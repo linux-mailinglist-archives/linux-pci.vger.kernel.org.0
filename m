@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-25228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25229-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3F17A7A055
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 11:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71A2CA7A086
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 11:55:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D52473B2D2D
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:46:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C9393ABE2C
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:54:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A2771F4C9B;
-	Thu,  3 Apr 2025 09:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD3E1F4CA4;
+	Thu,  3 Apr 2025 09:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KWmRDova"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/yMYJVL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEAA78F58;
-	Thu,  3 Apr 2025 09:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C914E13D531;
+	Thu,  3 Apr 2025 09:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673583; cv=none; b=Gr+sGB4GNCbHhWc3+9bETS/XkSFtPGNy95iINe97QF55p8pf59UZJ63mWxxhmciU1azGkgRsp5dW4+vkoiTuUrK9qAH9mF1BkhZ4jdvUhxVTPOyDogWNxHpxiSJdM2+4hkN9QbN1J3D4+FyZzM6oKeH4UYmLpIBZOF66MX+p76Y=
+	t=1743674098; cv=none; b=fh6fRCT2NrPaRkUh5ZPzEvzYdtX60V5fk/CNebV48RW9BvqngjhSXjYbGyy3nass1FEJIVPbIFgzE0+Fuj1JS07bkaefUAooCOnu+og4OlsLVo6zFOzVKa++beDV5gT1UD4U6EsKrwQARFWgcinqgwcVOf5SkV6EXrIzrfTgVNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673583; c=relaxed/simple;
-	bh=6XnoVg+yC7QQLKbDlRVIJmkNWMIJM7BWw4IEozsWanQ=;
+	s=arc-20240116; t=1743674098; c=relaxed/simple;
+	bh=4aLRfN57w9gzYeMIUFZ1CreUx/4uJrM+2z5ByxW5EGs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fEG8PIa8/2N+Z+CtBh+HEb52wpX5xxMFRUYKqFMU6In/yu6u7g3HEKWmx194glN2WtSVCJXcw6PK/nZmOayzVX0mB8t1tmkdtiRUY5TQWlz24BNdXBCwhVTxw+2v3gHMsTgLYexJFpV7yQFl0fAZZlN9WiZi+w4q3FOg3KgBk1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KWmRDova; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=G6+1j1tPtpFSIQWerj2fV3EfWi1d9PFJB3qRJD42ddQ4x636GMwkJo6s6mt+PMta4bCTl+GJKXIg5HpAf4DoFbyr5xDJQQj+4i1EwaW94OHErTbUAmiBwGxAp0cJJnNeh3qU49u5QFDNcJWIQLLvcHrAwFCnuavVNROQX2VUlZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/yMYJVL; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743673581; x=1775209581;
+  t=1743674097; x=1775210097;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=6XnoVg+yC7QQLKbDlRVIJmkNWMIJM7BWw4IEozsWanQ=;
-  b=KWmRDova8GWUPjo5bFtauS53mEqIiY5B3njmqrnnxtNvfYRkkl3z64Aw
-   V4oeJJNSUqRrSCTnAijT7akvS+1Uby2TcjPPtv4huY4qQHwPYU/snkPjD
-   wmpmEo5i/7ZxzOUrZizPTA1MtdJU+kgN4kKl39hDTl2CC9l1AjDEhP3zq
-   +Nk/qANo+gQkHz5MeplFlL70btNLbouV5CHz8jC3a7WwMC5xZ3ccDSEr0
-   Cyk+oHYYFEY8LZ4hoS3o0DEDKKDmTwOKNX+vw0CCniWepXeuipzPJ2RRv
-   uuAeeqk56RRqgm9lcuRnnsKPNy3pFj3NWpCS3GbNTc9oMPu7Ylk8t0F23
-   g==;
-X-CSE-ConnectionGUID: uyCEPOjOTueKU/CjiTWIWQ==
-X-CSE-MsgGUID: Dg1PivzHR3eD/STYSwRcJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55700869"
+  bh=4aLRfN57w9gzYeMIUFZ1CreUx/4uJrM+2z5ByxW5EGs=;
+  b=B/yMYJVLjUAKRgEGzKdpfgFeaCnXLloq0EzHHozlT9zYgWIRxhthI3Mt
+   iyW/9EIA4P7weMb2UHvk+TPyxQ0De3dEhA8DUzIv4bkgKEsvJD5W49+Wr
+   SpqwrOGM0u6PZJBVH9CowycHSj6u8NetxvlCq0osghSOfJZ/75KHUQ/LT
+   xHbNS5pRKVmJp2FYEw38E1Gtqatqe1xmpWcPOSkkjvoMwCd9NwE7zhhca
+   9GWrxbesjnHqQdYaKSTz+BmmFQYyQrjctg3VPSdDFAGLJFLZxicTv4f/9
+   xU8dWNJoriohOj8yJ+U1FAzMDIrb+eqGSFc5TSO1vE0lC9fpucF1c3SHG
+   w==;
+X-CSE-ConnectionGUID: JQmukYzRT5uoDRV4YC2zqA==
+X-CSE-MsgGUID: vsKjO1WrSiSjXI8pCWgH2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45197216"
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="55700869"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:45:54 -0700
-X-CSE-ConnectionGUID: jyG+Q7IsQ8Ol0yQpTWIevA==
-X-CSE-MsgGUID: ASjgkbMCR1OecHoGXGxgHw==
+   d="scan'208";a="45197216"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:54:56 -0700
+X-CSE-ConnectionGUID: /c3TGysPSg6RF7ARnplGBw==
+X-CSE-MsgGUID: WQuuYpJoT9S6C/he/aCgvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="126950855"
+   d="scan'208";a="150158033"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:45:48 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:54:51 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Apr 2025 12:45:45 +0300 (EEST)
+Date: Thu, 3 Apr 2025 12:54:47 +0300 (EEST)
 To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
 cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
@@ -74,217 +74,70 @@ cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
     Maxime Ripard <mripard@kernel.org>, 
     Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
     Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v7 3/6] PCI: Allow IOV resources to be resized in
- pci_resize_resource()
-In-Reply-To: <20250402141122.2818478-4-michal.winiarski@intel.com>
-Message-ID: <31c9a59c-b90c-80e4-cd2f-2eb992ce8556@linux.intel.com>
-References: <20250402141122.2818478-1-michal.winiarski@intel.com> <20250402141122.2818478-4-michal.winiarski@intel.com>
+Subject: Re: [PATCH v7 4/6] PCI/IOV: Check that VF BAR fits within the
+ reservation
+In-Reply-To: <20250402141122.2818478-5-michal.winiarski@intel.com>
+Message-ID: <308209c2-508e-19d1-a5aa-9c8a8af68b23@linux.intel.com>
+References: <20250402141122.2818478-1-michal.winiarski@intel.com> <20250402141122.2818478-5-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-154751121-1743673545=:1302"
+Content-Type: multipart/mixed; boundary="8323328-1411218873-1743674087=:1302"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-154751121-1743673545=:1302
+--8323328-1411218873-1743674087=:1302
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
 
-> Similar to regular resizable BAR, VF BAR can also be resized.
+> When the resource representing VF MMIO BAR reservation is created, its
+> size is always large enough to accommodate the BAR of all SR-IOV Virtual
+> Functions that can potentially be created (total VFs). If for whatever
+> reason it's not possible to accommodate all VFs - the resource is not
+> assigned and no VFs can be created.
 >=20
-> The capability layout is the same as PCI_EXT_CAP_ID_REBAR, which means
-> we can reuse most of the implementation, the only difference being
-> resource size calculation (which is multiplied by total VFs) and memory
-> decoding (which is controlled by a separate VF MSE field in SR-IOV cap).
+> An upcoming change will allow VF BAR size to be modified by drivers at
+> a later point in time, which means that the check for resource
+> assignment is no longer sufficient.
 >=20
-> Extend the pci_resize_resource() function to accept IOV resources.
->=20
-> See PCIe r6.2, sec 7.8.7.
+> Add an additional check that verifies that VF BAR for all enabled VFs
+> fits within the underlying reservation resource.
 >=20
 > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
 > ---
->  drivers/pci/iov.c       | 21 +++++++++++++++++++++
->  drivers/pci/pci.c       | 10 +++++++++-
->  drivers/pci/pci.h       |  9 +++++++++
->  drivers/pci/setup-res.c | 35 ++++++++++++++++++++++++++++++-----
->  4 files changed, 69 insertions(+), 6 deletions(-)
+>  drivers/pci/iov.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
 > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 3d5da055c3dc1..fee99e15a943f 100644
+> index fee99e15a943f..2fafbd6a998f0 100644
 > --- a/drivers/pci/iov.c
 > +++ b/drivers/pci/iov.c
-> @@ -154,6 +154,27 @@ resource_size_t pci_iov_resource_size(struct pci_dev=
- *dev, int resno)
->  =09return dev->sriov->barsz[pci_resource_num_to_vf_bar(resno)];
->  }
+> @@ -668,9 +668,12 @@ static int sriov_enable(struct pci_dev *dev, int nr_=
+virtfn)
+>  =09nres =3D 0;
+>  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
+>  =09=09int idx =3D pci_resource_num_from_vf_bar(i);
+> +=09=09resource_size_t vf_bar_sz =3D pci_iov_resource_size(dev, idx);
 > =20
-> +void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
-> +=09=09=09       resource_size_t size)
-> +{
-> +=09if (!pci_resource_is_iov(resno)) {
-> +=09=09pci_warn(dev, "%s is not an IOV resource\n",
-> +=09=09=09 pci_resource_name(dev, resno));
-> +=09=09return;
-> +=09}
-> +
-> +=09dev->sriov->barsz[pci_resource_num_to_vf_bar(resno)] =3D size;
-> +}
-> +
-> +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev)
-> +{
-> +=09u16 cmd;
-> +
-> +=09pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
-> +
-> +=09return cmd & PCI_SRIOV_CTRL_MSE;
-> +}
-> +
->  static void pci_read_vf_config_common(struct pci_dev *virtfn)
->  {
->  =09struct pci_dev *physfn =3D virtfn->physfn;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24e..6878e3b1e3fcf 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3745,7 +3745,15 @@ static int pci_rebar_find_pos(struct pci_dev *pdev=
-, int bar)
->  =09unsigned int pos, nbars, i;
->  =09u32 ctrl;
-> =20
-> -=09pos =3D pdev->rebar_cap;
-> +=09if (pci_resource_is_iov(bar)) {
-> +=09=09if (!pdev->physfn)
-> +=09=09=09return -ENOTSUPP;
-> +=09=09pos =3D pdev->sriov->vf_rebar_cap;
-> +=09=09bar =3D pci_resource_num_to_vf_bar(bar);
-> +=09} else {
-> +=09=09pos =3D pdev->rebar_cap;
-> +=09}
-> +
->  =09if (!pos)
->  =09=09return -ENOTSUPP;
-> =20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index f44840ee3c327..643cd8c737f66 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -689,6 +689,9 @@ void pci_iov_update_resource(struct pci_dev *dev, int=
- resno);
->  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int re=
-sno);
->  void pci_restore_iov_state(struct pci_dev *dev);
->  int pci_iov_bus_range(struct pci_bus *bus);
-> +void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
-> +=09=09=09       resource_size_t size);
-> +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev);
->  static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return resno >=3D PCI_IOV_RESOURCES && resno <=3D PCI_IOV_RESOURCE_EN=
-D;
-> @@ -722,6 +725,12 @@ static inline int pci_iov_bus_range(struct pci_bus *=
-bus)
->  {
->  =09return 0;
->  }
-> +static inline void pci_iov_resource_set_size(struct pci_dev *dev, int re=
-sno,
-> +=09=09=09=09=09     resource_size_t size) { }
-> +static inline bool pci_iov_is_memory_decoding_enabled(struct pci_dev *de=
-v)
-> +{
-> +=09return false;
-> +}
->  static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return false;
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index c6657cdd06f67..d2b3ed51e8804 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -423,13 +423,39 @@ void pci_release_resource(struct pci_dev *dev, int =
-resno)
->  }
->  EXPORT_SYMBOL(pci_release_resource);
-> =20
-> +static bool pci_resize_is_memory_decoding_enabled(struct pci_dev *dev,
-> +=09=09=09=09=09=09  int resno)
-> +{
-> +=09u16 cmd;
-> +
-> +=09if (pci_resource_is_iov(resno))
-> +=09=09return pci_iov_is_memory_decoding_enabled(dev);
-> +
-> +=09pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> +
-> +=09return cmd & PCI_COMMAND_MEMORY;
-> +}
-> +
-> +static void pci_resize_resource_set_size(struct pci_dev *dev, int resno,
-> +=09=09=09=09=09 int size)
-> +{
-> +=09resource_size_t res_size =3D pci_rebar_size_to_bytes(size);
-> +=09struct resource *res =3D pci_resource_n(dev, resno);
-> +
-> +=09if (!pci_resource_is_iov(resno)) {
-> +=09=09resource_set_size(res, res_size);
-> +=09} else {
-> +=09=09resource_set_size(res, res_size * pci_sriov_get_totalvfs(dev));
-> +=09=09pci_iov_resource_set_size(dev, resno, res_size);
-> +=09}
-> +}
-> +
->  int pci_resize_resource(struct pci_dev *dev, int resno, int size)
->  {
->  =09struct resource *res =3D pci_resource_n(dev, resno);
->  =09struct pci_host_bridge *host;
->  =09int old, ret;
->  =09u32 sizes;
-> -=09u16 cmd;
-> =20
->  =09/* Check if we must preserve the firmware's resource assignment */
->  =09host =3D pci_find_host_bridge(dev->bus);
-> @@ -440,8 +466,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
-o, int size)
->  =09if (!(res->flags & IORESOURCE_UNSET))
->  =09=09return -EBUSY;
-> =20
-> -=09pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> -=09if (cmd & PCI_COMMAND_MEMORY)
-> +=09if (pci_resize_is_memory_decoding_enabled(dev, resno))
->  =09=09return -EBUSY;
-> =20
->  =09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-> @@ -459,7 +484,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
-o, int size)
->  =09if (ret)
->  =09=09return ret;
-> =20
-> -=09resource_set_size(res, pci_rebar_size_to_bytes(size));
-> +=09pci_resize_resource_set_size(dev, resno, size);
-> =20
->  =09/* Check if the new config works by trying to assign everything. */
->  =09if (dev->bus->self) {
-> @@ -471,7 +496,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
-o, int size)
-> =20
->  error_resize:
->  =09pci_rebar_set_size(dev, resno, old);
-> -=09resource_set_size(res, pci_rebar_size_to_bytes(old));
-> +=09pci_resize_resource_set_size(dev, resno, old);
->  =09return ret;
->  }
->  EXPORT_SYMBOL(pci_resize_resource);
+>  =09=09bars |=3D (1 << idx);
+>  =09=09res =3D &dev->resource[idx];
+> +=09=09if (vf_bar_sz * nr_virtfn > resource_size(res))
+> +=09=09=09continue;
+>  =09=09if (res->parent)
+>  =09=09=09nres++;
+>  =09}
+>=20
 
 Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
  i.
 
---8323328-154751121-1743673545=:1302--
+--8323328-1411218873-1743674087=:1302--
 
