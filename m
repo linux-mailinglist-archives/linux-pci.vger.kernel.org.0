@@ -1,65 +1,55 @@
-Return-Path: <linux-pci+bounces-25252-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25253-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 656B4A7AE47
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:25:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F538A7AE74
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:28:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 251931799C4
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:19:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B8E5189DA8F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F9F1FFC59;
-	Thu,  3 Apr 2025 19:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C99802063FD;
+	Thu,  3 Apr 2025 19:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDATM6Kd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XCpV3rgC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D811FFC55;
-	Thu,  3 Apr 2025 19:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ECF2063EF;
+	Thu,  3 Apr 2025 19:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707786; cv=none; b=AuYNmboHoHHanBCvPBy9LKkp7jLcFPsJP0qeRwXzfhIc9u1uAdamMAajOE925aJvJjJXwc7r8RMSMuagBg4yJsvDvoJxLq2KWo6d5S5W8eyEPvgb4HWC9Zip/Czpo8PuM8h7IjjFmvCrlGemssvKhs5bdKbMfA3LCHrXeeJZwHI=
+	t=1743707797; cv=none; b=d5xsaauXSn+BxJGGg3Gdq0DvxeaCFuyo/HrW7yBC3W9/zkm0FnpjwENCqiqymfrgheVKW27m6FTsafpST9WwsibmX0Tw7ORBtEe8HuMnYvOwf6FNWRbWbYFmDKe3sNVsPQI/dNRAQIteO9BF0BjN0a4iyY62UYPhOz+VNkVm/r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707786; c=relaxed/simple;
-	bh=sDaOFhGbRXKWWgBDXTjF3gFFkmNVkCcMKXVKbM97/jg=;
+	s=arc-20240116; t=1743707797; c=relaxed/simple;
+	bh=ctBEI2ZBS0CtqznxxJ/yh2BNhEj8WfOONRgpeABLBpw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bqRuCvYy0CBzBo9J6MDjsVrm8pMr7E8g164B5EvDGe2jUWfS8DHUIN7bBjDPkjsae2vK0Np1ZvNgq8CKD8Oi7d6mgBnrKoVgN0a7ouR0eGM3PNEdzOiN6LyU84wYxv6G/dBx/iq1hPxeL0UXDdMvpOJI700DGjj081vl2h4rjt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDATM6Kd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A8EC4CEE3;
-	Thu,  3 Apr 2025 19:16:24 +0000 (UTC)
+	 MIME-Version; b=OSEmzKkthkAo6atrIlo6/jxNb6iK6x4eJVsmzLAK0WOe1e9/b9veMQjTlj3FsbledMtpYRyhQXKFjRdf0RnPTnmmZF01lb6sNJAjMyb1S4Bucbzm+pg3jOnGDZzA+L21fIlvAOtGsjMVwSrBQ+F1cGQXlsTykb5wL9OytgD35Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XCpV3rgC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B5EDC4CEE9;
+	Thu,  3 Apr 2025 19:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707785;
-	bh=sDaOFhGbRXKWWgBDXTjF3gFFkmNVkCcMKXVKbM97/jg=;
+	s=k20201202; t=1743707797;
+	bh=ctBEI2ZBS0CtqznxxJ/yh2BNhEj8WfOONRgpeABLBpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dDATM6KdwA8pBnk71COgokFTPaH5slXGlZJ6aKzqfl15z76e0RYKEdHFVe8Z/CAth
-	 HIHdR/bRgA3zmYV+ZAS7sjrhNjKxsjeeudlZCD7dZNYcT6vIN4Us2IX4n+LPl1NNmc
-	 cwWQCDvO19g4ci9A/rQ8RbtzB/3me8S0HvfjZeB4JHHwuYWI4csJiegKiFJvqGgiBH
-	 GG30+Ye782RzGiieInIteze1bULL4ceWQkos5Z8jcu1wAd2oBDAs+Jv26zAzOGFtm5
-	 Q/EgAp4hMlHexTajZ0PFBYH+7GocjaSIUXyul4yKDR+jhIthn/v0a4xf7diq+VYjcn
-	 ckLNiekzf/XDg==
+	b=XCpV3rgCENfronZFjXx37yAx/Y8qjR4RDFQD0+SQb4LJF0yJ847p9Gh/mlePQEho3
+	 GIDfrlqvA2DnuA22YZRMnUzdxlgSZ3nGo6fufrLvE8fGDKnYjocdmSg5kkL+w1K4NB
+	 nMcg+jjaTODktZG5+TG87GALWXdmo3VoXom5Z1qCqIHcJI11+0wQdT1LqirOiXgUeI
+	 AjXxfwSnS8NSGQA+dIJtu96efzjHK0YwiupODw7u2gRmFzeyL1FSURzXPEPSkSDU4W
+	 lkHmviwYf3w0tQ/difkljLnJhSs1HgX5HinaBgp0OaLDqSzIvqMHbXURXqjfgaPFkZ
+	 KZe7wI0RLocYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	manivannan.sadhasivam@linaro.org,
-	kw@linux.com,
-	gregkh@linuxfoundation.org,
-	lpieralisi@kernel.org,
-	heiko@sntech.de,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.13 25/37] PCI: Add Rockchip Vendor ID
-Date: Thu,  3 Apr 2025 15:15:01 -0400
-Message-Id: <20250403191513.2680235-25-sashal@kernel.org>
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 28/37] PCI: Enable Configuration RRS SV early
+Date: Thu,  3 Apr 2025 15:15:04 -0400
+Message-Id: <20250403191513.2680235-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403191513.2680235-1-sashal@kernel.org>
 References: <20250403191513.2680235-1-sashal@kernel.org>
@@ -69,82 +59,69 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: Shawn Lin <shawn.lin@rock-chips.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 20bbb083bbc9d3f8db390f2e35e168f1b23dae8a ]
+[ Upstream commit 3f8c4959fc18e477801386a625e726c59f52a2c4 ]
 
-Move PCI_VENDOR_ID_ROCKCHIP from pci_endpoint_test.c to pci_ids.h and
-reuse it in pcie-rockchip-host.c.
+Following a reset, a Function may respond to Config Requests with Request
+Retry Status (RRS) Completion Status to indicate that it is temporarily
+unable to process the Request, but will be able to process the Request in
+the future (PCIe r6.0, sec 2.3.1).
 
-Link: https://lore.kernel.org/r/20250218092120.2322784-2-cassel@kernel.org
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
+If the Configuration RRS Software Visibility feature is enabled and a Root
+Complex receives RRS for a config read of the Vendor ID, the Root Complex
+completes the Request to the host by returning PCI_VENDOR_ID_PCI_SIG,
+0x0001 (sec 2.3.2).
+
+The Config RRS SV feature applies only to Root Ports and is not directly
+related to pci_scan_bridge_extend().  Move the RRS SV enable to
+set_pcie_port_type() where we handle other PCIe-specific configuration.
+
+Link: https://lore.kernel.org/r/20250303210217.199504-1-helgaas@kernel.org
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c            | 1 -
- drivers/pci/controller/pcie-rockchip-host.c | 2 +-
- drivers/pci/controller/pcie-rockchip.h      | 1 -
- include/linux/pci_ids.h                     | 2 ++
- 4 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/probe.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 3aaaf47fa4ee2..b5c8422fd2f04 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -85,7 +85,6 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
- #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2e81ab0f5a25c..e894a77223f44 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1330,8 +1330,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
+ 			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
  
--#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
- #define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
- 
- static DEFINE_IDA(pci_endpoint_test_ida);
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 5adac6adc046f..6a46be17aa91b 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -367,7 +367,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 		}
- 	}
- 
--	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
-+	rockchip_pcie_write(rockchip, PCI_VENDOR_ID_ROCKCHIP,
- 			    PCIE_CORE_CONFIG_VENDOR);
- 	rockchip_pcie_write(rockchip,
- 			    PCI_CLASS_BRIDGE_PCI_NORMAL << 8,
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index a51b087ce8786..f9eaac9c8ee5d 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -198,7 +198,6 @@
- #define AXI_WRAPPER_NOR_MSG			0xc
- 
- #define PCIE_RC_SEND_PME_OFF			0x11960
--#define ROCKCHIP_VENDOR_ID			0x1d87
- #define PCIE_LINK_IS_L2(x) \
- 	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
- #define PCIE_LINK_TRAINING_DONE(x) \
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1a2594a38199f..2a9ca3dbaa0e9 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2609,6 +2609,8 @@
- 
- #define PCI_VENDOR_ID_ZHAOXIN		0x1d17
- 
-+#define PCI_VENDOR_ID_ROCKCHIP		0x1d87
+-	pci_enable_rrs_sv(dev);
+-
+ 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
+ 	    !is_cardbus && !broken) {
+ 		unsigned int cmax, buses;
+@@ -1572,6 +1570,11 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pdev->pcie_cap = pos;
+ 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+ 	pdev->pcie_flags_reg = reg16;
 +
- #define PCI_VENDOR_ID_HYGON		0x1d94
++	type = pci_pcie_type(pdev);
++	if (type == PCI_EXP_TYPE_ROOT_PORT)
++		pci_enable_rrs_sv(pdev);
++
+ 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+ 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
  
- #define PCI_VENDOR_ID_META		0x1d9b
+@@ -1588,7 +1591,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	 * correctly so detect impossible configurations here and correct
+ 	 * the port type accordingly.
+ 	 */
+-	type = pci_pcie_type(pdev);
+ 	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
+ 		/*
+ 		 * If pdev claims to be downstream port but the parent
 -- 
 2.39.5
 
