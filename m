@@ -1,143 +1,186 @@
-Return-Path: <linux-pci+bounces-25229-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25230-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71A2CA7A086
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 11:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D62D4A7A0B5
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 12:13:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C9393ABE2C
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:54:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9774A3B5780
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 10:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD3E1F4CA4;
-	Thu,  3 Apr 2025 09:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC69624500A;
+	Thu,  3 Apr 2025 10:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/yMYJVL"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JrpYDDl8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C914E13D531;
-	Thu,  3 Apr 2025 09:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234D61494D8;
+	Thu,  3 Apr 2025 10:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743674098; cv=none; b=fh6fRCT2NrPaRkUh5ZPzEvzYdtX60V5fk/CNebV48RW9BvqngjhSXjYbGyy3nass1FEJIVPbIFgzE0+Fuj1JS07bkaefUAooCOnu+og4OlsLVo6zFOzVKa++beDV5gT1UD4U6EsKrwQARFWgcinqgwcVOf5SkV6EXrIzrfTgVNM=
+	t=1743675215; cv=none; b=qqQ4GjqCfZY8bi8mfd2Fw3DVJhgudK/br/sKFzNuopKL7CASWdzhUjh1GuQ4wziKcbCI9z38xAba5F9EFeQSgOIzjAk1F4+4ngtYKRrApURozHPd3CzJfsWI1gj5Jqun/JMNHXwtmREEodJfakVleY36un6ya/bykW3g+5WF4AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743674098; c=relaxed/simple;
-	bh=4aLRfN57w9gzYeMIUFZ1CreUx/4uJrM+2z5ByxW5EGs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=G6+1j1tPtpFSIQWerj2fV3EfWi1d9PFJB3qRJD42ddQ4x636GMwkJo6s6mt+PMta4bCTl+GJKXIg5HpAf4DoFbyr5xDJQQj+4i1EwaW94OHErTbUAmiBwGxAp0cJJnNeh3qU49u5QFDNcJWIQLLvcHrAwFCnuavVNROQX2VUlZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/yMYJVL; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743674097; x=1775210097;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4aLRfN57w9gzYeMIUFZ1CreUx/4uJrM+2z5ByxW5EGs=;
-  b=B/yMYJVLjUAKRgEGzKdpfgFeaCnXLloq0EzHHozlT9zYgWIRxhthI3Mt
-   iyW/9EIA4P7weMb2UHvk+TPyxQ0De3dEhA8DUzIv4bkgKEsvJD5W49+Wr
-   SpqwrOGM0u6PZJBVH9CowycHSj6u8NetxvlCq0osghSOfJZ/75KHUQ/LT
-   xHbNS5pRKVmJp2FYEw38E1Gtqatqe1xmpWcPOSkkjvoMwCd9NwE7zhhca
-   9GWrxbesjnHqQdYaKSTz+BmmFQYyQrjctg3VPSdDFAGLJFLZxicTv4f/9
-   xU8dWNJoriohOj8yJ+U1FAzMDIrb+eqGSFc5TSO1vE0lC9fpucF1c3SHG
-   w==;
-X-CSE-ConnectionGUID: JQmukYzRT5uoDRV4YC2zqA==
-X-CSE-MsgGUID: vsKjO1WrSiSjXI8pCWgH2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45197216"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="45197216"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:54:56 -0700
-X-CSE-ConnectionGUID: /c3TGysPSg6RF7ARnplGBw==
-X-CSE-MsgGUID: WQuuYpJoT9S6C/he/aCgvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="150158033"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:54:51 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Apr 2025 12:54:47 +0300 (EEST)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v7 4/6] PCI/IOV: Check that VF BAR fits within the
- reservation
-In-Reply-To: <20250402141122.2818478-5-michal.winiarski@intel.com>
-Message-ID: <308209c2-508e-19d1-a5aa-9c8a8af68b23@linux.intel.com>
-References: <20250402141122.2818478-1-michal.winiarski@intel.com> <20250402141122.2818478-5-michal.winiarski@intel.com>
+	s=arc-20240116; t=1743675215; c=relaxed/simple;
+	bh=01MeoMdgRxAVrAckVIAvBLc/gYcrfZ7ucXaVfCHHKug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O62yehQUIMNOrRueKmPKvXlwDypEnT1JCuMah+j2dvvlh45gSitsz9/M3hMV104f9YXkna9uem9bndI8y4spyqnSInfLjWOEVh7d49NmbwpDm0oaMeB5uJ/45efZhqliYMVqgdlNEpyVGANI09ZxiAdglj8j31wcYDd/7KNV7oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JrpYDDl8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339rw6f021462;
+	Thu, 3 Apr 2025 10:13:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+1tIqhAWCJvJ3CMT+y5CBlACyfbXSMkpcdM6/ucOvxU=; b=JrpYDDl8YNsCAZvc
+	gtCR8T7s2hvDqcMg6HzHwahmSP/aQWu7BMthXYHZHW4Y9uVnlbLt0lKEj86vHEaE
+	ieZApWzKyp36/eMKR2eMhtm1ojwsWT9JSSsgu2KQVNeLV8puf36Q2+vcwVqoMEvO
+	OmD3LVvXtyV+zgzf8Sg9FZ8Xo2/87f4rnCmeMg39noD1MaTakSOJclGgmXflwbB6
+	uJf9zlpg3+lk3tCkeNCDCrtGKrCRIGkulbLBTHTwOcGgiZOsx9dolrU6RT53nKPX
+	W5FpRpKBxOGRCoUYZqivdTheIsKvJ64Z2BddVoXHTzZ2G9bW9NtL+IFhnI9II1ch
+	YYONqg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sbxy1qrm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 10:13:13 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533ADCIq003801
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 10:13:12 GMT
+Received: from [10.133.33.118] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 03:13:08 -0700
+Message-ID: <94dac340-2f92-40a3-be56-ba8bd2298328@quicinc.com>
+Date: Thu, 3 Apr 2025 18:13:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1411218873-1743674087=:1302"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] PCI: Remove pcim_iounmap_regions()
+To: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown
+	<broonie@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        Philipp Stanner
+	<pstanner@redhat.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Yang Yingliang
+	<yangyingliang@huawei.com>,
+        Hannes Reinecke <hare@suse.de>, Al Viro
+	<viro@zeniv.linux.org.uk>,
+        Li Zetao <lizetao1@huawei.com>, Anuj Gupta
+	<anuj20.g@samsung.com>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20250327110707.20025-2-phasta@kernel.org>
+ <20250327110707.20025-4-phasta@kernel.org>
+Content-Language: en-US
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+In-Reply-To: <20250327110707.20025-4-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
+X-Proofpoint-ORIG-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
+X-Authority-Analysis: v=2.4 cv=PNAP+eqC c=1 sm=1 tr=0 ts=67ee5f39 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=20KFwNOVAAAA:8 a=COk6AnOGAAAA:8 a=YDoAUpYN6iqzQeISu80A:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 phishscore=0 clxscore=1011 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030036
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1411218873-1743674087=:1302
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
-
-> When the resource representing VF MMIO BAR reservation is created, its
-> size is always large enough to accommodate the BAR of all SR-IOV Virtual
-> Functions that can potentially be created (total VFs). If for whatever
-> reason it's not possible to accommodate all VFs - the resource is not
-> assigned and no VFs can be created.
->=20
-> An upcoming change will allow VF BAR size to be modified by drivers at
-> a later point in time, which means that the check for resource
-> assignment is no longer sufficient.
->=20
-> Add an additional check that verifies that VF BAR for all enabled VFs
-> fits within the underlying reservation resource.
->=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+On 3/27/2025 7:07 PM, Philipp Stanner wrote:
+> From: Philipp Stanner <pstanner@redhat.com>
+> 
+> All users of the deprecated function pcim_iounmap_regions() have been
+> ported by now. Remove it.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 > ---
->  drivers/pci/iov.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index fee99e15a943f..2fafbd6a998f0 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -668,9 +668,12 @@ static int sriov_enable(struct pci_dev *dev, int nr_=
-virtfn)
->  =09nres =3D 0;
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
->  =09=09int idx =3D pci_resource_num_from_vf_bar(i);
-> +=09=09resource_size_t vf_bar_sz =3D pci_iov_resource_size(dev, idx);
-> =20
->  =09=09bars |=3D (1 << idx);
->  =09=09res =3D &dev->resource[idx];
-> +=09=09if (vf_bar_sz * nr_virtfn > resource_size(res))
-> +=09=09=09continue;
->  =09=09if (res->parent)
->  =09=09=09nres++;
->  =09}
->=20
+>  .../driver-api/driver-model/devres.rst        |  1 -
+>  drivers/pci/devres.c                          | 24 -------------------
+>  include/linux/pci.h                           |  1 -
+>  3 files changed, 26 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> index d75728eb05f8..601f1a74d34d 100644
+> --- a/Documentation/driver-api/driver-model/devres.rst
+> +++ b/Documentation/driver-api/driver-model/devres.rst
+> @@ -396,7 +396,6 @@ PCI
+>    pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
+>    pcim_iomap_table()		: array of mapped addresses indexed by BAR
+>    pcim_iounmap()		: do iounmap() on a single BAR
+> -  pcim_iounmap_regions()	: do iounmap() and release_region() on multiple BARs
+>    pcim_pin_device()		: keep PCI device enabled after release
+>    pcim_set_mwi()		: enable Memory-Write-Invalidate PCI transaction
+>  
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 3431a7df3e0d..c60441555758 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -946,30 +946,6 @@ int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+>  }
+>  EXPORT_SYMBOL(pcim_request_all_regions);
+>  
+> -/**
+> - * pcim_iounmap_regions - Unmap and release PCI BARs (DEPRECATED)
+> - * @pdev: PCI device to map IO resources for
+> - * @mask: Mask of BARs to unmap and release
+> - *
+> - * Unmap and release regions specified by @mask.
+> - *
+> - * This function is DEPRECATED. Do not use it in new code.
+> - * Use pcim_iounmap_region() instead.
+> - */
+> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+> -{
+> -	int i;
+> -
+> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> -		if (!mask_contains_bar(mask, i))
+> -			continue;
+> -
+> -		pcim_iounmap_region(pdev, i);
+> -		pcim_remove_bar_from_legacy_table(pdev, i);
+> -	}
+> -}
+> -EXPORT_SYMBOL(pcim_iounmap_regions);
+> -
+>  /**
+>   * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
+>   * @pdev: PCI device to map IO resources for
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa..7661f10913ca 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2323,7 +2323,6 @@ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+>  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
+>  int pcim_request_region(struct pci_dev *pdev, int bar, const char *name);
+>  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
+> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
+>  void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
+>  				unsigned long offset, unsigned long len);
+>  
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1411218873-1743674087=:1302--
+Reviewed-by: Zijun Hu <quic_zijuhu@quicinc.com>
 
