@@ -1,126 +1,101 @@
-Return-Path: <linux-pci+bounces-25216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF794A79D1D
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:38:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CE32A79D36
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:43:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0339C3B213A
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:38:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF3AD1897434
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:43:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29162241661;
-	Thu,  3 Apr 2025 07:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jSOnHL0P"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E86C241670;
+	Thu,  3 Apr 2025 07:43:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4636C24061F
-	for <linux-pci@vger.kernel.org>; Thu,  3 Apr 2025 07:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B7F1CD1E1;
+	Thu,  3 Apr 2025 07:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743665919; cv=none; b=WtXTzevVA0bVOptPJv7RYd4JWP99iRq6FeItrW/7NkRT2FtBdjhksSPxuQurIOKcksWNwpEpFVMNMjNqxZEVd6ZS4f/BHbazW3x499EIS2sUaBiTD9g4aj1JoysdOwKtJGBm2KoJhGV9ICbWuBB+e+isuKmiJExbMmpMZQWt4a0=
+	t=1743666221; cv=none; b=XLL2oEtIBXnq1mB5X8G5Wgoxh+VTqp/AHyKY5xYZe3KrLaEQ6ECqCeAbqvNCPfSIgXqFB/oro95VMWW1NfpvIJe7NjFlYTzPtS4kwZu6F7pJ4jSrGdz+zsp4ajjx5VtNJt3AxzH7fNVO8YOfXz38l2cwBTcsBO/BK2+HA3Yp/OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743665919; c=relaxed/simple;
-	bh=r1+85w+l8mYkuW5ZQ70d0+EsyEP9qhZP9Q1yJFSdZLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nlIha3aj7hO0fLpaUjmyoTkY/LL9AAUlKnqDmVSOM5zXDHmG4ncgyKm35TbKEpsRL0NgbHSNcnvB3VcV6VJPGukWDI2lXv0dcLyMY6/1DzBnU8nkUjAeRopeeXlDHrvYMaj5NUnS3M1T1ZhveSIrYCYE+GXnlFUT/DGrgYoBVPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jSOnHL0P; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c2d427194so5891001fa.0
-        for <linux-pci@vger.kernel.org>; Thu, 03 Apr 2025 00:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743665915; x=1744270715; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r1+85w+l8mYkuW5ZQ70d0+EsyEP9qhZP9Q1yJFSdZLA=;
-        b=jSOnHL0P6rxBH3daRFVWc0mGrRQ1uwVoxMTC4Wlvzx9cz1tQPKc6ojaSDg8NQNsDtI
-         i8+8MJv0fSOU98YTGMdQFEzT7Aab/Qe0UJYhMQwiU2ubt4jPXw1FtVcg/SNmOUl3H94V
-         rFgzks4TE9PgWsc1M/Rkv8KbwHNQpCFXRvCZT2O2mJCm7Epud5O6pE/hcW9TdWw9tYON
-         Yln7qTkOm8FUeHmzS5LUIJ1xgfs0tNw0gWiuqymy+1P0hatXAazO9NFNXgHTmZrFu6uA
-         GmHRbei4iGTJS9UrawVq51hxKrmeZC64Y3XKvuyr435LLeNte1cLEuIwZpMu7AFGkH0t
-         BKAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743665915; x=1744270715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r1+85w+l8mYkuW5ZQ70d0+EsyEP9qhZP9Q1yJFSdZLA=;
-        b=RTaHKc6wWAaDwdGDzVylRysHnlqFm7kagvUCNo5CHWS09IEfJRxZEkxWXF035xFj5b
-         AtMRoAVqaqYjGGMLY0tAm+cYhAZVE54Fd8CcKNQ0gV6WohgsVmthomK9jIgP3csrzEEE
-         3SeN9t/m1DTRw4mBP3W6ERYtfVA+EOMX3Z95HNVrbnF9TcPFsNDFGQ0NUaPMgBaX7VJ1
-         NfucyQwIWrtuxjy67GdVN8Bfohic9+pvvUb0NwkoRbePAZXmHu93eIWj4NzP1YWQtLUM
-         JuW/DWv3lyUSCMaML/wtwtfub9wM6A0qXfGL0HoIjqL6pMSVg+ClnVguEiewCBhBksgP
-         tiHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1EhS+Y/EGnkqR/bH3Wqhc4i7l2gvWfAwK6BIxt94OUa2GygCVPSEsL8sLQxcqFvfkKCAJZJUA0O8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsk0kw7Z/fDPAC/WHO785r/5pJH1KLWIl4G/lQKvTSC7RA58MY
-	QdGZvROABMnwuX6bClNBv11cjV+gb3FlYuok7KOBg2GIWRq0eyIWoZyIvWApBYcyoll7hOKa0KO
-	+p7g2hxOQd9hC8UZtwuwT7iCt4aDDSsSQAFLbqg==
-X-Gm-Gg: ASbGncuwZLF4PuS3URY+48iY2t0gJcbiSokCI77DpUM9yYJdM7Ma5nCC97ow1GenYpB
-	0lZn1SCr8ii0UaUYL0KRyJNuFZWMWeVLpv+ySYrYmj953QetzJlwG1xTm8Kwc6aNewUR3i92ikW
-	KNUz3fdblyHbyxY1HlkgK/zdxA+hgqbqI2mCfRX1NAvabQSxAcmK0WkwjI
-X-Google-Smtp-Source: AGHT+IE+efI2xX/8yZlFAe4Vm/Cxzz+Nax11lqQy3zdclZUZJJhpwXV7c7fhUqN3JwjPrbPY+ZyZGS0ljljrKBqXCe4=
-X-Received: by 2002:a2e:be14:0:b0:30b:8f60:cdb7 with SMTP id
- 38308e7fff4ca-30f02b985a2mr4363601fa.24.1743665915290; Thu, 03 Apr 2025
- 00:38:35 -0700 (PDT)
+	s=arc-20240116; t=1743666221; c=relaxed/simple;
+	bh=WD1TwJfSnJZyF+/epWcbS06+blHm8ZwXsxzo9muDIWg=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=gw7Jr6IsOSxueogAk3QrO9n3TZeTTACFljHVKtOO+Af3mtzgAOiL5B5oLojn9CJyibw+zjy39uQcKmPDjmOtMkkzRkVlh9Ipg2ygZ+mzFXfjwBF9CYdVcob9w1JeUVMsfug8+3ou1EaLo7uFfWz9DUMYBEe52GjCbs6bDsgKOTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZStyY3n7Wz4xfxL;
+	Thu,  3 Apr 2025 15:43:33 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 5337hNMG078468;
+	Thu, 3 Apr 2025 15:43:23 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp04[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 3 Apr 2025 15:43:26 +0800 (CST)
+Date: Thu, 3 Apr 2025 15:43:26 +0800 (CST)
+X-Zmail-TransId: 2afb67ee3c1effffffffc6e-36053
+X-Mailer: Zmail v1.0
+Message-ID: <20250403154326411S4luMrK8A5RXovincATzF@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250402132634.18065-1-johan+linaro@kernel.org>
- <CAMRc=Mfpm8=q1mkfNfjPtogbh1S9PKU+w_2yMP+oE_Gj7-qemQ@mail.gmail.com> <Z-42nVkEZeWHdwAm@hovoldconsulting.com>
-In-Reply-To: <Z-42nVkEZeWHdwAm@hovoldconsulting.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Apr 2025 09:38:24 +0200
-X-Gm-Features: AQ5f1JoaECCB4Ig-OQoVaRV_IJbeuDbZtSRj286KtUBGCZkrM4_HeX7c4fhC4-E
-Message-ID: <CAMRc=Mf3on3TpiPDhtPnp1-3b0ika2GHy6h-NJqcgvYpWMHpoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jonas Gorski <jonas.gorski@gmail.com>, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org, 
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <shawn.lin@rock-chips.com>
+Cc: <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <zhang.enpei@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBkcml2ZXJzOiBwY2k6IGNvbnRyb2xsZXI6IHBjaWUtcm9ja2NoaXA6IFVzZSBkZXZfZXJyX3Byb2JlKCk=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 5337hNMG078468
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67EE3C25.001/4ZStyY3n7Wz4xfxL
 
-On Thu, Apr 3, 2025 at 9:19=E2=80=AFAM Johan Hovold <johan@kernel.org> wrot=
-e:
->
-> On Thu, Apr 03, 2025 at 09:11:07AM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Apr 2, 2025 at 3:27=E2=80=AFPM Johan Hovold <johan+linaro@kerne=
-l.org> wrote:
-> > >
-> > > The PCI pwrctrl framework was renamed after being merged, but the
-> > > Kconfig symbols still reflect the old name ("pwrctl" without an "r").
-> > >
-> > > This leads to people not knowing how to refer to the framework in
-> > > writing, inconsistencies in module naming, etc.
-> > >
-> > > Let's rename also the Kconfig symbols before this gets any worse.
-> > >
-> >
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > I'm re-adding the tag here as otherwise b4 will only pick it up for
-> > patch 4/4 on v2 of the series.
->
-> I had already added it to the first three patches so it was only
-> missing on the last one.
->
-> Johan
+From: Zhang Enpei <zhang.enpei@zte.com.cn>
 
-Indeed, sorry for the noise, I saw b4 only applying it for the last
-one and didn't check git log.
+Replace the open-code with dev_err_probe() to simplify the code.
 
-Bartosz
+Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+---
+ drivers/pci/controller/pcie-rockchip.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index 0f88da378805..9897824a81f8 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -230,12 +230,9 @@ int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
+ 		phy = devm_of_phy_get(dev, dev->of_node, name);
+ 		kfree(name);
+
+-		if (IS_ERR(phy)) {
+-			if (PTR_ERR(phy) != -EPROBE_DEFER)
+-				dev_err(dev, "missing phy for lane %d: %ld\n",
+-					i, PTR_ERR(phy));
+-			return PTR_ERR(phy);
+-		}
++		if (IS_ERR(phy))
++			return dev_err_probe(dev, PTR_ERR(phy),
++					     "missing phy for lane %d\n", i);
+
+ 		rockchip->phys[i] = phy;
+ 	}
+-- 
+2.25.1
 
