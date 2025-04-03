@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64092A7AF56
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:48:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA878A7AF79
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:52:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 142F03AF7B0
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:41:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F8693BBEB6
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5180A2517B6;
-	Thu,  3 Apr 2025 19:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1708261392;
+	Thu,  3 Apr 2025 19:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKqCr9WB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKGFXrX5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F72517A4;
-	Thu,  3 Apr 2025 19:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE11261389;
+	Thu,  3 Apr 2025 19:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707991; cv=none; b=J0KtN+pFEXaMRuBlp3YIo7w+3h2qG8E6D1oL0IViK2QJYjI+ZILfwBOSCC0Wq4ek/8gXB+Ii5R9sFM9gIxmd4gyTwpeDCGnqR1/4cFCDEMwux6mDsvn6YvdX89nznxtLGh+2ck+y2ru8YhR4YGRofMF0ZhCOiRGa6SRSoLbMGXA=
+	t=1743708026; cv=none; b=F1IECPST8KkDwM+FASiZ9a4lhwDcNeQsLm8vn6I54/t9yXhr5ubmFb3Ur75D4FRCttMru4yqK7JJJ1d8EwcMaggwjviT5WT3g1UWj1arERtKxGoJSynajqConW8xucHM6oMaoOpsQCV+fc7GbCNVdUUisx/M6nWEZK2FSar9FXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707991; c=relaxed/simple;
-	bh=78MUgiVbVwd1OxI6YiH2mF5g9hU6Z/waZfajiKooUtg=;
+	s=arc-20240116; t=1743708026; c=relaxed/simple;
+	bh=+tBY6UKWekhQJduG+EZZK0/ueq1BweiGDOAn9x+7Voc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TkHLGINoQNMhgLyKijMiLEARkxIDGq4CBWatIiz+TD/VzB9jWXBV8C4oOiAdtxpJZLj25redOXrprVAcCQrVS97/O1XXO+hBCK5fnLuYZsnSW5jkmecLFWWVXgT29gg3AYGwq/gzOqtxkn6qWlou0Z4PuCg7YuW/XquRfZTX9jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKqCr9WB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B37FC4CEE3;
-	Thu,  3 Apr 2025 19:19:49 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jOBZKjooave54BVL6vJb0/ngHe4yExx92tKpHCGDHUZAT8QI1YQrseFAJ20i8UbSfvhAFUQF43YYaiCxa4ZAd/HC1320X8ATffzYtD7abcuwhdA+X09HZ5J4iLA/VgcJX2DafLMTT9uegLlt0+BGwryYRN24cMXXugm1qjEDppE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKGFXrX5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A06C4CEE3;
+	Thu,  3 Apr 2025 19:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707991;
-	bh=78MUgiVbVwd1OxI6YiH2mF5g9hU6Z/waZfajiKooUtg=;
+	s=k20201202; t=1743708026;
+	bh=+tBY6UKWekhQJduG+EZZK0/ueq1BweiGDOAn9x+7Voc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KKqCr9WBgGMqez6rTzHCtBOUvx+FKDlwDhhwf4tA3GPhgAjuSdd6ywwlQ/vY/kM4I
-	 J57RFNqPmolwU1ax6525ZK7jOo7zSLjSMjLrNqot78PI6SesUZygilw+tzqvNn09cZ
-	 JU+i1iVX1F5ijRMIadgKXvWeaH1RJuW7VyreRDSzEO9UcjOZXQp1rz73egnSavnYxF
-	 s7cTF3wyEWklUIdQYGHLt2T1wX6H/0fAwYRUuH6MZXOYTvCLkaJaYmWI4BFH1bPGi+
-	 bAOBfga8qp63ZPa804xC7FDkaSiPQObqTP4C/LQlgigcL2CNeNV8oVf6yxKuvEqlqb
-	 tvusM7LxZemtg==
+	b=rKGFXrX5IScWLvIhJdMq2MyM6SZlZu+a64frc1CPQtfTD8epdfG9P0qTkxgqE5p9i
+	 xJ5eUrN02SWjwzvoy1um2g8OnyxaKnsSzlfDWvqB/JnMQsK4cb4dAVxlLKoFdlhMMR
+	 hp6/w1rSUpajDxyu04BgJfHD2/HDctLxm7hicLEl1cCvw5zR9PMakjFKg5Ul1S8xkH
+	 W9huzk+3xtZoifrMufrm7MKK5jPdCf4CB2MWtFOf5vJgv3095wNjP+07l8WvFYfsZ4
+	 qmGt8dxIS374wV8LpEkeVwYmAi1iHkjUiZwb/tLy07jWVNacUtxuTSP5pxrRntaKWm
+	 6w4RvXK7ycq+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -57,12 +57,12 @@ Cc: Ryo Takakura <ryotkkr98@gmail.com>,
 	rostedt@goodmis.org,
 	linux-pci@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 16/20] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t type
-Date: Thu,  3 Apr 2025 15:19:09 -0400
-Message-Id: <20250403191913.2681831-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 10/12] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t type
+Date: Thu,  3 Apr 2025 15:19:59 -0400
+Message-Id: <20250403192001.2682149-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191913.2681831-1-sashal@kernel.org>
-References: <20250403191913.2681831-1-sashal@kernel.org>
+In-Reply-To: <20250403192001.2682149-1-sashal@kernel.org>
+References: <20250403192001.2682149-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,7 +72,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.132
+X-stable-base: Linux 5.15.179
 Content-Transfer-Encoding: 8bit
 
 From: Ryo Takakura <ryotkkr98@gmail.com>
@@ -119,10 +119,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a1dd614bdc324..09995b6e73bcc 100644
+index 10a078ef4799d..1195c570599c0 100644
 --- a/drivers/pci/controller/vmd.c
 +++ b/drivers/pci/controller/vmd.c
-@@ -110,7 +110,7 @@ struct vmd_irq_list {
+@@ -108,7 +108,7 @@ struct vmd_irq_list {
  struct vmd_dev {
  	struct pci_dev		*dev;
  
@@ -131,7 +131,7 @@ index a1dd614bdc324..09995b6e73bcc 100644
  	void __iomem		*cfgbar;
  
  	int msix_count;
-@@ -387,7 +387,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+@@ -386,7 +386,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
  	if (!addr)
  		return -EFAULT;
  
@@ -140,7 +140,7 @@ index a1dd614bdc324..09995b6e73bcc 100644
  	switch (len) {
  	case 1:
  		*value = readb(addr);
-@@ -402,7 +402,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+@@ -401,7 +401,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
  		ret = -EINVAL;
  		break;
  	}
@@ -149,7 +149,7 @@ index a1dd614bdc324..09995b6e73bcc 100644
  	return ret;
  }
  
-@@ -422,7 +422,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+@@ -421,7 +421,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
  	if (!addr)
  		return -EFAULT;
  
@@ -158,7 +158,7 @@ index a1dd614bdc324..09995b6e73bcc 100644
  	switch (len) {
  	case 1:
  		writeb(value, addr);
-@@ -440,7 +440,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+@@ -439,7 +439,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
  		ret = -EINVAL;
  		break;
  	}
@@ -167,7 +167,7 @@ index a1dd614bdc324..09995b6e73bcc 100644
  	return ret;
  }
  
-@@ -958,7 +958,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+@@ -850,7 +850,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
  	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
  		vmd->first_vec = 1;
  
