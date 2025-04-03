@@ -1,116 +1,191 @@
-Return-Path: <linux-pci+bounces-25234-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25235-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39406A7A2A4
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 14:17:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF0EFA7A2C4
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 14:24:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 064B51664CC
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 12:16:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C019E3B152F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 12:23:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9A6D1C861F;
-	Thu,  3 Apr 2025 12:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5621424C664;
+	Thu,  3 Apr 2025 12:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilK/OMNw"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="b095BoVU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E181519A7;
-	Thu,  3 Apr 2025 12:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE9D21519A7;
+	Thu,  3 Apr 2025 12:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743682564; cv=none; b=RIbZDQk5vLAu94kweq4fxabRsavuWm7xWpIsQc4LmK1izIGZl/Cb29GvDxoPYZELwXu9EyBTI5yKRiWXuC3lnVPcv8UnbVokrJdlQXaUboxzBZgrupMrz3L+AMPUn3FL/7eiFslyxf+uW0HFHHVXImK4DEBCyj1cw/h1rM76j1o=
+	t=1743683005; cv=none; b=YKP/zJ1Ckd/8hxVHJrbylJwLIim+rEytck0bSgirzc5iQlzuiE2OPaegeItIPnDsSGSwVeHKf8zB49xKBSx0iBljjRg6/jiaNUlgUL83apCW6MlCm5ZmT/97wAxfbjbceIr4KZt/6XIkLT0XJZs8bZ/fECf6jj4FD5Tq35KXdss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743682564; c=relaxed/simple;
-	bh=BfsuHIkQOn+t5ea9pEtC10uYV5VcdqlyisbK1g6IxPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUUKzNlipP73J+l9iTq8e5cX0ZqQi4IlVuK+9Zq7iD3Jhk4uGsz83R85rr+vJkDeRwosx94yLPi23bySCve26EAyWOrezrXoiPN9My2uHx7vCia0hIwCZn74ua6fVIOgvIjdCk6ZQ1E9k17vagKJ9K7TYen90DNWYt/M6xXicFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilK/OMNw; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-227b650504fso7965915ad.0;
-        Thu, 03 Apr 2025 05:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743682562; x=1744287362; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kEq00/hkCJ6pJcCFQSkcNbWxF96iAwQsWcvrCaZX5hs=;
-        b=ilK/OMNwyLnUyFB3/Bx+wbQi8A0dcSJ6IlVOWaZtdLlwmRPMMSrugY7vFo9wr+zEqt
-         AV1s4UnwiZQWzAdfl6txdLbVw5A1EYTBTaSY6zCMLxiFe+QFToOdPnEdKcC1MUMDx+4J
-         e2lTJtWsHb9I6rNtoyE+IqO2sO1YJiJt3msAc9RdoA71WHKvBQ8sl1RFi6KALP5w6vmM
-         8tW6yS+BuWasXrX61/DJtcYmAubPWIEDCV5JPXybo4iUdjNf+zRr5o/eHQambSksXRPz
-         19rwhXTJSizUuj2Tq8urSAiwtmsGkCGTdbYStmteE+2yC+u4gNC/UVFFWBY7lA5dMqNP
-         syDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743682562; x=1744287362;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kEq00/hkCJ6pJcCFQSkcNbWxF96iAwQsWcvrCaZX5hs=;
-        b=UkvvH8LoTisEok1m0ejAtdGZAm9ue3gyYKj+7o4XnFw0qjnjQll/Xj4ott3dEPS9na
-         /jNpTYKS5B70achE6DIhhdVopJ4nk8Ekq4nqogiimTE/SncjeWOOw3uawN3y1RgJYSpE
-         QTA/kPnGOkUSPx6SABG0b4cN2NYuJO0OTvZ+l40/rvmYh74AlLuC78yizE7FQJcO5M8A
-         +b2/922d4oyv3fpQPRHUD7l9BwFfJ9OXlW3Vy7pzC+rDBR7SM2nd6/Yoq0gL/MWUEeKS
-         FfWGCbpp67HPtbl23lsQPtGM+hwQ2lby9+988dZ3WyUAMq+/lJLByBHjLjDWPpbZPXds
-         i25A==
-X-Forwarded-Encrypted: i=1; AJvYcCUeNcua6dPAvk8n692furxd5Y13M8xazmfOQpkc2pzP9YXSnPakiiMaMFArHmbrEXzfAV9nc9cNl1Cg@vger.kernel.org, AJvYcCW8m4xJZmu4Zdr7no3uRjLawDjqpId8KA2ri0ZoN4ArY+1KkGXi1m/DhrjpGtaGKDPJ1eYgoN68Icp0JT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF6KrPeOyVQNqUQLmlMmSA1T4P3zuF0FSOl56jh7tJ+hRMYflO
-	RFqFPoRbQXazt0S2ZB9/AdmyCd7AIA8R4XXSvxaC2+HiKYagr6mz
-X-Gm-Gg: ASbGnctHScTLpVmEJjPB0X+2uaWY+QHecOjWjd5UX4qvuTxjUBc7Qm6uxT/RXayLAtR
-	TVLeUWA9EdjJI2dHZZ9/ie15XXLk36kDehq/UZXJvC/KkjdYuecQkinDWN+fRUIew7pyuaOcsub
-	FQsb0MxnT7BrZHnq8svnNP82uL1ca02V3V0VhYnhv6Uoz1m34RNxrVnnZLMbMpuloJRhjvoZQ1O
-	Lx5yGxbqUBL+vgDRFIE9gPD+Sof1BFa7qVjadDW04ARsTao/K3ZkCjU+ymS46VQJDgZXYfZbnjO
-	OotajuK5s0DZHwdAkHZw1Bc2YHtg5DhKgBLthDoKhzDNKBm4vxs4QQre8g==
-X-Google-Smtp-Source: AGHT+IE8TQ2CkjdWRykcK18PBt0Nb6zozfADT+9c8nhqxCjyqv/foO4kP8r/o0vLYNme2mK7+YJdBw==
-X-Received: by 2002:a17:903:18c:b0:21f:768:cced with SMTP id d9443c01a7336-22977d7d5d9mr24742365ad.8.1743682562558;
-        Thu, 03 Apr 2025 05:16:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c385csm12791485ad.81.2025.04.03.05.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:16:02 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 3 Apr 2025 05:16:01 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Subject: Re: [PATCH 1/1] PCI: Restore assigned resources fully after release
-Message-ID: <c295d86d-fb5a-4379-b998-719f39dbb209@roeck-us.net>
-References: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1743683005; c=relaxed/simple;
+	bh=dTsk6jVV77kmc52ANl2APXx3BgqrXor8y0sjiAJh9Ec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PR9Djnb5Yxr2WBmDxXYGE/dtQ5aIeHCwJ9De6MDxNnUyoYwu+MYpreiZ/SUnfK2/vBCQapHi6a3a05B0NebPSzKDaX/am14ID011sTcX4IZG75Fkde4VEeHH/tDJneQ0zdT+ndpWSYQOChHz4M4c7EgeDYKNFVHYO6u4U6gMOjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=b095BoVU; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=jzTFYbRyxfLAxh1qRBREFMy7wKyLY9dTmew/M4yIJEo=;
+	b=b095BoVUCOumXO/TaLxXkY1zpZ2ZYpyuOa+tDwCKzryNAA8DfXlLJboOL/OM6F
+	qZoWQ4ZZL3AyxwLLNTkhtWhjPNdOLDRVys3xWJ0F5zXEc+mHr75JVAArfug504K4
+	+UH0M3RRH1rJDOtB9eZU4qZkceA1XC2/Hp5rgoh6SK3SE=
+Received: from [192.168.60.52] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCnX6dvfe5nWSc0Dw--.58961S2;
+	Thu, 03 Apr 2025 20:22:09 +0800 (CST)
+Message-ID: <a0483c8d-3cd4-4da2-aca5-586379870e3a@163.com>
+Date: Thu, 3 Apr 2025 20:22:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-2-18255117159@163.com>
+ <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
+ <6075b776-d2be-49d3-8321-e6af66781709@163.com>
+ <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+X-CM-TRANSID:_____wCnX6dvfe5nWSc0Dw--.58961S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXw13XF48Kr17Kryftw1kKrg_yoW5uFyxpr
+	yUC3WayrWkJr17tw1Iqa4jgwnFqF92yayq934UG3W8JFyvyF1xGrWYkr129FyfZws5GF1U
+	X34j9as3GFsIyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UL4SwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh4ko2fufCMlEQAAsB
 
-On Thu, Apr 03, 2025 at 12:31:37PM +0300, Ilpo Järvinen wrote:
-> PCI resource fitting code in __assign_resources_sorted() runs in
-> multiple steps. A resource that was successfully assigned may have to
-> be released before the next step attempts assignment again. The
-> assign+release cycle is destructive to a start-aligned struct resource
-> (bridge window or IOV resource) because the start field is overwritten
-> with the real address when the resource got assigned.
+
+
+On 2025/4/3 17:10, Ilpo JÃ¤rvinen wrote:
+>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>> index 2e9cf26a9ee9..f705b8bd3084 100644
+>>>> --- a/drivers/pci/pci.h
+>>>> +++ b/drivers/pci/pci.h
+>>>> @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>>>>    bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>>>>    bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>>>>    +/* Standard Capability finder */
+>>>> +/**
+>>>> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+>>>> + * @read_cfg: Function pointer for reading PCI config space
+>>>> + * @start: Starting position to begin search
+>>>> + * @cap: Capability ID to find
+>>>> + * @args: Arguments to pass to read_cfg function
+>>>> + *
+>>>> + * Iterates through the capability list in PCI config space to find
+>>>> + * the specified capability. Implements TTL (time-to-live) protection
+>>>> + * against infinite loops.
+>>>> + *
+>>>> + * Returns: Position of the capability if found, 0 otherwise.
+>>>> + */
+>>>> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
+>>>> \
+>>>> +({									\
+>>>> +	u8 __pos = (start);						\
+>>>> +	int __ttl = PCI_FIND_CAP_TTL;					\
+>>>> +	u16 __ent;							\
+>>>> +	u8 __found_pos = 0;						\
+>>>> +	u8 __id;							\
+>>>> +									\
+>>>> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+>>>> +									\
+>>>> +	while (__ttl--) {						\
+>>>> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+>>>> +			break;						\
+>>>> +		__pos = ALIGN_DOWN(__pos, 4);				\
+>>>> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+>>>> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+>>>> +		if (__id == 0xff)					\
+>>>> +			break;						\
+>>>> +		if (__id == (cap)) {					\
+>>>> +			__found_pos = __pos;				\
+>>>> +			break;						\
+>>>> +		}							\
+>>>> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+>>>
+>>> Could you please separate the coding style cleanups into own patch that
+>>> is before the actual move patch. IMO, all those cleanups can be in the
+>>> same patch.
+>>>
+>>
+>> Hi Ilpo,
+>>
+>> Thanks your for reply. I don't understand. Is it like this?
 > 
-> Properly restore the resource after releasing it. The start, end, and
-> flags fields must be stored into the related struct pci_dev_resource in
-> order to be able to restore the resource to its original state.
+> Add a patch before the first patch which does only the cleanups to
+> __pci_find_next_cap_ttl(). The patch that creates PCI_FIND_NEXT_CAP_TTL()
+> and converts its PCI core users (most of the patches 1&2) is to be based
+> on top of that cleanup patch.
 > 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Hi Ilpo,
 
-Guenter
+Thank you so much for your patience in explaining it to me.
+
+>> #define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+>> ({									\
+>> 	int __ttl = PCI_FIND_CAP_TTL;					\
+>> 	u8 __id, __found_pos = 0;					\
+>> 	u8 __pos = (start);						\
+>> 	u16 __ent;							\
+>> 									\
+>> 	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+>> 									\
+>> 	while (__ttl--) {						\
+>> 		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+>> 			break;						\
+>> 									\
+>> 		__pos = ALIGN_DOWN(__pos, 4);				\
+>> 		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+>> 									\
+>> 		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+>> 		if (__id == 0xff)					\
+>> 			break;						\
+>> 									\
+>> 		if (__id == (cap)) {					\
+>> 			__found_pos = __pos;				\
+>> 			break;						\
+>> 		}							\
+>> 									\
+>> 		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+>> 	}								\
+>> 	__found_pos;							\
+>> })
+>>
+>>> You also need to add #includes for the defines you now started to use.
+>>>
+>>
+>> Is that what you mean?
+>>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/align.h>
+>> +#include <uapi/linux/pci_regs.h>
+> 
+> Almost, including pci_regs.h is not strictly necessary as linux/pci.h will
+> always pull that one in (not that it would hurt).
+> 
+> Also, sort the includes alphabetically.
+> 
+
+OKï¼Œwill change.
+
+Best regards,
+Hans
+
 
