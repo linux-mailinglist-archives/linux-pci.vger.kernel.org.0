@@ -1,191 +1,226 @@
-Return-Path: <linux-pci+bounces-25264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91414A7B09C
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 23:21:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1107BA7B198
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 23:45:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93097175178
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 21:15:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6987D1884F74
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 21:45:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF477205E35;
-	Thu,  3 Apr 2025 20:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045ED74059;
+	Thu,  3 Apr 2025 21:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gggvwUVG"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NrQbevuy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013058.outbound.protection.outlook.com [40.107.162.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564951F4626
-	for <linux-pci@vger.kernel.org>; Thu,  3 Apr 2025 20:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713557; cv=none; b=TqEt4Wk4yqNpzE9wKWMAYeW60W0dYuV1KNlGWuuKB0RkBVl5AySfWEgVpY3d/TnDIygfdFln8/9FLBi2tc9HtzeibLwpifAi9IMNAgpYfwyswyjKtM7JiXD4yxNMT5114YpDNPYULP+AfHRlYMSvevJN9G5xqCWkqWLTnn8Bo+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713557; c=relaxed/simple;
-	bh=tUE21kp5Y2Ha6PPB2grCo0cVpZSG6e2ekaq4gDZt+HQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=laqlKqdeZRSbznYGDflFS+ctaCbEkjw7ArF+Aq3jQAhpNbZ2qLOIBb1duIz6XEveP8tOKUbx5icx1dAeTwoJY5Ok8cLwDw96E92zo9tl9O1QINu222sEq9rZfzzRfq0+lmuG5j+eVzFQ3q9caaIaEOjpi2gvnkAde5HEglTh7vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gggvwUVG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533JhlBF019460
-	for <linux-pci@vger.kernel.org>; Thu, 3 Apr 2025 20:52:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+of49W00ZvZSV6VdrBbed6Uq20VFhTrt4WWUZuWJagI=; b=gggvwUVGrfFp+OAJ
-	9TlQVozwtUF30ZSnxqe7wG7NU1Yj2qoxmtKxVyk21RpgBtLhN2LZnr6dB+ft6Y4e
-	aDnq/uGUYzwHG6gWtaAAMLm2RB0A4pIyqMceXmOkURRlHSzYVozBPfEbfTuT6+8+
-	bwpF+B1B6Jbf1Nl/0FWWshW+ZnoEZpzafvfUC/f1rxD4vxCibI26SqGb8FxIPlYM
-	t4Gh409WmUVIllVPdnOsODL45Yj1HfGi1OrZuc2s9aJgHoAarIIkQ2nZVgZCTkH+
-	P6QrVKqBS/UftkBq1sVyjbLOjmBnbA3PiQ0BxZw3Q8DxBdKbbmdJWALHJb+Db2o4
-	wGuyDQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sc2yu8kn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 03 Apr 2025 20:52:33 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5ad42d6bcso33124285a.2
-        for <linux-pci@vger.kernel.org>; Thu, 03 Apr 2025 13:52:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743713553; x=1744318353;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+of49W00ZvZSV6VdrBbed6Uq20VFhTrt4WWUZuWJagI=;
-        b=ClWrhiwBUKreZVBwJzQWVzVIzhfRH0yOf6nurC2/HHnKrdeNrGWkgZxzu81F8/+VWz
-         3rTbwv0ev72N6z/jQKpeHhuAvvIHvizmXPRkDehd0TjZca6FX4BwP9a98NbM4Xfr91l4
-         tDovfqFQiWnwG4mztQ4pr21DJ35CTQbwv1oGvmKnUle6Uf1S+73FgIx97sX+G8MMME6N
-         yZODotmqWJXVvvomN52D4ECAzbURJeFkD0DAorKxUUPa2rm+i4Q2dYa8lrfxeLTzlhXQ
-         ZU87Bk8hp+hjJslJZGHPWoJivDr2Vfi24EqiA/vrITQjkTzPZjWu0IW6xpawm69drPlP
-         vuiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh7v3PPESp1FRQFkYI2azFqXCzLejkv/iJwPXLNKNW1H/+B5bEdIVwZp8lnZTIX1Zz1YcO+fI5vUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYeg9f8WnuzMBnYsBLMK4mNieHUEuAWkZuOYdmacwJQQHa/FD7
-	S+JdSGfFMfizyLsdOp2POm6ZFECGVVGfaoO8P1AW2uwmBwhcbWppdhRS2vZHy5VL2LfFJqqFDV2
-	eKW+xJI5vxMA8Ftw4pUVao3XtM1WOUYH8PTHOrxvLI/nSMiUdDDcfWjOMSb4=
-X-Gm-Gg: ASbGnctZTaidzPqOfyhOeKlYk6eRf9nqyJ2xozGvAx2hEN+y1Uwxk8rWtKhaR9J3SEU
-	oRtRddqg9LsU5ddZI1X1ksxJsOIvzJ7yzyek21qO/op3RZK29cLUV4vB3Jb4uScn3hA3dQ0EqSf
-	Cex7plZuuDH3gL7rLuaV4MC/FV4Du/9s5MFa4cngTSSkVOnl1VANZAZxQ16S9TQ89k7ZPeTf2p5
-	1fxR1kN2MCqhVF2OSyBKZ2MZJisGh09DgJ6xPCCNbnUoJ5gupEHSOIdqKEnWH3G84OmnToQCjJp
-	3r6q1z5VxsJESANNDGGI6edSXVLf39PDCPpT5IOwBkAM+PP7sXyqhbIePhGdAKKTD79JZw==
-X-Received: by 2002:a05:620a:d86:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c774d52b1fmr37586185a.7.1743713552880;
-        Thu, 03 Apr 2025 13:52:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFW9VVgHZdVpymWLYQ76D50xpMzwHkQtShiUWmBOzkY0o7BLLMB1tDc8bRnl4Fm8Wny63ZmKw==
-X-Received: by 2002:a05:620a:d86:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c774d52b1fmr37584485a.7.1743713552456;
-        Thu, 03 Apr 2025 13:52:32 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c018aeadsm144626866b.153.2025.04.03.13.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 13:52:31 -0700 (PDT)
-Message-ID: <c1f145b7-501d-4d73-a5bc-a1844e17a289@oss.qualcomm.com>
-Date: Thu, 3 Apr 2025 22:52:28 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5896C2E62BB
+	for <linux-pci@vger.kernel.org>; Thu,  3 Apr 2025 21:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743716739; cv=fail; b=c0b82QVBJrb0C8NKXhg1coL7hn/HA59p1U9DoNASfDlUbkUSG5Z97WiyafpnRZt+GCWvIVZl/Kw/BfpLWaIYTEFWePEamWJB3/A6sgpHZopNfHIJS8J4PJsKd11J3yFgs2tT6Z+8Cp/NHPkKczDI40RxNHSnu9KYSSknm6xzbb4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743716739; c=relaxed/simple;
+	bh=B26nA6s512CsgMWFIAv9UcNJrEjJ4EN3fyMR7epkRnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sOrPX7qR2vvZ2gLEFj3ZdBSELWxhaYGcYrp548UNgT5D/w1OyEnUgwY5TX6B+cNyPzpeEEmrrY2VBVMw/c6wQBrSe6E1u6ul6dyIitC9myM+aUs2Z088YAaajLmEh/O57xVby6g5PkQ+5XBBcio4g3q8kVS8XRh+rxZfNNLUczQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NrQbevuy; arc=fail smtp.client-ip=40.107.162.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OUOzio5/HVLbZDrLhvFFDOUKq5RoDzz/D48S6fWZaUF87yXhr8GvrFYPSlOh5P8swXUy90IsUzz2wAzwowqIi79LymeWk75QSZ9FvPHjDaWI6VqdXxbBZu63IqSW2zaRICqGglydYQbbiOn1rpLrEJEggTbVjlOwWNU2EGhHLOFshuiEXtZPY5oqEXwNU2gENf24JDN52b7E+7Mmd8HOVTioYCJ8v0kQmHTU2NxKJMOdj/DpGylTS4EBaS1qMqGSMxHixnKaR/bx1GCzAKArcZfx21no9mYDDVLNx3jtxkOLm8Kx1Bg7sZXW25aUQtg7vfPpzqsDLQzkd6syhETf5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B26nA6s512CsgMWFIAv9UcNJrEjJ4EN3fyMR7epkRnA=;
+ b=V5JcpIJCwq1RCF5YD8JoK6JzM5vUp/UHX3mfp4ufL3hPnMPIJUbLb3BcBGbrG2APA0Uz3qt2vycxV5hVQdh9iyNEn97gjdOZ3zmz+EmLlqSTLAAxL+1WYI5LFpEPzua0GYOoYCVtzjRziMCRcA5dD069qXr/DmZdtfenZQ/6SW69sNQ191dXsbdukFkksTbTzFMQABc05usvceW8RzJygCu6qyRENu9J0kFtCy/Nv3h879MXV160fWxf88UYbM71IJihRwAnZx0a1im2EnfihTozOS0VOH9nLdfZHjg6zarZ0jurrkcYbeMS3nqSCzEh0N/paMy7eoPtgQAAIxiwwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B26nA6s512CsgMWFIAv9UcNJrEjJ4EN3fyMR7epkRnA=;
+ b=NrQbevuyTJ9lvEzqSTTnBJcJVdXQq2ZcANvtgEhNyYYdtlDWvqHuYKvSriDepUf4DLNC523puLZ4CImFx4WG+vJmTekIn8gwKgvzSVJRxJufoR6r8graLrMUpCmd0owu0Pgwws/OtfIx717xpg4P2SqOdiBBHGuciAACm1sQl2zrPNd2LzUQDIHOJnSPjGOgu5+PFGhuwLdFW7NOP7L0MckiaHimU46JAIEIg02ZfCg633EVah4EnwOTY6WhAtaafO9Qp64bs6UymelNZY2BcR4Ef9GXDP5CHRcRkMzXWDAJKz3UQ3lJYsmvFGxSHNcGcYH0/q0tLSXZBR4Ojj9ePQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7930.eurprd04.prod.outlook.com (2603:10a6:10:1ea::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Thu, 3 Apr
+ 2025 21:45:34 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Thu, 3 Apr 2025
+ 21:45:34 +0000
+Date: Thu, 3 Apr 2025 17:45:26 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: bhelgaas@google.com, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	linux-pci@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] misc: pci_endpoint_test: Defer IRQ allocation until
+ ioctl(PCITEST_SET_IRQTYPE)
+Message-ID: <Z+8BdkOja+WyNst6@lizhi-Precision-Tower-5810>
+References: <20250402085659.4033434-2-cassel@kernel.org>
+ <Z+2XjBd1wQezRlNv@lizhi-Precision-Tower-5810>
+ <1AB85045-9BBE-47B8-9643-487D82E28877@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1AB85045-9BBE-47B8-9643-487D82E28877@kernel.org>
+X-ClientProxiedBy: PH0PR07CA0054.namprd07.prod.outlook.com
+ (2603:10b6:510:e::29) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
- <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
- <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
- <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
- <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
- <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
- <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
- <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
- <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
- <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
- <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=AMoviu7M c=1 sm=1 tr=0 ts=67eef511 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=8zO8dPC1Pt-TAjq7ZcgA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: 1hVqXSRQyY43wjMFHE0xud9NkqvLxbEc
-X-Proofpoint-ORIG-GUID: 1hVqXSRQyY43wjMFHE0xud9NkqvLxbEc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
- clxscore=1015 spamscore=0 phishscore=0 mlxlogscore=999 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030110
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7930:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0d0f2e9-2fee-4734-efc0-08dd72f8dcfc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8IPiwCVS/UeTumLtlThjYKB+Tnj7xpVB7SdLJFK/sZYvbzHDlcq4erMvOdGr?=
+ =?us-ascii?Q?XfLhXvRuBJpUuk0MtzEG/MaFVUkraLJcY/0rjvqpjMJkVGfe2k+xsgBt9Nbv?=
+ =?us-ascii?Q?IRPtfFOEkztZN0pu+u0wG0VMuYVdUA8fqx2HK3lO9RMTPB9T+3O/DNxVrfQH?=
+ =?us-ascii?Q?lq3ia1xNxb0foacQ7vDatgAm5p7FpAV7CRaUP1HHWpKmZAuKPU9jfL6cSEnv?=
+ =?us-ascii?Q?NiBsI7JC4F5/0aEfA8zfc/aZFs36Zo1uu1lhpZXo4TTA13xXurTYB+4pkNoE?=
+ =?us-ascii?Q?guJSuRAl6HJjTADuUo0FXU31qsLkRw9HyCDwQ99Ties2AzgbpVUsT30sN3Z0?=
+ =?us-ascii?Q?LAY9h9OBiXEl2MCJr6FEFpuCEQUpokewuxyAVAqWswI6j3r6fM/lokpVMK8N?=
+ =?us-ascii?Q?wI9NqIRtFBShxfEW0vqEFYLHlLFNzjtrttHcbqW0wc8v77MDEoMciJeZ/ETI?=
+ =?us-ascii?Q?l6M06xKf3yUNi3DMRijTD3fnjPExPjSmt/eG2kWDfsN9uCfHuA7RaeNnz6Ki?=
+ =?us-ascii?Q?mMO3wYFohmQR/BAzqWnbC2Cad6LhY/6tYQSVxxCqXZs3xTANhTN3jdtrJr9w?=
+ =?us-ascii?Q?yimnwngit8SrEWfe3T+tCGV1oMy/FTpse/vNFbETp6M8at6iyeCyvX/E3eBY?=
+ =?us-ascii?Q?OtEPf2klNgzpYRvz5IA1vyihLsUJG/c1pXiPJ2FsUDXFRGk/kDeZ/0FaOyqY?=
+ =?us-ascii?Q?ZK/5m50Jw/W1zsl1XcNz1fPMzUsZrhk1vy38MYNEOctpE6QeffvZZDJREw2z?=
+ =?us-ascii?Q?8/+7ItHrEWBV3moOB3XlxLiPQez56Js0WXtK3hfk8BC+bGG7HhIiKXPTjF8C?=
+ =?us-ascii?Q?jNbDNo9S5jvXkiKJTWsYg2jCIIvSoxLlERdiuizWTAOjtlRXk+uHF21aCLQz?=
+ =?us-ascii?Q?grbQvlxn39T4DS2R4O73wBOgQ9TuOloWCY1Pjw/IOio9PyCzsN69dS3X2VXl?=
+ =?us-ascii?Q?Jxl6VvZZJgsTwOawNQbhyHS5hzqFGPq6I7F1iRhDx7QkZ7eMT3KUzQPN4ggm?=
+ =?us-ascii?Q?x7xNjOrrxz2uKY1r8mUQoLmJbGclOgTPL03p5LIXn5fUIixbVb9bfMPVJvut?=
+ =?us-ascii?Q?7hKCRuYiUi+lpdmVfIACTzRX/pf1AzE2JQPd6Wkaf2zSX4d+Wr5RU6dVW/wf?=
+ =?us-ascii?Q?5s74In6jrRJVjshVH9WXoPDnkZDkw4O3tkp1DwGqYacy9byB4RXrYzPk857M?=
+ =?us-ascii?Q?lxOxrJBY+UEX149j9b/zPUhhdA39aJ2ZJ/ostpq/ATjuWkotgf6IGpsDZsYU?=
+ =?us-ascii?Q?wtLejAqvqPHX7ST+L5LwTzmPZZfYV4N98o3MJ4tRktveEUFO46TSRv/DsHdG?=
+ =?us-ascii?Q?a2sUZBmJKtjZvOIal3FIJvhm4E5pdBUBS9cv8CncbQm1kJEDoJTB4vdO7a5n?=
+ =?us-ascii?Q?SLurUhuihl8CFnL7yIlRRPE2sX2tdPkCbqAWZmWMbLxXbJp5gQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SS151Nypf+vVDoY8UD91Qx+Qw/JxbqeXH+UKn6RSN6z8GxOOwasWfv3Fbazs?=
+ =?us-ascii?Q?mKusgpTPrbfpe2ciSlTVTxvYBbhd+6iwMd2/a7jlw70EyxMALF3bicA2zOoT?=
+ =?us-ascii?Q?j9FDOwBJ7zytdmbMcaupjkb5g5LnW7F5Ok+VN6CATIBisnEZ2Z0rRsRyJXDf?=
+ =?us-ascii?Q?KS4elN0z+OkT6F0tJhYnPQIi3qY4iZjbhgg40CTlyOxXoe/70y+LxNR0k558?=
+ =?us-ascii?Q?6x1g/kI+UMob7f25iWQ6vhx/KuB7ZEOjjX3Uj1J7y6AHbN8ReSPmPWkTg+Zj?=
+ =?us-ascii?Q?vFZIS8amDVr+iYwomwHAPlVocOCqXhpHd3+QsMIWlcKhLhFl5/yGCAtHyB9I?=
+ =?us-ascii?Q?8BW5M309VY16Pz2S92LHpx5F+gCgAdG/XkBgcpMNUlTxukynP7D3TX1vkjoL?=
+ =?us-ascii?Q?WPZBzy7q3SZ8dp22TibWe4ePEkyW+nBTsTUNo/Qr3Pr0xC2+XpnMTgTjMS0f?=
+ =?us-ascii?Q?XiYHOn1hitO+z+FLEGEAsZT5cGQKFURdD/rZbypWT+r2ugJ7lHEe6a0+hxuH?=
+ =?us-ascii?Q?3LxYlsAfjE8s5IFQjmJx5X2fHlRY9gCs3SuMJmqT56lnlQeKYYascdK7S0rk?=
+ =?us-ascii?Q?TKOSxOM0c1syvzguyE7reLvjRZ7ZDmUUTQYz6mmm+ptil9VGt4Q98E48pqvb?=
+ =?us-ascii?Q?WEp9ZxOpGs9vubdPpKg4BaRyGPLqWNAhyoFkQOAE0VMuQJgubIl/P6Lms9lZ?=
+ =?us-ascii?Q?2SeirJ69QcNhyxU7ANehovOz7iEIPH5xkB/4CwKiXvg7J7Mx9+M/0HJvORGr?=
+ =?us-ascii?Q?gXmns60U1A/oB7sSb8clZ9iHfP9lrv05zzqueOn5TVoTw+uTMemEewd/VZKm?=
+ =?us-ascii?Q?BAcB2mHXHuO8sDW8fZt40aaOsuLc+zmauNxtZJFeZUPCJqsJyVobNIOa9E9X?=
+ =?us-ascii?Q?Hd6VMmcQIubjVQz33g8PLHqpgqwfDDGkRcXfBPl/fTdGOp0Z6ySRPt3R9qWJ?=
+ =?us-ascii?Q?+1Kzymz4+CExP+UQhBEFRQhlwiNKr84u2nfRWyZB4MY27wFXYu8AfhHD9fH7?=
+ =?us-ascii?Q?HxGSNd4nJ2vNjJLg0IZHLK48alQ02Jwu6f8sZLAKHkHKoS8aq+97YFmjZRyu?=
+ =?us-ascii?Q?kcrjhbBe9VeJrVWEzrzdaenFeD7J3jUPnXvJVkzwZ3UOSQ6EPYDJ7wme1DvB?=
+ =?us-ascii?Q?Iad8AMJl5yCsWX/wNCuiZlc1yvhg+TUnz2j7wySyfAU1EWHxVJKyy445MjYe?=
+ =?us-ascii?Q?gjhVXELcNTyCqJQinCa1kdHrFaFMrmbV1c7MkAg6qUunPy2gGwny4kIv+Tvx?=
+ =?us-ascii?Q?7MNOwrPgsLwXJjiTYluK0RqZ5Rw1AWAnf53Un0IM+N7y9Z4SSSUPDm9hH+yy?=
+ =?us-ascii?Q?m7JCLw7kQMHSrAlLqe0BIDlYT5EXDV4Su6MhDsiXrBt/kK/5hdjKdyrf/If+?=
+ =?us-ascii?Q?CFuWZeaQuSpqpse0p7jCzTOzRZnsmsKZVJBZDY4e4/MmPYjzT5JOUS30z2zt?=
+ =?us-ascii?Q?MGyuPkanGoqyHdMLQbyJq+rdGQfjfSzR6VHJj5A44aHp7dvWpTxeUtHuqJDX?=
+ =?us-ascii?Q?11w7HCyyy5TOTtE86cVr0sqgxyVyV2BAsJZ7TLBFRPRiCDaz/398QjFoAOww?=
+ =?us-ascii?Q?vC0k+PFauyoY3tBqUqdxnZ5evUkSo2M/oZybvrFJ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0d0f2e9-2fee-4734-efc0-08dd72f8dcfc
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 21:45:34.4429
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WUMo2TLQkvgTCsJtNfLQRlfYvr3rsO1qGNzU2d2lDavGRO3bAmHB7qZYUcoRfo1eUKtEUOhXKS36Ui5h0BKRAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7930
 
-On 4/2/25 8:02 AM, Manivannan Sadhasivam wrote:
-> On Sat, Mar 29, 2025 at 12:42:02PM +0100, Konrad Dybcio wrote:
->> On 3/29/25 10:39 AM, Manivannan Sadhasivam wrote:
->>> On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
->>>> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
->>>>> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
->>>>>> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
->>>>>>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
+On Thu, Apr 03, 2025 at 12:44:28AM +0200, Niklas Cassel wrote:
+>
+>
+> On 2 April 2025 22:01:16 CEST, Frank Li <Frank.li@nxp.com> wrote:
+> >On Wed, Apr 02, 2025 at 10:57:00AM +0200, Niklas Cassel wrote:
+> >> Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
+> >> and 'no_msi'") changed so that the default IRQ vector requested by
+> >> pci_endpoint_test_probe() was no longer the module param 'irq_type',
+> >> but instead test->irq_type. test->irq_type is by default
+> >> IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE)).
+> >>
+> >> However, the commit also changed so that after initializing test->irq_type
+> >> to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type, if
+> >> the PCI device and vendor ID provides driver_data.
+> >>
+> >> This causes a regression for PCI device and vendor IDs that do not provide
+> >> driver_data, and the driver now fails to probe on such platforms.
+> >>
+> >> Considering that the pci endpoint selftests and the old pcitest always
+> >> call ioctl(PCITEST_SET_IRQTYPE)
+> >
+> >Maybe my pcitest is too old. "pcitest -r" have not call ioctl(PCITEST_SET_IRQTYPE).
+> >I need run "pcitest -i 1" firstly. It'd better remove pcitest information
+> >because pcitest already was removed from git tree. and now pcitest always
+> >show NOT OKAY.
+>
+> If you are on an old version, the return value from the ioctls have been inverted by Mani:
+>
+> https://github.com/torvalds/linux/commit/f26d37ee9bda938e968d0e11ba1f8f1588b2a135
+>
+> But you should use the pci endpoint selftest, or the pcitest.sh shell script.
+>
+> Both the pci endpoint selftest and the pcitest.sh shell script always do ioctl(PCITEST_SET_IRQTYPE) before doing a read/write/copy test.
+>
+> Like you said, pcitest and the matching pcitest.sh shell script have been removed, so I suggest using the selftest.
+>
+>
+> >
+> >> before performing any test that requires
+> >> IRQs, simply remove the allocation of IRQs in pci_endpoint_test_probe(),
+> >> and defer it until ioctl(PCITEST_SET_IRQTYPE) has been called.
+> >>
+> >> A positive side effect of this is that even if the endpoint controller has
+> >> issues with IRQs, the user can do still do all the tests/ioctls() that do
+> >> not require working IRQs, e.g. PCITEST_BAR and PCITEST_BARS.
+> >>
+> >> This also means that we can remove the now unused irq_type from
+> >> driver_data. The irq_type will always be the one configured by the user
+> >> using ioctl(PCITEST_SET_IRQTYPE). (A user that does not know, or care
+> >> which irq_type that is used, can use PCITEST_IRQ_TYPE_AUTO. This has
+> >> superseded the need for a default irq_type in driver_data.)
+> >
+> >But you remove "irq_type" at driver_data, does it means PCITEST_IRQ_TYPE_AUTO
+> >will not be supported?
+>
+> It is supported by the selftest.
+> It is not supported by pcitest since it has been removed from the tree.
+>
+> driver_data was just specifying the default IRQ type, but that IRQ type was always overriden using ioctl(PCITEST_SET_IRQTYPE) before a read/write/copy/test by the pcitest.sh shell script and the selftest, so the IRQ type in driver_data was quite pointless.
 
-[...]
+Okay,
 
->> Ohh, I didn't think about that - and I can only think about solutions that are
->> rather janky.. with perhaps the least janky one being changing the else case I
->> proposed above into:
->>
->> else if (speed >= PCIE_SPEED_32_0GT && eq_presets_Ngts[speed - PCIE_SPEED_16_0GT][0] != PCI_EQ_RESV) {
-> 
-> s/PCIE_SPEED_16_0GT/PCIE_SPEED_32_0GT
-> 
->> 	...
-> 
-> So this I read as: Oh, your controller supports 32 GT/s and you firmware also
-> wanted to apply the custom preset offsets, but sorry we didn't do it because we
-> don't know if it would work or not. So please let us know so that we can work
-> with you test it and then finally we can apply the presets.
+Reviewed-and-tested-by: Frank Li <Frank.Li@nxp.com>
 
-Good, because that was exactly what I had in mind :)
-
->>>>> I'm not forseeing any issue in this part of the code to support higher GEN
->>>>> speeds though.
->>>>
->>>> I would hope so as well, but both not programming and misprogramming are
->>>> equally hard to detect
->>>>
->>>
->>> I don't disagree. I wanted to have it since there is no sensible way of warning
->>> users that this part of the code needs to be updated in the future.
->>
->> I understand, however I'm worried that the programming sequence or register
->> may change for higher speeds in a way that would be incompatible with what
->> we assume here
->>
-> 
-> Honestly, I don't know why you are having this opinion. This piece of code is
-> not in Qcom driver and the registers are the same for 8 GT/s, 16 GT/s as per the
-> PCIe spec. So the hardware programming sequence and other arguments doesn't
-> apply here (atleast to me).
-
-I'm not familiar with the spec, but if you think it's a good idea to extend
-the sequence for 32+ GT/s, I won't object anymore
-
-Konrad
+>
+>
+> Kind regards,
+> Niklas
 
