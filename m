@@ -1,101 +1,118 @@
-Return-Path: <linux-pci+bounces-25217-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25218-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CE32A79D36
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:43:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CA98A79D4E
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 09:46:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF3AD1897434
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:43:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B45E61897B9E
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E86C241670;
-	Thu,  3 Apr 2025 07:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C59892417EC;
+	Thu,  3 Apr 2025 07:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvNMq/fP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B7F1CD1E1;
-	Thu,  3 Apr 2025 07:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E490E241684;
+	Thu,  3 Apr 2025 07:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743666221; cv=none; b=XLL2oEtIBXnq1mB5X8G5Wgoxh+VTqp/AHyKY5xYZe3KrLaEQ6ECqCeAbqvNCPfSIgXqFB/oro95VMWW1NfpvIJe7NjFlYTzPtS4kwZu6F7pJ4jSrGdz+zsp4ajjx5VtNJt3AxzH7fNVO8YOfXz38l2cwBTcsBO/BK2+HA3Yp/OU=
+	t=1743666333; cv=none; b=JoJCA3t0Di878TXJ74BeA5+xHiI0UmA+O8baxzo1uHAgNAFoozzTQgrD4VdDdqVvh0lA9ksHFNAA3Vv0H8e83rvgQlIoIu96xzwNzftxmJbMcBLjqpJg0kmFjGMUNjcG6kDCdaYPdo9nTRSWhBRfSEyt5fYo/2p9HoDQXoZLH7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743666221; c=relaxed/simple;
-	bh=WD1TwJfSnJZyF+/epWcbS06+blHm8ZwXsxzo9muDIWg=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=gw7Jr6IsOSxueogAk3QrO9n3TZeTTACFljHVKtOO+Af3mtzgAOiL5B5oLojn9CJyibw+zjy39uQcKmPDjmOtMkkzRkVlh9Ipg2ygZ+mzFXfjwBF9CYdVcob9w1JeUVMsfug8+3ou1EaLo7uFfWz9DUMYBEe52GjCbs6bDsgKOTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZStyY3n7Wz4xfxL;
-	Thu,  3 Apr 2025 15:43:33 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 5337hNMG078468;
-	Thu, 3 Apr 2025 15:43:23 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 3 Apr 2025 15:43:26 +0800 (CST)
-Date: Thu, 3 Apr 2025 15:43:26 +0800 (CST)
-X-Zmail-TransId: 2afb67ee3c1effffffffc6e-36053
-X-Mailer: Zmail v1.0
-Message-ID: <20250403154326411S4luMrK8A5RXovincATzF@zte.com.cn>
+	s=arc-20240116; t=1743666333; c=relaxed/simple;
+	bh=osvwpmSaeCnsa2oIl3mVNrpD251AR8ZQaiVxUgCaMak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnut3S9rinZxHaZYgFcL8Bs+DG8f7qQlT1HWtZAZw4GhZ34h4AUvoJ/FThVkOadsyDHoKLg/pZg1WSlZZjKwwDZ+QtB660TX2djFkOb9E/YH9q7KF+m4QYJN71uWb/LBqLI+xEniq4lJiQ+wLsPnUoG0hoOKNekkFx86Rh2BG0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZvNMq/fP; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743666329; x=1775202329;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=osvwpmSaeCnsa2oIl3mVNrpD251AR8ZQaiVxUgCaMak=;
+  b=ZvNMq/fPyPRwhsjWubaE6PiPvgOItSPS9c0uTg/Q+qs0uJbWpbeBPuCq
+   J/5LGm+IjBRy1ZNJh54rx6DNugU9KsW0tsugQfo3Gr2BRjSK5AjZZVV8i
+   jvcWf/Qeoru6twBF7RsHV4GhN38odxApEJ4D1zG5NDnvCr02bgBxhUeXX
+   VhQIhKyrn5SCGCiE5M+uBXSN4FqOaePyZoWeu//KTdTBAqKkY+cjlKkII
+   jXvKSao7MysRCoadz8O3/LA9lsKFdpB89M/5sgjP00iun6ooi65Nd/tpu
+   rpvpiretoD+TeRrS54KP/xOP9M1LZCWLKo5uwIMG5uBOKoajFAMhnC7kV
+   g==;
+X-CSE-ConnectionGUID: 4Uph/TVXTfm7bgyHXy026Q==
+X-CSE-MsgGUID: W+6VGDN9SwCRPJ5w6iJZsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48721624"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="48721624"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 00:45:28 -0700
+X-CSE-ConnectionGUID: c0HY7SxsRnyopPxLmYOGkw==
+X-CSE-MsgGUID: h+84VRRCSkCsIdZIPSZQSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="164159449"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by orviesa001.jf.intel.com with ESMTP; 03 Apr 2025 00:45:26 -0700
+From: Raag Jadav <raag.jadav@intel.com>
+To: rafael@kernel.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	lukas.wunner@intel.com,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] PCI/AER: Avoid power state transition during system suspend
+Date: Thu,  3 Apr 2025 13:14:25 +0530
+Message-Id: <20250403074425.1181053-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <shawn.lin@rock-chips.com>
-Cc: <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <zhang.enpei@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBkcml2ZXJzOiBwY2k6IGNvbnRyb2xsZXI6IHBjaWUtcm9ja2NoaXA6IFVzZSBkZXZfZXJyX3Byb2JlKCk=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 5337hNMG078468
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EE3C25.001/4ZStyY3n7Wz4xfxL
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Zhang Enpei <zhang.enpei@zte.com.cn>
+If an error is triggered while system suspend is in progress, any bus
+level power state transition will result in unpredictable error handling.
+Mark skip_bus_pm flag as true to avoid this.
 
-Replace the open-code with dev_err_probe() to simplify the code.
-
-Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 ---
- drivers/pci/controller/pcie-rockchip.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 0f88da378805..9897824a81f8 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -230,12 +230,9 @@ int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
- 		phy = devm_of_phy_get(dev, dev->of_node, name);
- 		kfree(name);
+Ideally we'd want to defer recovery until system resume, but this is
+good enough to prevent device suspend.
 
--		if (IS_ERR(phy)) {
--			if (PTR_ERR(phy) != -EPROBE_DEFER)
--				dev_err(dev, "missing phy for lane %d: %ld\n",
--					i, PTR_ERR(phy));
--			return PTR_ERR(phy);
--		}
-+		if (IS_ERR(phy))
-+			return dev_err_probe(dev, PTR_ERR(phy),
-+					     "missing phy for lane %d\n", i);
+More discussion at [1].
+[1] https://lore.kernel.org/r/Z-38rPeN_j7YGiEl@black.fi.intel.com
 
- 		rockchip->phys[i] = phy;
- 	}
+ drivers/pci/pcie/aer.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 508474e17183..5acf4efc2df3 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1108,6 +1108,12 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+ 
+ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ {
++	/*
++	 * Avoid any power state transition if an error is triggered during
++	 * system suspend.
++	 */
++	dev->skip_bus_pm = true;
++
+ 	cxl_rch_handle_error(dev, info);
+ 	pci_aer_handle_error(dev, info);
+ 	pci_dev_put(dev);
 -- 
-2.25.1
+2.34.1
+
 
