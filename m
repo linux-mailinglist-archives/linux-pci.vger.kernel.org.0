@@ -1,102 +1,125 @@
-Return-Path: <linux-pci+bounces-25273-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25274-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEA4CA7B722
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Apr 2025 07:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02CB8A7B794
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Apr 2025 08:07:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F07A189CC77
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Apr 2025 05:27:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8678F188FB5D
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Apr 2025 06:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D0816CD33;
-	Fri,  4 Apr 2025 05:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72DB161321;
+	Fri,  4 Apr 2025 06:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNsr+gX2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGXbh/Yx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63E315B54C;
-	Fri,  4 Apr 2025 05:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A857101F2;
+	Fri,  4 Apr 2025 06:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743744408; cv=none; b=l+58h9PsgcmvwBESvJXOF/B4n3Oe5oEd1L3NjMGl3dkg6iwlokzRF5oFJoiM9H/7TpctyFVdDytceQO77USyobuammhIXvLhAenPcR3vwbgz+Ph7gGIt8hLO+ilAKiTiGwbOwqlqafxPygQaYCEMIcKtpfU7qKZ2+WZT5MXZ3ns=
+	t=1743746851; cv=none; b=TgnZoIFHxsD6kDTFpA5jTT2AMJYr+ZWR7IPGeTaJ8DcmLPSWhRYanFEekrjA8w18dQmgHVRZlAtCE++ORX7XfVmaPmHXBuquozHU1P5lVZE4vX/kWONUwT6ZwR3gxcMYOtnpThmqwh4Z+JudUAftkkyg+nJfCd0xngQiS5u9F8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743744408; c=relaxed/simple;
-	bh=68FORm/+PAAItJTs4YIhRng8DnrbZQIOdG8zHsV6wKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c8lkL39Yn56u11Pm5dw2sLNhg7VWIN0aaNg3sYsCyvpYxSIUxerYvToPgP0bJhoEp/YQuedwzkcRWD+p9diSUVb79aOY402nEREVaXu+J8gfLlLJNo2Pv9ViGm/XfcdAGKYQEqFgyoxATksVlJ4jUm67fE7lAei6NXh0l/Nske0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VNsr+gX2; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743744407; x=1775280407;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=68FORm/+PAAItJTs4YIhRng8DnrbZQIOdG8zHsV6wKI=;
-  b=VNsr+gX2g/31RqBWheIzvWp5UAtySBKpZtzlAMJfjFNIlL43D/WobhMI
-   rkuQr3KwwHcIyltunDIw5gYEB1QMl+nfbrvDaHZDIXTfZrKB1MngLaMcH
-   aGlRHkM9yOxQTQtpQ6qBep3iOd9bmLb3b0nKrf79E3nIrgItsckaw33Yr
-   wpTuq2lao+YPp+Vw3TnD+P5PrX7ZhtDqtrAUfJ3cDqhMmzYLc8Vw+nkNG
-   3xi4u5FSrXyPextWjBqMH1QbP6u/s2Cx2lRcN5CluG5ZhNThopLviji1l
-   OGOabXqv9+mnG7OjSHeI0tGg73YmS/AQ+z7gHvp4WAUL2Ju+FG9Oh3Oyd
-   A==;
-X-CSE-ConnectionGUID: RY8en1KpSlC30iS+DaF+ww==
-X-CSE-MsgGUID: 5mxGN99ZQx6f00fQqJ7Pfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="62573985"
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="62573985"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:26:47 -0700
-X-CSE-ConnectionGUID: O1D/mr/XQ1enVuDDicwQOQ==
-X-CSE-MsgGUID: 9OYiK1wPTfC5piPRJw+0PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="128072246"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:26:44 -0700
-Date: Fri, 4 Apr 2025 08:26:41 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas.wunner@intel.com
-Subject: Re: [PATCH v1] PCI/AER: Avoid power state transition during system
- suspend
-Message-ID: <Z-9tkV_iPntpROn-@black.fi.intel.com>
-References: <20250403074425.1181053-1-raag.jadav@intel.com>
- <CAJZ5v0gtUHbYPk-dFRwEZMnPv0gQG8+J+bwf8bahUskcDkw9HA@mail.gmail.com>
+	s=arc-20240116; t=1743746851; c=relaxed/simple;
+	bh=zLdh1g2tnF1S0nxVnFwRe60IEwUFv3+CLDsd/Xhb/jU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pfrH+OzSuzfvog/nnJbIAy2lM00mskxlHRB9pRi6aXNaWW48nn7pcc1CXpJxM78m1Iax4YzmnitWQ7vo1Txv4KPycoN4F+QptiegihDpZC/DGi1tIj+7F3nGE6i3BAqQMswdRYMWYSeYkEHHkrBZ7xHQPJ75OWYS5Vp5FJdIVUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGXbh/Yx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB480C4CEDD;
+	Fri,  4 Apr 2025 06:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743746851;
+	bh=zLdh1g2tnF1S0nxVnFwRe60IEwUFv3+CLDsd/Xhb/jU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RGXbh/YxjDWOA5SHXdomT+x+46iTOijYHyOeNzj5pA/3xOeusZ+6u2n28KqBZ4Mln
+	 jOL11g607i54PALyNSWFzmQCxZkx0RnenRghEHTkw6JuCosv3skAhuGFdUhSWH43nW
+	 Ko1UIccdaR8QCtg7PafC/wcUFiT8N/t2bLHvgFIrOmFP2N6ZJ/BV/h9eVfgXq73pyZ
+	 lLxdoIUzdqEOVnrIYzxfjZsKMKRBn4mUiUlM82ysWZwGgKP1ciphR3r+8e/rMBvtBq
+	 jmJiFpRo2Sop9vQDJzlcQCQaR+ToXNre131RFLSZATv1tqPKwly/i8uK6zzIdtPk0U
+	 ZmgP7K3oOpj1g==
+Message-ID: <9b309761-1c1c-42e3-ba68-308725ad6179@kernel.org>
+Date: Fri, 4 Apr 2025 08:07:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gtUHbYPk-dFRwEZMnPv0gQG8+J+bwf8bahUskcDkw9HA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: al: Use devm_platform_ioremap_resource_byname
+To: shao.mingyin@zte.com.cn, jonnyc@amazon.com
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn, xu.xin16@zte.com.cn,
+ ye.xingchen@zte.com.cn
+References: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 08:35:45PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Apr 3, 2025 at 9:45 AM Raag Jadav <raag.jadav@intel.com> wrote:
-> >
-> > If an error is triggered while system suspend is in progress, any bus
-> > level power state transition will result in unpredictable error handling.
-> > Mark skip_bus_pm flag as true to avoid this.
+On 03/04/2025 09:48, shao.mingyin@zte.com.cn wrote:
+> From: Xie Ludan <xie.ludan@zte.com.cn>
 > 
-> This needs to be synchronized with the skip_bus_pm clearing in pci_pm_suspend().
+> Introduce devm_platform_ioremap_resource_byname() to simplify
+> resource retrieval and mapping.This new function consolidates
+> platform_get_resource_byname() and devm_ioremap_resource() into a single
+> call, improving code readability and reducing API call overhead.
+> 
+NAK
 
-I'm wondering if we can have something like aer_in_progress flag
-that we can use in PCI PM for this? ...
 
-> Also, skip_bus_pm is only used in the _noirq phases, so if a driver
-> calls pci_set_power_state() from its ->suspend() callback, this change
-> won't help.
+You do not understand that code and your automation is just terrible.
+Stop sending these automated patches.
 
-... and perhaps skip these if it is set?
-
-Raag
+Best regards,
+Krzysztof
 
