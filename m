@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-25329-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25330-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8654FA7CA4D
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 18:42:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26FCBA7CA56
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 18:48:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA3421893F88
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 16:42:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEF2F3AC1D6
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 16:47:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4CF176242;
-	Sat,  5 Apr 2025 16:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D84A1547FF;
+	Sat,  5 Apr 2025 16:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Sf460MmW"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l55OxA1w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F065148FE6;
-	Sat,  5 Apr 2025 16:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004114502A;
+	Sat,  5 Apr 2025 16:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743871326; cv=none; b=bFYfMsNXFtEP5SDHncNL4mJPL0cngNrn2+nbU0noNL5pDaL+p8QBSpFX1tn5wKXYGDeRgot9rjIscOZKqailyugyfEORwwwJ5iKFZszHNxFK7d8dHmuiJqkvMBQFN0d9B52menToOaNQywS7iECkaSW2/a1D7+cWhwlYoWCbd7E=
+	t=1743871679; cv=none; b=OkbzTfbvsapAaTP63i7pP1m19KQZtYiiFDYLc0TFHeKDH6IukmyHhJtWljsxKKjeIR9KQyyG83DcvzoU6fL5D3sg4YTp2japBrGPwfcYmIT6WYFPCrwEL/hBiVYb3eJaIZoxsJggHWrifU7c4By0/752MJ9iJKE8uT8HBsF5tVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743871326; c=relaxed/simple;
-	bh=rggqmKNXZhyQJ5KpX5PEgXpbKcP7RLMtTrI/QHICR9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GmbQ/Xd55yNrH033WKZodWWeSqiM6sBxhEeEOkjqNpMv1J5YyhFMCS4pqlxHn/qQujglE/SJlyHDfCwY/fHOuP9vlhXfAiCR8UU261Gj3mHgp1y79EPQA50vV7kgIMSxJG2G7WEexjS47SurX25MqwPA1uyvjp/5xRdSvJ/fhvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Sf460MmW; arc=none smtp.client-ip=220.197.31.5
+	s=arc-20240116; t=1743871679; c=relaxed/simple;
+	bh=9BGLYqTQZu2s7kzI0dsjUtxU1pnjhjkWcecnNApDEUM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BieTnR5CPPDiuGNLpr889hvJuHJdH79hM3OtZBNW2L9qElt+dNSHBLis8jBiu0NZUyK40wBv5wt0/vkgfSjF5v7j2TUv938LuhrdfpOnSs/6D9VVd5u8xMea2MYjx3AxkFfPhTBigtEpbNhOxRNGmeckfgrB7xUi2A1vrd2g9io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l55OxA1w; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=mSzTicsRwO2mhYeb8FycY5Zmlx7Ew5ttyDCHEALjYdw=;
-	b=Sf460MmWtmzNyMTrHJCnmgnZ0jshLWXc2SMn9Dx7YVGiIIVXXk09nSjZ1UCOKv
-	10tIKoufZC0pf5UBbecxkhRdWnBgJMt6e6vzkcq/4UgTAyJP1/lCaJJ0a2BnDtb4
-	PGy6brDgqGBxDg+KOI+RLAaLQreeqoylz4cFV+k4omrO4=
+	Content-Type; bh=MDq1cM7gEdiK3Cx5k/Cw1x0umVJ9hEJWVQHhrti4x+E=;
+	b=l55OxA1w3Ne6EVRXZr1+QCnc6P2cEIQqyoDUVyyljagj6H3l8gmmXUSJ2lHIum
+	9yIW+UgGwmsdCJynOPksX3pLhPuvsIQ/LQaUfeLv5ckrIumqA1Ib1y1fS4am/Y5H
+	EBbrg6OzyuMjCfadC6NcNI1bJrOrDWRSTURV+sq22BWv0=
 Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnNtY7XfFnh4lxEQ--.27393S2;
-	Sun, 06 Apr 2025 00:41:31 +0800 (CST)
-Message-ID: <c696c21e-97c6-4bfa-bdb4-d519416f5c99@163.com>
-Date: Sun, 6 Apr 2025 00:41:31 +0800
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wCHIJWXXvFnNg2yCA--.4226S2;
+	Sun, 06 Apr 2025 00:47:20 +0800 (CST)
+Message-ID: <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
+Date: Sun, 6 Apr 2025 00:47:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,74 +48,106 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+From: Hans Zhang <18255117159@163.com>
 To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
  manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-References: <20250405145459.26800-1-18255117159@163.com>
- <727b55b6-ccba-4498-be95-027a9f67dfa9@wanadoo.fr>
+References: <20250405152818.GA107831@bhelgaas>
+ <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+ <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
+ <fa44eac9-8986-46d2-899d-df8811131925@163.com>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <727b55b6-ccba-4498-be95-027a9f67dfa9@wanadoo.fr>
+In-Reply-To: <fa44eac9-8986-46d2-899d-df8811131925@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnNtY7XfFnh4lxEQ--.27393S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF48tw43KF4Utr4fZw45GFg_yoW8Jw45pw
-	s7Cr45KF4UA348tFyxCa1kuFyfJrZ3Z343XFy3u3yv93s5Ar98XF92qF4YqFy3Gw48Kr1U
-	JFs5Zw15ur1YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UyWlPUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh0mo2fxWvIyYQAAsP
+X-CM-TRANSID:_____wCHIJWXXvFnNg2yCA--.4226S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr4UCw1kZrWrAF1UtFWUArb_yoW5ArW7p3
+	ykGay5KF4DAw1ft3sa9a1kAF1ft395Zr17X345uryIyw4vvr1rXr47KF4Y9Fyfur4kGF18
+	XF4Fv3WfuFn0yF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UyUDAUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxwmo2fxWi1E5gABsU
 
 
 
-On 2025/4/6 00:14, Christophe JAILLET wrote:
-> Le 05/04/2025 à 16:54, Hans Zhang a écrit :
->> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
->> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
->> debugfs_remove_recursive(), leading to potential NULL pointer operations.
+On 2025/4/6 00:35, Hans Zhang wrote:
+> 
+> 
+> On 2025/4/6 00:17, Christophe JAILLET wrote:
+>> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
+>>>
+>>>
+>>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
+>>>> Follow subject line capitalization convention.
+>>>>
+>>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
+>>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
+>>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally 
+>>>>> call
+>>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
+>>>>> operations.
+>>>>>
+>>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
+>>>>> which is
+>>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
+>>>>> shutdown to
+>>>>> ensure debugfs cleanup only occurs when entries were initialized.
+>>>>>
+>>>>> This prevents kernel warnings and instability when ASPM support is
+>>>>> disabled.
+>>>>
+>>>> This looks like there should be a Fixes: tag to connect this to the
+>>>> commit that introduced the problem.
+>>>
+>>> Hi Bjorn,
+>>>
+>>> Thanks your for reply. Will add.
+>>>
+>>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
+>>> Endpoint mode)
+>>>
+>>>>
+>>>> If this is something that broke with the v6.15 merge window, we should
+>>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
+>>>> would have to decide whether pci/for-linus is still appropriate or a
+>>>> stable tag.
+>>>>
+>>>
+>>> The original code that introduced the unconditional 
+>>> `debugfs_remove_recursive()` calls was actually merged in an earlier 
+>>> cycle.
+>>>
+>>>> We did merge some debugfs things for v6.15, but I don't see anything
+>>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
+>>>> be in pcie-tegra194.c instead of some more generic place.
+>>>>
+>>>
+>>> The Tegra194 driver conditionally initializes pcie->debugfs based on 
+>>> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
+>>> uninitialized, but tegra_pcie_dw_remove() and 
+>>> tegra_pcie_dw_shutdown() unconditionally call 
+>>> debugfs_remove_recursive(), leading to a NULL 
 >>
->> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
->> stubbed for !CONFIG_PCIEASPM. Use this function during 
->> removal/shutdown to
->> ensure debugfs cleanup only occurs when entries were initialized.
+>> debugfs IS initialized, because it is in a structure allocated with 
+>> devm_kzalloc().
 >>
->> This prevents kernel warnings and instability when ASPM support is
->> disabled.
+>> And debugfs functions handle such cases.
 >>
 > 
-> Could you elaborate?
+> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
+> really sorry about that.
 > 
-> 
-> debugfs_remove_recursive() ends either to:
-> 
-> static inline void debugfs_remove(struct dentry *dentry)
-> { }
-> if CONFIG_DEBUG_FS is not set,
-> 
-> or
-> to a function which starts with:
->      if (IS_ERR_OR_NULL(dentry))
->          return;
-> if it is set.
-> 
-> 
-> So what does this new deinit_debugfs() add?
-> 
-> 
-> Which NULL pointer are you seeing?
-> Did you actually manage to trigger it?
-> 
+> Another problem I noticed here is that currently, no matter what, 
+> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
+> debugfs_create_dir(name, NULL); Is it superfluous?
 
-
-Hi Christophe,
-
-You're right, and I'm sorry about that.
-
-The following line of code only makes sense if the #if 
-defined(CONFIG_PCIEASPM) condition holds. Do we need to optimize this?
-
-pcie->debugfs = debugfs_create_dir(name, NULL);
+Sorry, let me reply again:
+Another problem I noticed here is that currently, no matter what, 
+pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
+debugfs_create_dir(name, NULL); Is it superfluous?
 
 Best regards,
 Hans
