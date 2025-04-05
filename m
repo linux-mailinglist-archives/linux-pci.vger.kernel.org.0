@@ -1,180 +1,143 @@
-Return-Path: <linux-pci+bounces-25332-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25333-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 080EBA7CA8A
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 19:11:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB91A7CAAD
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 19:15:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C2443B774E
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 17:10:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A7E118988A8
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 17:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8FA217995E;
-	Sat,  5 Apr 2025 17:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B2FD17A303;
+	Sat,  5 Apr 2025 17:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aXrl7SbA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIzf27S0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B720615746F;
-	Sat,  5 Apr 2025 17:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C44182BC;
+	Sat,  5 Apr 2025 17:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743873062; cv=none; b=CxbZt9f/JEQvNEkVEiCqMX4Xdyc4KVtd8rMVUkf5ajMwQAIabvulD4l7SG222AcCvVlSa2P2epjuD8zIekYjYo44uiojerrtQ2fYhfvQAXsXluWWN7+7Gy8Or1LuDnWGiOHrHCvNHjkGOiDkrn47BLPtzTm3VojIELZhPn5hQtk=
+	t=1743873335; cv=none; b=XvtYM+iLkmyUr1MjKLdpt7IaEWZbGIy1XhLBPGCWi4HjMKBp3vyJZtAQeMjM8qCzrUq8mlBpgdylr5BBPXw6fEenHN1a7HZ3kJX9q2uxvLgze17YkAj6uHHNJkCfRnW++dkfQePmSxFgU9Jk4FX2/ah89B53yS6gHtUjNSJeqRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743873062; c=relaxed/simple;
-	bh=JqX86buw9HHooGIvsI0QsPGGPblozuLApWe0OsA9GRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RhymAysD8pj9oYmuIQaXXsWbLddWxHRzs1YsBCF5nGQu4TV6n6H6W6kZaAALnNrGJBAGCHdbCm9lrxk3XHT2wBms6Vv2RYd3ZFTqqQXPZNS0+ekuqqfi2dAiiK/ULHXL/QHlicUoXTm4vJu2g1Q1gEsVSQUbVQhvQiOOOdIYKKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aXrl7SbA; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=A6OD+nPI3zJQy3gtWa6Pq3ez60axHp3q2+HfcZNxkxo=;
-	b=aXrl7SbA8gu2qJU8/UG8FP0vdx8c2FVx8N+Dw2v+4MDUtc9QhVXMQyO0XpzIhT
-	eLjHZ1+j9YneUEr3nCoMQNAL/liaRgquVXb85DXG/4Q0iYc9UONF946Qv3X4rS5j
-	sODPumDfAO6Ky02VzIidiAMn2ObBw554pftwOVMNIEoVI=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3PlsIZPFnVxK1CA--.4162S2;
-	Sun, 06 Apr 2025 01:10:33 +0800 (CST)
-Message-ID: <ce8bf6d5-9783-4bb5-9aa3-1c697978084f@163.com>
-Date: Sun, 6 Apr 2025 01:10:32 +0800
+	s=arc-20240116; t=1743873335; c=relaxed/simple;
+	bh=b1IqaERcyii5vqNUAnyn0nLI0QHoRvGF/a+UIVRdmCo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=MHFW0U/KK0E9VGR3s1FoR24y80NB03TEtMnnKttC7JbBamVW7ColbyKwIk1GcyhiWFhNNH+oqisTQtfgKMbHG7VbplbEJpYkBhyW+gC3tBI+FUl47jpwz7Um4UusZKNpvfSwNSP/3/j8G/70hIVZC/GrHyqbwHJTC0cUSLDBnh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hIzf27S0; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so4918220a12.3;
+        Sat, 05 Apr 2025 10:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743873331; x=1744478131; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=isSd+kZScL6eZdRBnkO9dSwf+mmMPraP1IggRwVj8UY=;
+        b=hIzf27S04y/xdCwoMfTBtEcZj30d1PYLEbWWnwuRx8YneFNAAS89zadBShpadwQVWU
+         xIEzgz3JrRnrCOx0q4DrHBvuSr3p0Nhk6KFyK0U4MVhu3SitlM8x1klCTkatmFzav42k
+         ub60I/v4aLok+iAD8Y4LklmABJCPmIcX55+qd4idBkwgq6hKgRiVIF4TAqDsm7ZTiIv9
+         0GhZkzcjpOZCrPYenbm5Ca5GJYPRCxMcgKz36QoumRIHnkQmoqfcNCjBZXnwNQonIJkG
+         VZTiJdOWRS8rFS7ugbxJAnoWQVZGOK7UzyldjMeOx+eOk6A0qXR0I1F9FrT6dA3s7Nea
+         01BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743873331; x=1744478131;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=isSd+kZScL6eZdRBnkO9dSwf+mmMPraP1IggRwVj8UY=;
+        b=wAysnZ4FInMughsCmJSfKG3zAmI1dBIOWRddCEyC5TD9Led4PBO0oGCHrMRhDSNW2k
+         BDxvGBfx0VoG8e28/dCkF0l0FmkS5IEnED5r3u2B4MXBrV41Q4GUceSYzXU+F8NUKou5
+         rL2hg/fjfc9/9rtnL6Om4oL+JG9MMHZIkWIJSLtshze26UNr69TVpvEgnH6IWNTLh2Nb
+         K+OBKxu8oK6F1HbLiCOhcZoBnZfyJLfEW6KR37dj/5PLg8bY5+n7SwkiZMMw3Egcyt+S
+         ZaQ9qJKPYA9twUDJdNRZBddpgWIL1QRVyJ2H/djXhMlUUbFJfcUsw+G5ALSTmJbqATOe
+         NZ+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVzZyOyP4fLt2S/PYZC0asH5iB84wllQKUox8iA/QZJe3iRtl9cUwQSB6WiOCwZWjHy36iuoVdSXr0kYw==@vger.kernel.org, AJvYcCW8iGDJk43L3KsST5+RDBCsZmpzaaIWyLnRz+Twwq89TlNqAOLVBNURqadcRaOqKumTU328hlnBS7Ng0lPH@vger.kernel.org, AJvYcCWwkFHkWMzQcEvOgCeKq+5cHteaG9SfwRGB0TPp0JVeYWofiwg+81DDNQ7n9kEactTtyr0IwdwhmZoQ@vger.kernel.org, AJvYcCXfIkUUnY543LHOXr1HOJWK9X9P4Wj5bnX4P7xXHUTAjwIfKAsBdB3NMESv+UP9hXh1orY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH9qGb2JLwjIrYKDSNwpX9HkABt9Sm/z3gsKgdxwZiUXLFqVib
+	TaPg6wvPLfji9dWDPGaYRAkXVdCRRL7laGGwj/VlUXuyotjgnU7CJ4PxbzC8
+X-Gm-Gg: ASbGncu+5Vs2nG/eWCPMjUzQmUfNXM9VTXw0d6qfxCujqmG0mawcrdoNX2T2U1ktwbf
+	p/RIrUxpnS85SpnVJgU00th+ixDa3PZ2d/FD4Hs+NQYc989cn4rvQy3U2kuPYoZDZIHzBht8U1b
+	h6fihwwrfok7vy+hyF/X5yKEnLZ8LEFvWsEbkrDOouYnfL4Tzu8Bbbd3hQxsYuRPJnrNiAOHCqg
+	8nFNcBIMmombD846cgNtpCBKlrhRQYU+Z9sfAIUNhCAAqbNCMC9L8oL71uZp8kL5KfCuCgz974C
+	x8xGEqScToSmXlSFuvNXkpUIkWN8xMaXwNYbCW6h0/xWHMVLmhDcaaiK/DT1+kgOnqbSgsndqv1
+	x+BoIbN2N8BWIs4SooQlMyzxqHQ==
+X-Google-Smtp-Source: AGHT+IEYMEj6vVipafSJra5qktqhabiYJ6Afca6i+XiA9t0i2eFoS2ovVKnUzZgGlq8Rm6N1mlmmsg==
+X-Received: by 2002:a05:6402:358b:b0:5ec:cba6:7d82 with SMTP id 4fb4d7f45d1cf-5f0b3b5ff1cmr7092924a12.3.1743873331349;
+        Sat, 05 Apr 2025 10:15:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:f4b6:62bc:3e10:c9d4? ([2001:b07:5d29:f42d:f4b6:62bc:3e10:c9d4])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f088085e3esm3913147a12.58.2025.04.05.10.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 10:15:31 -0700 (PDT)
+Message-ID: <33e608d18c12fda45c922bc06ae9a49c2b3d777a.camel@gmail.com>
+Subject: Re: [RFC PATCH v2 16/22] coco/tsm: Add tsm-guest module
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: aik@amd.com
+Cc: Jonathan.Cameron@huawei.com, aneesh.kumar@kernel.org,
+ ashish.kalra@amd.com,  baolu.lu@linux.intel.com, bhelgaas@google.com,
+ dan.j.williams@intel.com,  dionnaglaze@google.com, hch@lst.de,
+ iommu@lists.linux.dev, jgg@ziepe.ca,  joao.m.martins@oracle.com,
+ joro@8bytes.org, kevin.tian@intel.com,  kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-coco@lists.linux.dev, 
+ linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de, 
+ michael.roth@amd.com, nicolinc@nvidia.com, nikunj@amd.com,
+ pbonzini@redhat.com,  robin.murphy@arm.com, seanjc@google.com,
+ steven.sistare@oracle.com,  suravee.suthikulpanit@amd.com,
+ suzuki.poulose@arm.com, thomas.lendacky@amd.com,  vasant.hegde@amd.com,
+ x86@kernel.org, yi.l.liu@intel.com, yilun.xu@linux.intel.com, 
+ zhiw@nvidia.com
+Date: Sat, 05 Apr 2025 19:15:28 +0200
+In-Reply-To: <20250218111017.491719-17-aik@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-References: <20250405152818.GA107831@bhelgaas>
- <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
- <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
- <fa44eac9-8986-46d2-899d-df8811131925@163.com>
- <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
- <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3PlsIZPFnVxK1CA--.4162S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGryxJF4fAr4DKFy5Ar1DKFg_yoWrJrW3p3
-	ykG3W5Kr4DJw15tr9ava1kAF1ft3ykAr1UX345uryIyr1vqr1rJr4Utr45uF9xur4kJF1U
-	XF4Fq3W3WF15AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbo7NUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhAmo2fxWvLLhQAAsf
 
+On 2025-02-18 at 11:10, Alexey Kardashevskiy wrote:
+> diff --git a/drivers/virt/coco/guest/tsm-guest.c
+> b/drivers/virt/coco/guest/tsm-guest.c
+> new file mode 100644
+> index 000000000000..d3be089308e0
+> --- /dev/null
+> +++ b/drivers/virt/coco/guest/tsm-guest.c
+> @@ -0,0 +1,291 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/module.h>
+> +#include <linux/tsm.h>
+> +
+> +#define DRIVER_VERSION	"0.1"
+> +#define DRIVER_AUTHOR	"aik@amd.com"
+> +#define DRIVER_DESC	"TSM guest library"
+> +
+> +struct tsm_guest_subsys {
+> +	struct tsm_subsys base;
+> +	struct tsm_vm_ops *ops;
+> +	void *private_data;
+> +	struct notifier_block notifier;
+> +};
+> +
+> +static int tsm_tdi_measurements_locked(struct tsm_dev *tdev)
+> +{
+> +	struct tsm_guest_subsys *gsubsys =3D (struct tsm_guest_subsys
+> *) tdev->tsm;
+> +	struct tsm_tdi_status tstmp =3D { 0 };
+> +	struct tsm_tdi *tdi =3D tsm_tdi_get(tdev->physdev);
+> +
+> +	if (!tdi)
+> +		return -EFAULT;
+> +
+> +	return gsubsys->ops->tdi_status(tdi, gsubsys->private_data,
+> &tstmp);
 
-
-On 2025/4/6 01:04, Christophe JAILLET wrote:
-> Le 05/04/2025 à 18:47, Hans Zhang a écrit :
->>
->>
->> On 2025/4/6 00:35, Hans Zhang wrote:
->>>
->>>
->>> On 2025/4/6 00:17, Christophe JAILLET wrote:
->>>> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
->>>>>
->>>>>
->>>>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
->>>>>> Follow subject line capitalization convention.
->>>>>>
->>>>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
->>>>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not 
->>>>>>> created, but
->>>>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
->>>>>>> unconditionally call
->>>>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
->>>>>>> operations.
->>>>>>>
->>>>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
->>>>>>> which is
->>>>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
->>>>>>> shutdown to
->>>>>>> ensure debugfs cleanup only occurs when entries were initialized.
->>>>>>>
->>>>>>> This prevents kernel warnings and instability when ASPM support is
->>>>>>> disabled.
->>>>>>
->>>>>> This looks like there should be a Fixes: tag to connect this to the
->>>>>> commit that introduced the problem.
->>>>>
->>>>> Hi Bjorn,
->>>>>
->>>>> Thanks your for reply. Will add.
->>>>>
->>>>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
->>>>> Endpoint mode)
->>>>>
->>>>>>
->>>>>> If this is something that broke with the v6.15 merge window, we 
->>>>>> should
->>>>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
->>>>>> would have to decide whether pci/for-linus is still appropriate or a
->>>>>> stable tag.
->>>>>>
->>>>>
->>>>> The original code that introduced the unconditional 
->>>>> `debugfs_remove_recursive()` calls was actually merged in an 
->>>>> earlier cycle.
->>>>>
->>>>>> We did merge some debugfs things for v6.15, but I don't see anything
->>>>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
->>>>>> be in pcie-tegra194.c instead of some more generic place.
->>>>>>
->>>>>
->>>>> The Tegra194 driver conditionally initializes pcie->debugfs based 
->>>>> on CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
->>>>> uninitialized, but tegra_pcie_dw_remove() and 
->>>>> tegra_pcie_dw_shutdown() unconditionally call 
->>>>> debugfs_remove_recursive(), leading to a NULL 
->>>>
->>>> debugfs IS initialized, because it is in a structure allocated with 
->>>> devm_kzalloc().
->>>>
->>>> And debugfs functions handle such cases.
->>>>
->>>
->>> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
-> 
-> Here, what is relevant in devm_kzalloc() is not devm but the kzalloc 
-> part. the "z" is for zeroing the allocated memory.
-> 
-
-Hi Christophe,
-
-Thanks your for reply. I understand.
-
->>> really sorry about that.
->>>
->>> Another problem I noticed here is that currently, no matter what, 
->>> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
->>> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
->>> debugfs_create_dir(name, NULL); Is it superfluous?
->>
->> Sorry, let me reply again:
->> Another problem I noticed here is that currently, no matter what, 
->> pcie-  >debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
->> defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
->> debugfs_create_dir(name, NULL); Is it superfluous?
-> 
-> AFAICT, it looks useless in this case.
-> 
-> I guess that moving debugfs_create_dir() and the
-> name = devm_kasprintf()...
-> above it, into init_debugfs() would do the trick.
-
-That's what I was thinking. I will submit the version again in the future.
-
-Best regards,
-Hans
-
+Missing call to tsm_tdi_put().
 
