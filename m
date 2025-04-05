@@ -1,145 +1,146 @@
-Return-Path: <linux-pci+bounces-25334-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25335-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F7A1A7CB12
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 19:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6FEA7CB30
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 20:20:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 105AD1893231
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 17:40:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CC0A1897589
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Apr 2025 18:20:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2975119C546;
-	Sat,  5 Apr 2025 17:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E0F1A239A;
+	Sat,  5 Apr 2025 18:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZX8xhOLR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lcz8Hts1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BC7199931;
-	Sat,  5 Apr 2025 17:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBFF13B7A3;
+	Sat,  5 Apr 2025 18:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874789; cv=none; b=i7U8bIf8Wr/aCR57J6jT087TYIE5qqRHWCd9uV2eikx9b5oHu8o8l6zjJgtows6HaACgZVcZUt6YDSWEAmE1zMseQZtlE0ALQk0Cr/8QarFy2iFMqrcyCjqBwYGieONVrx8rQcsudGJSGcavqDAcczayOBIxwWniNTZYDc5otmU=
+	t=1743877193; cv=none; b=FioF5VsDluUDeymd63SFpl6O79wxT8iug0CXAIhaR/sSW+zzpEj3mjCHIZ92Ll4TpVbBcjpUSHBd/z+QP2aubXiAmWfVvogemORP3+nQTJaz8Ncw5NrjDmqxvU02XmqFNLToX7GwJIe1qA7SoiLQ2Y+Ivj8ah6UUDtAR/wn39FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874789; c=relaxed/simple;
-	bh=cLoWa6W3Dyyrw2RNgGHlXiflRBqEsqjNsnatGYOyAbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VeWsiHY5khw1r5ivVEEuuulhKrQMKncg3ZDwW4xVct1fbpf7cQCn5ENxgGjTVyX4ULNt3xC+7sUEWP626zKPcWIhIHylKP0UWUW3YdrBqg/cJr3NKc0eZ907IB9tYxHKy0GGgKInrA0xzj4Tkz/M4e17N4PZwZ5Qk/A3OGx751k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZX8xhOLR; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743874787; x=1775410787;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cLoWa6W3Dyyrw2RNgGHlXiflRBqEsqjNsnatGYOyAbE=;
-  b=ZX8xhOLRA4NG6+fLu2CMbyQ9wAfYG2TnV4CV9/vx98IfArqRfNaMTvUr
-   t0LLnUSkMWULW1oc+TplOhl7TboyNR6EaKTYlgNrHFHQdw12T3CRfXzLE
-   /PROsoLvC6wzTNRYKpjO5aLdm7oAORczD/8LWwO5LBJhGAlENQQUk3zDN
-   QbEEAqN66V4yQr82UykmEjna1l4Q7Vy+3zg2zOefTkkI0xya9wXNC+Bhu
-   bxxbsZ527UckMpFt1GzlRnyydJsr9E0oqptQqshjB8nROaSL+KJygcI9o
-   jBPg1D98D+MfAPX3NSOLI0A9cXYgSiLARmcS7RPmrq8eskXiWiFMuqhoe
-   w==;
-X-CSE-ConnectionGUID: jZn8pSUWSF2vIV9INehEfQ==
-X-CSE-MsgGUID: tU4Q/p2uSj6GA91wtwqcFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45184591"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="45184591"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 10:39:47 -0700
-X-CSE-ConnectionGUID: Q0kGPG/CQpKSUF8fnQaNPw==
-X-CSE-MsgGUID: rSkLGwsQQMe8s9UYBz7AQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="128087199"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 05 Apr 2025 10:39:42 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u17Ua-0002BD-0U;
-	Sat, 05 Apr 2025 17:39:40 +0000
-Date: Sun, 6 Apr 2025 01:38:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jerome Brunet <jbrunet@baylibre.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ntb@lists.linux.dev, Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 1/3] PCI: endpoint: add epc_feature argument for
- pci_epf_free_space()
-Message-ID: <202504060122.RXfUdGx9-lkp@intel.com>
-References: <20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57@baylibre.com>
+	s=arc-20240116; t=1743877193; c=relaxed/simple;
+	bh=UuKpmCc29izBRMeN6jegH6OMMWvy55AsNWWT5DJwIi4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=B04w/h5EKjR2kSzOgI6SPyWMSoFDAZb4sKBiqMQPugNDOvuiAiIzZbI3NBxOoq1UvC6cIetmb2l/GUVzXfKxti8+3jvKNGmO/tdmsMNLiaMH/6r+ODLRCSZU1pawQUGu/wCpljbeddyjpVxFMjRdxpY3yjZh46lpi5jgGGI7Iao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lcz8Hts1; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so4985207a12.1;
+        Sat, 05 Apr 2025 11:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743877189; x=1744481989; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JzDPIcjxpueJWPt8ubJyJmHV+G2m+1GMdqn6UOzKG/Q=;
+        b=Lcz8Hts1D3VXAZrwJ6Mcql8kdtpe8YqDwOfvXWrhHGGrJJuVPovK18z8sMr6+oLxG2
+         2VAoLAcpKSjU+ml6awi1ZYIcUxdTX+2WbS/bHvSwJxny5Wj+p7/U44BhmTDVbn8Nq8xo
+         Ks9AehO069Ch5ghr4UBp8Z3GISKyGW2/BMOSCW+IQvejfk8fW+q2LDtMP531ovg/TQzt
+         9J8iUCz7KWrH8ffHBAL0Qv0TK7scPmNTsFXSKUHeAlSGcB1UH0mz4euoSNHZS5RKrkk7
+         T46XthobGgPqLzdbXCHu0zuu99WGlyZVBC94RQYDBvprteYwVf4vQuYdmZM7huLTA1Ty
+         h6Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743877189; x=1744481989;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JzDPIcjxpueJWPt8ubJyJmHV+G2m+1GMdqn6UOzKG/Q=;
+        b=ORCQCWeKtThrO8YvU9E8HFYft3/vEWg6iGUECjuVecNU5KtlwgFZtz1H/qaVGlwTy4
+         HG25ax9MCmJ2GvvV5IU0O+yeiwv5vPFJWwGfzO3+CsKlzMyTG9hOtmRIbpL8tSpldxsg
+         wxfMEY05NctrLQjzaN53jfXsXPX11xvuaMxTbqS6RmU0v1HRJBlvi6sa7ALKSb8ETFno
+         t5EFP8pUVVgfthplPXWh4yRp9jRlViLgA21mcigAaH78XX+Kg/yGa+squVhpHwlY3OfC
+         Tnse9bwZCUQ1KuzrajnLn+qGgXX1/Ez9YN7afSEsEUh1U9GuT3GTQMMOzylZzaqeWaIa
+         I0vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVorgDpegevhbGXH6zh/Vq4dBgZLjpl8UEhTCb/W3l94KllTjlya36snrcrhZxUM4RLCKc=@vger.kernel.org, AJvYcCW3bwHRARCbH4G/Y6sLGYBCpfaHRGqj1337SFNjQ/svM20WU2LFdhfMrNmwgphrbPqvYu3DXkLcd3r0@vger.kernel.org, AJvYcCXIhSfcixVsJGbllkYRyAZNA2LxdWeDMX+z30OQvdRl1+zqC11KHC1w/hU8UqTbUPMohfQAcv0Vyqkobg==@vger.kernel.org, AJvYcCXrupm0XRKVFQLP2mRuObvat2/dc9jjQ0A73YwnroMef/YyJlf6acJJyiWqEWcInNdlgWZabLX6l5nftgP6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGC2dTusYCgfHBavBR95v2by0hbXFAWxVtu/a6iw1aKHxZuz9m
+	/hShSTfb6BPo1pV2Po7mb0Npj88+Xvfd4w+FVE7hUOfnNu3sclWM
+X-Gm-Gg: ASbGnctDG9knLqqGF974/wY4tYZWUgoFtytavt8dlST5TZYuryDRvUWpXAKS5aPOkP/
+	PN4rvik8oMirR49NsH+apD2Zit/N0R7+MBn+D60esUhXUfp2sc68G6qILF7/G4ilGVCLzkTXXst
+	7bN30acY+hLgudod5U1e2w9dmAKJ0ABZkH5VV3ZQDOZ9qzTqiWBdNeiyKJKt8lh4noaynUEImMx
+	/SiWJxXRptjagrnkTBeCYc9HGMqYmXer0KYKWSSw4P2vHiLWCZjXLrTrXRSr9dDmebwuDvQKvkX
+	SOWsV6ZB2RMLtXY4uuVn17aau0B1rXbk0HEPc55iofjVOC/Gs9Nu/QUdcLjgIHD08Mqrt6ObTr8
+	o07jXNimcI3KFqg7Kf4aUleFH9A==
+X-Google-Smtp-Source: AGHT+IHjWd15bJFnLvYIPJuTi7FnhI2p3c/aAJQJSPYd5K7f8WVJvfxyJpynzpZjmDExmCZGqw22yQ==
+X-Received: by 2002:a05:6402:2350:b0:5de:dfde:c8b1 with SMTP id 4fb4d7f45d1cf-5f0b3b62b55mr5957465a12.4.1743877189229;
+        Sat, 05 Apr 2025 11:19:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:f4b6:62bc:3e10:c9d4? ([2001:b07:5d29:f42d:f4b6:62bc:3e10:c9d4])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f088084eddsm4160377a12.62.2025.04.05.11.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 11:19:48 -0700 (PDT)
+Message-ID: <3f450f215435d39b5376a83c42fd1da186d774c3.camel@gmail.com>
+Subject: Re: [RFC PATCH v2 17/22] resource: Mark encrypted MMIO resource on
+ validation
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: aik@amd.com
+Cc: Jonathan.Cameron@huawei.com, aneesh.kumar@kernel.org,
+ ashish.kalra@amd.com,  baolu.lu@linux.intel.com, bhelgaas@google.com,
+ dan.j.williams@intel.com,  dionnaglaze@google.com, hch@lst.de,
+ iommu@lists.linux.dev, jgg@ziepe.ca,  joao.m.martins@oracle.com,
+ joro@8bytes.org, kevin.tian@intel.com,  kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-coco@lists.linux.dev, 
+ linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de, 
+ michael.roth@amd.com, nicolinc@nvidia.com, nikunj@amd.com,
+ pbonzini@redhat.com,  robin.murphy@arm.com, seanjc@google.com,
+ steven.sistare@oracle.com,  suravee.suthikulpanit@amd.com,
+ suzuki.poulose@arm.com, thomas.lendacky@amd.com,  vasant.hegde@amd.com,
+ x86@kernel.org, yi.l.liu@intel.com, yilun.xu@linux.intel.com, 
+ zhiw@nvidia.com
+Date: Sat, 05 Apr 2025 20:19:46 +0200
+In-Reply-To: <20250218111017.491719-18-aik@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57@baylibre.com>
 
-Hi Jerome,
+On 2025-02-18 at 11:10, Alexey Kardashevskiy wrote:
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 5385349f0b8a..f2e0b9f02373 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -55,6 +55,7 @@ struct resource {
+>  #define IORESOURCE_MEM_64	0x00100000
+>  #define IORESOURCE_WINDOW	0x00200000	/* forwarded by
+> bridge */
+>  #define IORESOURCE_MUXED	0x00400000	/* Resource is
+> software muxed */
+> +#define IORESOURCE_VALIDATED	0x00800000	/* TDISP validated
+> */
 
-kernel test robot noticed the following build errors:
+You may want to remove the reference to TDISP, as this flag could be
+reused for non-PCI devices in the future.
 
-[auto build test ERROR on dea140198b846f7432d78566b7b0b83979c72c2b]
+> @@ -1085,6 +1092,47 @@ int adjust_resource(struct resource *res,
+> resource_size_t start,
+>  }
+>  EXPORT_SYMBOL(adjust_resource);
+> =20
+> +int encrypt_resource(struct resource *res, unsigned int flags)
+> +{
+> +	struct resource *p;
+> +	int result =3D 0;
+> +
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	write_lock(&resource_lock);
+> +
+> +	for_each_resource(&iomem_resource, p, false) {
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jerome-Brunet/PCI-endpoint-add-epc_feature-argument-for-pci_epf_free_space/20250405-014733
-base:   dea140198b846f7432d78566b7b0b83979c72c2b
-patch link:    https://lore.kernel.org/r/20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57%40baylibre.com
-patch subject: [PATCH v2 1/3] PCI: endpoint: add epc_feature argument for pci_epf_free_space()
-config: loongarch-randconfig-001-20250405 (https://download.01.org/0day-ci/archive/20250406/202504060122.RXfUdGx9-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504060122.RXfUdGx9-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504060122.RXfUdGx9-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/nvme/target/pci-epf.c: In function 'nvmet_pci_epf_free_bar':
->> drivers/nvme/target/pci-epf.c:2165:9: error: too few arguments to function 'pci_epf_free_space'
-    2165 |         pci_epf_free_space(epf, nvme_epf->reg_bar, BAR_0, PRIMARY_INTERFACE);
-         |         ^~~~~~~~~~~~~~~~~~
-   In file included from include/linux/pci-epc.h:12,
-                    from drivers/nvme/target/pci-epf.c:19:
-   include/linux/pci-epf.h:224:6: note: declared here
-     224 | void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
-         |      ^~~~~~~~~~~~~~~~~~
-
-
-vim +/pci_epf_free_space +2165 drivers/nvme/target/pci-epf.c
-
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2157  
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2158  static void nvmet_pci_epf_free_bar(struct nvmet_pci_epf *nvme_epf)
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2159  {
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2160  	struct pci_epf *epf = nvme_epf->epf;
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2161  
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2162  	if (!nvme_epf->reg_bar)
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2163  		return;
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2164  
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04 @2165  	pci_epf_free_space(epf, nvme_epf->reg_bar, BAR_0, PRIMARY_INTERFACE);
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2166  	nvme_epf->reg_bar = NULL;
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2167  }
-0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2168  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I don't think this function should walk the iomem_resource list, it can
+simply modify res->flags, which is consistent with what is done by the
+other *_resource() functions that take a pointer to a resource that is
+expected to be in the list.
+Also, the name of this function is unrelated to the name of the
+affected flag, you may want to make these names more consistent.
 
