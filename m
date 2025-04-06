@@ -1,90 +1,59 @@
-Return-Path: <linux-pci+bounces-25339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94349A7CD65
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Apr 2025 11:09:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DD0FA7CE31
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Apr 2025 15:44:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 425013A8F66
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Apr 2025 09:08:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 821A27A4131
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Apr 2025 13:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E5F14B08C;
-	Sun,  6 Apr 2025 09:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C056A2185BC;
+	Sun,  6 Apr 2025 13:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JliAhiMl"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Cf6DvJu9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D126319D07C;
-	Sun,  6 Apr 2025 09:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9B1DF9EC;
+	Sun,  6 Apr 2025 13:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743930537; cv=none; b=so5YIa9TlkvcdcJJIA7Z9NrhHFBx3UoYzhY65LaRGuPOJiEBX2g553WYMxXFDZTLb0sGRGxgNMXtXF9msn8acLnkKMrRLfwOjbWptrcZRViYiqepf9rPUSEN3l4PaMKHjana3Taq25MECDNpZw6ig3lVhlxYr9ffATmRjly88m0=
+	t=1743947085; cv=none; b=ai3XfzMXAUz5IZm3K4KzvVkPKkyc0eU14tzy8Ic6mHOzZJ8bLWSCdk+sOOQQq3NF/uaEm0vljsA0TXVNJxj6d7+rKlkOC0boW1pCS/q8CSsj9xSocesWOasUnk8nIxA88N/2U53WtIx5ZaLrCZpLwZ5zWzfUkLPaxCRVBlYp/cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743930537; c=relaxed/simple;
-	bh=SzoCK8uTEbEoC4J8gPsTOWxyFf85tq5CnyJPJwV2p/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cz0Z+IEtkcT7nT7zKxIEQ3OgcesvRzbdu4K+8FNVBiSRAdunn/1ceno/A+t2SWeqQkWmV8md7/b3jJCLzkQJz1UBFCjAbaRQJArMALpXXpgUeH4lrjJY9084g4ZxZWXMbcNDderCaKTP1wCDsI8pUv10BFrUiYVJrCYGBnHeJp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JliAhiMl; arc=none smtp.client-ip=209.85.210.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7376dd56eccso3659406b3a.0;
-        Sun, 06 Apr 2025 02:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743930535; x=1744535335; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4UGKRwJioPxy+lp/bM0MgZCwB2oOxusUsTVwfHCoqAI=;
-        b=JliAhiMlfuv3kehlDZRth3pCVgT0Obpyl0HSFfnyC0s+l9QmXLCSyFK8mH6yTuWBdw
-         zkyv07kBOFODQ2NcL2CNXD9i7+YHNsoC2Qj2ulvq/KAmCvY/KhFM9uncTwH3BWLI+NJk
-         rJTkB8+xGewbORU5Ylfhm+cmsd4IhiEWOL2rgH3A5gAf4edCvqaUf7NfygsqNhv3KEQM
-         8lbz5SK7ZHEqIzUDZo1gfosfBgS+DGvslsE0L6lqTPtama4Czw2AXTS/LyvBuE7RXMdZ
-         QP+h/2iqcDbtXubqviLyn7C+Lm7i4du/5CPaoH8HQAm4fQSqqYWgjcBqQElq/yqljnNS
-         iE4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743930535; x=1744535335;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4UGKRwJioPxy+lp/bM0MgZCwB2oOxusUsTVwfHCoqAI=;
-        b=RFmGol2dTVJNjzqeK/wAE4+HAg/nMjVW+0RqKV4khsLFjEFU6YPR1ZoQvflAgOKv7Z
-         ZO06DAj0FlMRsC6NnA5DiG0jB0isM9Bu4m3e3QD+LhKrtTahH6L2EP5fyGS8kEojpZz3
-         9dV0HjdfsINLYIoSIqHOlm2hc93XG8ts40UUQO5wCjws+rJSXpQLMzyYakuA3RHdBcyO
-         2MqNG6JhiaxIsSzqkdQXGnSj031pDBMQuKuksmlaZe5inlzFB7YYnq3WjWriFX0beqTZ
-         GZ8UZOQcYipsokumZuJiY6PFBbnqUxsi5posAK8Qvnctx7B3kYiRbGmvUq3w8DCBgXzH
-         xq2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAJ92VtqWLCxtC7F9ZSdfSLU7RMCWzkKk6MBT/JLoQ4mTX82niHMAKC6QzRoGWj9JQLJmQcvLM5+dfN04=@vger.kernel.org, AJvYcCX4256v2HY0M6cDtHdrq99t1l52fzTWA/Juj/NTGjGp0y31nUOG9gs7EogK+MMHQ+44G6mCE0P+7o1P@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDyIBlIaYtQndTW3UCfrC3oR/Ln15KbHk32u7GZNV1aOf53SAx
-	ZhpERzWr2mUiU0kLtJ8i3Cnc1eG5fbFAE/r83lQZT0dK6MvTZYo=
-X-Gm-Gg: ASbGncval1zrxUOOaR1Xyb9Y3b3Eg8AwnVwcHwepY+y2d6bKYFW6iyEE89x3xeLjKcW
-	V6R1EzWeKUPGmPKSMpHxZju6nTKvHXHiTW3WEX7aMvzMrRfZnqKSluz+UKKMQp8tXAuDZuugw2o
-	tktB5sHHjuNNEuXppPX35uu90fPqIGKrR+1K45ePcPMDN1G66RuZMEtufT+8gbQfiXuKyKS0wgy
-	VrcOAljjSa0wwMv138RgkR8kYVC0i7EKoL1aIqAtOS9unTFbFKjZhLv9+ydLTsJG+uR9QRJadwZ
-	tgRiZPW5zDvaLejswvTCbr/wwIktS2JnxbAKsXMkXeKBwRnvSELQlq/ukDCWMhQsvFc=
-X-Google-Smtp-Source: AGHT+IGx3mo4nQMC3y9JnPjB4iYOcrizjmsZJi15Y+a2ajNjUpR+hn/ORK2/xlZO5qXYUMxj7FK8iQ==
-X-Received: by 2002:a05:6a00:4606:b0:736:592e:795f with SMTP id d2e1a72fcca58-739e6ff6b02mr10889859b3a.9.1743930534978;
-        Sun, 06 Apr 2025 02:08:54 -0700 (PDT)
-Received: from localhost.localdomain ([139.227.17.3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1c5asm6396850b3a.2.2025.04.06.02.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 02:08:54 -0700 (PDT)
-From: Tomita Moeko <tomitamoeko@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Tomita Moeko <tomitamoeko@gmail.com>,
+	s=arc-20240116; t=1743947085; c=relaxed/simple;
+	bh=Jqu2AMMFksA7iOOfXNFCAeMLrm2e8NyBp0965KZXbPY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=btWOftLttVaR5jjP2nDyrWTQcIbjbt2A+VJuHc2BWqr/v6xnSPugIN6VUH3sukfg0QFauLsZxeWl2VOR7ZJ15HDFGx668KMpv42+IaXKLY0T+PpJyR7RNgeL/rr1q+/XjChUIAJ7yBuBIUaWCYDO7mfJOhQVNrhB0T6jnyhvBRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Cf6DvJu9; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=p4Mez
+	4mArlhOpLu4nWrQ/y8UYYPW3F3qmF7a7hBMrc0=; b=Cf6DvJu9BNElPw1+UA6KE
+	6f5W+pLcXX9x5wzzh02PcRWTVedSXCdqLSCySFTWmRRIEASEz9XdbCZ76WDu3n+R
+	A2fOfQHHHkc1ukjyZr2J0QEdeW+E7A/Bpqny11at+LHAmk+h9SIL2owSFstoJACb
+	T4tpe5pgU5zTzhuYks7JM8=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBn7yMdhfJnJvpbBg--.43663S2;
+	Sun, 06 Apr 2025 21:43:58 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: christophe.jaillet@wanadoo.fr,
+	manivannan.sadhasivam@linaro.org,
+	thierry.reding@gmail.com,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jonathanh@nvidia.com,
 	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/pci: Check signature before assigning shadow ROM
-Date: Sun,  6 Apr 2025 17:08:34 +0800
-Message-ID: <20250406090835.7721-1-tomitamoeko@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v2] PCI: tegra194: Fix debugfs directory creation when CONFIG_PCIEASPM is disabled
+Date: Sun,  6 Apr 2025 21:43:55 +0800
+Message-Id: <20250406134355.49036-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,52 +61,98 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgBn7yMdhfJnJvpbBg--.43663S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr1furWkZF4xurW8tFyrJFb_yoW5CFWxpa
+	y5GayYkw18Aa1fWrZrAa1DZr1SyrZak3s7J34fuw1vvF4DCry5JFyrKFyYqF97CrZ7tr1U
+	AF4jkF1DCr4UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziIzuJUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwIno2fyfGToqwAAsH
 
-Recent IGD platforms without VBIOS or UEFI CSM support do not contain
-VGA ROM at 0xC0000. Check whether the VGA ROM region is a valid PCI
-option ROM with 0xAA55 signature before assigning the shadow ROM.
+Previously, the debugfs directory was unconditionally created in
+tegra_pcie_config_rp() regardless of the CONFIG_PCIEASPM setting.
+This led to unnecessary directory creation when ASPM support was disabled.
 
-Signed-off-by: Tomita Moeko <tomitamoeko@gmail.com>
+Move the debugfs directory creation into init_debugfs() which is
+conditionally compiled based on CONFIG_PCIEASPM. This ensures:
+- The directory is only created when ASPM-related debugfs entries are
+  needed.
+- Proper error handling for directory creation failures.
+- Avoids cluttering debugfs with empty directories when ASPM is disabled.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- arch/x86/pci/fixup.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Changes since v1:
+https://lore.kernel.org/linux-pci/20250405145459.26800-1-18255117159@163.com
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index efefeb82ab61..da9fb86c2ea0 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -317,6 +317,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
- 	struct pci_bus *bus;
- 	u16 config;
- 	struct resource *res;
-+	void __iomem *rom;
- 
- 	/* Is VGA routed to us? */
- 	bus = pdev->bus;
-@@ -338,9 +339,12 @@ static void pci_fixup_video(struct pci_dev *pdev)
- 		}
- 		bus = bus->parent;
- 	}
--	if (!vga_default_device() || pdev == vga_default_device()) {
-+
-+	rom = ioremap(0xC0000, 0x20000);
-+	if (rom && (!vga_default_device() || pdev == vga_default_device())) {
- 		pci_read_config_word(pdev, PCI_COMMAND, &config);
--		if (config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
-+		if ((config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) &&
-+		    (readw(rom) == 0xAA55)) {
- 			res = &pdev->resource[PCI_ROM_RESOURCE];
- 
- 			pci_disable_rom(pdev);
-@@ -354,6 +358,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
- 			dev_info(&pdev->dev, "Video device with shadowed ROM at %pR\n",
- 				 res);
- 		}
-+		iounmap(rom);
- 	}
+- The first version was committed incorrectly because the judgment
+  parameter in "debugfs_remove_recursive" was not noticed.
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 27 +++++++++++++---------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 5103995cd6c7..f048b2342af4 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -711,16 +711,27 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
+ 	dw_pcie_writel_dbi(pci, PCIE_PORT_AFR, val);
  }
- DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
+ 
+-static void init_debugfs(struct tegra_pcie_dw *pcie)
++static int init_debugfs(struct tegra_pcie_dw *pcie)
+ {
+-	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
++	struct device *dev = pcie->dev;
++	char *name;
++
++	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
++	if (!name)
++		return -ENOMEM;
++
++	pcie->debugfs = debugfs_create_dir(name, NULL);
++
++	debugfs_create_devm_seqfile(dev, "aspm_state_cnt", pcie->debugfs,
+ 				    aspm_state_cnt);
++
++	return 0;
+ }
+ #else
+ static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
+ static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
+ static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
+-static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
++static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
+ #endif
+ 
+ static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
+@@ -1634,7 +1645,6 @@ static void tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
+ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+-	char *name;
+ 	int ret;
+ 
+ 	pm_runtime_enable(dev);
+@@ -1664,14 +1674,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+ 		goto fail_host_init;
+ 	}
+ 
+-	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
+-	if (!name) {
+-		ret = -ENOMEM;
++	ret = init_debugfs(pcie);
++	if (ret < 0)
+ 		goto fail_host_init;
+-	}
+-
+-	pcie->debugfs = debugfs_create_dir(name, NULL);
+-	init_debugfs(pcie);
+ 
+ 	return ret;
+ 
+
+base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
 -- 
-2.47.2
+2.25.1
 
 
