@@ -1,145 +1,211 @@
-Return-Path: <linux-pci+bounces-25413-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25414-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEA29A7E528
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 17:49:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78675A7E5A1
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:06:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 852AD3A5E27
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 15:43:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 388CF3B17D5
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 15:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70DA202F92;
-	Mon,  7 Apr 2025 15:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0DCA206F34;
+	Mon,  7 Apr 2025 15:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NmxAiWAd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="QVhgxBu0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D5D202C32;
-	Mon,  7 Apr 2025 15:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E3E207676
+	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 15:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040650; cv=none; b=BBhNAMoCcLC1lmugdJn5Hljv9JARWtw4a1QdH9x1aPp0NPmuqQtloriUnPHOUNP7rP2jqT9wY5v1QpxNzjAeQ72rYdh2ptv2rbLTZjL2Di/4RIAEubcjSLJsH7lbM93Y5kVZNYwFIIYAUS9FH5rj6pK73T2eccSY3XqqAKTI+sU=
+	t=1744041186; cv=none; b=YozTgbiiVZlcjjFPJzxUf6l/mC5+rgzUPfwGDz15VHw+E8dUKmC6B0FugA3rE1nyZpoDdotM3BrWGtqmdC17C3wxeGPNMSoJ6Av3Kh7W3onzwnoFUu8CieYyQ/txdIASvGsTG6Vhyq11vVLtfPeCsGhpqJnbQ7bBcaIXEVtwFWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040650; c=relaxed/simple;
-	bh=qdp7S8zYZK2tNWGM182FxMV42Ekv5vQIbw5ek6+RIF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbashu7SbiSoUT0U7OT3kQL3XDYIN2ay7RxCEm30Xuayb+wb0SP2LZkvEfNJpDaO/PSBSw12Io4vUjFCjEwtrEKjm66JvE85a/EeiQUaBF9ECp4r0lhDUpTyC8nsLE4iIg7DhYV5aqetOoQtwfINRFJZCPSRyWpDgN1PuL+t6Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NmxAiWAd; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744040649; x=1775576649;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qdp7S8zYZK2tNWGM182FxMV42Ekv5vQIbw5ek6+RIF8=;
-  b=NmxAiWAdAZ5tsqrxG5DASnNM84rGOyvCZcJEFmqk3jov2+jbroV1c4Ic
-   c3Sk7AaYJ9vV2vjLCjCFyGntv5S6Pl0T/gZryayHJ07MvYZ++Bo+hat+s
-   6A2MeNr2+V5SwsF0hf2RSqcYQ/vCQog/gRHuyPqbYgwVbn9ySASWQw2DQ
-   WkQ51zSB04b0S3ccwXpbDxt6tueVNbSSjEYfR0BV/b+GeR0kNxsvzE7WM
-   7mcx9kTS48u1VD0znKHiHL7T+nv9LOrw8nBrDuyeDj/tuYeWX6TZKqOaQ
-   RlQgC9e8AAk9+52RunSwBtNHaMJPWA9p9ekal7hBM6H02sU2e0lVRf1/Z
-   Q==;
-X-CSE-ConnectionGUID: /c1MGrd0SHmyexidvCPldg==
-X-CSE-MsgGUID: SI2gq1J0SVyUreIix1Ddrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44579327"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="44579327"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:44:00 -0700
-X-CSE-ConnectionGUID: aDcNRujzQ4iOgfKhELhzfw==
-X-CSE-MsgGUID: a8eRIMDVTc+cxIlKZ8rSMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128327640"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:43:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1odY-0000000A76j-0Bhp;
-	Mon, 07 Apr 2025 18:43:48 +0300
-Date: Mon, 7 Apr 2025 18:43:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 16/16] misc: lan966x_pci: Add drivers needed to support
- SFPs in Kconfig help
-Message-ID: <Z_Pysw4apeyWtHrT@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-17-herve.codina@bootlin.com>
+	s=arc-20240116; t=1744041186; c=relaxed/simple;
+	bh=lSRirgD6vmXWR2W+LyxRShb2hqrhF7lTs6ytrW6ttLg=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bby6215H2y4CkXatHt9kaNDU/aXAVuWZPsHluF16HHn+TyUq+RLmQa6X7/l1oHZnzlzT2eEYDJI5/L2oz0sI0fTcHPyQQhSt8BFRbohXEMQnvTDKjGeza7NvvdbaxkSLqKXduMsE8bYX7MNb9xbn0VB5OI8xX72bdYEjUglRBBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=QVhgxBu0; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744041168; x=1744300368;
+	bh=UO58uVNVuqrkxontk+bpXoCuz/hQY26JfCS2dLBPfS4=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=QVhgxBu03cUpTinM0Iick6X3X3GkWqA974KI2kzDFdH5mi0FU2YANJKNm4iJYYJa7
+	 B9qasfCxqu0nRVCnYdO2tosa2m0Vlrfinv6dkSn4pR62xJIGn91dA/U4sHlKaCntEN
+	 hGCU41p2o4BVXwBdgz3nLB0q7vWJLTWzRu560Fjdn3UV76D1j5/KkIzDtTWpcgmzwR
+	 6Ddutdxcdlyi+EI9JoOnnaivxloLtPcwUTYwMKVxq1XxkpcYSBCeqFOmntIpXc0PX8
+	 BNA8BnnhZy+JaJheBLxAOGGmyWeJSxvBSlU3JY3YOxCG5dRUM6bWGb4NP9E3lznlmw
+	 KSySkKr8Nx6LA==
+Date: Mon, 07 Apr 2025 15:52:42 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D90IZQSXEDMM.1AKV40R0VB94T@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 308df588d7fde4ef846351eef06d533f1a7121cf
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407145546.270683-17-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 04:55:45PM +0200, Herve Codina wrote:
-> Recently, new device-tree nodes were added in the overlay to add support
-> for SFPs on LAN966x PCI device.
-> 
-> The LAN966X Kconfig help section mentions drivers related to devices
-> added based on the overlay description.
-> 
-> Add drivers related to devices described by those new nodes in the
-> already existing driver list.
+On Wed Apr 2, 2025 at 11:06 AM CEST, Danilo Krummrich wrote:
+> On Wed, Apr 02, 2025 at 12:05:56AM +0000, Benno Lossin wrote:
+>> On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
+>> > On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
+>> >> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
+>> >> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
+>> >> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
+>> >> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
+>> >> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
+>> >> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wr=
+ote:
+>> >> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+>> >> >> >> >> > Along these lines, if you can convince me that this is som=
+ething that we
+>> >> >> >> >> > really should be doing, in that we should always be checki=
+ng every time
+>> >> >> >> >> > someone would want to call to_pci_dev(), that the return v=
+alue is
+>> >> >> >> >> > checked, then why don't we also do this in C if it's going=
+ to be
+>> >> >> >> >> > something to assure people it is going to be correct?  I d=
+on't want to
+>> >> >> >> >> > see the rust and C sides get "out of sync" here for things=
+ that can be
+>> >> >> >> >> > kept in sync, as that reduces the mental load of all of us=
+ as we travers
+>> >> >> >> >> > across the boundry for the next 20+ years.
+>> >> >> >> >>=20
+>> >> >> >> >> I think in this case it is good when the C and Rust side get=
+ a bit
+>> >> >> >> >> "out of sync":
+>> >> >> >> >
+>> >> >> >> > A bit more clarification on this:
+>> >> >> >> >
+>> >> >> >> > What I want to say with this is, since we can cover a lot of =
+the common cases
+>> >> >> >> > through abstractions and the type system, we're left with the=
+ not so common
+>> >> >> >> > ones, where the "upcasts" are not made in the context of comm=
+on and well
+>> >> >> >> > established patterns, but, for instance, depend on the semant=
+ics of the driver;
+>> >> >> >> > those should not be unsafe IMHO.
+>> >> >> >>=20
+>> >> >> >> I don't think that we should use `TryFrom` for stuff that shoul=
+d only be
+>> >> >> >> used seldomly. A function that we can document properly is a mu=
+ch better
+>> >> >> >> fit, since we can point users to the "correct" API.
+>> >> >> >
+>> >> >> > Most of the cases where drivers would do this conversion should =
+be covered by
+>> >> >> > the abstraction to already provide that actual bus specific devi=
+ce, rather than
+>> >> >> > a generic one or some priv pointer, etc.
+>> >> >> >
+>> >> >> > So, the point is that the APIs we design won't leave drivers wit=
+h a reason to
+>> >> >> > make this conversion in the first place. For the cases where the=
+y have to
+>> >> >> > (which should be rare), it's the right thing to do. There is not=
+ an alternative
+>> >> >> > API to point to.
+>> >> >>=20
+>> >> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since =
+that
+>> >> >> trait to me is a sign of a canonical way to convert a value.
+>> >> >
+>> >> > Well, it is the canonical way to convert, it's just that by the des=
+ign of other
+>> >> > abstractions drivers should very rarely get in the situation of nee=
+ding it in
+>> >> > the first place.
+>> >>=20
+>> >> I'd still prefer it though, since one can spot a
+>> >>=20
+>> >>     let dev =3D CustomDevice::checked_from(dev)?
+>> >>=20
+>> >> much better in review than the `try_from` conversion. It also prevent=
+s
+>> >> one from giving it to a generic interface expecting the `TryFrom` tra=
+it.
+>> >
+>> > (I plan to rebase this on my series introducing the Bound device conte=
+xt [1].)
+>> >
+>> > I thought about this for a while and I still think TryFrom is fine her=
+e.
+>>=20
+>> What reasoning do you have?
+>
+> The concern in terms of abuse is that one could try to randomly guess the
+> "outer" device type (if any), which obiously indicates a fundamental desi=
+gn
+> issue.
+>
+> But that's not specific to devices; it is a common anti-pattern in OOP to
+> randomly guess the subclass type of an object instance.
+>
+> So, I don't think the situation here is really that special such that it =
+needs
+> an extra highlight.
 
-...
+I re-read the docs on `TryFrom` and I have some new thoughts:
+`TryFrom<device::Device> for pci::Device` is indeed similar to
+`TryFrom<i64> for i32`. If the `device::Device` is embedded in a
+`pci::Device`, then the `Ok` value is obvious. If not, then the error is
+also clear and the user should do something in that case. So in this
+regard, it's pretty natural to use `TryFrom`.
 
->  	    - lan966x-serdes (PHY_LAN966X_SERDES)
->  	    - lan966x-miim (MDIO_MSCC_MIIM)
->  	    - lan966x-switch (LAN966X_SWITCH)
-> +	    - lan966x-gck (COMMON_CLK_LAN966X)
+Now my initial thoughts were more on the side of if people should avoid
+it, then it shouldn't be named `try_from`. But IIUC, most of the time
+they won't be able to call `try_from`, since they already have the
+correct type to begin with.
 
-> +	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
+Ultimately this is your call to make, if you think that it's unlikely
+that people will use the `try_from` in the wrong places, then go for it.
 
-Perhaps keep it alphabetically ordered?
+>> > At some point I want to replace this implementation with a macro, sinc=
+e the code
+>> > is pretty similar for bus specific devices. I think that's a bit clean=
+er with
+>> > TryFrom compared to with a custom method, since we'd need the bus spec=
+ific
+>> > device to call the macro from the generic impl, i.e.
+>> >
+>> > =09impl<Ctx: DeviceContext> Device<Ctx>
+>> >
+>> > rather than a specific one, which we can't control. We can control it =
+for
+>> > TryFrom though.
+>>=20
+>> We could have our own trait for that.
+>
+> I don't think we should have a trait specific for devices for this. If we=
+ really
+> think the above anti-pattern deserves special attention, then we should h=
+ave a
+> generic trait (e.g. FromSuper<T>) instead.
+>
+> But I'm not sure that we really need to put special attention on that.
 
-> +	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-> +	    - sam9x60-i2c (I2C_AT91)
-> +	    - sfp (SFP)
+That's fair, but I think then it would lose the `Device` specific docs
+about not using it if there are other options.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+---
+Cheers,
+Benno
 
 
