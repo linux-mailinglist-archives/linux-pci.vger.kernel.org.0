@@ -1,129 +1,204 @@
-Return-Path: <linux-pci+bounces-25460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38C20A7F03D
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 00:22:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9AAA7F07E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 00:54:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B79083AC72F
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 22:22:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FA1D17B7D6
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 22:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 425631F4199;
-	Mon,  7 Apr 2025 22:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388DC22E3E3;
+	Mon,  7 Apr 2025 22:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXxN0y2B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRWrO/4Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1343618E743;
-	Mon,  7 Apr 2025 22:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD9822D7A7
+	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 22:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744064537; cv=none; b=N0EoEEvLfX6m0c6zKrlAFwwB6oHegnrQXUAaYZ1zMJb/9ptA1lUkaD7GUHIGOtyO8vui3DB5hJd2o1BXP1Mgs6Jxx+ZbOJw3SuQbdmhlUTyKPJEMhusBEDp0wrmvYgu2e0jIgfpEgkXD8rExi12vFaXPTWHg8WsDFzhYfZtXZsc=
+	t=1744066321; cv=none; b=tQ/eGjTenA/6s1INGxHCZMWntSZX/vNURyF4deEeJdc+4mlLgYVnj6AZBnRnpSMVvbTqM1ki8k6ux98PQzcJiJc6E1J5RgOIF4i4Mu7ab9OmXPPNkFfjvbSPYmKzeok8ZcSaE5TSF1VX4ee9+HgBGVs8RaEjUrbnKemqqfRFhpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744064537; c=relaxed/simple;
-	bh=Qbr5F8RaLt4BsGe+R2HawfHCgZ7qW7CDs6Mf/m1Ffaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qG0K8OO14HllUeem4FS+OcgkGDZOkAu170RlRUDstTsHhSKIx5zlWy5tkEXlsyX0q9enUjwIttKgPx09xJRDCNqmSy8de2xlot/ozOOk156rxQXRzZogh80pHMcso+Uk4tTbkpN0iHaPoKnGjUwH99l8dp4dbOkYIm0n8FN0dSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXxN0y2B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B60BC4CEDD;
-	Mon,  7 Apr 2025 22:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744064536;
-	bh=Qbr5F8RaLt4BsGe+R2HawfHCgZ7qW7CDs6Mf/m1Ffaw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kXxN0y2BhzjZaHDvsi/NwsAmlYkOIDnfhmqeYyDtXHq0fucuJoVLN6Hi6iNkkrwHQ
-	 1ILN7T2kdZInG9IjsK0hDUQsKlRNejU5PaUSUm9amZdp/S5h6klGsojJxD3bd60IN3
-	 K5Ow9/AGEMstbMs2UHUF9ZMwj/w9Ikqpm63/9biC2U9TQ4PGrYIuPUwHpyFt7xaYKn
-	 jaRzRICdLww3xlHfsJJw9IOt/nE8kjfMHtOBWgOd5wgc01HI5lh8uxoAQ1Dy54/CKZ
-	 XuvaRRsWE7rh/irz9+0nhTkzBgo+Js78Dg0upa8WUUajzXyx7ggfW/MoJNIqeT+akV
-	 b+Ey9bHwhaIwQ==
-Date: Mon, 7 Apr 2025 17:22:14 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Michael Chan <mchan@broadcom.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Leon Romanovsky <leon@kernel.org>
-Subject: Re: PCI VPD checksum ambiguity
-Message-ID: <20250407222214.GA204460@bhelgaas>
+	s=arc-20240116; t=1744066321; c=relaxed/simple;
+	bh=xk6+GuIlJyPcOF97rvioGdrmfsj08TuNFKPTnNBPVcU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h1w1LTK1o3OhxXhhxAe3u3HewR22bS9l2AH3ydXVH/SHItrRn/O4v38LY0yT37N3h7Nkr9HMzN/dvNVlRXMamjjEIjb7Tf+4oUXq6LuBAVx2jtfTBVENm38CxhAt263uGMMTRm2yuMoDcWlUGMbEUCgdoRPc7mlzwAGgCGkq1og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aRWrO/4Q; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6050191e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 07 Apr 2025 15:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744066317; x=1744671117; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9T1LuFxtlhisA25vk0GSN9ZyiZy+KSvd4XC01LmHfFI=;
+        b=aRWrO/4Q9E4B0MNV+tJKgfo9c9heW7lRog8Dc85lAt5PytYH9yVgaLSJ+2qDRt4KGm
+         8OHXremBWnjJ1+157nNns7Ss+EVGQWY51xx6+cpN3mmrrsyi4Wa8zRov9sMH2Hf0aAFh
+         VOFxk+MX7NWBjG7VjxFwyY1CbBAN/ECmx48JoYc24LvN+FKVg0Z3fg9NGh2pa69rTMd7
+         2YYWAzjIZTEHwxkaGfYgYKO0KMoS6els9B8aI8cNAIutbOs+/ki5kbnZ+TWununInGzP
+         TPQ67+bHOaw5ApwHDMSxJ39IfblFdPzcpcjbfEOQNwpYYDeIYJCv57ss741AaAU+XHF2
+         3RaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744066317; x=1744671117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9T1LuFxtlhisA25vk0GSN9ZyiZy+KSvd4XC01LmHfFI=;
+        b=jDRqSFazLGH+LfuMQf/urxy/wqIEiBlGdYHPa+Se0txu37Qt6ATJGe3rBwFsAJGL4Z
+         6SnVAOc8v3DX44BajZIOYf4YGA3Ey9bauRvnuW3/B0KtEq94nL9FoX3wMwjneC+3BLlr
+         pqQ6H0fnNlwdAh3nGIQLxFkbvIA7bEWTnc8DGPAlQG+6EvArtoj9PMbCVkt6YMXDpZlp
+         2tQxEC8bTPu9qvMkXq2Z1kCuM6OPXOvN577UaPyey4kiULoVMRvKSP2Hc3aa0E6lWjwv
+         sPM9TGQ7Fh4WbNR/xm0mAsEKaUv4j4QS7KhgX7SsAGSXBwMgVyW1hdIdqs4etSu2Pkdp
+         AFcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTwpEM1j1RSTnIRXNVYe09jhD7h2qzrcn5P69hA46OUHrvS2NleiKJ/BJyAzD0BG7YL7Ju5Hl947E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgrTvGpSexuhMr649Ab42XRtUZN7qNLZPzA8cwXSe6d4nIxGvR
+	hcxGB3FnlBlns9m/pcib8HASr4j0hmE/6ojcHiofpc7OPJIMmstI7rbAXFYME03RjAnCaPLztZ/
+	LUAjmtoNKBxlTMz5fV0b62vQk47rdGbL82W6n
+X-Gm-Gg: ASbGncsQ/WLnDM/f68RuaeLEcb71WBIukGeVlpiC6J4NXtuZLnegk8U+62dLepZqn9S
+	9aJxW8O2V5cyoE3UlWWzdqa7E/ePp0uRX9t18o0zkDdNB6P0UQYWGUNTvEWGGarUhpRyfzBChN7
+	JBUWA0c6/Dd+u6HokCswKpVk69qN+8EU3e0d8=
+X-Google-Smtp-Source: AGHT+IGZy1cH5XFvxf4qYN6nMiZKkGDS0+s79ElF1xv6IXDDdsnr740VlwJkyiHI3RPM0cEI5hC/q03/uRkTb7Y8OD0=
+X-Received: by 2002:a05:6512:2341:b0:549:86c8:113a with SMTP id
+ 2adb3069b0e04-54c297d0929mr2593762e87.15.1744066316436; Mon, 07 Apr 2025
+ 15:51:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALs4sv3awP3oA3-mvjSUmHCk=KZjF5F75SnnaE79ZUGqDC=orw@mail.gmail.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com> <20250407145546.270683-3-herve.codina@bootlin.com>
+In-Reply-To: <20250407145546.270683-3-herve.codina@bootlin.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Mon, 7 Apr 2025 15:51:20 -0700
+X-Gm-Features: ATxdqUHzf_3trxjbd35DyDptpEJ-bBNCqGhzKGi2OGpUI_J2cUir_Gap-o-BFA4
+Message-ID: <CAGETcx81G7Bk3AswqGu1hoybuGL1znN7gvX5+baJurfWFx+xuA@mail.gmail.com>
+Subject: Re: [PATCH 02/16] driver core: Rename get_dev_from_fwnode() wrapper
+ to get_device_from_fwnode()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 04:03:42PM +0530, Pavan Chebbi wrote:
-> > > >
-> > > > Any idea how devices in the field populate their VPD?
-> 
-> I took a quick look at our manufacturing tool, and it does look like
-> the computation simply starts at address 0.
-> 
-> > > > Can you share any VPD dumps from devices that include an RV keyword
-> > > > item?
-> 
-> A couple of devices I could find: hope it helps..
-> 000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-> 000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373230
-> 000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-> 000160: 52561d1d 00000000 00000000 00000000 000000
-> 
-> 000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-> 000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373139
-> 000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-> 000160: 52561d15 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+On Mon, Apr 7, 2025 at 7:56=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
+>
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
+>
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
+>
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
+=3DiEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-Thanks a lot for this!
+Thank you!
 
-I put each of these in a file ("vpd.txt") and computed the checksum
-with this:
+Reviewed-by: Saravana Kannan <saravanak@google.com>
 
-  addr=0; sum=0; xxd -r -c 32 vpd.txt | xxd -p -g1 -c1 x.bin | while read X; do sum=$(($sum + "0x$X")); printf "addr 0x%04x: 0x%02x sum 0x%02x\n" $addr "0x$X" $(($sum % 256)); addr=$(($addr + 1)); done
-
-In both cases the sum came out to 0x00 as it should.
-
-So it looks like Broadcom interpreted the spec the same way Linux
-pci_vpd_check_csum() does: the checksum includes all bytes from the
-beginning of VPD up to and including the RV checksum byte, not just
-the VPD-R list.
-
-These dumps start at 0x100 (not 0), which seems a little weird.  But
-"xxd -r" assumes zeros for the 0-0xff range, so it doesn't affect the
-checksum.
-
-I manually decoded the first one, which looked like this.  Nothing
-surprising here:
-
-  00000100: 822f 0042 726f 6164 636f 6d20 4e65 7458  ./.Broadcom NetX
-  00000110: 7472 656d 6520 4769 6761 6269 7420 4574  treme Gigabit Et
-  00000120: 6865 726e 6574 2043 6f6e 7472 6f6c 6c65  hernet Controlle
-  00000130: 7200                                     r.
-
-    82 == large resource tag 0x02 (Identifier String), data item length 0x2f
-      "Broadcom NetXtreme Gigabit Ethernet Controller"
-
-  00000132:      904b 0050 4e08 4243 4d39 3537 3230    .K.PN.BCM95720
-  00000140: 4543 0931 3036 3637 392d 3135 534e 0a30  EC.106679-15SN.0
-  00000150: 3132 3334 3536 3738 394d 4e04 3134 6534  123456789MN.14e4
-  00000160: 5256 1d1d 0000 0000 0000 0000 0000 0000  RV..............
-  00000170: 0000 00                                  ...
-
-    90 == large resource tag 1_0000b (0x10, VPD-R), data item length 0x4b
-    50 4e PN keyword, length 0x08: 4243 4d39 3537 3230:       "BCM95720"
-    45 43 EC keyword, length 0x09: 31 3036 3637 392d 3135:    "106679-15"
-    53 4e SN keyword, length 0x0a: 30 3132 3334 3536 3738 39: "0123456789"
-    4d 4e MN keyword, length 0x04: 3134 6534:                 "14e4"
-    52 56 RV keyword, length 0x1d: 1d
-      (last byte of VPD-R is 0x162 + 0x1d == 0x17f)
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/vpd.c?id=v6.14#n520
+> ---
+>  drivers/base/core.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index d2f9d3a59d6b..f30260fd3031 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct dev=
+ice *dev)
+>         device_links_write_unlock();
+>  }
+>
+> -#define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
+> +#define get_device_from_fwnode(fwnode) get_device((fwnode)->dev)
+>
+>  static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
+>  {
+> @@ -1891,7 +1891,7 @@ static bool fwnode_init_without_drv(struct fwnode_h=
+andle *fwnode)
+>         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
+>                 return false;
+>
+> -       dev =3D get_dev_from_fwnode(fwnode);
+> +       dev =3D get_device_from_fwnode(fwnode);
+>         ret =3D !dev || dev->links.status =3D=3D DL_DEV_NO_DRIVER;
+>         put_device(dev);
+>
+> @@ -1960,7 +1960,7 @@ static struct device *fwnode_get_next_parent_dev(co=
+nst struct fwnode_handle *fwn
+>         struct device *dev;
+>
+>         fwnode_for_each_parent_node(fwnode, parent) {
+> -               dev =3D get_dev_from_fwnode(parent);
+> +               dev =3D get_device_from_fwnode(parent);
+>                 if (dev) {
+>                         fwnode_handle_put(parent);
+>                         return dev;
+> @@ -2016,8 +2016,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode=
+_handle *con_handle,
+>                 goto out;
+>         }
+>
+> -       sup_dev =3D get_dev_from_fwnode(sup_handle);
+> -       con_dev =3D get_dev_from_fwnode(con_handle);
+> +       sup_dev =3D get_device_from_fwnode(sup_handle);
+> +       con_dev =3D get_device_from_fwnode(con_handle);
+>         /*
+>          * If sup_dev is bound to a driver and @con hasn't started bindin=
+g to a
+>          * driver, sup_dev can't be a consumer of @con. So, no need to ch=
+eck
+> @@ -2156,7 +2156,7 @@ static int fw_devlink_create_devlink(struct device =
+*con,
+>         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
+>                 sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
+>         else
+> -               sup_dev =3D get_dev_from_fwnode(sup_handle);
+> +               sup_dev =3D get_device_from_fwnode(sup_handle);
+>
+>         if (sup_dev) {
+>                 /*
+> @@ -2225,7 +2225,7 @@ static void __fw_devlink_link_to_consumers(struct d=
+evice *dev)
+>                 bool own_link =3D true;
+>                 int ret;
+>
+> -               con_dev =3D get_dev_from_fwnode(link->consumer);
+> +               con_dev =3D get_device_from_fwnode(link->consumer);
+>                 /*
+>                  * If consumer device is not available yet, make a "proxy=
+"
+>                  * SYNC_STATE_ONLY link from the consumer's parent device=
+ to
+> --
+> 2.49.0
+>
 
