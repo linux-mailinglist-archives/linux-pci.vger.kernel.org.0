@@ -1,123 +1,121 @@
-Return-Path: <linux-pci+bounces-25419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25420-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2EA3A7E790
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 19:00:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B312A7E7A9
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 19:02:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0BF5189BBC9
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:55:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0318D1895A7C
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:56:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E7621423A;
-	Mon,  7 Apr 2025 16:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FDE215767;
+	Mon,  7 Apr 2025 16:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/fxj2Nh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQVL1rTf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243E913C8E8;
-	Mon,  7 Apr 2025 16:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A712139CB;
+	Mon,  7 Apr 2025 16:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044795; cv=none; b=Sv0lCF8aF0j7+wTOQ7V4W6VYX5yYdXrmhGnZ05APwlpYvc+3aKluKcIQBfVS+zGT0IvVfMig6ttZcw0A0anBV0naEMhSOX6cHuMazulEwoSav2nTEPmthI6QnaOGnKj4T/ia75o8NDAfB+BQPWknrnlYqiiiykJeKEDUU4kxinw=
+	t=1744044940; cv=none; b=PJBEqKpXIQoD6+NYCr4MfnEsK5qTTWesE/+FSK4QxApuRdDkAjakS46JwWPjkwcv3wVMiOkcY/q/LAKyyn/g0n+F7hhqwBepnOf0A1XBE+6+t+BnsqdyFjE9PRLL236nFkPUS1bjqF3qSGDqKVm3p0lKeC/4m7lDo+Vg7c/rO+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044795; c=relaxed/simple;
-	bh=/5l4BinDGarHYEuUjkfx0ozu50otXKiCczW5dEwIajA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LTE+bBXmh7fSKZ95VX265jqJ3lidLYeNxPBfYiZeSvsxt1oXuCtMmOYjRj0uYGNXLhybwPnwf2zmFDLaShGEaVi0MBhTPYANbLz0lGyrU+sDC7Xn8aIuigt+Ki86LBKHRobw0SO5Ysq88KLySOHABu05r6FB9IWsBJES8jo1Vs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/fxj2Nh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F73C4CEE7;
-	Mon,  7 Apr 2025 16:53:14 +0000 (UTC)
+	s=arc-20240116; t=1744044940; c=relaxed/simple;
+	bh=c2MKD/XKzSiKwW1/i7FUqEHwziXv/iFw3B4sgnw+bVs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rGvwC1iWRdpDdxAiQqISWK2Pf1eZPnT0iHKTunFhzqvobsNTLHZxiVb6rK/Qf+GX9D0unhSQfIdEHcVqbTVJoLAhwfoFXPB4t2vywz9tsx7jaMVNCmK0H3VpUqokoSViN4hgPL9cHqZ/WW4Xg2DCeV4tu0h1wrRI6SQCSWCQItM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQVL1rTf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711ACC4CEDD;
+	Mon,  7 Apr 2025 16:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744044795;
-	bh=/5l4BinDGarHYEuUjkfx0ozu50otXKiCczW5dEwIajA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=t/fxj2NhB3YZ6qljNzqey3La1PfdPfgT/cFyqH/SO2VAa4PElW5NZV2fwE4EuGD3d
-	 S0z38AJkDC1kApa972dpZaVJGzWT3SUbucu5nNX6Q8FoU7sh9gj5xPaZfThJZQV4u5
-	 kJBIqz5m1vG0shjKDr0DAZ9WzVNszYjj2wioR0HZ7JFYkt50V36+V/cYUT8L3XFWrA
-	 2zb5Nk0wf50652r9URCH8QQL02q+2uEZ+BiQFT+tD4v4IYXVctTweNYhzshIZ14ieo
-	 YqMd/w4X111ey4gXoNNrcyYKE8l7TAML1+gfA3FAjjFVjpECKdPCEktXF+dFaUg1z5
-	 IqCboSn1wkxFg==
-Date: Mon, 7 Apr 2025 11:53:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
-Message-ID: <20250407165313.GA183057@bhelgaas>
+	s=k20201202; t=1744044940;
+	bh=c2MKD/XKzSiKwW1/i7FUqEHwziXv/iFw3B4sgnw+bVs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KQVL1rTftG/IrWL4PFKeSt7oXv+clC6wbH1FSt6Bj77JqHtLrM/hnt7aWZmW4wXon
+	 HLJRMDdpXpLLwDKLl5UmTY4SGrRs47B77ktvFr5gDteoMJ9uNcFaUYQiaJkJDAi7MB
+	 zQPS/cg3YmSmHJZ1saJtvolhumMVX4njdRpx/JGlN5XJ4uOQwPD5EhQIZfK3RiLS70
+	 2bWFDwAhmT4wHItUiPJqIX4PRsgTPgR33opXSGJzH2ki2V3lewuHLDt4E/pmtwQjee
+	 Mbc82pPT5RNDvOWbjufOcRjlS5i6OdcS5N3Fjv+E3fhlkDsXoNlFS563wCLkudZ+px
+	 2d81T/08DtAIw==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2c663a3daso870057166b.2;
+        Mon, 07 Apr 2025 09:55:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5lTIA3t7z/hmjvTQXKrkrrxPMsxtswK5bNrNUKH40XPPwyHUQnzKU8w6iFheZ1HzMvTGlDK6dklmen/s=@vger.kernel.org, AJvYcCUFXTi5moF+eSUr9Om5pt7NOcYPBx26Ye9Z3R8z82B++Do66MFTAVdnUldvrvKPyUa2zbbjhhWUlv9Q@vger.kernel.org, AJvYcCVYnNiiuqALmXyBCL7C4AYWx2Mhtt1O5zGFSsk+0aD9VKhcLehPM8J/Bns7d4JC75vrUFL997WHBRY+za7c@vger.kernel.org, AJvYcCVmfvcII28cpv57NN7ejB3RBU3nWATfnHFx8ju22qEP/gxyPEQ2lUKmqg16Cu/z6iy9LGY7LpQAX6PS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRp2YXTNz1yA8uBTLrJRss6lKPS3uN/0x8XSI9FPcPwOvaMamb
+	BfFvdq/ypvZN1grqtaqjj0rEBt9ygs8+NhYc7iHFxFR2whL+apSZJXKKq2FFg+h9KGsDQ9ukGNr
+	w1V7Cquw1T1dwTWYNDQiIDzV/1Q==
+X-Google-Smtp-Source: AGHT+IEd0KrgFqiXEguYCKaGod1w87MoHOUslXzG8mwe6sn3+lvNHY/R8wCVUd9TUz9Kf+cBq/nGYese5yv4O8hDda0=
+X-Received: by 2002:a17:907:a4d:b0:ac7:3456:7ece with SMTP id
+ a640c23a62f3a-ac7d1b28752mr1313800366b.46.1744044939101; Mon, 07 Apr 2025
+ 09:55:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lhtklncbcyphq2ljxn6w5p7wk4rdj5wxzskmlly4mrr664b2lj@w5clch5uzvd3>
+References: <20250404221559.552201-1-robh@kernel.org> <174380891321.749968.3085053836966154334.robh@kernel.org>
+In-Reply-To: <174380891321.749968.3085053836966154334.robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 7 Apr 2025 11:55:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL+i012pE2vrSWc-Tro58aAEZY4xe5n-LcoqN1RWES6RQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFAzIqfYAmbp0OPypTNYKPyZk-fHySvRwAg51LjL3xBt7FwP5p8N5-z_nU
+Message-ID: <CAL_JsqL+i012pE2vrSWc-Tro58aAEZY4xe5n-LcoqN1RWES6RQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.li@nxp.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 01:14:56PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 24, 2025 at 11:28:54AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Mar 24, 2025 at 03:34:35PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > Precision Time Management (PTM) mechanism defined in PCIe spec
-> > > r6.0, sec 6.22 allows precise coordination of timing information
-> > > across multiple components in a PCIe hierarchy with independent
-> > > local time clocks.
-> > > 
-> > > PCI core already supports enabling PTM in the root port and
-> > > endpoint devices through PTM Extended Capability registers. But
-> > > the PTM context supported by the PTM capable components such as
-> > > Root Complex (RC) and Endpoint (EP) controllers were not exposed
-> > > as of now.
-> > > 
-> > > Hence, add the sysfs support to expose the PTM context to
-> > > userspace from both PCIe RC and EP controllers. Controller
-> > > drivers are expected to call pcie_ptm_create_sysfs() to create
-> > > the sysfs attributes for the PTM context and call
-> > > pcie_ptm_destroy_sysfs() to destroy them. The drivers should
-> > > also populate the relevant callbacks in the 'struct
-> > > pcie_ptm_ops' structure based on the controller implementation.
-> > 
-> > Can we include some motivation here, e.g., what is the value of
-> > exposing this information?  Is this for debugging or bringup
-> > purposes?  Can users or administrators use this for something?
-> > Obviously they can read and update some internal PTM state, but it
-> > would be nice to know what that's good for.
-> 
-> This was a request from one of the Qualcomm customers, but they
-> didn't share how they are using these context. They just said that
-> they want to collect the PTM timestamps for comparing with PTP
-> timestamps from a different PCIe switch. That was not a worth of
-> information to be mentioned in the cover letter, so I skipped it
-> intentionally.
+On Fri, Apr 4, 2025 at 6:21=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org> =
+wrote:
+>
+>
+> On Fri, 04 Apr 2025 17:15:57 -0500, Rob Herring (Arm) wrote:
+> > The content in these files has been moved to the schemas in dtschema.
+> > pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
+> > pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
+> > msi-map property in pci-host-bridge.yaml.
+> >
+> > Cc: Frank Li <Frank.li@nxp.com>
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  .../bindings/pci/nvidia,tegra194-pcie-ep.yaml |   2 +-
+> >  .../devicetree/bindings/pci/pci-iommu.txt     | 171 --------------
+> >  .../devicetree/bindings/pci/pci-msi.txt       | 220 ------------------
+> >  Documentation/devicetree/bindings/pci/pci.txt |  84 -------
+> >  4 files changed, 1 insertion(+), 476 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci.txt
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+>
+>
+> doc reference errors (make refcheckdocs):
+> Warning: Documentation/devicetree/bindings/virtio/pci-iommu.yaml referenc=
+es a file that doesn't exist: Documentation/devicetree/bindings/pci/pci.txt
+> Documentation/devicetree/bindings/virtio/pci-iommu.yaml: Documentation/de=
+vicetree/bindings/pci/pci.txt
 
-I think it is important to include a reason for merging a change.  The
-mere fact that information exists is not enough reason to expose it
-as a sysfs ABI.
+I've fixed this with this[1] patch.
 
-> >  Consequently this probably can't be done by generic drivers like
-> >  ACPI, and maybe this is a candidate for debugfs instead of sysfs.
-> 
-> Well, we can still create sysfs ABI for vendor specific features.
-> Problem with debugfs is that the customers cannot use debugfs in a
-> production environment.  Moreover, I cannot strictly classify PTM
-> context as a debugging information.
+Rob
 
-I'm not convinced about making sysfs ABI for vendor-specific features.
-I see that we do have a few existing things like this:
-
-  Documentation/ABI/testing/sysfs-bus-pci-drivers-janz-cmodio
-  Documentation/ABI/testing/sysfs-bus-pci-devices-cciss
-  Documentation/ABI/testing/sysfs-bus-pci-devices-avs
-
-but I'm a bit hesitant to extend this model.
-
-Bjorn
+[1] https://lore.kernel.org/r/20250407165341.2934499-1-robh@kernel.org
 
