@@ -1,269 +1,274 @@
-Return-Path: <linux-pci+bounces-25365-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25366-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01E6EA7D6FE
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 09:59:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB0F5A7D9DB
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 11:39:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5D8C16B5D4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 07:58:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B453E188D4E5
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 09:39:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A26145355;
-	Mon,  7 Apr 2025 07:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02450227BA5;
+	Mon,  7 Apr 2025 09:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SWhOVka+"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jhu1QqBK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012062.outbound.protection.outlook.com [52.101.71.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F2B17B4EC;
-	Mon,  7 Apr 2025 07:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCFD156230;
+	Mon,  7 Apr 2025 09:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012681; cv=fail; b=RU6t11pjv1KvVvFRUA3KEUIeM4TPvYoAgqjJSfShOBKmfLVgfN1gjO8XviqH8pGIejMqfRXMlm7V5T4ZPUhRJZYnVUM5iCLVd5UZPQ6ncvzo7ljWj7wqO4/B49p4a47pKSzpIV8qKy9VRMR4umnh7NNnLPiTMPBXB5L1s/QGOrM=
+	t=1744018742; cv=fail; b=reuw/6Ej2C0XnWsJ1bOOnmCaFpwbF/EcEUegMW3SEkHtg4sgsMgTrHGkYmVNeXbULd/TqMSfnZ8Q5qtWYLrxjaEfFeYGZvy4zfJp5zaoVoyFcsCE1TBTJm5WhnNRV1y6L2cycQsCaJ/67AhHGYtxUpeTjZbq604/5IG5ogHgV18=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012681; c=relaxed/simple;
-	bh=rUujQPUeYwZ5K0VOwmMxOmZbECbQTFmsmx0AlzyhPco=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=QHl0pkexqIVAkFpCzCEXMxuGk8uYnoArDgfl7HoY2byNnOROuoVY3GaLCmM0Bfv6yy2DjS+nlLKT+zh9sD/pO+1Qw6UKeRx5LIzHSRPHRS3LFBvHkPRLMhsmyuc64cviTpWTQA0Zij4/s95u2RJB9B1ukBlbVAHL2307CA0QEbE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SWhOVka+; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1744018742; c=relaxed/simple;
+	bh=lXAtiGTvKo3GBdXFmfPp2R607NFAw6GqvwopRV3M0eA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y3lOUAb9IMDGaFfcWBfUnvXn+BU4HcvUM1TrBfQre3HntMmxnIZ2qM/wKOawAJiTk1nYkTbJy+hWY2cHfjo1cKScnwklkmEQkk1gDOe632gDGX50VZidxKvFVUjN+1ijKsY/dSBX0oZLbBx5B363GzkQkkJZfCfusdkjKtuBa/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Jhu1QqBK; arc=fail smtp.client-ip=52.101.71.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bfoMG9f3uCYOTmz+dXWVlyJFGjXNir4mH5z3fNsC/5y+1Trj3ZvSMh1e0Pc9tQnLkGChOOy5aWjXQC7OjSylLksCPnX9NvL3apwEH25NDsonXrvVLaD2AIyYFca/TTFInuOMXE4mk8/Q8CCjObTsODqAiaGzGMpr7vMuvTKe+GHF0z4sZe/LflBYbuLic5bCxwWnWIL2Tjteux/FFgewEp+GI/sGFyaiJ6IB6U9rUsueK/kZdK6bcQpiydJk2mDTcAXhT45DtwpmX8O7ixH2P16KTYUjR66RZbZi1XGu/0lN9cEOqSC//50Cv/lKOhRynzFpzd4G9ajVGNMyyoRduQ==
+ b=DiYsCI9Ct8qsXnEPnvzOh/5LlUPxjPWSxTxh8x6zUdS/anC+aUoqUx//sUIjY3wIAhFkYMy1U7lnUyOxsRTlaIU315UveIwc0RMzez05hkOtSwM82EC5VibbiZ3myrvnEvVwbnpJcTHjApLRnjnRs3c0+FtxI4UZ7rnvBddmV0h5+KwrJls9rJT7BUzEm9UOo+oMrzALNBeZVQZn6t/OlHKDvwZfBZhKGP73qdQ9p5cieuVyzJGcCNQs+i0WaPxeQLcvA0LBYAUkN7HTAqE7oRbr9vzTjUDZd8OtZ348B5Z63DbVJYKDr4yOtomqMtUD5t+V14rSN3vrFfBEOcHpAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=od3aA4w/ssER5ZOhMCo8JoehIPwGsJVYdOEYJhCjQS4=;
- b=eZ+/UeB87AfQG8/4mG0Q9qmIg3cVk6UGEx4avtjQzypBxhv9/crbsFgCMv0ul6xuJTPjAIKXMNeJxWF4NUB+Zcz77invi2FoUa3F1v/5Lq+x+v/njeMxjZYObklD45KvtgY6aId9jvWSSD1H0uOkjJ9XnLARjsXxCCtSdjPdbBOefnXPTWHjPUzsajcTBW30ms1od4B8jQGmtPctnQv/Rdw7lZGPiyptLSsXGzUZFaFH4DS2BTVxg7VsxF5rFDQuGkB6X7x9ow8y/ZVwqVvU40jyhwxNQ1v16TOWZD5y+62cQge2anppIhHW5zH9wCUujy4ON8uBeo/MdiwV/XIYZg==
+ bh=pYVrZ/LKT23EGAPlyxyawMRqc4dMa3w514Ce/QtC5Qo=;
+ b=Y7XZPLyCkvk7NJDq0QFrWARxoDzeE4CbIS70w/4LSJoNAQ1loiNJDcLnkBQeWEOfayRl9nzSm3fNEBjaXzRhbVFBxCJ2a73WKwmllLOyoy0A89jQs7ZGes3sqxTFW92FpvBN72sMAqt5h4fry/60kOjqg5/hRl4utP2XHX7XRXG1xTShrvWbIh8UWu0ir7PcTere2wMFVYzR+qMeh2jmlgF07GwBOKUKnXJK/wO7NMXiliBqnXwTy2wopq+SAk1flBl1pO23/6IcH72zaS7ZUz+PPg9jW6DLytexIbRP0qJ5Xn3bR4IPkwF+vOzYv8tIuFLRkpebe+piv+n9YH7BwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=od3aA4w/ssER5ZOhMCo8JoehIPwGsJVYdOEYJhCjQS4=;
- b=SWhOVka+sC8z3+tIq/jJrmj6eSq2FRxDXsVY+tSrIknyVGWfBaqKWJC63YCt/+OnZ54SmkG2171qHfrDx5d52f9f6iAa7s83tnEjnL2kO9oE1cJOcIu4T0D95wt5qNwFeObhq7byR7TBi+m7pufZGODyez/msGNQHg0paJoU5V0VZdQERTwXUG1+yFHA6qPG5UYukMrdyX8djy4K+N+AtaKQSoq09s4oBE9eN9Dg0HidlQ+NE2mRWnScknvfXuk1/sMGDemmfZjqV1E1sLpWtIRSBzXSqKJ2qDRXxjJkiB1ne2eAQfzF77faGEbNu55y8qwoszx5WFXMbvITxv3F4g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by BL4PR12MB9481.namprd12.prod.outlook.com (2603:10b6:208:591::6) with
+ bh=pYVrZ/LKT23EGAPlyxyawMRqc4dMa3w514Ce/QtC5Qo=;
+ b=Jhu1QqBKJXgtY6qJGhmn4ouB6IS30IHuew5I6BE1OB9InLbKEKkDCd3YM6mO9IeGfnYApLhMWuA48iYMmHc4RfiTTJZDuxKVwyAF0lomrz9XyS/Ya+qbHr0Qqp1RsblVbAcUjmSeOTTE6oqWetenGvMleuqtFy5EZGrLRHw1aAkEVRnaCtlsFehrVavJDMoG022ze1D08ILfMlRx3aLFdwQj1pqS5UnhjS0jW6GSIwsZj9msi8TqSOUbSBdJMYxR+yeW25AoKg6NxMJll/bKKxRdBMxEsfQRc0OogVPSAXT9eVCRvGQb4129IAqEuFRgpu1uuGKrFpatSescjvleZA==
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com (2603:10a6:10:242::19)
+ by PA1PR04MB10098.eurprd04.prod.outlook.com (2603:10a6:102:45b::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Mon, 7 Apr
- 2025 07:57:55 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 07:57:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
+ 2025 09:38:57 +0000
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37]) by DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37%5]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
+ 09:38:56 +0000
+From: Sherry Sun <sherry.sun@nxp.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Hongxing Zhu <hongxing.zhu@nxp.com>, "l.stach@pengutronix.de"
+	<l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "shawnguo@kernel.org"
+	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
+	<festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Topic: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Index: AQHaLabE+/mqsANsskSLK4N2coNpALOWMC4AgASMryCAAAO/AIAAJLrA
+Date: Mon, 7 Apr 2025 09:38:56 +0000
+Message-ID:
+ <DB9PR04MB8429618213357F5CE918C68292AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
+References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+ <20231213092850.1706042-3-sherry.sun@nxp.com>
+ <20250404094130.GA35433@francesco-nb>
+ <DB9PR04MB8429588E7CF00BDC9CDA863F92AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
+ <Z_N9cO64FZwONcK9@gaggiata.pivistrello.it>
+In-Reply-To: <Z_N9cO64FZwONcK9@gaggiata.pivistrello.it>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB9PR04MB8429:EE_|PA1PR04MB10098:EE_
+x-ms-office365-filtering-correlation-id: 90350a73-8bb2-42ce-8325-08dd75b80475
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?jWiSnjvWmqxKvUWflhfSNcSCsVh1p3tkDn8ABDayGDRI0KUZAbg1MdA3vrRo?=
+ =?us-ascii?Q?pCdC781QERgcB/vz77BbuH0NQBkq+BsAFklmXXsU+GEAkFFXFIeNvZFbPSC3?=
+ =?us-ascii?Q?JFQAsww9Gm62vs6/4CimVgP5JsQfTMrMYWVvEY0pVR1f6k8ceKpaJEVUvgcZ?=
+ =?us-ascii?Q?a2Sc97QAax5Gfm8bilY3gffOaLjsf+Dp9s8/uXVqIyMy9wAHafCBlb+Skn2v?=
+ =?us-ascii?Q?TJk3k4KmRJ4nzfGzB01C1sG9fW+zMJsGHS5iFcyJisy8pIA5WlsWDC1O0urp?=
+ =?us-ascii?Q?vq63H09VEp3WfbCJNGI7yLvSQKzoQncFMnW7pomUKxGqMqiENYwV9D6E2ygg?=
+ =?us-ascii?Q?WROFtToV/GCs3ojSRUDkD8FljpIrvnpiHGstS33AO0zcc95FhAq1F+G6tYwM?=
+ =?us-ascii?Q?pts9beh215p8fXuDovJHBV0pOK4+sTytkNqOLxI3tOw9x0la+d80mSDPyaKf?=
+ =?us-ascii?Q?W8VkRsR/spZAtkwQJaJLcKiStAk6MPbOq4LACSrz9OI/0jI/iFcvqa2okt/y?=
+ =?us-ascii?Q?W30xPJm+5z9Ihslh1GdIHCnsRJDPPdRms+z5FUKP7qNsftzuIecTN7mjcSPn?=
+ =?us-ascii?Q?jZgTkpYYOzoD6kPQlLlyi2EFM1HZ+VV5kFCOSyvbB3AJWbsML62UrVwVXeNW?=
+ =?us-ascii?Q?AagCO/nA+X966NIcZOlMmTmvQxgNYJj6v5mXsZ2sUrJFc+rvxtqKG9V6LP8D?=
+ =?us-ascii?Q?dyTrJvyn2Wpfc4Rm72PQI1F/AMOWmYxxkjned+29nPHVxz92skbuPNTYFXE0?=
+ =?us-ascii?Q?ueQzU+B4uRt1d5fkfOOOnLBXEI1GJzrWUIGTo5etfzRK09MsDncSw7nudW8d?=
+ =?us-ascii?Q?zTPeTtC/4r5Q54m2DECru5xzXvqAX0tJaOnZKox3QOpxVe9ayliHkhBapeAv?=
+ =?us-ascii?Q?neZhKSD8+MWqjC+/x2thlskcexUdFEc/VPZSQ6mRTwgf7tVNr7dFLC0AQ0AD?=
+ =?us-ascii?Q?Z+PQIY/0tlaXUhW91ZE6BtMlMGmKwB42VFi4Yoe7HJZFnYOejGo1CgARK/Bj?=
+ =?us-ascii?Q?zH9PEAnH+GCWBbO5jMtbZP3QY95Le9HbWgKDl5bWHv7/xVb6EqBtUwcK6vw/?=
+ =?us-ascii?Q?Fo0Kwk275WFtJVKF0QYw+/MeMsuZXJhbFgAVGRlROPxcwh/WHgKiLkQA0hln?=
+ =?us-ascii?Q?NdxZnYVxSoFBLsGeCSlDoUYlj6YiahWhoYFT+9DSht3yvp4a/wI1fxkyiJ+/?=
+ =?us-ascii?Q?QZ6ZcI6RCGJEetJkG8VV0jP4GVhhC7AS0j8FxFVseIOOCTXhRa59B18JU1gh?=
+ =?us-ascii?Q?mUWFs7mNDmM93yPQpyA34WkH/95CEpyq1ngn2f824DVAStdG/0UUPxtH4Itd?=
+ =?us-ascii?Q?4WOY9RvCfXze5WkldgsKZ0zGFeLV3Yy1MVseSA6l3sjyzcV7k53XxHuri1gn?=
+ =?us-ascii?Q?gf5XyUOckD6v6penP4ClznIqQk+ZFqxcSmSWVUKyZnktoQQGX3aXkN9jLBDn?=
+ =?us-ascii?Q?qkEYRlmjeaQIolBaaQL3pfa+9YGqMzh5?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8429.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?row+HwUe/epL29ZOp+CBgGiIfJGQxcezHy41AKm0Q0yuFhToz4Y3D7oYS6KS?=
+ =?us-ascii?Q?38R+oclEUY2ZSpUXzyTuLhWC9xVJN3MzDzp6TlNsMc7COGR7Cv9Mj4hDP/R0?=
+ =?us-ascii?Q?ZUVIA8homl/sw3fIBQFVgWWyYPSx9N7nAGSABbJ5pwn0whPCOgnhM6f3GR9u?=
+ =?us-ascii?Q?BxV/9hrCJX1hvX2oI1U3r2zYIfQx36GAP5Jqkr9xTPXdOTa5Z1SF3hV2GPD7?=
+ =?us-ascii?Q?9yClPF3D0kRPoEPlAscntSNqQyl5HtNs8zkEhtQdfG0JFOvnJCCoLTfskOSX?=
+ =?us-ascii?Q?JMLfkEcFmAKxOjx4LbaD2rA6Q6JB7HA772dERj5OtKJOd+OWf6Rzd9SQr0xa?=
+ =?us-ascii?Q?yYBa3kOcjpsg4n4is51F5nD+iL/Xx2kq/gECJ1JXA9YcqHkttpoqrFxugZxX?=
+ =?us-ascii?Q?XJZVIJj7W//ksiGkqgMdKGQ+D/b/zd+khOoWLBATL5UMGvyi5dFrZD5jRnWb?=
+ =?us-ascii?Q?4uuk0d+iPdXNujVXi/3rGfBca2QE/x4qDzprDnPH25votn/pN0RNj4jPOrTM?=
+ =?us-ascii?Q?9PD38gUmW8vhH8+t3z7eeORmwGG0KX/ghgKWoKlZk2+/5/YsWnyCchn+xZx9?=
+ =?us-ascii?Q?q6+MeX8viL0ehy00NDvSgoJvPSveZdofu01kzEcPbqdPI8Oo7qiYflfEuiOY?=
+ =?us-ascii?Q?tjTbbFB3oanKFyBga1fj4meZBj1rnpN1UtEDtDF8/Qp1o+pF4CQSpHaSSGTf?=
+ =?us-ascii?Q?xa9DmBeKBLgHsq73NQaZGRWU3INfNhDGicyTSr2HWiZ+UW/i8EWZo17TCuWM?=
+ =?us-ascii?Q?KUu02nlNRYMh6lJN2+kPCjET3GJUlxLLYjoz+lYho3osLdAFvqjwGvf2oOZe?=
+ =?us-ascii?Q?2ZXKeNTTDM0HXKzmNAuaDnLbwHmtxqbXOzJIE/CFyG+Ui4UnbCZN2puRgT2x?=
+ =?us-ascii?Q?sM/ftpfmiKUTzA4bAkRc6SBvqLBMzxVRW1m0fsKCijJW3HyS34lstaWgm875?=
+ =?us-ascii?Q?JC9slF4WrZSilITVAJhXOCn+tZjQfyqDeostBqB1C8557xlO/VywjzBxcd1S?=
+ =?us-ascii?Q?3ICMY33Zj681WZ7GyVt7/f677iBzGKWdrQxPHH0sAtmajBUV+n/epI4Q2z3m?=
+ =?us-ascii?Q?rT+E2arjfAJMxYkrukodvAQ7ewFgC050+aSVhpNCyPu7x3OwA3+c7kVGRsyu?=
+ =?us-ascii?Q?V4O3NtT+cYy9DLdiRIgamJ4dOVISo7TkbJXGqikNos3PBxXzCNum0AVaRuDD?=
+ =?us-ascii?Q?iX/ukjjVP030vZmzAaQYUqP6HzBssR+bQzpGK2IiNvevnhANBUGdbMAkKFNf?=
+ =?us-ascii?Q?uRSAvJef/izAxohDRdZovu9dhPh6paXC5gusamVdzjgPxvkL9SOPiWY6Uf1Q?=
+ =?us-ascii?Q?JYI2HRUhnrYFC2S0tAvzIKBiDj+XiYnN730Zn+zcvExX6wGc0mwtFyhyUtLC?=
+ =?us-ascii?Q?eG/Ku5zNBAAcrASm8e0SxgzkhqhGDztjKy89hpnxLExyFIVsnnEEwIM61RHy?=
+ =?us-ascii?Q?wkh54S3qLRTsl41wvDIAf9GUbKdCSiOtqGE8ZBr1qxY5PO3vZ5IHeYTkJY+i?=
+ =?us-ascii?Q?0hpUTzcwJec//Z6fFzNUvyWT6iilqK6ksEvihIIxDhOClcU22QGhRqzpekD0?=
+ =?us-ascii?Q?xKwYa0llXfWRmZmh/io=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 07 Apr 2025 16:57:50 +0900
-Message-Id: <D908W8AWVRHW.30H6WLUHQ7QZL@nvidia.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] rust/revocable: add try_access_with()
- convenience method
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Benno Lossin" <benno.lossin@proton.me>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>, "Danilo Krummrich"
- <dakr@kernel.org>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Bjorn Helgaas" <bhelgaas@google.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250406-try_with-v3-0-c0947842e768@nvidia.com>
- <20250406-try_with-v3-1-c0947842e768@nvidia.com>
- <D8ZVBUTCJXYZ.1X3I8HOSTXIA7@proton.me>
-In-Reply-To: <D8ZVBUTCJXYZ.1X3I8HOSTXIA7@proton.me>
-X-ClientProxiedBy: TYAPR01CA0209.jpnprd01.prod.outlook.com
- (2603:1096:404:29::29) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|BL4PR12MB9481:EE_
-X-MS-Office365-Filtering-Correlation-Id: 74ed6116-1d97-4d8a-9172-08dd75a9e6d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|10070799003|1800799024|366016|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXNVNWFWa2FYWlM0bnlSRGRORko3YUpCZnlRWk85T1NuRkFGNktiSThGNjJS?=
- =?utf-8?B?S05SVWVpem9jUTVOZ0hVTXBRY0ZaekJVam1XZlNtWU9TSk1KL1MzRTZSamxl?=
- =?utf-8?B?L0ZIRzFrdzd5blBmejdPTDUyTlp0TWpkclRsSGxUV0xhaGIzd2Jyb0l3THJ1?=
- =?utf-8?B?a3c0VGRWbGs2ZFBicG51OUk1SkluTkppRStWRHRyUUt1aFp5R2FyWHpOTm4x?=
- =?utf-8?B?bC9SOXZlUDRWUWpjUlhhMUtXVXRvd2s4M21IcG45bEQzeWVnS1NsdWdURGhk?=
- =?utf-8?B?RVBDM0Evc2poWlpxZWtJb2tqMXpidEhlZ1Z0TzhCeWdqOTZWdTJwWlVPN1JQ?=
- =?utf-8?B?cFRCTk1PVytNN0w1aFZza1phQVR6MXlzTEVQNGFwMEs3T1JweGlJSlRLSHZw?=
- =?utf-8?B?NHVwYzQwSlNoRk9Sei9mWCtsN0lUZEg3SHNWNTJmUE5iQ2s2am1aM2N5OE9R?=
- =?utf-8?B?NnhGT3JsOGxMbjJhZWdZS2FuRksyMDFOZlhXMS94bysyeXM1dzBBc3YxRkpW?=
- =?utf-8?B?b2d3eVQ3R3FPeW1YdXEvTjcva2FSNlM3MnhtU2hHeUNvOHkzUTUxQTNlcGor?=
- =?utf-8?B?R3ZMOWtmV25CSkMyOTFCcXNRalVHWnBiLytRRklGczVnQk1yd2JYUUVXaXVl?=
- =?utf-8?B?S0wveUFDc1dLYnpqdHNZcXV1TXZ4MDFXQTVhck9ZYmFDd3dibWl0RExDbE4x?=
- =?utf-8?B?dDN5VDh3aVpmS1ZsbGdUNWx0VXVFZWI1TENHeHQzdk1mNk44eVdZaG1qZEgy?=
- =?utf-8?B?RXhOd3VaYlFNSENFZndvV2RpOGQwcGhTWFpKVXl1OEFXZFI3VnVONkhZb3or?=
- =?utf-8?B?V0RVMzhXbXM1NlYvQStHcFhPY21NQmVrTVRYNlRSSTFUdXhxY2dzbFA3SC9s?=
- =?utf-8?B?S1B0cENVQjBVNjdOcUpoYUNlaXBTQ1RaRllUd3h2QVVURU5yUlJ4SnU3c0Js?=
- =?utf-8?B?NENTSldSRWhBZk9RaS9ieFJlVm5zTkh3T0x1V29UYjNvalI3YitWc3FndTI3?=
- =?utf-8?B?cS9xRk0zYzMwL2dGMVpRLzBidEkranY3WGJON05Eek40b3FDZ0JQdWY0eXFY?=
- =?utf-8?B?R0dKTlNqMnpNN3ZtVTJwRytNd0hhVjJMeVVIMFdSNFZwNVhEMU5RNW5NYnV0?=
- =?utf-8?B?c01uQzRnVTRkZVZZcm91aytpWkRhUnQrZ2EzQVBXM2toUHlyL2x3YmpxTXVQ?=
- =?utf-8?B?UWtLeUM1Y1JJa29abFU4QlhoUXNzSDNKcEhwVFZDaHU5c1Y3bVBqK2FsczZo?=
- =?utf-8?B?dEFMZXJua3JrcmJBWXowVjdabWM2cVRqVzNTYnRXMjVvTWptYXFvNFBUaCtj?=
- =?utf-8?B?UjhtOHUrREN3UURCVnVkSW9jQlk4aXdaaDNZalFUMWhKOTh6a2tzTGcveVJV?=
- =?utf-8?B?bEMxNGlBYksrVG41TlNNS3pZRTNrUHBGYmg5VnBndko4TlpLc0VDbVd4L0Jt?=
- =?utf-8?B?Mk1YVUtaeHVvWmR1WGVNWU9PL0hoN01MVDJyUWtqV09PWTVKY1h5emY4eUts?=
- =?utf-8?B?bkRSMThLRHVpZlh1Y2xMM0ZkRGFMZXFheTUwaXhTVGw4L2QrdGJzaU81U3pR?=
- =?utf-8?B?RkxuMy9tbkVINnlPcGpodUJKOEFzVVYvcGhBdk9rUUlXbkpBQi9VNm40QURE?=
- =?utf-8?B?SlIzZmwzZkxIaFA0MHRuckVvSWVxd0Z3Z0Y0ZXlLc2xMb01wcWhsSXZSWWxv?=
- =?utf-8?B?S1d2OFlLMkdjMEhxQVQwc2dLc1J4ekRrOXExaThEVHBqcUlRYVloNzVnQ1JL?=
- =?utf-8?B?Sk5hWkRIZG9ienlncDFZT0llalV1NGZSaDdiNlNlL0E3YzViVVQ5VC9JVEhs?=
- =?utf-8?B?Ly90ak5wL3hoQ29NMXUyN3FkTzRJd09oTW9wWGxsd1lySHJ6SjkrQ05OOU42?=
- =?utf-8?B?ZUdXSHh4cTFTWVBObUpsTlVkaW4xNmljM1ppdkRqN2VUMzdqY05lamJvQ2tD?=
- =?utf-8?Q?32l+gVl0Aco=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(1800799024)(366016)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QlhXUjZ0NXdmWjF4UFB3aWd4OHZuMzBvSi9xRFVMbzZIak1TeWRlcDFNaVZH?=
- =?utf-8?B?N3U1OEVxT1RUU3k2bU1lUDNzeWJsUnpjQS9VVThnVStHQnF2eWxTMFZqd1Vq?=
- =?utf-8?B?SHd0SE8wWkRnK044Ky9VQ1FEa0NUZDhwMlAxdlllM2ljSzJVNDNIT3BPOTVN?=
- =?utf-8?B?T3R3SlVCbmFmWDR6c1lxZzJIU0VDY3IwSElVQmNTUzJCemZ3eW5NdU1LSkgz?=
- =?utf-8?B?YjhqNkNoeVNuMUFXOVJvNWpDbU5iYmt4c0xrNE10Z2l2ejArRzFZZXEwaW45?=
- =?utf-8?B?TlZFamZUdDFVb3EvVUl6ekR2aUVHOXY1aWlJNTVmN1ZoTGx3U0Z4S1VNQjVI?=
- =?utf-8?B?bS9IS2d1dnZxR2VYMVVxd0FySjErWUllS0NERHFER2V1bSt4NStyNFA2VVpH?=
- =?utf-8?B?bVViRHFhOXVIdWlMZGJYT2pKMWtsa25uK1FKTktER0RPaVp0Sm1RK0k3Zkdm?=
- =?utf-8?B?WWNpek5TeDlRbVk3N0pQWHpJYitoSlVaVm1JVlRWSEIwa1VyaGUzNStidEhK?=
- =?utf-8?B?SkNqMlJERExCME1aNnNPbjE1aHU3KzY2Qk9tNkNUNjFVdVNvNWNBOWdxTEpT?=
- =?utf-8?B?R05mMGo2bDJZMHZZTHVqVGR1ekNtZzdhZGFQb0szbHpPT1pHT1orcExkaVpl?=
- =?utf-8?B?N2xzeE5WSVgrdThGbjF4VGs3NXpXbTk5aUE1TnlDYmNGTjkzZ3VFVm8zWFdu?=
- =?utf-8?B?REl3Q3U4VTZZVnlrKzJSdy8wdjhUOGRoRzk4QTFtK2grUU1jTS9TTVBQMEIy?=
- =?utf-8?B?NVdyNVF4STFjZlV2RzVzTXNWR1VQdC9PUXVRODN5Y2k2SDFKQ1hPM2dSRGtp?=
- =?utf-8?B?TG1rZlltRkZtTnRtZ3YxY1RnQ29odFhVWU53aDlWbTJCME9rTW5tQzBWaDhx?=
- =?utf-8?B?NWtZN09TMVYwbVdvaGxObU1qajExSkVMOHpzYkI0QnM0emJlMzdLYkIwSUVE?=
- =?utf-8?B?NDV4QjFRa3JhUFNvVW5weWVIdndkc1VTL0hxNE9RL2h6cEtURmZmYnFkaXBT?=
- =?utf-8?B?NlhRRkZyS1RScER4TlRiNWlSeEg2aUI3NHIrdU9mWkZkVFRCTHZjRnBUci9T?=
- =?utf-8?B?dTI0Qlo3Mm11RHZTWWY0bDBMTEh2cURubjBkbEtnU2VFemRHU3p5Q2UxSWxV?=
- =?utf-8?B?QlMzUnJ5WTRoUjUwNmdGOXBtemZRVFF3UW9oTGd5bUFPd3Q4NDRKSEZKdkRV?=
- =?utf-8?B?ZVkvenpNOFVrZmpZQzZ4bzJrcmRmZ2ZxaC9nMnBQOHJaZllpOGs3Q2dnZ2Ru?=
- =?utf-8?B?UmwzWkVoY1R1MlFmVE85Rjl5cTdhUFNudElKNUpCc0lBRC9GNk9KMEJoeS9I?=
- =?utf-8?B?aFYwQmFZVVh6U21QL2JnQ1YwV05YL2ZZSStNdlMxQWUveGIwL2VEdkdOUzdV?=
- =?utf-8?B?VUQzUTRXNW5DN3c3dTUxdDBtc1ROTTlYMXR6b3VQektGZHBJNlloT1gzZVM5?=
- =?utf-8?B?WkdpS29pcytrbEt2SkpYcVJoaHFEWDVtZUsyeityeittcWlya1pSU0dzOTVC?=
- =?utf-8?B?ZWF0a2tLVXM0QzlYdURQa3A0cXZPYTVqS0djOVVnQzdBcks3ME1ZZzZUR0Vu?=
- =?utf-8?B?YkdJWlJVMHVZeUpXVU4yZlB6WjlCNlF5c25JWDA3N3NMaFl0N0pyS0VDd3pH?=
- =?utf-8?B?c25mQmEyMHJRQzRvSXJPQTlGSWIrTEpHRjVMRlJWY1hFQVFIbVRZVmdzM0Vq?=
- =?utf-8?B?Njk3RDM0SlRaY2pVVE9tQ25HZjc0SUtoZ2RqQmlMN0hzS0gwQnZXcGE0NkNM?=
- =?utf-8?B?cjRjdkZlc3YrdUtjamhuQXFvcW5GeW9Idno0cjF0ZXhzVU9WazhxRVNPRU1x?=
- =?utf-8?B?SkRxVWpvNGg3amZHUVM2QytKZDYxemtjTHh6YUh1R3VVVWJLN09VbXUvMDhq?=
- =?utf-8?B?cS9FTDJ5aTRCVlhyZW1SYnVLYVRCYXU2cENId28vQmltV2dxSWJPdC9rZ2V1?=
- =?utf-8?B?OE5RRVl3OWtFS2VSTUJmaDR0ZGNPYUsxeXhOeTFWdU85OU4zd1hRK3BrTCs3?=
- =?utf-8?B?Zm0zS0p1V3ozT3A4Z1IwQmNBUlBqb08rYzlKUVdkUk9ZQ3ZZQStycWxSTkNq?=
- =?utf-8?B?NXZxbEZBTXhTVVVLUW03TnJ5aTlleEtYMTY1MFdYR3JQVTVnK2lPTzNFbkQy?=
- =?utf-8?B?TlF1eENNOXpSYnlQdnd6MTBPSWhmTFllbzlnNnpZTkZsR3JxRUJuRG1kVFRp?=
- =?utf-8?Q?CB3cTDoMVCMZntGmD4ZJDYKYSW60zdd8NUTQmjxzOkM5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74ed6116-1d97-4d8a-9172-08dd75a9e6d3
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 07:57:54.2660
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8429.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90350a73-8bb2-42ce-8325-08dd75b80475
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 09:38:56.5425
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OPRl91v7HScqnpAQgD+HrrXzqxjpqKtgzzEvx9+sWhd6SmyGndpXrDkRCPph1hITqpllQ/Ceen1MWdWqYh/lJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9481
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2OuJRtATHa+0eSoGTHsyNqThQQOfywWqMjxOSPhQcJM8fodfqnYTwoJ/ipW7YS1jqlZQwED8opmpJy6rwk7SZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10098
 
-On Mon Apr 7, 2025 at 6:20 AM JST, Benno Lossin wrote:
-> On Sun Apr 6, 2025 at 3:58 PM CEST, Alexandre Courbot wrote:
->> Revocable::try_access() returns a guard through which the wrapped object
->> can be accessed. Code that can sleep is not allowed while the guard is
->> held; thus, it is common for the caller to explicitly drop it before
->> running sleepable code, e.g:
->>
->>     let b =3D bar.try_access()?;
->>     let reg =3D b.readl(...);
->>
->>     // Don't forget this or things could go wrong!
->>     drop(b);
->>
->>     something_that_might_sleep();
->>
->>     let b =3D bar.try_access()?;
->>     let reg2 =3D b.readl(...);
->>
->> This is arguably error-prone. try_access_with() provides an arguably
->> safer alternative, by taking a closure that is run while the guard is
->> held, and by dropping the guard automatically after the closure
->> completes. This way, code can be organized more clearly around the
->> critical sections and the risk of forgetting to release the guard when
->> needed is considerably reduced:
->>
->>     let reg =3D bar.try_access_with(|b| b.readl(...))?;
->>
->>     something_that_might_sleep();
->>
->>     let reg2 =3D bar.try_access_with(|b| b.readl(...))?;
->>
->> The closure can return nothing, or any value including a Result which is
->> then wrapped inside the Option returned by try_access_with. Error
->> management is driver-specific, so users are encouraged to create their
->> own macros that map and flatten the returned values to something
->> appropriate for the code they are working on.
->>
->> Acked-by: Danilo Krummrich <dakr@kernel.org>
->> Suggested-by: Danilo Krummrich <dakr@kernel.org>
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
->
->> ---
->>  rust/kernel/revocable.rs | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
->> index 1e5a9d25c21b279b01f90b02997492aa4880d84f..b91e40e8160be0cc0ff8e069=
-9e48e063c9dbce22 100644
->> --- a/rust/kernel/revocable.rs
->> +++ b/rust/kernel/revocable.rs
->> @@ -123,6 +123,22 @@ pub fn try_access_with_guard<'a>(&'a self, _guard: =
-&'a rcu::Guard) -> Option<&'a
->>          }
->>      }
->> =20
->> +    /// Tries to access the wrapped object and run a closure on it whil=
-e the guard is held.
->> +    ///
->> +    /// This is a convenience method to run short non-sleepable code bl=
-ocks while ensuring the
->> +    /// guard is dropped afterwards. [`Self::try_access`] carries the r=
-isk that the caller will
->> +    /// forget to explicitly drop that returned guard before calling sl=
-eepable code; this method
->> +    /// adds an extra safety to make sure it doesn't happen.
->> +    ///
->> +    /// Returns `None` if the object has been revoked and is therefore =
-no longer accessible, or the
->> +    /// result of the closure wrapped in `Some`. If the closure returns=
- a [`Result`] then the
->> +    /// return type becomes `Option<Result<>>`, which can be inconvenie=
-nt. Users are encouraged to
->> +    /// define their own macro that turns the `Option` into a proper er=
-ror code and flattens the
->> +    /// inner result into it if it makes sense within their subsystem.
->
-> I personally wouldn't have mentioned this in the docs, since to me such
-> a helper would be obvious, but I don't mind it either.
 
-Using a helper did not immediately occur to me, which is why I came with
-two different methods initially. I'm fine with removing this part of the
-doc if it sounds like it is overstepping the purpose of documentation
-tough.
+
+> -----Original Message-----
+> From: Francesco Dolcini <francesco@dolcini.it>
+> Sent: Monday, April 7, 2025 3:23 PM
+> To: Sherry Sun <sherry.sun@nxp.com>
+> Cc: Francesco Dolcini <francesco@dolcini.it>; Hongxing Zhu
+> <hongxing.zhu@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> kw@linux.com; robh@kernel.org; bhelgaas@google.com;
+> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
+> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; linux-
+> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios prope=
+rty
+>=20
+> On Mon, Apr 07, 2025 at 07:18:32AM +0000, Sherry Sun wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Francesco Dolcini <francesco@dolcini.it>
+> > > Sent: Friday, April 4, 2025 5:42 PM
+> > > To: Sherry Sun <sherry.sun@nxp.com>
+> > > Cc: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > bhelgaas@google.com; krzysztof.kozlowski+dt@linaro.org;
+> > > conor+dt@kernel.org; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx <linux-
+> > > imx@nxp.com>; linux-pci@vger.kernel.org; linux-arm-
+> > > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org
+> > > Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios
+> > > property
+> > >
+> > > Hello
+> > >
+> > > On Wed, Dec 13, 2023 at 05:28:48PM +0800, Sherry Sun wrote:
+> > > > Add wake-gpios property that can be used to wakeup the host process=
+or.
+> > > >
+> > > > Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> > > > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 6
+> > > > ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > index 81bbb8728f0f..fba757d937e1 100644
+> > > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > @@ -72,6 +72,12 @@ properties:
+> > > >        L=3Doperation state) (optional required).
+> > > >      type: boolean
+> > > >
+> > > > +  wake-gpios:
+> > > > +    description: If present this property specifies WAKE# sideband
+> signaling
+> > > > +      to implement wakeup functionality. This is an input GPIO
+> > > > + pin for the
+> > > Root
+> > > > +      Port mode here. Host drivers will wakeup the host using the =
+IRQ
+> > > > +      corresponding to the passed GPIO.
+> > > > +
+> > >
+> > > From what I know it is possible to share the same WAKE# signal for
+> > > multiple root ports. Is this going to work fine with this binding?
+> > > Same question on the driver.
+> > >
+> > > We do have design exactly like that, so it's not a theoretical questi=
+on.
+> > >
+> > The current design doesn't support such case, maybe some changes in
+> > the driver could achieve that (mark the wake-gpio as
+> > GPIOD_FLAGS_BIT_NONEXCLUSIVE and the interrupt as IRQF_SHARED,
+> etc.).
+>=20
+> Can you consider implementing this?
+>=20
+> > But usually each RC has its own WAKE# pin assigned. We have not come
+> > across a case where multiple RC share the same WAKE# pin.
+>=20
+> We do have such design, with an NXP iMX95 SoC, available now.
+>=20
+
+Hi Francesco,
+
+Now the patch set is pending, please check the comment under
+https://patchwork.kernel.org/project/linux-pci/cover/20231213092850.1706042=
+-1-sherry.sun@nxp.com/ .
+Seems this property should be put into the common PCI root port schema,
+now it relies on the pci-bus.yaml splitting job Rob is doing.
+
+Best Regards
+Sherry
 
