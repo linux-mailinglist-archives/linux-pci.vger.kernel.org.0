@@ -1,180 +1,168 @@
-Return-Path: <linux-pci+bounces-25408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C35CA7E51E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 17:48:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14449A7E4F3
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 17:43:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E2B03B3931
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 15:35:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87B47167BB5
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 15:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F211FF7D1;
-	Mon,  7 Apr 2025 15:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394FA1FFC5A;
+	Mon,  7 Apr 2025 15:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqhfbebs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaoLbDHw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F931FF7A1;
-	Mon,  7 Apr 2025 15:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81E31FF7BE;
+	Mon,  7 Apr 2025 15:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040163; cv=none; b=Jza3WVPX1TKazNWs5uusV0bKYBg3FyI2dl6Iisg0oG1jmM1BoLorBeqk7GXjXNG1TzCyVLFMpJwEPOVKc+XUqE05vGo6iFebAy4no/rKb0AbPPt2eWwzwXzF9rj6ojg30H2R6q3FzNNnx0wvIJNqkOdvQviiPN3VGFOkcFwHTu4=
+	t=1744040209; cv=none; b=cDeW53tPuz3z2ftjt3Rqr3bQCMUrbhCz46E3rQ7zN5yhhIJytQEXLWL1zVO5B/Zyn4qvYW6UwzU6BnSflLmWFSIEuO5RLpkdGEcalcanbVHcbO3uQNoQ5pZtohkzqcm5KXOtykKnXD20A+2cpf4xwv0gXE1RDyn0CN3zd58iRO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040163; c=relaxed/simple;
-	bh=vxoIfOH3hv+8JcQzJTe2JCQ2H+ulfHSIZy2SW/nfLss=;
+	s=arc-20240116; t=1744040209; c=relaxed/simple;
+	bh=G+sqUQNrBPH4I/W5mHr1fMjnSyEYSDrtCw2osviFCmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n5tHFBMBSbaLYf+y8ZvweDpgSQwGimjFs4NKG9oSNQbEiduyJGEZhNXtr/sFptyJUxk3b9jE339qI6BwMPa1FkbZ9Kob3QEvAsFrDbRX1YlUlgoT4L6ZqwK+hYsJWqvGM7sKsJs266+vJReUzqgPeOS67XIGji4QLmZ+HKmcb5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqhfbebs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5740CC4CEDD;
-	Mon,  7 Apr 2025 15:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744040163;
-	bh=vxoIfOH3hv+8JcQzJTe2JCQ2H+ulfHSIZy2SW/nfLss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hqhfbebs3x7d/GCPZcnQpCNFvIZ976SbyTsrHJ1Y/fneZ6Ex5mUrI2YzWo5ApBnFg
-	 hvaIToBRaRC1n0Sa1cxX2tu6tXj9PLKhaoYdAYLSTxmFbTyNTDCA5DfjGOw/uckaxS
-	 KkBf9o/Af5iXoNGTT4yOlYpvtnX/M5ON8RDEKI5MzAcmWdkNRcMakKFjpNbJgZ0rXh
-	 FnMLV0DdAQfSPLvGF65KBxWj8PkXK5IyrG/X/484QsEpcfpM9TahsgXAhAz8vP+VP3
-	 HF22onlmXjZQouFmEW1f9BNwgbDHvhliKJgC16bGB3JM+aYwXfCeYLq0HW8NIKdnNk
-	 wGNJ2WDKCXTeA==
-Date: Mon, 7 Apr 2025 17:35:56 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=jaO+NGJ9eIaYznS1tU6KS2FgFmi1/IH4sIXye1gDtqEmo9CBqAHKMy5M9R9Z3W73EGgPAmk7PowYMTdoBb3scqrhWjvZNGbOI344mNQ3lqCV3lokgnDKl7ChOnHduiNAt8wnEr0QueDVqiTzaN4BiLR10Texnl6XLx1wVysFcyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaoLbDHw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744040208; x=1775576208;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=G+sqUQNrBPH4I/W5mHr1fMjnSyEYSDrtCw2osviFCmU=;
+  b=YaoLbDHw2UkbPC2EXNlkH6HEoyIsOj/+nZF8ZFSSB6WC7Z/X3r/TDS1k
+   GOYGF4At4/XXBDvpSXOujnIs6JQx3hc7fTOsRtgYLTltHp+FTBsqjMeZx
+   LmWduuyQnBH8vQ58lYPaWgMLI9hvwR1hKN6tMHLuPuTBELNqRr3MitsEs
+   rZMuFYbe/BdolRj5PtTyR7mDGG7THwsWqQEtjev9JxV1PAfZ2+u4WXp6P
+   O7AtdDTNh66JDNJI92NfnqzxdH2iSRQYYB5R9HN2JIWYGqTY0thWr4yKs
+   95DSCCaE8U7RohIMhSrpHWN7C4IZrC6EW0Kbjxa+PkxvzObt7dH8FY5e6
+   A==;
+X-CSE-ConnectionGUID: JXqsM2+fQ5OYN/+MEP7jdg==
+X-CSE-MsgGUID: Zuy6ZnylTJyZx2Cqu2FAzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="70811280"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="70811280"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:36:46 -0700
+X-CSE-ConnectionGUID: rNN1lCbSQX+WW/v4pCR9wA==
+X-CSE-MsgGUID: R72zNQsnQ/GnEwWrCsQ2wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="132128993"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:36:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1oWT-0000000A6zT-16Go;
+	Mon, 07 Apr 2025 18:36:29 +0300
+Date: Mon, 7 Apr 2025 18:36:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ntb@lists.linux.dev, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] PCI: endpoint: improve fixed_size bar handling
- when allocating space
-Message-ID: <Z_Pw3I2xO7BMSGWW@ryzen>
-References: <20250407-pci-ep-size-alignment-v3-0-865878e68cc8@baylibre.com>
- <20250407-pci-ep-size-alignment-v3-2-865878e68cc8@baylibre.com>
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
+ for x86
+Message-ID: <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-12-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250407-pci-ep-size-alignment-v3-2-865878e68cc8@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407145546.270683-12-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Jerome,
-
-On Mon, Apr 07, 2025 at 04:39:08PM +0200, Jerome Brunet wrote:
-> When trying to allocate space for an endpoint function on a BAR with a
-> fixed size, the size saved in the 'struct pci_epf_bar' should be the fixed
-> size. This is expected by pci_epc_set_bar().
+On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
+> PCI drivers can use a device-tree overlay to describe the hardware
+> available on the PCI board. This is the case, for instance, of the
+> LAN966x PCI device driver.
 > 
-> However, if the fixed_size is smaller that the alignment, the size saved
-> in the 'struct pci_epf_bar' matches the alignment and it is a problem for
-> pci_epc_set_bar().
+> Adding some more nodes in the device-tree overlay adds some more
+> consumer/supplier relationship between devices instantiated from this
+> overlay.
 > 
-> To solve this, continue to allocate space that match the iATU alignment
-> requirement but save the size that matches what is present in the BAR.
+> Those fw_node consumer/supplier relationships are handled by fw_devlink
+> and are created based on the device-tree parsing done by the
+> of_fwnode_add_links() function.
 > 
-> Fixes: 2a9a801620ef ("PCI: endpoint: Add support to specify alignment for buffers allocated to BARs")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
+> Those consumer/supplier links are needed in order to ensure a correct PM
+> runtime management and a correct removal order between devices.
 > 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index b7deb0ee1760b23a24f49abf3baf53ea2f273476..fb902b751e1c965c902c5199d57969ae0a757c2e 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -225,6 +225,7 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
->  	struct device *dev;
->  	struct pci_epf_bar *epf_bar;
->  	struct pci_epc *epc;
-> +	size_t size;
->  
->  	if (!addr)
->  		return;
-> @@ -237,9 +238,12 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
->  		epf_bar = epf->sec_epc_bar;
->  	}
->  
-> +	size = epf_bar[bar].size;
-> +	if (epc_features->align)
-> +		size = ALIGN(size, epc_features->align);
-
-Personally, I think that you should just save the aligned_size / mem_size /
-backing_mem_size as a new struct member, as that avoids the risk that someone
-later modifies pci_epf_alloc_space() but forgets to update
-pci_epf_free_space() accordingly.
-
-But I will leave the decision to the PCI endpoint maintainers.
-
-
-Kind regards,
-Niklas
-
-
-> +
->  	dev = epc->dev.parent;
-> -	dma_free_coherent(dev, epf_bar[bar].size, addr,
-> -			  epf_bar[bar].phys_addr);
-> +	dma_free_coherent(dev, size, addr, epf_bar[bar].phys_addr);
->  
->  	epf_bar[bar].phys_addr = 0;
->  	epf_bar[bar].addr = NULL;
-> @@ -266,7 +270,7 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
->  			  enum pci_epc_interface_type type)
->  {
->  	u64 bar_fixed_size = epc_features->bar[bar].fixed_size;
-> -	size_t align = epc_features->align;
-> +	size_t aligned_size, align = epc_features->align;
->  	struct pci_epf_bar *epf_bar;
->  	dma_addr_t phys_addr;
->  	struct pci_epc *epc;
-> @@ -287,12 +291,17 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
->  			return NULL;
->  		}
->  		size = bar_fixed_size;
-> +	} else {
-> +		/* BAR size must be power of two */
-> +		size = roundup_pow_of_two(size);
->  	}
->  
-> -	if (align)
-> -		size = ALIGN(size, align);
-> -	else
-> -		size = roundup_pow_of_two(size);
-> +	/*
-> +	 * Allocate enough memory to accommodate the iATU alignment requirement.
-> +	 * In most cases, this will be the same as .size but it might be different
-> +	 * if, for example, the fixed size of a BAR is smaller than align
-> +	 */
-> +	aligned_size = align ? ALIGN(size, align) : size;
->  
->  	if (type == PRIMARY_INTERFACE) {
->  		epc = epf->epc;
-> @@ -303,7 +312,7 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
->  	}
->  
->  	dev = epc->dev.parent;
-> -	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
-> +	space = dma_alloc_coherent(dev, aligned_size, &phys_addr, GFP_KERNEL);
->  	if (!space) {
->  		dev_err(dev, "failed to allocate mem space\n");
->  		return NULL;
+> For instance, without those links a supplier can be removed before its
+> consumers is removed leading to all kind of issue if this consumer still
+> want the use the already removed supplier.
 > 
-> -- 
-> 2.47.2
+> The support for the usage of an overlay from a PCI driver has been added
+> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
+> host bridge node").
 > 
+> In the past, support for fw_devlink on x86 had been tried but this
+> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
+> fw_devlink DT support for X86"). Indeed, this support was breaking some
+> x86 systems such as OLPC system and the regression was reported in [0].
+> 
+> Instead of disabling this support for all x86 system, use a finer grain
+> and disable this support only for the possible problematic subset of x86
+
+> system mixing ACPI and device-tree at boot time (i.e. OLPC and CE4100).
+
+This is incorrect, they never had ACPI to begin with. Also there is third
+platform that are using DT on x86 core — SpreadTrum based phones.
+
+And not sure about AMD stuff (Geode?).
+
+> [0] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/
+
+Can you make this to be a Link tag?
+
+Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
+
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
