@@ -1,100 +1,141 @@
-Return-Path: <linux-pci+bounces-25425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C5F9A7E96E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 20:09:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11FB4A7EBBA
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 20:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FB9B17C9B4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:08:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53B071890AE7
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:57:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8114421ABBB;
-	Mon,  7 Apr 2025 18:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0A9235BF9;
+	Mon,  7 Apr 2025 18:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qt6JdKbU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMGfy4lW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C13D21ABC4;
-	Mon,  7 Apr 2025 18:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F51F221717;
+	Mon,  7 Apr 2025 18:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049225; cv=none; b=HkYhXqPa97x5fw9wbACpOaxP81wH/rvybM7u8cafvkQeJbq109mVRoSM5fUMdxUULSxH0CyhzcI20AaTWILCSbvdZhQ+tHObvUSV1YbbhwlyXXsD4U0PxijLAN6MKxb5WbwriUSn0hol+X0m03sEMChff2EMSgDsbJFFb8/bIek=
+	t=1744050149; cv=none; b=B+GgOgmvvi9ksZ1Vr3v22YRMIEYG/2iJhjxjPCoY3oFkrUvFhzBk48OyaUhAdk3XuqYRCEJI5fKgw7hp/0oaQ+oIomBd9lpsaGWIkmfBXMOWunQZSomVzPrwhIQRx+gczZK6T58KkRZMiB4Am67JEqBb+9EUQwkegW/EbVMNBxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049225; c=relaxed/simple;
-	bh=uU12NXRlphx6MjKtaq+HPkahipo858GXs1r+8aLru/A=;
+	s=arc-20240116; t=1744050149; c=relaxed/simple;
+	bh=Vzrl000GH9rO9BEdPNAMz2vKGlrv8PRMcFJ62aJ5frc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cwOkwNpaXllf727C6apFDQ13Jc9Lhqp1y+ksrUA8EKT+vtlEsUSU+iYOlh7PK3o+yuaWQAO2eHIhr+JcfSRo8X/Q3SvLCoeCI6ZoZe4nKCJWL/3qQgKqV6J6lKovD0DsS/xM5Rf4eezCborAAHm3oeVyPCNomVrZxnfZzQLAx2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qt6JdKbU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B763EC4CEDD;
-	Mon,  7 Apr 2025 18:07:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=mjTDXBGFLgJevuSsYui3NxCsErbxRKnBPFuGUM4YcHt6p4KqArPb4vNsHp8hfYyarseWjMVgpskeGgsRW5hr2Krp613O9t5Ud5pcmHyKiohqL7qj8Tk1scCLgR8qmdtICTMroz85EbkmcE/yjDOIcNKTnkW87yr2Fsm+kZ9/htU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMGfy4lW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A33C4CEDD;
+	Mon,  7 Apr 2025 18:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049224;
-	bh=uU12NXRlphx6MjKtaq+HPkahipo858GXs1r+8aLru/A=;
+	s=k20201202; t=1744050148;
+	bh=Vzrl000GH9rO9BEdPNAMz2vKGlrv8PRMcFJ62aJ5frc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Qt6JdKbUN9BMlRu1LaTLHcEw3prd8n9gpaHA0dpAsCaIbQlncF5F6I4BCfNl/cqI8
-	 shcE+rDPu6OTpPVN2KMYCWjim3+xJhyNDDEOIln8p1601UD2hpCsvwdF0PMrWvG3s4
-	 sC4f68QGPTg8qv7VqBBuZ027gunXHey8qrDyYFaFZUypPzx+2UvPD+6AVNuWlD+jDO
-	 04DXeKC1OmPnPkg3zeNKiXJowFll6CrV50odhMt1m0+QftQ2iAKXpy5cHjzmL8ILey
-	 edV4N1yXEMqgad0V3Q2GxoA2v1E/E1szHL6ogTLYvwfVI1BpGjL9zZrmab3FIkthVX
-	 wsiDysrgVZmLQ==
-Date: Mon, 7 Apr 2025 13:07:03 -0500
+	b=qMGfy4lWe7Elq23Bz8lvEB5OtcNj0kqjxMrleJjNqBGwOxJAyYdIN0nV+zkV23vmD
+	 upTPCbhNFr/hnGc8gee/QkDeOGETOIQsxMPDKltA1adk8+wz+PzG8X2u2yZ2saiSN9
+	 x8vsJ8PlouW/h2vOdWSmszA8C/emrG0ASALDtzas9sjY1tEQcTwk2nq41idc4okrW8
+	 q71ngcXjOhsSLZYlofhsG8DeYXI3NO4OB76p1LHTACaacniDNXZZLLWzgMc448oBfY
+	 H3Z95vGdTpN/BiZ4DOhEI1BXbgn1nT4b+JuUtqyDhRaYhDI7hXN135LsyxIvY++okG
+	 mQjkJVG5fLYdA==
+Date: Mon, 7 Apr 2025 13:22:27 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, kw@linux.com, gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: pci: add entry for Rust PCI code
-Message-ID: <20250407180703.GA189930@bhelgaas>
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Declare quirk_huawei_pcie_sva() as
+ pci_fixup_header
+Message-ID: <20250407182227.GA191373@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407133059.164042-1-dakr@kernel.org>
+In-Reply-To: <20250317011352.5806-1-zhangfei.gao@linaro.org>
 
-On Mon, Apr 07, 2025 at 03:29:50PM +0200, Danilo Krummrich wrote:
-> Bjorn, Krzysztof and I agreed that I will maintain the Rust PCI code.
-> Therefore, create a new entry in the MAINTAINERS file.
+On Mon, Mar 17, 2025 at 01:13:52AM +0000, Zhangfei Gao wrote:
+> The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+> probe path") fixed the iommu_probe_device() flow to correctly initialize
+> firmware operations, allowing arm_smmu_probe_device() to be invoked
+> earlier. This changes the invocation timing of arm_smmu_probe_device
+> from the final fixup phase to the header fixup phase.
 > 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> pci_iov_add_virtfn
+>     pci_device_add
+>       pci_fixup_device(pci_fixup_header)      <--
+>       device_add
+>         bus_notify
+>           iommu_bus_notifier
+>   +         iommu_probe_device
+>   +           arm_smmu_probe_device
+>     pci_bus_add_device
+>       pci_fixup_device(pci_fixup_final)       <--
+>       device_attach
+>         driver_probe_device
+>           really_probe
+>             pci_dma_configure
+>               acpi_dma_configure_id
+>   -             iommu_probe_device
+>   -               arm_smmu_probe_device
+> 
+> This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
+> that pci_device_add() is called from pci_scan_single_device() in the
+> generic enumeration path, and pci_bus_add_device() is called later,
+> after all a host bridge has been enumerated.
+> 
+> Declare the fixup as pci_fixup_header to ensure the configuration
+> happens before arm_smmu_probe_device.
+> 
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Applied to pci/for-linus for v6.15, thanks!
+
+Joerg, if you'd rather take it, let me know and I can drop it.
 
 > ---
->  MAINTAINERS | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> v3: modify commit msg, add Acked-by
+> v2: modify commit msg
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96b827049501..89f4bf7d9013 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18686,6 +18686,16 @@ F:	include/asm-generic/pci*
->  F:	include/linux/of_pci.h
->  F:	include/linux/pci*
->  F:	include/uapi/linux/pci*
-> +
-> +PCI SUBSYSTEM [RUST]
-> +M:	Danilo Krummrich <dakr@kernel.org>
-> +R:	Bjorn Helgaas <bhelgaas@google.com>
-> +R:	Krzysztof Wilczyński <kw@linux.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +C:	irc://irc.oftc.net/linux-pci
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-> +F:	rust/helpers/pci.c
->  F:	rust/kernel/pci.rs
->  F:	samples/rust/rust_driver_pci.rs
+>  drivers/pci/quirks.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f840d611c450..a9759889ff5e 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+>  	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+>  		pci_warn(pdev, "could not add stall property");
+>  }
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
 >  
-> 
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+>  /*
+>   * It's possible for the MSI to get corrupted if SHPC and ACPI are used
 > -- 
-> 2.49.0
+> 2.25.1
 > 
 
