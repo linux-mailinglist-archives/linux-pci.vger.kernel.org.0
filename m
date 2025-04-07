@@ -1,87 +1,72 @@
-Return-Path: <linux-pci+bounces-25423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 067D5A7E91C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 19:55:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 211ECA7E94C
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 20:05:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 522A23BA4E6
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 17:51:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE8123B779A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8E62144AD;
-	Mon,  7 Apr 2025 17:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCC36219A9D;
+	Mon,  7 Apr 2025 18:03:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zMnClYon"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RttCvuN6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE1E215186
-	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 17:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B227D21146F;
+	Mon,  7 Apr 2025 18:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744048272; cv=none; b=eU2kJF0PHzIok9gZAv7o2WXD8JcmJry5AYk/slTgEQpU+/jUqrlI9m2wFwbzrNdhZiy+b8mT4WZKJQ/5FBd3snpR32XNQ180CTVJJfw/NXiR77BQyOnEDso50uArfUf+qwGiX0Fe4lErA/qVXDStcxk4LExv929yLJPxxQ+/244=
+	t=1744049023; cv=none; b=cJ2jAULFqKPAAPIaghHFVIxZRIvr4PFldjXeHj9IF3+YOMUe7zRjxMpdKWV6+i+jMggxmYTWX9fkcuCyRojq2+/Ypt2Vachut04ICScQQO/ycLLm0dLAN3zn25QWpou7cZdswnjDZNBbZB4dvP79yGdAvBl6ljsugTZf6gatH5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744048272; c=relaxed/simple;
-	bh=0zjNM9dFoJpTEvEmQW4onWMxpWkB12U2X0BMSHbeSbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XwnP/l095Fl3c7NOfUd9RegqWv+ZoXwbE78NFYq4nvTxdFCjRg4sErIn01M/Z19NgMMXXubUPJfC6JPw69Frz08JzBy6aXYbixH5evZXJ4hqqAYa6QTO90FYlC4h+YzIFLRmqxnUFbsvAAOOqrHSlQy9k6GGo20MXUfrAWv2ohE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zMnClYon; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22a976f3131so18881075ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 07 Apr 2025 10:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744048270; x=1744653070; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VY91Ztk0jKcUdYVunqeI1fUjcT5ASJ+JXFcinKfCuVw=;
-        b=zMnClYonMcIg6dTsgkoNqCFlQA710y4aGg1YhKymCGLkcWBNfaCh02mt3bNZ+Gc0Dt
-         ZbxGmWBMwuVQcTnImhqlaEnqkD/YyeF9ZX8fV3eUX9/h1f6bMS//HYnReBguZV1Pkk7r
-         HGPwvBTfK6ADyG6OXdtitO/m6WyAiCcAFJuo9jzumUZ6eNQlNnlawms/CpjapoSAMwBj
-         F0j5tFONa1vFW1p+3Luwe0Z/gv4RjKHOzemtHUpE/j38TL2tkW+Sl+vdshtPpLbqJ+nB
-         Bz/stjWM6Ot7xMAOOpmtZuuSObPfGYlEAEWPTlLNxInxKHvZesb6S4d8OdmXHQ9ZFyIs
-         LMiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744048270; x=1744653070;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VY91Ztk0jKcUdYVunqeI1fUjcT5ASJ+JXFcinKfCuVw=;
-        b=knwTUd6Iqs32SGfd9RDDODzJDRn0MmeL2iyQfUeN2mSTGRc3NrCHDhpbKY093ndFGP
-         fthCO5dJOCw3BnN8uac+XZwUGmB1dsYV/Ao4M0dOBi0lkllZsEEngleqpg+BR0UgpTz/
-         MVDmBKRUH9dKV+z2nwKT5Z3eRS6kYduD1NaHqTg98g8Ka+jdNA3ArhTjF1VJrRIc9Gmf
-         yEuH6c4zXRQyoIbQN4xyqpNAVmbw7Sy2pf4SufIv0Kot/JXz6uMDgKT5DvaopeCX1+Ei
-         evMeerAnJZSWADrAaNYVpkAb9tXAkEAdtRA2iBoNnEcJh7IIMFwkj3N9GBbj/LiU5pCe
-         cCRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvDAt6HSlv7HcOw2+djxIboE73mk1zXDapajCQmHCIZ8Aky9RzwnPlU1hpEbR8hp+5xC6Pbpj4k5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOf3FDvdsRl3NP9V/6p9ps+lRF2azU3O2IUQYG843NR75MjUu3
-	OCZZEVlgv9X1vJ95BFSsz6v4ZxsR7JQKXnqmNcEl3nmNWwm61X32hgBIN/2fzw==
-X-Gm-Gg: ASbGncvkiXHCP4tuMAmCpd7uB/rVHiCkI0p0zBLdMnRmWNhnBf70uCOBM8F2OKhENUC
-	n2XxleImR9TLhwQBD/Y0FIhWQ0qNjxWeDC5+326fcKRuhmpYLs0ybzgf14xqtSiIaKMfNyjIF2i
-	x5qjDsbb4XxHTpWY1nvQ7GGBbJleS3H5fpQ4fZ/TBpzk/mi99e1zeG0OidqtNN4WyAii03ebFm5
-	dNR/zTuQvEO8tk+Li9RMD7DfgckJT4t/S/B7UQmcNPmVOOoFjJbGeqSBQB2M6F2qBqsxp3F1fIy
-	pIv+MnnhNxhB/XufOl7YKDMb3h4G2dcEfvjAkCuNs0JiWboIavOKqJIk4KQtWIFWM9s=
-X-Google-Smtp-Source: AGHT+IE7m+MVWIOyNIrcTveZ3d0m14foKlW7+98jfMKafcP4qh7P2NiqavTJmiS80pjt1sxX5q7qJg==
-X-Received: by 2002:a17:903:1aa7:b0:224:3c6:7865 with SMTP id d9443c01a7336-22a8a85a2c3mr169775595ad.3.1744048270554;
-        Mon, 07 Apr 2025 10:51:10 -0700 (PDT)
-Received: from thinkpad ([120.56.196.217])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229786608c6sm84002195ad.148.2025.04.07.10.51.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 10:51:10 -0700 (PDT)
-Date: Mon, 7 Apr 2025 23:21:05 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-Cc: jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, 
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, quic_cang@quicinc.com, mrana@quicinc.com, 
-	yuqiang <quic_qianyu@quicinc.com>
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-Message-ID: <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+	s=arc-20240116; t=1744049023; c=relaxed/simple;
+	bh=YHIy5Y1koKmkECfrSnEDyoWYCat4HjXEskfIpv3fwuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CPU728wXrKkt3/MO+3gzG5ulVPef7xtq0bYulk/Q9fLscX+pjdzq5PODYHSUCflD/aFERrUtnGMfgUMXlwM6f1QBXGwOfAoVdZ7P8HXYxJXkBr1mBt5PGSlIylCwvYXt9RRqnNSUA1wAdatArICk9kKyFI6+0FJjsNYguTVlMms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RttCvuN6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CDAC4CEDD;
+	Mon,  7 Apr 2025 18:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744049023;
+	bh=YHIy5Y1koKmkECfrSnEDyoWYCat4HjXEskfIpv3fwuc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RttCvuN6FYjIuyMSpBvHJlb4NGyWZ/3GBZXejCnlcffyyRb6qBm7entEeT5evaQPe
+	 LF0Y0672+3ZAnwDw6WTDneKn3v8souc6WjSgylaiDpxYunKnwcZj2aCfx1rd5invPL
+	 tBhB17TFw4gFjshVKtaDfsnXWzrIe8GsvSp0EKT1tgW4qdDsoptaI4oabflYTQKqah
+	 0S0QDF0bxdh3qiwItJEEY2RlOOnJ8Yd1d4s+7BKH0GEopNDPQU+7M4phafo7qggkpP
+	 qmvHquthg0WYzrN/WkyrxyW/lHo+3k6cCJK2Ffia4l+TYXQIuehc971AnL7F8FZX1I
+	 x1p5l2w16/ZBw==
+Date: Mon, 7 Apr 2025 13:03:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Toan Le <toan@os.amperecomputing.com>,
+	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 07/57] irqdomain: pci: Switch to of_fwnode_handle()
+Message-ID: <20250407180341.GA189772@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,37 +76,185 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+In-Reply-To: <20250319092951.37667-8-jirislaby@kernel.org>
 
-On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
-> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
-> indicates the number of lanes to check for exit from Electrical Idle in
-> Polling.Active and L2.Idle. It is used to limit the effective link width to
-> ignore broken or unused lanes that detect a receiver to prevent one or more
-> bad Receivers or Transmitters from holding up a valid Link from being
-> configured.
+On Wed, Mar 19, 2025 at 10:29:00AM +0100, Jiri Slaby (SUSE) wrote:
+> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+> defined of_fwnode_handle(). The former is in the process of being
+> removed, so use the latter instead.
 > 
-> In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
-> to 1 will not affect the link width that is actually intended to be used.
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Toan Le <toan@os.amperecomputing.com>
+> Cc: Joyce Ooi <joyce.ooi@intel.com>
+> Cc: Jim Quinlan <jim2101024@gmail.com>
+> Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+> Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+> Cc: Michal Simek <michal.simek@amd.com>
+> Cc: Daire McNamara <daire.mcnamara@microchip.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
 
-Where in the spec it is defined?
+Applied to pci/irq for v6.16, thanks!
 
-> But setting it to a value other than 1 will lead to link training fail if
-> one or more lanes are broken.
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c    | 2 +-
+>  drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 2 +-
+>  drivers/pci/controller/pci-xgene-msi.c               | 2 +-
+>  drivers/pci/controller/pcie-altera-msi.c             | 2 +-
+>  drivers/pci/controller/pcie-brcmstb.c                | 2 +-
+>  drivers/pci/controller/pcie-iproc-msi.c              | 2 +-
+>  drivers/pci/controller/pcie-mediatek.c               | 2 +-
+>  drivers/pci/controller/pcie-xilinx-dma-pl.c          | 2 +-
+>  drivers/pci/controller/pcie-xilinx-nwl.c             | 2 +-
+>  drivers/pci/controller/plda/pcie-plda-host.c         | 2 +-
+>  10 files changed, 10 insertions(+), 10 deletions(-)
 > 
-
-Which means the link partner is not able to downsize the link during LTSSM?
-
-> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
-> port actually supports to make linking up more robust. Link can still be
-> established with one lane at least if other lanes are broken.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index ecc33f6789e3..d1cd48efad43 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -227,7 +227,7 @@ static const struct irq_domain_ops dw_pcie_msi_domain_ops = {
+>  int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(pci->dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(pci->dev->of_node);
+>  
+>  	pp->irq_domain = irq_domain_create_linear(fwnode, pp->num_vectors,
+>  					       &dw_pcie_msi_domain_ops, pp);
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> index 0e088e74155d..6628eed9d26e 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> @@ -435,7 +435,7 @@ static const struct irq_domain_ops msi_domain_ops = {
+>  static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+>  	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+>  	mutex_init(&msi->lock);
+> diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+> index 7bce327897c9..69a9c0a87639 100644
+> --- a/drivers/pci/controller/pci-xgene-msi.c
+> +++ b/drivers/pci/controller/pci-xgene-msi.c
+> @@ -247,7 +247,7 @@ static int xgene_allocate_domains(struct xgene_msi *msi)
+>  	if (!msi->inner_domain)
+>  		return -ENOMEM;
+>  
+> -	msi->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(msi->node),
+> +	msi->msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(msi->node),
+>  						    &xgene_msi_domain_info,
+>  						    msi->inner_domain);
+>  
+> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+> index e1cee3c0575f..5fb3a2e0017e 100644
+> --- a/drivers/pci/controller/pcie-altera-msi.c
+> +++ b/drivers/pci/controller/pcie-altera-msi.c
+> @@ -164,7 +164,7 @@ static const struct irq_domain_ops msi_domain_ops = {
+>  
+>  static int altera_allocate_domains(struct altera_msi *msi)
+>  {
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(msi->pdev->dev.of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(msi->pdev->dev.of_node);
+>  
+>  	msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
+>  					     &msi_domain_ops, msi);
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 8b2b099e81eb..1f356fca07a2 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -581,7 +581,7 @@ static const struct irq_domain_ops msi_domain_ops = {
+>  
+>  static int brcm_allocate_domains(struct brcm_msi *msi)
+>  {
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(msi->np);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(msi->np);
+>  	struct device *dev = msi->dev;
+>  
+>  	msi->inner_domain = irq_domain_add_linear(NULL, msi->nr, &msi_domain_ops, msi);
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 649fcb449f34..804b3a5787c5 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -451,7 +451,7 @@ static int iproc_msi_alloc_domains(struct device_node *node,
+>  	if (!msi->inner_domain)
+>  		return -ENOMEM;
+>  
+> -	msi->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
+> +	msi->msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(node),
+>  						    &iproc_msi_domain_info,
+>  						    msi->inner_domain);
+>  	if (!msi->msi_domain) {
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 811a8b4acd50..efcc4a7c17be 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -485,7 +485,7 @@ static struct msi_domain_info mtk_msi_domain_info = {
+>  
+>  static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
+>  {
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(port->pcie->dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(port->pcie->dev->of_node);
+>  
+>  	mutex_init(&port->lock);
+>  
+> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> index dd117f07fc95..71cf13ae51c7 100644
+> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> @@ -470,7 +470,7 @@ static int xilinx_pl_dma_pcie_init_msi_irq_domain(struct pl_dma_pcie *port)
+>  	struct device *dev = port->dev;
+>  	struct xilinx_msi *msi = &port->msi;
+>  	int size = BITS_TO_LONGS(XILINX_NUM_MSI_IRQS) * sizeof(long);
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(port->dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(port->dev->of_node);
+>  
+>  	msi->dev_domain = irq_domain_add_linear(NULL, XILINX_NUM_MSI_IRQS,
+>  						&dev_msi_domain_ops, port);
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index 8d6e2a89b067..9cf8a96f7bc4 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -495,7 +495,7 @@ static int nwl_pcie_init_msi_irq_domain(struct nwl_pcie *pcie)
+>  {
+>  #ifdef CONFIG_PCI_MSI
+>  	struct device *dev = pcie->dev;
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+>  	struct nwl_msi *msi = &pcie->msi;
+>  
+>  	msi->dev_domain = irq_domain_add_linear(NULL, INT_PCI_MSI_NR,
+> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+> index 4153214ca410..4c7a9fa311e3 100644
+> --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> @@ -150,7 +150,7 @@ static struct msi_domain_info plda_msi_domain_info = {
+>  static int plda_allocate_msi_domains(struct plda_pcie_rp *port)
+>  {
+>  	struct device *dev = port->dev;
+> -	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> +	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+>  	struct plda_msi *msi = &port->msi;
+>  
+>  	mutex_init(&port->msi.lock);
+> -- 
+> 2.49.0
 > 
-
-This looks like a specific endpoint/controller issue to me. Where exactly did
-you see the issue?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
