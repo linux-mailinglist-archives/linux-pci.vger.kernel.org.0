@@ -1,54 +1,115 @@
-Return-Path: <linux-pci+bounces-25417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25418-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0102FA7E608
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:17:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDC46A7E711
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:45:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13291445190
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:10:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0437A18889E0
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36618205AD8;
-	Mon,  7 Apr 2025 16:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B541E20E02B;
+	Mon,  7 Apr 2025 16:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxpP7otZ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="C1e9a7Rl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126CB76035
-	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 16:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D920E01C
+	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 16:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042202; cv=none; b=HNvEAXqnjMeT+rPGwSsTSMBOSgyfefZrzFp5JlUc6lCzO3KoGnBgjOjB2AK8jG+w46Ax0HlmXx4yqxEqwgEXmqOJpssP0NJZ/heGaMSigBr/1Vcjf1HSkhDDGIEh1EWd6O7wiEW8TGxqLUJrsUlX8eCp95yWI92lK9lgRaUaoJg=
+	t=1744044014; cv=none; b=rC90ASy0v9M11jWJVVH6XLpAP5jnY0JJ1lmo0O8YkHLhvoyTryOS6WH9PfVIFI3iiiHmtY+Qs6iCnBraBuGj715tVrGP7L7NziOA2SOK1gMQVpNECAyJ8Z24HhX+IROseMA9ZUA6WLlnlQvk8d0D6+66NTdlkmiipRywHXJXt7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042202; c=relaxed/simple;
-	bh=b/+uQFdQQGmMzXPysgm3jt6hMce0vcwkuj4h9ZE01cw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=FmnIPdXGglJMnZqygzWRIZWrACUMvWtDrDCA4Yvc9H6jsDRrerv0yWNtuoTr0IG0ThJcWhgqFSDV9RyDNW3cDjs3sba/rGMeLHDlKo9yZVsKAO7Y1FJszgTp5GmVurEKb1c+6BzG5vimG1wG7QPc90z83VrGO9ONzD57HxGXYFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxpP7otZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0383C4CEE7;
-	Mon,  7 Apr 2025 16:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744042201;
-	bh=b/+uQFdQQGmMzXPysgm3jt6hMce0vcwkuj4h9ZE01cw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hxpP7otZIX8scJyddiCt6WrFwSIISKX1Is2hN+KkzwKaOCo+PEsxHrp0SY8SY8fBk
-	 zTMc8ideRW/U80ngNt4k7RzEPtkGEmVayVFMGAAYRIpTcqvCP0awTh5WdwHRFwRnu1
-	 3GWE8q1CrRGvHjQCBHlXakyPHX25txTcTeQ1311fzxM/qGI6haS5SIWNhKBUjpeGU/
-	 NsoMiG6i+gPQnPHkOVF1iBFNNYRaqyPFJDD5FQbJa11sQl3PAroiVVEENdMwEQYfof
-	 1M1zTHc/egX3mTVGuxHAdQ+K90VukCCBFU6l9MLSJuBn0DDGSTCqbdM3HQWM6VBnq1
-	 sLVacwuUg/0qA==
-Date: Mon, 7 Apr 2025 11:10:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Artem S. Tashkinov" <aros@gmx.com>
-Subject: Re: [Bug 219984] New: [BISECTED] High power usage since 'PCI/ASPM:
- Correct LTR_L1.2_THRESHOLD computation'
-Message-ID: <20250407161000.GA180182@bhelgaas>
+	s=arc-20240116; t=1744044014; c=relaxed/simple;
+	bh=xekbj8Um5XwrEOGdzENZPa2iQeQhDeMvkZT0NVb5BK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oaXo2itL94HSIvQAeL50NqOhl8+guccULxAbgyk/fgON6sGoHlQbrYLclAnnwXDvN/e4brrkkIqq95HUm550g+FoYek7EE1tGrQvrWFdUnxYmV3LzGm34f+01iXak4jhQvQEhWemIekrfJPcsMVRrRRYqE7bBmdAbgWl50tCoLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=C1e9a7Rl; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c56321b22cso428692485a.1
+        for <linux-pci@vger.kernel.org>; Mon, 07 Apr 2025 09:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1744044011; x=1744648811; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KVaiHAMacLy0yHf6meYzZ4WkOGggIQHdshTAyck4dh4=;
+        b=C1e9a7RlDnHM1HSLQZ5q8CNKgVYLTqgByhvy9WMxUJRN581QJO0J+rvZli6pcgyuMe
+         5x/L9DLnre5qvLPL5k5U9nmgJHaHr8q9l1/zwNTnFpGVRYulzqA8D4D/OXVoMOxkDgdz
+         vNsIxXM2KegZvo48VvlijiqqbTA7Dfhy/dkzRA6yp2EAAnp6x16CF3JkwqsD44nLtG3o
+         FsxD2OY/lGWRmlsYbVwcbPTKuAhsUyE10NIZ40gkK8l4dwIjH+fcSTybgCImC74fgk57
+         rGIff4B4Vn0IHEYEv+B4NXhPIYkaPyW0kTvRsSciPf4oXRWlj0J7czCO8jjf45rgRLKh
+         9wbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744044011; x=1744648811;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KVaiHAMacLy0yHf6meYzZ4WkOGggIQHdshTAyck4dh4=;
+        b=jmGjLpUt5mPh4oUGaauQn+FgUdASbStq9nNtvQv8MvEcrVKK8AUV4xAO9hqRSYpMOU
+         AtUz4AokURqdfLjUV5/Cxjy3JFLAc4Wo2uAFdTjj5zUYWjvax/mVxlsm664E30qiATGi
+         mPI5BSBDVC4tW9LAFnNa905rUoVzQxj7lGBE38mLiSVQTszC0ONVEcU6dgilEaCA7N7D
+         g0G8WjyOkYZ16lQBgntu3tMlcP0oKTfubS/zo8NN1aD8b7HrsNtnxcm11KoIIEdbPjU0
+         GmD2geMxaqg+R+CaD2AfR43TegO4QoeJulnbSuFxkdqTAUe3KFBXAYeIXZYmiGO9zEiL
+         lpsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwnINZhTv6x+tugASED1YlCE3tcPulN8KDH4DnFF7UDF1HGDK/8tPuR4eBBns2GEgt+HSQE1p8gdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys+UTbuPtRllTRTWhFPqGne6vd207jBnhzHFZ+bigIRzC3//lo
+	8oc4xgaGrjT/ocQnOMlk3tD4tsy7cpMNXWR4gHu0L5ZtqQo7+TsUd/AewFshwYA=
+X-Gm-Gg: ASbGnctV7EVFPw3HWZVHDN9oQWHEsCosq0pAGunLfcubtCTC6Vf99zN37FGzGG0OX/s
+	+sdjHtcfpJuJ/9IfCcjkVNKZdpop4Y4z/qdnZIGnKAem/RYC80o9AGPxUYuZBaEqm2k8oN+yGcS
+	iz9xmzP3VOKax9Bc3hmuBX2ZE0Ko+7CGWXVW87eA7Ml3LXwYjzE1KhEU8KMQoheuDU9A/EWpVp5
+	GtbAfnp7rbeCjDr239rC/JV5uIAkOsQ649mCqR2GhPW4P1j0bSRVNOCtIkkc/6F36ntC1ZrQevV
+	d4nfMdSJyN7Pe85qUppaH3sH9ECeI8/iOE5vvml/eEMwKuPCbOfPG4JpOsJL4EDzWoeXLq7Un/g
+	VRJfeYp/d7InlcaaxTwqrFpk=
+X-Google-Smtp-Source: AGHT+IEFf/klcawRT/DLAKNVY/s1kWSMw+u/XuSys5u9G30IOfriJNNXl5A9JC2j6VoZritBscM43A==
+X-Received: by 2002:a05:620a:25c8:b0:7c0:ad47:db3d with SMTP id af79cd13be357-7c7940ba2a0mr22422685a.21.1744044010744;
+        Mon, 07 Apr 2025 09:40:10 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e96e870sm618914485a.60.2025.04.07.09.40.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 09:40:10 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u1pW5-00000007DRV-3Cjz;
+	Mon, 07 Apr 2025 13:40:09 -0300
+Date: Mon, 7 Apr 2025 13:40:09 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>
+Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
+Message-ID: <20250407164009.GC1562048@ziepe.ca>
+References: <20250218111017.491719-1-aik@amd.com>
+ <20250218111017.491719-15-aik@amd.com>
+ <yq5av7rt7mix.fsf@kernel.org>
+ <20250401160340.GK186258@ziepe.ca>
+ <yq5a4iz019oy.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,55 +118,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407155742.GA178541@bhelgaas>
+In-Reply-To: <yq5a4iz019oy.fsf@kernel.org>
 
-On Mon, Apr 07, 2025 at 10:57:44AM -0500, Bjorn Helgaas wrote:
-> [bugzilla reporter bcc'd]
+On Mon, Apr 07, 2025 at 05:10:29PM +0530, Aneesh Kumar K.V wrote:
+> I was trying to prototype this using kvmtool and I have run into some
+> issues. First i needed the below change for vIOMMU alloc to work
 > 
-> Bisected to https://git.kernel.org/linus/7afeb84d14ea
+> modified   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -4405,6 +4405,8 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR3);
+>  	if (FIELD_GET(IDR3_RIL, reg))
+>  		smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
+> +	if (FIELD_GET(IDR3_FWB, reg))
+> +		smmu->features |= ARM_SMMU_FEAT_S2FWB;
+>  
+>  	/* IDR5 */
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
+
+Oh wow, I don't know what happened there that the IDR3 got dropped
+maybe a rebase mistake? It was in earlier versions of the patch at
+least :\ Please send a formal patch!!
+
+> Also current code don't allow a Stage 1 bypass, Stage2 translation when
+> allocating HWPT.
+>
+> arm_vsmmu_alloc_domain_nested -> arm_smmu_validate_vste -> 
 > 
-> I'll take a look; including linux-pci for completeness and in case
-> others are interested.
+> 	cfg = FIELD_GET(STRTAB_STE_0_CFG, le64_to_cpu(arg->ste[0]));
+> 	if (cfg != STRTAB_STE_0_CFG_ABORT && cfg != STRTAB_STE_0_CFG_BYPASS &&
+> 	    cfg != STRTAB_STE_0_CFG_S1_TRANS)
+> 		return -EIO;
+> 
+> This only allow a abort or bypass or stage1 translate/stage2 bypass config
 
-Sergey, would you mind collecting the output of "sudo lspci -vv" for
-both v6.14 and v6.14 with 7afeb84d14ea ("PCI/ASPM: Correct
-LTR_L1.2_THRESHOLD computation") reverted?
+The above is for the vSTE, the cfg is not copied as is to the host
+STE. See how arm_smmu_make_nested_domain_ste() transforms it.
 
-You can include the output here via email or (if you prefer not to
-expose your email address) attach to the bugzilla.
+STRTAB_STE_0_CFG_ABORT blocks all DMA
+STRTAB_STE_0_CFG_BYPASS "bypass" for the VM is S2 translation only
+STRTAB_STE_0_CFG_S1_TRANS "s1 only" for the VM is S1 & S1 translation
 
-> On Sun, Apr 06, 2025 at 03:11:54PM +0000, bugzilla-daemon@kernel.org wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219984
-> > 
-> >             Bug ID: 219984
-> >            Summary: [BISECTED] High power usage since 'PCI/ASPM: Correct
-> >                     LTR_L1.2_THRESHOLD computation'
-> >           Reporter: sergey.v.dolgov@gmail.com
-> >         Regression: No
-> > 
-> > Created attachment 307924
-> >   --> https://bugzilla.kernel.org/attachment.cgi?id=307924&action=edit
-> > Bisection log
-> > 
-> > I have been observing increased power consumption on my HP Spectre x360
-> > Convertible 15-df1xxx (CoffeeLake) since kernel 6.1. Bisection revealed a
-> > regression in commit 7afeb84d14eaaebb71f5c558ed57ca858e4304e7 (PCI/ASPM:
-> > Correct LTR_L1.2_THRESHOLD computation). This still affects the mainline. 
-> > 
-> > With the original kernel 6.14, turbostat shows that the CPU sticks to Pkg%pc3
-> > more than 50% of the time, resulting in a discharge rate of 3.52 W reported by
-> > powertop during an idle empty plasma6 session with screen off.
-> > 
-> > After reverting 7afeb84d14eaaebb71f5c558ed57ca858e4304e7 and recompiling the
-> > kernel with the same config, Pk%pc10, CPU%LPI and SYS%LPI residencies are all
-> > above 80% during the same session, and "The battery reports a discharge rate of
-> > 1.35 W."
-> > 
-> > The two kernels above had no nvidia drivers to avoid tainting. However,
-> > compiling also the proprietary nvidia modules reduces the idle power
-> > consumption further to 796 mW.
-> > 
-> > Could you please revert 7afeb84d14eaaebb71f5c558ed57ca858e4304e7 upstream? Or,
-> > at least, to switch between the two encode_l12_threshold algorithms selectively
-> > depending on the system.
+> Also if we don't need stage1 table, what will
+> iommufd_viommu_alloc_hwpt_nested() return?
+
+A wrapper around whatever STE configuration that userspace requested
+logically linked to the viommu.
+
+Jason
 
