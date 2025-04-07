@@ -1,115 +1,56 @@
-Return-Path: <linux-pci+bounces-25418-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25419-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDC46A7E711
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 18:45:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2EA3A7E790
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 19:00:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0437A18889E0
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:40:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0BF5189BBC9
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 16:55:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B541E20E02B;
-	Mon,  7 Apr 2025 16:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E7621423A;
+	Mon,  7 Apr 2025 16:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="C1e9a7Rl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/fxj2Nh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D920E01C
-	for <linux-pci@vger.kernel.org>; Mon,  7 Apr 2025 16:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243E913C8E8;
+	Mon,  7 Apr 2025 16:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044014; cv=none; b=rC90ASy0v9M11jWJVVH6XLpAP5jnY0JJ1lmo0O8YkHLhvoyTryOS6WH9PfVIFI3iiiHmtY+Qs6iCnBraBuGj715tVrGP7L7NziOA2SOK1gMQVpNECAyJ8Z24HhX+IROseMA9ZUA6WLlnlQvk8d0D6+66NTdlkmiipRywHXJXt7A=
+	t=1744044795; cv=none; b=Sv0lCF8aF0j7+wTOQ7V4W6VYX5yYdXrmhGnZ05APwlpYvc+3aKluKcIQBfVS+zGT0IvVfMig6ttZcw0A0anBV0naEMhSOX6cHuMazulEwoSav2nTEPmthI6QnaOGnKj4T/ia75o8NDAfB+BQPWknrnlYqiiiykJeKEDUU4kxinw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044014; c=relaxed/simple;
-	bh=xekbj8Um5XwrEOGdzENZPa2iQeQhDeMvkZT0NVb5BK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oaXo2itL94HSIvQAeL50NqOhl8+guccULxAbgyk/fgON6sGoHlQbrYLclAnnwXDvN/e4brrkkIqq95HUm550g+FoYek7EE1tGrQvrWFdUnxYmV3LzGm34f+01iXak4jhQvQEhWemIekrfJPcsMVRrRRYqE7bBmdAbgWl50tCoLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=C1e9a7Rl; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c56321b22cso428692485a.1
-        for <linux-pci@vger.kernel.org>; Mon, 07 Apr 2025 09:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1744044011; x=1744648811; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KVaiHAMacLy0yHf6meYzZ4WkOGggIQHdshTAyck4dh4=;
-        b=C1e9a7RlDnHM1HSLQZ5q8CNKgVYLTqgByhvy9WMxUJRN581QJO0J+rvZli6pcgyuMe
-         5x/L9DLnre5qvLPL5k5U9nmgJHaHr8q9l1/zwNTnFpGVRYulzqA8D4D/OXVoMOxkDgdz
-         vNsIxXM2KegZvo48VvlijiqqbTA7Dfhy/dkzRA6yp2EAAnp6x16CF3JkwqsD44nLtG3o
-         FsxD2OY/lGWRmlsYbVwcbPTKuAhsUyE10NIZ40gkK8l4dwIjH+fcSTybgCImC74fgk57
-         rGIff4B4Vn0IHEYEv+B4NXhPIYkaPyW0kTvRsSciPf4oXRWlj0J7czCO8jjf45rgRLKh
-         9wbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744044011; x=1744648811;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KVaiHAMacLy0yHf6meYzZ4WkOGggIQHdshTAyck4dh4=;
-        b=jmGjLpUt5mPh4oUGaauQn+FgUdASbStq9nNtvQv8MvEcrVKK8AUV4xAO9hqRSYpMOU
-         AtUz4AokURqdfLjUV5/Cxjy3JFLAc4Wo2uAFdTjj5zUYWjvax/mVxlsm664E30qiATGi
-         mPI5BSBDVC4tW9LAFnNa905rUoVzQxj7lGBE38mLiSVQTszC0ONVEcU6dgilEaCA7N7D
-         g0G8WjyOkYZ16lQBgntu3tMlcP0oKTfubS/zo8NN1aD8b7HrsNtnxcm11KoIIEdbPjU0
-         GmD2geMxaqg+R+CaD2AfR43TegO4QoeJulnbSuFxkdqTAUe3KFBXAYeIXZYmiGO9zEiL
-         lpsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwnINZhTv6x+tugASED1YlCE3tcPulN8KDH4DnFF7UDF1HGDK/8tPuR4eBBns2GEgt+HSQE1p8gdU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys+UTbuPtRllTRTWhFPqGne6vd207jBnhzHFZ+bigIRzC3//lo
-	8oc4xgaGrjT/ocQnOMlk3tD4tsy7cpMNXWR4gHu0L5ZtqQo7+TsUd/AewFshwYA=
-X-Gm-Gg: ASbGnctV7EVFPw3HWZVHDN9oQWHEsCosq0pAGunLfcubtCTC6Vf99zN37FGzGG0OX/s
-	+sdjHtcfpJuJ/9IfCcjkVNKZdpop4Y4z/qdnZIGnKAem/RYC80o9AGPxUYuZBaEqm2k8oN+yGcS
-	iz9xmzP3VOKax9Bc3hmuBX2ZE0Ko+7CGWXVW87eA7Ml3LXwYjzE1KhEU8KMQoheuDU9A/EWpVp5
-	GtbAfnp7rbeCjDr239rC/JV5uIAkOsQ649mCqR2GhPW4P1j0bSRVNOCtIkkc/6F36ntC1ZrQevV
-	d4nfMdSJyN7Pe85qUppaH3sH9ECeI8/iOE5vvml/eEMwKuPCbOfPG4JpOsJL4EDzWoeXLq7Un/g
-	VRJfeYp/d7InlcaaxTwqrFpk=
-X-Google-Smtp-Source: AGHT+IEFf/klcawRT/DLAKNVY/s1kWSMw+u/XuSys5u9G30IOfriJNNXl5A9JC2j6VoZritBscM43A==
-X-Received: by 2002:a05:620a:25c8:b0:7c0:ad47:db3d with SMTP id af79cd13be357-7c7940ba2a0mr22422685a.21.1744044010744;
-        Mon, 07 Apr 2025 09:40:10 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e96e870sm618914485a.60.2025.04.07.09.40.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:40:10 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u1pW5-00000007DRV-3Cjz;
-	Mon, 07 Apr 2025 13:40:09 -0300
-Date: Mon, 7 Apr 2025 13:40:09 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
-Message-ID: <20250407164009.GC1562048@ziepe.ca>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-15-aik@amd.com>
- <yq5av7rt7mix.fsf@kernel.org>
- <20250401160340.GK186258@ziepe.ca>
- <yq5a4iz019oy.fsf@kernel.org>
+	s=arc-20240116; t=1744044795; c=relaxed/simple;
+	bh=/5l4BinDGarHYEuUjkfx0ozu50otXKiCczW5dEwIajA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LTE+bBXmh7fSKZ95VX265jqJ3lidLYeNxPBfYiZeSvsxt1oXuCtMmOYjRj0uYGNXLhybwPnwf2zmFDLaShGEaVi0MBhTPYANbLz0lGyrU+sDC7Xn8aIuigt+Ki86LBKHRobw0SO5Ysq88KLySOHABu05r6FB9IWsBJES8jo1Vs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/fxj2Nh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F73C4CEE7;
+	Mon,  7 Apr 2025 16:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744044795;
+	bh=/5l4BinDGarHYEuUjkfx0ozu50otXKiCczW5dEwIajA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=t/fxj2NhB3YZ6qljNzqey3La1PfdPfgT/cFyqH/SO2VAa4PElW5NZV2fwE4EuGD3d
+	 S0z38AJkDC1kApa972dpZaVJGzWT3SUbucu5nNX6Q8FoU7sh9gj5xPaZfThJZQV4u5
+	 kJBIqz5m1vG0shjKDr0DAZ9WzVNszYjj2wioR0HZ7JFYkt50V36+V/cYUT8L3XFWrA
+	 2zb5Nk0wf50652r9URCH8QQL02q+2uEZ+BiQFT+tD4v4IYXVctTweNYhzshIZ14ieo
+	 YqMd/w4X111ey4gXoNNrcyYKE8l7TAML1+gfA3FAjjFVjpECKdPCEktXF+dFaUg1z5
+	 IqCboSn1wkxFg==
+Date: Mon, 7 Apr 2025 11:53:13 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
+Message-ID: <20250407165313.GA183057@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -118,51 +59,65 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yq5a4iz019oy.fsf@kernel.org>
+In-Reply-To: <lhtklncbcyphq2ljxn6w5p7wk4rdj5wxzskmlly4mrr664b2lj@w5clch5uzvd3>
 
-On Mon, Apr 07, 2025 at 05:10:29PM +0530, Aneesh Kumar K.V wrote:
-> I was trying to prototype this using kvmtool and I have run into some
-> issues. First i needed the below change for vIOMMU alloc to work
+On Mon, Apr 07, 2025 at 01:14:56PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Mar 24, 2025 at 11:28:54AM -0500, Bjorn Helgaas wrote:
+> > On Mon, Mar 24, 2025 at 03:34:35PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > Precision Time Management (PTM) mechanism defined in PCIe spec
+> > > r6.0, sec 6.22 allows precise coordination of timing information
+> > > across multiple components in a PCIe hierarchy with independent
+> > > local time clocks.
+> > > 
+> > > PCI core already supports enabling PTM in the root port and
+> > > endpoint devices through PTM Extended Capability registers. But
+> > > the PTM context supported by the PTM capable components such as
+> > > Root Complex (RC) and Endpoint (EP) controllers were not exposed
+> > > as of now.
+> > > 
+> > > Hence, add the sysfs support to expose the PTM context to
+> > > userspace from both PCIe RC and EP controllers. Controller
+> > > drivers are expected to call pcie_ptm_create_sysfs() to create
+> > > the sysfs attributes for the PTM context and call
+> > > pcie_ptm_destroy_sysfs() to destroy them. The drivers should
+> > > also populate the relevant callbacks in the 'struct
+> > > pcie_ptm_ops' structure based on the controller implementation.
+> > 
+> > Can we include some motivation here, e.g., what is the value of
+> > exposing this information?  Is this for debugging or bringup
+> > purposes?  Can users or administrators use this for something?
+> > Obviously they can read and update some internal PTM state, but it
+> > would be nice to know what that's good for.
 > 
-> modified   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -4405,6 +4405,8 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
->  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR3);
->  	if (FIELD_GET(IDR3_RIL, reg))
->  		smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
-> +	if (FIELD_GET(IDR3_FWB, reg))
-> +		smmu->features |= ARM_SMMU_FEAT_S2FWB;
->  
->  	/* IDR5 */
->  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
+> This was a request from one of the Qualcomm customers, but they
+> didn't share how they are using these context. They just said that
+> they want to collect the PTM timestamps for comparing with PTP
+> timestamps from a different PCIe switch. That was not a worth of
+> information to be mentioned in the cover letter, so I skipped it
+> intentionally.
 
-Oh wow, I don't know what happened there that the IDR3 got dropped
-maybe a rebase mistake? It was in earlier versions of the patch at
-least :\ Please send a formal patch!!
+I think it is important to include a reason for merging a change.  The
+mere fact that information exists is not enough reason to expose it
+as a sysfs ABI.
 
-> Also current code don't allow a Stage 1 bypass, Stage2 translation when
-> allocating HWPT.
->
-> arm_vsmmu_alloc_domain_nested -> arm_smmu_validate_vste -> 
+> >  Consequently this probably can't be done by generic drivers like
+> >  ACPI, and maybe this is a candidate for debugfs instead of sysfs.
 > 
-> 	cfg = FIELD_GET(STRTAB_STE_0_CFG, le64_to_cpu(arg->ste[0]));
-> 	if (cfg != STRTAB_STE_0_CFG_ABORT && cfg != STRTAB_STE_0_CFG_BYPASS &&
-> 	    cfg != STRTAB_STE_0_CFG_S1_TRANS)
-> 		return -EIO;
-> 
-> This only allow a abort or bypass or stage1 translate/stage2 bypass config
+> Well, we can still create sysfs ABI for vendor specific features.
+> Problem with debugfs is that the customers cannot use debugfs in a
+> production environment.  Moreover, I cannot strictly classify PTM
+> context as a debugging information.
 
-The above is for the vSTE, the cfg is not copied as is to the host
-STE. See how arm_smmu_make_nested_domain_ste() transforms it.
+I'm not convinced about making sysfs ABI for vendor-specific features.
+I see that we do have a few existing things like this:
 
-STRTAB_STE_0_CFG_ABORT blocks all DMA
-STRTAB_STE_0_CFG_BYPASS "bypass" for the VM is S2 translation only
-STRTAB_STE_0_CFG_S1_TRANS "s1 only" for the VM is S1 & S1 translation
+  Documentation/ABI/testing/sysfs-bus-pci-drivers-janz-cmodio
+  Documentation/ABI/testing/sysfs-bus-pci-devices-cciss
+  Documentation/ABI/testing/sysfs-bus-pci-devices-avs
 
-> Also if we don't need stage1 table, what will
-> iommufd_viommu_alloc_hwpt_nested() return?
+but I'm a bit hesitant to extend this model.
 
-A wrapper around whatever STE configuration that userspace requested
-logically linked to the viommu.
-
-Jason
+Bjorn
 
