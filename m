@@ -1,174 +1,322 @@
-Return-Path: <linux-pci+bounces-25446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77355A7EEA6
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 22:12:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D77DA7EEF5
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 22:20:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D4A51791D3
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 20:06:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 854534258A2
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Apr 2025 20:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD07321ABAA;
-	Mon,  7 Apr 2025 20:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26907221D87;
+	Mon,  7 Apr 2025 20:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qxWeMnez"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gCCEQSN0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6FF1EE032;
-	Mon,  7 Apr 2025 20:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE8321ADC2;
+	Mon,  7 Apr 2025 20:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056354; cv=none; b=qrFN0xdCegD7r9WFtw4XDuM5D/8imAggVKK7ORTXFIQOfWofzBdc3AE4ZcbECByz6Sm2nnSYJ7dN80sdXZ4oqNVbmCeTFtU049MyMn5iXusDIOteFG98N1LRF3jykcW5QsdRImLSX/qgbb5hJhIekJ6LD7b70pVZd2RIasn3Ljk=
+	t=1744056826; cv=none; b=o9y0v7yak0hV8w2WLCk1wS2d2W9A7JEKmLlSBoQd2ti7x6Vh23ySW5eyxfncimypCuHOPHSWaZUINF/fT9Lsoy0BJ1bQCYkqVj4dYGZD7pISfDEC2+nS8tGXF2ibo4cgjZPSHvAf+rxIpQK6rdauFJDOWEFOca7MFUUSPy7b8iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056354; c=relaxed/simple;
-	bh=sOI/Ws0aQosMDdWy0Ov4bIs+PItfPMvkWap9D35EHWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzzQEDRVSV1sMnjLKS9mt7m+8eRTvD4tfM0YaB6DxWhpeBAcpEsnkG9fCVcuZBcQC7uH8Zfn/dKCZ6UM8D75BNn7cvVv51vh2mI1cWdTbVRhDZN1tQEA/iqcroueF7gd2FeR35NXDf9erCOQ7jz1i8SMT54PaBfinlslxACpJHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qxWeMnez; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=nl5JULT9PoC4C0/72HEzW8Mzovg/wHI2O7mxt7leeac=; b=qxWeMnezbVGyFUZ5BOqEZBMjTK
-	4viXQQ3adWeVMFtj8DWC62nPkKxNP3JRzHmTYRUWNXDWfiC9zspf3TzS6xn3/qt+/aH7SogayZXAf
-	9FfUvh72FV/sVaQ9VxcIoxpCx6DEvrtYWOUpWwVcdeWwajTvujFf2v2Ta/AVHazNifO0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u1sip-008Igt-Tz; Mon, 07 Apr 2025 22:05:31 +0200
-Date: Mon, 7 Apr 2025 22:05:31 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	s=arc-20240116; t=1744056826; c=relaxed/simple;
+	bh=JRlM6/nALg5Lm2ZBXoQg0G8YiFQqAUJ2hCpLAKZYtEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KcaPVPCTd+Mnfiz3nIT4kJQb6hw6/AVbJZSozd/EfCgKJNCvUT/+wRlgXsBI8EmTHxqG0JxSAFAxM6DJvv15atk++g4ZwJvcrA/RKd5Gc4X9Vbl9N+mMw3p6dMLS8qS62P9DjeCkx16UOloChYFPZ5wqXlFRVNS2lJcoq728nQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gCCEQSN0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 293E52027DE8;
+	Mon,  7 Apr 2025 13:13:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 293E52027DE8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744056818;
+	bh=yj9BIkacDDLGPpl6vwbg2gVO4jjNFHVjEs/ckpY8yuw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gCCEQSN0jIPjXpLawvyUN8ZcBjn+2CyLaHtPz7uNafmcxGUb2XC/LphaHqqk3D5QH
+	 hWZKpPwvMwnBg8l9ArrC9uzyLdSyldUy2JLgY3+Ei44tnDSjm8/tV1MaPGgjVCTZbg
+	 lj6OyBx5MSmpUUjihaR45wuNkjBun6WizDVilD2c=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	dan.carpenter@linaro.org,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	joey.gouly@arm.com,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com,
+	maz@kernel.org,
+	mingo@redhat.com,
+	oliver.upton@linux.dev,
+	rafael@kernel.org,
+	robh@kernel.org,
+	rafael.j.wysocki@intel.com,
+	ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com,
+	suzuki.poulose@arm.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev,
 	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v7 00/11] arm64: hyperv: Support Virtual Trust Level Boot
+Date: Mon,  7 Apr 2025 13:13:25 -0700
+Message-ID: <20250407201336.66913-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407145546.270683-16-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 04:55:44PM +0200, Herve Codina wrote:
-> Add device-tree nodes needed to support SFPs.
-> Those nodes are:
->  - the clock controller
->  - the i2c controller
->  - the i2c mux
->  - the SFPs themselves and their related ports in the switch
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/misc/lan966x_pci.dtso | 111 ++++++++++++++++++++++++++++++++++
->  1 file changed, 111 insertions(+)
-> 
-> diff --git a/drivers/misc/lan966x_pci.dtso b/drivers/misc/lan966x_pci.dtso
-> index 94a967b384f3..a2015b46cd44 100644
-> --- a/drivers/misc/lan966x_pci.dtso
-> +++ b/drivers/misc/lan966x_pci.dtso
+This patch set allows the Hyper-V code to boot on ARM64 inside a Virtual Trust
+Level. These levels are a part of the Virtual Secure Mode documented in the
+Top-Level Functional Specification available at
+https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm.
 
-What exactly does this DTSO file represent?
+The OpenHCL paravisor https://github.com/microsoft/openvmm/tree/main/openhcl
+can serve as a practical application of these patches on ARM64.
+
+For validation, I built kernels for the {x86_64, ARM64} x {VTL0, VTL2} set with
+a small initrd embedded into the kernel and booted VMs managed by Hyper-V and
+OpenVMM off of that.
+
+Starting from V5, the patch series includes a non-functional change to KVM on
+arm64 which I tested as well.
+
+[V7]
+    - Used another approach not to increase the number of warnings produced when
+      building with CHECK_ENDIAN.
+      ** Thank you, Arnd! **
+
+     - Adjusted the function parameter formatting to match the rest of the code.
+      ** Thank you, Bjorn! **
+
+    - Removed the now unused local variable.
+      ** Thank you, kernel robot! **
+
+    - Fixed the description in the VMBus DT binding patch.
+      ** Thank you, Krzysztof! **
+
+    - Adjusted the function names and comments to better reflect what they do,
+      used the suggested approach to handling UUIDs to make code more readable
+      and maintainable on big-endian.
+    - Replaced ifdeffery with a stub function to make the code more readable.
+      ** Thank you, Mark! **
+
+    - Fixed the Kconfig not to build the VTL mode code on 32-bit kernels.
+      ** Thank you, Michael! **
+
+    - Fixed the indentation and the comment style.
+      ** Thank you, Rafael! **
+
+[V6]
+    https://lore.kernel.org/linux-hyperv/20250315001931.631210-1-romank@linux.microsoft.com/
+    - Use more intuitive Kconfig update.
+    - Remove ifdef for getting IRQ number
+    ** Thank you, Arnd! **
+
+    - Simplify code for finding the parent IRQ domain.
+    ** Thank you, Bjorn! **
+
+    - Remove a superfluous check.
+    ** Thank you, Dan! **
+
+    - Make the commit title and descrtiption legible.
+    - Don't set additionalProperties to true.
+    ** Thank you, Krzysztof! **
+
+    - Fix spelling in the commit title and description.
+    - Trade-offs for options in Kconfig.
+    - Export the new symbol as hyperv-pci can be built as a module.
+    ** Thank you, Michael! **
+
+    - Simplify code for getting IRQ number.
+    ** Thank you, Rob! **
+
+    - Add comment to clarify when running in VTL mode is reported.
+    ** Thank you, Wei! **
+
+[V5]
+  https://lore.kernel.org/linux-hyperv/20250307220304.247725-1-romank@linux.microsoft.com/
+    - Provide and use a common SMCCC-based infra for the arm64 hypervisor guests
+      to detect hypervisor presence.
+    ** Thank you, Arnd! **
+
+    - Fix line wraps to follow the rest of the code.
+    - Open-code getting IRQ domain parent in the ACPI case to make the code
+      better.
+    ** Thank you, Bjorn! **
+
+    - Test the binding with the latest dtschema.
+    - Clean up the commit title and description.
+    - Use proper defines for known constants.
+    ** Thank you, Krzysztof! **
+
+    - Extend comment on why ACPI v6 is checked for.
+    - Reorder patches to make sure that even with partial series application
+      the compilation succeeds.
+    - Report VTL the kernel runs in.
+    - Use "X86_64" in Kconfig rather than "X86".
+    - Extract a non-functional change for hv_get_vmbus_root_device() into
+      a separate patch.
+    ** Thank you, Michael! **
+
+[V4]
+    https://lore.kernel.org/linux-hyperv/20250212014321.1108840-1-romank@linux.microsoft.com/
+    - Fixed wording to match acronyms defined in the "Terms and Abbreviations"
+      section of the SMCCC specification throughout the patch series.
+      **Thank you, Michael!**
+
+    - Replaced the hypervisor ID containing ASCII with an UUID as
+      required by the specification.
+      **Thank you, Michael!**
+
+    - Added an explicit check for `SMCCC_RET_NOT_SUPPORTED` when discovering the
+      hypervisor presence to make the backward compatibility obvious.
+      **Thank you, Saurabh!**
+
+    - Split the fix for `get_vtl(void)` out to make it easier to backport.
+    - Refactored the configuration options as requested to eliminate the risk
+      of building non-functional kernels with randomly selected options.
+      **Thank you, Michael!**
+
+    - Refactored the changes not to introduce an additional file with
+      a one-line function.
+      **Thank you, Wei!**
+
+    - Fixed change description for the VMBus DeviceTree changes, used
+      `scripts/get_maintainers.pl` on the latest kernel to get the up-to-date list
+      of maintainers as requested.
+      **Thank you, Krzysztof!**
+
+    - Removed the added (paranoidal+superfluous) checks for DMA coherence in the
+      VMBus driver and instead relied on the DMA and the OF subsystem code.
+      **Thank you, Arnd, Krzysztof, Michael!**
+
+    - Used another set of APIs for discovering the hardware interrupt number
+      in the VMBus driver to be able to build the driver as a module.
+      **Thank you, Michael, Saurabh!**
+
+    - Renamed the newly introduced `get_vmbus_root_device(void)` function to
+      `hv_get_vmbus_root_device(void)` as requested.
+      **Thank you, Wei!**
+
+    - Applied the suggested small-scale refactoring to simplify changes to the Hyper-V
+      PCI driver. Taking the offered liberty of doing the large scale refactoring
+      in another patch series.
+      **Thank you, Michael!**
+
+    - Added a fix for the issue discovered internally where the CPU would not
+      get the interrupt from a PCI device attached to VTL2 as the shared peripheral
+      interrupt number (SPI) was not offset by 32 (the first valid SPI number).
+      **Thank you, Brian!**
+
+[V3]
+    https://lore.kernel.org/lkml/20240726225910.1912537-1-romank@linux.microsoft.com/
+    - Employed the SMCCC function recently implemented in the Microsoft Hyper-V
+      hypervisor to detect running on Hyper-V/arm64. No dependence on ACPI/DT is
+      needed anymore although the source code still falls back to ACPI as the new
+      hypervisor might be available only in the Windows Insiders channel just
+      yet.
+    - As a part of the above, refactored detecting the hypervisor via ACPI FADT.
+    - There was a suggestion to explore whether it is feasible or not to express
+      that ACPI must be absent for the VTL mode and present for the regular guests
+      in the Hyper-V Kconfig file.
+      My current conclusion is that this will require refactoring in many places.
+      That becomes especially convoluted on x86_64 due to the MSI and APIC
+      dependencies. I'd ask to let us tackle that in another patch series (or chalk
+      up to nice-have's rather than fires to put out) to separate concerns and
+      decrease chances of breakage.
+    - While refactoring `get_vtl(void)` and the related code, fixed the hypercall
+      output address not to overlap with the input as the Hyper-V TLFS mandates:
+      "The input and output parameter lists cannot overlap or cross page boundaries."
+      See https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
+      for more.
+      Some might argue that should've been a topic for a separate patch series;
+      I'd counter that the change is well-contained (one line), has no dependencies,
+      and makes the code legal.
+    - Made the VTL boot code (c)leaner as was suggested.
+    - Set DMA cache coherency for the VMBus.
+    - Updated DT bindings in the VMBus documentation (separated out into a new patch).
+    - Fixed `vmbus_set_irq` to use the API that works both for the ACPI and OF.
+    - Reworked setting up the vPCI MSI IRQ domain in the non-ACPI case. The logic
+      looks a bit fiddly/ad-hoc as I couldn't find the API that would fit the bill.
+      Added comments to explain myself.
+
+[V2]
+    https://lore.kernel.org/all/20240514224508.212318-1-romank@linux.microsoft.com/
+    - Decreased number of #ifdef's
+    - Updated the wording in the commit messages to adhere to the guidlines
+    - Sending to the correct set of maintainers and mail lists
+
+[V1]
+    https://lore.kernel.org/all/20240510160602.1311352-1-romank@linux.microsoft.com/
+
+Roman Kisel (11):
+  arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
+  arm64: hyperv: Use SMCCC to detect hypervisor presence
+  Drivers: hv: Enable VTL mode for arm64
+  Drivers: hv: Provide arch-neutral implementation of get_vtl()
+  arm64: hyperv: Initialize the Virtual Trust Level field
+  arm64, x86: hyperv: Report the VTL the system boots in
+  dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence
+    properties
+  Drivers: hv: vmbus: Get the IRQ number from DeviceTree
+  Drivers: hv: vmbus: Introduce hv_get_vmbus_root_device()
+  ACPI: irq: Introduce acpi_get_gsi_dispatcher()
+  PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
+
+ .../bindings/bus/microsoft,vmbus.yaml         | 16 ++++-
+ arch/arm64/hyperv/mshyperv.c                  | 53 ++++++++++++--
+ arch/arm64/kvm/hypercalls.c                   | 10 +--
+ arch/x86/hyperv/hv_init.c                     | 34 ---------
+ arch/x86/hyperv/hv_vtl.c                      |  7 +-
+ drivers/acpi/irq.c                            | 16 ++++-
+ drivers/firmware/smccc/kvm_guest.c            | 10 +--
+ drivers/firmware/smccc/smccc.c                | 17 +++++
+ drivers/hv/Kconfig                            |  6 +-
+ drivers/hv/hv_common.c                        | 31 ++++++++
+ drivers/hv/vmbus_drv.c                        | 53 +++++++++++---
+ drivers/pci/controller/pci-hyperv.c           | 72 +++++++++++++++++--
+ include/asm-generic/mshyperv.h                |  6 ++
+ include/hyperv/hvgdk_mini.h                   |  2 +-
+ include/linux/acpi.h                          |  5 +-
+ include/linux/arm-smccc.h                     | 64 +++++++++++++++--
+ include/linux/hyperv.h                        |  2 +
+ 17 files changed, 325 insertions(+), 79 deletions(-)
 
 
-> @@ -47,6 +47,47 @@ sys_clk: clock-15625000 {
->  				clock-frequency = <15625000>;  /* System clock = 15.625MHz */
->  			};
->  
-> +			i2c0_emux: i2c0-emux {
-> +				compatible = "i2c-mux-pinctrl";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				i2c-parent = <&i2c0>;
-> +				pinctrl-names = "i2c102", "i2c103", "idle";
-> +				pinctrl-0 = <&i2cmux_0>;
-> +				pinctrl-1 = <&i2cmux_1>;
-> +				pinctrl-2 = <&i2cmux_pins>;
-> +
-> +				i2c102: i2c@0 {
-> +					reg = <0>;
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +				};
-> +
-> +				i2c103: i2c@1 {
-> +					reg = <1>;
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +				};
-> +			};
-> +
-> +			sfp2: sfp2 {
-> +				compatible = "sff,sfp";
-> +				i2c-bus = <&i2c102>;
-> +				tx-disable-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-> +				los-gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
-> +				mod-def0-gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
-> +				tx-fault-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
+-- 
+2.43.0
 
-DT files are generally hierarchical. There is a soc .dtsi file which
-describes everything internal to the SoC.  And then we have .dts file
-which describes the board the SoC is placed on.
-
-We have a slightly different setup here. A PCI chip instead of a SoC.
-And a PCI card in a slot, which could be seen as the board.
-
-The SFP cage is on the board. How the GPIOs and i2c busses are wired
-to the SFP cage is a board property, not a SoC/PCI chip
-property. Different boards could wire them up differently. So to me,
-it seems wrong these nodes are here. They should be in a dtso file
-which represents the PCIe board in the slot, and that .dtso file
-imports the .dtso file which represents the PCIe chip.
-
-I suppose this comes down to, what do the PCIe IDs represent, since
-that is what is used for probing? The PCIe chip, or the board as a
-whole. When somebody purchases the chips from Microchip, and builds
-their own board, are they required to have their own PCIe IDs, and a
-.dtso file representing their board design? The PCIe chip part should
-be reusable, so we are talking about stacked dtso files, or at least
-included .dtso files.
-
-      Andrew
 
