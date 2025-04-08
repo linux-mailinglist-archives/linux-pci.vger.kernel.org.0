@@ -1,166 +1,225 @@
-Return-Path: <linux-pci+bounces-25482-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25483-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2BDFA7FC15
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 12:33:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 085F5A804E0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 14:13:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CB0E1894C0D
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 10:28:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8EA21B65AC4
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 12:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80A3267B1F;
-	Tue,  8 Apr 2025 10:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5FB269CE8;
+	Tue,  8 Apr 2025 12:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="GgwqOX9j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD9126773D;
-	Tue,  8 Apr 2025 10:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BD6269B12;
+	Tue,  8 Apr 2025 12:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107761; cv=none; b=HK2iIvXsSKjV3MOIxxIExOo5NOOZgj80yfVxy5sTIxsg9uUGUMdinyy340eqaEgfdbrsRJPfrPOsVpLvkYlI/m7kttEQx7MU9jCtZt8HIrG0vbQBarEjPYORFqdg+XQsNZd5Bulj6iA/qgZo7kmLJUQXcVH6VuYirHAdyiBkh5Q=
+	t=1744113957; cv=none; b=tVLlZbkSFpLAe7cirCCGhe+txl/3QwvHaPrdseyqwrphsqnfD8KFCwa7A7jtPxAsh2w6IuGPh886NkhPnuh8kyEaPmtDf9Bw0SiMvSOcdxlUfvbPc52nxkPNR0cWit/gbaedDVE2S43klCglsgQdlDphapFlbJrlgJbr84nyWPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107761; c=relaxed/simple;
-	bh=/m6+Ua66NFMhg2vNP8D7cOPQD3B82lw7pQYHz/7iMJ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HSiD01YNpH6X2SE1D/G+Y3Q9bcIQ5r/ZTouGz0OcCaDdw5o7UXL2iHJD91nnZMUQBO+uZLdUxfqOrt0/MSKNPl5+TDlDEp9z07KBe55yF0fhfq5ijsjjw6lW2/HJ5/+tIXIHz7+L3pU/IpggU5OrL3JEN0BQSw/wUV9lkbaLRyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5262475372eso2472016e0c.2;
-        Tue, 08 Apr 2025 03:22:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744107756; x=1744712556;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SsrLZDcWMMgz5qw73ZarBN4RUT9hrtTKFIK6rblk8+Q=;
-        b=tNPbBNVTJmxqGy0jBa5sryPPvZLd0AjZOY0EW6x4j9gRJqFYclTVMaO8LW8gQVB/bM
-         bCdh58TuAH+1hrn/ISO5odB4hHO61djPWuWoWENQIC0LIXX6BlqjygiitdYA1EDMOZUR
-         9RpFqxi415LWTHGgFYyDB3NP1jF0Y8izKd/2K6fiEnQzspzY4mNvlLUgDvaVJHxpBiKZ
-         nI+EDZ4LdXMQh3WuHBxZcABhkbCWON8e9oIm32B3Qwgw8A0QjfQ4WojfovjD1VkpP1PU
-         pV2hvo680JDC9QbJGvzj8k9U0qS3J4+gOZtAdR3/b91yjqgzdVcBh2GhA448a+TF04Lk
-         BKmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEA7qZAB3B0+kezkpOZpgk0SjQS40gZIxIESzH6D96qXVuMsUdgj6PHG88X971uVF5Rt8=@vger.kernel.org, AJvYcCVRBPWT8uBLQ2pIieSkrrdi36CASGl8wCATxc6NI5iOk2qS/IYbUIGn6hDRHxEmnKi2ocaf5/3VC2zk@vger.kernel.org, AJvYcCW4xIx1cdV944/IAeq2vpuEttUCkcpuBoBB5o+t0Xew1hIBPH/HlPJtcDjT76BPj1/KlmjTrYHP@vger.kernel.org, AJvYcCXOCCN05UNs0iOndHkTYX+x4JXPpo2PLSCzgfTpwcOi3bL/S8S5j0kF0nPxO5zDKvu87YQsDDCNLBr1TI5g/A==@vger.kernel.org, AJvYcCXPev8CqdRxG+Xu7jPmhtJRUOXcaZgCQ0a0mYGFYyaw/3tkMlw1a1lqY2iL/mCg1YX8AQMxnK5oqfvudA==@vger.kernel.org, AJvYcCXt+8xciHm8SAu+5DzuIYLk8qwPUHogEMjh6Ttay/FPrxE5evCGYor+AchUy94/KXPgc8YyRGu7YqZynbui@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBAB2zPTiiZS6jqcTOuZf7APe9hr8vImIqU+EMuNMm2hkugeCU
-	gd4x1r+J7db561RAyE3/W/Rbq4rrTlC0IVrh6YJ2KBfWyMmEtVER10rWdlBG
-X-Gm-Gg: ASbGncvjQ73/IidO/NQ91NS5qtSO59m6IlrsKIyjjtFcRJibIbPVoiENieSRxpNp+lh
-	uRbwUG1185gFeP3POHRwcsvZ7d0q+f0rUUCtbU0ljkiA5HO78C4ESWTSmjCtOBRt0bVlGd+f/7V
-	RQbRr4aHtdzeEUozREP4Gft8OiAZMjfQd0Y3eQ3eqbyQY+TslQQ0NiaZEW+RgY/HOyalBydLZ16
-	ps38/LX6b2C4E0oFLy6APwz8Z+K5nV6qebkIUY2J2wCnvusCGUuwpz2anup3cSnE6//DzZMHfc/
-	KWX33HFL457WVh4Dw2K292QuOQvAMbO8pB8LMJ8Eiw5R2q21IROSNRkyq0sgcyLrh3Rl9xTbOuS
-	92F89+JU=
-X-Google-Smtp-Source: AGHT+IFDb9okRj1xGl+mVbJRxzLLI3huCAhu6Vj0/hapZGGpzzktInrb/NA1bjOvWmUDk4T9v4AhDg==
-X-Received: by 2002:a05:6122:30a0:b0:520:64ea:c479 with SMTP id 71dfb90a1353d-52765db445cmr10786694e0c.10.1744107756603;
-        Tue, 08 Apr 2025 03:22:36 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5279b58aa78sm312255e0c.14.2025.04.08.03.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 03:22:35 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso2206333241.2;
-        Tue, 08 Apr 2025 03:22:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU26zpE9mOwfcgFM6aU88kNEV5kwikJtj5z06kE2m/+57CVUHgY2V3uGPlYiGvtoyaVg7Jdo2WN+xQ2AHxK@vger.kernel.org, AJvYcCULmQuRAkXtLcIQO9HqD147pHXbhjEapTsJJUzpHy/kQYYr2Qm9Gh+sVVwAhgGmrSQ3EKBbjB3Y@vger.kernel.org, AJvYcCUM6Ee5Vc6o+EkKdsHAYGqA/Kefeyg55IhkJDIDmmb9iZtTa2z9F2cnfZBjzIyb30NlpMY=@vger.kernel.org, AJvYcCVpbCYx6DzQfXfmR1XhJxQBheurbgqdyuVMGzAyeoePydwz5AIwmy9UX7arvVrPnzEq2XLxiqX1VTlz//9HIA==@vger.kernel.org, AJvYcCXIHfyUViYpbZ0KEhCmcG0S90hiMl8oL/txVZ/G+HRfdTa3+OZR/DqYCL6f79RwtUA6uGTNIpIg43d0aA==@vger.kernel.org, AJvYcCXqgXc0+D7YC4+PSbm+1wmQWFqVWmNbZ0Ics+DQRTK5MNh2TQaDeZdzv0NUneaO61AzUF59TMa0xrCZ@vger.kernel.org
-X-Received: by 2002:a05:6102:2b91:b0:4c4:e415:6737 with SMTP id
- ada2fe7eead31-4c856a8cf46mr12241766137.23.1744107755579; Tue, 08 Apr 2025
- 03:22:35 -0700 (PDT)
+	s=arc-20240116; t=1744113957; c=relaxed/simple;
+	bh=jXMobLYx5BmQ61oS27pg9+1XfoV0FmpfKH5PTC2MAt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UP5QmzFIzfwrOSitBzCLDjjBEUHruKiJCxOjJveZL8grldeTIv1GjxqrOPXiuB+SxOySUy7ej6HepmIj1sq/zcZ4qdjwXw8F5fnoC+FM/VIg419FmtrAyc7R/5FMcNpEyTZDJuByYAQMefMLDdcZmB2PRQ/7CgO++Uov/1ySxi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=GgwqOX9j; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744113892; x=1744718692; i=spasswolf@web.de;
+	bh=y7pvh9NxPFXwBjh1TnyNyATj1r/o8FQr5pBVTsL3P7A=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=GgwqOX9jTsgCIwtPWoCAZSHy4i2DXyPeiV7BKmkLc88ZSwTGJ2ff7EaqwaWRsvCl
+	 M74GZxxsuDZ1ABuX+qEM7S6QHpMj0F3LTt/cHCXlDBg3fjGF3DtiSaVgdOJ+61CEW
+	 H254iXlBAOIQMEr5/3tdfKxWa0XLSrdPb6wtqTuB+d/fz1L0QPCawPUjyiNT9MS5r
+	 08w/aSY8utpYvLLfzEuACDj3cq9rvH6zWFI0nz+7eAsZK+R5kYAUdIfO34I16VO7s
+	 WU9qa/3+c/WoPbCDSSk7waa5zKyiOw8YT8Ur6eaE6oDNJBy1mwJavuqExYD/f82Pk
+	 lnl/QScu4lfeB0r9XQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
+ (mrweb105 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 1N5Ug4-1t16uf2lYI-011NmK; Tue, 08 Apr 2025 14:04:51 +0200
+From: Bert Karwatzki <spasswolf@web.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	James.Bottomley@HansenPartnership.com,
+	Jonathan.Cameron@huawei.com,
+	allenbh@gmail.com,
+	d-gole@ti.com,
+	dave.jiang@intel.com,
+	haiyangz@microsoft.com,
+	jdmason@kudzu.us,
+	kristo@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	logang@deltatee.com,
+	manivannan.sadhasivam@linaro.org,
+	martin.petersen@oracle.com,
+	maz@kernel.org,
+	mhklinux@outlook.com,
+	nm@ti.com,
+	ntb@lists.linux.dev,
+	peterz@infradead.org,
+	ssantosh@kernel.org,
+	wei.huang2@amd.com,
+	wei.liu@kernel.org
+Subject: commit 7b025f3f85ed causes NULL pointer dereference
+Date: Tue,  8 Apr 2025 14:04:44 +0200
+Message-ID: <20250408120446.3128-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250319105506.564105011@linutronix.de>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407104025.3421624-1-arnd@kernel.org>
-In-Reply-To: <20250407104025.3421624-1-arnd@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 8 Apr 2025 12:22:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWN=wurw7qz0t2ovMkUNu0BJRAMv_0U63Lqs2MGxkVnHw@mail.gmail.com>
-X-Gm-Features: ATxdqUE9l7FjkqlZMDiGBpUM7CUSkyfcARh2bgkw-zOenNlQ3qLl0OOY1x_PRRI
-Message-ID: <CAMuHMdWN=wurw7qz0t2ovMkUNu0BJRAMv_0U63Lqs2MGxkVnHw@mail.gmail.com>
-Subject: Re: [RFC] PCI: add CONFIG_MMU dependency
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Carl Vanderlip <quic_carlv@quicinc.com>, 
-	Oded Gabbay <ogabbay@kernel.org>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Dave Airlie <airlied@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Xinliang Liu <xinliang.liu@linaro.org>, 
-	Tian Tao <tiantao6@hisilicon.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Yongqin Liu <yongqin.liu@linaro.org>, 
-	John Stultz <jstultz@google.com>, Sui Jingfeng <suijingfeng@loongson.cn>, 
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Zack Rusin <zack.rusin@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Lucas De Marchi <lucas.demarchi@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saurav Kashyap <skashyap@marvell.com>, Javed Hasan <jhasan@marvell.com>, 
-	GR-QLogic-Storage-Upstream@marvell.com, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali <njavali@marvell.com>, 
-	Manish Rangankar <mrangankar@marvell.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Jani Nikula <jani.nikula@intel.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Lijo Lazar <lijo.lazar@amd.com>, Niklas Schnelle <schnelle@linux.ibm.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux1394-devel@lists.sourceforge.net, amd-gfx@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, virtualization@lists.linux.dev, 
-	spice-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	kvm@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JlZYVXz2ZJ0Pn+QLXUIuvS1DoV3J9McGI6ddlWU4v2GXlT4JJAe
+ BAOP8Q82D27kOP0A+cOQCg4C7eB6X+Z6Sivtg6KPxXZ+PTdxq6odcvEmiDfvS9N2PDIA+l+
+ vX0Ya5wlWlUctjI5kSgDEw2UY9Mz0nQvqWLudpI+jG51h3nIOcah2dUb9uTxahoxptN1PQx
+ oZDPQaKi4MsnI4ni+0KNg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gb/9h0oVc/Q=;n3QIi49X+UiP8Rb500i0tWdronH
+ 4TdAN93Ct22tn3uSjZghH3dK8ZPCbN02lgunBVvk7mPyQy9An9wiHNvrK+UthB30QL3DY9gA3
+ rWRPjoS5PrEYciJlj3NTw5itGVqu5G+GIz+hKjOkjgiHr+1DKO/cOI81IMqwkN3flWpldlP6k
+ lQahwU561xPq9CpDF+6S4CgAlJUXVUMiXIZZarTNjbSBhJkHNH4RBYLhfp9wEda/B6YgBj9ig
+ 5f56CCZQabM+lGNNI92HyZ1XH9LP8doYVEr4YFPkspgxD32iDGa86f2f784fFqE22KMagO332
+ 4hTBSC54FsV/Nf+eU7tTEftnWcVlFg2hZe32Dof4KhFU9QrJh3AMF8QL6nEZ7Y58pItkgtPOs
+ LKzZN+AXnoLMyAWEtATxYHPWXGIh+C5zcyMmEzr9iKNZmfIqSgnauPq+IACC3GApf2WvH8vkx
+ SepyVs3YzIW3CCReqcJBg6zEpJELHoy/uCwUve6oiqSChr9FNdtwoQWGJoFBRT7BIEKWs7+kt
+ Ppoo57c3dZhSzxGlJtiTL9/oRulRdpc9tZrdSp802CbBU3YpD1q3iTf/G66vl9wxAugo729UO
+ fh/gk6t8zIni43SNhJrMzuA6p/1WP3NRxLkaszD1UR5BmSf2eL7q0MozTzd/jcDVNDWeyqvmN
+ Xi+WJXjwOsKlEISfeB1G5qF5rqRDCN/qI6OH9vxy+DiZCcpERIc6GPa6ASc6qRdssHodJ1B/4
+ vQZLYSTcHFBiIE9bNawlvjpipbUMwFRiAU0nF6ZEmDuA6Ecd6G4qRinx57FK7D9VN3YRZv+GC
+ gyNjRNgHZiVfl4pSvu7onoYzFZKVDbOazFnmeFKg8sp5vWELPE02xXjCabqjpprTkWBSv/fet
+ 9Kp34yQtlhhdl/t/r1oicnAXPyzpeKkyV/mdKJxbTB0eP/9MsB60gvYSx4kbxF5/5HVzuDzW0
+ NzbQ0tqBzV4HC3pphEvJBG53IQ5wLA4StdzKpBdI+SGkB5Sx4Jf6Jn+3NIRI68lGFRt3gn94d
+ UanyqwvpqJ358+dXinO2oVrATH6629OVQe7RjCrzfkkb3tV1ixsmXeSANo7khS1h1tykRiOEt
+ +RS73vIHClLIo3viQaqo04FFf+0VyWcvau1x5rI7WptZzioPx/hSF0Bj/QI5qlLUXozgNDFMr
+ il2XTv00Z86Yk0sVfq+gLp8vlOG+R5TrrS8kDtmwMxV5v+e5i9pBNYZoEzQco37WzzRXLgOVa
+ OItxJADEl2Gj+YzSq4W14gq49IQxNOYOdmJCaYwyCdUx10YN7axzwXYXZnLKbPQ1UJiK4qYaM
+ PNZnwBPaIYzRNPfQ+ImvzWByKVkdVex/x/LJksKc5/XR4eRB++mpgSTUphZJ3XKDeTrsb5k9n
+ K0D+cUBpVi4JTRmQZ57rSYLl4hGAUirKTD5EL12cMpQrR3PrwUtIpnfXhl5lZJcwMVwjbbNGo
+ Nsb7cCw==
 
-Hi Arnd,
+Since linux-next-20250408 I get a NULL pointer dereference when booting:
 
-CC Gerg
+[  T669] BUG: kernel NULL pointer dereference, address: 0000000000000330
+[  T669] #PF: supervisor read access in kernel mode
+[  T669] #PF: error_code(0x0000) - not-present page
+[  T669] PGD 0 P4D 0
+[  T669] Oops: Oops: 0000 [#1] SMP NOPTI
+[  T669] CPU: 2 UID: 0 PID: 669 Comm: (udev-worker) Not tainted 6.15.0-rc1=
+-next-20250408-master #788 PREEMPT_{RT,(lazy)}
+[  T669] Hardware name: Micro-Star International Co., Ltd. Alpha 15 B5EEK/=
+MS-158L, BIOS E158LAMS.107 11/10/2021
+[  T669] RIP: 0010:msi_domain_first_desc+0x4/0x30
+[  T669] Code: e9 21 ff ff ff 0f 0b 31 c0 e9 f3 8c da ff 0f 1f 84 00 00 00=
+ 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa <48> 8b=
+ bf 68 02 00 00 48 85 ff 74 13 85 f6 75 0f 48 c7 47 60 00 00
+[  T669] RSP: 0018:ffffcec6c25cfa78 EFLAGS: 00010246
+[  T669] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000008
+[  T669] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000c8
+[  T669] RBP: ffff8d26cb419aec R08: 0000000000000228 R09: 0000000000000000
+[  T669] R10: ffff8d26c516fdc0 R11: ffff8d26ca5a4aa0 R12: ffff8d26c1aed0c8
+[  T669] R13: 0000000000000002 R14: ffffcec6c25cfa90 R15: ffff8d26c1aed000
+[  T669] FS:  00007f690f71a980(0000) GS:ffff8d35e83fa000(0000) knlGS:00000=
+00000000000
+[  T669] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  T669] CR2: 0000000000000330 CR3: 0000000121b64000 CR4: 0000000000750ef0
+[  T669] PKRU: 55555554
+[  T669] Call Trace:
+[  T669]  <TASK>
+[  T669]  msix_setup_interrupts+0x23b/0x280
+[  T669]  __pci_enable_msix_range+0x31a/0x520
+[  T669]  sp_pci_probe+0xf2/0x1f0 [ccp]
+[  T669]  ? rt_spin_unlock+0x12/0x40
+[  T669]  pci_device_probe+0xc0/0x180
+[  T669]  really_probe+0xd9/0x340
+[  T669]  ? pm_runtime_barrier+0x4f/0x90
+[  T669]  ? __pfx___driver_attach+0x10/0x10
+[  T669]  __driver_probe_device+0x73/0x110
+[  T669]  driver_probe_device+0x1a/0xa0
+[  T669]  __driver_attach+0xb5/0x1c0
+[  T669]  bus_for_each_dev+0x78/0xd0
+[  T669]  bus_add_driver+0x110/0x1f0
+[  T669]  driver_register+0x6d/0xc0
+[  T669]  sp_mod_init+0x15/0xff0 [ccp]
+[  T669]  ? __pfx_sp_mod_init+0x10/0x10 [ccp]
+[  T669]  do_one_initcall+0x48/0x2a0
+[  T669]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  T669]  ? __kmalloc_cache_noprof+0x7c/0x160
+[  T669]  do_init_module+0x5b/0x220
+[  T669]  init_module_from_file+0x83/0xd0
+[  T669]  idempotent_init_module+0xf9/0x2f0
+[  T669]  __x64_sys_finit_module+0x60/0xc0
+[  T669]  do_syscall_64+0x5f/0xfa0
+[  T669]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  T669] RIP: 0033:0x7f69101e4779
+[  T669] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8=
+ 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d=
+ 01 f0 ff ff 73 01 c3 48 8b 0d 4f 86 0d 00 f7 d8 64 89 01 48
+[  T669] RSP: 002b:00007fff409a8788 EFLAGS: 00000246 ORIG_RAX: 00000000000=
+00139
+[  T669] RAX: ffffffffffffffda RBX: 000056296549f860 RCX: 00007f69101e4779
+[  T669] RDX: 0000000000000004 RSI: 00007f691035544d RDI: 0000000000000015
+[  T669] RBP: 0000000000000004 R08: 0000000000000000 R09: 00005629653acc40
+[  T669] R10: 0000000000000000 R11: 0000000000000246 R12: 00007f691035544d
+[  T669] R13: 0000000000020000 R14: 000056296549eea0 R15: 0000000000000000
+[  T669]  </TASK>
+[  T669] Modules linked in: ccp(+) snd_pci_acp3x battery soundcore ac butt=
+on evdev joydev hid_sensor_accel_3d hid_sensor_prox hid_sensor_gyro_3d hid=
+_sensor_magn_3d hid_sensor_als hid_sensor_trigger industrialio_triggered_b=
+uffer kfifo_buf industrialio amd_pmc hid_sensor_iio_common mt7921e mt7921_=
+common mt792x_lib mt76_connac_lib mt76 mac80211 libarc4 cfg80211 rfkill ms=
+r fuse nvme_fabrics efi_pstore configfs efivarfs autofs4 ext4 mbcache jbd2=
+ amdgpu usbhid amdxcp i2c_algo_bit drm_client_lib hid_sensor_hub drm_ttm_h=
+elper mfd_core ttm drm_exec xhci_pci hid_generic gpu_sched xhci_hcd drm_su=
+balloc_helper drm_panel_backlight_quirks cec drm_buddy drm_display_helper =
+nvme psmouse i2c_hid_acpi usbcore serio_raw amd_sfh i2c_hid nvme_core drm_=
+kms_helper hid r8169 i2c_piix4 usb_common i2c_smbus crc16 i2c_designware_p=
+latform i2c_designware_core
+[  T669] CR2: 0000000000000330
+[  T669] ---[ end trace 0000000000000000 ]---
+[  T155] ACPI: battery: Slot [BAT1] (battery present)
+[  T669] RIP: 0010:msi_domain_first_desc+0x4/0x30
+[  T669] Code: e9 21 ff ff ff 0f 0b 31 c0 e9 f3 8c da ff 0f 1f 84 00 00 00=
+ 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa <48> 8b=
+ bf 68 02 00 00 48 85 ff 74 13 85 f6 75 0f 48 c7 47 60 00 00
+[  T669] RSP: 0018:ffffcec6c25cfa78 EFLAGS: 00010246
+[  T669] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000008
+[  T669] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000c8
+[  T669] RBP: ffff8d26cb419aec R08: 0000000000000228 R09: 0000000000000000
+[  T669] R10: ffff8d26c516fdc0 R11: ffff8d26ca5a4aa0 R12: ffff8d26c1aed0c8
+[  T669] R13: 0000000000000002 R14: ffffcec6c25cfa90 R15: ffff8d26c1aed000
+[  T669] FS:  00007f690f71a980(0000) GS:ffff8d35e83fa000(0000) knlGS:00000=
+00000000000
+[  T669] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  T669] CR2: 0000000000000330 CR3: 0000000121b64000 CR4: 0000000000750ef0
+[  T669] PKRU: 55555554
+[  T669] note: (udev-worker)[669] exited with irqs disabled
 
-On Mon, 7 Apr 2025 at 12:40, Arnd Bergmann <arnd@kernel.org> wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> It turns out that there are no platforms that have PCI but don't have an MMU,
-> so adding a Kconfig dependency on CONFIG_PCI simplifies build testing kernels
-> for those platforms a lot, and avoids a lot of inadvertent build regressions.
->
-> Add a dependency for CONFIG_PCI and remove all the ones for PCI specific
-> device drivers that are currently marked not having it.
->
-> Link: https://lore.kernel.org/lkml/a41f1b20-a76c-43d8-8c36-f12744327a54@app.fastmail.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I bisected (from v6.15-rc1 to next-20250408) the first bad commit as 7b025=
+f3f85ed.
+To fix this in next-20250408 one needs to revert these commits:
 
-Thanks for your patch!
+7b025f3f85ed ("PCI/MSI: Switch msix_capability_init() to guard(msi_desc_lo=
+ck)")
+0ee2572d7b84 ("genirq/msi: Rename msi_[un]lock_descs()")
 
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -21,6 +21,7 @@ config GENERIC_PCI_IOMAP
->  menuconfig PCI
->         bool "PCI support"
->         depends on HAVE_PCI
-> +       depends on MMU
->         help
->           This option enables support for the PCI local bus, including
->           support for PCI-X and the foundations for PCI Express support.
-
-While having an MMU is a hardware feature, I consider disabling MMU
-support software configuration.  So this change prevents people from
-disabling MMU support on a system that has both a PCI bus and an MMU.
-But other people may not agree, or care?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bert Karwatzki
 
