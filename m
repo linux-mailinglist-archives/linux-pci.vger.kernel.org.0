@@ -1,139 +1,119 @@
-Return-Path: <linux-pci+bounces-25506-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25507-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D320A8105E
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 17:42:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47B17A8121C
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 18:22:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C830416AAC1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 15:38:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36C5E189FC65
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 16:16:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDC322A7F6;
-	Tue,  8 Apr 2025 15:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76A8622D4C6;
+	Tue,  8 Apr 2025 16:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="axRaKRvM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j1ES0ym5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F61862BB;
-	Tue,  8 Apr 2025 15:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04894218584;
+	Tue,  8 Apr 2025 16:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126720; cv=none; b=uGeTMt6Qu1eWt/ttSzX5bIDcCZAlxQCPZpe/gdWeDztaoXdHRg5+3H/iCypTnDBBv7cEvO5NrzyoaFtLXwoi8bnvK0vYeI1cfX9bmdHAk5q3DytfC3+xftBVbITb1FMrsH4QzhmSUEPcb25Ke3CKKG4c+stzgkZg1WWZSfVP8X4=
+	t=1744128979; cv=none; b=iCaT02V3rLXJamBKeUPsyxSaOGfcPQcdH6Q8iBTHjxHMIcRccN1PvugTtzrJCgmiwW+gB+C5SbWwDKk8VC0sLzGzlU0kIjl5ca7/yB9Dg2c3aZoc2xR2iJI4aCcVI7eYDzuyRfdfuZFfpRz3kHFZj9nzHbbLdg/0xh6JQw88v4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126720; c=relaxed/simple;
-	bh=ZFOFE/Iq5703lNvYzWC6MljENWk+R9HDSLK4Uz7noEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZ6uZ7KmyJ6g+XfpEavtkV+fX6rupqmTO6Msx4PsbA+eZutYe8b4WOSy+fMxjq7bwqMScKTf82PSBgW9NY+hn4nAWurM4BVLjSyMhuOwipKbQhu6MeTZywXPguBHE1CVRTWOn4AGmbG9CCwXPE+/c2eT5lSDJ2QRnEr+3wFtz/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=axRaKRvM; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=0AxXXCyGehUeIEBMKM+/UdgR6pywaI6NfyB/Hg4NGkk=; b=ax
-	RaKRvMxLNy1nBRskzmrWJqy7SKbGNVN5ztU5caLqrvQKZZPlHkHy104KGZfqfMnbtPn6mJ2MdUynW
-	bSlFnNxpbCZGbL9L+rBQrRBde2BHYdR68UaRU610uhMDkZyCerFWvPcuXpriSsBVfUt5PPjdGGus8
-	+qhrEZY1NPDNudE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2B1l-008PrO-KZ; Tue, 08 Apr 2025 17:38:17 +0200
-Date: Tue, 8 Apr 2025 17:38:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
- <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
- <20250408162603.02d6c3a1@bootlin.com>
- <D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
+	s=arc-20240116; t=1744128979; c=relaxed/simple;
+	bh=/eZ4b8l/VXJtWh+FH94pc5TZfV6mqG/4nYqWaQCWQ8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mg+ddZfPOcWwRLJLrGnoUHA4MTgNkLKT/lthF7Y/hCXpH775OjKdEMR6s3Y71GQipcJxG4O6cg7vWYBiG0dVsrozRsBoYlHZfdMHF45j+FIwsXu8YQ63Vpgm4nxRCUWtAKhPLdP1WJIx8ZvBllrMgSThWolC7nLPFA4Rg3CV964=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=j1ES0ym5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0A6912027DEF;
+	Tue,  8 Apr 2025 09:16:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A6912027DEF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744128977;
+	bh=QlxEL9VL5GBxv0J9u6K3DMLa5NYfTy2VRFDYnyudgvo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j1ES0ym5sbrgD3pdb0PoqBafFIEPGdc0EYOnjXVL+OYKUrGI2Q1Y40bDZZ+1kq+y8
+	 kTo/HsxUdggQ5dhmHYSDjbs/eS47iNdNi+LcisiFu2Bnp0CUSqsDg3kJrhJGChUqNv
+	 L7NnLJBQ7avTM3huC+oyN74Y7Q7XMlUJQFpTZvtw=
+Message-ID: <c9bea07c-3a0e-41bb-a8d8-12d9f8776e07@linux.microsoft.com>
+Date: Tue, 8 Apr 2025 09:16:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v7 01/11] arm64: kvm, smccc: Introduce and use
+ API for getting hypervisor UUID
+To: Marc Zyngier <maz@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, mingo@redhat.com,
+ oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
+ rafael.j.wysocki@intel.com, ssengar@linux.microsoft.com,
+ sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de,
+ wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com,
+ devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250407201336.66913-1-romank@linux.microsoft.com>
+ <20250407201336.66913-2-romank@linux.microsoft.com>
+ <86semjku7x.wl-maz@kernel.org>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <86semjku7x.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 08, 2025 at 05:13:54PM +0200, Thomas Petazzoni wrote:
-> Andrew, Hervé,
+
+
+On 4/8/2025 12:06 AM, Marc Zyngier wrote:
+> On Mon, 07 Apr 2025 21:13:26 +0100,
+> Roman Kisel <romank@linux.microsoft.com> wrote:
+
+[...]
+
+>>   
+>>   #include <linux/args.h>
+>>   #include <linux/init.h>
+>> +
+>> +#ifndef __ASSEMBLER__
+>> +#include <linux/uuid.h>
+>> +#endif
 > 
-> On Tue Apr 8, 2025 at 4:26 PM CEST, Herve Codina wrote:
+> That's a pretty unusual guard in arm64 land. Looking at the current
+> state of the kernel:
 > 
-> >> What exactly does this DTSO file represent?
-> >
-> > The dsto represents de board connected to the PCI slot and identified
-> > by its PCI vendor/device IDs.
+> $ git grep -w __ASSEMBLER__ arch/arm64/ | wc -l
+> 2
+> $ git grep -w __ASSEMBLY__ arch/arm64/ | wc -l
+> 122
 > 
-> If I may extend on that by providing what I believe is a more
-> accurate/precise definition.
+> I'd suggest the later rather than the former.
+
+Thanks for catching this! I'll be sure to change this to use the arm64
+coding conventions in the next version.
+
 > 
-> The DTSO doesn't represent the board, rather it describes the HW
-> topology of the devices inside the PCI endpoint. Indeed, the PCI
-> endpoint is a full-blown SoC with lots of different HW blocks that
-> already have drivers in the kernel (because the same chip can be used
-> with Linux running on an ARM core embedded in the SoC, rather than
-> access as a PCI endpoint). So the DTSO describes the full topology of
-> the HW blocks inside this complex PCI endpoint, just like the DTS
-> describes the full topology of the HW blocks inside an SoC.
+> Thanks,
+> 
+> 	M.
+> 
 
-"HW blocks inside an SoC." That would be the SoC .dtsi file. Anything
-outside of the SoC is in the .dts file. OEM vendors take the SoC,
-build a board around it, and name there .dts file after the board,
-describing how the board components are connected to the SoC.
+-- 
+Thank you,
+Roman
 
-So..
-
-So by PCI endpoint, you mean the PCIe chip? So it sounds like there
-should be a .dtsi file describing the chip.
-
-Everything outside of the chip, like the SFP cages, are up to the
-vendor building the board. I would say that should be described in a
-.dtso file, which describes how the board components are connected to
-the PCIe chip? And that .dtso file should be named after the board,
-since there are going to many of them, from different OEM vendors.
-
-	Andrew
 
