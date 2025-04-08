@@ -1,200 +1,171 @@
-Return-Path: <linux-pci+bounces-25477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63DEBA7F555
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 08:55:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00082A7F5A7
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 09:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C34E13B6954
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 06:54:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 079523B8F28
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 07:06:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEBFF25FA2D;
-	Tue,  8 Apr 2025 06:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3DA725FA3D;
+	Tue,  8 Apr 2025 07:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="X/qcmWxx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuNiBJYi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013053.outbound.protection.outlook.com [40.107.159.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F8225FA0C;
-	Tue,  8 Apr 2025 06:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095266; cv=fail; b=HYuit+09d147AXX+MPQCioAi2sSVWviiJLw4wbp/4WyiiMkVTGO4fgWuqq67p0kPrJVLqFcR4N6GBteRHpqMnVZTVArihJeexx2/gNTyRljn49lXAuOf13hxfvVBVwEb/KJtqMSNBXcGm1OdXa0t1qeYwV6pAxtlosNiX9Ar13g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095266; c=relaxed/simple;
-	bh=Ra3rGt50DuQOCQL4y6N6bn7NLoFJWFNLQcSlHbh83dY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sM1oZeI6jOWB7LyktHs/s1WM/hTk3GMYwieFHJ4xyb4M/ZUVsH3zrmkPgMlnAccgFkD2FGl33dnc4WknkUPaS6eSDvdoZx0Ka/HzFPpIMCEWOn0tx+1458AMmVGxsEy3wvjpOl/MkjWZ6BPpC7zrx+JQzzC4pQlFyJmRH33UYmk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=X/qcmWxx; arc=fail smtp.client-ip=40.107.159.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O2ruj9LA6mLZ6oKPwH9mJlw4WVX+Z9WPI+uBwkr7OESuhv/wcd/aozl35lzQnPCfCH77KvYIjuy+j5CDx4tMYquQW9wcSQlxyMAveQHJLZg6yZWIUfor0GEA5CZQp3EATa7qp9W7B2rcQyKI7ygYiC/5BiUWR6kPBKBuu4FA3fEKHNp36MDeYrCmLQ4qAUufnK4qyYCCABZb6w80WTItX5Co9ZYkmy1WDK+5nYI/16ZhtV9I9XanNGCHYSeWAIQm3DF6Shr+a2FbdmZ6KsqyynF5/nEZprd5zJ7+laHI+mZXBzPYdXcyxZ7sSs0cz4bcOw2L1aLeXJw/3z8Kjx5smQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iKCbWq+Itvwn7lFE69Mw2AySBmN0yvbWmmXK/6d14Ik=;
- b=j/UTzQFeU5rb/ZW7NqwWB5/Tnh2LndbYgmqyThvXV/9m5ohURECrElZQgOxQtHu+eMGzNFYbwBPdJdfLOQ6P6OQ/m0k5jxCz+A9cth4ciQ+ARLEqV/twQFEyAzgdfW75Ram2viC79MgdOqI9KoI+uZifb8tVcGelEOHECRollFgzQ4R9NBxpdE7t/FgJVVQvBcMhXdRdWKSXhcex//DOGZYCwAGyaqbl09T+65UrcBTt9TQ/fUEWlp0dfFleAFniIcHUs8KJPN6pek4Rh0ZbSf8SCBJrFN2nFMgmsXEPCqaLBJIJ99ULrtYmdEGqNNi8yT1IKz25CmGhYvWUrH7TVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iKCbWq+Itvwn7lFE69Mw2AySBmN0yvbWmmXK/6d14Ik=;
- b=X/qcmWxxkHD9hR/v+ga+HjViDq12nIPCZtfu7uxq/qgoVmOIF+x7nSOCe8bFypXmDyvLsmKmsnFYdqFdXIRfRhyvZsS1NdoF55x70wKTNaX3wEXa1vTsjmFPT0hIWAMS6vKc9jyDAlDb3H95YqHw69tc26Bh5Gloq9kspb9QGpk+yB2V9S1x3inPFcxR7Lj9o5nDa7viFyTDP6uYpYU3u4u1eMHQlsw4lTp3cnQayDYc02CnLBhkiMAyzQghd2XJQKJ/ZwylKrcIBHf6blC+3RhmDXDM87020SmeL/34q7QLMlUc98PXEiyGs06tiXadcW8Q9WrkKbprEZVGcy0q6A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by PAWPR04MB9936.eurprd04.prod.outlook.com (2603:10a6:102:38b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Tue, 8 Apr
- 2025 06:54:18 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
- 06:54:18 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: jingoohan1@gmail.com,
-	frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E19635979;
+	Tue,  8 Apr 2025 07:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744096007; cv=none; b=I9LyKDYL10YTW235M8J+efPOXq7SYNbHcLGvEVBIwQrYqST+I4QqwoNVCPHVD++m0BiDQVj96ygy4r8GQb1Ymam3FzQVvwiP9c7sA8J/XajVjIku0XmMotmFAz1S+CWd4CWHhiPw3JnZpON8r+dGEzrcMwZjiVwTWqWS43tzlAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744096007; c=relaxed/simple;
+	bh=b4/HM8+SciHG286LvQnLgT/d3PAh2mnGk8+5TyFZWoU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U6wSqExhdJ2bVMT5SKOA3VbjgrtgNI56C7SgkG5bcKB3OuLmIr0NVk4s1YJhOdVxXohZl33DBuwFlAL00LXN9CFhUQQPSux341Bjr1OMzvuOoT9XmyNuCU99lAhD/hEcXTkFMD2LJ332b5PIFCPndwNCh0nVjbDSl2A/keO0UmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuNiBJYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4448C4CEE5;
+	Tue,  8 Apr 2025 07:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744096007;
+	bh=b4/HM8+SciHG286LvQnLgT/d3PAh2mnGk8+5TyFZWoU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tuNiBJYibWOt5+vSOcQ+JRLaGgZWDkwaR5g7lNtcFTYc0eXDRKe6tq4CFJoPxKpIt
+	 5zBNMaoK7dfKeOvGjJHcZC3SgfNhwMciKiHLr3Xj3tBZTIQAQriWeFzCef/7bg1+dE
+	 hyqgZvsEdCEEUnc8kb8ixxAmY0ceVaTbQ/FV/etjY5hzXxF4tmwW+1dePcWZiVahGl
+	 0JA6jU7oJiTCnEF5XrUfeiimXLagzfg43mKERJZSQ+zqZhgvK4Qk5R1p1r9X+bNtjt
+	 Kk9dCK73/RxRciBC9MdW/1HCWKw9hR/5lrex479hCJcM2sa/cq97vi7qhYhnbL+BmN
+	 nEcjjtUmDVjOg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u232h-003JRY-F2;
+	Tue, 08 Apr 2025 08:06:43 +0100
+Date: Tue, 08 Apr 2025 08:06:42 +0100
+Message-ID: <86semjku7x.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de,
 	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	dan.carpenter@linaro.org,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	joey.gouly@arm.com,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com,
+	mingo@redhat.com,
+	oliver.upton@linux.dev,
+	rafael@kernel.org,
+	robh@kernel.org,
+	rafael.j.wysocki@intel.com,
+	ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com,
+	suzuki.poulose@arm.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
+	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v1 4/4] PCI: imx6: Add quirks to fix i.MX7D PCIe hang in suspend
-Date: Tue,  8 Apr 2025 14:52:21 +0800
-Message-Id: <20250408065221.1941928-5-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20250408065221.1941928-1-hongxing.zhu@nxp.com>
-References: <20250408065221.1941928-1-hongxing.zhu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0001.apcprd02.prod.outlook.com
- (2603:1096:4:194::10) To AS8PR04MB8676.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::10)
+	linux-pci@vger.kernel.org,
+	x86@kernel.org,
+	apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v7 01/11] arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
+In-Reply-To: <20250407201336.66913-2-romank@linux.microsoft.com>
+References: <20250407201336.66913-1-romank@linux.microsoft.com>
+	<20250407201336.66913-2-romank@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|PAWPR04MB9936:EE_
-X-MS-Office365-Filtering-Correlation-Id: fab96a16-a365-430e-3c3b-08dd766a2eb2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4JUpX9ZdOln5T2mz8Bd9x8sP6eeRyemKZJfPqsA15+z++9k0EoWlNQuJkEsq?=
- =?us-ascii?Q?95PIBV/YnUYKYxuPCulWK1lIWktLGAvDWlHqK/3gd1P7L+QOAK2a/xe9+uBP?=
- =?us-ascii?Q?YC4mhu3dIdyf2/f9SFhp9Oe9JdykrOHZit7TFxDDtSI/KX+KyR1oaMbJ6OP4?=
- =?us-ascii?Q?pYpriirc461wsZ9/fgNUQ6PfGDpddx+lsHcqrCoaagzk6LFnfDQfQEf4oW1s?=
- =?us-ascii?Q?o2X6IplYQeAR1ST0INhpHMxbsMhizgdgNGPzAMcb09R+cxCnOWXBNERlM9nJ?=
- =?us-ascii?Q?pCNYuTpO6LJ8wVaGFoAKW45jn5+fR5FH9unF47yyx3O6UOGq2D/ewm2ma+HL?=
- =?us-ascii?Q?QbvLWdH7dbO7+01yB0QWrygP/GiBSrtJpmNjYKOZYVh6F00kcoWS2Q/NhNuH?=
- =?us-ascii?Q?bvOGh6t3tErIL7F7GTbKd9O6lu2xWfldP54jo7uEUk3Sx1x850RjnQ1HhRF3?=
- =?us-ascii?Q?+70b/0s8QIq8tQDtJXXrGS1+KU++861hQoUtvaJ24tNX7rOBamH+yszmISav?=
- =?us-ascii?Q?v6mpNhkiScQghaOPw0sXr/t3m/kOqixKfCYZa+W3WAi2Ggejgeh6jOLoSb6s?=
- =?us-ascii?Q?rsSMCMLsm9VZU/xbK5Cos0jtCXQ2KpgF2ondOdttvPyvRV73zqlAdNxQLpua?=
- =?us-ascii?Q?qx8Jx3k3B2Qjxa3uP4M7hJ4MqDO3Q0PllmvjCH6vYPW1cUvHeKnk4tryazMw?=
- =?us-ascii?Q?2EyyLHBqkKDBtl8ccfWGT4BG/P69MpKJC3vx8dxWYQqUz1V19shVwTh/cI0y?=
- =?us-ascii?Q?GDi5cmPvu922GxlDtYzfxY2DtXRqzBh3GnhBquSK7Pm96mhYCTAZKIbjHWHV?=
- =?us-ascii?Q?5Q7QHtkzoyn1/bg8IfO7Ky05ZaFhiD6epzNlWQWNPZ48N5e8MzMDFoYeVUr1?=
- =?us-ascii?Q?oeD1YmUGa82/kluC/VIyB3BMczaoMIuL8VpsVGMlfBx7BaMYlRWbZieek3nz?=
- =?us-ascii?Q?tQ4EH3VO6Jy0wKWYhRoXxYalvX3kjAkQ3BmLwGgc8jNGOYunWFZ18prNJDBo?=
- =?us-ascii?Q?F0OKxuKlByYhngKCm0/tKmC0CLE/pKpnS4NmsY3Uefv/0dQFvUZw+XOZSFZu?=
- =?us-ascii?Q?GouO+3rzXk1nttuVLRaUMyFDGC6C1kQYdj3ui+fX29Y1FCrM2tlTp/ZYQbJm?=
- =?us-ascii?Q?lB7nnp9Z4fcrkf/T+3EJTyL1kZ4Mcq2G8KOvCb0WzaUX3umUGINqK0QN6vg6?=
- =?us-ascii?Q?WmAtQIkvPTC7vNhQnuAtPHSU3esnb8FilvSCnh+tTYcZUqYTRlpH5xOuM6CG?=
- =?us-ascii?Q?apUTp5i0YX8T7ao911zohNkLN9XxCeDzGRdue4Uq5SdUYQG72noYeykbWyqy?=
- =?us-ascii?Q?7Tx/AFOKF67h0ykNLzwBXixY8oT+ApU28xsUvw1bpSK96wSw9GgWLM6MCYrB?=
- =?us-ascii?Q?icQlEJKYALwkCJMkWoiub/yDuyBJnopL8vPuyOD4XKtznwYobf5mDWQwEmm3?=
- =?us-ascii?Q?G4O8pWkWiGEIFWh9wNUIcoVMlaHD5ZPgxllMTcHNMa3ahH00A7TCZGeNQ9B9?=
- =?us-ascii?Q?vederEexC+SWBso=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cj0BNLcTk4mGretPSPn7P/dGERY9magGPTZ/SLLK19Cz450lRAa4f/J2LHjY?=
- =?us-ascii?Q?O/mjKTgl3e3tSNFRHEm+8qbRUGsV8KdYuMSHEqNpo30xwO5gL8yGWBtVAjCx?=
- =?us-ascii?Q?aFamEQSDRSJTjfwQsrlluwnKXqAtxCvdU+PaL+6/FIpptEl1C/3kRLeQbdmL?=
- =?us-ascii?Q?xueABeYdW5zj2aKy2mEa9bXupbMhl3gPT+ZBOUgnnAMRHoDpN+x2rta8qkFo?=
- =?us-ascii?Q?dUXMfEMxy/KO26iSePfm6ezWp1glpafCZ0MVQLk+B6fLFKs96NZRLHTBgH9Z?=
- =?us-ascii?Q?+JgpoeSoiiaTaNNV5ZAlrjrqRWYeqOARLOyXoiEmnSabWeYgjlV7XsC4ABOg?=
- =?us-ascii?Q?Pf9l1acgC+NaUlBk/xFOKZc45omNdpiCCxAJ3RyJfbIYgel+Lsw//a4QSP7/?=
- =?us-ascii?Q?DcxvmVC6WV82YCzJatPHVFj+uBWZbAg2MdqCDzPIKZLmd0qG+08LR69/9Q/T?=
- =?us-ascii?Q?S5WAPc36DBCQJyLai252wb0c+8vfBwPbHbUYDpiNFBydm3NEL2Vwlyft34xe?=
- =?us-ascii?Q?v2piNej4nEWPtRIhidXaxwwRNvbM+COQD76ZxyLXvvffB7IECQGuAGLJDG6K?=
- =?us-ascii?Q?He803R9hMiIPfSPZhIpMjchrRBIUqvcWe2L6hp9y1QD1riRTPNjUWCDLM2nD?=
- =?us-ascii?Q?63wuUsjg12iE+ja1popbNBbjjQFALoFFhzpy+H784QawJFdrreKvRYAzE2w+?=
- =?us-ascii?Q?ItfwBIbaqMJLa1/rlIn6Jr+DDR7B5w2aIuixHODZMdel3wYXDxDmsQ2uWz8t?=
- =?us-ascii?Q?EBR15AtLaE6qEAur/ldAXlVKg7X3ZkMvqjcNafQHUo2Bi9o09nuYcWcOCSzZ?=
- =?us-ascii?Q?7+Mkrnp0gMoZNsaP9/AlgTj65zzOOZilVI47nGdtjeq5sv5RFSBfpKzN9XWW?=
- =?us-ascii?Q?XbqefoJlZUXTtx0AbXlEnnPbeOfkLMHzZKaHe3h5lz3iZW8010DRKKsWiuNB?=
- =?us-ascii?Q?MKSxFS4ghCyNBivnRBhiu/8RXDve/0aCjrXqmX6jCZHIs+0Z0p5EWuTUNdpZ?=
- =?us-ascii?Q?WwUXyQ55YJhd8A0nefQ7sxrK/VOYrkhv4llX0v2arGw9+prSLVJ6BfYjnTh4?=
- =?us-ascii?Q?RkC1IdCtNIaaInBF+8RCe38mrAvtPEo45ndSY8FnZc2KkZaXemOVViD7Dk44?=
- =?us-ascii?Q?dgwdRIMxuDolZDyBu2378oI0OYlpljcklE8D7kR32JFA9cUZCQMwIUoxPRqx?=
- =?us-ascii?Q?dacukFxCM4Rcb6VM3u0an8L6qDMs9mGzzZczhm8RLU4K6l6B/k6MFu7sLHVW?=
- =?us-ascii?Q?beH507WhupV6u6t6abVrsIkZvFjgvyWt69hiYbbx1LeGd4u9jvnaqgkgZObP?=
- =?us-ascii?Q?BZmeKm3HVoNEJe2mB4NlvjlwnVOPl3j6VLZhATFsrozgEhr76Zc2GK1NsLKr?=
- =?us-ascii?Q?tlRN5hF1v01RU6dyA6dSQzwRUwCvTbAD670nteOzOSBh1+olyV1On9fIE1X5?=
- =?us-ascii?Q?YFm7Z4ec/4jlBXUhrZitMGJ4njMtjpBmwp7bVGotJ3PufenebtDu+QM7YU+A?=
- =?us-ascii?Q?4MRAuMkJ/15fG0aqPbCrFqa0TMT4bda2BAobXOzvqqtZ3zhs7eziJ4UPI8By?=
- =?us-ascii?Q?RG8Aztvs5r9GmydyVVTMGJoEuor+sStefVo+l933?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fab96a16-a365-430e-3c3b-08dd766a2eb2
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 06:54:18.1722
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cw+dQcGwkUXGo+DmsYihGXOXf3P0AyNcWIfomyEB7RM+VKTr0Gl+QA/jiYqbZn42AuPEcdY344fzKERXxmvdMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9936
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: romank@linux.microsoft.com, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org, dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org, rafael.j.wysocki@intel.com, ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft
+ .com, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-When no endpoint is connected on i.MX7D PCIe, chip would be freeze when do
-the dummy write in dw_pcie_pme_turn_off() to issue a PME_Turn_Off Msg TLP.
+On Mon, 07 Apr 2025 21:13:26 +0100,
+Roman Kisel <romank@linux.microsoft.com> wrote:
+> 
+> The KVM/arm64 uses SMCCC to detect hypervisor presence. That code is
+> private, and it follows the SMCCC specification. Other existing and
+> emerging hypervisor guest implementations can and should use that
+> standard approach as well.
+> 
+> Factor out a common infrastructure that the guests can use, update KVM
+> to employ the new API. The central notion of the SMCCC method is the
+> UUID of the hypervisor, and the new API follows that.
+> 
+> No functional changes. Validated with a KVM/arm64 guest.
+> 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/arm64/kvm/hypercalls.c        | 10 +++--
+>  drivers/firmware/smccc/kvm_guest.c | 10 +----
+>  drivers/firmware/smccc/smccc.c     | 17 ++++++++
+>  include/linux/arm-smccc.h          | 64 ++++++++++++++++++++++++++++--
+>  4 files changed, 85 insertions(+), 16 deletions(-)
+>
 
-And, i.MX7D has the hang problem in the L2 state poll after PME_Turn_Off
-is sent out when one endpoint device is connected.
+[...]
 
-Add quirk flags to issue the PME_Turn_Off only when link is up and don't
-do the L2 state poll to avoid problems on i.MX7D platform.
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 67f6fdf2e7cd..4bb38f0e3fe2 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -7,6 +7,11 @@
+>  
+>  #include <linux/args.h>
+>  #include <linux/init.h>
+> +
+> +#ifndef __ASSEMBLER__
+> +#include <linux/uuid.h>
+> +#endif
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 1 +
- 1 file changed, 1 insertion(+)
+That's a pretty unusual guard in arm64 land. Looking at the current
+state of the kernel:
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index aade80010cbe..779b6c7a501d 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1706,6 +1706,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.enable_ref_clk = imx7d_pcie_enable_ref_clk,
- 		.core_reset = imx7d_pcie_core_reset,
-+		.quirk = QUIRK_NOLINK_NOPME | QUIRK_NOL2POLL_IN_PM,
- 	},
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
+$ git grep -w __ASSEMBLER__ arch/arm64/ | wc -l
+2
+$ git grep -w __ASSEMBLY__ arch/arm64/ | wc -l
+122
+
+I'd suggest the later rather than the former.
+
+Thanks,
+
+	M.
+
 -- 
-2.37.1
-
+Without deviation from the norm, progress is not possible.
 
