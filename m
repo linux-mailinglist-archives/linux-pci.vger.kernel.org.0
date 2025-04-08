@@ -1,142 +1,173 @@
-Return-Path: <linux-pci+bounces-25487-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AACBCA80BDE
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 15:22:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAFF1A80BD2
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 15:21:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0078A887C63
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 13:13:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2B03506A9E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 13:15:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D857017CA17;
-	Tue,  8 Apr 2025 13:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A9E01D86ED;
+	Tue,  8 Apr 2025 13:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bx/u3rSO"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CoGtiJjr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF93017A312;
-	Tue,  8 Apr 2025 13:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99451DED78;
+	Tue,  8 Apr 2025 13:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117323; cv=none; b=RTpA3P72iol453tJuwPWNyAIJOcrblwj+/EBO5wU8KSSKdDi7vAbNzaZzHbjvrgSrUGSCpvlkg8dtVOD9F5d4OlC27ha4GQtTMUP4KS0/aKEQ95dhe3RQyhp9JXTxi+6SB2TRzdRDlI27DZQW/PRr+nKFDZe+HqXfzQIf+khGyk=
+	t=1744117726; cv=none; b=QLIby3ZS3S4N6WG84Qx7ujtlFuQNCqANwzWZnGnti2W0gJjH1QqbGq3R6Vz3nk4/qbrY6JCACfcjkEUjjtRZZoAyrf5AKMi0njPUYtNuZvk3eCmYycN1ifP2+HvqLlKSyIW8I7GrmkwiIjhcrAy+diz/Pelrc5TzJPtJM6wfdhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117323; c=relaxed/simple;
-	bh=8GaiwcHWfRvoK90OTJYH2v6UniBDmHmB840KjBxhX9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=glWZxdj++zsHb7cjvLaoOju3sfFx/ZsDYGaCaOijhXpcewxToN9GwfTtMbTfYLzAMbTgb2UtAB4BpYzg21dIyaSD7Mhwj1Vr84LYFmoLFL3n/wr/CeccTI4imujwCG9D2bA7fNZLEm2ZBfoCJEbK4LZM4nSf1BhHgYLiJeR92fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bx/u3rSO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A95C4CEE5;
-	Tue,  8 Apr 2025 13:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744117323;
-	bh=8GaiwcHWfRvoK90OTJYH2v6UniBDmHmB840KjBxhX9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bx/u3rSOYgMC7jIRf7LSFxGKUAE49p5zlPuOAGFbp6ba/lgcNkjmUfK+dNiDlZiCA
-	 N6gpP7SyrT/+mGmXKbmseT05/H9DB4N5ZkjNBWR4m5mXbrJVUqvGw68IyeswxfbFid
-	 mjzHPiydS/R95kzWi+Agq2Wnft8UvxJjXPjJl1zT6qublMQ+uHN+dK5vBEnNnJiRv3
-	 fenZLDwbSIN5ae9T7sGBH0aiFAukS00fmNQx8TTEDJyJbHTpVv5l62DoiZC5NnjoWO
-	 oLZxCdLlf67Dqc2zY5n5Qzs2YSYFmqeCGxiIKeY1UWewFy5Ok28pLOI5ERzE8ZLM01
-	 1CNlXj/8qPujA==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2c1caacc1f7so3315708fac.3;
-        Tue, 08 Apr 2025 06:02:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVS/4CHxkxXWcBxSQ1mtvMIW0UQL1TpUaHiweHCiATePCdcAi2HtnfJMegFK43/9E74tQE1uUkDEoo6@vger.kernel.org, AJvYcCXQxQEpsHUfwKYwWXaNv22H5yu8cvp43/6qn7ilrP+AGCNWVqorvCgkOpBR7dlGq/PHsCdVnlnmqSoB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3DmHMZILGzS2R8lv/a2cqYygExmgGAF32xROI7f9rvtnijPWE
-	75ll67kIR1ZnX00sJVXHw86j8Bd2p0zuv/qS8hTKoBEXnA51zp5+bSQmP7NmoMMNa8DIu10vvp6
-	0IOaDzgiOmmmBcIXIwLCIba7mY0s=
-X-Google-Smtp-Source: AGHT+IFjkp5ajfGr7EdSG92rcHQnSQqd9flrT9xcE+UImXVlpGkb6J2F1cd6PRh1PbU8p/vO/e6sJj2DBsJQNGW87m4=
-X-Received: by 2002:a05:6870:b520:b0:2c2:3da4:6389 with SMTP id
- 586e51a60fabf-2cc9e659fb9mr9436751fac.23.1744117322463; Tue, 08 Apr 2025
- 06:02:02 -0700 (PDT)
+	s=arc-20240116; t=1744117726; c=relaxed/simple;
+	bh=RXNrlCWRVAP2kZW5DHHqBHlW5pOJ9IXKJbD4ElTd98M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MpqLRvkWAtsBCi4/hjEnQxHIy/XlHIfnrPebAw++9TIjOAgS52a+nSLyWRAELC3udHFpbUPPbqx4T7alzXmdS5CCymGF7Fq73zYwrp8yoRT8eNfGDPVclt1+KkRU5Y3JFSTwm1PCpbvs5UH8j/H9v2OdFvqPTb/LZ/BG9Pn2lM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CoGtiJjr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B982944326;
+	Tue,  8 Apr 2025 13:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744117721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MT039/hhuMMp5IO2JcEWxMC4o3y8QemyuoMvfE2SUFc=;
+	b=CoGtiJjrd6pJSrynxk4Ww042keQh9u8acYoWopM/7RJrx9UjShh6+u7Qo3SEoi01uF1T+3
+	7JYdjRmu+B/pSRo5pKCLoCR+Wnw9v1QhZDuWoasw9JAzB1/hEkC6kEYTs1u6jXCFCSypsd
+	8EYWRBvHIoQB0sde8vSCwIyu2OYFXap+fsygdNhAOjLPHZ+ljCPsdEa9Tb3Zh19j7+9RMU
+	5Bg5gS0f5LoXYD55neip1umz/F8gxUf2aVGhUaz63FSOKcaLxWUsac7ZoMUZgsTu5lm97u
+	tV9Df778F4P+kiMOoJZJ/CJRrnkEnStg22TSuJc7wvqBsbmT23vNx5hI6wdulA==
+Date: Tue, 8 Apr 2025 15:08:36 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 08/16] i2c: core: Introduce i2c_get_adapter_supplier()
+Message-ID: <20250408150836.327a337d@bootlin.com>
+In-Reply-To: <Z_Puy8eEBc6tubEx@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	<20250407145546.270683-9-herve.codina@bootlin.com>
+	<Z_Puy8eEBc6tubEx@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401153225.96379-4-anshuman.gupta@intel.com>
- <20250401201349.GA1676401@bhelgaas> <CAJZ5v0irNFX6dFrStinNXamrhP143=yjjfx4iK0pY+-dTEkviw@mail.gmail.com>
- <CY5PR11MB6211021207DE5ECAA43BF26595AE2@CY5PR11MB6211.namprd11.prod.outlook.com>
- <CAJZ5v0inCpM2UhzZ_pD52S0Hf8aaEMa40CyE-dwzVmO1n3PMwA@mail.gmail.com>
- <MN0PR11MB6207F55ABAA2187609BB872695AE2@MN0PR11MB6207.namprd11.prod.outlook.com>
- <CAJZ5v0gKBYa_N-dA1JwF0yVbc6XSmQEy1LpVytDM7uc9kbZ8fA@mail.gmail.com> <CY5PR11MB621174B9AF1B5C6EA4FE27F095A92@CY5PR11MB6211.namprd11.prod.outlook.com>
-In-Reply-To: <CY5PR11MB621174B9AF1B5C6EA4FE27F095A92@CY5PR11MB6211.namprd11.prod.outlook.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 8 Apr 2025 15:01:51 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hp-bYn8JFiBnTgrSdJWHm1jgCjcvbVZkzeOaySjvAQQg@mail.gmail.com>
-X-Gm-Features: ATxdqUHqV0sOwFWqSUOVlfsgC6-e9g7HrCV9B3ZHAiWPRSwaiLow0_l4zBDiy30
-Message-ID: <CAJZ5v0hp-bYn8JFiBnTgrSdJWHm1jgCjcvbVZkzeOaySjvAQQg@mail.gmail.com>
-Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
-To: "Gupta, Anshuman" <anshuman.gupta@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, 
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, 
-	"De Marchi, Lucas" <lucas.demarchi@intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, 
-	"Nilawar, Badal" <badal.nilawar@intel.com>, "Gupta, Varun" <varun.gupta@intel.com>, 
-	"ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>, "Shankar, Uma" <uma.shankar@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefudejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, Apr 4, 2025 at 2:53=E2=80=AFPM Gupta, Anshuman <anshuman.gupta@inte=
-l.com> wrote:
->
-> /snip
-> > > >
-> > > > Exactly like I said: If you only allow one driver to use the _DSM t=
-o
-> > > > request the Aux power from a given Root Port, it will have all of
-> > > > the information and does not need to be notified about any changes.
-> > > > Since no one else is allowed to use this interface for that Root
-> > > > Port, no one else will need a notifier either.  For this to work,
-> > > > you need some mechanism allowing drivers to claim the interface so
-> > > > no one else can use it (on a per Root Port basis) which is currentl=
-y missing
-> > AFAICS.
-> > >
-> > > IMHO such kind of mechanism will require to add Root Port specific
-> > > data structure to claim the interface. But real problem is the criter=
-ia  to claim
-> > the interface.
-> > > Is first PCIe Non-Bridge Endpoint Function 0 driver can be criteria
-> > > to claim the Interface. Or first come and first serve approach ?
-> >
-> > IMV, the first PCIe Non-Bridge Endpoint Function 0 driver approach woul=
-d be
-> > sort of fragile and cumbersome to enforce.
-> >
-> > First come, first serve is much simpler and should be sufficient for no=
-w AFAICS.
->
-> We are enabling VRSR only for default vga boot device.
-> As it needed only GPU driving the display for better user experience.
-> Can we use same logic vga_default_device() to claim the interface under r=
-oot port.
-> That will simplify the criteria to claim the interface.
+Hi Andy,
 
-Basically, you need to prevent somebody else from running
-DSM_PCI_D3COLD_AUX_POWER_LIMIT concurrently for the given Root Port
-and store the information that it has been run already.
+On Mon, 7 Apr 2025 18:27:07 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Personally, I'd add aux_power_limit to struct acpi_device_power and
-I'd use a static mutex in pci_acpi_request_d3cold_aux_power() along
-the lines of:
+> On Mon, Apr 07, 2025 at 04:55:37PM +0200, Herve Codina wrote:
+> > The supplier device of an I2C adapter is the device that calls
+> > i2c_add_adapter() or variants and i2c_del_adapter().
+> > 
+> > Most of the time this supplier device is the parent of the adapter dev.
+> > 
+> > Exceptions exist with i2c muxes. Indeed, in case of i2c muxes, the
+> > parent of the adapter dev points to the adapter dev the mux is connected  
+> 
+> dev --> device (in both cases)
 
-1. Acquire the mutex.
-2. If power.aux_power_limit is set for the ACPI companion of pci_dev,
-release the mutex and bail out.
-3. Evaluate DSM_PCI_D3COLD_AUX_POWER_LIMIT and if it fails, release
-the mutex and bail out.
-4. Set power.aux_power_limit for the ACPI companion of pci_dev to the
-requested value.
-5. Release the mutex.
+Will be updated in the newt iteration.
 
-Of course, this would only allow it to be set once per kernel boot, so
-in order to handle hibernation properly, the same Aux power limit
-would need to be requested again automatically on Root Port restore.
+> 
+> > to instead of the supplier of this adapter.
+> > 
+> > Introduce i2c_get_adapter_supplier() and a new supplier field in the
+> > adapter structure in order to ease the adapter supplier retrieval.  
+> 
+> ...
+> 
+> > +/**
+> > + * i2c_get_adapter_supplier() - Get the supplier of an adapter
+> > + * @adapter: the adapter to get the supplier from
+> > + *
+> > + * return:  
+> 
+> Return:
+
+Will be updated.
+
+> 
+> > + * Look up and return the &struct device corresponding to the device supplying
+> > + * this adapter.  
+> 
+> @adapter
+
+Will be updated.
+
+> 
+> > + * The user must call put_device() once done with the supplier returned.
+> > + */
+> > +struct device *i2c_get_adapter_supplier(struct i2c_adapter *adapter)
+> > +{
+> > +	return get_device(adapter->supplier ?: adapter->dev.parent);  
+> 
+> What will be the meaning when both are set? Why dev.parent is not the same
+> as supplier in this case?  Looking at the commit message example, it seems
+> like you want to provide a physdev or sysdev (as term supplier seems more
+> devlink:ish), like it's done elsewhere. And in the same way _always_ initialise
+> it. In such a case, the ambiguity will be gone.
+
+When both are set (this is case for i2c muxes), the adapter->supplier the
+device that register the I2C adapter using i2c_add_adapter() or variant.
+In other word, the device that creates the I2C adapter.
+
+The adapter->dev.parent is most of the time the device that register the
+I2C adapter except for i2c muxes. For I2C muxes, this adapter->dev.parent
+is the adapter the i2c mux is connected to.
+
+Between physdev and sysdev, I really prefer physdev and, if renaming from
+supplier to physdev is still needed (and wanted), I will rename it. Let me
+know.
+
+For initialization, I don't want to modify all the I2C controller drivers.
+What I can do is to initialize adapter->supplier using adapter->dev.parent
+during the i2c_register_adapter() call if it was not already initialize by
+the caller (i.e. the I2C controller driver).
+
+Does it make sense ?
+
+Best regards,
+Hervé
 
