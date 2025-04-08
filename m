@@ -1,176 +1,177 @@
-Return-Path: <linux-pci+bounces-25513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0349A81626
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 21:58:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C75B2A8162C
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 21:59:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C530E3AB0AA
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 19:57:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85487189A365
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 19:59:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75EB71EB3D;
-	Tue,  8 Apr 2025 19:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00AFC2417D8;
+	Tue,  8 Apr 2025 19:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDmNTfT7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IdgILvda"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BA922171B
-	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 19:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAAF21ABCD
+	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 19:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744142282; cv=none; b=ez/TJ9qMsfYxRbBNrYP3t5YLU5V7PJNkAraeQ50v1y5ounzjAkUxPBD6SZWJ22ARToMjAy9cA6kv0vMy3JLbTITdveOp7jpY0VT+favSnho5sNLiB2bTrb3p26MF9Rz+zplcY4F5ZJJpIkUPj9sSrhR0o0EsM0spjSWVSmvi6ko=
+	t=1744142381; cv=none; b=DQTwIXwiCqBBMqENI/Lf7Z2fF3ekI5oTfgdFVbdUQUtp0mJaNFBOz9PiXjrvu5djCa5DbtHDar5lTi73JPqroNeakyG9yFPYhT4gqBoThwsiFkuVcUq8g46FsDRrtvIjV6PAjBJvJOyz3tVQNxeYjNc/FBwXpLfV3i8VEI+Xr+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744142282; c=relaxed/simple;
-	bh=ruyPBOsLXpsryhdZPgpQXmEH7Ygr4EtEBZHvjagInzo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gWiQrnFAj++Mr+BZRd69ElzS6zn8aJoXVQnB7tg3Mu3AZOuUBgYPO3520qFOh88s6qDO8BBVzi9gzZPqJu+ld36jwo6bTsleXTRuw1GHboOIfpt7WaqAAQLBpwNozZzmrUxujmgBA7l558YCOr6fPMLUFDngyMdrS0Y6k5PRpYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDmNTfT7; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744142281; x=1775678281;
-  h=date:from:to:cc:subject:message-id;
-  bh=ruyPBOsLXpsryhdZPgpQXmEH7Ygr4EtEBZHvjagInzo=;
-  b=BDmNTfT71V/CNFyoyVRyR+Gp8pSKjpOKM7aGAEe2t2g+RB4/XtzvKf2e
-   Zd0g5WgxqZE6aE7zMLjZ0wqushCOiZ/2bf1q/fQu7gR5hSHfBlS9eb5pH
-   N42CAJyoN7Usrgui5LU/hOzMnamy3D2aixTLOix+kXpPAXwXsndDxe6UM
-   BMoVcAwMoOVkdIEQx+mwTpWoqx36UhJiUFOZKSW7Pk8yesAEjEvWZfzMc
-   wbUnCpGgYO+9nyb9ggGsM8NCwGPNWi3X2Xw3FzQnwJxl68/F8k3YOWVIN
-   lXYWHQYjEIFa/3O4mGzkHa526w9zKJpLAPwg0I2zAZvdOvfTlM0aX+7Mx
-   Q==;
-X-CSE-ConnectionGUID: cd4w1+EMQ2O40Dk0tHWL9Q==
-X-CSE-MsgGUID: LW6VonuhTNWyJtMpVQVDdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="63139670"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="63139670"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 12:57:51 -0700
-X-CSE-ConnectionGUID: MX/R8LxeQQum0CvDt1jxkQ==
-X-CSE-MsgGUID: XcmKFjtYQpCTb3HJFCb8lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="129208553"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 08 Apr 2025 12:57:50 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2F4t-0007wJ-0P;
-	Tue, 08 Apr 2025 19:57:47 +0000
-Date: Wed, 09 Apr 2025 03:57:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 47216638b6e748ed5dc783ead688eef37b021466
-Message-ID: <202504090324.TuyDTh0C-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1744142381; c=relaxed/simple;
+	bh=T3dxU9Xzp9z0tf6G7dXM8herRtcII2CldD29N7/opUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z782VSH869WBUyOIU3gFtbbt3uhY36T6RH5psUEozIyuomRDIbrryX/nZJkSfFm13uw0gJx9w+ksN42ENC/5n+xN5T/uHpqC046xRI30OfrZo31lmlArk/z69pzsSXsPtZdUtPT6e3ILcEs5QV6aBUiALfZ3snxiZur/qjjckHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IdgILvda; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso5873329b3a.2
+        for <linux-pci@vger.kernel.org>; Tue, 08 Apr 2025 12:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744142379; x=1744747179; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P36tuhRNiXUx83uwdjI7YGhqW3UK9LAxmTlrMVh1D9o=;
+        b=IdgILvdaSSt31NfzSJDntSsraVrg1swZByNq55EayrGs7kaYcXoVm9GmYmjLes43b+
+         ECJLyYYo+EYrUkImvn6RUtk6QGMOzstGElXo3PjaIqHs/pKkCs0ojjCPCnPZi7xWk9l8
+         1KBl6DpivUKNWm0Zr+Q1XpFWi4JVtdg4D2DyY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744142379; x=1744747179;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P36tuhRNiXUx83uwdjI7YGhqW3UK9LAxmTlrMVh1D9o=;
+        b=r9ly6V6A8ZBp8NOIfx1GkZD42WQod1hJsZ/a2f9fyhGYL2X+bb6NkqqlCMdofclekv
+         MbE2SBqVmnbnO7BwRjYWywXngQ667eNZwDizmKslydKtUa+k5geUZQGgvOPTfkeP9qKG
+         07/lBi72ux58lqu31jpfitlhODSr8CHNQwl0p+s42J4EoJYqF2C8SR+sbbwT/Y8t/wUS
+         Yi+W4LSpSb371bodhflsbBiS6GGa4Myoa8lhEVM4DDmF87oBTmlvyZRqE02HdalOdL1L
+         odErKtQ8exf2A4aqJB5Y2iY2Zx5a8wmXPWyMoMBiqyyI/+fajn0LNsVUxUAqfjYF3PeL
+         hkLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXa1C6yzuXd7/qSGERClWbr/73iExlE3Pjfn2SXxz18T4sZshlW6HeFWkwRBAs5SO4fXinzCi5Ck+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJwwTpqzMQEP5M88+sQzIvI7D40El/v6YmkBFCBOUjpnQiZ3j+
+	x6nVSR3RCcCgsxgxOCum4vGvYYUniYSv4VXyXIc0WszMuJh/CTtfjEhfRmiU3Q==
+X-Gm-Gg: ASbGncvq2A8wLwwQ99SB6hMRszjIqBjEixO6ItZTkp0tHfR2NW5xpE3ZG2rsuKgJ+zG
+	lx7XE8d/dppsQ1B7Ezw21nPU4GNlOt5CRNNPs0VSJ94hQci4JyTpkLc2UEBZ5VtdnWaCqa89ZAQ
+	mqGnt1EQ1T/hqawqwWKcbQBqTn28EgWFrQ544KleQSdO5SGJlta7lURMHJMHE52OwMOvIqov9+A
+	tZEWU2AzrkkbuxwnsWUsvQQHdVASZ+Os04MS32uihQPxboDcEg9lsbggxU23LLn8IO9Vv/nnRHR
+	/c82D8bnliZV3ftmI1nP46q/TqSH9KZQQfwI/Ua/RHl8hYnfyU4T0ar9who2tzYajdDGKEBXrIT
+	ZalNtmTI=
+X-Google-Smtp-Source: AGHT+IFEVy+GFyChwMyGX3zYW7HedKd+ZJuOOOX9WnEe0gqFxgoin7KxxjobZqlNVSmcDzY3B3n1dA==
+X-Received: by 2002:a05:6a00:1148:b0:736:3c6a:be02 with SMTP id d2e1a72fcca58-73bae4d52femr329321b3a.11.1744142379428;
+        Tue, 08 Apr 2025 12:59:39 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:f6a0:ca46:b8a5:169e])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-739d97f1c4bsm10955081b3a.70.2025.04.08.12.59.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 12:59:38 -0700 (PDT)
+Date: Tue, 8 Apr 2025 12:59:36 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, Tsai Sung-Fu <danielsftsai@google.com>
+Subject: [RFC] PCI: pwrctrl and link-up dependencies
+Message-ID: <Z_WAKDjIeOjlghVs@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 47216638b6e748ed5dc783ead688eef37b021466  PCI: Run quirk_huawei_pcie_sva() before arm_smmu_probe_device()
+TL;DR: PCIe link-up may depend on pwrctrl; however, link-startup is
+often run before pwrctrl gets involved. I'm exploring options to resolve
+this.
 
-elapsed time: 1462m
+Hi all,
 
-configs tested: 83
-configs skipped: 1
+I'm currently looking at reworking how some (currently out-of-tree, but I'm
+hoping to change that) pcie-designware based drivers integrate power sequencing
+for their endpoint devices, as well as the corresponding start_link()
+functionality.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For power sequencing, drivers/pci/pwrctrl/ looks like a very good start at what
+we need, since we have various device-specific regulators, GPIOs, and
+sequencing requirements, which we'd prefer not to encode directly in the
+controller driver.
 
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250408    gcc-14.2.0
-arc                   randconfig-002-20250408    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                   randconfig-001-20250408    clang-21
-arm                   randconfig-002-20250408    gcc-10.5.0
-arm                   randconfig-003-20250408    clang-17
-arm                   randconfig-004-20250408    gcc-6.5.0
-arm64                 randconfig-001-20250408    clang-21
-arm64                 randconfig-002-20250408    gcc-9.5.0
-arm64                 randconfig-003-20250408    gcc-9.5.0
-arm64                 randconfig-004-20250408    clang-20
-csky                  randconfig-001-20250408    gcc-14.2.0
-csky                  randconfig-002-20250408    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250408    clang-21
-hexagon               randconfig-002-20250408    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250408    clang-20
-i386        buildonly-randconfig-002-20250408    clang-20
-i386        buildonly-randconfig-003-20250408    gcc-12
-i386        buildonly-randconfig-004-20250408    gcc-12
-i386        buildonly-randconfig-005-20250408    gcc-12
-i386        buildonly-randconfig-006-20250408    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250408    gcc-14.2.0
-loongarch             randconfig-002-20250408    gcc-13.3.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250408    gcc-13.3.0
-nios2                 randconfig-002-20250408    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250408    gcc-6.5.0
-parisc                randconfig-002-20250408    gcc-8.5.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250408    gcc-5.5.0
-powerpc               randconfig-002-20250408    gcc-9.3.0
-powerpc               randconfig-003-20250408    gcc-5.5.0
-powerpc64             randconfig-001-20250408    clang-21
-powerpc64             randconfig-002-20250408    gcc-5.5.0
-powerpc64             randconfig-003-20250408    gcc-7.5.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250408    gcc-9.3.0
-riscv                 randconfig-002-20250408    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250408    gcc-8.5.0
-s390                  randconfig-002-20250408    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250408    gcc-13.3.0
-sh                    randconfig-002-20250408    gcc-13.3.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250408    gcc-10.3.0
-sparc                 randconfig-002-20250408    gcc-6.5.0
-sparc64               randconfig-001-20250408    gcc-6.5.0
-sparc64               randconfig-002-20250408    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250408    clang-21
-um                    randconfig-002-20250408    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250408    clang-20
-x86_64      buildonly-randconfig-002-20250408    clang-20
-x86_64      buildonly-randconfig-003-20250408    clang-20
-x86_64      buildonly-randconfig-004-20250408    gcc-12
-x86_64      buildonly-randconfig-005-20250408    clang-20
-x86_64      buildonly-randconfig-006-20250408    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                randconfig-001-20250408    gcc-6.5.0
-xtensa                randconfig-002-20250408    gcc-6.5.0
+For link startup, pcie-designware-host.c currently
+(a) starts the link via platform-specific means (dw_pcie::ops::start_link()) and
+(b) waits for the link training to complete.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+However, (b) will fail if the other end of the link is not powered up --
+e.g., if the appropriate pwrctrl driver has not yet loaded, or its
+device hasn't finished probing. Today, this can mean the designware
+driver will either fail to probe, or at least waste time for a condition
+that we can't achieve (link up), depending on the HW/driver
+implementation.
+
+I'm wondering how any designware-based platforms (on which I believe pwrctrl
+was developed) actually support this, and how I should look to integrate
+additional platforms/drivers. From what I can tell, the only way things would
+work today would either be if:
+(1) a given platform uses the dw_pcie_rp::use_linkup_irq==true functionality,
+    which means pcie-designware-host will only start the link, but not wait for
+    training to succeed. (And presumably the controller will receive its
+    link-up IRQ after power sequencing is done, at which point both pwrctrl and
+    the IRQ may rescan the PCI bus.) Or:
+(2) pci/pwrctrl sequencing only brings up some non-critical power rails for the
+    device in question, so link-up can actually succeed even without
+    pwrctrl.
+
+My guess is that (1) is the case, and specifically that the relevant folks are
+using the pcie-qcom.c, with its "global" IRQ used for link-up events.
+
+So how should I replicate this on other designware-based platforms? I suppose
+if the platform in question has a link-up IRQ, I can imitate (1). But what if
+it doesn't? (Today, we don't validate and utilize a link-up IRQ, although it's
+possible there is one available. Additionally, we use various retry mechanisms
+today, which don't trivially fit into this framework, as we won't know when
+precisely to retry, if power sequencing is controlled entirely by some other
+entity.)
+
+Would it make sense to introduce some sort of pwrctrl -> start_link()
+dependency? For example, I see similar work done in this series [1], for
+slightly different reasons. In short, that series adds new
+pci_ops::{start,stop}_link() callbacks, and teaches a single pwrctrl driver to
+stop and restart the bridge link before/after powering things up.
+
+I also see that Manivannan has a proposal out [2] to add semi-generic
+link-down + retraining support to core code. It treads somewhat similar
+ground, and I could even imagine that its pci_ops::retrain_link()
+callback could even be reimplemented in terms of the aforementioned
+pci_ops::{start,stop}_link(), or possibly vice versa.
+
+Any thoughts here? Sorry for a lot of text and no patch, but I didn't just want
+to start off by throwing a 3rd set of patches on top of the existing ones that
+tread similar ground[1][2].
+
+Regards,
+Brian
+
+[1] [PATCH v4 00/10] PCI: Enable Power and configure the TC956x PCIe switch
+https://lore.kernel.org/linux-pci/20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com/
+
+[PATCH v4 03/10] PCI: Add new start_link() & stop_link function ops
+https://lore.kernel.org/linux-pci/20250225-qps615_v4_1-v4-3-e08633a7bdf8@oss.qualcomm.com/
+
+[...]
+[
+[PATCH v4 08/10] PCI: pwrctrl: Add power control driver for tc956x
+https://lore.kernel.org/linux-pci/20250225-qps615_v4_1-v4-8-e08633a7bdf8@oss.qualcomm.com/
+
+[2] [PATCH 0/2] PCI: Add support for handling link down event from host bridge drivers
+https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org/
 
