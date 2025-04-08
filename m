@@ -1,142 +1,109 @@
-Return-Path: <linux-pci+bounces-25496-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25497-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2C10A80EC7
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 16:48:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 350B3A80EF0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 16:54:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 952474442E7
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 14:46:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8E5F8A5889
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 14:48:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAF7224AEB;
-	Tue,  8 Apr 2025 14:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27BF1E492D;
+	Tue,  8 Apr 2025 14:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TLs5lB9Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVIeuNwM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BEF1C5D61;
-	Tue,  8 Apr 2025 14:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FDF2AD0C
+	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 14:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123543; cv=none; b=COryo1jWpcVmTaM390ngMOR/tWoLC4ug+m8/SDRtcoNg+e67JAUoXjNZa41eNOH8d5nVolrWGOygN6lmOshp85nxcImsKOQNOuUbB4BTJWcfeRYOu5poiIDjtUPq+LLPGvcgWdA7k7T2WZ9xDMeX5ojD0ugSS1mSY3pkAtHMlU8=
+	t=1744123709; cv=none; b=sBIzmZEA2UNp1+P726k6OZSKc7mjk1TCj6HIPPiwN0EPlz904UrcHanHSt/9o3akE5ubWHDbxzWp+QcDUxdXkh8g/95VgPaVRrBj2xV+OUynf01vLXa9Cijn/e37sKsmcmvLanUoQfTXu3BhdPZtxwy0yp9o1vc4ldnQ2kRuZpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123543; c=relaxed/simple;
-	bh=7T4CpB6DGc+gXmXeKE+QAVK5wOG1xBkOti6BP2/W8Ow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLZgpcM71DsPuNZsDIc5qsB8tdQ0KoOMnQ7FyDzsFY1tRuSol9rHPYKyikFqRoTAJfTLmaQJHAJFMOi7dPWgOcFNCWrnrQC3rZvYQKvw0dR9a/aAyCdTmAkDtZACmyrQPzmX0ibMp3u8iXTf93y0C+1XFB2a9Bd6gzP+Jahh8zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TLs5lB9Q; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ZU8AgxcMgNb7+V6IhjT3po2+emT09ZzOnp6Z/8jLn6c=; b=TLs5lB9Q6k6NOM0ejAiZKSUmbw
-	Dj+iAfTAAhm+Ug5dOAXdaCUR0ebD73P/pVGjYFtKaTG8ZV+/atjxB8tqHRg7WBYsJwW5Vwwr7EF9c
-	EXg2eTLofm8UMCn7fjXC4Ewz5LuW28/Ib8u6LPJzVd95vL9xcZUe0UdgFLyk1LVTAELk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2ACU-008PSe-Gy; Tue, 08 Apr 2025 16:45:18 +0200
-Date: Tue, 8 Apr 2025 16:45:18 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <e370fcd3-bd58-47d1-bc0c-c0abeebbefdc@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
- <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
- <20250408162603.02d6c3a1@bootlin.com>
+	s=arc-20240116; t=1744123709; c=relaxed/simple;
+	bh=55cQgSO9a4MkOf3pJ6EiY9mcXXFYsCUolchzvWbsKvs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=mRn80b4JSp5NMdXozOSQUJ+7sNlJ+pV2wDzzVqUNEpgDIr1oAE4TN4eSJdflA8u4dSqLwmUOOmbwSeCCqSvU1p0F2LxDiOsm2q62ye00h1BsNdx/ybBmzOzu8qXgOX9KpFl/cM7aZAHWI10VCqu6eltURqj8Bo5oHlLyftLwxU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVIeuNwM; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c7b2c14455so3750094fac.2
+        for <linux-pci@vger.kernel.org>; Tue, 08 Apr 2025 07:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744123707; x=1744728507; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bznJKz6O2SYFzrV+0EKZv488/bcfkz1ahZm7AjPPiIQ=;
+        b=dVIeuNwMuBMt6gC6O2974IhLV0lRAyCCP3kM30iW8hxkuYMuiuaycKBxXkCrtHSB3x
+         2W5PVF96mlSTz0CNm7ZlbhEWdPUBegtFRfX7pNEc+lPH4OLK5OH9MRBnSSaU4Q7qcAaf
+         zKMo8r1XekUZlDv+7piwAOyEvjKJx4MOBBMwUbOZjjpFM5XqQRnF+8hPgbt/1cVtwkJ7
+         VasytLheOYKINa4jDR861qv4u9pmQMn7oVxT4re6IEvizmueYrbDagc+CCOojpEF6/OP
+         atjy5VtUnLtAY2caVYnCh3w9w0cxqS/OHe7GLlWqCCvXD99Hooi/Oyy4MkaUM+V7lwEU
+         LLLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744123707; x=1744728507;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bznJKz6O2SYFzrV+0EKZv488/bcfkz1ahZm7AjPPiIQ=;
+        b=ae8lZv8mmC6rJsgLuglDpT+RDe8E3peUtHWkyrJQPxtGG9NRRiL1j6linzbDH3H7EI
+         mvfDoV0JXL08fR+b4v8ANSrJQLPvToNkcd5KXPYzBarTwVElLCA128sKAf1udv9qlOA0
+         mi99m2knLdmfw5H5WK9rB0E37ipB+jGQKUUn1NaKJ8oMGX15mvZ064pVaritN2NKWADi
+         t1Xf6190cwyTa2TCX0neDFez/zjJeyK8IysDHscDWLcCMGCE+pa5bEDknMJeJk+kyejD
+         FLUOJw4TbbZrg7gcwp872eiSY7EE+SZLS/00UtkuSGEQyYc3ZPB+kuOaSA7SCr5YDd0Z
+         /VPQ==
+X-Gm-Message-State: AOJu0YwEb1zWCijTG/kKZysn9TxZyshicIcCmDcP87gMiRuHCCOwzNc7
+	ZKvWGtXQGT8VRcQiK1xLFQ+Pa4xdRBoPWJD7vfsbpp4bk6Wj3sXEPp84p/6giaBvqKrbJ3eaBLV
+	8hkfDopFZup2S8FwTRolzdHTYKTDOjl8OrUY=
+X-Gm-Gg: ASbGncvoBv0fYBaNzsIUOpc1nBJS68MULgXZdBmriHUfQGW5XawlKqV47vzz9Ptz5fq
+	Dq1USORmx11vAT25tSasnBET6+QJBbz7FbPqpye2L2sRdatVbgDw89KlO+kUGSc+g2H+O0hkwuO
+	P0eH48tjyS/paXKM1Y85nGgHEQxB83leISvGmgR5eSAAe7ussOjiP1hwXJPoOL
+X-Google-Smtp-Source: AGHT+IE27guOwjsKcaRQzKMxApEo8RqcwUOG2X9a0pwVt2ICQ8qZG2qpBPymoLCU2rY0KS4cWl+eZRySU8cezRxjgpg=
+X-Received: by 2002:a05:6871:5298:b0:2b8:e8da:e89c with SMTP id
+ 586e51a60fabf-2cc9e7e59b7mr11444871fac.29.1744123707096; Tue, 08 Apr 2025
+ 07:48:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408162603.02d6c3a1@bootlin.com>
+From: Damir Chanyshev <conflict342@gmail.com>
+Date: Tue, 8 Apr 2025 17:48:16 +0300
+X-Gm-Features: ATxdqUEwaoodgHRgtuvdEWLC0bxri6HyGuF2SgPjQEzwfMVE3wC6d95IXeXukYo
+Message-ID: <CAAUwoOjXGzaTQ4Dbx3wcMOiy484Sjd4Vv1=ZDiVrYvCEaNiRcA@mail.gmail.com>
+Subject: P2PDMA support status for the sappire rapids+
+To: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 08, 2025 at 04:26:03PM +0200, Herve Codina wrote:
-> Hi Andrew,
-> 
-> On Mon, 7 Apr 2025 22:05:31 +0200
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > On Mon, Apr 07, 2025 at 04:55:44PM +0200, Herve Codina wrote:
-> > > Add device-tree nodes needed to support SFPs.
-> > > Those nodes are:
-> > >  - the clock controller
-> > >  - the i2c controller
-> > >  - the i2c mux
-> > >  - the SFPs themselves and their related ports in the switch
-> > > 
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> > >  drivers/misc/lan966x_pci.dtso | 111 ++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 111 insertions(+)
-> > > 
-> > > diff --git a/drivers/misc/lan966x_pci.dtso b/drivers/misc/lan966x_pci.dtso
-> > > index 94a967b384f3..a2015b46cd44 100644
-> > > --- a/drivers/misc/lan966x_pci.dtso
-> > > +++ b/drivers/misc/lan966x_pci.dtso  
-> > 
-> > What exactly does this DTSO file represent?
-> 
-> The dsto represents de board connected to the PCI slot and identified
-> by its PCI vendor/device IDs.
+Hello experts!
+First thank you so much for everything.
 
-Then i think the name lan966x_pci.dtso is too generic. It should be
-named after whatever microchip calls the RDK.
+I have a question regarding p2pdma support, I am not an expert in the
+kernel subsystems, please pardon my stupidity.
+While investigating performance opportunities, I stumbled with dma
+between cpu root complex and pcie switch root complex. And found white
+list for the Intel platforms [1]
 
-> We can move the PCI chip in a dtsi included by this dtso but in the
-> end this leads to the exact same representation. Further more, moving
-> out the PCI chip description in its own dtsi out of this dtso can be
-> done in a second step when an other dtso uses the same chip.
+Typical topology looks like this rdma nic<>cpu<>pcie switch<>gpu/xpu,
+for each socket.
+Questions:
+List not updated because new hardware doesn't support this feature?
+(For example abandoned for the CXL3+ )
+Or just not tested for the new platforms?
 
-And what would you call this pulled out dtsi file? lan966x_pci.dtsi?
-That is going to be confusing.
+[1]
+https://lore.kernel.org/all/20220209162801.7647-1-michael.j.ruhl@intel.com/T/#m3f4e4194770274c2873a130ad684a74469038585
 
-Naming is hard, but we should assume this PCIe device is going to be
-successful, and a number of OEMs will build cards around it, so there
-needs to be space within the naming scheme for them.
+P.S.
+Pardon my tone, if it sounds harsh, don't mind it, unfortunately
+English is my third language.
+Thank you in advance, I appreciate all input.
 
-	Andrew
+
+-- 
+Thanks,
+Damir Chanyshev
 
