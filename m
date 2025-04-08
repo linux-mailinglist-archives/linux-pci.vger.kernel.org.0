@@ -1,209 +1,184 @@
-Return-Path: <linux-pci+bounces-25510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0518CA81293
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 18:40:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45CA3A8158D
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 21:12:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91FD63B46DD
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 16:35:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8096818966E2
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 19:11:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F4422DFB1;
-	Tue,  8 Apr 2025 16:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF7421DA60F;
+	Tue,  8 Apr 2025 19:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubdRKC5X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c87uIojP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6EA22F3B8
-	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 16:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C53223714
+	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 19:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744130162; cv=none; b=gE2+4VL1fqEf9AL23lUtib+IKNtf8FZnqCSzcv8tIFpJcWwpEmAmn0bPCjfFcJPdyGQSnKuowqvDrpwSerjXZDsgbmGiEiRTHTrU2nwqv/b1gn9FTX5CrDnDpX9jo8be/wMjcExgfu9h7CAzRQ1y+wTeA/7fyz5v7BGCCuFUVjw=
+	t=1744139448; cv=none; b=h8DsTN+dI1EpkZQctuhw/sEbL5dXff7xDY1ZWQcd1t6PVS/dRskkgK13sLkfnDoO9ERcMwfTkn99/EWKBrmbCUSR9V8gW2zVpzzVuiRJiWmOmAIetIW745dGWjXgpzAZG0u59E7P3HtjfB1k/ypYBEDBls/F+m2wmCD21T5993g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744130162; c=relaxed/simple;
-	bh=00A5pSAj4q5FEcB3H5HQ7k3EUdvbnl6kl/w6qZejtHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qonsxjUEKyWURUvrd0DPGVI+77Q7XtdrMJnCZDIROjzndAykDaUzLAKNxDU/gYjUB0z+/RpIHuT09kNFn7IPh6iAXyJOdfGOSxSMpBqzLp0KKgpk28S2sNrgSs8phqC3f2C3Z93ShJMA/37wpH+5wFGn4g2ZVp+Infgxc6Jnr98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubdRKC5X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC78C4CEE5;
-	Tue,  8 Apr 2025 16:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744130162;
-	bh=00A5pSAj4q5FEcB3H5HQ7k3EUdvbnl6kl/w6qZejtHY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ubdRKC5XVdDiJmQ81lfhxJs7OEnmrMAaIPEfsA6y7cySPT2vaDjHyF26IWgRoxld8
-	 D5OOHPCnxuXBFqqItraWRIo9N4720uC0u8fWRwv3GPnqgzgrTyRroOLa75W8WFanWx
-	 V176JKWojR47Q+wwj+m+im0G2zI0TPKEJ187ga7cYEFo16nuN0Ewstp1TSI07DJJbF
-	 slqp2qKExT+GnI4twKx7aIYRTSQSU3eJuqhX1lJkBZ0FQwIhA9KQ/srsc/bLUSD3cx
-	 rewti8fNzcCFyzz0UL34RWMmfKsFvpu7KaCmjlcW2l/d+IIGPRfIrW4TVBcez68pVK
-	 kWpJD+Z0aqKVQ==
-Date: Tue, 8 Apr 2025 11:36:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sergey Dolgov <sergey.v.dolgov@gmail.com>
-Cc: linux-pci@vger.kernel.org,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Artem S. Tashkinov" <aros@gmx.com>
-Subject: Re: [Bug 219984] New: [BISECTED] High power usage since 'PCI/ASPM:
- Correct LTR_L1.2_THRESHOLD computation'
-Message-ID: <20250408163600.GA238676@bhelgaas>
+	s=arc-20240116; t=1744139448; c=relaxed/simple;
+	bh=SPoTy4WlXa/+QTB61BIFV004CAujb/C8S2qTmrqOyME=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ZXDzCz+HJ9AypiBDg8u6ECoqFsrJkJ/htrJSn+L7NYu63Gd5EWqYXSAktmgNysY70dhvXq0N3jhlN18z9+HKX5QSEsuuOD2WfBBrfYFxLWWUr47dK8oOwwNIO+mSA7K1b5Khzy0eQNJUyoKcJ33QRQlceOH1ZOmid1ZPh/aXkLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c87uIojP; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744139446; x=1775675446;
+  h=date:from:to:cc:subject:message-id;
+  bh=SPoTy4WlXa/+QTB61BIFV004CAujb/C8S2qTmrqOyME=;
+  b=c87uIojP5rKXJv9vD7TTxI+SA5g1eacNgvIDJuUVfxOklapVGusmxT8q
+   bonOL8+LARsFCimp7bYVHIYk7vKwwp3nE3/sluv+Y4v+hWPQKnSK4pKR1
+   Qkm3aoAnPGzwMuROBnpaSLjM6f5TBN/O47sQF//qVC0rzHF7KycKkT2zj
+   zxts/fxwtadg/f/1h1Rmz4mrubDBS1tps25Nbh+kv0ocRjpKMSytUjT+o
+   MGLnabQ6dM4XoggLv+BHqpVf1DSjhPvxZWCiQH8/Qo2nhHTsDoakeh9xb
+   O6BmqiXGguG9gY25zwFCWy7J/D++Kw0saeQJzsLo6Aid2EtUsTw6mSino
+   A==;
+X-CSE-ConnectionGUID: BlEruPRLQha85+LxhTq1rQ==
+X-CSE-MsgGUID: SgVCbFYPSuG84WK2mLad8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45711279"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="45711279"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 12:10:45 -0700
+X-CSE-ConnectionGUID: gasesh+dRgmyruUR6CvfQg==
+X-CSE-MsgGUID: xj8oijNyRI6bWIlQtHN93A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128697700"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 08 Apr 2025 12:10:44 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2ELK-0007uL-0s;
+	Tue, 08 Apr 2025 19:10:42 +0000
+Date: Wed, 09 Apr 2025 03:10:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:irq] BUILD SUCCESS
+ fdc348121f2465897792f946715a5da7887e5f97
+Message-ID: <202504090300.c8o5Fv5T-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAONYan8F-WokoVpX9HpooeMYnHeOa+Wq6EfbketRJH3dZBoY7g@mail.gmail.com>
 
-On Mon, Apr 07, 2025 at 07:33:31PM +0100, Sergey Dolgov wrote:
-> Dear Bjorn,
-> 
-> both attached.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git irq
+branch HEAD: fdc348121f2465897792f946715a5da7887e5f97  irqdomain: pci: Switch to of_fwnode_handle()
 
-Thank you very much.  Most of the differences are that the
-LTR1.2_Threshold values are increased with 7afeb84d14ea ("PCI/ASPM:
-Correct LTR_L1.2_THRESHOLD computation"):
+elapsed time: 1487m
 
-  02:00.0 PCI bridge: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018]
-    Bus: primary=02, secondary=03, subordinate=6c, sec-latency=0
-    Capabilities: [a00 v1] L1 PM Substates
--     T_CommonMode=40us LTR1.2_Threshold=65536ns
-+     T_CommonMode=40us LTR1.2_Threshold=90112ns
+configs tested: 91
+configs skipped: 2
 
-  6d:00.0 Non-Volatile memory controller: Intel Corporation Optane NVME SSD H10 with Solid State Storage
-    Capabilities: [180 v1] L1 PM Substates
--     T_CommonMode=0us LTR1.2_Threshold=3145728ns
-+     T_CommonMode=0us LTR1.2_Threshold=3211264ns
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  70:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader
-    Capabilities: [160 v1] L1 PM Substates
--     T_CommonMode=0us LTR1.2_Threshold=98304ns
-+     T_CommonMode=0us LTR1.2_Threshold=126976ns
+tested configs:
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250408    gcc-14.2.0
+arc                   randconfig-002-20250408    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                          collie_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250408    clang-21
+arm                   randconfig-002-20250408    gcc-10.5.0
+arm                   randconfig-003-20250408    clang-17
+arm                   randconfig-004-20250408    gcc-6.5.0
+arm64                            allmodconfig    clang-19
+arm64                 randconfig-001-20250408    clang-21
+arm64                 randconfig-002-20250408    gcc-9.5.0
+arm64                 randconfig-003-20250408    gcc-9.5.0
+arm64                 randconfig-004-20250408    clang-20
+csky                  randconfig-001-20250408    gcc-14.2.0
+csky                  randconfig-002-20250408    gcc-9.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250408    clang-21
+hexagon               randconfig-002-20250408    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250408    clang-20
+i386        buildonly-randconfig-002-20250408    clang-20
+i386        buildonly-randconfig-003-20250408    gcc-12
+i386        buildonly-randconfig-004-20250408    gcc-12
+i386        buildonly-randconfig-005-20250408    gcc-12
+i386        buildonly-randconfig-006-20250408    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch             randconfig-001-20250408    gcc-14.2.0
+loongarch             randconfig-002-20250408    gcc-13.3.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+nios2                 randconfig-001-20250408    gcc-13.3.0
+nios2                 randconfig-002-20250408    gcc-7.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250408    gcc-6.5.0
+parisc                randconfig-002-20250408    gcc-8.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc               randconfig-001-20250408    gcc-5.5.0
+powerpc               randconfig-002-20250408    gcc-9.3.0
+powerpc               randconfig-003-20250408    gcc-5.5.0
+powerpc64             randconfig-001-20250408    clang-21
+powerpc64             randconfig-002-20250408    gcc-5.5.0
+powerpc64             randconfig-003-20250408    gcc-7.5.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250408    gcc-9.3.0
+riscv                 randconfig-002-20250408    clang-21
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250408    gcc-8.5.0
+s390                  randconfig-002-20250408    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250408    gcc-13.3.0
+sh                    randconfig-002-20250408    gcc-13.3.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                 randconfig-001-20250408    gcc-10.3.0
+sparc                 randconfig-002-20250408    gcc-6.5.0
+sparc64               randconfig-001-20250408    gcc-6.5.0
+sparc64               randconfig-002-20250408    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250408    clang-21
+um                    randconfig-002-20250408    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250408    clang-20
+x86_64      buildonly-randconfig-002-20250408    clang-20
+x86_64      buildonly-randconfig-003-20250408    clang-20
+x86_64      buildonly-randconfig-004-20250408    gcc-12
+x86_64      buildonly-randconfig-005-20250408    clang-20
+x86_64      buildonly-randconfig-006-20250408    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                randconfig-001-20250408    gcc-6.5.0
+xtensa                randconfig-002-20250408    gcc-6.5.0
 
-
-In addition, I wonder if there's something wrong with link training
-because the 00:1d.0 - 6d:00.0 link claims training is in progress, and
-the 00:1d.2 - 6e:00.0 link is only x1 when it should be x2:
-
-  00:1d.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #9
-      LnkSta: Speed 8GT/s, Width x2
--       TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-+       TrErr- Train+ SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-
-  00:1d.2 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root Port #11
--     LnkSta: Speed 8GT/s, Width x2
-+     LnkSta: Speed 8GT/s, Width x1
-
-
-I don't see the problem right off, so could you please add the patch
-below and collect the dmesg logs again?
-
-Bjorn
-
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 29fcb0689a91..bd9322bde53a 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -647,12 +647,19 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 	val2 = FIELD_GET(PCI_L1SS_CAP_CM_RESTORE_TIME, child_l1ss_cap);
- 	t_common_mode = max(val1, val2);
- 
-+	pci_info(child, "parent CMRT %#04x child CMRT %#04x\n", val1, val2);
-+
- 	/* Choose the greater of the two Port T_POWER_ON times */
- 	val1   = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_VALUE, parent_l1ss_cap);
- 	scale1 = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_SCALE, parent_l1ss_cap);
- 	val2   = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_VALUE, child_l1ss_cap);
- 	scale2 = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_SCALE, child_l1ss_cap);
- 
-+	pci_info(child, "parent T_POWER_ON %#04x usec (val %#02x scale %x)\n",
-+		 calc_l12_pwron(parent, scale1, val1), val1, scale1);
-+	pci_info(child, "child  T_POWER_ON %#04x usec (val %#02x scale %x)\n",
-+		 calc_l12_pwron(child, scale2, val2), val2, scale2);
-+
- 	if (calc_l12_pwron(parent, scale1, val1) >
- 	    calc_l12_pwron(child, scale2, val2)) {
- 		ctl2 |= FIELD_PREP(PCI_L1SS_CTL2_T_PWR_ON_SCALE, scale1) |
-@@ -675,7 +682,11 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 	 * least 4us.
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
-+	pci_info(child, "t_common_mode %#04x t_power_on %#04x l1_2_threshold %#04x\n",
-+		 t_common_mode, t_power_on, l1_2_threshold);
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
-+	pci_info(child, "encoded LTR_L1.2_THRESHOLD value %#04x scale %x\n",
-+		 value, scale);
- 	ctl1 |= FIELD_PREP(PCI_L1SS_CTL1_CM_RESTORE_TIME, t_common_mode) |
- 		FIELD_PREP(PCI_L1SS_CTL1_LTR_L12_TH_VALUE, value) |
- 		FIELD_PREP(PCI_L1SS_CTL1_LTR_L12_TH_SCALE, scale);
-@@ -686,6 +697,11 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
- 	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL2, &cctl2);
- 
-+	pci_info(child, "L1SS_CTL1 %#08x (parent %#08x child %08x)\n",
-+		 ctl1, pctl1, cctl1);
-+	pci_info(child, "L1SS_CTL2 %#08x (parent %#08x child %08x)\n",
-+		 ctl2, pctl2, cctl2);
-+
- 	if (ctl1 == pctl1 && ctl1 == cctl1 &&
- 	    ctl2 == pctl2 && ctl2 == cctl2)
- 		return;
-@@ -703,14 +719,27 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 					       PCI_L1SS_CTL1_L1_2_MASK, 0);
- 	}
- 
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
-+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
-+	pci_info(child, "L1SS_CTL1 parent %#08x child %#08x (L1.2 disabled)\n",
-+		 pctl1, cctl1);
-+
- 	/* Program T_POWER_ON times in both ports */
- 	pci_write_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, ctl2);
- 	pci_write_config_dword(child, child->l1ss + PCI_L1SS_CTL2, ctl2);
- 
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, &pctl2);
-+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL2, &cctl2);
-+	pci_info(child, "L1SS_CTL2 parent %#08x child %#08x (T_POWER_ON updated)\n",
-+		 pctl2, cctl2);
-+
- 	/* Program Common_Mode_Restore_Time in upstream device */
- 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
- 				       PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
- 
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
-+	pci_info(child, "L1SS_CTL1 parent %#08x (CMRT updated)\n", pctl1);
-+
- 	/* Program LTR_L1.2_THRESHOLD time in both ports */
- 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
- 				       PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
-@@ -721,6 +750,11 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 				       PCI_L1SS_CTL1_LTR_L12_TH_SCALE,
- 				       ctl1);
- 
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
-+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
-+	pci_info(child, "L1SS_CTL1 parent %#08x child %#08x (LTR_L1.2_THRESHOLD updated)\n",
-+		 pctl1, cctl1);
-+
- 	if (pl1_2_enables || cl1_2_enables) {
- 		pci_clear_and_set_config_dword(parent,
- 					       parent->l1ss + PCI_L1SS_CTL1, 0,
-@@ -729,6 +763,11 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 					       child->l1ss + PCI_L1SS_CTL1, 0,
- 					       cl1_2_enables);
- 	}
-+
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
-+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
-+	pci_info(child, "L1SS_CTL1 parent %#08x child %#08x (L1.2 restored)\n",
-+		 pctl1, cctl1);
- }
- 
- static void aspm_l1ss_init(struct pcie_link_state *link)
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
