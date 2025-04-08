@@ -1,113 +1,105 @@
-Return-Path: <linux-pci+bounces-25500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF5FBA80F78
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 17:14:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35C9EA80F8B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 17:16:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D5BA8A32B3
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 15:09:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 697973A061F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 15:12:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7053522ACDF;
-	Tue,  8 Apr 2025 15:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vQ0SxnBR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A7yhWpVz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC0B1DA612;
+	Tue,  8 Apr 2025 15:11:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13DC1E8348;
-	Tue,  8 Apr 2025 15:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041B1E0DE8
+	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 15:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124962; cv=none; b=iCM7pBfIbdQc6+9sDGxlYTuPEm49DUbuTW1bnhObRqcqqlcYXbsI175hQL6b8FpBOZv+TC0OvT7KvRew3cOj6RZp0PGERW09KhEbdnocSZfYQhaKu8frNkHwJ/5jUEsy5Nd007LdxwZ0+czjQR8oVOz6ZyENCy/qye+qYPgOB6s=
+	t=1744125114; cv=none; b=GzRCX1YjuzK4mu1J4ShvpxDSvjtG/rAwVPTt5DW+eKwmLpEc+1VRK5yTtxa3cPBViHdZquQ3mphWbz55935obUO016+uRCvimr/jS6pZPzCBlu1GTFH/QbVTBtGc4n9g6xlIUE5OkDvvMDlfUeApNE0baMojTL9Y1YsNzKCTyy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124962; c=relaxed/simple;
-	bh=KfZp5sOMLhUjS958RvECX1/aPL/JVAyn8rQO3+gzo4g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nPDdgUCFqaXebx2kWPJ85S0b9l+mAoJwlmjI4OLH5Vjuy5yCJTYoqC80bAjYJkmsv3wEiOp+NWYIkOtbgAevdwLruikLrZDdIVNih99PH8xuGe7ub0vYNdEtCjv6qOi1WVeMNRP27khdakNvjYLBP4gW8YnEX+wyQWnEXebSlho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vQ0SxnBR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A7yhWpVz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744124953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CLZRLH/712vh97T+Cj7EHgs1xlJmlFXKT4+PuzmWYVE=;
-	b=vQ0SxnBRBFif4SBTr1JHxo86wY2TiqcahO4BLbwviSFg+TxUs/TqpUAzI+A9H+qrecT47n
-	uaAZLehOFtO2cS0aMrwyMratDAIFf3LRdXSs8D5ksrr1jao2lYsSHb4HkT/JHgrJcIkGdQ
-	P4c0n5scFjUFKChtVVKksGBoSDjOw4zExsifB73w509bnSCEGJK3cAQ021jvWZwKP9rKuM
-	uUEFOakfJB5C21bGfOEMv883Bh0RTGrbDbr/6m2kmycVI1NK0Z/n7OlVCPHgEbYyQMTg1X
-	ZurYgDqxO0tkBqaMG3AavucoBcutqttybAB/qrhs+ZKPM59FkSxfm/pE1rzflw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744124953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CLZRLH/712vh97T+Cj7EHgs1xlJmlFXKT4+PuzmWYVE=;
-	b=A7yhWpVzxzZ7h8xWz+gWEdgrzFDb3axJw4JoyUoRRn5JJG4ybMGxSjrN/VqG3a6AE6v1FQ
-	3r2s0FKn/eRUvAAA==
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: Bert Karwatzki <spasswolf@web.de>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
- Jonathan.Cameron@huawei.com, allenbh@gmail.com, d-gole@ti.com,
- dave.jiang@intel.com, haiyangz@microsoft.com, jdmason@kudzu.us,
- kristo@kernel.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
- logang@deltatee.com, manivannan.sadhasivam@linaro.org,
- martin.petersen@oracle.com, maz@kernel.org, mhklinux@outlook.com,
- nm@ti.com, ntb@lists.linux.dev, peterz@infradead.org, ssantosh@kernel.org,
- wei.huang2@amd.com, wei.liu@kernel.org
-Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
-In-Reply-To: <20250408120446.3128-1-spasswolf@web.de>
-References: <20250408120446.3128-1-spasswolf@web.de>
-Date: Tue, 08 Apr 2025 17:09:12 +0200
-Message-ID: <87iknevgfb.ffs@tglx>
+	s=arc-20240116; t=1744125114; c=relaxed/simple;
+	bh=vcBf1F3m7nMSuASpNIz+Iswhrm3OT9YaFOpgZaKLgNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLDyXYuymOnAKPjjsKTe8i/CgW5pO/QDIlZq4sA96b7maROXUeqlldnBcWekDJG+JzAWX8zbxeJ+nMm6dG2NYxLA39EAfmf+yv9JtT70LRLyDQj4dDtHwa6IVjiQptKPPQvyyAPsvwvpz09VZCFZnl2FaEa+CtHyONl/78KT0Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1F44C2C05245;
+	Tue,  8 Apr 2025 17:11:37 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1861736632; Tue,  8 Apr 2025 17:11:43 +0200 (CEST)
+Date: Tue, 8 Apr 2025 17:11:43 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Damir Chanyshev <conflict342@gmail.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: P2PDMA support status for the sappire rapids+
+Message-ID: <Z_U8r19u9rdPzXDh@wunner.de>
+References: <CAAUwoOjXGzaTQ4Dbx3wcMOiy484Sjd4Vv1=ZDiVrYvCEaNiRcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAUwoOjXGzaTQ4Dbx3wcMOiy484Sjd4Vv1=ZDiVrYvCEaNiRcA@mail.gmail.com>
 
-On Tue, Apr 08 2025 at 14:04, Bert Karwatzki wrote:
-> Since linux-next-20250408 I get a NULL pointer dereference when booting:
->
-> [  T669] BUG: kernel NULL pointer dereference, address: 0000000000000330
-> [  T669] #PF: supervisor read access in kernel mode
-> [  T669] #PF: error_code(0x0000) - not-present page
-> [  T669] PGD 0 P4D 0
-> [  T669] Oops: Oops: 0000 [#1] SMP NOPTI
-> [  T669] CPU: 2 UID: 0 PID: 669 Comm: (udev-worker) Not tainted 6.15.0-rc1-next-20250408-master #788 PREEMPT_{RT,(lazy)}
-> [  T669] Hardware name: Micro-Star International Co., Ltd. Alpha 15 B5EEK/MS-158L, BIOS E158LAMS.107 11/10/2021
-> [  T669] RIP: 0010:msi_domain_first_desc+0x4/0x30
-> [  T669] Code: e9 21 ff ff ff 0f 0b 31 c0 e9 f3 8c da ff 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa <48> 8b bf 68 02 00 00 48 85 ff 74 13 85 f6 75 0f 48 c7 47 60 00 00
-> [  T669] RSP: 0018:ffffcec6c25cfa78 EFLAGS: 00010246
-> [  T669] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000008
-> [  T669] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000c8
-> [  T669] RBP: ffff8d26cb419aec R08: 0000000000000228 R09: 0000000000000000
-> [  T669] R10: ffff8d26c516fdc0 R11: ffff8d26ca5a4aa0 R12: ffff8d26c1aed0c8
-> [  T669] R13: 0000000000000002 R14: ffffcec6c25cfa90 R15: ffff8d26c1aed000
-> [  T669] FS:  00007f690f71a980(0000) GS:ffff8d35e83fa000(0000) knlGS:0000000000000000
-> [  T669] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  T669] CR2: 0000000000000330 CR3: 0000000121b64000 CR4: 0000000000750ef0
-> [  T669] PKRU: 55555554
-> [  T669] Call Trace:
-> [  T669]  <TASK>
-> [  T669]  msix_setup_interrupts+0x23b/0x280
+On Tue, Apr 08, 2025 at 05:48:16PM +0300, Damir Chanyshev wrote:
+> I have a question regarding p2pdma support, I am not an expert in the
+> kernel subsystems, please pardon my stupidity.
+> While investigating performance opportunities, I stumbled with dma
+> between cpu root complex and pcie switch root complex. And found white
+> list for the Intel platforms [1]
+> 
+> Typical topology looks like this rdma nic<>cpu<>pcie switch<>gpu/xpu,
+> for each socket.
+> Questions:
+> List not updated because new hardware doesn't support this feature?
+> (For example abandoned for the CXL3+ )
+> Or just not tested for the new platforms?
 
-Can you please decode the lines please via:
+Basically just lack of resources to do proper testing and amend the list
+on a regular basis.
 
-    scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
-    scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
+Feel free to submit a patch amending the list for newer platforms if
+you got p2pdma working on them.
+
+> Pardon my tone, if it sounds harsh, don't mind it, unfortunately
+> English is my third language.
+
+That's fine but it would help us if you could clarify whether you're
+associated with an OFAC sanctioned entity.  Unfortunately we're now
+forced to perform background checks on contributors before interacting
+with them:
+
+https://www.linuxfoundation.org/blog/navigating-global-regulations-and-open-source-us-ofac-sanctions
+
+I note that there's a developer with your name based in Serbia.
+If that's you, you're probably not associated with a sanctioned entity:
+
+https://rs.linkedin.com/in/damir-chanyshev
+
+However there is another person based in Saint Petersberg and the
+situation is less clear in their case:
+
+https://ru.linkedin.com/in/chanyshv
+https://github.com/chanyshv
+
+I am very sorry it has come to this.
 
 Thanks,
 
-        tglx
+Lukas
 
