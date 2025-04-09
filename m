@@ -1,284 +1,281 @@
-Return-Path: <linux-pci+bounces-25572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84440A82900
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 16:57:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AD52A82915
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:00:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A72724E5446
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 14:52:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 574E1176D15
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 14:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23A326FA64;
-	Wed,  9 Apr 2025 14:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 289B82673A2;
+	Wed,  9 Apr 2025 14:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSDS/mD1"
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="D6budtVV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2122.outbound.protection.outlook.com [40.107.103.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F5826AAAA;
-	Wed,  9 Apr 2025 14:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210059; cv=none; b=EBAcIsM5xLPoiBWheGAK7QzsANHtE2u+0eqO4PLm8m+KzCU+sueimEToQfI8kLFNqsadiN3xQL/XrvCGXb8ME8e9kEA7huslrLEFYLAY/M0leKYJoL2aopBQQ/v1VBQ/TuV8/tXp1SWGZRBec3qW3FcIuhY1ybd4+NfFJAlw1zE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210059; c=relaxed/simple;
-	bh=QE1XMyiEfHKVDVPNBt1oL3c+f45lsJThYSxbdchE9vs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sBrJ5chdJrHchYPgfKTtI3/NUgZ3aXRGxbpuTrYBtdGPDzetym8wvpFLQ91Zi02MuSJKC4zkKX67yndaawm5N0gBytUHs47JjJVza+djasOZHIigTiOtqo8/R52YDvO6yaewbaP/RBqKQeDkOB8y7Ll0VMuD8EmRqs+bee3aUWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSDS/mD1; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47692b9d059so34572601cf.3;
-        Wed, 09 Apr 2025 07:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744210057; x=1744814857; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zdDH+qr7UBoA/lgIB3GeZraE2OIbymXMH9TLc56aCLg=;
-        b=HSDS/mD1UAWmMkEy56VKtH6IZlmEu3N1tpbANV1fMKomEa7hCa/k9RPxPc50f1sGp1
-         rKtB+XqxN7yDZq+zAieJzce7Yils7OZXreBNm57obtFlOkW1c2vapeeM1ln0SIPMybkf
-         kkwLeFucI2TTL9MHR0fVmFOeYsxPZVOeQtrFv/ir7f14y993mcRr2WfGXVuHlyPQmozK
-         bLWPIveM7osq3XVSYM/+eyqxjtzhy8I4QfbFqudOH1rSrRW30pF26s+PLqvjhparreRX
-         +bsQkqVVjQfAXKCPC1Eshx7n5uJ8XxqhKf7rZSrTTAcTcOumhn+/n4bZ0A7svPiRQTKa
-         yZ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744210057; x=1744814857;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zdDH+qr7UBoA/lgIB3GeZraE2OIbymXMH9TLc56aCLg=;
-        b=byfChugHBH+XCoMlWIe0sZRrct55p1iZh8z1ktn50iUS9dLUTMvkbOaBegz8CFXpSZ
-         ZUlnebzOsvBFDkEARVwj20bd+RU+e0FyMB60oeXt73RStW1FfJhqKpjIK7e87/MG8o1n
-         mw3I90yxDwCW0gNAI7qZgQWdYAz24ylGZui+pBM7xR3nVFtx44SPyscoAU3jQN7KATbt
-         9rNVB6f8T+lYmLBHBWIjX7w+wOPT2180ZCVt9/XaO2KZooDv/jRXZmSG9LjYcicHODyF
-         HKnF/7CZhaZRK+lOXg/7hhsnJAGQwG3BDs3CaGt2ygm3lOlh8cvnqc4+eADtAqZWSZRi
-         QbuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz1B/yAh79EZQKTxppzR1B4Jqje8NTdm1p0abRbLOyfOSKWDatrL/mIxvorGgjRz3Ej0AZQJUp@vger.kernel.org, AJvYcCV44OyIVay3X/EdS1xcNTw/fgOU6qerGZosN1Toxo4VyZ5GDyKh8yTkRAz2+bOjCP7jfPQDdb9ZG86UKJtPLvo=@vger.kernel.org, AJvYcCVgQo1JuazwgIT9BFRCaOAG6yd/ZXoBo9GxxCz1Hud1Zd1u8HYvoh3120DtYZextM2BqzfPyH9RoOWVTDz3@vger.kernel.org, AJvYcCVhLdEAijLfauEdht0YfXXbsIZ2IS9vu4Xc8S408aqqQ8vpzK/4Uw1z4mJVS8ttaA074hMP9Z9ntEhEo++/tIIT@vger.kernel.org, AJvYcCW15GNwYgkaBMjeOwVWXLmYgVHzZXxX0UG4806cAzXanUriT/ZzLmV+jzGAL9i4DTnnKCH49UA/Huq6@vger.kernel.org, AJvYcCWXRSCCFwdmLNjaJUuzvbL/yor5WyJJ6W8X2uFOqFpG20x5/JojI1X3hxnaBDeKFtL+4HAPoLotnkrU@vger.kernel.org, AJvYcCWrFe51eZBIRrR2QuDStsiOeDvc22IGEQDwXijI07BooNu0AqbzZTB+Lp7babMEA8q4Q+vDVOt5xDurnKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8l48HZqOkMe9PtVH6yJdQsMviuZY489GXfygrLs1G8c2NjKfy
-	LIvUl+3ez6IeSpu480TZ+qsoJC8QnIJCZLbQF1Y8cHNeY272G0nc
-X-Gm-Gg: ASbGnctK9kWguV3sj3vhVtTxmSiT/grLrh5uCi+FsPlpIXbHH9MJ7CEmkIieaUd8Wk6
-	u0l1++Fp5n6Dx66bxomZo8gB3h4FM5DjdX9tovYB/dg0qk1CfhjeOXhDFDIrIUQ+TdXtsKFEq1I
-	zA1corVD5wZPkV9xHOzcHAmguPxwiM1YyxvWLoIaAtX4zlWaat5whWmu5OmOvoEL/TT8q1gsclo
-	HaMivfd7DT/QNaZkgeP7X0RyMSKzXHKoYaXkAQB/vHx2fbGzFSaoAceRV1s1dIUpOfeJp4/AmSu
-	bgYbUarjCGZ2Eys5qocddkY0Kqgu66WFxFj4SC469Dvu7ixP9/IBu9Mcujz59VFgXhvyuYz1+uD
-	1um5Lv0fmeZ8bM7g/tJHTjdPAgZudlHRbZDjjRB86oTbtBsDzY4klvw0=
-X-Google-Smtp-Source: AGHT+IFr7umJxKzgzhGh/oy0Dih4g5haX41vEbYRI8F+ERkJbmGl9jimDDp7gEjubuafDokQiSZEmA==
-X-Received: by 2002:ac8:7d4c:0:b0:476:8cad:72d7 with SMTP id d75a77b69052e-4796007888bmr32351221cf.8.1744210056456;
-        Wed, 09 Apr 2025 07:47:36 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3298])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47964eb9a8fsm8024461cf.49.2025.04.09.07.47.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:47:35 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 09 Apr 2025 10:47:23 -0400
-Subject: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9628A266F1D;
+	Wed,  9 Apr 2025 14:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744210188; cv=fail; b=uKGhGxXXlzP18SLg/8kucdk0uGZXbY7+x4omZWmbzzLVQ74ie3oVT7VupFJar3SIX4/PxxEdEqcciGm/LIMx2PevXYbu/XF5ywYR4ApetOH2LsAUwdclBiQOoVlTaJSxMlO179g6J2NpF20OuDNpqYWJlMMg8XF3t5Z1BYjFp/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744210188; c=relaxed/simple;
+	bh=tD21dCKlDyuTG9YxVS/EKuQkWyoYresPV6qbUpheQWY=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
+	 References; b=ZRCeBIco9Cq4MOJms76iq0+9aJvlSLsLK8rUdcWJC6kuHGateSl52my+Q/laBVgC3KCoevHBSk1cZaDpJ2b/+xDZbwm5z6+x2DMNaXOn2eQCRkseKeFgM4GZtNqZIAqOJ/1VRNEhWAF5Rl+88DMeP8PO+eOF6twBIvs3yf4mBxQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=D6budtVV; arc=fail smtp.client-ip=40.107.103.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HUH0I5RvU9D9cwHTpNurwCEJAQcor1iRz9zRgvNgzNAytD1YDePrWpnhXqdyq4BhK1K1OtLgPW3OenEVYlHFft5sTZSbmEHZz7RNsifAVfl6JPkeQdf3gKkLpAv3daUMTYSqd1C9WZJW+Y05FfXzVUoWjvru2TOG6lYW+dULU/n95aZWbT44uEMb1CLfHNtGiQ/C1iyd+A4IW8yLcBlOWXflePoShbadOuMSjGu8aHa0Hl8Tj9b8BqSVleXod2rpXib1362R7u3yYAMmZhw8n0/H6JtRqvPcgS1d7o8O5cgOfrT5TGg+14ILzERbPA1md6IxN5dOlxPOPM8xBbYpdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8e14WHygYEIx2z/myUUSGtjuD5tEozC7eQUDOWClsPg=;
+ b=KAjgLEBSfeOPWU2Lq+lMuhlTJnABQdBTy+wnE0N+2wtHbOj5S6HudGoNE+F1qRVoUg6F0uymUKrz1n7ULmw9QhWIh4m5LNnp396X7tl3a6ct4/SDQGqPdYjCrRz1sKoDR+9SkS/rvl1vhQBlzonqF+TqPsgrmIN6j/p575KMx14cxkdQdEnLm3yfHZv5V0CKgCdTg63K8qlQyiKL0PQelogmOTq3FeFUMH3k27YZxYFe9i0PRrQW9dlgK8ThU48+eEPRpep1gj676mozwfzniFfbEbUcljkt3Pmo/Xk88EnMuPvZuz8NRtKVJ1QKGo5LWygLSs6o+w9EHMu8WE7OnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 13.93.42.39) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=topic.nl;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=topic.nl;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8e14WHygYEIx2z/myUUSGtjuD5tEozC7eQUDOWClsPg=;
+ b=D6budtVVhLCbUk4xBIFQICGwRjEce6inEalBVyWahpVdp7/N1KIDQtVlKCasfekEHf71krmqlxwwpZWBwOe0oIJXKujyTuwf+ruAJWvPxtftf8DpW4WGx6C3l3NFsuMO82BS+X0a2PvGUAmFjPD2NvMIKzOTOL2IceF5h4h42KVEC6WvkLGag2beXS/lBu9BtXULGfss80PAg3YV+cACu6GwOA/Lb1RbtORLItLVhFiVD+fXRXTzhO/2PqmaZMN5p2uZaFCY4uAjXgjlZdzn044+fkbK2idLjZopbHf4RzuFzAL1/xzdJ52oApGEox7PRaEm93HbGIIbfs6oK3xT6w==
+Received: from DUZPR01CA0008.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:3c3::17) by DU4PR04MB10840.eurprd04.prod.outlook.com
+ (2603:10a6:10:58a::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.28; Wed, 9 Apr
+ 2025 14:49:40 +0000
+Received: from DB1PEPF000509F0.eurprd03.prod.outlook.com
+ (2603:10a6:10:3c3:cafe::7f) by DUZPR01CA0008.outlook.office365.com
+ (2603:10a6:10:3c3::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.37 via Frontend Transport; Wed,
+ 9 Apr 2025 14:49:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
+Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
+ DB1PEPF000509F0.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 14:49:40 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (104.47.18.104) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 09 Apr 2025 14:49:39 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by AM0PR04MB7155.eurprd04.prod.outlook.com (2603:10a6:208:194::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
+ 2025 14:49:37 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a%5]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 14:49:36 +0000
+From: Mike Looijmans <mike.looijmans@topic.nl>
+To: linux-pci@vger.kernel.org
+CC: Mike Looijmans <mike.looijmans@topic.nl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] pcie-xilinx: Wait for link-up status during initialization
+Date: Wed, 9 Apr 2025 16:49:24 +0200
+Message-ID: <20250409144930.10402-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: AM9P195CA0028.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21f::33) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
-References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
-In-Reply-To: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
- Saravana Kannan <saravanak@google.com>, 
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Robin Murphy <robin.murphy@arm.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Nicolas Schier <nicolas.schier@linux.dev>, 
- Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
- linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|AM0PR04MB7155:EE_|DB1PEPF000509F0:EE_|DU4PR04MB10840:EE_
+X-MS-Office365-Filtering-Correlation-Id: 48b2efd8-53ea-4f05-c1e3-08dd7775c1eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?OeqqdKfKnZUFCJmm1XnqiNCjdCNCRlpAllaTQKInab5C/0f5oW5ccuPMml2e?=
+ =?us-ascii?Q?4/IdBHIjdi/LnyALVdOA1owRNd0VfkuPEEV9YH+NDFJdUoOGcSdEk15+VDPL?=
+ =?us-ascii?Q?BG7PpoWJSMhm7QxEeTid+IAbQxlPsPB/B2yo/2tXdFXa5qCFPDmrm2QDeC1D?=
+ =?us-ascii?Q?sdvuBz6Jj94yXvAn8gHCe6mTtTZXtEDLaC05tbInw4xQcAH8kxnSmxxqJCBr?=
+ =?us-ascii?Q?oNeDQvpCubmzYQEmLE5/uqjF4678PLodAwQhM36RkWUtfC9PlUPfWI4I7aHD?=
+ =?us-ascii?Q?kstgUBPSg7MXtafVSloWZMB8tn+V7I1ucYSc3J321SI8iMT/iKkxCQCAjeOG?=
+ =?us-ascii?Q?8Xr9AGBmtae+kRObbdMM7ncRtHebudQJpuq9wl5weTWNu6iLRa2W5JrSHCni?=
+ =?us-ascii?Q?+Zr6BAqCWMKWgi5sRcmuhrWXHx39pQtnARHeRGUp9Y9pUKiL2PRAxqb3AA+n?=
+ =?us-ascii?Q?XVdppMd8Jbw3awfBEZU4TspEcee37ngiPHY8sB+X+09bRxu6qz7UnYzJhpUn?=
+ =?us-ascii?Q?pHLoOvWhsd/aCsjWbfnOr1eRUDYOpHuZJziTfbQovV18dttr2JXHUXVADunT?=
+ =?us-ascii?Q?OFpC5LcxLRJcRZe2IessFDJ47qkcKsjSMXVnL9Q/DdvNrg+seg8DZnTU6vl2?=
+ =?us-ascii?Q?Pg1bJ6ZViZHg3g4LIyBrFLFXzO5hTpfnaFmOYxQ8kiUPOBLKOWHRyA70TOcd?=
+ =?us-ascii?Q?xciKkDwAWPfGcWDtgTcdcYC2tC9YaWUNXPoHSAZ/7Lpae2ZLUMnVOjYQSgxf?=
+ =?us-ascii?Q?OB3CmsCPkhmYM/3srZhI+vAcWh6KK+/4344vjBvIVjuVsi8CAM0Cpa4lKUVb?=
+ =?us-ascii?Q?9Jxh9D6SYKAnxtLTWSmp5zelPCkdSaHbXKXAW6jyo1/+gZphuA33UEPazZNV?=
+ =?us-ascii?Q?VX++HqbyCb1TnKGHHxahvf90Tsd7zBzjYmY1VHz40heqUNmJyg36W7evrlhi?=
+ =?us-ascii?Q?0KbxYMUGYc+qU8iGycMSVaSKIn7+DfqIjiE8Xkvny+WSpXiaXAwpzeUWnpoO?=
+ =?us-ascii?Q?+AszGNM38HofsuRz+PFaCTIvrHEszLDYYYOs+NyDneMukIEvdq89Pq8ElZ9Q?=
+ =?us-ascii?Q?fwlD7LriPM+/i630WH595dms5sHibReCJWSbM/7+sPjiAAgBbMi28GbO4ORh?=
+ =?us-ascii?Q?bDu9inTaKXmWP23MqU7t9bD7/RT7Xw5/Wc3mliBrptnqyXiv0dmnj1qnQYaP?=
+ =?us-ascii?Q?XSuEgjbVvxyq34ZARRWIKNbygkWrVkdlGAPwyA2fP7NxBmsyIF/74wQv84ws?=
+ =?us-ascii?Q?Vk1z7vYh51yje5l3UgvDRNZNMxIdeN/6e52RVrUQ3h5iM2LdAdD9zhJG/XgV?=
+ =?us-ascii?Q?OABz+HmjTfz/5XrmyPGa+o5bHBEXtKRuJDxRZF3xwrF4iPfOunvFLPBeZuuc?=
+ =?us-ascii?Q?893dq4+7RwmrO454ZuztU+nXyMTjO3EIR9Yk0XkZ9qt0YGM7hmB3P/mtQEvg?=
+ =?us-ascii?Q?2NolDHAwBMKAAMN8ykOGG53KhGRczmjdXTz6K+GuGW13dlMzzXYX3A=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7155
+X-CodeTwo-MessageID: a5dab0de-e288-42b8-a640-180713b70c31.20250409144939@westeu12-emailsignatures-cloud.codetwo.com
+References:
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.d67fd5a1-30a5-4d5a-a4ef-dde83ebcdd8d@emailsignatures365.codetwo.com>
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB1PEPF000509F0.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	6c2360f3-94fc-4ad0-5d93-08dd7775bfc0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|36860700013|1800799024|82310400026|376014|14060799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TLaEj91agsRv8AD6RI0pupH0CyA6F2Kk+B4xa+sgiYUAIKOPYY2IbEyAXu1P?=
+ =?us-ascii?Q?H62aFWzGt9cnL88oQR0vpT6O1s+d2IvCvpvGGXFbiB3hWcUC4sKxDoLUQUvl?=
+ =?us-ascii?Q?K5lshCxWn4AnpJcbzNh0Fz/ZCL2qGwzVSAc2u6or6Mm4isQyXkr0wVTS8gDK?=
+ =?us-ascii?Q?7Y9Bi5Gb96lkQUbJu1HmxQWWnBfv0T0WoGkrlVqSjWfFAb3WXEQLRqESgP6m?=
+ =?us-ascii?Q?JigpHSyuBNV0hEmBAXeHqf2/9ZubMPzG/th4fQTNUWtuZ9C/qawKN7Hl/Pqz?=
+ =?us-ascii?Q?3k4x5dKHUv4wweuTfbhlbFbVak5K9EuSL71CD2xTYtIhja+hzvT7LPvj2ora?=
+ =?us-ascii?Q?IwBe8QUm6ATGAUqYePMeu0BBmYV3TUzn1CKz5ysHj7aVj3U7e3jRgNGTphg9?=
+ =?us-ascii?Q?vo1CPDCuGGuOVXpgISo8W0pLnX6K4eFLSZsC1SRm30yp7uMyheSZjGLrkr9T?=
+ =?us-ascii?Q?MReUhlnVpNiqa0SAc+/KSNjRiaZ7RGJO9jcTnMZLi7UwFq7/yBjMdRQdIHQr?=
+ =?us-ascii?Q?r8OmCafIMaDXwE7F6xoeUov76Mo9Y0TBsZN/xBI8A8yljtVUKp1uyalMI5wr?=
+ =?us-ascii?Q?ByRhW2l3Y60qomi47xc3ExE0oVNdxLXVfWJQ9iakfKJVBNq+EU41H7lmnlpK?=
+ =?us-ascii?Q?OrZDHOsddqKHcjXkTo5PAKU+2Q1QsYv4/ArZ7ZWTgDZsUefBKRP3yGd6uYyq?=
+ =?us-ascii?Q?e04nIio0EHRfmNShUXe2ELYx4MWpj7JXWrWV+jNakqke4H8ShuDNP6Kxvil5?=
+ =?us-ascii?Q?fuVAHC/PyQUxsrjNdEJb8zQQu9zfvI6wclix4f50vKkJWXzUAMJDOXP3j6EW?=
+ =?us-ascii?Q?eihJOQVIDzl+eTDqXBtKgEvg5UbJvEy/1YtIc1VJL+4rSMvmkJx590vTxpU4?=
+ =?us-ascii?Q?lSbeDow91jiq5oNVklPtCrtgQUTfKrzzRkl/LEQEoznTEXFBMdfreJmiltDE?=
+ =?us-ascii?Q?Rupv+Ci8T9AuSE0VshU9MgzIHSwFAykIPuu4pLGl0PsqcKb11qfQJmAJyHA7?=
+ =?us-ascii?Q?xRfSjyH98RFerisQ/qU1xzBS2K4lG1/vOIN2MwUEAkqQOfwL5RUa3sUkniBL?=
+ =?us-ascii?Q?RwSuceFV9ghARVK1JzQRDNgq5d0GaEcsnOltWzxzq3blYvCpLcX8cqwSnGgS?=
+ =?us-ascii?Q?qIIa0wRF7Tb27koXUT3PSNxSNDFUuBzXMqmI+eg3DrlNldOsYEjhDxVx8oj0?=
+ =?us-ascii?Q?6Bih2QyUKf999blo7I66VPoyxyX43YFFY7YSN+zdMEtb50qug48aVqTJCUip?=
+ =?us-ascii?Q?YQ03bRWoC3NJDNzvtqNWEMpYoG7URAj4B88D6sxJp4/OK2E4H5OdFmiEvdIW?=
+ =?us-ascii?Q?hdr3Iujz2pn3wvxkhN0wvMio6uoseu369lRjV2AQf67MyGG/gVekZGck8YDH?=
+ =?us-ascii?Q?q/y1Agy6sMNGrax3j2HrJh1/cmyohTfnJOdQl01LcypyiOszH0s2O0U/2pXJ?=
+ =?us-ascii?Q?b4u84/uAxnUCkoagRv3K/amXnoW1mqQ8?=
+X-Forefront-Antispam-Report:
+	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(35042699022)(36860700013)(1800799024)(82310400026)(376014)(14060799003);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 14:49:40.3248
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48b2efd8-53ea-4f05-c1e3-08dd7775c1eb
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509F0.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10840
 
-In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
+When the driver loads, the transceiver may still be in the state of
+setting up a link. Wait for that to complete before continuing. This
+fixes that the PCIe core does not work when loading the PL bitstream
+from userspace. There's only milliseconds between the FPGA boot and the
+core initializing in that case, and the link won't be up yet. The design
+only worked when the FPGA was programmed in the bootloader, as that will
+give the system hundreds of milliseconds to boot.
 
-> Using `as` casts may result in silently changing mutability or type.
+As the PCIe spec allows up to 100 ms time to establish a link, we'll
+allow up to 200ms before giving up.
 
-While this doesn't eliminate unchecked `as` conversions, it makes such
-conversions easier to scrutinize.  It also has the slight benefit of
-removing a degree of freedom on which to bikeshed. Thus apply the
-changes and enable the lint -- no functional change intended.
-
-Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_ptr [1]
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 ---
- Makefile                 |  1 +
- rust/bindings/lib.rs     |  1 +
- rust/kernel/device_id.rs |  3 ++-
- rust/kernel/fs/file.rs   |  3 ++-
- rust/kernel/str.rs       |  6 ++++--
- rust/kernel/uaccess.rs   | 10 ++++------
- rust/uapi/lib.rs         |  1 +
- 7 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index eb5a942241a2..2a16e02f26db 100644
---- a/Makefile
-+++ b/Makefile
-@@ -485,6 +485,7 @@ export rust_common_flags := --edition=2021 \
- 			    -Wclippy::no_mangle_with_rust_abi \
- 			    -Wclippy::ptr_as_ptr \
- 			    -Wclippy::ptr_cast_constness \
-+			    -Wclippy::ref_as_ptr \
- 			    -Wclippy::undocumented_unsafe_blocks \
- 			    -Wclippy::unnecessary_safety_comment \
- 			    -Wclippy::unnecessary_safety_doc \
-diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-index b105a0d899cc..2b69016070c6 100644
---- a/rust/bindings/lib.rs
-+++ b/rust/bindings/lib.rs
-@@ -27,6 +27,7 @@
- #[allow(dead_code)]
- #[allow(clippy::cast_lossless)]
- #[allow(clippy::ptr_as_ptr)]
-+#[allow(clippy::ref_as_ptr)]
- #[allow(clippy::undocumented_unsafe_blocks)]
- mod bindings_raw {
-     // Manual definition for blocklisted types.
-diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index 4063f09d76d9..37cc03d1df4c 100644
---- a/rust/kernel/device_id.rs
-+++ b/rust/kernel/device_id.rs
-@@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
-     fn as_ptr(&self) -> *const T::RawType {
-         // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
-         // to access the sentinel.
--        (self as *const Self).cast()
-+        let this: *const Self = self;
-+        this.cast()
-     }
- 
-     fn id(&self, index: usize) -> &T::RawType {
-diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-index 791f493ada10..559a4bfa123f 100644
---- a/rust/kernel/fs/file.rs
-+++ b/rust/kernel/fs/file.rs
-@@ -359,12 +359,13 @@ impl core::ops::Deref for File {
-     type Target = LocalFile;
-     #[inline]
-     fn deref(&self) -> &LocalFile {
-+        let this: *const Self = self;
-         // SAFETY: The caller provides a `&File`, and since it is a reference, it must point at a
-         // valid file for the desired duration.
-         //
-         // By the type invariants, there are no `fdget_pos` calls that did not take the
-         // `f_pos_lock` mutex.
--        unsafe { LocalFile::from_raw_file((self as *const Self).cast()) }
-+        unsafe { LocalFile::from_raw_file(this.cast()) }
-     }
+(no changes since v2)
+
+Changes in v2:
+Split into "reset GPIO" and "wait for link" patches
+Add timeout explanation
+
+ drivers/pci/controller/pcie-xilinx.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/=
+pcie-xilinx.c
+index 0b534f73a942..2e59b91f43e0 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -15,6 +15,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/iopoll.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -126,6 +127,19 @@ static inline bool xilinx_pcie_link_up(struct xilinx_p=
+cie *pcie)
+ 		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
  }
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 40034f77fc2f..75b4a18c67c4 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -28,8 +28,9 @@ pub const fn is_empty(&self) -> bool {
-     /// Creates a [`BStr`] from a `[u8]`.
-     #[inline]
-     pub const fn from_bytes(bytes: &[u8]) -> &Self {
-+        let bytes: *const [u8] = bytes;
-         // SAFETY: `BStr` is transparent to `[u8]`.
--        unsafe { &*(bytes as *const [u8] as *const BStr) }
-+        unsafe { &*(bytes as *const BStr) }
-     }
- 
-     /// Strip a prefix from `self`. Delegates to [`slice::strip_prefix`].
-@@ -289,8 +290,9 @@ pub const fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, CStrConvertError
-     /// `NUL` byte (or the string will be truncated).
-     #[inline]
-     pub unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
-+        let bytes: *mut [u8] = bytes;
-         // SAFETY: Properties of `bytes` guaranteed by the safety precondition.
--        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
-+        unsafe { &mut *(bytes as *mut CStr) }
-     }
- 
-     /// Returns a C pointer to the string.
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 80a9782b1c6e..7a6fc78fc314 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -240,9 +240,10 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-     /// Fails with [`EFAULT`] if the read happens on a bad address, or if the read goes out of
-     /// bounds of this [`UserSliceReader`]. This call may modify `out` even if it returns an error.
-     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-+        let out: *mut [u8] = out;
-         // SAFETY: The types are compatible and `read_raw` doesn't write uninitialized bytes to
-         // `out`.
--        let out = unsafe { &mut *(out as *mut [u8] as *mut [MaybeUninit<u8>]) };
-+        let out = unsafe { &mut *(out as *mut [MaybeUninit<u8>]) };
-         self.read_raw(out)
-     }
- 
-@@ -348,6 +349,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-         if len > self.length {
-             return Err(EFAULT);
-         }
-+        let value: *const T = value;
-         // SAFETY: The reference points to a value of type `T`, so it is valid for reading
-         // `size_of::<T>()` bytes.
-         //
-@@ -355,11 +357,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-         // kernel pointer. This mirrors the logic on the C side that skips the check when the length
-         // is a compile-time constant.
-         let res = unsafe {
--            bindings::_copy_to_user(
--                self.ptr as *mut c_void,
--                (value as *const T).cast::<c_void>(),
--                len,
--            )
-+            bindings::_copy_to_user(self.ptr as *mut c_void, value.cast::<c_void>(), len)
-         };
-         if res != 0 {
-             return Err(EFAULT);
-diff --git a/rust/uapi/lib.rs b/rust/uapi/lib.rs
-index d5dab4dfabec..6230ba48201d 100644
---- a/rust/uapi/lib.rs
-+++ b/rust/uapi/lib.rs
-@@ -16,6 +16,7 @@
-     clippy::all,
-     clippy::cast_lossless,
-     clippy::ptr_as_ptr,
-+    clippy::ref_as_ptr,
-     clippy::undocumented_unsafe_blocks,
-     dead_code,
-     missing_docs,
+=20
++static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
++{
++	u32 val;
++
++	/*
++	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
++	 * fabric, we're more lenient and allow 200 ms for link training.
++	 */
++	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
++			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
++			200 * USEC_PER_MSEC);
++}
++
+ /**
+  * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
+  * @pcie: PCIe port information
+@@ -493,7 +507,7 @@ static void xilinx_pcie_init_port(struct xilinx_pcie *p=
+cie)
+ {
+ 	struct device *dev =3D pcie->dev;
+=20
+-	if (xilinx_pcie_link_up(pcie))
++	if (!xilinx_pci_wait_link_up(pcie))
+ 		dev_info(dev, "PCIe Link is UP\n");
+ 	else
+ 		dev_info(dev, "PCIe Link is DOWN\n");
+--=20
+2.43.0
 
--- 
-2.49.0
 
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topic.nl=0A=
+W: www.topic.nl=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
 
