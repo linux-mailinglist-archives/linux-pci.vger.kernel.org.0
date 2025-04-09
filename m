@@ -1,131 +1,102 @@
-Return-Path: <linux-pci+bounces-25594-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25595-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21332A82FC0
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 20:58:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFA65A83078
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 21:24:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F40D7B0B82
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 18:55:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D73781B66731
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 19:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F6327815A;
-	Wed,  9 Apr 2025 18:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFF11EF36E;
+	Wed,  9 Apr 2025 19:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YfJq30qN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMY0d9sQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BBA27932A
-	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 18:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C90E1DFDB8;
+	Wed,  9 Apr 2025 19:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224869; cv=none; b=kuQOL3DdP8M44nQ+Jr/O3xnxrOVso56VgQll/NLNaO0Sz+l6yHzzqyhsubmHn9jhfEl7hErsPw9cFSSUUYA+IsyLhC5X5dNadJjcGC1Mt/yU8FCY6oE4TNmWnc1QudR5kMpVqexX6dTN6Gq/Vma0qB3DYj4cIo9T9DDk2V/EYrY=
+	t=1744226613; cv=none; b=HwgD+Akb61K+GXs/HGKkZZIKhmKlWHUAAILFXcQZEZE6Ul3zCKiGAo06+SeuBsqLccvK+X3E+K7Wp9LQXuCgS+E7YAoujn43myA0qKL2+dScL57JoGUXxS5gZK2ND5SL86NlHovfNqHpBqzmhoWfidfhxDoYMruxtnMC/M5D8Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224869; c=relaxed/simple;
-	bh=syPUBIzkEdarCp+N7WDiwHDCNIOV6P5QwWnIfqZVWLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YDP/1Be15/lwuJCiKDaTXqhJvFred+b/bn8KKC1Mtm1Uifn0aTvzUT98VYQfdT/jFdjN3arIUa0d6cUlsU/e8UPgxikkwBaADxUic94LwTC/o3yhIl5ZftgWoMg1lhjwSt//TOjk8jTUB6vEdrDzLxqUBuFULK2ajpZhSJr7sJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YfJq30qN; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301918a4e1bso5053094a91.1
-        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 11:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744224867; x=1744829667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EuoB16/glHZs8DH9yStavq4EmyDzORTC/5S9hgU6uRQ=;
-        b=YfJq30qNt2eazDQvF4ru6jdllvyjlGpTAJzqLbUOFSL9VSJev4ElvKMvIME1R3GiYq
-         sXqMHcoeeSoA3hSqgdrihAOmz9gs/eIVuSZ4cCKjCC+iD/q0MGfQKRTDe2ncYB+nl2HQ
-         zBllJMa6NnDp0usZ/Xi2qxLHOhUYAUYJ5cpXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224867; x=1744829667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EuoB16/glHZs8DH9yStavq4EmyDzORTC/5S9hgU6uRQ=;
-        b=gN/q5LGHDG+zVr9l5Wl/Beg/sSuTnpbkwY8wTR7fz2Xddsk+8OUUr6NyHYbQnTXSAe
-         g8npydWVuhzb9leDLWYwHaiywia0v7aQ7LiAWSRu6YzE5JR15DoE7ObnZWrnbyvsmmd7
-         /G+0scechC3aDnKJXqr3gRnStWQLVvnCCW4ZuMvJLIVJjHQcWfRoqxGwnwLGNq5IuJ++
-         v8NDJ2MPFjwv3uOSnvUq/Q8oaxAa3oo980Va6m3mRPHulUMYO+dE2QRC2cuKSrNL8E3u
-         /fFaSuS6EPw4VnhmIOYbf6OTNyIz47gWtSXiU4Y022t9CuKT/a+dtoUR012V2ChlpZMA
-         5Mig==
-X-Forwarded-Encrypted: i=1; AJvYcCXJTyG7FzN9iXxNUOryk2mtOZALU+FeEEKbap046k3LGsmHRxChiURbNlJyBLIEiDpwFJcjU25IJBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjzgdIK3/nTlDFZBZiwi4ujVTGoC4qZ7bYAq30SjwRhj1iDC3g
-	LZDDRUomHdOyw3RWHWjT+mRDx9Jygix32xuiDnQSTVu1u7zpSIRjivEVwUQWog==
-X-Gm-Gg: ASbGncs3zzzpfvXJ1LIeEoglVa+jyilOC13ARHTOEhyo4qIFkmavX5l7sm7SEUM5lPl
-	FUh2sjxoheKgfosGKaWqVUewfOxIFDRBcyw14edLPiNYcvhCeDyMOi70IiOuDwSbclhG6sHtvHe
-	UmCM7D8uZeA/i0nud4PgjWmwL96AEdGQxR0AXCoPwK9x2kcLz1OgXPwu3fSR7DFltZ0aSXSl8xT
-	siBJm9fF6wmnFkUoaLHH+Et780XwcdZzAhjUNVkesI0+rv3A0AFbSrcCA//5w+jVldG4vWQpKc1
-	gwjCW5CCgpqeamWOauVqh9sgDtB7Zf7EtJefZNaQz1SlqGUhMlLJ6pfa3d6BbmtCI8bgjMVXkTh
-	iGg==
-X-Google-Smtp-Source: AGHT+IFaHlE9ZoUh5364MdBMCmTSlfQCXd+iwEWJTQuSiqhbGD8ldtSoWxeJNBTDXaBLlDhuQihS0Q==
-X-Received: by 2002:a17:90b:53c8:b0:2ee:cded:9ac7 with SMTP id 98e67ed59e1d1-30718b83034mr77258a91.20.1744224867680;
-        Wed, 09 Apr 2025 11:54:27 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:461b:92cc:c320:f98])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22ac7b642besm15656375ad.46.2025.04.09.11.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:54:27 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Brian Norris <briannorris@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when unregistering
-Date: Wed,  9 Apr 2025 11:53:13 -0700
-Message-ID: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+	s=arc-20240116; t=1744226613; c=relaxed/simple;
+	bh=wbZBWZPCrLHSWfbKDSWK04xVRpg9kPi7xGRc5wGJiss=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CiM1kho0IE6vfizTLN8Zfv7k63ABwo0Rt5JD+smEsPnlHFv4wAVIGk87ggdb0/ir2scL51XoqK8zs4f/M4ltFBjuHMU2eBjoN3RbZrGfIQ7d1e4ILYviDSSuyZREETOLtizjeqrO15ZPUHD0XlRYG0FhsqCKdVWUjBP3mh6neBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMY0d9sQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC47C4CEE2;
+	Wed,  9 Apr 2025 19:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744226612;
+	bh=wbZBWZPCrLHSWfbKDSWK04xVRpg9kPi7xGRc5wGJiss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IMY0d9sQSe0X9Zj3ZUJwKF0hn9S+k7W5NAWQU6jHagnk4NFPOniKWJpbI6s2OzBE8
+	 GPKs2AkvIqDjqp076uOnIXDu206cN5b1LSRabyRs2OymGvDTNwC2kpmkR8YK7YScw+
+	 YYkBlvcuGBKAHlfOs3DE9jywbAZXGA3iu5P9tJ5pB9Bp7oElPpQfT1My6cGIlNhfG0
+	 tCVismGnLdKI4IF2YPW06vsM7N8EiskYUFMEV/zXEmXDhKX5rh0fyGpELDbnHBRrRj
+	 KqCq+hE3xfEzWV4MSclEcm7nfKfQ8XVVsZ2H2rrz2NEjlF4H4i0NwcvA0RQbU3tZCf
+	 1LCj2cRta7m/w==
+Date: Wed, 9 Apr 2025 14:23:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, Hannes Reinecke <hare@suse.de>,
+	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
+	Anuj Gupta <anuj20.g@samsung.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: Remove pcim_iounmap_regions()
+Message-ID: <20250409192330.GA292795@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327110707.20025-2-phasta@kernel.org>
 
-From: Brian Norris <briannorris@google.com>
+On Thu, Mar 27, 2025 at 12:07:06PM +0100, Philipp Stanner wrote:
+> The last remaining user of pcim_iounmap_regions() is mtip32 (in Linus's
+> current master)
+> 
+> So we could finally remove this deprecated API. I suggest that this gets
+> merged through the PCI tree. (I also suggest we watch with an eagle's
+> eyes for folks who want to re-add calls to that function before the next
+> merge window opens).
+> 
+> P.
+> 
+> Philipp Stanner (2):
+>   mtip32xx: Remove unnecessary PCI function calls
+>   PCI: Remove pcim_iounmap_regions()
 
-It's possible to trigger use-after-free here by:
-(a) forcing rescan_work_func() to take a long time and
-(b) utilizing a pwrctrl driver that may be unloaded for some reason.
+Updated mtip32xx subject to:
 
-I'm unlucky to trigger both of these in development. It's likely much
-more difficult to hit this in practice.
+  mtip32xx: Remove unnecessary pcim_iounmap_regions() calls
 
-Anyway, we should ensure our work is finished before we allow our data
-structures to be cleaned up.
+and applied to pci/devres for v6.16, thanks!
 
-Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
-Cc: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Brian Norris <briannorris@google.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-
- drivers/pci/pwrctrl/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 9cc7e2b7f2b5..6bdbfed584d6 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
-  */
- void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
- {
-+	cancel_work_sync(&pwrctrl->work);
-+
- 	/*
- 	 * We don't have to delete the link here. Typically, this function
- 	 * is only called when the power control device is being detached. If
--- 
-2.49.0.604.gff1f9ca942-goog
-
+>  .../driver-api/driver-model/devres.rst        |  1 -
+>  drivers/block/mtip32xx/mtip32xx.c             |  7 ++----
+>  drivers/pci/devres.c                          | 24 -------------------
+>  include/linux/pci.h                           |  1 -
+>  4 files changed, 2 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.48.1
+> 
 
