@@ -1,98 +1,95 @@
-Return-Path: <linux-pci+bounces-25589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A32BFA82CB8
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 18:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C41EFA82CF2
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 18:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E43116DC24
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 16:43:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 724DE44077C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 16:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC75326772C;
-	Wed,  9 Apr 2025 16:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7116A26FDB1;
+	Wed,  9 Apr 2025 16:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlr6WSs0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cYkQpO8f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385941DC07D
-	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4B521129A
+	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 16:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217024; cv=none; b=C2t6bzZYeFjhBSjLge1C+EzLsL7N0H/Oos1PXL0yedWzi/CNGNi/CAjbNyDUGsErLXxdeD5NkVuuZGppb8v8BUydl/HYfGdvmPagy11cVb8cMIiZdY11ze6mB13IWTFPXDjD5XNcIzio3OksBwiJdmAOS6jk26FTllS58Ohiay0=
+	t=1744217809; cv=none; b=o4/RNvA9yl1IdmUcEn6wyNoPo6cuQWqroTOxhSjnvzVR9G6u3KUBkJM5/bnMA4Nf8Vw1Cl+LNn/DdR2HoLC+q3qmJyuoQj0ujVSYKuSNqE7hqSidNEwXSnkZYaPlp5CLG2+2u1D5FaBC59iI6IX1+fEKO+cndTeyg6E7r39w3qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217024; c=relaxed/simple;
-	bh=5eUj6yBdJ8a0mINwGc3NfXDTNv0qkC5CznahgFCyhNE=;
+	s=arc-20240116; t=1744217809; c=relaxed/simple;
+	bh=Bqdf1Et9LwlA+0JPynFGPhGeW3rXhOgyuKTlk9gJvKc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bjrzEN0j23dPIHuWVbUOpJ2AxUSrGdnRVTJf84MwLa3ckyBd5xZBKe4eyTnJz6pAqZhmTjK4MoA6ZSI3YT+5VdnH16A5rwtqjLJbVEESahj5rvjgRNP6RQVHJYLc5tBVyoLQ4aWf8TlpnQWcBZnpfgM2m3vgwE4qZLJRVwbFBbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xlr6WSs0; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXSt543HFr77H7EB7mjs/eHnVx35TxSXjFStmguf13huY2F9yz89yNP+GjFOeIuEpn+W8Y9PJPI0ytfs6baUmtv6CQhxJ27HNbk8i9lTjjLmbjBfxff5l4PHktXjr5t4yZlHM8KtQo1i23+7zlu/aHxIQsOO7JFYgjKsAQB3o7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cYkQpO8f; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224019ad9edso91633325ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 09:43:42 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22401f4d35aso82126715ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 09:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744217022; x=1744821822; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744217806; x=1744822606; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
-        b=xlr6WSs0UFPT1X4QuKinBAVQbl/EgJxxa7ghRyYYeDc9oHeBO4lJXxTaEvv+gcg1sk
-         lcT1X9cQtxrxFPQA2oDC1PKQRANIs9xyVkF4pNdrxeZE3wtMqSpvslunVctvNYpCQkSg
-         6d7PIK+OMsN3ELAyWUyrb5rGAEqVZlo4mWs2GPBUXCXSx8YnqkoO9Z0TjCD/mQsPxLK6
-         y/1n6GZ5pC0d8jhYqrXTm929ikAqoUYbz1mWkwOQT6s5ebGWkEle2qPFp7zVJsJeA/Vc
-         IgsltZGvJyTH7WRc/RhZ+NtrLJuawttKKWqfOXcg6X4u8mhqNCyF8tek4DBOwpXHrrT4
-         DNVA==
+        bh=k+/H0ybkUq7HVu5uBj7V7TDncclF2UN1EMmyx3scUCw=;
+        b=cYkQpO8fa3uXJq/wthZ0SNVpl9yM/Iss25zef4xWFjF8MxnKw1KwvjYSeSz2evzwGr
+         uXWzznU42360YZkpyUzV/iFw6v8aqWd7iWwt8aUh86U+W4+Klifrdjz3RXzfxUoh6u54
+         CRMLrmysltdT56/27tINIV00FdE5uzx6Mvuf+RWnhbJKjc6qSwPMNm9thByAJsX07/Hp
+         QIgY1QgtPnFN1hOroUZnBMQZnuio2aBjhMzM899s0nPqLp/heSOGo69ojKrhSlu0zqgV
+         sYpLXmKIV0//skFOM7eZc/54kp6DZZDcN5lBM61Gcx6eYC1if+FfTzxvrjKDbmV2ZzB6
+         HtLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744217022; x=1744821822;
+        d=1e100.net; s=20230601; t=1744217806; x=1744822606;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
-        b=U3DLiM+xL57HVp7I5hoqtQF+BIRXkDoUw0YLYqabc4IpPHKkAnK3LQEMFCA7k02k2k
-         SND6TYiFeTBayW08I13HhDuciQw2DM/kMHk09kZxOXgU8icVEbbLUtWctOjILeuCFscp
-         pwLx/evVncDHZEAOzshIf5E6gXIJEGdWXlKogi5K25Eeu1wqvoWeqcLB55FnigDDajr9
-         1KqyG2qV8ky0SgeIS5U7KFqisKWLJXNFezZMa9YjmZaB+anw8jHxHo2EJRsoCfV0SL65
-         wafEmSxoybpcmuArQ3/Hdya0pxO+shzKiKYIRQtOjBcYpNJyF49eYup0Lx0ta3t/NDW7
-         6rqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2kB7bTrH3Lm9kNBdkx16Ls1IXd3RxAqp5eI5PW/xxSz4PreCLwas0qW0D1H0AxlVgnGcM+p5osNQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpVU7bERsyBa+ng2Jndz1cdb2yTtmeaFP6gvy97GNitMsn22Kc
-	mGyuylgKvIEWMb3tWrbIlTbaFZnUYCNonbA8DsqLILp4L7Y19TJ0LHzdCaOksg==
-X-Gm-Gg: ASbGncsHvPpe7g/sCZM6iFTb+4dDqF+L24FQe4GTT05YXrXv1DrEz3bZm8eT/SU6hI4
-	45R8LD60bgTSVwJa36CH3dWd7KQzMyrd08YrPXIjHLxS4QDpOJ1wq3NCvCZ5//73qVzamtHkJVk
-	Mqhai1J8nVR7LnlLk3r1P2/MkXF9Bvle2Gu4N9S46sbtNcVtC/w07nn0fBnwtcWpXfSeQqaCoh0
-	ebnSBH1JRUOSWVNCM6t0l9gA8kBG2Usf3gOnhE0XDtx4lh8jTxeSCMtJCgF6ciDPxNGZuJm++KZ
-	pVzdPb70g6YjGyS1A2CR6D2uu9tCE0C61oOBl22VJAEqXKTJ+rGuGB5gWVLMrA==
-X-Google-Smtp-Source: AGHT+IGmox3LqV854DFPIki4F+4Ez1MkIE7qgsYtzCRr9m1FgmnFh+N3/PD/p2Tx05KbHuOZaTpH7A==
-X-Received: by 2002:a17:903:32ce:b0:224:7a4:b2a with SMTP id d9443c01a7336-22ac297c916mr55618525ad.11.1744217022535;
-        Wed, 09 Apr 2025 09:43:42 -0700 (PDT)
+        bh=k+/H0ybkUq7HVu5uBj7V7TDncclF2UN1EMmyx3scUCw=;
+        b=EXfWVU9pWIp9tDsBCjjfUTF9nL+95+GIt2I4MQsshHwNqi+f8+NJWUYV7tKjWhA88k
+         fpQtUeir8n3b+vgnrrbJDFkmzG58pDlqgUwV33HWD2BX2uGzSxF6mkOMJNfBWJE9RgSB
+         IZxI2GJgPB2ZdyslcSYWmxkk1CZPnx9Rm+1PW8zTrcqckzMuRCOIgfMtWCO2kf5Z4ABN
+         z8IYu0cYhvEsd6MtLmAi9OQPnx5C3tPGkkv8+p+WJFJNZMnLN9DkkBB0IrmrT5ZrJHAp
+         YteuFgTVuHpF+XbjhKcjh7pMWVq11ng7oGzp2ZKCqidBu9iyZ1C/Oh2WRhLLjtJ4mj7h
+         BYwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTEVoBx/8RgiweCnfe69d0l17S1ByU8JvS1haTeZYuCJK+A+ts5zigkW26jSuRPX8Rs5O8SwXYV6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrA9UytzxHn6EhkH8psCC/aZBTYM6zv6XFiEAjWPoG2ZwsCv1e
+	4eTDLxU1YxUdH7YNI5t1XELAb/Fb2aiCs19mqsFGUlm4YrD0EX0BRbob6I1wRw==
+X-Gm-Gg: ASbGncspitGGuIgbRi9l60wSARKLGUzxssbh9ZIWylrjaTF9FsjbhwikWXvdZJh4bsq
+	4uBTx1tFlCOs81OSy8Ad+/Ef4EFtjt4eJMWD0XiE5DjAFFrOeOvCh3+qK1MwWPfPLd2iHqZAdRE
+	FtXHOwYwlU3fDxOiiaKLJ0c+ExQtAZQ58d/a2BNpYJeU6K+u16DosvLYRjjzkjb7CCAvM+eNIyh
+	8/R7+w1npnOTO5WPiUCYF6J1J+f3kIfhaD6BY7sMx08tUjLoL79Y+JtLcjM+56bzbUVlySFPVhA
+	RoQyUe6kbQ/ESYVwHEZBkyT/Q9RA0SGwtf8UwW3SAZsxCemraBs=
+X-Google-Smtp-Source: AGHT+IFz5w1COIo2PYC62wmrQx0adK5Tc3rBe8Psp1oZp/1xQGb6NWLXzX+rUW4TKFX3JOsAMmmtsQ==
+X-Received: by 2002:a17:903:1787:b0:224:1220:7f40 with SMTP id d9443c01a7336-22ac298441fmr50556105ad.3.1744217806079;
+        Wed, 09 Apr 2025 09:56:46 -0700 (PDT)
 Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b642besm14327585ad.46.2025.04.09.09.43.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cda517sm14384085ad.250.2025.04.09.09.56.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 09:43:41 -0700 (PDT)
-Date: Wed, 9 Apr 2025 22:13:36 +0530
+        Wed, 09 Apr 2025 09:56:45 -0700 (PDT)
+Date: Wed, 9 Apr 2025 22:26:39 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <4qrfkx3ckywcbk7qbjplal5j7v6sjs3zebeehe5dnrgjz2ej2t@krdwjb4xm2sx>
-References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
- <20250328030213.1650990-4-hongxing.zhu@nxp.com>
- <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
- <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
- <AS8PR04MB8676BB3EDFCF3E5A490AC0628CAE2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, vigneshr@ti.com, 
+	kishon@kernel.org, wojciech.jasko-EXT@continental-corporation.com, 
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com, linux-pci@vger.kernel.org, 
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, srk@ti.com, dlemoal@kernel.org
+Subject: Re: [PATCH 3/4] PCI: cadence-ep: Introduce cdns_pcie_ep_disable
+ helper for cleanup
+Message-ID: <itmjxj5kuy7cloeplhwqxyumcx7rrzvdudxilg6fswrtxqcl7l@oa2uvswe2ups>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <20250307103128.3287497-4-s-vadapalli@ti.com>
+ <20250318080304.jsmrxqil6pn74nzh@thinkpad>
+ <20250318081239.rvbk3rqud7wcj5pj@uda0492258>
+ <20250319103217.aaoxpzk2baqna5vc@thinkpad>
+ <Z-vN8_-HJ0K1-1mH@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,86 +99,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <Z-vN8_-HJ0K1-1mH@ryzen>
 
-On Tue, Apr 08, 2025 at 03:02:42AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Hongxing Zhu
-> > Sent: 2025年4月3日 11:23
-> > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > kw@linux.com; robh@kernel.org; bhelgaas@google.com;
-> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: RE: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
-> > L23 ready
+On Tue, Apr 01, 2025 at 01:28:51PM +0200, Niklas Cassel wrote:
+> Hello Mani,
+> 
+> On Wed, Mar 19, 2025 at 04:02:17PM +0530, Manivannan Sadhasivam wrote:
+> > > 
+> > > While I don't intend to justify dropping pci_epc_deinit_notify() in the
+> > > cleanup path, I wanted to check if this should be added to
+> > > dw_pcie_ep_deinit() as well. Or is it the case that dw_pcie_ep_deinit()
+> > > is different from cdns_pcie_ep_disable()? Please let me know.
+> > > 
 > > 
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Sent: 2025年4月2日 23:18
-> > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > > linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not
-> > > exit L23 ready
-> > >
-> > > On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
-> > > > > -----Original Message-----
-> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Sent: 2025年4月2日 15:08
-> > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > > > kernel@pengutronix.de; festevam@gmail.com;
-> > > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
-> > > > > not exit L23 ready
-> > > > >
-> > > > > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
-> > > > > > ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
-> > > > > > Through Beacon or PERST# De-assertion
-> > > > >
-> > > > > Is it possible to share the link to the erratum?
-> > > > >
-> > > > Sorry, the erratum document isn't ready to be published yet.
-> > > > > >
-> > > > > > When the auxiliary power is not available, the controller cannot
-> > > > > > exit from
-> > > > > > L23 Ready with beacon or PERST# de-assertion when main power is
-> > > > > > not removed.
-> > > > > >
-> > > > >
-> > > > > I don't understand how the presence of Vaux affects the controller.
-> > > > > Same goes for PERST# deassertion. How does that relate to Vaux? Is
-> > > > > this erratum for a specific endpoint behavior?
-> > > > IMHO I don't know the exact details of the power supplies in this IP design.
-> > > > Refer to my guess , maybe the beacon detect or wake-up logic in
-> > > > designs is  relied on the status of SYS_AUX_PWR_DET signals in this case.
-> > >
-> > > Can you please try to get more details? I couldn't understand the errata.
-> > >
-> > Sure. Will contact designer and try to get more details.
-> Hi Mani:
-> Get some information from designs, the internal design logic is relied on the
->  status of SYS_AUX_PWR_DET signal to handle the low power stuff.
-> So, the SYS_AUX_PWR_DET is required to be 1b'1 in the SW workaround.
+> > Reason why it was not added to dw_pcie_ep_deinit() because, deinit_notify() is
+> > supposed to be called while performing the resource cleanup with active refclk.
+> > 
+> > Some plaforms (Tegra, Qcom) depend on refclk from host. So if deinit_notify() is
+> > called when there is no refclk, it will crash the endpoint SoC. But since
+> > cadence endpoint platforms seem to generate their own refclk, you can call
+> > deinit_notify() during deinit phase.
+> > 
+> > That said, I noticed some issues in the DWC cleanup path while checking the code
+> > now. Will submit fixes for them.
+> 
+> Could you please elaborate quickly what issues you found?
 > 
 
-Ok. So due to the errata, when the link enters L23 Ready state, it cannot
-transition to L3 when Vaux is not available. And the workaround requires setting
-SYS_AUX_PWR_DET bit?
+(1)
 
-IIUC, the issue here is that the controller is not able to detect the presence
-of Vaux in the L23 Ready state. So it relies on the SYS_AUX_PWR_DET bit. But
-even in that case, how would you support the endpoint *with* Vaux?
+dw_pcie_ep_deinit()
+	-> dw_pcie_ep_cleanup()
+		-> dw_pcie_edma_remove()
+
+But dw_pcie_ep_init() is not calling dw_pcie_edma_detect(). It is called by
+dw_pcie_ep_init_registers(). So dw_pcie_ep_init() and dw_pcie_ep_deinit() not
+symmetrical.
+
+(2)
+
+We are not calling pci_epc_deinit_notify() in non-PREST# supported controller
+drivers. I think this could be fixed by moving it inside dw_pcie_ep_cleanup().
 
 - Mani
 
