@@ -1,108 +1,94 @@
-Return-Path: <linux-pci+bounces-25555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 661B2A8231B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 13:09:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 131DEA82341
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 13:14:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3151F1BA77A7
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 11:07:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC7511BA544C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 11:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A471115382E;
-	Wed,  9 Apr 2025 11:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C30A25DD0B;
+	Wed,  9 Apr 2025 11:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="BAaE1NXi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLAl5bix"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m3285.qiye.163.com (mail-m3285.qiye.163.com [220.197.32.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1539A1DF99C
-	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 11:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A9325DD00;
+	Wed,  9 Apr 2025 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196857; cv=none; b=UkqmbM/nA+OTD/hyXhvOCaIP+ATlnG3cHWjFhUdpp+sC0HEYeYhnkk/9/knQcPY6XDbtA3h1dV2/NxRtSmkEtmnpnP+rBOltQtKfRRJYiUB/39DLUqZaX+Zgwq0JVS87RyS7M28MZWM1ed8y2rNx19h5laEUzck+SoalHIfwyKg=
+	t=1744197161; cv=none; b=On4uO1gcSaF9gr5OmHHw7oJFesBTxzuQfitqxsccORq89+KLn4BVATMOOUfWSSU63VwJIZ2Jg/V0qk3Ysdx+532gvVeVmJYPoVtDj7//eA/UFJbdzGiSPJcunDt7mP8PBkE+dE7dRXGUqWBhyTlRrJ5KeNoRLunZMxh6yViZhhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196857; c=relaxed/simple;
-	bh=pgKbWu+wLLMcF6a8RbGiVOPGxxYGsOD2Vum9vWEMJTE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=jJogPa7rd3UijBbHC8nHfLyV18f6PLTAQ6PSIHZLxo/t4Z1Hfl3H/HNgI8bad5s3e6BNTdpb4UkwpVt78CZYL0ogPtPq4bsGKCWbTwWkaZEWkGOlVLHPeYoMtwGyRkpkaaMwlmAsqmkhHMqsqw7yVQjc5auDtUOXHS1C/95bBiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=BAaE1NXi; arc=none smtp.client-ip=220.197.32.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1139d61b6;
-	Wed, 9 Apr 2025 17:51:53 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2] PCI: dw-rockchip: Remove PCIE_L0S_ENTRY check from rockchip_pcie_link_up()
-Date: Wed,  9 Apr 2025 17:51:48 +0800
-Message-Id: <1744192308-238386-1-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUlKSFYZSEkZTh5DHU1IGkNWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9619f6985f09cckunm1139d61b6
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODY6Hww6DjJMAjw4LBM1DwEI
-	Dx0wFA1VSlVKTE9PSkJJSEpPSU1NVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlKSEM3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=BAaE1NXiTZZ9JEFZ2uhIVmzg/FZyQMyATMIsWDV63JNsCSzzXo+ZBdz0tfoe0Hu0ojFxeMnI/Q0RPZTdMydmNlwwyz4KP2zVjtnAoGrWT3EwVF82bzLW6c6+ZgTBCAUezhWGZuVZiyG1maTTll2jDNFrXsUXoYjap11ExDNoY4Y=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=gywVutG6WB6sYLQFgYZ+H7rTiQCGSWF3bbpFAggbU2g=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1744197161; c=relaxed/simple;
+	bh=fu51QOdu0zYhDKD62Nv58+jXxwkA8j6Vk7jJgAZWlZE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gJtuEzri81VsieomUHt9e7bqn1zGsEr5rLazWxJiNaRZuNSYu2YL+BaKPqf/TDHCYxQbZb4A4ATj5WADupjdNrifFnyHYrxcr0q3ffNOLq0n6ztidHWF/fkZ+AIFLP/LyElNf8v3+osE+xF6XxENYM37h4vTmDxEUHV2aYib7SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLAl5bix; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37294C4CEE3;
+	Wed,  9 Apr 2025 11:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744197160;
+	bh=fu51QOdu0zYhDKD62Nv58+jXxwkA8j6Vk7jJgAZWlZE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JLAl5bix5PnBCG9MPoDPmDDSS+9dKNLwSxnhHqiPzo3yiSbih42XhF5kBZ7FdyGxk
+	 1TkGdHnjKz63EVW2+nlY93c/esFEVweREzsiJSlHRHbnOpDHghy0mII92PtNh866gh
+	 HomtMZA9B1uEaDsEZN4LD4BspIMBk46pKy/epLmK80OHf0WrDMBwbXfz8opJ1tLa6r
+	 gkzFIMG09u/9rBSVqMVPcFD/hJTAlDGJEV6z/RCn5gZNJIIC3gXbMoJ4+C+D0WF/wo
+	 +OPUExpfgCNcfwQSBmJ5H7mo7QuVqsrABQKUxX4/AaNQmsZa71P0pRPSjdkkFccHrK
+	 3rV6Ttp+4Iyiw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Bjorn Helgaas"
+ <bhelgaas@google.com>,  "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+  "Rafael J. Wysocki" <rafael@kernel.org>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Tejun Heo" <tj@kernel.org>,  "Lai Jiangshan"
+ <jiangshanlai@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] rust: retain pointer mut-ness in `container_of!`
+In-Reply-To: <20250409-no-offset-v2-1-dda8e141a909@gmail.com> (Tamir
+	Duberstein's message of "Wed, 09 Apr 2025 06:03:21 -0400")
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
+	<wNTv3DUCxugtsN73Pr6pIECzSTPNWa-VY-rRpG5RjiIyLAloJxoS_AXQnHXzLZmiA-1MLPTMEP7XkdDgu8yGew==@protonmail.internalid>
+	<20250409-no-offset-v2-1-dda8e141a909@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 09 Apr 2025 13:12:15 +0200
+Message-ID: <87semhbncg.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Two mistakes here:
-1. 0x11 is L0 not L0S, so the naming is wrong from the very beginning.
-2. It's totally broken if enabling ASPM as rockchip_pcie_link_up() treat other
-states, for instance, L0S or L1 as link down which is obviously wrong.
+"Tamir Duberstein" <tamird@gmail.com> writes:
 
-Remove the check.
+> Avoid casting the input pointer to `*const _`, allowing the output
+> pointer to be `*mut` if the input is `*mut`. This allows a number of
+> `*const` to `*mut` conversions to be removed at the cost of slightly
+> worse ergonomics when the macro is used with a reference rather than a
+> pointer; the only example of this was in the macro's own doctest.
+>
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Changes in v2:
-- add Fixes tag
 
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Best regards,
+Andreas Hindborg
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c624b7e..21dc99c 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -44,7 +44,6 @@
- #define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
- #define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
- #define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
--#define PCIE_L0S_ENTRY			0x11
- #define PCIE_CLIENT_GENERAL_CONTROL	0x0
- #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
- #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
-@@ -177,8 +176,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
- 	u32 val = rockchip_pcie_get_ltssm(rockchip);
- 
--	if ((val & PCIE_LINKUP) == PCIE_LINKUP &&
--	    (val & PCIE_LTSSM_STATUS_MASK) == PCIE_L0S_ENTRY)
-+	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
- 		return 1;
- 
- 	return 0;
--- 
-2.7.4
+
 
 
