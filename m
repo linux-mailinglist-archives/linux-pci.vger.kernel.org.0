@@ -1,123 +1,179 @@
-Return-Path: <linux-pci+bounces-25585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25586-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03B48A82A47
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:28:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5573FA82A48
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:28:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F09603B836E
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 15:17:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14AE31B62CFD
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 15:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D205E265CC5;
-	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8611C265CC5;
+	Wed,  9 Apr 2025 15:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZudEVGyV"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gprqXmBC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A689069D2B;
-	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67FF1DFFD;
+	Wed,  9 Apr 2025 15:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211876; cv=none; b=SlgChnB+kDxXq0XV2QgINkXUQy+3WgQF8H9NnpukwlMIEYM63CuXbMwuSM6JkQ1R6ZCVX+y0lcY36kITI1raF6HtonEj2qFLcEhaTbHUgAtxqIT5Esr5FhlucgV0jsDBP19tPyhYtnMSnoNWtWJycNn8o81JCmN+AbNGCjrC6DQ=
+	t=1744212205; cv=none; b=sA4MV4aM0AtcTWveWe2RrXcxgMhBBE28veq5S+AWIjWN4CA5yuiI10fq0kV2oi0dDCsZ4N1jbaEc35M++l/25DK5LWd9+bGMaZXOV2jAE+wgot7T2754KRy5iYNBc/BZ/Zab8yQ+Qhl8ApY/zWvzMQDqn1yExhK4DdVF3B8mIpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211876; c=relaxed/simple;
-	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PzrD1bk67ABiiDFnoaCp6fWJPvZtnnfu+Uncub5Ufurc1BoPMOI41SCWBNE1FGWXwwVTZNisTvw3RQT92evyPglQNxIRkOBXoaQQ1FsrgpCI6VcFqy7MtDuTEeeArq5evJuYcG0cNx94PDo6z7FDz6tnTCgeDG4yTVyMG67dHCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZudEVGyV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3CEC4CEE2;
-	Wed,  9 Apr 2025 15:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744211876;
-	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZudEVGyVTVqKJEXjfUOMN0q53Rs+fb13Tyxnu5nKHUFpP5TjefHF4RyfHZM37oiJJ
-	 UceMCe6PkFwazZdBel2mQOUdPca4uD6UVROcd7d8f1vtTmheTsaSrT4EtIWm3VcAcb
-	 VVD7GQWgIC+ik/IS36cIuxepH8887a/8oGw/05u1+mJaqv1FoXhjHJOMaMOLPAqxXn
-	 o7HwhF8ncBwsZZkoG+2nLTPyTVA+S6r9CAXkFIxDLgZ8pdM58/3qdhpzOsjnkxgNxy
-	 /ZaDUlnwEHRNOAUb3Od2Al/G8bGB1kxsGdiM9rgJ3wIh+SibyOfiglTRJebyEIToCh
-	 1bIzHBi1eRplQ==
-Date: Wed, 9 Apr 2025 10:17:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] pcie-xilinx: Wait for link-up status during
- initialization
-Message-ID: <20250409151754.GA283974@bhelgaas>
+	s=arc-20240116; t=1744212205; c=relaxed/simple;
+	bh=9N1NF3CqX6CI171CJlg3zeVkou7wQc8y9+DoTh/HPcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DhIwsF5ZLY2XY2BjP49MjuPPa3x23qOk1K3aI8J1FB5ca2wBUu+QewwIwS5mcTF7mFXhF/PiUgENu+3FBbFqRuCas5DACynbAZBjltzKqwkv+4QAZ2O/0/0374rAa2PAUBllERLDycZscmRY4n99rqrjPN2zknxdAfuMB07/Gv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gprqXmBC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539A0RWg008866;
+	Wed, 9 Apr 2025 15:22:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=UD5ziO
+	CSUS/zVJxI5iQCqBhTxQrQYo4uOaPECKb7CFs=; b=gprqXmBCTFFahLum4nyHXU
+	NbQDOcXitZK3KUdmcaGywysROm5F9mO0tB3nswtWq7a1Y3Obd8rEFCMQ1py2R0d9
+	LPtfMXuQsIDdSt3D7DrTEs4ca67hKL6vKvh53oBaeIz+gBm+oGhg2MDrEGJIlcBU
+	pBJHXi+fQWYKr9RrdBMSxS4ShGnijpu4c7f1PLZ1nvxEvaoTBMgG5LKMmxfaDRtG
+	IkwbQFavNEeToerrI0AFFEKUUJQs1XHAzpnJhsf1gAmfNkc40rZzZWmi9u2DKG12
+	DnPBX/9cz2lYN4NBVUMcfveIyGqaunVA3x/e6JvxcAJEKfvR0pQUSZOQLhA2ctmw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wayr4dww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 15:22:21 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 539FMK4a003291;
+	Wed, 9 Apr 2025 15:22:20 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wayr4dws-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 15:22:20 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539E5swi017447;
+	Wed, 9 Apr 2025 15:22:19 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uh2kr4du-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 15:22:19 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539FMIVw25428476
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 15:22:18 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25C8058053;
+	Wed,  9 Apr 2025 15:22:18 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C7D0E58059;
+	Wed,  9 Apr 2025 15:22:09 +0000 (GMT)
+Received: from [9.61.248.89] (unknown [9.61.248.89])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  9 Apr 2025 15:22:09 +0000 (GMT)
+Message-ID: <105f1b15-9536-4847-a3c5-8ca0993cfa35@linux.ibm.com>
+Date: Wed, 9 Apr 2025 20:52:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409144930.10402-1-mike.looijmans@topic.nl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+To: Thomas Gleixner <tglx@linutronix.de>, Bert Karwatzki <spasswolf@web.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        James.Bottomley@HansenPartnership.com, Jonathan.Cameron@huawei.com,
+        allenbh@gmail.com, d-gole@ti.com, dave.jiang@intel.com,
+        haiyangz@microsoft.com, jdmason@kudzu.us, kristo@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-scsi@vger.kernel.org, logang@deltatee.com,
+        manivannan.sadhasivam@linaro.org, martin.petersen@oracle.com,
+        maz@kernel.org, mhklinux@outlook.com, nm@ti.com, ntb@lists.linux.dev,
+        peterz@infradead.org, ssantosh@kernel.org, wei.huang2@amd.com,
+        wei.liu@kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, venkat88@linux.ibm.com
+References: <20250408120446.3128-1-spasswolf@web.de> <87iknevgfb.ffs@tglx>
+ <87friivfht.ffs@tglx> <f303b266172050f2ec0dc5168b23e0cea9138b01.camel@web.de>
+ <87a58qv0tn.ffs@tglx>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <87a58qv0tn.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: K0j9-S0-7MhHZv4iZrAgfjbRog9_Afjv
+X-Proofpoint-GUID: s6FUoYEm87oi5YTiionJnOj6VvrwtrP_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0
+ clxscore=1011 lowpriorityscore=0 spamscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504090094
 
-Please make the subject line match previous changes to this driver.
-See "git log --oneline drivers/pci/controller/pcie-xilinx.c"
 
-On Wed, Apr 09, 2025 at 04:49:24PM +0200, Mike Looijmans wrote:
-> When the driver loads, the transceiver may still be in the state of
-> setting up a link. Wait for that to complete before continuing. This
-> fixes that the PCIe core does not work when loading the PL bitstream
-> from userspace. There's only milliseconds between the FPGA boot and the
-> core initializing in that case, and the link won't be up yet. The design
-> only worked when the FPGA was programmed in the bootloader, as that will
-> give the system hundreds of milliseconds to boot.
-> 
-> As the PCIe spec allows up to 100 ms time to establish a link, we'll
-> allow up to 200ms before giving up.
+On 09/04/25 2:16 am, Thomas Gleixner wrote:
+> On Tue, Apr 08 2025 at 18:20, Bert Karwatzki wrote:
+>> Am Dienstag, dem 08.04.2025 um 17:29 +0200 schrieb Thomas Gleixner:
+>>>> Can you please decode the lines please via:
+>>>>
+>>>>      scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+>>>>      scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
+>> I had to recompile with CONFIG_DEBUG_INFO=Y, and reran the test, the calltrace
+>> is identical.
+>>
+>> $ scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+>> msi_domain_first_desc+0x4/0x30:
+>> msi_domain_first_desc at kernel/irq/msi.c:400
+>>
+>> So it seems msi_domain_first_desc() is called with dev = NULL.
 
-This sounds like there's still a race between userspace loading the PL
-bitstream and the driver waiting for link up, but we're just waiting
-longer in the kernel so userspace has more chance of winning the race.
-Is that true?
 
-> @@ -126,6 +127,19 @@ static inline bool xilinx_pcie_link_up(struct xilinx_pcie *pcie)
->  		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
->  }
->  
-> +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	/*
-> +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
-> +	 * fabric, we're more lenient and allow 200 ms for link training.
-> +	 */
-> +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
-> +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
-> +			200 * USEC_PER_MSEC);
+This issue is seen on IBM Power9 server also. Bisection is pointing to 
+7b025f3f85ed4283d5a414371bb2ffd38d19033f as first bad commit.
 
-There should be a #define in drivers/pci/pci.h for this 100ms value
-that you can use here to connect this more closely with the spec.
+I applied this patch on top of 20250409 and it fixes the issue.
 
-Maybe there's a way to use read_poll_timeout(), readx_poll_timeout(),
-or something similar so we can use xilinx_pcie_link_up() directly
-instead of reimplementing it here?
 
-> +}
-> +
->  /**
->   * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
->   * @pcie: PCIe port information
-> @@ -493,7 +507,7 @@ static void xilinx_pcie_init_port(struct xilinx_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
->  
-> -	if (xilinx_pcie_link_up(pcie))
-> +	if (!xilinx_pci_wait_link_up(pcie))
->  		dev_info(dev, "PCIe Link is UP\n");
->  	else
->  		dev_info(dev, "PCIe Link is DOWN\n");
+> Yup
+>
+>> $ scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
+>> msix_setup_interrupts+0x23b/0x280:
+>> msix_update_entries at drivers/pci/msi/msi.c:647 (discriminator 1)
+> Aaarg. The patch below should fix that.
+>
+> Thanks,
+>
+>          tglx
+> ---
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 4027abcafe7a..77cc27e45b66 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -680,8 +680,8 @@ static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *ent
+>   	if (ret)
+>   		return ret;
+>   
+> -	retain_ptr(dev);
+>   	msix_update_entries(dev, entries);
+> +	retain_ptr(dev);
+>   	return 0;
+>   }
+>   
+
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Regards,
+
+Venkat.
+
 
