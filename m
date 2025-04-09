@@ -1,122 +1,117 @@
-Return-Path: <linux-pci+bounces-25520-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25521-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3690A81939
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 01:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76AEEA81A95
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 03:38:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C9478A01C0
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Apr 2025 23:18:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D32223B164E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 01:38:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CFC2566E4;
-	Tue,  8 Apr 2025 23:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFD07D07D;
+	Wed,  9 Apr 2025 01:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ew0ddOoZ"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lPCYIr2x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB7D2566E3
-	for <linux-pci@vger.kernel.org>; Tue,  8 Apr 2025 23:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F50250EC;
+	Wed,  9 Apr 2025 01:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744154329; cv=none; b=cd/Jo9gBZrVmWrTHM1A+dMGpiWgr4Qt5u1o9QxJdzOaDYGQVkwfOweET/ZLnXMqmtW/kLC0uPGM1a0twdGDP2erKlBw0LS6C1pY1j+OSiZVpFErtsS/Yur8d97t99ZWw4ecAcw3a8hmakXR0cVQ4xidkLX1EOSFWv7bLoRb9Ixc=
+	t=1744162719; cv=none; b=ienAtXzlD3TBMG36YceYfPqcCtwnpGEPYaKi9IqApC5jb6X43d0ThhiJI5FEVev7q4ZAQwxxFtVUoRax9RfNUfB/7MprZVvPRTsHADL4jdrKJsch0RL1eRd/fwJ9kZEfooNVDThZYKhDqviLdE4sWNP9QXnOICD3/7LxoqNNSxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744154329; c=relaxed/simple;
-	bh=fnhn40nrzk5xfb8sWmFEl51rUqFCihOJRKjcab4ZksU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cgTEBSHzIEYjnuQon/BOBN7ATZFRVDSHDPL0uAHKspGl2tNm1faXcqABxRHIUnlvNSwW1vCMVESsnGsL0jzqi3DsE1WJQidFTm6gG+L1VaiskFiC80WQueqqwJVDlp7lzldcCNEaTK55iehAvxU7JM79wFUFNxUCVFo3PrRf4O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ew0ddOoZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3DBC4CEE5;
-	Tue,  8 Apr 2025 23:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744154328;
-	bh=fnhn40nrzk5xfb8sWmFEl51rUqFCihOJRKjcab4ZksU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ew0ddOoZACyY90BZ5V9pY/jecWYQG/+Vb6Z47vpNhVL0w0tZGrYOTBRP+b4iiUkmV
-	 0TwE6zSESkDoLBuwuPCcIR4QvkV99nd06tVPT+KziAu9/lpxfRmpQIgLoHcy2ea9P3
-	 Ov0NdsMnumicjCWhfFiwz8GzMaD45wkTxjxm004WueyaOzeBWVVBxWZQLN3wMvw8bI
-	 fjVAOsgbPjjbnU4uUiSUonNjniMCdIqeJyOlkJkmdB9xKnzsbk4HknRjeONBunJrBO
-	 M+Vr9O9WQZRKKxG99SrYFfPuLecM3u0uHI1KhwYWzV324i1dDr+tKXgeOAfyk0cpcn
-	 sw7IREOQTvAUw==
-Date: Tue, 8 Apr 2025 18:18:46 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sergey Dolgov <sergey.v.dolgov@gmail.com>
-Cc: linux-pci@vger.kernel.org,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Artem S. Tashkinov" <aros@gmx.com>
-Subject: Re: [Bug 219984] New: [BISECTED] High power usage since 'PCI/ASPM:
- Correct LTR_L1.2_THRESHOLD computation'
-Message-ID: <20250408231846.GA253000@bhelgaas>
+	s=arc-20240116; t=1744162719; c=relaxed/simple;
+	bh=/Aqhjl5oClsTu1nqE+4odId5RVqnkUfrHVKtJCSZwMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OMNfyH5pma40Vyeo/LIOeLCI7Yd8sRdaxzqUrsUnixmgaP5Woq/Kx9usW5d+tAdCPKdfP6cORp2NwUrE2qfbEb5zxqp/j3d0x4wIqExwYDHucfPyOSFmtto1PHc5Ycsk71Dei1OfelVi+mxkxFtSkPAuOG4CrKofI3aiHChjpUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lPCYIr2x; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=c3z3dr7lgCFWhzF4uE+NiRcEM2IRJ/mxV0Clz0l0eIg=;
+	b=lPCYIr2xPYp0mI+Bylyk7TGs4qKH2qxyv+9MNdMV1yG0A1seS/tMaV/NAo3YLt
+	U5LyMq+5lAThv82osy/J0uHt5GtSMKPWCwKtEnB2kBVITMo+7AFioivjKdfK88sT
+	fOj7sKgjsjsW/hFdER/S8TNe8Xuo2Op7rzubd3q9EPNxs=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBXH3NXz_VnptM4FA--.59992S2;
+	Wed, 09 Apr 2025 09:37:29 +0800 (CST)
+Message-ID: <1731bcdd-22ad-4c71-a94e-b3576c1e7dc2@163.com>
+Date: Wed, 9 Apr 2025 09:37:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAONYan8=q3b+hUJRRsa_cB20m3SFP6vR0SP4HyYhTk4sNJfAgw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-3-18255117159@163.com>
+ <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
+ <c6706073-86b0-445a-b39f-993ac9b054fa@163.com>
+ <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
+ <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com>
+ <ef0237d9-f5da-44d7-ab45-2be037cf0f25@163.com>
+ <3689b121-1ff2-f0f6-59f4-293cda8ea6a8@linux.intel.com>
+ <ef311715-3e61-4bf5-bdae-58fd87a3d5e7@163.com>
+ <e4db2248-ed8b-d270-d417-9efdca947e8e@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <e4db2248-ed8b-d270-d417-9efdca947e8e@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXH3NXz_VnptM4FA--.59992S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtr15Xw47JFykGF43AFy5Jwb_yoWDJrXE93
+	929as29w1I9Fs7Aw4fKrs8urZ0g3yUWryYq3sYqrZ8GFn5AayDAr4vk3s2v34xGa4Yyrsx
+	Kr4Yqr42y34IkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUboqcUUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwUpo2f1RouuSgABsu
 
-On Tue, Apr 08, 2025 at 09:02:46PM +0100, Sergey Dolgov wrote:
-> Dear Bjorn,
+
+
+On 2025/4/9 00:18, Ilpo Järvinen wrote:
+>> Move the Capability search logic into a header-based macro that accepts a
+>> config space accessor function as an argument.  This enables controller
+>> drivers to perform Capability discovery using their early access mechanisms
+>> prior to full device initialization while maintaining the original search
+>> behavior.
 > 
-> here are both dmesg from the kernels with your info patch.
+> ... while maintaining ... ->
+> 
+> ... while sharing the Capability search code.
+> 
 
-Thanks again!  Here's the difference:
+Dear Ilpo,
 
-  - pre  7afeb84d14ea
-  + post 7afeb84d14ea
+Thank you very much for your reply. Will change.
 
-   pci 0000:02:00.0: parent CMRT 0x28 child CMRT 0x00
-   pci 0000:02:00.0: parent T_POWER_ON 0x2c usec (val 0x16 scale 0)
-   pci 0000:02:00.0: child  T_POWER_ON 0x0a usec (val 0x5 scale 0)
-   pci 0000:02:00.0: t_common_mode 0x28 t_power_on 0x2c l1_2_threshold 0x5a
-  -pci 0000:02:00.0: encoded LTR_L1.2_THRESHOLD value 0x02 scale 3
-  +pci 0000:02:00.0: encoded LTR_L1.2_THRESHOLD value 0x58 scale 2
+>>
+>> Convert the existing PCI core Capability search implementation to use this new
+>> macro
+> 
+> I think the rest of this paragraph after this are unnecessary.
+> 
 
-We computed LTR_L1.2_THRESHOLD == 0x5a == 90 usec == 90000 nsec.
+Will delete.
 
-Prior to 7afeb84d14ea, we computed *scale = 3, *value = (90000 >> 15)
-== 0x2.  But per PCIe r6.0, sec 6.18, this is a latency value of only
-0x2 * 32768 == 65536 ns, which is less than the 90000 ns we requested.
+>> , eliminating code duplication. The refactoring preserves the original
+>> functionality without behavioral changes, while allowing both the core and
+>> drivers to share common Capability discovery logic.
+> 
+> Other than that, it seemed good enough for me.
+> 
 
-After 7afeb84d14ea, we computed *scale = 2, *value =
-roundup(threshold_ns, 1024) / 1024 == 0x58, which is a latency value
-of 90112 ns, which is almost exactly what we requested.
 
-In essence, before 7afeb84d14ea we tell the Root Port that it can
-enter L1.2 and get back to L0 in 65536 ns or less, and after
-7afeb84d14ea, we tell it that it may take up to 90112 ns.
+Best regards,
+Hans
 
-It's possible that the calculation of LTR_L1.2_THRESHOLD itself in
-aspm_calc_l12_info() is too conservative, and we don't actually need
-90 usec, but I think the encoding done by 7afeb84d14ea itself is more
-correct.  I don't have any information about how to improve 90 usec
-estimate.  (If you happen to have Windows on that box, it would be
-really interesting to see how it sets LTR_L1.2_THRESHOLD.)
-
-If the device has sent LTR messages indicating a latency requirement
-between 65536 ns and 90112 ns, the pre-7afeb84d14ea kernel would allow
-L1.2 while post 7afeb84d14ea would not.  I don't think we can actually
-see the LTR messages sent by the device, but my guess is they must be
-in that range.  I don't know if that's enough to account for the major
-difference in power consumption you're seeing.  
-
-The AX200 at 6f:00.0 is in exactly the same situation as the
-Thunderbolt bridge at 02:00.0 (LTR_L1.2_THRESHOLD 90 usec, RP set to
-65536 ns before 7afeb84d14ea and 90112 ns after).
-
-For the NVMe devices at 6d:00.0 and 6e:00.0, LTR_L1.2_THRESHOLD is
-3206 usec (!), and we set the RP to 3145728 ns (slightly too small)
-before, 3211264 ns after.
-
-For the RTS525A at 70:00.0, LTR_L1.2_THRESHOLD is 126 usec, and we set
-the RP to 98304 ns before, 126976 ns after.
-
-Sorry, no real answers here yet, still puzzled.
-
-Bjorn
 
