@@ -1,282 +1,190 @@
-Return-Path: <linux-pci+bounces-25573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89E3DA82954
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:06:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE628A82940
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:04:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E86E90690C
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 14:54:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55602906BDE
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 14:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC9C267397;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB162676CA;
 	Wed,  9 Apr 2025 14:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="QQ9nnEN6"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PAwKdEvj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2113.outbound.protection.outlook.com [40.107.105.113])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B178266B75;
-	Wed,  9 Apr 2025 14:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210188; cv=fail; b=BcCqSYioRxFFcYe8aEx8UMBPr6wMNvGl8U0ts3RyT31f6xZpV4qRuG/4IVOmWcVAcH0uXeGIRXEWrrGNbebY8lKfQfdQuNnmSeqiLOACxnZmdBBisSEE5YGZd4q4t7WFCzeYQzV3OC6VntCKhqKid+QB3pvFaYNMOGpluv4siSs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ADA267391
+	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 14:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744210188; cv=none; b=k+kWEJzXTFzU3RCelc0wczlcLs8tHdvaJMiD0PMuYGpW390f2FYV07qGvg1GIVkxXRX/G4+asJk1irs+/vmwq8HYiOwmDSxLi6L6iSWLn6lgJZ2unWjedLwTqXS/bNyr3KpJ7LckGh9aGa5R2Q4Tl7sfQ/8in7/8F+GD2gqwL0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744210188; c=relaxed/simple;
-	bh=NB5ZpJCVCOJiihyteNaUXp/3M7syeBB2lInwHUBD67k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m170Zl5P5PdMTCB9d8clX+BXlaOba3F2idvrKQmzEc9p4XQMDVtK3ycZVan9LrjQHFYFeF0+6bR+zdNcIwxfQ7o0NurFWQtWaP7et5St2tP6R3Cvkap9F7azJYYYFHo+g7NnmBbqSiFJM+QvU/EfIQH1etQg+gmCBTM7hKX9tG4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=QQ9nnEN6; arc=fail smtp.client-ip=40.107.105.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ADhO7a3sTtFVKWUtorxabs4FYJOq9k9EQfTBXN1Zoa8oDdea6GuCiGMV/zISXzDj0fuWKMngB5sI5rlxvNtH/75GLTA+XdbIHzL7WtEkSheqo75iiVXld7HAmjI/rCGy9yMN8Y9Nj5r8s0vZGEuWYlqMbsbLCMycsFTWlthW8b6BTwDEihckLODNVashIiOiGABZBeyb1uCm/iiil2NYd358p756AXuGxpbKnX4GsiFEVxVofZJWcxCode/IeyplpMjRWBNmNLkD1QRhk9b3COM6btzIsJNHt7KJlT7Ut/hO5uqmWaTlHPwKGpkFqODzRZLDGk2RsX5SbdeSqulpBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uFsojQkjE5+qLRt4ZFFghJ+cfJmKYX9alhI5Zh/AySg=;
- b=Yn2IilHTHWSFIjTyeGLNMxdoO3rjQ60JDnkMaUoyzPTbZFHdJu6dzzR2KJtHV8VTNqO8HtTNAr/dtNJtBTDeiQjfcTaDeizjAqBWq3aAhndQM7ubcucZf5jxAxACSTLcKmMIj9UbIWnkEhDZLAHV9vxr/CuGGPehcqEe5ONEEey7rbyN9iBXW6i72nuhpTr4pxilVZ3vuzRDPDenZ2LF5xud4I+3Nj2CKJue8XXA4PNGox7Av0n8viqIu6/ag/4hIQYz5qprHiMZxacZp6MtEqnHAIggd93mWG94BqSBVpklDCVfJ+tOPx8Eso0bXMLBiOs24VuwgCu9DP3BG/259g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 13.93.42.39) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=topic.nl;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=topic.nl;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uFsojQkjE5+qLRt4ZFFghJ+cfJmKYX9alhI5Zh/AySg=;
- b=QQ9nnEN6q0uK7hJSOQ62syej6xQwLZSsWuVej1wzhbp7ZFe+GExE2gKJv0bYqWk6mR0kfE/LEgq1KPc3q9sGvsZQLmnluzEXNLDQdu9L94jrw5ltztLC/kNRiZp1gXPVQ3210/BQYukcBZfxGBXqXl7Ld1Irp3385/2xcUSAPO1tpqbiilahaCQD4ICYW1pL9pu4tIqT3VXaJN1HehC9lr7qWpv2uP4Jfv+jO1ObtKqJ4MpEZka/HmE8aseRrNCd2Ty0mEifmvzPfRPM1dvdmjEXIwUsNYpqGG1g6f/QxQV6EaCqXkCDhGDB+FFhb0mbPSL5KaIWv7E5Svtd8lJnPA==
-Received: from DUZPR01CA0216.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b4::14) by PA1PR04MB10916.eurprd04.prod.outlook.com
- (2603:10a6:102:483::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.46; Wed, 9 Apr
- 2025 14:49:41 +0000
-Received: from DU2PEPF00028D0E.eurprd03.prod.outlook.com
- (2603:10a6:10:4b4:cafe::29) by DUZPR01CA0216.outlook.office365.com
- (2603:10a6:10:4b4::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Wed,
- 9 Apr 2025 14:49:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
- smtp.mailfrom=topic.nl; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
- 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
- client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
-Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
- DU2PEPF00028D0E.mail.protection.outlook.com (10.167.242.22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 14:49:40 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (104.47.18.104) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 09 Apr 2025 14:49:39 +0000
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=topic.nl;
-Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
- by AM0PR04MB7155.eurprd04.prod.outlook.com (2603:10a6:208:194::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
- 2025 14:49:38 +0000
-Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
- ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
- ([fe80::e86d:f110:534e:480a%5]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 14:49:37 +0000
-From: Mike Looijmans <mike.looijmans@topic.nl>
-To: linux-pci@vger.kernel.org
-CC: Mike Looijmans <mike.looijmans@topic.nl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] pcie-xilinx: Support reset GPIO for PERST#
-Date: Wed, 9 Apr 2025 16:49:25 +0200
-Message-ID: <20250409144930.10402-2-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409144930.10402-1-mike.looijmans@topic.nl>
-References: <20250409144930.10402-1-mike.looijmans@topic.nl>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.7d136b9c-d113-4bfd-af7b-10cf34f20342@emailsignatures365.codetwo.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: AM9P195CA0028.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:21f::33) To AS8PR04MB8644.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::12)
+	bh=85+UIcf1eKLU/wNzZgNVq10Yo7Ip9fEDwLj2BK/wH0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FZzy0UPBbUygBzFab3iv0TN6hW+6blElu2cFUk/Zm7LO1Po6uZeCLeaOt5g2JGtu9Lt9HgHH5fooOGN/KQTCypIlnLw+i3yh3JkDkel7NMO0A2REQzJ05q9cBPsPe3z2WV/SEh1Mj9RtXG/VynxGa4LVSiwNsh3LseKiE1puYxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PAwKdEvj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398i7GK032322
+	for <linux-pci@vger.kernel.org>; Wed, 9 Apr 2025 14:49:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NAji33sbWftR/X6dZ2NUeyfjXLgktdVt707HtkxaLX0=; b=PAwKdEvjtewbtaba
+	2V2qQjPJwGOamRfReF4UgYHmeMQPWAMYT6bC8e2TsfZzNn5hpIluqBIcCB2VD5gc
+	oIcllz4ev5MxKTTUAPQFCQpXLI0okxFDYPb+0hqeu2guc4fWqE4WpMVWiqA6TDkm
+	1Nu7jGCBtZabRfZRQHgLGTpe+6bNB7hC04kvxNiG7Z9fPjZTYfFWlXM+fBE5DMk5
+	I2kHcg/lPeC1cHyJgoYwIdpDZgC0VDBBsw/tRTNrxw3Z0Zex0SaxodPfbAQHR5hd
+	xUSYZLu71lvANyR44l+aMLnRsMs7iprErdrR2G9V117gWTJx0e8Eh89vuI4XbtaV
+	qqfsaQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbebsds-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 14:49:45 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54734292aso162256985a.2
+        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 07:49:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744210184; x=1744814984;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAji33sbWftR/X6dZ2NUeyfjXLgktdVt707HtkxaLX0=;
+        b=saIXYTa1TdCB0l5uTX2ifsC0ZOrQl5QQvpvf6jiRrqxZW+D30bNgET6QslK7XsMijo
+         7mztkb539f2woiLCLg+WRBwnTDz7gpwxzcWkS4iOy4LfPgUImfB/cxIF9bB7yr2oWiGh
+         tMBQkCFJaVidWKbj1WF2UUTYtcEKJzErFM6nKC9Gm3d5LzBuvEYfhJcXRTkdZA8uqfph
+         aM+vqc5eSaPGogatjWjV2hicsUOozSLSdaGI/mFv3oyvNNMP95VWsdGj0lVcIxH457x0
+         3rWlIgZkunH1BWlqfzUlbHlw4N1SMNhF+6R1bLe6oHJuxoW0/n20WhmPcUPL8u4qCF3U
+         cN3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWZvI3NGpA+BkSFQOu01oc89igjOtvdFxUZtinGhdUOG9AwA5uS4OOcaCTBVXjO8xNjvvccKXM7CME=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz7LmpXMzivdP8vRxO6xMlBIJ5mBOdVawQTeWOOx2SEIHxq0BG
+	QPDGMUmzQc2anZc7FEGOkj9vRYkret2lxaB+V4k10cLELiOrxiusbpY3/+xxe5qIU/yaGJsJIJM
+	BZhIcliiqeUJXmv8GsTO9+6COS4Ii0rVwR9TWDueywT/WDPt0IiRs5m17bHU=
+X-Gm-Gg: ASbGncvmlQ61YM2QBPUf4ocPu7nwRemiAqxX3ZAjfWlSlyyNf4eVuil8hoGVpvWCQ/W
+	roDY6vJW4tOTYaoULQ8q0U9J6McLBHMrVl7Q+44IADE/6/62GQHofXeEqpjDpTpOS9yhbtOX+Fk
+	zKQ+4YyhVaSH8mrNE1Q2g6gNwjkkTWs/dUyXGtGxzQNIRWYEinwTKymHNbz5gaizAZs5DV/64+6
+	BVVSBdU9Y3awDHI8hihH3hpK4DQtHmImVXsvECj2t8mP+kDj35XbmGqQC7ZULB3KEXYTzUOX9ZT
+	5tl3V6p0KPOB6fd8+KlK44w/vveAeVgLfAHzzxMeikRwJu/zqrByq2gZ2LF1pyAY7g==
+X-Received: by 2002:a05:620a:1792:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7c79cc382dcmr170872885a.10.1744210184459;
+        Wed, 09 Apr 2025 07:49:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFMm5nWNQB+SUuTMx8XfwA9o0yrLRkaTZP7ACAR3JyVEdTKjbhOMoZD8lRtbWW3IF+TISiTyg==
+X-Received: by 2002:a05:620a:1792:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7c79cc382dcmr170869385a.10.1744210183947;
+        Wed, 09 Apr 2025 07:49:43 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccd205sm108975966b.141.2025.04.09.07.49.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 07:49:43 -0700 (PDT)
+Message-ID: <83713b15-d74d-4620-b9a0-9c57f216c6bc@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 16:49:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AS8PR04MB8644:EE_|AM0PR04MB7155:EE_|DU2PEPF00028D0E:EE_|PA1PR04MB10916:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78a11ace-7d23-49d7-e7c7-08dd7775c218
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?Dy7znNuRh5ZeFNfJE1MhYz05f5MYzxG36yXXr1MQqnb/EvMi0YmsvI3BdLq5?=
- =?us-ascii?Q?r5uqiBSsGlhjZ5jB2gIVjh3j3mD7DjuK+dXayQgERNL0wuyHjf8J6hYziwSs?=
- =?us-ascii?Q?Hug8DExzhaiCndpjiL+sDvFZdu9t8ZUtEW20tyy5EhAQwAW3EbhhYYgjhx4Z?=
- =?us-ascii?Q?FlKkXOLtL45NxrwFFJ8OTEgOWZzyUkUP38NZuWHLHGhKKTkrUAaM0JUOoGwB?=
- =?us-ascii?Q?80a/FRw5e+GWlZY6fVzu2eihdQJElkpPZptnReHywoK1tJaHcjQB1+IADz3s?=
- =?us-ascii?Q?6TWUZkdnifExKA3uXEGVfPKZGmZBNqdfcn/Bic3JI/RjOnZ89AMPOP6ljbdm?=
- =?us-ascii?Q?zSddynBzss7Q1p03N4NWRoYaWYbceAyOOI0dt+MFRaB1HXYirG9Alt2wvpCx?=
- =?us-ascii?Q?bDELG93xYPCLmJRy1zuVyp5KbAHbunm9v9tf4u8K9zJhXN8LA9mxB1BNfB4w?=
- =?us-ascii?Q?h90a2P6e1LNCgxnbTSwabSX29svC7EsoI371zkY/9aiD77u+h7AIBEwamDPR?=
- =?us-ascii?Q?j7kZh3U6oIZxt3kniRxVbsA4U3xrDmlbQXImnoHuHmP3fFv2U1DCAV1qyTIk?=
- =?us-ascii?Q?0ZyS81cwFGiMfFwhLnRXmrTEE+CPCPEy4+cwXWimDFYMSWDbRaO/PjcsryP9?=
- =?us-ascii?Q?wrw6NWjkmnUMcjKjt5OrKy3MggfFbkDc0ZFhctuwjM9ayJ+6RreTg/0ZaHts?=
- =?us-ascii?Q?qAXP1eoklXZvbvTXu/YM+Vd4tMcC1DmT9TOvF/UhNkzAHyKO1C4NWi0AocWc?=
- =?us-ascii?Q?KVYhcfFB/JD6rFmYw18+SxhrK+ipBAaCpJY61d5k9DzR9g7OMebA7fJ1gUx8?=
- =?us-ascii?Q?TlvxOlPbRg5zlrx6A28NNyHvMwLNZxmRzOh1fj07U0dG9jXqSmc+It6d4vf+?=
- =?us-ascii?Q?xbQKneTMYvDcMYiKH02esypio6ODbF8DcSXSV3YL/ULrX4Blsswb3bdKa0Bo?=
- =?us-ascii?Q?/+1f9+DARwuZpYJqKm/D4bdukSxkpO271J95UoN7HUAiXcYf10lrb6d7Nw/D?=
- =?us-ascii?Q?wO+Xbcz6C7kWF6DY7+l2vqzAEKdh5+lbAcZ/UMcWFMWcmNdZgVywWHhz6TCq?=
- =?us-ascii?Q?s4KPnT/Ihh+m+ljlWKQXALU6C9ceajnvBWxFLoH6/pdZnxQeP7YtWaHt/1iw?=
- =?us-ascii?Q?lci9ckKoiqMmrjRGL3EIVJKeVya6V4PFyVxAHm5vab0LAngsUDTLZcu/qDNh?=
- =?us-ascii?Q?JKdIT8AEkKFRR1H7v8+jJU5fOPWdqq9tP9Nn5e8z28omB9zdX6iVmX82gjOR?=
- =?us-ascii?Q?OFk6Sv5h/MJZotf09b9e0e+139lXohpIVBRcl+d+AJNCPjRvz8JNzhq3kwc4?=
- =?us-ascii?Q?zy3FPJG4YwlN34XSVFy0LXnemWl+4ssZIayE2FIhjjnX1nxz0j/EW6FTeJuL?=
- =?us-ascii?Q?JmU1MAkZo8K4XHssCmUnPSuaedbFAUrKuC6SCteXYGMuDH3z3Rs5FlyHif4I?=
- =?us-ascii?Q?we1nQ26UdZv8sLDvZqH90B3MDUn9Bptcn/3lb6sQWbnITStOerUrRg=3D=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7155
-X-CodeTwo-MessageID: 6f0a156c-86a5-4acb-a589-074aeb2c224c.20250409144939@westeu12-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D0E.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	8628d9b9-84c7-40c2-64ec-08dd7775c00c
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|36860700013|1800799024|82310400026|376014|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dri9XwrusMxcvrCezs7e3Xt8aOS7Cy1xJuwnORx/z2DS8R6NMpEG5rxHXcYS?=
- =?us-ascii?Q?nqIKXv3VJqafN+ZUEZZhQ7K/6zIaqCQ3iXV/kLcOAsyyB4/DG4W6bd2CIkQo?=
- =?us-ascii?Q?Sew30/NPZDsgAA75FOoKFrVJ7kpPLnY0tcjxkLRyk2y0L0F1jre1eN6fRUY+?=
- =?us-ascii?Q?92bExXJvFFHbhoTZBfbQC2FMF2hJYk0BaHuX9TCLy36OjTzsJX/51Hjd/l5u?=
- =?us-ascii?Q?oRsQZ69VWUE8KTOoud2kH/kb2ogSgPm+555AhX5XKW+odkdcNPP3leuXGPeC?=
- =?us-ascii?Q?i+gA3FeEzX3Huvlhd9AZo7mgKsWUalW56MOgw9IEDbM+6thfd0BtShdr5AMG?=
- =?us-ascii?Q?AEub5xPwSgJlG9xCf4oSVOJX96Y/Qsn1h7acZjwS+lOD7lMDLmR7KEG5wkrj?=
- =?us-ascii?Q?w9dJkGGK8lyIWHk7oCwZY/IpJOmku0aeok4Kz4Bm5y/KLZdQ6LTfGUQI+CQQ?=
- =?us-ascii?Q?Q76n+purtKU+uv3GkClgF5pBFX1ewbtQ04O4VFCbUumdkdQPH4RJlFCl0b8g?=
- =?us-ascii?Q?6CwlKxdUx4y28M7ITkrMebe/v+oAJX2Y/bC9S9Purn3JpDqDytUG4kWtdzcA?=
- =?us-ascii?Q?ZLQP/I69a9ycEGDhhe36e0zwV4GnjiR5Xoeu7pWtRBgpwasMojh2G/hPyLzb?=
- =?us-ascii?Q?br3W923ws3I+KUmWjA86fK+6f3Bfy2Wzw/artx5FRuOY3vSIU8Z5TAS95Fsb?=
- =?us-ascii?Q?xyNshla0ChAs/krG0i2lo2gKsR3b0gLyb3av62lOuuXZv3n9zOQ4InQtPe10?=
- =?us-ascii?Q?9g7OpSJda/aEz95zHP/+gFe3J3UcRW8BnRTnX4pTmXe1cvyFfJpFLX8tlCnK?=
- =?us-ascii?Q?4Lb1p1uTxf73TMgFBdKxCAImImHZf8nW3igHtBFtc234qNBv+shzJYxHI7QC?=
- =?us-ascii?Q?gT495rRMi4dqjiiCYJxelrNdwlR245pgMA5I+FCVdPBBiFy+tRqQBzxlgjnb?=
- =?us-ascii?Q?dq4cws3TxPgwsg3bVQswCwmSQxdLo3NidQpiYv6NQs8UhAIc08gNhI4o4Wl8?=
- =?us-ascii?Q?BiYbzq7pSUdOYORXCBXoT8nunGNkSvhvtTI7rJPS/MKQQTkd0EvB/REjjsqq?=
- =?us-ascii?Q?D91GmwI0ivYEiuexIzza9iSJJQNhSJtumP4xRFb4Ys+hxy0UWLcqe2vsJT/J?=
- =?us-ascii?Q?Zy4vXEMnbkG6zECHDm0woOjkUMOWWDZA/9B7ZZc9GPOheHTOHZdAT8Lcbbxc?=
- =?us-ascii?Q?eKL7lUSvcWfcUpQMd6Wrf1/rQnVUHhoZT4cP1bRNMEvc555c5B0m2B4fvio1?=
- =?us-ascii?Q?kHbNqZaiTXHcp9WTBhaGZkES5jDbIyylwRyeWZz44FJ9NpvoILdLYFArc8Hg?=
- =?us-ascii?Q?7mULWHiBVodGgEBlCBeKYJjZ+MT/EpCn1yjRl6uSUrJAG71zMt2p+JPCuaQw?=
- =?us-ascii?Q?fGMJtprIA2621oegyrwHYQ0y6w0fEU6E1QYlYljaR113KujiUBRjiKDNdmQ1?=
- =?us-ascii?Q?WIT4sqUFDz0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(14060799003)(36860700013)(1800799024)(82310400026)(376014)(35042699022);DIR:OUT;SFP:1102;
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 14:49:40.6050
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78a11ace-7d23-49d7-e7c7-08dd7775c218
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D0E.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10916
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] dt-bindings: PCI: Add binding for Toshiba TC956x
+ PCIe switch
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        chaitanya chundru <quic_krichai@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+        amitk@kernel.org, dmitry.baryshkov@linaro.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez@oss.qualcomm.com
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-1-e08633a7bdf8@oss.qualcomm.com>
+ <20250226-eager-urchin-of-performance-b71ae4@krzk-bin>
+ <8e301a7b-c475-4642-bf91-7a5176a00d1f@oss.qualcomm.com>
+ <385c7c77-0cb7-f899-4934-dfa58328235a@oss.qualcomm.com>
+ <a79eaaa9-0fe9-45d9-b55f-ba2c327eaaaf@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <a79eaaa9-0fe9-45d9-b55f-ba2c327eaaaf@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 53HM1Tz_Uyf2ZNBHa8U9_a2BExd5WC-Y
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f68909 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=3h54kFN3o8ui-8ShBWYA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 53HM1Tz_Uyf2ZNBHa8U9_a2BExd5WC-Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090093
 
-Support providing the PERST# reset signal through a devicetree binding.
-Thus the system no longer relies on external components to perform the
-bus reset.
+On 4/9/25 3:22 PM, Konrad Dybcio wrote:
+> On 4/1/25 7:52 AM, Krishna Chaitanya Chundru wrote:
+>>
+>>
+>> On 3/25/2025 7:26 PM, Konrad Dybcio wrote:
+>>> On 2/26/25 8:30 AM, Krzysztof Kozlowski wrote:
+>>>> On Tue, Feb 25, 2025 at 03:03:58PM +0530, Krishna Chaitanya Chundru wrote:
+>>>>> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>>>
+>>>>> Add a device tree binding for the Toshiba TC956x PCIe switch, which
+>>>>> provides an Ethernet MAC integrated to the 3rd downstream port and two
+>>>>> downstream PCIe ports.
+>>>>>
+>>>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>>>>
+>>>> Drop, file was named entirely different. I see other changes, altough
+>>>> comparing with b4 is impossible.
+>>>>
+>>>> Why b4 does not work for this patch?
+>>>>
+>>>>    b4 diff '20250225-qps615_v4_1-v4-1-e08633a7bdf8@oss.qualcomm.com'
+>>>>    Checking for older revisions
+>>>>    Grabbing search results from lore.kernel.org
+>>>>    Nothing matching that query.
+>>>>
+>>>> Looks like you use b4 but decide to not use b4 changesets/versions. Why
+>>>> making it difficult for reviewers and for yourself?
+>>>>
+>>>>
+>>>>> ---
+>>>>>   .../devicetree/bindings/pci/toshiba,tc956x.yaml    | 178 +++++++++++++++++++++
+>>>>>   1 file changed, 178 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml b/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..ffed23004f0d
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml
+>>>>
+>>>> What is "x" here? Wildcard?
+>>>
+>>> Yes, an overly broad one. Let's use the actual name going forward.
+>>>
+>> ok I will update the next series the name from tc956x to tc9563 as
+>> suggested.
+> 
+> As per internal discussions, 956*4* would be the correct name for this one
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
+I misread. It's supposed to be 3. Sorry for the confusion.
 
-Changes in v3:
-Include linux/gpio/consumer.h
-Message "Failed to request reset GPIO"
-Use PCIE_T_PVPERL_MS and PCIE_T_RRS_READY_MS
-Dropped dt-bindings patch, not needed
-
-Changes in v2:
-Split into "reset GPIO" and "wait for link" patches
-Handle GPIO defer and/or errors
-
- drivers/pci/controller/pcie-xilinx.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/=
-pcie-xilinx.c
-index 2e59b91f43e0..8e8ca9891b36 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -10,6 +10,7 @@
-  * ARM PCI Host generic driver.
-  */
-=20
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-@@ -577,11 +578,17 @@ static int xilinx_pcie_probe(struct platform_device *=
-pdev)
- 	struct device *dev =3D &pdev->dev;
- 	struct xilinx_pcie *pcie;
- 	struct pci_host_bridge *bridge;
-+	struct gpio_desc *perst_gpio;
- 	int err;
-=20
- 	if (!dev->of_node)
- 		return -ENODEV;
-=20
-+	perst_gpio =3D devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(perst_gpio))
-+		return dev_err_probe(dev, PTR_ERR(perst_gpio),
-+				     "Failed to request reset GPIO\n");
-+
- 	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENODEV;
-@@ -596,6 +603,13 @@ static int xilinx_pcie_probe(struct platform_device *p=
-dev)
- 		return err;
- 	}
-=20
-+	if (perst_gpio) {
-+		msleep(PCIE_T_PVPERL_MS); /* Minimum assertion time */
-+		gpiod_set_value_cansleep(perst_gpio, 0);
-+		/* Initial delay to provide endpoint time to initialize */
-+		msleep(PCIE_T_RRS_READY_MS);
-+	}
-+
- 	xilinx_pcie_init_port(pcie);
-=20
- 	err =3D xilinx_pcie_init_irq_domain(pcie);
---=20
-2.43.0
-
-
-Met vriendelijke groet / kind regards,=0A=
-=0A=
-Mike Looijmans=0A=
-System Expert=0A=
-=0A=
-=0A=
-TOPIC Embedded Products B.V.=0A=
-Materiaalweg 4, 5681 RJ Best=0A=
-The Netherlands=0A=
-=0A=
-T: +31 (0) 499 33 69 69=0A=
-E: mike.looijmans@topic.nl=0A=
-W: www.topic.nl=0A=
-=0A=
-Please consider the environment before printing this e-mail=0A=
+Konrad
 
