@@ -1,64 +1,62 @@
-Return-Path: <linux-pci+bounces-25595-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25596-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFA65A83078
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 21:24:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42785A831A2
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 22:11:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D73781B66731
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 19:24:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C80F1897C41
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 20:11:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFF11EF36E;
-	Wed,  9 Apr 2025 19:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F0821127E;
+	Wed,  9 Apr 2025 20:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMY0d9sQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra99G1Pf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C90E1DFDB8;
-	Wed,  9 Apr 2025 19:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAD4211261;
+	Wed,  9 Apr 2025 20:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226613; cv=none; b=HwgD+Akb61K+GXs/HGKkZZIKhmKlWHUAAILFXcQZEZE6Ul3zCKiGAo06+SeuBsqLccvK+X3E+K7Wp9LQXuCgS+E7YAoujn43myA0qKL2+dScL57JoGUXxS5gZK2ND5SL86NlHovfNqHpBqzmhoWfidfhxDoYMruxtnMC/M5D8Fs=
+	t=1744229467; cv=none; b=mSO9P++ELY8ardbvFJhkHO7uoCT6NZ2SlNOm2cvlqnI/TwozYUJKFfGh1UgE92XFgvyhLehVoF71KZHFc0/gTU4LUMKFZmNEUqeqfg4hKwpqzkrYUDKJoWxyJtPtn15sJa4KkmV3D9A7I5vCn7iG/7z3alkdrL1qrZFS/1+CJt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226613; c=relaxed/simple;
-	bh=wbZBWZPCrLHSWfbKDSWK04xVRpg9kPi7xGRc5wGJiss=;
+	s=arc-20240116; t=1744229467; c=relaxed/simple;
+	bh=0e4FkhqyEYt7yqEDX5mzHFyo+DedyZnaA98fEUnVjQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=CiM1kho0IE6vfizTLN8Zfv7k63ABwo0Rt5JD+smEsPnlHFv4wAVIGk87ggdb0/ir2scL51XoqK8zs4f/M4ltFBjuHMU2eBjoN3RbZrGfIQ7d1e4ILYviDSSuyZREETOLtizjeqrO15ZPUHD0XlRYG0FhsqCKdVWUjBP3mh6neBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMY0d9sQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC47C4CEE2;
-	Wed,  9 Apr 2025 19:23:32 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hwWi5LqmcRXg2I4KL41o/ClzB+uPLlcm77T1+C6W5lIDUIi2HS1vNZMSqJYu8URCjUZ/Er14XFWRoRxkHKXtt4OxBbaArXBjrlGh5+7tx6K6Hvgu3PCEnNjr69q/PREYbeKsnfcWEeuQR76xrrwO4sdNOOV37cDCtRYCpYNIbsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra99G1Pf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178BAC4CEE8;
+	Wed,  9 Apr 2025 20:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744226612;
-	bh=wbZBWZPCrLHSWfbKDSWK04xVRpg9kPi7xGRc5wGJiss=;
+	s=k20201202; t=1744229466;
+	bh=0e4FkhqyEYt7yqEDX5mzHFyo+DedyZnaA98fEUnVjQI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IMY0d9sQSe0X9Zj3ZUJwKF0hn9S+k7W5NAWQU6jHagnk4NFPOniKWJpbI6s2OzBE8
-	 GPKs2AkvIqDjqp076uOnIXDu206cN5b1LSRabyRs2OymGvDTNwC2kpmkR8YK7YScw+
-	 YYkBlvcuGBKAHlfOs3DE9jywbAZXGA3iu5P9tJ5pB9Bp7oElPpQfT1My6cGIlNhfG0
-	 tCVismGnLdKI4IF2YPW06vsM7N8EiskYUFMEV/zXEmXDhKX5rh0fyGpELDbnHBRrRj
-	 KqCq+hE3xfEzWV4MSclEcm7nfKfQ8XVVsZ2H2rrz2NEjlF4H4i0NwcvA0RQbU3tZCf
-	 1LCj2cRta7m/w==
-Date: Wed, 9 Apr 2025 14:23:30 -0500
+	b=Ra99G1PfH0mlQl/VvEl7lYnGVufgYLzq9Zt9O6BLMeY1V4NySIUGR6y/NiQr8ZLYW
+	 N69ZO91wXYEbLNtWPY8wxT7AuXEAzO78u9G+0psZ1kMSKYKKxcaMXJfnEwelHhlH9m
+	 dRh8uznYDtXA6yGSe2/veKd6CDf9UzAOieEYzwbgVmcAsLEaJvfRnP7ZzN6A6UyQmI
+	 mMZlDun1fLrYbU/Q14hat91MBSASXC7An31Bo8dNANFOhT16ssBDj5pgYsdom7rygK
+	 7W5qS0Ncj+/pgKC2pc8axYwJKdkQxO+gZ1qfdS4l4KYCnQADF1P1jftCxmNmNPpRD3
+	 9laeGltrrdgog==
+Date: Wed, 9 Apr 2025 15:11:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, Hannes Reinecke <hare@suse.de>,
-	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
-	Anuj Gupta <anuj20.g@samsung.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: Remove pcim_iounmap_regions()
-Message-ID: <20250409192330.GA292795@bhelgaas>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	Milind Parab <mparab@cadence.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
+Message-ID: <20250409201104.GA295084@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,36 +65,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250327110707.20025-2-phasta@kernel.org>
+In-Reply-To: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-On Thu, Mar 27, 2025 at 12:07:06PM +0100, Philipp Stanner wrote:
-> The last remaining user of pcim_iounmap_regions() is mtip32 (in Linus's
-> current master)
-> 
-> So we could finally remove this deprecated API. I suggest that this gets
-> merged through the PCI tree. (I also suggest we watch with an eagle's
-> eyes for folks who want to re-add calls to that function before the next
-> merge window opens).
-> 
-> P.
-> 
-> Philipp Stanner (2):
->   mtip32xx: Remove unnecessary PCI function calls
->   PCI: Remove pcim_iounmap_regions()
+On Thu, Mar 27, 2025 at 10:59:08AM +0000, Manikandan Karunakaran Pillai wrote:
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
 
-Updated mtip32xx subject to:
+Usual convention is to include a space before "(" in English text.
+Apply throughout this series in commit logs and comments.
 
-  mtip32xx: Remove unnecessary pcim_iounmap_regions() calls
+Others have mentioned the fact that we can't easily extract the
+patches from this posting because of the Outlook series.  That also
+makes it harder to review because we can't apply the series and see
+the changes in context.
 
-and applied to pci/devres for v6.16, thanks!
-
->  .../driver-api/driver-model/devres.rst        |  1 -
->  drivers/block/mtip32xx/mtip32xx.c             |  7 ++----
->  drivers/pci/devres.c                          | 24 -------------------
->  include/linux/pci.h                           |  1 -
->  4 files changed, 2 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.48.1
-> 
+Bjorn
 
