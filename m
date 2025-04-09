@@ -1,94 +1,58 @@
-Return-Path: <linux-pci+bounces-25584-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25585-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07E11A829BD
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:15:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03B48A82A47
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 17:28:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A6465015F0
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 15:09:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F09603B836E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 15:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02E726FA60;
-	Wed,  9 Apr 2025 15:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D205E265CC5;
+	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EDb9t9ug"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZudEVGyV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C0526F475;
-	Wed,  9 Apr 2025 15:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A689069D2B;
+	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211053; cv=none; b=G7pqSl4qf0ktcTp7bQenkhWXwL8Azk583hpf51iIHuD+jFCUVhLRHSLNxf6rufYB5wxsV8dXRHT1Pp10QkQnWNL7svucaO4ryzvcc5bQezSkXlYJMOiq7DVxdgTVNdPELQO0t0/iypSJEiEa9orNZgPjwhqhjjNCczUh/Z7Jjh0=
+	t=1744211876; cv=none; b=SlgChnB+kDxXq0XV2QgINkXUQy+3WgQF8H9NnpukwlMIEYM63CuXbMwuSM6JkQ1R6ZCVX+y0lcY36kITI1raF6HtonEj2qFLcEhaTbHUgAtxqIT5Esr5FhlucgV0jsDBP19tPyhYtnMSnoNWtWJycNn8o81JCmN+AbNGCjrC6DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211053; c=relaxed/simple;
-	bh=VPw47VFikKf8fTolInwOS7M/6m1lsw75MF8AshQmubI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLAi5NvwImkGZFwf1+UFOfdzlvndREMJQeshi7Oe0FgtxlzmidXjT3edRI8cIq5+589lHFoUHxvQ4WtiBbindclhD4s5V0oP8wtQ3tdrT6450utLsfsXqmxz5+MSIkGIcyLuw5zxXwOXgwm3R7yibFrZ53JrWvyDEQdACB0jCXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EDb9t9ug; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Lhtq1pefqTUVYOAkJzIOHqWiVsfsbUWsRek0JSSJoaM=; b=EDb9t9ug3VAuhsP2v5wV6dRtb9
-	iS7Wnq8zgIJ18meTszE5HNwkmgb/DJWG2rzHMpIlo2YO2DjOhaxa1Afh/x+VSB6uO5Dtr7QEl5l6y
-	CTgeIulElJ7lZgvn0u/oTdY7ogOeKQ9FUbXWyrwgM8EocLlJ/LQT6+wOPKMDD0UK5Eds=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2Wxt-008Ymd-Uk; Wed, 09 Apr 2025 17:03:45 +0200
-Date: Wed, 9 Apr 2025 17:03:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
- <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
- <20250408162603.02d6c3a1@bootlin.com>
- <D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
- <c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
- <D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
- <b1b33000-4c10-43cd-bcf4-d24fc73902b1@lunn.ch>
- <20250409161444.6158d388@windsurf>
+	s=arc-20240116; t=1744211876; c=relaxed/simple;
+	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PzrD1bk67ABiiDFnoaCp6fWJPvZtnnfu+Uncub5Ufurc1BoPMOI41SCWBNE1FGWXwwVTZNisTvw3RQT92evyPglQNxIRkOBXoaQQ1FsrgpCI6VcFqy7MtDuTEeeArq5evJuYcG0cNx94PDo6z7FDz6tnTCgeDG4yTVyMG67dHCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZudEVGyV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3CEC4CEE2;
+	Wed,  9 Apr 2025 15:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744211876;
+	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZudEVGyVTVqKJEXjfUOMN0q53Rs+fb13Tyxnu5nKHUFpP5TjefHF4RyfHZM37oiJJ
+	 UceMCe6PkFwazZdBel2mQOUdPca4uD6UVROcd7d8f1vtTmheTsaSrT4EtIWm3VcAcb
+	 VVD7GQWgIC+ik/IS36cIuxepH8887a/8oGw/05u1+mJaqv1FoXhjHJOMaMOLPAqxXn
+	 o7HwhF8ncBwsZZkoG+2nLTPyTVA+S6r9CAXkFIxDLgZ8pdM58/3qdhpzOsjnkxgNxy
+	 /ZaDUlnwEHRNOAUb3Od2Al/G8bGB1kxsGdiM9rgJ3wIh+SibyOfiglTRJebyEIToCh
+	 1bIzHBi1eRplQ==
+Date: Wed, 9 Apr 2025 10:17:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] pcie-xilinx: Wait for link-up status during
+ initialization
+Message-ID: <20250409151754.GA283974@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,31 +61,63 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409161444.6158d388@windsurf>
+In-Reply-To: <20250409144930.10402-1-mike.looijmans@topic.nl>
 
-On Wed, Apr 09, 2025 at 04:14:44PM +0200, Thomas Petazzoni wrote:
-> On Wed, 9 Apr 2025 16:04:51 +0200
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > And you need some way to map the PCI ID to the correct .dtso file.
-> > Maybe that is just a lookup table in the driver, or maybe you can pack
-> > the .dtso file into a kernel module with the correct
-> > MODULE_DEVICE_TABLE(pci, ...) so that PCI probing pulls in the
-> > specific driver module with the .dtso, which via dependencies pulls in
-> > the core driver which can actually make use of the .dtso?
-> 
-> Well, check the already upstream driver:
-> 
->   https://elixir.bootlin.com/linux/v6.13.7/source/drivers/misc/lan966x_pci.c
-> 
-> It indeed binds on the PCI ID, and the driver bundles the .dtbo.
+Please make the subject line match previous changes to this driver.
+See "git log --oneline drivers/pci/controller/pcie-xilinx.c"
 
-So it only supports a single .dtbo. In its current form it does not
-scale to multiple .dtso files for multiple different boards built
-around the PCIe chip.
+On Wed, Apr 09, 2025 at 04:49:24PM +0200, Mike Looijmans wrote:
+> When the driver loads, the transceiver may still be in the state of
+> setting up a link. Wait for that to complete before continuing. This
+> fixes that the PCIe core does not work when loading the PL bitstream
+> from userspace. There's only milliseconds between the FPGA boot and the
+> core initializing in that case, and the link won't be up yet. The design
+> only worked when the FPGA was programmed in the bootloader, as that will
+> give the system hundreds of milliseconds to boot.
+> 
+> As the PCIe spec allows up to 100 ms time to establish a link, we'll
+> allow up to 200ms before giving up.
 
-At the moment, that is not really an issue, but when the second board
-comes along, some refactoring will be needed.
+This sounds like there's still a race between userspace loading the PL
+bitstream and the driver waiting for link up, but we're just waiting
+longer in the kernel so userspace has more chance of winning the race.
+Is that true?
 
-      Andrew
+> @@ -126,6 +127,19 @@ static inline bool xilinx_pcie_link_up(struct xilinx_pcie *pcie)
+>  		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+>  }
+>  
+> +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	/*
+> +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
+> +	 * fabric, we're more lenient and allow 200 ms for link training.
+> +	 */
+> +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
+> +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
+> +			200 * USEC_PER_MSEC);
+
+There should be a #define in drivers/pci/pci.h for this 100ms value
+that you can use here to connect this more closely with the spec.
+
+Maybe there's a way to use read_poll_timeout(), readx_poll_timeout(),
+or something similar so we can use xilinx_pcie_link_up() directly
+instead of reimplementing it here?
+
+> +}
+> +
+>  /**
+>   * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
+>   * @pcie: PCIe port information
+> @@ -493,7 +507,7 @@ static void xilinx_pcie_init_port(struct xilinx_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  
+> -	if (xilinx_pcie_link_up(pcie))
+> +	if (!xilinx_pci_wait_link_up(pcie))
+>  		dev_info(dev, "PCIe Link is UP\n");
+>  	else
+>  		dev_info(dev, "PCIe Link is DOWN\n");
 
