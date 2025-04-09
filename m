@@ -1,89 +1,93 @@
-Return-Path: <linux-pci+bounces-25538-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25539-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56C4AA81E2B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 09:21:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70E14A81E43
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 09:27:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 851C44C1489
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 07:21:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DEA21BA2138
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Apr 2025 07:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3470C25A2AD;
-	Wed,  9 Apr 2025 07:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9A625A2BB;
+	Wed,  9 Apr 2025 07:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pXH3heZF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fxpzZVf/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB811D8A0A
-	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 07:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3265D1A7262
+	for <linux-pci@vger.kernel.org>; Wed,  9 Apr 2025 07:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183285; cv=none; b=uXJgckmLS+3HcYHbrCNW3++jBpmokTvudOyeB0A6sWVL+6C6SA8q9gLeWAYd1NzkBc3dTb8yj3VjiD8iGrFSqYkLjGnfEy5JMaNnAfUezDegMcel/mCWYByqdHlt4yrvhEBo0Id+2qljhPTNPIAlyOEWBIr1w+16mQqs8hMqPRo=
+	t=1744183637; cv=none; b=AP34C/kH/s/yv/JJLW+udtYvlxRGp4naj/46rfFDSwPzbKCwwpuhubU+f5Kr0F2NYN1xXfr9B775v2qHVQknRzl0cDZo2FZMcNvaYeCykNw00u9FErC/YjKPnjJ4aUXJ9D36AUi+ciiR4LsXJ+pTjvghW9G4P3lS2K3ZAYendBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183285; c=relaxed/simple;
-	bh=qNSl23w5CnRkWWQDCwzcmDhQyRvrFgVagKgPYfHX2a8=;
+	s=arc-20240116; t=1744183637; c=relaxed/simple;
+	bh=8Ts1vfTmlOH6tqq2vzk26pvMDa/NdwFzpsuvjn6Gqvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyG3UWDArFIBmO+q3u41fwq/yQm9LrBAkFLz7XJMrN4Wjl6ruQDlIv7sZokC5B7dqwMf/t/0gWRuAQlJuQPm0MCiQUa7AjQddKJq1oXuY/rS8BSfBMAqEIZ7TwjwTumlQz6gVLePG01FHJ1UqyQXWMCtll3wyk25DnElSW82yXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pXH3heZF; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+hKXGMfuhhFMUwXuMsefWQHlyKkll44YjTiW+FvCD1tjBTpILnew8ptY4tK+4zwMlOdOSjdNkrP6WSYKI16IJWd9cH8brxq6AslWzEEX3AtqDjB7fW5CjTEYfZuQsdtSJDAoIQIEkPASZkmDVeTpfPpjJ7+IeVEV+hZXg9A8cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fxpzZVf/; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223f4c06e9fso4250885ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 00:21:22 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736b0c68092so5322858b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 09 Apr 2025 00:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744183282; x=1744788082; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744183633; x=1744788433; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=W/Lgrhm4h4G8hxhz8A5NFWeZfI9t1CHWAlhm6z4dsMY=;
-        b=pXH3heZFOmY36C7hlyIVWOqlyX1i2qp+Wzw2JoZHbN+4feRFT/cfjxjniY9ahXt2pP
-         pSXM7GAWM3p6TqK8kyPtP0uaIXfFIl4vvBNBzpOX1gv8GnUmX345daFkHJWlk/1BcRP5
-         OPlSJvYvNC9AtVOj7PEamLr0Kxrm9uc6y7FWR0ZMbmWI7dbH291ez4ZHg8JrL7Fck1rr
-         nwOYBNRymVK4KuMbwHyFT2Z+QvhuqQDKiVdQTa3cGRUUMRpO69VjO9EDP/+tWPPIevhB
-         EcLyhNzniDxPOY+JtFTvYDjFWDSK2/R09KYl3sRANZgt9kSqW856OTWwDFJyYh3b92wR
-         2vJQ==
+        bh=bjtp5uxq5PJR8SPbumJFOhR6APtRTEBkqcgJtZZs/yI=;
+        b=fxpzZVf/nn2mUcJeaSsFQzaEf8h+OWCg190ORWaxh78ccL7Z/zHRdUMyKPf17ynbeY
+         P5ceAowkshR115+M5z/iogREkiSD8FWjHMraKQjlveVg4t+qDBF03S9l1a5YM0Jb8p35
+         DNyIcGiclHMiwSx3ZErpQYJeRzyVegPL06+FuHH9KCIBdw56oixncV/mRXn13vPKtsqP
+         PMQqs7UozjeXJcFQz6AXRLQtvf8WgCF8oJAZ4CN1n3SwDiUoOaHk7LGnd85gtJy1mFF8
+         OMCSxkIWLdL4ZgvA/jU3R2zDpWVM7n6oD0x5+SlyY2VaKG2FwJJf1cLZDk5nDKuESR/I
+         IuUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744183282; x=1744788082;
+        d=1e100.net; s=20230601; t=1744183633; x=1744788433;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/Lgrhm4h4G8hxhz8A5NFWeZfI9t1CHWAlhm6z4dsMY=;
-        b=jElMr0q1KEpZdaJSLR/QjxaIbWAjVyEzxpkLiqTnUCA3wxNBWNGgBckEjQdHO/kDc0
-         twujTNvhuC3enrpxcjhc9yEZLntBrSmU776iU+JqKUiFged8bdnVQyYPbdkLW+0lA8aZ
-         gyvWN3pRwJ7aOOXVMnz9071F1Fm+Xo3TnE7kxKED+3O8HmySVO3aUMSX/YuA9/SRl/wX
-         9eJBd6iuIrgNkKgxvvfuMyEcwJldLQGbYBhWfdybpwzD5TqjKM/hscURmzNXDbCc8him
-         qPLqrG9rMVfxj79CCvAj7qacgVcOHGMoZc+8BoDhpaWXW/J2Uq1Q00EkvAURaKyCZ1Ut
-         izGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQiv+h6ymQ/OeXqikxvNcnAGjBlE1KoaGSVo2jkT8ZF9PAsZMgMeeTjWiTjqRcEBSLLPvS+5pFa/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/3Pm+1aRBrZQ4HFc7+svnqh9+V/XK/mORak+XHm/ObozINMyn
-	UCMs125HkoQMW0v+39IuPrh3zgDh5TL3Ds9PYAzGXyUyMIs+giZ9h2i8vDcnOw==
-X-Gm-Gg: ASbGncu9dYhxwiK4bs47/r+UAnphb2Qxb4zi6I8ZYn1C+TsgATJqPKbTQYKTOfjBpV9
-	rMmsq6RRTNSK8e92S4gyrBhYmzsBinbMKiTQqTrkbNe7+xY9pDAwhIYrxrvShsEr33g4+2kwuF2
-	n98D5F1lmsLbGGtvF05ze1F1gd8wjaMNYeFRCpF1C6pTrJRaZnrzm7LQHNLywagbZ06cmpYDd9B
-	kmP5IKJScWY/uqRyBC+a/uG5PoaLIDk35ahuDr6aiTYOamcCxLP15VreaKgLx5kHa2h4U3E5AW3
-	VtVLUFmsmQC2mvdJo/N1CcHElgAyRiQc0MLqEJnZ/vlW4i1SWRY=
-X-Google-Smtp-Source: AGHT+IGUCu6KH+qbWXj60ojYm5A5DYVA5PgB9guIKo4oEmIjyN5lFtDuT6SUF5QFieMWF+Ry0lPKeA==
-X-Received: by 2002:a17:903:3c4e:b0:215:58be:334e with SMTP id d9443c01a7336-22ac324a92fmr30082095ad.10.1744183281894;
-        Wed, 09 Apr 2025 00:21:21 -0700 (PDT)
+        bh=bjtp5uxq5PJR8SPbumJFOhR6APtRTEBkqcgJtZZs/yI=;
+        b=dMbPWNPwT5mRtgIQh9+dPXbULvCSgCsajJdCV06BTC6cLD9QPCAYZqC4YfjAQ+l6Rt
+         67pbNM+E0Vi2hT//jYG0AFRp6ArOdzWDhmBlVywnjPJ/TWvMrkZqy6ZfUL2EtutRi34e
+         QtjZUVKlsgBwTaP5LTt3RmXo4/F5IuEg33mD7BwrrfNnQHR/5aL5hvW0lB7gCm+zkR8c
+         5+k6w6nY5bj2rrs9U4oKAJuqCiLZNHyv65+nV502B5tHTvRq5v+YCl+Rgfw61SX4AIxL
+         S3QUvaqnm1RMAnOTGSVmmeSx+6X0Yb5OzMe3SjyDVq3RA1YB5Bt97sqCrSFX9JmwXHgK
+         Q3+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUjpgLAFR7NUh4AdD7NtaUOgm/nWObGYrEkb/tiX/6SzMLSlghep5y2TDsdcq3vM/qWckMixj76sXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc2++15iD8ls1vZtGT25iyhqRU0drqL8Tf5TBDruSBhrvYyi80
+	6AVA0p3nfqEyDQMgXrbD7XqzzUR8FmDtnyHqdaXCKP8gVdWairn5XDojRebJeCsrLXFzB9kDyXc
+	=
+X-Gm-Gg: ASbGncs9q+91SQl///5Htc6FEV62l2pEIaaHtcVorEHJiUtrC4FYNENIAWVOGYj7ToW
+	PFR9ac4BWSBjKaS/Hcp5zpMVbq1JpaQOunQvrLcWUtA6KGRSQMJyZynT4vXqhzwAyABNOM2qGTn
+	PJPvzXvnqY49MQGMWkSHI06hRCR2hFh3+yR3z0aUzrulwkzOIy5za2mhHG4D3agUfkSlrG897pX
+	zgkUzUm3p30i+rNi8nv9KZIYH3uG7xG99lOstXWB5y98BAinzo3aQnJJtWyizUT2JiugP7ALUEz
+	oHTbFd7aAMRyb0l/WK4/u4V33CgtryIbh9hyFr3azZo6PPv8yiLBlkIEcphQiw==
+X-Google-Smtp-Source: AGHT+IFJNOB7FQRc/Tw1WyrEz0Y4erL5DJ65iCK7Rvye19VpLIDU8oQWce0axOQ4lCLAH8Qrt4ZW7g==
+X-Received: by 2002:a05:6a20:c88f:b0:1f5:6d00:ba05 with SMTP id adf61e73a8af0-201592e1b96mr2765473637.38.1744183633456;
+        Wed, 09 Apr 2025 00:27:13 -0700 (PDT)
 Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62864sm5025575ad.22.2025.04.09.00.21.19
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a322117bsm469422a12.64.2025.04.09.00.27.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:21:21 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:51:17 +0530
-From: 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "kw@linux.com" <kw@linux.com>, 
-	"robh@kernel.org" <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 0/6] Enhancements for PCIe Cadence Controllers
-Message-ID: <kx3cive5lamnvs4lnngs2d53fadpnhasagutsgdumb366btcw7@2oodfpe55bo5>
-References: <20250324082241.2565884-1-mpillai@cadence.com>
- <CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+        Wed, 09 Apr 2025 00:27:12 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:57:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
+	johan+linaro@kernel.org, cassel@kernel.org, quic_schintav@quicinc.com, 
+	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/9 RESEND] dt-bindings: PCI: Add STM32MP25 PCIe Root
+ Complex bindings
+Message-ID: <ku3lsolnbbwwlngi54lpe4j6s476rhxi662vqvlwwua4sos4du@b6j6zofrpuuy>
+References: <20250325065935.908886-1-christian.bruel@foss.st.com>
+ <20250325065935.908886-2-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,50 +97,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <20250325065935.908886-2-christian.bruel@foss.st.com>
 
-On Mon, Mar 24, 2025 at 09:08:09AM +0000, Manikandan Karunakaran Pillai wrote:
-> Enhances the exiting Cadence PCIe controller drivers to support second
-> generation PCIe controller also referred as HPA(High Performance
-> Architecture) controllers.
+On Tue, Mar 25, 2025 at 07:59:27AM +0100, Christian Bruel wrote:
+> Document the bindings for STM32MP25 PCIe Controller configured in
+> root complex mode with one root port.
 > 
-> Comments from the earlier patch submission on the same enhancements are
-> taken into consideration. The previous submitted patch links is
-> https://patchwork.kernel.org/project/linux-pci/patch/
-> CH2PPF4D26F8E1CB68755477DCA7AA9C6EBA2EE2@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+> Supports 4 INTx and MSI interrupts from the ARM GICv2m controller.
 > 
-> The changes are tested on 2 platforms. The legacy controller changes are
-> tested on an TI J7200 EVM and HPA changes are tested on an FPGA platform
-> available within Cadence.
+> STM32 PCIe may be in a power domain which is the case for the STM32MP25
+> based boards.
 > 
-> Manikandan K Pillai (6):
->   dt-bindings: pci: cadence: Add property "hpa" for PCIe controllers
->   PCI: cadence: Add header support for PCIe next generation controllers
->   PCI: cadence: Add architecture information for PCIe controller
->   PCI: cadence: Add support for PCIe Endpoint HPA controller
->   PCI: cadence: Add callback functions for Root Port and EP controllers
->   PCI: cadence:  Update support for TI J721e boards
+> Supports WAKE# from wake-gpios
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+One comment below.
+
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/pci/st,stm32-pcie-common.yaml    |  33 ++++++
+>  .../bindings/pci/st,stm32-pcie-host.yaml      | 112 ++++++++++++++++++
+>  2 files changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
 > 
 
-Your series is broken in some form that neither lore nor my email client could
-find all patches linked to the cover letter. Please use a better tooling like b4
-and resubmit.
+[...]
+
+> +    pcie@48400000 {
+> +        compatible = "st,stm32mp25-pcie-rc";
+> +        device_type = "pci";
+> +        reg = <0x48400000 0x400000>,
+> +              <0x10000000 0x10000>;
+> +        reg-names = "dbi", "config";
+> +        #interrupt-cells = <1>;
+> +        interrupt-map-mask = <0 0 0 7>;
+> +        interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        ranges = <0x01000000 0x0 0x00000000 0x10010000 0x0 0x10000>,
+> +                 <0x02000000 0x0 0x10020000 0x10020000 0x0 0x7fe0000>,
+> +                 <0x42000000 0x0 0x18000000 0x18000000 0x0 0x8000000>;
+> +        dma-ranges = <0x42000000 0x0 0x80000000 0x80000000 0x0 0x80000000>;
+> +        clocks = <&rcc CK_BUS_PCIE>;
+> +        resets = <&rcc PCIE_R>;
+> +        msi-parent = <&v2m0>;
+> +        access-controllers = <&rifsc 68>;
+> +        power-domains = <&CLUSTER_PD>;
+> +
+> +        pcie@0,0 {
+> +          device_type = "pci";
+
+Indentation is off by 2 spaces.
 
 - Mani
-
->  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |   4 +
->  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   7 +
->  drivers/pci/controller/cadence/pci-j721e.c    |   8 +
->  .../pci/controller/cadence/pcie-cadence-ep.c  | 179 +++++++++--
->  .../controller/cadence/pcie-cadence-host.c    | 257 ++++++++++++++--
->  .../controller/cadence/pcie-cadence-plat.c    |  30 ++
->  drivers/pci/controller/cadence/pcie-cadence.c | 195 +++++++++++-
->  drivers/pci/controller/cadence/pcie-cadence.h | 290 +++++++++++++++++-
->  8 files changed, 922 insertions(+), 48 deletions(-)
-> 
-> -- 
-> 2.27.0
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
