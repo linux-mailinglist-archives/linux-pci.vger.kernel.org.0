@@ -1,132 +1,185 @@
-Return-Path: <linux-pci+bounces-25634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8C59A84973
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 18:22:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B604A8497C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 18:24:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA96217C31B
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 16:22:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F22E9A2000
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 16:23:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7362C1EDA12;
-	Thu, 10 Apr 2025 16:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4035B1D5CE8;
+	Thu, 10 Apr 2025 16:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axey5ek3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GuYMRDrY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458421D5CE8;
-	Thu, 10 Apr 2025 16:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9042A1EDA12
+	for <linux-pci@vger.kernel.org>; Thu, 10 Apr 2025 16:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302119; cv=none; b=Wx2WN2VN4g/eyvWoqFDouDlvZERlWsm7SbN4w6cWMWZmTEVUjmJ2j4NycXTblRxXLOCpIGV4PwVIcCbjavVgjCMaoSxIuSh46a800foDg8lTCgPUyuHTi7TJsz1m6XJrZPRR90Tl0sVqxkqVdpzP1RlVBR4IKukRDTYwddEZm+w=
+	t=1744302229; cv=none; b=DY88Rb2SRY8JwaXXzAB3FHkZcAKqwllnRtLkFHGhwVByLdhymFNKBEvN8TM2vCAgqNdevJKqwQ9PcRX7NKDzgTNfKVMJ1OMeEVs8l1DxlQJ6CmSdF4/KGZTaBbh5hOrw/0DjHSV3/FtggLfTb5UGMzKi+iWYrpgkH4ld0OuGjxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302119; c=relaxed/simple;
-	bh=xE5n6B+MNRMKtpObrYG84EMMt9mli5Pp21a1M9jmvY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BXZia38I6JsvfJ2sy8WsoLfY0rYbEsfUISaAzSK4cOSsJ7pj0rAKVu5pfLQcP0cpJzjMvyZKWBezDYLDXF7XhJjCD572EjhsPpIIi1qR6mvkzmzs/pub76Ag9jxptCP+65tHt4gDrOZw1jSGgg9UPdGoflQKD0xTVjbHBUxy4So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axey5ek3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78860C4CEDD;
-	Thu, 10 Apr 2025 16:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744302118;
-	bh=xE5n6B+MNRMKtpObrYG84EMMt9mli5Pp21a1M9jmvY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=axey5ek338ZhZvIs+yMX5kJJ3aG2naqpdsmvWwGPjBGv+2dxL32lP+Vxln2MY+k3x
-	 MV4GVEcky/bUOisI26LOF/2Z/m1S3jF8g9b9MPn84WLS1zL+pdrtYZ5rTAQfKG9Vtn
-	 GqcA+Vh07HiUFEm+rXfyIMwmaUN9LKvcY1RhZswB/xfyJVWi0TgDN0Ydh0WhRWA24p
-	 4yUDO4dLScMrqsNpmS97PrnbyyqtdRYkD/x8dzkEiZAxyYC7aodlsk9NEIPBV6xHGA
-	 Mac99+oKtMf8TjP3Wjca6IE2hR74/rWcbHuf1Tr8ryKRm/nFzKE7kvZy0j0jfrug0s
-	 Y/Q2MzxToNdYQ==
-Date: Thu, 10 Apr 2025 11:21:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Michael Chan <mchan@broadcom.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Leon Romanovsky <leon@kernel.org>
-Cc: netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: PCI VPD checksum ambiguity
-Message-ID: <20250410162157.GA328195@bhelgaas>
+	s=arc-20240116; t=1744302229; c=relaxed/simple;
+	bh=Zse19Flxl4HY0v0Jk8JGVeE8Exp6P67ep/qZayqS3QU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=oEFApCP2y6x9GMgMes86XyDV1QVWHFjuU32Qfi+xvWR4gPnZ4iTfblExXaCUoFqf4e0Axr6L2LoB6tOcZZv5J4IXb4HSRGKkxxBqiC9rmb1mmX7ZJ4hLgKJTNPIF+svFyjJex4amT7IhUYm9CBkW21y9hUP2kyxvFqcI0+YkBvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GuYMRDrY; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744302228; x=1775838228;
+  h=date:from:to:cc:subject:message-id;
+  bh=Zse19Flxl4HY0v0Jk8JGVeE8Exp6P67ep/qZayqS3QU=;
+  b=GuYMRDrY4ePhpECX8bq4rBOjQh1vF3T0xZj+zeNF5yphFQDtEktt8LqF
+   y3JlOvfg+zz6dG6bew83eJ8qE1RXQPcZDVtgsrjuSA0IBO5meMgCoEyOv
+   oDfQUqTajzulpBu72+jqaZYiYPV7soxRbbMcd/wyQJ3ZXYqi6PgUM71kx
+   3tIJmkUT0fzyRs3iRkeGSXrWYOa8svYOjzHZAeGp4n7gT0qKmEXyz1Vj+
+   lf3LsZJHJAiezkmryyafsdyRoKvr025Lbr4BkCWrHVoMsdXvL8zztAugW
+   6k+qZw+LkyqC6aHVMSq33I7JzKGGBBAv7bzSjTTSxQ/nAONupjHteOiqr
+   w==;
+X-CSE-ConnectionGUID: gtBMU2+0SCu4I6xF/qX3Hw==
+X-CSE-MsgGUID: 7xmVG45ATcuKTfReFW+mfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45545585"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="45545585"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:23:47 -0700
+X-CSE-ConnectionGUID: 5POv8IFOQq+p4XBMeE2pNg==
+X-CSE-MsgGUID: RJChnE7yRLq3JAqblUPxyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="133816329"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 10 Apr 2025 09:23:47 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2ugp-000AJH-2f;
+	Thu, 10 Apr 2025 16:23:43 +0000
+Date: Fri, 11 Apr 2025 00:22:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 71a99d678d5fa6848478834d9572b8c2228ff464
+Message-ID: <202504110037.N0tOSU65-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401205544.GA1620308@bhelgaas>
 
-On Tue, Apr 01, 2025 at 03:55:44PM -0500, Bjorn Helgaas wrote:
-> Hi,
-> 
-> The PCIe spec is ambiguous about how the VPD checksum should be
-> computed, and resolving this ambiguity might break drivers.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 71a99d678d5fa6848478834d9572b8c2228ff464  Merge branch 'pci/irq'
 
-Any more input on this?  It would be great to have more information
-about how vendors compute the checksum on their devices.
+elapsed time: 1468m
 
-There is a proposed PCIe spec change to resolve the ambiguity, and the
-intent is to make a change that reflects what vendors have actually
-implemented.
+configs tested: 92
+configs skipped: 2
 
-The only concrete data I've seen so far is from Pavan at Broadcom
-(thank you very much for that), where the checksum starts at the
-beginning of VPD, not at the beginning of VPD-R.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you can collect VPD data from devices, you can use something like
-this to compute the checksum from the beginning of VPD:
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250410    gcc-14.2.0
+arc                   randconfig-002-20250410    gcc-12.4.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250410    clang-21
+arm                   randconfig-002-20250410    clang-18
+arm                   randconfig-003-20250410    gcc-7.5.0
+arm                   randconfig-004-20250410    gcc-8.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250410    clang-21
+arm64                 randconfig-002-20250410    clang-21
+arm64                 randconfig-003-20250410    gcc-6.5.0
+arm64                 randconfig-004-20250410    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250410    gcc-14.2.0
+csky                  randconfig-002-20250410    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250410    clang-21
+hexagon               randconfig-002-20250410    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250410    clang-20
+i386        buildonly-randconfig-002-20250410    clang-20
+i386        buildonly-randconfig-003-20250410    clang-20
+i386        buildonly-randconfig-004-20250410    gcc-11
+i386        buildonly-randconfig-005-20250410    clang-20
+i386        buildonly-randconfig-006-20250410    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250410    gcc-12.4.0
+loongarch             randconfig-002-20250410    gcc-12.4.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250410    gcc-14.2.0
+nios2                 randconfig-002-20250410    gcc-10.5.0
+parisc                randconfig-001-20250410    gcc-5.5.0
+parisc                randconfig-002-20250410    gcc-11.5.0
+powerpc               randconfig-001-20250410    gcc-6.5.0
+powerpc               randconfig-002-20250410    gcc-6.5.0
+powerpc               randconfig-003-20250410    clang-21
+powerpc64             randconfig-001-20250410    clang-21
+powerpc64             randconfig-002-20250410    clang-21
+powerpc64             randconfig-003-20250410    clang-21
+riscv                 randconfig-001-20250410    clang-21
+riscv                 randconfig-002-20250410    gcc-8.5.0
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250410    clang-17
+s390                  randconfig-002-20250410    gcc-6.5.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250410    gcc-12.4.0
+sh                    randconfig-002-20250410    gcc-10.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250410    gcc-10.3.0
+sparc                 randconfig-002-20250410    gcc-7.5.0
+sparc64               randconfig-001-20250410    gcc-7.5.0
+sparc64               randconfig-002-20250410    gcc-5.5.0
+um                               allmodconfig    clang-19
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250410    clang-21
+um                    randconfig-002-20250410    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250410    clang-20
+x86_64      buildonly-randconfig-002-20250410    gcc-12
+x86_64      buildonly-randconfig-003-20250410    clang-20
+x86_64      buildonly-randconfig-004-20250410    clang-20
+x86_64      buildonly-randconfig-005-20250410    clang-20
+x86_64      buildonly-randconfig-006-20250410    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250410    gcc-14.2.0
+xtensa                randconfig-002-20250410    gcc-7.5.0
 
-  addr=0; sum=0; xxd -r -c 32 vpd.txt | xxd -p -g1 -c1 x.bin | while read X; do sum=$(($sum + "0x$X")); printf "addr 0x%04x: 0x%02x sum 0x%02x\n" $addr "0x$X" $(($sum % 256)); addr=$(($addr + 1)); done
-
-(You still have to figure out manually where the RV item is so you
-don't include the writable VPD-W part.)
-
-> PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
-> checksum:
-> 
->   One VPD-R (10h) tag is used as a header for the read-only keywords.
->   The VPD-R list (including tag and length) must checksum to zero.
-> 
-> But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
-> 
->   RV   The first byte of this item is a checksum byte. The checksum is
->        correct if the sum of all bytes in VPD (from VPD address 0 up
->        to and including this byte) is zero.
-> 
-> These are obviously different unless VPD-R happens to be the first
-> item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
-> String item should be the first item, preceding the VPD-R list:
-> 
->   The first VPD tag is the Identifier String (02h) and provides the
->   product name of the device. [6.27]
-> 
->   Large resource type Identifier String (02h)
-> 
->     This tag is the first item in the VPD storage component. It
->     contains the name of the add-in card in alphanumeric characters.
->     [6.27.2.1, Table 6-23]
-> 
-> I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
-> bytes in the buffer up to and including the checksum byte of the RV
-> keyword.  The range starts at 0, not at the beginning of the VPD-R
-> read-only list, so it likely includes the Identifier String.
-> 
-> As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
-> drivers use pci_vpd_check_csum().  Of course, other drivers might
-> compute the checksum themselves.
-> 
-> Any thoughts on how this spec ambiguity should be resolved?
-> 
-> Any idea how devices in the field populate their VPD?
-> 
-> Can you share any VPD dumps from devices that include an RV keyword
-> item?
-> 
-> Bjorn
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
