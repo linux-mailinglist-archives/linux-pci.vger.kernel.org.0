@@ -1,162 +1,141 @@
-Return-Path: <linux-pci+bounces-25616-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25617-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52FA5A83E02
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 11:12:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4755CA83DF8
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 11:10:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C206F9E08D4
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 09:05:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 409E6179312
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 09:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808232144B4;
-	Thu, 10 Apr 2025 09:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87BC20E030;
+	Thu, 10 Apr 2025 09:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="DxzR6flk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lXw/zGFs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m32114.qiye.163.com (mail-m32114.qiye.163.com [220.197.32.114])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11AC20F069
-	for <linux-pci@vger.kernel.org>; Thu, 10 Apr 2025 09:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA956205AA5;
+	Thu, 10 Apr 2025 09:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275789; cv=none; b=dOvZhosgc9o1nH2tTuthbk2tpcqw4x7SY4KPAHsWReSwbV5TMIoLTYhqfBqfngo6AFsUi00PniEC2t9/3PPw+EkKK8LTXtH4JjGWzFk+ZIAbtDvAVtjbcL94LFp0nc1zsdD1MPLnXKBXvfptf9aVnI0YS92uvuICyMDiSNIDU+g=
+	t=1744275954; cv=none; b=J7VWHCsiK+00p2SAVzTkw4HojpH2zUXZOOCcKBhOeaM+zR9vH9MP0bH380QVfYZj3xPcvl20CTG5CEkeTuuA+a3cUOVh6/r5ZmN9ss5HtOFrNcRif8WRGRW0EcErveLq2h+IdIstnHYmQbeKAyN/WsnukwItkwu2YD1ziVXssQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275789; c=relaxed/simple;
-	bh=OotE7cHBSFlzurwTI18wNFBuZPftr/UlkB6mzjMB4ko=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cH231Kkq5kxDz8eCSViY+cMYva2ox+xU+PkUQRg8a5hW3XFhyXKdZ2nozks1OlXqfKoJHeKHRwxXj8ynH6COQ35Uspi7WSAxrQPA+lBsH0XpqJ9acmgwnfayx2KEgT0lhc+5jR5KpM6JnSePJEkxvI9KYu3uUjWZbZiGhrtT2hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=DxzR6flk; arc=none smtp.client-ip=220.197.32.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1160c0ad2;
-	Thu, 10 Apr 2025 16:57:46 +0800 (GMT+08:00)
-Message-ID: <11fa4ae4-2765-8d10-176f-602bf9d81d4b@rock-chips.com>
-Date: Thu, 10 Apr 2025 16:57:26 +0800
+	s=arc-20240116; t=1744275954; c=relaxed/simple;
+	bh=SyNgFYqShoX8sG1EvElMpp2wgQICe5/LIovg4bPhTLM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYFrk8RRSUqmxnL+2deceAomsyq/YWlrDMbqI1bKOKwcMhW/uZB69iI7OA3UcaAcz/m3qq4kRgvMQWwEt0xTpe61TUYCB+ffhg+eDi+84x+ZKgkSlw6t0fJ2r2H/SO7PZDsWKR+9g2wAYKrZZnIocWr8P5nS3yQ1F82Y4hAMc5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lXw/zGFs; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95OH71769035
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 04:05:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744275924;
+	bh=SD7cOLHPNPRn+FrhFL4jj5FK1/KNQWomyZ99DtlTZeo=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=lXw/zGFsunICye/4+h6fJgF860Fh84ljOwinYE5ODgpWsnA7QcvEKWuxpcVnVddle
+	 rTMdN6bbQFVP/3oIwr9QgvX3r9VeqqkQdDJJ8B9ZJx58SlMz3onu+Kqsb96dywsKSS
+	 WAkMgmYnwZxWC0f9FiEzjsdlCPK8SSxyifS9vBxo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95Out047438
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 10 Apr 2025 04:05:24 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
+ Apr 2025 04:05:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 10 Apr 2025 04:05:23 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A95MPQ048842;
+	Thu, 10 Apr 2025 04:05:22 -0500
+Date: Thu, 10 Apr 2025 14:35:21 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Frank Li <Frank.Li@nxp.com>
+CC: <s-vadapalli@ti.com>, <bhelgaas@google.com>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <krzk+dt@kernel.org>, <kw@linux.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <lpieralisi@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <robh@kernel.org>, <tony@atomide.com>, <vigneshr@ti.com>
+Subject: Re: [PATCH 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
+Message-ID: <9bd626d5-8fcd-4076-af52-deea6cf2dedc@ti.com>
+References: <20250409153518.3068176-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Enable L0S capability
-To: Niklas Cassel <cassel@kernel.org>
-References: <1744248981-43371-1-git-send-email-shawn.lin@rock-chips.com>
- <Z_eEw-l6SG-lF_7R@ryzen>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <Z_eEw-l6SG-lF_7R@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRgfQlYfTksdHU8fSBgZTR9WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a961eeb67ce09cckunm1160c0ad2
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M0k6Kxw5DTJJQzARMSEMSxoj
-	HA4KFAJVSlVKTE9PSUxOT01MSUpIVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUhCSEo3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=DxzR6flkJJfZ2y5DXmXLBgdMMmPnAx1sGQbgFWd/hnsibiQy78TS4qTBKtzd/LG4GVmoZ2+YdcsgQ+IhivI7Ww+hQ0WK8IzA2to4eLsuWXLnFtR12FQNGhZBrxAvpshxBpEp2f78mWwhMfVdrdSvNjKalINLA82M+Arr7sltrKU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=KGUyqCpZlkneH9bPtD1oxyi9RUc2m083c5vFMnUGzPs=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250409153518.3068176-1-Frank.Li@nxp.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-在 2025/04/10 星期四 16:43, Niklas Cassel 写道:
-> Hello Shawn,
-> 
-> On Thu, Apr 10, 2025 at 09:36:21AM +0800, Shawn Lin wrote:
->> L0S capability isn't enabled on all SoCs by default, so enabling it
->> in order to make ASPM L0S work on Rockchip platforms. We have been
->> testing it for quite a long time and the default FTS number provided
->> by DWC core is broken since it fits only for DWC PHY IP but not for
->> other types of PHY IP from other vendors.
-> 
-> If we take the rk3588 SoC for example,
-> some PCIe controllers use PHY:
-> drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-> some PCIe controllers use PHY:
-> drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-> 
-> This second PHY is obviously a Synopsys PHY.
-> 
-> So, I think the commit message is a bit confusing/misleading,
-> since IMO the second PHY driver is for a DWC PHY IP.
-> 
-> Is this N_FTS value correct for both of these PHYs?
+On Wed, Apr 09, 2025 at 11:35:18AM -0400, Frank Li wrote:
 
-yes, the vaule is PHY depends, but we don't know which PHY is
-used currently. So the safest one is 255 which is the max defined
-in spec, seems work fine for both under massive test.
+Hello Frank,
+
+> This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
+> 
+> The previous device tree correctly reflects the hardware behavior.
+> The reverted commit introduced a fake address translation at pcie's parent
+> bus node.
+
+More details are required in the commit message. The commit being
+reverted states:
+
+"The range for 0 is typically used for child devices as the offset from the
+module base. In the following patches, we will update pcie to probe with
+ti-sysc, and the patches become a bit confusing to read compared to other
+similar modules unless we update the ranges first. So let's just use the
+full addresses for ranges for the 0x20000000 and 0x30000000 ranges."
+
+The commit message in this patch should probably indicate something
+along the lines of:
+The commit being reverted updated the "ranges" property for the sake of
+readability but that is no longer required because <your reason here>.
+
+Tony Lindgren is the author of the commit being reverted. Tony could
+clarify if the purpose of the commit was more than just improving
+readability.
 
 > 
+> Reverting this change prepares for the cleanup of the driver's
+> cpu_addr_fixup() hook.
 > 
-> Having this code in ->start_link() looks incorrect.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Previous disscusion at
+> https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
+> ---
+>  arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
+>  1 file changed, 11 insertions(+), 18 deletions(-)
 > 
-> rockchip_pcie_configure_rc(), calls dw_pcie_host_init().
-> 
-> dw_pcie_host_init() first calls dw_pcie_setup_rc(), which calls dw_pcie_setup().
-> dw_pcie_setup() will write pci->n_fts[0] / pci->n_fts[1].
-> 
-> dw_pcie_host_init() then calls dw_pcie_start_link()
-> (which calls ->start_link()).
-> 
-> So, setting pci->n_fts[0] / pci->n_fts[1] in ->start_link() is thus too late.
-> 
+> diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> index b709703f6c0d4..711ce4c31bb1f 100644
+> --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> @@ -195,24 +195,22 @@ axi0: target-module@51000000 {
+>  			clock-names = "fck", "phy-clk", "phy-clk-div";
+>  			#size-cells = <1>;
+>  			#address-cells = <1>;
+> -			ranges = <0x51000000 0x51000000 0x3000>,
+> -				 <0x20000000 0x20000000 0x10000000>;
+> +			ranges = <0x51000000 0x51000000 0x3000
+> +				  0x0	     0x20000000 0x10000000>;
+>  			dma-ranges;
 
-Oops, I did move n_fts a bit afterward after testing, in order to look
-more reasonable until we enable L0S capability. Let me see how to fix
-it.
+[...]
 
-Thannks for the review.
-
-> 
-> Kind regards,
-> Niklas
-> 
-> 
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index 21dc99c..56acfea 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -185,6 +185,20 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
->>   static int rockchip_pcie_start_link(struct dw_pcie *pci)
->>   {
->>   	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
->> +	u32 cap, lnkcap;
->> +
->> +	/* Enable L0S capability for all SoCs */
->> +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> +	if (cap) {
->> +		/* Default fts number(210) is broken, override it */
->> +		pci->n_fts[0] = 255; /* Gen1 */
->> +		pci->n_fts[1] = 255; /* Gen2+ */
->> +		lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
->> +		lnkcap |= PCI_EXP_LNKCAP_ASPM_L0S;
->> +		dw_pcie_dbi_ro_wr_en(pci);
->> +		dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
->> +		dw_pcie_dbi_ro_wr_dis(pci);
->> +	}
->>   
->>   	/* Reset device */
->>   	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
->> -- 
->> 2.7.4
->>
-> 
+Regards,
+Siddharth.
 
