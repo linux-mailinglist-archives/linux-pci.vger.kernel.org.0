@@ -1,141 +1,126 @@
-Return-Path: <linux-pci+bounces-25617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4755CA83DF8
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 11:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF146A83E69
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 11:22:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 409E6179312
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 09:07:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29DB816E755
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 09:17:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87BC20E030;
-	Thu, 10 Apr 2025 09:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36A820C026;
+	Thu, 10 Apr 2025 09:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lXw/zGFs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DL7EBaC5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA956205AA5;
-	Thu, 10 Apr 2025 09:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45320F079
+	for <linux-pci@vger.kernel.org>; Thu, 10 Apr 2025 09:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275954; cv=none; b=J7VWHCsiK+00p2SAVzTkw4HojpH2zUXZOOCcKBhOeaM+zR9vH9MP0bH380QVfYZj3xPcvl20CTG5CEkeTuuA+a3cUOVh6/r5ZmN9ss5HtOFrNcRif8WRGRW0EcErveLq2h+IdIstnHYmQbeKAyN/WsnukwItkwu2YD1ziVXssQ4=
+	t=1744276608; cv=none; b=tWfOSuD1z/agrVfW1UahC5S0dy9K8uYOXjYuIbuds/DLcPKxUtlAcIcglgsMVx2SEID3IK25TT8cs65LQQhVkaYDtYBToERnFStMUTvNDnwTK9yTNZtJZ7ySsqeYR1LfP7k7HKfjztBxa39ucg7S9Xuk6jFtFJYEcljSxFQl6dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275954; c=relaxed/simple;
-	bh=SyNgFYqShoX8sG1EvElMpp2wgQICe5/LIovg4bPhTLM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SYFrk8RRSUqmxnL+2deceAomsyq/YWlrDMbqI1bKOKwcMhW/uZB69iI7OA3UcaAcz/m3qq4kRgvMQWwEt0xTpe61TUYCB+ffhg+eDi+84x+ZKgkSlw6t0fJ2r2H/SO7PZDsWKR+9g2wAYKrZZnIocWr8P5nS3yQ1F82Y4hAMc5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lXw/zGFs; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95OH71769035
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 04:05:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744275924;
-	bh=SD7cOLHPNPRn+FrhFL4jj5FK1/KNQWomyZ99DtlTZeo=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=lXw/zGFsunICye/4+h6fJgF860Fh84ljOwinYE5ODgpWsnA7QcvEKWuxpcVnVddle
-	 rTMdN6bbQFVP/3oIwr9QgvX3r9VeqqkQdDJJ8B9ZJx58SlMz3onu+Kqsb96dywsKSS
-	 WAkMgmYnwZxWC0f9FiEzjsdlCPK8SSxyifS9vBxo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95Out047438
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 04:05:24 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 04:05:23 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 04:05:23 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A95MPQ048842;
-	Thu, 10 Apr 2025 04:05:22 -0500
-Date: Thu, 10 Apr 2025 14:35:21 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Frank Li <Frank.Li@nxp.com>
-CC: <s-vadapalli@ti.com>, <bhelgaas@google.com>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <krzk+dt@kernel.org>, <kw@linux.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <lpieralisi@kernel.org>, <manivannan.sadhasivam@linaro.org>,
-        <robh@kernel.org>, <tony@atomide.com>, <vigneshr@ti.com>
-Subject: Re: [PATCH 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Message-ID: <9bd626d5-8fcd-4076-af52-deea6cf2dedc@ti.com>
-References: <20250409153518.3068176-1-Frank.Li@nxp.com>
+	s=arc-20240116; t=1744276608; c=relaxed/simple;
+	bh=itSqP8ogBAobjCYHP+CFBbneh9aJwPMtMma1ImNEw+8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=an625QLA9ay9J0oW8vZGxB0XVizRYTpXX4oi9kDBCCid3dS2dk3HRLcn0OtizsglpCXDpPhffweOXXlNY8ltaq0TKHTjcA2AXtu/uJbBHlZE9olQbxUUru9+EUgdC6NBdY+DIQpoi6Zd/YhAj7mMEDHaxbvvS5qpNCw3B8NkdyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DL7EBaC5; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so3387385e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 10 Apr 2025 02:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744276605; x=1744881405; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfvJMVFhf1+kAn7tCoC+aB8KULrWlIykltXkyJsg4r8=;
+        b=DL7EBaC5qkUVQcgyCv48Uo45zC7QclPvd+uf6LNgwtPRBOmezx8ek7ej9KTPM4aC91
+         fdXQDcggXpCQnYJT4wtoRnfmFWNb6gl6BV9dc9tK4vSG0x4j//bIDhYiT3W2HyBK+h9v
+         XksFJpUdf4oPIdRLYNB9WUbPurSh0nl8eAUKDAFIlEyARYHR/gpSZDKNE8DUoypJ8txI
+         YvPsxvocDazwe56b5RHpYiAzTi1iuYDpNPgmH1tek+wR1n7MM4GpdtvyeGTmRwPSstz6
+         upKN55JcTLG2he0PLvB01PmAr4JQ9W/+JsqENYHGf9KmnqkmlOtWy5CQyb9A2N/qzWMe
+         jVPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744276605; x=1744881405;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfvJMVFhf1+kAn7tCoC+aB8KULrWlIykltXkyJsg4r8=;
+        b=IQaHvJpPu4pUYTB5UgdW0DoyUNi2s6rh1wnOzhehJiIleLvBDU6y1EV/EOlDofMkDs
+         N77Ab7NkAyYq6p6vrHRP9Fa1r6WzaizqIIZ7FBhocT3kOTW8nMtgUe6ak0vJIQxisLy7
+         Qqud1srta0b5dA7wFjKEZ9wV/Ha6fs5idxY2Ok+kpQGOcB0FDMih7N/XoTm6NPY7tL9h
+         z2TBQu/de3W/irYuBnz9BXD6hhXwH/+rzJErMsX9iF24xEaHFpJpPCKGnkXnRLUZTg4Y
+         RbZOMJuNyD6ome3iQIJVU+hYJJXz/fYaRiK7zSOs+oS39433ocmcNWmjU02uOE+e0aMd
+         h5Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCFgNcg2wmFkYuxIEE5mUnJt+Cz8y2/wgbTfM2/Vsjxk0E3cUWCjuU2Cxg1k+kRZW8VSv68whEX7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfvjeCD/v3d9gYg5vS8rg2M3ncrs0DEJQkPzRr/UPjtdGweGTI
+	Ff+wTLKBJ/sGKv5dOTaHyRG4rHI8FMg8doJkSTfHChXHvpt21Us55NJGcfg/P0GuLKWFeWiJEW4
+	T53eWI5Vy74wM1A==
+X-Google-Smtp-Source: AGHT+IETeoAaNtvfDFEMNKBYDouZZNCtt3iqFBqsbj3dZ6TE/CPvQOWwMIom6SUQsR7LhOwbohGA98ZZqIG3vlE=
+X-Received: from wmrn9.prod.google.com ([2002:a05:600c:5009:b0:43c:f8ae:4d6c])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4e51:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-43f2d98b578mr24536995e9.30.1744276605380;
+ Thu, 10 Apr 2025 02:16:45 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:16:43 +0000
+In-Reply-To: <20250409-no-offset-v2-2-dda8e141a909@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250409153518.3068176-1-Frank.Li@nxp.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com> <20250409-no-offset-v2-2-dda8e141a909@gmail.com>
+Message-ID: <Z_eMe7y0ixrBrHaz@google.com>
+Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Apr 09, 2025 at 11:35:18AM -0400, Frank Li wrote:
-
-Hello Frank,
-
-> This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
+On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
+> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> the interface of `HasWork` and replacing pointer arithmetic with
+> `container_of!`. Remove the provided implementation of
+> `HasWork::get_work_offset` without replacement; an implementation is
+> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+> `HasWork::work_container_of` which was apparently necessary to access
+> `OFFSET` as `OFFSET` no longer exists.
 > 
-> The previous device tree correctly reflects the hardware behavior.
-> The reverted commit introduced a fake address translation at pcie's parent
-> bus node.
-
-More details are required in the commit message. The commit being
-reverted states:
-
-"The range for 0 is typically used for child devices as the offset from the
-module base. In the following patches, we will update pcie to probe with
-ti-sysc, and the patches become a bit confusing to read compared to other
-similar modules unless we update the ranges first. So let's just use the
-full addresses for ranges for the 0x20000000 and 0x30000000 ranges."
-
-The commit message in this patch should probably indicate something
-along the lines of:
-The commit being reverted updated the "ranges" property for the sake of
-readability but that is no longer required because <your reason here>.
-
-Tony Lindgren is the author of the commit being reverted. Tony could
-clarify if the purpose of the commit was more than just improving
-readability.
-
+> A similar API change was discussed on the hrtimer series[1].
 > 
-> Reverting this change prepares for the cleanup of the driver's
-> cpu_addr_fixup() hook.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Tested-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > ---
-> Previous disscusion at
-> https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
-> ---
->  arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
->  1 file changed, 11 insertions(+), 18 deletions(-)
+>  rust/kernel/workqueue.rs | 45 ++++++++++++---------------------------------
+>  1 file changed, 12 insertions(+), 33 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> index b709703f6c0d4..711ce4c31bb1f 100644
-> --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> @@ -195,24 +195,22 @@ axi0: target-module@51000000 {
->  			clock-names = "fck", "phy-clk", "phy-clk-div";
->  			#size-cells = <1>;
->  			#address-cells = <1>;
-> -			ranges = <0x51000000 0x51000000 0x3000>,
-> -				 <0x20000000 0x20000000 0x10000000>;
-> +			ranges = <0x51000000 0x51000000 0x3000
-> +				  0x0	     0x20000000 0x10000000>;
->  			dma-ranges;
+> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> index f98bd02b838f..1d640dbdc6ad 100644
+> --- a/rust/kernel/workqueue.rs
+> +++ b/rust/kernel/workqueue.rs
+> @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+>  ///
+>  /// # Safety
+>  ///
+> -/// The [`OFFSET`] constant must be the offset of a field in `Self` of type [`Work<T, ID>`]. The
+> -/// methods on this trait must have exactly the behavior that the definitions given below have.
+> +/// The methods on this trait must have exactly the behavior that the definitions given below have.
 
-[...]
+This wording probably needs to be rephrased. You got rid of the
+definitions that sentence refers to.
 
-Regards,
-Siddharth.
+Alice
 
