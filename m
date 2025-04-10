@@ -1,147 +1,124 @@
-Return-Path: <linux-pci+bounces-25629-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25630-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0269AA84616
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 16:19:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58FEEA8467C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 16:37:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFC85189BC03
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 14:16:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A9D9169281
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Apr 2025 14:35:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3912853FA;
-	Thu, 10 Apr 2025 14:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671EA284B31;
+	Thu, 10 Apr 2025 14:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS4nQLJK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXY/3B/H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C921CC6A;
-	Thu, 10 Apr 2025 14:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FA6202F97
+	for <linux-pci@vger.kernel.org>; Thu, 10 Apr 2025 14:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294594; cv=none; b=Rr9uFLRB2czwGLigFPZtAyXB4gD7zFwIASQ6P0scQ17njHtJZIHSdmBcutH3wfmu6OBX0xKBZzu6im3mo8Kx91zWBWSFCB7YywxcJw4xP4pyonkTYETenKLMwYdDrS9zzteImthJ4hVQ5iFdwfOWUHqSZjKFRrV+ZuZV2rzR9S4=
+	t=1744295697; cv=none; b=RNsdZXS9FPcjUykV0/cdI0b4xST232adbB3anumJpYMBfe/MAsJIxr0dQBqSb9k9vXt9HrLVyaN7j0GblqGipp4/KULRIwdPnyhX0MJEVdJkft4reCbTu5DOqIjYGSad9+M+Y4ds8VYNVnuN+XUG03tCd0Gl2D4j+6tuRzebdqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294594; c=relaxed/simple;
-	bh=wpnB+mY98/YzeerltwfWpXe/v1r9KQTMtXB8eBWKulE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e3NG+sKSNcv3NhF3pXFimLRbcYGi2X+kMeBHeQ8lqnJG7ywNNCc72PIRW417up7j5r0G8AReYY3/QZ2XkWljMMGRHQ9OdqQmTfdlLXZ2KmrhcVIOiYRqJY4ag1BNuamxQoDrm1Z8w2brbeChtRos6vyZ7GQWKsXMsdhBfOjldII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gS4nQLJK; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso8409401fa.0;
-        Thu, 10 Apr 2025 07:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744294590; x=1744899390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/LuqIm7oDS3cJFB5A2Gy16/wM9hH8Ae4bhB21+gT2cY=;
-        b=gS4nQLJKh6V7lenem95flPd8uiBi8qFNTDVHZvMleCrRzRQwVsTIUuXcQb3YhNEGpB
-         ij1dIjOUokVrpVNKpyAqf4DRAhKnvga9ec8M2KAmTGzM4M9gLsIZxah8hzc3maST5c9S
-         3+rgq2B3R8QQ1U1342L5KMKMhk7WsJbWx1NZKSRS9Y6VY1YkNuXsEV/WkWpz02fGNSqk
-         2yurk1TkM76LOu0JrXNSw6RRlvFuft1P/V0iDxl6oTEZujTiAqTl2QgsRc+OYi+wsw6J
-         p0V6G7fvVGi1/VI1vAuZoqHibxIQaTjuY0UsUyPjKtKwxyf9HbC1n8Ot/TlWjV5CLu0E
-         E6yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294590; x=1744899390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/LuqIm7oDS3cJFB5A2Gy16/wM9hH8Ae4bhB21+gT2cY=;
-        b=fSkkP1PVQMomCHPOYp+Bg1lQ/qNUMsbuY8bqRz0wkM53RQjD4/DHm71qs8O19QsvOy
-         PPtJgJJlmvUWS4tpg4NLA4Y7Q+J/RvYENhMzfG8I5OLfkEusW9v2E1QlITMPIMdo73pi
-         54XiN4nBkLhQgf1GFwB2Rdritq3lCNYBX7yynyjlhvNbcjLlK++ON2z4oy3FLwbUyA0L
-         VuKpg1U49/7kto32uuuesfrSBQIgpm9MzOX+/ih3ofzrsKlwqyfOLhCyji2RVn57zAop
-         6FJLS+R4YFxjm9mzF0eL2TOfU+eJtnfb/T1jYF6bSlYdW8ecF4MSvJicyvpuWZlNtJYx
-         ri1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV22peE0oAvnc30q4vbp81LUmk3wbaK3CB3WesfhHwOFiwAatZhJa9T4egC8/5uZjMZlsTwIsnpHTg6LWM=@vger.kernel.org, AJvYcCVan8rjnKruSWpjM6wiwu9dJ8r8ydwZoP4VL5a0upwKgUXAyt0RZdhmbt4mBeEmykr6+Rrnz16ITdur@vger.kernel.org, AJvYcCWp4BPKkzhfsniCIL096QoSYLtHWqDpuawn2DD8KlibVrQ5rsDs2ebbM9fqlYWimmAXg3c7Qt+luRMX7mNq5GE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4M8aJDpXwxH8XRjliwC4VMlyDQnLhLHpSzY8FKEKihZudS78H
-	j6vfMrw5WipKFnVglOBEhhiWZQBlbFhSB6xl41l/+EzINE7CI8Tg2AqHvl9geROANj57xSdViXo
-	wtJq0uw4/hgqfdEtx5NiZwPwCgIc=
-X-Gm-Gg: ASbGncvv3gwMcVPP/tCVjEEadxUjPXlD3U+V6gAiH6toTbWBgaExUtRaqn5Z8zcPmAO
-	tghYFvpIaDgOuAfZoZk5mExLyJiSI9vQ9pTWEiyNLheQ0i9ETD+yGhOeCjAUBiFjNumw5+WYF6O
-	AqxD7XMRr0D0aaVxWLAdQFxFhPr2gfwEN+yI6iRg==
-X-Google-Smtp-Source: AGHT+IEKYFsCJw05RuYVwzcEOx6C4Kdg0vX7NCgG95ngBstS4sq7EDxb6p4TkKQLd/5jeOhcyilGdhzUG5optTokoLU=
-X-Received: by 2002:a05:651c:515:b0:308:e8d3:7578 with SMTP id
- 38308e7fff4ca-30faccc2c3dmr9320731fa.35.1744294589559; Thu, 10 Apr 2025
- 07:16:29 -0700 (PDT)
+	s=arc-20240116; t=1744295697; c=relaxed/simple;
+	bh=y/FbEIaObcAdMypgTRXrJ4pwawBjLKceNVNrPI+wt7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dANwznxXUCKgF16exlzssi78y1dB8rvm6altWbch2vUeCw0daBSSjaeUVPjFXw7d4klBrNrbTc4AtE4oxGnr8aWqCD0GwbeRj0z0qva5/Bv118MVyJ1Zduq1ToMPtZKAagHFGiRq0I/syYzrfOXiYmQaXJVTES3QsVu75x5p3PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXY/3B/H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD41C4CEDD;
+	Thu, 10 Apr 2025 14:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744295696;
+	bh=y/FbEIaObcAdMypgTRXrJ4pwawBjLKceNVNrPI+wt7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IXY/3B/HmkDh2w2wi9FxOaoUxHIDnP/pwPpo2Q1XWe37vkSPtm51PqgARCrdeSfZu
+	 9+5HNOyfYst5rAFA15UbX833VradTUA7gvfeM45YUuPgCWxyoBDa4EA4irJXUuVe3t
+	 Dlz46bZVWTmTDCHa7SEkMrg7Rjs/Vwdw6dDgjBS7FwFSbcNeslX3bwv3GVs+pbLIdI
+	 xP6wmq6dG37mHIff9kHKeL2F/2ZKp8z1kl3siWWl98SNvyHuDRnQK2uY1qtw9aurJg
+	 GuRIBhH6eI+jRemTQPV8weDzYhqk7DQ77zLcBYLQKrhaxg8ktL/ooJKyCLqHlu1YNC
+	 yhQ9GBUZvme2Q==
+Date: Thu, 10 Apr 2025 09:34:55 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Remove pci_fixup_cardbus
+Message-ID: <20250410143455.GA322129@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
- <20250409-no-offset-v2-2-dda8e141a909@gmail.com> <Z_eMe7y0ixrBrHaz@google.com>
-In-Reply-To: <Z_eMe7y0ixrBrHaz@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 10 Apr 2025 10:15:53 -0400
-X-Gm-Features: ATxdqUG2ZcipzfhLY0pg0ohs4AsJQbvOEHI9iiCmTdCNpeZTeZnJKPrpt4cauq4
-Message-ID: <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8de7da4c-2b16-4ee1-8c42-0d04f3c821c6@gmail.com>
 
-On Thu, Apr 10, 2025 at 5:16=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
-> > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
-> > the interface of `HasWork` and replacing pointer arithmetic with
-> > `container_of!`. Remove the provided implementation of
-> > `HasWork::get_work_offset` without replacement; an implementation is
-> > already generated in `impl_has_work!`. Remove the `Self: Sized` bound o=
-n
-> > `HasWork::work_container_of` which was apparently necessary to access
-> > `OFFSET` as `OFFSET` no longer exists.
-> >
-> > A similar API change was discussed on the hrtimer series[1].
-> >
-> > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5b=
-d3bf0ce6cc@kernel.org/ [1]
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > Tested-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  rust/kernel/workqueue.rs | 45 ++++++++++++----------------------------=
------
-> >  1 file changed, 12 insertions(+), 33 deletions(-)
-> >
-> > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> > index f98bd02b838f..1d640dbdc6ad 100644
-> > --- a/rust/kernel/workqueue.rs
-> > +++ b/rust/kernel/workqueue.rs
-> > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut b=
-indings::work_struct {
-> >  ///
-> >  /// # Safety
-> >  ///
-> > -/// The [`OFFSET`] constant must be the offset of a field in `Self` of=
- type [`Work<T, ID>`]. The
-> > -/// methods on this trait must have exactly the behavior that the defi=
-nitions given below have.
-> > +/// The methods on this trait must have exactly the behavior that the =
-definitions given below have.
->
-> This wording probably needs to be rephrased. You got rid of the
-> definitions that sentence refers to.
+On Wed, Apr 09, 2025 at 10:43:10PM +0200, Heiner Kallweit wrote:
+> Since 1c7f4fe86f17 ("powerpc/pci: Remove pcibios_setup_bus_devices()")
+> there's no architecture left setting pci_fixup_cardbus. Therefore
+> remove support from PCI core.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-I don't follow. What definitions was it referring to? I interpreted it
-as having referred to all the items: constants *and* methods.
+Great, always nice to remove things, thanks!
 
-Could you propose an alternate phrasing?
+Applied to pci/enumeration for v6.16.
+
+> ---
+>  drivers/pci/pci.c        | 5 -----
+>  drivers/pcmcia/cardbus.c | 1 -
+>  include/linux/pci.h      | 3 ---
+>  3 files changed, 9 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4d7c9f64e..c24d6f5a1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6806,11 +6806,6 @@ int __weak pci_ext_cfg_avail(void)
+>  	return 1;
+>  }
+>  
+> -void __weak pci_fixup_cardbus(struct pci_bus *bus)
+> -{
+> -}
+> -EXPORT_SYMBOL(pci_fixup_cardbus);
+> -
+>  static int __init pci_setup(char *str)
+>  {
+>  	while (str) {
+> diff --git a/drivers/pcmcia/cardbus.c b/drivers/pcmcia/cardbus.c
+> index 45c8252c8..5e5cf2c3e 100644
+> --- a/drivers/pcmcia/cardbus.c
+> +++ b/drivers/pcmcia/cardbus.c
+> @@ -72,7 +72,6 @@ int __ref cb_alloc(struct pcmcia_socket *s)
+>  	pci_lock_rescan_remove();
+>  
+>  	s->functions = pci_scan_slot(bus, PCI_DEVFN(0, 0));
+> -	pci_fixup_cardbus(bus);
+>  
+>  	max = bus->busn_res.start;
+>  	for (pass = 0; pass < 2; pass++)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77..d26e6611b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1139,9 +1139,6 @@ resource_size_t pcibios_align_resource(void *, const struct resource *,
+>  				resource_size_t,
+>  				resource_size_t);
+>  
+> -/* Weak but can be overridden by arch */
+> -void pci_fixup_cardbus(struct pci_bus *);
+> -
+>  /* Generic PCI functions used internally */
+>  
+>  void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
+> -- 
+> 2.49.0
+> 
 
