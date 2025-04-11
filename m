@@ -1,259 +1,198 @@
-Return-Path: <linux-pci+bounces-25681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 000F4A86043
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 16:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 33A8CA860CF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 16:39:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 489E616E532
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 14:15:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19C3B169D4C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 14:38:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3B81F37BA;
-	Fri, 11 Apr 2025 14:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12CA1F4608;
+	Fri, 11 Apr 2025 14:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Vq6il/s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjGetJCr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339141F30AD
-	for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 14:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A38627450;
+	Fri, 11 Apr 2025 14:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380893; cv=none; b=KyGCRdGPDjLtikunVyCdbV5ZA1Q6BhIhABShmqNzuya2qzd+MJEwisXz0ho3rYa/GFJY3vgtqLkKj0cAuh4aGOkhSsV7tXBf7q7q5qonRPLKU0NtGgz5r7GTpNYoatskNeqSzBShqwKEe051VVnC+ENw7VD/dimaugaWNmNk3XQ=
+	t=1744382322; cv=none; b=LtT6tlmqLKkchc985Xie3Z+qwRYR/8A6qNmRbN9eF+UchKpKr+gk60VyW8FtMCG3kgjidUUj82uE6/gGe2WATVC0RgacxizCAtrodZx3PgJmjuJpp2xplyyP2P+9Y5kwlUAM5opnCBRnhpCn+F2mfJz9QKdU0BrrW+ZRVHrZZCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380893; c=relaxed/simple;
-	bh=3I/jo4GVACXTfj3jcxaqe6QYqUY4G0brexzhnK0ZACQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iXflWgVLfZU6JVOJZxvjrxlwKyqFjodguG0PGmRBVsFCQP9Qt29gpWF9tJJs51YAOP3NNAJ/8Bn7k+oFGi18TI0cKgCf/NByIvNJUMBkqh1mC1WRCk1eCgaV8VWxqZUtWiDQSJSd5k7SAOZkau7yFD0WJ7AUSwU0ZAVbjheg+4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Vq6il/s; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1222317f8f.2
-        for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 07:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744380888; x=1744985688; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KXMGF02aLSnVhhQjfgbwPODzDlrVvGFax9i6l7P95zQ=;
-        b=3Vq6il/sCVD5ZKXiwUv+117yMDTw/VyqFHjMo8Mo/xhN81MZnac0O6UPv0LG/zZZzu
-         qtp+f2IcAb73rselEvAG0EJUWXYD0in3jWUftxo6ls+332W6OtE35eVw/QH1B8ZGq9UG
-         17PGVdMMwMBSJmYdfYv+cFyYRyqy5H7wpfnIodAId/6d6ZNm8YC5gBWGNWhy/ntXqzw8
-         2zklx+jZCClTvAUtjwjM9BqrRQcx4o5Lv1i9iI6yelghgLAiOylCf5ZkuH0G4YsseFEg
-         S7hChU1ELbv42HCK9bs8YpcJRG+MzyrXQP1kuQmL56ZPhmkp5baJOPc/MT1ySOZy5via
-         Y2vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380888; x=1744985688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KXMGF02aLSnVhhQjfgbwPODzDlrVvGFax9i6l7P95zQ=;
-        b=hxE3+6McQ9rofjE6FDbJNKToJFttRl1s4VgZfNBkt/WcdcYb8JXX5326NmwuOkqxyZ
-         9tIMy3xrNcx9qplYvItDMsYv+iJnOZYKOGeXi6+K914Z7FWrpEoOtrxMzQLnFML0DVzU
-         b1qR+CndXKiAO2E4fTGA4oTMNDN4tdSt+amV6ROwfww84X2X7gpatRXdegXKijXeSyFx
-         WW0mSE3agPgElojS3ci9tuT2FtfkWtV0uNXerC6ASZINMAyq/S644MPg3c+WGNTyh7AC
-         eV+c+Nc+MpoGx9BYCjScTwnNGcKuTH0NHdksyB0xKOcdmIvcnSlAuFuFS8Z9LbB1mevP
-         AhyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMPzFuvxysfVdMDGuZZaDPv+3akWN79ahR/fyLtHvF0K/3ie1mb+kkaO/d0s1VyEg2JsLp7lch69Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBk1bKc/f+o2o9N1jbdprHXjG4UtGP7hsYEo0XtvAO3OqMrVRa
-	OtgG24QwpqSGQwcx35zVC8HBARXWVUWIoI6KRVzFBgQqKu0v99zoS7lZvbNGPNEr8Wvy5FEOTqI
-	AapnBXp0KuWDvFRv/9zHdh9hT/ZUSuexyn4dh
-X-Gm-Gg: ASbGncvlKMEKrijOpAy04vj2HlzbM+9PFqc25dpQ6U1A3NVAkM8o4un7RFDdnwaeueT
-	cVC4+7V2d0DD+xKkad6MmPuibnLvkElr97EvB7FouW8VXiWOqgfr1MZ5XE83se8/KjfqgvQ1ULw
-	vD+kIwDoMQ5jToi4PeYgT28DadhuHDJmS2Sw==
-X-Google-Smtp-Source: AGHT+IEvfllzR2JPfvaVSPMfFR259rJ0LInD1vvPV1cUQw8WY9tKKwVRF8+YuZkXX5HFgCCrO2dQv4csvUmAfS+p+8c=
-X-Received: by 2002:a05:6000:144f:b0:38d:dffc:c133 with SMTP id
- ffacd0b85a97d-39eaaebc5c4mr2768779f8f.44.1744380888247; Fri, 11 Apr 2025
- 07:14:48 -0700 (PDT)
+	s=arc-20240116; t=1744382322; c=relaxed/simple;
+	bh=jAJlS5q852euhAe6wyd7vFRnrkERexMZBYRdv4EcB0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iatTQY90hLEUv07ZZm6S3J3RYCI5RXovC3R4EzRLmbRbjyjeAvl5efPtCnv0GI69x5pRgLHLKtmgzeWoGrJBElOytojFOpWdfKK+v2UVBaTDCDV9VihHU9bOVkZ6inyU4xqBoX+0jvSpKeb9rKEw83JHsUqTHRZaYOkxCZ59prQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjGetJCr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44D2C4CEE2;
+	Fri, 11 Apr 2025 14:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744382322;
+	bh=jAJlS5q852euhAe6wyd7vFRnrkERexMZBYRdv4EcB0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IjGetJCrr/sz6vp/t4NriLyM4AZgVjR1JD0g+XkmUyXoFZHKgEQliaAbU+YsF+ybt
+	 +kcTXDIuo8zlyiy4PyXingdVCLrv8uCQeiFIl3dFvjH+WekfZBZ5Y9GOnietOAzshD
+	 ibwGTqV9WUMxsRnO87Bluy1qqlXXaaqUVGpHo2pBETy7CeTs5nGg0pR4oDuKtygLL5
+	 7Yhtwk7+l+yWYExiqmDbhGimC/igkoymfZdjapsjUQ6fv6tclOCWQ2Q637Z2M1a7TQ
+	 ZHuRrtXWYaNoVkzT0Y57jM/Hz+Q0LiBDEaJJ5g/dcC0w5u0Oy8FWg3Cd9UnVF5wh0R
+	 ljhES93+qM6oA==
+Date: Fri, 11 Apr 2025 09:38:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
+	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v17 04/15] dt-bindings: PCI: pci-ep: Add support for
+ iommu-map and msi-map
+Message-ID: <20250411143840.GA3153754-robh@kernel.org>
+References: <20250407-ep-msi-v17-0-633ab45a31d0@nxp.com>
+ <20250407-ep-msi-v17-4-633ab45a31d0@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
-In-Reply-To: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 11 Apr 2025 16:14:35 +0200
-X-Gm-Features: ATxdqUGt2HpUIhfbszKbRnHcJkw44XStGlH5K6VgtPiPDEF_Tvxme1ItV2cYEZU
-Message-ID: <CAH5fLgg6_U4OAnDXy1eM98ur=MZonnDq3tk2o=KAf+YXNPtBbQ@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-ep-msi-v17-4-633ab45a31d0@nxp.com>
 
-On Fri, Apr 11, 2025 at 4:08=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
-> the interface of `HasWork` and replacing pointer arithmetic with
-> `container_of!`. Remove the provided implementation of
-> `HasWork::get_work_offset` without replacement; an implementation is
-> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
-> `HasWork::work_container_of` which was apparently necessary to access
-> `OFFSET` as `OFFSET` no longer exists.
->
-> A similar API change was discussed on the hrtimer series[1].
->
-> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3=
-bf0ce6cc@kernel.org/ [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Tested-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-
-Seems reasonable enough.
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-
+On Mon, Apr 07, 2025 at 03:50:54PM -0400, Frank Li wrote:
+> Document the use of (msi|iommu)-map for PCI Endpoint (EP) controllers,
+> which can use MSI as a doorbell mechanism. Each EP controller can support
+> up to 8 physical functions and 65,536 virtual functions.
+> 
+> Define how to construct device IDs using function bits [2:0] and virtual
+> function index bits [31:3], enabling (msi|iommu)-map to associate each
+> child device with a specific (msi|iommu)-specifier.
+> 
+> The EP cannot rely on PCI Requester ID (RID) because the RID is determined
+> by the PCI topology of the host system. Since the EP may be connected to
+> different PCI hosts, the RID can vary between systems and is therefore not
+> a reliable identifier.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> Changes in v3:
-> - Extract first commit to its own series as it is shared with other
->   series.
-> - Reword `HasWork` safety comment.
-> - Link to v2: https://lore.kernel.org/r/20250409-no-offset-v2-0-dda8e141a=
-909@gmail.com
->
-> Changes in v2:
-> - Rebase on v6.15-rc1.
-> - Add WORKQUEUE maintainers to cc.
-> - Link to v1: https://lore.kernel.org/r/20250307-no-offset-v1-0-0c728f63b=
-69c@gmail.com
+> Change from v16 to v17
+> - new patch
 > ---
->  rust/kernel/workqueue.rs | 50 ++++++++++++++++--------------------------=
-------
->  1 file changed, 17 insertions(+), 33 deletions(-)
->
-> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> index f98bd02b838f..d092112d843f 100644
-> --- a/rust/kernel/workqueue.rs
-> +++ b/rust/kernel/workqueue.rs
-> @@ -429,51 +429,28 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bin=
-dings::work_struct {
->  ///
->  /// # Safety
->  ///
-> -/// The [`OFFSET`] constant must be the offset of a field in `Self` of t=
-ype [`Work<T, ID>`]. The
-> -/// methods on this trait must have exactly the behavior that the defini=
-tions given below have.
-> +/// The methods [`raw_get_work`] and [`work_container_of`] must return v=
-alid pointers and must be
-> +/// true inverses of each other; that is, they must satisfy the followin=
-g invariants:
-> +/// - `work_container_of(raw_get_work(ptr)) =3D=3D ptr` for any `ptr: *m=
-ut Self`.
-> +/// - `raw_get_work(work_container_of(ptr)) =3D=3D ptr` for any `ptr: *m=
-ut Work<T, ID>`.
->  ///
->  /// [`impl_has_work!`]: crate::impl_has_work
-> -/// [`OFFSET`]: HasWork::OFFSET
-> +/// [`raw_get_work`]: HasWork::raw_get_work
-> +/// [`work_container_of`]: HasWork::work_container_of
->  pub unsafe trait HasWork<T, const ID: u64 =3D 0> {
-> -    /// The offset of the [`Work<T, ID>`] field.
-> -    const OFFSET: usize;
-> -
-> -    /// Returns the offset of the [`Work<T, ID>`] field.
-> -    ///
-> -    /// This method exists because the [`OFFSET`] constant cannot be acc=
-essed if the type is not
-> -    /// [`Sized`].
-> -    ///
-> -    /// [`OFFSET`]: HasWork::OFFSET
-> -    #[inline]
-> -    fn get_work_offset(&self) -> usize {
-> -        Self::OFFSET
-> -    }
-> -
->      /// Returns a pointer to the [`Work<T, ID>`] field.
->      ///
->      /// # Safety
->      ///
->      /// The provided pointer must point at a valid struct of type `Self`=
-.
-> -    #[inline]
-> -    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
-> -        // SAFETY: The caller promises that the pointer is valid.
-> -        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID> =
-}
-> -    }
-> +    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
->
->      /// Returns a pointer to the struct containing the [`Work<T, ID>`] f=
-ield.
->      ///
->      /// # Safety
->      ///
->      /// The pointer must point at a [`Work<T, ID>`] field in a struct of=
- type `Self`.
-> -    #[inline]
-> -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
-> -    where
-> -        Self: Sized,
-> -    {
-> -        // SAFETY: The caller promises that the pointer points at a fiel=
-d of the right type in the
-> -        // right kind of struct.
-> -        unsafe { (ptr as *mut u8).sub(Self::OFFSET) as *mut Self }
-> -    }
-> +    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self;
->  }
->
->  /// Used to safely implement the [`HasWork<T, ID>`] trait.
-> @@ -504,8 +481,6 @@ macro_rules! impl_has_work {
->          // SAFETY: The implementation of `raw_get_work` only compiles if=
- the field has the right
->          // type.
->          unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_=
-type $(, $id)?> for $self {
-> -            const OFFSET: usize =3D ::core::mem::offset_of!(Self, $field=
-) as usize;
-> -
->              #[inline]
->              unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workq=
-ueue::Work<$work_type $(, $id)?> {
->                  // SAFETY: The caller promises that the pointer is not d=
-angling.
-> @@ -513,6 +488,15 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crat=
-e::workqueue::Work<$work_typ
->                      ::core::ptr::addr_of_mut!((*ptr).$field)
->                  }
->              }
+>  Documentation/devicetree/bindings/pci/pci-ep.yaml | 67 +++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> index f75000e3093db..a1a5b9b8ef859 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> @@ -53,6 +53,73 @@ properties:
+>        must be unique.
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>  
+> +  msi-map:
+
+Not that the rest of the file is alphabetized, but put i before m.
+
+> +    description: |
+> +      Maps a Device ID to an MSI and associated MSI specifier data.
 > +
-> +            #[inline]
-> +            unsafe fn work_container_of(
-> +                ptr: *mut $crate::workqueue::Work<$work_type $(, $id)?>,
-> +            ) -> *mut Self {
-> +                // SAFETY: The caller promises that the pointer points a=
-t a field of the right type
-> +                // in the right kind of struct.
-> +                unsafe { $crate::container_of!(ptr, Self, $field) }
-> +            }
->          }
->      )*};
->  }
->
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250307-no-offset-e463667a72fb
-> prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
-> prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
->
-> Best regards,
-> --
-> Tamir Duberstein <tamird@gmail.com>
->
+> +      A PCI Endpoint (EP) can use MSI as a doorbell function. This is achieved by
+> +      mapping the MSI controller's address into PCI BAR<n>. The PCI Root Complex
+> +      can write to this BAR<n>, triggering the EP to generate IRQ. This notifies
+> +      the EP-side driver of an event, eliminating the need for the driver to
+> +      continuously poll for status changes.
+> +
+> +      However, the EP cannot rely on Requester ID (RID) because the RID is
+> +      determined by the PCI topology of the host system. Since the EP may be
+> +      connected to different PCI hosts, the RID can vary between systems and is
+> +      therefore not a reliable identifier.
+> +
+> +      Each EP can support up to 8 physical functions and up to 65,536 virtual
+> +      functions. To uniquely identify each child device, a device ID is defined
+> +      as
+> +         - Bits [2:0] for the function number (func)
+> +         - Bits [18:3] for the virtual function index (vfunc)
+> +
+> +      The resulting device ID is computed as:
+> +
+> +        (func & 0x7) | (vfunc << 3)
+> +
+> +      The property is an arbitrary number of tuples of
+> +      (device-id-base, msi, msi-base,length).
+> +
+> +      Any Device ID id in the interval [id-base, id-base + length) is
+> +      associated with the listed MSI, with the MSI specifier
+> +      (id - id-base + msi-base).
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        - description: The Device ID base matched by the entry
+> +          maximum: 0x7ffff
+> +        - description: phandle to msi-controller node
+> +        - description: (optional) The msi-specifier produced for the first
+> +            Device ID matched by the entry. Currently, msi-specifier is 0 or
+> +            1 cells.
+> +        - description: The length of consecutive Device IDs following the
+> +            Device ID base
+> +          maximum: 0x80000
+> +
+> +  msi-map-mask:
+> +    description: A mask to be applied to each Device ID prior to being
+> +      mapped to an msi-specifier per the msi-map property.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+maximum: 0x7ffff ?
+
+> +
+> +  iommu-map:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        - description: Device ID (see msi-map) base
+> +          maximum: 0x7ffff
+> +        - description: phandle to IOMMU
+> +        - description: IOMMU specifier base (currently always 1 cell)
+> +        - description: Number of Device IDs
+> +          maximum: 0x80000
+> +
+> +  iommu-map-mask:
+> +    description:
+> +      A mask to be applied to each Device ID prior to being mapped to an
+> +      IOMMU specifier per the iommu-map property.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    maximum: 0xffff
+
+0x7ffff ?
+
+> +
+>  required:
+>    - compatible
+>  
+> 
+> -- 
+> 2.34.1
+> 
 
