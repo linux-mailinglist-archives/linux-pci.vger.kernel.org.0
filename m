@@ -1,170 +1,235 @@
-Return-Path: <linux-pci+bounces-25679-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25680-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3687A85FF9
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 16:06:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35425A8600F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 16:09:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3CEB9A2605
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 14:04:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 438277ACF4F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 14:07:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E11A41F1931;
-	Fri, 11 Apr 2025 14:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 586201F4187;
+	Fri, 11 Apr 2025 14:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tXMDgwUf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3IJbWDl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDF01F1537
-	for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 14:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D41F3BB8;
+	Fri, 11 Apr 2025 14:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380251; cv=none; b=qgwM+GtW3m/oGdS9yme/pqbgd9pTkaXRkuR/7yTcoE/2MbKHK/Xbpqxzhz9GacxQbJGVbKq1t4u1Dkb7OYL+Eo7EV83uUvMEj8uXA5J6LZIPc0HGlJvr+UQW9CuYICeJKVwEjy4bG1Ram7vs3sPtLNRj9DgC0KAuQqzvXS/eE/c=
+	t=1744380520; cv=none; b=ZN8z2Pv+PUOxb2LtzU2KBo1VDb14gze3rvss7TIOp3y9E7UwXebQtCdwS7uyQqQKO1o1QLcP/EAIUm5wHZMmF4srVJPErZmWKUoGauRHaix8+PgUThNBuTpkbN9Aau4hQuRrvk4hEWQjKdYwT5xTSo1rT3Fa/O5jvzMOGADYZMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380251; c=relaxed/simple;
-	bh=Ubbxb2bHjPtTIgxbhNVN9KrZrgvceENegW/Wx+7aLiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hPm/0p1eSW34wuacJf1WbJa6lIVg0dSBO4lOfueC1pnxodtcqX5eMHYxDMJZ4qwex6Z2Ic4CcjZU5XEZ0DaEa6e0LCJ9A2IGK2HuRybZfO0Jvugs7ldwFhuGCp5WaAVx5zcg7NbM9svqF0fINTL7f48m4Y41HB9wb42gnMLUlGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tXMDgwUf; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso14854885e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 07:04:09 -0700 (PDT)
+	s=arc-20240116; t=1744380520; c=relaxed/simple;
+	bh=Q3eaWd+6wGMNRQPZybiIJSiRvz0UKOQRz+P7X6jycHs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=udRTdI+6fKPzItv/S1ucECP0kJRi2K04EhhDfOYHE+0TZj8kj3MFxC/I4Nkpgo2KQXOF4qU5L6dJn/WEcb1x0GHRXFZk4acauGvctvAlBFedR/oWM+6l/KpQ0tBHO8FZiJyQE3nmspGXLKiB5HOd41UaF8TwDW6VWA2reWLTzeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3IJbWDl; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47677b77725so20505301cf.3;
+        Fri, 11 Apr 2025 07:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744380248; x=1744985048; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9NFAq1EfAGe7+mU4CLxqlGsdPDug9rpW5Qn5zNLxhCg=;
-        b=tXMDgwUfoPWNF9E55yjFJ1Mj8iaFROohMET7Hp4VnpX0vygX2+ON4jIrOKBAZ7kSf6
-         LB7yAKn9Nfq0ZyyrLPbHIF3ueJnrhb+YEKsZqINUOWXDnaMXVI2qup4EKbACGj8pZBih
-         8wvxC/4jLC7XGy6JKjy5oZAv55BBT1H2z/CKVKUe+P8m0mbv2VZUwoBaFoUbRywI0gMY
-         N8ffhBl0/am0X8cNdGsugweHPCj/toEF8mIBAIQByaU0A75fsBKhhOiRxvlu/z/uk8ej
-         3+4/xEhb8rfkgqyB2Yml9/HKSSUrHpjoQUXk0hw93Cb5BGuK/LJyYmWJ/gJq3pDZGXKV
-         6nEA==
+        d=gmail.com; s=20230601; t=1744380517; x=1744985317; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
+        b=h3IJbWDlhW13bfKWuhbx4beyHVzzKAJhM8muhfO+fXXZAjgws/P3lxupwl2zLbmLaA
+         YDuZ9SbcRYNG79Lwo/HTTFe5kEllNiSUNm2Abh9PUKlN7125an9a9rKr9ABMj3zBnkY2
+         Vo85ZUuRlB+4wmqDsIPiBIsbT3TIEEzChOLON7dl/ToVzTbNiv19PhHB6Nt6IRGfUm9s
+         pNmt03uCfIMZ2Hw3XkXGIir0Y8BqiIYPJ2w1T7tuQcfAxcq4p3dEcxYttbVaJctCRd3z
+         PuBGSjy8SzYn0ZEhj5btFAdPxCXpt+ro7LbKIRc+cUpfeodvI6RrMNoh+mxgq4F+dtEJ
+         3JVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380248; x=1744985048;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9NFAq1EfAGe7+mU4CLxqlGsdPDug9rpW5Qn5zNLxhCg=;
-        b=e2btHoCIkT6fxT2Lg6XrPecxwaJm1OnQ0ScYX2lPug4HDlAsOsXh3lPHAxXpyCqsqV
-         UvpzAGJf+bRbkvKsN+f3n/hsrdLjPs2uDPUN7b98QZLHsT/qWt4wCYtkY3cQoGBOs8qp
-         3qFZ6M69pgiazOKkDQ478jktXVSLfGYmfbtSzmvaNCiAfqXW0C1hef+fsoEJOEGqlolv
-         Z3TdaJXbsrDn2txNwTzFVH2VKY5YXe7E/XGFB/YTIVKwigRknyTO/td8WpV/8NWLmEwA
-         8bW7c0BBUzo1GHwdZSWEo3rpxtQsGbQaWtkbzvHz8yZK066OkEUhLBtgDWS863ghmt7J
-         i65g==
-X-Forwarded-Encrypted: i=1; AJvYcCUvXZliQX19Kc010mdJL3/9rbzYQ5kO++VUvLEtZ/4bBk0aytjL54tpfgUMUNqnqb1nMkaMzaLiY3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsNJ20sSC8a6Cu0fi1mFLxb6x0IA3odJpxfO3rp0Wz0SSaMuEX
-	Aokw1aZlBMxpj+1UceXKNHeUA/3rs7n5kX7/hbaJ6YcFV3Mmqi/F7QikVQxyZQLrx6Q2p3ismKD
-	UWv9YcdcQKYF415mIQLecE946dXh1LKDsGcgY
-X-Gm-Gg: ASbGnctpBcSrF/95YpWx7YJQhxrdSUyjQQhCm/S41kVmP3d90D8KLRiqKTaL0/UF1FN
-	ef+EzElQmz8yy2m1OdwtibH4SWgR5SDXkQY0Qcj+bQ3SkCjyYWf3G3qBlvk/+J6oMNoIj6GaHhN
-	R8fKXAxpsALxAz3z7dNsHg/XA=
-X-Google-Smtp-Source: AGHT+IFA1agukbluKMaNAK8/Nzo2zAHxJ+1B9VH4QUSarYItlzRNIQQWZBJ1lw2yIq9o5G3ylfA1vyQ5gZ4J7p9hwUA=
-X-Received: by 2002:a05:600c:4f12:b0:43d:24d:bbe2 with SMTP id
- 5b1f17b1804b1-43f3a9b02e3mr21068765e9.28.1744380247946; Fri, 11 Apr 2025
- 07:04:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744380517; x=1744985317;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
+        b=mZSMMmKMvfcMmmMwizBMylqwH5QGRGNvlS69bnPlhrohxlV56eBcA9fcgsCk0lkgCn
+         Hr5u2Bjt5DmPF06joFDAkhy1kcX1a0wKG+xJqV4n4gFUEezmpweSqg5ZioAcJ/H7MD3S
+         HJXPBEueZtYfDwXQMqGUcSBcqeldInL4IymjPHpIgkY3uCp0jYoVgGd7w0Mfcm55fnyZ
+         s50PdqMPzIvU7tQcVhI2YrFggdx6HxUntw4k1lPvafMUsrnGc5a9NSwDKSFI+kI1xVpq
+         uGpedXx/5rZVQmvzoATA/lRNwj2plkB8n6LNiCWM8TYr6S6x7cX9PnimJcqpY/EJThwo
+         /xvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUt9AIRz/j66Vn9h3SzmSjvnCCgZMZCn/pT2QwYuFlFOUcFTA/s6T8+NjU9GF4D878eolsTVkV5fM8wn+xAgso=@vger.kernel.org, AJvYcCVDcclDcwx1CiF6+7yc8XfC8llTCIkrjjyicgZtBUemL+nVnOB787ACyCO7TExPU+r8JCkla74gTWHY@vger.kernel.org, AJvYcCVN541V6xF43beR4nP3AeqN9L9Xo0ja2O3dUwfptIBSOW9wbCLYVITkApHDnYpzKXM1Zo9ICgM3k424Q8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC86SK6uhqFFQQDWq5z+q0XZtDP4qqYXQZYO1eY7EplTpI388D
+	L90tkSdqymw/6ZK7G6AuE2y5mZDS2k0DwaH3NrV6OjbaoaIn1LCPFE8q3BI5
+X-Gm-Gg: ASbGnctefUipodzp0EgxdWascyzELf7aECQPloWAWIg63j7GGkQM5dDtFtGTq3XSLnc
+	Fi97FW/a++PhLu3ffk4jacs2VqTdUTZTT8y8J3ESdp3rNc56TB+M40m3vNUefvEEd5hdfcP6Wlh
+	17MZ6mDsp0XmrP3tyPJIK/fjYt77lNr6iILlpto+pG2B78B4uwsbW6yM44bIFXeEahGoAVeFRvv
+	xBp8AG2g/J+eItSdQZFhBuNVXWR98Q6usX3ZxEocmo2pus2vaap1o10e2uDSozu4VLcYm9cfDHs
+	rKvMw45b8kqEzyF11nihQ0+C7nHGtN1ABAB/x43mRK9mWUZwo1Eg4BPX5jGK5iO46qE=
+X-Google-Smtp-Source: AGHT+IEkZCpPSOfFFs4p/DramAWWHRy0xJDNth8YSq+TvpMzGWw9fJchjS6mFS3f28qolg0RykLZ5g==
+X-Received: by 2002:ac8:5745:0:b0:476:add4:d2a9 with SMTP id d75a77b69052e-4797755dfcemr41402541cf.30.1744380516812;
+        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
+Received: from [192.168.1.159] ([2600:4041:5be7:7c00:1d83:73da:5aa:7e95])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cc64sm25872641cf.62.2025.04.11.07.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 11 Apr 2025 10:08:27 -0400
+Subject: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
- <20250409-no-offset-v2-2-dda8e141a909@gmail.com> <Z_eMe7y0ixrBrHaz@google.com>
- <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com>
- <Z_jcjEtKZRpRi9Yn@google.com> <CAJ-ks9ka0sASqBdhFSv6Ftbd7p1KCBuy6v-2jNd98gDpyAgQGA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9ka0sASqBdhFSv6Ftbd7p1KCBuy6v-2jNd98gDpyAgQGA@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 11 Apr 2025 16:03:55 +0200
-X-Gm-Features: ATxdqUG8hC_u__HK8-CW3gNS0gPxgHK6AdZX6UOb7LflknvLRFcPY7MceIw6q8A
-Message-ID: <CAH5fLghSWJKDYae+oDsbkQHSWLVyAS6fqGYt7whHWaA6PXox_w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAFoi+WcC/22QzW7DIBCEX8XiXCr+jMGnvkeVAz9LglRDCsRqF
+ PndQxKp9aHH2d0ZfbM3VKFEqGgebqjAGmvMqQv+NiB3MukIOPquESNsJJxMOGWcQ6jQMAjJpZz
+ MxIJF/f5cIMSfZ9bnoetTrC2X6zN6pY/pfykrxQQTNzEVJLdSu4/jYuLXu8sLeqSs7M8piN47W
+ Xd6bxRQQY0meu/cXkAFvi+9U3tRIWsq4L5fYpsHYgIL0gK1ginK1WglVc4qabwWEjx4orRxCu1
+ /MQ+/JC6nZmKC0oHwcmkJasWWjtwbK7hSfu6tD9t2BwJidGRkAQAA
+X-Change-ID: 20250307-no-offset-e463667a72fb
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Fri, Apr 11, 2025 at 3:57=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Fri, Apr 11, 2025 at 5:10=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > On Thu, Apr 10, 2025 at 10:15:53AM -0400, Tamir Duberstein wrote:
-> > > On Thu, Apr 10, 2025 at 5:16=E2=80=AFAM Alice Ryhl <aliceryhl@google.=
-com> wrote:
-> > > >
-> > > > On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
-> > > > > Implement `HasWork::work_container_of` in `impl_has_work!`, narro=
-wing
-> > > > > the interface of `HasWork` and replacing pointer arithmetic with
-> > > > > `container_of!`. Remove the provided implementation of
-> > > > > `HasWork::get_work_offset` without replacement; an implementation=
- is
-> > > > > already generated in `impl_has_work!`. Remove the `Self: Sized` b=
-ound on
-> > > > > `HasWork::work_container_of` which was apparently necessary to ac=
-cess
-> > > > > `OFFSET` as `OFFSET` no longer exists.
-> > > > >
-> > > > > A similar API change was discussed on the hrtimer series[1].
-> > > > >
-> > > > > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v=
-9-1-5bd3bf0ce6cc@kernel.org/ [1]
-> > > > > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > > > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > > > > Tested-by: Alice Ryhl <aliceryhl@google.com>
-> > > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > > > ---
-> > > > >  rust/kernel/workqueue.rs | 45 ++++++++++++----------------------=
------------
-> > > > >  1 file changed, 12 insertions(+), 33 deletions(-)
-> > > > >
-> > > > > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> > > > > index f98bd02b838f..1d640dbdc6ad 100644
-> > > > > --- a/rust/kernel/workqueue.rs
-> > > > > +++ b/rust/kernel/workqueue.rs
-> > > > > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> =
-*mut bindings::work_struct {
-> > > > >  ///
-> > > > >  /// # Safety
-> > > > >  ///
-> > > > > -/// The [`OFFSET`] constant must be the offset of a field in `Se=
-lf` of type [`Work<T, ID>`]. The
-> > > > > -/// methods on this trait must have exactly the behavior that th=
-e definitions given below have.
-> > > > > +/// The methods on this trait must have exactly the behavior tha=
-t the definitions given below have.
-> > > >
-> > > > This wording probably needs to be rephrased. You got rid of the
-> > > > definitions that sentence refers to.
-> > >
-> > > I don't follow. What definitions was it referring to? I interpreted i=
-t
-> > > as having referred to all the items: constants *and* methods.
-> >
-> > I meant for it to refer to the default implementations of the methods.
-> >
-> > > Could you propose an alternate phrasing?
-> >
-> > I guess the requirements are something along the lines of raw_get_work
-> > must return a value pointer, and it must roundtrip with
-> > raw_container_of.
->
-> What is a value pointer?
+Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+the interface of `HasWork` and replacing pointer arithmetic with
+`container_of!`. Remove the provided implementation of
+`HasWork::get_work_offset` without replacement; an implementation is
+already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+`HasWork::work_container_of` which was apparently necessary to access
+`OFFSET` as `OFFSET` no longer exists.
 
-Sorry, I meant "valid".
+A similar API change was discussed on the hrtimer series[1].
+
+Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Tested-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v3:
+- Extract first commit to its own series as it is shared with other
+  series.
+- Reword `HasWork` safety comment.
+- Link to v2: https://lore.kernel.org/r/20250409-no-offset-v2-0-dda8e141a909@gmail.com
+
+Changes in v2:
+- Rebase on v6.15-rc1.
+- Add WORKQUEUE maintainers to cc.
+- Link to v1: https://lore.kernel.org/r/20250307-no-offset-v1-0-0c728f63b69c@gmail.com
+---
+ rust/kernel/workqueue.rs | 50 ++++++++++++++++--------------------------------
+ 1 file changed, 17 insertions(+), 33 deletions(-)
+
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index f98bd02b838f..d092112d843f 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -429,51 +429,28 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+ ///
+ /// # Safety
+ ///
+-/// The [`OFFSET`] constant must be the offset of a field in `Self` of type [`Work<T, ID>`]. The
+-/// methods on this trait must have exactly the behavior that the definitions given below have.
++/// The methods [`raw_get_work`] and [`work_container_of`] must return valid pointers and must be
++/// true inverses of each other; that is, they must satisfy the following invariants:
++/// - `work_container_of(raw_get_work(ptr)) == ptr` for any `ptr: *mut Self`.
++/// - `raw_get_work(work_container_of(ptr)) == ptr` for any `ptr: *mut Work<T, ID>`.
+ ///
+ /// [`impl_has_work!`]: crate::impl_has_work
+-/// [`OFFSET`]: HasWork::OFFSET
++/// [`raw_get_work`]: HasWork::raw_get_work
++/// [`work_container_of`]: HasWork::work_container_of
+ pub unsafe trait HasWork<T, const ID: u64 = 0> {
+-    /// The offset of the [`Work<T, ID>`] field.
+-    const OFFSET: usize;
+-
+-    /// Returns the offset of the [`Work<T, ID>`] field.
+-    ///
+-    /// This method exists because the [`OFFSET`] constant cannot be accessed if the type is not
+-    /// [`Sized`].
+-    ///
+-    /// [`OFFSET`]: HasWork::OFFSET
+-    #[inline]
+-    fn get_work_offset(&self) -> usize {
+-        Self::OFFSET
+-    }
+-
+     /// Returns a pointer to the [`Work<T, ID>`] field.
+     ///
+     /// # Safety
+     ///
+     /// The provided pointer must point at a valid struct of type `Self`.
+-    #[inline]
+-    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
+-        // SAFETY: The caller promises that the pointer is valid.
+-        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID> }
+-    }
++    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
+ 
+     /// Returns a pointer to the struct containing the [`Work<T, ID>`] field.
+     ///
+     /// # Safety
+     ///
+     /// The pointer must point at a [`Work<T, ID>`] field in a struct of type `Self`.
+-    #[inline]
+-    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
+-    where
+-        Self: Sized,
+-    {
+-        // SAFETY: The caller promises that the pointer points at a field of the right type in the
+-        // right kind of struct.
+-        unsafe { (ptr as *mut u8).sub(Self::OFFSET) as *mut Self }
+-    }
++    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self;
+ }
+ 
+ /// Used to safely implement the [`HasWork<T, ID>`] trait.
+@@ -504,8 +481,6 @@ macro_rules! impl_has_work {
+         // SAFETY: The implementation of `raw_get_work` only compiles if the field has the right
+         // type.
+         unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_type $(, $id)?> for $self {
+-            const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
+-
+             #[inline]
+             unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_type $(, $id)?> {
+                 // SAFETY: The caller promises that the pointer is not dangling.
+@@ -513,6 +488,15 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_typ
+                     ::core::ptr::addr_of_mut!((*ptr).$field)
+                 }
+             }
++
++            #[inline]
++            unsafe fn work_container_of(
++                ptr: *mut $crate::workqueue::Work<$work_type $(, $id)?>,
++            ) -> *mut Self {
++                // SAFETY: The caller promises that the pointer points at a field of the right type
++                // in the right kind of struct.
++                unsafe { $crate::container_of!(ptr, Self, $field) }
++            }
+         }
+     )*};
+ }
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250307-no-offset-e463667a72fb
+prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
+prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
 
