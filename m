@@ -1,115 +1,153 @@
-Return-Path: <linux-pci+bounces-25659-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0789A85719
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 10:58:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C36A85797
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 11:12:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21AB11B61DC0
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 08:58:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D61E7A6775
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Apr 2025 09:09:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B887529344B;
-	Fri, 11 Apr 2025 08:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A33428FFD8;
+	Fri, 11 Apr 2025 09:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="baRaw0Qe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472EE15D5B6;
-	Fri, 11 Apr 2025 08:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867E82980D9
+	for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 09:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361913; cv=none; b=Xpq6GLYk+IB05HJCq4LDr0/lFNWyP4EGy+oUD/CrUloTOQu9/HEBRht/02SfXLJbH4NDiiTqcOR8chJqmN+aKoSlfMTcfNHtsT4uq3qZFWRiWQeyxqESky6lPFIAiwq1XL+6e6UX8di7dI3JDsPvc683ofxnqKCmxq6F4aA+Glw=
+	t=1744362642; cv=none; b=s8KB4lnRJo1iIsKszYhyTn2cGR2gO23WeFEDooAX8S017lSCO5iOqgnPWuZnLoHBdiT2b6vBHPnLO2hbz6pZP25bmdT2Jtfdt43usQ4U5MDJdzbb2GzpZtIfqUfxzYFklFksG+zG/DRJGfozazoz2SzXuXaP9QzdgpJLxWoel1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361913; c=relaxed/simple;
-	bh=GGcmJ801V4S5R0AOJnKrnxXmRR1nQzrCrRf7CI7Sl4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tMYPdSAxxpULOXUXUEEe12Qa1iedha4DcoiRZaNX4EiVbqmJ6wZxFnLYEaKsr3i/i+AKVMqUM0G7UW44FMOcf672/qvDciz5N54mRIQYzyqSBVykmm/ubqpEscjfnuR4Q1HbUGYmbRHcuR9SUs2zKJ83ihmFjW2W7fKj+s8zJeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 346D3200A293;
-	Fri, 11 Apr 2025 10:57:58 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 93BA55EF8C; Fri, 11 Apr 2025 10:58:26 +0200 (CEST)
-Date: Fri, 11 Apr 2025 10:58:26 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	Yicong Yang <yangyicong@hisilicon.com>, linux-pci@vger.kernel.org,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Joel Mathew Thomas <proxy0@tutamail.com>,
-	Russ Weight <russ.weight@linux.dev>,
-	Matthew Gerlach <matthew.gerlach@altera.com>,
-	Yilun Xu <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
-	Moshe Shemesh <moshe@nvidia.com>, Shay Drory <shayd@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH 1/2] PCI: pciehp: Ignore Presence Detect Changed caused
- by DPC
-Message-ID: <Z_jZsngaY88cP_iy@wunner.de>
-References: <cover.1744298239.git.lukas@wunner.de>
- <fa264ff71952915c4e35a53c89eb0cde8455a5c5.1744298239.git.lukas@wunner.de>
- <6b8cf94f-4264-46c5-bf08-77e77796c3ac@linux.intel.com>
+	s=arc-20240116; t=1744362642; c=relaxed/simple;
+	bh=d4KKNjwuoZFI0UhSHvmeJQu1TqXtlyhxiS6Ao/gYqro=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GDFj5ngj5jpv22Y+88bvC/PkgmgAEpePTwwlsX//grBZTrsjObgJQ0+BgOucSuEOSwl60bKVc8oM4dHrFkY61pasYci3y708y+Ztsoc9L1B/wFB/O1q1FPa+zneBMfWXcifbWx24TrM82siauFaKoAzQ8RM3evENyLUASe7jt+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=baRaw0Qe; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43eed325461so10251455e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 11 Apr 2025 02:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744362639; x=1744967439; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zF5GJW+czRiIiu4D0r/0Z8MC9j7bmRNMDvcUyfABZzU=;
+        b=baRaw0QeCwrPeLUmZSZf7FJExbK0zaBPMzKzCnNqmkN7HiX33BMJ/0c4P2uJU5hvvB
+         4zqVGRXfifPPIenJ575uSTVQMfQBmvsdXN+uSfXB72bzhko6QDmzqItf0Is3lTXEEZCD
+         VbyNc3RKlBMAPKQQUORcnXJyffC6WcXTqi4CwKDIIXZT7nbMIwn8tq2Zyx3EVmd4cjZ/
+         EoPHecHIUj2Fe+5V6/FL7v0XHrgFpFAQbYrOq1olmZAkOtuaHfnYVSmr+44DVdWiYy2K
+         aOIPxHcwgXQEUK5E0mpOi/NfMGqHNAPZmwrFLErZUuS/azx1iDv/GkVnRObiW5od1iRO
+         3Pyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744362639; x=1744967439;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zF5GJW+czRiIiu4D0r/0Z8MC9j7bmRNMDvcUyfABZzU=;
+        b=JGVDRBUol6kEkXvxXItvs0yxq71Yyd/06lQ+sOYJX4rYwF3xMyWrlHPYnJj4nqJcd3
+         s7Dg/AJUONTQvtk9TSkC5Pq/L0oOz9mp9dquPoL6e7iPTGF9PmLKqa1sb2Y8gF8OaQb3
+         bEAtUuwd/AHyUK6G+lNUvkPnEykkE5RgsK7EAIMIUT1yvIrAgqh4h2q2hSBfbWZbmDZO
+         wFHuKpsag7eYFFB9+4COc5BDgKaZVvOxMDjGik+iPCmZOd9YY2MRfHoBGlmwCFsR7wm4
+         hJhQYTTyLYHe7GC1Sf31QnmsEB+6LIYBo03QQoQ3zmIKsi1OuiTBybfEdzfHmR3OIv+X
+         wibg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPvgcpTrASC29KN/NCjh7Ndb0YngKnDS32OtYf3+p2ThF+NghBrYqkqYCnNTYoVFdkZ2NaWURir+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtOvbAQ2CnrTShRovXYJYAlAB0z0G0ZuBjymTu2AamC7a1t+yr
+	N5TN3C0bO9lh1oGK0a7cJ/vLufjBjXmXVQXo+709FzSb3s5Wwz9puwbmyIOgIJscKD4Tf2n1Aj7
+	PCfxe1FSTu0qI2Q==
+X-Google-Smtp-Source: AGHT+IHlmejxcmD4jTD6NlcQhR5M2fWZs6vm160cXr9LWOW4REHUSk7IeQbvwGvehOaDQxPxdMQbpfJ4Mva7ALM=
+X-Received: from wmcq13.prod.google.com ([2002:a05:600c:c10d:b0:43d:41bf:5b62])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1ca9:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43f3a9599f2mr13568655e9.18.1744362638990;
+ Fri, 11 Apr 2025 02:10:38 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:10:36 +0000
+In-Reply-To: <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6b8cf94f-4264-46c5-bf08-77e77796c3ac@linux.intel.com>
+Mime-Version: 1.0
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
+ <20250409-no-offset-v2-2-dda8e141a909@gmail.com> <Z_eMe7y0ixrBrHaz@google.com>
+ <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com>
+Message-ID: <Z_jcjEtKZRpRi9Yn@google.com>
+Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 07:34:41PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 4/10/25 8:27 AM, Lukas Wunner wrote:
-> > Commit a97396c6eb13 ("PCI: pciehp: Ignore Link Down/Up caused by DPC")
-> > amended PCIe hotplug to not bring down the slot upon Data Link Layer State
-> > Changed events caused by Downstream Port Containment.
-> > 
-> > However Keith reports off-list that if the slot uses in-band presence
-> > detect (i.e. Presence Detect State is derived from Data Link Layer Link
-> > Active), DPC also causes a spurious Presence Detect Changed event.
-> > 
-> > This needs to be ignored as well.
-> > 
-> > Unfortunately there's no register indicating that in-band presence detect
-> > is used.  PCIe r5.0 sec 7.5.3.10 introduced the In-Band PD Disable bit in
-> > the Slot Control Register.  The PCIe hotplug driver sets this bit on
-> > ports supporting it.  But older ports may still use in-band presence
-> > detect.
-> > 
-> > If in-band presence detect can be disabled, Presence Detect Changed events
-> 
-> It should be "in-band presence detect is disabled", right?
+On Thu, Apr 10, 2025 at 10:15:53AM -0400, Tamir Duberstein wrote:
+> On Thu, Apr 10, 2025 at 5:16=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+> >
+> > On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
+> > > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> > > the interface of `HasWork` and replacing pointer arithmetic with
+> > > `container_of!`. Remove the provided implementation of
+> > > `HasWork::get_work_offset` without replacement; an implementation is
+> > > already generated in `impl_has_work!`. Remove the `Self: Sized` bound=
+ on
+> > > `HasWork::work_container_of` which was apparently necessary to access
+> > > `OFFSET` as `OFFSET` no longer exists.
+> > >
+> > > A similar API change was discussed on the hrtimer series[1].
+> > >
+> > > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-=
+5bd3bf0ce6cc@kernel.org/ [1]
+> > > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > > Tested-by: Alice Ryhl <aliceryhl@google.com>
+> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > > ---
+> > >  rust/kernel/workqueue.rs | 45 ++++++++++++--------------------------=
+-------
+> > >  1 file changed, 12 insertions(+), 33 deletions(-)
+> > >
+> > > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> > > index f98bd02b838f..1d640dbdc6ad 100644
+> > > --- a/rust/kernel/workqueue.rs
+> > > +++ b/rust/kernel/workqueue.rs
+> > > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut=
+ bindings::work_struct {
+> > >  ///
+> > >  /// # Safety
+> > >  ///
+> > > -/// The [`OFFSET`] constant must be the offset of a field in `Self` =
+of type [`Work<T, ID>`]. The
+> > > -/// methods on this trait must have exactly the behavior that the de=
+finitions given below have.
+> > > +/// The methods on this trait must have exactly the behavior that th=
+e definitions given below have.
+> >
+> > This wording probably needs to be rephrased. You got rid of the
+> > definitions that sentence refers to.
+>=20
+> I don't follow. What definitions was it referring to? I interpreted it
+> as having referred to all the items: constants *and* methods.
 
-Well, for all practical purposes it's the same because pciehp disables
-in-band PD if it can be disabled.
+I meant for it to refer to the default implementations of the methods.
 
-> > occurring during DPC must not be ignored because they signal device
-> > replacement.  On all other ports, device replacement cannot be detected
-> > reliably because the Presence Detect Changed event could be a side effect
-> > of DPC.  On those (older) ports, perform a best-effort device replacement
-> > check by comparing the Vendor ID, Device ID and other data in Config Space
-> > with the values cached in struct pci_dev.  Use the existing helper
-> > pciehp_device_replaced() to accomplish this.  It is currently #ifdef'ed to
-> > CONFIG_PM_SLEEP in pciehp_core.c, so move it to pciehp_hpc.c where most
-> > other functions accessing config space reside.
-> 
-> Code looks fine to me
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Could you propose an alternate phrasing?
 
-Thanks for taking a look!
+I guess the requirements are something along the lines of raw_get_work
+must return a value pointer, and it must roundtrip with
+raw_container_of.
 
-Lukas
+Alice
 
