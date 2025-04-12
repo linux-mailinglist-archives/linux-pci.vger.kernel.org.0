@@ -1,107 +1,174 @@
-Return-Path: <linux-pci+bounces-25709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12FCDA86A84
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 05:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DF8BA86A9A
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 05:36:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F7C01B85354
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 03:18:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 701071B8667E
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 03:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3877F7FC;
-	Sat, 12 Apr 2025 03:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1559C43AA4;
+	Sat, 12 Apr 2025 03:36:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCEE195;
-	Sat, 12 Apr 2025 03:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9BE28FF;
+	Sat, 12 Apr 2025 03:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744427893; cv=none; b=cD9RkxEd8WnWUVeytmuHxzZSgjmMhGqkONYRrzZal2T+5rsim2wXMHwDfRIeoLj2/XVTzk0DqR6KY6Y1PoP6B+3r+KUcbabasOs2yCwWAvjbaUUi1EU/TU+6xem0FDYfdyiafUaqrr/z5fgGAaDAK8UDwcY+a4EYYRyFTmGkfHg=
+	t=1744428997; cv=none; b=lcPaTbXkffumrDNzMPrwwIKYkCYqRnR/CU0HhebzvejRIxinRCELxJaP+fMbNLZYyHgxh2jiCtpHjgMJJ6XrvXugCw47V2MlmvRPgIDpTPHFkrUdZ42pXdReG1kYNM+j4YgszLgTnHuYyCUYlohfp6UAfL+jf8CmbACUd10oCko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744427893; c=relaxed/simple;
-	bh=P+g1eZZgQUy4396fqW0psiVAmLDDZ9qap10KnsywV2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qvtB267vvfv0vLj2PAM1aQXc/4hGmBte4lLMRlpfoVisV1XyN7fj9Rs2EHFCNNLohUbGhTLg4Ro8NLzwhirsJA5OUdtJzqvfLt5yeO2A7+n44S4TWgLd+I5tA9Vzd9YK8bDI26u3nHzSPNcslX2saQHDnHeN7jSdCI1oZkTsPl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZZJcT6lFSznfT1;
-	Sat, 12 Apr 2025 11:16:41 +0800 (CST)
-Received: from kwepemg200007.china.huawei.com (unknown [7.202.181.34])
-	by mail.maildlp.com (Postfix) with ESMTPS id 325001401F2;
-	Sat, 12 Apr 2025 11:18:05 +0800 (CST)
-Received: from [10.174.179.176] (10.174.179.176) by
- kwepemg200007.china.huawei.com (7.202.181.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 12 Apr 2025 11:18:04 +0800
-Message-ID: <c81b43b7-e993-4e9f-ad27-acacd0b85847@huawei.com>
-Date: Sat, 12 Apr 2025 11:18:03 +0800
+	s=arc-20240116; t=1744428997; c=relaxed/simple;
+	bh=2SYRdqrN9XHQA50CH2L1MU0Mczru0UjJCmWSUDuOAQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCaMwk8Pr6EDiRJZxP9/ojHo/XyGP5FQz2tNyJZvP9pxs34XJ84zUwLH4WF0HxiMu4fTqxqtvaxY9xBisMHi0d6UCm9qo1x8QBtP0BmX/zZCS0KzSozmR2lznrem3wNDpPBA52KPA+0SYXrzSvtNvFlqVPLwKZFw4Ac/hGrDtPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1CFCA2C4C0D2;
+	Sat, 12 Apr 2025 05:35:53 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D42BB70299; Sat, 12 Apr 2025 05:36:24 +0200 (CEST)
+Date: Sat, 12 Apr 2025 05:36:24 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>, linux-pci@vger.kernel.org,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Joel Mathew Thomas <proxy0@tutamail.com>,
+	Russ Weight <russ.weight@linux.dev>,
+	Matthew Gerlach <matthew.gerlach@altera.com>,
+	Yilun Xu <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
+	Moshe Shemesh <moshe@nvidia.com>, Shay Drory <shayd@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH 2/2] PCI: pciehp: Ignore Link Down/Up caused by Secondary
+ Bus Reset
+Message-ID: <Z_nfuGrVh_CO7vbe@wunner.de>
+References: <cover.1744298239.git.lukas@wunner.de>
+ <d04deaf49d634a2edf42bf3c06ed81b4ca54d17b.1744298239.git.lukas@wunner.de>
+ <3e12d065-77b1-49f0-9ee7-32b49c3ab9ef@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "PCI: Fix reference leak in
- pci_register_host_bridge()"
-To: Su Hui <suhui@nfschina.com>
-CC: <linux-kernel@vger.kernel.org>, <make24@iscas.ac.cn>,
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<bobo.shaobowang@huawei.com>, <wangxiongfeng2@huawei.com>
-References: <4a967093-97e2-401f-a0ea-9d7447d518c4@nfschina.com>
-From: "liwei (JK)" <liwei728@huawei.com>
-In-Reply-To: <4a967093-97e2-401f-a0ea-9d7447d518c4@nfschina.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg200007.china.huawei.com (7.202.181.34)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e12d065-77b1-49f0-9ee7-32b49c3ab9ef@linux.intel.com>
 
-
-
-在 2025/4/10 19:19, Su Hui 写道:
-> On 2025/4/10 11:28, Xiangwei Li wrote:
->> This reverts commit 804443c1f27883926de94c849d91f5b7d7d696e9.
->>
->> The newly added logic incorrectly sets bus_registered to true even when
->> device_register returns an error, this is incorrect.
->>
->> When device_register fails, there is no need to release the reference 
->> count,
-> I think you missed some thing about device_register(). This patch is wrong.
+On Fri, Apr 11, 2025 at 03:28:15PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 4/10/25 8:27 AM, Lukas Wunner wrote:
+> > Introduce two helpers to annotate code sections which cause spurious link
+> > changes:  pci_hp_ignore_link_change() and pci_hp_unignore_link_change()
+> > Use those helpers in lieu of masking interrupts in the Slot Control
+> > register.
+> > 
+> > Introduce a helper to check whether such a code section is executing
+> > concurrently and if so, await it:  pci_hp_spurious_link_change()
+> > Invoke the helper in the hotplug IRQ thread pciehp_ist().  Re-use the
+> > IRQ thread's existing code which ignores DPC-induced link changes unless
+> > the link is unexpectedly down after reset recovery or the device was
+> > replaced during the bus reset.
 > 
-> device_register()
->      -> device_initialize()
->                -> kobject_init()
->                      -> kobject_init_internal()
->                          -> kref_init(&kobj->kref);  //set 
-> kref->refcount to 1
->                             ^^^^^^^^^^^^^^^^^^^^^
+> Since most of the changes in this patch is related to adding framework to
+> ignore spurious hotplug event, why not split it in to a separate patch?
+
+The idea is to ease backporting.  The issue fixes VFIO passthrough on
+v6.13-rc1 and newer, so the patch will have to be backported at least
+to v6.13, v6.14, v6.15.
+
+
+> Is this fix tested in any platform?
+
+Yes, Joel Mathew Thomas successfully tested it:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=219765
+
+That's an Asus TUF FA507NU dual-GPU laptop (AMD CPU + Nvidia discrete GPU).
+The Nvidia GPU is passed through to a VM.
+
+
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -227,6 +227,7 @@ static inline bool pcie_downstream_port(const struct pci_dev *dev)
+> >   /* Functions for PCI Hotplug drivers to use */
+> >   int pci_hp_add_bridge(struct pci_dev *dev);
+> > +bool pci_hp_spurious_link_change(struct pci_dev *pdev);
 > 
-Sorry, I missed the initialization of refcount in device_initialize,
-but I’m confused about the branch logic for bus_registered. Why isn’t
-free(bus) executed when bus_registered == true? My understanding is
-that the kobject_cleanup operation triggered when refcount reaches zero
-does not clean up the allocated bus. Could you clarify this further?
+> Do you expect this function used outside hotplug code? If not why not leave
+> the declaration in pciehp.h?
+
+Any hotplug driver may call this.  In particular, there are two other drivers
+implementing the ->reset_slot() callback: pnv_php.c and s390_pci_hpc.c
+
+pnv_php.c does a similar dance as pciehp_hpc.c (before this patch):
+It disables the interrupt, performs a Secondary Bus Reset, clears spurious
+events and re-enables the interrupt.  I think it can be converted to use
+the newly introduced API.  That should make it more robust against removal
+or replacement of the device during the Secondary Bus Reset.
+
+Also, to cope with runtime suspend to D3cold, there's an ignore_hotplug
+bit in struct pci_dev.  The bit is set by drivers for discrete GPUs and
+is honored by acpiphp and pciehp.  I'd like to remove the bit in favor
+of the new mechanism introduced here and that means acpiphp will have to
+be converted to call pci_hp_spurious_link_change().
+
+One thing that's problematic about the current behavior is that hotplug
+events are ignored wholesale for GPUs which runtime suspend to D3cold.
+That works for discrete GPUs in laptops which are soldered down on the
+mainboard, but doesn't work for GPUs which are plugged into an actual
+hotplug port, e.g. data center GPUs.  The new API will allow detecting
+and ignoring spurious events in a more surgical manner.  I envision
+that __pci_set_power_state() will call pci_hp_ignore_link_change()
+if the target power state is D3cold.  Also vga_switcheroo.c will have
+to call that.  But none of the GPU drivers will have to call
+pci_ignore_hotplug() anymore.
+
+To summarize, there are at least two other hotplug drivers besides pciehp
+which I expect will call pci_hp_spurious_link_change() in the foreseeable
+future, acpiphp and pnv_php, hence the declaration is not in pciehp.h
+but in drivers/pci/pci.h.
+
+
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1848,6 +1848,14 @@ static inline void pcie_no_aspm(void) { }
+> >   static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
+> >   #endif
+> > +#ifdef CONFIG_HOTPLUG_PCI
+> > +void pci_hp_ignore_link_change(struct pci_dev *pdev);
+> > +void pci_hp_unignore_link_change(struct pci_dev *pdev);
+> > +#else
+> > +static inline void pci_hp_ignore_link_change(struct pci_dev *pdev) { }
+> > +static inline void pci_hp_unignore_link_change(struct pci_dev *pdev) { }
+> > +#endif
+> > +
+> 
+> Generally we expose APIs when we really need it.  Since you have already
+> identified some use cases where you will use it in other drivers, why not
+> include one such change as an example?
+
+Mostly because I wanted to get this fix out the door quickly before more
+people come across the regression it addresses.
+
+Converting the Mellanox Ethernet driver to use the API would require an ack
+from its maintainers.  Since it's not urgent, I was planning to do that in
+a subsequent cycle.  Same for the conversion of D3cold handling.
 
 Thanks,
-Xiangwei Li
-> device_register() only  fails when device_add() fails, and 
-> kerf->refcount can be 1
-> at this time ,  so we need to call put_deivce() to release  memory.
->> and there are no direct error-handling operations following its 
->> execution.
->>
->> Therefore, this patch is meaningless and should be reverted.
->>
->> Fixes: 804443c1f278 ("PCI: Fix reference leak in 
->> pci_register_host_bridge()")
->> Signed-off-by: Xiangwei Li <liwei728@huawei.com>
->> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> 
+
+Lukas
 
