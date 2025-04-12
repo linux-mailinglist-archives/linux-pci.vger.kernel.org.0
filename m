@@ -1,118 +1,125 @@
-Return-Path: <linux-pci+bounces-25712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11BF5A86AE0
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 06:31:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17303A86B38
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 08:10:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FD04446EF0
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 04:31:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17BD31B85B10
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Apr 2025 06:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1B51EA90;
-	Sat, 12 Apr 2025 04:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F24B187325;
+	Sat, 12 Apr 2025 06:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUJf6KBp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8321E10F9;
-	Sat, 12 Apr 2025 04:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB756A2D;
+	Sat, 12 Apr 2025 06:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744432284; cv=none; b=MPjtENjtv05Q6iGcvIVeRgGmZnNqFX0dSOSb+HRHu8IVs3gd7cTbq78DpgDsho6kJ4taB8qR1nrz6zwKl3O240biLtRW77cj2VkWKhxRg12ELQidGxJJl4fjBwh+GX52xLJndI4jh8bbmJEEXu1LunQS2FnYP8RnxwmgFc4YdZQ=
+	t=1744438221; cv=none; b=bWiHGVtYFRX/05pU56MBF9EPNHA+YWWhu142u1uvKCHkGRjJYYM+IelDiWd2BrpuIS9F/Z4zCikMlcqBMn3nqyzHEL94KW0za3giSUlt8fkUSI/Vrpuzw6eQ2+jUESwnOe6xb5uw8tQqQQpXRbfuOkGkL0gAVigeZe3sUAfdJJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744432284; c=relaxed/simple;
-	bh=bOkiD1hyZrmRAZQ4QH4zaQyYDHImylAofKNJ105nBaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=br0D1bkOtyaLkbOg5HcbYzEZhH5zjpmkLUAnDLarP+SjED/N+m9TaOohbRoxORt3hzosuW3dEMhFxSQNrUE7m56jZeMSWwX6sKiYXG0HD125z+GX8GbtUnLYOxfXC+LrojBUBWpaVJnhBTR42Vddent6jP2xKni+ezI9bp8TtHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 6D562200A2A7;
-	Sat, 12 Apr 2025 06:30:42 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E168310720; Sat, 12 Apr 2025 06:31:12 +0200 (CEST)
-Date: Sat, 12 Apr 2025 06:31:12 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shawn Anastasio <sanastasio@raptorengineering.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, tpearson@raptorengineering.com,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH 2/3] pci/hotplug/pnv_php: Work around switches with
- broken presence detection
-Message-ID: <Z_nskClPmT4A_5Cf@wunner.de>
-References: <20250404041810.245984-1-sanastasio@raptorengineering.com>
- <20250404041810.245984-3-sanastasio@raptorengineering.com>
- <Z-9jOFiPaxYAJwdm@wunner.de>
+	s=arc-20240116; t=1744438221; c=relaxed/simple;
+	bh=+L41gmr9GY2a0j2/3zIF0m6qP0TqES8j7naIIvECLPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pUjwjJgsuNTPTm0XOC7pewkO10Cd7t4T2MV8U92E6X30XTgWrHSlGg6rt9DzS1lmeXxWc8pzx/ktBnjVQPLM6T1vJ/nBGOcE8FA0r35cKwgk/BY1BO+Y8Otvu9nI0MAUoMOuylDhyfGdxw8HUqiU8JcBbPqaHlGjJ8wFx66TFvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUJf6KBp; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7359aca7ef2so3949018b3a.2;
+        Fri, 11 Apr 2025 23:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744438219; x=1745043019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PVNWMzhUv1sB3IFRx/3hnoeslHEIVBXstwaTsoFrumY=;
+        b=LUJf6KBpdhemC+8kErztCd5ouZYBAziH9H7XJL4cKC5HwQjlesIyy7fip6XTIzJNij
+         ReVmlSvO4okWqvdyZWZUBAI2q9wVQ/Z32MM6B7J/31gBiVC6Qw3OXsK7Nea3tidT6Hku
+         maBlNxH2qwOG5uVNxmto2NlzpK/z+pkL+KjFfCYRzQ2eiyZC+98RyZP0+7MijbiHGFCj
+         mzYYBVgVTfRP1r/2PN8DInlAoRGB+jVv6DuRahP9ZWeZDhqsMwjEgTfLKqDZ5hWEtdgq
+         xZtXkpyAOoprVjNjc/YWhQHXzKIw8ANp8VLbzRYF6v5hnn1oyEQevGlab0jUVMMR+0zV
+         KjDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744438219; x=1745043019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PVNWMzhUv1sB3IFRx/3hnoeslHEIVBXstwaTsoFrumY=;
+        b=Mn+P6p2Qiga6BVxZYHcOkXuVN86/5XyVHGpmOaPA7DI7lj4mtAF+5g8WVGSHTBJhO9
+         tbqcVu/wVP3c1zanDZpia4/b5+q8E/KtXWtWuWjnM0QsXMha3I1KbkKuyBureZcSWx5n
+         CASw85tvhc6ss3O1NoVf1LC9Tmdje9WXnpxe/CF1RuCxjAv189hHGlR7hFXzeyrphgBd
+         z6usO47WUCLa8MXdlN+Udjv2Qc5X8JJ+1y78afmC2kLYEHQaQ+IJeA5GCFBZnlNWApOx
+         AZMZXhjcLI5Xsbc6XxVU+urC7ozu3/hv/lL56/8Sddo5TzYebROoMss+X0+cVuQL9Tai
+         cKLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCarJ2Tp0O+LQ/AsmtPGl5MjMlJQm0VYX/F/2In4/QveG6CRyNQY8ypTrvWtwt/AdP1sucQgxaMAWGcBg=@vger.kernel.org, AJvYcCXuJqplO32DOFA8S0eSmrA9HmtlhSDpQeKe/0BYU6dk5b/BQRMWaCSUs6/RYJ1FdfkNAkhtcxKRC2oD@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk3gaO1bMYYBa2m97jBW30+j66GOKGujY3uCw6tdbPUSu/zlhe
+	59sgvPdVtI5LmX1MFsc4xHOBkZbCxS+I3G9iCRYtmjtgBSUcuHZa
+X-Gm-Gg: ASbGncsJCb+wtpy8Dfb61OjpK79H0LXOMI9NU05ihDKwWuo4W+nU6O7hLwObgwGa61d
+	rbFTbaQ1Jl2CxtBp6s5RP0k9dJZHN63WJVvOaUCncThtpNJVI1SFRFqfxo7r3Z+5AH1fDF64nCn
+	0at0ZKocprxl7ur/E1wSmIDFo/NPzI7lwC1JutTFis8gI1axy8yX+Mst/VXFx79PTdNRNIuhM2X
+	meYDXJyQcX4Ufty9Bf1hVChyTEdbrbunCdedJn5Z7kZvO4z1wNQOkLH7jcIdXH7t1X+RXSBaKkt
+	pF0RSAYA3JCxve6WagAlG8WDZP76Tnf8Yyx8xcNVcskcIsg=
+X-Google-Smtp-Source: AGHT+IHa+43R3N2ccAE/i6roRMPDUETNPoym+O1GXJ+ITgbljmlrpQ+kfO/8ZRwBz24S/E5i4rLF8A==
+X-Received: by 2002:a05:6a00:8d4:b0:736:73ad:365b with SMTP id d2e1a72fcca58-73bd12121b5mr6828784b3a.14.1744438218909;
+        Fri, 11 Apr 2025 23:10:18 -0700 (PDT)
+Received: from fedora.. ([159.196.5.243])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2335534sm2694240b3a.168.2025.04.11.23.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 23:10:18 -0700 (PDT)
+From: Wilfred Mallawa <wilfred.opensource@gmail.com>
+To: bhelgaas@google.com,
+	mika.westerberg@linux.intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	lukas@wunner.de
+Cc: alistair.francis@wdc.com,
+	wilfred.mallawa@wdc.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dlemoal@kernel.org,
+	cassel@kernel.org
+Subject: [PATCH] PCI: fix the printed delay amount in info print
+Date: Sat, 12 Apr 2025 16:09:35 +1000
+Message-ID: <20250412060934.41074-2-wilfred.opensource@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-9jOFiPaxYAJwdm@wunner.de>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 06:42:32AM +0200, Lukas Wunner wrote:
-> On Thu, Apr 03, 2025 at 11:18:09PM -0500, Shawn Anastasio wrote:
-> > The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
-> > was observed to incorrectly assert the Presence Detect Set bit in its
-> > capabilities when tested on a Raptor Computing Systems Blackbird system,
-> > resulting in the hot insert path never attempting a rescan of the bus
-> > and any downstream devices not being re-detected.
-> > 
-> > Work around this by additionally checking whether the PCIe data link is
-> > active or not when performing presence detection on downstream switches'
-> > ports, similar to the pciehp_hpc.c driver.
-> [...]
-> > --- a/drivers/pci/hotplug/pnv_php.c
-> > +++ b/drivers/pci/hotplug/pnv_php.c
-> > @@ -390,6 +390,20 @@ static int pnv_php_get_power_state(struct hotplug_slot *slot, u8 *state)
-> >  	return 0;
-> >  }
-> >  
-> > +static int pcie_check_link_active(struct pci_dev *pdev)
-> > +{
-> > +	u16 lnk_status;
-> > +	int ret;
-> > +
-> > +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> > +		return -ENODEV;
-> > +
-> > +	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> 
-> This appears to be a 1:1 copy of pciehp_check_link_active(),
-> save for the ctrl_dbg() call.
-> 
-> For the sake of code-reuse, please move the function into the
-> PCI library drivers/pci/pci.c so that it can be used everywhere.
-> 
-> Note that there's another patch pending which does exactly that:
-> 
-> https://lore.kernel.org/r/20250225-qps615_v4_1-v4-7-e08633a7bdf8@oss.qualcomm.com/
-> 
-> So either include that patch in your series (addressing the review
-> feedback I sent for it and cc'ing the original submitter) or wait
-> for it to be respun by the original submitter.
+From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 
-Update -- Krishna respun the patch:
+Print the delay amount that pcie_wait_for_link_delay() is invoked with
+instead of the hardcoded 1000ms value in the debug info print.
 
-https://lore.kernel.org/r/20250412-qps615_v4_1-v5-7-5b6a06132fec@oss.qualcomm.com/
+Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait
+time for slow links")
+
+Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..8139b70cafa9 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		delay);
+ 	if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 		/* Did not train, no need to wait any further */
+-		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
++		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
+ 		return -ENOTTY;
+ 	}
+ 
+-- 
+2.49.0
+
 
