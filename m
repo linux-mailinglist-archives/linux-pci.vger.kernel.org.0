@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25757-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25758-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A648CA87312
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 19:42:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86EEBA87314
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 19:42:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F9043BB56D
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 17:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5A0E3BB9FD
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 17:39:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7277D1F4CA5;
-	Sun, 13 Apr 2025 17:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41CC61F5425;
+	Sun, 13 Apr 2025 17:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czTlta5D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8/tOA95"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E1C1F3FC0;
-	Sun, 13 Apr 2025 17:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172E31F3FEE;
+	Sun, 13 Apr 2025 17:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744565915; cv=none; b=epnAJHHOFNnK+bT/LJHnnZQ16JprLetc8qVd7H1UvsYND+34WENTO2tVFZ5qqMJskUzka+fcfGTIw69moJyAj9ywSjVI3AqSvAwOahV5R1iA8lckt5yNLlfE/vdohX+mLU35mL1Epqs09weYsdGHCU/rI0dEbnPLA/OrWpZa2Os=
+	t=1744565919; cv=none; b=aLA0cTl7ByIJrU1Bd55bKbRszXEg5dFowzhTjtiIx20ecV+dIYopZoqwtAh3vuJXfsvH+MBEfnQs2raSvAqyPIdo4KauSzXi5Lq6Oioojt8+2cyU+OMocCAA+LhYYAASkL6UN+IlA4sYh3aSa3mBjcozQYXhZHMz1PmOOU5ZvZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744565915; c=relaxed/simple;
-	bh=fkEeseR9PtCDZJ7E32DzZR1VXQCCuTAmIsu3dUC+V8I=;
+	s=arc-20240116; t=1744565919; c=relaxed/simple;
+	bh=pQKXbW5g5QATkdun2XLx2iYsIxArlMlNIpZWyKcpnYU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G5PjvUgVFkqa9wQPHkB2bdCTJtjCwlgBOjoLr/gI2ajOwcSGJmRfUc15jxdUvPVKwPM+DY01w49JmJzt9vyKAuffqjJcPpIQNQSo+g5z575lxwUF80zBOiQplXS+Pb3GKNrXY6ASca7MF055JFXaPu20Trwt+muNJeV8hTAmpqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czTlta5D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133E0C4CEDD;
-	Sun, 13 Apr 2025 17:38:30 +0000 (UTC)
+	 MIME-Version; b=czObZT4qZKDfPgQ9zW4rAN0a9UWypWpT+dMsX/K+mnX7/cHA0GgAVd8Fbc6hOgWWShPmyuwyouamFN3sREV/E42pyaHrNIq7yc9LNgidRhfKhjEBSJRZTXyvTyjPyet+A96VpAtF1zriLGMvYT068AXBpKHojS2WcCeZKehWzKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8/tOA95; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3DEC4CEE7;
+	Sun, 13 Apr 2025 17:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744565914;
-	bh=fkEeseR9PtCDZJ7E32DzZR1VXQCCuTAmIsu3dUC+V8I=;
+	s=k20201202; t=1744565919;
+	bh=pQKXbW5g5QATkdun2XLx2iYsIxArlMlNIpZWyKcpnYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=czTlta5DGrOUljqHgiTfzHhqbRYBnYnUVGEdplKN9m+GcYVq86rOJ7tIjXtNN+iL4
-	 sW05mecavIWTV0TElJwCn1V/jj85hfFjb6Ez41EwsIuBVUNeYlPNgokCOdAASDZFQu
-	 6/GOKKDgXA801XdeMOwii+pwTEBsCGW1wD4bTqd5eIfzt360MKjxffZyQbPGRRRqQ8
-	 hXljhB8x3jPTBlARhbHqNlcn4Zvml8S9YiQ9NcrcGa3Td9tHO+r7MyoZ30gh0OpyEy
-	 GaFdq5tOAwvEAH+Iwyhi3a218pgvQAIOr/DqGeJy85S3HpSrufX9wMXC7K2nf4xqoi
-	 oBVsHBQcWqQyg==
+	b=H8/tOA95aSQfxIogv4/Zyeqi9p2IAKsLr0Nm3f40NfQ0Mlf3idRBDinR8OHvirpOK
+	 Ie/UTThPY+e4YgmC8ciaU5+oi+fV/y4l5VZvfjfrgyqjGiMubzMo9OyPYjwRWnDA2n
+	 hDahPowRfj51IdPAxI/ZQ4KrF01AIeC4J6NN+YuRY7w8VhJ8k1+5jOEAKf4x9uiHar
+	 1qpNtFQOUbMe+t1EUgxzgSbM2o84/BYBAjCK7U7LmqE6u9b1i2oCgSS0AcSMnclMMi
+	 8rgPDY8JBHCAhi7AKYGXfgYYVVctmSdwQ49ihF7Km8tLFHYSRtbYUO15Diqel0JDC7
+	 Ou2pdWP0la0wA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	kwilczynski@kernel.org,
@@ -62,9 +62,9 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 7/9] rust: pci: move iomap_region() to impl Device<Bound>
-Date: Sun, 13 Apr 2025 19:37:02 +0200
-Message-ID: <20250413173758.12068-8-dakr@kernel.org>
+Subject: [PATCH v2 8/9] rust: devres: require a bound device
+Date: Sun, 13 Apr 2025 19:37:03 +0200
+Message-ID: <20250413173758.12068-9-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250413173758.12068-1-dakr@kernel.org>
 References: <20250413173758.12068-1-dakr@kernel.org>
@@ -76,29 +76,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Require the Bound device context to be able to call iomap_region() and
-iomap_region_sized(). Creating I/O mapping requires the device to be
-bound.
+Require the Bound device context to be able to a new Devres container.
+This ensures that we can't register devres callbacks for unbound
+devices.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/pci.rs | 2 ++
- 1 file changed, 2 insertions(+)
+ rust/kernel/devres.rs | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 1234b0c4a403..3664d35b8e79 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -390,7 +390,9 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-         // - by its type invariant `self.as_raw` is always a valid pointer to a `struct pci_dev`.
-         Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_into()?) })
-     }
-+}
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index ddb1ce4a78d9..1e58f5d22044 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -8,7 +8,7 @@
+ use crate::{
+     alloc::Flags,
+     bindings,
+-    device::Device,
++    device::{Bound, Device},
+     error::{Error, Result},
+     ffi::c_void,
+     prelude::*,
+@@ -45,7 +45,7 @@ struct DevresInner<T> {
+ /// # Example
+ ///
+ /// ```no_run
+-/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::{Io, IoRaw}};
++/// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
+ /// # use core::ops::Deref;
+ ///
+ /// // See also [`pci::Bar`] for a real example.
+@@ -83,13 +83,10 @@ struct DevresInner<T> {
+ ///         unsafe { Io::from_raw(&self.0) }
+ ///    }
+ /// }
+-/// # fn no_run() -> Result<(), Error> {
+-/// # // SAFETY: Invalid usage; just for the example to get an `ARef<Device>` instance.
+-/// # let dev = unsafe { Device::get_device(core::ptr::null_mut()) };
+-///
++/// # fn no_run(dev: &Device<Bound>) -> Result<(), Error> {
+ /// // SAFETY: Invalid usage for example purposes.
+ /// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
+-/// let devres = Devres::new(&dev, iomem, GFP_KERNEL)?;
++/// let devres = Devres::new(dev, iomem, GFP_KERNEL)?;
+ ///
+ /// let res = devres.try_access().ok_or(ENXIO)?;
+ /// res.write8(0x42, 0x0);
+@@ -99,7 +96,7 @@ struct DevresInner<T> {
+ pub struct Devres<T>(Arc<DevresInner<T>>);
  
-+impl Device<device::Bound> {
-     /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
-     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-     pub fn iomap_region_sized<const SIZE: usize>(
+ impl<T> DevresInner<T> {
+-    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
++    fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+         let inner = Arc::pin_init(
+             pin_init!( DevresInner {
+                 dev: dev.into(),
+@@ -171,7 +168,7 @@ fn remove_action(this: &Arc<Self>) {
+ impl<T> Devres<T> {
+     /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+     /// returned `Devres` instance' `data` will be revoked once the device is detached.
+-    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
++    pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+         let inner = DevresInner::new(dev, data, flags)?;
+ 
+         Ok(Devres(inner))
+@@ -179,7 +176,7 @@ pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
+ 
+     /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
+     /// is owned by devres and will be revoked / dropped, once the device is detached.
+-    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
++    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
+         let _ = DevresInner::new(dev, data, flags)?;
+ 
+         Ok(())
 -- 
 2.49.0
 
