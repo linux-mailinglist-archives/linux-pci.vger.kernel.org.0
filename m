@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-25750-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25751-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5EFAA87304
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 19:38:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D28E5A87303
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 19:38:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 224F83AEDBA
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 17:37:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09E8D188DAB3
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 17:38:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4BD1DB154;
-	Sun, 13 Apr 2025 17:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED791F3BAB;
+	Sun, 13 Apr 2025 17:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bl5y12IT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSpehm4j"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6FD1A0711;
-	Sun, 13 Apr 2025 17:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1B41A0711;
+	Sun, 13 Apr 2025 17:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744565886; cv=none; b=fEVLNwTOx5W3lahdobzWasEy1NtrHA91rBlAHbSCeWdorYPfgv+klVj+vULePS96BKFqgtzYDqAue87pG2zlYZdMLhpJo+64Znpliffrt+nM7fZa9nZjTSC5Nozy5uvh5c5zR+kIEvk/ezX4FGtSKr8ZwnkZES/r0z7iKkaLJsg=
+	t=1744565890; cv=none; b=WzxkP87hCKd53N387tzbmWJo3y34G6IMsn/1G/q0ja6VdTi+6lnM86bZThL9swvOMOxd5i83ljgPQ1T9mCB8IoBz6aifVmIF+0fj0rD4p1QVa6aCXwvrlX0YIIOH5AGvCaNOc4MrVMRzPSqIk21WXpMoRk7cgwoNTDwvqpZdB9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744565886; c=relaxed/simple;
-	bh=B/4wpZfymQa2EZNIHKUkhiU9jz14uKnVoG+hwSh5Npc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBlqXt3eaPwDpjsUESQCh1fDjkWd2q3Txk3peo0C2iTwTvRqlGJp/LvT+q+m21X/5AzhiuQ6goiKNkGZOriqEc5qTGGA5Ix0l2fwNBJvcNtGXGKFewu4y6D2S9ndByvhWbtTJBZtZ8NgPdfH9AZ4ScoT1r2RivJ7PGL6adxWhmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bl5y12IT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB80FC4CEDD;
-	Sun, 13 Apr 2025 17:38:01 +0000 (UTC)
+	s=arc-20240116; t=1744565890; c=relaxed/simple;
+	bh=Lp95DzubEoanpikgjlhKpvhsatoB28z6K99cNgw02kE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=isrERo8E9Yh0yYNOSYORoncIKDAoWDbbnrY/CnbDPrB0ojc+SUSXiPVuHhhc0YWCvlTMn+BNiFQgI14gNN9NElawoyiRIZK8OxHkC4EN3UrWAOCqGxHzJmo+JN8js6Sldk+I9eD8SYWLRsuiWdRY7PBudrktEVVnDGVvGbIw29I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSpehm4j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F65C4CEEC;
+	Sun, 13 Apr 2025 17:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744565885;
-	bh=B/4wpZfymQa2EZNIHKUkhiU9jz14uKnVoG+hwSh5Npc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bl5y12IT4LGGcBXw7WS1SBz5KtTvBnocG0ZNdwiLbs1JHf2dMPwdTwx91oYc1u0/X
-	 XenTCVf0bshSRGr89mVypR8joX6Lowz4pjIAfZTwhAncKOkuBKlXPJrk1tEobKQngz
-	 TmYX5ohAtzo7jYhYdQZN6hMyfc6ibSdf+WU2O5AUr1wIXr5FKEvjHWtyNJOmpugrV2
-	 5w5anKe+T3jJSIZrOomOdJcXzirYg9SEU1mmSnV4jbCU0RlHYLhi7ESlG0TiO4HWNW
-	 Vs1R4FOvFo0xeSBXcLz/PhEgFsk78IX/GnsJ4OJSMSa901do5T9ADn1RcN8sBto3Pg
-	 XjIUSCSqM1sHw==
+	s=k20201202; t=1744565889;
+	bh=Lp95DzubEoanpikgjlhKpvhsatoB28z6K99cNgw02kE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HSpehm4jXfYAIeWh1yAB4yRcxihPnRgbeqpUza2oB14Y5bLbvjjBIErCJq8cvbHFs
+	 HWGejaIjT1Xhr1AGK8UJFDCETlDztxYPC+rTcJfqAchKI8oUsObfYNyptqy7SvUdRc
+	 Toa3N9I8faIPJrio1GgkJ2LYwZuW9yCqo5m2xnZ/wubfrRuj04WL73fCAPATw1qgIZ
+	 r9izjrgP8tS1YdqXfBTcRNvPRYg+V81fQ6i7bamsJsODpRQDhSmie/2npDXQJPXgCy
+	 8RyZIcf0kjZXRJ8r6mbFnGYpbYbeXFixcMwuPw09Z5RiC95Yrv1bZSPzAmSo9ySmN8
+	 ztZBoXG+xWyqA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	kwilczynski@kernel.org,
@@ -61,10 +62,12 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 0/9] Implement "Bound" device context
-Date: Sun, 13 Apr 2025 19:36:55 +0200
-Message-ID: <20250413173758.12068-1-dakr@kernel.org>
+Subject: [PATCH v2 1/9] rust: device: implement impl_device_context_deref!
+Date: Sun, 13 Apr 2025 19:36:56 +0200
+Message-ID: <20250413173758.12068-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250413173758.12068-1-dakr@kernel.org>
+References: <20250413173758.12068-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,63 +76,139 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, we do not ensure that APIs that require a bound device instance can
-only be called with a bound device.
+The Deref hierarchy for device context generics is the same for every
+(bus specific) device.
 
-Examples of such APIs are Devres, dma::CoherentAllocation and
-pci::Device::iomap_region().
+Implement those with a generic macro to avoid duplicated boiler plate
+code and ensure the correct Deref hierarchy for every device
+implementation.
 
-This patch series introduces the "Bound" device context such that we can ensure
-to only ever pass a bound device to APIs that require this precondition.
+Co-developed-by: Benno Lossin <benno.lossin@proton.me>
+Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/device.rs   | 44 +++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/pci.rs      | 16 +++------------
+ rust/kernel/platform.rs | 17 +++-------------
+ 3 files changed, 50 insertions(+), 27 deletions(-)
 
-In order to get there, we need some prerequisites:
-
-(1) Implement macros to consistently derive Deref implementations for the
-    different device contexts. For instance, Device<Core> can be dereferenced to
-    Device<Bound>, since all device references we get from "core" bus callbacks
-    are guaranteed to be from a bound device. Device<Bound> can always be
-    dereferenced to Device (i.e. Device<Normal>), since the "Normal" device
-    context has no specific requirements.
-
-(2) Implement device context support for the generic Device type. Some APIs such
-    as Devres and dma::CoherentAllocation work with generic devices.
-
-(3) Preserve device context generics in bus specific device' AsRef
-    implementation, such that we can derive the device context when converting
-    from a bus specific device reference to a generic device reference.
-
-With this, Devres::new(), for instance, can take a &Device<Bound> argument and
-hence ensure that it can't be called with a Device reference that is not
-guaranteed to be bound to a driver.
-
-A branch containing the patches can be found in [1].
-
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device-bound
-
-Changes in v2:
-  - add a safety requirement for impl_device_context_deref! (thanks to Benno for
-    working this out)
-
-Danilo Krummrich (9):
-  rust: device: implement impl_device_context_deref!
-  rust: device: implement impl_device_context_into_aref!
-  rust: device: implement device context for Device
-  rust: platform: preserve device context in AsRef
-  rust: pci: preserve device context in AsRef
-  rust: device: implement Bound device context
-  rust: pci: move iomap_region() to impl Device<Bound>
-  rust: devres: require a bound device
-  rust: dma: require a bound device
-
- rust/kernel/device.rs   | 90 ++++++++++++++++++++++++++++++++++++++++-
- rust/kernel/devres.rs   | 17 ++++----
- rust/kernel/dma.rs      | 14 +++----
- rust/kernel/pci.rs      | 33 +++++----------
- rust/kernel/platform.rs | 32 ++++-----------
- 5 files changed, 121 insertions(+), 65 deletions(-)
-
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 21b343a1dc4d..7cb6f0fc005d 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -235,6 +235,50 @@ impl Sealed for super::Normal {}
+ impl DeviceContext for Core {}
+ impl DeviceContext for Normal {}
+ 
++/// # Safety
++///
++/// The type given as `$device` must be a transparent wrapper of a type that doesn't depend on the
++/// generic argument of `$device`.
++#[doc(hidden)]
++#[macro_export]
++macro_rules! __impl_device_context_deref {
++    (unsafe { $device:ident, $src:ty => $dst:ty }) => {
++        impl ::core::ops::Deref for $device<$src> {
++            type Target = $device<$dst>;
++
++            fn deref(&self) -> &Self::Target {
++                let ptr: *const Self = self;
++
++                // CAST: `$device<$src>` and `$device<$dst>` transparently wrap the same type by the
++                // safety requirement of the macro.
++                let ptr = ptr.cast::<Self::Target>();
++
++                // SAFETY: `ptr` was derived from `&self`.
++                unsafe { &*ptr }
++            }
++        }
++    };
++}
++
++/// Implement [`core::ops::Deref`] traits for allowed [`DeviceContext`] conversions of a (bus
++/// specific) device.
++///
++/// # Safety
++///
++/// The type given as `$device` must be a transparent wrapper of a type that doesn't depend on the
++/// generic argument of `$device`.
++#[macro_export]
++macro_rules! impl_device_context_deref {
++    (unsafe { $device:ident }) => {
++        // SAFETY: This macro has the exact same safety requirement as
++        // `__impl_device_context_deref!`.
++        kernel::__impl_device_context_deref!(unsafe {
++            $device,
++            $crate::device::Core => $crate::device::Normal
++        });
++    };
++}
++
+ #[doc(hidden)]
+ #[macro_export]
+ macro_rules! dev_printk {
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index c97d6d470b28..8474608e7a90 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -422,19 +422,9 @@ pub fn set_master(&self) {
+     }
+ }
+ 
+-impl Deref for Device<device::Core> {
+-    type Target = Device;
+-
+-    fn deref(&self) -> &Self::Target {
+-        let ptr: *const Self = self;
+-
+-        // CAST: `Device<Ctx>` is a transparent wrapper of `Opaque<bindings::pci_dev>`.
+-        let ptr = ptr.cast::<Device>();
+-
+-        // SAFETY: `ptr` was derived from `&self`.
+-        unsafe { &*ptr }
+-    }
+-}
++// SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
++// argument.
++kernel::impl_device_context_deref!(unsafe { Device });
+ 
+ impl From<&Device<device::Core>> for ARef<Device> {
+     fn from(dev: &Device<device::Core>) -> Self {
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 4917cb34e2fe..22590bdff7bb 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -16,7 +16,6 @@
+ 
+ use core::{
+     marker::PhantomData,
+-    ops::Deref,
+     ptr::{addr_of_mut, NonNull},
+ };
+ 
+@@ -190,19 +189,9 @@ fn as_raw(&self) -> *mut bindings::platform_device {
+     }
+ }
+ 
+-impl Deref for Device<device::Core> {
+-    type Target = Device;
+-
+-    fn deref(&self) -> &Self::Target {
+-        let ptr: *const Self = self;
+-
+-        // CAST: `Device<Ctx>` is a transparent wrapper of `Opaque<bindings::platform_device>`.
+-        let ptr = ptr.cast::<Device>();
+-
+-        // SAFETY: `ptr` was derived from `&self`.
+-        unsafe { &*ptr }
+-    }
+-}
++// SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
++// argument.
++kernel::impl_device_context_deref!(unsafe { Device });
+ 
+ impl From<&Device<device::Core>> for ARef<Device> {
+     fn from(dev: &Device<device::Core>) -> Self {
 -- 
 2.49.0
 
