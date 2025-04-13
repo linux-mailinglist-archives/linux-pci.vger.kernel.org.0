@@ -1,93 +1,90 @@
-Return-Path: <linux-pci+bounces-25726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2907A87233
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 16:13:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15351A87239
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 16:24:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B74461892145
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 14:13:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18C2F1894796
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 14:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2BC526ADD;
-	Sun, 13 Apr 2025 14:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C741C5D59;
+	Sun, 13 Apr 2025 14:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v2DhXvoo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s2nGBI08"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18FF1A23B5
-	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 14:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A82B134CF
+	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 14:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744553596; cv=none; b=pthbMMQUO4H9aaZjb48pnXtlo5DD5zLe2vpBDIZ1mmsOjG4glsbcX70bXD37pTd+csiePzNRZN+OyMxJ5M0iRwBCiDgeNBQ4UHWLc1Wbw9RUkGwWZadbpdNxGGmNwE/e2w1OObJ3g5+RFWeD0k18SdWbeIrE4ft6rL3AxqW6/gE=
+	t=1744554276; cv=none; b=X3UqAKGZgQMRnmJlCaiKqwmkq6jYekNfL+cRccsD0IZEw6+k+CWW56zJzJnjzHPLqtlnvJ0QMN620mRIRcsvCrk76fo5nmnu+oRJb2EpPcadE+VHoejDpyXWcA2s8y04AO4D58jMcVR5TOpiXd/9LJ/TvUsTuNUU/dA3AlXejVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744553596; c=relaxed/simple;
-	bh=MTMySu9l51fD2dVWjJvZtk9X2dn/X/Lj8ZL927kSy8A=;
+	s=arc-20240116; t=1744554276; c=relaxed/simple;
+	bh=AhC5haPQFj3COVXG0x34Zc0YL8gTnP+Gg5/HIQpmgZc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufsHVFY2Sr6izKFDEA+p2yKxYgmxECHDKsQeBJK6+MuM3MImVDSCfwpHESJsoLEeC8Z5amoamzXMZYMXO1Bu9zh/KHfAFz0AzOC5Hp8sFV8Ug/A6Grv4qs+tx2r9wI+efIyjOHlZ7oYDNy+IkzFd7CgI/LO8lBQHccJB5+ff9Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v2DhXvoo; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBvFQpvHrpTJfsVyjpEPuh+bxLwuQSJE+SDD+HfsUAJ4jK10hI6Hbojn2Sd+dk7ofyeF/m31H4xw1tFPIJYOvBwwaoXwE58cu/r7y9UlkHNZ7jkuw+xLXsktX9odmQUXoErorZT1ZovLtsDSMRIV+TAjKV2rmnGZcGUMLfoaPCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s2nGBI08; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736b0c68092so2914907b3a.0
-        for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 07:13:14 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so49517585ad.0
+        for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 07:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744553594; x=1745158394; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744554274; x=1745159074; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=MDGkU74MBhCdgJJMoNaDSjeUhoyAzk0gL7nqKzTZvSA=;
-        b=v2DhXvooC0z7Ir5vHkjNGKIxyclQ9T4G4R172mNvayB6/lcS0UHTylVJ287LpTKHfL
-         S6eEj8m7GwjI8fDkAQ+/QdqNslXTk/RQG/7ASRL8+XCgoE6K/lF1NmxLf4ONuxGRt2Ss
-         7l2YkPZemij9tdnXKjNvdoGhwiQH/cV2y4AFlCGQXMfKCH8hy4IJpFwC4JNnxdWTRmIx
-         AJqlLL3j9wclLo7ToAmrNv+X9X9x8QMChVAu4P5K8X3CA2T6KCVjP0Rzwj7wpQ7DHEpT
-         QxWaqGhhmcN1k8fnGxsTo7DYOhPJ5RrpOpRUJtZeAUrHms+C1LcciIpwRI3o98ZjGTMY
-         Ziog==
+        bh=1HrAk684WJxvGVi+ClfydabBEME3gjs95+HZox1kC4Q=;
+        b=s2nGBI08+3ZdBJYgGaICVVydRe8O4cNuVqZUeUA1H6z+LuwOKn5ix+hnIuqjaPXx5S
+         MM6hLIZu+vl03TYJmv0yzSPgXxRtiG7nYzmgqp6n94lilKUMmXor+WVWPZDc8rA+p4ES
+         dy9j+1fKdG7jjWsYULM2I9YCf5B5JaHcT10L7zNxA75FLoQQNLL6msDCdWpXrg6/YXrQ
+         hoaAAlQNtShTPYEgosA94ozN0wCQnvZ+InPKJJP+ILQ4x9prdpx9BXcgEznZjIK+M/BP
+         P4apMLbMk01X/KofeYE7i6Wi2JeEeTCmJPMtYU86TMjktwHfUC3PmQ2GTyMgenywa0Rf
+         S62w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744553594; x=1745158394;
+        d=1e100.net; s=20230601; t=1744554274; x=1745159074;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MDGkU74MBhCdgJJMoNaDSjeUhoyAzk0gL7nqKzTZvSA=;
-        b=G17kWUfehsxnjFJmVLe8Gn64jdFqoMAX+k6eaBku4chu5QCxjrO4cP9CeT99a2+bKB
-         WuVfvy52d9AI9vq9n+UVEe2FzmudGKIe3hXi1sS3rkzEt/p0iBHqNBM+K/h91Ubd4yM6
-         T5qyxRUKfFe98tIpvHfvx0l2nJ5DOQK0sLWROKneTGYKTMgI6CwNNe+1vqFznMwW46a8
-         fl2PzVG30zbwumRu0o2L9OIYpRLlDBbjxxu/hH1pkhfqM+RShXlecwNiKTTiOCdK6Xpf
-         QBnHVF8Rhxc4Hnd9Angme+/2iMMQoHwGi2S8NNXvQNv2PDSte/TwSxh/ivKj5kszHsj5
-         qiAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVv0bdBTZMX7o9yMbNdlWdi6kcdt95DWl3sBEjLh9FZPX68UEZjVavaBqAGOscKb+7txiM6fnlP2Is=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvzcTk26obSIFLH0pL7Sur+L8pKo2O4WKNNAcCujB26F2ih/wm
-	8kBItLBtHpIoRpbYjvkbVRzdgJkzFACozUVGLP76hw4ANNptj/QU9YTa1B75qg==
-X-Gm-Gg: ASbGncvFuUPcSqEvCTtMM7UMvUdg6MK4PCbkSWvov/AgYf7rkpUZ4gTx3Ecu2GwKv96
-	SVdkiXxTBdwh6IGqVQtT9n4Iy4mKEPGe5s1Um2gie/StCtWUNMFyn1s///9GCvLL+Avb1KjW+WK
-	urnF+v8hVcJrwAlo/5527G7CWweYctgyRyV4Hg+rXBQlS48XLGjVFDP5ms5qXZaB69H0BRJtRuS
-	cps0JpbK816pfhf6IAGJLe+Hfv0tde63WxmkwcGpkzKX5T0HCWO0WgHZVMsTNGc6wKTecWCg4lu
-	1GDL/gkvf+wnZ21u7HWGXFGjwoR/3oUFURNokZ6KkvVU7jqIjHfv
-X-Google-Smtp-Source: AGHT+IG3KsEC7opdxKauuCqzbkQebp3bxI0hJGkx4B9uTAWlK9jJFs28Sw9U9lh+D1sRPZ4sMA2Hkw==
-X-Received: by 2002:a05:6a00:4644:b0:736:9e40:13b1 with SMTP id d2e1a72fcca58-73bd12b1315mr12154297b3a.23.1744553593852;
-        Sun, 13 Apr 2025 07:13:13 -0700 (PDT)
+        bh=1HrAk684WJxvGVi+ClfydabBEME3gjs95+HZox1kC4Q=;
+        b=O6ZsZph5xW82xJxjdAOaVtEDk/sSHpuzxGlV21MK/oS+KC26pBL+Es/Ji9Z11S4C7C
+         BhJWGZUPIZsfz9UPz8d31ngZafBI72a3q/M8oS/Fy6G+DtLz8leQPncLo4N3prdCy3Jz
+         oM5wYTAQCd8bAAIFyju2NLTad9a3lImPEb8MykqAv+3e/k/7aLn0gM+g1kfj7+lCl9yY
+         NoOa0XqayC4BmjAMlIDwomLUCtQ49WVlzoNlwSySV93wQO1s6hlaGmyWYIOl+8jHYmwj
+         ZopYilCHAG9Gxv+5zOg3ijm5rhk8qCg9eaT1ZXfQbTiCN0L+nlStuD8iPYORnxT541dm
+         bnDA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8l8YYGi4/SxGoierSgYV8Se3Nvrx8f3Q3cXtcI+Fvpn5+oFHZqNqsh/vLMI+WEW6X4LY1nBbJJzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp+leLCES3K7vK4XwiO4uxNmUMj8RmqwlKRj2gHlUTVDJVhYVk
+	g2orOciY1XgZf0l4EB9shu0a18kmVFhwfNdLVLuyym00RvGRkJQKaH7dg9XjHA==
+X-Gm-Gg: ASbGncur2bnuWMOoC68mYLZSjeSmzDKsr4DJ9LxX6dcwh6hdEUrNDDIuTBlnHd78Jl6
+	0GvTa4CpUNN76Q4E682EHsOdE6oBNRNHrqL/IZ3DI4cZs56TaykWV22n3poyos1pdXyHoL0m0Tc
+	ehughatvNB1p/l+x6OIwgf+waYCG+tqO52UqhPhPpaxqlScVNNXGKsJqUGew2W/ilsN0wlGmub+
+	j+pjLomM1UkX1Gr6UjAbXaBShOWvyNQBRU8yn+b57MShNR5CbJ/cCcbncY5ZQScREwqQCt1Crzw
+	+5+dzQmpynnh7bLBb6pR4W4JvhgqzX1aea1q+xln7t4KwyhAfLY/
+X-Google-Smtp-Source: AGHT+IHz8KFcMndBsaWjeHAnKge9iDzq51I0lR4nXYH5jlXhc1fMIqB8kkjeuXzLM3IOTths9xwogQ==
+X-Received: by 2002:a17:902:d4cd:b0:224:1609:a747 with SMTP id d9443c01a7336-22bea4bd2c0mr120185085ad.31.1744554274314;
+        Sun, 13 Apr 2025 07:24:34 -0700 (PDT)
 Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c33bfsm4979324b3a.42.2025.04.13.07.13.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb4fa9sm82852175ad.179.2025.04.13.07.24.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 07:13:12 -0700 (PDT)
-Date: Sun, 13 Apr 2025 19:43:05 +0530
+        Sun, 13 Apr 2025 07:24:33 -0700 (PDT)
+Date: Sun, 13 Apr 2025 19:54:28 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org, 18255117159@163.com, 
-	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com, 
-	thomas.richard@bootlin.com, bwawrzyn@cisco.com, linux-pci@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, srk@ti.com
-Subject: Re: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable
- module
-Message-ID: <6bi5gul3sqvycmkf6cwokkvownjffaf2tkonjlefo2d7cautwx@uhfexzgz3okp>
-References: <20250330083914.529222-1-s-vadapalli@ti.com>
- <20250330083914.529222-5-s-vadapalli@ti.com>
- <zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh>
- <20250409064227.ctzznnb2shaygxhm@uda0492258>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Remove PCIE_L0S_ENTRY check from
+ rockchip_pcie_link_up()
+Message-ID: <gogw24yg4lfq77ime7qyurvkef5yvmkkwjxo6xch52fbszibax@diaxredvtcrh>
+References: <1744180833-68472-1-git-send-email-shawn.lin@rock-chips.com>
+ <Z_YwNt6WUuijKTjt@ryzen>
+ <38e69551-cc40-11a9-191f-de9a193c5e51@rock-chips.com>
+ <Z_Y7h1vzVCCEiXK6@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,131 +94,72 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409064227.ctzznnb2shaygxhm@uda0492258>
+In-Reply-To: <Z_Y7h1vzVCCEiXK6@ryzen>
 
-On Wed, Apr 09, 2025 at 12:12:27PM +0530, Siddharth Vadapalli wrote:
-> On Wed, Apr 09, 2025 at 12:06:35PM +0530, Manivannan Sadhasivam wrote:
+On Wed, Apr 09, 2025 at 11:19:03AM +0200, Niklas Cassel wrote:
+> Hello Shawn,
 > 
-> Hello Mani,
-> 
-> > On Sun, Mar 30, 2025 at 02:09:14PM +0530, Siddharth Vadapalli wrote:
-> > > The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
-> > > Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
-> > > loadable module.
+> On Wed, Apr 09, 2025 at 05:09:38PM +0800, Shawn Lin wrote:
+> > 在 2025/04/09 星期三 16:30, Niklas Cassel 写道:
+> > > On Wed, Apr 09, 2025 at 02:40:33PM +0800, Shawn Lin wrote:
 > > > 
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > ---
-> > > 
-> > > v1:
-> > > https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
-> > > Changes since v1:
-> > > - Based on feedback from Thomas at:
-> > >   https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
-> > >   the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
-> > >   dropped.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > >  drivers/pci/controller/cadence/Kconfig     |  6 ++--
-> > >  drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
-> > >  2 files changed, 35 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> > > index 82b58096eea0..72d7d264d6c3 100644
-> > > --- a/drivers/pci/controller/cadence/Kconfig
-> > > +++ b/drivers/pci/controller/cadence/Kconfig
-> > > @@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
-> > >  	  different vendors SoCs.
-> > >  
-> > >  config PCI_J721E
-> > > -	bool
-> > > +	tristate
-> > >  
-> > >  config PCI_J721E_HOST
-> > > -	bool "TI J721E PCIe controller (host mode)"
-> > > +	tristate "TI J721E PCIe controller (host mode)"
-> > >  	depends on ARCH_K3 || COMPILE_TEST
-> > >  	depends on OF
-> > >  	select PCIE_CADENCE_HOST
-> > > @@ -57,7 +57,7 @@ config PCI_J721E_HOST
-> > >  	  core.
-> > >  
-> > >  config PCI_J721E_EP
-> > > -	bool "TI J721E PCIe controller (endpoint mode)"
-> > > +	tristate "TI J721E PCIe controller (endpoint mode)"
-> > >  	depends on ARCH_K3 || COMPILE_TEST
-> > >  	depends on OF
-> > >  	depends on PCI_ENDPOINT
-> > > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > > index ef1cfdae33bb..8bffcd31729c 100644
-> > > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/irqchip/chained_irq.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/mfd/syscon.h>
-> > > +#include <linux/module.h>
-> > >  #include <linux/of.h>
-> > >  #include <linux/pci.h>
-> > >  #include <linux/platform_device.h>
-> > > @@ -27,6 +28,7 @@
-> > >  #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-> > >  
-> > >  #define ENABLE_REG_SYS_2	0x108
-> > > +#define ENABLE_CLR_REG_SYS_2	0x308
-> > >  #define STATUS_REG_SYS_2	0x508
-> > >  #define STATUS_CLR_REG_SYS_2	0x708
-> > >  #define LINK_DOWN		BIT(1)
-> > > @@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
-> > >  	return IRQ_HANDLED;
-> > >  }
-> > >  
-> > > +static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
-> > > +{
-> > > +	u32 reg;
-> > > +
-> > > +	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
-> > > +	reg |= pcie->linkdown_irq_regfield;
-> > > +	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
-> > > +}
-> > > +
-> > >  static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
-> > >  {
-> > >  	u32 reg;
-> > > @@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
-> > >  	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
-> > >  	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-> > >  	struct device *dev = &pdev->dev;
-> > > +	struct cdns_pcie_ep *ep;
-> > > +	struct cdns_pcie_rc *rc;
-> > > +
-> > > +	if (pcie->mode == PCI_MODE_RC) {
-> > > +		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
-> > > +		cdns_pcie_host_disable(rc);
-> > > +	} else {
-> > > +		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
-> > > +		cdns_pcie_ep_disable(ep);
-> > > +	}
-> > > +
-> > > +	if (pcie->reset_gpio) {
-> > > +		msleep(PCIE_T_PVPERL_MS);
+> > > Is there any advantage of using a rockchip specific way to read link up,
+> > > rather than just reading link up via the DWC PCIE_PORT_DEBUG1 register?
 > > 
-> > There is no point in adding a delay before PERST# assertion.
-> 
-> True :)
-> 
+> > This is a very good question which we tried but made real products
+> > suffer from it for a long time, and finally we found the reason and
+> > discarded it.
 > > 
-> > > +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+> > Quoted from DWC databook, section 8.2.3 AXI Bridge Initialization,
+> > Clocking and Reset:
 > > 
-> > This is not PERST# assert, isn't it? Typo?
+> > "In RC Mode, your AXI application must not generate any MEM or I/O
+> > requests, until the host software has enabled the Memory Space Enable
+> > (MSE), and IO Space Enable (ISE) bits respectively. Your RC application
+> > should not generate CFG requests until it has confirmed that the link is
+> > up by sampling the smlh_link_up and rdlh_link_up outputs."
+> > 
+> > Quoted from DWC databook, section 5.50 SII: Debug Signals
+> > "[36]: smlh_link_up: LTSSM reports PHY link up or LTSSM is in
+> > Loopback.Active for Loopback Master" which refers to
+> > PCIE_PORT_DEBUG1_LINK_UP per code.
+> > 
+> > The timing in dwc core is drving smlh_link_up->L0->rdlh_link_up->FC
+> > init(a fixed delay) from IC simulation when linking up.
+> > 
+> > The dw_pcie_link_up() wasn't reliably work as expected by massive test.
+> > The problem is clear from our ASIC view, that cxpl_debug_info from DWC
+> > core is missing rdlh_link_up. cxpl_debug_info[32:63] is indentical to
+> > PCIE_PORT_DEBUG1, So reading PCIE_PORT_DEBUG1 and check
+> > smlh_link_up isn't enough.
+> > 
+> > The problem was introduced by commit 1 and fixed by commit 2 but not to
+> > the end. And finally commit 3 rename the register but not fix anything.
+> > 
+> > It was broken from the first time. Any dwc controllers should not be use
+> > the buggy default method to check link up state from our view.
+> > So this's the whole story for it, which may help you understand the
+> > indeed problem and why we reinvent rockchip_pcie_link_up() here.
+> > 
+> > [1]. commit dac29e6c5460 ("PCI: designware: Add default link up check if
+> >     sub-driver doesn't override")
+> > 
+> > [2]. commit 01c076732e82 ("PCI: designware: Check LTSSM training bit
+> >     before deciding link is up")
+> > 
+> > [3]. commit 60ef4b072ba0 ("PCI: dwc: imx6: Share PHY debug register
+> >     definitions")
 > 
-> It is PERST# assert.
+> Thank you for the detailed answer.
+> 
+> It seems like we should really add a warning and a comment in
+> dw_pcie_link_up(), so that others don't get hit by this hard to debug issue!
+> 
 
-Since the reset-gpios polarity is defined as GPIO_ACTIVE_HIGH in DT (which is
-wrong unless you have an external component that changes polarity), for PERST#
-assert, you need to set 0. If you set 1, then PERST# will be signalled as
-deassert.
+Right. But I'm also wondering if we should use the 'Data Link Layer Link Active'
+bit in PCI Express Capability for checking link up. Qcom driver has been using
+it from the start and there are no reported issues. We could add this as the
+first fallback if the link_up callback is not provided.
 
 - Mani
 
