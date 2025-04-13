@@ -1,232 +1,154 @@
-Return-Path: <linux-pci+bounces-25732-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25733-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08062A87264
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 17:39:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 108BEA872A0
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 18:38:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2005E1894A01
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 15:39:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 726207A98CD
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Apr 2025 16:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA281C9DE5;
-	Sun, 13 Apr 2025 15:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38AB439FCE;
+	Sun, 13 Apr 2025 16:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WhXeE9tf"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MikeDy2o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4637A1A4F3C
-	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 15:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95277BAEC
+	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 16:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744558734; cv=none; b=cDyCSUl8S1NkOD3orw/f3iFEF+z2HTCxJ07RXyQG2N5n3pbdf3d/bMd/SLWS9kPYs1zGBb5Ptuswmzz+yjlE/LMDQ7RuZGxY5r9WbLIoNGFzQjcP/CHwhpFIp03yKraAWmjxXqbOJfKiFKyC0XJRsQYEQkYcd8W2+QRgSoex0qE=
+	t=1744562148; cv=none; b=RWq/q5z8V9IkJePkCNGcC9d8Msso7uHo+7rmkSpFVVkZQzW9Fy2my/ic2TySMc8zVDzdAc+UnZv8aZoyq5pK/P2bej6hviX8ONLHlQlt8lR/+oghvj9FVdUkfcfNlPDBmIUYZ0rXbgvG30bgvGx36m3McpQmYxz9s2WPFu7tRJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744558734; c=relaxed/simple;
-	bh=NEFQkTV6HWbWySDV1gYFlTQgKHF1fM8Q2eL5vnHMCvs=;
+	s=arc-20240116; t=1744562148; c=relaxed/simple;
+	bh=RB0Is3RsXE4ayIze9bhVA06wlRHIFRumqGpp63ItTVA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJ2bKzTNHxxLR6YaxY87KVPX2gnvVoM/XHXxkjma4s6pm5Wf4nNWapJrk0MxPnTLhbwtPU+fUghCCbSM5HFcj2bLqL5tyAChOnx4rJYxtNhWUwkBAUwpvrZhXfoSUnTc5J8TwVII4blsA2ZyxAntH8FJBEkVft68lbwB31wcBx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WhXeE9tf; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224019ad9edso45592985ad.1
-        for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 08:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744558732; x=1745163532; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wJxSIAZXO2C4Zhd9fy6/iiyMv7oQ8uqx9BwDDb/UO4o=;
-        b=WhXeE9tfVoerLXom90RKhk9qwZ3H10lRioe+LK0ZcQDxmsFmuqjVk4kGAzG5wO+JOa
-         ImSH9rw3O96di0PaXQtkbipzowvPqv/FlM7DVxWLWaCiwKWw4EHOMI15y1SJ+OMACmop
-         fUwqO0vkq4xEOktGCdAijsWcsY3OamzUl7pTf8NehX2z4f2ak6hnGysCGQzLF0dL8zqr
-         r/Qp6ueFuY7dB1nlf1sRutPeSOYplgDfoWpoQp8hc5KDSYVcRhRxcOpCfdLSaf6R21N5
-         riOeGZtFwTMPzrkPoADwI07PbLzWSKRXT99Fm/PZcP8j53sUIPRdoWl4FiVyIjRjKlFh
-         l3bQ==
+	 Content-Type:Content-Disposition:In-Reply-To; b=OgeD/s0yT7nfeM7iVlzSLps2f4pY+w9e3F0vCQwqHPVWh6fF9L2gKziq4MosxJI1KRxNUseE5PVfKxJaRHLP2Vo4H0x6LDIxpv9JPGOpCZpT6bEEmG+KgaMboRAQPgxRWSVEd7BZDjkR4Xi9jU2LCWPFdacE+ttpR9Br3wF419U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MikeDy2o; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DD9UYQ022548
+	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 16:35:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=HHDGRlqVtQyxh83zlwnFTMpQ
+	Jn3llTrejkQ0QtY9TUg=; b=MikeDy2oM6IDwZvBeICfrVy6g2JuSn1wycCTDOJy
+	ewpYcbNKm1lkqdvXr3OCB4shtXjbWN+TBdYtBVgcPSAIi6/zQM4I56WAMY5FjJ4h
+	dn7FDu0fQaDrk9cbqdTUNneHMfwnhGAHMRgtP9+qGg0YI2MiVtKSWjj7orm7QRUX
+	ZGYJvM8W3c972lOf/HW79X8durgIMCEro9e2RyIRBJM4dT+kPhHllv31StHI1gpl
+	YVcdKhNbB2lQZ4txeZXjvuvtLb2NNGTae32ixYaZr6rsvoaJahePKgP/MXwS8FxG
+	TttBkWSNZP1X/DghyQqyFoUQgRtCXFdMHmN7mxebRRJ+EQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs12eas-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 16:35:45 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e703so634791685a.3
+        for <linux-pci@vger.kernel.org>; Sun, 13 Apr 2025 09:35:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744558732; x=1745163532;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wJxSIAZXO2C4Zhd9fy6/iiyMv7oQ8uqx9BwDDb/UO4o=;
-        b=d0tqQGE+xDCMtOP8/NuwARiYK0K7Co/+ucd1wwfSUKl0MsAKMhWLh4YaW3ZdcfDuDD
-         2EUzheRJhs5TvFTTyXy2gVQo2P+fFEYZ76L3cMHFh4gtqVk1wWi7m4/Ht9s9I2YcD9dX
-         bFPvf2QF+pmV9mFj3LlI+UUSRm+casvECYxXIsvrWs0ZKCnWh6VclV11TPcdlm3g4MVX
-         FWQUgLgtUe8z0GEWz98EThD69VcwqbcC3+Lc5BaFJwFYNoSs2CCz44ddfBE9GqhuvBOY
-         K6xPnO0RSrB64qc2dCGifjNc1I6S4KgjmQQr48sbEyNPBk8I8psqZPFWHH+CjmJERfFa
-         jWhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWY6bxPk4HSQ4HuJxaed43sKlKE9KS2iehBzklg9BdReGUgaxJ9pHRRI2J1tyJlOVeTMVBOtA1irOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJaEsTMAxUzH549/TfBvlpGtTJaLU91xTdWKrPE52ShoAiUJMz
-	bBi1ou9f9uuiFB2ZFJ/xPPfINeAfZYmtU0OHhkJfwJD6kejy5xNJW+bPTqnpJQ==
-X-Gm-Gg: ASbGnctHjfM9qBop1UstfdWOnmsbxPD/Lkjif3N2TOcI0Xk8RjaPaKSr1nooQkK+H5s
-	ZuP2TDIpRM+cpc+rXDD0F5q1PnWcgezm+IICm9bnowtG+oQXnb2gcgSo6ipJcZ+4L9oA2OxvIpj
-	Ht2hJYckCK8wG/dGOptVkb6A/R9f52JvueDw9Le7T/CO7kGjxVaXND4BhSPl8KVyTPApRWOk3L7
-	PMHa1G17QZXPDdeZ+3sFJiXIKZ5tEad9yCYdpxGKgbw1k9L9t9UABgbjfPiyzrM5DTN8UaldNHL
-	I1V0gDBSzq7ZRGMKAWDcR8dCM8hMw0DOlnutf71XeY14yubtvy3s
-X-Google-Smtp-Source: AGHT+IF144jyIPz4NUFnuSSDcuxFolD9nML5zcTpAccGjMR/wBPaVGXigppgwKhzhmzy2ywG7rsfww==
-X-Received: by 2002:a17:903:1905:b0:223:65a9:ab86 with SMTP id d9443c01a7336-22bea4aab88mr160177565ad.12.1744558732319;
-        Sun, 13 Apr 2025 08:38:52 -0700 (PDT)
-Received: from thinkpad ([120.60.137.231])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df09071fsm9507767a91.25.2025.04.13.08.38.47
+        d=1e100.net; s=20230601; t=1744562125; x=1745166925;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HHDGRlqVtQyxh83zlwnFTMpQJn3llTrejkQ0QtY9TUg=;
+        b=H35D7dpQD7WxoCGhSEYah4nsfd1ld6a7TCA+6mUq0FWDnA6os8GuZbFffre5w2xDNZ
+         sDHKk2KH/mEf90MyqVqmOIynfpv23mQQ1OGYqOL9vLBRSIJx9SIxxv0frcJ821RTL2qA
+         aETiNMy7wKEoH4S7VuF8pfAhc8hIPd6zYSO8/YsPBZ05Lf15/jFLJfxrQUWGuuiygPlT
+         65PJIhNKYb6sHtbixDUDYqlWG6gcokdXBuFjUp9KWiCYZyaAv7NHgsU3i5XSUGgt6D5v
+         eYnGFkNDE3axgzspxamyFqkdKPnLkUWsA9XMFHdndwlmgyI14Kk7ZbPQeY2Ynp4m1naO
+         jESw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrorluVPiisVinVlbgLvIgfmBxwmIMTFDKTTEAwP5HeOTuo+iRRJqPHXo3q2mJfNzJFZ+dnVrJXzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymhtKWRWuqzkJ3BpK/JlEH3sbU0RmNpPYqLjRDPjQBrhC043PY
+	Zj5iYDxjbjiJvML0Cy1V0tm1YCTjyZMeLUaFmpZatxOCHCijBEPop4qTrFqbSoegmnIV2KvxE4K
+	FCpKVP2hFQ9xl4bs40BcI0qb8Unja1a77cblDUJRyYu9F2b3mvJGDFgOVTO8=
+X-Gm-Gg: ASbGncuNwi+lOiBrM8V77wrsZrIPd5UzTh0iWad8QajC2pvTuqqYhV2j1cODd+1upp5
+	UBxtEreiBEglV+qJ19O6mnoSPnV0FAN8kEK9HrxPAzG0WoEiVyCExCi+xWV/ZB6BukBrnYA7E0n
+	h4fCa0I7UCtmmGQiTAEtgvdN6T8HSYE1U4Hb+9z7eMDBvYfLrUSQOA+6RHoh5bDmYXNSneFdput
+	bWvKGCejfgga4P51CalJtUmrt+ISMg0ayWIFyWhkZNx+eht+DpmOM6KEWzj0ardzISx01UCrGVo
+	O8wHM0MBRF7Pu0+QMSvJgWLR2qDMqR/mc0sYg6XmMxvnUOAXGyc9e4/yL1KKqRopFE373iNTwSQ
+	=
+X-Received: by 2002:a05:620a:2684:b0:7c5:50ab:ddf7 with SMTP id af79cd13be357-7c7af20babcmr1365619885a.52.1744562125103;
+        Sun, 13 Apr 2025 09:35:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZ2SmFOwzSyR099QmLh/foSM29GY2hyA1aduFy1joD+oyH331vhHReKlrLXjjTN89o+aPFZg==
+X-Received: by 2002:a05:620a:2684:b0:7c5:50ab:ddf7 with SMTP id af79cd13be357-7c7af20babcmr1365615385a.52.1744562124627;
+        Sun, 13 Apr 2025 09:35:24 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d23c8afsm888868e87.101.2025.04.13.09.35.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 08:38:51 -0700 (PDT)
-Date: Sun, 13 Apr 2025 21:08:45 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <h7pja24zffl4t7653rjaamp6v2j5nmukbzq7rdajynemlyb6l6@3e37ggkparjg>
-References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
- <20250328030213.1650990-4-hongxing.zhu@nxp.com>
- <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
- <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
- <AS8PR04MB8676BB3EDFCF3E5A490AC0628CAE2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <4qrfkx3ckywcbk7qbjplal5j7v6sjs3zebeehe5dnrgjz2ej2t@krdwjb4xm2sx>
- <AS8PR04MB8676221C998474EF5A9B94288CB72@AS8PR04MB8676.eurprd04.prod.outlook.com>
+        Sun, 13 Apr 2025 09:35:22 -0700 (PDT)
+Date: Sun, 13 Apr 2025 19:35:19 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        chaitanya chundru <quic_krichai@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+        amitk@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+        Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 2/9] arm64: dts: qcom: qcs6490-rb3gen2: Add TC9563
+ PCIe switch node
+Message-ID: <ethalrlraf4lnaefcmks4buffqfsuxasmfjmajhlz66zoqtzvi@37hh57nbfrmd>
+References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
+ <20250412-qps615_v4_1-v5-2-5b6a06132fec@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676221C998474EF5A9B94288CB72@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <20250412-qps615_v4_1-v5-2-5b6a06132fec@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67fbe7e1 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=2cuD_6P_uzM7HzBj738A:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: oW2zr1VAbphhttwUgjy3OMUYTQt9jv_M
+X-Proofpoint-ORIG-GUID: oW2zr1VAbphhttwUgjy3OMUYTQt9jv_M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-13_08,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504130128
 
-On Thu, Apr 10, 2025 at 02:45:51AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2025年4月10日 0:44
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > kw@linux.com; robh@kernel.org; bhelgaas@google.com;
-> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit L23
-> > ready
-> > 
-> > On Tue, Apr 08, 2025 at 03:02:42AM +0000, Hongxing Zhu wrote:
-> > > > -----Original Message-----
-> > > > From: Hongxing Zhu
-> > > > Sent: 2025年4月3日 11:23
-> > > > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > > kernel@pengutronix.de; festevam@gmail.com;
-> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > Subject: RE: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
-> > > > not exit
-> > > > L23 ready
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Sent: 2025年4月2日 23:18
-> > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > > > kernel@pengutronix.de; festevam@gmail.com;
-> > > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
-> > > > > not exit L23 ready
-> > > > >
-> > > > > On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
-> > > > > > > -----Original Message-----
-> > > > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > > Sent: 2025年4月2日 15:08
-> > > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > > > bhelgaas@google.com; shawnguo@kernel.org;
-> > > > > > > s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > > > > > > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > > > > > linux-arm-kernel@lists.infradead.org;
-> > > > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe
-> > > > > > > may not exit L23 ready
-> > > > > > >
-> > > > > > > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
-> > > > > > > > ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
-> > > > > > > > Through Beacon or PERST# De-assertion
-> > > > > > >
-> > > > > > > Is it possible to share the link to the erratum?
-> > > > > > >
-> > > > > > Sorry, the erratum document isn't ready to be published yet.
-> > > > > > > >
-> > > > > > > > When the auxiliary power is not available, the controller
-> > > > > > > > cannot exit from
-> > > > > > > > L23 Ready with beacon or PERST# de-assertion when main power
-> > > > > > > > is not removed.
-> > > > > > > >
-> > > > > > >
-> > > > > > > I don't understand how the presence of Vaux affects the controller.
-> > > > > > > Same goes for PERST# deassertion. How does that relate to
-> > > > > > > Vaux? Is this erratum for a specific endpoint behavior?
-> > > > > > IMHO I don't know the exact details of the power supplies in this IP
-> > design.
-> > > > > > Refer to my guess , maybe the beacon detect or wake-up logic in
-> > > > > > designs is  relied on the status of SYS_AUX_PWR_DET signals in this
-> > case.
-> > > > >
-> > > > > Can you please try to get more details? I couldn't understand the errata.
-> > > > >
-> > > > Sure. Will contact designer and try to get more details.
-> > > Hi Mani:
-> > > Get some information from designs, the internal design logic is relied
-> > > on the  status of SYS_AUX_PWR_DET signal to handle the low power stuff.
-> > > So, the SYS_AUX_PWR_DET is required to be 1b'1 in the SW workaround.
-> > >
-> > 
-> > Ok. So due to the errata, when the link enters L23 Ready state, it cannot
-> > transition to L3 when Vaux is not available. And the workaround requires setting
-> > SYS_AUX_PWR_DET bit?
-> > 
-> Refer to the description of this errata, it just mentions the exist from
->  L23 Ready state.
-
-Exiting from L23 Ready == entering L2/L3. And since you mentioned that Vaux is
-not available, it is definitely entering L3.
-
-> Yes, the workaround requires setting SYS_AUX_PWR_DET bit to 1b'1.
+On Sat, Apr 12, 2025 at 07:19:51AM +0530, Krishna Chaitanya Chundru wrote:
+> Add a node for the TC9563 PCIe switch, which has three downstream ports.
+> Two embedded Ethernet devices are present on one of the downstream ports.
+> As all these ports are present in the node represent the downstream
+> ports and embedded endpoints.
 > 
-> > IIUC, the issue here is that the controller is not able to detect the presence of
-> > Vaux in the L23 Ready state. So it relies on the SYS_AUX_PWR_DET bit. But even
-> > in that case, how would you support the endpoint *with* Vaux?
-> > 
-> This errata is only applied for i.MX95 dual PCIe mode controller.
-> The Vaux is not present for i.MX95 PCIe EP mode either.
+> Power to the TC9563 is supplied through two LDO regulators, controlled by
+> two GPIOs, which are added as fixed regulators. Configure the TC9563
+> through I2C.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 129 +++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
+>  2 files changed, 130 insertions(+), 1 deletion(-)
 > 
 
-First of all, does the controller really know whether Vaux is supplied to the
-endpoint or not? AFAIK, it is up to the board designers to route Vaux and only
-endpoint should care about it.
-
-I still feel that this specific erratum is for fixing the issue with some
-endpoints where Vaux is not supplied and the link doesn't exit L23 Ready. Again,
-what would be the behavior if Vaux is supplied to the endpoint? You cannot just
-say that the controller doesn't support Vaux, which is not a valid statement
-IMO.
-
-- Mani
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With best wishes
+Dmitry
 
