@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-25811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72042A87DD7
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:42:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F2F1A87DE0
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:44:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7851E188E233
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:41:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39BE53B195A
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3252326AAA1;
-	Mon, 14 Apr 2025 10:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC8725F7BD;
+	Mon, 14 Apr 2025 10:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="cwpMpSMz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="AGJQs2Z0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E27D26B091
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 10:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1666126E166;
+	Mon, 14 Apr 2025 10:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744627292; cv=none; b=bEFy5ne4Mm/UARmH1CdBeyjV2Ql/ah4w904O48bdXCJsv2sUVe9k6BbWs7mzOf+b51uGyB5HwHOIvhdSvZ4AnEOsOoko+Hw7LDEAOd+2cUexSeb58YyvEYNdtAxyLpx8AxtNlXj1Zci7B2RE72+5t1w/XmPlRNvNheo+FBwoPIQ=
+	t=1744627484; cv=none; b=peO0Q3btuDqR3eM+HbyAkiazYGxGG3B6Kw4Mfg1IK5af+AI6fWBi1miMACqsGz6qs9WzQvRE4s8PGraS1Bex6mUNkMXi7sxZ4CcTA4dbXM5PBIFJpzQmqoUw8LqD8PvyQgJIFbdzkyl0Ne714PhLubDsp1BCjcnH9/4ZHX6GoHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744627292; c=relaxed/simple;
-	bh=Nug9Q62+3aayhu9v8ZVJhL4dYNFDNug81UIRbQgqO44=;
+	s=arc-20240116; t=1744627484; c=relaxed/simple;
+	bh=gIv5RXGhRhSvSRzNRg63Sn+Y+HEZk33ik3pEUfW7oAA=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nt7wmJw5yBGLBwBVJELRe5khuebjPvflyh9YsY5IZ6SpCXPxh04+gpMSrmYs/1rMgbbRfOJeAy83Rr689tU46BlIewx3ltd+rUYIXLqOc4T7paR+FiLYxl7KBi+geu/geJzv+7j37hili4sFtiZ59Bg9evGDamOguO388e2OoTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=cwpMpSMz; arc=none smtp.client-ip=185.70.43.22
+	 MIME-Version:Content-Type; b=ic5aN0ZOmW3NVgvA8fT0GGRxDgVJ8Srj05lQXcy8HbMugte3EsqbNnhyIHys1GzwFRPq+70fF9xrLGwV49Hy0oAd1xNv3cvBhDRyV2YgZ1o6yB9uUqsHeQqBTzo9rUBlxdsecaWLwQci0pGCsBz0afulWK7Xnxv8+iU1IGPpcis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=AGJQs2Z0; arc=none smtp.client-ip=185.70.43.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744627288; x=1744886488;
-	bh=Blq4drQ3QF4Ja9cHh+gKnVsH2R3dEHTZSB6RBotBXjw=;
+	s=protonmail; t=1744627480; x=1744886680;
+	bh=a4fdBrOJHLc+DHsG3VDUOfov4qzwi8oBYErf1tej1Qw=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=cwpMpSMzh53Ifxjx5DeUwk4GmqM8AMp4R74Ut/J/UuEYUZNZYshbT8q28YLs1sqc0
-	 8fIqbNwlJ+uxZiLb4r2+KgdGalymqwGIKsTNjXZYbXYJJ4+zQkKCRtHSeJZ04HrP2u
-	 1hNidH677P+OFnfk6gSaGf0LGBPYsxvcjjs45K5o0pgsf25cV85Rr47m8ZqintUdD6
-	 6EKHBjjvseyEahb+n5ObO+J7psDwBa8Z8uUyndAnXQRUOsVyhafZ4tWS+5cjTRxzmI
-	 4rpcCu4raUNH/lQKWFB4svvJxCinY6Le1BKpAaoqU5WP/If2lpo8iwE5NY+wC9C6ZH
-	 DzvlAQJrKyszA==
-Date: Mon, 14 Apr 2025 10:41:23 +0000
+	b=AGJQs2Z0Qiu0X9DkkvmwgauhP0ikhR1iKCdFbBnIX6opMA5QuPHACGpmLNUDF1b58
+	 KCJLDtcRzEqGszCz9yZhp6LDg3itvcg9tTSjLK9O3xEm9hqOk5N/T5X+GPrvhHGkXW
+	 NfbyKG91bHLW+cHAuMwxVsgsXwwf99cVqfF/LMx0ScaxdNpc2D80vBLnT7F1Ng4RPq
+	 0I6plFLc4VLfA7FptzxoBT3mqH27tvf7xFmLuQFInyv57LtcuwKAar+GrOoQLnDUHh
+	 FAxxVNZKcWf0nyXQyPqiUUVwAuQKs8rn32hBNwwZ7smKUQ0CUBfLcjtQ8ClNhLXn4O
+	 VJaWSzxo6fkzw==
+Date: Mon, 14 Apr 2025 10:44:35 +0000
 To: Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, abdiel.janulgue@gmail.com
 From: Benno Lossin <benno.lossin@proton.me>
 Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, daniel.almeida@collabora.com, robin.murphy@arm.com, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] rust: device: implement impl_device_context_deref!
-Message-ID: <D96AR6IOMJ0I.1YH5KT3QX2YHF@proton.me>
-In-Reply-To: <20250413173758.12068-2-dakr@kernel.org>
-References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-2-dakr@kernel.org>
+Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
+Message-ID: <D96ATODOGB6O.2JAJOWXMJG3VC@proton.me>
+In-Reply-To: <20250413173758.12068-7-dakr@kernel.org>
+References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-7-dakr@kernel.org>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 3112fc7797939f0f2ca1bccdcd1961884f9eab8e
+X-Pm-Message-ID: 035391338b03753296f1b07ce9ddbadec2b91b50
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,37 +62,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun Apr 13, 2025 at 7:36 PM CEST, Danilo Krummrich wrote:
-> +/// Implement [`core::ops::Deref`] traits for allowed [`DeviceContext`] =
-conversions of a (bus
-> +/// specific) device.
-> +///
-> +/// # Safety
-> +///
-> +/// The type given as `$device` must be a transparent wrapper of a type =
-that doesn't depend on the
-> +/// generic argument of `$device`.
-> +#[macro_export]
-> +macro_rules! impl_device_context_deref {
-> +    (unsafe { $device:ident }) =3D> {
+On Sun Apr 13, 2025 at 7:37 PM CEST, Danilo Krummrich wrote:
+> The Bound device context indicates that a device is bound to a driver.
+> It must be used for APIs that require the device to be bound, such as
+> Devres or dma::CoherentAllocation.
+>
+> Implement Bound and add the corresponding Deref hierarchy, as well as the
+> corresponding ARef conversion for this device context.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+
+One suggestion below, feel free to make it its own patch or fold it into
+the correct ones. Also two `::` nits below, with those fixed:
+
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
+> ---
+>  rust/kernel/device.rs | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index 487211842f77..585a3fcfeea3 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+
+> @@ -281,7 +287,14 @@ macro_rules! impl_device_context_deref {
+>          // `__impl_device_context_deref!`.
+>          kernel::__impl_device_context_deref!(unsafe {
+>              $device,
+> -            $crate::device::Core =3D> $crate::device::Normal
+> +            $crate::device::Core =3D> $crate::device::Bound
+> +        });
+> +
 > +        // SAFETY: This macro has the exact same safety requirement as
 > +        // `__impl_device_context_deref!`.
 > +        kernel::__impl_device_context_deref!(unsafe {
 
-Missing `::` in front of `kernel`.
+Missing `::`.
+
+> +            $device,
+> +            $crate::device::Bound =3D> $crate::device::Normal
+
+IIUC, all "devices" (so eg `pci::Device`) will use this macro, right? In
+that case, I think we can document this behavior a bit better, possibly
+on the `DeviceContext` context trait and/or on the different type
+states. So on `Core` we could say "The `Core` context is a supercontext
+of the [`Bound`] context and devices also expose operations available in
+that context while in `Core`." and similarly on `Bound` with `Normal`.
+
+>          });
+>      };
+>  }
+> @@ -304,6 +317,7 @@ fn from(dev: &$device<$src>) -> Self {
+>  macro_rules! impl_device_context_into_aref {
+>      ($device:tt) =3D> {
+>          kernel::__impl_device_context_into_aref!($crate::device::Core, $=
+device);
+> +        kernel::__impl_device_context_into_aref!($crate::device::Bound, =
+$device);
+
+Missing `::`.
 
 ---
 Cheers,
 Benno
 
-> +            $device,
-> +            $crate::device::Core =3D> $crate::device::Normal
-> +        });
-> +    };
-> +}
-> +
->  #[doc(hidden)]
->  #[macro_export]
->  macro_rules! dev_printk {
+>      };
+>  }
+> =20
+
 
 
