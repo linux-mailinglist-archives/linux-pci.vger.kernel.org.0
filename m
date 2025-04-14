@@ -1,142 +1,194 @@
-Return-Path: <linux-pci+bounces-25821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 792DEA87ED0
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 13:17:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75393A87F39
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 13:38:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0EAF168E60
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:16:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7218D17227F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:38:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02366298CA3;
-	Mon, 14 Apr 2025 11:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B218280CDC;
+	Mon, 14 Apr 2025 11:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OZb9RHfL"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="H0sFDIZs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2260D2980C0
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 11:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91731A9B4A;
+	Mon, 14 Apr 2025 11:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744629335; cv=none; b=TkKseE0FlFnAhJBrEKSHFQ2Y9KbIwRRHs2fONCNjdWl3yF/9eqXVGA1NS0fnHGVskAwMjE5wRJKFojgVD1lfSWhDLk0vcU+9vY2pYCWq0vykW5pkpiix32hQv2iXUqMfesw2UHKnr0xBoGnUW+JcKt1Twp2dE0miIoBS0pdCyN8=
+	t=1744630732; cv=none; b=m3wH0s99TFfqUGhrgmKNb27R9ALMPS4/jaY9XSuFtmWtJYre/7A8kkJX7nlrj2DV5dvLyI6CEgHJzP4CCh3hO6+xDLTFG7q40rKdOHSmETENQ9oS0mf14/wbpzFSdz2T2JJ+bsKvIgsp0DfDd6BZgu+RU7zG69YfMBMxDS7fNm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744629335; c=relaxed/simple;
-	bh=afDS7rfeFrK9rl7VbLwnwnMc3kAcEi8l5jjlmmNbRkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVUOnFK/7JJNaGOD2fLRhBkrC2I1rDqhAFcNS010Vz2TbtrQ2k4YcLuJH2ijrHbgXMTmmW5sYaLskPT4O3GpbBthkX9JCmnXJYpjzxHQ5Rao89+vtaxGrMeFsHG6Rg2z8yyuI4G8rT0+RqoBS9GXlxmbU9D5j+/ArnVpOFklnsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OZb9RHfL; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736b34a71a1so4826982b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 04:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744629333; x=1745234133; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RQlcYD4asnsxpVdwQG6h+GjZzibJklswImMXTXM/EgE=;
-        b=OZb9RHfLq7x4nbfoyu3uYwfKiztsO4hc4Ru9AMlohY1UQYBsE73iY+XnYiG58wRWqE
-         L9IEnKiYicxYPSedMg7Qgyz7JP1gZRllAMPehpERKeL4hfxBVBiAE2VNf5fDYdXbIFkA
-         ub7bOJeO1V3FM4Rr0G0gxm/VTLy+vsAPwuzKF30+04Q7NlXcYvCMxk+dcKRFDCr3PrSt
-         4HtUJSycAmZO0tghMsySsC44NJvEHD/U3yuAmKqUGIXhK6Ry9TDXBbmz3rjt8ZEdTmfb
-         t4f7WfAzY3rhcC8cif8L0TEecjkIObzAw41B+ycA6a9UrCdL7WOcT2JxDvRwE61KTuNv
-         GuIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744629333; x=1745234133;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RQlcYD4asnsxpVdwQG6h+GjZzibJklswImMXTXM/EgE=;
-        b=NWv/8TKtGsr2tPsEDOXeMVvWhcfA9B0LxrxMJq+urizHgjmOTYXwyaE9HBWuWpNCOe
-         VEvzWLlJipUrKa1PIY7feSbaHFE1pqnz1UOO84WdkY+xPY8d0GMVvlsHTjLrzgxKySy7
-         57la1QJ011Fr9kbyt8CZpkU27I4u+29+TPv4bFQrhJinC7HaizpN5irM+HKYxRZOQ5C9
-         XDptS7la8i2ocjJcI/K3uPanLpkpckisXUuhGT17KDnUvbCk5aOnQUWZg0ghhwcEkXHV
-         6mDp8BKW4kvwxU7GWGhumKVFS203oRbFnE+P96j1/PPsxGPLLUXSdFkFAAiixdRZY4QV
-         GTaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQFATxRYBMT8CY6B1b+PuPq2xgwJpI/K/dyDgPwEAcMqsjB+o5SRG26BowoajRB83Iy/b42r7JiOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBAF6oSamZqKqOBITELT1usCjDJ00cLcNl7A3zdbBlSaAByNuZ
-	8EeG/H/plwqL32EQfrM1qQD670aJSXp9YjFDK4VPCG6xXJ0x7/+NN/pRmjkx9Q==
-X-Gm-Gg: ASbGncsDwZMOBnT8SKQd5LJjGwbMRpdAb0T/5c3IOSL97zW7gmU7ndDLk20jiEmu2OB
-	WSHvX/YdceUaB3SXTUBkwjoHS2DvYQd8lvfqAZNJc3/6q0kZnA7VxoG5plMzJgqtpwRF/sr2Zhv
-	XPwfZhKlYtEiskE8PvZIiDuceq0Zdka9kfdvIIbn/Lvu8oeju8gq9sh/0v9GFeFph6VE/SU1NoJ
-	5f/4I/+twhWRajhh+80jMvNoENbCDe4R9akKyUGWCyYu3HCGsmWzHO/M5EWARCQZm3BRsem9w44
-	MkKF2eo2O/+NVLaAujGcTpdtIrEa/YcQhuwmL30OWM4qaNqmTu9B
-X-Google-Smtp-Source: AGHT+IHLmEWm+AyUgC3aZXfK/APx9iAwvnZ4/R7W9g5gd6twWGbVcm4JwjPl38NL98UBnVMWqLwbnQ==
-X-Received: by 2002:a05:6a20:43ab:b0:1f5:874c:c987 with SMTP id adf61e73a8af0-201797a43dbmr16442336637.15.1744629333130;
-        Mon, 14 Apr 2025 04:15:33 -0700 (PDT)
-Received: from thinkpad ([120.56.202.123])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0817f4fsm9032010a12.13.2025.04.14.04.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 04:15:32 -0700 (PDT)
-Date: Mon, 14 Apr 2025 16:45:27 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Remove PCIE_L0S_ENTRY check from
- rockchip_pcie_link_up()
-Message-ID: <zansaj7wgeydqo6qqvczlkkoll2tcpay4acvjd3idjemrbrbw6@2hqfmkfsug5o>
-References: <1744180833-68472-1-git-send-email-shawn.lin@rock-chips.com>
- <Z_YwNt6WUuijKTjt@ryzen>
- <38e69551-cc40-11a9-191f-de9a193c5e51@rock-chips.com>
- <Z_Y7h1vzVCCEiXK6@ryzen>
- <gogw24yg4lfq77ime7qyurvkef5yvmkkwjxo6xch52fbszibax@diaxredvtcrh>
- <Z_zeERoDtZ52kW0T@ryzen>
+	s=arc-20240116; t=1744630732; c=relaxed/simple;
+	bh=tw8NicR85wtZWn7+Of5iPSQ4ltvwsaFU5yYg/jkmpFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OB4ZKpkdozPf0cc8Jq7ehoZ1lNtgveD5kGX1GS2UiomOebP3vyB2iKqFQCqSeD4v2yu54SpAh/X/uBxv7HL6neGRaSItUPqaGh58Tw4L/7Mfv9BdZa0wi+QnaUiJkUPFSwFnI0XrFZ2BpsrgunG2+ToPXARIk66MpKucuCuS0+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=H0sFDIZs; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744630711; x=1745235511; i=wahrenst@gmx.net;
+	bh=5Yqz6YDLmosCf4LwVIBid/uZpaNuifGBNUOWF1Ok3z8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=H0sFDIZsvbu7eadEOfhvpsig557h5T4fVsdqhIrBvDjjyxf+kw5m2dYClZv3FATR
+	 rpATfe2E5LMuvoZL8B+aKpyj9Bwg6//OnkxVxgdoXrv68ycU9zOh7uIVb8CLp9w0I
+	 VzBOxdVZvAvqby0MLfPVA7ztYVMQijJ3rtzDfCXt0Hh/vgaU0FltcFkW1Z+af9u2C
+	 913J6HX7dOF21eWTKxsYC4hwGs4yvnVHVXlNnef9DAy+MGPXvImJzcJgNKeOk03oB
+	 zO6aC/1IhSLQgshoySKcyTB1EBJzg6aItmds8ZWWjpkWREKzfjphWDQDJ1/7TzqjH
+	 pZEyJzAGIDZaxAaRqg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1poA-1u26Hv1PB2-00DKvJ; Mon, 14
+ Apr 2025 13:38:31 +0200
+Message-ID: <abb3405a-45fb-4425-a817-89a03b0c16c4@gmx.net>
+Date: Mon, 14 Apr 2025 13:38:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_zeERoDtZ52kW0T@ryzen>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 10/13] arm64: dts: Add overlay for RP1 device
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:m8JLxCwdInGWwVIBpPbWU85afGcQak8XuDSiAyyOP0EmeklFBz0
+ hl4x34oAp+KNiLjDCLAoxHrznsBPvcnDWCFB193V4upZYpMs40GI2TqwkaQ6gaacflG7bOQ
+ EMPaxpr1mFixC81q0mbv+LRK8wc44QYFoCnKnP6uT1vlasOa6ZQCCtek/T2Kz9SKVqA1bFJ
+ wdUbubZcymN48TQHDXT0w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:EhsPipdgz2M=;g3X/9zeu8NWjQ6d/rmQ0irfcxJ/
+ XzlBaf60rX/TLoFVsn5MVtvPRLvOEiKdfGSUC2bX2UBW0EpJOJWfagXAKhkfoBkCMlwm+tZpw
+ yYaJ+bIiqADOU/+GZ3dSVaQMzLVKMESLZJorEtoqtT49HEFCVfMAVFrcxlr/FnodYVTuvqBLI
+ 2jd+2LK6QUd6RMo3b5S1tiP3NkJTLX65UIGJb+EX3QKlzcBbuDtqET0D5edbUxhgiK+1aEPao
+ RqNr7IiJFI9AP4Yk5T3RjT5KsrBN+BJ7kt5Z9V/lQvOqwL9RDiMH94pi/6xu9MCZ3TeN8n4Lk
+ WC0tILwnOgBUzD2ZYLdI1yjpGzRSOYNN3y5NGaK1kYHJ29X2kyN+H0HZD1em6uskGWU3v5B6o
+ +Jsi+HUlsphsvY9OM8lubZC9dqQ2DzWvUZkKS7dzSO1ugQcH3nt/UXxzAyh7xKYClx0WUgFvh
+ QJ1a4rI4nl43TZ4E7uoLMWHAwn+cdy+iFFUQcCSC0J/WYgvhm9NtLaloCHypcu4DECk/EN1KM
+ yf57bYcS92ZavxWNGeoNMOSwd/zp0hMQPBF1BSPVPWOZZ5z1iBaK9k4o36xnLrDNZrVJeD4OP
+ IcLtxlUtrRE5KH/+F9jWouP9eNhK+hesGmYyvY/P7RnDdBeGfdXjPc9oKEk1OJqHN4wLXFzik
+ roe44AAeU5YSHd3NZ8j/5tDyKiRklQYpjlqVbAnd4jIVpXZK/o6DZWiyZRmhcCtPP0ZMgeUro
+ ytiZQqeQMCDdYBupYDfclhA+Zgh72EYTt8OUImEIdiDMILHbUtZk/RyXn39oY+cRiKa2LBUK/
+ 0ElUSPw4u++83Pu+kOYpXRuf0lmJ3obBHSgkdKbNh6AVWlbHuvnEKXRaAbhROt1b2c1a5S2/H
+ JvrGHvmGwapmXSL/y7bKIZRbIwEsnff8fsyKRBQyRd6w1smn1gK2A9UEuuIvWQ7egeQo1i4PL
+ l+fDr4/1GbDzkXXDlHHg5d6eBEAIJMIhKWs8eaIt/Fa9wOTDj0xUF8Dr6gvAhrqJ0ZEkZ9oF0
+ mtD2MCFsFlpijH8E3NeRoJCAI0wuEbGPD5dvv6K+vIo+LyQpKjdUNw5PZVWNFR3smQdC4u7oh
+ XYu9Zv4PO6cu+8A6HIJ6KvmYj0GCVxzUkXkZsE3ZdmlA/W09eZmJzNG3b/vQOQdGY18GoJsZw
+ 3TRjhx1bvUtr/jUtoSSaTPJ1iJAtK2nfLkrv8i/rJqBko+T7nDfLx1KIqKoOGZWkks1r8f5zU
+ aqN2d+8ChDTNSFENFKtnofG/2w/7U7vnkncD134pe6x9S/0xaZwBIsGyAQD2G5oSsHR+Wr3/o
+ yiC8Jdj9mo1q/5fKhnM4RLVQNrUfWocUhqMig2BqR8ovSxtNEInnV/QlaAxcPG8+iKRqjnIak
+ HpFb5XQquykn9MQLQx6/9+vrpAyceuUW9Tx1hEBYooWafXQerd482sXlUw1Riuw8zk3NuYQ7a
+ 3wMVDcCP5dcHNixEAYB82cPXEpmg=
 
-On Mon, Apr 14, 2025 at 12:06:09PM +0200, Niklas Cassel wrote:
-> Hello Mani,
-> 
-> On Sun, Apr 13, 2025 at 07:54:28PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Apr 09, 2025 at 11:19:03AM +0200, Niklas Cassel wrote:
-> > > 
-> > > It seems like we should really add a warning and a comment in
-> > > dw_pcie_link_up(), so that others don't get hit by this hard to debug issue!
-> > > 
-> > 
-> > Right. But I'm also wondering if we should use the 'Data Link Layer Link Active'
-> > bit in PCI Express Capability for checking link up. Qcom driver has been using
-> > it from the start and there are no reported issues. We could add this as the
-> > first fallback if the link_up callback is not provided.
-> 
-> Sounds like a good idea, but from looking at:
-> 7.5.3.6 Link Capabilities Register (Offset 0Ch)
-> 
-> "
-> Data Link Layer Link Active Reporting Capable - For a Downstream Port,
-> this bit must be hardwired to 1b if the component supports the optional
-> capability of reporting the DL_Active state of the Data Link Control and
-> Management State Machine. For a hot-plug capable Downstream Port (as
-> indicated by the Hot-Plug Capable bit of the Slot Capabilities Register)
-> or a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-> this bit must be hardwired to 1b.
-> 
-> For Upstream Ports and components that do not support this optional
-> capability, this bit must be hardwired to 0b.
-> "
-> 
-> It sounds like the the 'Data Link Layer Link Active' bit is optional,
-> or at least optional for Gen1 and Gen2.
+Hi Andrea,
 
-Yeah, we should avoid relying on it. Thanks for digging through the spec :)
-Really appreciated!
+just a nit. Could you please add "broadcom:" to the subject?
 
-- Mani
+Am 19.03.25 um 22:52 schrieb Andrea della Porta:
+> Define the RP1 node in an overlay. The inclusion tree is
+> as follow (the arrow points to the includer):
+>
+>                        rp1.dtso
+>                            ^
+>                            |
+> rp1-common.dtsi ----> rp1-nexus.dtsi
+>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+> This patch can be considered optional, since it fills just the second
+> scenario as detailed in [1], which is the RP1 DT node loaded from a dtb
+> overlay by the FW at early boot stage.
+> This may be useful for debug purpose, but as such not strictly necessary=
+.
+>
+> [1] https://lore.kernel.org/all/CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoD=
+WJ3=3Dzd3cgcg@mail.gmail.com/#t
+> ---
+>   arch/arm64/boot/dts/broadcom/Makefile |  3 ++-
+>   arch/arm64/boot/dts/broadcom/rp1.dtso | 11 +++++++++++
+>   2 files changed, 13 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+>
+> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts=
+/broadcom/Makefile
+> index 4836c6da5bee..58293f9c16ab 100644
+> --- a/arch/arm64/boot/dts/broadcom/Makefile
+> +++ b/arch/arm64/boot/dts/broadcom/Makefile
+> @@ -13,7 +13,8 @@ dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
+>   			      bcm2837-rpi-3-b.dtb \
+>   			      bcm2837-rpi-3-b-plus.dtb \
+>   			      bcm2837-rpi-cm3-io3.dtb \
+> -			      bcm2837-rpi-zero-2-w.dtb
+> +			      bcm2837-rpi-zero-2-w.dtb \
+> +			      rp1.dtbo
+>  =20
+>   subdir-y	+=3D bcmbca
+>   subdir-y	+=3D northstar2
+> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts=
+/broadcom/rp1.dtso
+> new file mode 100644
+> index 000000000000..ab4f146d22c0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +&pcie2 {
+> +	#address-cells =3D <3>;
+> +	#size-cells =3D <2>;
+> +
+> +	#include "rp1-nexus.dtsi"
+> +};
 
--- 
-மணிவண்ணன் சதாசிவம்
 
