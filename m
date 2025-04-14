@@ -1,226 +1,119 @@
-Return-Path: <linux-pci+bounces-25891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B24DA88F72
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 00:49:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E4D3A88FFC
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 01:16:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD1D3188EDA6
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 22:49:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D980F3AFC1B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 23:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7A54214A66;
-	Mon, 14 Apr 2025 22:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0534E1F3FC0;
+	Mon, 14 Apr 2025 23:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lPVutIap"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U4nsliAQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E811FECC3;
-	Mon, 14 Apr 2025 22:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8712E1E5211
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 23:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744670841; cv=none; b=VItHUBNuy0IAZ3rx/ydHjnZBCOLvmtW2JZmKQThUScyvtCdpNEjLBIqdsoiskAZIqBr30MajmffVYFwR5FxsYf+Jv+VfBNpZachnHNo9/E96+1DiK+HQie5wprubhLFmjluve/ygEuIKOCNjSeiYXoCMynMI58hZdC2gB18P/BM=
+	t=1744672568; cv=none; b=bZxK4dauE0EOKnL3/t8J9buinGWTGHHEQfYX2rnfK0Od2oI17RcxOnYKT5/TpQ/Z3aX16HXMxU0h0Ykoz8EM6w+9yAVTpPePrzK4bW8j1UnfHE/35MQbjJBf/pJHF0QZfOg59aOS0tVcRURqkL4gl+llKWNpSdX2tQ8InDssBOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744670841; c=relaxed/simple;
-	bh=kNfVG+yZpaLRq1OoCyzPL29BMRStZnd75S1TRZZzGyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NU6syHYwHHw1/WfQVOR6Jhj6djRIYKmLYfZWRdJ/+IXbokhvb5a6NarwKNU5EonAklLTp/Gu9FNdGMBVKGjCgoW/nmHzqKpw2yVpVX+IHVJlfT2TyKmGlhdubPf7aH8MTAII1ib4sGpdNI2hytcfJYBdv9B6+evrqKFYW1YNpSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lPVutIap; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.159.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1B1BE210C436;
-	Mon, 14 Apr 2025 15:47:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B1BE210C436
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744670839;
-	bh=SIS7Ml4VZ/wIhHt29L18904r+oPLJIB7CTsSxudVE84=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lPVutIaptWTHrT7cgcH+ye3PQBmYeR9GPO7Dkc0r17twjSXXl4N0TL32uYTZtmSJw
-	 MSoR+caetSn8mKX3MNIVfyN65CfKmfBY8REgRnSubcXDMD/vNMoPeqm5nfs2U4sGo3
-	 WBuza01bqCW0gRUcgOYszPirGJpdsitB48PEP3d4=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	conor+dt@kernel.org,
-	dan.carpenter@linaro.org,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	joey.gouly@arm.com,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mark.rutland@arm.com,
-	maz@kernel.org,
-	mingo@redhat.com,
-	oliver.upton@linux.dev,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rafael.j.wysocki@intel.com,
-	ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com,
-	suzuki.poulose@arm.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	yuzenghui@huawei.com,
-	devicetree@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v8 11/11] PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
-Date: Mon, 14 Apr 2025 15:47:13 -0700
-Message-ID: <20250414224713.1866095-12-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414224713.1866095-1-romank@linux.microsoft.com>
-References: <20250414224713.1866095-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1744672568; c=relaxed/simple;
+	bh=7RJL7GBBV5nZmJ0yS9Gm6NjRypVsJlXMTCKHtHSWBRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ElZt3I+KlNuFibFCjaj8ULclvjXnho4VcY8ws6HWRKQktLlci4R8UZOi3WsQzwDw4zywj9HJRyN3Ldfazvc7T4ieFXGdlhA4OkPgXrALdSBmM1r/9u/11aSxYT3OU40a401em5dCxNJLXuqf4z8pD6HlwfBmTtTiHpWHf1UlZ3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U4nsliAQ; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22403cbb47fso52007385ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 16:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744672567; x=1745277367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7RJL7GBBV5nZmJ0yS9Gm6NjRypVsJlXMTCKHtHSWBRg=;
+        b=U4nsliAQMyUp0LtxoaNU5XCSEeZwZrNj4/NeL3nMPsVrZ2GLYMw8pXJz8oaOr2ZaHB
+         BHzjW+OUjK/O83PFlYi9sDSr/lxsoICZB6bVAz7skK23xi0lFDbcPRcagW03HZwwDXc5
+         wzgCg7zcZ/PJrUVs6Nm6/NDlb2bbp2deTUoD8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744672567; x=1745277367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7RJL7GBBV5nZmJ0yS9Gm6NjRypVsJlXMTCKHtHSWBRg=;
+        b=bpuZG1cnLJfljMB4uIdzXapZ8DyNqpjNkTTc2nRCFTzLAWa3oenbwSLI+vcbZ7Z5uL
+         HLOXcIhaMHYQ2yuswBaTBazQ9SsmWS9WY0nmLIhAhtu4Pkxl/nZ67TE38A0o8V9/Nkqy
+         WCO9SdhypPOcFmZ2QIc71hb7jTzj7UocOTFb/NMT9QNyUSFWP2GewPjIjsNzDW4IZG+l
+         YmgK3X565MdKVkDS/7LqO1V+zIJzO1XMoqoGo7a4i+dLaqXO1LGratMJ8+rCdPS1sDBI
+         Dt8gLUQ5w4xK2pTpHuLh9zg5rggTDS7NS3/AWI/G0w5mfne8K+G7YEygOJEkwykJO4Hs
+         ohsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUz68AIFWLg2gNcmcz1KBvmRYaFzhWGxWvpQoPnD5+mM2YH/BdA7lHSlcBvuDeUAZXdixa7zGs0qEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyji1heaOWSfbzHwCU0C3edDQiKaMM6otQw84BTKVsuaJ4FgTTX
+	6EMOLoP+cEmKn7j9YQwDiF+ZnKNUSZ1XO8YVXsl3PuxzNWSe0sq0PZ2AoDJamw==
+X-Gm-Gg: ASbGncsphZas0ZxPVEJgv2X2XMBqqKYT3hkItntyj45EYV3qjybHUXRJq6NrJ2dpgop
+	kjMPELXAOhsthOEvzvU6GcSXKsJC7oDAKp88+Ng5ZJZ1drfSGb/e8hkUuUaqCUHehAyio+GRZr6
+	nzH4cevWcj4ilPHdS1wppVW0kALWDyYYnKr9NTpDbFAZv079HFte3jJXNPNuRfxeX8oBSwlVFDG
+	KMq7VGve/SYPR/SXOAv2NjPfQNNv3ffFmkAjglxet72BRZvNHEZRM9lPMP+UxhmCeypb4Wg+0TT
+	dGb576ogxPzVLK6OzkH66iMV4y4aBmfGcI294ojqPHbT9eGyGIdZLrd/gHpOl1QCnynhNmi9PFS
+	YJQ==
+X-Google-Smtp-Source: AGHT+IHXVC2msS9Lv6MHRlDHgQ+8UmqZCQExOC+5nUPQFdZj1WNEowXz+rxUvsT8W2cEg963akZYUQ==
+X-Received: by 2002:a17:902:f64e:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-22bea4c76acmr213874215ad.29.1744672566799;
+        Mon, 14 Apr 2025 16:16:06 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:cfd0:cb73:1c0:728a])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd21e1f66sm7163929b3a.84.2025.04.14.16.16.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 16:16:06 -0700 (PDT)
+Date: Mon, 14 Apr 2025 16:16:04 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, Tsai Sung-Fu <danielsftsai@google.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
+Message-ID: <Z_2XNM6FdRIvDx38@google.com>
+References: <Z_WAKDjIeOjlghVs@google.com>
+ <Z_WUgPMNzFAftLeE@google.com>
+ <uivlbxghkynwpmzenyr2b3xk4uxeuqf6dow6ao4mptcnzygrw7@ylfqavr3ry44>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <uivlbxghkynwpmzenyr2b3xk4uxeuqf6dow6ao4mptcnzygrw7@ylfqavr3ry44>
 
-The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-arm64. It won't be able to do that in the VTL mode where only DeviceTree
-can be used.
+On Mon, Apr 14, 2025 at 04:37:23PM +0530, Manivannan Sadhasivam wrote:
+> If you look into brcm_pcie_add_bus(), they are ignoring the return value of
+> brcm_pcie_start_link() precisely for the reason I explained in the previous
+> thread. However, they do check for it in brcm_pcie_resume_noirq() which looks
+> like a bug as the controller will fail to resume from system suspend if no
+> devices are connected.
 
-Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-case, too.
+Ah, I think I was actually looking more at brcm_pcie_resume_noirq(), and
+didn't notice that their add_bus() callback ignored errors.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/pci-hyperv.c | 72 ++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 6 deletions(-)
+But I think pcie-brcmstb.c still handles things that pwrctrl does not,
+and I'm interested in those things. I'll reply more to your other
+response, where there's more details.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6084b38bdda1..2d7de07bbf38 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -50,6 +50,7 @@
- #include <linux/irqdomain.h>
- #include <linux/acpi.h>
- #include <linux/sizes.h>
-+#include <linux/of_irq.h>
- #include <asm/mshyperv.h>
- 
- /*
-@@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
- 	int ret;
- 
- 	fwspec.fwnode = domain->parent->fwnode;
--	fwspec.param_count = 2;
--	fwspec.param[0] = hwirq;
--	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	if (is_of_node(fwspec.fwnode)) {
-+		/* SPI lines for OF translations start at offset 32 */
-+		fwspec.param_count = 3;
-+		fwspec.param[0] = 0;
-+		fwspec.param[1] = hwirq - 32;
-+		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		fwspec.param_count = 2;
-+		fwspec.param[0] = hwirq;
-+		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	}
- 
- 	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- 	if (ret)
-@@ -887,10 +896,46 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
- 	.activate = hv_pci_vec_irq_domain_activate,
- };
- 
-+#ifdef CONFIG_OF
-+
-+static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-+{
-+	struct device_node *parent;
-+	struct irq_domain *domain;
-+
-+	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
-+	if (!parent)
-+		return NULL;
-+	domain = irq_find_host(parent);
-+	of_node_put(parent);
-+
-+	return domain;
-+}
-+
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+
-+static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
-+{
-+	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
-+
-+	if (acpi_irq_model != ACPI_IRQ_MODEL_GIC)
-+		return NULL;
-+	gsi_domain_disp_fn = acpi_get_gsi_dispatcher();
-+	if (!gsi_domain_disp_fn)
-+		return NULL;
-+	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
-+				     DOMAIN_BUS_ANY);
-+}
-+
-+#endif
-+
- static int hv_pci_irqchip_init(void)
- {
- 	static struct hv_pci_chip_data *chip_data;
- 	struct fwnode_handle *fn = NULL;
-+	struct irq_domain *irq_domain_parent = NULL;
- 	int ret = -ENOMEM;
- 
- 	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-@@ -907,9 +952,24 @@ static int hv_pci_irqchip_init(void)
- 	 * way to ensure that all the corresponding devices are also gone and
- 	 * no interrupts will be generated.
- 	 */
--	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
--							  fn, &hv_pci_domain_ops,
--							  chip_data);
-+#ifdef CONFIG_ACPI
-+	if (!acpi_disabled)
-+		irq_domain_parent = hv_pci_acpi_irq_domain_parent();
-+#endif
-+#ifdef CONFIG_OF
-+	if (!irq_domain_parent)
-+		irq_domain_parent = hv_pci_of_irq_domain_parent();
-+#endif
-+	if (!irq_domain_parent) {
-+		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
-+		ret = -EINVAL;
-+		goto free_chip;
-+	}
-+
-+	hv_msi_gic_irq_domain = irq_domain_create_hierarchy(irq_domain_parent, 0,
-+		HV_PCI_MSI_SPI_NR,
-+		fn, &hv_pci_domain_ops,
-+		chip_data);
- 
- 	if (!hv_msi_gic_irq_domain) {
- 		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
--- 
-2.43.0
-
+Thanks,
+Brian
 
