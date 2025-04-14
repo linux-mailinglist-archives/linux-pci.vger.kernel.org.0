@@ -1,86 +1,86 @@
-Return-Path: <linux-pci+bounces-25798-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25799-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A2F0A879B6
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:04:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4857A879C3
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:06:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8373B188F742
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 08:04:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6EA816E3CF
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 08:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56401FECAB;
-	Mon, 14 Apr 2025 08:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF3F1258CE7;
+	Mon, 14 Apr 2025 08:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nM4MVO0b"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l5jFPU+1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E1342077
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FF1259CA4
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744617872; cv=none; b=ar7Oom+9GHjkI5/ZG5XiVlrhg+2JpFfoM6+RkPqSWdiHyWuQABRU2mqbwW8jwRp1WyP79TjzQDYLZ0RhNwBJpqmBOLYHF9FbDGkOPLvA4rXMvxbPj5EM6NKBhtobozl/0YYSZupBg+KINjJVEGRSRQ7qssQyFbMBYkeJdaCD7aY=
+	t=1744617990; cv=none; b=MBzveGqH05E1WFbUE4TDCFWv5dHgq+43kwUH7PwpwWu5yj4Xu1G9dDliVKOgWs2hSbXSQuK7XwqOFurgUy4Fy8dbUflmQaJFK7BlIyTxi2Mygu+bT3M93g9BLVLUU8oibeCG5Ne8vuklYLNgmaPnlRl4uLaIRYGqZs4rqpZW0/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744617872; c=relaxed/simple;
-	bh=u5+zJ8xQq2E+c5EIBgefhUD1z6xhKKWp9LXxgnrgFx4=;
+	s=arc-20240116; t=1744617990; c=relaxed/simple;
+	bh=Tt6na1JgL9gZhGym0N2yqcFVRTJSFPyk7p6xzBcJWzY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXIcBTHnqwkwjiCybPK+KUanx6NSob/qzp15wIZ8TGHrWpb5OX0QwLsKzHpByalmlXRsiELG9cio1OMxXrElHAbv+bBqSjC8juS0vQKq0Nf5fs2uwVPRdXFz2+bzlufEe8yQB6UvM3AOwtLb8Dv1FKNhHp7SCemQzv28pO5S+w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nM4MVO0b; arc=none smtp.client-ip=205.220.168.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=cy9lEnXwaFCINT1GDQD+EESLBf3s8Rf+Qujm4fy9BKxdtyr/oO1oxpWlkt0f9By2Lo5aF/PqSLRPQpCXCtJxeJHguOc8KGFXwaz+PEfKLj7H51MJ5jX38xIgDi2vZCJMTj4TAoSyi3r3Qy+Nge+A/HP9mzgdYyTAf1fYAfKtpME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l5jFPU+1; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DM3cCm012386
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:04:31 GMT
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DLgvVA023915
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:06:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=motKW5Lb6mQyTh0z/VsDrh9t
-	PeNWHlCOYtShOT2XwtM=; b=nM4MVO0bE8SBq0z15kjjmKu6d8ldV0BDBDQmwgAT
-	H6Z5OahIIpzOv7U1xvXGeg9cRQpnahOg8IuIfrdfXXXOZwJ0+KS8RZ8atxCuUpSI
-	LV5nq9kPT/kgwAJflDjHqlJT05lHD8wcie2qlAXn/khjWWm37e/IIhBuMiAGeGJD
-	MkN2BnDftf55j86oex+flsp1qHEEcxFhNPTJl4MpNhanckUlIqsvXgIQ6tPn6aLq
-	XKRL3jjTy7bF+Dd1iNF2ughLLGIJaWvq3p8alF788jadkz/+LpDSyyT4ZmkyO33J
-	DHz3ecdKFJUoQ5TJ3HiPDYNNwyOS7zq5uo1xEDvADyWmHQ==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpkmhj-1
+	:references:subject:to; s=qcppdkim1; bh=px7Blgm8qx6BAMDM/eVg3Hlb
+	wIYCiUozHBvsIkG9+po=; b=l5jFPU+1JFnl3gsrOOMLiYU3rmI8ssnqt7CZdg+M
+	YCdvc8K8irjy6j783KN/4fpyxm5vmiHo8rqfR15AhCjk20R+7RkeZb2wJa6CatP2
+	XiS11dMEqwWyXeKRqV2Gh9E9UbAMlZcyMj2o/JQyR+B5lnFA3dtxuIKGgrdNQw1O
+	Svu/H10lyffm5KlaQny1i8Oe8JL8HE1j3f1wSYhzXE7MhFHzOQll/5N1wPQAzOiQ
+	NDIUBMU7AwBkeoElJn0AH737kcL1Kk1HcI/agEOxNvBhVVQnWq8q+gW1ULqIBO//
+	wZuBYmIlpvqwf3tzCdpcrnyguV23knlU1MabJ4T1AmmcEQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vbudd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:04:30 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e9083404b7so82012956d6.1
-        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 01:04:30 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 08:06:28 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3c5e92d41so634326885a.1
+        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 01:06:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744617869; x=1745222669;
+        d=1e100.net; s=20230601; t=1744617987; x=1745222787;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=motKW5Lb6mQyTh0z/VsDrh9tPeNWHlCOYtShOT2XwtM=;
-        b=M6Hdyr68I0m+OK2Il160nCBGUgU2ac3rEr2bT4+P1RPkj5xU5mPebQUahto6RM5aV4
-         QvPPzXQwHhJWGJRo1TYrY1KBPipi4kMS5933eMppcjJVIVOBbjoqMqWJ2lmcuqjkz9Ys
-         7+xuwwuicBfZk6somlnMkDC0GOyyBtUpJwu2A9u1XuuK5UO8bqN4lzRSDL8REo9/GPR4
-         +8olkwRtSoWpF9DWSR28NEpZdyBII78tUcJ1bd7qv3jMqab0nOzVk0kxkTnzBSFCuZMT
-         J7I/V93ChZ5bq/8UScZsoOX4QehD7PBuuxT8IIYGhQaXZMJ+IoWDfr7Vd6J+e1WVlyy0
-         Ee/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXRaUw0Zzr5edihz5n06cIKWb/TjGjW/5nZo9agH1S2dzujA/5u/kHbKdDyZg2hGfpvY6POGHyg+0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRcWbPcOH48Qr0ZbY1GMhWm4D3hUpxhLlUQyTPdv1XM6C4f0q2
-	m3gEC/lCdV6/4ZwhTt/m6DRnc/d6o2pfONqlbtwIcWCNCzHbhtJutctMdtATB7Z18xmNZh/+yER
-	NoXX7eXqN4eiJRDrVSitiEAriWn6kXTGYaR4JHM/0YansJFG8B723JwF9tWg=
-X-Gm-Gg: ASbGncvKz0+7M6Wy+ZaZmqVRn4v9YD9YOKFwO/uljqbfo9TAA87RdwVjzAHSEyso2FZ
-	XrDE0xkmHnUAMeJe6XTYh9ao2eZIDooGSsndUOcQqlTdtS52LXl6dDspQ000+bn4Q1g5WVNOIuS
-	FS8gDt3z8U10VchJa4KabAJp1f2wFeYXhusKwFfCqMSpzEwje9DRYza3Vsm5WmzBXBtAQGXDeA6
-	EZ+9WU6LVPNBxbRQFUOKTEFZsverHYj6J35d+L+7ASzV5GSUoIQYIx8NlZ0qYzzalP3MOMzCOVF
-	SR61KtWxUh3XcdPCagWUN1/K+Ks2T9v4hOOTkZBHM/Rl5ZbgWedrFFUEjxhkdfwCUPMAb5pq2no
+        bh=px7Blgm8qx6BAMDM/eVg3HlbwIYCiUozHBvsIkG9+po=;
+        b=Xt6XO5h5yq4D5XKalS3AkfCjVcLdpVqttv1+90FePodrgdUuX+T/Y00mauw2JwMECs
+         9GhKW5Qk2+en1PdJkCotXeBoakk7md9u746oEvEIzUO8npnP8ZQgw/SWllUnpXlu7AiN
+         0BNuYVhpGBkb7Psr9Tu7LhvfC9r+TDIGI9OYhT4JVbFq3Um958LVCv7FJU4hAlR9FZLT
+         qNexVbXrC3eseDIE6sdJmNFYECoKIZ9s5rY9m2tavWByuCBatLTLoQiRprgAWE6nP8d7
+         e9Q3Pur6IdO5DWaFGBwox18yoAq5PkKna9ddZcprh2pM4cQ4nBN2DWxyCTSlogfE+wQa
+         UljA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFFUzheemq+kHzE7LVPoVkFNTDT6glFpPuk9IMjDIqJ8sSyxYGGuE3PfB3s/K6sRGGJ9kZB1KxqXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRPtj9tW+RW/2AJYKv/TcXNbpuyvW9yT5r2wA35K7dEd7aPYK9
+	Lks7nhtGOpKn5YvIFOLA1LVdi9xIY0Kd6/KvswLRvO1WZxrWHAZFz93a6vi9ULXgmTa3ob65xeO
+	yzN4myI2TzUWxtXaTbSTtA7B5ZGrH+HVlH58P8lq7OFXdFN+RDi2WyKycuXU=
+X-Gm-Gg: ASbGncu+6cpvmb5R8C5yOjR14s4kw6QVtszvoYgWjmsFzMq2GFXs2FjyHOkPw7H7yhX
+	YKSqV26vMInZBugJPRnVncPqx7Du6NRkoHyrsKNkleWkzxVlA5SuroXn71CWOdJ3yWwMxUYpf7K
+	sCrWqgAE76fxJjb7mGKZ4ZO/iKk5+0muP23k0M2qrXduXnyw2bfZM5KNML6alLp1dk8hgHA7K6x
+	WhB0e+rTP9y8fUPk9fYkaKFoYBL2/GbTVhOvoMrGR7Qcwcih4d9xpKEEcO2SLY91iNbaD5JCUv/
+	B7zcbw7gq2W2NbQaQiiYXCk7jImTknTn3K+DKfUL5dAP+9PK4O7t6KnlI/vD7vHHSUw5cwtmR2c
 	=
-X-Received: by 2002:a05:620a:28c6:b0:7c7:a55d:bd0 with SMTP id af79cd13be357-7c7af0c0ea9mr1883520585a.5.1744617869248;
-        Mon, 14 Apr 2025 01:04:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWWHm3DOZ1Q8AF22op7ePgxy0MOLfDLF+pEm6YiivbRillDGj+xV6eV96SSkSZfVCdD+uIVQ==
-X-Received: by 2002:a05:620a:28c6:b0:7c7:a55d:bd0 with SMTP id af79cd13be357-7c7af0c0ea9mr1883516185a.5.1744617868730;
-        Mon, 14 Apr 2025 01:04:28 -0700 (PDT)
+X-Received: by 2002:a05:620a:2b93:b0:7c7:a5b7:b288 with SMTP id af79cd13be357-7c7af12e661mr1704240385a.19.1744617986787;
+        Mon, 14 Apr 2025 01:06:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAoYHyf5+XK2qQjpZ4XxjJYJBB3jlyzLSFJ8UqK/f647FyCb562GXZofuaa+BHngQwYN52Ow==
+X-Received: by 2002:a05:620a:2b93:b0:7c7:a5b7:b288 with SMTP id af79cd13be357-7c7af12e661mr1704236885a.19.1744617986266;
+        Mon, 14 Apr 2025 01:06:26 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cc096sm16699131fa.29.2025.04.14.01.04.27
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238d5dsm1023356e87.93.2025.04.14.01.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 01:04:27 -0700 (PDT)
-Date: Mon, 14 Apr 2025 11:04:26 +0300
+        Mon, 14 Apr 2025 01:06:25 -0700 (PDT)
+Date: Mon, 14 Apr 2025 11:06:22 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -95,11 +95,11 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
         quic_mrana@quicinc.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <ody5tbmdcmxxzovubac4aeiuxvrjjmwujqmo6uz7kczktefcxz@b6i5bkwpvmzl>
+Subject: Re: [PATCH v2 2/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+Message-ID: <hcficagxw4p6h5nr4non25vuwdyor4nvbff3vxz7z6rgztltxl@vcoi7dacv5wc>
 References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
- <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -108,115 +108,128 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: CH09uQqVxIIhM3eSbjXsyEkiOJY8FOJ_
-X-Proofpoint-GUID: CH09uQqVxIIhM3eSbjXsyEkiOJY8FOJ_
-X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=67fcc18e cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=xMVSDGMRPTrRGbC6XWUA:9 a=CjuIK1q_8ugA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
+In-Reply-To: <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: JFoKzUoRrvvlPFmuDAjoOyKa0Ty99KRp
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fcc204 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=dLDDg6SP7YSfz8vGITsA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: JFoKzUoRrvvlPFmuDAjoOyKa0Ty99KRp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504140057
 
-On Mon, Apr 14, 2025 at 11:09:12AM +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
+On Mon, Apr 14, 2025 at 11:09:13AM +0530, Krishna Chaitanya Chundru wrote:
+> Move phy, perst, to root port from the controller node.
 > 
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpio
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
-> 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
-> 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> Rename perst-gpios to reset-gpios to align with the expected naming
+> convention of pci-bus-common.yaml.
+
+Note that the cover letter doesn't land in the git history. Anybody
+browsing file history would have hard time understanding the reason for
+the change.
+
 > 
 > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml      | 18 ++++++++++++++++++
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml      | 17 +++++++++++++----
->  2 files changed, 31 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+>  arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+>  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+
+I can only hope that after the series is landed, there will be a
+followup from you, convering all other platforms.
+
+>  4 files changed, 14 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index 0480c58f7d998adbac4c6de20cdaec945b3bab21..16e9acba1559b457da8a8a9dda4a22b226808f86 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -85,6 +85,24 @@ properties:
->    opp-table:
->      type: object
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -709,8 +709,11 @@ &mdss_edp_phy {
+>  	status = "okay";
+>  };
 >  
-> +patternProperties:
-> +  "^pcie@":
-> +    type: object
-> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
 > +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      phys:
-> +        maxItems: 1
-> +
-> +      wake-gpios:
-> +        description: GPIO controlled connection to WAKE# signal
-> +        maxItems: 1
-> +
-> +    unevaluatedProperties: false
-
-Please mark old properties as deprecated.
-
-> +
->  required:
->    - reg
->    - reg-names
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> index 76cb9fbfd476fb0412217c68bd8db44a51c7d236..beb092f53019c31861460570cd2142506e05d8ef 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> @@ -162,9 +162,6 @@ examples:
->              iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
->                          <0x100 &apps_smmu 0x1c81 0x1>;
+>  &pcie1 {
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
 >  
-> -            phys = <&pcie1_phy>;
-> -            phy-names = "pciephy";
+>  	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+>  	pinctrl-names = "default";
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> index 2ba4ea60cb14736c9cfbf9f4a9048f20a4c921f2..ff11d85d015bdab6a90bd8a0eb9113a339866953 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> @@ -472,10 +472,13 @@ &pcie1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pcie1_clkreq_n>, <&ssd_rst_l>, <&pe_wake_odl>;
+>  
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>  	vddpe-3v3-supply = <&pp3300_ssd>;
+>  };
+>  
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>  &pm8350c_pwm {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> index 7370aa0dbf0e3f9e7a3e38c3f00686e1d3dcbc9f..3209bb15dfec36299cabae07d34f3dc82db6de77 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> @@ -414,9 +414,12 @@ &lpass_va_macro {
+>  	vdd-micb-supply = <&vreg_bob>;
+>  };
+>  
+> +&pcie1_port0 {
+> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>  &pcie1 {
+>  	status = "okay";
+> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>  
+>  	vddpe-3v3-supply = <&nvme_3v3_regulator>;
+>  
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 0f2caf36910b65c398c9e03800a8ce0a8a1f8fc7..376fabf3b4eac34d75bb79ef902c9d83490c45f7 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2271,9 +2271,6 @@ pcie1: pcie@1c08000 {
+>  
+>  			power-domains = <&gcc GCC_PCIE_1_GDSC>;
+>  
+> -			phys = <&pcie1_phy>;
+> -			phy-names = "pciephy";
 > -
->              pinctrl-names = "default";
->              pinctrl-0 = <&pcie1_clkreq_n>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie1_clkreq_n>;
 >  
-> @@ -173,7 +170,19 @@ examples:
->              resets = <&gcc GCC_PCIE_1_BCR>;
->              reset-names = "pci";
+> @@ -2284,7 +2281,7 @@ pcie1: pcie@1c08000 {
 >  
-> -            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
->              vddpe-3v3-supply = <&pp3300_ssd>;
-> +            pcie1_port0: pcie@0 {
-> +              device_type = "pci";
-
-The rest of the file uses 4 spaces to indent the next level. Any reason
-for breaking this custom?
-
-> +              reg = <0x0 0x0 0x0 0x0 0x0>;
-> +              bus-range = <0x01 0xff>;
-> +
-> +              #address-cells = <3>;
-> +              #size-cells = <2>;
-> +              ranges;
-> +              phys = <&pcie1_phy>;
-> +
-> +              reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +            };
-> +
-
-Drop extra empty liines
-
->          };
->      };
+>  			status = "disabled";
+>  
+> -			pcie@0 {
+> +			pcie1_port0: pcie@0 {
+>  				device_type = "pci";
+>  				reg = <0x0 0x0 0x0 0x0 0x0>;
+>  				bus-range = <0x01 0xff>;
+> @@ -2292,6 +2289,7 @@ pcie@0 {
+>  				#address-cells = <3>;
+>  				#size-cells = <2>;
+>  				ranges;
+> +				phys = <&pcie1_phy>;
+>  			};
+>  		};
+>  
 > 
 > -- 
 > 2.34.1
