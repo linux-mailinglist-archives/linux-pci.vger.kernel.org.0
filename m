@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-25814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A40A87E00
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:50:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6984CA87E0E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:53:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 646BA1751CB
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:50:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74B0C175701
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:53:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46F1278159;
-	Mon, 14 Apr 2025 10:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B743227BF91;
+	Mon, 14 Apr 2025 10:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="cgT0RMnc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BegFfWdY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA23126770E;
-	Mon, 14 Apr 2025 10:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9239278165;
+	Mon, 14 Apr 2025 10:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744627800; cv=none; b=pyC9yIjlX1I0acXuVLZ+rYpS5KonMZubh1HDOacLfbmxVw41yRlCi55srUJRy3xVySHrY5+mdPup7eH98iIQvPqBZl1oBYUS9BK16/HnZcESF2wmY9gCY7ot28/L/TNZCntdhqtgcRbzeKB6e2IyT1zgUgDzNBj7YbnsTioumnk=
+	t=1744627985; cv=none; b=DwbLtb0bUK2USBEW7ht2XPxDeCrB05yr8rn+fR4Irl6ZYwPUCSzJQpItJ5yArJ4JK4ZkyaXyopTWj1BZ+KJq0gsD5W3z6/4Wpy6BnxbozJMsuzySD55foeLG9xUzYBxDOcRGwv2vk8hktccBZqaFbKCE85eBr08vTgaZaOmZi0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744627800; c=relaxed/simple;
-	bh=CzkyEWh1sE7HBtK/0v+QMbrgGUGQNe+UkIbezvWOkL0=;
+	s=arc-20240116; t=1744627985; c=relaxed/simple;
+	bh=hp/iT9vRY4WLbkXBJM0HMTKnmsgkT83gkCn0+xI8TDs=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aaieyG/v0UTymdkGiLe376hmGNFoX5ty/hE1+WvzLTHgiHMUlerjKzhXI8luyL3UPFixIs7SzkfeORZK5+yuB1QR9uZbmYXjmQAtmN9WVkMjg3eEdAYAeDKpBfK/xSB/Sdm75sym3gV6KU4xfzxrIS6E5t16CaqJj1g18nVwb7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=cgT0RMnc; arc=none smtp.client-ip=109.224.244.16
+	 MIME-Version:Content-Type; b=eVSsLVle+Eqrwi2jkzqKu/Y264w1iWBuPS3FBaMrSu0osjmk50ZvzeSHdwcUOEQZNAYKql2VQZobq5Bh3Q7HrblB53MNtfp4PcVabXhz4C3Nlr1oH4jQydaF0WmDkrfHuLA45jIEnsqoozYRjzvI6KbxVULNUD5Xfl+83tHz6vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BegFfWdY; arc=none smtp.client-ip=79.135.106.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744627796; x=1744886996;
-	bh=iMBhs2JiirFFXeARfh001EWhBL3xf29IVwkB/4ajPgo=;
+	s=xkpzb5yfxnf2jeuzp7tothlcbe.protonmail; t=1744627980; x=1744887180;
+	bh=cGneafMdb7E/5GcVD98UZZZtBXjzJsDf2In9bf3AS80=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=cgT0RMncgS3U93r9FcbI6Pa4hCtAzDnvQI97lzdvOPeNCxd+5Khqr62BhC97IyXhd
-	 VPqYfhC29NOWN89jJ+DSq0N7dQWbNlFPnShjCO30R3eN4vxVVcIN4Jp+8EtJw432hP
-	 aNRi2jmro3yEVBqUsLNi11wHrvbcUP1TODwQR1/8JUPLff1s3cbC9A0+YSHC+uyaU5
-	 sP4y2gG/93sD6VQ7NAj94QpuljA36d3Oh4oXuD26t/o10s2vo2VQZG8BgOzJUIuO48
-	 QLsLQ6NkYbNHAjb/9gmwmcSKzxRbqPFEsBVXXqsrX4hQGM+Vf9H8DotK2TqFagl4Rh
-	 tHd6kBeF6BT5w==
-Date: Mon, 14 Apr 2025 10:49:49 +0000
-To: Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, abdiel.janulgue@gmail.com
+	b=BegFfWdYH4OhAyD9Vvv7x2GV3KDqo1ZdIa4E1vDwLL1zYU+n0iu7x/BeBvqz8KItD
+	 GDOj/qovBvhDYAgxwurvOPV4B5kaKfgzdIJK90kxmeSI/vZ9nc4wMn2yrjl83TNmRV
+	 aUtOAtPUFwMQ4obXOllmUTSJ1Hb4ggZEdjnCh2xk3po2dfCSfYaV5Fyjns7UdfevHL
+	 TpQNAPlce1lLPOQTB7WtXA13fie3Bytsq41rfbB3b5pSrw6cFQMzsIoPAxgH4iCGnJ
+	 PiyPMQARv9EXxWlP0kBJ4X5NI1T61eWT7rjmyhWhDFsYvfDDkxZgDbb0NKHMbDUr0R
+	 j3CebiM1XQJVw==
+Date: Mon, 14 Apr 2025 10:52:54 +0000
+To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>
 From: Benno Lossin <benno.lossin@proton.me>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, daniel.almeida@collabora.com, robin.murphy@arm.com, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
-Message-ID: <D96AXNJRUAA0.3E5KYNM5PZZPG@proton.me>
-In-Reply-To: <20250413173758.12068-7-dakr@kernel.org>
-References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-7-dakr@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
+Message-ID: <D96B00U9SS2Q.1YHLNBOIEWSNE@proton.me>
+In-Reply-To: <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
+References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com> <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d65abdb282b018130f7a52d26ce21322fecb2432
+X-Pm-Message-ID: 192a33aecbd50a9b6c4225576203521e98318959
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,46 +63,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun Apr 13, 2025 at 7:37 PM CEST, Danilo Krummrich wrote:
-> The Bound device context indicates that a device is bound to a driver.
-> It must be used for APIs that require the device to be bound, such as
-> Devres or dma::CoherentAllocation.
+On Wed Apr 9, 2025 at 4:47 PM CEST, Tamir Duberstein wrote:
+> In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
 >
-> Implement Bound and add the corresponding Deref hierarchy, as well as the
-> corresponding ARef conversion for this device context.
+>> Using `as` casts may result in silently changing mutability or type.
 >
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/device.rs | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> While this doesn't eliminate unchecked `as` conversions, it makes such
+> conversions easier to scrutinize.  It also has the slight benefit of
+> removing a degree of freedom on which to bikeshed. Thus apply the
+> changes and enable the lint -- no functional change intended.
 >
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 487211842f77..585a3fcfeea3 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -232,13 +232,19 @@ pub trait DeviceContext: private::Sealed {}
->  /// any of the bus callbacks, such as `probe()`.
->  pub struct Core;
-> =20
-> +/// The [`Bound`] context is the context of a bus specific device refere=
-nce when it is guranteed to
-> +/// be bound for the duration of its lifetime.
-> +pub struct Bound;
+> Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_pt=
+r [1]
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-One question about this: is it possible for me to
-1. have access to a `ARef<Device<Bound>>` (or `Core`) via some callback,
-2. store a clone of the `ARef` in some datastructure,
-3. wait for the device to become unbound,
-4. use a `Bound`-only context function and blow something up?
-
-Depending on the severity of the "blow something up" we probably need to
-change the design. If it's "only a bug" (and not a memory
-vulnerability), then this is fine, since people should then "just not do
-that" (and I think this design makes that painfully obvious when someone
-tries to do something funny with a `Device<Bound>`).
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
 ---
 Cheers,
 Benno
+
+> ---
+>  Makefile                 |  1 +
+>  rust/bindings/lib.rs     |  1 +
+>  rust/kernel/device_id.rs |  3 ++-
+>  rust/kernel/fs/file.rs   |  3 ++-
+>  rust/kernel/str.rs       |  6 ++++--
+>  rust/kernel/uaccess.rs   | 10 ++++------
+>  rust/uapi/lib.rs         |  1 +
+>  7 files changed, 15 insertions(+), 10 deletions(-)
 
 
