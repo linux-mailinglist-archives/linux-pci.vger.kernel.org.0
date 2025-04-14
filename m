@@ -1,83 +1,63 @@
-Return-Path: <linux-pci+bounces-25876-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25877-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65054A88D9E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 23:19:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B1EEA88DE8
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 23:41:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98A631893448
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 21:19:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A4C717B4CE
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 21:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9901F0E58;
-	Mon, 14 Apr 2025 21:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0B91EA7D3;
+	Mon, 14 Apr 2025 21:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4jgL5p4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/w3h7+u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F741B393A
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 21:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F42001A9B28;
+	Mon, 14 Apr 2025 21:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744665538; cv=none; b=T5mMIsE01CVxSjZQfnn4M2rum4bbXlQdQUHVXE5sjF/ljlcDGe5O4KNL4R1GeRqcBrtQ+YshyPXB0HXLLk2d4aO0/dEfKEM3klWcSf+dgq/wrSr1jJoU5/fs/uK0Z55hVzJ8ACYNSVnQrGLrYFeuVFU8wDDPNCyK8OEq+/6vEN0=
+	t=1744666906; cv=none; b=r3ePwtWJ6158RcSi9eYfV0vkFE4fNnUNRN/ywPpIPSilUcw0ywzigLoZMxcIkxR8m6LoJfWcpXzw+QfRfK+WX3QfC+n1wNDG+b+p87FqK5WubX0n+24yQdE0th7RJHMpvl0/14ZpRlPmKfah3KiWIm65pd1Cve6FhJ3Fclq8IMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744665538; c=relaxed/simple;
-	bh=YQ/06zfvEcF5UMcfQSij1aUf1GFr5wunJW2D9NZOJbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZndcvTL/ZaHy6/HYUG88a4HTCguInppdhFVA9L+pJM9fReyKTQuMy1UTalgOXPJC1j/d5RtWNfKK+/EXLXKOLbuId1qWnE6kTBbeVk9Ai+LP84HmYGvavW0muF1QJdrNrHiaW1X5xN2Vej8aRXY8UhLfdtK8bc4CURDIiaalD3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4jgL5p4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744665533;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=coS5bIjv+D/gf/yiERTG+K9wJBtK2z0KhS0caIojfFA=;
-	b=F4jgL5p46dVpNIbu7oPyW2WkY/IbGkE7G+u4ISdNzl6vBNRBUBSKAe0W3tW42koI6U+EVb
-	VTHCbLbTcV9+aypZ7WjW2ngsoySWnQNqwPpL1w2iy3p93R8FaJpEeWbAR8h0jlfQwB8Pwd
-	tcEhUHO0Gof4K01+J+KyA728fzvlNy0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-446-lbrIh1omMAuEXJ--FixISw-1; Mon,
- 14 Apr 2025 17:18:48 -0400
-X-MC-Unique: lbrIh1omMAuEXJ--FixISw-1
-X-Mimecast-MFC-AGG-ID: lbrIh1omMAuEXJ--FixISw_1744665526
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F36CE18608CB;
-	Mon, 14 Apr 2025 21:18:35 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.88.22])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15B4F1809B73;
-	Mon, 14 Apr 2025 21:18:29 +0000 (UTC)
-From: Alex Williamson <alex.williamson@redhat.com>
-To: helgaas@kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	naravamudan@nvidia.com,
-	bhelgaas@google.com,
-	raphael.norwitz@nutanix.com,
-	ameynarkhede03@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jgg@nvidia.com,
-	yishaih@nvidia.com,
-	shameerali.kolothum.thodi@huawei.com,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	cp@absolutedigital.net,
-	stable@vger.kernel.org
-Subject: [PATCH] Revert "PCI: Avoid reset when disabled via sysfs"
-Date: Mon, 14 Apr 2025 15:18:23 -0600
-Message-ID: <20250414211828.3530741-1-alex.williamson@redhat.com>
-In-Reply-To: <20250207205600.1846178-1-naravamudan@nvidia.com>
-References: <20250207205600.1846178-1-naravamudan@nvidia.com>
+	s=arc-20240116; t=1744666906; c=relaxed/simple;
+	bh=56UD9sxCwRsZ7jmoJ4U9OVV4xFNm0c0zNetF7YhUZeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fA/HdsH0U/FqT2QXVWy/nmLZPxMCGo26I+JLDHU6NTMCBQM47DuRyAIXKpF9lvJYBAXacN5Ox/9+GbO6/6ZFJLj1w+zOd3sXJjWTtDSRNDnbVeWB9fZQ9L4mHhjjie+03I9d3+1fk4xWgHTt8rbRXcNYkn0eBymSRxLqo23bJc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/w3h7+u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA66C4CEE2;
+	Mon, 14 Apr 2025 21:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744666905;
+	bh=56UD9sxCwRsZ7jmoJ4U9OVV4xFNm0c0zNetF7YhUZeI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X/w3h7+uJbpoc45U8Im/jaz/u/cG+ujt41fwvIrpAmIJdOCUaSGejMTaiZyevJG2J
+	 t+kt+uXP+WiIgThFuMHByBxYZS09Q2kPzKJUYFrarJiNWc8ifa5ROHk9gNaqLekk7a
+	 dokhETg2y1TWK11lMBI7WqbbzK72h4iTFJSP2bTuPCwH9ZDfIfxCws9l/p71Kq5SFL
+	 SPrdF/cStsctggbOwwys1fs7ZAn4gxuvd5Wa5WMqVM/7DHKWG7FCl1qc9eODvbfUsr
+	 +x349Lh+pK6nxOe7eFfg3sojB+pzPYh7LFK9IaFockxCr7HITlS7K2k4XgbncgVk7G
+	 UDkbcOiIz917A==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: PCI: Convert marvell,armada8k-pcie to schema
+Date: Mon, 14 Apr 2025 16:41:33 -0500
+Message-ID: <20250414214135.1680076-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,57 +65,243 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-This reverts commit 479380efe1625e251008d24b2810283db60d6fcd.
+Convert the marvell,armada8k-pcie binding to DT schema. The binding
+uses different names for reg, clocks, and phys which have to be added
+to the common Synopsys DWC binding.
 
-The reset_method attribute on a PCI device is only intended to manage
-the availability of function scoped resets for a device.  It was never
-intended to restrict resets targeting the bus or slot.
+The "marvell,reset-gpio" property was not documented. Mark it deprecated
+as the "reset-gpios" property can be used instead. The "msi-parent"
+property was also not documented.
 
-In introducing a restriction that each device must support function
-level reset by testing pci_reset_supported(), we essentially create a
-catch-22, that a device must have a function scope reset in order to
-support bus/slot reset, when we use bus/slot reset to effect a reset
-of a device that does not support a function scoped reset, especially
-multi-function devices.
-
-This breaks the majority of uses cases where vfio-pci uses bus/slot
-resets to manage multifunction devices that do not support function
-scoped resets.
-
-Fixes: 479380efe162 ("PCI: Avoid reset when disabled via sysfs")
-Reported-by: Cal Peake <cp@absolutedigital.net>
-Link: https://lore.kernel.org/all/808e1111-27b7-f35b-6d5c-5b275e73677b@absolutedigital.net
-Cc: stable@vger.kernel.org
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/pci/pci.c | 4 ----
- 1 file changed, 4 deletions(-)
+ .../bindings/pci/marvell,armada8k-pcie.yaml   | 100 ++++++++++++++++++
+ .../devicetree/bindings/pci/pci-armada8k.txt  |  48 ---------
+ .../bindings/pci/snps,dw-pcie-common.yaml     |   3 +-
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+ MAINTAINERS                                   |   2 +-
+ 5 files changed, 106 insertions(+), 51 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d7c9f64ea24..e77d5b53c0ce 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5429,8 +5429,6 @@ static bool pci_bus_resettable(struct pci_bus *bus)
- 		return false;
+diff --git a/Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml b/Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml
+new file mode 100644
+index 000000000000..f3ba9230ce2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/marvell,armada8k-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell Armada 7K/8K PCIe interface
++
++maintainers:
++  - Thomas Petazzoni <thomas.petazzoni@bootlin.com>
++
++description:
++  This PCIe host controller is based on the Synopsys DesignWare PCIe IP.
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - marvell,armada8k-pcie
++  required:
++    - compatible
++
++allOf:
++  - $ref: snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - marvell,armada8k-pcie
++      - const: snps,dw-pcie
++
++  reg:
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: ctrl
++      - const: config
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: core
++      - const: reg
++
++  interrupts:
++    maxItems: 1
++
++  msi-parent:
++    maxItems: 1
++
++  phys:
++    minItems: 1
++    maxItems: 4
++
++  phy-names:
++    minItems: 1
++    maxItems: 4
++
++  marvell,reset-gpio:
++    maxItems: 1
++    deprecated: true
++
++required:
++  - interrupt-map
++  - clocks
++  - msi-parent
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    pcie@f2600000 {
++        compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
++        reg = <0xf2600000 0x10000>, <0xf6f00000 0x80000>;
++        reg-names = "ctrl", "config";
++        #address-cells = <3>;
++        #size-cells = <2>;
++        #interrupt-cells = <1>;
++        device_type = "pci";
++        dma-coherent;
++        msi-parent = <&gic_v2m0>;
++
++        ranges = <0x81000000 0 0xf9000000 0xf9000000 0 0x10000>,  /* downstream I/O */
++                 <0x82000000 0 0xf6000000 0xf6000000 0 0xf00000>;  /* non-prefetchable memory */
++        interrupt-map-mask = <0 0 0 0>;
++        interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++        interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++        num-lanes = <1>;
++        clocks = <&cpm_syscon0 1 13>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+deleted file mode 100644
+index ff25a134befa..000000000000
+--- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-* Marvell Armada 7K/8K PCIe interface
+-
+-This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+-and thus inherits all the common properties defined in snps,dw-pcie.yaml.
+-
+-Required properties:
+-- compatible: "marvell,armada8k-pcie"
+-- reg: must contain two register regions
+-   - the control register region
+-   - the config space region
+-- reg-names:
+-   - "ctrl" for the control register region
+-   - "config" for the config space region
+-- interrupts: Interrupt specifier for the PCIe controller
+-- clocks: reference to the PCIe controller clocks
+-- clock-names: mandatory if there is a second clock, in this case the
+-   name must be "core" for the first clock and "reg" for the second
+-   one
+-
+-Optional properties:
+-- phys: phandle(s) to PHY node(s) following the generic PHY bindings.
+-	Either 1, 2 or 4 PHYs might be needed depending on the number of
+-	PCIe lanes.
+-- phy-names: names of the PHYs corresponding to the number of lanes.
+-	Must be "cp0-pcie0-x4-lane0-phy", "cp0-pcie0-x4-lane1-phy" for
+-	2 PHYs.
+-
+-Example:
+-
+-	pcie@f2600000 {
+-		compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
+-		reg = <0 0xf2600000 0 0x10000>, <0 0xf6f00000 0 0x80000>;
+-		reg-names = "ctrl", "config";
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		#interrupt-cells = <1>;
+-		device_type = "pci";
+-		dma-coherent;
+-
+-		bus-range = <0 0xff>;
+-		ranges = <0x81000000 0 0xf9000000 0  0xf9000000 0 0x10000	/* downstream I/O */
+-			  0x82000000 0 0xf6000000 0  0xf6000000 0 0xf00000>;	/* non-prefetchable memory */
+-		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+-		num-lanes = <1>;
+-		clocks = <&cpm_syscon0 1 13>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+index dc05761c5cf9..34594972d8db 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+@@ -115,7 +115,7 @@ properties:
+             above for new bindings.
+           oneOf:
+             - description: See native 'dbi' clock for details
+-              enum: [ pcie, pcie_apb_sys, aclk_dbi ]
++              enum: [ pcie, pcie_apb_sys, aclk_dbi, reg ]
+             - description: See native 'mstr/slv' clock for details
+               enum: [ pcie_bus, pcie_inbound_axi, pcie_aclk, aclk_mst, aclk_slv ]
+             - description: See native 'pipe' clock for details
+@@ -201,6 +201,7 @@ properties:
+           oneOf:
+             - pattern: '^pcie(-?phy[0-9]*)?$'
+             - pattern: '^p2u-[0-7]$'
++            - pattern: '^cp[01]-pcie[0-2]-x[124](-lane[0-3])?-phy$'  # marvell,armada8k-pcie
  
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		if (!pci_reset_supported(dev))
--			return false;
- 		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
- 		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
- 			return false;
-@@ -5507,8 +5505,6 @@ static bool pci_slot_resettable(struct pci_slot *slot)
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		if (!pci_reset_supported(dev))
--			return false;
- 		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
- 		    (dev->subordinate && !pci_bus_resettable(dev->subordinate)))
- 			return false;
+   reset-gpio:
+     deprecated: true
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+index 1117a86fb6f7..69e82f438f58 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+@@ -105,6 +105,8 @@ properties:
+             Vendor-specific CSR names. Consider using the generic names above
+             for new bindings.
+           oneOf:
++            - description: See native 'dbi' CSR region for details.
++              enum: [ ctrl ]
+             - description: See native 'elbi/app' CSR region for details.
+               enum: [ apb, mgmt, link, ulreg, appl ]
+             - description: See native 'atu' CSR region for details.
+@@ -117,7 +119,7 @@ properties:
+               const: slcr
+     allOf:
+       - contains:
+-          const: dbi
++          enum: [ dbi, ctrl ]
+       - contains:
+           const: config
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b827049501..9764b87ea304 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18411,7 +18411,7 @@ M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/pci/pci-armada8k.txt
++F:	Documentation/devicetree/bindings/pci/marvell,armada8k-pcie.yaml
+ F:	drivers/pci/controller/dwc/pcie-armada8k.c
+ 
+ PCI DRIVER FOR CADENCE PCIE IP
 -- 
-2.48.1
+2.47.2
 
 
