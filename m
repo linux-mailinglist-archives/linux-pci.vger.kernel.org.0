@@ -1,168 +1,150 @@
-Return-Path: <linux-pci+bounces-25800-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25801-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8D69A87AE8
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:48:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03DD0A87B50
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:03:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6610F1886084
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 08:48:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7327D3B2849
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 09:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CF5625E822;
-	Mon, 14 Apr 2025 08:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB1B264FAE;
+	Mon, 14 Apr 2025 09:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UYQCFl3O"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BWt7J/s9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F412580CD;
-	Mon, 14 Apr 2025 08:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C96261580
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 09:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620351; cv=none; b=az9Bi7KKqB6wmyw1RnDu/CeUHZKXXO8HzFkrlxCG4+Mq2JzTlHVzHk7hyTmzmTILGZqznFLARYSDT7D9yRCO2Dc+XUOr4Kmw6bHxUhRYWv1Ouadwse2oObQYzgUm2CM9+A8pjaQMDkMZvLtlrYH/rdUF0877sdQl5oxyeazkx4M=
+	t=1744621303; cv=none; b=HJ6QUCybmWPpvu3vlMUsSMaarfAITnO26gmF+Z6A15hkGmgzr9ac0ef8qh5rpRo1AH99VrC3uB4krs4K5V7ahnJGcI9Zd9v5F2OoxW4G2ol5dmYAPhe5B4XYbW4TZfvP5vHeOrkiNwufuVz5WC+C6KN+XbVmdX9MgabPGhizRH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620351; c=relaxed/simple;
-	bh=pEc2TXvVNzLpSozgoDM7+YONkPktZs8pw/fQbXJIB08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WUejbi+owN9pyy+rqrZql9+ICpU+WpKQj5OIw/WURMSHNgrIOsfo0ossCnCBKKbUJPjmGZRHiGV4DHGmjI3c2nuK7vRzut9eDR8vrQBhxlOwGaAlX7/vurklph1bPyxMYjnZ4f7dbawhgVksgIGBmqdOwuK7ybTrOuW/I1O3P7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UYQCFl3O; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNEjSx014000;
-	Mon, 14 Apr 2025 08:45:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TC+cBorcPZtYI+BCAvI2mJGo1QM3DFfIBbzFnXVFQPA=; b=UYQCFl3OXi+wqvc2
-	DZRlz6RsG7REsZfOPUwRzi9jRBUnLLc2SFee1mqbhKlXi9fXO9SsxPb733oPwZlN
-	gEexTm51OqPnWVFDxEzlnKyKjO2zLbT4ZFBhis9WP0P+D/B3Js8xTNdbTELPy4SO
-	3GoyvfWOcR3J6ThrSX8N0hhRXk4Mt/UOgWEyj6X2cbsi4+Ygnfh0fqDrg7v3LGK1
-	B6FQ/RXjdzYLfuhlgdsgIyT52CmLvM7kxAqITNGABkF1xcCnVpOGnoyZclgLHpmB
-	rdaA5oXVyDEk4ALYXYqPtW92lMQYiud69mpxhFMY4dsVkYbPnPh2dfiyXTbpN6gP
-	LxUL9A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vbybr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 08:45:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53E8jfXc021023
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 08:45:42 GMT
-Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 01:45:39 -0700
-Message-ID: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
-Date: Mon, 14 Apr 2025 16:45:26 +0800
+	s=arc-20240116; t=1744621303; c=relaxed/simple;
+	bh=NL2TGpDIJnKJLRnd23h9LgHRVuBV+Ktt+8xcaN6KIFI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEqIUBB+bafNjWsswbzElQE7oSGEsspkJlyVgseBy7BwKUJ6/2s579RE9ES4TZlpQL/6H8wt8zYmoMCVXjWHGHD41D3jNMsp5iBvpOYfmGhu88b4ADPOrlLFE7mW+sg0AcDufRpn01OVHepjyyEe7E5fSglGeEtmtQgxYm/kATw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BWt7J/s9; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so684044466b.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 02:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744621296; x=1745226096; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPOEfxN91t6VGg4utPDevtYddqW0HAL5VO9JP2cPRZo=;
+        b=BWt7J/s9YV/VAOEc7OQF2YUju7YbYeIpodRYNsYtyweNtzkQWUaNq6rFFh0nNbpv9L
+         idr0VZ9J78Nl8S34s9+ZJtl7DFyE3vNr8SEZ87JdZy4hImG1WlnI2RjpSfkHs6BmWW2B
+         87Wm1xcJ2Wz+zjLBnPYAhMQ+C6P8/+PlGIpysxb2v5mGH4VIPIOGSSMxh5Ag8LA3jLk3
+         RVdaghf11CqCg6skFuM+3LaigbGU9f7Uiy6T6rqIYeiUrI8xlj9mi6m5xyUYNUKRVlfr
+         UqRV6QgDzRXAt5ulhv68I7aDg41Sh4eoJiGIOijRHIEaJ5W2tAstR4nYmEFNvUqCY9Dl
+         iBGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744621296; x=1745226096;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FPOEfxN91t6VGg4utPDevtYddqW0HAL5VO9JP2cPRZo=;
+        b=X9TNA5O9fAUWPZiWC8rLR7olvkUmqi7Oxme4fxezoropqQRdj9RiLAV+iMr3Jv6b+M
+         DZY8F8ZkZZamxXRu9sbP3tXET+lq9yh4ART+/k09lsf6sT9UmlFnX2wdsgr8oyxKftn9
+         M6wrVVsvwJSaMoBER4FDESk5Ipsz4BT1ISs7wEaOaY1zSfjsyz13LViCuDKN6q3HqXSz
+         HYcPO8JPfLFhBm8UN2T3SFWrENLfj97tm/FyNJ3rLji8NRRlERrWeyK3d7qBnvNGkDxF
+         sQPAYBbewSvJPTaDX+vzdGocL2am7Gf47jXLb/2SXRmllfyrJqMsjlxl98n4wIeygbD2
+         yPmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU7QOJ3cWTOdknGvJWZlE99kGrj4YdSnSY9VXA9HaWLx+dT5Un/6YzLoO/y60aJZf8ZAx7XIwkhqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjAS7cKWUb3mPDbpxMiYdX1fSBjk/c/MpzUNO+HY4z7owmWBLH
+	BXYXew3s0RThGNIb1TyoM+KqruV7LQDFi4Hv12vVTx9s+gDQmCu9zanb6VQmb0k=
+X-Gm-Gg: ASbGncv3WGgw5OmoTJY4Y+O/MECqZdOAW+TrESpjZPB+cYyk1WuOwKGRFJiXo3mEhu3
+	KK6swH3fDoYNPPXy8M+Ya92slUKj3yh8+jN9U78r+ageWCDKt32J7yRHndRHPkUTPzidQeeJD4T
+	QPE9GrypEN7KB0TDv0A5lx7hx+ztW5r0mKDkpZPWE6o1eBM3Bi/pudyBv3vsU5dWGZU4M2v4ccG
+	mooc3CicX7xtbOI3EUWGU5pUVC76ZYSHCZxoAy2Zzup9uH1tiViyv+3PW8D4nUMVUGmKir4y3Ow
+	RveESmd8UyRmLQw0qxmdydoonVyTXaasDCWa97ZC2i4yAaXISR5cASfRTo8BKqO5QSRs/FdAnd4
+	EG+UHZg==
+X-Google-Smtp-Source: AGHT+IFmbGr9kZB05oV1EN/0KfR241wQsclfRn1B+/FEvNm78/Bf5RFw5+zsFio1fzhhJ8sSkqIJlQ==
+X-Received: by 2002:a17:906:730e:b0:ac4:4d2:3867 with SMTP id a640c23a62f3a-acad3499ff8mr901526366b.23.1744621296460;
+        Mon, 14 Apr 2025 02:01:36 -0700 (PDT)
+Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce7fdcsm883504566b.176.2025.04.14.02.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 02:01:36 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 14 Apr 2025 11:02:58 +0200
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 00/13] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <Z_zPQpyjZXzVxroB@apocalypse>
+References: <cover.1742418429.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Wenbin Yao
- (Consultant)" <quic_wenbyao@quicinc.com>
-CC: <jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
-        <mrana@quicinc.com>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
- <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
-Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fccb36 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=4veHE8ydySSEcrfzLuYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: mvqhVk7rKe0B7SZWuqgopOFZZvbLuKFs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=968 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1742418429.git.andrea.porta@suse.com>
 
+Hi,
 
-On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
-> On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
->> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
->> indicates the number of lanes to check for exit from Electrical Idle in
->> Polling.Active and L2.Idle. It is used to limit the effective link width to
->> ignore broken or unused lanes that detect a receiver to prevent one or more
->> bad Receivers or Transmitters from holding up a valid Link from being
->> configured.
->>
->> In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
->> to 1 will not affect the link width that is actually intended to be used.
-> Where in the spec it is defined?
-As per DWC registers data book, NUM_OF_LANES is referred to as the 
-"Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express 
-Base 3.0 Specification, revision 1.0.
-Section 4.2.6.2.1 explains the condtions need be satisfied for enter 
-Poll.Configuration from Polling.Active.
-The original statement is
-
-"Next state is Polling.Configuration after at least 1024 TS1 Ordered 
-Sets were transmitted, and all Lanes that detected a Receiver during 
-Detect receive eight consecutive training sequences (or
-their complement) satisfying any of the following conditions:
+On 22:52 Wed 19 Mar     , Andrea della Porta wrote:
+> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+> a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+> etc.) whose registers are all reachable starting from an offset from the
+> BAR address.  The main point here is that while the RP1 as an endpoint
+> itself is discoverable via usual PCI enumeraiton, the devices it contains
+> are not discoverable and must be declared e.g. via the devicetree.
+> 
 ...
-Otherwise, after a 24 ms timeout the next state is:
-Polling.Configuration if
-...
-(ii) At least a predetermined set of Lanes that detected a Receiver 
-during Detect have detected an exit from Electrical Idle at least once 
-since entering Polling.Active.
-     Note: _*This may prevent one or more bad Receivers or Transmitters 
-from holding up a valid Link from being configured*_, and allow for 
-additional training in Polling.Configuration. *_The exact set of 
-predetermined Lanes is implementation specific_*. Note that up to the 
-1.1 specification this predetermined set was equal to the total set of 
-Lanes that detected a Receiver.
-     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered 
-Sets should have detected an exit from Electrical Idle at least once 
-since entering Polling.Active."
->
->> But setting it to a value other than 1 will lead to link training fail if
->> one or more lanes are broken.
->>
-> Which means the link partner is not able to downsize the link during LTSSM?
-Yes, According to the theory metioned above, let's say in a 8 lanes PCIe 
-link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver 
-during Detect need to receive eight consecutive training sequences, 
-otherwise the LTSSM can not enter Poll.Configuration and linktraing will 
-fail.
->
->> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
->> port actually supports to make linking up more robust. Link can still be
->> established with one lane at least if other lanes are broken.
->>
-> This looks like a specific endpoint/controller issue to me. Where exactly did
-> you see the issue?
-Althouh we met this issue on some Modem platforms where PCIe port works 
-in EP mode. But this is not a specific endpoint/controller issue. This 
-register will be set to 1 by default after reset in new QCOM platform. 
-But upstream kernel will still program it to other value here.
->
-> - Mani
->
--- 
-With best wishes
-Qiang Yu
 
+since there has been no feedback for a while, a gentle reminder about this
+patchset. 
+Several patches have at least one Reviewed-by tag, with the exception of:
+
+- PATCH 5, 8: those are, respectively, the driver for RP1 clock and misc core
+  which have no major rework since the inception.
+
+- PATCH 9, 10: those are new patches, where the most relevant change is a
+  rearrangement of the dts include hierarchy to be flexible enough to support
+  both the dtb overlay approach and the monolithic dtb.
+
+- PATCH 13: just enables OF_OVERLAY config option. Some metric data have been
+  added to help evaluating the impact.
+
+Many thanks,
+
+Andrea
 
