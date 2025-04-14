@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-25825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3104A87FD5
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 13:56:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1F66A88004
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 14:10:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62CB03A4B4D
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:55:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4BE41893F4E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:10:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B0329AAF5;
-	Mon, 14 Apr 2025 11:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02D662BD586;
+	Mon, 14 Apr 2025 12:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="hkXw8muY"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Adt+S7Q5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48D7539A;
-	Mon, 14 Apr 2025 11:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286A529C34F;
+	Mon, 14 Apr 2025 12:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631769; cv=none; b=dZx/te/jr0ppfF5cd0UgHjzcYSLbhECA+zw7ZfhJ6VK8XYVgDGzcl2tTTCQGBB74qgLaFiba+7vemBVWjUMkEszTmjfofy4QmOnxLnbslaeJoMPj/99A59AyNW4PYGXOV0fNSxhC6CAWQikdHhCizinAPBScbA7XAonlOV10qF8=
+	t=1744632596; cv=none; b=cHxe2IWBYvciOO81NoB/HqYV6WAAYMu6pFZ1FYgoc3ItGTofvC20hK94JXGWWZOHBHNtn904+1N7dArNmrWsv+Uau5eMz68cH6XB/OXZGusG0a7nU57KbUdpJpxJP3NhycW5861Nso0XVrAD0t6YnCAMZjK/EBzKePvb+IH5EyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631769; c=relaxed/simple;
-	bh=HEMRU5ogTyYI/vOgZEsmrPMUZkbUYpcAVVYG0vTlpWI=;
+	s=arc-20240116; t=1744632596; c=relaxed/simple;
+	bh=3wFAQ0bfmajHT5gHApNJl6KfzdiirBoLJLZBwl7ntrs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=o127gXk4nMsQqxNiCgeDySHZp+g9qjmvMcPcrdG+5cYpGGoWO4CdTmmfT0gP/443jxS9poPQj6E+RvuFweyyPum3npwIZU09z4Gp68NkgbfWNe2J7qR9WVf/s2185DInd7x/DYf1PFvxh6n8haCbrUroVlF4u7yxfEBzCmti7Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=hkXw8muY; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=aEgFeHmd1P5QgI2vkbP8kHE5EpGEp1wK5CAyf4PFx20zwurdo0jf96aeVRnEjN1ONG55YHZIZiZ43Jj4nndOjCxCPm6jJhCbKCRbSVBvKJn19Ne9Cjj+LuTK8kQ/to7FxS4+XeK5Xp0+KfaalMLe5JuZW7NSRz6PUVqQ8z7XkOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Adt+S7Q5; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744631761; x=1745236561; i=wahrenst@gmx.net;
-	bh=OreeNdyrrGiGJumVjXwzjTBKuHbR9pl0eB7Dt3B4zzc=;
+	s=s31663417; t=1744632571; x=1745237371; i=wahrenst@gmx.net;
+	bh=Xp75qIMm57nPPVP8J/rsf6yDNuT8ofPVgHhiAuNSxeI=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=hkXw8muYvurpmWkA5D0R2aZZM3YLd+3hXbxIsxsEDGPzGa4moLFP7gBSVJBrqi+6
-	 Zp4Y2mpKIMypSStpHeqkWnUmkkroI5ydlmWUny94rpWm8YToANCnmU+6ixJwtrKrg
-	 IgvrWt1BJNSdZ9WvotQIyPU3Q8Dgc1Jl8WCBNPN6GEZa5yrO+egKUgJc9nJvnx5wk
-	 rKRSRVMCXLeW7GCqLUD+Nv1+IsW+DOsCsWrk4s61YlkLuo0vSrVhQXS7qLTuwVsPk
-	 y1sr7D3GalHtNvyGky+6uaDTv9IDoEnxQfI72MUhXOCs7uKStNxILoi2I6bd/4koB
-	 XYOpUs8aIr+PIDyd3w==
+	b=Adt+S7Q58ZFbuxAVqbEHCpygKTx6tn4q8QFotlb4nz9t3K9hHxvdOH/1pAT7pDKq
+	 7K00hQI/NjI8dhXowu96FesxpdRIAkVhl1AETvGYXKo7gqF3fv+Fwx4ND4ER/RD2y
+	 ELkGEIzv+5pCMk6VBKZbfg3Ix86aTtbSsWt/fENeELl+/i3HHem1d++0CE5u+KUhl
+	 NgqMqn4ICiQFQn6id9mrXwC7AMh+1c8O1Qe7YgMaeNSLE1uILdOvMmsERdUwLF/Jl
+	 +xl7Pcjbxqrt6LNfi0ot6A0mu+Wp3iTkvLGpZVMmJDlJOOShnLQsJH+YlHLKBL9pf
+	 Ly//gAj0bMnUHv2S/A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDQeK-1tuuEY2qgw-008QzD; Mon, 14
- Apr 2025 13:56:00 +0200
-Message-ID: <45c1a50c-2ecd-4201-85e5-9a0e94f06fa3@gmx.net>
-Date: Mon, 14 Apr 2025 13:55:58 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MXXyP-1tWtt73HQ7-00Jmb6; Mon, 14
+ Apr 2025 14:09:30 +0200
+Message-ID: <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
+Date: Mon, 14 Apr 2025 14:09:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,8 +58,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/13] arm64: dts: bcm2712: Add external clock for RP1
- chipset on Rpi5
+Subject: Re: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
 To: Andrea della Porta <andrea.porta@suse.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -86,7 +85,7 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
  Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
 References: <cover.1742418429.git.andrea.porta@suse.com>
- <7c26a0b52e00a39930ba02f7552abdd1be4c828c.1742418429.git.andrea.porta@suse.com>
+ <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Stefan Wahren <wahrenst@gmx.net>
 Autocrypt: addr=wahrenst@gmx.net; keydata=
@@ -98,70 +97,141 @@ Autocrypt: addr=wahrenst@gmx.net; keydata=
  f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
  V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
  aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <7c26a0b52e00a39930ba02f7552abdd1be4c828c.1742418429.git.andrea.porta@suse.com>
+In-Reply-To: <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:czG4GMQht2nXD2Mp++EOANKZEP+5pkXc4oz+r+gufql0lTqXjuM
- Y8+JfqD3AYyuaFqqm863fyxublyZoJgRCh2hj4D1WaeSDHF++0qxu2XBaNtajrRIOgOhxjR
- HtcYdQV1zN2Jl1MVmGY01Y2SH+UYmwZTcSOb0EW5MgLaCWrvbOYYPBZMsh66zeac9xZyqSm
- OrcgCaFCW2lDKA9iuuqdg==
+X-Provags-ID: V03:K1:jVwfn61L1l623hq7JXUK39FgY+Ke6mJ2vq3rv9zPlizsfdYXY7A
+ 2eFM7o4p/xMmoEYRWw3X5rZ9EwLs3HX0RNGwjh32MBVmJ5tPIWKJD3TZOSZ5mQ9ScVCGxhS
+ vZxFeauGQHcerGX4V2kn7p5gOHGCNFF+iuDo1OHP9HHq1BHKzBHpm8KosKpBNLrmbKyMqZa
+ ufvid/6nBIWqMTvIQqIYw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vEW4EQv+njU=;qowLx6dw0PwcUYvBP81aJOvYU0C
- KYT5EDL/HOu92YhV9xMyNbTJ4wt1vQpl5IGofiaK//7K6ebfVMhT7KeEGmvjSmRJnvjxGAvDu
- 10ybIOFv4Zh0KTE3YVN8By8HkzUM22tVeRWq6khQUmDNd2TZdyx7aGRuzWrR0RDWEWyegcYqk
- zNxe7JLbi7QSjgWq3nfk+yMnaiZgWsQddlXd4P9YaWjue0TR2XTc/Fie88FZAlqmVkb4F4ORH
- p06z3ni4fRK+3RpbZfH3ZUiAwd7OuGYVAf+Xdovm0GcaeQYtuF5AtD6NVAlpylvy6OXMNwxm7
- 7FldIrVkcuG+rGnebie+TyRp+gtS4s3U104JPkeJDm8T4aXkGwtlqcEaQtRaij0No41Wl4fFx
- ZGx19bM4Zaf6o3r3WqQrP1tqNlEIPvm1D6w+iWk64yJCbB3dJ8GPJ+TuNzY0OagHIgeYT2zi9
- k1N9MuEBNjGbZQ+FQqmc3KbAYHmXlieH9HfzGPKyOZwAC5LO2t/rcBgkeTmcT2B3zYnb7w35e
- Sas5NuiOa6MAUosm6+QK1e2ttQJN0Ff0ZSksLF/O8gIr64rqySbkPe774hduPKdaP98tbo+F8
- OnQTQxprcYzzxouOBDh4QpVrewBlu6XiG3pmIxuaSq74Ju48JLQlcLJnuqyPotnZk8tTwVmN3
- ZUFiNIV8pMRs/zuEjLoZjZHkhheI9vdMY4YwQj7JLG5JXHcElVym7e0ghjTppF8WOmpfC+PRe
- qTVT8agweSHBJ7HVXDWT3YIDKRGFwdVl2m/g4qeyWI57U/iXjTgqVZBn6kF07seaV8j7cRM6t
- 9o+zU2tRrGhtrNtAfDeBszDaa03vcO2zz8K/75daxwRuK08BnESJjIoKfaOis4Pn6WXdWdP4a
- KSggrOZg+Ekc/NOQhwat8wm2y24m7Wwrx+SrsNg6ykZGH7GitSzd+mnkgq+c6+oMAS3a0IMn6
- sqPiM1x06NryP4mmt72SiMNvcN8CON2SATlxRbTKF94XmAOGXmCwvlp5liET4kC001AhXFZk5
- KC3HZru1+5nmPEGNG86V+1gIqydAYkuP9Kgo/wyuAIVTH3cvG83pgPPqJZRDZrP/zvDoUGZ0w
- awceQ+GrwNcKwb/6u/vrIuyBsm8CxndYDSUa8eGYomMMSdBHWfHLa+/CIWDhakSyMlLg4R9B8
- yRdx2X3rHI9HbPVjoAPKmWPKwu1v1FZ4J3m3NGVdPQteyIu+uaTlBGn+ET59+AxlvgqizbtUT
- 7U5dlX554FaPxTELGFG5dfK2GyF3Z27N2a7NneRQ3kQxE8e1st2PCp0OC2b3vDtfxFW0utvqF
- BrFJNqYKdkP+mPdiRI1+AMSHEug3yBopu1iPt8M1C4fxeJO9ZCNE5cG+U0ZLpzeJCDyY3XBDe
- zNDPtAPBJbWOpnAkYoY5n1TMa/jV1GLb/O4EVxYuSk5CrMfpH8CeeUs8lLVOyaZpbhvWMemnH
- g54GcnHPTN1vXEIhXZ03o/FxBZrfUYuZnhVpPRbExq9W11E+d
+UI-OutboundReport: notjunk:1;M01:P0:tB7vyzX7o7A=;RW1rgnOFo0RixCKF/d2mYwqmzGx
+ gSFo/UeVvOCf8bVNC1Pj3NvNg4zJkY2004QcR9y+HC+L9+2uD13HLgztYw34Eqy/JQFtZnJSh
+ tsP1fuZth67d3KlO5JOyvYsSToFt2mGGZCPx/jhttn2z6otSqiviaOL0CjzN2I1vpxQpaib+e
+ HpTPgSz2QuMBb11T2VbJtGnA7hl9YwHqfL9VpD0cRn+E7HiSXxn/kg0AfwgOES61fERkhXxXX
+ N8CqWE4HHFISvUiC964Z8hB+AE5Gn3LwmQ4c2+FJeIOG6CPRjzlMjIWj10Ucncaj91yFH/p2y
+ CsjdMjb2SwMOP3LzZVzujsM2AaoFmLkGd0TMGhP2oRkMxMos/Vzg6/9kH5aFAPojtRI3weHgZ
+ mBKwKjhhpWuxjbBKH8Kw/TtEI+hArfK25tHFEmHM/xLZtODPYIEDRxCP0Ajz//YOHVbn2zXZV
+ GkcQzwL0Nr1DmTIC6TMM1I8FE2PRerSZS3/OIJxTUtjWq6kWunHUzak5KymWS5qLSHPp/joxD
+ V1s7ZzdV53RFNVC4eEJxNeVyPUdoL02WLzuMAYcJ4rEoxOO6LCSM1eqiNGKy+vB56rQQt8p0+
+ YaIhNK4URPD4bPcQzCZuGVzUKItTkxWZo+uqd6ZFNBjmrwWhQzh8g5eYZmGuUZVkq2wggYGUp
+ kdpPgEKHa58d8XSwi9ZK3Rz4NKk9Gqq4YHaKljiEgFF856gzEvLaAT28quohPIz3Qk8s7elrs
+ 721i8oM45qWxYxeoe8nXLalgEUfdajTRc2lsI6vZDKNPzmI2tm0W5iXXznsPLnuyzuFHlAmh/
+ Nq1uEtn80MHmaXPa9jluhzG2TJvd9UH6RRX4iDWvRQPkeIVuDX9pxZ1D4rY0eNUO2r4BkmTo3
+ VIFvwwPS6WNJUnXOJsS225ihQIxBao3xVA8pzL9pFpKdmA56O0RiAdfLGRThRxbeptsHFq3ag
+ sQXdvxBQWfpeUjlT0xYEn7EDFjlsCBSeyzGSvrrbGnjPvaeqaHGMsmr+Bh4gUtlHfy5FihEbq
+ Ydud5f8o1RCCbMtl1JFKrbfb/KPKF0IOLCbySmGELYixS75meuWv+UzBksXhIWSZJJxPwk+AK
+ S/KvqBqKiUBQWMkbBy6R9Yl+Bi9LjmWwnQhnJajIp1ksZU+I+q6CKi2FwRJuHr1BcZ5/OcY6n
+ Xg0mmgKkb7028ajltzj5lHq3xoa6vy58CfZyxMRSj5q46oQNCmFdJbc5ijAv0Laiheg01kcuB
+ PgKlduTSecrLH5OQpUT+C98gY7zi0EeHf8S2hE2wnL1RwP4ddWOHoeomzOF8EzyxeLSXwA5C+
+ B2x/genRqFN6zZMzhsFkcVtBuozi3z6AI2DP92pkRH1wbAZpWxEoxf1b8xYZnVQ4og66l02y/
+ rhyKF2O/8nZYHtPRC2ORjtO1vRVK9m/Dbdo5E3aM25e3tya4bp/Gk1PgQuDefWuNp2Ym2Bos9
+ 1dHlIJr5UGJta6dClhb240M3P0aNwZQRADOsrn9mmblCnJoFT
 
 Hi Andrea,
 
 Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz=
-.
-> Add clk_rp1_xosc node to provide that.
+> RaspberryPi RP1 is an MFD providing, among other peripherals, several
+> clock generators and PLLs that drives the sub-peripherals.
+> Add the driver to support the clock providers.
 >
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-i'm fine with the patch content, but I think this is necessary before
-Patch 9 is applied?
 > ---
->   arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
->   1 file changed, 7 insertions(+)
+>   MAINTAINERS           |    5 +
+>   drivers/clk/Kconfig   |    9 +
+>   drivers/clk/Makefile  |    1 +
+>   drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 1527 insertions(+)
+>   create mode 100644 drivers/clk/clk-rp1.c
 >
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm=
-64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> index fbc56309660f..1850a575e708 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> @@ -16,6 +16,13 @@ chosen: chosen {
->   		stdout-path =3D "serial10:115200n8";
->   	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 896a307fa065..75263700370d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19748,6 +19748,11 @@ S:	Maintained
+>   F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
+>   F:	drivers/media/platform/raspberrypi/rp1-cfe/
 >
-> +	clk_rp1_xosc: clock-50000000 {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-output-names =3D "rp1-xosc";
-> +		clock-frequency =3D <50000000>;
-> +	};
+> +RASPBERRY PI RP1 PCI DRIVER
+> +M:	Andrea della Porta <andrea.porta@suse.com>
+> +S:	Maintained
+> +F:	drivers/clk/clk-rp1.c
 > +
->   	/* Will be filled by the bootloader */
->   	memory@0 {
->   		device_type =3D "memory";
-
+>   RC-CORE / LIRC FRAMEWORK
+>   M:	Sean Young <sean@mess.org>
+>   L:	linux-media@vger.kernel.org
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 713573b6c86c..cff90de71409 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -88,6 +88,15 @@ config COMMON_CLK_RK808
+>   	  These multi-function devices have two fixed-rate oscillators, clock=
+ed at 32KHz each.
+>   	  Clkout1 is always on, Clkout2 can off by control register.
+>
+> +config COMMON_CLK_RP1
+> +	tristate "Raspberry Pi RP1-based clock support"
+> +	depends on MISC_RP1 || COMPILE_TEST
+> +	default MISC_RP1
+> +	help
+> +	  Enable common clock framework support for Raspberry Pi RP1.
+> +	  This multi-function device has 3 main PLLs and several clock
+> +	  generators to drive the internal sub-peripherals.
+> +
+>   config COMMON_CLK_HI655X
+>   	tristate "Clock driver for Hi655x" if EXPERT
+>   	depends on (MFD_HI655X_PMIC || COMPILE_TEST)
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index bf4bd45adc3a..ff3993ed7e09 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+=3D clk-plldig.o
+>   obj-$(CONFIG_COMMON_CLK_PWM)		+=3D clk-pwm.o
+>   obj-$(CONFIG_CLK_QORIQ)			+=3D clk-qoriq.o
+>   obj-$(CONFIG_COMMON_CLK_RK808)		+=3D clk-rk808.o
+> +obj-$(CONFIG_COMMON_CLK_RP1)            +=3D clk-rp1.o
+>   obj-$(CONFIG_COMMON_CLK_HI655X)		+=3D clk-hi655x.o
+>   obj-$(CONFIG_COMMON_CLK_S2MPS11)	+=3D clk-s2mps11.o
+>   obj-$(CONFIG_COMMON_CLK_SCMI)           +=3D clk-scmi.o
+> diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
+> new file mode 100644
+> index 000000000000..72c74e344c1d
+> --- /dev/null
+> +++ b/drivers/clk/clk-rp1.c
+> @@ -0,0 +1,1512 @@
+> +// SPDX-License-Identifier: GPL-2.0
+...
+> +
+> +static int rp1_pll_divider_set_rate(struct clk_hw *hw,
+> +				    unsigned long rate,
+> +				    unsigned long parent_rate)
+> +{
+> +	struct rp1_clk_desc *divider =3D container_of(hw, struct rp1_clk_desc,=
+ div.hw);
+> +	struct rp1_clockman *clockman =3D divider->clockman;
+> +	const struct rp1_pll_data *data =3D divider->data;
+> +	u32 div, sec;
+> +
+> +	div =3D DIV_ROUND_UP_ULL(parent_rate, rate);
+> +	div =3D clamp(div, 8u, 19u);
+> +
+> +	spin_lock(&clockman->regs_lock);
+> +	sec =3D clockman_read(clockman, data->ctrl_reg);
+> +	sec &=3D ~PLL_SEC_DIV_MASK;
+> +	sec |=3D FIELD_PREP(PLL_SEC_DIV_MASK, div);
+> +
+> +	/* Must keep the divider in reset to change the value. */
+> +	sec |=3D PLL_SEC_RST;
+> +	clockman_write(clockman, data->ctrl_reg, sec);
+> +
+> +	/* TODO: must sleep 10 pll vco cycles */
+Is it possible to implement this with some kind of xsleep or xdelay?
+> +	sec &=3D ~PLL_SEC_RST;
+> +	clockman_write(clockman, data->ctrl_reg, sec);
+> +	spin_unlock(&clockman->regs_lock);
+> +
+> +	return 0;
+> +}
+> +
+>
 
