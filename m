@@ -1,317 +1,317 @@
-Return-Path: <linux-pci+bounces-25828-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25829-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58381A88041
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 14:19:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CE69A8804B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 14:23:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 179043ACE05
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:19:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49DC6189546E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCAF25A2AB;
-	Mon, 14 Apr 2025 12:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACE3286A1;
+	Mon, 14 Apr 2025 12:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="Ay4zaMjh"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WKsSK+Km"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C14F29615F;
-	Mon, 14 Apr 2025 12:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633193; cv=none; b=KZn3gyBaPnHU0vUhnElWYQEwjzIbtdxDiDTn1ECHeL1jgLqsZs0E1mCPJyEAbbZQX9E6kAkixlcil7H81HHl4Mqo6C6+/QZJKJVW+enUdda9/H1cd/9mWIEkxRFKLcF2THaEzgOmvKYs6GmSiVzTLGYpVm3GsuDvNvJjznz7mDs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633193; c=relaxed/simple;
-	bh=0ArJpkKXAnnNusm2G/IQTI+WfRbsZM6rKFCoaOIJLQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4Tfn8UgIbEDBo0OLknIJT9IDJhNvpTR2IJ8RwgVRm5UgDBstu7rXc4UaOo5QvIlbAdEJy63Zrh2a3u9t2hkhyZG5EF2bNugW/zHaJpncKKcgmphIpckdAsxhnN3iU43OdKpMjMIopPq4tALvMo+3QPYpAN3pDfY0zhT0oRZCuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=Ay4zaMjh; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1744633178; bh=0ArJpkKXAnnNusm2G/IQTI+WfRbsZM6rKFCoaOIJLQk=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=Ay4zaMjhKcVaCuR2bWHhdjv7qPofHeJmTGXyzFpn+143OZpE20xjF7+z7aRUp/b+A
-	 SuAi/1AJTH43Dxoy3lbfOvKRwmHwBoJYoCcvVqDTEkEdD6sKnbNmi5vDAmapwazSgL
-	 p2PG96B1tBjLY9BNewzZB4VMQ0bEOJiJ7Q+qODOs=
-Date: Mon, 14 Apr 2025 14:19:38 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Igor Mammedov <imammedo@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-Message-ID: <tuhhms3jfcbgzzgmxt7ghvhp5zoh56ue2ikvge2kdhsudnpoon@elmy6yymd6bf>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Igor Mammedov <imammedo@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net>
- <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com>
- <6612c4d2-2533-98ef-7c89-f61d80c3e3e2@linux.intel.com>
- <5eb8fd42-b288-4ecb-ae0e-177904cc0a14@roeck-us.net>
- <c34c6dc2-5ab2-1a81-3ba4-b3bc2c016945@linux.intel.com>
- <nb4knp52jylojmj3jsvvgq2dsbn3srruxmkqfuto2k3hv3fnqs@6rkqgdved6gi>
- <9c9d5aed-ae10-f590-3e59-34234d4d8f7d@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B941E505;
+	Mon, 14 Apr 2025 12:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744633411; cv=fail; b=R2n/oDn5/AsQA7ou8vhl+G10cAoyxPQSoYS8+7TwR+08DSGeUR9ioqs22/dcLG+Ov6BllN3gpGCgb0BYlcFmMssQAtRJ/z1ZhE1mqOnIzq950EbGTSLpVYJ/+mzc0rufiu2cLv0sfc4dXbIvJdBZysbxznkKF6wkQF0WbFeJeLI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744633411; c=relaxed/simple;
+	bh=8+NpMNCNWvzcCwl9jGSZ3tWskbIsKZtXhNlCznjssDY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OPtcSDsbkrtLwa6rklEtJdeCxFvZVDnIdYm7/8mzxClXanONJqZk1sBIW5L2KPAi2BJ46YkBo8twy8Ybn5a4JTJ+LEbOjIfVo5AbuvX/WNmL3MC6CG0dHzQU87WIxBzu1XWspaqe+47CtaHmuDqtGnJizun0+LXh4kCyqmq7rpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WKsSK+Km; arc=fail smtp.client-ip=40.107.236.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jwElEDR4G75QJDpYygOe+InysMaid8Oge6nJ0agAiimR2h3Uj7RM3OiZJ+tVqEuFfS5f/K99ebL2uT5HGoC7YNPeGhPgO/Xm5vGFI3P0+xd4gyi6hcVYENoXrlFtYLNyOCnjiyFD+JMetjvCsEifvnhrMl/gqCvgicwUODIrfq0MX2ShLohG9GFrhDWJbXBOEqvQAFecDslVA4iZuOcIqjMgaQnI/qKHSnpjc8UnEgLu+8tIRywrrjcUyHg5wOJ38ccA8Oa9/tpD94OL9u5Dr2UAYxPr7iA/31NCA2qf4OlqzU6BiUTEwpWmIXsUJ8Am/PrGkbaFveeFAlhyRUD9zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8+NpMNCNWvzcCwl9jGSZ3tWskbIsKZtXhNlCznjssDY=;
+ b=qPC1s6/e81r5QvPyummMSnX+pA5o6055hUiucwNjwknKBn4olFqQECLUPhfzFC5u/l0Kw8BQrcXY9BVMo1dRjFNMyapP/92peSqKoqHnPT+LZG7NfleBiJUcT8WanDGDs58uVoa+G4ah+5sbBXPwzFcX4yonJ7kugUnEZ2uQcAP7pO+WjglPFN7jTeZkbqyfdc6iG0CfpGr1QeuGZ3Zjd65xmZOHAWZLjaRe/HUire1jPKgSRuXf+mwuuPviUsdX/kc+0iO+W1cggmhq6xOuV3Xwk+vX4yDzqka5dmz3CK1wElnMAqMrRFfKk5wHHfOYtV7dJYmm4y6kTiMQWGtt1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8+NpMNCNWvzcCwl9jGSZ3tWskbIsKZtXhNlCznjssDY=;
+ b=WKsSK+KmZ9k6IJDCEOCrV7nJ749nqNxY/9N7S5W1f9i0ZCuIkz9xV+n6lslISHrCCyP0keWYicsf2TtXWVgPzP6qcQ++LPJGqn/GA19xl22656E5/N/TQUFaN6WpU26N58COWvcL5mrqiuhB9nr+3DpLZgLTnxZs0TZ7dPyWI5o=
+Received: from IA1PR12MB6140.namprd12.prod.outlook.com (2603:10b6:208:3e8::16)
+ by IA1PR12MB6210.namprd12.prod.outlook.com (2603:10b6:208:3e6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Mon, 14 Apr
+ 2025 12:23:26 +0000
+Received: from IA1PR12MB6140.namprd12.prod.outlook.com
+ ([fe80::92c9:cc21:f1dd:abec]) by IA1PR12MB6140.namprd12.prod.outlook.com
+ ([fe80::92c9:cc21:f1dd:abec%7]) with mapi id 15.20.8632.036; Mon, 14 Apr 2025
+ 12:23:26 +0000
+From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
+	<thippeswamy.havalige@amd.com>
+Subject: RE: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add `cpm_crx`
+ and `cpm5nc_fw_attr` properties
+Thread-Topic: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add
+ `cpm_crx` and `cpm5nc_fw_attr` properties
+Thread-Index: AQHbrOyiG1HeLApj8U6pHK3ZPQFrqrOivGoAgABRrwA=
+Date: Mon, 14 Apr 2025 12:23:26 +0000
+Message-ID:
+ <IA1PR12MB6140D67181ED0003799228DACDB32@IA1PR12MB6140.namprd12.prod.outlook.com>
+References: <20250414032304.862779-1-sai.krishna.musham@amd.com>
+ <20250414032304.862779-2-sai.krishna.musham@amd.com>
+ <20250414-naughty-simple-rattlesnake-bb75bb@shite>
+In-Reply-To: <20250414-naughty-simple-rattlesnake-bb75bb@shite>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=16f878da-984d-4775-8ccb-8112f5bc9302;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-04-14T11:54:27Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR12MB6140:EE_|IA1PR12MB6210:EE_
+x-ms-office365-filtering-correlation-id: 00305e43-7789-4e78-8591-08dd7b4f2832
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?L213UWdHRXlxQzZCNXRLbjgrTWloUEthOE1aOW0vVWVleDBTWTJqM2Uyc2o2?=
+ =?utf-8?B?UWE5dC9ydW5GUFY5UDF3UW0vMENEdWR4UFlLLzZES3ppRUJHVmNWVUxqbzBN?=
+ =?utf-8?B?aG1xL3QzNkh2ay9VZ29DR05qbnVNcEFodklKQWIxQ1lvTEFtUnFTSUplRUNx?=
+ =?utf-8?B?dlJYQmlJK28wVTh5OStsZEVPd1QxMkJkTHJPREszRmk0clFlMkpmc0YzSnNF?=
+ =?utf-8?B?cjFZWTJyRjY5eitvcE9ITFRkRTZiNWxqQjhEYXZkcHVuTHhxYzd1SU9Ja3pJ?=
+ =?utf-8?B?eHJnVzBjWXIvcmczL3BYSG0xU25OUHNlWUZJQUVETFI1dkQ4aXMwTmRRN0F0?=
+ =?utf-8?B?bVJLM0M0QXI0UEc3UTI3S0YxVjAyRkJybFdEdHpPa0JhUktiSm5YNE1mOTJW?=
+ =?utf-8?B?MDN2Y3FYSCsyZ0lUUGFRNmlEbVlndXkxSDBlMWpFdk84M2tESHV6eGI2VFZO?=
+ =?utf-8?B?bElsUW4rRG13RW1tb1RwVTIydXlEWFFITmFFRk8yRVdxWTByNXREdE5hR0JD?=
+ =?utf-8?B?bnAzb2hmYjIyaE0vL3ZuaFdkZm1TTGJ6ZVlINWRMN29BbXBMUXpzUjJNZk02?=
+ =?utf-8?B?T2RaVEtCa2hxYnBVSm1kcUNFNkcwUnZocTkyazJrSHBOK1M1dFNsbU8zcS9R?=
+ =?utf-8?B?dUdVTVpIYjJzTExRT2cvUS9XZmtONElYcm5IM1MvZmRaTFBWais3YmhSZm80?=
+ =?utf-8?B?YUFaRlFDZXVJNkIvTWJyRVBER1JOWGJTWkhteHZjWklsVjA1UkFyeHFKNmxo?=
+ =?utf-8?B?aVdrZ25sdWRRN0VmaldWTWVhOXdGcDNxaFNCL2xRdXNGajkzc25jdWlUSGVi?=
+ =?utf-8?B?ZHZmbUtsSzY4TjhlUTN2OUtCYjRzR3hwaUdubVBMVVVIaW14WXZwcDNTMWJB?=
+ =?utf-8?B?aXlTWSsrTE1xYlVrZUFTZVRJajFQcTcyYnVnaWxycEhhZDd6ZWVTMGkzVFpG?=
+ =?utf-8?B?YXdlWGl6WVNmS0gybW5xVFo1UnF2ZzNsVVRXZjZJOEdHZTVncm1FRWhFbXJC?=
+ =?utf-8?B?YjFNM29aUEcrUTlmTXN3UW54eDRXV1p0aUVHbzAzYWJ6aGp3RXBuVEEwOGJl?=
+ =?utf-8?B?MWxRd1ZWdGo4Lzh6OVJUalozby9VY3Y0RkgyNGpFS0xCTEozUmliYzRZZE5l?=
+ =?utf-8?B?WTdQMUxBRVdtN3dMZit5R211Y2kzdGtBT3ErZWJha0JMT1RUWk1aY0FyRXFF?=
+ =?utf-8?B?elI5dWg4UG9lWGNjOWttNEJlTEVvaEVEUVJCbVhFZVc3RitUdXFlNkU0cmVv?=
+ =?utf-8?B?ZDdibWFGWXNoK1ErWlowczNFVjJtczU5WlE0VDZLS2F4SzRCR0p6UzRNZFlN?=
+ =?utf-8?B?RmVJQzc4T3RDM1U5SjJlNVRZUE5JYlhBNTlwTktMVG91U3dWUjcwYkNoc0Rt?=
+ =?utf-8?B?MmxOeE1kT01pU1Y5bDRhTW1GMUFkNitNN09tb25XQkJIZ0toNWdWWmRGR0Q3?=
+ =?utf-8?B?U3VtS2VpK1dXQmNCdEZFeStRQUtnb0dabnRYZUYxUjFwcmlWVVZTcDdhZzI1?=
+ =?utf-8?B?RDRjQlVDSk9ZZjRGNzFFYWx5WUZETk9KQVJZTWZnZWc5QXErdmRzNDlRc01w?=
+ =?utf-8?B?ZmFtNVBWTTBvTDBJOXJtNDYvcnVQSlNCbGZvK0ZUenp6aTdNYmxzb1VJdHRu?=
+ =?utf-8?B?OXJaZ25KbnJvbHozbS9MVk5zTitwNUNYT2NIUWEwYUtHQTJDbjhweXQyc0M4?=
+ =?utf-8?B?dFZwTklKdnk1KzcxTFZnYjVJd3RZYS9ReEhhUGM3ak5FMk5XcTdHZ2psYk50?=
+ =?utf-8?B?cmVjUlVtMXN0NEs0M3N0V0V5eTU5c0tvdGZWMEcxcndEY0lYVW9mRk55Tnp4?=
+ =?utf-8?B?Q1YvREpyZzVlZ2JWUjhLUm1LTzdtUmxWYm1GTFl1Z0VaU3FlVm9qN3pkY1l6?=
+ =?utf-8?B?dWJscjZDWXd2MkN2ZWlmVmZUT3Z2ZXVyNkNPeG9rNitaZkN4dExnUmxLUWp0?=
+ =?utf-8?B?NUNGTlUyN3drdklXTFVJNlJHNE02TjdUdFozUEtxdU1HQkQyakQvZmFlZi9h?=
+ =?utf-8?B?aXJ1ZnFaMzJ3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6140.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cDVYblFvOUJpcFlTTk5vWjVYNEJEbFk0MVVDaXhPRXB3R0REWTZGb25TS3VX?=
+ =?utf-8?B?bitOa3FCYVEybzducjdJY244c21zUW5JYlJqaVRieEJSeHNtaVhkUXpsRk9J?=
+ =?utf-8?B?bW5rMG9IeTVGRjBDM0NOVVBVM1F0WkYvR0xoS3JDSXV5Rm8zMGRhSmdpajFp?=
+ =?utf-8?B?a3FiVy9YVVQ5QnZUK2pHUVNvRTV1UVk5YzdzUFJBWjAyay9JQm0rRUhBNXFO?=
+ =?utf-8?B?TCtNSnNtSmhrK1VwNTYrMEo2ZXFGSEFvQkdOTVJ0NFFsNTVZSlNMTGswUGxy?=
+ =?utf-8?B?M0dHWkt5bCtISnBIZVlDVXVoaTJrc3NWQ2VRZ0VEaVU5empUVTJoQU1FSCtW?=
+ =?utf-8?B?dVJrY3ppcEh6RzJJd2xkL1hLaktQRFJYRHpWT0c4VWZmUklQMGd5WWVacThJ?=
+ =?utf-8?B?dWRLdXExZU9FVWVkb2RwcDBpYW1kUy9YRGg1U211d2FQM3RPL0lwNjExM3k4?=
+ =?utf-8?B?U1hTNTBXcWFVdUppSEpOWWJISDdkbXp1T1J0bkxFMUhPd3FxZ1RyeU9GUy9x?=
+ =?utf-8?B?Mk9JVWZaN3Z0U0YyTVBFUGVKamlIejhDS25qSENqYmtCelcxekpPRmRyVWFN?=
+ =?utf-8?B?WTRobncrdStoVG02SzhtSThZYUFEbjA2YVpWa0FhT0Z0U241QjV1bWtGNmtK?=
+ =?utf-8?B?UFNYVlJnczdldEIrcENncDBpNldOY3Qva2xab3VrVWIxVjNvUXZuL01MMzVr?=
+ =?utf-8?B?bml5Ri9mTTQwOFRVMmY4bm52UVFqVndqaDc2a3l2K0lJb210K05oaUFEUzRx?=
+ =?utf-8?B?LzEvUVBSQjUrNlkxZ0J3Y0tCZWQ3Tmt1TWJ2R0VobE5kR0ZCQUdBL0pVQzJ6?=
+ =?utf-8?B?UlNPcGpweFF0ZDFjY0N3alNpN1Nlc0lCWTVkVmFFTE9uVGhWZXc3dThlaGpv?=
+ =?utf-8?B?UUtOV0dXZXJFUGpWcElLVWYyMklPdW5rNFhHMUdUK0tETk9BemIwY1lYWVY3?=
+ =?utf-8?B?MENOL1ovNWc0Q2FFVFRoeUtMVTJDSHE2V0NhcExId3JCZ2lXUFM1NFlYSmtJ?=
+ =?utf-8?B?eERSMExRUGxya1REakVSWFdYbWo5aExzRDVzRC8vdmlWSHN1N2JVQ3pkUUJq?=
+ =?utf-8?B?Q2tUbFJIY2U5OUl0SmVnaE52bEtRWlpiTE5BN1ZoVGVNVHdxOW52T2t2TmVS?=
+ =?utf-8?B?U1hjR3VoWUdYWU5uM0w0c2RZaWlVSTRSWU45dUNVbWYvNEdlbnRuUGNNVVpG?=
+ =?utf-8?B?TTRrZlFtNHdEalYzUThrTE44cGRTeUZZRmZrRWpuSHA1V3AxY1lybTlFdDN4?=
+ =?utf-8?B?ck55R3dielhwc1RWSWhpNlA2S0k1MXh6M0lxcG1HMXNrQXlPZlowUzNZTVRB?=
+ =?utf-8?B?emdON0VGZ3JOTVdRQ0R0V3B5WU5rNmlrVmk5ZTBEU3dyNkJqbnM1bTljUktR?=
+ =?utf-8?B?MUE1elVIK3hRU2h6bHJPZmNIbC84eUJWc01qTEZPbFFpd0lhMDBDRkpOWENT?=
+ =?utf-8?B?aXQvT2luVlpqamk4eHJYYlpaNnMwUm9WeUZRb1BzMUd6dy8vOGRDbS9ZQS8z?=
+ =?utf-8?B?U21uNDU3M3ZTVUlOc2Q1ekJPM09wVjVjRnUyM2lVeGxXMExUVlROai9TRHNC?=
+ =?utf-8?B?L0hrSVJseFE0MGdJbVQrVjVQNkpKcklmclJ0VFd1b0pQQTJqb0tYL1dDNGw0?=
+ =?utf-8?B?Um1FL1JVK1BWVVZlcVR6Zy9DVlRwSklTaDlCS21jWTRES0hvYmwyeVdaQmw4?=
+ =?utf-8?B?T0VKekh0eEM4MUNGeTNPUm1scGF6Slc4SmUyOUdYNjVNbnRwbVRsSi81WUdr?=
+ =?utf-8?B?RHd3N3E1bHBwaHd4Zks3MVhXcG04YzJlR1JVVHFIYnhVVWFLa0pDYU5WeGFZ?=
+ =?utf-8?B?Nmg1V0JGSkEzY0xVd1o3bTVRSmVBaitEQnd4dlEvK1VlaXA5aFkrWWVHdHlU?=
+ =?utf-8?B?SFpwcG1PK2J4YXhYeEVrRlB4NnVoWGpKK2pSRlRHYkJBbGhzYW1GWkdWVHlI?=
+ =?utf-8?B?NWJkbVJLdXoyMzJyV2pmOHJPckN5emlSckZoY08rcEtlWmNvK08yd3ZPZUFC?=
+ =?utf-8?B?U0hOaWJmSkI0Zy9pQkNGMlI5aEQrK0NRaE9LMXFHSlovNlExeTVvS2hNZ2gz?=
+ =?utf-8?B?QXlxV0hXMXE5Wm5Mb1UxRlJzSTN5VDd4OWsxb0cwZkFjS1V2aDluUTdsbTI0?=
+ =?utf-8?Q?43BY=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c9d5aed-ae10-f590-3e59-34234d4d8f7d@linux.intel.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6140.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00305e43-7789-4e78-8591-08dd7b4f2832
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2025 12:23:26.3279
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KLDkBjzaTkelduuPXc4Fy7HLPCKhurzvCgydQjGMlPjweLiN8KRijWqDF+lbiRxK5FkaRmdz2zM0iCuZzf1oEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6210
 
-Hello Ilpo,
-
-On Mon, Apr 14, 2025 at 12:52:15PM +0300, Ilpo Järvinen wrote:
-> On Fri, 11 Apr 2025, Ondřej Jirman wrote:
-> 
-> > Hello Ilpo,
-> > 
-> > On Tue, Apr 01, 2025 at 08:38:48PM +0300, Ilpo Järvinen wrote:
-> > > That log wasn't taken from a bad case but it doesn't matter anymore as I 
-> > > could test this with qemu myself, thanks for providing enough to make it 
-> > > easy to reproduce & test it locally :-).
-> > > 
-> > > The problem is caused by assign+release cycle being destructive on start 
-> > > aligned resources because successful assigment overwrites the start field. 
-> > > I'll send a patch to fix the problem once I've given it a bit more thought
-> > > as this resource fitting code is somewhat complex.
-> > 
-> > BTW, same thing here on a different SoC:
-> > 
-> > https://lore.kernel.org/lkml/hrcsm2bo4ysqj2ggejndlou32cdc7yiknnm5nrlcoz4d64wall@7te4dfqsoe3y/T/#u
-> > 
-> > There are kernel logs there, too, although I don't have dynamic debug enabled
-> > in the kernel.
-> > 
-> > Interestingly, bisect pointed me initially to a different commit. Reverting
-> > it helped, but just on one board (QuartzPro64).
-> 
-> Hi,
-> 
-> Since you didn't mention it, I guess you haven't tried the fix:
-> 
-> https://patchwork.kernel.org/project/linux-pci/patch/20250403093137.1481-1-ilpo.jarvinen@linux.intel.com/
-
-This patch works. Thank you. One difference compared to 6.14 that I'm noticing
-in the kernel log is that "save config" sequences now are printed twice for
-unpopulated port. Not sure if it's related to your patches. Previously it was
-printed just once.
-
-Kind regards,
-	o.
-
-rockchip-dw-pcie a40800000.pcie: PCI host bridge to bus 0002:20
-pci_bus 0002:20: root bus resource [bus 20-2f]
-pci_bus 0002:20: root bus resource [io  0x300000-0x3fffff] (bus address [0xf2100000-0xf21fffff])
-pci_bus 0002:20: root bus resource [mem 0xf2200000-0xf2ffffff]
-pci_bus 0002:20: root bus resource [mem 0x980000000-0x9bfffffff] (bus address [0x40000000-0x7fffffff])
-pci_bus 0002:20: scanning bus
-pci 0002:20:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
-pci 0002:20:00.0: ROM [mem 0x00000000-0x0000ffff pref]
-pci 0002:20:00.0: PCI bridge to [bus 01-ff]
-pci 0002:20:00.0:   bridge window [io  0x0000-0x0fff]
-pci 0002:20:00.0:   bridge window [mem 0x00000000-0x000fffff]
-pci 0002:20:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-pci 0002:20:00.0: supports D1 D2
-pci 0002:20:00.0: PME# supported from D0 D1 D3hot
-pci 0002:20:00.0: PME# disabled
-pci 0002:20:00.0: Adding to iommu group 9
-pci 0002:20:00.0: vgaarb: pci_notify
-pci_bus 0002:20: fixups for bus
-pci 0002:20:00.0: scanning [bus 01-ff] behind bridge, pass 0
-pci 0002:20:00.0: Primary bus is hard wired to 0
-pci 0002:20:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-pci 0002:20:00.0: scanning [bus 00-00] behind bridge, pass 1
-pci_bus 0002:20: bus scan returning with max=21
-pci 0002:20:00.0: ROM [mem 0xf2200000-0xf220ffff pref]: assigned
-pci 0002:20:00.0: PCI bridge to [bus 21]
-pci_bus 0002:20: resource 4 [io  0x300000-0x3fffff]
-pci_bus 0002:20: resource 5 [mem 0xf2200000-0xf2ffffff]
-pci_bus 0002:20: resource 6 [mem 0x980000000-0x9bfffffff]
-pcieport 0002:20:00.0: vgaarb: pci_notify
-pcieport 0002:20:00.0: assign IRQ: got 148
-pcieport 0002:20:00.0: PME: Signaling with IRQ 157
-pcieport 0002:20:00.0: AER: enabled with IRQ 158
-pcieport 0002:20:00.0: bwctrl: enabled with IRQ 157
-pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-pcieport 0002:20:00.0: save config 0x04: 0x00100507
-pcieport 0002:20:00.0: save config 0x08: 0x06040001
-pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-pcieport 0002:20:00.0: save config 0x10: 0x00000000
-pcieport 0002:20:00.0: save config 0x14: 0x00000000
-pcieport 0002:20:00.0: save config 0x18: 0x00212120
-pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-pcieport 0002:20:00.0: save config 0x28: 0x00000000
-pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-pcieport 0002:20:00.0: save config 0x30: 0x00000000
-pcieport 0002:20:00.0: save config 0x34: 0x00000040
-pcieport 0002:20:00.0: save config 0x38: 0x00000000
-pcieport 0002:20:00.0: save config 0x3c: 0x00020194
-pcieport 0002:20:00.0: vgaarb: pci_notify
-pcieport 0002:20:00.0: save config 0x00: 0x35881d87
-pcieport 0002:20:00.0: save config 0x04: 0x00100507
-pcieport 0002:20:00.0: save config 0x08: 0x06040001
-pcieport 0002:20:00.0: save config 0x0c: 0x00010000
-pcieport 0002:20:00.0: save config 0x10: 0x00000000
-pcieport 0002:20:00.0: save config 0x14: 0x00000000
-pcieport 0002:20:00.0: save config 0x18: 0x00212120
-pcieport 0002:20:00.0: save config 0x1c: 0x000000f0
-pcieport 0002:20:00.0: save config 0x20: 0x0000fff0
-pcieport 0002:20:00.0: save config 0x24: 0x0001fff1
-pcieport 0002:20:00.0: save config 0x28: 0x00000000
-pcieport 0002:20:00.0: save config 0x2c: 0x00000000
-pcieport 0002:20:00.0: save config 0x30: 0x00000000
-pcieport 0002:20:00.0: save config 0x34: 0x00000040
-pcieport 0002:20:00.0: save config 0x38: 0x00000000
-pcieport 0002:20:00.0: save config 0x3c: 0x00020194
-pcieport 0002:20:00.0: PME# enabled
-
-
-> -- 
->  i.
-> 
-> > And this is iomem:
-> > 
-> > 0010f000-0010f0ff : 10f000.sram sram@10f000
-> > 00200000-e2bbffff : System RAM
-> >   02010000-0474ffff : Kernel code
-> >   04750000-0498ffff : reserved
-> >   04990000-0508ffff : Kernel data
-> >   daa00000-e29fffff : reserved
-> > e2bc0000-ecbbffff : reserved
-> >   e2bc0000-ecbbffff : reserved
-> > ecbc0000-efffffff : System RAM
-> >   ecbc7000-ecbdffff : reserved
-> > f0000000-f00fffff : a40000000.pcie config
-> > f0200000-f0ffffff : pcie@fe150000
-> >   f0200000-f020ffff : 0000:00:00.0
-> >   f0300000-f03fffff : PCI Bus 0000:01
-> >     f0300000-f0303fff : 0000:01:00.0
-> >       f0300000-f0303fff : nvme
-> >     f0304000-f03040ff : 0000:01:00.0
-> >       f0304000-f03040ff : nvme
-> > f2000000-f20fffff : a40800000.pcie config
-> > f2200000-f2ffffff : pcie@fe170000
-> >   f2200000-f27fffff : PCI Bus 0002:21
-> >     f2200000-f220ffff : 0002:21:00.0
-> >     f2400000-f27fffff : 0002:21:00.0
-> >   f2800000-f280ffff : 0002:20:00.0
-> > f3000000-f30fffff : a40c00000.pcie config
-> > f3200000-f3ffffff : pcie@fe180000
-> >   f3200000-f320ffff : 0003:30:00.0
-> >   f3300000-f33fffff : PCI Bus 0003:31
-> >     f3300000-f3303fff : 0003:31:00.0
-> >     f3304000-f3304fff : 0003:31:00.0
-> >       f3304000-f3304fff : r8169
-> > fb000000-fb1fffff : fb000000.gpu gpu@fb000000
-> > fc00c100-fc3fffff : fc000000.usb usb@fc000000
-> > fc400000-fc407fff : usb@fc400000
-> >   fc400000-fc407fff : xhci-hcd.10.auto usb@fc400000
-> > fc40c100-fc7fffff : fc400000.usb usb@fc400000
-> > fc800000-fc83ffff : fc800000.usb usb@fc800000
-> > fc840000-fc87ffff : fc840000.usb usb@fc840000
-> > fc880000-fc8bffff : fc880000.usb usb@fc880000
-> > fc8c0000-fc8fffff : fc8c0000.usb usb@fc8c0000
-> > fc900000-fc900dff : fc900000.iommu
-> > fc910000-fc910dff : fc900000.iommu
-> > fd600000-fd6fffff : fd600000.sram sram@fd600000
-> > fd8a0000-fd8a00ff : fd8a0000.gpio gpio@fd8a0000
-> > fdb50000-fdb507ff : fdb50000.video-codec video-codec@fdb50000
-> > fdb50800-fdb5083f : fdb50800.iommu iommu@fdb50800
-> > fdb80000-fdb8017f : fdb80000.rga rga@fdb80000
-> > fdba0000-fdba07ff : fdba0000.video-codec video-codec@fdba0000
-> > fdba0800-fdba083f : fdba0800.iommu iommu@fdba0800
-> > fdba4800-fdba483f : fdba4800.iommu iommu@fdba4800
-> > fdba8800-fdba883f : fdba8800.iommu iommu@fdba8800
-> > fdbac800-fdbac83f : fdbac800.iommu iommu@fdbac800
-> > fdc70000-fdc707ff : fdc70000.video-codec video-codec@fdc70000
-> > fdd90000-fdd941ff : fdd90000.vop vop
-> > fdd95000-fdd95fff : fdd90000.vop gamma-lut
-> > fdd97e00-fdd97eff : fdd97e00.iommu iommu@fdd97e00
-> > fdd97f00-fdd97fff : fdd97e00.iommu iommu@fdd97e00
-> > fddf0000-fddf0fff : fddf0000.i2s i2s@fddf0000
-> > fddf4000-fddf4fff : fddf4000.i2s i2s@fddf4000
-> > fde80000-fde9ffff : fde80000.hdmi hdmi@fde80000
-> > fdea0000-fdebffff : fdea0000.hdmi hdmi@fdea0000
-> > fdee0000-fdee5fff : fdee0000.hdmi_receiver hdmi_receiver@fdee0000
-> > fe060000-fe06ffff : fe060000.dfi dfi@fe060000
-> > fe150000-fe15ffff : a40000000.pcie apb
-> > fe170000-fe17ffff : a40800000.pcie apb
-> > fe180000-fe18ffff : a40c00000.pcie apb
-> > fe1b0000-fe1bffff : fe1b0000.ethernet ethernet@fe1b0000
-> > fe210000-fe210fff : fe210000.sata sata@fe210000
-> > fe2c0000-fe2c3fff : fe2c0000.mmc mmc@fe2c0000
-> > fe2e0000-fe2effff : fe2e0000.mmc mmc@fe2e0000
-> > fe470000-fe470fff : fe470000.i2s i2s@fe470000
-> > fe600000-fe60ffff : GICD
-> > fe680000-fe77ffff : GICR
-> > fea10000-fea13fff : dma-controller@fea10000
-> >   fea10000-fea13fff : fea10000.dma-controller dma-controller@fea10000
-> > fea30000-fea33fff : dma-controller@fea30000
-> >   fea30000-fea33fff : fea30000.dma-controller dma-controller@fea30000
-> > feaa0000-feaa0fff : feaa0000.i2c i2c@feaa0000
-> > feaf0000-feaf00ff : feaf0000.watchdog watchdog@feaf0000
-> > feb20000-feb20fff : feb20000.spi spi@feb20000
-> > feb50000-feb500ff : serial
-> > fec00000-fec003ff : fec00000.tsadc tsadc@fec00000
-> > fec10000-fec1ffff : fec10000.adc adc@fec10000
-> > fec20000-fec200ff : fec20000.gpio gpio@fec20000
-> > fec30000-fec300ff : fec30000.gpio gpio@fec30000
-> > fec40000-fec400ff : fec40000.gpio gpio@fec40000
-> > fec50000-fec500ff : fec50000.gpio gpio@fec50000
-> > fec90000-fec90fff : fec90000.i2c i2c@fec90000
-> > fed10000-fed13fff : dma-controller@fed10000
-> >   fed10000-fed13fff : fed10000.dma-controller dma-controller@fed10000
-> > fed60000-fed61fff : fed60000.phy phy@fed60000
-> > fed70000-fed71fff : fed70000.phy phy@fed70000
-> > fed80000-fed8ffff : fed80000.phy phy@fed80000
-> > fed90000-fed9ffff : fed90000.phy phy@fed90000
-> > fee00000-fee000ff : fee00000.phy phy@fee00000
-> > fee10000-fee100ff : fee10000.phy phy@fee10000
-> > fee20000-fee200ff : fee20000.phy phy@fee20000
-> > fee80000-fee9ffff : fee80000.phy phy@fee80000
-> > ff001000-ff0effff : ff001000.sram sram@ff001000
-> > 100000000-3fbffffff : System RAM
-> >   3ec000000-3fbffffff : reserved
-> > 3fc500000-3ffefffff : System RAM
-> > 4f0000000-4ffffffff : System RAM
-> >   4fc611000-4fc6d0fff : reserved
-> >   4fc6d1000-4fded1fff : reserved
-> >   4fded2000-4fdf91fff : reserved
-> >   4fdf93000-4fdf96fff : reserved
-> >   4fdf97000-4fdfabfff : reserved
-> >   4fdfac000-4fe051fff : reserved
-> >   4fe052000-4ffffffff : reserved
-> > 900000000-93fffffff : pcie@fe150000
-> >   900000000-93fffffff : 0000:00:00.0
-> > 980000000-9bfffffff : pcie@fe170000
-> > 9c0000000-9ffffffff : pcie@fe180000
-> > a40000000-a403fffff : a40000000.pcie dbi
-> > a40800000-a40bfffff : a40800000.pcie dbi
-> > a40c00000-a40ffffff : a40c00000.pcie dbi
-> > 
-> > Thank you,
-> > 	o.
-> > 
-> > > -- 
-> > >  i.
-> > 
-
+W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
+Cg0KSGkgS3J6eXN6dG9mLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJu
+ZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEFwcmlsIDE0LCAyMDI1IDEyOjMyIFBNDQo+IFRvOiBN
+dXNoYW0sIFNhaSBLcmlzaG5hIDxzYWkua3Jpc2huYS5tdXNoYW1AYW1kLmNvbT4NCj4gQ2M6IGJo
+ZWxnYWFzQGdvb2dsZS5jb207IGxwaWVyYWxpc2lAa2VybmVsLm9yZzsga3dAbGludXguY29tOw0K
+PiBtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZzsgcm9iaEBrZXJuZWwub3JnOyBrcnpr
+K2R0QGtlcm5lbC5vcmc7DQo+IGNvbm9yK2R0QGtlcm5lbC5vcmc7IGNhc3NlbEBrZXJuZWwub3Jn
+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2ltZWssIE1pY2hhbA0KPiA8bWljaGFs
+LnNpbWVrQGFtZC5jb20+OyBHb2dhZGEsIEJoYXJhdCBLdW1hcg0KPiA8YmhhcmF0Lmt1bWFyLmdv
+Z2FkYUBhbWQuY29tPjsgSGF2YWxpZ2UsIFRoaXBwZXN3YW15DQo+IDx0aGlwcGVzd2FteS5oYXZh
+bGlnZUBhbWQuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JFU0VORCBQQVRDSCB2NyAxLzJdIGR0LWJp
+bmRpbmdzOiBQQ0k6IHhpbGlueC1jcG06IEFkZCBgY3BtX2NyeGANCj4gYW5kIGBjcG01bmNfZndf
+YXR0cmAgcHJvcGVydGllcw0KPg0KPiBDYXV0aW9uOiBUaGlzIG1lc3NhZ2Ugb3JpZ2luYXRlZCBm
+cm9tIGFuIEV4dGVybmFsIFNvdXJjZS4gVXNlIHByb3BlciBjYXV0aW9uDQo+IHdoZW4gb3Blbmlu
+ZyBhdHRhY2htZW50cywgY2xpY2tpbmcgbGlua3MsIG9yIHJlc3BvbmRpbmcuDQo+DQo+DQo+IE9u
+IE1vbiwgQXByIDE0LCAyMDI1IGF0IDA4OjUzOjAzQU0gR01ULCBTYWkgS3Jpc2huYSBNdXNoYW0g
+d3JvdGU6DQo+ID4gQWRkIHRoZSBgY3BtX2NyeGAgcHJvcGVydHkgdG8gbWFuYWdlIHRoZSBQQ0ll
+IElQIHJlc2V0LCBhbmQNCj4gPiBgY3BtNW5jX2Z3X2F0dHJgIHByb3BlcnR5IHRvIGNsZWFyIGZp
+cmV3YWxsIGFmdGVyIGxpbmsgcmVzZXQsIHdoaWxlDQo+ID4gbWFpbnRhaW5pbmcgYmFja3dhcmQg
+Y29tcGF0aWJpbGl0eSB3aXRoIGV4aXN0aW5nIGRldmljZSB0cmVlcy4NCj4gPg0KPiA+IEFsc28s
+IGluY29ycG9yYXRlIGByZXNldC1ncGlvc2AgaW4gZXhhbXBsZSBmb3IgR1BJTy1iYXNlZCBoYW5k
+bGluZyBvZg0KPiA+IHRoZSBQQ0llIFJvb3QgUG9ydCAoUlApIFBFUlNUIyBzaWduYWwgZm9yIGVu
+YWJsaW5nIGFzc2VydCBhbmQgZGVhc3NlcnQNCj4gPiBjb250cm9sLg0KPiA+DQo+ID4gVGhlIGBy
+ZXNldC1ncGlvc2AgYW5kIGBjcG1fY3J4YCBwcm9wZXJ0aWVzIG11c3QgYmUgcHJvdmlkZWQgZm9y
+IENQTSwNCj4gPiBDUE01IGFuZCBDUE01X0hPU1QxLiBGb3IgQ1BNNU5DLCBhbGwgdGhyZWUgcHJv
+cGVydGllcyAtIGByZXNldC1ncGlvc2AsDQo+ID4gYGNwbV9jcnhgIGFuZCBgY3BtNW5jX2Z3X2F0
+dHJgIG11c3QgYmUgZXhwbGljaXRseSBkZWZpbmVkIHRvIGVuc3VyZQ0KPg0KPiBUaGlzIHdlIHNl
+ZSBmcm9tIHRoZSBkaWZmLCBidXQgd2h5IHRoZXkgbXVzdCBiZSBkZWZpbmVkPw0KPg0KPiA+IHBy
+b3BlciBmdW5jdGlvbmFsaXR5Lg0KPg0KPiBXaGF0IGZ1bmN0aW9uYWxpdHk/DQo+DQoNCkZvciBv
+dXIgY29udHJvbGxlciwgaWYgY3BtX2NyeCBpcyBub3QgcHJvdmlkZWQgbGFuZSBlcnJvcnMgd2ls
+bCBiZSBvYnNlcnZlZC4NClNwZWNpZmljYWxseSBmb3IgQ1BNNU5DLCBpZiBjcG01bmNfZndfYXR0
+ciBwcm9wZXJ0eSBpcyBub3QgcHJvdmlkZWQsIHRoZSBmaXJld2FsbA0KaXMgbm90IGNsZWFyZWQg
+YWZ0ZXIgcmVzZXQgYW5kIGZ1cnRoZXIgUENJZSB0cmFuc2FjdGlvbnMgd2lsbCBub3QgYmUgYWxs
+b3dlZC4NClRoZXJlZm9yZSwgdGhlc2UgcHJvcGVydGllcyBtdXN0IGJlIGRlZmluZWQuDQoNCj4g
+Pg0KPiA+IEluY2x1ZGUgYW4gZXhhbXBsZSBEVFMgbm9kZSBhbmQgY29tcGxldGUgdGhlIGJpbmRp
+bmcgZG9jdW1lbnRhdGlvbiBmb3INCj4gPiBDUE01TkMuIEFsc28sIGZpeCB0aGUgYnJpZGdlIHJl
+Z2lzdGVyIGFkZHJlc3Mgc2l6ZSBpbiB0aGUgZXhhbXBsZSBmb3INCj4gPiBDUE01Lg0KPiA+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogU2FpIEtyaXNobmEgTXVzaGFtIDxzYWkua3Jpc2huYS5tdXNoYW1A
+YW1kLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGZvciB2NzoNCj4gPiAtIFVwZGF0ZSBDUE01
+TkMgZGV2aWNlIHRyZWUgYmluZGluZy4NCj4gPiAtIEFkZCBDUE01TkMgZGV2aWNlIHRyZWUgZXhh
+bXBsZSBub2RlLg0KPiA+IC0gVXBkYXRlIGNvbW1pdCBtZXNzYWdlLg0KPiA+DQo+ID4gQ2hhbmdl
+cyBmb3IgdjY6DQo+ID4gLSBSZXNvbHZlIEFCSSBicmVhay4NCj4gPiAtIFVwZGF0ZSBjb21taXQg
+bWVzc2FnZS4NCj4gPg0KPg0KPiAuLi4NCj4NCj4gPiArICAtIGlmOg0KPiA+ICsgICAgICBwcm9w
+ZXJ0aWVzOg0KPiA+ICsgICAgICAgIGNvbXBhdGlibGU6DQo+ID4gKyAgICAgICAgICBjb250YWlu
+czoNCj4gPiArICAgICAgICAgICAgZW51bToNCj4gPiArICAgICAgICAgICAgICAtIHhsbngsdmVy
+c2FsLWNwbTVuYy1ob3N0DQo+ID4gKyAgICB0aGVuOg0KPiA+ICsgICAgICBwcm9wZXJ0aWVzOg0K
+PiA+ICsgICAgICAgIHJlZzoNCj4gPiArICAgICAgICAgIGl0ZW1zOg0KPiA+ICsgICAgICAgICAg
+ICAtIGRlc2NyaXB0aW9uOiBDUE0gc3lzdGVtIGxldmVsIGNvbnRyb2wgYW5kIHN0YXR1cyByZWdp
+c3RlcnMuDQo+ID4gKyAgICAgICAgICAgIC0gZGVzY3JpcHRpb246IENvbmZpZ3VyYXRpb24gc3Bh
+Y2UgcmVnaW9uIGFuZCBicmlkZ2UgcmVnaXN0ZXJzLg0KPiA+ICsgICAgICAgICAgICAtIGRlc2Ny
+aXB0aW9uOiBDUE0gY2xvY2sgYW5kIHJlc2V0IGNvbnRyb2wgcmVnaXN0ZXJzLg0KPiA+ICsgICAg
+ICAgICAgICAtIGRlc2NyaXB0aW9uOiBDUE01TkMgRmlyZXdhbGwgYXR0cmlidXRlIHJlZ2lzdGVy
+Lg0KPiA+ICsgICAgICAgICAgbWluSXRlbXM6IDINCj4gPiArICAgICAgICByZWctbmFtZXM6DQo+
+ID4gKyAgICAgICAgICBpdGVtczoNCj4gPiArICAgICAgICAgICAgLSBjb25zdDogY3BtX3NsY3IN
+Cj4gPiArICAgICAgICAgICAgLSBjb25zdDogY2ZnDQo+ID4gKyAgICAgICAgICAgIC0gY29uc3Q6
+IGNwbV9jcngNCj4gPiArICAgICAgICAgICAgLSBjb25zdDogY3BtNW5jX2Z3X2F0dHINCj4gPiAr
+ICAgICAgICAgIG1pbkl0ZW1zOiAyDQo+DQo+IFdoeSBpbnRlcnJ1cHRzIGFyZSBub3QgcmVxdWly
+ZWQgZm9yIHRoaXMgdmFyaWFudD8gV2h5IGlzbid0IHRoaXMgYW4NCj4gaW50ZXJydXB0IGNvbnRy
+b2xsZXI/DQo+DQoNCk1TSSBhbmQgTVNJLVggaW50ZXJydXB0cyBhcmUgaGFuZGxlZCB2aWEgR0lD
+LCBzbyBtc2ktbWFwIHByb3BlcnR5IGlzDQpyZXF1aXJlZCBmb3IgaW50ZXJydXB0IGhhbmRsaW5n
+Lg0KTGVnYWN5IGludGVycnVwdCBzdXBwb3J0IGlzIG5vdCBhdmFpbGFibGUsIGFuZCBFcnJvciBp
+bnRlcnJ1cHQgc3VwcG9ydCB3aWxsIGJlDQphZGRlZCBpbiBmdXR1cmUsIG9uY2UgaXQgaXMgYWRk
+ZWQgY29ycmVzcG9uZGluZyBEVCBjaGFuZ2VzIHdpbGwgYmUgYWRkZWQuDQoNCj4gPg0KPiA+ICB1
+bmV2YWx1YXRlZFByb3BlcnRpZXM6IGZhbHNlDQo+ID4NCj4gPiAgZXhhbXBsZXM6DQo+ID4gICAg
+LSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ID4NCj4g
+PiAgICAgIHZlcnNhbCB7DQo+ID4gICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+
+Ow0KPiA+IEBAIC05OCw4ICsxNjUsMTAgQEAgZXhhbXBsZXM6DQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgPDB4NDMwMDAwMDAgMHg4MCAweDAwMDAwMDAwIDB4ODAgMHgwMDAw
+MDAwMCAweDANCj4gMHg4MDAwMDAwMD47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgbXNp
+LW1hcCA9IDwweDAgJml0c19naWMgMHgwIDB4MTAwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIHJlZyA9IDwweDAgMHhmY2ExMDAwMCAweDAgMHgxMDAwPiwNCj4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8MHg2IDB4MDAwMDAwMDAgMHgwIDB4MTAwMDAwMDA+Ow0KPiA+
+IC0gICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJjcG1fc2xjciIsICJjZmciOw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDYgMHgwMDAwMDAwMCAweDAgMHgx
+MDAwMDAwMD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MCAweGZjYTAw
+MDAwIDB4MCAxMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0g
+ImNwbV9zbGNyIiwgImNmZyIsICJjcG1fY3J4IjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICByZXNldC1ncGlvcyA9IDwmZ3BpbzEgMzggR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICBwY2llX2ludGNfMDogaW50ZXJydXB0LWNvbnRyb2xsZXIgew0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MD47DQo+
+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+
+Ow0KPiA+IEBAIC0xMjYsOCArMTk1LDEwIEBAIGV4YW1wbGVzOg0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIG1zaS1tYXAgPSA8MHgwICZpdHNfZ2ljIDB4MCAweDEwMDAwPjsNCj4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweGZjZGQwMDAwIDB4MDAgMHgxMDAwPiwN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwNiAweDAwMDAwMDAwIDB4MDAg
+MHgxMDAwMDAwPiwNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwMCAweGZj
+ZTIwMDAwIDB4MDAgMHgxMDAwMDAwPjsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICByZWct
+bmFtZXMgPSAiY3BtX3NsY3IiLCAiY2ZnIiwgImNwbV9jc3IiOw0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwweDAwIDB4ZmNlMjAwMDAgMHgwMCAweDEwMDAwPiwNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwMCAweGZjZGMwMDAwIDB4MDAgMHgxMDAwMD47
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImNwbV9zbGNyIiwgImNm
+ZyIsICJjcG1fY3NyIiwgImNwbV9jcngiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJl
+c2V0LWdwaW9zID0gPCZncGlvMSAzOCBHUElPX0FDVElWRV9MT1c+Ow0KPiA+DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgcGNpZV9pbnRjXzE6IGludGVycnVwdC1jb250cm9sbGVyIHsNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDA+Ow0K
+PiA+IEBAIC0xMzYsNCArMjA3LDIyIEBAIGV4YW1wbGVzOg0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIH07DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAg
+ICAgY3BtNW5jX3BjaWU6IHBjaWVAZTRhMTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAieGxueCx2ZXJzYWwtY3BtNW5jLWhvc3QiOw0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gInBjaSI7DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJy
+dXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBidXMtcmFu
+Z2UgPSA8MHgwMCAweGZmPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByYW5nZXMgPSA8
+MHgyMDAwMDAwIDB4MDAgMHhhODAwMDAwMCAweDAwIDB4YTgwMDAwMDAgMHgwMA0KPiAweDgwMDAw
+MDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDQzMDAwMDAwIDB4
+MTAxMCAweDAwIDB4MTAxMCAweDAwIDB4MDggMHgwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgbXNpLW1hcCA9IDwweDAgJml0c19naWMgMHg0MDAwMCAweDEwMDAwPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweGU0YTEwMDAwIDB4MDAgMHgxMDAwMD4s
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MDAgMHhhMDAwMDAwMCAweDAw
+IDB4ODAwMDAwMD4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MDAgMHhl
+NGEwMDAwMCAweDAwIDB4MTAwMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDwweDAwIDB4ZTQzMDEwMDAgMHgwMCAweDEwMDAwPjsNCj4NCj4gRm9sbG93IERUUyBjb2Rpbmcg
+c3R5bGUuIE9yIGp1c3QgZHJvcCB0aGlzIGV4YW1wbGUuLi4gaXQgYWxzbyBoYXMNCj4gaW5jb3Jy
+ZWN0IGluZGVudGF0aW9uLiA6Lw0KDQpPaywgSSB3aWxsIGRyb3AgdGhpcyBleGFtcGxlLg0KDQo+
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImNwbV9zbGNyIiwgImNm
+ZyIsICJjcG1fY3J4IiwgImNwbTVuY19md19hdHRyIjsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICByZXNldC1ncGlvcyA9IDwmZ3BpbzAgMjIgR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiArICAg
+ICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gICAgICB9Ow0KPiA+IC0tDQo+ID4gMi40NC4xDQo+
+ID4NCg0KVGhhbmtzLA0KU2FpIEtyaXNobmENCg==
 
