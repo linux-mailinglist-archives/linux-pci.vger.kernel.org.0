@@ -1,76 +1,98 @@
-Return-Path: <linux-pci+bounces-25841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADDEAA885AC
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 16:50:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABE91A885C6
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 16:52:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 117F1563F1D
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 14:37:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36AD55613D7
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 14:41:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E8A28DF0B;
-	Mon, 14 Apr 2025 14:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQlh+xJk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF1B627FD7A;
+	Mon, 14 Apr 2025 14:25:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDDD28936A
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 14:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D9D27F744
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 14:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640107; cv=none; b=KtoqoxY+u/A/JQBrOAZGx5OdWUgJiBu+rzkyiiBdE0mRJS3jtrl8SpoNH8ZMEJ9q8W9oq04vuZkQsesgA/3G/G9tx1IqrO6bENl6NC/4D6G3XCxmyUyZijms9PCSWg6PFagst0fUCjgydm0Xgv85MjAQEB2jUPcdiMXaQf4ffJA=
+	t=1744640731; cv=none; b=hySYZNwPeXsPAOKxYRmqcdFDqbJMHB8Wn+4IAzpibOXnCOEkq7roCfXDFPudafGkz942CQRCapTZXvC5q0uA7L9Iduah1Vp24G/KsUA7Fx0fgGQPr2Z95u7cCPW8W7zA5kK9rNXeRZyJgZJCIK9NPzk59IJpy7kaNb9cIg5LluQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640107; c=relaxed/simple;
-	bh=N59mWOOmWYHFDa9wgd8r2eaYDiBQILRhojph9hULj9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxdUh/PsxkiPXs4yzv+Kuri6I5kY3J/KXBYRMWRS2gUOHxafW6TipVfNaSO4UJlePVmSqCjI0V6tcFRzUMogfuoLF6Kdst6/h10PRLIHCBTuaOEdOsMG5KIo8ytg3VaKmJNvCCPXku1WW9whgz8J5ztKgfIbZl+4V01N5K/Sxl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQlh+xJk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3455FC4CEE2;
-	Mon, 14 Apr 2025 14:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744640106;
-	bh=N59mWOOmWYHFDa9wgd8r2eaYDiBQILRhojph9hULj9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EQlh+xJkLK8zR2EKzmrKEhYIjgvdIUwlT7vbz19lC+HCBa3zRIOisBtf7SPvAHeCh
-	 8+t45kJAbu3enKP1KBM/giIp6BWaJyQemD99BGFoZCyh6wNieD8UY+akHZIz+UOASt
-	 jQrqDu2Ul3VO2djOxYKUBCIc666Jk7x1inTG0XH7Fg/qeerBnlANQXj7quV1rB6yq3
-	 qVGD66K5IEHaNI0yjnGyv/AMlkXRSCGzBTpMmrcBWe67zeZE9+ctL9yKQyxvcqxLcw
-	 Ta3gTCxbmo7xz6/EylwdeolbOQJvRbLr8RER2YRk1HsUvNzSVkQt30r2Q5LLi+rvbq
-	 AQOMsSepFwC6A==
-Date: Mon, 14 Apr 2025 16:15:02 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 1/2] PCI: dw-rockchip: Enable L0S capability
-Message-ID: <Z_0YZnJUiJdffqtA@ryzen>
-References: <1744594051-209255-1-git-send-email-shawn.lin@rock-chips.com>
+	s=arc-20240116; t=1744640731; c=relaxed/simple;
+	bh=6aWmQkbtr0/PqPkn3ZQz0hfhf98gpgWaNTvtlVZ0xSs=;
+	h=Message-Id:From:Date:Subject:To:Cc; b=Cyzi+wkL4uqiz5ggyy3fwGmvqVBKIpeq9K0p/4QPsLobN16BVya6u4byqyrbgw9m8jWfCHPUkAu44v27iy8VwLpAFl/nClW71Klauq2fi+ir7IG2Gl0RkE6gLvnQvDldwyDUqBV2kiMoScQ/qk7WQ40hqJ2fC3FTuCy2tHcqaO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A1A772C0524A;
+	Mon, 14 Apr 2025 16:25:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 76FAC4D321; Mon, 14 Apr 2025 16:25:25 +0200 (CEST)
+Message-Id: <c19e25bf2cefecc14e0822c6a9bb3a7f546258bc.1744640331.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Mon, 14 Apr 2025 16:25:21 +0200
+Subject: [PATCH] PCI: hotplug: Drop superfluous #include directives
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1744594051-209255-1-git-send-email-shawn.lin@rock-chips.com>
 
-On Mon, Apr 14, 2025 at 09:27:31AM +0800, Shawn Lin wrote:
-> L0S capability isn't enabled on all SoCs by default, so enabling it
-> in order to make ASPM L0S work on Rockchip platforms. We have been
-> testing it for quite a long time and found the default FTS number
-> provided by DWC core doesn't work stable and make LTSSM switch between
-> L0S and Recovery, leading to long exit latency, even fail to link sometimes.
-> So override it to the max 255 which seems work fine under test for both PHYs
-> used by Rockchip platforms.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+In February 2003, historic commit
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+  https://git.kernel.org/tglx/history/c/280c1c9a0ea4
+  ("[PATCH] PCI Hotplug: Replace pcihpfs with sysfs.")
+
+removed all invocations of __get_free_page() and free_page() from the
+PCI hotplug core without also removing the #include <linux/pagemap.h>
+directive.
+
+It removed all invocations of kern_mount(), mntget() and mntput()
+without also removing the #include <linux/mount.h> directive.
+
+It removed all invocations of lookup_hash()
+without also removing the #include <linux/namei.h> directive.
+
+It removed all invocations of copy_to_user() and copy_from_user()
+without also removing the #include <linux/uaccess.h> directive.
+
+These #include directives are still unnecessary today, so drop them.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/hotplug/pci_hotplug_core.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pci_hotplug_core.c b/drivers/pci/hotplug/pci_hotplug_core.c
+index d8c5856..210f93d 100644
+--- a/drivers/pci/hotplug/pci_hotplug_core.c
++++ b/drivers/pci/hotplug/pci_hotplug_core.c
+@@ -20,13 +20,9 @@
+ #include <linux/types.h>
+ #include <linux/kobject.h>
+ #include <linux/sysfs.h>
+-#include <linux/pagemap.h>
+ #include <linux/init.h>
+-#include <linux/mount.h>
+-#include <linux/namei.h>
+ #include <linux/pci.h>
+ #include <linux/pci_hotplug.h>
+-#include <linux/uaccess.h>
+ #include "../pci.h"
+ #include "cpci_hotplug.h"
+ 
+-- 
+2.43.0
+
 
