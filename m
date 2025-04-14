@@ -1,40 +1,77 @@
-Return-Path: <linux-pci+bounces-25847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62E3CA88791
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 17:42:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54586A888AB
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 18:35:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0493218820D2
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 15:38:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B25A3AE0EE
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 16:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC32A2749F2;
-	Mon, 14 Apr 2025 15:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28EA25395C;
+	Mon, 14 Apr 2025 16:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ZG8vnqx2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8CE252297;
-	Mon, 14 Apr 2025 15:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from sonic308-30.consmr.mail.bf2.yahoo.com (sonic308-30.consmr.mail.bf2.yahoo.com [74.6.130.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091262522B8
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 16:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.130.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645098; cv=none; b=me1pDa8eMGB/aHGkh+d9qiSJGZiOfHRDvTe0BNwQU4OpIva5fWFrgBGxNGb4kEOMFaeQKn9ySrwGIVbkuvS7rNJv/3FTFHH/tFLcIrKu4JIz0fo5DyADtDDIJOvh6xkR3ISWTmR6wHNBj64Z8jT9ntQUVfCAwYW9jF/wh66t04Q=
+	t=1744648497; cv=none; b=T0CIKRtY/vMOPyKOWRaqb1NEXLuomZJN7QPNSupOUzkBdmjdTq/LETb9ygnyb0cEz3ZhRmDgbkokh1eaYUGh516JkZIkcWJGATVulWHv6TlYUSjZ5k3DCm1QtTDy/uHvM/oij+HADxlKoaS7ln1KmcuOtukOZw/MZ7XXeT8QMaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645098; c=relaxed/simple;
-	bh=0aZVGbEl/02D251casMOEEUyC3c3T0vU3dfpYMvmlIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hk7og3gmia3zpUU6uYpm5h5z0xBajBxjbEi6dLCNxkBLTDQk+l3AJ0+gPPXDbtm2bafy/kq9xBujVdhMaAshMGBQ6Abnrupk0gIS2tyRUIGBxA2HQONLujDoWY+nWV3yMeVmb96mfdpiBo5v42fh9sZDd3tK/YmbwrEF9oZbzN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 137701007;
-	Mon, 14 Apr 2025 08:38:13 -0700 (PDT)
-Received: from [192.168.1.102] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE7993F66E;
-	Mon, 14 Apr 2025 08:38:10 -0700 (PDT)
-Message-ID: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
-Date: Mon, 14 Apr 2025 16:37:59 +0100
+	s=arc-20240116; t=1744648497; c=relaxed/simple;
+	bh=LRip5C8YXBMcattS1GRTxAuDuczRlbVQDGWhRq42ClI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hO/DH9u1s1FLkGjt1gqpHX4skHsrA7xrMJkH1nYc510H8o5Tq2r2Q2TjJ6g4BgKiwENNuOR72zsf7xo2ASCvy7YLuUA85P3nJKfqnanzUGnwM8N3xDJAutUrC57FamhVHJXV27XeyZlEZEyu3Cx+tyFgo4RqQ+fTalOVw6SY4Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ZG8vnqx2; arc=none smtp.client-ip=74.6.130.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744648494; bh=6V04kO3rpZ47EWD3X905dHz9fGQ1xlrcbJbLzzJKDj8=; h=Date:Subject:From:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=ZG8vnqx2flHQJ17qX9ZTdUuHJFMIwFc6kpw5dptWesaPfD51lWUxs0ngpCBS+QZfipUu7BmzAt6ghHz1vWSrirmw2eQ9YMOFEj9xcWu4S1IqyRoQp6rRC2GB+dU9dEud4yCiE7gp0wNKwWD1QF0YHXBQ2uNuLiXDGxjX4wl60NBACtZGGewtZIzdFfwrJkiYWo0gSmBIO0xagWancWXDqnrb5f0HKCn8Y7oiMElS/iBS5UgefWeiW3noDai1M5kMXzaCLQzRGjMbR9Va/qu/2SL1Nq1P5bgIqpFqvqT8QPEfkykflKs0nTrQ4Os/xQ8gZJXISedrwQbcL1XC0Npghw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744648494; bh=GwWQWtK5rq38HpBalCWn5zG/YKDvoNpxhk0sWqir6Li=; h=X-Sonic-MF:Date:Subject:From:To:From:Subject; b=cYgMqGp9wz2NZm8bXQ4weNJuvJc6kU+Co8nd85vaZqly7RS66TUgo4Ba8tJVSOxZLi8XJuvTVX8f130/x7FNs5GfZno5oF8a/958tzFKLLn2QqgU4Pkc3kzB+rrcicmcPIr+DUJkaMLwqcZiK2ECdYfJtSdIXQ5iEcbFp7a6xK4Og7N3BODQOKavoRB97MoqD9hRbAXh7DUkja6pZnXYSIq9m4wDMLnLryj5ovdIZpU1HPY8AuakirgbbcfA8ebPeNDahF4z9c7mpBmbQdWoAbWBBwW0Uh4p7x/5UQ1YtOfZbKinc8mBaFqeJeGMv4u7huwBPfG8ECZbhY70QzPQHw==
+X-YMail-OSG: ijaescAVM1kj5AFBIzzT.YKhGnW2.GMXcoNbQi.Jna0FItqIw5ZmuNjyO6y4WBL
+ nGAdxWYqSBtPW7w6BJi3kQLTHkYS0Fyt5OKIJzTo255iMyr5RfZ0F2qquSlJh0LoiU8T3eiul4tE
+ 9K3BMCQf93_hzZCVBcXw2c95HyrFdn4XqOj1QRRS6IhnQObkdTwv3D1bmKADOU7eWlI3UKO.9tYY
+ R4TYDbz9rwrZaepSU1349IKr1S2Qu3guonNuts1Pj_jG6Faq7DR0Iwrz2B6BfxPgBGTTdU77q.tv
+ 8Ivhly6Bt82znn7SANBbhGhnHcjy_En7BAiLplxZPK3WIyGzV.Z66T8lMlMHoPyHuujr6XUB9WGi
+ kLVY7VQ5MV8mLaT2kz5aRz0DRRpi4pM8bXVYilFTujbdkgebdsnSOoaC1LlCKqBXs3VktflfFgSN
+ CCmFlAqaf1.vOE2zxeXJhHSNWG2aCSwdg1whgQDKAEvRKgQwxhAmbsLsGCEmIzu6PTwQxA3Rc4Ij
+ OWrMnMhLEyaUAYWIO4ZAmuJ1xxXJUuauhX2aEKKnOnjnyKbSpuRVz_94gDN5ZHmAPZCc_5IgU7x4
+ BzG7FpRA4amT1lhVjCqcGoQsUrxz1CeUXNivlnRhdokeNHND1KyqMMJ5Is9NqiV5CxkhIrtv6GtS
+ hXsc8aCSr4FCbuc6vF5nI.eRPFZSN5lGDEBhbwdA3JR9QVqTODNcAglR498sijcdqVYCA.xzFj7s
+ xdNwP5RSe5xRo7thDmkzRSjYSEF2S4xpDqtLM84SNt_Q4QIh2ckfp_eSfxP.aUxmQYLBCgpbvIJz
+ ElllqXu.JdgOmDgXmlH0J_vKlxNLwooRNuUnogEN.ATpAu26KV2ID9aqjtVGdGjK55MfYU0teetL
+ XA9EzdzkU3etTnb2lAEW1ebexZwiZlfxPSNUFRs01hP4Tw53ivColKJhxFD1f74kEefmVfQyCJXS
+ aCVbsRiWlVYWyt6DWA.YY8BSIE6s32LCrlVS.JlLi80lNSapZxeKkYPrfgCra.0SprZfe1XhPKEV
+ aKKW0zCa1IWqqY8hUDN.Uz.Ov4Tik4iwkJjWruy4u5hBWno.Az0b9F..xVj91vfZ37JI2wMCkSfQ
+ Yt8xmeGZaL_o_UcLLaNpkHIx6D616F5hOxo0vZcNRHJa5.zDEZPgY0ErKtwxI7yHvXxbyh7C30Dr
+ dPBVJQRTZF8XAuoIWbnDFh.SfWICdopamHEdFnV6Qp485h0Q6hvAzyBBB_.geAGdIm68d4rO5h2Y
+ M75NWavibJsQWCQ_j4ZoRSn8T2Ztn_3yI6HcIJh3Q8Gu2RpuQBF8jEqiZGNr93VaVio4Ev3tF2X3
+ ap57Wu3p0uM6UssZqY5QdAXAdtiLYCHbNj_ybVALCZN6kU1.ptLZSjArgE1kI0pMqMzwSuajpp0S
+ _wS3nRptlINDwD78V2tBeWQyhPFqOY4YHWU7JNlS6WA7Q.WGuZJyE6wO8zYIs42JimYDcMdreOck
+ 6zr.6R1hwsP0oIBcyJrz2zBCfVYHsSyR_0e17Zec3kEcWIOBlWeuqegwyZLabUkOU1Vpmdlupx1V
+ Kz2fL9agosZDxRAk6k5vHOFQ9YTLTNHYMtvBJ2g3c3DEsqOPalQyG2S7fd.rMcVG7xxWRVfCB.AB
+ 6U.Sn8VklpY4dcK1n7NBBJg0Ro6OmfnvBxc1bezv3Gt_NjUlIHD.ouh4tP28bhu5i7i8uSTIof8X
+ Y8K9RLR0OmEDIj3_C431SxQ2IZhKWuBwBNtoRT_Tz8vFg36k2BF0x.wG482p5M9G_waTKw5QBnrY
+ PV2hx6ZIaw0cUcoDxBeAiLtRENKoOhmHIEUChWDOpK.KWD5n2fHh4XUc2M0rbzNrpRXVNHlcLxaz
+ 8RQ4X2ay1lT3JvRnVa6.bSajS21qYnVW_B5.npCmkS6j8Gjy0G6FaeOxsPsJOSLD2teUZRPG4vNZ
+ 0x7enlFk1mvGEdGmkL6yLsiL1_dOiujje.akjTuY3gMuzvn0iuoqBEpEdgYIrL5PW2nLw_mhg0Di
+ BODDRNa.BCPpewEfzdGzj9ytsSG6sq3UH6J4gfS3E3eIxsYP6ebawE7oR6VOp13Nvl5K3FmrAizb
+ Z2UC84hAnQbtOw8FWFmEx20M2VRbXwrUr2c6lDfO5OVdQIWGaTzrizOeOXR.qQsB4qVDB0aPVcrD
+ WdYVqj25OaxfI.cSPKAFQssdVnUjnxie9uSdhHsEkWA6DhhpphGZ7sxGIb5KMDZn0m9QC_wo6zp5
+ UCE_iAr29sp4JfrkfixrANyuNhPZeJ1CwYGA9OD69mgFTgKl0Wu_ZNwS0L96wtjsRZOBVLjou5p_
+ gVzxzbi8m2ED32Ql8BTFHvBi2DAXzQDnybLfiZN5Vb.An
+X-Sonic-MF: <dullfire@yahoo.com>
+X-Sonic-ID: fb281f51-85b9-4bd8-87a5-49c0144f821e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.bf2.yahoo.com with HTTP; Mon, 14 Apr 2025 16:34:54 +0000
+Received: by hermes--production-ne1-9495dc4d7-vqjq6 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7de9b757f65aed43fbd0bf15ec9cf014;
+          Mon, 14 Apr 2025 16:22:47 +0000 (UTC)
+Message-ID: <3aa3b1aa-84c1-4bdd-ac79-918bcd80f98b@yahoo.com>
+Date: Mon, 14 Apr 2025 11:22:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -42,148 +79,49 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-To: Johan Hovold <johan@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
- Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
- <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Charan Teja Kalla <quic_charante@quicinc.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 1/2] PCI/MSI: Add MSIX option to write to ENTRY_DATA
+ before any reads
+From: Dullfire <dullfire@yahoo.com>
+To: Paolo Abeni <pabeni@redhat.com>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jacob Keller <jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Mostafa Saleh <smostafa@google.com>,
+ Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20241117234843.19236-1-dullfire@yahoo.com>
+ <20241117234843.19236-2-dullfire@yahoo.com>
+ <a292cdfe-e319-4bbd-bcc0-a74c16db9053@redhat.com>
+ <07726755-f9e7-4c01-9a3f-1762e90734af@yahoo.com>
+ <4f621a9d-f527-4148-831b-aad577a6e097@redhat.com>
+ <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
+Content-Language: en-US
+In-Reply-To: <5a580609-aa5e-4153-b8dd-a6751af72685@yahoo.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 2025-04-11 9:02 am, Johan Hovold wrote:
-> Hi Robin,
+
+
+On 1/20/25 6:38 AM, Dullfire wrote:
 > 
-> On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
->> In hindsight, there were some crucial subtleties overlooked when moving
->> {of,acpi}_dma_configure() to driver probe time to allow waiting for
->> IOMMU drivers with -EPROBE_DEFER, and these have become an
->> ever-increasing source of problems. The IOMMU API has some fundamental
->> assumptions that iommu_probe_device() is called for every device added
->> to the system, in the order in which they are added. Calling it in a
->> random order or not at all dependent on driver binding leads to
->> malformed groups, a potential lack of isolation for devices with no
->> driver, and all manner of unexpected concurrency and race conditions.
->> We've attempted to mitigate the latter with point-fix bodges like
->> iommu_probe_device_lock, but it's a losing battle and the time has come
->> to bite the bullet and address the true source of the problem instead.
+> On 11/21/24 04:28, Paolo Abeni wrote:
+[...]
+>> The niu driver is not exactly under very active development, I guess the
+>> whole series could go via the IRQ subsystem, if Thomas agrees.
+>>
+>> Cheers,
+>>
+>> Paolo
+>>
 > 
->> @@ -426,6 +438,12 @@ static int iommu_init_device(struct device *dev)
->>   		ret = -ENODEV;
->>   		goto err_free;
->>   	}
->> +	/*
->> +	 * And if we do now see any replay calls, they would indicate someone
->> +	 * misusing the dma_configure path outside bus code.
->> +	 */
->> +	if (dev->driver)
->> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
->>   
->>   	if (!try_module_get(ops->owner)) {
->>   		ret = -EINVAL;
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index e10a68b5ffde..6b989a62def2 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
->>   		dev_iommu_free(dev);
->>   	mutex_unlock(&iommu_probe_device_lock);
->>   
->> -	if (!err && dev->bus)
->> +	/*
->> +	 * If we're not on the iommu_probe_device() path (as indicated by the
->> +	 * initial dev->iommu) then try to simulate it. This should no longer
->> +	 * happen unless of_dma_configure() is being misused outside bus code.
->> +	 */
-> 
-> This assumption does not hold as there is nothing preventing iommu
-> driver probe from racing with a client driver probe.
+> Thomas, does this work for you, or is there something else you would to see in this series?
 
-Not sure I follow - *this* assumption is that if we arrived here with 
-dev->iommu already allocated then __iommu_probe_device() is already in 
-progress for this device, either in the current callchain or on another 
-thread, and so we can (and should) skip calling into it again. There's 
-no ambiguity about that.
 
->> +	if (!err && dev->bus && !dev_iommu_present)
->>   		err = iommu_probe_device(dev);
->>   
->>   	if (err && err != -EPROBE_DEFER)
-> 
-> I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
-> is probed late due to a clock dependency and can end up probing in
-> parallel with the GPU driver.
-
-And what *should* happen is that the GPU driver probe waits for the 
-IOMMU driver probe to finish. Do you have fw_devlink enabled?
-
-> [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
-> [    3.806007] arm-smmu 3da0000.iommu: SMMUv2 with:
-> [    3.806843] arm-smmu 3da0000.iommu:  stage 1 translation
-> [    3.807562] arm-smmu 3da0000.iommu:  coherent table walk
-> [    3.808253] arm-smmu 3da0000.iommu:  stream matching with 24 register groups
-> [    3.808957] arm-smmu 3da0000.iommu:  22 context banks (0 stage-2 only)
-> [    3.809651] arm-smmu 3da0000.iommu:  Supported page sizes: 0x61311000
-> [    3.810339] arm-smmu 3da0000.iommu:  Stage-1: 48-bit VA -> 40-bit IPA
-> [    3.811130] arm-smmu 3da0000.iommu:  preserved 0 boot mappings
-> 
-> [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
-> 
-> [    3.992050] ------------[ cut here ]------------
-> [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
-> [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
-> 
-> [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
-> [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
-> 
-> [    4.025943] Call trace:
-> [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
-> [    4.030453]  iommu_probe_device+0x38/0x7c
-> [    4.030455]  of_iommu_configure+0x188/0x26c
-> [    4.030457]  of_dma_configure_id+0xcc/0x300
-> [    4.030460]  platform_dma_configure+0x74/0xac
-> [    4.030462]  really_probe+0x74/0x38c
-
-Indeed this is exactly what is *not* supposed to be happening - does 
-this patch help at all?
-
-https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
-
-If not then I guess I do need to do something to explicitly distinguish 
-the "iommu_device_register() is still running" state after all...
-
+Since it's been a few months, just wanted to give this a bump, and see if the series is lacking anything.
 Thanks,
-Robin.
 
-> [    4.030464]  __driver_probe_device+0x7c/0x160
-> [    4.030465]  driver_probe_device+0x40/0x110
-> [    4.030467]  __device_attach_driver+0xbc/0x158
-> [    4.030468]  bus_for_each_drv+0x84/0xe0
-> [    4.030470]  __device_attach+0xa8/0x1d4
-> [    4.030472]  device_initial_probe+0x14/0x20
-> [    4.030473]  bus_probe_device+0xb0/0xb4
-> [    4.030476]  deferred_probe_work_func+0xa0/0xf4
-> 
-> [    4.030501] ---[ end trace 0000000000000000 ]---
-> [    4.031269] adreno 3d00000.gpu: Adding to iommu group 9
-> 
-> Johan
-
+Sincerely,
+Jonathan Currier
 
