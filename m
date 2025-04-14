@@ -1,196 +1,99 @@
-Return-Path: <linux-pci+bounces-25794-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25795-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9535A87850
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 09:02:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 320F0A87954
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 09:46:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CC681892343
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 07:02:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6B8F3B46EB
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 07:44:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 306491A0711;
-	Mon, 14 Apr 2025 07:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZRTDiRD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB4C1A9B48;
+	Mon, 14 Apr 2025 07:44:00 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0470829D05;
-	Mon, 14 Apr 2025 07:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4CC19597F;
+	Mon, 14 Apr 2025 07:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744614134; cv=none; b=d5IxT0R94KRdAWxWe4OfckkrLpg3n/VYMVXQbPaFAQ9joA/dEfhs+4c8d18KqcPZBwJ+XzS1o9P4fWRG6FtNAgJ7EnEsXY8xqRHrqPo7modZGWvJeAfnP9mS7UEdkRir5skgjxXxNT+pcVw1UHw4laBAG9VbcMeiFiJyZzJtIBE=
+	t=1744616640; cv=none; b=TTt4XDOrY6K0mzXf7/3cr69NrPNm/xz7S8FGAX+Eh1o03FfDwXzkfoGEr4HDFvbYgaHRqiMaTX7jdTMYwxnJLS7OwAPVv2tEjNSZlqwMmAWS2t5M74wbE69qEugF1XZgMuAky0HY58jhw7z4BG5BjvisdbE4ZmeAmzY85DN2wtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744614134; c=relaxed/simple;
-	bh=Y+PzRa5KHzS3rRu7HfCG+Yc3+iPhWFVgRe6fdYaJvW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmd9xuxYh5E21aDIWjQUTm4RcFofDH3XJdA+cLEGk+p2+T3WgtVLk5wub1lWRba6G6gjrPZtGu8GT7y8onds0YYXzQfzbuK4rPMlUFzyyh5aUrZe0u5GntRRGjVbUAj4T2DOAFN6FUV7Lbgb33V6lKUKwONawAL4HYyDbXQj9i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZRTDiRD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CBCC4CEE2;
-	Mon, 14 Apr 2025 07:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744614133;
-	bh=Y+PzRa5KHzS3rRu7HfCG+Yc3+iPhWFVgRe6fdYaJvW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eZRTDiRDjhtRQIF5HRwOfptBoU1y+N8XY3hnlYCziTttxb4MMPTeEb89lyTvYUPCf
-	 THqpn3XG5Q7FTGm5sC99GYH/l3QBEYx3N/X7nDFXBRZSOq+9/hCrHP2bM4naaP8yXx
-	 lduBwjj9k/AWIkOQL3AmIKLC+myqfGCzQIv4ZYlwRbGYcJ3mDx6nvbqN1uQbEUOkaA
-	 qbd2mm+ElcpVXgXKT2mp84FkxjoF2DOZ44aNu2S2/M4ELraT1jhGb03n7AcsYWtnO4
-	 q2ogvg8o8JBeSZi04Bz7x400SabDmmdgiKcAQNDejww9mCIoWMX12EBrZ04epg/mBa
-	 4+jHblJNk0aHw==
-Date: Mon, 14 Apr 2025 09:02:06 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	cassel@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, michal.simek@amd.com, bharat.kumar.gogada@amd.com, 
-	thippeswamy.havalige@amd.com
-Subject: Re: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add
- `cpm_crx` and `cpm5nc_fw_attr` properties
-Message-ID: <20250414-naughty-simple-rattlesnake-bb75bb@shite>
-References: <20250414032304.862779-1-sai.krishna.musham@amd.com>
- <20250414032304.862779-2-sai.krishna.musham@amd.com>
+	s=arc-20240116; t=1744616640; c=relaxed/simple;
+	bh=3jKNDEail7lAtKlGJ6h6oq+Jys87QBcw4F/gbjH06po=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r1SwsLGjlwPy0Gkc9J0dAevn6kGk7lOc2UjHmYmyvPacLBetE9xQ2azV4wQp5+jtHivaTmOSSSNCKHeCvP26LdFxDCgtFsg3WMYywFt6twUZFgyCiKTbQdtoRFLJcC/+lLOQyUIoLeSGHkHupTz6IUAgQUhBL+RJXMBBI4UOW7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAAHQwuwvPxn49_nCA--.16546S2;
+	Mon, 14 Apr 2025 15:43:44 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: Zhiqiang.Hou@nxp.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] PCI: ls-gen4: Use to_delayed_work()
+Date: Mon, 14 Apr 2025 15:42:41 +0800
+Message-Id: <20250414074241.3954081-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250414032304.862779-2-sai.krishna.musham@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAHQwuwvPxn49_nCA--.16546S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1xJF43Zw1DurWUuF4fGrg_yoWDXFX_u3
+	yqkF9FkFyYk3s5J34akrW3ZFykA34xXw1kKFs5KFZ8Zay7Jr1jy348ZFWDAFW8Kr45XF13
+	CF9xCF13C3yDAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbVHq3UUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, Apr 14, 2025 at 08:53:03AM GMT, Sai Krishna Musham wrote:
-> Add the `cpm_crx` property to manage the PCIe IP reset, and
-> `cpm5nc_fw_attr` property to clear firewall after link reset, while
-> maintaining backward compatibility with existing device trees.
-> 
-> Also, incorporate `reset-gpios` in example for GPIO-based handling of
-> the PCIe Root Port (RP) PERST# signal for enabling assert and deassert
-> control.
-> 
-> The `reset-gpios` and `cpm_crx` properties must be provided for CPM,
-> CPM5 and CPM5_HOST1. For CPM5NC, all three properties - `reset-gpios`,
-> `cpm_crx` and `cpm5nc_fw_attr` must be explicitly defined to ensure
+Use to_delayed_work() instead of open-coding it.
 
-This we see from the diff, but why they must be defined?
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> proper functionality.
+diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+index 5af22bee913b..09dff6bf824f 100644
+--- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
++++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+@@ -174,8 +174,7 @@ static int ls_g4_pcie_interrupt_init(struct mobiveil_pcie *mv_pci)
+ 
+ static void ls_g4_pcie_reset(struct work_struct *work)
+ {
+-	struct delayed_work *dwork = container_of(work, struct delayed_work,
+-						  work);
++	struct delayed_work *dwork = to_delayed_work(work);
+ 	struct ls_g4_pcie *pcie = container_of(dwork, struct ls_g4_pcie, dwork);
+ 	struct mobiveil_pcie *mv_pci = &pcie->pci;
+ 	u16 ctrl;
+-- 
+2.25.1
 
-What functionality?
-
-> 
-> Include an example DTS node and complete the binding documentation for
-> CPM5NC. Also, fix the bridge register address size in the example for
-> CPM5.
-> 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
-> ---
-> Changes for v7:
-> - Update CPM5NC device tree binding.
-> - Add CPM5NC device tree example node.
-> - Update commit message.
-> 
-> Changes for v6:
-> - Resolve ABI break.
-> - Update commit message.
-> 
-
-...
-
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - xlnx,versal-cpm5nc-host
-> +    then:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: CPM system level control and status registers.
-> +            - description: Configuration space region and bridge registers.
-> +            - description: CPM clock and reset control registers.
-> +            - description: CPM5NC Firewall attribute register.
-> +          minItems: 2
-> +        reg-names:
-> +          items:
-> +            - const: cpm_slcr
-> +            - const: cfg
-> +            - const: cpm_crx
-> +            - const: cpm5nc_fw_attr
-> +          minItems: 2
-
-Why interrupts are not required for this variant? Why isn't this an
-interrupt controller?
-
->  
->  unevaluatedProperties: false
->  
->  examples:
->    - |
-> +    #include <dt-bindings/gpio/gpio.h>
->  
->      versal {
->                 #address-cells = <2>;
-> @@ -98,8 +165,10 @@ examples:
->                                  <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
->                         msi-map = <0x0 &its_gic 0x0 0x10000>;
->                         reg = <0x0 0xfca10000 0x0 0x1000>,
-> -                             <0x6 0x00000000 0x0 0x10000000>;
-> -                       reg-names = "cpm_slcr", "cfg";
-> +                             <0x6 0x00000000 0x0 0x10000000>,
-> +                             <0x0 0xfca00000 0x0 10000>;
-> +                       reg-names = "cpm_slcr", "cfg", "cpm_crx";
-> +                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
->                         pcie_intc_0: interrupt-controller {
->                                 #address-cells = <0>;
->                                 #interrupt-cells = <1>;
-> @@ -126,8 +195,10 @@ examples:
->                         msi-map = <0x0 &its_gic 0x0 0x10000>;
->                         reg = <0x00 0xfcdd0000 0x00 0x1000>,
->                               <0x06 0x00000000 0x00 0x1000000>,
-> -                             <0x00 0xfce20000 0x00 0x1000000>;
-> -                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
-> +                             <0x00 0xfce20000 0x00 0x10000>,
-> +                             <0x00 0xfcdc0000 0x00 0x10000>;
-> +                       reg-names = "cpm_slcr", "cfg", "cpm_csr", "cpm_crx";
-> +                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
->  
->                         pcie_intc_1: interrupt-controller {
->                                 #address-cells = <0>;
-> @@ -136,4 +207,22 @@ examples:
->                         };
->                 };
->  
-> +               cpm5nc_pcie: pcie@e4a10000 {
-> +                       compatible = "xlnx,versal-cpm5nc-host";
-> +                       device_type = "pci";
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       interrupt-parent = <&gic>;
-> +                       bus-range = <0x00 0xff>;
-> +                       ranges = <0x2000000 0x00 0xa8000000 0x00 0xa8000000 0x00 0x8000000>,
-> +                                <0x43000000 0x1010 0x00 0x1010 0x00 0x08 0x00>;
-> +                       msi-map = <0x0 &its_gic 0x40000 0x10000>;
-> +                       reg = <0x00 0xe4a10000 0x00 0x10000>,
-> +                             <0x00 0xa0000000 0x00 0x8000000>,
-> +                             <0x00 0xe4a00000 0x00 0x10000>,
-> +                             <0x00 0xe4301000 0x00 0x10000>;
-
-Follow DTS coding style. Or just drop this example... it also has
-incorrect indentation. :/
-
-> +                       reg-names = "cpm_slcr", "cfg", "cpm_crx", "cpm5nc_fw_attr";
-> +                       reset-gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
-> +               };
-> +
->      };
-> -- 
-> 2.44.1
-> 
 
