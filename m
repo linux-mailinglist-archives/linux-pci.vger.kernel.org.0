@@ -1,93 +1,58 @@
-Return-Path: <linux-pci+bounces-25806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 459BDA87D41
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:14:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0B47A87DA7
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:28:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B541E7A36C5
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:13:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2033C167A59
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F14F26989C;
-	Mon, 14 Apr 2025 10:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE1252690F8;
+	Mon, 14 Apr 2025 10:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T6/wGTUV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="cFfCm3H+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD60266586
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 10:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B409A26E16A;
+	Mon, 14 Apr 2025 10:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625645; cv=none; b=odsqguwR1T+e07dROJwUcpNxtXzUMaqpZhOfb90pb4GZ+YRE9EZ0VG9QLzoXR+od7XDAOdwa9UOm3Q2RwkfJg+otPBUpN2ijEpUoDfJ/CMyhzarX0B00+HtjXIL/g68CxzdJwhbGbhcG36jBaN96AyZMAgbwIfC4puPv0P4v96M=
+	t=1744626390; cv=none; b=Xf7KGpBQPdccOozNs/k5vFy2UtmlyjkeKEFEcXphV11VptadzRaBlUkHZhu50o3cS0v6E/WOhBdc6yxvW2DyrVjnaOiIGVAUGhLegQ5HMA7V1sCcaFgJ1Mfv3UPf2aWhsoZgx4YDIJBnxmL9VNjWkmRbCIO4jg+wIM+Q8BWKvEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625645; c=relaxed/simple;
-	bh=5NV1TH2xrxHb4IO9SixFXKNVM4OWlBJPXwuyr+sXUuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkfcPeeCL21zN2SWoP97zVdhC44mOnRSNmGLg4LVVPPNx+2kQYWeEPocsM4k8Rqf2LZIvTlLiWr4ByhzUlmy/IpVe7fkj0vS1GtS2HKs8xqtQQDFPWvnxuMHTnvifbC1zbntlWItkyrgQUrEBZWyCK4bx7H/Pad3r9YaSSep0+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T6/wGTUV; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-224191d92e4so38092495ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 03:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744625643; x=1745230443; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Smsg72GcXkF+Ivv2bDXZHVMpQJJmZfbh7twUx1di6OI=;
-        b=T6/wGTUVPSVKDB6nAPFSiKgf3JZkp/d0lN09ZV/zXVW8mPkaUzr4CttcwhGrmNrO1S
-         NHlBJIzF3WIQtZULawoVLpjudAyZF47UxGBLymS61W4JnjYLGH7DUkcnZRh4elQijhbD
-         xC7gVWrHPs5CAHaV6p7dJu8uey4pnShc3NSbsOvmc15hdnj2nHa3c2VI4qoHFP72ZluN
-         V85KefRALsoJLYKA+Fz3pKH397QGY8nbQ7uUJ3aEOrz3lIBciHUVodWpxftIi+E9lxYC
-         1PaAzLomtoItIg5OU7MbPksp9Vsp23x0fvBkV3WJAmmNtVoyo9moxqsvdEH966OA8q0i
-         v1Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744625643; x=1745230443;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Smsg72GcXkF+Ivv2bDXZHVMpQJJmZfbh7twUx1di6OI=;
-        b=g1OXA//3iSMg7s7/k2dsor7N0hBYJzpR6o3Mhd8MarNy4pRXOSoT212UC0xe9O+o9H
-         RPrheoVMVpHa8nunzDq0du0UuLdd0Pu55i8a7Ihfgblvs5aWGFe0Fq7ucUB6fOvwVIyS
-         YseOnJllpgpkul/McNZMc/fc5gb90qnQci1trWb5D5H58iIpLRUp3woH1KaC/ZhJ7ziS
-         pdmbe4InZGnKE3Y/F04Z2R7+l/tbqUjKMHIotdoZV4MrJalKnR89yaL4cT8I4zPH1/lf
-         BDA5/dKYK3yuu2TDBwp+RYWbRNW0CHKA4d9WSk3/uzBzy8xUvHmmpU0COReQU7Fy1SIT
-         MH2w==
-X-Forwarded-Encrypted: i=1; AJvYcCX+HtNV1STkDDSY6z82E6vn6/y9oU1+ItbmdOhIvio5OkXLr26bf/QEtY3qLe1T+A3F4uHlFFrAZEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQsFIgs7tGhvDglXMG2fv4XUx64HFdz+tXRoHjzjgH94xLHPUW
-	sitTIBeXkFwmPp4lFXIR4eSOPlS8M4oYQFpjGPuZu6A3mpAXLH2QKLzojytG5A==
-X-Gm-Gg: ASbGnct5EhBl8QGo4Wrd/J5sfT6Cq52thnwmEnfUXL49vbehz26CVGA/1GvozfsDFTo
-	fXQ5I+cMFUUs2/o+xW1wObqG7AGTIpR9EewyKJ3U9hQUw7n4izy8D6n7klIgTWXfe9w5btygNGq
-	Fom6f3OlDNL2/9rL4bNIVW4PApL2ThTndgBvdGnj7ygKhJdmv4BNTv4BAfU7L/LZnuQ2qN5sGPe
-	mZAo4PTfi0SK4/kBImRmqlcrkgGCSIu5hgyHZxZyfxTJXM740ZrwSJuKDin7BRyRgkUetAkItDL
-	aPvdBV/CGzUl5g1jnXjCDv4l3QuU/nsBSIeGySp04x8KHnWyfiGOJmbqybddjZo=
-X-Google-Smtp-Source: AGHT+IFP91KCL2ubggimJjnRS6FXpsDpAY6dmmHmoDGSKCTanmBivzBpL+STAELx6GokUH9JL1EV7Q==
-X-Received: by 2002:a17:903:244d:b0:224:93e:b5d7 with SMTP id d9443c01a7336-22bea4f6649mr164638455ad.34.1744625643547;
-        Mon, 14 Apr 2025 03:14:03 -0700 (PDT)
-Received: from thinkpad ([120.56.202.123])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c93addsm95066555ad.152.2025.04.14.03.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 03:14:03 -0700 (PDT)
-Date: Mon, 14 Apr 2025 15:43:54 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>, 
-	Sven Peter <sven@svenpeter.dev>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 01/13] PCI: apple: Set only available ports up
-Message-ID: <egu73pd5m4ubr5ex26kw5vwtmekuto73x46lzzmc3gy2rkiv5m@wjat4ewfsud2>
-References: <20250401091713.2765724-1-maz@kernel.org>
- <20250401091713.2765724-2-maz@kernel.org>
- <k3wj3wkk3cymyacboalkhe2fa7jvkpuehq4knpsouoyhvoavpl@bafg4oakp4lr>
- <87v7r7ygq0.wl-maz@kernel.org>
+	s=arc-20240116; t=1744626390; c=relaxed/simple;
+	bh=P4tVZMFQeTryqhZfLYxMqp9Mr4yDOpMpRVM0VYHA3no=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=teY4k6Wrqyj6Zmu9JSBSRkCtSji6AZZvPZhbRhbfHmeSjJutUamftg27E9BWeEbsKUWfdtVkOnK3tDiQFFLCjTs8sLOBMgopLREeavmn9OeG3M7hs+sAIbCIlTv7GOpvqR/wSy5eS9WlpWxk1dNKix+cNjB+Af2+ic+lAm/xZoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=cFfCm3H+; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744626386; x=1744885586;
+	bh=yRcvV9zzEHmLeGHD8PYUBkj05ZKHhUmdRnM9Ej07AqI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=cFfCm3H+ah/m7XpakvlzjZYDUWeHuo8MKHfjyXqHxQmqxpC4Fbc1wmLRRf57piRl3
+	 wGxxxq92v0lYMoQBmzczq8p6xjv6WIxhWs3FzyZE9XLmRb8JG4GGAmselc6xhUk1Kz
+	 fal6DQUoGgbqTXRMqE7/eEKdNelhc4kOvh/NJNN2yK2YU8BIVKlmPFef67HIUDP7VN
+	 yQErnhclV7BQCTXW7LiRWYN5vVpxEk7X0u+fG5eEfnUqHHOhbI04/JtQFr07GiR9nO
+	 j8RSqYOLMmxix4V+mhXUJldbg+ub7OoB8qScPcRcIDu+8G4c3Zg/1DvAl5fJ7zP/Mb
+	 3imHQPMFZ7coQ==
+Date: Mon, 14 Apr 2025 10:26:21 +0000
+To: Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, abdiel.janulgue@gmail.com
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, daniel.almeida@collabora.com, robin.murphy@arm.com, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/9] rust: device: implement impl_device_context_into_aref!
+Message-ID: <D96AFO7XG0S5.9YOG2JPIWDIZ@proton.me>
+In-Reply-To: <20250413173758.12068-3-dakr@kernel.org>
+References: <20250413173758.12068-1-dakr@kernel.org> <20250413173758.12068-3-dakr@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 50dc295fd6a4f5a7030fc2aa9d171edef1070374
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,40 +60,64 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87v7r7ygq0.wl-maz@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 13, 2025 at 09:00:23PM +0100, Marc Zyngier wrote:
-> On Sun, 13 Apr 2025 17:57:35 +0100,
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > 
-> > On Tue, Apr 01, 2025 at 10:17:01AM +0100, Marc Zyngier wrote:
-> > > From: Janne Grunau <j@jannau.net>
-> > > 
-> > > Iterating over disabled ports results in of_irq_parse_raw() parsing
-> > > the wrong "interrupt-map" entries, as it takes the status of the node
-> > 
-> > 'as it doesn't take account'?
-> > 
-> > > into account.
-> 
-> No, I really mean it in the positive form. of_irq_parse_raw() checks
-> of_device_is_available(), and gets really confused if walking from a
-> disabled port. You end up with the interrupt for the next *available*
-> port, and everything goes pear shaped from then onwards.
-> 
+On Sun Apr 13, 2025 at 7:36 PM CEST, Danilo Krummrich wrote:
+> Implement a macro to implement all From conversions of a certain device
+> to ARef<Device>.
+>
+> This avoids unnecessary boiler plate code for every device
+> implementation.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-Ah okay. 
+One nit below, with that fixed:
 
-> So IMO "as it takes into account" describes pretty accurately the
-> situation.
-> 
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-Thanks for the clarification.
+> ---
+>  rust/kernel/device.rs   | 21 +++++++++++++++++++++
+>  rust/kernel/pci.rs      |  7 +------
+>  rust/kernel/platform.rs |  9 ++-------
+>  3 files changed, 24 insertions(+), 13 deletions(-)
+>
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index 7cb6f0fc005d..26e71224460b 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -279,6 +279,27 @@ macro_rules! impl_device_context_deref {
+>      };
+>  }
+> =20
+> +#[doc(hidden)]
+> +#[macro_export]
+> +macro_rules! __impl_device_context_into_aref {
+> +    ($src:ty, $device:tt) =3D> {
+> +        impl core::convert::From<&$device<$src>> for $crate::types::ARef=
+<$device> {
 
-- Mani
+Missing `::` in front of `core`.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> +            fn from(dev: &$device<$src>) -> Self {
+> +                (&**dev).into()
+> +            }
+> +        }
+> +    };
+> +}
+> +
+> +/// Implement [`core::convert::From`], such that all `&Device<Ctx>` can =
+be converted to an
+> +/// `ARef<Device>`.
+> +#[macro_export]
+> +macro_rules! impl_device_context_into_aref {
+> +    ($device:tt) =3D> {
+> +        kernel::__impl_device_context_into_aref!($crate::device::Core, $=
+device);
+> +    };
+> +}
+> +
+>  #[doc(hidden)]
+>  #[macro_export]
+>  macro_rules! dev_printk {
+
 
