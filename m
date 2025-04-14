@@ -1,113 +1,81 @@
-Return-Path: <linux-pci+bounces-25801-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25802-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DD0A87B50
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:03:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 230BDA87BBE
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:20:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7327D3B2849
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 09:02:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA3716F9CE
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 09:20:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB1B264FAE;
-	Mon, 14 Apr 2025 09:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E20225E479;
+	Mon, 14 Apr 2025 09:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BWt7J/s9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9L9GkCg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C96261580
-	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 09:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743541A8401;
+	Mon, 14 Apr 2025 09:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744621303; cv=none; b=HJ6QUCybmWPpvu3vlMUsSMaarfAITnO26gmF+Z6A15hkGmgzr9ac0ef8qh5rpRo1AH99VrC3uB4krs4K5V7ahnJGcI9Zd9v5F2OoxW4G2ol5dmYAPhe5B4XYbW4TZfvP5vHeOrkiNwufuVz5WC+C6KN+XbVmdX9MgabPGhizRH8=
+	t=1744622453; cv=none; b=dUVcRIplNOp+B2qd1zXiuMq292/6qjsXHTXN22kxF2D2le+zb8fa836aXvM5WwE3Zhgp3VF1kujVmk4poIUt7+H3DWKLwGkowx0f3vb/gGwna/QtU3sA9T7S0RqStmphwTHsiJJJutLuBB0X+OUP4LhmH87oOiAa4QJd5tp/y+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744621303; c=relaxed/simple;
-	bh=NL2TGpDIJnKJLRnd23h9LgHRVuBV+Ktt+8xcaN6KIFI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEqIUBB+bafNjWsswbzElQE7oSGEsspkJlyVgseBy7BwKUJ6/2s579RE9ES4TZlpQL/6H8wt8zYmoMCVXjWHGHD41D3jNMsp5iBvpOYfmGhu88b4ADPOrlLFE7mW+sg0AcDufRpn01OVHepjyyEe7E5fSglGeEtmtQgxYm/kATw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BWt7J/s9; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so684044466b.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 02:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744621296; x=1745226096; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPOEfxN91t6VGg4utPDevtYddqW0HAL5VO9JP2cPRZo=;
-        b=BWt7J/s9YV/VAOEc7OQF2YUju7YbYeIpodRYNsYtyweNtzkQWUaNq6rFFh0nNbpv9L
-         idr0VZ9J78Nl8S34s9+ZJtl7DFyE3vNr8SEZ87JdZy4hImG1WlnI2RjpSfkHs6BmWW2B
-         87Wm1xcJ2Wz+zjLBnPYAhMQ+C6P8/+PlGIpysxb2v5mGH4VIPIOGSSMxh5Ag8LA3jLk3
-         RVdaghf11CqCg6skFuM+3LaigbGU9f7Uiy6T6rqIYeiUrI8xlj9mi6m5xyUYNUKRVlfr
-         UqRV6QgDzRXAt5ulhv68I7aDg41Sh4eoJiGIOijRHIEaJ5W2tAstR4nYmEFNvUqCY9Dl
-         iBGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744621296; x=1745226096;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FPOEfxN91t6VGg4utPDevtYddqW0HAL5VO9JP2cPRZo=;
-        b=X9TNA5O9fAUWPZiWC8rLR7olvkUmqi7Oxme4fxezoropqQRdj9RiLAV+iMr3Jv6b+M
-         DZY8F8ZkZZamxXRu9sbP3tXET+lq9yh4ART+/k09lsf6sT9UmlFnX2wdsgr8oyxKftn9
-         M6wrVVsvwJSaMoBER4FDESk5Ipsz4BT1ISs7wEaOaY1zSfjsyz13LViCuDKN6q3HqXSz
-         HYcPO8JPfLFhBm8UN2T3SFWrENLfj97tm/FyNJ3rLji8NRRlERrWeyK3d7qBnvNGkDxF
-         sQPAYBbewSvJPTaDX+vzdGocL2am7Gf47jXLb/2SXRmllfyrJqMsjlxl98n4wIeygbD2
-         yPmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU7QOJ3cWTOdknGvJWZlE99kGrj4YdSnSY9VXA9HaWLx+dT5Un/6YzLoO/y60aJZf8ZAx7XIwkhqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjAS7cKWUb3mPDbpxMiYdX1fSBjk/c/MpzUNO+HY4z7owmWBLH
-	BXYXew3s0RThGNIb1TyoM+KqruV7LQDFi4Hv12vVTx9s+gDQmCu9zanb6VQmb0k=
-X-Gm-Gg: ASbGncv3WGgw5OmoTJY4Y+O/MECqZdOAW+TrESpjZPB+cYyk1WuOwKGRFJiXo3mEhu3
-	KK6swH3fDoYNPPXy8M+Ya92slUKj3yh8+jN9U78r+ageWCDKt32J7yRHndRHPkUTPzidQeeJD4T
-	QPE9GrypEN7KB0TDv0A5lx7hx+ztW5r0mKDkpZPWE6o1eBM3Bi/pudyBv3vsU5dWGZU4M2v4ccG
-	mooc3CicX7xtbOI3EUWGU5pUVC76ZYSHCZxoAy2Zzup9uH1tiViyv+3PW8D4nUMVUGmKir4y3Ow
-	RveESmd8UyRmLQw0qxmdydoonVyTXaasDCWa97ZC2i4yAaXISR5cASfRTo8BKqO5QSRs/FdAnd4
-	EG+UHZg==
-X-Google-Smtp-Source: AGHT+IFmbGr9kZB05oV1EN/0KfR241wQsclfRn1B+/FEvNm78/Bf5RFw5+zsFio1fzhhJ8sSkqIJlQ==
-X-Received: by 2002:a17:906:730e:b0:ac4:4d2:3867 with SMTP id a640c23a62f3a-acad3499ff8mr901526366b.23.1744621296460;
-        Mon, 14 Apr 2025 02:01:36 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce7fdcsm883504566b.176.2025.04.14.02.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 02:01:36 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 14 Apr 2025 11:02:58 +0200
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 00/13] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <Z_zPQpyjZXzVxroB@apocalypse>
-References: <cover.1742418429.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1744622453; c=relaxed/simple;
+	bh=bz1n5Vi8wBxB9B2+kQXtaqVfb20MXtUZpsz3bQ93BJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsJ19xZMgqAa97wD6VvaMyQHKYnmticjYeVNo65BRtmsexkS8GpUAZY24wrYmMJya2K5JawaovK5QXRD00A60Xprc8U6uB+pAPRf4CV69MZPwDTapQqkyPLdR4Z5ZspBmkWcqRQlUXUn8Li/lEbCMSS2lJV4Vh+WPH+ayK2jgMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9L9GkCg; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744622450; x=1776158450;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bz1n5Vi8wBxB9B2+kQXtaqVfb20MXtUZpsz3bQ93BJ8=;
+  b=K9L9GkCgj6hdsC6ZDizk8nVpbWIHHJ9gVdPFa8u6HpPs3QrotjMaWu3Z
+   GN9uIwnHmd8mp06pOnnxLZvvkkUrXnAdD9cUFcT2V2y3ab+3hzfbSsUTj
+   ksRJ9EQZ7FY85riFX1PUulxPt3g7tO8o3AYYhhsuB9kgPjj6bav/Xa7f/
+   wOdq7bmDzIO0wlVAhNo5yt0wCjhVv+Oi/gZ55lET/x3vGZR/ZmFhecKhx
+   qGRdJnZtx+gTf/pp99JuAYQAs8PhxGQAWyvV7dpy5N6HLzHn524XiszbP
+   V1LgPHsigLlC+neNbbFK7uGFWyB5i163B3223niIp8/SEkBduPx5nUBoz
+   g==;
+X-CSE-ConnectionGUID: EXRBzIUPRIK6MDvEe5LGUQ==
+X-CSE-MsgGUID: Ex2IiMuOSo+/ZHCNq5Jt2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="57071613"
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="57071613"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:20:50 -0700
+X-CSE-ConnectionGUID: 9YIxMUhpQ8WDg5wUXXbL1A==
+X-CSE-MsgGUID: L2c9Ba6lRjKWPYBikVug5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,211,1739865600"; 
+   d="scan'208";a="129617713"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 14 Apr 2025 02:20:36 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4FzW-000Dz8-0S;
+	Mon, 14 Apr 2025 09:20:34 +0000
+Date: Mon, 14 Apr 2025 17:20:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manikandan K Pillai <mpillai@cadence.com>,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and
+ EP controller
+Message-ID: <202504141719.svx3rf5x-lkp@intel.com>
+References: <20250411103656.2740517-6-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -116,35 +84,142 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1742418429.git.andrea.porta@suse.com>
+In-Reply-To: <20250411103656.2740517-6-hans.zhang@cixtech.com>
 
 Hi,
 
-On 22:52 Wed 19 Mar     , Andrea della Porta wrote:
-> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
-> a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
-> etc.) whose registers are all reachable starting from an offset from the
-> BAR address.  The main point here is that while the RP1 as an endpoint
-> itself is discoverable via usual PCI enumeraiton, the devices it contains
-> are not discoverable and must be declared e.g. via the devicetree.
-> 
-...
+kernel test robot noticed the following build warnings:
 
-since there has been no feedback for a while, a gentle reminder about this
-patchset. 
-Several patches have at least one Reviewed-by tag, with the exception of:
+[auto build test WARNING on a24588245776dafc227243a01bfbeb8a59bafba9]
 
-- PATCH 5, 8: those are, respectively, the driver for RP1 clock and misc core
-  which have no major rework since the inception.
+url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250414-094836
+base:   a24588245776dafc227243a01bfbeb8a59bafba9
+patch link:    https://lore.kernel.org/r/20250411103656.2740517-6-hans.zhang%40cixtech.com
+patch subject: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
+config: powerpc64-randconfig-001-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141719.svx3rf5x-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141719.svx3rf5x-lkp@intel.com/reproduce)
 
-- PATCH 9, 10: those are new patches, where the most relevant change is a
-  rearrangement of the dts include hierarchy to be flexible enough to support
-  both the dtb overlay approach and the monolithic dtb.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504141719.svx3rf5x-lkp@intel.com/
 
-- PATCH 13: just enables OF_OVERLAY config option. Some metric data have been
-  added to help evaluating the impact.
+All warnings (new ones prefixed by >>):
 
-Many thanks,
+>> drivers/pci/controller/cadence/pcie-cadence.c:303:12: warning: variable 'ctrl0' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+     303 |                 desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/controller/cadence/pcie-cadence.h:342:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN'
+     342 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK, devfn)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:68:3: note: expanded from macro '__BF_FIELD_CHECK'
+      68 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      69 |                                  ~((_mask) >> __bf_shf(_mask)) &        \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      70 |                                         (0 + (_val)) : 0,               \
+         |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      71 |                                  _pfx "value too large for the field"); \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:557:2: note: expanded from macro 'compiletime_assert'
+     557 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:545:2: note: expanded from macro '_compiletime_assert'
+     545 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:537:7: note: expanded from macro '__compiletime_assert'
+     537 |                 if (!(condition))                                       \
+         |                     ^~~~~~~~~~~~
+   drivers/pci/controller/cadence/pcie-cadence.c:323:46: note: uninitialized use occurs here
+     323 |                              CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(r), ctrl0);
+         |                                                                   ^~~~~
+   drivers/pci/controller/cadence/pcie-cadence.c:303:12: note: remove the 'if' if its condition is always true
+     303 |                 desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
+         |                          ^
+   drivers/pci/controller/cadence/pcie-cadence.h:342:2: note: expanded from macro 'CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN'
+     342 |         FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK, devfn)
+         |         ^
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^
+   include/linux/bitfield.h:68:3: note: expanded from macro '__BF_FIELD_CHECK'
+      68 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+         |                 ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:557:2: note: expanded from macro 'compiletime_assert'
+     557 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^
+   include/linux/compiler_types.h:545:2: note: expanded from macro '_compiletime_assert'
+     545 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ^
+   include/linux/compiler_types.h:537:3: note: expanded from macro '__compiletime_assert'
+     537 |                 if (!(condition))                                       \
+         |                 ^
+   drivers/pci/controller/cadence/pcie-cadence.c:291:39: note: initialize the variable 'ctrl0' to silence this warning
+     291 |         u32 addr0, addr1, desc0, desc1, ctrl0;
+         |                                              ^
+         |                                               = 0
+   1 warning generated.
+--
+>> drivers/pci/controller/cadence/pcie-cadence-host.c:122:3: warning: variable 'desc0' is uninitialized when used here [-Wuninitialized]
+     122 |                 desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
+         |                 ^~~~~
+   drivers/pci/controller/cadence/pcie-cadence-host.c:80:18: note: initialize the variable 'desc0' to silence this warning
+      80 |         u32 addr0, desc0, desc1, ctrl0;
+         |                         ^
+         |                          = 0
+   1 warning generated.
 
-Andrea
+
+vim +303 drivers/pci/controller/cadence/pcie-cadence.c
+
+   286	
+   287	void cdns_pcie_hpa_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
+   288							      u8 busnr, u8 fn,
+   289							      u32 r, u64 cpu_addr)
+   290	{
+   291		u32 addr0, addr1, desc0, desc1, ctrl0;
+   292	
+   293		desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG;
+   294		desc1 = 0;
+   295	
+   296		/* See cdns_pcie_set_outbound_region() comments above. */
+   297		if (pcie->is_rc) {
+   298			desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr) |
+   299				CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
+   300			ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
+   301				CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
+   302		} else {
+ > 303			desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
+   304		}
+   305	
+   306		addr0 = CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
+   307			(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+   308		addr1 = upper_32_bits(cpu_addr);
+   309	
+   310		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   311				     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r), 0);
+   312		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   313				     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r), 0);
+   314		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   315				     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r), desc0);
+   316		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   317				     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r), desc1);
+   318		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   319				     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(r), addr0);
+   320		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   321				     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(r), addr1);
+   322		cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+   323				     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(r), ctrl0);
+   324	}
+   325	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
