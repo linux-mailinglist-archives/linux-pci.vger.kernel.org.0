@@ -1,80 +1,62 @@
-Return-Path: <linux-pci+bounces-25804-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25805-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBC6AA87D05
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:08:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC26EA87D01
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 12:08:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41BCA188C38F
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:07:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12ACC174686
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 10:08:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC1126B0A0;
-	Mon, 14 Apr 2025 10:05:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9218526E16D;
+	Mon, 14 Apr 2025 10:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3cfMpvF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dnb1SXSd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9A426B08A;
-	Mon, 14 Apr 2025 10:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1BB26E16B
+	for <linux-pci@vger.kernel.org>; Mon, 14 Apr 2025 10:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744625147; cv=none; b=GcvRmY9Y1LuoXoOFR9uY6eeZeiDun+DP08BDv3oX5YKkEOjHqGdVs6OhpaPQ1A1/hSUXWOUdn5rhcUKmyaTdJa3OKJo+DOSrrpwG05ReNv6JhdfWIei7Ci2n3teFO+dEgVGSBMHToaPZrHi7oTH055O05RxKvNbhZgf/hLd6dYg=
+	t=1744625174; cv=none; b=EIBUMUo3JEZIYBAKI+mgH6wthm4kLUVXLuHvujKnpLRKzuwn5b/ZKeQY0NtIrZI4veJL510z5O4BIdGwgJHIaZ5I2KTLkGXiaTZbA1jIhR7lF2/j3EAOll2IPhQX9VNPu9TU6MuiZTua2/cA8nfB8XVTwNJyfGcrDMwP3l9ehgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744625147; c=relaxed/simple;
-	bh=F1AlJoHjOHPtKPHcI1/WRpTs95CH1wV1k4+PVrQlr2o=;
+	s=arc-20240116; t=1744625174; c=relaxed/simple;
+	bh=i2lYtsZGAS9XdlrMapzUnk0eGNmZJKYqS1yBto1gtek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgJ/T5F+7eHOSUMusKGXEI2Z3sO6XIAAEbPNPdtY6q9pThdBcpV/ZmgEt7H9OiKlpVD+npqgHavZJQ55eJZYtYfm2e4Iah7Jf9/CLaZbsVqDN7jZlid5DQtHublJo+TeBrLegP3OSAEACJ0s4FNUVMzpL1qLp63C0n29nYMwK5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3cfMpvF; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744625145; x=1776161145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F1AlJoHjOHPtKPHcI1/WRpTs95CH1wV1k4+PVrQlr2o=;
-  b=K3cfMpvFcKHjO8mdAAcugaYkeLpPKbZ8jhr2Cf/CXgmwWcs9XeBLgONp
-   0A8VUGhnWkePA8t6TI2hdXE77d2K4q2rlWw5fmjMt1RmjzNsr0t0Z9Pr7
-   BgsorqJHn9KCy56ohDWCVYLJarPK5YWqDkYPE+s5+xh6G9F49z/+zhfvZ
-   uqY11kHPlipKL1M8gd1zD7RSZw+yjheF04efqsWdgo0kSkrKN1gINYUPx
-   FPo2NnP4PWMg+qaZAp2sfFFXFI98497iQRVrtj7Bmoua5MxFM+AMEPTVD
-   Ob17UP304KDzCWzb+byHfumN0kmjJdgTplOenTZTVBDg/UF+PeRzYcQC5
-   w==;
-X-CSE-ConnectionGUID: e7DNuFipSv6BkpQXkKM35g==
-X-CSE-MsgGUID: bV5/Xli9TVO1N8DFzsEAlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="45973024"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="45973024"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:05:45 -0700
-X-CSE-ConnectionGUID: SfouxUGlT2SZEPwGuXFLfw==
-X-CSE-MsgGUID: /VoKRjlJQMqY1B8ddPrbmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="152957247"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:05:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4Gh9-0000000CCb3-3buo;
-	Mon, 14 Apr 2025 13:05:39 +0300
-Date: Mon, 14 Apr 2025 13:05:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ruM5+SXNOANvV1T08PScCdKMO5YWIAY1flmHnhCYj3fSRxYNBrY16q6DhJsXNvLf6xfSbZX+3CAIg574mCK9GSUwNkXrItOXGbFtELev8fiZ8xdiv/llHn+yxcUslDtHnkEQITlu0FuvyuOCWEMv06ZQ2hjNX4yEWrQGs2fReUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dnb1SXSd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49B25C4CEE2;
+	Mon, 14 Apr 2025 10:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744625173;
+	bh=i2lYtsZGAS9XdlrMapzUnk0eGNmZJKYqS1yBto1gtek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dnb1SXSdLlWm+dU/DMNl+RyKzZc5LSYXzbUMlbKHC/QRtbHQXOFlpDtVLJefjzVgS
+	 Y/OfrRTqvgGJmx5mZpAph8cMY23YCapEH30D6U6PatxkEQTfgZzvoNilS9NO5EoxX0
+	 asAzr60r9aM1TNTcEiRtn+n0ztMCQ5sUHF2R1tP35VZzpytZ39d9vFjTGHz3LvQCQd
+	 BAhqL+X4qdb+0dHY6UuSmwemOfxk5IM5ec4+VSMnqK6N+Pti4XcKV+JuDWF+TXIff+
+	 7L2lu80MJLKB2BYozNxjS1fPxG7ZpliI8Pp7q8YIJsLCQU4yyn8p7mF37ptpI93FDT
+	 tLFZCZHWcv+SQ==
+Date: Mon, 14 Apr 2025 12:06:09 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v1 1/1] x86/PCI: Drop 'pci' suffix from intel_mid_pci.c
-Message-ID: <Z_zd88_-lqFFvtnP@smile.fi.intel.com>
-References: <20250407070321.3761063-1-andriy.shevchenko@linux.intel.com>
- <Z_QOAPXsacHI6TZz@gmail.com>
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Remove PCIE_L0S_ENTRY check from
+ rockchip_pcie_link_up()
+Message-ID: <Z_zeERoDtZ52kW0T@ryzen>
+References: <1744180833-68472-1-git-send-email-shawn.lin@rock-chips.com>
+ <Z_YwNt6WUuijKTjt@ryzen>
+ <38e69551-cc40-11a9-191f-de9a193c5e51@rock-chips.com>
+ <Z_Y7h1vzVCCEiXK6@ryzen>
+ <gogw24yg4lfq77ime7qyurvkef5yvmkkwjxo6xch52fbszibax@diaxredvtcrh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,35 +65,42 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_QOAPXsacHI6TZz@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <gogw24yg4lfq77ime7qyurvkef5yvmkkwjxo6xch52fbszibax@diaxredvtcrh>
 
-On Mon, Apr 07, 2025 at 07:40:16PM +0200, Ingo Molnar wrote:
-> 
-> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > CE4100 PCI specific code has no 'pci' suffix in the filename,
-> > intel_mid_pci.c is the only one that duplicates the folder
-> > name in its filename, drop that redundancy.
+Hello Mani,
+
+On Sun, Apr 13, 2025 at 07:54:28PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Apr 09, 2025 at 11:19:03AM +0200, Niklas Cassel wrote:
 > > 
-> > While at it, group the respective modules in the Makefile.
+> > It seems like we should really add a warning and a comment in
+> > dw_pcie_link_up(), so that others don't get hit by this hard to debug issue!
 > > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  MAINTAINERS                                   | 2 +-
-> >  arch/x86/pci/Makefile                         | 6 +++---
-> >  arch/x86/pci/{intel_mid_pci.c => intel_mid.c} | 0
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> >  rename arch/x86/pci/{intel_mid_pci.c => intel_mid.c} (100%)
 > 
-> Acked-by: Ingo Molnar <mingo@kernel.org>
+> Right. But I'm also wondering if we should use the 'Data Link Layer Link Active'
+> bit in PCI Express Capability for checking link up. Qcom driver has been using
+> it from the start and there are no reported issues. We could add this as the
+> first fallback if the link_up callback is not provided.
 
-Thanks!
-I believe it's Bjorn who is going to apply?
+Sounds like a good idea, but from looking at:
+7.5.3.6 Link Capabilities Register (Offset 0Ch)
 
--- 
-With Best Regards,
-Andy Shevchenko
+"
+Data Link Layer Link Active Reporting Capable - For a Downstream Port,
+this bit must be hardwired to 1b if the component supports the optional
+capability of reporting the DL_Active state of the Data Link Control and
+Management State Machine. For a hot-plug capable Downstream Port (as
+indicated by the Hot-Plug Capable bit of the Slot Capabilities Register)
+or a Downstream Port that supports Link speeds greater than 5.0 GT/s,
+this bit must be hardwired to 1b.
+
+For Upstream Ports and components that do not support this optional
+capability, this bit must be hardwired to 0b.
+"
+
+It sounds like the the 'Data Link Layer Link Active' bit is optional,
+or at least optional for Gen1 and Gen2.
 
 
+Kind regards,
+Niklas
 
