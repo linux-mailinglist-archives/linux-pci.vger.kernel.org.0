@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-25822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75393A87F39
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 13:38:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99400A87F96
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 13:49:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7218D17227F
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:38:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C57E21897E87
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Apr 2025 11:49:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B218280CDC;
-	Mon, 14 Apr 2025 11:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 069FD283689;
+	Mon, 14 Apr 2025 11:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="H0sFDIZs"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="m5DZBDYe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91731A9B4A;
-	Mon, 14 Apr 2025 11:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B07E17A305;
+	Mon, 14 Apr 2025 11:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744630732; cv=none; b=m3wH0s99TFfqUGhrgmKNb27R9ALMPS4/jaY9XSuFtmWtJYre/7A8kkJX7nlrj2DV5dvLyI6CEgHJzP4CCh3hO6+xDLTFG7q40rKdOHSmETENQ9oS0mf14/wbpzFSdz2T2JJ+bsKvIgsp0DfDd6BZgu+RU7zG69YfMBMxDS7fNm0=
+	t=1744631351; cv=none; b=WleMMGUAxUGYLt5gTPAMeqACrsHkw2CG5I0lu7+NSWgNs6jaHlS+j9qyV776A1t6DjWsheMsdNvapv6KJGwZcXVsP7AFeKAhH8s/ghwB1TPJJ2pOQ6dpHO4yX5+t/RBYqjdyvhneW3e+rd3j2/4AHHfsKWFUq5NiacTe23T4cUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744630732; c=relaxed/simple;
-	bh=tw8NicR85wtZWn7+Of5iPSQ4ltvwsaFU5yYg/jkmpFA=;
+	s=arc-20240116; t=1744631351; c=relaxed/simple;
+	bh=/v36ltzahpmGPcKjD7NxZ2v8Uexk1OPxWedQXja8tPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OB4ZKpkdozPf0cc8Jq7ehoZ1lNtgveD5kGX1GS2UiomOebP3vyB2iKqFQCqSeD4v2yu54SpAh/X/uBxv7HL6neGRaSItUPqaGh58Tw4L/7Mfv9BdZa0wi+QnaUiJkUPFSwFnI0XrFZ2BpsrgunG2+ToPXARIk66MpKucuCuS0+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=H0sFDIZs; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=dvGcVA0EHRqCTZfrA8EFaXP9iHVzO97+G598w875GuIwzs/MZqdvpaomn4CgKd8aajav88IjNvCuiRbu3wL/y2WWipwApBk2rx6GLsVhPWqvXZK91us6I8/6o6E67KFWS1PcQidjIfMcRIfECG929zTJjpgW2jIWiQFEUN615Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=m5DZBDYe; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744630711; x=1745235511; i=wahrenst@gmx.net;
-	bh=5Yqz6YDLmosCf4LwVIBid/uZpaNuifGBNUOWF1Ok3z8=;
+	s=s31663417; t=1744631327; x=1745236127; i=wahrenst@gmx.net;
+	bh=K+4Cpie0T/NmOxvbbp6LArEVusYrUxyybbrudOe3VN4=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=H0sFDIZsvbu7eadEOfhvpsig557h5T4fVsdqhIrBvDjjyxf+kw5m2dYClZv3FATR
-	 rpATfe2E5LMuvoZL8B+aKpyj9Bwg6//OnkxVxgdoXrv68ycU9zOh7uIVb8CLp9w0I
-	 VzBOxdVZvAvqby0MLfPVA7ztYVMQijJ3rtzDfCXt0Hh/vgaU0FltcFkW1Z+af9u2C
-	 913J6HX7dOF21eWTKxsYC4hwGs4yvnVHVXlNnef9DAy+MGPXvImJzcJgNKeOk03oB
-	 zO6aC/1IhSLQgshoySKcyTB1EBJzg6aItmds8ZWWjpkWREKzfjphWDQDJ1/7TzqjH
-	 pZEyJzAGIDZaxAaRqg==
+	b=m5DZBDYeoNm1c69dLoupy36ujE6g73TlBVkqqpXE9312bIdVuRJnzIUDupL2/aLn
+	 UZr++AQrDlt6EzcazCMAoYNssJA/mvHmpiIvJUStzRQ7BprduVezaxAdketU7+0jq
+	 btZHbzwOMf64QQ/UpRF/gkSbwzPL+MczqNNhAeOKpzsI6CAApyqxM5GePmZwwj3fs
+	 KvDttgiyYVhyKjvXDW31uZuN4ggsdyBlxbh6pnencQqUVQERei+TFYDKI5koiI7eg
+	 dKnqjtC770IxxORivFoQ7rLY68JVeJC3gcg5F7oNfTXREecBPYKTsNb/BUGg3P3X5
+	 nhWJeVgphps3sFDt3Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1poA-1u26Hv1PB2-00DKvJ; Mon, 14
- Apr 2025 13:38:31 +0200
-Message-ID: <abb3405a-45fb-4425-a817-89a03b0c16c4@gmx.net>
-Date: Mon, 14 Apr 2025 13:38:29 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N6sn7-1sxZOS2Z27-00sqVE; Mon, 14
+ Apr 2025 13:48:47 +0200
+Message-ID: <526751d2-c7e8-4097-9454-c9049b880225@gmx.net>
+Date: Mon, 14 Apr 2025 13:48:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,7 +58,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/13] arm64: dts: Add overlay for RP1 device
+Subject: Re: [PATCH v8 09/13] arm64: dts: Add board DTS for Rpi5 which
+ includes RP1 node
 To: Andrea della Porta <andrea.porta@suse.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -85,7 +86,7 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
  Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
 References: <cover.1742418429.git.andrea.porta@suse.com>
- <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
+ <c6498d8cf8dfade1980b566e99a9a91551fd8b53.1742418429.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Stefan Wahren <wahrenst@gmx.net>
 Autocrypt: addr=wahrenst@gmx.net; keydata=
@@ -97,97 +98,102 @@ Autocrypt: addr=wahrenst@gmx.net; keydata=
  f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
  V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
  aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com>
+In-Reply-To: <c6498d8cf8dfade1980b566e99a9a91551fd8b53.1742418429.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m8JLxCwdInGWwVIBpPbWU85afGcQak8XuDSiAyyOP0EmeklFBz0
- hl4x34oAp+KNiLjDCLAoxHrznsBPvcnDWCFB193V4upZYpMs40GI2TqwkaQ6gaacflG7bOQ
- EMPaxpr1mFixC81q0mbv+LRK8wc44QYFoCnKnP6uT1vlasOa6ZQCCtek/T2Kz9SKVqA1bFJ
- wdUbubZcymN48TQHDXT0w==
+X-Provags-ID: V03:K1:Q/uqLjrFuArPjirEjhXTJ5d3uJ7OdvCvVI+pv/Xt5or02vZztUA
+ YY/J9+90WDy098NKbupQsiWz932xEwp7WwuN9BiZIDHqp6zp/xZBODCbLogW+r1k8E/pwir
+ +0kLC28Y4V9siWI4uCrkwIO85UE9ATs8CCSE1Q/S2PzHIcWqHnO4I66Vp76XrGTYFxjJ+8c
+ uU9PSIB7qElvAnelIGPpg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:EhsPipdgz2M=;g3X/9zeu8NWjQ6d/rmQ0irfcxJ/
- XzlBaf60rX/TLoFVsn5MVtvPRLvOEiKdfGSUC2bX2UBW0EpJOJWfagXAKhkfoBkCMlwm+tZpw
- yYaJ+bIiqADOU/+GZ3dSVaQMzLVKMESLZJorEtoqtT49HEFCVfMAVFrcxlr/FnodYVTuvqBLI
- 2jd+2LK6QUd6RMo3b5S1tiP3NkJTLX65UIGJb+EX3QKlzcBbuDtqET0D5edbUxhgiK+1aEPao
- RqNr7IiJFI9AP4Yk5T3RjT5KsrBN+BJ7kt5Z9V/lQvOqwL9RDiMH94pi/6xu9MCZ3TeN8n4Lk
- WC0tILwnOgBUzD2ZYLdI1yjpGzRSOYNN3y5NGaK1kYHJ29X2kyN+H0HZD1em6uskGWU3v5B6o
- +Jsi+HUlsphsvY9OM8lubZC9dqQ2DzWvUZkKS7dzSO1ugQcH3nt/UXxzAyh7xKYClx0WUgFvh
- QJ1a4rI4nl43TZ4E7uoLMWHAwn+cdy+iFFUQcCSC0J/WYgvhm9NtLaloCHypcu4DECk/EN1KM
- yf57bYcS92ZavxWNGeoNMOSwd/zp0hMQPBF1BSPVPWOZZ5z1iBaK9k4o36xnLrDNZrVJeD4OP
- IcLtxlUtrRE5KH/+F9jWouP9eNhK+hesGmYyvY/P7RnDdBeGfdXjPc9oKEk1OJqHN4wLXFzik
- roe44AAeU5YSHd3NZ8j/5tDyKiRklQYpjlqVbAnd4jIVpXZK/o6DZWiyZRmhcCtPP0ZMgeUro
- ytiZQqeQMCDdYBupYDfclhA+Zgh72EYTt8OUImEIdiDMILHbUtZk/RyXn39oY+cRiKa2LBUK/
- 0ElUSPw4u++83Pu+kOYpXRuf0lmJ3obBHSgkdKbNh6AVWlbHuvnEKXRaAbhROt1b2c1a5S2/H
- JvrGHvmGwapmXSL/y7bKIZRbIwEsnff8fsyKRBQyRd6w1smn1gK2A9UEuuIvWQ7egeQo1i4PL
- l+fDr4/1GbDzkXXDlHHg5d6eBEAIJMIhKWs8eaIt/Fa9wOTDj0xUF8Dr6gvAhrqJ0ZEkZ9oF0
- mtD2MCFsFlpijH8E3NeRoJCAI0wuEbGPD5dvv6K+vIo+LyQpKjdUNw5PZVWNFR3smQdC4u7oh
- XYu9Zv4PO6cu+8A6HIJ6KvmYj0GCVxzUkXkZsE3ZdmlA/W09eZmJzNG3b/vQOQdGY18GoJsZw
- 3TRjhx1bvUtr/jUtoSSaTPJ1iJAtK2nfLkrv8i/rJqBko+T7nDfLx1KIqKoOGZWkks1r8f5zU
- aqN2d+8ChDTNSFENFKtnofG/2w/7U7vnkncD134pe6x9S/0xaZwBIsGyAQD2G5oSsHR+Wr3/o
- yiC8Jdj9mo1q/5fKhnM4RLVQNrUfWocUhqMig2BqR8ovSxtNEInnV/QlaAxcPG8+iKRqjnIak
- HpFb5XQquykn9MQLQx6/9+vrpAyceuUW9Tx1hEBYooWafXQerd482sXlUw1Riuw8zk3NuYQ7a
- 3wMVDcCP5dcHNixEAYB82cPXEpmg=
+UI-OutboundReport: notjunk:1;M01:P0:h1ERpLur5s8=;XszaV0pd/6wJsRYUEg+d0/xKRGH
+ mW+ii9MSTn/iz78dmGmvCFfqo32rASu6B5GIoMktr7PhV1oLfJVddRC6NLShfJo0ULfJEPFLI
+ OuxFNy9likSPgd4VIstZqiK4y4Tmd4g1s6IMLSVae3u9dd5pdZs9xnrUujvLYkwEa/U/qGYxA
+ 3q3G+GXmOoc/Q62qVBRC6w2Z/ZlyN+AN4al8Xm88YifwZsv3z8MNUk9TmtRBDjonZQuqKl0Dn
+ x7v8TRQCG3MZfVRhUs+7EK277PTaT9uL3v1timWb28dVKGHTWGrIhvtQtLlrhi/1YSdj0Mbbf
+ kr0iVBM9MNYwOQEGsVHmVa6WHZBhPEdcdeUJNIQroXdhQy/b6/+AEnEr//ifpAVvVaxVVg3Tw
+ HcdxPnWdzURHYMt3nGKoJtt86ibc935UjG6lF+67F80S50Dxu+/n5ovE8mmeqEFOQSAhAolTs
+ dOuy8EHKK41EKph0T271y2eleG7Wyx5GEVDgANtLznsNmk+YWFXbFjq7O1auV9i8n9qNAq6Sh
+ V4Jgf15wGMC7/b/BzvJ9wOmune/9krPYKs5KwHXD1pn4cvJydJ/cY91mSqU45aKydQZCun2Ft
+ l5n1PRDBapcaOc3hRmu8hK4alzfA24FpxI0AmmPO9wYsZ3Y2gKTEVlrgnhVnfgl/s/iJgvAkE
+ P5VvmIDTsE8I3mZVkkpRf5OHyu/TkmqsU4JdnESzwNNtxZegNRMha7CjGaoEkgUNPEQOMVxeg
+ 5pCNmJKdSumjj5HvNo5OnVKJLkfa0Vqneij049IoHCYtT9HwBX9bAX5DGmVVh+C5nqe+0Ss1k
+ VhkQjih5c2bkTYQEveuAf09eIngSpfWWpimzpVMf87BMSyNZ/+2pWbC5UE3AH5x+ziJOLO+jz
+ xwmeiuB6Btw1/Gxkg0ZPjw8xLHU6fe0M9auCBSPhYvKaSteoM9itSVjii4IU1SXfzXgFpKPrm
+ K/vJrgMbNpphIEu0NsLqCnSYQp5o18KAeZReSeCzjDCca09Ev7O76QC4OKW6HUP67u2fx+Gy6
+ PXtsDz2zTAXamXPyTuFb1TPlRFZwbVMGetHmROy/vmO/N3V+ZobHAHT8KSfx46izss5aJmLUe
+ 9il6aSvMuK6Sd5PXR70ddUOjKlM3IPE52Re1nI9dcA6FG/jmZuKoMBXDW+dvnpKe5wtlh3pPo
+ 4XFuiio793Yi4O+lFHKacGOgxn/jrR7oLe6clyT2UbvtXsf5p+mC3QmboSQxWsYunRi+go9qx
+ ZDC7PGUx2dMM3eQ4bkTJ4TijmLzbVM+uco8ofDjR94DEsq65HxKSKSE5LXCnwAVFkroJ26FnT
+ /iXH7RU2zI5+G2NNsvaq+EdtNC02Vi0/TZzzK4L97gc5/zeYZh657y+gOYfGbshKP/JsjcrId
+ sGCGcTrBdGwiFDuRShCkBJqV5EU0UWsraCgjLkhVQHMrggoc2Xfu6u5NB9HmKKtvHV4WBGG1z
+ Q0FtFZV3k/G0TNkawOVDl7hVwUtc=
 
 Hi Andrea,
 
-just a nit. Could you please add "broadcom:" to the subject?
-
 Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> Define the RP1 node in an overlay. The inclusion tree is
-> as follow (the arrow points to the includer):
+> Add the board 'monolithic' DTS for RaspberryPi 5 which includes
+> the RP1 node definition.  The inclusion treeis as follow (the
+> arrow points to the includer):
 >
->                        rp1.dtso
->                            ^
->                            |
-> rp1-common.dtsi ----> rp1-nexus.dtsi
+> rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-monolithic.dt=
+s
+>                                                 ^
+>                                                 |
+>                                             bcm2712-rpi-5-b.dts
+sorry for the delay. I'm not happy with the monolithic appendix.
+
+How about bcm2712-rpi-5-b-rp1.dts or something more self-explaining?Regard=
+s
+> This is designed to maximize the compatibility with downstream DT
+> while ensuring that a fully defined DT (one which includes the RP1
+> node as opposed to load it from overlay at runtime) is present
+> since early boot stage.
 >
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > ---
-> This patch can be considered optional, since it fills just the second
-> scenario as detailed in [1], which is the RP1 DT node loaded from a dtb
-> overlay by the FW at early boot stage.
-> This may be useful for debug purpose, but as such not strictly necessary=
-.
->
-> [1] https://lore.kernel.org/all/CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoD=
-WJ3=3Dzd3cgcg@mail.gmail.com/#t
+> Right now bcm2712-rpi-5-b.dts is the overlay-ready DT which will make
+> the RP1 driver to load the RP1 dtb overlay at runtime, while
+> bcm2712-rpi-5-b-monolithic.dts is the fully defined one (i.e. it
+> already contains RP1 node, so no overlay is loaded nor needed).
+> Depending on which one we want to be considered the default, we can
+> swap the file names to align with downstream naming convention that
+> has only the fully defined DT called bcm2712-rpi-5-b.dts.
+Could you please move some of this good explanation into this dts file=20
+as comment?
 > ---
->   arch/arm64/boot/dts/broadcom/Makefile |  3 ++-
->   arch/arm64/boot/dts/broadcom/rp1.dtso | 11 +++++++++++
->   2 files changed, 13 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+>   arch/arm64/boot/dts/broadcom/Makefile                     | 1 +
+>   .../boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts      | 8 ++++++++
+>   2 files changed, 9 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monoli=
+thic.dts
 >
 > diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts=
 /broadcom/Makefile
-> index 4836c6da5bee..58293f9c16ab 100644
+> index 3d0efb93b06d..4836c6da5bee 100644
 > --- a/arch/arm64/boot/dts/broadcom/Makefile
 > +++ b/arch/arm64/boot/dts/broadcom/Makefile
-> @@ -13,7 +13,8 @@ dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
+> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
+>   			      bcm2711-rpi-4-b.dtb \
+>   			      bcm2711-rpi-cm4-io.dtb \
+>   			      bcm2712-rpi-5-b.dtb \
+> +			      bcm2712-rpi-5-b-monolithic.dtb \
+>   			      bcm2712-d-rpi-5-b.dtb \
+>   			      bcm2837-rpi-3-a-plus.dtb \
 >   			      bcm2837-rpi-3-b.dtb \
->   			      bcm2837-rpi-3-b-plus.dtb \
->   			      bcm2837-rpi-cm3-io3.dtb \
-> -			      bcm2837-rpi-zero-2-w.dtb
-> +			      bcm2837-rpi-zero-2-w.dtb \
-> +			      rp1.dtbo
->  =20
->   subdir-y	+=3D bcmbca
->   subdir-y	+=3D northstar2
-> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts=
-/broadcom/rp1.dtso
+> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts=
+ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
 > new file mode 100644
-> index 000000000000..ab4f146d22c0
+> index 000000000000..3aeee678b0bc
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> @@ -0,0 +1,11 @@
+> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
+> @@ -0,0 +1,8 @@
 > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
 > +/dts-v1/;
-> +/plugin/;
+> +
+> +#include "bcm2712-rpi-5-b.dts"
 > +
 > +&pcie2 {
-> +	#address-cells =3D <3>;
-> +	#size-cells =3D <2>;
-> +
 > +	#include "rp1-nexus.dtsi"
 > +};
 
