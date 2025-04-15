@@ -1,169 +1,294 @@
-Return-Path: <linux-pci+bounces-25927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58F61A8A268
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 17:09:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FEBEA8A28D
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 17:14:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6297A172871
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 15:09:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC3457A65CD
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 15:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFEB81DE3C4;
-	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81381D7E4A;
+	Tue, 15 Apr 2025 15:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRrGEh6D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSafZpYm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ACA199FA4;
-	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95A52DFA37;
+	Tue, 15 Apr 2025 15:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729736; cv=none; b=ZCOUQrb+wL8YivW4y26Eb2IFz/J21txmmAqcGXkptfTrujwtQJI1GtMLRItTSne7n1yF2j3bIzcJbPB+MJqE8CcrQhRyOcL2JNsIvKtaVCrIhF2LProKXYd2x0L9KEnA0pubeTQEKApW969aLNGauRTgTg236bjb+cqoMUa1MXg=
+	t=1744730073; cv=none; b=GugWbU/iub+ZBzN7z4CTvBz+MCuuhtvvFtV5Z4bqrT7GLhhM716BEsMOYxntRm/E1NUA7jgs2Q1yZSTMOjt2RNpGwuYIhEXZYK9T0kyDPIG3YLK4uhsBrhH62TIHIwz028lgXDJwoktcnGFvgzz6c7fhMkXS17HjoSYSoaHek7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729736; c=relaxed/simple;
-	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P65x3XRp9JSQ/PQkfE7IQ59tY7YsZPsvyzhctSLete+kWi4a6skS+qNQ96Tu2IEgEe5z60x60s8dAZC8okjyIZ1Hz2NbGlJ//oEV8F+uHF2ecURsioJVny2YcSkmd5+W9HgP9M2pGtctfPaRv4XyS2pP0LK0oHBJ+sMROyP8edg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRrGEh6D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0849BC4CEEB;
-	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+	s=arc-20240116; t=1744730073; c=relaxed/simple;
+	bh=gD0cmObSHxYd8bgM73eRn1ghAqi73Kk6fOmAAfdaZKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QMrtfgQhnIhw+XETNnte2D/bg0TPpYnvHGEmK/CyTTu1NsMLxlghGL0HBf6ZzW/nrfU3lvgnkRv+EsXoWDZafoyRJz5qMcJUEAqYvC2G6D+eCbp1qfmR39GautXfDnwQesQJp5iU60oEOFTxchy1nQ42KbiYOVlt/lTvx9M3zro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSafZpYm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35DB6C4CEEB;
+	Tue, 15 Apr 2025 15:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744729736;
-	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DRrGEh6Dx4EKmnikulVWAAbjfm1F0kKtYZQ8q3BEwTpCDZA0B9+QzGhuCuBKrLymY
-	 HV/yOnn7C8aTzJXBXnUmq4iyL34gnw2vr2UacavgID0On6wW26QnN/9ByvcBn57ZSx
-	 QnN4owL31dMbGuRaEr6/1i403ibnllJv3xrmPCbvjfyvZDI/bqizPnEgFo+mPzwFKR
-	 yYedYK9YV9W+FdohnLbAlY5xySk9MVdddKDk/2RAQp4uMF/Tb9wTwG64yZi3phdI1g
-	 JA4V8NNuptOnMFG74HHX/Vi4QD6pEr86q0WMz/EgK09XUoUnOMLZ8KN8iWSMugGijC
-	 jwOTQfgTv9e/g==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4hu9-000000007Q0-1YOd;
-	Tue, 15 Apr 2025 17:08:53 +0200
-Date: Tue, 15 Apr 2025 17:08:53 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <Z_52heGno2Y5M6uF@hovoldconsulting.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
- <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+	s=k20201202; t=1744730073;
+	bh=gD0cmObSHxYd8bgM73eRn1ghAqi73Kk6fOmAAfdaZKw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uSafZpYmqe51N/TKEuPKox9rzCSy/nYX4sAommp3vsni/I5odJAfoDIY4BV0Rfo7k
+	 RkhFjcOc8Vetd7Wgw9Qd1SgAVwCtjSf4Ueyb75g9Ciqr1ppkQ1Y5/mQzKsU0xxuD4l
+	 sRsml09qhQ8oURfC9/6Jjy7GI9/kU3d6B1VsW7JTLeUTXMRR3YG9R6h+ERziSlItbL
+	 HWNHaYtM+c5yNoHJblQdR+rN70WeC6klZOJvVSgBHw60MnLRb+p21J7hUO51686KPB
+	 qjx4b0rCm0aS8lbyFGlpsTLbFQ8wEaX095hFWZx1wQ7dGTpl63bnMCfYP27rZI+VUP
+	 66CzN/Oy4GFCA==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2963dc379so943869166b.2;
+        Tue, 15 Apr 2025 08:14:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqlAefWQpbAYB9cJ3IEGal6SLYo43m8I0xhGwoXzxnB6geHHcIK6x0LhYEQyGRRpYgbz7BMPKPPYBWDXt+@vger.kernel.org, AJvYcCVGCEsUidmjUkweH39UE6acmPSJ4seIXxB5gayK4oReGimWuFxxowTgr7qHiZMKB6GSR2DC1GMHaN+V@vger.kernel.org, AJvYcCXisZmK07WsQTx+jNIvwrY3fulje5w0yxXfDTSY6/4bqRyFtR1zium1tenGIEGzhU2C+izutR/LxwAU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6ZYMYpt83lDLwcd+DB9ycMLWva63bKFoQm84wypGxtqBFP43F
+	vcv3MKtYEPLg+1xlGXM/JXteuiK0E5PHbT/LLNpf5fUPWiBcFTHms+rxKUF6CU+z5z9fSYsYCkz
+	5Y/trJ5quPMCykq7PD8a0qFEWLg==
+X-Google-Smtp-Source: AGHT+IEUzUqVPUBjh4HKSirKc2PT7Kum3sp+RXYYtJjDM6hVuDVxtEtFPs/ve7h6W24RoFtDIYrOgQG2iWs/Ezl2CPc=
+X-Received: by 2002:a17:907:dab:b0:ac7:95ae:747f with SMTP id
+ a640c23a62f3a-acad36a3f79mr1448223466b.45.1744730071715; Tue, 15 Apr 2025
+ 08:14:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+References: <20250414032304.862779-1-sai.krishna.musham@amd.com> <20250414032304.862779-2-sai.krishna.musham@amd.com>
+In-Reply-To: <20250414032304.862779-2-sai.krishna.musham@amd.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 15 Apr 2025 10:14:20 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJvRFR1Su8ajWOiAKaz2n1JH9RK0RojhhPKsiKsGeGm4Q@mail.gmail.com>
+X-Gm-Features: ATxdqUGHsQF9Gw0uE7e4ZeB3yGu01jMsGh4Mx_GAgeR_dmsPGtuFO598otWvFBo
+Message-ID: <CAL_JsqJvRFR1Su8ajWOiAKaz2n1JH9RK0RojhhPKsiKsGeGm4Q@mail.gmail.com>
+Subject: Re: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add `cpm_crx`
+ and `cpm5nc_fw_attr` properties
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	cassel@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michal.simek@amd.com, 
+	bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 04:37:59PM +0100, Robin Murphy wrote:
-> On 2025-04-11 9:02 am, Johan Hovold wrote:
-> > On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
+On Sun, Apr 13, 2025 at 10:23=E2=80=AFPM Sai Krishna Musham
+<sai.krishna.musham@amd.com> wrote:
+>
+> Add the `cpm_crx` property to manage the PCIe IP reset, and
+> `cpm5nc_fw_attr` property to clear firewall after link reset, while
+> maintaining backward compatibility with existing device trees.
 
-> >> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
-> >>   		dev_iommu_free(dev);
-> >>   	mutex_unlock(&iommu_probe_device_lock);
-> >>   
-> >> -	if (!err && dev->bus)
-> >> +	/*
-> >> +	 * If we're not on the iommu_probe_device() path (as indicated by the
-> >> +	 * initial dev->iommu) then try to simulate it. This should no longer
-> >> +	 * happen unless of_dma_configure() is being misused outside bus code.
-> >> +	 */
-> > 
-> > This assumption does not hold as there is nothing preventing iommu
-> > driver probe from racing with a client driver probe.
-> 
-> Not sure I follow - *this* assumption is that if we arrived here with 
-> dev->iommu already allocated then __iommu_probe_device() is already in 
-> progress for this device, either in the current callchain or on another 
-> thread, and so we can (and should) skip calling into it again. There's 
-> no ambiguity about that.
+You aren't adding properties. You are adding entries to 'reg'.
 
-I was referring to the this "should no longer happen unless
-of_dma_configure() is being misused outside bus code" claim, which
-appears to be false given the splat below.
+But the real problem here is you are adding reset and firewall
+controls, but not using the respective bindings. It looks like you
+need to use the 'resets' and possibly the 'access-controllers'
+bindings. Unless these controls are really part of the PCIe bridge
+(and only for it).
 
-> >> +	if (!err && dev->bus && !dev_iommu_present)
-> >>   		err = iommu_probe_device(dev);
-> >>   
-> >>   	if (err && err != -EPROBE_DEFER)
-> > 
-> > I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
-> > is probed late due to a clock dependency and can end up probing in
-> > parallel with the GPU driver.
-> 
-> And what *should* happen is that the GPU driver probe waits for the 
-> IOMMU driver probe to finish. Do you have fw_devlink enabled?
+>
+> Also, incorporate `reset-gpios` in example for GPIO-based handling of
+> the PCIe Root Port (RP) PERST# signal for enabling assert and deassert
+> control.
 
-Yes, but you shouldn't rely on devlinks for correctness.
+"Also" is a red flag for that change should be a separate commit.
 
-That said it does seem like something is not working as you think it is
-here, and indeed the iommu supplier link is not created until SMMUv2
-probe_device() (see arm_smmu_probe_device()).
+>
+> The `reset-gpios` and `cpm_crx` properties must be provided for CPM,
+> CPM5 and CPM5_HOST1. For CPM5NC, all three properties - `reset-gpios`,
+> `cpm_crx` and `cpm5nc_fw_attr` must be explicitly defined to ensure
+> proper functionality.
+>
+> Include an example DTS node and complete the binding documentation for
+> CPM5NC. Also, fix the bridge register address size in the example for
+> CPM5.
+>
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> Changes for v7:
+> - Update CPM5NC device tree binding.
+> - Add CPM5NC device tree example node.
+> - Update commit message.
+>
+> Changes for v6:
+> - Resolve ABI break.
+> - Update commit message.
+>
+> Changes for v5:
+> - Remove `reset-gpios` property from required as it is already present
+>   in pci-bus-common.yaml
+> - Update commit message
+>
+> Changes for v4:
+> - Add CPM clock and reset control registers base to handle PCIe IP
+>   reset.
+> - Update commit message.
+>
+> Changes for v3:
+> - None
+>
+> Changes for v2:
+> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
+> - Update commit message
+> ---
+>  .../bindings/pci/xilinx-versal-cpm.yaml       | 129 +++++++++++++++---
+>  1 file changed, 109 insertions(+), 20 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml=
+ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index d674a24c8ccc..ed07896f763e 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -9,9 +9,6 @@ title: CPM Host Controller device tree for Xilinx Versal =
+SoCs
+>  maintainers:
+>    - Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+>
+> -allOf:
+> -  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> -
+>  properties:
+>    compatible:
+>      enum:
+> @@ -21,18 +18,12 @@ properties:
+>        - xlnx,versal-cpm5nc-host
+>
+>    reg:
+> -    items:
+> -      - description: CPM system level control and status registers.
+> -      - description: Configuration space region and bridge registers.
+> -      - description: CPM5 control and status registers.
+>      minItems: 2
+> +    maxItems: 4
+>
+>    reg-names:
+> -    items:
+> -      - const: cpm_slcr
+> -      - const: cfg
+> -      - const: cpm_csr
+>      minItems: 2
+> +    maxItems: 4
+>
+>    interrupts:
+>      maxItems: 1
+> @@ -64,18 +55,94 @@ properties:
+>  required:
+>    - reg
+>    - reg-names
+> -  - "#interrupt-cells"
+> -  - interrupts
+> -  - interrupt-map
+> -  - interrupt-map-mask
+>    - bus-range
+>    - msi-map
+> -  - interrupt-controller
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - xlnx,versal-cpm-host-1.00
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: CPM system level control and status registers=
+.
+> +            - description: Configuration space region and bridge registe=
+rs.
+> +            - description: CPM clock and reset control registers.
+> +          minItems: 2
+> +        reg-names:
+> +          items:
+> +            - const: cpm_slcr
+> +            - const: cfg
+> +            - const: cpm_crx
 
-So client devices can start to be probed (bus dma_configure() is called)
-before their iommu is ready also with devlinks enabled (and I do see
-this happen on every boot).
+The xlnx,versal-cpm-host-1.00 no longer has cpm_csr registers? Where
+did they go? This is an ABI issue.
 
-> > [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+> +          minItems: 2
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupts
+> +        - interrupt-map
+> +        - interrupt-map-mask
+> +        - interrupt-controller
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - xlnx,versal-cpm5-host
+> +              - xlnx,versal-cpm5-host1
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: CPM system level control and status registers=
+.
+> +            - description: Configuration space region and bridge registe=
+rs.
+> +            - description: CPM5 control and status registers.
+> +            - description: CPM clock and reset control registers.
+> +          minItems: 3
+> +        reg-names:
+> +          items:
+> +            - const: cpm_slcr
+> +            - const: cfg
+> +            - const: cpm_csr
+> +            - const: cpm_crx
+> +          minItems: 3
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupts
+> +        - interrupt-map
+> +        - interrupt-map-mask
+> +        - interrupt-controller
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - xlnx,versal-cpm5nc-host
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: CPM system level control and status registers=
+.
+> +            - description: Configuration space region and bridge registe=
+rs.
+> +            - description: CPM clock and reset control registers.
+> +            - description: CPM5NC Firewall attribute register.
 
-> > [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
-> > 
-> > [    3.992050] ------------[ cut here ]------------
-> > [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
-> > [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
-> > 
-> > [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
-> > [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
-> > 
-> > [    4.025943] Call trace:
-> > [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
-> > [    4.030453]  iommu_probe_device+0x38/0x7c
-> > [    4.030455]  of_iommu_configure+0x188/0x26c
-> > [    4.030457]  of_dma_configure_id+0xcc/0x300
-> > [    4.030460]  platform_dma_configure+0x74/0xac
-> > [    4.030462]  really_probe+0x74/0x38c
-> 
-> Indeed this is exactly what is *not* supposed to be happening - does 
-> this patch help at all?
-> 
-> https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
+Just 1 register?
 
-I've only seen that splat once so far so I don't have a reliable
-reproducer.
+> +          minItems: 2
+> +        reg-names:
+> +          items:
+> +            - const: cpm_slcr
+> +            - const: cfg
+> +            - const: cpm_crx
+> +            - const: cpm5nc_fw_attr
 
-But AFAICS that patch won't help help here where we appear to have iommu
-probe racing with bus dma_configure() called from really_probe() for the
-client device.
+The block name in the entry is redundant. Drop 'cpm5nc_'.
 
-Johan
+> +          minItems: 2
+>
+>  unevaluatedProperties: false
+>
+>  examples:
+>    - |
+> +    #include <dt-bindings/gpio/gpio.h>
+>
+>      versal {
+>                 #address-cells =3D <2>;
 
