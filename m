@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-25958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25959-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE3EBA8A987
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 22:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD24BA8A995
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 22:47:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7E9F175CD0
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 20:44:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFC1C17FD11
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 20:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81A8D2550C2;
-	Tue, 15 Apr 2025 20:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0660D256C8F;
+	Tue, 15 Apr 2025 20:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPsc8Lfh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8p5OHZ0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D46253345;
-	Tue, 15 Apr 2025 20:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33B51DB34E;
+	Tue, 15 Apr 2025 20:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749878; cv=none; b=rDulNjTaqtR4lF6J0za6/+odwcfT8pQ6Gw8AnU8P+mWqmBsbFBhvEo37z1YvxDtSdlv0LBCHAfgUH2WmvoXF4GQmJk3CBh6qr+4+KWZ6YFK+JPAN5AVhZHcA+kUaiKsoTVE60zpSYxTnatFacBjRlzAM0stU90+G9xOniP2XNsE=
+	t=1744750028; cv=none; b=WydLRxDrgs4sBLS1ma0Pq+z4wEazB7ZAtxdJLhPm3VLLs2hx9KJ+vGw6zL/BKx5qOITcv1NkXI+a2FhsNXp8ytriNprQYryzhBSVuka6XPb23tMt14W8fwtcHgWK7OswtJFMROLqGbrXMZrSpw97TBv/lHxt0sLv1qd8rxYTJWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749878; c=relaxed/simple;
-	bh=SYCVZ5jNZO/onkmDY8uNkxGPskd/fCuKLzEqkOrgpYk=;
+	s=arc-20240116; t=1744750028; c=relaxed/simple;
+	bh=NM3NTCfQKXOu+maLNoeBI0wRtD8RKBHlIxJ0rLLbkmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R7f6cST3xP1DNp2Fw6fHN0WneFCQi/TKnEKWlRCFRf/5550iWPM6lnEKJw9iOrvRqq56+EpL37sT/i97SQO68HhjLm4gsQOZuobO1PAcFd4SfpTEmM77Su+NoeYgX85xHTS+gODiESVlB18ITxKenDRulayqxCKMfKOorv3IB2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPsc8Lfh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A6B3C4CEE7;
-	Tue, 15 Apr 2025 20:44:37 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=i663/AwetKkC6idJH+HPMwudOhlnarY/iSJN5rmJlyNMFbsRPtbvkuMle6hpJnCZSihEVYbS23KF6VMZRrk9G/6lTY0BAKJKmMIvCV90hVZ41KIsdhmxHT/wTaT26OWbbFPxIv+sbs2ZZXy3pzfKasfp7I7ATQdsjOjdvgatkwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8p5OHZ0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33ADBC4CEE7;
+	Tue, 15 Apr 2025 20:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744749877;
-	bh=SYCVZ5jNZO/onkmDY8uNkxGPskd/fCuKLzEqkOrgpYk=;
+	s=k20201202; t=1744750027;
+	bh=NM3NTCfQKXOu+maLNoeBI0wRtD8RKBHlIxJ0rLLbkmA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MPsc8LfhaIu9c2EfngiVBmCw71aF8FF9ItvxkUYSV/18TweuQ5ysP5e71/1uy3dt8
-	 G5hwXE/x0sOHW5qEw8WyMZHjKQoDrjkKqU5q5AUBIZQhXo05SKtdohjkR/XYJUAIeg
-	 PQfrQZeoIADzNhf/MmH96EFAteniYaO/QdXs3GO7wjMbh8cAw9LLA20xuGNlCr1bI3
-	 B66oOWPKYL3pLo/szuu1uOhchlwARoZ3Dp0T5mKNj0OVH+rcn8m84mnNRWdDCg2ra8
-	 9ufkA7af58pdim7RqrLALfB9BLcgubm7wHE+zltXA7XnFLKsPgPcPWy10ajV6Z1o0m
-	 2SDzHoNvSPt/w==
-Date: Tue, 15 Apr 2025 15:44:36 -0500
+	b=Z8p5OHZ0wQmeqyj907IsYur8ATEcS4bIob+uB8Mct74d7Lr+sBagW0K8BY3yGXreU
+	 CeeCJVdLZ9FTkCPX3VhzLjOFa963XQtIXmco17PEDUwysYA6IlyZRd/Mc/ipd2mS8B
+	 K4B6Pq619rtLFDfX0anlburRpaULdsfZTAcpAKlptE/5SyZz378VW3NrVYl4o9cBC8
+	 ZdIOcR+VlAQuJ6gU4SJp+8MIotNCykLc8DbVzGUubwRrJ4d/DzvFCLL5vj8ZKL3Qwk
+	 agmLQlOzPQOk+THvSWgjZUxRLx/bNgYNFYogj1l+3IlWUMMafnX/FnmYxsClRlswXK
+	 yGNswiXTr7OyQ==
+Date: Tue, 15 Apr 2025 15:47:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org,
@@ -52,8 +52,8 @@ Cc: bhelgaas@google.com, kwilczynski@kernel.org, gregkh@linuxfoundation.org,
 	daniel.almeida@collabora.com, robin.murphy@arm.com,
 	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] rust: device: implement Bound device context
-Message-ID: <20250415204436.GA34981@bhelgaas>
+Subject: Re: [PATCH v2 3/9] rust: device: implement device context for Device
+Message-ID: <20250415204705.GA35108@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,31 +62,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250413173758.12068-7-dakr@kernel.org>
+In-Reply-To: <20250413173758.12068-4-dakr@kernel.org>
 
-On Sun, Apr 13, 2025 at 07:37:01PM +0200, Danilo Krummrich wrote:
-> The Bound device context indicates that a device is bound to a driver.
-> It must be used for APIs that require the device to be bound, such as
-> Devres or dma::CoherentAllocation.
+On Sun, Apr 13, 2025 at 07:36:58PM +0200, Danilo Krummrich wrote:
+> Analogous to bus specific device, implement the DeviceContext generic
+> for generic devices.
 > 
-> Implement Bound and add the corresponding Deref hierarchy, as well as the
-> corresponding ARef conversion for this device context.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/device.rs | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 487211842f77..585a3fcfeea3 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -232,13 +232,19 @@ pub trait DeviceContext: private::Sealed {}
->  /// any of the bus callbacks, such as `probe()`.
->  pub struct Core;
->  
-> +/// The [`Bound`] context is the context of a bus specific device reference when it is guranteed to
-> +/// be bound for the duration of its lifetime.
+> This is used for APIs that work with generic devices (such as Devres) to
+> evaluate the device' context.
 
-s/guranteed/guaranteed/
+Looks like a stray ', but maybe it's some rust thing I don't know
+about.
 
