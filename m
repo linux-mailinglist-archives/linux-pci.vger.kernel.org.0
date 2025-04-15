@@ -1,234 +1,168 @@
-Return-Path: <linux-pci+bounces-25903-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 881A7A8936D
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 07:34:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B154A8937F
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 07:46:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A77751783A0
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 05:34:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D302C3B660E
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 05:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C33C327466B;
-	Tue, 15 Apr 2025 05:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F48A48;
+	Tue, 15 Apr 2025 05:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsdjjogM"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="VGgXhzj7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-65-228.siemens.flowmailer.net (mta-65-228.siemens.flowmailer.net [185.136.65.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BB319992D;
-	Tue, 15 Apr 2025 05:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C71B27467D
+	for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 05:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744695270; cv=none; b=Kw1MDudVqGay3i6HdU0KXz+wvA6hTZO7aBYqdB57qylfa482ObB0kEzOMtFigO3oau4fWP6X2pTPOcEMfUgLQyid+g0+3MQ3fYuv4UNm0h3oO6NzunP6h155VyyIyO0kJLyahn5fggFL4koMBEu+jFA83U8k5+msp/gI6iAZ63g=
+	t=1744695975; cv=none; b=AEi9o2eQNbQc4sml+nb19YCsIry3A/4PG8EQLEOpjjLQ20fv4wEuNZiR8knitAqF/blX6K9DVE8o/8/1ISaTnj+3bAeH9P6U8A6rcC8y5cM4HTtKUjzeT4pMUZopM0eqZY1IQSd37uYLOQzePJXtlOhO3gydVMZEb9oG3YFLqM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744695270; c=relaxed/simple;
-	bh=45o6nO1ZdabDZRp2mosO2ayRd8wFBJ7ZpP9Jr4qOmK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WahbjdBTo+9U936yautCBrFWV1RLinzbA7hZurPQnR5aKT2/d7panB3MgtwOyXpl135/syu50O9DI/t0rCrRHVPcSqO3ErBpcU36kjTseGK7GeZmL1aZvhWmbUmfYUM9dnz6z5QBZppOFPHAz8KqQCHLk8CNsjn7PFPux0Moxws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsdjjogM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98203C4CEDD;
-	Tue, 15 Apr 2025 05:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744695270;
-	bh=45o6nO1ZdabDZRp2mosO2ayRd8wFBJ7ZpP9Jr4qOmK0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KsdjjogMSU35get7rJpSvvMy+VkhJhyymfpDK8TmQz4J351HR9pBWxdxfB0c8SYRg
-	 yNKWwIwAqH96h642SSEh4QVPZ12p54L78O74Z+6CQGzWl7dRly9L/yyi9wWKUxReH/
-	 6d9uokbC/D95wk460z2A3wlNtGXvggrypCsyFqX2V8oqmeorWpx9rhnpdIPnXLAsG/
-	 iIwtTv6+bmv1aDGpfcwoa/oWLmE7p28W5smy97fLA9lsbix6nzPSrgsJWt27YzUqSH
-	 H6H1IjW7zosBrHbNoG62r7+QaloK/AQQ2vpvYCi49nW1fv3zjeBLfKOco488CmD/q7
-	 /jM6Hg676nIWg==
-Message-ID: <4b741da1-6540-4e5c-aa32-098420cab3c2@kernel.org>
-Date: Tue, 15 Apr 2025 07:34:22 +0200
+	s=arc-20240116; t=1744695975; c=relaxed/simple;
+	bh=DO0c7tz9CQ9GwF0tk3kNMlKgxPwHsvsymFz79fBly0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Tv06ErC6WWpl1n60LUqZmMpMSVsudC3Hq6MjLn/L4y+OsL3XvhrNG5SKt+g2U44IzSZzBDBWQXgMnHZ2VzHM4zjfuyNByMOW7PmkQ4xOdOf1PlnD/jphiFlk1lajQiUImtVJmpxAq1lZJIeiwE109mawD2OiUiltcunZOK1OOHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=VGgXhzj7; arc=none smtp.client-ip=185.136.65.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Received: by mta-65-228.siemens.flowmailer.net with ESMTPSA id 20250415054609c5f2081ac584d8a2b2
+        for <linux-pci@vger.kernel.org>;
+        Tue, 15 Apr 2025 07:46:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=D/BR5PX4U0RbN6BcfSHJhZdDvS5/9/IrRAm/0Q+wQr0=;
+ b=VGgXhzj7H6lOqUowUFiV0IWndOvxDvpjXHUyHESqjbUmT0NPF1FD1naet0/cu9caqJSkD+
+ /wUcnkfuNeMV/Ehz/b57Zdp9GhbYQu7OiHVF6hVUAcvyZyqgQF3tA2afMVEU3b+l5fzTkO4a
+ +hbT+Znb4I7jfKVK06FiCrI5ZwYtiAMdKUVS2/NmSnFVKmgRHmyM/3VJsl9/lC32XSVhXFiN
+ ipm0FrXPytjPB+EyS9z0lMIK3cdh3bJSZjfCirfzUUMBpik0hk573CVaNXFWiAgRtZ5Ck4xj
+ qM67I/1m5N2K4r4cVskhe2hzjCyyGNwtJhROjgv8xjD4gTmUi9OiMUPg==;
+From: huaqian.li@siemens.com
+To: huaqianlee@outlook.com
+Cc: huaqian.li@siemens.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v7 0/7] soc: ti: Add and use PVU on K3-AM65 for DMA
+Date: Tue, 15 Apr 2025 13:45:42 +0800
+Message-Id: <20250415054549.611747-1-huaqian.li@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add `cpm_crx`
- and `cpm5nc_fw_attr` properties
-To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "cassel@kernel.org" <cassel@kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Simek, Michal" <michal.simek@amd.com>,
- "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
- "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-References: <20250414032304.862779-1-sai.krishna.musham@amd.com>
- <20250414032304.862779-2-sai.krishna.musham@amd.com>
- <20250414-naughty-simple-rattlesnake-bb75bb@shite>
- <IA1PR12MB6140D67181ED0003799228DACDB32@IA1PR12MB6140.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <IA1PR12MB6140D67181ED0003799228DACDB32@IA1PR12MB6140.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
-On 14/04/2025 14:23, Musham, Sai Krishna wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> Hi Krzysztof,
-> 
-> Thanks for the review.
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Monday, April 14, 2025 12:32 PM
->> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
->> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
->> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
->> conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Michal
->> <michal.simek@amd.com>; Gogada, Bharat Kumar
->> <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
->> <thippeswamy.havalige@amd.com>
->> Subject: Re: [RESEND PATCH v7 1/2] dt-bindings: PCI: xilinx-cpm: Add `cpm_crx`
->> and `cpm5nc_fw_attr` properties
->>
->> Caution: This message originated from an External Source. Use proper caution
->> when opening attachments, clicking links, or responding.
->>
->>
->> On Mon, Apr 14, 2025 at 08:53:03AM GMT, Sai Krishna Musham wrote:
->>> Add the `cpm_crx` property to manage the PCIe IP reset, and
->>> `cpm5nc_fw_attr` property to clear firewall after link reset, while
->>> maintaining backward compatibility with existing device trees.
->>>
->>> Also, incorporate `reset-gpios` in example for GPIO-based handling of
->>> the PCIe Root Port (RP) PERST# signal for enabling assert and deassert
->>> control.
->>>
->>> The `reset-gpios` and `cpm_crx` properties must be provided for CPM,
->>> CPM5 and CPM5_HOST1. For CPM5NC, all three properties - `reset-gpios`,
->>> `cpm_crx` and `cpm5nc_fw_attr` must be explicitly defined to ensure
->>
->> This we see from the diff, but why they must be defined?
->>
->>> proper functionality.
->>
->> What functionality?
->>
-> 
-> For our controller, if cpm_crx is not provided lane errors will be observed.
-> Specifically for CPM5NC, if cpm5nc_fw_attr property is not provided, the firewall
-> is not cleared after reset and further PCIe transactions will not be allowed.
-> Therefore, these properties must be defined.
+From: Li Hua Qian <huaqian.li@siemens.com>
 
-This must be in the commit msg.
+Changes in v7:
+ - add schema expressing dependency as suggested on pci-host bindings
+ - resolve review comments on pci-keystone driver
 
-> 
->>>
->>> Include an example DTS node and complete the binding documentation for
->>> CPM5NC. Also, fix the bridge register address size in the example for
->>> CPM5.
->>>
->>> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
->>> ---
->>> Changes for v7:
->>> - Update CPM5NC device tree binding.
->>> - Add CPM5NC device tree example node.
->>> - Update commit message.
->>>
->>> Changes for v6:
->>> - Resolve ABI break.
->>> - Update commit message.
->>>
->>
->> ...
->>
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - xlnx,versal-cpm5nc-host
->>> +    then:
->>> +      properties:
->>> +        reg:
->>> +          items:
->>> +            - description: CPM system level control and status registers.
->>> +            - description: Configuration space region and bridge registers.
->>> +            - description: CPM clock and reset control registers.
->>> +            - description: CPM5NC Firewall attribute register.
->>> +          minItems: 2
->>> +        reg-names:
->>> +          items:
->>> +            - const: cpm_slcr
->>> +            - const: cfg
->>> +            - const: cpm_crx
->>> +            - const: cpm5nc_fw_attr
->>> +          minItems: 2
->>
->> Why interrupts are not required for this variant? Why isn't this an
->> interrupt controller?
->>
-> 
-> MSI and MSI-X interrupts are handled via GIC, so msi-map property is
-> required for interrupt handling.
-> Legacy interrupt support is not available, and Error interrupt support will be
-> added in future, once it is added corresponding DT changes will be added.
+Changes in v6:
+ - make restricted DMA memory-region available to all pci-keystone
+   devices, moving property to unconditional section (patch 2)
 
-I don't think commit msg explained this.
+Changes in v5:
+ - resolve review comments on pci-host bindings
+ - reduce DMA memory regions to 1 - swiotlb does not support more
+ - move activation into overlay (controlled via firmware)
+ - use ks_init_vmap helper instead of loop in
+   rework ks_init_restricted_dma
+ - add more comments to pci-keystone
+ - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
 
-> 
+Changes in v4:
+ - reorder patch queue, moving all DTS changes to the back
+ - limit activation to IOT2050 Advanced variants
+ - move DMA pool to allow firmware-based expansion it up to 512M
 
+Changes in v3:
+ - fix ti,am654-pvu.yaml according to review comments
+ - address review comments on ti,am65-pci-host.yaml
+ - differentiate between different compatibles in ti,am65-pci-host.yaml
+ - move pvu nodes to k3-am65-main.dtsi
+ - reorder patch series, pulling bindings and generic DT bits to the front
 
+Changes in v2:
+ - fix dt_bindings_check issues (patch 1)
+ - address first review comments (patch 2)
+ - extend ti,am65-pci-host bindings for PVU (new patch 3)
 
-Best regards,
-Krzysztof
+Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+against DMA-based attacks of external PCI devices. The AM65 is without
+an IOMMU, but it comes with something close to it: the Peripheral
+Virtualization Unit (PVU).
+
+The PVU was originally designed to establish static compartments via a
+hypervisor, isolate those DMA-wise against each other and the host and
+even allow remapping of guest-physical addresses. But it only provides
+a static translation region, not page-granular mappings. Thus, it cannot
+be handled transparently like an IOMMU.
+
+Now, to use the PVU for the purpose of isolated PCI devices from the
+Linux host, this series takes a different approach. It defines a
+restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+buffers from a static memory carve-out. And to enforce that the devices
+actually follow this, a special PVU soc driver is introduced. The driver
+permits access to the GIC ITS and otherwise waits for other drivers that
+detect devices with constrained DMA to register pools with the PVU.
+
+For the AM65, the first (and possibly only) driver where this is
+introduced is the pci-keystone host controller. Finally, this series
+provides a DT overlay for the IOT2050 Advanced devices (all have
+MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+Application of this overlay will be handled by firmware.
+
+Due to the cross-cutting nature of these changes, multiple subsystems
+are affected. However, I wanted to present the whole thing in one series
+to allow everyone to review with the complete picture in hands. If
+preferred, I can also split the series up, of course.
+
+Jan
+
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: "Krzysztof Wilczyński" <kw@linux.com>
+CC: linux-pci@vger.kernel.org
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+
+Jan Kiszka (7):
+  dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+  dt-bindings: PCI: ti,am65: Extend for use with PVU
+  soc: ti: Add IOMMU-like PVU driver
+  PCI: keystone: Add support for PVU-based DMA isolation on AM654
+  arm64: dts: ti: k3-am65-main: Add PVU nodes
+  arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+  arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+    behind PCI RC
+
+ .../bindings/pci/ti,am65-pci-host.yaml        |  39 +-
+ .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+ arch/arm64/boot/dts/ti/Makefile               |   5 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+ ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+ drivers/pci/controller/dwc/pci-keystone.c     | 106 ++++
+ drivers/soc/ti/Kconfig                        |   4 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+ include/linux/ti-pvu.h                        |  28 +
+ 10 files changed, 798 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+ create mode 100644 drivers/soc/ti/ti-pvu.c
+ create mode 100644 include/linux/ti-pvu.h
+
+-- 
+2.34.1
+
 
