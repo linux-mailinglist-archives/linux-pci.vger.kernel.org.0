@@ -1,122 +1,169 @@
-Return-Path: <linux-pci+bounces-25926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25927-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E537CA8A1F4
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 16:55:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58F61A8A268
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 17:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14D27190096A
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 14:55:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6297A172871
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 15:09:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0792A29A3C7;
-	Tue, 15 Apr 2025 14:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFEB81DE3C4;
+	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NeGlLIav"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRrGEh6D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0384C297A68;
-	Tue, 15 Apr 2025 14:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ACA199FA4;
+	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728913; cv=none; b=e/pHuXCMn3Xub00d/F+BKj3rq/1ab+yH/aQ6dopHRI3SqwBnijm+wACRnT9W0m/mN9z3IuSR2fiw3CGR8ESM2DaVgr4zcAcP1/iHVz1l1zezRaFqKsUtmOdwDvx7OlLyjOC+yqRM28S2+QadDatAz2JAM6KyT94qCZxLPFV9CpU=
+	t=1744729736; cv=none; b=ZCOUQrb+wL8YivW4y26Eb2IFz/J21txmmAqcGXkptfTrujwtQJI1GtMLRItTSne7n1yF2j3bIzcJbPB+MJqE8CcrQhRyOcL2JNsIvKtaVCrIhF2LProKXYd2x0L9KEnA0pubeTQEKApW969aLNGauRTgTg236bjb+cqoMUa1MXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728913; c=relaxed/simple;
-	bh=+flNzZtjn1M/5D89HSQUpcWv0OrCTQQNyIqgrpPpkW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W62okntvqTwa5rrhm1kvZ6UU6b3N6GCsM0LYVQKfDF9hQdQmaYYn+p2BvG5LyqnS+Che4GySW78oxwghgt0buI09D0Lh2m05QlPhQjk1Kb+mrZM0wYH9mPhCcK7IzsYaldAgV3pw4H+oAV4lVXcA3uyEcGpdmmiI1VzMvsH9tQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NeGlLIav; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C049439AC;
-	Tue, 15 Apr 2025 14:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744728909;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=02LK9pHroELAh3qGOo82hLnNoi/5dDABLv647P77RhE=;
-	b=NeGlLIavf8r3+95C7G3xorvF32BXXKG3930EBRZhay4vBBBBnXJOU6PYCjReX1a+1648w8
-	wcxk6gJwXWocATV016xQa3TUEro4dECD/Jshf1oOhOi+hSfVlsMTBnjRi8Vn9LJoMeyCIw
-	weCSHqCMw+Ks+PEiOcnBsUZbSooI7JGRglPjy+QgCo9JobYsih5tijLHIjodfc/uvkBZhw
-	ZjyNEUq/D889sqajEC02nuUhI5QcBC/KrZwFMkZ8pOn9TrtKpvthgKofdbvs6HaxLK795N
-	pqVg7/VtLffvI+hLHk+H0vauo7A3s0yNXcethhI6BMc/V8yoP2uQXUjdxceU9w==
-Date: Tue, 15 Apr 2025 16:55:05 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan
- Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Saravana
- Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, Stefan
- Wahren <wahrenst@gmx.net>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <20250415165505.0c05bc61@bootlin.com>
-In-Reply-To: <2025041557-masculine-abrasive-c372@gregkh>
-References: <cover.1742418429.git.andrea.porta@suse.com>
-	<3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
-	<2025041557-masculine-abrasive-c372@gregkh>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1744729736; c=relaxed/simple;
+	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P65x3XRp9JSQ/PQkfE7IQ59tY7YsZPsvyzhctSLete+kWi4a6skS+qNQ96Tu2IEgEe5z60x60s8dAZC8okjyIZ1Hz2NbGlJ//oEV8F+uHF2ecURsioJVny2YcSkmd5+W9HgP9M2pGtctfPaRv4XyS2pP0LK0oHBJ+sMROyP8edg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRrGEh6D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0849BC4CEEB;
+	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744729736;
+	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DRrGEh6Dx4EKmnikulVWAAbjfm1F0kKtYZQ8q3BEwTpCDZA0B9+QzGhuCuBKrLymY
+	 HV/yOnn7C8aTzJXBXnUmq4iyL34gnw2vr2UacavgID0On6wW26QnN/9ByvcBn57ZSx
+	 QnN4owL31dMbGuRaEr6/1i403ibnllJv3xrmPCbvjfyvZDI/bqizPnEgFo+mPzwFKR
+	 yYedYK9YV9W+FdohnLbAlY5xySk9MVdddKDk/2RAQp4uMF/Tb9wTwG64yZi3phdI1g
+	 JA4V8NNuptOnMFG74HHX/Vi4QD6pEr86q0WMz/EgK09XUoUnOMLZ8KN8iWSMugGijC
+	 jwOTQfgTv9e/g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4hu9-000000007Q0-1YOd;
+	Tue, 15 Apr 2025 17:08:53 +0200
+Date: Tue, 15 Apr 2025 17:08:53 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+Message-ID: <Z_52heGno2Y5M6uF@hovoldconsulting.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
+ <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdfhleejtdeftdejveffgedtuddtgefhtedtudfhuefhtddtffeiueeigfdvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsr
- hgvrdgtohhmpdhrtghpthhtohepshgsohihugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
 
-Hi Greg,
+On Mon, Apr 14, 2025 at 04:37:59PM +0100, Robin Murphy wrote:
+> On 2025-04-11 9:02 am, Johan Hovold wrote:
+> > On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
 
-On Tue, 15 Apr 2025 16:06:43 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> > The RaspberryPi RP1 is a PCI multi function device containing
-> > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > and others.  
+> >> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+> >>   		dev_iommu_free(dev);
+> >>   	mutex_unlock(&iommu_probe_device_lock);
+> >>   
+> >> -	if (!err && dev->bus)
+> >> +	/*
+> >> +	 * If we're not on the iommu_probe_device() path (as indicated by the
+> >> +	 * initial dev->iommu) then try to simulate it. This should no longer
+> >> +	 * happen unless of_dma_configure() is being misused outside bus code.
+> >> +	 */
+> > 
+> > This assumption does not hold as there is nothing preventing iommu
+> > driver probe from racing with a client driver probe.
 > 
-> So shouldn't this be using the auxbus code?  That's designed to "split
-> up" PCI devices such that you can share them this way.
+> Not sure I follow - *this* assumption is that if we arrived here with 
+> dev->iommu already allocated then __iommu_probe_device() is already in 
+> progress for this device, either in the current callchain or on another 
+> thread, and so we can (and should) skip calling into it again. There's 
+> no ambiguity about that.
+
+I was referring to the this "should no longer happen unless
+of_dma_configure() is being misused outside bus code" claim, which
+appears to be false given the splat below.
+
+> >> +	if (!err && dev->bus && !dev_iommu_present)
+> >>   		err = iommu_probe_device(dev);
+> >>   
+> >>   	if (err && err != -EPROBE_DEFER)
+> > 
+> > I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
+> > is probed late due to a clock dependency and can end up probing in
+> > parallel with the GPU driver.
 > 
-> Or did that get rejected somewhere previously?
+> And what *should* happen is that the GPU driver probe waits for the 
+> IOMMU driver probe to finish. Do you have fw_devlink enabled?
+
+Yes, but you shouldn't rely on devlinks for correctness.
+
+That said it does seem like something is not working as you think it is
+here, and indeed the iommu supplier link is not created until SMMUv2
+probe_device() (see arm_smmu_probe_device()).
+
+So client devices can start to be probed (bus dma_configure() is called)
+before their iommu is ready also with devlinks enabled (and I do see
+this happen on every boot).
+
+> > [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+
+> > [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
+> > 
+> > [    3.992050] ------------[ cut here ]------------
+> > [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
+> > [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
+> > 
+> > [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
+> > [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
+> > 
+> > [    4.025943] Call trace:
+> > [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
+> > [    4.030453]  iommu_probe_device+0x38/0x7c
+> > [    4.030455]  of_iommu_configure+0x188/0x26c
+> > [    4.030457]  of_dma_configure_id+0xcc/0x300
+> > [    4.030460]  platform_dma_configure+0x74/0xac
+> > [    4.030462]  really_probe+0x74/0x38c
 > 
+> Indeed this is exactly what is *not* supposed to be happening - does 
+> this patch help at all?
+> 
+> https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
 
-It doesn't use auxbus probably for the exact same reason that the
-one given for the LAN966x PCI device driver [0] and [1].
+I've only seen that splat once so far so I don't have a reliable
+reproducer.
 
-Avoid all boiler plate needed with auxbus whereas drivers already exist
-as platform drivers. Internal devices are handled by those platform drivers.
-Those devi just need to be described as platform devices and device-tree is
-fully relevant for that description.
+But AFAICS that patch won't help help here where we appear to have iommu
+probe racing with bus dma_configure() called from really_probe() for the
+client device.
 
-[0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com/
-[1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
-
-Best regards,
-Hervé
+Johan
 
