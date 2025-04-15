@@ -1,226 +1,278 @@
-Return-Path: <linux-pci+bounces-25948-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25949-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5B2BA8A795
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 21:13:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ADDDA8A8E9
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 22:10:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 119EB19028A5
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 19:13:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FEBC443A65
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 20:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A9D82405E8;
-	Tue, 15 Apr 2025 19:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF62B2528E1;
+	Tue, 15 Apr 2025 20:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HEcxrD1w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jp01jsw5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013048.outbound.protection.outlook.com [52.101.72.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EAA23CEE7;
-	Tue, 15 Apr 2025 19:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744410; cv=fail; b=bBmeVSiLkAh4Yb6lntDZquCC3tceufm60Ah/y1+dVFrHTmXlPlM1tLB0sevcroNezVa/ddwlHAn0mIZEJpBRjSUuDB3yxJ+hZBl2gWUgRlVaystCe9zvuaC+jYsJuiPVwfUQNg/fwvt4byMw132bfMSBCoJieuE/X+RNpZHI5m4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744410; c=relaxed/simple;
-	bh=Wt4vsHqXJgLaUM2UCwb2vLEW0l+e//p8qZMZIDwoyyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U9wnFpUcC7Wpf/d/LBE/9SYZFUemDnDdyk5EwsQNRyw40rwSSyBVNFEgGV/yBBFjkmTDw+W6wBovONyxybdf0heUz3RZZfh3dFwBTH7tni4arFIdegO6iwJCXcnnQSvzFMS4xtWZSCbHXvZO/PNyNUcnyNDykYWKl29Id6QMdYY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HEcxrD1w; arc=fail smtp.client-ip=52.101.72.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h3fiRrYVP2PL/HR4Qzh6A1vL1DPmDgu+gBW0U3CaSAgJaMC6vZ8rhBneKrb7gI7Fvj+ogDxtrnZfc5Wbn+stUmltW+faMN77kVruB04dDKa/zqQsWwf6LncBof327Rj7n/Nn6fo9b/9xFmeZuLCB7QV6PikhDae7pVAPOOMEbXi8G3WA7ZWW9YBlhaT/eolKs8GDJSWrzEyIx1OPL5Up7Dg8BGAX8cCvVrG1LOzhveoeCCoG4KqqWULRuXSWNj2l3ZuylnGU3fEcfmOH/NXKYS/GXx0ud5GW9UrdOvepCt8WX6Bfwg1lVzEMjmdlVX090jFBdXIHKh4YrECmguq0iA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8ZQ88lK+gCpJeTX8mCB8Cng3uKaMgrXugjpa2QwDmnU=;
- b=wvhpKtMpMVNx/UJa3CA3nCYMnt41tUV9ASGKz1iC3BbPhBW7NyibW30GKUiRZCRboEaydCj1iNRVOu8I5ov56X5erVEIHVnSneYAEr66uOak9WjY8Zr/kA51thSM9GPL/76r6OtRui2Vq9tVwvEXRzW5JBHQKtlUm00S8EVmRXVPt7R0LZI3CZjISOsOVwX9Qsa/CeyDMWP1mQtDwP9VNBmZHBvjs/MQbgYhNwL9fBg6RvnisBgT3AwYzG5XvMKZ+uDXfPD9+vL/YNnpmQldWWRY/YOSOhbgUC5eyIdUsadPGXKOh3/XMR81azMXt3Tq3k6woBZ29Ke+/0ksae0ZlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ZQ88lK+gCpJeTX8mCB8Cng3uKaMgrXugjpa2QwDmnU=;
- b=HEcxrD1w+9QGYIhMkAbRwyuZG9tw9XJC7NqrKtFbIakfUj8w7ZgRBQPXwkTUXh5zbtcEjl6GrYvKtWBLzPDvlHKdPqaO7e00pX6doPgtNnKpt3sOBlLP6Wo48BD6XDoX3N+bg2nyahiR6ZqYW20/AJpicyBwhLvr/WXyQyJTgapGNJMMb8bKcg/thBQQ1JYOxqnGuW1Rz84k5v4iXP/fNJewkQm9W2Rr8XrxGHGAfgptSqXrTi/KnUxf7CE/FB90aut5n17ONE+BlsmXJtk/tDbZxk66hlofHuTf7hyTmjMh5KySkzd1xPN37K+rxiHi+fDRr3k4fcTNzNEyRdPWPw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU0PR04MB9225.eurprd04.prod.outlook.com (2603:10a6:10:350::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
- 2025 19:13:23 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
- 19:13:22 +0000
-Date: Tue, 15 Apr 2025 15:13:13 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-	amitk@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 4/9] PCI: dwc: Add host_start_link() &
- host_start_link() hooks for dwc glue drivers
-Message-ID: <Z/6vyaNh1XGEkJ2R@lizhi-Precision-Tower-5810>
-References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
- <20250412-qps615_v4_1-v5-4-5b6a06132fec@oss.qualcomm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412-qps615_v4_1-v5-4-5b6a06132fec@oss.qualcomm.com>
-X-ClientProxiedBy: SJ0PR03CA0294.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::29) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A815F1F542A;
+	Tue, 15 Apr 2025 20:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744747841; cv=none; b=mVM7U5qETjh7+W+cofHrPkDfhwnKYnSFtO4FpR2eZ6FuTPJ2iy3dbFoguEM3rFdSvZ5jgEMVPI6qKJDkATpZV6dX4Jd8IoMZ9yoKrhOzgUw6vQdY0oslGCmOpGxKS2TLltJ3Uy80+CQu+Qdzo2gR6+ahmVb6rVdaAIw29eXc0xY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744747841; c=relaxed/simple;
+	bh=dJMTmdqQ72cO70qaEEev0EvSkDUVmn1Nod8NeWRbBw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ah9s3+bp29Dd7gRTTmNQsOLwRgIZ2TRMvXNtUvf609FstczoBdRHQlldz2Xbrt2awiGKwQqbCf/jXKyuMJsGZJNchjaeDh2eocmLKk8hgADvUXgZdNj7zrtcZAQarTWXwblYUqaGQ66M1mHa6Bjgult0v3ofkPS9pMGfmPwSHJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jp01jsw5; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso379431fa.1;
+        Tue, 15 Apr 2025 13:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744747838; x=1745352638; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHELFzxVVmsy2zgSKA6PLaix5nlp2CFpgVoQsmmD40s=;
+        b=jp01jsw59l/kh6RdDKzVHKkegIuegYNJz8zFNvW5quyo57XpcwAOMr/w1prWDIUNLw
+         plnpT2Yvc4i/bgTZhqTsKNehIJQrefPIMkfWOkMyEaY6D3Uw2k5n+yGgvzhXNB/raKMc
+         1l/oBiB6/ky68q2PJ/SmGBJr8N7pDr8u44SYolgRtrOmxBgIBHC1cEJMg50CvryDm8E/
+         lW+ugeksfo7IGkqg5jLVEewRqT0qpQ7a4PQmiRSlGNalQueGMVlExK+kgXg/eFZbrMEu
+         NKc+wKy3y2fX9QuKPr7arN1NffxorUg5/HT7xwVwCVp7uralRBC22E+fdMi9pFqXpylz
+         ufZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744747838; x=1745352638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SHELFzxVVmsy2zgSKA6PLaix5nlp2CFpgVoQsmmD40s=;
+        b=Y7tYVTImAGBpKcYUKxt2Fq3OCN+c04i2XI92kAzmvKTQ+0cDQzIZ7iJrZjmFXHbTQA
+         fi3dfAkjcNfh+olp9VfwEPKpqSUd49r6Vj+ukfrv2rlt3k5AkZEbfuyROgcMtR+Ri9rc
+         yhu1Surl4NQIxx24Ra6vJnY1tExBDi9tEroXf992Na+2ZL29Owjj0t5lzsmP0NyrvRlR
+         WXLNTjZK4TbEC8oWy5qjdFW5e/k9c3OfJ6C0DyLa2Gr6sOsFJBsDGy2dSRQIxnvxkmV2
+         0ENVzZmXm5HCFIX5k0yIOykJ3y50A557iHJSyHc5nZQhJGHVlNRiV0QsPT1G6I4SwWnl
+         JmPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUd01zr//KmGabdArWADRcGKkDEaSDYfQpM84sSF07PA9Os21YCZ9nuA7tNg47LwTcuIEfI+JW/8HMPevk=@vger.kernel.org, AJvYcCUpjO2LCLCMN5v7Uus15Q5j6UjG4ru65z9seMnToHgr6SBgffSehsAQ+iBh2bnyLjZW6k0bsRhhbPwy@vger.kernel.org, AJvYcCVPwX/TpjIxIp+klDQsSxa9FTbwFHYsOt5oJLY7bcuxlROOC5ZSZdTNbCbIWxqE7+FOONC0udi1@vger.kernel.org, AJvYcCW5Blj2urWF+XyILI4rCSJ2xN1J1wIdaO0EFUqAvg+1v7s2qF5cuFG0Z2xqtRPnFXxeBWUy0uOVT7e2RJ0J@vger.kernel.org, AJvYcCWp1BFUEkMYlqnFKGH29qirUKcMot9oSa8Z8j7YT48A4A/Er0CXNITGmhjNplKb9zI+ogq3fCdAr7w/@vger.kernel.org, AJvYcCX9+xF9KHwp3yPERXv8S5R3z7KTYbRQ92ZJtO1dldqR/7GbNFaInYEaogHeLGDZUfWJXuqKw1bT7N8w7aPr@vger.kernel.org, AJvYcCXPB31KAREkHQXMyoUbARiZ8v4vTNCX+HG1Fi0AJ/GS9bfDMT/5fzTbdB3oKGtK/RgvzAGElFWcIeZws599nmdt@vger.kernel.org, AJvYcCXYyrC57v9osBS8g5Raq/6ldP4VL5dso/jKwsxKD7PBlzYXoWTp/t9oZhKcRl4lGUtmEwq5b4dN79We7G3J6ik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG4DoccEFagINo/RkLpZxByPY2TeMescus6xMY3MWTtoYzMcbk
+	l6bzEwg0XGsv0og0DF5qREjpojyL2RocDY322290rZz78Z2i5zGYAgY8+9saGA+sfG/rcG37OC8
+	w6p0WRY9A0rzJMQnB7MtLO20DORg=
+X-Gm-Gg: ASbGncsTpzyWxrIKkDaEjuyzyxAaYR6qLPLhD4iTgyuHVeO0zycqlmdsxFL8nGRhS3F
+	3pIfndt2XBUsPjlkDup2WClSLT137dBgdiGjjNsqKH35KACDMCHobaqpiBYgBYtY0gqQcwajPNx
+	RB/MGk28YVWmlAU2NkAgNQhk1A25ipZI4uE6CVIQ==
+X-Google-Smtp-Source: AGHT+IHHpITksB955oQm5ARBuGAcVFAjDyvUs2PTCTEghg3Tq3v8kUReDzyNimxph/3Sw67RckF5NDVyJKnzu5cOggg=
+X-Received: by 2002:a2e:e09:0:b0:30b:9f7b:c186 with SMTP id
+ 38308e7fff4ca-31071be6a50mr16553061fa.1.1744747837350; Tue, 15 Apr 2025
+ 13:10:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU0PR04MB9225:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a5db13d-c99e-4fc3-1eb4-08dd7c51972c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|1800799024|376014|366016|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SL7rgwslmIhZG/ElOQhQxVrVfXepkuM1otUln63MZDKK8OC0lBV8rOAG8MFz?=
- =?us-ascii?Q?26ylI0UTWhYwJ6Nw/LteZflUY40mdGSvF2iT5AXbhG7nTNAjVaFhDIZBMH3B?=
- =?us-ascii?Q?E2bMltQ7ftAeiqnxDHQZnswXrL/GIRDMJjuisACHcoYAUjvLJgzS36hVytl9?=
- =?us-ascii?Q?xceedo6cWVaNLdNtpmqjNCDuwqCnRsGGMqRNQj34UFDxNfLDtW35jXb3cfyT?=
- =?us-ascii?Q?sxZSn9jUclscCFZprVW79hjKF32oNBzR2ZYHNydW6yGGbn8KyzSV62s5Bk+k?=
- =?us-ascii?Q?1uaxmyzvt32QGK6psiYcj4qYbzvvvZZ17/P8UqyX4B5jWmvHBEW975eC16hD?=
- =?us-ascii?Q?LWfz4aOZyKnZXZcsV0aQjB1oGmAeewl2EGBMR/u1gLoFlCtvZ4Y8R3JZSYaL?=
- =?us-ascii?Q?FR6l1fJQN2ZHOxUoICyrsvllf45Fksl2oTulaorpqpcZQeGPPWNWWjwehJeQ?=
- =?us-ascii?Q?+8PGXfycyYsRxKznf/qTL2+lUDWrOBYqXwVQUkDGul7Xqw/gWhmW2mB/41UG?=
- =?us-ascii?Q?bduoz39cn4TQ6A9zToCXT2rfOtYjOa/IDlndj9pqzIjsQ8DNwbVHCn2B4obA?=
- =?us-ascii?Q?/JqUzzCrIGqFhSyo1ORVkQqlGmNOlaAGojGchXRKS0TWjHsn7I2LYP1YO8fA?=
- =?us-ascii?Q?PkazY+/jf4jNvqJZ8T81AK3jcts6BwBWSfappV3JFxhsNyp3e/pcpSqrPJrl?=
- =?us-ascii?Q?rHXvNT9+RWBGMAiFg+x/uwuIm+GlP0u7d0kTV5KQqeCNhbTBa8cJwO87nIHa?=
- =?us-ascii?Q?/J3qMA31Zzu9R0HMTGhwjI0OMcXGX5B2hoGjbeTzZ0vhq7Bo9YkGNWeRPU1+?=
- =?us-ascii?Q?YVXdzCAnI1etNLgJCMOk3NNS5RbX8F6NrPWhp5t2W+tKZ7nXlfpvoJ8x0YHd?=
- =?us-ascii?Q?XGLI7bUghj575HRmXYj+WGrNEHcVwC1uoHr8cHq3udESNZx9N27Be1EWyhdv?=
- =?us-ascii?Q?YIZV7c4UCscCALIvBB9Umnimq0Y+khGUDNaEOz9b78LaPjSqAJzXJDDYMDKp?=
- =?us-ascii?Q?RYBu7Un5t0llU3pbSgVgF8DJQj+l4r8DYFwV0sN0PxWNgfN44jbbNDHT4mFf?=
- =?us-ascii?Q?aGvW3zlQVOSij0uiK7Q3WaPY2xT7Ji8T8FQNNzmt287dwN99GgYSt197AeeW?=
- =?us-ascii?Q?HGxW03nVWekAPYJknRZTPqDPuj0kZFPjt8yzokQqamkcMnevOllVH0MiXu/8?=
- =?us-ascii?Q?CQb4uOy8Cx+rs3NAGTr8iOakVcYflNv84szHjFrVKn7HJMI0A5LSivP1KwMk?=
- =?us-ascii?Q?YZhGXmNHLmBqzETUN1abDsgmXQaYLCN/1w7ctLS3VuQIPvDvMxkV+fGO0yps?=
- =?us-ascii?Q?MmPLrf9kV1KVAuTll4nFLUx06rbeanXkQT4HDgm1Ptwu3hRVZf6U3ec/GTZ9?=
- =?us-ascii?Q?6Ui9plOES+hd5lFMpcLtG4n9bvmctJS5t83WYJ+vvtjdKmzRzpDnGRINrwQ+?=
- =?us-ascii?Q?hCdh/+5LdYX/m952dzabK93qhqvGvrp5OrxCJSvY+E7PBnavX4Pd2w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(1800799024)(376014)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8yAUMVCERTDJU6z615A0bwdx2dYX5p4apO5MlRqjEV6+2MeTqhIm/AadviMp?=
- =?us-ascii?Q?kGB0xWxPJ1bhiB4TAjEAzAVjkmt2TNOBE5npmkXTCmj1j1C7RRwBXs0cruRa?=
- =?us-ascii?Q?nsHthmU3pRqVgs5oS9bsuyjrfYEwYMw9mFr9A6mUFB1AGgPfVbmWNbTr0IWK?=
- =?us-ascii?Q?6flz+NL3YtzyBUeqqvOuTyfwKCoW3eaQa+vJ0G5F/Jtl3NJUe6p2iFnPPDXT?=
- =?us-ascii?Q?uPPLp6pujsISpGMkZieCOjhsMkGkhhJGRW3NBSRVYxxoxpn1K899TLrGwgL6?=
- =?us-ascii?Q?T4HazSis7trxsAK689jZG2qhkqj3nKhD4k/lgeSX+GKKI/sIgRun5u8xirky?=
- =?us-ascii?Q?h8DJUObEybIKY5hMyQCPRhY6r+FoFNTAHS/ys+1HQi2d5acwz4qTJNAg0VaQ?=
- =?us-ascii?Q?5cGtsR1XCEtIC22SuH9Afdlbfac/tfSLH2kwVLEW5opSEEaZdqnAFxPajeKl?=
- =?us-ascii?Q?qddf6uQquDIaWtJ0+IWxVyCEj3ATA5psXXL1dF5R0GuzaASzCIf/OfgprzaZ?=
- =?us-ascii?Q?SrClHwGM/pSJnNUX6MKsSMMUG0z+0TMM0MMe0/0G+eGm7Q6LIgGaB9MouFQI?=
- =?us-ascii?Q?+eZDYGv7gl3pDXa9vTBSecQmnVUcZOnjNfsCsex3wuD6gn9S4ZLgJVr5qbVP?=
- =?us-ascii?Q?Fh7SfkQPoh242MboyQIwI5xrvhZ93gGqMqUwms/5m95jzq69IAz0JWj3ZX55?=
- =?us-ascii?Q?tp2IjzKmublhlquB+DMfz7nn2r5NP4uuwDUITZamPun0UNn9KcRxwlBQF5+e?=
- =?us-ascii?Q?JK/PAMZeznrTx9P+4seAVEuEgnXJS6rI00XyT4spJtk21nLMXF1FBjjVEjUF?=
- =?us-ascii?Q?+rr+H16sENqGjKsmnlwKOVgJ6Dy+rIgWi/rOX2gIg6BmedWbHvsWo+QoT/J7?=
- =?us-ascii?Q?gMigBEetnklyuIDVQHvvR3dsFWYpd1wVPA1zI0nK+gItezzMTwXbg1Ei7fW8?=
- =?us-ascii?Q?jUFEw3uRdBkJe6tGe0nJifaL+EZcrERSYqYfcTZVTm77ybJtEn0Nf0oZ15Ac?=
- =?us-ascii?Q?RQIKK0HydavTOVaFjc18PJic5Vo9R8RgeuOQXoLxn4o92kzU8I/zuvSs8iqc?=
- =?us-ascii?Q?hyHXqfhwHL6KtRDJmCSZj1V+8GxVnrbFwFAoHAyGhvVHTMI/sGklHYaHP5Uq?=
- =?us-ascii?Q?qb8fvHPHurxtHNq7RYUiGry1KbM6KIb52J5ElqHyzhIA4EM2FoP6UthakSMG?=
- =?us-ascii?Q?p09Wreo5VFXUl7aB/PTrPJ32RM5wO2FviVk+a/eu2+3wQfF/YP2YMMhC8ZVv?=
- =?us-ascii?Q?xrSS99SjgmQakRvh9H41zwzuVy2KV17YbITp6Y5qMZ/z5nDqKpVwX41IEYQX?=
- =?us-ascii?Q?bMbpJ4pyiQfSOMCvmpehAHE9wU9MtZv2P3Hq/NKvU7vRaOHzTRidHhLb5Efh?=
- =?us-ascii?Q?Te9zz2r93rHdvbZ5pyCDlsbKGa4rWBJJxX7rGL09aiXhy+9klIZCIJNlwTUM?=
- =?us-ascii?Q?nsRyjrGAr0uboWaKcOCkgy+tOX6ZyFBukGX6uXyB+g0XcRoh1kRRw91176Aw?=
- =?us-ascii?Q?iGvTUXsUSd6+k6ioSAniAOV6nWa3yUGHru3ZZZzGKdxVUSewuytGc0w6n8Sy?=
- =?us-ascii?Q?FicQQGfyAPXP/jcrSXsALW36W7/oOEImLpUysX/C?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5db13d-c99e-4fc3-1eb4-08dd7c51972c
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 19:13:22.8962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CcBXnMbBHYNhIs3wwkV1jugxMQ7DrBrUoDtcmglMtK7sN0LaJxHj+/4H4WisQdv4CelQgG25XG/PK0WKb5gDFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9225
+References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
+ <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com> <67fe9975.c80a0220.1b5785.66e7@mx.google.com>
+ <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com> <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
+In-Reply-To: <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 15 Apr 2025 16:10:01 -0400
+X-Gm-Features: ATxdqUH2AXGR5D179vLUcxKCqAiKWiqv74mYwXiMQpvC31RtT7QM1E9QIgjYVQU
+Message-ID: <CAJ-ks9=G1ajyT8gwLHyvHW09Z2gG=Geg7LDS6iyRyqx_wyp5Sg@mail.gmail.com>
+Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025 at 07:19:53AM +0530, Krishna Chaitanya Chundru wrote:
-> Add host_start_link() and host_stop_link() functions to dwc glue drivers to
-> register with start_link() and stop_link() of pci ops, allowing for better
-> control over the link initialization and shutdown process.
+On Tue, Apr 15, 2025 at 2:18=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Tue, Apr 15, 2025 at 01:58:41PM -0400, Tamir Duberstein wrote:
+> > Hi Boqun, thanks for having a look!
+> >
+> > On Tue, Apr 15, 2025 at 1:37=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Wed, Apr 09, 2025 at 10:47:23AM -0400, Tamir Duberstein wrote:
+> > > > In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
+> > > >
+> > > > > Using `as` casts may result in silently changing mutability or ty=
+pe.
+> > > >
+> > > > While this doesn't eliminate unchecked `as` conversions, it makes s=
+uch
+> > > > conversions easier to scrutinize.  It also has the slight benefit o=
+f
+> > > > removing a degree of freedom on which to bikeshed. Thus apply the
+> > > > changes and enable the lint -- no functional change intended.
+> > > >
+> > > > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref=
+_as_ptr [1]
+> > > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > > > Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton=
+.me/
+> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > > > ---
+> > > >  Makefile                 |  1 +
+> > > >  rust/bindings/lib.rs     |  1 +
+> > > >  rust/kernel/device_id.rs |  3 ++-
+> > > >  rust/kernel/fs/file.rs   |  3 ++-
+> > > >  rust/kernel/str.rs       |  6 ++++--
+> > > >  rust/kernel/uaccess.rs   | 10 ++++------
+> > > >  rust/uapi/lib.rs         |  1 +
+> > > >  7 files changed, 15 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/Makefile b/Makefile
+> > > > index eb5a942241a2..2a16e02f26db 100644
+> > > > --- a/Makefile
+> > > > +++ b/Makefile
+> > > > @@ -485,6 +485,7 @@ export rust_common_flags :=3D --edition=3D2021 =
+\
+> > > >                           -Wclippy::no_mangle_with_rust_abi \
+> > > >                           -Wclippy::ptr_as_ptr \
+> > > >                           -Wclippy::ptr_cast_constness \
+> > > > +                         -Wclippy::ref_as_ptr \
+> > > >                           -Wclippy::undocumented_unsafe_blocks \
+> > > >                           -Wclippy::unnecessary_safety_comment \
+> > > >                           -Wclippy::unnecessary_safety_doc \
+> > > > diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
+> > > > index b105a0d899cc..2b69016070c6 100644
+> > > > --- a/rust/bindings/lib.rs
+> > > > +++ b/rust/bindings/lib.rs
+> > > > @@ -27,6 +27,7 @@
+> > > >  #[allow(dead_code)]
+> > > >  #[allow(clippy::cast_lossless)]
+> > > >  #[allow(clippy::ptr_as_ptr)]
+> > > > +#[allow(clippy::ref_as_ptr)]
+> > > >  #[allow(clippy::undocumented_unsafe_blocks)]
+> > > >  mod bindings_raw {
+> > > >      // Manual definition for blocklisted types.
+> > > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+> > > > index 4063f09d76d9..37cc03d1df4c 100644
+> > > > --- a/rust/kernel/device_id.rs
+> > > > +++ b/rust/kernel/device_id.rs
+> > > > @@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable=
+<T, U> for IdArray<T, U, N> {
+> > > >      fn as_ptr(&self) -> *const T::RawType {
+> > > >          // This cannot be `self.ids.as_ptr()`, as the return point=
+er must have correct provenance
+> > > >          // to access the sentinel.
+> > > > -        (self as *const Self).cast()
+> > > > +        let this: *const Self =3D self;
+> > >
+> > > Hmm.. so this lint usually just requires to use a let statement inste=
+ad
+> > > of as expression when casting a reference to a pointer? Not 100%
+> > > convinced this results into better code TBH..
+> >
+> > The rationale is in the lint description and quoted in the commit
+> > message: "Using `as` casts may result in silently changing mutability
+> > or type.".
+> >
+>
+> Could you show me how you can silently change the mutability or type? A
+> simple try like below doesn't compile:
+>
+>         let x =3D &42;
+>         let ptr =3D x as *mut i32; // <- error
+>         let another_ptr =3D x as *const i64; // <- error
 
-what's difference .host_start_link and .start_link ?
+I think the point is that the meaning of an `as` cast can change when
+the type of `x` changes, which can happen at a distance. The example
+shown in the clippy docs uses `as _`, which is where you get into real
+trouble.
 
-what's reason why need .host_start_link.
+> also from the link document you shared, looks like the suggestion is to
+> use core::ptr::from_{ref,mut}(), was this ever considered?
 
-Frank
+I considered it, but I thought it was ugly. We don't have a linter to
+enforce it, so I'd be surprised if people reached for it.
+
 >
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> > >
+> > > > +        this.cast()
+> > > >      }
+> > > >
+> > > >      fn id(&self, index: usize) -> &T::RawType {
+> > > > diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+> > > > index 791f493ada10..559a4bfa123f 100644
+> > > > --- a/rust/kernel/fs/file.rs
+> > > > +++ b/rust/kernel/fs/file.rs
+> > > > @@ -359,12 +359,13 @@ impl core::ops::Deref for File {
+> > > >      type Target =3D LocalFile;
+> > > >      #[inline]
+> > > >      fn deref(&self) -> &LocalFile {
+> > > > +        let this: *const Self =3D self;
+> > > >          // SAFETY: The caller provides a `&File`, and since it is =
+a reference, it must point at a
+> > > >          // valid file for the desired duration.
+> > > >          //
+> > > >          // By the type invariants, there are no `fdget_pos` calls =
+that did not take the
+> > > >          // `f_pos_lock` mutex.
+> > > > -        unsafe { LocalFile::from_raw_file((self as *const Self).ca=
+st()) }
+> > > > +        unsafe { LocalFile::from_raw_file(this.cast()) }
+> > > >      }
+> > > >  }
+> > > >
+> > > > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> > > > index 40034f77fc2f..75b4a18c67c4 100644
+> > > > --- a/rust/kernel/str.rs
+> > > > +++ b/rust/kernel/str.rs
+> > > > @@ -28,8 +28,9 @@ pub const fn is_empty(&self) -> bool {
+> > > >      /// Creates a [`BStr`] from a `[u8]`.
+> > > >      #[inline]
+> > > >      pub const fn from_bytes(bytes: &[u8]) -> &Self {
+> > > > +        let bytes: *const [u8] =3D bytes;
+> > > >          // SAFETY: `BStr` is transparent to `[u8]`.
+> > > > -        unsafe { &*(bytes as *const [u8] as *const BStr) }
+> > > > +        unsafe { &*(bytes as *const BStr) }
+> > >
+> > >         unsafe { &*(bytes.cast::<BStr>()) }
+> > >
+> > > ? I'm curious why this dodged the other lint (ptr_as_ptr).
+> >
+> > The reason it has to be written this way is that BStr is !Sized, and
+> > `pointer::cast` has an implicit Sized bound.
+> >
+> > Perhaps the lint is smart enough to avoid the suggestion in that case?
+> > Seems like yes:
+> > https://github.com/rust-lang/rust-clippy/blob/d3267e9230940757fde2fcb60=
+8605bf8dbfd85e1/clippy_lints/src/casts/ptr_as_ptr.rs#L36.
+> >
 >
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 56aafdbcdacaff6b738800fb03ae60eb13c9a0f2..f3f520d65c92ed5ceae5b33f0055c719a9b60f0e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -466,6 +466,8 @@ struct dw_pcie_ops {
->  	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
->  	int	(*start_link)(struct dw_pcie *pcie);
->  	void	(*stop_link)(struct dw_pcie *pcie);
-> +	int	(*host_start_link)(struct dw_pcie *pcie);
-> +	void	(*host_stop_link)(struct dw_pcie *pcie);
->  };
->
->  struct debugfs_info {
-> @@ -720,6 +722,20 @@ static inline void dw_pcie_stop_link(struct dw_pcie *pci)
->  		pci->ops->stop_link(pci);
->  }
->
-> +static inline int dw_pcie_host_start_link(struct dw_pcie *pci)
-> +{
-> +	if (pci->ops && pci->ops->host_start_link)
-> +		return pci->ops->host_start_link(pci);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void dw_pcie_host_stop_link(struct dw_pcie *pci)
-> +{
-> +	if (pci->ops && pci->ops->host_stop_link)
-> +		pci->ops->host_stop_link(pci);
-> +}
-> +
->  static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
->  {
->  	u32 val;
->
-> --
-> 2.34.1
->
+> Oh, I see, so fat pointers get their way from this check? Hmm... however
+> fat pointers also suffer the same problem that ptr_as_ptr prevents,
+> right? How should we avoid that?
+
+Probably the proper solution is to remove the `Sized` bound from
+`pointer::cast`. Short of that, I'm not sure how -- but I don't think
+this deficiency should prevent us from the benefits of this change,
+even if they are a bit limited.
 
