@@ -1,95 +1,91 @@
-Return-Path: <linux-pci+bounces-25910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF683A894C8
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 09:21:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C473A89541
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 09:37:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 844623B6F6C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 07:20:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E1C61777FF
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 07:37:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C9319F438;
-	Tue, 15 Apr 2025 07:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A887327A108;
+	Tue, 15 Apr 2025 07:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qrlNFjZ9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTmjPEEQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764B11F0E47
-	for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 07:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D227A27990F
+	for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 07:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744701662; cv=none; b=Aboc47yDUzpCUUvmvgbNvELbFmsvuB3bWecYRHRayZESoL4RrkT27+M9RbYMp6UcyZay63/X+6rjoLr9oF1KzgXiy5ORt/Mhq2EL8MzQn7KJMaOjMnZZIt+rl3l1ZdfGP6/+Xgpk6Qz6Fq0Ce1LVBubYtMjAFnDWmFQhRRqMLJ8=
+	t=1744702652; cv=none; b=Smt49KPanuorF7BJsUi59YbihfB0epiaDewo6p4y0xi7feCGAYfgc7cNV3po9Vbnv0f106wGmvIrFSpCOn0/3UWmev6msDwB/ZsBRb75VEZTBwhHC12W6HrRUVx4vWOVo0l4yvCp75HV8ph4yopQMJW8oofGjOvq6QaeVxP3L4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744701662; c=relaxed/simple;
-	bh=GEfBOA45QlWfcWHD5yzJuDstvply4eSmwqKjrGpmXUw=;
+	s=arc-20240116; t=1744702652; c=relaxed/simple;
+	bh=ADDQjSNZrMUYfNo3JcSB4Y6gU66cQoi2s58lZfjsQeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SnDuonYwzXR2K51EcS7LiTodRtp+3F+DOnRmcaoPz6gX8/qfBx1bDApkQUW/a/IZfGYQsA2TjGd8H+zhkdwbIincMe1yCNNDCt1zcKeyhqUuDpR3oj4aALcO7CrR1Ch9GUNRkQ1zSIaAMoKG8RnJgW1poVKFP+isNoT9aZurpZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qrlNFjZ9; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=YEff7AEg6DAar2Y/8HA2PearhZKdmLTE5LqsL1Rnlz2iOqFQhb45Ll3oM1Dwo9p1wf01YyqZsFEANdCDyXQ9qOOgYBCJ4obXxWxykLU5L+sHx5l14E9HZzSEyHUDtNlqY3F1ddJgC3gjICpNSmD0+PF1VZto+oqGnI6I6k/ywGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LTmjPEEQ; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2295d78b433so54041595ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 00:21:00 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223fb0f619dso55474885ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 00:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744701660; x=1745306460; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744702650; x=1745307450; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=XCNk9Rod1k+bgkwurUtIjlivzVvS2RJvCje5WjdRCTk=;
-        b=qrlNFjZ9sCrJXI5cTQdCR+/laEgXYSV2r1Oauzx4cOKoNxLJMdG2zoZQRY3WMjlDQ3
-         g4b9Br9o2of0QLOj/83VooUXEWSw4C1Bd19kf27waStgRxki4DAS68TJ7qEGpZqbPEBz
-         GHloJdpnRVFRhjIkYQyoE+A2zLatJqk4bdrd1i2Z93bosZyc6Cu9RhcsenaW70Zo//oV
-         dh9ovl+BxInOQwagNk5bQ5ORACw01eAplZAJ+wIE8ybIGlakUIQTaa37sTwEu3BP49vC
-         7mASa1tSyi+mGGRRSVTqriPEJcBX3xJSbYlxthqY2FmVAxb1RdHBdli37bP2NeeGAZDx
-         PxkQ==
+        bh=DDo+1ovq35fsREK4xW2iMU0s3LeNEpGFrQXnNr7tsWY=;
+        b=LTmjPEEQ14PVsl7LzxiN3KWjSd8cdJ2Vgt9AKT11Xdk/aGyDC6dK+x/zMUH/1KVgb/
+         VRWI51OyJvK5mBHSP56RYCM0nyJbidly8GTkpr+4Dhg807gKTrMN8/zUcQeydmT0F8to
+         0ZHyOPCpB6LCs9LIr2IUfMiZCZi1726pxcckgcTNl7QeVFL8xeTAYOjoP2K8+1ZUg8MX
+         kOfDGmYYFOzvXWIonlzqASfNMHoMnYg9Gkg7TCG6opjep2VFvriS2i+r7nQqcX4DBfI4
+         SqtR/avfCfsNAZPoxFvLyv69WZaQIaWTebnluJpH3/DLlfZcMAdi7jX92LHRWn94cGzu
+         6W8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744701660; x=1745306460;
+        d=1e100.net; s=20230601; t=1744702650; x=1745307450;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCNk9Rod1k+bgkwurUtIjlivzVvS2RJvCje5WjdRCTk=;
-        b=PZpqzMmFMIt3IKvlezv4IcQwznTSvLMYcxZh/cP+p0S7fS+AaSUP5gxEDoUQwsayyQ
-         vi5SPvs++iGoRMQOtJusgZGYU2c5Sd8RCPcW6HyhVTKG193Oqb13kwlndVePNUvMcDsZ
-         wKfAFX6XKa4aK/yLVtrwBUjgaNkOBJ6Z07YmB5wgqxz/31LfLBTpt6ywj/VPQod5NwWG
-         haZyt7xFRfiv7a3y2bYHE8GVV9DRjQ84tlN6T417ZiDfD39CswRkC6fWZUtd6RX1DJot
-         gHFg4owLMaYPsRwM54FDQdeYJoVyJw4+mvVADHlIxQoKphrZaDsj23LRVS2w1JaerRaz
-         +HHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYmprb96j2OPSXiEB+/lqSS36fGnk3MjhanYIZRBm1H9fVKtfhhrYwYnM6SSo1GlG21WTpOUx+UQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1EPXcUY7we7XOflGMELqKpGCMwEGf3RXMgtg4xux5bDkbzBJ9
-	wcV7HO157QdcmCWna040RoQZ3Ae3HgtNGNegjgbW4NCZwBEZyhY3ExlsjqyhWQ==
-X-Gm-Gg: ASbGncvbzeKgPGnHCo00iuAunxmIkh5BDT7nOqsCNj8wJVZjc1WPKmS+XSbYWlVRSOj
-	1nknv5SlKzaSQ4WXWS23wCXEETAxMI9gqBZmB9cZ04NyBR/po7H1L5SaTIJe8jMUZ5mNdtOoA+q
-	m09B4o31OLyE7u7Qfaygc2+S8sf4kNoJO7PLBuUscT8Ip+qqLQe3jgfwOkYbbs2k+zn09DSpKhx
-	Hn7L1N+VGCao5NNpXN4mWi45QJM91/bT9+Vwz5XRghD+a6clBFle/ftJJ1r1Meqi+/NbHz9t5VK
-	b5zUqzY4DpeuLH/w4Xt1e3U1cnNt3tYYiKgZ2XW46/P9YXw/qNtAaJtdkVkx
-X-Google-Smtp-Source: AGHT+IHwx8NytA4HfmHYqY+ucueZxWfnA77QXqfaKsQqKRz4c9hbWsTrqA2PwtFUSZmcoIQDMTuTwQ==
-X-Received: by 2002:a17:903:1b6f:b0:224:c47:cb7 with SMTP id d9443c01a7336-22bea3f02aemr222574665ad.0.1744701659806;
-        Tue, 15 Apr 2025 00:20:59 -0700 (PDT)
+        bh=DDo+1ovq35fsREK4xW2iMU0s3LeNEpGFrQXnNr7tsWY=;
+        b=IxJU1+BU97qdyD4aDJVspySWDNOKDZYzLiGV5k6MG/AeB0zPC0bYSM7xzDiR8uXB22
+         61aU3W83l0QDJoB/AzSW2DL4r3gspygYRJUNx+Vhrp8GlW8G+z9KWna6ypHrWhuW+cO2
+         11LqOnXOjUrmBgikgZiL9J3rsbYbhokjJK6LPNEjj2TsEt2L1OxgbHzYCb/QhyT6Gf6/
+         2SqcJkn8sbig/DKZ+5tTu4xZABqHeQ38wajIRZJsgjbdrMvcYzP3g93PkvD8udtCQLHl
+         F2YUXXMoa25akQB5aR3iDuVq4UfbmFwa5dfBrkBHji3sudev779lnG75w0CErUB97hP2
+         NUSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4g+/jnj6JG9nvSLXbECMhy3MZ/rbO+pVrNE7GORIylqIlDAuvi/1EC7pwL9hBJcdsWHkQKkexavc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2S83ku/k+haYikdAoYqJhM/TMHLZEQsxScD/jarNflmjrGb3u
+	shhDV0z1wU5vZW5+bWonYEUb+2OTcpaAj7gHhMwrDHpOF7ZC54U2rmmp+tAPjg==
+X-Gm-Gg: ASbGncuqtKTE/kghSAF1WQgkYL5oPvbHudDwl5NZU75p0P+VInQuimOQaCaY/NUo+6M
+	mRN3+9sh6O9cPMLti6tE4iDH7484Ff0vvuRCN38oZye2jwpcRinMT0278xAnkN+YspSRFERdPWw
+	YB9yz5D0nqzeenoEbZ920/SdaBakJ4hMud+0SEeHgTMEptkCLUK1fz5aTEwQGWtVrdl5TvDztEk
+	Gm2zzgqUnll0GMNU4VfzWIUgHsyN58OK6wnLcgfqroH4oGLuo2fCX8Hc/+mtrdISjI3m0CGo69I
+	PpEkqwCjbzly3AWHgghJE66Lw4rzknjkuAVdrOCKEOtOPD3I/w==
+X-Google-Smtp-Source: AGHT+IH01tCvqQyBttKOk5hZJJOIuUKEuEjjzWxtM8xTK8g6f9wear268faSQH9NM/buDV5yVj/opw==
+X-Received: by 2002:a17:902:cec9:b0:227:e980:9190 with SMTP id d9443c01a7336-22bea4fcad1mr230050615ad.44.1744702650063;
+        Tue, 15 Apr 2025 00:37:30 -0700 (PDT)
 Received: from thinkpad ([120.60.71.35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cddfaesm111157005ad.257.2025.04.15.00.20.55
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e31dsm8053401b3a.141.2025.04.15.00.37.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 00:20:59 -0700 (PDT)
-Date: Tue, 15 Apr 2025 12:50:53 +0530
+        Tue, 15 Apr 2025 00:37:29 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:07:23 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
- PCIe
-Message-ID: <3wmkjmutepc2s2ookc3ces4eyxe6morhhwxzlpup4mkkoy5ocx@py6h36upgl75>
-References: <20250408025930.1863551-1-hongxing.zhu@nxp.com>
- <20250408025930.1863551-7-hongxing.zhu@nxp.com>
- <uqrhqkmtp4yudmt4ys635vg3gh5sibhevu7gjtbbbizuheuk45@lhxywqhtbpak>
- <AS8PR04MB867619A464E923655EDEF4878CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, quic_mrana@quicinc.com, 
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com, quic_vpernami@quicinc.com
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
+Message-ID: <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
+References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
+ <Z-0xJpBrO4wN9UzN@ryzen>
+ <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
+ <Z-4-A29UddizBUPz@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,94 +95,98 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB867619A464E923655EDEF4878CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <Z-4-A29UddizBUPz@ryzen>
 
-On Mon, Apr 14, 2025 at 03:16:46AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2025年4月13日 23:33
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v5 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
-> > PCIe
+On Thu, Apr 03, 2025 at 09:51:31AM +0200, Niklas Cassel wrote:
+> Hello Krishna,
+> 
+> On Thu, Apr 03, 2025 at 09:26:08AM +0530, Krishna Chaitanya Chundru wrote:
+> > On 4/2/2025 6:14 PM, Niklas Cassel wrote:
+> > > 
+> > > Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
+> > > 
+> > > Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
+> > > was enough for me to produce:
+> > > 
+> > > [   40.209887] r8169 0004:41:00.0 eth0: Link is Down
+> > > [   40.216572] ------------[ cut here ]------------
+> > > [   40.216986] called from state HALTED
+> > > [   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
+> > > [   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
+> > > [   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
+> > > [   40.220908] Hardware name: Radxa ROCK 5B (DT)
+> > > [   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > > [   40.221899] pc : phy_stop+0x134/0x1a0
+> > > [   40.222222] lr : phy_stop+0x134/0x1a0
+> > > [   40.222546] sp : ffff800082213820
+> > > [   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
+> > > [   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
+> > > [   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
+> > > [   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
+> > > [   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
+> > > [   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
+> > > [   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
+> > > [   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
+> > > [   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
+> > > [   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
+> > > [   40.229093] Call trace:
+> > > [   40.229308]  phy_stop+0x134/0x1a0 (P)
+> > > [   40.229634]  rtl8169_down+0x34/0x280
+> > > [   40.229952]  rtl8169_close+0x64/0x100
+> > > [   40.230275]  __dev_close_many+0xbc/0x1f0
+> > > [   40.230621]  dev_close_many+0x94/0x160
+> > > [   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
+> > > [   40.231426]  unregister_netdevice_queue+0xe4/0x100
+> > > [   40.231848]  unregister_netdev+0x2c/0x60
+> > > [   40.232193]  rtl_remove_one+0xa0/0xe0
+> > > [   40.232517]  pci_device_remove+0x4c/0xf8
+> > > [   40.232864]  device_remove+0x54/0x90
+> > > [   40.233182]  device_release_driver_internal+0x1d4/0x238
+> > > [   40.233643]  device_release_driver+0x20/0x38
+> > > [   40.234019]  pci_stop_bus_device+0x84/0xe0
+> > > [   40.234381]  pci_stop_bus_device+0x40/0xe0
+> > > [   40.234741]  pci_stop_root_bus+0x48/0x80
+> > > [   40.235087]  dw_pcie_host_deinit+0x34/0xe0
+> > > [   40.235452]  rockchip_pcie_shutdown+0x24/0x48
+> > > [   40.235839]  platform_shutdown+0x2c/0x48
+> > > [   40.236187]  device_shutdown+0x150/0x278
+> > > [   40.236533]  kernel_restart+0x4c/0xb8
+> > > [   40.236859]  __do_sys_reboot+0x178/0x280
+> > > [   40.237206]  __arm64_sys_reboot+0x2c/0x40
+> > > [   40.237561]  invoke_syscall+0x50/0x120
+> > > [   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
+> > > [   40.238305]  do_el0_svc+0x24/0x38
+> > > [   40.238597]  el0_svc+0x30/0xd0
+> > > [   40.238868]  el0t_64_sync_handler+0x10c/0x138
+> > > [   40.239251]  el0t_64_sync+0x198/0x1a0
+> > > [   40.239575] ---[ end trace 0000000000000000 ]---
+> > > 
+> > Hi Niklas,
 > > 
-> > On Tue, Apr 08, 2025 at 10:59:29AM +0800, Richard Zhu wrote:
-> > > Add PLL clock lock check for i.MX95 PCIe.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 28
-> > > +++++++++++++++++++++++++--
-> > >  1 file changed, 26 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > index 7dcc9d88740d..c1d128ec255d 100644
-> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > @@ -45,6 +45,9 @@
-> > >  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> > >  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> > >
-> > > +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
-> > > +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
-> > > +
-> > >  #define IMX95_PCIE_SS_RW_REG_0			0xf0
-> > >  #define IMX95_PCIE_REF_CLKEN			BIT(23)
-> > >  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> > > @@ -479,6 +482,23 @@ static void
-> > imx7d_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
-> > >  		dev_err(dev, "PCIe PLL lock timeout\n");  }
-> > >
-> > > +static int imx95_pcie_wait_for_phy_pll_lock(struct imx_pcie
-> > > +*imx_pcie) {
-> > > +	u32 val;
-> > > +	struct device *dev = imx_pcie->pci->dev;
-> > > +
-> > > +	if (regmap_read_poll_timeout(imx_pcie->iomuxc_gpr,
-> > > +				     IMX95_PCIE_PHY_MPLLA_CTRL, val,
-> > > +				     val & IMX95_PCIE_PHY_MPLL_STATE,
-> > > +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
-> > > +				     PHY_PLL_LOCK_WAIT_TIMEOUT)) {
-> > > +		dev_err(dev, "PCIe PLL lock timeout\n");
-> > > +		return -ETIMEDOUT;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int imx_setup_phy_mpll(struct imx_pcie *imx_pcie)  {
-> > >  	unsigned long phy_rate = 0;
-> > > @@ -824,6 +844,8 @@ static int imx95_pcie_core_reset(struct imx_pcie
-> > *imx_pcie, bool assert)
-> > >  		regmap_read_bypassed(imx_pcie->iomuxc_gpr,
-> > IMX95_PCIE_RST_CTRL,
-> > >  				     &val);
-> > >  		udelay(10);
-> > > +	} else {
-> > > +		return imx95_pcie_wait_for_phy_pll_lock(imx_pcie);
-> > 
-> > Is this PLL lock related to COLD_RESET? It doesn't look like it. If unrelated, it
-> > should be called wherever required. imx95_pcie_core_reset() is supposed to
-> > only assert/deassert the COLD_RESET.
-> > 
-> > If related, please explain how.
-> Thanks for your kindly review.
-> To make sure the HW state is correct to continue the sequential initializations.
-> The PLL lock or not check would be kicked off after the COLD_RESET is
->  de-asserted for i.MX95 PCIe.
-> So, the PLL lock check is added at the end of de-assertion in
->  imx95_pcie_core_reset() function.
+> > The issue which you are seeing with specific to the RealTek ethernet
+> > driver and should be fixed by RealTek driver nothing to do with the host
+> > controller.
+> 
+> The warning comes from:
+> drivers/net/phy/phy.c:phy_stop()
+> so from the networking phylib.
+> 
+> Doing a simple:
+> $ git grep -p phy_stop
+> 
+> shows that practially all Ethernet drivers call phy_stop() from the
+> .ndo_stop() callback.
+> 
+> So after your suggested patch, you should see this warning appear with
+> any NIC, if connected to your PCIe controller.
 > 
 
-But imx95_pcie_core_reset() is not doing anything for deassert other than
-waiting for PLL lock. Hence my question.
+I think the issue here is that phy_stop() is called without calling
+corresponding phy_start(). This means that either rtl8169_up() is never called
+or rtl8169_down() is called twice.
+
+I don't think this issue is applicable to all drivers. It'd be worth
+investigating what is going wrong with this r8169 driver.
 
 - Mani
 
