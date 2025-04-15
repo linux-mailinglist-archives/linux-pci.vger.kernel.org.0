@@ -1,133 +1,93 @@
-Return-Path: <linux-pci+bounces-25931-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25932-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24C27A8A3D8
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 18:15:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84AA3A8A4CF
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 19:00:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44E853BD177
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 16:14:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C8CB3BC9A6
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 17:00:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECA4B1FDA9B;
-	Tue, 15 Apr 2025 16:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3208F7D;
+	Tue, 15 Apr 2025 17:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pztQCA3m"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="P3RtSJ+k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38802DFA41;
-	Tue, 15 Apr 2025 16:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C142710E9;
+	Tue, 15 Apr 2025 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733699; cv=none; b=W424lMifkqOYvkzCi0CTCpZ7IPwuwuyvrbRaWb4OuAJrFnrZHhK9ZjcFPmrmIf5OSmul+DfWBLZUXKrQYku/kWhLaxxAym6WyqqSf/Hohp7wwyaQ8BWWrOaQyQemofWZAcJimqm8H6u0y2hNZieeB02eRt+6JobzZXiBZUDwO+k=
+	t=1744736422; cv=none; b=nb4WXazMsOE11ehQ8VxYp5Zjg5jP5JQt0iBaO+50jGSoWicgcapJl1Ieql98VqThhgL4eubve2HsWFD0TfJIE6t623XBkfNYXriw4dZRVxMBhLkTeB3CiUt5axf6s0LS+YD5cvWXrjqElgKsL39BhXTq6GWIKjxLm69p/mHiBNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733699; c=relaxed/simple;
-	bh=U/rKNYDUD8j6QMOYLJ34Ll3gyPFM6SLKNxk//x2JQP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nm7ucF6UbYQxmjmbeXLawz2Aq4/7Rjl+b8UfzgZmkqQ7XtK1B22Vrg8DNOhnABlONGtvxqHz3GG8FsE60locFTTKJL4+7Mm2LBCdsuEODIpxuaGlC1OagcwzoMJUVmxNTqtMsiF+XFKzaj5FSj3uR3NtlmFILd19gW/YtIvj1R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pztQCA3m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743E4C4CEEB;
-	Tue, 15 Apr 2025 16:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744733698;
-	bh=U/rKNYDUD8j6QMOYLJ34Ll3gyPFM6SLKNxk//x2JQP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pztQCA3m4GCim/1wSoY8Mu8F8hiIGUr0WM7lChdgo6fkoAulk7Da+VoWMtvINe60v
-	 o0eezdUCv+z2WE8DZF6zM1Ra2I8U+5eiZLlBGNASYIpAQD0Z16N9YYS0vmCWJ1gINx
-	 ehq9XyP/8CEQDI9/XyTxr1znYNaP1Pjy2m31UCRc=
-Date: Tue, 15 Apr 2025 18:14:55 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <2025041530-random-cheek-125d@gregkh>
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
- <2025041557-masculine-abrasive-c372@gregkh>
- <20250415165505.0c05bc61@bootlin.com>
- <2025041531-dubiously-duchess-276a@gregkh>
- <Z_5-Jjbu6XoHGmxN@apocalypse>
+	s=arc-20240116; t=1744736422; c=relaxed/simple;
+	bh=KsPCEMVc2LMLTS4j1lUJZrful794O99DydUdMIngm8A=;
+	h=Message-ID:Date:MIME-Version:To:References:From:In-Reply-To:
+	 Content-Type:Subject; b=OO/1HlEoJ9rViMKa+Dw/nDZeQF2us4nK8BajhBkWKWVsyHK8zMDVgKrNFcRqUNhxmMXK1z9FGfgIS2LDaFWweBMcYwo2mx6x29ROJm6g0EsDmlX6oRXo7yB2ENT2dVHb5GBR5HiRwnyziE3pRpaLa3RL79Cy1dakUa0Wwo0D17I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=P3RtSJ+k; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:To:
+	MIME-Version:Date:Message-ID:cc:content-disposition;
+	bh=KsPCEMVc2LMLTS4j1lUJZrful794O99DydUdMIngm8A=; b=P3RtSJ+kk9OJ5LuMQzZga8rlKU
+	lwj6oFYa7EtD7N+rEKwDyzNt8XfjFLRuIHwZOchBOA71z9i2CZjmKmW4t06/+LKOdaewTrVnxhHCs
+	AxaOXIxquT/r/b6Y3ZjsIXNtsYBw+U/LtVWR5eOldEBRU03n1F6I0nq8u8nNPWf0CAT1ijVsgocPX
+	zUS8oYl1s82QpX9yylOxZWHhHg2qySHGgBU9uIX5eU1tdc8WXq3FN54a/U2EcpzPS+tlgDg9wnEQq
+	hH0T4z2w1KjwkswMhwFoYDLEakw3amD0T/Cl5m86x7nWSDLp7obeEh+qyC0Hz9hu19JJNm4RanAnQ
+	UnsLJESg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1u4jdt-000rei-0Q;
+	Tue, 15 Apr 2025 11:00:12 -0600
+Message-ID: <dbb07d97-433b-4792-bbd7-74033c838d29@deltatee.com>
+Date: Tue, 15 Apr 2025 11:00:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_5-Jjbu6XoHGmxN@apocalypse>
+User-Agent: Mozilla Thunderbird
+To: Stephen Bates <sbates@raithlin.com>, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z_2nIRgPqp2JlT9m@MKMSTEBATES01.amd.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <Z_2nIRgPqp2JlT9m@MKMSTEBATES01.amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH] p2pdma: Whitelist the QEMU host bridge for x86_64
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Tue, Apr 15, 2025 at 05:41:26PM +0200, Andrea della Porta wrote:
-> Hi Greg,
-> 
-> On 17:14 Tue 15 Apr     , Greg Kroah-Hartman wrote:
-> > On Tue, Apr 15, 2025 at 04:55:05PM +0200, Herve Codina wrote:
-> > > Hi Greg,
-> > > 
-> > > On Tue, 15 Apr 2025 16:06:43 +0200
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> > > > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > and others.  
-> > > > 
-> > > > So shouldn't this be using the auxbus code?  That's designed to "split
-> > > > up" PCI devices such that you can share them this way.
-> > > > 
-> > > > Or did that get rejected somewhere previously?
-> > > > 
-> > > 
-> > > It doesn't use auxbus probably for the exact same reason that the
-> > > one given for the LAN966x PCI device driver [0] and [1].
-> > > 
-> > > Avoid all boiler plate needed with auxbus whereas drivers already exist
-> > > as platform drivers. Internal devices are handled by those platform drivers.
-> > > Those devi just need to be described as platform devices and device-tree is
-> > > fully relevant for that description.
-> > > 
-> > > [0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com/
-> > > [1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
-> > 
-> > I really hate creating platform devices below a PCI device, so I'll keep
-> > complaining about this every time people try to do it.
-> 
-> I agree with you, but as Herve has already pointed out this would mean incurring
-> in significant work to adapt drivers for all the peripherals (there are quite a
-> few), while with this approach they would be left untouched.
+Hi Stephen,
 
-We have no problem with reworking existing drivers, especially if they
-will be doing the correct thing.  Don't let that be an excuse, it
-doesn't work with me, sorry :)
+On 2025-04-14 18:24, Stephen Bates wrote:
+> It is useful to be able to develop and test p2pdma applications in
+> virtualized environments. Whitelist the QEMU PCI host bridge emulated
+> by the default QEMU system for x86_64.
 
-greg k-h
+The host bridge is also in real hardware. 82G33 motherboards from c.
+2007. Given it's age the real hardware probably doesn't support P2P
+transactions, but at the same time it's probably pretty rare and I
+wouldn't expect there to be much risk of someone trying and failing a
+P2P transaction on such a machine. These things are probably worth
+noting in the commit message.
+
+Other than that:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
 
