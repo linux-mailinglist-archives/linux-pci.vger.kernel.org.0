@@ -1,64 +1,93 @@
-Return-Path: <linux-pci+bounces-25917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25918-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88720A896A2
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 10:31:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBB1EA89705
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 10:44:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E12917C28C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 08:30:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC8CD189DDBB
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 08:44:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7612028B50F;
-	Tue, 15 Apr 2025 08:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5220727A119;
+	Tue, 15 Apr 2025 08:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iX6u1f/i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4sN4Akx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4545D28B505;
-	Tue, 15 Apr 2025 08:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2771DE8B0;
+	Tue, 15 Apr 2025 08:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705673; cv=none; b=jVmAQNoVIvftSI2WgDDQHeYt1qmpqQWKOqLAWFRNZlBrPrtYE3K09t9PvKQuGmEJOC7PoPKNA7wEMNd4gUaC+PKRKIrRqbLxYr9OyQaquBRFv1PLLVfBXk6PPvOBJOfN4A3e1mPGd3mZXCNOq82jYRu/BCHrqmxRB5wHNX2GTQc=
+	t=1744706666; cv=none; b=ZtB3RWlh+UHSKXgmj+NsnEkJBdiiMObVEH/aH0+ma+Ipkjt1H3v6kV/yYxQeuRRIpMhY6E9W/KNpxB+e/5ihVpjuS5J5aeJLPk55hd7qKNLH7fjy0O7RHYUjcqpvAzu6sLzEFH9iukTuz+nn2x24T7Hl6FbtAoiKrDH/AJhvDSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705673; c=relaxed/simple;
-	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
+	s=arc-20240116; t=1744706666; c=relaxed/simple;
+	bh=tTQC2d50IWaHk+pOnbgalVH8CC4lcqM8R16udFXoxsE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQlx0EHO9M2CGxJnHwMjZn2E63YLm7oOwDPVVmNPSTDzSDrIhkCooF14Le68oWcYXZr2ANr5Zdiv8OtYAbByQ+irC9F8lo2oGSItfSyGNd8DEnjivUrFdqqfR8yMHjxtdeZQ5OZVZBWfUJek8b+VfcOrWK9UxAJcDEqBtK47PP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iX6u1f/i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3007BC4CEDD;
-	Tue, 15 Apr 2025 08:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744705671;
-	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iX6u1f/i6SkDFvVRC9+ra7KaJDNon9ZgZoCF1yyg3aTHP2tUpudugUG+9MO6MhjsY
-	 lPvCWgMWAZyPtnIvjyBuTXF6oqmC4o/tio4cgeGhqQ6LA0nRQIB9Bxc1gPnFSc+CCc
-	 F9z+VgFb38toE3Q0ckFx3w/ZAv6P6rYpss8Fx9RMjCPhjQFMEunuIsWjSxPYOXIv+6
-	 JYiPFFdgnk06PcK3JdqNGc1unUa+tv+AMwMHMqMGsSxkKWlQbubHMjxCk88tInC+0V
-	 rXqiodGYNZgl0zl3FPvHKj2pm+bJO31/VuW1ycSrSWXsEIuMv+JVqlvwlcv0sAuhql
-	 kZCVAdV/YPqEQ==
-Date: Tue, 15 Apr 2025 10:27:46 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5AhF9ofcBBqVlzbTC3yUzaRRKkwmA8Pw3lJf0p5kqbbmKRgt4O00YNeXh2Oz2QxrzlBc27APUTkAk8HHgGA3DQUSnJTh4RwTOXF9k5rlhRKU7NKyZpO/HV8nYBeXPPTxmIHu5BUXd5yL3iAvfNEoJCZsSuQhILqivnCFavKzjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4sN4Akx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744706664; x=1776242664;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tTQC2d50IWaHk+pOnbgalVH8CC4lcqM8R16udFXoxsE=;
+  b=C4sN4Akx1eCb1wXo5RoaU4yqOpI75yK8y8Ls9KHfpdAtpcUMbGd1VMX3
+   KjS8f/Zz8BXMtBh5R32OZVIjoAuYDfp4TkCNF0n6mNjYlRCszMPA84acm
+   kFdZTQ8PLrrxhOXQ8zipAALT76GuNBrqub/Kj+OnbKoIXw+XSWAF6P76q
+   HSTB/Zq3cjVaW3XGWfZQQ1mXAAb+sgSCDGGf02G9+qGBmwuoHZ4Ps5mk1
+   KJ/BKbrkItSwvnnqJG9uJ9gZ0BlIf8QfnoseOV60abSFHA3AFzX21XB91
+   41/v+ButXFA8ok0M28YMEch/7LUdWwHIA+vGhLIaXjQMTYHovq1D0XmbB
+   w==;
+X-CSE-ConnectionGUID: PrtPQIieQEa/gYTBwV/peQ==
+X-CSE-MsgGUID: M+2r/EByT6OmFFpFfGx8Ag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="63745014"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="63745014"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:44:23 -0700
+X-CSE-ConnectionGUID: Dd7Wr1IVSUeIPUZVeoOEZQ==
+X-CSE-MsgGUID: xlzBoADzQ/GGkY8cyvRjUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130593508"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 15 Apr 2025 01:44:18 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4btv-000FQo-2S;
+	Tue, 15 Apr 2025 08:44:15 +0000
+Date: Tue, 15 Apr 2025 16:44:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_vpernami@quicinc.com
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
-Message-ID: <Z_4YgkXR1Retq7n9@ryzen>
-References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
- <Z-0xJpBrO4wN9UzN@ryzen>
- <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
- <Z-4-A29UddizBUPz@ryzen>
- <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	quic_vbadigan@quicnic.com, amitk@kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	jorge.ramirez@oss.qualcomm.com,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 8/9] PCI: pwrctrl: Add power control driver for tc9563
+Message-ID: <202504151632.tCoey9d8-lkp@intel.com>
+References: <20250412-qps615_v4_1-v5-8-5b6a06132fec@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,187 +96,232 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
+In-Reply-To: <20250412-qps615_v4_1-v5-8-5b6a06132fec@oss.qualcomm.com>
 
-On Tue, Apr 15, 2025 at 01:07:23PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Apr 03, 2025 at 09:51:31AM +0200, Niklas Cassel wrote:
-> > Hello Krishna,
-> >
-> > On Thu, Apr 03, 2025 at 09:26:08AM +0530, Krishna Chaitanya Chundru wrote:
-> > > On 4/2/2025 6:14 PM, Niklas Cassel wrote:
-> > > >
-> > > > Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
-> > > >
-> > > > Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
-> > > > was enough for me to produce:
-> > > >
-> > > > [   40.209887] r8169 0004:41:00.0 eth0: Link is Down
-> > > > [   40.216572] ------------[ cut here ]------------
-> > > > [   40.216986] called from state HALTED
-> > > > [   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
-> > > > [   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
-> > > > [   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
-> > > > [   40.220908] Hardware name: Radxa ROCK 5B (DT)
-> > > > [   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > > > [   40.221899] pc : phy_stop+0x134/0x1a0
-> > > > [   40.222222] lr : phy_stop+0x134/0x1a0
-> > > > [   40.222546] sp : ffff800082213820
-> > > > [   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
-> > > > [   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
-> > > > [   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
-> > > > [   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
-> > > > [   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
-> > > > [   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
-> > > > [   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
-> > > > [   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
-> > > > [   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
-> > > > [   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
-> > > > [   40.229093] Call trace:
-> > > > [   40.229308]  phy_stop+0x134/0x1a0 (P)
-> > > > [   40.229634]  rtl8169_down+0x34/0x280
-> > > > [   40.229952]  rtl8169_close+0x64/0x100
-> > > > [   40.230275]  __dev_close_many+0xbc/0x1f0
-> > > > [   40.230621]  dev_close_many+0x94/0x160
-> > > > [   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
-> > > > [   40.231426]  unregister_netdevice_queue+0xe4/0x100
-> > > > [   40.231848]  unregister_netdev+0x2c/0x60
-> > > > [   40.232193]  rtl_remove_one+0xa0/0xe0
-> > > > [   40.232517]  pci_device_remove+0x4c/0xf8
-> > > > [   40.232864]  device_remove+0x54/0x90
-> > > > [   40.233182]  device_release_driver_internal+0x1d4/0x238
-> > > > [   40.233643]  device_release_driver+0x20/0x38
-> > > > [   40.234019]  pci_stop_bus_device+0x84/0xe0
-> > > > [   40.234381]  pci_stop_bus_device+0x40/0xe0
-> > > > [   40.234741]  pci_stop_root_bus+0x48/0x80
-> > > > [   40.235087]  dw_pcie_host_deinit+0x34/0xe0
-> > > > [   40.235452]  rockchip_pcie_shutdown+0x24/0x48
-> > > > [   40.235839]  platform_shutdown+0x2c/0x48
-> > > > [   40.236187]  device_shutdown+0x150/0x278
-> > > > [   40.236533]  kernel_restart+0x4c/0xb8
-> > > > [   40.236859]  __do_sys_reboot+0x178/0x280
-> > > > [   40.237206]  __arm64_sys_reboot+0x2c/0x40
-> > > > [   40.237561]  invoke_syscall+0x50/0x120
-> > > > [   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
-> > > > [   40.238305]  do_el0_svc+0x24/0x38
-> > > > [   40.238597]  el0_svc+0x30/0xd0
-> > > > [   40.238868]  el0t_64_sync_handler+0x10c/0x138
-> > > > [   40.239251]  el0t_64_sync+0x198/0x1a0
-> > > > [   40.239575] ---[ end trace 0000000000000000 ]---
-> > > >
-> > > Hi Niklas,
-> > >
-> > > The issue which you are seeing with specific to the RealTek ethernet
-> > > driver and should be fixed by RealTek driver nothing to do with the host
-> > > controller.
-> >
-> > The warning comes from:
-> > drivers/net/phy/phy.c:phy_stop()
-> > so from the networking phylib.
-> >
-> > Doing a simple:
-> > $ git grep -p phy_stop
-> >
-> > shows that practially all Ethernet drivers call phy_stop() from the
-> > .ndo_stop() callback.
-> >
-> > So after your suggested patch, you should see this warning appear with
-> > any NIC, if connected to your PCIe controller.
-> >
->
-> I think the issue here is that phy_stop() is called without calling
-> corresponding phy_start(). This means that either rtl8169_up() is never called
-> or rtl8169_down() is called twice.
+Hi Krishna,
 
-phy_start() is called.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on f4d2ef48250ad057e4f00087967b5ff366da9f39]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-Chaitanya-Chundru/dt-bindings-PCI-Add-binding-for-Toshiba-TC9563-PCIe-switch/20250414-123816
+base:   f4d2ef48250ad057e4f00087967b5ff366da9f39
+patch link:    https://lore.kernel.org/r/20250412-qps615_v4_1-v5-8-5b6a06132fec%40oss.qualcomm.com
+patch subject: [PATCH v5 8/9] PCI: pwrctrl: Add power control driver for tc9563
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250415/202504151632.tCoey9d8-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504151632.tCoey9d8-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504151632.tCoey9d8-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:419:2: error: call to undeclared function 'gpiod_set_value'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     419 |         gpiod_set_value(ctx->reset_gpio, 1);
+         |         ^
+   drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:433:2: error: call to undeclared function 'gpiod_set_value'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     433 |         gpiod_set_value(ctx->reset_gpio, 0);
+         |         ^
+>> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:535:20: error: call to undeclared function 'devm_gpiod_get'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     535 |         ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+         |                           ^
+>> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:535:49: error: use of undeclared identifier 'GPIOD_OUT_HIGH'
+     535 |         ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+         |                                                        ^
+   4 errors generated.
 
 
->
-> I don't think this issue is applicable to all drivers. It'd be worth
-> investigating what is going wrong with this r8169 driver.
+vim +/gpiod_set_value +419 drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c
 
-In case you are curious, I added a dump_stack() before phy_stop() is called:
+   416	
+   417	static void tc9563_pwrctrl_power_off(struct tc9563_pwrctrl_ctx *ctx)
+   418	{
+ > 419		gpiod_set_value(ctx->reset_gpio, 1);
+   420	
+   421		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+   422	}
+   423	
+   424	static int tc9563_pwrctrl_bring_up(struct tc9563_pwrctrl_ctx *ctx)
+   425	{
+   426		struct tc9563_pwrctrl_cfg *cfg;
+   427		int ret, i;
+   428	
+   429		ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+   430		if (ret < 0)
+   431			return dev_err_probe(ctx->pwrctrl.dev, ret, "cannot enable regulators\n");
+   432	
+   433		gpiod_set_value(ctx->reset_gpio, 0);
+   434	
+   435		 /* wait for the internal osc frequency to stablise */
+   436		usleep_range(10000, 10500);
+   437	
+   438		ret = tc9563_pwrctrl_assert_deassert_reset(ctx, false);
+   439		if (ret)
+   440			goto power_off;
+   441	
+   442		for (i = 0; i < TC9563_MAX; i++) {
+   443			cfg = &ctx->cfg[i];
+   444			ret = tc9563_pwrctrl_disable_port(ctx, i);
+   445			if (ret) {
+   446				dev_err(ctx->pwrctrl.dev, "Disabling port failed\n");
+   447				goto power_off;
+   448			}
+   449	
+   450			ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, false, cfg->l0s_delay);
+   451			if (ret) {
+   452				dev_err(ctx->pwrctrl.dev, "Setting L0s entry delay failed\n");
+   453				goto power_off;
+   454			}
+   455	
+   456			ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, true, cfg->l1_delay);
+   457			if (ret) {
+   458				dev_err(ctx->pwrctrl.dev, "Setting L1 entry delay failed\n");
+   459				goto power_off;
+   460			}
+   461	
+   462			ret = tc9563_pwrctrl_set_tx_amplitude(ctx, i, cfg->tx_amp);
+   463			if (ret) {
+   464				dev_err(ctx->pwrctrl.dev, "Setting Tx amplitube failed\n");
+   465				goto power_off;
+   466			}
+   467	
+   468			ret = tc9563_pwrctrl_set_nfts(ctx, i, cfg->nfts);
+   469			if (ret) {
+   470				dev_err(ctx->pwrctrl.dev, "Setting nfts failed\n");
+   471				goto power_off;
+   472			}
+   473	
+   474			ret = tc9563_pwrctrl_disable_dfe(ctx, i);
+   475			if (ret) {
+   476				dev_err(ctx->pwrctrl.dev, "Disabling DFE failed\n");
+   477				goto power_off;
+   478			}
+   479		}
+   480	
+   481		ret = tc9563_pwrctrl_assert_deassert_reset(ctx, true);
+   482		if (!ret)
+   483			return 0;
+   484	
+   485	power_off:
+   486		tc9563_pwrctrl_power_off(ctx);
+   487		return ret;
+   488	}
+   489	
+   490	static int tc9563_pwrctrl_probe(struct platform_device *pdev)
+   491	{
+   492		struct pci_host_bridge *bridge = to_pci_host_bridge(pdev->dev.parent);
+   493		struct pci_dev *pci_dev = to_pci_dev(pdev->dev.parent);
+   494		struct pci_bus *bus = bridge->bus;
+   495		struct device *dev = &pdev->dev;
+   496		enum tc9563_pwrctrl_ports port;
+   497		struct tc9563_pwrctrl_ctx *ctx;
+   498		struct device_node *i2c_node;
+   499		int ret, addr;
+   500	
+   501		ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+   502		if (!ctx)
+   503			return -ENOMEM;
+   504	
+   505		ret = of_property_read_u32_index(pdev->dev.of_node, "i2c-parent", 1, &addr);
+   506		if (ret)
+   507			return dev_err_probe(dev, ret, "Failed to read i2c-parent property\n");
+   508	
+   509		i2c_node = of_parse_phandle(dev->of_node, "i2c-parent", 0);
+   510		ctx->adapter = of_find_i2c_adapter_by_node(i2c_node);
+   511		of_node_put(i2c_node);
+   512		if (!ctx->adapter)
+   513			return dev_err_probe(dev, -EPROBE_DEFER, "Failed to find I2C adapter\n");
+   514	
+   515		ctx->client = i2c_new_dummy_device(ctx->adapter, addr);
+   516		if (IS_ERR(ctx->client)) {
+   517			dev_err(dev, "Failed to create I2C client\n");
+   518			i2c_put_adapter(ctx->adapter);
+   519			return PTR_ERR(ctx->client);
+   520		}
+   521	
+   522		ctx->supplies[0].supply = "vddc";
+   523		ctx->supplies[1].supply = "vdd18";
+   524		ctx->supplies[2].supply = "vdd09";
+   525		ctx->supplies[3].supply = "vddio1";
+   526		ctx->supplies[4].supply = "vddio2";
+   527		ctx->supplies[5].supply = "vddio18";
+   528		ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies), ctx->supplies);
+   529		if (ret) {
+   530			dev_err_probe(dev, ret,
+   531				      "failed to get supply regulator\n");
+   532			goto remove_i2c;
+   533		}
+   534	
+ > 535		ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+   536		if (IS_ERR(ctx->reset_gpio)) {
+   537			ret = dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "failed to get reset GPIO\n");
+   538			goto remove_i2c;
+   539		}
+   540	
+   541		pci_pwrctrl_init(&ctx->pwrctrl, dev);
+   542	
+   543		port = TC9563_USP;
+   544		ret = tc9563_pwrctrl_parse_device_dt(ctx, pdev->dev.of_node, port);
+   545		if (ret) {
+   546			dev_err(dev, "failed to parse device tree properties: %d\n", ret);
+   547			goto remove_i2c;
+   548		}
+   549	
+   550		/*
+   551		 * Downstream ports are always children of the upstream port.
+   552		 * The first node represents DSP1, the second node represents DSP2, and so on.
+   553		 */
+   554		for_each_child_of_node_scoped(pdev->dev.of_node, child) {
+   555			ret = tc9563_pwrctrl_parse_device_dt(ctx, child, port++);
+   556			if (ret)
+   557				break;
+   558			/* Embedded ethernet device are under DSP3 */
+   559			if (port == TC9563_DSP3)
+   560				for_each_child_of_node_scoped(child, child1) {
+   561					ret = tc9563_pwrctrl_parse_device_dt(ctx, child1, port++);
+   562					if (ret)
+   563						break;
+   564				}
+   565		}
+   566		if (ret) {
+   567			dev_err(dev, "failed to parse device tree properties: %d\n", ret);
+   568			goto remove_i2c;
+   569		}
+   570	
+   571		if (!pcie_link_is_active(pci_dev) && bridge->ops->stop_link)
+   572			bridge->ops->stop_link(bus);
+   573	
+   574		ret = tc9563_pwrctrl_bring_up(ctx);
+   575		if (ret)
+   576			goto remove_i2c;
+   577	
+   578		if (!pcie_link_is_active(pci_dev) && bridge->ops->start_link) {
+   579			ret = bridge->ops->start_link(bus);
+   580			if (ret)
+   581				goto power_off;
+   582		}
+   583	
+   584		ret = devm_pci_pwrctrl_device_set_ready(dev, &ctx->pwrctrl);
+   585		if (ret)
+   586			goto power_off;
+   587	
+   588		platform_set_drvdata(pdev, ctx);
+   589	
+   590		return 0;
+   591	
+   592	power_off:
+   593		tc9563_pwrctrl_power_off(ctx);
+   594	remove_i2c:
+   595		i2c_unregister_device(ctx->client);
+   596		i2c_put_adapter(ctx->adapter);
+   597		return ret;
+   598	}
+   599	
 
-First phy_stop() call:
-
-[   21.733574] platform fc400000.usb: deferred probe pending: dwc3: failed to initialize core
-[   23.827753] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
-[   23.827762] Hardware name: Radxa ROCK 5B (DT)
-[   23.827764] Call trace:
-[   23.827765]  show_stack+0x20/0x40 (C)
-[   23.827774]  dump_stack_lvl+0x60/0x80
-[   23.827778]  dump_stack+0x18/0x24
-[   23.827782]  rtl8169_down+0x30/0x2a0
-[   23.827788]  rtl_shutdown+0xb0/0xc0
-[   23.827792]  pci_device_shutdown+0x3c/0x88
-[   23.827797]  device_shutdown+0x150/0x278
-[   23.827802]  kernel_restart+0x4c/0xb8
-[   23.827807]  __do_sys_reboot+0x178/0x280
-[   23.827811]  __arm64_sys_reboot+0x2c/0x40
-[   23.827816]  invoke_syscall+0x50/0x120
-[   23.827822]  el0_svc_common.constprop.0+0x48/0xf0
-[   23.827826]  do_el0_svc+0x24/0x38
-[   23.827828]  el0_svc+0x30/0xd0
-[   23.827834]  el0t_64_sync_handler+0x10c/0x138
-[   23.827837]  el0t_64_sync+0x198/0x1a0
-[   23.827841] calling phy_stop() rtl8169_down:4844
-[   23.834789] r8169 0004:41:00.0 eth0: Link is Down
-
-Second phy_stop() call:
-
-[   23.841458] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
-[   23.841467] Hardware name: Radxa ROCK 5B (DT)
-[   23.841468] Call trace:
-[   23.841470]  show_stack+0x20/0x40 (C)
-[   23.841478]  dump_stack_lvl+0x60/0x80
-[   23.841483]  dump_stack+0x18/0x24
-[   23.841486]  rtl8169_down+0x30/0x2a0
-[   23.841492]  rtl8169_close+0x64/0x100
-[   23.841496]  __dev_close_many+0xbc/0x1f0
-[   23.841502]  dev_close_many+0x94/0x160
-[   23.841505]  unregister_netdevice_many_notify+0x160/0x9d0
-[   23.841510]  unregister_netdevice_queue+0xf0/0x100
-[   23.841515]  unregister_netdev+0x2c/0x58
-[   23.841519]  rtl_remove_one+0xa0/0xe0
-[   23.841524]  pci_device_remove+0x4c/0xf8
-[   23.841528]  device_remove+0x54/0x90
-[   23.841534]  device_release_driver_internal+0x1d4/0x238
-[   23.841539]  device_release_driver+0x20/0x38
-[   23.841544]  pci_stop_bus_device+0x84/0xe0
-[   23.841548]  pci_stop_bus_device+0x40/0xe0
-[   23.841552]  pci_stop_root_bus+0x48/0x80
-[   23.841555]  dw_pcie_host_deinit+0x34/0xe0
-[   23.841559]  rockchip_pcie_shutdown+0x20/0x38
-[   23.841565]  platform_shutdown+0x2c/0x48
-[   23.841571]  device_shutdown+0x150/0x278
-[   23.841575]  kernel_restart+0x4c/0xb8
-[   23.841580]  __do_sys_reboot+0x178/0x280
-[   23.841584]  __arm64_sys_reboot+0x2c/0x40
-[   23.841588]  invoke_syscall+0x50/0x120
-[   23.841595]  el0_svc_common.constprop.0+0x48/0xf0
-[   23.841598]  do_el0_svc+0x24/0x38
-[   23.841601]  el0_svc+0x30/0xd0
-[   23.841605]  el0t_64_sync_handler+0x10c/0x138
-[   23.841609]  el0t_64_sync+0x198/0x1a0
-[   23.841613] calling phy_stop() rtl8169_down:4844
-
-
-So it seems that the driver's rtl_shutdown() calls rtl8169_net_suspend(),
-which calls rtl8169_down() which calls phy_stop().
-
-
-If I compare rtl8169_close() with e.g. e1000e_close(),
-e1000e_close() does have a guard:
-
-if (netif_device_present(netdev)) {
-
-around the call to e1000e_down(),
-while rtl8169_close() does not have a similar guard around the call to
-rtl8169_down().
-
-So, I think you are right, this is probably a r8169 driver specific
-problem after all.
-
-
-Kind regards,
-Niklas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
