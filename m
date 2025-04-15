@@ -1,306 +1,375 @@
-Return-Path: <linux-pci+bounces-25946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 394B1A8A69C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 20:18:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00062A8A6BE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 20:24:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E57317F4DA
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 18:18:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DC4A3A51BC
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Apr 2025 18:24:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6604921D591;
-	Tue, 15 Apr 2025 18:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B076B222565;
+	Tue, 15 Apr 2025 18:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSfwFKd6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PWcx0gwR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C1E20C02E;
-	Tue, 15 Apr 2025 18:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B559664A98
+	for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 18:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741083; cv=none; b=JtbfaH1Apmtp5MfNTazcDR+OG+rERORiL+f7NMxZ3H9TNxoYdKjdbTfHI9GKIGovJHM7hhjd5jmJuhvRCAK2ZdEVLcdWD+Uq2TC9WUKEUuSrkwEkVCuhcIItIrQG3oTu/C7W+KevGX+abL5SMELYDpRsNYh0ammkvxCFpU6gXFA=
+	t=1744741485; cv=none; b=SO5k9EXwopkzlyiaOXR91V2lbLRgPkNlIlKKByZZP1T9K3Gsx394NAdooA9mt/uCY2qYDLoW3bdvPeikYxO9EWC8d2IVTTZbT8OZIlFpNALZIadQ6h4ikcCw8bFE5NkzdeHEA33JYzAzlR41D+Y62W45xgsxmLBhm74BuEn63rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741083; c=relaxed/simple;
-	bh=hBQWsWabfwGfXwS58TZeuoy5jyXcr/PgT5bDAAydwYg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhbbIbfn3ZUDvzjgkNKPfBo2/sNMI0rqOoNLwYtyidv/MfBIDuqbu8CSlKUXuHJ+i5eubDs1mZh7W7lHyWPpeZNvodPXs1rwUBPWl6ZGonXn/qNLrMJHXsvff4IJUDOc/OxRZGDkV/tDhM4DerJ0viiOM0GRGIBASywU+BJd6U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSfwFKd6; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c592764e54so696534485a.3;
-        Tue, 15 Apr 2025 11:18:00 -0700 (PDT)
+	s=arc-20240116; t=1744741485; c=relaxed/simple;
+	bh=/GFGDbNuXymklDWRO5AzwTj12PzmIH6SguJDQlMud4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vA/zFXKth1sdv50D7x9W2LlFSwOO86jg9Xdga2a+X9ErkSdDEWbiEv414dtXGJQepEz0sY0fCmA/jYEkXIENeODnmlLaArSizNs5CNQchyPbB/11iSIKgQNUg9foJDIkOquhD7dMxCpqIYk4upx/qVApILuxRDiUyJqdYRVN30Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PWcx0gwR; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227914acd20so55123655ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 15 Apr 2025 11:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744741079; x=1745345879; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ExhlIGj+yTSPW/bDWyFi4TK2XTBBWSbc3TeamRQDEM0=;
-        b=aSfwFKd6meZM2jmxG2i72fr4E8UljvEpwQ/+OFPV3iBr1rhXJXBo+qjHkzyr1x15fu
-         QGmjATakcPvfU0mqpCZY4JPYhobeQh1REcmSvjHr59rxYRqZWUdDixIVkJoxj7du8R49
-         gvoRcd+bfazrjXroaUOEaz5l5K/p1U/gsfTzuSq4JM+2+3O6mxuU/fsnuv5Ii6mnFIFl
-         0eWhJosL8EOBMsJBiB8LlmqU4G0tdhAAnLEk8C7/USbqoYdyVY3PgY2C8QM/mnnpXc/h
-         c3hjEdoF0O1V5SaDnCp2mt4gYWOY3gbTUjR5mu0iDZ80erNr1K3IexZ7KgHa4YivzkXy
-         lvKg==
+        d=chromium.org; s=google; t=1744741483; x=1745346283; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvsYDfCkdMlDli3tvTkkt2mwrny9x0nA/xkSFS51KcI=;
+        b=PWcx0gwRkORM+Dwcupjvg2bbcG5ZZtI8rjxhHPPS5gvxov51MAKgTGjjCH/7CYfKbe
+         dMQTnPeKNuGZbj14jfVsy0VmNSeJe5j2V+DOidTDtWwrrYTBKeJRQSVcEQXHyqes9J6x
+         ntDHt+eZKXXnsUKGzp1eWGXFJTue1otdT2eVM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744741079; x=1745345879;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ExhlIGj+yTSPW/bDWyFi4TK2XTBBWSbc3TeamRQDEM0=;
-        b=TKQ2FQWAvPzj6Y2LWTshy39a6MUCMQTqYSMwxgSnQoJqusOQBV+n1p8H9RpuuyQ8uE
-         n6NF/hwAzbIOS9TNdwCcCUBWrxCV+oLQVwoQst91cS4fvYiRoWp+sm51EUHlyRW6685u
-         ro3wm2t3HYwS1VkSPQXQbQYzXcYZb79ecpJ/08FbiiDLAQmpZrzQQnbExtl8Be8WL+Tq
-         eU5bD9EWR4L74/4dbUQWCLs6B7QgD7LwieWY7RFOiy430IhkT0xROxXRjE2UURX5Lre3
-         v0uWOabRK1M/IoNuXTv8ItqXMEcUWMouakCc59Go1HKwosAvtbvFr0INEJBSn/84LDuG
-         nKjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUU7Lfd+LMJ9xqv3QyYXKZ8PkyYPoap69a4rYO97ZfEMYRqZ7XyDbtWwtxMlWOBDffNgtYRK6i0nkYz@vger.kernel.org, AJvYcCUqwJlSjqfmjV4XZv0g0V1Msbm8s/hk8vwOtEz4VC+iPyT6MDeXI8HM4LnYu3DK8EDOry2NT2SUWogn9d+Yv8Q=@vger.kernel.org, AJvYcCVDFz5p90dIj8ZVwhWUIQBzNxApNsCAlQac9deFeL+05m3mXMSp3GG6OSJBqUdDTPIYoBwr7XShXnj6@vger.kernel.org, AJvYcCVT5J/LmWXLaPq6/k7EDIxtB58P7vHVCGVxmlQ/WcNhp5Y8M9AYm5Z3ujHEcyfNEw6L7dDAlkZnCpbx9ITN@vger.kernel.org, AJvYcCVri6KjmZ/6IbRwSbCv1m+bXouvVK48kWnD/7gHggObEmJoN1QBEu3uq6AmjD28DjYfhTXNJvcvH8Nb9ps=@vger.kernel.org, AJvYcCW5BTW3GbwJ+lme+7pf8+2h3v0dRZeNyXlFc6NDL9wieEQWHBRBrmSQqH1Q8cqNRFJzUxesV5OznsD7EEgd@vger.kernel.org, AJvYcCWlnL+pxEN8R9+75UaWUwUHMn53g7f2dPD7iGaDNj4on5C3eN3HDm4VAHoaYABON+gHhzmajqfo@vger.kernel.org, AJvYcCXBTk1ilBiP40l0yXl5nIJZoA9EyVsVHIbATcSRKRy0wFYZqcsQdPcv8/TrgDiAf7nV1FIeDj+zDT2LmoyUKVdU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEbuhrYp1T0DGFDl2B4cOBqams4SuTaBiyrnYLQx6bDTF7TkL1
-	52EVDmlaM4qZvuE6wgKyivUYcQ5w1JdBLOcvoiHlVhjoQeYrLTRK
-X-Gm-Gg: ASbGnctOacj02QTN7KeQuisExaEHRyrbupB1lpW+LTfF9pfbU9aJHKbtBDRLdx/J23j
-	ilY8t/Shn1Ty7xZqpwvuqTcNyQ3SAOWHuasGOVXvyH7cS7dcNOb6nvrTUhpMrbS1N6GQ0g/GxUg
-	Nrs0A5K+90OzcSGXck+G534PrO5P5EIrtHc7XI3KcVXE5OW9qA4zO+gnZk6LKIxsprzovAT6Rjp
-	n3TC3cg48kBaAEX/f0lQbmAcbKdDJEjQVdFdc2O3EJsSoVKc3edMyI9/YAD5hHJeoC6Qkr+jwXR
-	wwib9tq+ys03V7zgES2EkoM58x4XbpDaoH+9rnSwvjb4f81sgkSmNnEj4ykogvg9+q9s2yAB+Xg
-	jD4yQVQSjFGoFLKl+zFakCwZBC9h5Uns=
-X-Google-Smtp-Source: AGHT+IFVhSC6OL+aHzP4UlljX/heiemumch2r3K6vBxStW09sbsikfEhG8+kvEM3mf7eRSQiqbICcQ==
-X-Received: by 2002:a05:620a:bcc:b0:7c5:3ca5:58fb with SMTP id af79cd13be357-7c91415d59emr74272085a.4.1744741079462;
-        Tue, 15 Apr 2025 11:17:59 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8951562sm936825785a.35.2025.04.15.11.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 11:17:58 -0700 (PDT)
-Message-ID: <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
-X-Google-Original-Message-ID: <Z_6i0yjysPAaySGW@winterfell.>
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D1ACA1200069;
-	Tue, 15 Apr 2025 14:17:57 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 15 Apr 2025 14:17:57 -0400
-X-ME-Sender: <xms:1aL-ZzOZ7kkx6oxN54FGRf3pqCp4eRIaxCOhh4pwFwYV8BSAoE68sA>
-    <xme:1aL-Z98oNZWbcy7I7imgoURM7wrGUlGwt87cF0JY67yzZVOJoKUl4idcScql3_NDK
-    8hqw7iHfzt-5ux_uw>
-X-ME-Received: <xmr:1aL-ZyQZT1Fnk6K32y51NUIZVCOSEkXr9XkKDLh3Xn-KlNM2K587N9isrYgX>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegudelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
-    rhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnuc
-    fhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthht
-    vghrnhepgfeiffdvheeiheeuudejgeeuffeiledvvdffvdduteehvdfhiedvffdukeevhf
-    ehnecuffhomhgrihhnpehgihhthhhusgdrihhopdhkvghrnhgvlhdrohhrghdpihgushdr
-    rghspdhgihhthhhusgdrtghomhdpphhtrhgprghspghpthhrrdhrshenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhht
-    phgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqd
-    gsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgs
-    pghrtghpthhtohepgeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmih
-    hrugesghhmrghilhdrtghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgih
-    nhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnh
-    gvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdp
-    rhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtth
-    hopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:1aL-Z3t4V1nrnDRpDe3waAoDcwL-GT2iKdz-e9M1OlfleZb4jENPyA>
-    <xmx:1aL-Z7eSJJgAc9FzMJTBxxOc2BlYKIs16ufbEqnCTVnUFBnVzUW3sg>
-    <xmx:1aL-Zz1-_Rbwhxszl-I2Fi4Fh-tnnCR2L9c2t2uyyWEL-p59Ujgbaw>
-    <xmx:1aL-Z38fM0JFsuSXIKsSdFYK73Z2nyEo2suHLtyJcymmhVEpWDmX0A>
-    <xmx:1aL-Z-9P1VFxFc4GoBFdNDkQp0zG9p8sGfilqgSN_7dnXPmKSilVoZy->
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 15 Apr 2025 14:17:57 -0400 (EDT)
-Date: Tue, 15 Apr 2025 11:17:55 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+        d=1e100.net; s=20230601; t=1744741483; x=1745346283;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UvsYDfCkdMlDli3tvTkkt2mwrny9x0nA/xkSFS51KcI=;
+        b=LyXe+3CNOxNl8c/HAhJafq5ikf783c3zvkuKQIjLOIyU1uc6WaddHZkbWd5y1jEk31
+         cZFPBluzpSoYgWNTLy4QWdq9R+7Xo44IPsZ+4W1Mu/3aPOW5k6ADYs2p+SPyzkVb0tF2
+         xm6MQ1BFAuk51iH/G+44o/vcKbyIVAhlWg3egj1tBXYO4Brq3l+q4NSlRomL+6kJWabZ
+         OZJULlBWxIMWOAm8l5JqFr4ZuAgCP8I2JGLXDrQCMVAmP6n2NwKdAW+xngX0N8d4CEmW
+         SaeMyLrgZJ6irwG3vbHUruG6Q9fcpWPpRL+p5dJY/vgmV2Cy/zqQf0UDh4gE48f0YKC8
+         PiIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfd0h0KrdH+M9J04L3bhsWRO2V/OXWD2l90hAw6FrijFAb1v6m7eW65H7XwkrpRw3GQX2yxeEAxtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK34AEr0T0W2bKexn2rzgQzhanQce9BgunYfyP1gKTrmiK16fX
+	zSZWAB1ZGKP6oI8Z4hHXXC38ge8cyIq6gWfydK8tuHPZVL2XzK4gUme8GTQTNA==
+X-Gm-Gg: ASbGncsppS8nWFX7UgajeAHxEdd2Dk7HvmR9LYIzEdFtgn24FwNilkZHFA4mKhe5uvm
+	GhH5cul/xnGVvWdj3mENNcNSyiG8Wu+rVpXN/+n6JzWMnK4sJBZ2P9pZiPHKg3WiJGSugd/QHaQ
+	rnqGIC/i1jx6KFPU9NRTvrwPg31eI58PES/6+SZcKvYGjbRPQ5BSCcNVwH7Gn0/zMvzA2aAfpMZ
+	Acw4fqzeMDros7zyH1d3mu5UKij6T3+sesM/kdaChwVroxgoXI4LxaCltEysOU1oFCQAu9GLbaE
+	mP1Ub+9Sbd0hW9dEGoSczdx9sDcpS5pmetTs/44sJtXxHOy/lS821sw9C3e1kTMAJ6qmjQg8JMc
+	pb8A=
+X-Google-Smtp-Source: AGHT+IFcpP3CIx7mOPyRZjL3OJStL4sfRHU6gXM820Ln0i6PxGtwBiFjSgwEiXkmpCOf0Dy7arSllg==
+X-Received: by 2002:a17:903:1b6f:b0:216:271d:e06c with SMTP id d9443c01a7336-22c30cf9720mr6830375ad.4.1744741482761;
+        Tue, 15 Apr 2025 11:24:42 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:8cf6:d796:9e6e:f7e5])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22ac7b62895sm121021895ad.5.2025.04.15.11.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 11:24:41 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:24:39 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
-References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
- <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
- <67fe9975.c80a0220.1b5785.66e7@mx.google.com>
- <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com>
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, Tsai Sung-Fu <danielsftsai@google.com>
+Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
+Message-ID: <Z_6kZ7x7gnoH-P7x@google.com>
+References: <Z_WAKDjIeOjlghVs@google.com>
+ <vfjh3xzfhwoppcaxlov5bcmkfngyf6no4zyrgexlcxpfajsw2t@o5nbfcep3auz>
+ <Z_2ZNuJsDr0lDjbo@google.com>
+ <4pwigzf7q6abyntt4opjv6lnvkdulyejr73efnud2cvltskgt2@tjs2k5tiwyvc>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com>
+In-Reply-To: <4pwigzf7q6abyntt4opjv6lnvkdulyejr73efnud2cvltskgt2@tjs2k5tiwyvc>
 
-On Tue, Apr 15, 2025 at 01:58:41PM -0400, Tamir Duberstein wrote:
-> Hi Boqun, thanks for having a look!
-> 
-> On Tue, Apr 15, 2025 at 1:37 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Wed, Apr 09, 2025 at 10:47:23AM -0400, Tamir Duberstein wrote:
-> > > In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
-> > >
-> > > > Using `as` casts may result in silently changing mutability or type.
-> > >
-> > > While this doesn't eliminate unchecked `as` conversions, it makes such
-> > > conversions easier to scrutinize.  It also has the slight benefit of
-> > > removing a degree of freedom on which to bikeshed. Thus apply the
-> > > changes and enable the lint -- no functional change intended.
-> > >
-> > > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_ptr [1]
-> > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > > Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > ---
-> > >  Makefile                 |  1 +
-> > >  rust/bindings/lib.rs     |  1 +
-> > >  rust/kernel/device_id.rs |  3 ++-
-> > >  rust/kernel/fs/file.rs   |  3 ++-
-> > >  rust/kernel/str.rs       |  6 ++++--
-> > >  rust/kernel/uaccess.rs   | 10 ++++------
-> > >  rust/uapi/lib.rs         |  1 +
-> > >  7 files changed, 15 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index eb5a942241a2..2a16e02f26db 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -485,6 +485,7 @@ export rust_common_flags := --edition=2021 \
-> > >                           -Wclippy::no_mangle_with_rust_abi \
-> > >                           -Wclippy::ptr_as_ptr \
-> > >                           -Wclippy::ptr_cast_constness \
-> > > +                         -Wclippy::ref_as_ptr \
-> > >                           -Wclippy::undocumented_unsafe_blocks \
-> > >                           -Wclippy::unnecessary_safety_comment \
-> > >                           -Wclippy::unnecessary_safety_doc \
-> > > diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-> > > index b105a0d899cc..2b69016070c6 100644
-> > > --- a/rust/bindings/lib.rs
-> > > +++ b/rust/bindings/lib.rs
-> > > @@ -27,6 +27,7 @@
-> > >  #[allow(dead_code)]
-> > >  #[allow(clippy::cast_lossless)]
-> > >  #[allow(clippy::ptr_as_ptr)]
-> > > +#[allow(clippy::ref_as_ptr)]
-> > >  #[allow(clippy::undocumented_unsafe_blocks)]
-> > >  mod bindings_raw {
-> > >      // Manual definition for blocklisted types.
-> > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-> > > index 4063f09d76d9..37cc03d1df4c 100644
-> > > --- a/rust/kernel/device_id.rs
-> > > +++ b/rust/kernel/device_id.rs
-> > > @@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
-> > >      fn as_ptr(&self) -> *const T::RawType {
-> > >          // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
-> > >          // to access the sentinel.
-> > > -        (self as *const Self).cast()
-> > > +        let this: *const Self = self;
-> >
-> > Hmm.. so this lint usually just requires to use a let statement instead
-> > of as expression when casting a reference to a pointer? Not 100%
-> > convinced this results into better code TBH..
-> 
-> The rationale is in the lint description and quoted in the commit
-> message: "Using `as` casts may result in silently changing mutability
-> or type.".
-> 
+Hi,
 
-Could you show me how you can silently change the mutability or type? A
-simple try like below doesn't compile:
-
-	let x = &42;
-	let ptr = x as *mut i32; // <- error
-	let another_ptr = x as *const i64; // <- error
-
-also from the link document you shared, looks like the suggestion is to
-use core::ptr::from_{ref,mut}(), was this ever considered?
-
-> >
-> > > +        this.cast()
-> > >      }
-> > >
-> > >      fn id(&self, index: usize) -> &T::RawType {
-> > > diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-> > > index 791f493ada10..559a4bfa123f 100644
-> > > --- a/rust/kernel/fs/file.rs
-> > > +++ b/rust/kernel/fs/file.rs
-> > > @@ -359,12 +359,13 @@ impl core::ops::Deref for File {
-> > >      type Target = LocalFile;
-> > >      #[inline]
-> > >      fn deref(&self) -> &LocalFile {
-> > > +        let this: *const Self = self;
-> > >          // SAFETY: The caller provides a `&File`, and since it is a reference, it must point at a
-> > >          // valid file for the desired duration.
-> > >          //
-> > >          // By the type invariants, there are no `fdget_pos` calls that did not take the
-> > >          // `f_pos_lock` mutex.
-> > > -        unsafe { LocalFile::from_raw_file((self as *const Self).cast()) }
-> > > +        unsafe { LocalFile::from_raw_file(this.cast()) }
-> > >      }
-> > >  }
-> > >
-> > > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> > > index 40034f77fc2f..75b4a18c67c4 100644
-> > > --- a/rust/kernel/str.rs
-> > > +++ b/rust/kernel/str.rs
-> > > @@ -28,8 +28,9 @@ pub const fn is_empty(&self) -> bool {
-> > >      /// Creates a [`BStr`] from a `[u8]`.
-> > >      #[inline]
-> > >      pub const fn from_bytes(bytes: &[u8]) -> &Self {
-> > > +        let bytes: *const [u8] = bytes;
-> > >          // SAFETY: `BStr` is transparent to `[u8]`.
-> > > -        unsafe { &*(bytes as *const [u8] as *const BStr) }
-> > > +        unsafe { &*(bytes as *const BStr) }
-> >
-> >         unsafe { &*(bytes.cast::<BStr>()) }
-> >
-> > ? I'm curious why this dodged the other lint (ptr_as_ptr).
+On Tue, Apr 15, 2025 at 11:02:14AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Apr 14, 2025 at 04:24:38PM -0700, Brian Norris wrote:
+> > On Mon, Apr 14, 2025 at 04:27:35PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Apr 08, 2025 at 12:59:36PM -0700, Brian Norris wrote:
+> > > > For link startup, pcie-designware-host.c currently
+> > > > (a) starts the link via platform-specific means (dw_pcie::ops::start_link()) and
+> > > > (b) waits for the link training to complete.
+> > > > 
+> > > > However, (b) will fail if the other end of the link is not powered up --
+> > > > e.g., if the appropriate pwrctrl driver has not yet loaded, or its
+> > > > device hasn't finished probing. Today, this can mean the designware
+> > > > driver will either fail to probe,
+> > > 
+> > > This is not correct.
+> > 
+> > That depends on the implementation of start_link(). But I suppose the
+> > intention is that start_link() only "starts" and doesn't care where
+> > things go from there. (IOW, my local start_link() implementation is
+> > probably wrong at the moment, as it performs some poll/retry steps too.)
+> > 
 > 
-> The reason it has to be written this way is that BStr is !Sized, and
-> `pointer::cast` has an implicit Sized bound.
-> 
-> Perhaps the lint is smart enough to avoid the suggestion in that case?
-> Seems like yes:
-> https://github.com/rust-lang/rust-clippy/blob/d3267e9230940757fde2fcb608605bf8dbfd85e1/clippy_lints/src/casts/ptr_as_ptr.rs#L36.
-> 
+> The callback is supposed to just start
+> the link and not wait for anything else.
 
-Oh, I see, so fat pointers get their way from this check? Hmm... however
-fat pointers also suffer the same problem that ptr_as_ptr prevents,
-right? How should we avoid that?
+Ack, thanks. I've learned something.
+
+> > > > or at least waste time for a condition
+> > > > that we can't achieve (link up), depending on the HW/driver
+> > > > implementation.
+> > > > 
+> > > 
+> > > Unfortunately we cannot avoid this waiting time as we don't know if a device is
+> > > attached to the bus or not. The 1s wait time predates my involvement with DWC
+> > > drivers.
+> > 
+> > I don't really love that answer. It means that any DWC-based platform
+> > that needs pwrctrl and doesn't set use_link_irq==true will waste 1
+> > second per PCIe controller. While it's hard to make guarantees about old
+> > and/or unloved drivers, I'd like to think I can do better on new ones.
+> > 
+> 
+> Even I'd like to avoid the 1s delay. But the problem is how would you know if
+> the device is attached to the bus or not. The delay is to account for the fact
+> that the link may take up to 1s to come up post starting LTSSM. So if we do not
+> wait for that period, there is a chance that we would report the false negative
+> status and also the enumeration would fail.
+
+I understand there are cases we won't know, if we don't have a
+hotplug/presence-detect wiring. But for cases we know, I think it's
+cop-out to say "we can't handle it." See below.
+
+> > Consider
+> > the lesser statement that was paired along with it: always wasting 1
+> > second per controller polling for something that will never happen. It
+> > feels backwards and wasteful.
+> > 
+> 
+> Again, I do get your point. But tell me how can a controller reliably detect
+> that there is a device attached to the bus. Only on your android setup, you for
+> sure know that the device won't be there during probe. So you are considering 1s
+> wait as a wast of time and it is fair. But what if the same controller is used
+> in another platform which is not android or the endpoint device is powered on
+> during probe itself without replying on userspace?
+
+This has nothing to do with Android.
+
+IMO, we have 3 main categories of setups that we should primarily care
+about:
+
+(1) hotplug is supported, and PRSNT1#/PRSNT2# are wired
+(2) hotplug is not supported, but a device is present and is already
+    powered.
+(3) hotplug is not supported, but a device is present. the device
+    requires external power (i.e., pwrctrl / "subdevice regulators" /
+    etc., should be involved)
+
+AFAICT, we don't have much of (1). But if we did, we should also be able
+to avoid initial delays, as we can reliably detect presence, and only
+wait for training when we know it should succeed. (Or even better,
+handle it async via an interrupt.)
+
+For (2), we're also OK. The initial polling delay is likely to be much
+less than 1 second.
+
+For (3) ... all non-pwrctrl drivers (pcie-brcmstb.c, pcie-tegra.c,
+pcie-tegra194.c, pcie-rockchip-host.c, ...) power things up before they
+configure ports, start LTSSM, and have any expectation of detecting a
+link. If a device is there, they again should commonly find it in much
+less than 1 second.
+
+However, when *using* pwrctrl, we have the ordering all wrong (IMO), and
+so we eat needless delay. We *will not* successfully bring the link up,
+and we *won't* find the device. This smells like a design problem, where
+we have failed to plumb the information we already have available.
+
+I think you're too worried about a case (4): that hotplug is not
+supported, and a device is not present.
+
+IMO, (4) should mostly be handled by simply disabling the unused
+controller in device tree, or living with the timeouts. If a platform
+doesn't support hotplug, then you can't expect optimal behavior for
+unplugged devices.
+
+I'm not complaining about (4). I'm complaining about (3) with pwrctrl.
+
+> > One of my key questions: if I don't have a link-up IRQ, how can I avoid
+> > this waste? pcie-brcmstb avoids that waste today (for the common case
+> > where there is, in fact, a device connected), and it would be a
+> > regression for it to start using pwrctrl tomorrow.
+> > 
+> 
+> Why are you tying pwrctrl with this designware driver behavior? Both are
+> unrelated. Even if you don't use pwrctrl and use controller driver to bring up
+> the device, the 1s delay would be applicable (if there is no device).
+
+We might be talking past each other. Per above, I think we can do better
+with (1)-(3). But you're bringing up (4). Problem (3) exists for all
+drivers, although it's more acute with DWC, and I happen to be using it.
+I also think it's indicative of larger design and ordering problems in
+pwrctrl.
+
+> pcie-brcmstb driver indeed wastes time. It is not 1s but just 100ms. But that
+> driver is for only one vendor. In the case of DWC, the driver has to work with
+> multiple vendors. But again, I do not know how this 1s delay came up. Maybe we
+> could try to reduce it to 500ms or so, but for that I need confirmation from
+> someone like Lorenzo who knows the history.
+> 
+> > (Side note: I also just noticed pcie-tegra194.c does the same.)
+> > 
+> > > > My guess is that (1) is the case, and specifically that the relevant folks are
+> > > > using the pcie-qcom.c, with its "global" IRQ used for link-up events.
+> > > > 
+> > > 
+> > > We only recently added support for 'Link Up' event through 'global_irq' in the
+> > > controller driver. And this was done to avoid waiting for link up during probe
+> > 
+> > You're kind of reinforcing my question: you don't like the waste, so
+> > you're adding link-up IRQ support -- is that really the only way?
+> > 
+> 
+> I don't know. But so far I haven't seen any other sensible way which is generic.
+> 
+> > (My initial thought: no, it's not. We know when pwrctrl has done its
+> > thing -- why should we bother polling for link state before that? But
+> > that's easier said than done, when pwrctrl is optional and highly
+> > abstracted away from the DWC driver...)
+> > 
+> 
+> Oh well... this is where you got it wrong. pwrctrl drivers are only probed
+> before enumeration because of the design (which is way after starting the link).
+> As of v6.15-rc1, before we try to enumerate any device, we check if there is any
+> device defined in DT which requires power supply. If so, we create a platform
+> device (or pwrctrl device) and let the pwrctrl driver to bind to it and power up
+> the device. In that case, we also do not proceed to scan the bus further and
+> skip the hierarchy. Because, the pwrctrl driver will rescan the bus once it has
+> finished powering up the device.
+
+It sounds like you're saying "it's the way that it is, because of the
+way that it is." I understand how it is currently structured, but I'm
+saying that I think pwrctrl is placed at the wrong place. It looks cute
+and clean, but it has the ordering wrong.
+
+IMO, we should allow pwrctrl to power things up earlier, so that
+controller drivers have a better chance of hitting the optimal cases
+(case (3) above) properly. (That's also how every pre-pwrctrl driver
+does things, and I think it's for good reason.)
+
+That would also resolve my PERST# and other timing questions, because
+the controller driver would better know when pwrctrl is finished, and so
+can better handle PERST# and any necessary delays.
+
+I agree this might be more difficult to do in a "generic" way (per your
+above language), depending on your definition of generic. But IMO, it's
+important to prioritize doing things correctly, even if it's slightly
+less cute.
+
+As an example less-cute way of doing pwrctrl: expose a wrapped version
+of pci_pwrctrl_create_device() such that drivers can call it earlier. If
+there is a pwrctrl device created, that means a driver should not yet
+wait for link-up -- it should defer that until the relevant pwrctrl is
+marked "ready". (There are likely other problems to solve in here too,
+but this is just an initial sketch. And to be clear, I suspect this
+doesn't fit your notion of "generic", because it requires each driver to
+adapt to it.)
+
+> > Regarding the controller design: frankly, I don't think my controller
+> > does anything all that revolutionary in this space [0]. All of my
+> > questions today can be asked (from what I can tell) of existing upstream
+> > controller drivers. I'm mostly trying to understand the expected driver
+> > design here, and that includes teasing apart what is "stuff done in
+> > 'old' drivers, but isn't recommended", and "what is currently
+> > unimplemented in new stuff" (like pwrctrl [1]), and where do my
+> > expectations fit in between that.
+> > 
+> > For instance, poking around a bit I come up with this question: when
+> > using pci/pwrctrl, how does one ensure timing requirements around, e.g.,
+> > power stability vs PERST# deassertion are met? When looking at a pwrctrl
+> > driver like drivers/pci/pwrctrl/slot.c, the process looks too simple:
+> > 
+> > (0) host bridge probably already started its LTSSM, deasserted PERST#
+> > (1) slot.c powers the slot
+> > (2) pci_pwrctrl_device_set_ready() -> rescan_work_func() rescans the bus
+> > 
+> > Notably, there's no enforced delay between (1) and (2).
+> > 
+> > Reading the PCIe CEM, it seems we're violating some specification bits,
+> > like:
+> > 
+> >   2.2. PERST# Signal
+> >   [...] On power-up, the de-assertion of PERST# is delayed 100 ms
+> >   (TPVPERL) from the power rails achieving specified operating limits.
+> >   [...]
+> > 
+> > There are references to this in various implementations (e.g.,
+> > tegra_pcie_enable_slot_regulators() and brcm_pcie_start_link() --
+> > although I suspect the latter is applying the wrong ordering).
+> > 
+> > Additionaly, CEM also seems to suggest we have PERST# ordering wrong. It
+> > should also come between (1) and (2), not at (0).
+> > 
+> 
+> You are absolutely right! Currently, we follow the timing requirement while
+> deasserting the PERST# in the controller drivers. But once we power on the slot,
+> we do not touch PERST# and it just happen to work.
+> 
+> We may need to introduce another callback that toggles PERST# so that we can use
+> it while powering up the device.
+> 
+> > And finally (for now), I don't understand how we have any guarantee that
+> > step (2) is useful. Even if we've already started the LTSSM in (0), we
+> > have no idea if the link is actually Active by the time we hit (2), and
+> > so rescanning may not actually discover the device. And if that scan
+> > fails ... then when do we trigger another pci_rescan_bus()? Only if the
+> > implementation has a "link-up" IRQ?
+> > 
+> 
+> As I said above, we do not enumerate the device if it has devicetree node with
+> supplies. So that's why we need (2). Otherwise, the device won't be enumerated
+> at all, unless userspace does the rescan (which defeats the purpose of pwrctrl).
+
+But you haven't addressed one of the concerns in my paragraph: how do we
+know the link is up by the time we hit the pwrctrl-initiated
+pci_rescan_bus()? We haven't gone back to ask the host bridge if it's up
+yet. We're just hoping we get lucky.
+
+IOW, the pwrctl sequence should be something like:
+
+ (1) power up the slot
+ (1)(a) delay, per spec
+ (1)(b) deassert PERST#
+ (1)(c) wait for link up
+ (2) rescan bus
+
+Currently, we skip all of (1)(a)-(c). We're probably lucky that (1)(b)'s
+ordering doesn't matter all the time, as long as we did it earlier. And
+we're lucky that there are natural delays in software such that lack of
+(1)(a) and (1)(c) aren't significant.
+
+> > Unless I'm misunderstanding, these concerns all suggest we need some
+> > host-bridge hook in between (1) and (2), and existing pwrctrl users are
+> > operating somewhat outside the specification, or are relying on
+> > something more subtle that I'm missing.
+> > 
+> 
+> Yes, feel free to submit patches for toggling PERST#. Or let me know otherwise,
+> I'll do it.
+
+Per the above, I think pwrctrl has multiple ordering design problems, so
+I haven't yet decided what kind of patch(es) I might submit. Feel free
+to CC me if you tackle it before I do though.
 
 Regards,
-Boqun
+Brian
 
