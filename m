@@ -1,268 +1,218 @@
-Return-Path: <linux-pci+bounces-25981-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25982-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E89C3A8B2E6
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 10:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 086A9A8B30B
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 10:14:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 449691905847
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 08:01:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6405419048B6
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 08:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C842253F6;
-	Wed, 16 Apr 2025 08:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA95722F15C;
+	Wed, 16 Apr 2025 08:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SsdYmy1R"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JU8eyqG5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2085.outbound.protection.outlook.com [40.107.21.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05A81F94C;
-	Wed, 16 Apr 2025 08:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790458; cv=none; b=ZX2T+39b3FrpKxLqoX5ECy8KpCJTeEI9HtTGewA9senDO626YmG7kS5agZ528fnsdN7VJ8FQ9GmC6g20Iyen4aI0mDeDN8P8YDrPZLb/DP7cQuvobGv4uGBr6GOMM1h/8q0PBHPYudcGkDxrZHUrQyKVGjP9ZoXiOYhH1hWqDE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790458; c=relaxed/simple;
-	bh=OaeQGXsO6kmHJmqkUC48ldZurlI7o6Ga/Bsl2vQOpoI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=d+rYXcro80yBmhZMz5ufpwYhzxJRceM50Dcm2E3Qj2N1V6ETjbXGR+WDPU7YX7tjNoQrTNIRfSMZ/0N9ZuLHdm5XL6zJy8u5ZVZryQTVQL2gkHbwduQZGuXo67zkOhKx4iZjvHrMuCW7zTCSz0Ajd9fYbW3sgsvvwSFDFU0yhBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SsdYmy1R; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744790458; x=1776326458;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OaeQGXsO6kmHJmqkUC48ldZurlI7o6Ga/Bsl2vQOpoI=;
-  b=SsdYmy1RE15yA1zH67BLauOXbPZIMatrD30ODz92Oht0n7N2dUy8ySOR
-   VoRH8J9i8GkKkASJoz8TtXG7YLe8R8OyV4Akym137wiMwMF1b8U/ztjQq
-   HiqGDM0l27q9w7tEkHPPx97THtEFBADtNU++B4Qe55m7F4egWIulWmhxO
-   rAtVUbW7sVE8Pauk/zOMmT0XclcSjkGa/oNBRR8cDLu+57pWP/QwQPi3D
-   bX9AvId70QFhvAAt+EmzJsBXfLiX5EyGp2wrIXqvYRDQ64etm+cfYgzqm
-   5l5ebAC59M/wIYaJXJDT6k66MDdhilIWZUZjbiRCJg7XFpESFP8z6jiwW
-   Q==;
-X-CSE-ConnectionGUID: cHUTI+XaSBmc6ZfVyQztmQ==
-X-CSE-MsgGUID: LpKWiHuoQ1KCAwq++CPLFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="68815568"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="68815568"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:00:54 -0700
-X-CSE-ConnectionGUID: gU3JjF9yQWSBXDjDMjiubw==
-X-CSE-MsgGUID: jTjeyYEMQGmx4wLIB/B9qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="130687123"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:00:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 16 Apr 2025 11:00:43 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
-cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Keith Busch <kbusch@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
-    linux-pci@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Joel Mathew Thomas <proxy0@tutamail.com>, 
-    Russ Weight <russ.weight@linux.dev>, 
-    Matthew Gerlach <matthew.gerlach@altera.com>, 
-    Yilun Xu <yilun.xu@intel.com>, linux-fpga@vger.kernel.org, 
-    Moshe Shemesh <moshe@nvidia.com>, Shay Drory <shayd@nvidia.com>, 
-    Saeed Mahameed <saeedm@nvidia.com>, 
-    Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH 2/2] PCI: pciehp: Ignore Link Down/Up caused by Secondary
- Bus Reset
-In-Reply-To: <d04deaf49d634a2edf42bf3c06ed81b4ca54d17b.1744298239.git.lukas@wunner.de>
-Message-ID: <e42a19a8-4934-69bb-0a79-6748062043ec@linux.intel.com>
-References: <cover.1744298239.git.lukas@wunner.de> <d04deaf49d634a2edf42bf3c06ed81b4ca54d17b.1744298239.git.lukas@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE3C158520;
+	Wed, 16 Apr 2025 08:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744791285; cv=fail; b=A3ypbCaIjxOsVr9fWLSyGCtA02xtopTqwSQGgh+t5nfLz4/Xm6vIIaFvHFE4NczZdsrIZDDdxryGXEeUuy0J7m9E3AsvaENGZhLjXVSyU2lfpAFpyn6g5Ex/OE0rj8wjdYy9JOpSQult0CESM7bCG7N+SpEOnN5GfblkPV8TITc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744791285; c=relaxed/simple;
+	bh=Q+7aj89sP0BEmGHS9YXA+++Al9pMuTGaiBGV3A7vJ7Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=BMYFf+IqqFAPZGZejiFgSmQnV9EUoqzrGSNDzd0zbT0Yri/qeuA6GRVI7u7OcGb2Iis5ydvBENNK1aoPFJunrBQZNFnvQQ/5h5KSwmsxh4NmoY3WJ3AppcEmGYOsdQY5eio3Bot6K7KPJXmwI+Kegr1u+ajMmwdvA3oKWv+xi14=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JU8eyqG5; arc=fail smtp.client-ip=40.107.21.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pMRA2jLL+5V/BzwuiKsoF9ylgrGCAfpwISNvzkPMlWyk26HgMwMwNwTAxiWVwTESn6lJX2xhXL1fArBsUjZYYpf1XjDQ0RwIszJh9Cjlnp0u5K+c8gBhd3bVDfQ6YdERcrX8l7iteEV80ddVqg+Wik8UUYQrmjtsXo6kwlqEaDr5PNfj3zedDx1TMgtf8Hnj//YgW7HA7tErSOj8+S+NM2j5hK3eE9Ql/qnmxSvFIGvaBq0rKiEGd761gB39MGDc2lQrkDKFypdNq3nr6saCMyGV8zoJDDiMXu0Fnu4toGAKWe9NOLz6u61DeLVuzll5At/MDowaTj/LuR4Ixu/AxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9zEWZQN+n4oZe8uJZywWn6S5+wYmTl0ZjXEmh28ODIo=;
+ b=Qwpn1TXZyy3V2NCJzVa8quNXHAyjVGdWNnYG3lmEbzQXN4jzWTLDcwFaHlmU7TEQcFzCHWkRG9hJqREgIFNIUhlqTP4kBTH+l8+Gl74jkRIqGp1XaXJqqffR7Xpc8xejdW1+NfAhMp+U7wIPRYt+nU+Mf0gnVEhR14VOxRmzBLcbDwxmQwjcGFUbvhoz76bzvF27LuCkFRt/NTYhoiUDT5nUd8HczVszVv7Wmt14X8cPeLARLOgV4Z+ese9bjDypIt8rNpHwX+WrT1M4Q+sHuwXIJprpMTpey7v3MLSiF6ixynw7kWMngKpx5YcMU0W9yGMzWBy/nMD5mXuJIVqyKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9zEWZQN+n4oZe8uJZywWn6S5+wYmTl0ZjXEmh28ODIo=;
+ b=JU8eyqG5OZLvW+ayREg652L7raZ+ZYStbDQ2P7pYZLH8WnJzn/7XRHOGjlEm7tm4wtdSJkKfp8sLXL4Vbhdj6bikDnKb+1TFe+PonxUlziL/SI+m2pHKASlU6DNhRRqocQqv+CaWzC2Afhn3/AOH4M+sSQXU0YTaH6fvpTHSBNB3nC7hKz7cYqiuLxD0s0x+LmD7du/j8d7ejnuUNMdhBhqvpO6SLChvwhdj83WYTCUw8BcUFoVmPlNqGG0zB5Yinbdf0AbcrMo40Hkg2dEmKNU/olLqxlHDE0eaY6qGeOZcVyNtbP1iTtDiQ7KQpb/K6pPOeRvm3QVhpdQ5IXoPZg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by VI1PR04MB7103.eurprd04.prod.outlook.com (2603:10a6:800:123::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Wed, 16 Apr
+ 2025 08:14:40 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
+ 08:14:40 +0000
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: frank.li@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v6 0/7] Add some enhancements for i.MX95 PCIe
+Date: Wed, 16 Apr 2025 16:13:07 +0800
+Message-Id: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::8) To AS8PR04MB8676.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-810837578-1744790443=:991"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|VI1PR04MB7103:EE_
+X-MS-Office365-Filtering-Correlation-Id: aef97e71-a5f1-4d07-a698-08dd7cbebc30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Nhi4kka4PnPsZZ4tfp2tla4mPl2HfsF9qpIkg8zKzDipdgemJRs8s8fZd1nv?=
+ =?us-ascii?Q?qf/urItjKhXcUAvUe2CuqK87jxYN6pV3VNS2uw3ixkla1ygfsqYv5l2T/y7u?=
+ =?us-ascii?Q?JCe34+EmYssePs6mbTzWUq9QuBE/7NoHwf+kd5pMyhpLxM5lxREiCHh3hees?=
+ =?us-ascii?Q?U4i+Za3f3XOIab8EIb3tU5VKCCFo4+TKpRT9qDC5vD3WYOKiOHDZEdY4RqnZ?=
+ =?us-ascii?Q?x/NCVEblh7K1PdQCxtsJtsbXszlQXw/Ru96Q59/nMyx2BJ7R1PBhKR9eLjHk?=
+ =?us-ascii?Q?Qak05MpRUVvttM6vs7ba1ltmPwB0ZIcajOEqWYkGF6zGhM5vNX8F2Sr9X1Id?=
+ =?us-ascii?Q?uVjfmPzqecRyNuCiCVzttdurfdqVDSxKTDajzZmA0F/8M3DduInYicUD9B9/?=
+ =?us-ascii?Q?o8Fmg17QXZzTyYJQKiLuL2vZR2yUKrvwsuNQI8+zh2sicYAB+hxIY2rEHxxP?=
+ =?us-ascii?Q?dS0c3hGD8+uFbmlyfVs+kEDjS9bb3v07qjwkKD7c6lCcUncpsKqhMn81KrUd?=
+ =?us-ascii?Q?ILxp5MJTk1yFe/8a82x8IFtqV+AKrOPLnD4i2OGvpz6a/HLX+URSQsgQjfn2?=
+ =?us-ascii?Q?Rd6rATsylZm1tO+ottVnu/cwBbf030YrU/5C6n74TZqY8sD+U6kLRAbJ5AB7?=
+ =?us-ascii?Q?ZF+RwXYrC429w2FBHtwflkug4FphBo7yExDSPH7jPZXpUMJRA+sYuI/ZuqQj?=
+ =?us-ascii?Q?LYDB4+BMCo6ESCInja+iqtX+F60FwmXVY6rF4SLfVUVYnvdMtUmuetyCrV8N?=
+ =?us-ascii?Q?9c33iLhKYgQMnAL5B+dXmzzp+SufP4GH0u4XIa9kfbTobYwqJgddLNWBOJna?=
+ =?us-ascii?Q?r/d2SHEUeqzR+G6f2QCMDE+t5eZz2xZx8ffB0Y4pPQtC1EPxVDw122nsOVPX?=
+ =?us-ascii?Q?sroh+EQyNakn/lTjmS4jIenh8rBxVegtirF/1mSg99Sl70jO4q3riBcgIQEl?=
+ =?us-ascii?Q?tmVE8MLrhAN70/6g/0+PujH6keOkDnlvvWFBr4UDxiZky0d1KC/cP6VQFkT0?=
+ =?us-ascii?Q?GRM5vTaxJaYgGrGewLQfM1uZrrYY0l60gj92SPiSVf+2wWxkDZOwynoyl+ZO?=
+ =?us-ascii?Q?HS1fM+iowDHihAoEaLGqSGUiD8ODSIPmaIyGcxYKxIyzuHga7YJci5UnXd17?=
+ =?us-ascii?Q?olz4SoD64y0/lbAqTq0vjbCSBLOEb1AHwsJYeTgM6CQOXtVzYGZsFoNEVtiv?=
+ =?us-ascii?Q?a6PY0BO7ro0zCpqjo5+Z7mPPfq/o+6BOGIeVa/4IJUY0MUQcPBkss4eeAlb6?=
+ =?us-ascii?Q?5ERTOsgDeMFqF3sMgRm6pt0ikAetX+BNCiOzG+bTcEL0+LgDqJ4pmxkx/edj?=
+ =?us-ascii?Q?V8DMO5GoKkP0SDlhmvzFcoBqbuA8/n0sm6vMU+WecH+V757Pp8Q4rQ7FlPi/?=
+ =?us-ascii?Q?fVT3TdXHsv+6OOIo9tFV2P3Qo6sujoQ47SD3cLXf8cX56aDaFh3l6vLEAQ/w?=
+ =?us-ascii?Q?8MPEYcaGo1k5NKLHC+3hCGHeABvw8noby0//pyj3bVETiXUtzTbqhWqQz9kL?=
+ =?us-ascii?Q?b362qKurIF1f0nE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?131EIMS+ugIjvM/S+QohK0zTroDQe2R/COP959UyCeTDVy0Ch8xUGj7sQ1sd?=
+ =?us-ascii?Q?P2xfoaj/7qIhs48xh1+shSE+TbV6RtGYu9LTnv9JwjKRaoupCuOEd1pKNm+a?=
+ =?us-ascii?Q?BnUPnS8ayJmm7KGCMGcDJJ0EDN5BNMdOkFWcmhWgFi0dn/8hngoR65jXc+kM?=
+ =?us-ascii?Q?MZ6fFbQwAOnoOSwoYo9sM7nsHkYDqQqQ/YIXvgzKuvloXfFYOwcsIayqUthb?=
+ =?us-ascii?Q?EXK+RPq/xM0udbJ88zwgUB28sRyUeHandscqqDOf+I1S/so/e/sgdeoRfcwb?=
+ =?us-ascii?Q?OVYMFRdaY7AELD/sZOzREbkA6L7/ofd3+lHPaJ2oBd20hijIncdYnjpA/GpD?=
+ =?us-ascii?Q?tUVYulRqEDuhdrE0Bkql+x8U6d4m721MoJ4uDDhX8R2n4S3oOt7atX1cr2bP?=
+ =?us-ascii?Q?ZmuuUOwUSdd6rl6WSbEJ9LrUtKjOv8kcsWqvgyPH26MnqM7Fu6Z6YGEvJkK0?=
+ =?us-ascii?Q?X31wBgtOgVstFb6MWc+k6SGtnMWSsVkOfckeP+p9EPYvjkRVgYRXx/tBzLIp?=
+ =?us-ascii?Q?l073euY78rQpDary06rgKMLagA7Ta1Y8g8/2BlVOn7y8+2ifMFHF7bjFhCQq?=
+ =?us-ascii?Q?F2TM41L5R71L0Lcd0aP3D7fTDlyTHEZcWkeKu2BDDQYte+VdDpWL3mcRCfsG?=
+ =?us-ascii?Q?DVdjAEiYCZ+ekwjDaKsNw1vt71+8uXk2or26RMCNxSb95YOunmDRwp2s3W2f?=
+ =?us-ascii?Q?Swv9ZhXeG2C7df+5+mNILl0Rag6rK3GTl7yKh9/qXrxfZwd2KOWJAecCXQqN?=
+ =?us-ascii?Q?Ic+1JspUPnXUTDey697K/HyOpyxsvJguqbK6V3nh/btTzFD/Yq01SNivxXo9?=
+ =?us-ascii?Q?owmYv8w22L7732iatJC22AzvNfXo6t8I4uJuNpwJGHoX3V/maeCcai6bijVW?=
+ =?us-ascii?Q?0HNkTuWeb6QL9YCQsbumVfGJhabV3y2LiyiYt8ivoYzXyMGqqHP6VG9adFyb?=
+ =?us-ascii?Q?IlYwOXIgH91NzQzXKU5t+Ny5Kw5s09xS8Sii5SZEfR8c6AaCDX0V60J2RFVM?=
+ =?us-ascii?Q?3i/JGbSWjDD1TKdj9z15CWWA00ORJuPQUIn3mfHgbcD+xT/OjYbukgACBIWf?=
+ =?us-ascii?Q?0CPLFeeJGc17zDSrVk+hwe2e8lJaKu1fxaGqJYD6Yiu+uwgt0k7c+nCmDEM7?=
+ =?us-ascii?Q?DSAeaxq3r55NFcWtOZbBAnPyUjafbzTn8pr1LuXs5Nif9eQHHDVQNEMIxoOI?=
+ =?us-ascii?Q?szfzQGurlAcTeb2GjVqfNfmdhE38v3BwT8KtY/MT60g89PH0QWLDdpikozw6?=
+ =?us-ascii?Q?I+vTjQRo8PLsnVKJ2HK1jV3ra6b30HeaKv7/i1G2K08uj2DoBaxqt6TUyDul?=
+ =?us-ascii?Q?Z4LXrJch9Mbh/u3zRjVQI+0oWcxzkoFFvsQSbOSIBH6q9rjrrS1IkAlIn6JD?=
+ =?us-ascii?Q?2taUmlWVBqmCtw4RFZooUjfWY6XUtW3/26+2+YUpJBEeg8OoTNbbiSLFUCK+?=
+ =?us-ascii?Q?BcisyCwLW0IzUEQ9eQ6X4eg8q6JsreveERy3pBKOvsr+DmpUaaV+Pcsi0aid?=
+ =?us-ascii?Q?L7fm76OtBArMO++7WuRSlxUc77Fs9kaDjbEDVnfKiBTCZwn86D2Dc7OX3DPL?=
+ =?us-ascii?Q?AW58ZN9DYMltuoOasFhXd1CkVt9wW/tK1RQFa+a3?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aef97e71-a5f1-4d07-a698-08dd7cbebc30
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 08:14:40.2452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lysmbeJcVh5YMem/d6B1n52p2MYRAas+Dftm/1ECiWX3Y7JQmJNRbE0SDPzXMiPl18Sr0lNiMvifVNsBrH2ytA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7103
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Add some enhancements for i.MX95 PCIe.
+- Refine the link procedure to speed up link training.
+- Add two ERRATA SW workarounds.
+- To align PHY's power on sequency, add COLD reset.
+- Add PLL clock lock check.
+- Save/retore the LUT table in supend/resume callbacks.
+- 3/7 relies on "arm64: dts: imx95: Correct the range of PCIe app-reg region"
+  https://lore.kernel.org/imx/20250314060104.390065-1-hongxing.zhu@nxp.com/
 
---8323328-810837578-1744790443=:991
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+v6 changes:
+- Move the PLL clock lock check out of core_reset, and collect to a new
+  callback function.
+- Update the commit message of 4/7.
+- Correct the typo errors in the commit messgage of 2/7 patch refer to
+  Alok's comments. Thanks.
+- Add the dependecy of 3/7 into the cover letter refer to Alexander'
+  comments.
 
-On Thu, 10 Apr 2025, Lukas Wunner wrote:
+v5 changes:
+- Rebase to v6.15-rc1
+- Update the commit message of "PCI: imx6: Skip one dw_pcie_wait_for_link() in"
 
-> When a Secondary Bus Reset is issued at a hotplug port, it causes a Data
-> Link Layer State Changed event as a side effect.  On hotplug ports using
-> in-band presence detect, it additionally causes a Presence Detect Changed
-> event.
->=20
-> These spurious events should not result in teardown and re-enumeration of
-> the device in the slot.  Hence commit 2e35afaefe64 ("PCI: pciehp: Add
-> reset_slot() method") masked the Presence Detect Changed Enable bit in th=
-e
-> Slot Control register during a Secondary Bus Reset.  Commit 06a8d89af551
-> ("PCI: pciehp: Disable link notification across slot reset") additionally
-> masked the Data Link Layer State Changed Enable bit.
->=20
-> However masking those bits only disables interrupt generation (PCIe r6.2
-> sec 6.7.3.1).  The events are still visible in the Slot Status register
-> and picked up by the IRQ handler if it runs during a Secondary Bus Reset.
-> This can happen if the interrupt is shared or if an unmasked hotplug even=
-t
-> occurs, e.g. Attention Button Pressed or Power Fault Detected.
->=20
-> The likelihood of this happening used to be small, so it wasn't much of a
-> problem in practice.  That has changed with the recent introduction of
-> bandwidth control in v6.13-rc1 with commit 665745f27487 ("PCI/bwctrl:
-> Re-add BW notification portdrv as PCIe BW controller"):
->=20
-> Bandwidth control shares the interrupt with PCIe hotplug.  A Secondary Bu=
-s
-> Reset causes a Link Bandwidth Notification, so the hotplug IRQ handler
-> runs, picks up the masked events and tears down the device in the slot.
->=20
-> As a result, Joel reports VFIO passthrough failure of a GPU, which Ilpo
-> root-caused to the incorrect handling of masked hotplug events.
->=20
-> Clearly, a more reliable way is needed to ignore spurious hotplug events.
->=20
-> For Downstream Port Containment, a new ignore mechanism was introduced by
-> commit a97396c6eb13 ("PCI: pciehp: Ignore Link Down/Up caused by DPC").
-> It has been working reliably for the past four years.
->=20
-> Adapt it for Secondary Bus Resets.
->=20
-> Introduce two helpers to annotate code sections which cause spurious link
-> changes:  pci_hp_ignore_link_change() and pci_hp_unignore_link_change()
-> Use those helpers in lieu of masking interrupts in the Slot Control
-> register.
->=20
-> Introduce a helper to check whether such a code section is executing
-> concurrently and if so, await it:  pci_hp_spurious_link_change()
-> Invoke the helper in the hotplug IRQ thread pciehp_ist().  Re-use the
-> IRQ thread's existing code which ignores DPC-induced link changes unless
-> the link is unexpectedly down after reset recovery or the device was
-> replaced during the bus reset.
->=20
-> That code block in pciehp_ist() was previously only executed if a Data
-> Link Layer State Changed event has occurred.  Additionally execute it for
-> Presence Detect Changed events.  That's necessary for compatibility with
-> PCIe r1.0 hotplug ports because Data Link Layer State Changed didn't exis=
-t
-> before PCIe r1.1.  DPC was added with PCIe r3.1 and thus DPC-capable
-> hotplug ports always support Data Link Layer State Changed events.
-> But the same cannot be assumed for Secondary Bus Reset, which already
-> existed in PCIe r1.0.
->=20
-> Secondary Bus Reset is only one of many causes of spurious link changes.
-> Others include runtime suspend to D3cold, firmware updates or FPGA
-> reconfiguration.  The new pci_hp_{,un}ignore_link_change() helpers may be
-> used by all kinds of drivers to annotate such code sections, hence their
-> declarations are publicly visible in <linux/pci.h>.  A case in point is
-> the Mellanox Ethernet driver which disables a firmware reset feature if
-> the Ethernet card is attached to a hotplug port, see commit 3d7a3f2612d7
-> ("net/mlx5: Nack sync reset request when HotPlug is enabled").  Going
-> forward, PCIe hotplug will be able to cope gracefully with all such use
-> cases once the code sections are properly annotated.
->=20
-> The new helpers internally use two bits in struct pci_dev's priv_flags as
-> well as a wait_queue.  This mirrors what was done for DPC by commit
-> a97396c6eb13 ("PCI: pciehp: Ignore Link Down/Up caused by DPC").  That ma=
-y
-> be insufficient if spurious link changes are caused by multiple sources
-> simultaneously.  An example might be a Secondary Bus Reset issued by AER
-> during FPGA reconfiguration.  If this turns out to happen in real life,
-> support for it can easily be added by replacing the PCI_LINK_CHANGING fla=
-g
-> with an atomic_t counter incremented by pci_hp_ignore_link_change() and
-> decremented by pci_hp_unignore_link_change().  Instead of awaiting a zero
-> PCI_LINK_CHANGING flag, the pci_hp_spurious_link_change() helper would
-> then simply await a zero counter.
->=20
-> Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe =
-BW controller")
-> Reported-by: Joel Mathew Thomas <proxy0@tutamail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219765
-> Tested-by: Joel Mathew Thomas <proxy0@tutamail.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> ---
->  drivers/pci/hotplug/pci_hotplug_core.c | 69 ++++++++++++++++++++++++++++=
-++++++
->  drivers/pci/hotplug/pciehp_hpc.c       | 35 ++++++-----------
->  drivers/pci/pci.h                      |  3 ++
->  include/linux/pci.h                    |  8 ++++
->  4 files changed, 92 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/pci/hotplug/pci_hotplug_core.c b/drivers/pci/hotplug=
-/pci_hotplug_core.c
-> index d30f131..d8c5856 100644
-> --- a/drivers/pci/hotplug/pci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/pci_hotplug_core.c
-> @@ -492,6 +492,75 @@ void pci_hp_destroy(struct hotplug_slot *slot)
->  }
->  EXPORT_SYMBOL_GPL(pci_hp_destroy);
-> =20
-> +static DECLARE_WAIT_QUEUE_HEAD(pci_hp_link_change_wq);
-> +
-> +/**
-> + * pci_hp_ignore_link_change - begin code section causing spurious link =
-changes
-> + * @pdev: PCI hotplug bridge
-> + *
-> + * Mark the beginning of a code section causing spurious link changes on=
- the
-> + * Secondary Bus of @pdev, e.g. as a side effect of a Secondary Bus Rese=
-t,
-> + * D3cold transition, firmware update or FPGA reconfiguration.
-> + *
-> + * Hotplug drivers can thus check whether such a code section is executi=
-ng
-> + * concurrently, await it with pci_hp_spurious_link_change() and ignore =
-the
-> + * resulting link change events.
-> + *
-> + * Must be paired with pci_hp_unignore_link_change().  May be called bot=
-h
-> + * from the PCI core and from Endpoint drivers.  May be called for bridg=
-es
-> + * which are not hotplug-capable, in which case it has no effect because
-> + * no hotplug driver is bound to the bridge.
-> + */
-> +void pci_hp_ignore_link_change(struct pci_dev *pdev)
-> +{
-> +=09set_bit(PCI_LINK_CHANGING, &pdev->priv_flags);
-> +=09smp_mb__after_atomic(); /* pairs with implied barrier of wait_event()=
- */
-> +}
-> +
-> +/**
-> + * pci_hp_unignore_link_change - end code section causing spurious link =
-changes
-> + * @pdev: PCI hotplug bridge
-> + *
-> + * Mark the end of a code section causing spurious link changes on the
-> + * Secondary Bus of @pdev.  Must be paired with pci_hp_ignore_link_chang=
-e().
-> + */
-> +void pci_hp_unignore_link_change(struct pci_dev *pdev)
-> +{
-> +=09set_bit(PCI_LINK_CHANGED, &pdev->priv_flags);
-> +=09mb(); /* ensure pci_hp_spurious_link_change() sees either bit set */
-> +=09clear_bit(PCI_LINK_CHANGING, &pdev->priv_flags);
-> +=09wake_up_all(&pci_hp_link_change_wq);
+v4 changes:
+- Add another patch to skip one dw_pcie_wait_for_link() in the workaround link
+  training refer to Mani' suggestion.
+- Rephrase the comments in "PCI: imx6: Toggle the cold reset for i.MX95 PCIe".
+- Correct the error return in "PCI: imx6: Add PLL clock lock check for i.MX95 PCIe".
+- Collect and add the Reviewd-by tags.
 
-This change should have added these:
+v3 changes:
+- Correct the typo error in first patch, and update the commit message of
+  #1 and #6 pathes.
+- Use a quirk flag to specify the errata workaround contained in post_init.
 
-#include <linux/bitops.h>
-#include <linux/wait.h>
+v2 changes:
+- Correct typo error, and update commit message.
+- Replace regmap_update_bits() by regmap_set_bits/regmap_clear_bits.
+- Use post_init callback of dw_pcie_host_ops.
+- Add one more PLL lock check patch.
+- Reformat LUT save and restore functions.
 
-#include <asm/barrier.h>
+[PATCH RESEND v6 1/7] PCI: imx6: Start link directly when workaround
+[PATCH RESEND v6 2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in
+[PATCH RESEND v6 3/7] PCI: imx6: Toggle the cold reset for i.MX95
+[PATCH RESEND v6 4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit
+[PATCH RESEND v6 5/7] PCI: imx6: Let i.MX95 PCIe compliance with
+[PATCH RESEND v6 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
+[PATCH RESEND v6 7/7] PCI: imx6: Save and restore the LUT setting for
 
---
- i.
---8323328-810837578-1744790443=:991--
+drivers/pci/controller/dwc/pci-imx6.c | 213 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+1 file changed, 182 insertions(+), 31 deletions(-)
+
 
