@@ -1,134 +1,106 @@
-Return-Path: <linux-pci+bounces-25996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2007EA8B7E9
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 13:54:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50EDFA8B833
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 14:04:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E4143BC3D2
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 11:53:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD575445DD7
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 12:04:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA90B2459E9;
-	Wed, 16 Apr 2025 11:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mEtJiAJE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56EB424729E;
+	Wed, 16 Apr 2025 12:03:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D832459DF;
-	Wed, 16 Apr 2025 11:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1F5248893;
+	Wed, 16 Apr 2025 12:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804442; cv=none; b=teIQI8wdv5grJnGUMeIMj37fgZd36G1AhLJweGuuhPeSALRTCG6P0Ga74DgGmbkYasuNstfR+p3uskTBg+gEduJaWTJgtSppwtReS/IiHP/nebtK1aYlOTREHza6Qd6XSSsJsVtBfDj/vb1pf/ZbEe2giXFf6bIKQFJ+6nKhOjI=
+	t=1744805001; cv=none; b=hsf+uK5m1gtlWDza9kfUKvmXxpM/ma4ZG5/On6PnG0O7PFjnNUMqA1ov40QwrZA6js2hVvNhnsPrvnow28riGsq0W1cybP+3YbGGJP0VDrurGFXH1fYt7tjjcr19HeB/smE3sy3V7jhXm/vU9Sp6VPY4/w/qVVFEYFlqkij/q78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804442; c=relaxed/simple;
-	bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZzrcQ3kQogm+WkDwJC9yQOTyRx7s9kNpZLslOdPpruU9cwO5olNser36CaKMrUNf2KJccD4WsDcVXYLZwRZx1wMhev9HczRkxLirz0U09znSsAvtR7Fk74nMg240QsGtAv47qJij05jNuzi23ubSSkB5Xb/ONN2TiautDlboz1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mEtJiAJE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744804441; x=1776340441;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
-  b=mEtJiAJEoOJoz5NHxd+eMe8UnE7RxjdszMe95fEo7tvK4JoXT+ot/d1B
-   RT63nZdwAaFt8BLQw2bKL8vCJJNE3UDgzv6BquRcLQU3fFoDDyLQgjQfd
-   kcnXzH4ptsQJZ5zgF+m9Ync8hcKDMYbjODiuFNjoqSPH/UnB3M2ySWcbl
-   ECO383Uu9EgLTVJLabua+6+Tu9W0ZSkAA4iNVE94dgNR+SrUO5vrrg1/V
-   mPd15/SOKPtWdKFiqPxwuP++bAuPDOovvFewvHYE6n8+7bGTu9rdCzsLH
-   eD86/5dV6hLBQ1KwdT2iRHmHXbzuQ7QETVKyTTljedY5yiANTMSBFyu+C
-   A==;
-X-CSE-ConnectionGUID: 6vaO3GaaQhCbD0HmgWTYEQ==
-X-CSE-MsgGUID: EWjSetY6SZqWCXVYhgWjwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63753828"
+	s=arc-20240116; t=1744805001; c=relaxed/simple;
+	bh=Fd+W9CjO5d9kB35ZI0RnHNWj1wpgnArBWJxv+jgCc4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdWz2aCixJApJQy4xUadOxOVmpA7Eh97e26Zw+boDh19eTz2jb02DvXSBWAdfwsY4LXAewypW5m6JJqZh2bqP10n9pzXg0syDZmNGZgGa6tC81GCg5UspAz5VAef4iZDvWuFND7OIwM4W+lgZiLjMi76/4ZapVApxN1uU+dAdpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: JAcJZtEdTyuFSOW+X8JWYA==
+X-CSE-MsgGUID: pO2iESYQROaO8OlQSOUCzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46238939"
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="63753828"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:54:00 -0700
-X-CSE-ConnectionGUID: U0GvJdoERtK0/oYmQ01AEQ==
-X-CSE-MsgGUID: CTzwN4b6S16MzzsgE131bQ==
+   d="scan'208";a="46238939"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:03:19 -0700
+X-CSE-ConnectionGUID: rZsEcAhtTU+IXw8AkJz4MA==
+X-CSE-MsgGUID: ISgYA7SHRiGfC442U/jbNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130403134"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:53:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 16 Apr 2025 14:53:51 +0300 (EEST)
-To: Andy Shevchenko <andy@kernel.org>
-cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+   d="scan'208";a="135521346"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:03:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u51U1-0000000CqQW-00w5;
+	Wed, 16 Apr 2025 15:03:13 +0300
+Date: Wed, 16 Apr 2025 15:03:12 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
 Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-In-Reply-To: <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
-Message-ID: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+Message-ID: <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
+ <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+ <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-255701998-1744804431=:991"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-255701998-1744804431=:991
 Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+On Wed, Apr 16, 2025 at 02:53:51PM +0300, Ilpo Järvinen wrote:
+> On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
 
-> On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
-> > Convert open coded resource size calculations to use
-> > resource_set_{range,size}() helpers.
-> >=20
-> > While at it, use SZ_* for size parameter which makes the intent of code
-> > more obvious.
->=20
-> ...
->=20
-> > +=09resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
->=20
-> Then probably
->=20
-> =09resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
->=20
-> to follow the same "While at it"?
+> > > +			resource_set_range(res, 0xC0000, SZ_128K);
+> > >  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+> > >  				     IORESOURCE_PCI_FIXED;
+> > 
+> > I'm wondering why not DEFINE_RES_MEM() in such cases?
+> 
+> I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
+> However, DEFINE_RES*() will overwrite ->name which seems something that 
+> ought to not be done here.
 
-I'll change that now since you brought it up. It did cross my mind to=20
-convert that to * SZ_1M but it seemed to go farther than I wanted with a=20
-simple conversion patch.
+Okay, I haven't checked the initial state of name field here, so then
+DEFINE_RES_MEM_NAMED()?  Or don't we have one?
 
-I've never liked the abuse of BIT*() for size related shifts though, I=20
-recall I saw somewhere a helper that was better named for size related=20
-operations but I just cannot recall its name and seem to not find that=20
-anymore :-(. But until I come across it once again, I guess I'll have to=20
-settle to BIT*().
+In any case I would rather see a one assignment for these cases than something
+hidden behind proposed conversions.
 
-> > +=09=09=09resource_set_range(res, 0xC0000, SZ_128K);
-> >  =09=09=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-> >  =09=09=09=09     IORESOURCE_PCI_FIXED;
->=20
-> I'm wondering why not DEFINE_RES_MEM() in such cases?
+> I found one other case from the same file though which is truly defines
+> a resource from scratch.
 
-I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
-However, DEFINE_RES*() will overwrite ->name which seems something that=20
-ought to not be done here.
 
-I found one other case from the same file though which is truly defines
-a resource from scratch.
+-- 
+With Best Regards,
+Andy Shevchenko
 
---=20
- i.
---8323328-255701998-1744804431=:991--
+
 
