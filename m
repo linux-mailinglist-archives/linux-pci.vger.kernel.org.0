@@ -1,79 +1,57 @@
-Return-Path: <linux-pci+bounces-26046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 382A0A90C61
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 21:32:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ABABA90D3F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 22:40:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A40C4189F707
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 19:32:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98CE45A23FC
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 20:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113AA221F25;
-	Wed, 16 Apr 2025 19:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4F2D229B3C;
+	Wed, 16 Apr 2025 20:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIPgOR5M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKd7z5T9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045B1B6D06;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD021F8937;
+	Wed, 16 Apr 2025 20:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744831916; cv=none; b=OQsjKR52oi6pvpr8WLfdz7ycNd/V9o5dHJNXKZuAOBBn13OjAwbyQ7w2TloT1RqSwdtIAvw/t11MrNju6TWFxKeW0+tMyLIqZUAVX7VPNIbWBuK1osbX0iLTdPgNhQOL6dHiFnqbBQME6/ELJDTy6nCcCOzGr2ed+mHfgMVw3vk=
+	t=1744836053; cv=none; b=bO1b1xwRD7PJkeLRx5bJG9fP27pXRvSwBIkKeOm0u6UhCtgQM8R8/zUdBx5XAaJdegYHE+gfv/v/XzRGF61+0P/JHGAoQNZqhzI/iSwnJIOgbT4es2A/ipARyYGUg93ACTs70iFRTm6Ll3Tz78tWSoeWeGe29UN+Zww5YTSKjZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744831916; c=relaxed/simple;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
+	s=arc-20240116; t=1744836053; c=relaxed/simple;
+	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=selu/w4Q4Ok/dVCqGfJUOGxN2rTAx5zNaSa3kByk2sg8N61iQBcaOX/QfWoHKAVaq0BzMSSfW2X6m2FSQdTC0cH3GI+3DarvXcemr/h8xjQ7BRHJScYa6wMFD0T/hGukxR2RwTji5jCMVNphf/Ey6cRrY0HzmV/wcZ9JOHaKb2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIPgOR5M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057FFC4CEE2;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=rUM+oJOCcEDgllGGPXp65PUN8evR8ft1R/Mras3QmJibFTqZBJxVauWki5rX6PyKOJH7EGtwwLnQ3GADLOPIQcGpSD28umBoNETirpOAfwE1g6VilRUlxDfNN67HMbBLYH90gUdDzC+E3YEE/cfbBnNVWHlwXVYCKQ71PgMArv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKd7z5T9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5B9C4CEE4;
+	Wed, 16 Apr 2025 20:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744831914;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
+	s=k20201202; t=1744836053;
+	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VIPgOR5MNLdSjfdlkkjOwUf7qmUNhO0t4OBBHheK/N7avBHoXTTT2X7PgAWUWSr6U
-	 vf6BnQNC8DMs9hIRLLzpHjG624jNYTy10DS/RSWYn9KZbyn/ivV+rMU/Zd0/BTdyZy
-	 q8XxR9s32JWMSxvMgE+Zh69OKXLDQbl49qB8slxphi+AY5vbUF47wlXp+hZxGiOUKW
-	 WIEdjXDxPt1+xNoBRrafov/YQdPTvhKjikwKTMygIT/l2oH4Wl3YbdDaZ5ZZsceDQP
-	 xkyYbxXs27Dc6CLTp+1j/V3eDxj7j+HG1tH1mOmQRPVUZFeglvnsCDlp7S0xAmJnDT
-	 KtMHgXZ/kR/aA==
-Date: Wed, 16 Apr 2025 14:31:52 -0500
+	b=eKd7z5T9E+knRBpQ3jKb/8ftx91rIF0bQBduS15ZAE2ht6hl19zLfGIL9jHC8vshl
+	 ykdizw73AakIuy3I1ly2//T08eeyRE3ODKNdIFqgSHtB8hcBfBJ4LJzlAXzQu/t7Zm
+	 SxWbJqE5V3eH2DBbGvY8tdy1KPA+cXGIi7fCUQ0pQrR4Qsloroe1ehc3TYdmQyzw9q
+	 N9vYSg1SXVhHXpRvwzpeWwPWveWbjNh0kAPClbvhKFeY/KZ3j7OEnAqbmNQSYWp/AH
+	 pkrq53hr0Xo0jqC6lng23FIZb2jtzv4zasaBJGtDpm9etx3bJvK3BIgUA6SyMXkGwn
+	 T9sqLP0GT211Q==
+Date: Wed, 16 Apr 2025 15:40:51 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <20250416193152.GA78446@bhelgaas>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <20250416204051.GA78956@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,85 +60,98 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+In-Reply-To: <20250416151926.140202-1-18255117159@163.com>
 
-On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
+On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
+> The RK3588's PCIe controller defaults to a 128-byte max payload size,
+> but its hardware capability actually supports 256 bytes. This results
+> in suboptimal performance with devices that support larger payloads.
 > 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
-> 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
-> 
->  rp1-pci.dtso <---- rp1-common.dtsi
-> 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
-> 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
-> 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
-> 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# quirks.c, pci_ids.h
-
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..4dfda527c76b 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6283,6 +6283,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0, of_pci_make_dev_node);
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index c624b7ebd118..5bbb536a2576 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>  	return IRQ_HANDLED;
+>  }
 >  
->  /*
->   * Devices known to require a longer delay before first config space access
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..b7a2c0fd589e 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2620,6 +2620,9 @@
->  #define PCI_VENDOR_ID_TEKRAM		0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
->  
-> +#define PCI_VENDOR_ID_RPI		0x1de4
-> +#define PCI_DEVICE_ID_RPI_RP1_C0	0x0001
+> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
+> +{
+> +	struct dw_pcie *pci = &rockchip->pci;
+> +	u32 dev_cap, dev_ctrl;
+> +	u16 offset;
 > +
->  #define PCI_VENDOR_ID_ALIBABA		0x1ded
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
+> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
+> +
+> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> +	dev_ctrl |= dev_cap << 5;
+> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
+> +}
+
+I can't really complain too much about this since meson does basically
+the same thing, but there are some things I don't like about this:
+
+  - I don't think it's safe to set MPS higher in all cases.  If we set
+    the Root Port MPS=256, and an Endpoint only supports MPS=128, the
+    Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
+    that case the RP may respond with a 256-byte payload the Endpoint
+    can't handle.  The generic code in pci_configure_mps() might be
+    smart enough to avoid that situation, but I'm not confident about
+    it.  Maybe I could be convinced.
+
+  - There's nothing rockchip-specific about this.
+
+  - It's very similar to meson_set_max_payload(), so it'd be nice to
+    share that code somehow.
+
+  - The commit log is specific about Max_Payload_Size Supported being
+    256 bytes, but the patch actually reads the value from Device
+    Capabilities.
+
+  - I'd like to see FIELD_PREP()/FIELD_GET() used when possible.
+    PCIE_LTSSM_STATUS_MASK is probably the only other place.
+
+These would be material for a separate patch:
+
+  - The #defines for register offsets and bits are kind of a mess,
+    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+    names, and they're not even defined together.
+
+  - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+    PCIE_RDLH_LINK_UP_CHGED, which are in
+    PCIE_CLIENT_INTR_STATUS_MISC.
+
+  - PCIE_LTSSM_ENABLE_ENHANCE is apparently in
+    PCIE_CLIENT_HOT_RESET_CTRL?  Sure wouldn't guess that from the
+    names or the order of #defines.
+
+  - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+
+>  static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+>  				      struct rockchip_pcie *rockchip)
+>  {
+> @@ -511,6 +527,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+>  	pp->ops = &rockchip_pcie_host_ops;
+>  	pp->use_linkup_irq = true;
 >  
->  #define PCI_VENDOR_ID_CXL		0x1e98
+> +	rockchip_pcie_set_max_payload(rockchip);
+> +
+>  	ret = dw_pcie_host_init(pp);
+>  	if (ret) {
+>  		dev_err(dev, "failed to initialize host\n");
+> 
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 > -- 
-> 2.35.3
+> 2.25.1
 > 
 
