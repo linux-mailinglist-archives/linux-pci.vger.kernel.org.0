@@ -1,93 +1,71 @@
-Return-Path: <linux-pci+bounces-25990-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25991-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F471A8B50C
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 11:18:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BED8DA8B655
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 12:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFED91902F21
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 09:18:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44306189778C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 10:03:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DBDA233708;
-	Wed, 16 Apr 2025 09:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F9772441B4;
+	Wed, 16 Apr 2025 10:02:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nunaxTzV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExvZvf32"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25145230BE8;
-	Wed, 16 Apr 2025 09:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A5237700;
+	Wed, 16 Apr 2025 10:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795109; cv=none; b=FGyWE2WJc/AjkDu8jKpCK/jhV7+lLRLVML17OrRpkH3trJPMcvoUuFb17CIKexjh+OeA5kIb4hl0dLKuzW7WXqdlIgxo6V+MuId36qIijl40vzmdpDLVBo4jp8ppZ32FbghYqAxvX14lt2xtESYTiWitaDszNLlgaGzfPcjlylE=
+	t=1744797775; cv=none; b=TDH7I5VBs+eGQ1KlSuJ8tA5voM/ICngyIZMhl5/IyTBk5DyTvI9qASijpv7pyOMAicVKAazL4UDkjZSM/UQjWfJPZPhu7COrwOLwklXl7tCAHx8VzcBDxs6DyKjpT1fGmHAmdd0iFaEQP9PXlSbCokks4K+nao30q38jOUkCnqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795109; c=relaxed/simple;
-	bh=XVpXGxl2fXHpOXZZcDAodwwPWK0sRmyWRilpTGEVAiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ntif+5K2pwRnckRMmyHroh5bSjjv/Ye9SNotoa4zsuuHt5H84f91p60rX1WXMJaZqPncZayOG1+AKxOrclE1c4T/8evZHhdVkLMfS3oyZD5Q1SKFqitgT0+2qamn/ecDr37R0zAYiZo2yPgRdlRs9U788ZSjc+v9TM1fYaBVkgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nunaxTzV; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D0D61FCF1;
-	Wed, 16 Apr 2025 09:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744795104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dllKgwcLha1xL/vp7a/BLD+IvTjOmLEdGFp4zUwZcgg=;
-	b=nunaxTzVBV3n6npKioC4tkVt5qyJ/0ovo+X8BcdX9YasgCi5MZmYPXEYmZQLlVcbXUapoU
-	/YW+9QKRf1K7y+ySRHWe80jMUkTndaRM8MOjvKCQyRoTQwPNs9rC5OBGm8mx+ZxtuFTS0M
-	Mh+JZq330W/CcxlMqhLY9sUb27AkokWn+pB6L4aFnGPvahVNli93kPUcEwJ9DtSixG4nMG
-	P1sEhO6BOAsiptpbuVq7KGWaNNBphmoJglgknx9T1i6XMbdUohCbAbO6ZiHQumVwZs6Zly
-	BGVahasiNILSThVKRNFpHbojxJF6fnoFTX/w8G6I6tYPNy9h7p/XJv+V6hbqyA==
-Date: Wed, 16 Apr 2025 11:18:19 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <20250416111819.4fd7b364@bootlin.com>
-In-Reply-To: <20250410084809.1829dc65@windsurf>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-16-herve.codina@bootlin.com>
-	<19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
-	<20250408162603.02d6c3a1@bootlin.com>
-	<D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
-	<c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
-	<D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
-	<b1b33000-4c10-43cd-bcf4-d24fc73902b1@lunn.ch>
-	<20250409161444.6158d388@windsurf>
-	<c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
-	<20250410084809.1829dc65@windsurf>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1744797775; c=relaxed/simple;
+	bh=+cKq8aKhcGOaMlZseIjnVl0ziwhnIryENv47tAzoNxg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BpLG34OIvUn5B5qM0xjmn7pKxbELkAH5uWqr0VcdgX4TYEune4g9t2nGd0FGXAKrIofTjPVIeb9cjVuR3NDzV78WfHEmG5CB8Wavq5zAimEj1F571hcixS3sXXl61LWO1WdqpDuxcgVtrqdle5wZM6U5Wd0sOvWe8m+p4j97zpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExvZvf32; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744797772; x=1776333772;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+cKq8aKhcGOaMlZseIjnVl0ziwhnIryENv47tAzoNxg=;
+  b=ExvZvf32+dVjk/6LNeB9Y4cQ56FI1Uw53YY2QATykGJ1L0UiMv2PUhsJ
+   wY0eeh9E4TxRtVnp7+u2uKVO33IazHE9dgIJUVRYtD7T7XjGCH36mFg9e
+   34Nbfkq0A6ElOId8nhC0Qgja/a6bXqzjnhgQmS2VDXg6CEz2kkUDKbxm6
+   SCI8aIf3cKrvNxHe2/wvLDbWu7bIIX02r9oNq+mauzGKQHdhh/pUz8oif
+   FyCKC28d9eccdyUB4Aidn3k13vJifpENzTrmSnATOmUBBCDMgzG3OiZzu
+   6CYPApYDEDepXho09xYPIGgllKfJep6jwHfXWJxOePSJHDHfwW6Ya95Xv
+   A==;
+X-CSE-ConnectionGUID: hfC2DSDNRIK9eLIep7XhrQ==
+X-CSE-MsgGUID: M7ZMF9lVT22htHuLvBquMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="49987801"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="49987801"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:02:50 -0700
+X-CSE-ConnectionGUID: ffEA1J1qSkS2k+ZErWBacg==
+X-CSE-MsgGUID: 3sxvh7DWTuK/oFTttngPIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="161449257"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:02:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Use PCI_STD_NUM_BARS instead of 6
+Date: Wed, 16 Apr 2025 13:02:39 +0300
+Message-Id: <20250416100239.6958-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,45 +74,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdehleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlhesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Thomas, Andrew,
+pci_read_bases() is given literal 6 that means PCI_STD_NUM_BARS.
+Replace the literal with the define to annotate the code better.
 
-On Thu, 10 Apr 2025 08:48:09 +0200
-Thomas Petazzoni <thomas.petazzoni@bootlin.com> wrote:
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Wed, 9 Apr 2025 17:03:45 +0200
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > So it only supports a single .dtbo. In its current form it does not
-> > scale to multiple .dtso files for multiple different boards built
-> > around the PCIe chip.
-> > 
-> > At the moment, that is not really an issue, but when the second board
-> > comes along, some refactoring will be needed.  
-> 
-> Indeed, but that's really an implementation detail. It doesn't change
-> anything to the overall approach. The only thing that would have to
-> change is how the driver gets the .dtbo. We could bundle several .dtbos
-> in the driver, we could fall back to request_firmware(), etc.
-> 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 364fa2a514f8..08971fca0819 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2058,7 +2058,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 		if (class == PCI_CLASS_BRIDGE_PCI)
+ 			goto bad;
+ 		pci_read_irq(dev);
+-		pci_read_bases(dev, 6, PCI_ROM_ADDRESS);
++		pci_read_bases(dev, PCI_STD_NUM_BARS, PCI_ROM_ADDRESS);
+ 
+ 		pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
+ 
 
-Not sure we need to split right now the existing dtso file nor rename it
-even if it is updated in the series.
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.39.5
 
-This could be done later when an other user of the LAN996x PCI chip is
-there.
-
-Doing something right now will probably need other modification when this
-potential other user comes in. Indeed, depending on specificities of this
-future user, what is done now could not match the need of this future user.
-
-Any opinion?
-
-Best regards,
-Hervé
 
