@@ -1,122 +1,111 @@
-Return-Path: <linux-pci+bounces-26009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56ACAA90792
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 17:20:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64A7CA9078C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 17:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D299A5A0B83
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 15:20:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0F563BD802
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 15:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5509D207DE5;
-	Wed, 16 Apr 2025 15:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 869DD2080F1;
+	Wed, 16 Apr 2025 15:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VNOTY+dy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9BqaHyO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76220189BB5;
-	Wed, 16 Apr 2025 15:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DE5207DE5;
+	Wed, 16 Apr 2025 15:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744816833; cv=none; b=g64wOLGsfyp/POAr8m2BW36a0pjQdOqEd/cBABUSttwCZ/AICE/Ob5iEQjoQ447UfpJYJldsYCj0y1keV3rJqNE7sXJjwF4IkDLeRpyom6zK9tR5sy3zHiFe1uAMwBtjVfLFz02ceBmNHK9WcHRvzhCt/2Y6b/IXCDgbacJXWE0=
+	t=1744816813; cv=none; b=j90SZMAOjgJ5hHAEr7BV3yGTOviHdQBhaqCjc1gKR6uPMVwjkk7uQ76++kkONu/To9KggdqSENbu6F9DcesrQ8E76zliSn8LNASa4EKOCDqof4DwBRzKt7b9ZSkcxLjsKVF7jnbnxDN6RJhLNlrkNjbYYdtCjgcRAZPS/WgXJlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744816833; c=relaxed/simple;
-	bh=rmHHaaug2DDbVdoWrpVDh9XFDcdhs6q/pEUn8PkZvMU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pZPnuvvhGXNRRQK7Pzf9zFifZLXyXQ3ZVWE9bEeHA/I6oLewoPdXy28DExs08cUG/GLECN/141nQBMpjdvs92GAOCXowG5KKriwq51llIOF9Le1EGjZciOG3Zkw2y/jPCMih8Zu4XGQtuLvK60FiY9WyZB+h7H9aFEcKCDnoIFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VNOTY+dy; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=n/CrH
-	Wu7/N0JbLzLhfGyYLZ28eCk9w7x/JfjK48Yd84=; b=VNOTY+dyHQg0QwO0e8psO
-	1EQh2MMGJQGnp3gE7RZOKgtSb5zfsTKfHHKKCNbUzvitXSSl3J0y5cC8cALMA47X
-	7rtM7Qw4JcH2MELzQEd1xPDKl+z/3X3mmD9+ZB+q/60izYZ7rlG28v4v628nHscN
-	aiAFBgX+VVteVApJxz5dW8=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDHrr6Ayv9nGGzuAQ--.32225S2;
-	Wed, 16 Apr 2025 23:19:29 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Date: Wed, 16 Apr 2025 23:19:26 +0800
-Message-Id: <20250416151926.140202-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744816813; c=relaxed/simple;
+	bh=kCVbfLAZNndH71VOtNN3t9SCRn2ApxZIB93dUmK6lcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iw95HSxgUk+2IreBPdXiRmSc7HK1a1Py+SHwIBgJZmT1NyNfsFETxO7gbd7oQpXUADo9tl/VwRbOs0UiovMMRDiqdEB2AjWX8YNwFSRpEHAHL6aEiAdWRxw4uzcc9v5lhFe911La3VBCXHmlccT0ozpd0jF4p6RUzqyG/IPLCwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9BqaHyO; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb1eso1539468a12.0;
+        Wed, 16 Apr 2025 08:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744816810; x=1745421610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9sWTeW5JPNog8u98+gGPIwRpNW08sbRO3hBcyyJAqaM=;
+        b=k9BqaHyOTTlYgsru79+pOu6ck4QpqQHXfWjmEZRkKKNGfvtJNTq2Y1Svrqc/hQQo0T
+         +d2VMEd2n0HmltUaLs1Rf85qAZSwbSuLSHXFxiCneUe56UjklrerfoYqG8FE2mJNVxwb
+         9NgZR0kYAX9f24Wlivo+8ATpU8v7z7d78xOnQF1FoON25y8CSMIuTi0kjN7Z4WdOZ2EP
+         4ssmql9ryTNnRUecYcz9NaWl4mzonFaD9VZIVGvpzL/14bMKmb2bWIzLy03ysKMkn1B+
+         T2GlBBUB86NGJKVjpCXBxPBR6QWG/mwktTEcM3bjM7ed+uNDXzPjghUWk51U7OIE4Y1L
+         ydMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744816810; x=1745421610;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9sWTeW5JPNog8u98+gGPIwRpNW08sbRO3hBcyyJAqaM=;
+        b=YGeaja/DeCHAXbNWUKhXPQzignBA2T4uRUdV/55y2Z7iJrwvsf7ORLFHVEYk7ucqg0
+         0MIgbNohXkpzYmt8/fjQxqI9OGf6cyLNyOnRqBwRvGPvrjk6CCR86PM/uLQ/VYnjcbyF
+         Xi6gC9F4ORVMe7rmZI4VsT5noeDe9JV6GwuMT5qIsYKO4l5KmPulmPl472n57lsQIYta
+         nFeBdAQUeZh4odpJ0yet+rG4ObmTtVEJQ38pbFOVqU4YBiXg6OAP8WkUYCQp0BNiHizo
+         Tvbe8/+1f3U1gZX58BdgBy2DCbHtqFQNaMJFYnfftSWh6OC34PdnduqFUQhH4sJPrm6T
+         YSkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUF2Z0GvZFfHnD0J1oDMhLTGr1j5v2FChaFIMeMfRBFGzTPviEkbwzqhebyXa2S8MVBU2f9gwi64ypTAZM=@vger.kernel.org, AJvYcCWexeirObRRPWBH14IveM3Tc89b5hKNaNydDlnEyx7OGBFgXGrqYfebvLy+Cd+SdfZvstZP47ZCfW3B@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrvZudaFUZ7MxEsB9KGqbnuI3qU71E/t8QaKNkgI9ZF9BurmqH
+	DS8wlwACTIa0H9R6aqVkpFrojBF8q5sAHaQNfqHjagLdWR/fIb0v
+X-Gm-Gg: ASbGncsmYL4W0aCs3+Hd6R2UDHNLo48sh7AE3n6qEzpclXQnSXeK7gnsgHKrdvMWh1J
+	moz+gLLsYYL9HP/unXtdp8w4EkSMqtd5X6LsEa8sSjBFPez/cLtYjFCAp9KnDFA2joEGiiUYoVR
+	aYaI1k+E1xRljTF+L0ViHHLuKmIyvwDJypcpXiUGUVjdstCXt8iD+7uy2bedwnESy5G8J2JHtBe
+	2s5xzWqdKycrNFnYGEPudC1V6P4rnvY/+lPT4x+/UEgBlQ4FNgXVUfl/cwTaWVowci3pIY0OW10
+	rbXI1RmWXwz+N/tLEy8U9k5s3TZvnq5nOaAgGgf0c6Yk7dv9BZaxqg==
+X-Google-Smtp-Source: AGHT+IFxR6UYUgOKHVLVg6n4w6RHWVoUkZFCxPoGbNXih5IwBs66f7bVUwUF0n9FeKTWUdtV+a8y9g==
+X-Received: by 2002:a05:6402:5cb:b0:5f4:9015:a6d0 with SMTP id 4fb4d7f45d1cf-5f4b87537cemr2061930a12.12.1744816809732;
+        Wed, 16 Apr 2025 08:20:09 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f507687sm8723710a12.56.2025.04.16.08.20.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 08:20:09 -0700 (PDT)
+Message-ID: <45eacf4b-be34-47de-93bf-69601e394aef@gmail.com>
+Date: Wed, 16 Apr 2025 17:20:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDHrr6Ayv9nGGzuAQ--.32225S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFWrZFWfWFy7CrWxtryDAwb_yoW8Cr4xpa
-	yDAFW5Ary5GF4agFnrC3Zxur4rt3Zayay7Jws3Kw1I9Fy2yryDtFy3urnxta1fJF40kFy5
-	Cr45ta40kr43Xr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pELvKUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhAxo2f-yS0qIAAAsO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] rust: list: use consistent self parameter name
+To: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
+ <20250409-list-no-offset-v2-3-0bab7e3c9fd8@gmail.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250409-list-no-offset-v2-3-0bab7e3c9fd8@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The RK3588's PCIe controller defaults to a 128-byte max payload size,
-but its hardware capability actually supports 256 bytes. This results
-in suboptimal performance with devices that support larger payloads.
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c624b7ebd118..5bbb536a2576 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
-+{
-+	struct dw_pcie *pci = &rockchip->pci;
-+	u32 dev_cap, dev_ctrl;
-+	u16 offset;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
-+	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
-+
-+	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-+	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
-+	dev_ctrl |= dev_cap << 5;
-+	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
-+}
-+
- static int rockchip_pcie_configure_rc(struct platform_device *pdev,
- 				      struct rockchip_pcie *rockchip)
- {
-@@ -511,6 +527,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
- 	pp->ops = &rockchip_pcie_host_ops;
- 	pp->use_linkup_irq = true;
- 
-+	rockchip_pcie_set_max_payload(rockchip);
-+
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(dev, "failed to initialize host\n");
-
-base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
--- 
-2.25.1
-
+On 09.04.25 4:51 PM, Tamir Duberstein wrote:
+> Refer to the self parameter of `impl_list_item!` by the same name used
+> in `impl_has_list_links{,_self_ptr}!`.
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
