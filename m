@@ -1,240 +1,166 @@
-Return-Path: <linux-pci+bounces-26016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98445A908C6
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 18:26:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0743DA908F2
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 18:29:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B7963A836C
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 16:26:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6E397AC58E
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 16:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F2F3211A24;
-	Wed, 16 Apr 2025 16:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B0F212B34;
+	Wed, 16 Apr 2025 16:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Zbk9V2mz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1IUL+59"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FC5211704
-	for <linux-pci@vger.kernel.org>; Wed, 16 Apr 2025 16:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8754211A3D;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820807; cv=none; b=LB0pxo2paJwDR0KGYybV1JycgFhTxQmO0HbEoxF5nSYgeVET3TiH/e9IajNUoXEylero4QtlB2FJuVM1d9bAMEQuDEptl+QdWloSqbFNcOnqroJXeWQRO27JmY0g18VOI1+mtRVcqEXf6OhiUHvT4zWOVVmtY5gASCWOE9kFJjg=
+	t=1744820955; cv=none; b=Nkfr7PzhZDyANkzEL2p9vbPxVpKMFsv11GAjiPe7liOc60t6JGx4jdSF+xXxWC8ix7eJMfJtDTEboi5/HwALjzNp0nPDuSzMYgtCc/pF4ZIG7ifcWHOz93BDZ/D1l6ybq0r1ueZcObbwgWMYN1T3Jhl0dbWoYZ9HuNtNlP7n96A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820807; c=relaxed/simple;
-	bh=IgVUPVmeENy0Uzuoi0wDjp+mUTJq74C5LbxA0jQcmRU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WY1FP9uvMPOmoas4huT1KZQm83ysuWxJzMrN/fqUleb/QJgawau7LOikuqE8tOS14zS9YUEN+6zYuzJ1NzeMkR7bodJ3WWe+8S2riq2TUK9GwnRKcTdhp6Mm5kNDD5NMOqHUcaWTfBsJJEbMUnKWQNTR9e7gSgkRHYrYjwp4pds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Zbk9V2mz; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso9064293a12.3
-        for <linux-pci@vger.kernel.org>; Wed, 16 Apr 2025 09:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744820802; x=1745425602; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
-        b=Zbk9V2mzhvYatYTUOlXlO837M+Gz8+Hde2DMQCNpqHmfAXowQx43KtI8Fcn54XHz5A
-         4S04TNsffSUSK3qDocq8M8dd4EuM2JJlsWxvnG5UTulUD7qGwNHD4HGSMo5bgvZdQuiZ
-         o5EdZYA+J66smISdM4BYTjwZESdVpwxHfOiQfC4DnKidSfmf1jYZY6DIJ5b8fc37pDPe
-         nkq1GrBQ+HYunIBXFGhxiOJTyB0d9YNCoeeLvCpKBoVJ27fTdyCdi/yUZJP+MAqeG6Yx
-         BM5ntIRGHA0WQHTBkpoOxJZ2g8wOW29GQpHZGeM+E1z+N6D4MlFFlKdQBaI9XdxwDlmW
-         /iMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744820802; x=1745425602;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
-        b=bf6+Ot7ONL0OGz0drgqsbAbUUY9xqxEfPQu7FBa+WyuwzpPREZxYk0Plua4pJwDZky
-         rVxE531ND17j4NytcRmEpjjw0tOFVjrwuiMVJ69/d2YIs0bwgy1Gib8Liy3KhCvg49q2
-         ySc9EcfxtZfrmERXAbEMzuo/4J/ror+oKmdFaO34yRgFHr74Ir76llpILSpd6j+SpdYn
-         r+PGFKYtryagGy5h+2NgXr7uqXdFvrEyHRhcPEzsxaJCzJ7wwSDR8FShBUubzKpQGzsJ
-         caBcz05tYxiKiiEWwRhdgfkzjGZfSd+JZHwP5pElaCwXVaDe39bmSDO4dAgMck2ohvUF
-         kSVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuxJTeItCp9R5+xIt/8YdrR51QVrKX6zXe689Hl2aHI+yh2WwrYsH7FxG4t6c/3bN4+IRMlfMmK78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXF/ZFS7ZOId9aFYytjVGnKyRkOBx1kSMLCiRR91x/9SHgCt9P
-	rHcycMevUh/jQcijR8IXxbwUXZgUKVjQMVggwspaT2N5J/tNlfQMUOIfD2DsQrM=
-X-Gm-Gg: ASbGncu5ZDH/urHwkFmRtpTo7rGsoVEsBhOLN3Cj/WjwZP96zL8IwvVxvf239zLpvo8
-	B8VXQZNH97kg1u/cx25JG2R/9tCeFmrtC4RlRI+G9DSxb5kc1SjdWlOHHAmft9lNjwc7CRJEDnb
-	Hjc55ZF0CmMPUAvGmkk+boffepBTzcQNGoI6YHaM0zkStrFwN8agVY2Sn9TA8hEwdgzA9kaDdOn
-	joW0xGMAN/StPt0tyhLynX3z9lc8tqbIBjp4WE3Vlc/JudrYdilX1PWUcDlvyy6NA8Xjr7nb29T
-	/slKCq/oqFuerVIPe6/Vu1eUXSsojdM/CAgtIvWigDR3dXJcWEU2XcJzyedozmILMfE/38V44pw
-	T5i/KUg==
-X-Google-Smtp-Source: AGHT+IHS1EQoXBYosStv1ftcoY5+W8c3n7WjQIALsG6rcu4q9LYmbRt8Y9GVkdutMbrKBeFufo1cQw==
-X-Received: by 2002:a17:907:2d9e:b0:aca:c441:e861 with SMTP id a640c23a62f3a-acb42890585mr270946866b.7.1744820802220;
-        Wed, 16 Apr 2025 09:26:42 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ccd75sm155050366b.142.2025.04.16.09.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 09:26:41 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 16 Apr 2025 18:28:05 +0200
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <Z__alTyVJOwu_1gR@apocalypse>
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
- <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
+	s=arc-20240116; t=1744820955; c=relaxed/simple;
+	bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XCXxP0wPqibYjbzVi1m6RG51gF3DaDAnVse/sOK53jOqkNMFE5EedeMEMJKKDAEL8dGlKI5mrwspakovslpJzNvm03M3+fKki97ROjqM4VZYXrM0SkWJATm4H0YS0zOBKwyZb4pXCNBat8kbtMh9jhiiT/wNP5oFzCUCiKXWi4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1IUL+59; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2650BC4CEE2;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744820955;
+	bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=B1IUL+59kGeD7mqga7bCyxPIxG2tp3cXVrKCvl5dVtHYI0OhB5uCNAOGJiOc0bp+l
+	 HsYGTqjEsLaHjBoX4CofSq+N9qa3eKcmpemd67bkz6OaFrkFLEkyLMD+1OE8YbB0lG
+	 KLv12g/nY3FdONOL1EgWm3Xw4t8o0vKBbJuJSzLNnFufjeaKx3lfX1dZDk6RPSJOng
+	 oAQCbEQd1tTf6NwWRPx5fSaohAq4P5rcqnD3z+EgBYIuR7vOFa6VklFzFzPOJGwxpH
+	 zu86cEMnCqpkacuKS0dZhcYisejR0kc+z2kDbH66j8nILxYuGVpK2rSjNJJQn4MHUN
+	 5SfMBNL6P3Jfg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1ECC369BA;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH v2 0/4] PCI: Add support for resetting the slots in a
+ platform specific way
+Date: Wed, 16 Apr 2025 21:59:02 +0530
+Message-Id: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM/a/2cC/3WNwQqDMBBEf0X23C1Jqmh66n8UD9FudEES2UhoE
+ f+9qfce3zDzZodEwpTgXu0glDlxDAXMpYJxdmEi5FdhMMo0qlY1riMTCiXaMC1xw/amBu9a7Uo
+ DymoV8vw+jc++8Mxpi/I5D7L+pf9dWaNC29nGWN0N3qrHwsFJvEaZoD+O4wsJP+HXrwAAAA==
+X-Change-ID: 20250404-pcie-reset-slot-730bfa71a202
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>
+Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3553;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBn/9rVLvxXFkai8cVNkg23+3JBYRdthOY/lxQwa
+ fbOegB4XfmJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ//a1QAKCRBVnxHm/pHO
+ 9SGRB/40rRHb9fGiMK5kD1aBd/MewJxI5StivHVa5Erzx+HMuFj97jziyHXdpUsz4ffhJ4XQFoQ
+ EMKPxKj+ocduRoORbAYIa33SUHBLn9X5/XInHvLBEw/E47p6YBkQDFCSXZOAgZ+9FX0D0Te5tNb
+ 2CDt7KVi+T2IKCwkbBX+pLkKJfs0hbfGBijN3F6/qNXG/stthtJKfzrFg9VYRmfOjaLGXksNq1d
+ OiiXevAEEKFNC81mjU+Y6fQGpvjisAiglcBeql266ba4ZFT+yV17zxaxnd1oV7XdMRq/Nmthza6
+ b/hxtehyr4BdSL0Vhz0u0SENUH1/6Tv88cWuux5Xhjrb+IJ7
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-Hi Stefan,
+Hi,
 
-On 14:09 Mon 14 Apr     , Stefan Wahren wrote:
-> Hi Andrea,
-> 
-> Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > ---
-> >   MAINTAINERS           |    5 +
-> >   drivers/clk/Kconfig   |    9 +
-> >   drivers/clk/Makefile  |    1 +
-> >   drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
-> >   4 files changed, 1527 insertions(+)
-> >   create mode 100644 drivers/clk/clk-rp1.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 896a307fa065..75263700370d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -19748,6 +19748,11 @@ S:	Maintained
-> >   F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
-> >   F:	drivers/media/platform/raspberrypi/rp1-cfe/
-> > 
-> > +RASPBERRY PI RP1 PCI DRIVER
-> > +M:	Andrea della Porta <andrea.porta@suse.com>
-> > +S:	Maintained
-> > +F:	drivers/clk/clk-rp1.c
-> > +
-> >   RC-CORE / LIRC FRAMEWORK
-> >   M:	Sean Young <sean@mess.org>
-> >   L:	linux-media@vger.kernel.org
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 713573b6c86c..cff90de71409 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -88,6 +88,15 @@ config COMMON_CLK_RK808
-> >   	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-> >   	  Clkout1 is always on, Clkout2 can off by control register.
-> > 
-> > +config COMMON_CLK_RP1
-> > +	tristate "Raspberry Pi RP1-based clock support"
-> > +	depends on MISC_RP1 || COMPILE_TEST
-> > +	default MISC_RP1
-> > +	help
-> > +	  Enable common clock framework support for Raspberry Pi RP1.
-> > +	  This multi-function device has 3 main PLLs and several clock
-> > +	  generators to drive the internal sub-peripherals.
-> > +
-> >   config COMMON_CLK_HI655X
-> >   	tristate "Clock driver for Hi655x" if EXPERT
-> >   	depends on (MFD_HI655X_PMIC || COMPILE_TEST)
-> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> > index bf4bd45adc3a..ff3993ed7e09 100644
-> > --- a/drivers/clk/Makefile
-> > +++ b/drivers/clk/Makefile
-> > @@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
-> >   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
-> >   obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
-> >   obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-> > +obj-$(CONFIG_COMMON_CLK_RP1)            += clk-rp1.o
-> >   obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
-> >   obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
-> >   obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
-> > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-> > new file mode 100644
-> > index 000000000000..72c74e344c1d
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-rp1.c
-> > @@ -0,0 +1,1512 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> ...
-> > +
-> > +static int rp1_pll_divider_set_rate(struct clk_hw *hw,
-> > +				    unsigned long rate,
-> > +				    unsigned long parent_rate)
-> > +{
-> > +	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-> > +	struct rp1_clockman *clockman = divider->clockman;
-> > +	const struct rp1_pll_data *data = divider->data;
-> > +	u32 div, sec;
-> > +
-> > +	div = DIV_ROUND_UP_ULL(parent_rate, rate);
-> > +	div = clamp(div, 8u, 19u);
-> > +
-> > +	spin_lock(&clockman->regs_lock);
-> > +	sec = clockman_read(clockman, data->ctrl_reg);
-> > +	sec &= ~PLL_SEC_DIV_MASK;
-> > +	sec |= FIELD_PREP(PLL_SEC_DIV_MASK, div);
-> > +
-> > +	/* Must keep the divider in reset to change the value. */
-> > +	sec |= PLL_SEC_RST;
-> > +	clockman_write(clockman, data->ctrl_reg, sec);
-> > +
-> > +	/* TODO: must sleep 10 pll vco cycles */
-> Is it possible to implement this with some kind of xsleep or xdelay?
+Currently, in the event of AER/DPC, PCI core will try to reset the slot and its
+subordinate devices by invoking bridge control reset and FLR. But in some
+cases like AER Fatal error, it might be necessary to reset the slots using the
+PCI host bridge drivers in a platform specific way (as indicated by the TODO in
+the pcie_do_recovery() function in drivers/pci/pcie/err.c). Otherwise, the PCI
+link won't be recovered successfully.
 
-I guess so... unless anyone knows a better method such as checking
-for some undocumented register flag which reveals when the clock is stable
-so it can be enabled (Phil, Dave, please feel free to step in with advice
-if you have any), I think this line could solve the issue:
+So this series adds a new callback 'pci_host_bridge::reset_slot' for the host
+bridge drivers to reset the slot when a fatal error happens.
 
-ndelay (10 * div * NSEC_PER_SEC / parent_rate);
+Also, this series allows the host bridge drivers to handle PCI link down event
+by resetting the slots and recovering the bus. This is accomplished by the
+help of a new API 'pci_host_handle_link_down()'. Host bridge drivers are
+expected to call this API (preferrably from a threaded IRQ handler) when a link
+down event is detected. The API will reuse the pcie_do_recovery() function to
+recover the link if AER support is enabled, otherwise it will directly call the
+reset_slot() callback of the host bridge driver (if exists).
 
-Many thanks,
-Andrea
+For reference, I've modified the pcie-qcom driver to call
+pci_host_handle_link_down() after receiving LINK_DOWN global_irq event and
+populated the 'pci_host_bridge::reset_slot()' callback to reset the controller
+(there by slots). Since the Qcom PCIe controllers support only a single root
+port (slot) per controller instance, reset_slot() callback is going to be
+invoked only once. For multi root port controllers, this callback is supposed to
+identify the slots using the supplied 'pci_dev' pointer and reset them.
 
-> > +	sec &= ~PLL_SEC_RST;
-> > +	clockman_write(clockman, data->ctrl_reg, sec);
-> > +	spin_unlock(&clockman->regs_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > 
+NOTE
+====
+
+This series is a reworked version of the earlier series [1] that I submitted for
+handling PCI link down event. In this series, I've made use of the AER helpers
+to recover the link as it allows notifying the device drivers and also
+allows saving/restoring the config space.
+
+Testing
+=======
+
+This series is tested on Qcom RB5 and SA8775p Ride boards by triggering the link
+down event manually by writing to LTSSM register. For the error recovery to
+succeed (if AER is enabled), all the drivers in the bridge hierarchy should have
+the 'err_handlers' populated. Otherwise, the link recovery will fail.
+
+[1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v2:
+- Moved calling reset_slot() callback from pcie_do_recovery() to pcibios_reset_secondary_bus()
+- Link to v1: https://lore.kernel.org/r/20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org
+
+---
+Manivannan Sadhasivam (4):
+      PCI/ERR: Remove misleading TODO regarding kernel panic
+      PCI/ERR: Add support for resetting the slots in a platform specific way
+      PCI: Add link down handling for host bridges
+      PCI: qcom: Add support for resetting the slot due to link down event
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 89 +++++++++++++++++++++++++++++++++-
+ drivers/pci/pci.c                      | 12 +++++
+ drivers/pci/pci.h                      | 21 ++++++++
+ drivers/pci/pcie/err.c                 | 33 ++++++++++---
+ drivers/pci/probe.c                    |  7 +++
+ include/linux/pci.h                    |  2 +
+ 6 files changed, 156 insertions(+), 8 deletions(-)
+---
+base-commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
+change-id: 20250404-pcie-reset-slot-730bfa71a202
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+
 
