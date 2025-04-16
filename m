@@ -1,198 +1,119 @@
-Return-Path: <linux-pci+bounces-26001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2794A9068C
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 16:34:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DC48A906A2
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 16:38:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC46E3BA705
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 14:28:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A601318933F4
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 14:38:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2595E1C4A10;
-	Wed, 16 Apr 2025 14:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHJL29tL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C821B87E9;
+	Wed, 16 Apr 2025 14:38:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018041AAA1C
-	for <linux-pci@vger.kernel.org>; Wed, 16 Apr 2025 14:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6913010C;
+	Wed, 16 Apr 2025 14:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813711; cv=none; b=OB7x+mAsrbHpbGj2EXUMZUTQNME0EMVgx5s2HTQE3E8sVkgwG3FldgxYcnYUH+Ez/z8eRzEnQp1361sBNLSE+ABG6dxQTRUUZqFA0g2TgeRElc/THdk67jZQ05HNYPPnNeMPS7A/7U4R8xdlWdkVBqef+lBysxucquSTDT7qxGo=
+	t=1744814293; cv=none; b=oCknJtX1dPH5a/Tpg0/okE6gaY71g+FfN11eTwsInGVmqZ2onHDLgpjsODJOCwCoHGAN4yFX0TP9+TAlwLcpE53KjO0t9+w40B25WHTChj+QUEf/DprggD1gavXgiuN/cuQh69bWnhMP/vCfoT8w6iVAH73RYm8ryGWZx9GRXtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813711; c=relaxed/simple;
-	bh=ddyj+0QoVnWwPTSXOB25OsEt0lLqybWfpDsgS0PnYUc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a/XxLmdYT0JD04cehJkP7I3eJmSqbeGXr200W5qY0GDMwTqjw4CGSDRraIpkBP9nN27EQtMxk8hKIjDf9uv+t3c9CuDqis7MKuKHvsZFXB/PUmv5Yzqb3p2tNv99W4zRohptVzAiP/ve/omMO735sOzXe2GcZWPlMMjNIkBUA+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHJL29tL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC619C4CEEC;
-	Wed, 16 Apr 2025 14:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744813710;
-	bh=ddyj+0QoVnWwPTSXOB25OsEt0lLqybWfpDsgS0PnYUc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rHJL29tL3ffBeTCMdZu13yQfJGBwKq0kBbDxKO0zwYreqJUIDWJ7ntvuXZV2rqHt3
-	 yVZoS8Xvll6dt9zmYz6FJ11iR9xQAPSybqHTlObNCGOZu02bJ4oEsQj4D0po5TWAAN
-	 Ze3wuVUEgLqYrJ1j1PVAYj3l/h+VGpZ3kWZdI7ii7d0GoH6B4rsN0eUMPV20QMMiNX
-	 9pPK+nruFbmq3JwSIRGrgLI2AiZlqgijHtpoFxnkjx9fB1EcBqmzR6QdofyLFU+Yv6
-	 M9mwEMAaBsp8ryELEZTGVHGgkqdOoauS4XpfV5/tTwocPowV0cXxOOLzKlxB1lNlG0
-	 M4d1Dd27WA9IA==
-From: Niklas Cassel <cassel@kernel.org>
-To: bhelgaas@google.com,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	linux-pci@vger.kernel.org,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH RESEND] misc: pci_endpoint_test: Defer IRQ allocation until ioctl(PCITEST_SET_IRQTYPE)
-Date: Wed, 16 Apr 2025 16:28:26 +0200
-Message-ID: <20250416142825.336554-2-cassel@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744814293; c=relaxed/simple;
+	bh=doVRRvVe6WEmfRp+vwpcnTHqA9pAD2XGe1+hyb7lzFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMCPXb/+sZjiIwq88AxVGG0wMzCpo+IMJQ/nerwrc7uIep2MUiH3OLnnZ0diGj7L5nH4trFF6GjuAoWbVE4TFfNjsgmdbQuYPQJksmHZXe6HZdcA0I+YH+OdJ0orlUQMJ+JOwdGT3I+unSEr1QUTkWnh+6Rt6w69MvkwLrZ/3+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E372F2C06039;
+	Wed, 16 Apr 2025 16:38:00 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D4BF0173A2F; Wed, 16 Apr 2025 16:38:01 +0200 (CEST)
+Date: Wed, 16 Apr 2025 16:38:01 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	dingwei@marvell.com, cassel@kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <Z__AyQeZmXiNwT7c@wunner.de>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
+ <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4769; i=cassel@kernel.org; h=from:subject; bh=ddyj+0QoVnWwPTSXOB25OsEt0lLqybWfpDsgS0PnYUc=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNL/7+ssTPY7vm/3ZGmnRSFl/qeyFaNCLFQeBTTulNi92 +fhtbv2HaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZiIZwjD/5zF2tdN/Jasex9T rpHf/ckpx6OiROrlj3TXswrdZrmavxkZVkueYLlX+rUnPiXs2VX+S3dYNKZrqViZVbH0WRlMFqn kAQA=
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
 
-Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
-and 'no_msi'") changed so that the default IRQ vector requested by
-pci_endpoint_test_probe() was no longer the module param 'irq_type',
-but instead test->irq_type. test->irq_type is by default
-IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE)).
+On Tue, Apr 15, 2025 at 07:03:17PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Apr 04, 2025 at 10:46:27AM +0200, Lukas Wunner wrote:
+> > On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > When the PCI error handling requires resetting the slot, reset it
+> > > using the host bridge specific 'reset_slot' callback if available
+> > > before calling the 'slot_reset' callback of the PCI drivers.
+> > > 
+> > > The 'reset_slot' callback is responsible for resetting the given slot
+> > > referenced by the 'pci_dev' pointer in a platform specific way and
+> > > bring it back to the working state if possible. If any error occurs
+> > > during the slot reset operation, relevant errno should be returned.
+> > 
+> > This feels like something that should be plumbed into
+> > pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
+> 
+> I did consider that, but didn't go for it since there was no platform
+> reset code present in that function. But I will try to use it as I
+> don't have a strong preference to do reset slot in pcie_do_recovery().
 
-However, the commit also changed so that after initializing test->irq_type
-to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type, if
-the PCI device and vendor ID provides driver_data.
+The only platform overriding pcibios_reset_secondary_bus() is powerpc,
+and it only does that on PowerNV.
 
-This causes a regression for PCI device and vendor IDs that do not provide
-driver_data, and the driver now fails to probe on such platforms.
+I think you could continue to stick with the approach of adding a
+->reset_slot() callback to struct pci_host_bridge, but it would
+be good if at the same time you could convert PowerNV to use the
+newly introduced callback as well.  And then remove the way to
+override the reset procedure via pcibios_reset_secondary_bus().
 
-Considering that the pci endpoint selftests and the old pcitest.sh always
-call ioctl(PCITEST_SET_IRQTYPE) before performing any test that requires
-IRQs, simply remove the allocation of IRQs in pci_endpoint_test_probe(),
-and defer it until ioctl(PCITEST_SET_IRQTYPE) has been called.
+All pci_host_bridge's which do not define a ->reset_slot() could be
+assigned a default callback which just calls pci_reset_secondary_bus().
 
-A positive side effect of this is that even if the endpoint controller has
-issues with IRQs, the user can do still do all the tests/ioctls() that do
-not require working IRQs, e.g. PCITEST_BAR and PCITEST_BARS.
+Alternatively, pcibios_reset_secondary_bus() could be made to invoke the
+pci_host_bridge's ->reset_slot() callback if it's not NULL, else
+pci_reset_secondary_bus().  And in that case, the __weak attribute
+could be removed as well as the powerpc-specific version of
+pcibios_reset_secondary_bus().
 
-This also means that we can remove the now unused irq_type from
-driver_data. The irq_type will always be the one configured by the user
-using ioctl(PCITEST_SET_IRQTYPE). (A user that does not know, or care
-which irq_type that is used, can use PCITEST_IRQ_TYPE_AUTO. This has
-superseded the need for a default irq_type in driver_data.)
+I guess what I'm trying to say is, you don't *have* to plumb this
+into pcibios_reset_secondary_bus().  In fact, having a host bridge
+specific callback could be useful if the SoC contains several
+host bridges which require different callbacks to perform a reset.
 
-Fixes: a402006d48a9c ("misc: pci_endpoint_test: Remove global 'irq_type' and 'no_msi'")
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-and-tested-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/misc/pci_endpoint_test.c | 21 +--------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+I just want to make sure that the code remains maintainable,
+i.e. we don't have two separate ways to override how a bus reset
+is performed.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index d294850a35a1..c4e5e2c977be 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -122,7 +122,6 @@ struct pci_endpoint_test {
- struct pci_endpoint_test_data {
- 	enum pci_barno test_reg_bar;
- 	size_t alignment;
--	int irq_type;
- };
- 
- static inline u32 pci_endpoint_test_readl(struct pci_endpoint_test *test,
-@@ -948,7 +947,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 		test_reg_bar = data->test_reg_bar;
- 		test->test_reg_bar = test_reg_bar;
- 		test->alignment = data->alignment;
--		test->irq_type = data->irq_type;
- 	}
- 
- 	init_completion(&test->irq_raised);
-@@ -970,10 +968,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 
- 	pci_set_master(pdev);
- 
--	ret = pci_endpoint_test_alloc_irq_vectors(test, test->irq_type);
--	if (ret)
--		goto err_disable_irq;
--
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		if (pci_resource_flags(pdev, bar) & IORESOURCE_MEM) {
- 			base = pci_ioremap_bar(pdev, bar);
-@@ -1009,10 +1003,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 		goto err_ida_remove;
- 	}
- 
--	ret = pci_endpoint_test_request_irq(test);
--	if (ret)
--		goto err_kfree_test_name;
--
- 	pci_endpoint_test_get_capabilities(test);
- 
- 	misc_device = &test->miscdev;
-@@ -1020,7 +1010,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	misc_device->name = kstrdup(name, GFP_KERNEL);
- 	if (!misc_device->name) {
- 		ret = -ENOMEM;
--		goto err_release_irq;
-+		goto err_kfree_test_name;
- 	}
- 	misc_device->parent = &pdev->dev;
- 	misc_device->fops = &pci_endpoint_test_fops;
-@@ -1036,9 +1026,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- err_kfree_name:
- 	kfree(misc_device->name);
- 
--err_release_irq:
--	pci_endpoint_test_release_irq(test);
--
- err_kfree_test_name:
- 	kfree(test->name);
- 
-@@ -1051,8 +1038,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 			pci_iounmap(pdev, test->bar[bar]);
- 	}
- 
--err_disable_irq:
--	pci_endpoint_test_free_irq_vectors(test);
- 	pci_release_regions(pdev);
- 
- err_disable_pdev:
-@@ -1092,23 +1077,19 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
- static const struct pci_endpoint_test_data default_data = {
- 	.test_reg_bar = BAR_0,
- 	.alignment = SZ_4K,
--	.irq_type = PCITEST_IRQ_TYPE_MSI,
- };
- 
- static const struct pci_endpoint_test_data am654_data = {
- 	.test_reg_bar = BAR_2,
- 	.alignment = SZ_64K,
--	.irq_type = PCITEST_IRQ_TYPE_MSI,
- };
- 
- static const struct pci_endpoint_test_data j721e_data = {
- 	.alignment = 256,
--	.irq_type = PCITEST_IRQ_TYPE_MSI,
- };
- 
- static const struct pci_endpoint_test_data rk3588_data = {
- 	.alignment = SZ_64K,
--	.irq_type = PCITEST_IRQ_TYPE_MSI,
- };
- 
- /*
--- 
-2.49.0
+Thanks,
 
+Lukas
 
