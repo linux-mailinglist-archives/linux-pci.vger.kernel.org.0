@@ -1,240 +1,114 @@
-Return-Path: <linux-pci+bounces-26074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1759DA91650
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 10:17:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A946A9169A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 10:40:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 261B917E7DB
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 08:17:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C2295A0A5B
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 08:39:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21642192E3;
-	Thu, 17 Apr 2025 08:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F9B2253FD;
+	Thu, 17 Apr 2025 08:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ypmOsvMa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHW40nqI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52B82DFA4E
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 08:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A30E22424D;
+	Thu, 17 Apr 2025 08:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877859; cv=none; b=sat0ZVz8q8sToUNiJUXQYuQwuDcFqmFzSlSUmkdO65XVnMT6fr/7DYJ7Imj2Vy5ewTdRDpHPxKm+PAG/idl0W7ncHEOKA5VMn2hkq/nfT4iLXaDtFIjB3H+u872getX7fgX+HhSTOKJ1BYAkpQjO+mgmavCPBV0FzsEjK0I5Abg=
+	t=1744879194; cv=none; b=KTEFcX7PiwN3Wd1vGHVPsnUiq6uVfEBjsSk0xSRb1rG7pUWOi42UJFGa6fk41tpp2EWyRzb4naaeKwA9sfLRW36l/iZge3dcdlIPV6yYI5xatsNJmpiqbw1ITCsTdeaNiZdT0xlGLe49CN0nkQERnUbtS58TRKK5eOGQlBalDP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877859; c=relaxed/simple;
-	bh=vyfv5uDFesZcrAllaBn0OZ4VwrlUj+P98dNMmR/LkKc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=jV+OXaVaSoHxFNd0OCsb31QScSTXtZMoMKN04PIhI5AuIL6Kn2xXxvnIdLWFXP5N6V5dlG5gaHzw90qnV98EpYvJMNmvu56v+0j5hMJ59ZmpMUFLyt14muR9F725Pl6BF51S211o4Kcs5mirCT8c+4wypDulc3eEME7ZHBXiorI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ypmOsvMa; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1744879194; c=relaxed/simple;
+	bh=E2pUwIa3M2j8+TwNI8zdHacoOXOQYH/elMF2JStWijg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pPJ4j5WLE5hXojK7It3DYer8VoU1kmP1FJthfAwEAfMkdtm1Vjdix5yMP3M7GCBAvwiXexvg7YKg0FoSQIPx1/AeaUP554obGjS60pDPDZ6ayF0iRlUpYY6UA/v9nMNvELeQ+fLSyKY0NmZ3tGVk8QW0zz+KvSWd7YO720BPiDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHW40nqI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79DD9C4CEE4;
+	Thu, 17 Apr 2025 08:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744879194;
+	bh=E2pUwIa3M2j8+TwNI8zdHacoOXOQYH/elMF2JStWijg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fHW40nqIuGIijzpwiC5akHwMbGFOSJ1+jL/+ZngNMd+K4bT8s12plZRNkkJxe3Ye2
+	 T8B6niULHBTtrEf6UmCUUM9/KWJyOZWnA/XdG7sNqBRJ8hbHfaWeoh+XiQ/vjjhlYm
+	 rcXjSzZOhJ4M69YByAp+kWgKcOYvTxrXM987mgY5aldRHWUfVwHQRX5W/JVNON68vW
+	 zxTzKQBI6cJGk9lvviHSrZuaAOoOLckcMA0zHmuqnS1jJxNrMWvODO86eQYnvmmcqN
+	 n79/wMFaQsyb2BOlxWf8PPRZGH/6e2Kn9L7QppLIT6z7DEuM3T23odCLaNxggvv/8b
+	 akXryhkCD7z7w==
+Date: Thu, 17 Apr 2025 10:39:49 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+Message-ID: <aAC-VTqJpCqcz6NK@ryzen>
+References: <20250416151926.140202-1-18255117159@163.com>
+ <aACoEpueUHBLjgbb@ryzen>
+ <85643fe4-c7df-4d64-e852-60b66892470a@rock-chips.com>
+ <aACsJPkSDOHbRAJM@ryzen>
+ <ca283065-a48c-3b39-e70d-03d4c6c8a956@rock-chips.com>
+ <aACyRp8S9c8azlw9@ryzen>
+ <52a2f6dc-1e13-4473-80f2-989379df4e95@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1744877853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wHCWyLOw/2Wsq89rjMWyjH4MzPbVSwCwU1jjVX3VbRQ=;
-	b=ypmOsvMaUafpvd5eWmKEvJwYHiXQIdLqQiv0+Ev6Xgn8RI9JEbZbvJkWXxeASxnZrSSQxK
-	dux5TjY+RkeTON4aZq7OaBTeIQ8Loz65VK2Cno/krrcZhxdbseFT+SBVAxyCTJSERth3Wd
-	Qunqcwan7mdBOkLvEvNbx8K0w6eI6E+w+wMLO2077rRgzKEZ0NiJ12B41T91yf92hQmsQb
-	810Rtr2Ta1RGQdD/e+M7zT0woBXUgemXOomE7XK9RW68vYEbzOZpleaPDAilPVnUVfUmh6
-	8RXikR19BV3AOHwkGTvkt65GtWBZAFv6nR5DGTXh+miORbBa2szilO60yKh4Pw==
-Content-Type: multipart/signed;
- boundary=77376431c399ca9f2570bed1ad7af9fd48ef8140982d7c520b5c570e21a3;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 17 Apr 2025 10:17:25 +0200
-Message-Id: <D98RKO927TBG.8ZRWD3GCLSXH@cknow.org>
-Cc: <linux-pci@vger.kernel.org>, <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Add system PM support
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Shawn Lin" <shawn.lin@rock-chips.com>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-References: <1744352048-178994-1-git-send-email-shawn.lin@rock-chips.com>
-In-Reply-To: <1744352048-178994-1-git-send-email-shawn.lin@rock-chips.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52a2f6dc-1e13-4473-80f2-989379df4e95@163.com>
 
---77376431c399ca9f2570bed1ad7af9fd48ef8140982d7c520b5c570e21a3
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Thu, Apr 17, 2025 at 04:07:51PM +0800, Hans Zhang wrote:
+> On 2025/4/17 15:48, Niklas Cassel wrote:
+> 
+> Hi Niklas and Shawn,
+> 
+> Thank you very much for your discussion and reply.
+> 
+> I tested it on RK3588 and our platform. By setting pci=pcie_bus_safe, the
+> maximum MPS will be automatically matched in the end.
+> 
+> So is my patch no longer needed? For RK3588, does the customer have to
+> configure CONFIG_PCIE_BUS_SAFE or pci=pcie_bus_safe?
+> 
+> Also, for pci-meson.c, can the meson_set_max_payload be deleted?
 
-Hi,
+I think the only reason why this works is because
+pcie_bus_configure_settings(), in the case of
+pcie_bus_config == PCIE_BUS_SAFE, will walk the bus and set MPS in
+the bridge to the lowest of the downstream devices:
+https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/probe.c#L2994-L2999
 
-On Fri Apr 11, 2025 at 8:14 AM CEST, Shawn Lin wrote:
-> This patch adds system PM support for Rockchip platforms by adding .pme_t=
-urn_off
-> and .get_ltssm hook and tries to reuse possible exist code.
 
-s/exist/existing/ ?
+So Hans, if you look at lspci for the other RCs/bridges that don't
+have any downstream devices connected, do they also show DevCtl.MPS 256B
+or do they still show 128B ?
 
-> ...
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->
-> Changes in v2:
-> - Use NOIRQ_SYSTEM_SLEEP_PM_OPS
->
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 185 ++++++++++++++++++++=
-+++---
->  1 file changed, 169 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/=
-controller/dwc/pcie-dw-rockchip.c
-> index 56acfea..7246a49 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -21,6 +21,7 @@
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
-> =20
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  ...
-> =20
-> +static int rockchip_pcie_suspend(struct device *dev)
-> +{
-> +	struct rockchip_pcie *rockchip =3D dev_get_drvdata(dev);
-> +	struct dw_pcie *pci =3D &rockchip->pci;
-> +	int ret;
-> +
-> +	rockchip->intx =3D rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_M=
-ASK_LEGACY);
-> +
-> +	ret =3D dw_pcie_suspend_noirq(pci);
-> +	if (ret) {
-> +		dev_err(dev, "failed to suspend\n");
-> +		return ret;
-> +	}
-> +
-> +	rockchip_pcie_phy_deinit(rockchip);
 
-You're using ``rockchip_pcie_phy_deinit(rockchip)`` here ...
+One could argue that for all policies (execept for maybe PCIE_BUS_TUNE_OFF),
+pcie_bus_configure_settings() should start off by initializing DevCtl.MPS to
+DevCap.MPS (for the bridge itself), and after that pcie_bus_configure_settings()
+can override it depending on policy, e.g. set MPS to 128B in case of
+pcie_bus_config == PCIE_BUS_PEER2PEER, or walk the bus in case of
+pcie_bus_config == PCIE_BUS_SAFE.
 
-> +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-> +	reset_control_assert(rockchip->rst);
-> +	if (rockchip->vpcie3v3)
-> +		regulator_disable(rockchip->vpcie3v3);
-> +	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rockchip_pcie_resume(struct device *dev)
-> +{
-> +	struct rockchip_pcie *rockchip =3D dev_get_drvdata(dev);
-> +	struct dw_pcie *pci =3D &rockchip->pci;
-> +	int ret;
-> +
-> +	reset_control_assert(rockchip->rst);
-> +
-> +	ret =3D clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
-> +	if (ret) {
-> +		dev_err(dev, "clock init failed\n");
-> +		goto err_clk;
-> +	}
-> +
-> +	if (rockchip->vpcie3v3) {
-> +		ret =3D regulator_enable(rockchip->vpcie3v3);
-> +		if (ret)
-> +			goto err_power;
-> +	}
-> +
-> +	ret =3D phy_init(rockchip->phy);
-> +	if (ret) {
-> +		dev_err(dev, "fail to init phy\n");
-> +		goto err_phy_init;
-> +	}
-> +
-> +	ret =3D phy_power_on(rockchip->phy);
-> +	if (ret) {
-> +		dev_err(dev, "fail to power on phy\n");
-> +		goto err_phy_on;
-> +	}
+That way, we should be able to remove the setting for pci-meson.c as well.
 
-... would it be possible to reuse ``rockchip_pcie_phy_init(rockchip)``
-here ?
+Bjorn, thoughts?
 
-otherwise, ``s/fail/failed/`` in the error messages
 
-> +
-> +	reset_control_deassert(rockchip->rst);
-> +
-> +	rockchip_pcie_writel_apb(rockchip, HIWORD_UPDATE(0xffff, rockchip->intx=
-),
-> +				 PCIE_CLIENT_INTR_MASK_LEGACY);
-> +
-> +	rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_RC_MODE);
-> +	rockchip_pcie_unmask_dll_indicator(rockchip);
-> +
-> +	ret =3D dw_pcie_resume_noirq(pci);
-> +	if (ret) {
-> +		dev_err(dev, "fail to resume\n");
-> +		goto err_resume;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_resume:
-> +	phy_power_off(rockchip->phy);
-> +err_phy_on:
-> +	phy_exit(rockchip->phy);
-
-I initially thought this sequence was incorrect as I looked at the
-``rockchip_pcie_phy_deinit`` function:
-
-	phy_exit(rockchip->phy);
-	phy_power_off(rockchip->phy);
-
-https://elixir.bootlin.com/linux/v6.15-rc1/source/drivers/pci/controller/dw=
-c/pcie-dw-rockchip.c#L411
-
-But the ``phy_exit`` function docs says "Must be called after phy_power_off=
-()."
-https://elixir.bootlin.com/linux/v6.15-rc1/source/drivers/phy/phy-core.c#L2=
-64
-
-So it seems the code/sequence in this patch is correct, but
-``rockchip_pcie_phy_deinit`` has it wrong?
-
-> +err_phy_init:
-> +	if (rockchip->vpcie3v3)
-> +		regulator_disable(rockchip->vpcie3v3);
-> +err_power:
-> +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-> +err_clk:
-> +	reset_control_deassert(rockchip->rst);
-> +	return ret;
-> +}
-> +
->  static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk356=
-8 =3D {
->  	.mode =3D DW_PCIE_RC_TYPE,
->  };
-
-Cheers,
-  Diederik
-
---77376431c399ca9f2570bed1ad7af9fd48ef8140982d7c520b5c570e21a3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaAC5FwAKCRDXblvOeH7b
-bgxeAQD5QYNSvXPr1J7diAdHDzgCAtqrKYmuRaEnPEeHtNvanAD6AxEEsfdK21iJ
-I1+nNmwB0KLtQD8AyjsjZt5yoMGprwQ=
-=bwym
------END PGP SIGNATURE-----
-
---77376431c399ca9f2570bed1ad7af9fd48ef8140982d7c520b5c570e21a3--
+Kind regards,
+Niklas
 
