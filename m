@@ -1,57 +1,58 @@
-Return-Path: <linux-pci+bounces-26054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0623A9138C
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 08:08:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3928A913F7
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 08:25:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC2174450C7
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 06:08:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A4A91904763
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 06:25:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4321E0DE8;
-	Thu, 17 Apr 2025 06:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3F01F582C;
+	Thu, 17 Apr 2025 06:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZ8CNBrG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ng2Ma1fp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2F61DF246
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 06:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADFA1E1DE8
+	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 06:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744870079; cv=none; b=kL3/p/ISj4lG8wDBY/iauB88i9xxdW5XJbBdwcVIMf+ZnIGHBnPn4b8O5fL2KEA5pk+Ew/H/B2/djBRbEVQ14t/7IT5k2vljQIKLtYXkkYr6HdsmIPR3VF0nvNbss0F96I/c93UqfvLZPoAIS8vNXYsnVxt8MFAKLjuCSngQ3t0=
+	t=1744871112; cv=none; b=ZICHOdX9nTN2Rv79jMZTLqcR2kL6BAuQ4gBf4vJw6u60xHynjr9/pKv3vht6bVm+cgfp5UELQoIpy8R0qNTbTQQZlM5vxu8vyh7WJaTU/GvdDsenCY6SLIAveCRLyZzZl3A1p20VRQ30j/n2c4Rg7/HYc/FDD+Dhe+NcMxrG5HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744870079; c=relaxed/simple;
-	bh=OMu7tO35fvSf9J8kxaenGb0sj4L8jwiOy3D1lWxPt40=;
+	s=arc-20240116; t=1744871112; c=relaxed/simple;
+	bh=CkcZHT9S/DrOH9gULoFqAN3BPOa15S+qzPUMMh9rsQw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dP2Xyd6lvs69BJ0sAf2I3f9V1dExA+gV9zjgijZ7Id4WbljAup4a0Sj5h+UBHbiSKY1yElMNNK0g3yVa5Mq6QnKT07alrqrtgL8SFuFpn28tp74W5SWbGuApwb7XKP7rvPC7mrhjL54yM+mw02wBRHIPNJTtSbEXsTs3DzAu3FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZ8CNBrG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF15C4CEE4;
-	Thu, 17 Apr 2025 06:07:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJ6264oxkyuaQpvB1xDNQLaVvozMf4C/TEskEOhWx51ntKPKH5ug0UmKGF1gY8uxAHMGXIWFcLiIdqxqJr2d1V2pDJhEwughip/hy1ybxQcQd+LSBL+dW52h4qk5wDDJlr76nadUCiedtUTpRZ7MfhznZcHw6bzpzqJaVwR23HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ng2Ma1fp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E896BC4CEE4;
+	Thu, 17 Apr 2025 06:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744870078;
-	bh=OMu7tO35fvSf9J8kxaenGb0sj4L8jwiOy3D1lWxPt40=;
+	s=k20201202; t=1744871112;
+	bh=CkcZHT9S/DrOH9gULoFqAN3BPOa15S+qzPUMMh9rsQw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BZ8CNBrGHNcho+tHZRAgQp07hL/utTImmqSoqG39q9fl/9EA2KRBmVAZHjsNR2v0m
-	 NlgFZn0kHBD9IvP6cEuuloCUOZSpoZv8g2FJHF+ASGKUOhBFXDhMyu9oepD7NOGN2/
-	 LZzx1AcFFTC8YrPjmMd+aZRUzZpuNj0REarTypEG+gz6ikZfQpJ8xigRYXnpmNLSRl
-	 1rj9pZL07euG4eTFfas672ZXM83TmDFVCalxNsFrq7wTFoSqSWXamtQ0Yjl6Rn2tTw
-	 beMdZU+IA52m6QyzTP2QhAua9RQcpmdEs9+4jgujQTEfxxjrPCYW5Eb2fbf1QiISMr
-	 s1vP7vK5RIL2Q==
-Date: Thu, 17 Apr 2025 08:07:54 +0200
+	b=ng2Ma1fpZMD8295uxEY0tvRt6DA1jOxpOt4npjV08qFCdiq7M6flqMQC935JmBLZU
+	 jiSEfy5t04UtIFPLA7POCceFmmb+ICU2bn0b4cmsQ/BqbQruWeNg8SsQWHPJeQ5ILO
+	 DYrL8kQMZUdO2BFjG/bajIX/JC7IhBljpEzisexO+oBmACRl6s3ACkSNZnSE/8AoA1
+	 LgB0yfkow0zFL1v8YwECCodalfiX+eMZhELRkpVLcxoG0QO5+WDhbAmpZBDtOtgAGE
+	 IsXqBGwd1YMIrSc7/PzIKVgI5HVx0bVD0a4GcGF1L9b40Fa1uLh83aIt0hsCAwJRik
+	 X72laD0f7RuOw==
+Date: Thu, 17 Apr 2025 08:25:08 +0200
 From: Niklas Cassel <cassel@kernel.org>
 To: Shawn Lin <shawn.lin@rock-chips.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 1/3] PCI: dw-rockchip: Remove PCIE_L0S_ENTRY check
- from rockchip_pcie_link_up()
-Message-ID: <aACaupQvmiiBE29l@ryzen>
+Subject: Re: [PATCH v4 3/3] PCI: dw-rockchip: Move
+ rockchip_pcie_ep_hide_broken_ats_cap_rk3588() to .init()
+Message-ID: <aACexEN4wEv5fIMC@ryzen>
 References: <1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com>
+ <1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,13 +61,26 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com>
 
-Hello Shawn,
+On Thu, Apr 17, 2025 at 08:35:11AM +0800, Shawn Lin wrote:
+> There is no reason to call rockchip_pcie_ep_hide_broken_ats_cap_rk3588()
+> from the pre_init() callback, instead of the normal init() callback.
+> 
+> Thus, move the rockchip_pcie_ep_hide_broken_ats_cap_rk3588() call from
+> the pre_init() callback to the init() callback, as:
+> 1) init() will still be called before link training is enabled, so the
+>    quirk will still be applied before the host has can see our device.
+> 2) This allows us to remove the pre_init() callback, as it is now unused.
+> 3) It is a more robust design, as the init() callback is called by
+>    dw_pcie_ep_init_registers(), which will always be called after a core
+>    reset. The pre_init() callback is only called once, at probe time.
+> 
+> No functional changes.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
 
-I just see patch 1/2 and 2/3.
-
-
-Kind regards,
-Niklas
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
