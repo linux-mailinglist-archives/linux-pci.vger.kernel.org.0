@@ -1,166 +1,244 @@
-Return-Path: <linux-pci+bounces-26127-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26128-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4892CA92385
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:10:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3282A9238F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:13:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6644516D1E1
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:10:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E46B344105A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:13:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B06A253B59;
-	Thu, 17 Apr 2025 17:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C69FE2550C4;
+	Thu, 17 Apr 2025 17:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="xRrOkl+q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPkwScwO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC8B17A30E
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 17:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928EB186E2E;
+	Thu, 17 Apr 2025 17:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909802; cv=none; b=aAefPcf6+Ph1fV2JC+P1pokl1sn83FvotUjR3nltnoi9Bk3+0o34/cnXgRFiCO1l3IJiqG3DKI5KQ3iIlbhIAfNN/PAacdYjkMVoPgHkyqwFcns3qNAvWKOGFklmU/Mfc2b7YRioid/mekR4X7yycJQzu/3NDKqGS4HumIJHhRU=
+	t=1744909983; cv=none; b=S/x3kPBccJi8d/lKAr6RHT6JaDRE4zC/ok5nC/rNVnCTg8gXPJOC18nbWf2BROl2g4dSZJtXj/EcVQN+ctj+5e+rSP142OninT7zzgsq+H7pjhMJCKyNfCFwUfYma/8euvDqg9fvNwAqHIovvdJ5CXhxfC5mTZoOUMR3eNi+C9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909802; c=relaxed/simple;
-	bh=+KCwB4S1lB26w346UYpwjYOn/QTHi7mLnh8nbljjSZI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=oLCcz/NI3/lyVO6OFKb7h4+CXemPg4aNTBCdp369yAC70ukVaYWcRoBdlm5xOz95Icm7XJuhVbxJ5tr652v690hIh3QINMRdODsQXTS9bb7LjFusT7y1QFSwoDlsqhIsP+TDv7ei/UNBe5HQF38ENUWmFuV6/IfJbKNVeYVa+o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=xRrOkl+q; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1744909983; c=relaxed/simple;
+	bh=ze9golB+JCYX8yboRtMyVbur9ZOh65QOaNLGoUZZC00=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5XDOEqyKA9zZjtByn6eYcjGTdwRJL2Hbo9bUGz1LafAgIW4XF8WAnvvX5WSIyI+wrcBHCbn0lbrmEafxumueDyIjbR7wSbTBWJatUDvAO/9Qe+2MhPX3XIcf2mHfXlFDTgbNHSkxNL8WT7IZCrDaIb6H8PDnxa6CUqvezjCT1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hPkwScwO; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c55b53a459so94881885a.3;
+        Thu, 17 Apr 2025 10:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744909979; x=1745514779; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MalP9T0FOVBPSQ7hdLh//NHSp0ARkV8JPukt1uR1PUg=;
+        b=hPkwScwO/l1zPn+l0S5MZSdQqT+CKPECSQxw0HBAXCUSYfsKuBjHP9sTDSZNWFOZQD
+         8ATfafQYy4XOsvODr2ItrLRLSGcqZ3pUFZjUbwynFyqhTX4XyhwoJlxJ3G516Ei6ZkjA
+         GmBwi5kPtME5SktnT2/Qmoa7ZuWUZ1kQX9EBxbn20uiuYgZ8aENZ6C3zcZmGVqpcwGQv
+         0BCfxb+1sgsLsr59dOMEcDisVK2JAXoUA4H1P2CRdalW1t7RVb3yOqmP5252aSA/ZKvo
+         +eG0nqqVhDbJ949UbvqWlPj1fr1MfLv16ycmiaj/90xW7KbzOsry3xa6Hw7BIchfAzl3
+         v5yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744909979; x=1745514779;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MalP9T0FOVBPSQ7hdLh//NHSp0ARkV8JPukt1uR1PUg=;
+        b=dYbDfiz6IEzkFj4dFkTulqIbnzpe2rP/bVKzPmncvkyDIIUO5sLWyeeZRux26Zgaf8
+         2xS4O1k6ubdEAhx5DYXAMpgOcvtSheQwgqTWRzp5cZPoGgQG7ots/gVmkU16C+0h8hTJ
+         BWV9rSvrWg/08YHDYDGQfZ6BWwOINKw/7vzZz4GoZQbatBGGs9PkuXykf/A4w9cp8tRl
+         A/Jz19xnevRj4yg1qk2mPVOBcr69eJD4a8RDfVJM1VJTBWCNtN8DwKvxSAh0v+cJnU3a
+         txCgWJE1bJ+B5L3lf/S2sg6YSwUdbuPiTdq+aQDMxAOcOam15TTIJ/YVCoconTPZRebO
+         3RNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURlaUQ1iHJ3FZ7bN170DG18aTmLjoP+Ujrla2KblC9iPSxxBOE8cmu6yyCTL7J973cOsj5VKn4rdcX@vger.kernel.org, AJvYcCWLhzHHxSqfmEMQ1QMNsMiBNGtcJyG5KVldIKV4dbguYl3SU1wqi1vfyG2qlF36gjENJj8ODMX7XdI+Q9If@vger.kernel.org, AJvYcCWcjy+Cv3ALCdc/WnIQp9I/t7sjut+JHUwWpSQ7rgntpUqaZAxeSiQC0g/hH0iZSRQfrFVSyevS@vger.kernel.org, AJvYcCWv3Hfo9qDJz1sQk6JJ/bPchFbmkF+sF9g5HOXuqw6y2ziw8DkJijWAkJ5ebIFF68VwS3BilDEG/My+@vger.kernel.org, AJvYcCX10oApNiTaOsJd+RfTUIRJmuAqUV/eWheCsKXKzm5wHDl5gkP+YLuA4BDBvfiROiGTCXdRFNmq/smR6eg39Ig=@vger.kernel.org, AJvYcCXQ+ua4vuO3NQzKLYh8wKosgnKh0GcVI9mpTXINDoYzEwRMCpZkI00bQtzlJPewURciqsvg/st1ofPohAs=@vger.kernel.org, AJvYcCXp8RHT26cYx9smXODFYnWivF99Kjz7Do/PnyDyYfe5Yw3FQ/ZmklEQWLTlKNqRnyAcDei9nYjjL4iqYlWAQo0J@vger.kernel.org, AJvYcCXzr2IE5vuUiHGoYnXqqeEpd34f4RD8kNjdHuL2b1N4gBpCIrDp5+K7P3ZeKGlLM63DHAGp+NPOD6miow7+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqsDSu3w7gBNY9AFpqid1L3ChXPEpKiK08TNgV6v/Tju6raMJ/
+	AhBZ+C/jesuN9y0FtT1hGsf/P0CepqyrelaUtLuei8rjcZMfgN3A
+X-Gm-Gg: ASbGnct+q7Fn/ym1QR1jthycJfnW6PlhLyckxYrdrc0k69l2EfdE8skaoXnlECArhY3
+	Cb/0wzyQEOpAtqqEfGYBmXgdbAJlvXCyRk+xdExZO1ttDmTDnuWb1uCBnFRZ62fYjDsZA58UNp0
+	vtAg4n47wsykQPNzl+JI4HmZsuAu9X+9TnBB788l5g0eZiFSMM9BvWTSnBC/Y/3S9u4c+RJO7p0
+	htNRsbKSVU060KtD/vGnwvb/NrQ/RCXCcsQtiuYvUZu3NIA39buKeQ9yTsGRLgV/VIGy5xGp75S
+	yqfdwW8NraocFdMdzQ5j4SIbCZlj7fmaOpgJjK2CJQQ2kyTxYhy/TwdmIiaPDUYUETXPSPyg4Cd
+	3Gx7R4ydkFfWMnpDsteVRzv1UY+Vw1TE=
+X-Google-Smtp-Source: AGHT+IE1U46a7zOOtONq+QwBpax7Ahpds1E61gFA8qmT13V9WuNjWi2ccq8I+2TPW5mk2fqOlsESrw==
+X-Received: by 2002:a05:620a:2409:b0:7c5:cdb5:271b with SMTP id af79cd13be357-7c918fec2d8mr831126785a.15.1744909979301;
+        Thu, 17 Apr 2025 10:12:59 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a8d2bfsm12902585a.28.2025.04.17.10.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 10:12:58 -0700 (PDT)
+Message-ID: <6801369a.050a0220.2b2efe.0e72@mx.google.com>
+X-Google-Original-Message-ID: <aAE2lwwjI9Csr7Kq@winterfell.>
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id A85251200043;
+	Thu, 17 Apr 2025 13:12:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Thu, 17 Apr 2025 13:12:57 -0400
+X-ME-Sender: <xms:mTYBaKtPCX7hTJAXfh3Cy_qkehcb4j40eAV_zC-gJRP9srDYf0yGrw>
+    <xme:mTYBaPepJAsVpiQG0hAtgDrwnJZtShi6JOXMb13sfHgmD6jaupfXdsj1kd_B06aXE
+    UYozOVcM-GE8TOHAQ>
+X-ME-Received: <xmr:mTYBaFygZIhapB2yIA8EpcA9kTa7jOq8q2HtCt2e3PYuqyG3bdPJvIMuJB5itw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelkeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
+    rhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhf
+    gvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgv
+    rhhnpeekjefgudefhfeigffghfdtheeggfdtuddvkeejleffheeufeffteetvefgfeeuje
+    enucffohhmrghinhepghhithhhuhgsrdhiohenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrsh
+    honhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghn
+    gheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepge
+    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmihhrugesghhmrghilhdr
+    tghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilh
+    drtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthho
+    pegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvg
+    hnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggs
+    ohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:mTYBaFNbnly-XmcLgzboyy0blulaxf0g_gvx5OspvUJihMB5uzMr3A>
+    <xmx:mTYBaK84QRzrqbAEIeK_fit7VpwxMszuiY6oBiljD6osiizhHtkHhA>
+    <xmx:mTYBaNX47CQC2l341GOfs0S74VKiJamzlrjNck9b-e-ERxjmbDuOtw>
+    <xmx:mTYBaDfibi2GAvOragNKXULPCEIkgES2H3JOaJeBZwW64PWC01KaMA>
+    <xmx:mTYBaEeI2DwRz__Rqild4X0j7hF0LYyp_jEGBEtNDHFCuDTOSLYyo8y9>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 17 Apr 2025 13:12:56 -0400 (EDT)
+Date: Thu, 17 Apr 2025 10:12:55 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v9 2/6] rust: enable `clippy::ptr_cast_constness` lint
+References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
+ <20250416-ptr-as-ptr-v9-2-18ec29b1b1f3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1744909795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U4ILFAnnROWvWpXm91/wKuzpauoiAfG10LJOtDhws0=;
-	b=xRrOkl+qGnYLA+AOqsbB9LjK1LWPYQy1oz8Y+rZWCD7iABshDYz1KUdZGcAdgbdurKya1R
-	CmI/fAI+abH5jKptTBlaXXuXzSzy6WA+8jcjmfT+qaoYMFx0A0F2590ib3Hghb/4DXHC1a
-	x++yxn2UC73tCT1BpT6bXu0j5HzYItmFsvENg9YCryIlHXRk6Fg7QnpXXpzvYxs6IxVc7W
-	c8sXsnDjKc4Bov2fkxDKx03WqPOEpfKUFS6Ak0zhV8nC0c2fEoLWUtuyP4rJPeFaeL0Hlf
-	VFVppXokdY6+zL3p+ey2gDqA+uAtsN12AQMFYGmk3QCLVkMdtAfVm2vN+mo5Tg==
-Content-Type: multipart/signed;
- boundary=9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 17 Apr 2025 19:09:46 +0200
-Message-Id: <D992W9V9ZH2J.2Z2OLK00N0FIU@cknow.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Dragan Simic" <dsimic@manjaro.org>
-Cc: "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Heiko Stuebner" <heiko@sntech.de>, "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Shawn Lin" <shawn.lin@rock-chips.com>, "Niklas Cassel"
- <cassel@kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <stable@vger.kernel.org>
-Subject: Re: [PATCH] PCI: dw-rockchip: Fix function call sequence in
- rockchip_pcie_phy_deinit
-References: <20250417142138.1377451-1-didi.debian@cknow.org>
- <3e000468679b4371a7942a3e07d99894@manjaro.org>
-In-Reply-To: <3e000468679b4371a7942a3e07d99894@manjaro.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-ptr-as-ptr-v9-2-18ec29b1b1f3@gmail.com>
 
---9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Wed, Apr 16, 2025 at 01:36:06PM -0400, Tamir Duberstein wrote:
+> In Rust 1.72.0, Clippy introduced the `ptr_cast_constness` lint [1]:
+> 
+> > Though `as` casts between raw pointers are not terrible,
+> > `pointer::cast_mut` and `pointer::cast_const` are safer because they
+> > cannot accidentally cast the pointer to another type.
+> 
+> There are only 2 affected sites:
+> - `*mut T as *const U as *mut U` becomes `(*mut T).cast()`
+> - `&self as *const Self as *mut Self` becomes
+>   `core::ptr::from_ref(self).cast_mut()`.
+> 
+> Apply these changes and enable the lint -- no functional change
+> intended.
+> 
+> Link: https://rust-lang.github.io/rust-clippy/master/index.html#ptr_cast_constness [1]
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  Makefile                        | 1 +
+>  rust/kernel/block/mq/request.rs | 4 ++--
+>  rust/kernel/dma.rs              | 2 +-
+>  3 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 5d2931344490..7b85b2a8d371 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -481,6 +481,7 @@ export rust_common_flags := --edition=2021 \
+>  			    -Aclippy::needless_lifetimes \
+>  			    -Wclippy::no_mangle_with_rust_abi \
+>  			    -Wclippy::ptr_as_ptr \
+> +			    -Wclippy::ptr_cast_constness \
+>  			    -Wclippy::undocumented_unsafe_blocks \
+>  			    -Wclippy::unnecessary_safety_comment \
+>  			    -Wclippy::unnecessary_safety_doc \
+> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+> index 4a5b7ec914ef..af5c9ac94f36 100644
+> --- a/rust/kernel/block/mq/request.rs
+> +++ b/rust/kernel/block/mq/request.rs
+> @@ -69,7 +69,7 @@ pub(crate) unsafe fn aref_from_raw(ptr: *mut bindings::request) -> ARef<Self> {
+>          // INVARIANT: By the safety requirements of this function, invariants are upheld.
+>          // SAFETY: By the safety requirement of this function, we own a
+>          // reference count that we can pass to `ARef`.
+> -        unsafe { ARef::from_raw(NonNull::new_unchecked(ptr as *const Self as *mut Self)) }
+> +        unsafe { ARef::from_raw(NonNull::new_unchecked(ptr.cast())) }
+>      }
+>  
+>      /// Notify the block layer that a request is going to be processed now.
+> @@ -155,7 +155,7 @@ pub(crate) fn wrapper_ref(&self) -> &RequestDataWrapper {
+>          // the private data associated with this request is initialized and
+>          // valid. The existence of `&self` guarantees that the private data is
+>          // valid as a shared reference.
+> -        unsafe { Self::wrapper_ptr(self as *const Self as *mut Self).as_ref() }
+> +        unsafe { Self::wrapper_ptr(core::ptr::from_ref(self).cast_mut()).as_ref() }
+>      }
+>  }
+>  
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index f395d1a6fe48..43ecf3c2e860 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -186,7 +186,7 @@ pub fn alloc_attrs(
+>              dev: dev.into(),
+>              dma_handle,
+>              count,
+> -            cpu_addr: ret.cast(),
+> +            cpu_addr: ret.cast::<T>(),
 
-Hi Dragan,
+Is this change necessary? The rest looks good to me.
 
-On Thu Apr 17, 2025 at 6:20 PM CEST, Dragan Simic wrote:
-> On 2025-04-17 16:21, Diederik de Haas wrote:
->> The documentation for the phy_power_off() function explicitly says
->>=20
->>   Must be called before phy_exit().
->>=20
->> So let's follow that instruction.
->>=20
->> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host
->> controller driver")
->> Cc: stable@vger.kernel.org	# v5.15+
->> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
->> ---
->>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index c624b7ebd118..4f92639650e3 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct
->> rockchip_pcie *rockchip)
->>=20
->>  static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
->>  {
->> -	phy_exit(rockchip->phy);
->>  	phy_power_off(rockchip->phy);
->> +	phy_exit(rockchip->phy);
->>  }
->>=20
->>  static const struct dw_pcie_ops dw_pcie_ops =3D {
->
-> Thanks for the patch, it's looking good to me.  The current state
-> of the rockchip_pcie_phy_deinit() function might actually not cause
-> issues because the rockchip_pcie_phy_deinit() function is used only
-> in the error-handling path in the rockchip_pcie_probe() function,
-> so having no runtime errors leads to no possible issues.
->
-> However, it doesn't mean it shouldn't be fixed, and it would actually
-> be good to dissolve the rockchip_pcie_phy_deinit() function into the
-> above-mentioned error-handling path.  It's a short, two-line function
-> local to the compile unit, used in a single place only, so dissolving
-> it is safe and would actually improve the readability of the code.
+Regards,
+Boqun
 
-This patch came about while looking at [1] "PCI: dw-rockchip: Add system
-PM support", which would be the 2nd consumer of the
-rockchip_pcie_phy_deinit() function. That patch's commit message has the
-following: "tries to reuse possible exist(ing) code"
-
-Being a fan of the DRY principle, that sounds like an excellent idea :-)
-
-So while you're right if there would only be 1 consumer, which is the
-case *right now*, given that a 2nd consumer is in the works, I think
-it's better to keep it as I've done it now.
-Let me know if you disagree (including why).
-
-[1] https://lore.kernel.org/linux-rockchip/1744352048-178994-1-git-send-ema=
-il-shawn.lin@rock-chips.com/
-
-> Thus, please feel free to include
->
-> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
-
-Thanks :-)
-
-Cheers,
-  Diederik
-
-> and please consider dissolving the rockchip_pcie_phy_deinit() function
-> in the possible v2 of this patch, as suggested above.
-
-
---9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaAE13QAKCRDXblvOeH7b
-buluAQCEIjcEnqtZwClOAqM8s1LvfqUaaPSSbkWDSy6SYsLWAwEAofWwHxa8G5nC
-MgjHBOJT/8MsTjFkhLaeM2uzEV2YXQE=
-=VbT8
------END PGP SIGNATURE-----
-
---9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762--
+>              dma_attrs,
+>          })
+>      }
+> 
+> -- 
+> 2.49.0
+> 
 
