@@ -1,57 +1,64 @@
-Return-Path: <linux-pci+bounces-26047-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26048-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ABABA90D3F
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 22:40:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D90E5A9103F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 02:23:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98CE45A23FC
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Apr 2025 20:40:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E56424477FD
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 00:23:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4F2D229B3C;
-	Wed, 16 Apr 2025 20:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKd7z5T9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD739145B3F;
+	Thu, 17 Apr 2025 00:23:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD021F8937;
-	Wed, 16 Apr 2025 20:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B238632E;
+	Thu, 17 Apr 2025 00:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836053; cv=none; b=bO1b1xwRD7PJkeLRx5bJG9fP27pXRvSwBIkKeOm0u6UhCtgQM8R8/zUdBx5XAaJdegYHE+gfv/v/XzRGF61+0P/JHGAoQNZqhzI/iSwnJIOgbT4es2A/ipARyYGUg93ACTs70iFRTm6Ll3Tz78tWSoeWeGe29UN+Zww5YTSKjZY=
+	t=1744849412; cv=none; b=B/wOkChvLS45IbBFIVLsy8sANBMFEQkw6c/c/oW2CtOEZqsW1AI/NzN0skgGoj/spc2Ny1C5UdeZdTGbApPSewRYDFQpIPnDXfKkCh9u7NUhOCPkAo1Jb4lKaGeT6vfaMgP9m6Yuq4TgwVuiMoKoXLvUD6d61W/uRc9AjQCo6fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836053; c=relaxed/simple;
-	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rUM+oJOCcEDgllGGPXp65PUN8evR8ft1R/Mras3QmJibFTqZBJxVauWki5rX6PyKOJH7EGtwwLnQ3GADLOPIQcGpSD28umBoNETirpOAfwE1g6VilRUlxDfNN67HMbBLYH90gUdDzC+E3YEE/cfbBnNVWHlwXVYCKQ71PgMArv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKd7z5T9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5B9C4CEE4;
-	Wed, 16 Apr 2025 20:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744836053;
-	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eKd7z5T9E+knRBpQ3jKb/8ftx91rIF0bQBduS15ZAE2ht6hl19zLfGIL9jHC8vshl
-	 ykdizw73AakIuy3I1ly2//T08eeyRE3ODKNdIFqgSHtB8hcBfBJ4LJzlAXzQu/t7Zm
-	 SxWbJqE5V3eH2DBbGvY8tdy1KPA+cXGIi7fCUQ0pQrR4Qsloroe1ehc3TYdmQyzw9q
-	 N9vYSg1SXVhHXpRvwzpeWwPWveWbjNh0kAPClbvhKFeY/KZ3j7OEnAqbmNQSYWp/AH
-	 pkrq53hr0Xo0jqC6lng23FIZb2jtzv4zasaBJGtDpm9etx3bJvK3BIgUA6SyMXkGwn
-	 T9sqLP0GT211Q==
-Date: Wed, 16 Apr 2025 15:40:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <20250416204051.GA78956@bhelgaas>
+	s=arc-20240116; t=1744849412; c=relaxed/simple;
+	bh=1cC1zkkpxx9QtygR1jzi0pnPO98RzJxPsGGbSVcb2yU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWlaP3IKymMpCvASPBvnJ9zvnrsvJXwXT5+uWSRFkZDwKk18elkSG9f1sQdItcSJy0mydc++ytLNw97nnaIp5cu/HD/49Nym/vDqa2t0wB9jVouQseHGIxBbixEgxC79bVH5VbkUR3IVNzaoxmLOX148mpplRr4L1wf3LiIU5m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 62FA7200A46D;
+	Thu, 17 Apr 2025 02:23:19 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 7A2566AABD; Thu, 17 Apr 2025 02:23:26 +0200 (CEST)
+Date: Thu, 17 Apr 2025 02:23:26 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	dingwei@marvell.com, cassel@kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <aABJ_u8-FXeJoPyF@wunner.de>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
+ <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+ <Z__AyQeZmXiNwT7c@wunner.de>
+ <rrqn7hlefn7klaczi2jkfta72pwmtentj3zp37yvw3brwpnalk@3eapwfeo5y4d>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,98 +67,206 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416151926.140202-1-18255117159@163.com>
+In-Reply-To: <rrqn7hlefn7klaczi2jkfta72pwmtentj3zp37yvw3brwpnalk@3eapwfeo5y4d>
 
-On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> but its hardware capability actually supports 256 bytes. This results
-> in suboptimal performance with devices that support larger payloads.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index c624b7ebd118..5bbb536a2576 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->  	return IRQ_HANDLED;
->  }
->  
-> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
-> +{
-> +	struct dw_pcie *pci = &rockchip->pci;
-> +	u32 dev_cap, dev_ctrl;
-> +	u16 offset;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
-> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
-> +
-> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> +	dev_ctrl |= dev_cap << 5;
-> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
-> +}
+On Wed, Apr 16, 2025 at 08:34:21PM +0530, Manivannan Sadhasivam wrote:
+> I don't think it is possible to get rid of the powerpc version. It has
+> its own pci_dev::sysdata pointing to 'struct pci_controller' pointer
+> which is internal to powerpc arch code. And the generic code would need
+> 'struct pci_host_bridge' to access the callback.
 
-I can't really complain too much about this since meson does basically
-the same thing, but there are some things I don't like about this:
+Below is my proposal to convert powerpc to the new ->slot_reset() callback.
+Compile-tested only.
 
-  - I don't think it's safe to set MPS higher in all cases.  If we set
-    the Root Port MPS=256, and an Endpoint only supports MPS=128, the
-    Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
-    that case the RP may respond with a 256-byte payload the Endpoint
-    can't handle.  The generic code in pci_configure_mps() might be
-    smart enough to avoid that situation, but I'm not confident about
-    it.  Maybe I could be convinced.
+Feel free to include this in your series, alternatively I can submit it
+to powerpc maintainers once your series has landed.  Thanks!
 
-  - There's nothing rockchip-specific about this.
+-- >8 --
 
-  - It's very similar to meson_set_max_payload(), so it'd be nice to
-    share that code somehow.
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH] powerpc/powernv/pci: Migrate to pci_host_bridge::reset_slot
+ callback
 
-  - The commit log is specific about Max_Payload_Size Supported being
-    256 bytes, but the patch actually reads the value from Device
-    Capabilities.
+struct pci_host_bridge has just been amended with a ->reset_slot()
+callback to allow for a per-host-bridge Secondary Bus Reset procedure.
 
-  - I'd like to see FIELD_PREP()/FIELD_GET() used when possible.
-    PCIE_LTSSM_STATUS_MASK is probably the only other place.
+PowerNV needs a platform-specific reset procedure and has historically
+implemented it by overriding pcibios_reset_secondary_bus().
 
-These would be material for a separate patch:
+Migrate PowerNV to the new ->reset_slot() callback for simplicity and
+cleanliness.  Assign the callback as soon as the pci_host_bridge is
+allocated through the following call chain:
 
-  - The #defines for register offsets and bits are kind of a mess,
-    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
-    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
-    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
-    names, and they're not even defined together.
+pcibios_init()
+  pcibios_scan_phb()
+    pci_create_root_bus()
+      pci_register_host_bridge()
+        pcibios_root_bridge_prepare()
 
-  - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
-    PCIE_RDLH_LINK_UP_CHGED, which are in
-    PCIE_CLIENT_INTR_STATUS_MISC.
+The powerpc-specific implementation of pcibios_reset_secondary_bus() can
+thus be deleted and the remaining default implementation in the PCI core
+can be made private.  The ->reset_secondary_bus() callback in struct
+pci_controller_ops likewise becomes obsolete and can be deleted.
 
-  - PCIE_LTSSM_ENABLE_ENHANCE is apparently in
-    PCIE_CLIENT_HOT_RESET_CTRL?  Sure wouldn't guess that from the
-    names or the order of #defines.
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ arch/powerpc/include/asm/pci-bridge.h        |  1 -
+ arch/powerpc/kernel/pci-common.c             | 12 ------------
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 14 +++++++++-----
+ arch/powerpc/platforms/powernv/pci-ioda.c    |  9 +++++++--
+ arch/powerpc/platforms/powernv/pci.h         |  3 ++-
+ drivers/pci/pci.c                            |  2 +-
+ include/linux/pci.h                          |  1 -
+ 7 files changed, 19 insertions(+), 23 deletions(-)
 
-  - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 2aa3a091ef20..0de09fc90641 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -36,7 +36,6 @@ struct pci_controller_ops {
+ 					    unsigned long type);
+ 	void		(*setup_bridge)(struct pci_bus *bus,
+ 					unsigned long type);
+-	void		(*reset_secondary_bus)(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_PCI_MSI
+ 	int		(*setup_msi_irqs)(struct pci_dev *pdev,
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index eac84d687b53..dad15fbec4e0 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -233,18 +233,6 @@ void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+ 		hose->controller_ops.setup_bridge(bus, type);
+ }
+ 
+-void pcibios_reset_secondary_bus(struct pci_dev *dev)
+-{
+-	struct pci_controller *phb = pci_bus_to_host(dev->bus);
+-
+-	if (phb->controller_ops.reset_secondary_bus) {
+-		phb->controller_ops.reset_secondary_bus(dev);
+-		return;
+-	}
+-
+-	pci_reset_secondary_bus(dev);
+-}
+-
+ resource_size_t pcibios_default_alignment(void)
+ {
+ 	if (ppc_md.pcibios_default_alignment)
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index db3370d1673c..9b9517cb6ab7 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -890,18 +890,22 @@ static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
+ 	return (rc == OPAL_SUCCESS) ? 0 : -EIO;
+ }
+ 
+-void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
++int pnv_pci_reset_secondary_bus(struct pci_host_bridge *host,
++				struct pci_dev *dev)
+ {
+ 	struct pci_controller *hose;
++	int rc_hot, rc_dea;
+ 
+ 	if (pci_is_root_bus(dev->bus)) {
+ 		hose = pci_bus_to_host(dev->bus);
+-		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
+-		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
++		rc_hot = pnv_eeh_root_reset(hose, EEH_RESET_HOT);
++		rc_dea = pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
+ 	} else {
+-		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+-		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
++		rc_hot = pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
++		rc_dea = pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+ 	}
++
++	return rc_hot ? : rc_dea ? : 0;
+ }
+ 
+ static void pnv_eeh_wait_for_pending(struct pci_dn *pdn, const char *type,
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index ae4b549b5ca0..e1b75a4bc681 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2145,6 +2145,12 @@ static void pnv_pci_ioda_fixup(void)
+ #endif
+ }
+ 
++static int pnv_pci_root_bridge_prepare(struct pci_host_bridge *bridge)
++{
++	bridge->reset_slot = pnv_pci_reset_secondary_bus;
++	return 0;
++}
++
+ /*
+  * Returns the alignment for I/O or memory windows for P2P
+  * bridges. That actually depends on how PEs are segmented.
+@@ -2504,7 +2510,6 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
+ 	.release_device		= pnv_pci_release_device,
+ 	.window_alignment	= pnv_pci_window_alignment,
+ 	.setup_bridge		= pnv_pci_fixup_bridge_resources,
+-	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
+ 	.shutdown		= pnv_pci_ioda_shutdown,
+ #ifdef CONFIG_IOMMU_API
+ 	.device_group		= pnv_pci_device_group,
+@@ -2515,7 +2520,6 @@ static const struct pci_controller_ops pnv_npu_ocapi_ioda_controller_ops = {
+ 	.enable_device_hook	= pnv_ocapi_enable_device_hook,
+ 	.release_device		= pnv_pci_release_device,
+ 	.window_alignment	= pnv_pci_window_alignment,
+-	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
+ 	.shutdown		= pnv_pci_ioda_shutdown,
+ };
+ 
+@@ -2724,6 +2728,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	}
+ 
+ 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
++	ppc_md.pcibios_root_bridge_prepare = pnv_pci_root_bridge_prepare;
+ 
+ #ifdef CONFIG_PCI_IOV
+ 	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 42075501663b..44e8969c7729 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -275,7 +275,8 @@ extern struct iommu_table *pnv_pci_table_alloc(int nid);
+ 
+ extern void pnv_pci_init_ioda2_phb(struct device_node *np);
+ extern void pnv_pci_init_npu2_opencapi_phb(struct device_node *np);
+-extern void pnv_pci_reset_secondary_bus(struct pci_dev *dev);
++extern int pnv_pci_reset_secondary_bus(struct pci_host_bridge *host,
++				       struct pci_dev *dev);
+ extern int pnv_eeh_phb_reset(struct pci_controller *hose, int option);
+ 
+ extern struct pnv_ioda_pe *pnv_pci_bdfn_to_pe(struct pnv_phb *phb, u16 bdfn);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 13709bb898a9..fe66d69c6429 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4980,7 +4980,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+ }
+ 
+-void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
++static void pcibios_reset_secondary_bus(struct pci_dev *dev)
+ {
+ 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 	int ret;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 76e977af2d52..43d952361e84 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1398,7 +1398,6 @@ int pci_probe_reset_slot(struct pci_slot *slot);
+ int pci_probe_reset_bus(struct pci_bus *bus);
+ int pci_reset_bus(struct pci_dev *dev);
+ void pci_reset_secondary_bus(struct pci_dev *dev);
+-void pcibios_reset_secondary_bus(struct pci_dev *dev);
+ void pci_update_resource(struct pci_dev *dev, int resno);
+ int __must_check pci_assign_resource(struct pci_dev *dev, int i);
+ void pci_release_resource(struct pci_dev *dev, int resno);
+-- 
+2.43.0
 
->  static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  				      struct rockchip_pcie *rockchip)
->  {
-> @@ -511,6 +527,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  	pp->ops = &rockchip_pcie_host_ops;
->  	pp->use_linkup_irq = true;
->  
-> +	rockchip_pcie_set_max_payload(rockchip);
-> +
->  	ret = dw_pcie_host_init(pp);
->  	if (ret) {
->  		dev_err(dev, "failed to initialize host\n");
-> 
-> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
-> -- 
-> 2.25.1
-> 
 
