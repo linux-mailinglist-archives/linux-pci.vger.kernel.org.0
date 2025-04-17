@@ -1,51 +1,61 @@
-Return-Path: <linux-pci+bounces-26144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83D00A92BD1
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 21:31:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1442A92BD3
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 21:31:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5331B4A3565
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:31:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC64C1B668AF
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F401FF1D1;
-	Thu, 17 Apr 2025 19:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8D81FDE12;
+	Thu, 17 Apr 2025 19:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3givaiB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6121BC9F4
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 19:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B301BC9F4;
+	Thu, 17 Apr 2025 19:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744918252; cv=none; b=Ad65FaVS1vchKEqBmG3eZcPhlqSOC3fU4x8ka73O++BS7sr79fmVfPUam+gdIVRvd8PwJp6px7a9lQBgNzjVoiR8jg9fWeQ3OJTeQV3W+7DiYmADrMCxMuMpaXRNxgmRqXeg5xWbwQjmNOJOISyqI/MfGf0pS+gvuvv2oJBmWr8=
+	t=1744918269; cv=none; b=cAQ0enewnZh8znRb7v88V9zIyEqsf1weXvJHx3Dbqluaq0LQi7Elk/O9/oxrR12I8X21xHQcQLuF2UZHmH146sUODsZp22HxSK5+Ol6kH0YPC1h/0AiWu9S+TiS93RSBCHwo0wVg80DoUGkzXGC4Ay7/GllsD8+c4fEj4ths104=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744918252; c=relaxed/simple;
-	bh=at3QSj1UEXNVEw4QNe7UQl3ZClCAIWLwgKEKukNd85A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bnTnEMrTQ5XapMqdm9hzB/SbEFDRxDEIxLhvt7AXJlE1EzEO7oCmZFvD3lZ37RiXTpEvM+kPPXhJZXJTxCVg5KC/lETDHWV10G3qdQrZpqdKH0v3RfCPfHkoP7hT7MefWsJf+UgdkVAJQDAVHpCAd6OoV6dFOBZMjaHEYa+N7Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 668482C4C3F7;
-	Thu, 17 Apr 2025 21:30:33 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9ABC918B42C; Thu, 17 Apr 2025 21:30:40 +0200 (CEST)
-Date: Thu, 17 Apr 2025 21:30:40 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: hotplug: Drop superfluous #include directives
-Message-ID: <aAFW4Bsgl8JLnjog@wunner.de>
-References: <c19e25bf2cefecc14e0822c6a9bb3a7f546258bc.1744640331.git.lukas@wunner.de>
- <20250415203354.GA34031@bhelgaas>
+	s=arc-20240116; t=1744918269; c=relaxed/simple;
+	bh=9AX6tVfbkd+pSYNXJrk75ytubbBqDkCzzjRuH1cCBcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ZqdLkEOV78BYJzDUdm2uozf0Z9HopwJ82Mhx4FSFag2STs2DhcBXR4QCafTrw8XHGHuWFk7o0GMask2cudbueipEMtAzSO9F6zWs1kSOpUOriCRIx+zTOUOubVR+cT9z0FcQuHra+N87fRazmJZ2Df/7FtXMg4U4S4FOqpTfYUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3givaiB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2777C4CEE4;
+	Thu, 17 Apr 2025 19:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744918269;
+	bh=9AX6tVfbkd+pSYNXJrk75ytubbBqDkCzzjRuH1cCBcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=C3givaiBZ9ajgF4VdBGY/2PGt6kDEdJY24QBrLscfHSkVIs0JkxrLLvGUy+aPIisL
+	 YVNGCEBiKXeq9hfyPYEqqSKRPl0Z3mlXn2i3faLy0ZNTymx8+GLAuBu+n7nE7k3x/Z
+	 QgAU+7feL5Z8uN5PuRXAlTm/xeolipSvGwMGfY2HDVDqUiTU2hI5V/yvoOR25vCtGU
+	 ymP47NCvBN/B4vrjSmLdtg2CXYzhSa445aOwMOWSm3bjLqTx38HkmE6mMBh8ZSU8ZX
+	 EixnmcB4+POaXdUK22IXvJTtR/Ylgd4aIZh29brR0Km7YZBrFgZJjFd3mTrXBQRWxQ
+	 8+gNBWETf42RQ==
+Date: Thu, 17 Apr 2025 14:31:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, p.zabel@pengutronix.de,
+	thippeswamy.havalige@amd.com, shradha.t@samsung.com,
+	quic_schintav@quicinc.com, cassel@kernel.org,
+	johan+linaro@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <20250417193107.GA123243@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,51 +64,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415203354.GA34031@bhelgaas>
+In-Reply-To: <20250417131833.3427126-3-christian.bruel@foss.st.com>
 
-On Tue, Apr 15, 2025 at 03:33:54PM -0500, Bjorn Helgaas wrote:
-> On Mon, Apr 14, 2025 at 04:25:21PM +0200, Lukas Wunner wrote:
-> > In February 2003, historic commit
-> > 
-> >   https://git.kernel.org/tglx/history/c/280c1c9a0ea4
-> >   ("[PATCH] PCI Hotplug: Replace pcihpfs with sysfs.")
-> > 
-> > removed all invocations of __get_free_page() and free_page() from the
-> > PCI hotplug core without also removing the #include <linux/pagemap.h>
-> > directive.
-> > 
-> > It removed all invocations of kern_mount(), mntget() and mntput()
-> > without also removing the #include <linux/mount.h> directive.
-> > 
-> > It removed all invocations of lookup_hash()
-> > without also removing the #include <linux/namei.h> directive.
-> > 
-> > It removed all invocations of copy_to_user() and copy_from_user()
-> > without also removing the #include <linux/uaccess.h> directive.
-> > 
-> > These #include directives are still unnecessary today, so drop them.
-> > 
-> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> 
-> Applied to pci/hotplug for v6.16, thanks!
+On Thu, Apr 17, 2025 at 03:18:26PM +0200, Christian Bruel wrote:
+> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+> controller based on the DesignWare PCIe core.
 
-A small issue snuck into the commit message while applying:
+> +static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
+> +{
+> +	/* Delay PERST# de-assertion t least 100ms he power to become stable */
 
-There's a sentence which ends abruptly:
+s/ t / at /
+s/ he / for / ?
 
-    It removed all invocations of lookup_hash() without also removing the
+Could also remove "100ms".
 
-The remainder of the sentence should have been:
+> +	msleep(PCIE_T_PVPERL_MS);
+> +
+> +	gpiod_set_value(stm32_pcie->perst_gpio, 0);
+> +
+> +	/* Wait 100ms for the REFCLK to becode stable  */
 
-    #include <linux/namei.h> directive.
+s/becode/become/
 
-While rewrapping the paragraph, the word "#ifdef" ended up at the
-beginning of the line and "git commit" interpreted that as a comment
-and stripped the line from the commit message.
+Could drop "100ms" here, too.
 
-I think just prepending a blank to the line may stop git from doing that.
+> +	if (stm32_pcie->perst_gpio)
+> +		msleep(PCIE_T_RRS_READY_MS);
+> +}
 
-Thanks,
+> +	if (stm32_pcie->wake_gpio) {
+> +		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
+> +		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
+> +		if (ret) {
+> +			dev_info(dev, "Failed to enable wake# %d\n", ret);
 
-Lukas
+I guess this refers to the "WAKE#" signal in the spec?  Could
+capitalize to remove the question.
 
