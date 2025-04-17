@@ -1,56 +1,60 @@
-Return-Path: <linux-pci+bounces-26150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71A10A92C3E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 22:26:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A2FEA92C49
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 22:28:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04E2E1B661D8
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 20:26:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F8DF1896AC0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 20:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249D01D6AA;
-	Thu, 17 Apr 2025 20:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C5620408A;
+	Thu, 17 Apr 2025 20:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhnyQkmf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nif05Uiz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3461C6B4;
-	Thu, 17 Apr 2025 20:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FF61FF7B0;
+	Thu, 17 Apr 2025 20:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921570; cv=none; b=DgNUu14A/13xNRcCGTlWPKL01roo91Svh1IYG4x7++PMLwqYRCQlgX689x1ecIMxqF5djVNjai1aG/O3dLbHB+mhnek6jDnCHlLe8P76KFyKMXNXLNco9IaB3MtltFVSr7CYbV78uRnnoUdqWVDjIkJ7EUDxBB/jzqTGJOIpXCQ=
+	t=1744921688; cv=none; b=tFEjITYN+BE3cJQFRLK0Cd3Jay+Lrp6jimQX2sXwF0KJ4FOdweEU/goY8pntlV0d2Ce8Z6btv18c1x+AmFQ3CWocoroaxsCj+ecOm88vn7AqEhhirMnuqRcF2BPWg7YHaSbmVW0LN36HEktpK4anfFbhhHAOJgbfeoF8vW2Bp88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921570; c=relaxed/simple;
-	bh=c6K+IDOm2UmtT0YyTQrVHZ1Z6NC5GdO2MJHTb7XTcsE=;
+	s=arc-20240116; t=1744921688; c=relaxed/simple;
+	bh=ZwcydrHnf4owbCgmZ+z4mAJu20e6epNCBpMKRAM2UDI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VvuYFX/3hZaZ0hEnlA5mJWPsKmrgNEuV6CQQr2NZ28E8xoSpDrHcaGVHCbiwGoGpg+MdzPURUcRQFuxIKBEpcgysZBGd7NC2sVyrLktYMnEpaiYlZ4a+GiQ8FOxBu3uAHl9swQmqLuf2fHKOaUg80wvThAXtxMXZ2v8XXYvp2GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhnyQkmf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E9AC4CEE4;
-	Thu, 17 Apr 2025 20:26:09 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=RMFUD+Ih7Xf6jE6ox3T0QvLars7pNZ+mnavH80L60zZIqk8mYbowBgpopBlXeHXmyOvBlh3txY3qjbYd5aknsYQ8DGysGBaFQlnAQqQ7mSo4yRxD4PXkSVNOE6pPKrxpeNWBvSmc7qPIYtcp/VQgWnChHMuWUKV0lc+CNmcshH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nif05Uiz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBBA6C4CEE4;
+	Thu, 17 Apr 2025 20:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744921569;
-	bh=c6K+IDOm2UmtT0YyTQrVHZ1Z6NC5GdO2MJHTb7XTcsE=;
+	s=k20201202; t=1744921688;
+	bh=ZwcydrHnf4owbCgmZ+z4mAJu20e6epNCBpMKRAM2UDI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rhnyQkmf9B0RLV1c8/ro72CPxAwk9Yx0IxmG3XPVfnnr3gHrtHmGh/PeU0ywxup61
-	 lExzMrUAivK5rUUMUkneStI9MFSeLTuxpDGT4S8HWY4acXorQEcRpAX8H6GozJZ++j
-	 G+qrPJ6x4wT0yaO+RyMDllBhF8qdgzu4ernGnayc0200J/chqs2dleUAc0MnAGdis7
-	 68O/zHNs4bRtqHgwqQR1s2KJCdNSgAix8Wjkl3e14aNqcb03f7N2bQ7A/PaXJBHeA7
-	 750YXziDDxCygxKxiT9NccNhoDGDCpEMO6nvE2SYSsF9o99r8lIiHo3MeA/Z+qR/8G
-	 2C91akAGxXMAw==
-Date: Thu, 17 Apr 2025 15:26:07 -0500
+	b=Nif05UizHzsvI55wWdxto9hi/QnlaKBBt21ZJGgiHCCCiSZ02jQpkW/YGd5zUd2pE
+	 +I9uR7UIpEx6rtt5A7UmCy0GaeryiQQmQy9djXLqPlcDo3Upucqa7yZwr3+wrthmFC
+	 NlDftX1ogbkZP4CqpLdrK6ZAVOF0Ph+Xn8W/lPq+UWS4VH+8k85EbIS2NkOZaiqcBD
+	 3jDSXI3KCc1cRXWvGa9zKEh+oMzKacrcbQROeO7OAQP2w0pqeSVOlWnROGDhDOIs2w
+	 u0SECy2gr/Nu2+JZq3LyndL1U8NIDlzAumOy4SNT//a2An92lZDOkpTXGyAcSyrKb0
+	 pqtP/rBF8KTfA==
+Date: Thu, 17 Apr 2025 15:28:06 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, lukas@wunner.de,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alistair.francis@wdc.com, wilfred.mallawa@wdc.com,
-	dlemoal@kernel.org, cassel@kernel.org
-Subject: Re: [PATCH v2] PCI: fix the printed delay amount in info print
-Message-ID: <20250417202607.GA126859@bhelgaas>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+	Xianglai Li <lixianglai@loongson.cn>
+Subject: Re: [PATCH V2] PCI: Add ACS quirk for Loongson PCIe
+Message-ID: <20250417202806.GA127187@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,38 +63,67 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414001505.21243-2-wilfred.opensource@gmail.com>
+In-Reply-To: <20250403040756.720409-1-chenhuacai@loongson.cn>
 
-On Mon, Apr 14, 2025 at 10:15:06AM +1000, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+On Thu, Apr 03, 2025 at 12:07:56PM +0800, Huacai Chen wrote:
+> Loongson PCIe Root Ports don't advertise an ACS capability, but they do
+> not allow peer-to-peer transactions between Root Ports. Add an ACS quirk
+> so each Root Port can be in a separate IOMMU group.
 > 
-> Print the delay amount that pcie_wait_for_link_delay() is invoked with
-> instead of the hardcoded 1000ms value in the debug info print.
-> 
-> Fixes: 7b3ba09febf4 ("PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links")
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Applied to pci/enumeration for v6.16, thanks!
+Applied to pci/virtualization for v6.16, thanks!
 
 > ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> V2: Add more device ids.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..8139b70cafa9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4935,7 +4935,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		delay);
->  	if (!pcie_wait_for_link_delay(dev, true, delay)) {
->  		/* Did not train, no need to wait any further */
-> -		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
->  		return -ENOTTY;
->  	}
+>  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 8d610c17e0f2..eee96ad03614 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4995,6 +4995,18 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+>  		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+>  }
 >  
+> +static int pci_quirk_loongson_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * Loongson PCIe Root Ports don't advertise an ACS capability, but
+> +	 * they do not allow peer-to-peer transactions between Root Ports.
+> +	 * Allow each Root Port to be in a separate IOMMU group by masking
+> +	 * SV/RR/CR/UF bits.
+> +	 */
+> +	return pci_acs_ctrl_enabled(acs_flags,
+> +		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+> +}
+> +
+>  /*
+>   * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
+>   * multi-function devices, the hardware isolates the functions by
+> @@ -5128,6 +5140,17 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
+>  	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
+>  	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+> +	/* Loongson PCIe Root Ports */
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x3C09, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x3C19, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x3C29, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A09, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A19, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A29, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A39, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A49, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A59, pci_quirk_loongson_acs },
+> +	{ PCI_VENDOR_ID_LOONGSON, 0x7A69, pci_quirk_loongson_acs },
+>  	/* Amazon Annapurna Labs */
+>  	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+>  	/* Zhaoxin multi-function devices */
 > -- 
-> 2.49.0
+> 2.47.1
 > 
 
