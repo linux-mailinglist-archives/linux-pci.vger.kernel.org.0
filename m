@@ -1,201 +1,187 @@
-Return-Path: <linux-pci+bounces-26076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B2BAA91764
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 11:12:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B93A917FD
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 11:33:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09CE5189F734
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 09:12:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15C2B3B0FC6
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 09:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62EC9226CF1;
-	Thu, 17 Apr 2025 09:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745FF226165;
+	Thu, 17 Apr 2025 09:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Uv0qjN97"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJdVEW74"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B672D225A22
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 09:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C6315F41F
+	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 09:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744881125; cv=none; b=V19MegRe0klhQXinVZ3yN5waCOYD7W+JrQ/29s7hiLyfKMtm7uK+GHxCi/I2zo0NXa3Wy4eQWF/5opcJ5AX3/YgDvNt8BPYkMr9dAQ+fRdYO7jASoyfrF1CziaPE+jUvS2B1kNDjpEQ4UEzuMJ2vnY/fQISqWHHeupMpZexrLOk=
+	t=1744882405; cv=none; b=GIzO03e6YhDRvErcvH/USY7lu/yDO7DN9SyTwlAZV4sHK/abPFSFvbsG3796dVHp6SQMId/owFh7G3kWb6tIdX99kwVKfEf+6tk/cZuhnbZeNeYzgm/GzBzubx5eTO2DUX9FmEGDi9ZFg7pvztmo/+14BoACWdDQWAVF24K201U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744881125; c=relaxed/simple;
-	bh=S9sx4WRmlrMxC51W4pRnbf5duDxnpgl+Tq42Ma9ogH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oD/KAX/uB4K8hLLsAON4ORBd4/mTQY26WoHOGeNidANePq0icW5sMHkxz/hFa7WBsEahilptLSm931BWJjm/YQSl1k7uxKKTKuz5EvbA/UQnxt+Mf8zdfHAtCPk99LYdEpNpbgsuZneGkbQ/XvE8Swk1ti12Wm7ob6O41C4w4aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Uv0qjN97; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5lENl030240
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 09:12:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ib44xKBj/Ro+Xh08yJf1yGF0ql4Q7w+22UKEcuxyUGk=; b=Uv0qjN97adMvtefz
-	EGm8EizDkZw6NWJUroUIg6Re6QCO0cnRWiLoMQNnp0n9A7OfwDB6MlrjPUQjFVN2
-	RhoKU+OiCE2gx/QGfen8TjmLgivVvd9lIgod8tXQf7735RuZ0vp/tcwdCN2Z16MO
-	XYIWC2IRhfWgdM3X++Rrc4/QY7WWQQXx3MJQoTTZPLQBgI3ZGoGq9q7jOTSoRXKQ
-	UZFdl6N3FCwaq9rfb6fsDD6cAhCnpLKZXf7UdPkAxitmc7Qr8jWIr0nUKRUuEfXh
-	hDuEc/z7La/wDE1Lk3wNjgNLWxPQ1+fCLOrvo5gm/s8b5WM/E+GxwU8MIoKj/dJT
-	M4MYCQ==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69xb3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 09:12:02 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-224347aef79so10252105ad.2
-        for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 02:12:02 -0700 (PDT)
+	s=arc-20240116; t=1744882405; c=relaxed/simple;
+	bh=4N3XYkDst3rYfH4PF/bcxk8Q9dUYBcytZTx+T0TxXHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocrsQpxMhv4jkhjShjaGGclsAPklsyE5NU2pl1B14DilhLEIrWaSVEqECGi3cPqgKtkcgve4yKQipX4P1sTpkRUifI+lDQ5SrrFgCg8Uq0BmfqmS7/SeoDyyNhoWLTALuUBVUiz11v3jb0kvelFa6cKKjnueS862V4L6/sAwxp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YJdVEW74; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736b98acaadso499130b3a.1
+        for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 02:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744882403; x=1745487203; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9N0xhgZNCRJbzkyeaB5Kdu2W0GpuGNyTH2hczyIgWGQ=;
+        b=YJdVEW74OjnjGoPgoX6jkhhvbJMQnF5I6yh04Zo79Rp5HU4gKzh5j8U20iOQ9M5stU
+         sfzg6KIU1yBv4IVWarEpB+Y0M6p+NyiiA7h/mBBLSLEFSHNcdwEj/cWotoXXzmB22wQE
+         GyOIFqN7JcLEL8bWgg9ALeHALewW/7PeiRaeCdB8EndFvxyqfE7JzTBBjBVniMNi6/pg
+         2Ro/miY2nB4OEnZkpK+sQvUtluxpOIsuGcSnskXMhf1QNgDjgr+7bFbBTx+3JZcoy76W
+         akjqWHe70/Xlyxw7XTfCOOgWUp4iS4dyfRsAC1LbFhsdDHOxy0/Pu4Zvr0se72ykSh2v
+         pKCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744881121; x=1745485921;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1744882403; x=1745487203;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ib44xKBj/Ro+Xh08yJf1yGF0ql4Q7w+22UKEcuxyUGk=;
-        b=JBLAMfC60ZhCBJD80pMny4wN9czOHphDsNRZUrrq23IoDj2LcYotsFLQ/9AD+zvGQZ
-         9dNfNH1FQ8o8Cmfr55g86pthIaaFpWmgmtv1I3UEBBFOy7ESVd3+6iS5GJeNVdmZDQ29
-         CPLjXcxnpqKWukQfhpO03kblQZQxUcLEwfJ90BUchly1nG9wlxEv8C4rV3HF4DBG+9Io
-         vb+VMAtuIC3p5DJnXdJ0i2cQ9D3vpLv/ZMfAGRjgn2EgwySLhrXiCeuqY89xRc4geai9
-         GQdmo+TwnA0sHg4DcTOJi+BbJPgMhA8DbH9K0+SabqSm1pxeLTT9x3rrbfkjipqLO5re
-         bs/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXENTM0LqfeWEd63G9t/ILU7MWCBH+/3S5Bt5al6rz36et+AAsX63l0Jt4VXewjaTRSdgFamqmLO4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCPn2LGfhajljNasGkWGpgl0B1AEEDNsTbYTO4an0Vp2XuuMdw
-	qq/lxJ8Zm84uoSglTTSmuWbYAUKWF5DpLlbGV5fYR2b4XgV1rKzuoOUe/fnGo4cFwToBdug5E/W
-	5tSi9amxjZo5w9yOyd939WM1iNg/UE7Q9XKIaY37QiWEechwYs0anFiTCNrU=
-X-Gm-Gg: ASbGncusP80hvzx39zU2iRdCkPfrSopEcUNHx2x1lyBeSclyw63C2zTQ/Gyv+S2fFUt
-	Dc/sbcg3PorHmHO7L7990tyg9XYJpI+Qz7QLiuPheURMcldhuUiDOGvxkXX4302VnU6vASurgXA
-	/wtvtOK+cUQunIE8hYzfFaa7/W7LU2/eI4Hua16pwdWHruRWU78JEYqMYQjB8j8PMdmLeiW0Xsj
-	p06Eh70BCQufsOzmqRKrU3vZ0QV/48GmeGNHurV/8luWLW4StR62zzqPIvWQki/Bv0TtthSow9S
-	2BiZqkdISb+9Hg8KD3joBSwmzocpMPUTnpYzvmfx/w==
-X-Received: by 2002:a17:903:2f85:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22c35973405mr86070425ad.41.1744881121017;
-        Thu, 17 Apr 2025 02:12:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQyKNgE0DokKtvPIYouYE1uOOI7So2YqEjxzqZuyFFiQfJrMgw7yOOs6D0q9vCJ2ghjk5ZDA==
-X-Received: by 2002:a17:903:2f85:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22c35973405mr86070015ad.41.1744881120660;
-        Thu, 17 Apr 2025 02:12:00 -0700 (PDT)
-Received: from [10.92.199.136] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe9810sm28564065ad.249.2025.04.17.02.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 02:12:00 -0700 (PDT)
-Message-ID: <2c0b0929-0610-3e99-03be-a50e9f5f323b@oss.qualcomm.com>
-Date: Thu, 17 Apr 2025 14:41:55 +0530
+        bh=9N0xhgZNCRJbzkyeaB5Kdu2W0GpuGNyTH2hczyIgWGQ=;
+        b=aCUWlhFv71upKlEaTuFKGG0Ln6ReVPZlqrE8wUOZQPDUBE+O6UezzAbqzgTe6Mgnea
+         XaRoctikdQgXVojVHy/pMNwteooOK09e+b5oOgQcHAwN4uzEL4zmOFXvYJZJIXZE30ss
+         mQeakdXHd6QJKk0/JVVJoHvURUVnqzVWVez8z7a4bTtYVKBiBVGp9CaFw3gW0ya6noiB
+         dkMwC+ZY022CVUjCOyawHz7CFsMdQONthTE9O/bBtIMrtlrXcwYOPTE3zIwRM8mvW+8g
+         dFSb6t1B2aZhoRGqVwXcwLgZ3JRADdfb0cq/hkH1GZblId2soFQmHHj3M1qOzM4NONK8
+         nK1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXCRqta0OnVo9yd5nEWwl3saoWPhdDFt+hHJ1Zvjm3F8di1SQDS1dAVWoUt+aZk/tPE3+QaHvZgLOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWZP8Jdw5Q+mM7fp3b2GsERkBHVmkCA1BiAvgim1WZpo2Ur7/a
+	Hd6kKdQAuoZaLCgaIhis0dUmeweSsl/K5uE0dAwS8tWH+AT2Oi/Q6a6l3/Ry6w==
+X-Gm-Gg: ASbGncvfEFgh3NzNGrLV2bYnCUCKGtYSBmqhBV8n09ZTxUO+ozSnkZ/LSXqEqoInqb+
+	eKDWdV89VhOQjwGUSrjvlRAE0rIoke/Bb2Ouxd8JZGmg+TFwwE+CGt2hGA8XOkQLapA+XkAjSt+
+	d0Dfosplacha55VIngr2ImDmp6WZlFgAYQ6X7BHsNM+Lt4GUfqZ5gYl6qN6l85wgBAO335qIMp5
+	qZxsGZDYneZj/sj330rJ7JqpRnryesnbDfkguah+kkmfZGjlm6CQoLx0aOFFTXirKrbtMmm9H2U
+	AXByPR5XMlGRaPbBfmVoXgVGR8dcJwICPtt1elK0VBp8X0aW
+X-Google-Smtp-Source: AGHT+IEDIoppzt9Qk8ptm5Tvdr9bMM0BM2cyotG2JtwFXQXfEIWSI1eGvMWwitL7P6ll2IgmvhRvXA==
+X-Received: by 2002:a05:6a00:2e24:b0:736:8c0f:774f with SMTP id d2e1a72fcca58-73c267ee1bbmr7570930b3a.22.1744882402798;
+        Thu, 17 Apr 2025 02:33:22 -0700 (PDT)
+Received: from thinkpad ([120.60.54.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198d95sm12277569b3a.17.2025.04.17.02.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 02:33:22 -0700 (PDT)
+Date: Thu, 17 Apr 2025 15:03:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
+	Lukas Wunner <lukas@wunner.de>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
+Message-ID: <hcjqtycb3dpauylwx726f3kb722dinuxootjswitchmh6cymlc@d4gzshhlfodh>
+References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+ <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
+ <26b70e1b-861f-4c94-47a7-a267c41cadbb@oss.qualcomm.com>
+ <lsehjhqicvit32jcsjkfqemgypnpim6zbxwapzdrncm3hwrp44@bvwg2acyyvle>
+ <2c0b0929-0610-3e99-03be-a50e9f5f323b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org,
-        Lukas Wunner <lukas@wunner.de>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
- <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
- <26b70e1b-861f-4c94-47a7-a267c41cadbb@oss.qualcomm.com>
- <lsehjhqicvit32jcsjkfqemgypnpim6zbxwapzdrncm3hwrp44@bvwg2acyyvle>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <lsehjhqicvit32jcsjkfqemgypnpim6zbxwapzdrncm3hwrp44@bvwg2acyyvle>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 8K31LvWb_wuIsiz-qtD9bR-p0tigEY48
-X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=6800c5e2 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=om0y8n2fdRonrlNA1WoA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 8K31LvWb_wuIsiz-qtD9bR-p0tigEY48
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-17_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504170071
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c0b0929-0610-3e99-03be-a50e9f5f323b@oss.qualcomm.com>
 
-
-
-On 4/17/2025 1:24 PM, Manivannan Sadhasivam wrote:
-> On Wed, Apr 16, 2025 at 11:21:49PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 4/16/2025 9:59 PM, Manivannan Sadhasivam via B4 Relay wrote:
->>> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>>
->>> The PCI link, when down, needs to be recovered to bring it back. But that
->>> cannot be done in a generic way as link recovery procedure is specific to
->>> host bridges. So add a new API pci_host_handle_link_down() that could be
->>> called by the host bridge drivers when the link goes down.
->>>
->>> The API will iterate through all the slots and calls the pcie_do_recovery()
->>> function with 'pci_channel_io_frozen' as the state. This will result in the
->>> execution of the AER Fatal error handling code. Since the link down
->>> recovery is pretty much the same as AER Fatal error handling,
->>> pcie_do_recovery() helper is reused here. First the AER error_detected
->>> callback will be triggered for the bridge and the downstream devices. Then,
->>> pcie_do_slot_reset() will be called for each slots, which will reset the
->>> slots using 'reset_slot' callback to recover the link. Once that's done,
->>> resume message will be broadcasted to the bridge and the downstream devices
->>> indicating successful link recovery.
->>>
->>> In case if the AER support is not enabled in the kernel, only
->>> pci_bus_error_reset() will be called for each slots as there is no way we
->>> could inform the drivers about link recovery.
->>>
->> The PCIe endpoint drivers are registering with err_handlers and they
->> will be invoked only from pcie_do_recovery, but there are getting built
->> by default irrespective of AER is enabled or not.
->>
+On Thu, Apr 17, 2025 at 02:41:55PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> AER is *one* of the functionalities of an endpoint. And the endpoint could
-> mostly work without AER reporting (except for AER fatal/non-fatal where recovery
-> need to be performed by the host). So it wouldn't make sense to add AER
-> dependency for them.
 > 
->> Does it make sense to built err.c irrespective of AER is enabled or not
->> to use common logic without the need of having dependency on AER.
->>
+> On 4/17/2025 1:24 PM, Manivannan Sadhasivam wrote:
+> > On Wed, Apr 16, 2025 at 11:21:49PM +0530, Krishna Chaitanya Chundru wrote:
+> > > 
+> > > 
+> > > On 4/16/2025 9:59 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > The PCI link, when down, needs to be recovered to bring it back. But that
+> > > > cannot be done in a generic way as link recovery procedure is specific to
+> > > > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > > > called by the host bridge drivers when the link goes down.
+> > > > 
+> > > > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > > > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > > > execution of the AER Fatal error handling code. Since the link down
+> > > > recovery is pretty much the same as AER Fatal error handling,
+> > > > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > > > callback will be triggered for the bridge and the downstream devices. Then,
+> > > > pcie_do_slot_reset() will be called for each slots, which will reset the
+> > > > slots using 'reset_slot' callback to recover the link. Once that's done,
+> > > > resume message will be broadcasted to the bridge and the downstream devices
+> > > > indicating successful link recovery.
+> > > > 
+> > > > In case if the AER support is not enabled in the kernel, only
+> > > > pci_bus_error_reset() will be called for each slots as there is no way we
+> > > > could inform the drivers about link recovery.
+> > > > 
+> > > The PCIe endpoint drivers are registering with err_handlers and they
+> > > will be invoked only from pcie_do_recovery, but there are getting built
+> > > by default irrespective of AER is enabled or not.
+> > > 
+> > 
+> > AER is *one* of the functionalities of an endpoint. And the endpoint could
+> > mostly work without AER reporting (except for AER fatal/non-fatal where recovery
+> > need to be performed by the host). So it wouldn't make sense to add AER
+> > dependency for them.
+> > 
+> > > Does it make sense to built err.c irrespective of AER is enabled or not
+> > > to use common logic without the need of having dependency on AER.
+> > > 
+> > 
+> > Well, yes and no. Right now, only DPC reuses the err handlers except AER. But
+> > DPC driver itself is functional dependent on AER. So I don't think it is really
+> > required to build err.c independent of AER. But I will try to rework the code in
+> > the future for fixing things like 'AER' prefix added to logs and such.
+> > 
+> Right now we have DPC & AER to use this pcie_do_recovery(), now we are
+> adding supporting for controller reported error (Link down) not sure if
+> there will be newer ways to report errors in future.
 > 
-> Well, yes and no. Right now, only DPC reuses the err handlers except AER. But
-> DPC driver itself is functional dependent on AER. So I don't think it is really
-> required to build err.c independent of AER. But I will try to rework the code in
-> the future for fixing things like 'AER' prefix added to logs and such.
->
-Right now we have DPC & AER to use this pcie_do_recovery(), now we are
-adding supporting for controller reported error (Link down) not sure if
-there will be newer ways to report errors in future.
+> May be not in this series, in future better to de-couple err.c from
+> AER as err.c. As the sources of error reporting is not limited to AER
+> or DPC alone now.
+> 
 
-May be not in this series, in future better to de-couple err.c from
-AER as err.c. As the sources of error reporting is not limited to AER
-or DPC alone now.
+Yes, that's part of my plan.
 
->> Also since err.c is tied with AER, DPC also had a hard requirement
->> to enable AER which is not needed technically.
->>
+> > > Also since err.c is tied with AER, DPC also had a hard requirement
+> > > to enable AER which is not needed technically.
+> > > 
+> > 
+> > DPC driver is functional dependent on AER.
+> I got a impression by seeing below statement that DPC can work
+> independently.
+> As per spec 6 sec 6.2.11.2, DPC error signaling "A DPC-capable
+> Downstream Port must support ERR_COR signaling, independent of whether
+> it supports Advanced Error Reporting (AER) or not".
 > 
-> DPC driver is functional dependent on AER.
-I got a impression by seeing below statement that DPC can work
-independently.
-As per spec 6 sec 6.2.11.2, DPC error signaling "A DPC-capable
-Downstream Port must support ERR_COR signaling, independent of whether
-it supports Advanced Error Reporting (AER) or not".
 
-In fact it can work if AER is not enabled also, but will not have full
-functionality of DPC.
+That's why I intentionally said 'DPC driver' not 'DPC'. The driver has the
+dependency, not the feature.
 
-- Krishna Chaitanya.
+> In fact it can work if AER is not enabled also, but will not have full
+> functionality of DPC.
 > 
-> - Mani
-> 
+
+Right. That's why I said functionally dependent.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
