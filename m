@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-26122-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26123-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43501A922DE
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 18:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E413A922E7
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 18:42:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 083D2464B0F
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 16:39:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCB39464914
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 16:42:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4D32550B6;
-	Thu, 17 Apr 2025 16:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5ED254AFC;
+	Thu, 17 Apr 2025 16:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvZnOc/I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4LNlipi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A3D3C0C;
-	Thu, 17 Apr 2025 16:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA3035973;
+	Thu, 17 Apr 2025 16:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744907946; cv=none; b=koBZ/m+3gm7ctV7kY2hWT4oEDY4JpQwUlBgEGOi0eA0WHyYUCfAFIyPYFcRhhpVmgzTn11wOHCWGwsys1Ribp+KYfZLIENQ2rWi25fTjO0DNUfXTaNrQHULGTM9M5sdigajD68+ajhdxjB8I6qvKYyLWBzmhk+mvMrl0uPcw51A=
+	t=1744908139; cv=none; b=Uzl19JD61WLu1iZ5aidbnI9OXBvsYQGCVfLqescDyLC7VmtNDH0ObxB7oj1aiET3dIlrNHtNn7R61PaaUqgSfTFGvKpQs9GgWvZe8orAQwbWXmXlYwse5ED05+gdZY8whcQ1Ur7hb6rmdgtyu6edo4SfHka7WnI+vUzgz3Huwhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744907946; c=relaxed/simple;
-	bh=3bVynOwOhRnPTp6Qdaz4+H3O1NgzpHkzWFZ3znhf9uo=;
+	s=arc-20240116; t=1744908139; c=relaxed/simple;
+	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VVRvya14RPu9Ky6+EjenE63McBk5s6uIavWrCLaHkNi1HHTbd1AIbXuTNuLf+0jNn7I7EvogL1oAw5pwxmLUO5s+mHQJVzZVcbbNF3PWdUWF/gzpnlfArN4EypidgXPliIDkkPbrnjN3YxIA7BuKgDCMkc6pryNKybYs+2GeABI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvZnOc/I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88995C4CEE4;
-	Thu, 17 Apr 2025 16:39:05 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lFwFQOM3Gsad8mWEYCyAPgIKPcudkJzemMmofI25MOoYXSmdGNl81/k3mJjEw447hCBHv/tk0MA1cJRWX8px8qV3lm9zggkcv1sMaM3AcMfWX4hw0MwbA6LICl4VLneSOTDlBha4UnUO6ThdgSJf7Uy7MG2DfEQgQx/meUCdrEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4LNlipi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C792AC4CEE4;
+	Thu, 17 Apr 2025 16:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744907945;
-	bh=3bVynOwOhRnPTp6Qdaz4+H3O1NgzpHkzWFZ3znhf9uo=;
+	s=k20201202; t=1744908138;
+	bh=9Z7zBFITen5PF+y8xcxXkcjNm2Fxh2599HAlAnQpbdc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SvZnOc/I85gqJZkwDZjnKynKc9xfXK2fv/cyICHQQbwvMBE0KFtY6wuKGmzL9mPwG
-	 Xtz400JLslF3YFx3+bs5sZQc1SKCHJVJBw3CzP0bJh55VYeyzK4+87+Nvqe2e0llg/
-	 4N9LTR8XSWegH/g65+lWJ6yKxy7h621LGdjpvpsXvmwtnJLUIy4RRJkEjm8HuJiK9d
-	 pRW8ZuMarCZvE8P9Fcwypgco114DDX7HooRZzkplniyzF5hZM5AglsFLfBc+UNn03T
-	 JBrx8m8PHmiPm18GhmJ4bodD6XpW4r9r88xsb1SFChG1/dcsHYvuYSPWLJVMrhs391
-	 CycdmYU0iEq/A==
-Date: Thu, 17 Apr 2025 11:39:04 -0500
+	b=b4LNlipiHMvrWTAjLoHe+ZwMoIeK2hjXpW23gk4aIrdi/420f1KjZFYcMbrCsxsYA
+	 NbizB1LwKEPz7s1osOFZogR2ovTj02RQBC1VhE+Z5u8A3jntOBYK8auHEmqk2fLrcD
+	 zP0JTHvRL9CILuHpJb1h6E4kDv2D8I7XSqSoNtov3mtMriQht3xUFEd7lJ4Jkirblw
+	 +MzdZRPREZcem9JGuLXoKYCwqtLAUt/WDzJ6KdDYnVUBbOa1QLujt669Gw0ea/fkCO
+	 Y1pBv7Y77WZQ3mU+df3USCgk3DneWDn7cmZ4DaFfyCT2WV397zrdGUICKq/TGsgRXg
+	 SHGc0Od+wJ/rQ==
+Date: Thu, 17 Apr 2025 11:42:17 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Subject: Re: [PATCH 1/1] PCI: Restore assigned resources fully after release
-Message-ID: <20250417163904.GA114476@bhelgaas>
+Cc: Shuah Khan <shuah@kernel.org>, Yi Lai <yi1.lai@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] selftests/pcie_bwctrl: Fix test progs list
+Message-ID: <20250417164217.GA114940@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,67 +59,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250417124529.11391-1-ilpo.jarvinen@linux.intel.com>
 
-On Thu, Apr 03, 2025 at 12:31:37PM +0300, Ilpo Järvinen wrote:
-> PCI resource fitting code in __assign_resources_sorted() runs in
-> multiple steps. A resource that was successfully assigned may have to
-> be released before the next step attempts assignment again. The
-> assign+release cycle is destructive to a start-aligned struct resource
-> (bridge window or IOV resource) because the start field is overwritten
-> with the real address when the resource got assigned.
+On Thu, Apr 17, 2025 at 03:45:29PM +0300, Ilpo Järvinen wrote:
+> The commit df6f8c4d72ae ("selftests/pcie_bwctrl: Add
+> 'set_pcie_speed.sh' to TEST_PROGS") added set_pcie_speed.sh into
+> TEST_PROGS but that script is a helper that is only being called by
+> set_pcie_cooling_state.sh, not a test case itself. When
+> set_pcie_speed.sh is in TEST_PROGS, selftest harness will execute also
+> it leading to bwctrl selftest errors:
 > 
-> Properly restore the resource after releasing it. The start, end, and
-> flags fields must be stored into the related struct pci_dev_resource in
-> order to be able to restore the resource to its original state.
+>   # selftests: pcie_bwctrl: set_pcie_speed.sh
+>   # cat: /cur_state: No such file or directory
+>   not ok 2 selftests: pcie_bwctrl: set_pcie_speed.sh # exit=1
 > 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
+> Place set_pcie_speed.sh into TEST_FILES instead to have it included
+> into installed test files but not execute it from the test harness.
+> 
+> Fixes: df6f8c4d72ae ("selftests/pcie_bwctrl: Add 'set_pcie_speed.sh' to TEST_PROGS")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Applied to pci/for-linus for v6.15, thanks!
-
-I'd like to add the following to the commit log if it's accurate:
-
-  + One symptom:
-
-  +   pci 0002:00:00.0: bridge window [mem size 0x00100000]: can't assign; bogus alignment
-
-    Reported-by: Guenter Roeck <linux@roeck-us.net>
-  + Closes: https://lore.kernel.org/r/01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net/
-  + Reported-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-  + Closes: https://lore.kernel.org/r/3578030.5fSG56mABF@workhorse
-
-Let me know if that's wrong or there are additional reports.
+Applied to pci/for-linus for v6.15, thanks, Ilpo!
 
 > ---
->  drivers/pci/setup-bus.c | 4 ++++
->  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 54d6f4fa3ce1..e994c546422c 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -187,6 +187,9 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
->  			panic("%s: kzalloc() failed!\n", __func__);
->  		tmp->res = r;
->  		tmp->dev = dev;
-> +		tmp->start = r->start;
-> +		tmp->end = r->end;
-> +		tmp->flags = r->flags;
->  
->  		/* Fallback is smallest one or list is empty */
->  		n = head;
-> @@ -545,6 +548,7 @@ static void __assign_resources_sorted(struct list_head *head,
->  		pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
->  
->  		release_resource(res);
-> +		restore_dev_resource(dev_res);
->  	}
->  	/* Restore start/end/flags from saved list */
->  	list_for_each_entry(save_res, &save_head, list)
+> I'm sorry I didn't realize this while the fix was submitted, I'm not that
+> familiar with all the kselftest harness variables and the justification
+> given for the fix sounded valid enough to raise any alarm bells in my
+> mind that something would be off with the approach the fix patch used.
 > 
-> base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+>  tools/testing/selftests/pcie_bwctrl/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
+> index 48ec048f47af..277f92f9d753 100644
+> --- a/tools/testing/selftests/pcie_bwctrl/Makefile
+> +++ b/tools/testing/selftests/pcie_bwctrl/Makefile
+> @@ -1,2 +1,3 @@
+> -TEST_PROGS = set_pcie_cooling_state.sh set_pcie_speed.sh
+> +TEST_PROGS = set_pcie_cooling_state.sh
+> +TEST_FILES = set_pcie_speed.sh
+>  include ../lib.mk
+> 
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 > -- 
 > 2.39.5
 > 
