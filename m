@@ -1,103 +1,118 @@
-Return-Path: <linux-pci+bounces-26111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77EB1A91F77
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 16:23:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 807BBA91FCB
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 16:35:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E0067A82A9
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 14:22:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34F307ABEF4
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 14:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F35824E4AA;
-	Thu, 17 Apr 2025 14:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4E3D2517B9;
+	Thu, 17 Apr 2025 14:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="epf/QWi0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzA0qzRC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0A72512FD
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 14:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A140A2517A3
+	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 14:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899778; cv=none; b=YDrM8AVRmdZ+iJ87+BqNwdtIEQpubK5qy9BgYvUm3Itr82iDQQxaJnuIurjcUzJhexQab7CD03feCYlvsKTWqUTUTGl2AW96N9xxLCtNQYZce2JIy/TSJv5Re8kRwp9xQNYjF3T926lyk78GjXo0/x0xbt4J3rvpzUi0AE7wito=
+	t=1744900528; cv=none; b=mFPJuBSAaNZsf1vuaatbD/H9Rp7HX4gqOyUnMbma7qDZSAFKf7gjTnQhfKCkpMZAlbtchlGNaCg9Pf/IdwQJuEW3QgNu+pKlOCYNpxQIugsdfRjswskemI0IElfpDmSxNYT9qLRBGs3m5ysRJ74WdWbXHuMyhTYmeNMUFm5QSo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899778; c=relaxed/simple;
-	bh=9FSKpxCPd9i3UM5rQhSSgYxqhu8htOS3MLmDsJB3+dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=koa4c7/62btSha++nyKN9dT7yXBA7ftWM84J0ieQubGugHbTX+Tiw0+v13ribwR8qoN0WTNdBNqCtjcf1QsGjqmnOgMG/ux0dlKQWHAAQtsqgYNEH8sIG0YKf+J5+GPF5bJd2Wfx1V7eAnzyFltUhNFJ54SsUxNZikMBjXxaiGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=epf/QWi0; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1744899764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i674xOwrjdf/AAf3vaDDj/zXNM7PUpgpfGixq0BvJVM=;
-	b=epf/QWi0fEMbAePO0z2eV4VX/swstqahqUqzcygHP0DUZtjjOHcjgeViy27Yytj7Be690M
-	ySo035j0wLDy5r1/hXLft9L0MrK9XDkOFsUqji7vLGPO61zUiowfKaBPniuXs+3/0Zpmge
-	/5NGI5R7h5IKsgJFebHve85QL3fvfN3cbdxlh4MwZZjNj2I0w74cWJlNksgOGqz6GoDZam
-	KcBBqm3QSadwVwLWZnfrrJV14r45Vng8AottX3TkeiReqBt+kG/Mit/xfgHyEWPskklxNw
-	v/fAQ33/TVTWCXevtP/iPE/iy9iMwZKKGJP8IwxryliX6s6W21Hl7qPPTUQQRw==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1744900528; c=relaxed/simple;
+	bh=wnrScLvNMWAdpvl0Ot+SMpbyDyceQMrcNClqUjt96MY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sbrGAx9PN8l8UegP/ue0Ix4DQxMMOiG4X36fwltmHds8nMW80GO7KwlRTazHx6Q/YW2aVSpfhZnxTm+I2yK7vQxMFQ2jjHgnAkvPyGiYDrZEJE2+ooNW7mOu40xQrwofLE4+dklkFUgm949zBgDL9XNeej69VrtjEHZ034LqxfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzA0qzRC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935E9C4CEE4;
+	Thu, 17 Apr 2025 14:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744900528;
+	bh=wnrScLvNMWAdpvl0Ot+SMpbyDyceQMrcNClqUjt96MY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OzA0qzRCBUy5GF6fE5vGg1MbVEUMJpKgv4P3BDwDb9eN+jZigMFCncUKnqtmrvSmn
+	 8VDaGwAa3Q7cxyM6nCj/uE3NwVMA5XZbkiWeUIOcylsplj8BLQWnwNlJciLKLgOfRP
+	 ywsebgp6msX8SIwA49ZT4YqdAHwGkDfKecTDvhAfjJKkvRiB74JYVHVzTFcU5P7PL8
+	 SbK5KN/RPszB62Xv1OVy2H+Zf16LAkEDfqMThdp3RIx8HbbsmBHAHeVg6ZmWxjr2HB
+	 J7/eFFGRxF0U/gg2iRdQkaeEknYgdpTKEh9a7F5YvQw7/IUP6WhrCHemWx6Jc/8fQG
+	 7tyWIDX1C7f4w==
+Date: Thu, 17 Apr 2025 16:35:23 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: linux-rockchip@lists.infradead.org,
 	Shawn Lin <shawn.lin@rock-chips.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] PCI: dw-rockchip: Fix function call sequence in rockchip_pcie_phy_deinit
-Date: Thu, 17 Apr 2025 16:21:18 +0200
-Message-ID: <20250417142138.1377451-1-didi.debian@cknow.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Add system PM support
+Message-ID: <aAERqx6LNZpcv7KO@ryzen>
+References: <1744352048-178994-1-git-send-email-shawn.lin@rock-chips.com>
+ <Z_5aib0WGKfIANj_@ryzen>
+ <8815983.T7Z3S40VBb@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8815983.T7Z3S40VBb@workhorse>
 
-The documentation for the phy_power_off() function explicitly says
+Hello Nicolas,
 
-  Must be called before phy_exit().
+On Thu, Apr 17, 2025 at 03:24:34PM +0200, Nicolas Frattaroli wrote:
+> On Tuesday, 15 April 2025 15:09:29 Central European Summer Time Niklas Cassel wrote:
+> > On Fri, Apr 11, 2025 at 02:14:08PM +0800, Shawn Lin wrote:
+> > > [...]
+> > > +      rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_RC_MODE);
+> > 
+> > Here you are setting PCIE_CLIENT_RC_MODE unconditionally.
+> > 
+> > I really don't think that you have tested these callbacks with EP mode.
+> 
+> Hi Niklas,
+> 
+> I may be reading too much into your tone here, but I think it'd be good if
+> you didn't formulate this in such a passive-aggressive accusatory way. You
+> can just express your concern as a question about whether this was tested
+> with EP mode.
 
-So let's follow that instruction.
+I provided a suggestion further down in the same email
+(perhaps split the driver to RC and EP part like the qcom driver).
 
-Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-Cc: stable@vger.kernel.org	# v5.15+
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I also provided a further suggestion here:
+https://lore.kernel.org/linux-pci/aADdI7ByEImYy3Pq@ryzen/
+(perhaps do like the tegra driver and let the callback return -ENOTSUPP
+if running in EP mode.)
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c624b7ebd118..4f92639650e3 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
- 
- static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
- {
--	phy_exit(rockchip->phy);
- 	phy_power_off(rockchip->phy);
-+	phy_exit(rockchip->phy);
- }
- 
- static const struct dw_pcie_ops dw_pcie_ops = {
--- 
-2.49.0
 
+> 
+> After all, I'm giving you specifically the same benefit of the doubt with
+> RC mode that has broken BAR resource mapping on RK3588 in timing-related
+> ways in v6.15-rc that has already taken me about a day of unreliable
+> bisects to try and track down, and may in fact end up bisecting to one of
+> your recent commits touching that part.
+
+It would have been nice if you waited until your bisect was done,
+so you could have provided some facts, rather than speculation.
+
+Nonetheless, may I suggest that you try with Shawn's recent patch:
+https://lore.kernel.org/linux-pci/aACaupQvmiiBE29l@ryzen/T/#m5ec27d0ee4d2345dd4539385b3c7c8f6b98ee72e
+which fixes the .link_up() callback.
+
+The link_up() callback is used e.g. by dw_pcie_other_conf_map_bus():
+https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/controller/dwc/pcie-designware-host.c#L622-L631
+
+So bad things could happen if this callback is not implemented correctly.
+
+
+Kind regards,
+Niklas
 
