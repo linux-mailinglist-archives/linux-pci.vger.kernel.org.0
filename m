@@ -1,221 +1,188 @@
-Return-Path: <linux-pci+bounces-26129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B41D5A92396
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:13:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 233FCA923B0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:16:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEEFB1B60CED
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:14:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3371716B53D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:16:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CB2255232;
-	Thu, 17 Apr 2025 17:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F84D2550B0;
+	Thu, 17 Apr 2025 17:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ+07d1O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJUH06Sv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2995E255227;
-	Thu, 17 Apr 2025 17:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6463619DF9A;
+	Thu, 17 Apr 2025 17:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744910028; cv=none; b=qcs0RJs+y1mewmXRZiuoCQlXxvKsydmge0ruYHQRQYKdSKo+R3pQmwiNVMa/2rkZ9VPnbg40HyQjfigs4QT2B9EhBdTvwx5RSl0zkqfGPFzoCKaq/Kx8a6AfD+ZGCli581WafPw7dWzPUAsMt43zdEBEMwq/GVmE8dUsgL72UNs=
+	t=1744910197; cv=none; b=fKI0gQONF3M3b/3dlcAX4R5xnaJ7VfcLJBs7SQiiCN9HwODAWZZHPm5YegPOlzqxyHD9MB5IiSU6GZEaLNVp9aWCLUrMYZE/pIf9DEprz1DryUAcXt4ZHVZIK6foDjfSRvmzgWyQpYU9wV6ODgR6jFORIvC/riVoocO0jRxbB6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744910028; c=relaxed/simple;
-	bh=ClXKge+s0+Ub2mg760Y3fWyvgn0KGdmf2n1ls9/1cQ4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RCOkx6i9LwU4HmEf4RUdWzaf8m4zg9YoEIYh+IartBwwC+GgoJ4T4/pzUShLUKkKG3UilfFGmCVd8E4I5o8Ir5VXZvarWf+PncX8Z6Fm05RpIo5IiaEBciJtJDYaWH4AJIz0RkwzijYYxEWvPi8/p1Cg1ljCiL7pRh8WWQB1oXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJ+07d1O; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6ecfa716ec1so10451066d6.2;
-        Thu, 17 Apr 2025 10:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744910026; x=1745514826; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMiNN63eUUM5t6fmwQT7MGcJeOTU1iqkIGAVW80wSWM=;
-        b=cJ+07d1OEuUmDXsNNIezebyDQpYhFn6WZCYc7/xTmYME0f5EKDqF61a81MLJURIT/C
-         Muva7nhr6xwbxWlE/NTx+c9A07tGvayU+r/IZGjhGMtxbB0z4/53Du2RNrZA9VXOMuzr
-         wpZrb9nTf2TuObiI0EjBLnIZCzzekkqyodMtidy7gy/CD/exOb56TOIThqW4kPppHnaq
-         oYecbRLtG2SZlVeT48dwp7t9whSPsnMU5KXk7uiqu+0LO4/szUK57dB+oVYp3UgKK+ln
-         WIUVmPuLum9Oy5RKOKyX8vCoKudeKaPxJJE9dzRbS1F1eY55pg81YraQ/qL8CCGfiNuU
-         H+Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744910026; x=1745514826;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uMiNN63eUUM5t6fmwQT7MGcJeOTU1iqkIGAVW80wSWM=;
-        b=JXooNIik3wHzwM3Ux2zPeqFuKUAn63re1ezdBfFsZBK+K+rULnOYgfI0bQuA+YYU0u
-         l3gbwd4Yrn15cWAhBn/8lgBglGC84yFQUiESo0sh8PrZhzQ1uthqnq/+9ovjyEdRk7MX
-         A6LjBx6fF1+PVGvA1oZYeuKzZg4o+qyzOogzuxNSxfV6qM4MwBz575ixgbsq1GXc6ref
-         3UguCXa1kLavfm+0bxYXr6eSJHxQKqkPAFbBitqArSpKl3TbofyP/MrkCw/XzmAix9EL
-         Se8IcfeILWDrSAOXYUhzMuVup6ED7XcRQ+th2m6g/bAnb9h+AgrUfm+uKgT4S6z8rRHK
-         C5cw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Ho2NrnGPiOhOclnxE2Mr2+P41skGwSXWk2B1B5t7vrIWqHi4Q6ziHwkzm5ToLmD5atscLn5vZ9Dd@vger.kernel.org, AJvYcCUeYF8vB1VBe8qlgsOqsm9TUD5H13onbrWFysgCjfSRO1k4W/LV3mGT67Kiak9+KrNQhJeDngzj41up52IT@vger.kernel.org, AJvYcCUpbWxFViwKYunlrE4aK2VgYbdssrVk//JWeQKaBa7EtQ78ZbNOQJKiSMYG/WPVascYsU2ccLQ427Oy@vger.kernel.org, AJvYcCVIByMDtyjdFYbgpnA0t36jy0oPI4BM57+okLiMT8K9EmOrfH5+k2q9JxA8bzG4fCgvLiOfhbWXJrF8/do=@vger.kernel.org, AJvYcCVWHxnyrPsrAG0wrJIgIhlUs11o3ZxMiusMr+lupl5ja2qX5pG7oRoDP824kzJ+XN5ot8IaG685@vger.kernel.org, AJvYcCVnye0uvgqnwAE7OO/KaNxfkEW1jVJdGluaE5Auzcb+QnFQoEUrj7SaISCkV+G5H4H/CZN6kl61K3KVgzbqy34=@vger.kernel.org, AJvYcCVxSU2ZBu58SBGyEUPlyIbikGy58uIJNCion2td/FTguY1yYLmTUsB3xi47nf2g6qUmWtyXcp76TvZOkzgf@vger.kernel.org, AJvYcCXuM3Nh3228ousIRky9KPcpfnpUeGU9Vq9H/Hh0Yx31JluKVJUdKhmErz0+7WkJLhx5rNJiM/8qqU/vrfuA+FV3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS73WHSy5BwkiClAlwyWP5J53DTXp0KfVoXbfYBcfCZDYljf2g
-	xtICUZE5l3uxTlB3JDZwdZc0ui+ZtujoFiKz01CFnkCcKIbi3HhJ
-X-Gm-Gg: ASbGncvURpN4aQe0oHv9za4x1exOccqzWk9IeudYPOv82uesxrDH7upqNBLccgP0I6G
-	OBYa74WnOheNX5CLuiYJBuPgiJbpcPtdQU+FvQ8D0Rr7NWeVO4NaBXE2TmVZ3iFgWhdHGf8rdYR
-	+L/1kKH/3b32zP2RoE7fBABZHPDGiL+tf9a9RPbfttZmjUKrAsosL5Rrz3885pXEjlGjNVAzPnz
-	ZL/kTD8sBVY7ySCsNgVzv5CH81TuW63fW5VSRZNekvBLgQeAqpgc7ALdX00yEuoVi25ArLNFubf
-	4SATTvwbDp/u0lG3v4a/MPIl0ScaiBg30VnBVzTk9+uhmurm7Pab3LNvhHO3hLzmqdeUt89k0G4
-	lasuE02OLiv/gL5Cp2IMGlejxtxF+56k=
-X-Google-Smtp-Source: AGHT+IFjAMymz+o8QFD3zeYcOgfTsX1rJmYVCrC8UuklVGxVBRToXezBFVxai8deeydLj3G4kuqUbg==
-X-Received: by 2002:a05:6214:29ca:b0:6f2:aefb:948d with SMTP id 6a1803df08f44-6f2b2f47dafmr111323006d6.15.1744910025787;
-        Thu, 17 Apr 2025 10:13:45 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21d85sm1193506d6.107.2025.04.17.10.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 10:13:45 -0700 (PDT)
-Message-ID: <680136c9.d40a0220.3a40bc.0bd0@mx.google.com>
-X-Google-Original-Message-ID: <aAE2xsLJq-QnGamy@winterfell.>
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4A7821200043;
-	Thu, 17 Apr 2025 13:13:44 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Thu, 17 Apr 2025 13:13:44 -0400
-X-ME-Sender: <xms:yDYBaKP-8D2Cc1Qasl15QzYIKWEXmuEJNyu7NeylH87LFVV_OyaoUg>
-    <xme:yDYBaI_5nESWhc4x7XO7Kw4SC8rxSyDiRyMg0FcQNLUttVtEKp05ZjLA7qGXWUc-L
-    bswlrf6bKx-KuONyA>
-X-ME-Received: <xmr:yDYBaBQUQUgJSQ_cEe2LZpJkNWc6_9yJwwld8UVgtygkbo3-_CO0cFVCfm8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelkeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
-    rhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnuc
-    fhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthht
-    vghrnhepfedvkeettdeluedtjeevleeugfehiedvuefhgfdvleduheegvdekudegvefhue
-    ffnecuffhomhgrihhnpehgihhthhhusgdrihhonecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrh
-    hsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgv
-    nhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhope
-    egjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthgrmhhirhgusehgmhgrihhl
-    rdgtohhmpdhrtghpthhtohepmhgrshgrhhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggr
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthht
-    ohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsg
-    gvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:yDYBaKvwEls1Zv6MdJG_fBGROyvSZPi_smjaTZit-e5mcuMjphUgRw>
-    <xmx:yDYBaCffMS8uRoKqZ7odUAvP81el5qkqHjyOniSsrdgkC12UYxz4FA>
-    <xmx:yDYBaO2pk_HMexV47hY4tJuwpSETKzXzexChsPkbiSfrQ6HAuB9-hA>
-    <xmx:yDYBaG_ZoyUhjasgiehzWnKMBRUdZTU7eKXpRc5jx2qcFp0R-6dfRQ>
-    <xmx:yDYBaB8bIvlKrY0p0lTwqimjLRsBSCtP3OJvaLaUDpHBMf4dz94q4W3O>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Apr 2025 13:13:43 -0400 (EDT)
-Date: Thu, 17 Apr 2025 10:13:42 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v9 3/6] rust: enable `clippy::as_ptr_cast_mut` lint
-References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
- <20250416-ptr-as-ptr-v9-3-18ec29b1b1f3@gmail.com>
+	s=arc-20240116; t=1744910197; c=relaxed/simple;
+	bh=PvCdeV/T71+XdJMLiE0kUIteJDGjHav14JPcDUzEWbk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NfR+7pFe6C/DEGDdRoTucByMy6DxLvVwUCk4k5avQHl9W8m4SSvtJLfxmqE/L6+FVc1KmS92T6T9ebjgFA40nfqsONt7gYqLB83mFj+BQN2+JSg2WwqRgc+12A8Kkc7vrxQq/nrdSeXTYl3J/IPgGiEKCd3DCv3KGcfEpkKkfEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJUH06Sv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D8B20C4CEE4;
+	Thu, 17 Apr 2025 17:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744910196;
+	bh=PvCdeV/T71+XdJMLiE0kUIteJDGjHav14JPcDUzEWbk=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=WJUH06SvY8Ksr0nzZ7DCUDo5Di7SQoeF6dFkQW3NemsP8cvNAqoOA2s91iIo/YvyP
+	 k8PRMNjQcOKH/9qx1cGBSCmXEy1AkfKAbY9p/1EFc6OibXdq3cS8C1N4jR0U22F9B7
+	 W0Mq3sdRJb3z+Ug37awsk8cybqi79w5JHv/3aZx3JoDqMr61t0D6KO0Wj564qRrpb8
+	 d6MynBi239RebUcYGwk4k5O8IYV9nKdcGVEFQV4eSqmexy4cCSx1u9MLtbSnyQjjQa
+	 cAzceTCkgC5T+uLRuBJ/nqlefijOwNmjG2C/HENazcMKuxN0vsjHcJ/4VWqsqsOw/4
+	 3XVhPEI7Vg37g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4343C369C9;
+	Thu, 17 Apr 2025 17:16:36 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH v3 0/5] PCI: Add support for resetting the slots in a
+ platform specific way
+Date: Thu, 17 Apr 2025 22:46:26 +0530
+Message-Id: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416-ptr-as-ptr-v9-3-18ec29b1b1f3@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGo3AWgC/3XNzQrDIAzA8VcpnudQ+2Hdae8xdrAutoFSSyyyU
+ frusz1tjB3/IfllZREIIbJLsTKChBHDlKM8FcwNduqB4yM3U0LVohIVnx0CJ4iw8DiGhetSdN5
+ qafMGy1czgcfnId7uuQeMS6DX8SDJffrfSpILblpTKyPbzhtxHXGyFM6BerZjSX0AsvkFVAbAg
+ 246pVsnv4Ft2977FJM68AAAAA==
+X-Change-ID: 20250404-pcie-reset-slot-730bfa71a202
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
+ Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Daire McNamara <daire.mcnamara@microchip.com>
+Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4498;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=PvCdeV/T71+XdJMLiE0kUIteJDGjHav14JPcDUzEWbk=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBoATdtxd9VXuCzJQXALX9GONRBJRZvlq1rHHO2E
+ vixk5tx8BOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaAE3bQAKCRBVnxHm/pHO
+ 9SGZB/9wO83g2WQiJXUe+pmJAGWUVZyOgslNdIVc+RJ1hJtslE2h7Sab5a93Ifm+nv6wpK569OR
+ i1gjAn8JYIjUYRKqe549owUx0d61b6uUI9aqgk5KorUfpMWpCuCwZlALyUoR58nsedoG1u105el
+ 9BQX6K3r57OIC5YGIdFwZu+126TXcX02ygDt7e+aG1XmFJRjKOD3ir8NJRHge2Lweh1AkFMZ+by
+ ApXkVlkdI1rqHa9ZDPwn/4UTjM2scyba3TkffP72FPsDzVQd7lhe65j6UpqS7AsaDkpkDAim/3z
+ zqhI1xMxVGFaNU4cJ0tX3GrjjkOBQ8njtMdysDf6f6fkzXyf
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On Wed, Apr 16, 2025 at 01:36:07PM -0400, Tamir Duberstein wrote:
-> In Rust 1.66.0, Clippy introduced the `as_ptr_cast_mut` lint [1]:
-> 
-> > Since `as_ptr` takes a `&self`, the pointer won’t have write
-> > permissions unless interior mutability is used, making it unlikely
-> > that having it as a mutable pointer is correct.
-> 
-> There is only one affected callsite, and the change amounts to replacing
-> `as _` with `.cast_mut().cast()`. This doesn't change the semantics, but
-> is more descriptive of what's going on.
-> 
-> Apply this change and enable the lint -- no functional change intended.
-> 
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#as_ptr_cast_mut [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Hi,
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Currently, in the event of AER/DPC, PCI core will try to reset the slot and its
+subordinate devices by invoking bridge control reset and FLR. But in some
+cases like AER Fatal error, it might be necessary to reset the slots using the
+PCI host bridge drivers in a platform specific way (as indicated by the TODO in
+the pcie_do_recovery() function in drivers/pci/pcie/err.c). Otherwise, the PCI
+link won't be recovered successfully.
 
-Regards,
-Boqun
+So this series adds a new callback 'pci_host_bridge::reset_slot' for the host
+bridge drivers to reset the slot when a fatal error happens.
 
-> ---
->  Makefile              | 1 +
->  rust/kernel/devres.rs | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 7b85b2a8d371..04a5246171f9 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -474,6 +474,7 @@ export rust_common_flags := --edition=2021 \
->  			    -Wrust_2018_idioms \
->  			    -Wunreachable_pub \
->  			    -Wclippy::all \
-> +			    -Wclippy::as_ptr_cast_mut \
->  			    -Wclippy::ignored_unit_patterns \
->  			    -Wclippy::mut_mut \
->  			    -Wclippy::needless_bitwise_bool \
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 9e649d70716a..f7e8f5f53622 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -143,7 +143,7 @@ fn remove_action(this: &Arc<Self>) {
->              bindings::devm_remove_action_nowarn(
->                  this.dev.as_raw(),
->                  Some(this.callback),
-> -                this.as_ptr() as _,
-> +                this.as_ptr().cast_mut().cast(),
->              )
->          };
->  
-> 
-> -- 
-> 2.49.0
-> 
+Also, this series allows the host bridge drivers to handle PCI link down event
+by resetting the slots and recovering the bus. This is accomplished by the
+help of a new API 'pci_host_handle_link_down()'. Host bridge drivers are
+expected to call this API (preferrably from a threaded IRQ handler) when a link
+down event is detected. The API will reuse the pcie_do_recovery() function to
+recover the link if AER support is enabled, otherwise it will directly call the
+reset_slot() callback of the host bridge driver (if exists).
+
+For reference, I've modified the pcie-qcom driver to call
+pci_host_handle_link_down() after receiving LINK_DOWN global_irq event and
+populated the 'pci_host_bridge::reset_slot()' callback to reset the controller
+(there by slots). Since the Qcom PCIe controllers support only a single root
+port (slot) per controller instance, reset_slot() callback is going to be
+invoked only once. For multi root port controllers, this callback is supposed to
+identify the slots using the supplied 'pci_dev' pointer and reset them.
+
+NOTE
+====
+
+This series is a reworked version of the earlier series [1] that I submitted for
+handling PCI link down event. In this series, I've made use of the AER helpers
+to recover the link as it allows notifying the device drivers and also
+allows saving/restoring the config space.
+
+Testing
+=======
+
+This series is tested on Qcom RB5 and SA8775p Ride boards by triggering the link
+down event manually by writing to LTSSM register. For the error recovery to
+succeed (if AER is enabled), all the drivers in the bridge hierarchy should have
+the 'err_handlers' populated. Otherwise, the link recovery will fail.
+
+[1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v3:
+- Made the pci-host-common driver as a common library for host controller
+  drivers
+- Moved the reset slot code to pci-host-common library
+- Link to v2: https://lore.kernel.org/r/20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org
+
+Changes in v2:
+- Moved calling reset_slot() callback from pcie_do_recovery() to pcibios_reset_secondary_bus()
+- Link to v1: https://lore.kernel.org/r/20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org
+
+---
+Manivannan Sadhasivam (5):
+      PCI/ERR: Remove misleading TODO regarding kernel panic
+      PCI/ERR: Add support for resetting the slots in a platform specific way
+      PCI: host-common: Make the driver as a common library for host controller drivers
+      PCI: host-common: Add link down handling for host bridges
+      PCI: qcom: Add support for resetting the slot due to link down event
+
+ drivers/pci/controller/Kconfig                    |  8 +-
+ drivers/pci/controller/dwc/Kconfig                |  1 +
+ drivers/pci/controller/dwc/pcie-hisi.c            |  1 +
+ drivers/pci/controller/dwc/pcie-qcom.c            | 90 ++++++++++++++++++++++-
+ drivers/pci/controller/pci-host-common.c          | 64 +++++++++++++++-
+ drivers/pci/controller/pci-host-common.h          | 17 +++++
+ drivers/pci/controller/pci-host-generic.c         |  2 +
+ drivers/pci/controller/pci-thunder-ecam.c         |  2 +
+ drivers/pci/controller/pci-thunder-pem.c          |  1 +
+ drivers/pci/controller/pcie-apple.c               |  2 +
+ drivers/pci/controller/plda/pcie-microchip-host.c |  1 +
+ drivers/pci/pci.c                                 | 13 ++++
+ drivers/pci/pcie/err.c                            |  7 +-
+ include/linux/pci-ecam.h                          |  6 --
+ include/linux/pci.h                               |  1 +
+ 15 files changed, 196 insertions(+), 20 deletions(-)
+---
+base-commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
+change-id: 20250404-pcie-reset-slot-730bfa71a202
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+
 
