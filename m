@@ -1,112 +1,188 @@
-Return-Path: <linux-pci+bounces-26060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C3ADA914AE
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 09:05:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E50BCA914B9
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 09:06:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F350440154
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 07:05:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 405FA1888350
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 07:06:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5129205E2F;
-	Thu, 17 Apr 2025 07:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1F6205E2F;
+	Thu, 17 Apr 2025 07:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIwTodbB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mffqul+9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA0A64A98;
-	Thu, 17 Apr 2025 07:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E4F1E4929
+	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 07:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873495; cv=none; b=UDqp1KasU/mYWTf6AhbxLlYW1lq8D4qaRCs8xHWS72lecBPHgIEFDAOu9RhNDcugdFFy7H0tVtyK3wbs2knR92I17CzXR9EV30l1rfE0yiyuKmuMf2ZZVCBb0Ht/7kEdo4SjLB2s4DjyFBKSu/r7Jfj+YiDzQiFwGuSjnu3/XPQ=
+	t=1744873583; cv=none; b=kiXUcEAYs/ifQiV+sEJma1YDXa2jkgJv6aeM7f6NSJDxG5i08F4ItMaiVkdix4HqDISqkKoI44qm2Ea5YAwUk0EuFQLZcD4tMuIsIp4cvjvu63rOAjV1RHv+OcAlkt9yYGM9DQ9n54P/V0LESV3irqdmmpUKN7wK7nWtTnsshdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873495; c=relaxed/simple;
-	bh=A1UXWE3ilQY9BEMls0KvjFVXoarU66FDUevVVhE2dx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhsT9C5NEAP/lSVp5xqAEwgnt4mvjU/KCYZBTSm5FIWb+1PZchjoX6OKLSjVps6IzJtXKnSscrdZ1yjEnlrzru7txByy91tZJmG77WomDlQYmNZpVYBBOZjmKl9wG+oiXKcGWzbNuKRGUP25P+xmYJ9QTBrtqbS1mlY1H2WWYuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIwTodbB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE57C4CEE4;
-	Thu, 17 Apr 2025 07:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744873495;
-	bh=A1UXWE3ilQY9BEMls0KvjFVXoarU66FDUevVVhE2dx4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XIwTodbBMR171TZ4AX8MxpAiVF4LBuFV++eunfuyLDo2jIZl1zpE5f4KhmHssGfLC
-	 OQcWFRyNDLhjyrvxLCrUbTGEW1ae4TIKGUIkdZHEH1NoTrjwGrtue3XXw2feCYrEPI
-	 LfulYwe5IAACEvI2AMz6m1mwVHEACaQgKRbvPWUVI6nuluOU3JuRSKEftCtGpNqQcp
-	 nnPIZslkezsAeBIYHpTjhNklZpwxRwuaHjQkftxs+VKglhBHChG7m8SfxxYRO3aOK8
-	 2KzqtRqP1C9aIPeKXiT08gJunojmUrEiCg1S9pg8zGTa7YBou++qIYu1YbmAt1xDo/
-	 +HcDrKaJ0Ga1w==
-Date: Thu, 17 Apr 2025 09:04:50 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <aACoEpueUHBLjgbb@ryzen>
-References: <20250416151926.140202-1-18255117159@163.com>
+	s=arc-20240116; t=1744873583; c=relaxed/simple;
+	bh=zobxR+PetJHd1b80p/Rpe8VIRjLN95XqD/D9aO5W7Uc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=W6ZJf/BSWa0m00fRreufQT9hcKe2E+PAict2y4HXTwT8v+l8/i/P82RN18uIVBET3xXQkCK6TQFV2E65O4Fy8vz4B6PupkVuX/hwhpEY2CZegI+eCIodZbFTcx7K9uQX7222JiwaZkkzI6J0NtKdeojSsn2NXTycSzbsBOYSyZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mffqul+9; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744873582; x=1776409582;
+  h=date:from:to:cc:subject:message-id;
+  bh=zobxR+PetJHd1b80p/Rpe8VIRjLN95XqD/D9aO5W7Uc=;
+  b=Mffqul+9p4SN4t4iOsEE1z7FcVipnb2Tmagdw1IdnyOWXxfxwrbR7ga7
+   KHxSDuZS4AUDkdHCdmGjpVPlLAt+KtgZZN1uSM7wanPiCs7aKQZ9j4wJK
+   Qh+b9eYMHatrsvkDFiYNQXaLKBEGVP47NVjImm5vD/3I3ZMBOU+oN0kpv
+   Lyyop0xVh4uCz++wJ6qUZlVyhi2qqBQNceVKSc0eYk7nQxjimG4JBCsvh
+   Wj+/zZI3+0MiYbKgzyNHpDtqHZwEY9FRWXT9TSwrxGqkWYyER6bN/x+Uw
+   4ZEe7mg9DCq1BNR4oz3D0I79uZcxiPkfLLjSSKK7UCfIHlmdtVN5XtGoE
+   A==;
+X-CSE-ConnectionGUID: Ey/tAySoTzars/qDJ2IWdA==
+X-CSE-MsgGUID: rjqYmpKqQJyKWdZpdsaKeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46163501"
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="46163501"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 00:06:21 -0700
+X-CSE-ConnectionGUID: DXQ4SVM5ShqXWNIET4wYNw==
+X-CSE-MsgGUID: hdLj1oJoQ9Sol9uuqo1ULw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="135534052"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Apr 2025 00:06:19 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5JKC-000Lh4-2t;
+	Thu, 17 Apr 2025 07:06:16 +0000
+Date: Thu, 17 Apr 2025 15:05:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ bc0b828ef6e561081ebc4c758d0c4d166bb9829c
+Message-ID: <202504171533.ZXMYwgci-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416151926.140202-1-18255117159@163.com>
 
-Hello Hans,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: bc0b828ef6e561081ebc4c758d0c4d166bb9829c  Revert "PCI: Avoid reset when disabled via sysfs"
 
-On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> but its hardware capability actually supports 256 bytes. This results
-> in suboptimal performance with devices that support larger payloads.
+elapsed time: 1456m
 
-Patch looks good to me, but please always reference the TRM when you can.
+configs tested: 95
+configs skipped: 1
 
-Before this patch:
-		DevCap: MaxPayload 256 bytes
-		DevCtl: MaxPayload 128 bytes
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250416    gcc-12.4.0
+arc                   randconfig-002-20250416    gcc-10.5.0
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250416    clang-17
+arm                   randconfig-002-20250416    gcc-7.5.0
+arm                   randconfig-003-20250416    clang-21
+arm                   randconfig-004-20250416    clang-19
+arm64                            allmodconfig    clang-19
+arm64                 randconfig-001-20250416    gcc-8.5.0
+arm64                 randconfig-002-20250416    clang-21
+arm64                 randconfig-003-20250416    gcc-6.5.0
+arm64                 randconfig-004-20250416    gcc-8.5.0
+csky                  randconfig-001-20250416    gcc-14.2.0
+csky                  randconfig-002-20250416    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250416    clang-21
+hexagon               randconfig-002-20250416    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250416    clang-20
+i386        buildonly-randconfig-002-20250416    gcc-12
+i386        buildonly-randconfig-003-20250416    gcc-12
+i386        buildonly-randconfig-004-20250416    gcc-11
+i386        buildonly-randconfig-005-20250416    clang-20
+i386        buildonly-randconfig-006-20250416    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch             randconfig-001-20250416    gcc-14.2.0
+loongarch             randconfig-002-20250416    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250416    gcc-6.5.0
+nios2                 randconfig-002-20250416    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250416    gcc-11.5.0
+parisc                randconfig-002-20250416    gcc-7.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250416    gcc-8.5.0
+powerpc               randconfig-002-20250416    clang-21
+powerpc               randconfig-003-20250416    clang-21
+powerpc64             randconfig-001-20250416    clang-21
+powerpc64             randconfig-002-20250416    clang-21
+powerpc64             randconfig-003-20250416    gcc-6.5.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250416    clang-20
+riscv                 randconfig-002-20250416    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250416    clang-21
+s390                  randconfig-002-20250416    gcc-6.5.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250416    gcc-14.2.0
+sh                    randconfig-002-20250416    gcc-6.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250416    gcc-11.5.0
+sparc                 randconfig-002-20250416    gcc-11.5.0
+sparc64               randconfig-001-20250416    gcc-5.5.0
+sparc64               randconfig-002-20250416    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250416    clang-21
+um                    randconfig-002-20250416    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250416    gcc-12
+x86_64      buildonly-randconfig-002-20250416    gcc-12
+x86_64      buildonly-randconfig-003-20250416    gcc-12
+x86_64      buildonly-randconfig-004-20250416    clang-20
+x86_64      buildonly-randconfig-005-20250416    clang-20
+x86_64      buildonly-randconfig-006-20250416    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250416    gcc-7.5.0
+xtensa                randconfig-002-20250416    gcc-9.3.0
 
-As per rk3588 TRM, section "11.4.3.8 DSP_PCIE_CAP Detail Registers Description"
-
-DevCap is per the register description of DSP_PCIE_CAP_DEVICE_CAPABILITIES_REG,
-field PCIE_CAP_MAX_PAYLOAD_SIZE.
-Which claims that the value after reset is 0x1 (256B).
-
-DevCtl is per the register description of
-DSP_PCIE_CAP_DEVICE_CONTROL_DEVICE_STATUS, field PCIE_CAP_MAX_PAYLOAD_SIZE_CS.
-Which claims that the reset value is 0x0 (128B).
-
-Both of these match the values above.
-
-As per the description of PCIE_CAP_MAX_PAYLOAD_SIZE_CS:
-"Permissible values that
-can be programmed are indicated by the Max_Payload_Size
-Supported field (PCIE_CAP_MAX_PAYLOAD_SIZE) in the Device
-Capabilities (DEVICE_CAPABILITIES_REG) register (for more
-details, see section 7.5.3.3 of PCI Express Base Specification)."
-
-So your patch looks good.
-
-I guess I'm mostly surprised that the e.g. pci_configure_mps() does not
-already set DevCtl to the max(DevCap.MPS of the host, DevCap.MPS of the
-endpoint).
-
-Apparently pci_configure_mps() only decreases MPS from the reset values?
-It never increases it?
-
-
-Kind regards,
-Niklas
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
