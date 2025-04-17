@@ -1,206 +1,166 @@
-Return-Path: <linux-pci+bounces-26126-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26127-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D9C9A92350
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:01:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4892CA92385
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC9907B29D4
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:00:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6644516D1E1
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:10:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56F12550B6;
-	Thu, 17 Apr 2025 17:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B06A253B59;
+	Thu, 17 Apr 2025 17:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNKBIE8+"
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="xRrOkl+q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591B81DE2BA;
-	Thu, 17 Apr 2025 17:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC8B17A30E
+	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 17:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909278; cv=none; b=JIkd6R9z2Ti9VfjClJ0tqspwZA4TGd/U6+RnElzGo29nHcly972v+HpI5CVyqA8SdxGHrJMCOX+Her3DtYRoVP8FYsfXgO9oElIMa7FRHz11B4uG6qmAky+7nz+WPcrKAFU0rhR/tP5HqgushWAuaXD8tb+m+C/FJ8Twok68vOI=
+	t=1744909802; cv=none; b=aAefPcf6+Ph1fV2JC+P1pokl1sn83FvotUjR3nltnoi9Bk3+0o34/cnXgRFiCO1l3IJiqG3DKI5KQ3iIlbhIAfNN/PAacdYjkMVoPgHkyqwFcns3qNAvWKOGFklmU/Mfc2b7YRioid/mekR4X7yycJQzu/3NDKqGS4HumIJHhRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909278; c=relaxed/simple;
-	bh=8i9lX0psQnMN8sdsTxonUupq8Y2juLTsgFuRvvLwuBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dp8ViFW/gW3bpBRsYuXqhSFAACT93Tq9CXIxpTh+RvvXAbNhFtX2r6lDbml2Lzs/L59agbRF4GnDliVjMaQWTjp86Q15fp7xkIlbby4SdPtT5cE0VF7Cf6Qf9D2JJ0c3+R2oIPoeeaNd0zSiIVU+S7zmi+pOlvVFybR4zD62bMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QNKBIE8+; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso9366671fa.0;
-        Thu, 17 Apr 2025 10:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744909274; x=1745514074; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WCm+5cTD1ipGuSKYz4yFrUfBStPZICztG7ial36N10I=;
-        b=QNKBIE8+TJI+Dg92PPiN6FhAMioccy5Oy8k6p81jU5wV2YzfrReqCInP71n5Y0kuQN
-         CFhLqyO3CBnQYY1mETA6cWLipXu3UxxlcEuB7biLTtaZXw35q268gVuyoWQnJktkUwFe
-         Pnu8Lc6zjKGPd/Z4cFSwIGarMTIxEedDDLTx5/ftiD0Er9dYcj6plcrVsPf/YLwyYtHa
-         mkULmwxC9hCiF2YBMsjpkGsp+0QkXdVI2iZ+3EOWnwcJQqwqU5RUFhM7BowbT5BSxgbp
-         fCxnXeBV+EfyK8/7iXpocuMT8He2nZT5jvFRBt6On/DHfkyLF53LM1cxYIKsRrq7t0Dp
-         j7jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744909274; x=1745514074;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WCm+5cTD1ipGuSKYz4yFrUfBStPZICztG7ial36N10I=;
-        b=YskfRbGM7e5yzC90UVixl//ikRltsKMp8juLgOiA7u81XgWkRm+wBGr0+C8Bty3I9q
-         0s75pYINoYGqSu+SQshSOqSO0RWB1v+k8SnhqetwG5epoNoUD7ZlzHoJtuLlaaeAth78
-         9LTPrmq6GLGCdfDEE//FfKRDe8T/zkIM+DHoPGR9F5tM8T8UQK8jS9NRnT45g0if1VGS
-         24D2YexaH+u+bFEAit5k0ezr73T4rKOKubCF+4TbIY/aaXZ05sbeP0lKCWvmua+B3WDx
-         p6W4gtcrX8E9SOnHV3XFrbUjdOcJGqd/cgPmmv0+4TgMvef7npYXA/aBf+T1YqaVC3Go
-         0Cvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYZcg5D1w4WqkBw8Pc/XTT3lw00Mpnr5DJdoXppBFWjAbwhb1GfdTp2qrNs1o+MOl7e9+H29VUHlKM@vger.kernel.org, AJvYcCV6zB/rl5Qpy/vIjV+DZvm+FY6UtB2qNh5s22iNeshDNvBKjoOsZkZJLzjEPepM18VP5lASDHheGTRWyg6o@vger.kernel.org, AJvYcCVbOYNA6N7lQi3CbNvk1vIjEnk0pKwunD6z/k3RSMB5R17RACEKolqUyF+yo9a4xVEyfv8TRr0y@vger.kernel.org, AJvYcCWPRPfd7dhv76Q9y3z6VMCVObLRrKGgd4C9ouPIvyFdCpTE84/8tpG5DIObINWhdawapyX8lr9pteGCr+jheBSk@vger.kernel.org, AJvYcCWgrSwljf0p/3iAF6kLhPHyvdUIayYXopQxtIB+eYIi3hRL8M5zlLagV3rK5Oegp31C5vjedcSU8AuH86s=@vger.kernel.org, AJvYcCX1DgDlo3tHpQZfzGBb08cC4RjF/S/lSlLds1rI7uDMRGlORHcKrYm5nYO7JY9Qy+37vfNYHvEAmFEPghNm@vger.kernel.org, AJvYcCXORNsq6xgNtnciUgQ0kN64n8OiCCQR1sjEvGJzAofqvbzWeEZJgIpUfGf/eRX8rbeCYeRfOc6LVx/94DKFMco=@vger.kernel.org, AJvYcCXsZ7ALN+bRvxXwIpwyhi51iUSkyKWaxYYB1DuaSdBiyEW1TALQX1WU6l0RKKdR8nD29Mhei4wOaAZY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn+gQl9zhFChnntApzacFLZlCnEZNpnxdArCEK4DcutOHDQe/M
-	hTUPE2YYVcp5CAsHHMXcgq6oI/zOIw0Aq+px603338qr+qh2Ga2FeCIpNipj1In+3OY0IaFONJ4
-	br8qiagy30RoXDHGWSPmEjPWl+VI=
-X-Gm-Gg: ASbGncs1umZIKGDFfz5/OslHNgkDRD+oQrEGlD3oUj3pfP1i/s0wae2ovj058/fsIGl
-	dVP1vXlroglbsiZTwPfe/7maoOppnMSWv684dkaLMslu447LcdTSZs9flohKP4ifKub5BxWOkg9
-	RHDrHEw4li6vfQcpEWGBEBHqoDZZHMH+kb5wAhwuXYYFsVxV4mYAbHMDc=
-X-Google-Smtp-Source: AGHT+IHZAKP3/qvwJmsc5m8mvIzKS19yV7vWRxGgOitXjzOxUUQqlMCy6l+9mVxAv+hzn3jvGdnz5kayZsyPq+aJCYg=
-X-Received: by 2002:a05:651c:1027:b0:310:85ba:113a with SMTP id
- 38308e7fff4ca-31085ba14b3mr23077911fa.34.1744909272419; Thu, 17 Apr 2025
- 10:01:12 -0700 (PDT)
+	s=arc-20240116; t=1744909802; c=relaxed/simple;
+	bh=+KCwB4S1lB26w346UYpwjYOn/QTHi7mLnh8nbljjSZI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=oLCcz/NI3/lyVO6OFKb7h4+CXemPg4aNTBCdp369yAC70ukVaYWcRoBdlm5xOz95Icm7XJuhVbxJ5tr652v690hIh3QINMRdODsQXTS9bb7LjFusT7y1QFSwoDlsqhIsP+TDv7ei/UNBe5HQF38ENUWmFuV6/IfJbKNVeYVa+o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=xRrOkl+q; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
- <20250416-ptr-as-ptr-v9-1-18ec29b1b1f3@gmail.com> <680130ee.050a0220.393a1.0995@mx.google.com>
-In-Reply-To: <680130ee.050a0220.393a1.0995@mx.google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 17 Apr 2025 13:00:36 -0400
-X-Gm-Features: ATxdqUFUCc7UwWya32vBGQOBhztbpYLccod5SsXvC27P86OwyeljmPoIQlWpelQ
-Message-ID: <CAJ-ks9kr4vRKKFA15D6rZ3PPAvteRmWNyHLpDAvWBzTN5iBP-g@mail.gmail.com>
-Subject: Re: [PATCH v9 1/6] rust: enable `clippy::ptr_as_ptr` lint
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1744909795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U4ILFAnnROWvWpXm91/wKuzpauoiAfG10LJOtDhws0=;
+	b=xRrOkl+qGnYLA+AOqsbB9LjK1LWPYQy1oz8Y+rZWCD7iABshDYz1KUdZGcAdgbdurKya1R
+	CmI/fAI+abH5jKptTBlaXXuXzSzy6WA+8jcjmfT+qaoYMFx0A0F2590ib3Hghb/4DXHC1a
+	x++yxn2UC73tCT1BpT6bXu0j5HzYItmFsvENg9YCryIlHXRk6Fg7QnpXXpzvYxs6IxVc7W
+	c8sXsnDjKc4Bov2fkxDKx03WqPOEpfKUFS6Ak0zhV8nC0c2fEoLWUtuyP4rJPeFaeL0Hlf
+	VFVppXokdY6+zL3p+ey2gDqA+uAtsN12AQMFYGmk3QCLVkMdtAfVm2vN+mo5Tg==
+Content-Type: multipart/signed;
+ boundary=9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Thu, 17 Apr 2025 19:09:46 +0200
+Message-Id: <D992W9V9ZH2J.2Z2OLK00N0FIU@cknow.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Dragan Simic" <dsimic@manjaro.org>
+Cc: "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, "Heiko Stuebner" <heiko@sntech.de>, "Manivannan
+ Sadhasivam" <manivannan.sadhasivam@linaro.org>, "Rob Herring"
+ <robh@kernel.org>, "Shawn Lin" <shawn.lin@rock-chips.com>, "Niklas Cassel"
+ <cassel@kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH] PCI: dw-rockchip: Fix function call sequence in
+ rockchip_pcie_phy_deinit
+References: <20250417142138.1377451-1-didi.debian@cknow.org>
+ <3e000468679b4371a7942a3e07d99894@manjaro.org>
+In-Reply-To: <3e000468679b4371a7942a3e07d99894@manjaro.org>
+X-Migadu-Flow: FLOW_OUT
+
+--9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Apr 17, 2025 at 12:48=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->
-> On Wed, Apr 16, 2025 at 01:36:05PM -0400, Tamir Duberstein wrote:
-> > In Rust 1.51.0, Clippy introduced the `ptr_as_ptr` lint [1]:
-> >
-> > > Though `as` casts between raw pointers are not terrible,
-> > > `pointer::cast` is safer because it cannot accidentally change the
-> > > pointer's mutability, nor cast the pointer to other types like `usize=
-`.
-> >
-> > There are a few classes of changes required:
-> > - Modules generated by bindgen are marked
-> >   `#[allow(clippy::ptr_as_ptr)]`.
-> > - Inferred casts (` as _`) are replaced with `.cast()`.
-> > - Ascribed casts (` as *... T`) are replaced with `.cast::<T>()`.
-> > - Multistep casts from references (` as *const _ as *const T`) are
-> >   replaced with `core::ptr::from_ref(&x).cast()` with or without `::<T>=
-`
-> >   according to the previous rules. The `core::ptr::from_ref` call is
-> >   required because `(x as *const _).cast::<T>()` results in inference
-> >   failure.
-> > - Native literal C strings are replaced with `c_str!().as_char_ptr()`.
-> > - `*mut *mut T as _` is replaced with `let *mut *const T =3D (*mut *mut
-> >   T)`.cast();` since pointer to pointer can be confusing.
-> >
-> > Apply these changes and enable the lint -- no functional change
-> > intended.
-> >
-> > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ptr_as_=
-ptr [1]
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Hi Dragan,
 
-Thanks!
+On Thu Apr 17, 2025 at 6:20 PM CEST, Dragan Simic wrote:
+> On 2025-04-17 16:21, Diederik de Haas wrote:
+>> The documentation for the phy_power_off() function explicitly says
+>>=20
+>>   Must be called before phy_exit().
+>>=20
+>> So let's follow that instruction.
+>>=20
+>> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host
+>> controller driver")
+>> Cc: stable@vger.kernel.org	# v5.15+
+>> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index c624b7ebd118..4f92639650e3 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct
+>> rockchip_pcie *rockchip)
+>>=20
+>>  static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
+>>  {
+>> -	phy_exit(rockchip->phy);
+>>  	phy_power_off(rockchip->phy);
+>> +	phy_exit(rockchip->phy);
+>>  }
+>>=20
+>>  static const struct dw_pcie_ops dw_pcie_ops =3D {
+>
+> Thanks for the patch, it's looking good to me.  The current state
+> of the rockchip_pcie_phy_deinit() function might actually not cause
+> issues because the rockchip_pcie_phy_deinit() function is used only
+> in the error-handling path in the rockchip_pcie_probe() function,
+> so having no runtime errors leads to no possible issues.
+>
+> However, it doesn't mean it shouldn't be fixed, and it would actually
+> be good to dissolve the rockchip_pcie_phy_deinit() function into the
+> above-mentioned error-handling path.  It's a short, two-line function
+> local to the compile unit, used in a single place only, so dissolving
+> it is safe and would actually improve the readability of the code.
 
-> A few nits below though...
->
-> > ---
-> >  Makefile                               |  1 +
-> >  rust/bindings/lib.rs                   |  1 +
-> >  rust/kernel/alloc/allocator_test.rs    |  2 +-
-> >  rust/kernel/alloc/kvec.rs              |  4 ++--
-> >  rust/kernel/device.rs                  |  4 ++--
-> >  rust/kernel/devres.rs                  |  2 +-
-> >  rust/kernel/dma.rs                     |  4 ++--
-> >  rust/kernel/error.rs                   |  2 +-
-> >  rust/kernel/firmware.rs                |  3 ++-
-> >  rust/kernel/fs/file.rs                 |  2 +-
-> >  rust/kernel/kunit.rs                   | 11 +++++++----
-> >  rust/kernel/list/impl_list_item_mod.rs |  2 +-
-> >  rust/kernel/pci.rs                     |  2 +-
-> >  rust/kernel/platform.rs                |  4 +++-
-> >  rust/kernel/print.rs                   |  6 +++---
-> >  rust/kernel/seq_file.rs                |  2 +-
-> >  rust/kernel/str.rs                     |  2 +-
-> >  rust/kernel/sync/poll.rs               |  2 +-
-> >  rust/kernel/time/hrtimer/pin.rs        |  2 +-
-> >  rust/kernel/time/hrtimer/pin_mut.rs    |  2 +-
-> >  rust/kernel/workqueue.rs               | 10 +++++-----
-> >  rust/uapi/lib.rs                       |  1 +
-> >  22 files changed, 40 insertions(+), 31 deletions(-)
-> >
-> [...]
-> > diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/=
-impl_list_item_mod.rs
-> > index a0438537cee1..1f9498c1458f 100644
-> > --- a/rust/kernel/list/impl_list_item_mod.rs
-> > +++ b/rust/kernel/list/impl_list_item_mod.rs
-> > @@ -34,7 +34,7 @@ pub unsafe trait HasListLinks<const ID: u64 =3D 0> {
-> >      unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID>=
- {
-> >          // SAFETY: The caller promises that the pointer is valid. The =
-implementer promises that the
-> >          // `OFFSET` constant is correct.
-> > -        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut ListLinks<=
-ID> }
-> > +        unsafe { ptr.cast::<u8>().add(Self::OFFSET).cast() }
->
-> I think we better do:
->
->         unsafe { ptr.byte_add(Self::OFFSET).cast() }
->
-> here, similar for a few instances below. Maybe in a follow-up patch?
-> byte_add() is way more clear about what is done here.
+This patch came about while looking at [1] "PCI: dw-rockchip: Add system
+PM support", which would be the 2nd consumer of the
+rockchip_pcie_phy_deinit() function. That patch's commit message has the
+following: "tries to reuse possible exist(ing) code"
 
-This code is deleted in
-https://lore.kernel.org/all/20250409-list-no-offset-v2-4-0bab7e3c9fd8@gmail=
-.com/,
-which could also use a review!
+Being a fan of the DRY principle, that sounds like an excellent idea :-)
 
-Cheers.
-Tamir
+So while you're right if there would only be 1 consumer, which is the
+case *right now*, given that a 2nd consumer is in the works, I think
+it's better to keep it as I've done it now.
+Let me know if you disagree (including why).
+
+[1] https://lore.kernel.org/linux-rockchip/1744352048-178994-1-git-send-ema=
+il-shawn.lin@rock-chips.com/
+
+> Thus, please feel free to include
+>
+> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+
+Thanks :-)
+
+Cheers,
+  Diederik
+
+> and please consider dissolving the rockchip_pcie_phy_deinit() function
+> in the possible v2 of this patch, as suggested above.
+
+
+--9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaAE13QAKCRDXblvOeH7b
+buluAQCEIjcEnqtZwClOAqM8s1LvfqUaaPSSbkWDSy6SYsLWAwEAofWwHxa8G5nC
+MgjHBOJT/8MsTjFkhLaeM2uzEV2YXQE=
+=VbT8
+-----END PGP SIGNATURE-----
+
+--9beec6f5477ababb2ae9d3e4220a4e06ab7f2fafa941ec7e9fa069b1c762--
 
