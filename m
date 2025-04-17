@@ -1,267 +1,364 @@
-Return-Path: <linux-pci+bounces-26139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7001BA9244D
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:46:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFDC0A924CC
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 19:58:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3F437AE4A8
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:45:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BE2C464226
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 17:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A293E2566DC;
-	Thu, 17 Apr 2025 17:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2432566DF;
+	Thu, 17 Apr 2025 17:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="tWMmo9NK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0b5J5j9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C8D253F22
-	for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 17:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559372566D7;
+	Thu, 17 Apr 2025 17:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744911989; cv=none; b=Qtg/P59DfwQ41yrwnyh1zPpsGoWYNMue2zWqVyCidNR3tYIRI57Rw+dftjqg1/dRSZ2eh9PG5lx1CR/72fJMcMa+Zx3ctzlozexf8juTcBHLmqIdOTnFfU0lMemKlmb5ok2s6hBNvhaOa4i7+UDkfkzIXnJny1G7DC/Tz1wMQWQ=
+	t=1744912520; cv=none; b=TKyIoZu3So2xLkOJpfw+Qi/iSmEkwt+JIpRjp+9uFps3KnGz6l9W+401Od/073E5xz7bSaHAdyfwHS5P+fa3WA9XwPXjd/8odw6FCp7FJxwYbRVzC4cTcd3Z7BUxwkFpJ2ypoOt1swndllDJCH1xeqXKBxpIUzAvrXYI0vIFY6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744911989; c=relaxed/simple;
-	bh=SHusiNh4+rFgJuDeK17m5Z1S6PLQHVzz+ZfMyp5VOJ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mrsLTuIzWsVS1TtbUBMc7+A2cV2jXP+32ecu8hgglDdAdW2hE3Qq9qp+8ukoyVgN/RxA2ctlGTcGys6MhIynIPdO5BNn2V7qF7jm14tV2UcE3/newfQ+19lm3eUZVKEdl5Oeyl0ZCyza7vllva14A9iIILrt2waBXQte6xjeiEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=tWMmo9NK; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70565ccf3bcso10549487b3.0
-        for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 10:46:26 -0700 (PDT)
+	s=arc-20240116; t=1744912520; c=relaxed/simple;
+	bh=vZZPLIRZjLTF8DCsEfQ5zp295QmxSVBoEfRxLdbjD7s=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FnbtZABTzJCv0aA6YpHEo8I95jjm7D1gxwSfzHtUFuUaAB84d4gv33z5bRv9gjOWTgPDmm2IN0ylabjk+x1ebbnAntB22I9cwrDstbtMAk1vwfa9/+a0TJYYTH+op29XJabZc/wmtYwTgTElTPhNEsLZJQngXiNnhqWRouW+C/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0b5J5j9; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c081915cf3so134043685a.1;
+        Thu, 17 Apr 2025 10:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1744911985; x=1745516785; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fWFVgupzA3WcXLT+BN9IkoTUzlpVNJIm/ZYe94t2FFM=;
-        b=tWMmo9NK9eWYG+HQkTG9aeDcZ2fXuHS3Dk/tzhWMvHAlkBnOD/EOCjsHoKeicfoT+g
-         kXeu69M+leUM23r/TU5rZDMMiFxQXLZE1yEmwncnDYVaNy52HZsUxcmOGVICZEO8On85
-         mNUPc9LBJidlVVAqrJE+/TJhuTIUjSVZ9W4t6vREcz2LmqOpCe5KlJp65vlHyx8kA4Wh
-         qwWb3KJAl8vaO6oiE52vbvhsZNo2oEm+N3cLAf3f5XmiHYUUpLB7BWJpxj+n59FOZ/g8
-         tgJhqC2J7I0aLbvDJONRnbpAaeFZyF2mD2Hc2MvTerKb/sprupC9nMs8VdbFlIMVc38d
-         ROSA==
+        d=gmail.com; s=20230601; t=1744912517; x=1745517317; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qDTyGaLtYvMzXIgfoaj4Rbqx4NtWqG+lF7urmkywNu8=;
+        b=j0b5J5j92co+ipS5b7D79JYNFfijrGyK47sNkOch4cCL2qKhclfR4ad6GR1OHps2ch
+         kDxeaaUUC/4Cq+2rmEVrwIDOSRtie577hHaDPXInKyoESFOKSQnfkTk9htkufcYeyfmH
+         fhmd2+hpOf+Y5cfcV6RBB/N90TELi1GW0Bu7qAJURRFjyeNa9k0mdX81tfKcKEJGg/cu
+         FJkMnyXdGZruUbnA7JBGbYo0hjmuhIc/u0JP674rYFCFM+3KShPXAPMq8qbhk595MT5m
+         ZmYPLLIjsLFBgM2+Zz0mPt1J9K/qKeQ435TL4qTtSJXfdjgJPRt2S+2l0TqaRAGMy9fx
+         YVPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744911985; x=1745516785;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fWFVgupzA3WcXLT+BN9IkoTUzlpVNJIm/ZYe94t2FFM=;
-        b=UlwRR86EDeEzBq/VPvuUj9M7nLAfJIt9E08l9V/EKiBN03bI7qpNTCpZ4bUL5PU8yS
-         F5W7pI9Ak0YMUmHDYf414B/cmzYLRXijccD3gYthonmjf6jwG5oSVE1aaxBnHIf8ol0j
-         F/yopK2gQExb1upe70oEC3GHiFDph9OaPnKDi+NSfrNZFlit8Kk8kD/VrhryvZlzQySZ
-         zd4Rmw13maKFmjKrtsIaLhWOQUA+OxvkgykZ4YHqSM5UXh+oTrov24z5F1ITwlEyWbXA
-         C5Nglcpzg/B22MTLDn+GrorOwM5YModfq46oSR2i7C6AZ9qSR7fmKkRI8qOoHJSu8OcD
-         Mj7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUAUMuxNE/3fEqDyo/OxSiHtPLrayxN2kIfxFtFKMeMlKCFiyvOHEy9skmB8/6Y/y2IQcswOA7N/lI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGmrL2w0K2vaq1drXAyVjNJ6hJNcQtIE763NwclPlqQA3WDM/n
-	qKa7tZk6szj3GYlnYqPV6UEGv9Q5uQcgqvWS5Yg2dZYfm443/ymIpiCg26WyyGS4zF2+K+Dm6ON
-	0TjNJNPQZas1D+amCFA6P24NyzCeUWo1ayQ5IAA==
-X-Gm-Gg: ASbGncuNxJcxT/WmHpgyAuFpc6zILWop89iGaOuO5GbDAz0QUr8A8v0idQAhKbRkwqC
-	PE0WgeKktTlvbwa0KdOtGNyojYxEmaFs4gfF5IZWPQMBES3Vhoce7BoWH0wTsb91NcirLQf50ha
-	sLr34JuGagFquT4DC1ehAN8XffmEBEF/+kVwqbjjjRN+b9HbIgYJuEXw==
-X-Google-Smtp-Source: AGHT+IFyC6HYs9e80CmN73xlBJt/HpImaly70LEZmj35WGtDtklY8rBjCjjco5A8WQ2lGInHkA6lzygUfa3Emej99Gg=
-X-Received: by 2002:a05:690c:3506:b0:6fe:c040:8eda with SMTP id
- 00721157ae682-706b325d56amr97201527b3.4.1744911985301; Thu, 17 Apr 2025
- 10:46:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744912517; x=1745517317;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qDTyGaLtYvMzXIgfoaj4Rbqx4NtWqG+lF7urmkywNu8=;
+        b=KFtgUpJvH+zoOkVLA9BjfWHrPfphZWp2eCX47Yha8DmD4MMOYdzBNX+STlsLqXHkRE
+         ZKYtdUFccnIhprt8aJEe0X0yFrfk5UbavkKthmTzIgTwyI8gmuSBW29bL3qj/3aUODeM
+         X4Pdpt7/foyQtnXBufY5YI70jCi3t/9+3lmIV+P1LU+us8lTSTOAoaiV4RBRkhU/VC55
+         5aKyiEctEPDfx3bhuPSic9pjxG+M6jSTXx5nwbotXzYUCAiQVIZ5we9OTFbXcWoGotO6
+         NpFQez/vkKb+kefFNEeD560coSylIVdtLqypwrh3OQNXMMMocM+Jfn6dWVDEHySh3fFP
+         TBQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaP/TczVDAovpOZuR2JgK/tycprWV5kfRbexzUZcF1i6SOT+iiy7oCL//x/NO4DMunB/3hbnkfRt66n6PNOgI=@vger.kernel.org, AJvYcCUyssu9d1lPziYhzYoej8Pzok/DpYS5HmyGNE7AoT5Khr9yad62RAr1l2vQGTX/S8ReaccziymYL16j6B/9DlD5@vger.kernel.org, AJvYcCVQCVK/4n+BjB8XOv7Mvl6j0NudwsFcSwLmCsjE0teBZcjWlbXK2lMvkgNa6iGu++WONm8KQBv7tjvz@vger.kernel.org, AJvYcCW2WcUBH/1Qn4rI82lr1xrysE71Mtu6jbquQAdNWK5xI69yWpCbGUj7iRaAotUCQRJgujA/ldEpWOV8jR73@vger.kernel.org, AJvYcCWieIJU+JXq1N1cIru27WUbCyDm2pgCzLvNM//dLAUWBMlO1hJN4WNbHbuD4IqtVAoLDYm19MgHWjYbq1Mj@vger.kernel.org, AJvYcCX2KAQcw38IqmAn6s27/ZucZaHUrbn3/fqzkwV7x+AFGp5jIQuFGIzslv2jfoUcnsZAVDDgtzViMr3G@vger.kernel.org, AJvYcCXe3kYw9GyNYgq4OaCOdpab4lRPo5yiiaQq/ic8TxQNrnfp/SjwQe29yd8XgB1oY95rLjww22bGI7PyrGo=@vger.kernel.org, AJvYcCXl861dLVw6ogtvc15Pyddb4oBGu8jL5imWb1ZLEkZFWCzgt+j5UgmX07Z1Jf7RIG1TOuXCNIXM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT/JHyngZpDX/+em41fxy8wgskmSv69vxpP2+svDZIl8sEpmz3
+	PabnM14AghJ7pvhSRiIW3ntBRKfTrtrZj508llgNcByOe6lG6YSH
+X-Gm-Gg: ASbGncvMrbMlyQW6Adg3pk19flvinMCs1v7bozrMZbXtX8K7nVShPUXWrcO0T4tMR8E
+	agg0EEwGK13L+zeubBvLZMaGNz+zQH3p/xrYvCWtNaa0lJFAYk9YG6tfbc1Ow7YnKWPor5iNW3x
+	S7y5w02l/bK69UcnCo61XMpJ+C9/R86lyxkL9CurzJp5hAnz97xM/X17c5o/9BkQBuCDwxrSqBX
+	gQJgoaPDQZdkSjz7MbExzsrjO2XowMukIFks6z9866sEa2h17BGg5F/6zO/3qlia660EycKhR36
+	lxwQqC0THI/O77A7hQsEqrSYwtvNh2Eeoy32EGYtoaH/mXZPT98on2SJCZwiQE2vWYdLSV9A/4v
+	2ovOCFdYyOFGcrLWYN5739sH8gZTy71jS7862xstnKw==
+X-Google-Smtp-Source: AGHT+IE3H7mH1nYpCtZAyCv0gNgV400qtjcEh3CsRpVjdOU7C2s1ueMnwNvcesjSj2oJQ2QEcjf+TA==
+X-Received: by 2002:ad4:5c65:0:b0:6e8:fb92:dffa with SMTP id 6a1803df08f44-6f2b2f97ff2mr117242546d6.25.1744912516938;
+        Thu, 17 Apr 2025 10:55:16 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b0f0fdsm1708066d6.29.2025.04.17.10.55.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 10:55:16 -0700 (PDT)
+Message-ID: <68014084.0c0a0220.394e75.122c@mx.google.com>
+X-Google-Original-Message-ID: <aAFAgcqBweaMzlAE@winterfell.>
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 670A31200043;
+	Thu, 17 Apr 2025 13:55:15 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 17 Apr 2025 13:55:15 -0400
+X-ME-Sender: <xms:g0ABaKa4EcQUC7fK7BYEjgy2gGAJI13Q2EBEttkW1DIPfPkLwCPFjQ>
+    <xme:g0ABaNbebtyF11d8GBpjn5jKGhVH8idOwX3TpiXtReZNPDn67VxvyPU3Dj87vHnRN
+    zTQUiQ76o2uCZj22A>
+X-ME-Received: <xmr:g0ABaE99EXDad75aTJ2E6BW8TM4x8UeYaddVaOt4TqmECgE8LQ-8NbXzqZf2SQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdelleduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
+    rhepfffhvfevuffkfhggtggujgesthdtrodttddtvdenucfhrhhomhepuehoqhhunhcuhf
+    gvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgv
+    rhhnpefgteetfeekheekleetffdvgfegkeetkeehudfhheegveekleekieeuudeitedvue
+    enucffohhmrghinhepghhithhhuhgsrdhiohenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrsh
+    honhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghn
+    gheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepge
+    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmihhrugesghhmrghilhdr
+    tghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilh
+    drtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthho
+    pegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvg
+    hnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggs
+    ohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:g0ABaMrAvrmxf3gdiJO3-ZbxmF7UIMs2PHeSVcsCn51Z8WkUFa-lgg>
+    <xmx:g0ABaFpW6Zkb7KQ4fzsYJKoOfk2zeyEiqGixN0bi66xIrdlqUzS51w>
+    <xmx:g0ABaKQ8zVN6GqRR5WsaFGM4miuik80rgyuL4NMBiOvmcykxiZ6Llg>
+    <xmx:g0ABaFq7q6ScWpkgBnLDstyvt3GXcCW2ZUx7e4xF7jcBtfKiM7gZLg>
+    <xmx:g0ABaC5uGjNwNtEanE9knMMkjvbEj0OWv_RcOmcNpy0TzVCHEUS3UHDL>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 17 Apr 2025 13:55:14 -0400 (EDT)
+Date: Thu, 17 Apr 2025 10:55:13 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v9 4/6] rust: enable `clippy::as_underscore` lint
+References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
+ <20250416-ptr-as-ptr-v9-4-18ec29b1b1f3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1742418429.git.andrea.porta@suse.com> <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
- <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net> <Z__alTyVJOwu_1gR@apocalypse>
- <CAPY8ntD2W5xAHGCD+uBL-0QgyYNj6k9MExns=DFvxU1WGYtO5g@mail.gmail.com> <aAD6EXrav161J0vS@apocalypse>
-In-Reply-To: <aAD6EXrav161J0vS@apocalypse>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 17 Apr 2025 18:46:02 +0100
-X-Gm-Features: ATxdqUHcDbWr8xBnLCzFc0eo6fLOV6JX6u0K_scOh1zjVezR0S_9IzHQVsjXicM
-Message-ID: <CAPY8ntBMJUONss_0nCYRPNJ1vTMWMu0Ga3w-r_1jboM+aShH7w@mail.gmail.com>
-Subject: Re: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>, Herve Codina <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, kernel-list@raspberrypi.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-ptr-as-ptr-v9-4-18ec29b1b1f3@gmail.com>
 
-On Thu, 17 Apr 2025 at 13:53, Andrea della Porta <andrea.porta@suse.com> wrote:
->
-> Hi Dave,
->
-> On 11:48 Thu 17 Apr     , Dave Stevenson wrote:
-> > Hi Andrea & Stefan.
+On Wed, Apr 16, 2025 at 01:36:08PM -0400, Tamir Duberstein wrote:
+> In Rust 1.63.0, Clippy introduced the `as_underscore` lint [1]:
+> 
+> > The conversion might include lossy conversion or a dangerous cast that
+> > might go undetected due to the type being inferred.
 > >
-> > On Wed, 16 Apr 2025 at 17:26, Andrea della Porta <andrea.porta@suse.com> wrote:
-> > >
-> > > Hi Stefan,
-> > >
-> > > On 14:09 Mon 14 Apr     , Stefan Wahren wrote:
-> > > > Hi Andrea,
-> > > >
-> > > > Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> > > > > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > > > > clock generators and PLLs that drives the sub-peripherals.
-> > > > > Add the driver to support the clock providers.
-> > > > >
-> > > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > > > ---
-> > > > >   MAINTAINERS           |    5 +
-> > > > >   drivers/clk/Kconfig   |    9 +
-> > > > >   drivers/clk/Makefile  |    1 +
-> > > > >   drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
-> > > > >   4 files changed, 1527 insertions(+)
-> > > > >   create mode 100644 drivers/clk/clk-rp1.c
-> > > > >
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > > index 896a307fa065..75263700370d 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -19748,6 +19748,11 @@ S: Maintained
-> > > > >   F:        Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
-> > > > >   F:        drivers/media/platform/raspberrypi/rp1-cfe/
-> > > > >
-> > > > > +RASPBERRY PI RP1 PCI DRIVER
-> > > > > +M: Andrea della Porta <andrea.porta@suse.com>
-> > > > > +S: Maintained
-> > > > > +F: drivers/clk/clk-rp1.c
-> > > > > +
-> > > > >   RC-CORE / LIRC FRAMEWORK
-> > > > >   M:        Sean Young <sean@mess.org>
-> > > > >   L:        linux-media@vger.kernel.org
-> > > > > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > > > > index 713573b6c86c..cff90de71409 100644
-> > > > > --- a/drivers/clk/Kconfig
-> > > > > +++ b/drivers/clk/Kconfig
-> > > > > @@ -88,6 +88,15 @@ config COMMON_CLK_RK808
-> > > > >       These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-> > > > >       Clkout1 is always on, Clkout2 can off by control register.
-> > > > >
-> > > > > +config COMMON_CLK_RP1
-> > > > > +   tristate "Raspberry Pi RP1-based clock support"
-> > > > > +   depends on MISC_RP1 || COMPILE_TEST
-> > > > > +   default MISC_RP1
-> > > > > +   help
-> > > > > +     Enable common clock framework support for Raspberry Pi RP1.
-> > > > > +     This multi-function device has 3 main PLLs and several clock
-> > > > > +     generators to drive the internal sub-peripherals.
-> > > > > +
-> > > > >   config COMMON_CLK_HI655X
-> > > > >     tristate "Clock driver for Hi655x" if EXPERT
-> > > > >     depends on (MFD_HI655X_PMIC || COMPILE_TEST)
-> > > > > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> > > > > index bf4bd45adc3a..ff3993ed7e09 100644
-> > > > > --- a/drivers/clk/Makefile
-> > > > > +++ b/drivers/clk/Makefile
-> > > > > @@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)  += clk-plldig.o
-> > > > >   obj-$(CONFIG_COMMON_CLK_PWM)              += clk-pwm.o
-> > > > >   obj-$(CONFIG_CLK_QORIQ)                   += clk-qoriq.o
-> > > > >   obj-$(CONFIG_COMMON_CLK_RK808)            += clk-rk808.o
-> > > > > +obj-$(CONFIG_COMMON_CLK_RP1)            += clk-rp1.o
-> > > > >   obj-$(CONFIG_COMMON_CLK_HI655X)           += clk-hi655x.o
-> > > > >   obj-$(CONFIG_COMMON_CLK_S2MPS11)  += clk-s2mps11.o
-> > > > >   obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
-> > > > > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..72c74e344c1d
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/clk/clk-rp1.c
-> > > > > @@ -0,0 +1,1512 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > ...
-> > > > > +
-> > > > > +static int rp1_pll_divider_set_rate(struct clk_hw *hw,
-> > > > > +                               unsigned long rate,
-> > > > > +                               unsigned long parent_rate)
-> > > > > +{
-> > > > > +   struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-> > > > > +   struct rp1_clockman *clockman = divider->clockman;
-> > > > > +   const struct rp1_pll_data *data = divider->data;
-> > > > > +   u32 div, sec;
-> > > > > +
-> > > > > +   div = DIV_ROUND_UP_ULL(parent_rate, rate);
-> > > > > +   div = clamp(div, 8u, 19u);
-> > > > > +
-> > > > > +   spin_lock(&clockman->regs_lock);
-> > > > > +   sec = clockman_read(clockman, data->ctrl_reg);
-> > > > > +   sec &= ~PLL_SEC_DIV_MASK;
-> > > > > +   sec |= FIELD_PREP(PLL_SEC_DIV_MASK, div);
-> > > > > +
-> > > > > +   /* Must keep the divider in reset to change the value. */
-> > > > > +   sec |= PLL_SEC_RST;
-> > > > > +   clockman_write(clockman, data->ctrl_reg, sec);
-> > > > > +
-> > > > > +   /* TODO: must sleep 10 pll vco cycles */
-> > > > Is it possible to implement this with some kind of xsleep or xdelay?
-> > >
-> > > I guess so... unless anyone knows a better method such as checking
-> > > for some undocumented register flag which reveals when the clock is stable
-> > > so it can be enabled (Phil, Dave, please feel free to step in with advice
-> > > if you have any), I think this line could solve the issue:
-> > >
-> > > ndelay (10 * div * NSEC_PER_SEC / parent_rate);
-> >
-> > I've checked with those involved in the hardware side.
-> > There's no hardware flag that the clock is stable, so the ndelay is
-> > probably the best option. The VCO can go as low as 600MHz, so the max
-> > delay would be 166ns.
->
-> Perfect, I'll use ndelay then. However, shouldn't this be 16ns max?
-> I think this formula should give a good estimate:
->
-> 10ULL * div * NSEC_PER_SEC / parent_rate
->
-> and has the advantage of not depending on hard coded values.
+> > The lint is allowed by default as using `_` is less wordy than always
+> > specifying the type.
+> 
+> Always specifying the type is especially helpful in function call
+> contexts where the inferred type may change at a distance. Specifying
+> the type also allows Clippy to spot more cases of `useless_conversion`.
+> 
+> The primary downside is the need to specify the type in trivial getters.
+> There are 4 such functions: 3 have become slightly less ergonomic, 1 was
+> revealed to be a `useless_conversion`.
+> 
+> While this doesn't eliminate unchecked `as` conversions, it makes such
+> conversions easier to scrutinize.  It also has the slight benefit of
+> removing a degree of freedom on which to bikeshed. Thus apply the
+> changes and enable the lint -- no functional change intended.
+> 
+> Link: https://rust-lang.github.io/rust-clippy/master/index.html#as_underscore [1]
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  Makefile                           |  1 +
+>  rust/kernel/block/mq/operations.rs |  2 +-
+>  rust/kernel/block/mq/request.rs    |  2 +-
+>  rust/kernel/device_id.rs           |  2 +-
+>  rust/kernel/devres.rs              | 15 ++++++++-------
+>  rust/kernel/dma.rs                 |  2 +-
+>  rust/kernel/error.rs               |  2 +-
+>  rust/kernel/io.rs                  | 18 +++++++++---------
+>  rust/kernel/miscdevice.rs          |  2 +-
+>  rust/kernel/of.rs                  |  6 +++---
+>  rust/kernel/pci.rs                 |  9 ++++++---
+>  rust/kernel/str.rs                 |  8 ++++----
+>  rust/kernel/workqueue.rs           |  2 +-
+>  13 files changed, 38 insertions(+), 33 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 04a5246171f9..57080a64913f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -475,6 +475,7 @@ export rust_common_flags := --edition=2021 \
+>  			    -Wunreachable_pub \
+>  			    -Wclippy::all \
+>  			    -Wclippy::as_ptr_cast_mut \
+> +			    -Wclippy::as_underscore \
+>  			    -Wclippy::ignored_unit_patterns \
+>  			    -Wclippy::mut_mut \
+>  			    -Wclippy::needless_bitwise_bool \
+> diff --git a/rust/kernel/block/mq/operations.rs b/rust/kernel/block/mq/operations.rs
+> index 864ff379dc91..d18ef55490da 100644
+> --- a/rust/kernel/block/mq/operations.rs
+> +++ b/rust/kernel/block/mq/operations.rs
+> @@ -101,7 +101,7 @@ impl<T: Operations> OperationsVTable<T> {
+>          if let Err(e) = ret {
+>              e.to_blk_status()
+>          } else {
+> -            bindings::BLK_STS_OK as _
+> +            bindings::BLK_STS_OK as u8
+>          }
+>      }
+>  
+> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+> index af5c9ac94f36..22697104bf8c 100644
+> --- a/rust/kernel/block/mq/request.rs
+> +++ b/rust/kernel/block/mq/request.rs
+> @@ -125,7 +125,7 @@ pub fn end_ok(this: ARef<Self>) -> Result<(), ARef<Self>> {
+>          // success of the call to `try_set_end` guarantees that there are no
+>          // `ARef`s pointing to this request. Therefore it is safe to hand it
+>          // back to the block layer.
+> -        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::BLK_STS_OK as _) };
+> +        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::BLK_STS_OK as u8) };
+>  
 
-I'd copied the number my colleague had given :-) He's now left for the
-Easter weekend, but I can hassle him again on Tuesday.
+We could consider defining a const block::mq::BLK_STATUS_OK as:
 
-I was expecting a computation rather than hard coded value, but was
-giving the maximum as significant delays aren't very friendly.
-The fact that we haven't noticed any issues with no delay at all
-implies to me that this delay may only be a level of polishing rather
-than anything critical. Although there is also the possibility that
-they haven't been reconfigured on a regular basis either.
+	const BLK_STATUS_OK: u8 = bindings::BLK_STS_OK as u8;
 
-  Dave
+, because repeating the as pattern is a bit err-prone. But maybe in a
+later patch.
 
-> >
-> > Thanks for your continuing work on this.
->
-> Thank you for checking.
->
-> Regards,
-> Andrea
->
-> >
-> >   Dave
-> >
-> > > Many thanks,
-> > > Andrea
-> > >
-> > > > > +   sec &= ~PLL_SEC_RST;
-> > > > > +   clockman_write(clockman, data->ctrl_reg, sec);
-> > > > > +   spin_unlock(&clockman->regs_lock);
-> > > > > +
-> > > > > +   return 0;
-> > > > > +}
-> > > > > +
-> > > > >
+>          Ok(())
+>      }
+> diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+> index e5859217a579..4063f09d76d9 100644
+> --- a/rust/kernel/device_id.rs
+> +++ b/rust/kernel/device_id.rs
+> @@ -82,7 +82,7 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
+>              unsafe {
+>                  raw_ids[i]
+>                      .as_mut_ptr()
+> -                    .byte_offset(T::DRIVER_DATA_OFFSET as _)
+> +                    .byte_add(T::DRIVER_DATA_OFFSET)
+>                      .cast::<usize>()
+>                      .write(i);
+>              }
+> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> index f7e8f5f53622..70d12014e476 100644
+> --- a/rust/kernel/devres.rs
+> +++ b/rust/kernel/devres.rs
+> @@ -45,7 +45,7 @@ struct DevresInner<T> {
+>  /// # Example
+>  ///
+>  /// ```no_run
+> -/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::{Io, IoRaw}};
+> +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, ffi::c_void, io::{Io, IoRaw}};
+>  /// # use core::ops::Deref;
+>  ///
+>  /// // See also [`pci::Bar`] for a real example.
+> @@ -59,19 +59,19 @@ struct DevresInner<T> {
+>  ///     unsafe fn new(paddr: usize) -> Result<Self>{
+>  ///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
+>  ///         // valid for `ioremap`.
+> -///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE as _) };
+> +///         let addr = unsafe { bindings::ioremap(paddr as bindings::phys_addr_t, SIZE) };
+
+
+///         let addr = unsafe { bindings::ioremap(bindings::phys_addr_t::from(paddr), SIZE) };
+
+better? Or even with .into()
+
+///         let addr = unsafe { bindings::ioremap(paddr.into(), SIZE) };
+
+>  ///         if addr.is_null() {
+>  ///             return Err(ENOMEM);
+>  ///         }
+>  ///
+> -///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+> +///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
+>  ///     }
+>  /// }
+>  ///
+>  /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+>  ///     fn drop(&mut self) {
+>  ///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped by `Self::new`.
+> -///         unsafe { bindings::iounmap(self.0.addr() as _); };
+> +///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void); };
+>  ///     }
+>  /// }
+>  ///
+[...]
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index 43ecf3c2e860..851a6339aa90 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -38,7 +38,7 @@
+>  impl Attrs {
+>      /// Get the raw representation of this attribute.
+>      pub(crate) fn as_raw(self) -> crate::ffi::c_ulong {
+> -        self.0 as _
+> +        self.0 as crate::ffi::c_ulong
+
+        crate::ffi::c_ulong::from(self.0)
+
+maybe, a C unsigned long should always be able to hold the whole `Attr`
+and a lossly casting is what this function does.
+
+>      }
+>  
+>      /// Check whether `flags` is contained in `self`.
+[...]
+> @@ -70,19 +70,19 @@ pub fn maxsize(&self) -> usize {
+>  ///     unsafe fn new(paddr: usize) -> Result<Self>{
+>  ///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
+>  ///         // valid for `ioremap`.
+> -///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE as _) };
+> +///         let addr = unsafe { bindings::ioremap(paddr as bindings::phys_addr_t, SIZE) };
+
+Similarly:
+
+///         let addr = unsafe { bindings::ioremap(paddr.into(), SIZE) };
+
+or `from()`.
+
+>  ///         if addr.is_null() {
+>  ///             return Err(ENOMEM);
+>  ///         }
+>  ///
+> -///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+> +///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
+>  ///     }
+>  /// }
+>  ///
+>  /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+>  ///     fn drop(&mut self) {
+>  ///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped by `Self::new`.
+> -///         unsafe { bindings::iounmap(self.0.addr() as _); };
+> +///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void); };
+>  ///     }
+>  /// }
+>  ///
+[...]
+
+The rest looks good to me. Thanks!
+
+Regards,
+Boqun
 
