@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-26252-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26253-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41C2DA93F57
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 23:13:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B89C6A93F59
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 23:14:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6BD91B653D3
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 21:13:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D086917F0DD
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 21:14:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D086223316;
-	Fri, 18 Apr 2025 21:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5032868B;
+	Fri, 18 Apr 2025 21:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BmZdpSBD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PENo4+1Y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE92868B
-	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 21:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D321B9C5
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 21:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745010800; cv=none; b=Q6nGvq8kUP+rXyHYn50msrBAKII9ibJBUbXXxKWF/hsVj7i+6SyvHOvG3KSkIVBRFrptUWuDtKXvrwlk/SSWFkLSunugx7o9LQPXAxl4t5/RxLjgz6/knEuPoKm3MXDkFDZHE5yiiEn/nEmB7Ci5qPg6ZEDujbebmr5z2/m469Y=
+	t=1745010861; cv=none; b=TEXwpOfYfn8TzdJ52GfrvnXbIevYKWaxDbSRSfS11dh4zRIgAnXvpBZHtymd/su/mT6KCqC7Sv2S74i8r9bRjPZlJhTKpbk3BBh5aUnI/aQF3kV8ZZA8aJlntcvAk/6fS6pF5G715tAx8GDyxwg6lpVIuEDQ1U4CMLtAlADkWJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745010800; c=relaxed/simple;
-	bh=yFgXHHkef4kHLeAP8hbxElH0hskAjdKTGznq17S0CdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ppdPEUL8Dv8+ymx1ShXA3ZNfE99moW/MdlcCHZJYIELJ9YR8Eo6hN/cTYNf0qErBrsOMXcXu6Ths/Vg8DgSiNzKK/7uBF6ALrGnZ/dTfmTHpiiklginRdfTEC0PaVNm8hwL72eIjaL6UJzzDNsO7xR5kngu5D1wF00vhQC5HSdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BmZdpSBD; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1745010861; c=relaxed/simple;
+	bh=VUb1gWLxlhtMUpgPiw1W7aoUDFbwRgxi/zgjWDuilYs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=dtCSoMMWIfXtqDFdfSUN2NGl8gdoSs3wNnOsi2f6udjedMl4KUjbWNj9h57m5BydnJyik3Nz0xgqxjxXbRlPK8WMcAFZSCa1qXJqkB15I9yJ4OEDo4hoTFBai3/fM2bR0eZkCaiFJc0BwVN7RbPO035SxYtW28FRmOM9wQpTMAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PENo4+1Y; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745010798; x=1776546798;
+  t=1745010859; x=1776546859;
   h=date:from:to:cc:subject:message-id;
-  bh=yFgXHHkef4kHLeAP8hbxElH0hskAjdKTGznq17S0CdQ=;
-  b=BmZdpSBDbbAtlMHSdfWP8c8NDL3tHC/nEMBUeRQCiu/6czqbqtrUthvZ
-   J7sM8t4u9TBPx0RLLNzqb/0DzqtDa1YvP46MuL91Q0MKrSPl5dkAReS/x
-   5NUzxl621LQvYDjOAISVfsOpyKZ8ThNumFUgYHlemJMNJV5ccAPwQ3vLj
-   CHBFld2biuSWvys+pmyNpSeL43/VkKwL5R9HA4b/6DfwKF0p8O+0YjDQg
-   CGi2YOQ4fRJnwljhkZHtbYsw3KON3s9lPVS+aUgySDQ67CfFwQbgt//RN
-   AWmYL8V0BTJG/g1S+q+CGbg4/TJEHIjG+uKiMWdlje7tFicjABu6RPLYH
-   Q==;
-X-CSE-ConnectionGUID: /IuBT/onT8K0MCINgW6yOA==
-X-CSE-MsgGUID: ziG5RiuZQ4yX3Dpqx7nZpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46748409"
+  bh=VUb1gWLxlhtMUpgPiw1W7aoUDFbwRgxi/zgjWDuilYs=;
+  b=PENo4+1YloBEPoSTCWGoa6066MdJxddob8Ub6FqcStDwLqkTps20e9W2
+   Ett1dnNHWS19wLRqDMn7zs0zLu4NWEuFkkcIXw5nzwiTzQ5q49tIOE/kz
+   5Qse6bVmZ/uC4/4oN6sf19vDqdeXzAwBgAMZVFE7d+EarWSjbvSO60N4Z
+   jvPCeLC4/l/0Z5j356ZH0FFScFGICuejZUTd7CEF2tRHOrYWappdsGB5w
+   guDhnst5I3HDQpfk/9et5prgVzKiRaBrsm04zAfCS4ToBZKJcna9WRWTt
+   TsseAbGFaAeVFdr2fMcrVdfb3T9sqtP5jLt/HD4xoOuKs9aQog2GL55VV
+   g==;
+X-CSE-ConnectionGUID: n6siTiCdTZ2OtLvmQwtxJA==
+X-CSE-MsgGUID: khe/wLRtT2Ce2x94u1hAGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46816513"
 X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="46748409"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 14:13:15 -0700
-X-CSE-ConnectionGUID: srJKhTvQQa62dlmSArXblg==
-X-CSE-MsgGUID: vj1mMtl0RcardTakg1NyWw==
+   d="scan'208";a="46816513"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 14:14:15 -0700
+X-CSE-ConnectionGUID: 342miOwxRAKcXVypNvUvrQ==
+X-CSE-MsgGUID: LrN3jN65ToGVYv77pbgvNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="162257318"
+   d="scan'208";a="135311379"
 Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Apr 2025 14:13:14 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 18 Apr 2025 14:14:14 -0700
 Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u5t1M-0003L1-0J;
-	Fri, 18 Apr 2025 21:13:12 +0000
-Date: Sat, 19 Apr 2025 05:12:30 +0800
+	id 1u5t2K-0003L7-0Z;
+	Fri, 18 Apr 2025 21:14:12 +0000
+Date: Sat, 19 Apr 2025 05:13:21 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:virtualization] BUILD SUCCESS
- 1f3303aa92e15fa273779acac2d0023609de30f1
-Message-ID: <202504190520.ffnZmYtV-lkp@intel.com>
+Subject: [pci:misc] BUILD SUCCESS
+ a2c6c1c23bed3506fd87e00c88540ac47832c867
+Message-ID: <202504190511.xIkGw3if-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,12 +74,12 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git virtualization
-branch HEAD: 1f3303aa92e15fa273779acac2d0023609de30f1  PCI: Add ACS quirk for Loongson PCIe
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: a2c6c1c23bed3506fd87e00c88540ac47832c867  x86/PCI: Drop 'pci' suffix from intel_mid_pci.c
 
-elapsed time: 1452m
+elapsed time: 1453m
 
-configs tested: 250
+configs tested: 251
 configs skipped: 5
 
 The following configs have been built successfully.
@@ -101,6 +101,7 @@ arc                   randconfig-001-20250419    gcc-7.5.0
 arc                   randconfig-002-20250418    gcc-12.4.0
 arc                   randconfig-002-20250419    gcc-7.5.0
 arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-14.2.0
 arm                               allnoconfig    gcc-14.2.0
 arm                              allyesconfig    clang-19
 arm                              allyesconfig    gcc-14.2.0
