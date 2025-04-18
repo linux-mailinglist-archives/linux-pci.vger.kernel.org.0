@@ -1,156 +1,89 @@
-Return-Path: <linux-pci+bounces-26240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8F65A93B6B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 18:54:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FB8FA93B94
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 19:01:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB54D440300
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 16:54:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B9AA44758C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 17:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E139521A459;
-	Fri, 18 Apr 2025 16:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94EE215047;
+	Fri, 18 Apr 2025 17:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+LMRDGB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUxoVppg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBA621A43B;
-	Fri, 18 Apr 2025 16:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D1B215782
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 17:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744995228; cv=none; b=MnB26BJKBn/Ui9s0E6JEQJpd54N9DLPboRx+8D7ITPBhBSLBSdIetxGOTXcDz7mYQNJTXDR0wuELAv5ULO7BEfd+ZFRgqAnQfh5DWEMzK41myjprikyjYT2zTl9ErskUm0j8586am87zLJSMuV2xqR21+SxG+XbU3BqrUDY/aoI=
+	t=1744995688; cv=none; b=CuuVE0daJG8UR324T2nvxvpsPLfng8i92YMNfGNw6qbN/Hi28PW460xnbWdvojINS+WW9SHVjIyGpY2q/URMxYPCsKxJ5v2nrU/Jm3mICV+3K6mfP+3RaE8P6NyyhwdsQS3M7BghZVDJ67j8XgZ4x0oyb53dyqCcVEPoJWs8e1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744995228; c=relaxed/simple;
-	bh=tZYYONwzDkApmp/34Q7EaXBholg+tMiIkIlNEDsexvg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/WJ2gfqTJh4JTwFruzqZpIVkjMN6N06VyudifVLbc8gQjOoM3oeWRjBIbylhLUIt4vQu8mHdQTdPlnH1T3V6fk9Y4g9EXivl/jo6nuT/4B7hd41Cic787MwVYAUIuuo0lBfI8BhYidZQqGSKVb8H2BYPzibXiKGZj7u4uuOPJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+LMRDGB; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8ec399427so16345876d6.2;
-        Fri, 18 Apr 2025 09:53:46 -0700 (PDT)
+	s=arc-20240116; t=1744995688; c=relaxed/simple;
+	bh=gO8UuUnEL0GdMWSU7mYBXHTLEBePuhrA4Yw2uBuWr2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmfEvAKHf3EwTxK683R3znXHbTp+8X06b2zatHlaVpjFTsnt101pNLxzLGyK2wAU4g8NWQkuP/T9CFzkqTCYWTvAGpLz9gWWU0Aeruec7gyyiyecqovXacZeEcx9ZYxGxnApxdIE1+aMohj5blxcy5Pn4/qVDErqklEWGmWENVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CUxoVppg; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22622ddcc35so31826475ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744995226; x=1745600026; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744995686; x=1745600486; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3t/WaZrLOk89oF+EDQCe/b1X08N9WTsCNvmuCONFWag=;
-        b=j+LMRDGB0RNfCBFu3APD/ADBdWP2yGo3HeB2kYiJH3BPx8xnrhsnofsceuQonW6lCi
-         GXeAPl09qTocEpxQDsKS6fRg/dR0lMRDYA8X/meXr/ZVbrIEJYIsAfWDDZYYQFcexvi9
-         fUSR1TJEKvFkQYd7aHXEAVUILic2aTvc8MolyQ7H/7J90yOQ3Er6yvaY7C1afDoAiryu
-         ReQGPK2JYNYc1urNodWKW+EfXrVnnmy1CnHk4Ov8XRN+rFbr7/MgfmISwDWm8q5B8XHK
-         Io2Vu7KHED0RimZWTIKwIWKjC1b3ZrucMtIoUzBqlHtWaATL0FK0uYHP0CKKLRxKhtc5
-         cDKA==
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
+        b=CUxoVppgsjWzbqu5DK7X36o10BpcIOEQ9CefD+xSqrL1mmFplHOTNIoRGIKn0edttL
+         563JYG5LMoMYQDOpf7HhhkMzQmBGs1kQDS6X8X3q2QhYj8ROaZlklKEJ4LnjPkzTd3Ht
+         nBUSgV0v9MdeId3Rz8s3RgIQR3q1AudPUSOrT7ldZjnNB3Hb+baB3se11MJlO4K/lIHm
+         Pr5HT8CEu7ROUS9xDkoYpL7SJ5/NS/9n8cKtgYnP9lj632IveqSGlxFDp5zoKxRSr6sN
+         BwxkH2qJ6aFrOSstSSS1svkNYkkZZh0G3tPp9Qc5d9xBAOKE0WL+W7BQ/dlrnzc7dEGP
+         ev1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744995226; x=1745600026;
+        d=1e100.net; s=20230601; t=1744995686; x=1745600486;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3t/WaZrLOk89oF+EDQCe/b1X08N9WTsCNvmuCONFWag=;
-        b=mlP3mzrpt46SPfX1kLokiPsQE/b+Vi0SPDGCNwdVtM9nIeg7p3yRLd8nHadvHXAY0K
-         TsWdOCmsQPS8iPGf0u5EC+UPz2abUodEFvGeI/MfBrn2DI96+q7lLonh+2kAZDBrTdPg
-         eDXd7zL69EeBDXv+KQVF7prAzu674Ps0gEI8rEk5651d1s6OH/D7T4YuPpF3vUjBQTLs
-         wfTixHzyqBk9+5iCzAASSpjEto89WSHgozSfXtgKXEHV7KeCxGvylPNReBFw549LBg1v
-         vJvyxC642JuZP4zjo+zaSRmex6V5Dh5fw1Kfkm1QYUp5rlPXDaRmPCQzQGD12XIGzkPd
-         Su4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUBE9oRQ/5V7XpC9Uqzs7EYWPxNwXOqc5ETip11M0SyD72BkJLl2suYg/ULkkNB6L6WId/xEnz4un8ZS1Ml@vger.kernel.org, AJvYcCUg9TlaW61hVdd8zQeQbnXDTnKgt3P9qN+TBh/Cva/mRMCKExizPbSW8vQL2ko140x1FKOPufV6C5EqLM2o0Eo=@vger.kernel.org, AJvYcCUnFsiTdzk9fMp5WkAz+ijRCHJj6YjPT3EOuMf1Q+X+/0qAv/bQLr14H6yL2uuufi+R80ZeZMUfSwR/@vger.kernel.org, AJvYcCVmJ5DruueRyRDgAFTxbD8U5XfCByrfgPrcYOzwzPy8yGPoWdtipm6Vlsrzh1ouIpkhDULXaQISJFkO@vger.kernel.org, AJvYcCWKJKFAyMsM//5kd8nKyRSexgm/3MiQwMOXg7MZID0um801q7Gau5SpW0O1WFRESomNrNG6yBSNvcp+Ajw=@vger.kernel.org, AJvYcCWXbrtg/SRQq6HA7oYojQ+fUmQ83zsC+BwRoG8MMr0anmVGrjI2wpC+qj+WHa1bJAzE4HEJ6v79lObf0v26fY8d@vger.kernel.org, AJvYcCWdeHJC4ySQx4Uhe6Lsrn8yq4FQ9VGrKeLSJtGaQvGedNoKD+1y9RM8y2hPWvwvFHn/k0TobzEk@vger.kernel.org, AJvYcCXkLbhSUggWgFML2i+pVusc/Gkw1Ovmy19Q4m8QjCi2247rsgxW+DFvTfexj/QxdWATjF2od/vBu6ZT1wXU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyNH3ysd8YlIFxiW1fXvdlUhGx3V+ws9B9hLOMJptpczWTmP14
-	P6zG2WOQi4BuSNGFqcB6cScdTc9o0f/nFUCjYnCzZXB1k0QFLJ4m
-X-Gm-Gg: ASbGncsLiG+sCa/xL5Uq2LcLGp38ZWOyl9BVLyhpuBNTLR/DzeeT8CbhK5WDZOizDSR
-	Kr8u9rmSjJPirv7kUR08JQnG1/RIutB+YbU576v8h6amF+mThZPczc0oiMtJiiBpmKkxIKzCuOW
-	4Hnrr3F7nqVVT3qaUhnH/ManTz4mWKlTc7Qj7aWVF8WHUbRt+q/BsE835NQkowdRWrPnN0QODXP
-	pqYKSZmOvbIvFNdzJcQsOkDldgV/+UbvD8ldUEykbjjK1LWw2Cp74ZJecpKu45u7M7A7aHkHL2j
-	ZbLJL02Br13SjGpYZL5IurAMvVeubGDYC4VA4auzSTwSU1iZTuXsKIv97QVkg+ge0y13X3ZQCHr
-	4Xi1H7Q0WKZdrHIjBL5Lk/9QdmyqtW6k=
-X-Google-Smtp-Source: AGHT+IFK5F7pjTh+gDI22NM3J/gMlBfdXSYFP16c7YCh2IMcJ2ycP9QTVW7R2aFWqMe//5+hwErVFQ==
-X-Received: by 2002:ad4:5d4a:0:b0:6e6:61f1:458a with SMTP id 6a1803df08f44-6f2c454e561mr61427996d6.14.1744995225599;
-        Fri, 18 Apr 2025 09:53:45 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b0dc58sm12429256d6.30.2025.04.18.09.53.44
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fs+FbSr25h62ESmDLvM+DIV5SDJW0JK2umLWA74NAL4=;
+        b=NVK05V4BE025UgLUszf82Unlj5+ZErqc5MoNRYsMpiZas01xdvsbhVGi1mA4cosUK5
+         9asFaczfKgIQVUJA1zEP2yGCDwJq1Gy00rUUX/vceQSLZSuuNhsRYeIerBmLeHH1s5xB
+         5DuN3daXYLB0iyIyoMXOSaZ4au8mnwEASccWmt/4Q1dcO461Rb3iUBB0aYMf0BvKNqKo
+         NkteP6+zafR+Cxbjs6fzj0iubitErwJvHQdsX7tRL7RExYg3/KRDBM9yNJ4Q9y9AXdP7
+         s8Q6rbq8svYpyTyseiqqJwhcqdFqrrvG9bbwZK5BrXxBWZuUbc0x9wrGlm27E01SYvmm
+         paLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnRI+6+xaV9s3QQbyV6gXsYlCLlhKQIMP+rCFqkD6B49hgrJbH1O505SSN4Uk4MX7Bo2DAJxh5qrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW8oIZoMoX+VsjXKUAAeNrLcQT0rJogx5vF/o35MywFbUlfJKw
+	ldl6L3k0D+L4j6q9guvDhNwOMCm0vNWYTp3HDw+SEL/X2oyF1jR2Yhsy2mWW0w==
+X-Gm-Gg: ASbGncvwGs7sosbJddc2Cx7+/4zXE+ZPvhlOZPdbmmEQHD+WvQvMVI5f3X6nFoYi/qT
+	/d2R1sJ1gafOLCLCF7ruxdiESV14OCg5WvN77jVIh1RWI2o40lCcuzeI9aWyQE53QnPQGOUQkHI
+	VGnpO93NOx8PTpGn4E0UDKYShlLxHmlG8JTzNr9GWe9TQZtiC6jPUyzXgtXVamkqsRaHgb/ajNj
+	TNfynT9GudCN0Giz++cy82udO9465+T+fsj/VbM3vEMbjVrXE+QUQY5hbfihg9+PPLvfYmm3qCq
+	4thrKnCMm9KtAfpVg+lsW4+ZjN3oIK/sM6bQJj0P6fBi5sVjqaY=
+X-Google-Smtp-Source: AGHT+IEnFAQ5ZdAVrVFVrdvYt5L9ZjZCuO9Da8Y6K9EjBgw5KyuHMkIHZ0L6Nkwt9mqFlQeiQfcWzQ==
+X-Received: by 2002:a17:903:990:b0:223:f408:c3dc with SMTP id d9443c01a7336-22c5357a703mr52536975ad.9.1744995686287;
+        Fri, 18 Apr 2025 10:01:26 -0700 (PDT)
+Received: from thinkpad ([36.255.17.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb64fbsm19040645ad.158.2025.04.18.10.01.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 09:53:45 -0700 (PDT)
-Message-ID: <68028399.0c0a0220.389db7.61aa@mx.google.com>
-X-Google-Original-Message-ID: <aAKDlapFVulZac94@winterfell.>
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 066C51200043;
-	Fri, 18 Apr 2025 12:53:44 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 18 Apr 2025 12:53:44 -0400
-X-ME-Sender: <xms:l4MCaOS0MZu7VrDm1Ob2LRUYzATn3lvCrSx3mxKtRJynmiJf91vuQw>
-    <xme:l4MCaDz51H7htPFXnN1I5J2eYclIkY2hxlzLEpBwVsysaX8a6d4yyVxY1Z2XsvVGA
-    osS__YVT1a0RizI-w>
-X-ME-Received: <xmr:l4MCaL1eShu7QA0LgrTDuktgHW2xyyXGbxMkMlvWru2HnE6VgzKO-vQd-oIGFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvieekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
-    rhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnuc
-    fhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthht
-    vghrnhepkeekheeuudefgeelfedthfduheehkeellefhleegveeljeduheeufeelkeejie
-    egnecuffhomhgrihhnpehgihhthhhusgdrihhopdhkvghrnhgvlhdrohhrghenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
-    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
-    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-    dpnhgspghrtghpthhtohepgeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeht
-    rghmihhrugesghhmrghilhdrtghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrd
-    hgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhu
-    ohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtg
-    homhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgt
-    phhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:l4MCaKCQ5_AOxgrM9RUujgkgseBZnmKKzmalnkhJG6SECBu9lWm2pg>
-    <xmx:l4MCaHgYTO7zyl3noT53XHpiSgVpbmcFFmbFQNR8UOf2kvASWVyHpA>
-    <xmx:l4MCaGrX6PPw9obSYJcN3qrnBS7WfC_zXPJu5mxchXy92dGdyigYSQ>
-    <xmx:l4MCaKiFAgA2HoDBXSctPHo_XFldUBwHaFxEgeDfvkjr87N1ON2s_A>
-    <xmx:mIMCaGSluDRYYRt5sBgRuiMWR_Dz1ykK0mZeKIfuwnIwbJoOeQ4WxXkb>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 18 Apr 2025 12:53:43 -0400 (EDT)
-Date: Fri, 18 Apr 2025 09:53:41 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v10 5/6] rust: enable `clippy::cast_lossless` lint
-References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
- <20250418-ptr-as-ptr-v10-5-3d63d27907aa@gmail.com>
+        Fri, 18 Apr 2025 10:01:25 -0700 (PDT)
+Date: Fri, 18 Apr 2025 22:31:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	quic_cang@quicinc.com, mrana@quicinc.com
+Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
+Message-ID: <gnpoekmyk4elg53xabcsvj6sqacttby6dpryxcdepws3fpt2xj@y7efnnszvpem>
+References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
+ <t7urbtpoy26muvqnvebdctm7545pllly44bymimy7wtazcd7gj@mofvna4v5sd3>
+ <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -160,115 +93,93 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250418-ptr-as-ptr-v10-5-3d63d27907aa@gmail.com>
+In-Reply-To: <72e7ec4e-6a14-4a09-8498-42c2772da4fb@quicinc.com>
 
-On Fri, Apr 18, 2025 at 11:37:21AM -0400, Tamir Duberstein wrote:
-> Before Rust 1.29.0, Clippy introduced the `cast_lossless` lint [1]:
+On Mon, Apr 14, 2025 at 04:45:26PM +0800, Qiang Yu wrote:
 > 
-> > Rust’s `as` keyword will perform many kinds of conversions, including
-> > silently lossy conversions. Conversion functions such as `i32::from`
-> > will only perform lossless conversions. Using the conversion functions
-> > prevents conversions from becoming silently lossy if the input types
-> > ever change, and makes it clear for people reading the code that the
-> > conversion is lossless.
+> On 4/8/2025 1:51 AM, Manivannan Sadhasivam wrote:
+> > On Thu, Dec 12, 2024 at 04:19:12PM +0800, Wenbin Yao (Consultant) wrote:
+> > > PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
+> > > indicates the number of lanes to check for exit from Electrical Idle in
+> > > Polling.Active and L2.Idle. It is used to limit the effective link width to
+> > > ignore broken or unused lanes that detect a receiver to prevent one or more
+> > > bad Receivers or Transmitters from holding up a valid Link from being
+> > > configured.
+> > > 
+> > > In a PCIe link that support muiltiple lanes, setting PORT_LOGIC_LINK_WIDTH
+> > > to 1 will not affect the link width that is actually intended to be used.
+> > Where in the spec it is defined?
+> As per DWC registers data book, NUM_OF_LANES is referred to as the
+> "Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express Base
+> 3.0 Specification, revision 1.0.
+> Section 4.2.6.2.1 explains the condtions need be satisfied for enter
+> Poll.Configuration from Polling.Active.
+> The original statement is
 > 
-> While this doesn't eliminate unchecked `as` conversions, it makes such
-> conversions easier to scrutinize.  It also has the slight benefit of
-> removing a degree of freedom on which to bikeshed. Thus apply the
-> changes and enable the lint -- no functional change intended.
-> 
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#cast_lossless [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Link: https://lore.kernel.org/all/D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me/
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> "Next state is Polling.Configuration after at least 1024 TS1 Ordered Sets
+> were transmitted, and all Lanes that detected a Receiver during Detect
+> receive eight consecutive training sequences (or
+> their complement) satisfying any of the following conditions:
+> ...
+> Otherwise, after a 24 ms timeout the next state is:
+> Polling.Configuration if
+> ...
+> (ii) At least a predetermined set of Lanes that detected a Receiver during
+> Detect have detected an exit from Electrical Idle at least once since
+> entering Polling.Active.
+>     Note: _*This may prevent one or more bad Receivers or Transmitters from
+> holding up a valid Link from being configured*_, and allow for additional
+> training in Polling.Configuration. *_The exact set of predetermined Lanes is
+> implementation specific_*. Note that up to the 1.1 specification this
+> predetermined set was equal to the total set of Lanes that detected a
+> Receiver.
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Ok, this is the most relevant part of the spec. It says that atleast the
+predetermined set of lanes that detected a receiver during Detect.Active state
+should detect an exit from Electrical Idle at least once. So this condition can
+only be false if one or more lanes are faulty (not unused or broken). If the
+lanes are unused or broken, then they should not have detected the Receivers in
+the Detect.Active state itself.
 
-Regards,
-Boqun
+So this was the source of confusion.
 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  Makefile                        | 1 +
->  drivers/gpu/drm/drm_panic_qr.rs | 2 +-
->  rust/bindings/lib.rs            | 1 +
->  rust/kernel/net/phy.rs          | 4 ++--
->  rust/uapi/lib.rs                | 1 +
->  5 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 57080a64913f..eb5a942241a2 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -476,6 +476,7 @@ export rust_common_flags := --edition=2021 \
->  			    -Wclippy::all \
->  			    -Wclippy::as_ptr_cast_mut \
->  			    -Wclippy::as_underscore \
-> +			    -Wclippy::cast_lossless \
->  			    -Wclippy::ignored_unit_patterns \
->  			    -Wclippy::mut_mut \
->  			    -Wclippy::needless_bitwise_bool \
-> diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_qr.rs
-> index f2a99681b998..7555513a4fd8 100644
-> --- a/drivers/gpu/drm/drm_panic_qr.rs
-> +++ b/drivers/gpu/drm/drm_panic_qr.rs
-> @@ -386,7 +386,7 @@ fn next(&mut self) -> Option<Self::Item> {
->          match self.segment {
->              Segment::Binary(data) => {
->                  if self.offset < data.len() {
-> -                    let byte = data[self.offset] as u16;
-> +                    let byte = u16::from(data[self.offset]);
->                      self.offset += 1;
->                      Some((byte, 8))
->                  } else {
-> diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-> index 0486a32ed314..b105a0d899cc 100644
-> --- a/rust/bindings/lib.rs
-> +++ b/rust/bindings/lib.rs
-> @@ -25,6 +25,7 @@
->  )]
->  
->  #[allow(dead_code)]
-> +#[allow(clippy::cast_lossless)]
->  #[allow(clippy::ptr_as_ptr)]
->  #[allow(clippy::undocumented_unsafe_blocks)]
->  mod bindings_raw {
-> diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-> index a59469c785e3..f821480ad72b 100644
-> --- a/rust/kernel/net/phy.rs
-> +++ b/rust/kernel/net/phy.rs
-> @@ -142,7 +142,7 @@ pub fn is_autoneg_enabled(&self) -> bool {
->          // SAFETY: The struct invariant ensures that we may access
->          // this field without additional synchronization.
->          let bit_field = unsafe { &(*self.0.get())._bitfield_1 };
-> -        bit_field.get(13, 1) == bindings::AUTONEG_ENABLE as u64
-> +        bit_field.get(13, 1) == u64::from(bindings::AUTONEG_ENABLE)
->      }
->  
->      /// Gets the current auto-negotiation state.
-> @@ -426,7 +426,7 @@ impl<T: Driver> Adapter<T> {
->          // where we hold `phy_device->lock`, so the accessors on
->          // `Device` are okay to call.
->          let dev = unsafe { Device::from_raw(phydev) };
-> -        T::match_phy_device(dev) as i32
-> +        T::match_phy_device(dev).into()
->      }
->  
->      /// # Safety
-> diff --git a/rust/uapi/lib.rs b/rust/uapi/lib.rs
-> index f03b7aead35a..d5dab4dfabec 100644
-> --- a/rust/uapi/lib.rs
-> +++ b/rust/uapi/lib.rs
-> @@ -14,6 +14,7 @@
->  #![cfg_attr(test, allow(unsafe_op_in_unsafe_fn))]
->  #![allow(
->      clippy::all,
-> +    clippy::cast_lossless,
->      clippy::ptr_as_ptr,
->      clippy::undocumented_unsafe_blocks,
->      dead_code,
-> 
-> -- 
-> 2.49.0
-> 
+>     Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered Sets
+> should have detected an exit from Electrical Idle at least once since
+> entering Polling.Active."
+> > 
+> > > But setting it to a value other than 1 will lead to link training fail if
+> > > one or more lanes are broken.
+> > > 
+> > Which means the link partner is not able to downsize the link during LTSSM?
+> Yes, According to the theory metioned above, let's say in a 8 lanes PCIe
+> link, if we set NUM_OF_LANES to 8, then all lanes that detect a Receiver
+> during Detect need to receive eight consecutive training sequences,
+> otherwise the LTSSM can not enter Poll.Configuration and linktraing will
+> fail.
+
+Correct. This information should be part of the patch description.
+
+> > 
+> > > Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
+> > > port actually supports to make linking up more robust. Link can still be
+> > > established with one lane at least if other lanes are broken.
+> > > 
+> > This looks like a specific endpoint/controller issue to me. Where exactly did
+> > you see the issue?
+> Althouh we met this issue on some Modem platforms where PCIe port works in
+> EP mode. But this is not a specific endpoint/controller issue. This register
+> will be set to 1 by default after reset in new QCOM platform. But upstream
+> kernel will still program it to other value here.
+
+Yeah, now it makes sense to me and I agree that there is no need to set it to
+MLW lanes.
+
+Please reword the patch description to change 'broken or unused lanes' to
+'faulty lanes', add reference to relevant sections of the PCIe and DWC specs
+and also add above mentioned paragraph.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
