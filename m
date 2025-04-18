@@ -1,77 +1,59 @@
-Return-Path: <linux-pci+bounces-26213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2127A9365F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 13:16:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2907A93664
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 13:19:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 657877B38A3
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 11:15:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01B828A5930
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 11:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16BF92741B0;
-	Fri, 18 Apr 2025 11:16:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574CF270EAD;
+	Fri, 18 Apr 2025 11:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQ/C0ZYE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1+xi6fE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5AAFBF6;
-	Fri, 18 Apr 2025 11:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F01EA945;
+	Fri, 18 Apr 2025 11:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744975003; cv=none; b=rmKS1kt8eK8wFfK4A7NUeeCIvGvM1gQ7T9v2JzMB7fgRGrrXYkR/r1M6AoT2JA22U0OUSNDpmQrdAGHNjlD1pcWxrkExCQOAg20bw4IFTJE0/4Xq1W34wkvKE8WXP6LeJLtZDhpWtifrBlvPIaEp7gGdLsuuUy2bHYgLM/kKB24=
+	t=1744975141; cv=none; b=cgpeweE6FqjIpw8oA0wgB/e12Zpqhozj7h1GBSkdDDH0Jv87XBu+fTEjBMO8zby6ElZIQlXajQyhas494XOTuYNMhDHp4tegduWpNyWP+g78wmrTPqvTeXvfimtRrw+CCaHlH4yZn9JhI5hSpd8UpUOZflKq/6jHg59eBQSRqJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744975003; c=relaxed/simple;
-	bh=dvINVulNQm/q8ensffkaywCQHGoNQIxMaLroxrA224U=;
+	s=arc-20240116; t=1744975141; c=relaxed/simple;
+	bh=32SDoTi4aOppG1pwoCkguBhvjQmwSM3vk39kPbcX9r0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/5vpN6LpKLsC7yWUFgdUXOSTE5lsE+Ul0a2+NQHxGOnwuqv4iOeC9pUbSoD8qM9LwNITTl25bsrrlzWc+aRKRVvUOur0T8JUEXaPJJ/4uMn+aHMdj68BW3L113543BpnYya668P4ccOMq0It+Y325Iz3tQ+nNnDT/H6sS4DFfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQ/C0ZYE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900E0C4CEE2;
-	Fri, 18 Apr 2025 11:16:42 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ilmQbHbQSak1YTHNGdCp3ykqorNaDsLS4TtAkEM4ZlaU5NhIrh7OKvQkSwpewxcZ6spcEQDPRQsOx1/PcXVAWt9mUh2BR0rkFocWCYsUEBNGlsoaIQTKNKpRzuCOvMbsMxCZ6EHtoeYmZReWD//6RnnScxw1PzBtVs8MaLqTOnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1+xi6fE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89F8C4CEEA;
+	Fri, 18 Apr 2025 11:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744975003;
-	bh=dvINVulNQm/q8ensffkaywCQHGoNQIxMaLroxrA224U=;
+	s=k20201202; t=1744975140;
+	bh=32SDoTi4aOppG1pwoCkguBhvjQmwSM3vk39kPbcX9r0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WQ/C0ZYEmhZxfgAy6oSrCwtec97rYq+IQy72i0QXVT4Nic+OEanmNLKKsvIIV8Ekj
-	 1x7gsGqeeh1osAlFFL0KDLYmWqa0wjQIuod7vLi1OTJlGC5z4qe7QRZ5wj4SS2nqE7
-	 +SH+NS44ZZFAhuBE2ycaahgJLhmerUsAv+G4MIEsX1IMHt8ijPEtQJjO7xQyt6BtQo
-	 tyiaXeqr34eQH5l7zL728IAWC+FUE2oBIwfQLJxm+CM1SCDOXGLW0mSvG5V+8GFATT
-	 SZvt1I0LYqXvIMwiZgIyzpqRSI5Z5otseG0yxNbcvWknZp/i/ZkFcDocEdXEtgjD/p
-	 CTvTVJqZ7YpdQ==
-Date: Fri, 18 Apr 2025 14:16:39 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v8 00/24] Provide a new two step DMA mapping API
-Message-ID: <20250418111639.GB199604@unreal>
-References: <cover.1744825142.git.leon@kernel.org>
+	b=S1+xi6fEAlbNF8LnRY6/TnQX/JzaOKKXaki6c+R72ovNVaziZoTomPTvBC677eim7
+	 yNZSWyYBHD8Q9jMLwNaKQQwdZePby+StKw26TPui3H1vzQrZBOCLHXtK0sI5suh9mD
+	 69k8duFv37hz0s4XM+YvkNSR3smIYEgYl1dRmTXfCkjsgf36XiWBtrgL69KjoNBmqu
+	 NyjoRZbAuuoydX4Zn+NdMNJKclPPGmW6pZG1yL954MeaE+m/B5sxDPg0FdTV8ky+Om
+	 TKb/oXef/3LSfDIaEFRiuT18K99KVpRMAp5aNbcJ79bIUxxy5UToezodSLFQJhxNyZ
+	 yN44WI03msplw==
+Date: Fri, 18 Apr 2025 16:48:55 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, treding@nvidia.com,
+	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
+	sagar.tv@gmail.com
+Subject: Re: [PATCH V3] PCI: dwc: tegra194: Broaden architecture dependency
+Message-ID: <aAI1H05leD2L9Eiy@vaman>
+References: <20250417074607.2281010-1-vidyas@nvidia.com>
+ <aACzFo2wNYpo4-TN@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,26 +62,72 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1744825142.git.leon@kernel.org>
+In-Reply-To: <aACzFo2wNYpo4-TN@ryzen>
 
-On Fri, Apr 18, 2025 at 09:47:30AM +0300, Leon Romanovsky wrote:
-> Following recent on site LSF/MM 2025 [1] discussion, the overall
-> response was extremely positive with many people expressed their
-> desire to see this series merged, so they can base their work on it.
+On 17-04-25, 09:51, Niklas Cassel wrote:
+> +CC PHY maintainer.
 > 
-> It includes, but not limited:
->  * Luis's "nvme-pci: breaking the 512 KiB max IO boundary":
->    https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
->  * Chuck's NFS conversion to use one structure (bio_vec) for all types
->    of RPC transports:
->    https://lore.kernel.org/all/913df4b4-fc4a-409d-9007-088a3e2c8291@oracle.com
->  * Matthew's vision for the world without struct page:
->    https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
+> On Thu, Apr 17, 2025 at 01:16:07PM +0530, Vidya Sagar wrote:
+> > Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
+> > check, allowing the PCIe controller to be built on Tegra platforms
+> > beyond Tegra194. Additionally, ensure compatibility by requiring
+> > ARM64 or COMPILE_TEST.
+> > 
+> > Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> > v3:
+> > * Addressed warning from kernel test robot
+> > 
+> > v2:
+> > * Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
+> > 
+> >  drivers/pci/controller/dwc/Kconfig | 4 ++--
+> >  drivers/phy/tegra/Kconfig          | 2 +-
 
-The link here should be https://lore.kernel.org/all/Z-WRQOYEvOWlI34w@casper.infradead.org/
+can phy and pci be two different patches?
 
->  * Confidential computing roadmap from Dan:
->    https://lore.kernel.org/all/6801a8e3968da_71fe29411@dwillia2-xfh.jf.intel.com.notmuch
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index d9f0386396ed..815b6e0d6a0c 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -226,7 +226,7 @@ config PCIE_TEGRA194
+> >  
+> >  config PCIE_TEGRA194_HOST
+> >  	tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
+> > -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> > +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+> >  	depends on PCI_MSI
+> >  	select PCIE_DW_HOST
+> >  	select PHY_TEGRA194_P2U
+> > @@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
+> >  
+> >  config PCIE_TEGRA194_EP
+> >  	tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
+> > -	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> > +	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+> >  	depends on PCI_ENDPOINT
+> >  	select PCIE_DW_EP
+> >  	select PHY_TEGRA194_P2U
+> > diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> > index f30cfb42b210..342fb736da4b 100644
+> > --- a/drivers/phy/tegra/Kconfig
+> > +++ b/drivers/phy/tegra/Kconfig
+> > @@ -13,7 +13,7 @@ config PHY_TEGRA_XUSB
+> >  
+> >  config PHY_TEGRA194_P2U
+> >  	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+> > -	depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
+> > +	depends on ARCH_TEGRA || COMPILE_TEST
+> >  	select GENERIC_PHY
+> >  	help
+> >  	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x
+> > -- 
+> > 2.25.1
+> > 
 
-Thanks
+-- 
+~Vinod
 
