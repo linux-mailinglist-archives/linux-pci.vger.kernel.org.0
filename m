@@ -1,149 +1,426 @@
-Return-Path: <linux-pci+bounces-26157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA6FA92F77
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 03:45:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5D82A92F9A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 04:01:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A46C4A3EDA
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 01:45:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C83F4445847
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 02:01:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1A622147FD;
-	Fri, 18 Apr 2025 01:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9769A266B7F;
+	Fri, 18 Apr 2025 02:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b="wlT+Yzs5"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="RGq0rn4K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m15589.qiye.163.com (mail-m15589.qiye.163.com [101.71.155.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CB92144AE
-	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 01:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3620266B65
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 02:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744940561; cv=none; b=p5YLUxaPaNxpBvlUxDUlF1Ir6c/WYl4r1qkl5UR6SPJUyBere11fqxSUkg505YeYQPmzdhwMRO4WsCcVslCMTvEO2JoH4caxsHRqBcMSY/g+jUm1P651R25JLV7tdsMu1hU5U7ujUBzmfcFhNnm27C4la0S41eKVzP2QnyPtULo=
+	t=1744941704; cv=none; b=UfYbUPNwmNH38H5ZCz5y9GqIb8uWbvyC5GhmrdbNqLevItQx4toW3p5eN6IKaGTRhsrV+OJt29CVhgzvsziOYy5OWjjz/epAYmKeO2uaPh08vH0iEewJ2guvQnEAB1ay7Nc4y/IuBRtTo6VvIDVb8KhIwro5mVgNVUZbm0uqy/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744940561; c=relaxed/simple;
-	bh=FyzfpjuzV37kb8DXdRAf2JVqbI26cGWJdP3ZB4YA9Uc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=haHYeGd49EFJeWTlgWRGyc7xhQjxHVBGNESxFvSbBZpTSvtyksgm1l+NH52ruxrTXdXohqrsxrxyQmVDwukPDX3W6UcXm2uAMWpkv4/5r3YNNGoOakTbwqiX6SZw5EfrYjR+Njvk7jpn627c8Hioy2T7vwzT4u/fxKKOONjW+aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=byte-forge.io; dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b=wlT+Yzs5; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=byte-forge.io
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-707561e5fdcso1201787b3.1
-        for <linux-pci@vger.kernel.org>; Thu, 17 Apr 2025 18:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=byte-forge-io.20230601.gappssmtp.com; s=20230601; t=1744940558; x=1745545358; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ypjYaS2bCdOwhFfUcatnP6T3YhESxrRRKhPIWxfjEY=;
-        b=wlT+Yzs5oqxQ8z8ppn2k2kKpXKkVUTE/fiMNimu8ArT9FF1paMb6rQs6GYnIY92Efu
-         w4PLktPsOWE3vAE9iTXy4mJj0IKi5HHmQWrcqqSKTPae4rW0XBII/+C2Syy+TnKqfsMV
-         lv5pNERE3yRcyHnb5vxlSoLxNxzt08ZphhnW9noYNNELQcIohHlKgbw1xYzhvBIKY3L1
-         Yje7OpJyyJ8bXmu27au8AGTErtxnn02H2f1KHkSBWpD3s+o7P/frp+edLGSeoaH1pVoy
-         SWXAptR6C7BeykAHCymK5tLbKvlko0vqJlWzLYrN/yki8I9Z9O6VVSXlh8PIrrm6hJhv
-         uRpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744940558; x=1745545358;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ypjYaS2bCdOwhFfUcatnP6T3YhESxrRRKhPIWxfjEY=;
-        b=LeaWmY9Bd7Dk6lc3Ay2698sBvXZPiKoMhxNGmtFRxOVO4qek2w6WfH7ht7QkqYMNxC
-         cS4GsqDRDXSZWkx9dh2dgnJzwvALFl2s0T4bvS9RRv5Jab1AO/xBL0P0ySm+7E7ytPLB
-         c/viT28Ik2rERgCSBrMEPjtfi+zG9Wdx3bC6HnKHYAnlyiwP7oWUT7Dgy9IbjUMDx7uX
-         hLECaECtVl8HXWABoqJASGTJ5UskcTlrJ0au9kVD7fU3vMa4tsgqixXvKCqDt7JeKDXu
-         GNLidwBuAX/LjvyaiCTzHwpX8UTDpxNcoaHudsvv0LF9iasXiM8rlh+hWIhZeCu35wCW
-         CG3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdtKfn9fYD1R/xGKwfFL9WdnSiNBO7QpzzVnnqvjISyqEnwpZoXo3Bo2ookhmfp04NWhAC9QP0jTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ9Nu9dqoT7rNIqnYik6Mf+EzarimxZG5h293ejv0vwgER2p23
-	my+j0MPSSNEID9uomZgsjvYG4jNKWG5P5p2TBcgNlJusnhCdX665ppDtzsiOWWQ=
-X-Gm-Gg: ASbGncu9SvDnm0f7OfrKceoW9Mio3gGH6uLl7YawrRXuxp2Xb35lcuvfL+8giKzbQP4
-	Jy0tFO1GGi6FeFjdDb5r6zMZKwZD5XnSW5Gj/GTL8MRrSt5g1MVZo8CES0qBTO7IwMrHHwmnYB/
-	Lqw3kQEZf1oi0sH83MdoibB4CokR+pM0ajy4gGkzy0tlEKkbU6m4xJ3PRuZaGCjl0yGs2X/ieKa
-	w+YTm3tM5vQRj6MHYWZNTqrqFBR/waOmGvJ7FvrjToKBhHAnEw/bhUjc59hL4O+ci2O2X7UmSKP
-	8Ogg8otaB5Gc2o/UDU2zeDnDvkFF1UJdbemMpE+h/BHQVfiiNvta3nap5uX4cvlKoTaNZhvexYX
-	UdJfWKf/94otmmBDgb8HcLkqbeajzFWCs8YJK
-X-Google-Smtp-Source: AGHT+IEHJ+6Pf1f8ODH1sVykiKxg8GkjoeffCbwbuKrlLP91ZhaDAEvmG3W3nEPzfRzvLTxyNUCQWA==
-X-Received: by 2002:a05:690c:6a0f:b0:702:627e:a787 with SMTP id 00721157ae682-706cce2592amr16062067b3.29.1744940558537;
-        Thu, 17 Apr 2025 18:42:38 -0700 (PDT)
-Received: from Machine.localdomain (107-219-75-226.lightspeed.wepbfl.sbcglobal.net. [107.219.75.226])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-706ca44fd13sm2804597b3.20.2025.04.17.18.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 18:42:38 -0700 (PDT)
-From: Antonio Hickey <contact@antoniohickey.com>
+	s=arc-20240116; t=1744941704; c=relaxed/simple;
+	bh=OmMEf3GQYtWB42rigrDZiTi0dwmVUOtzP+nH5mAZJ58=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=QAkxLDDXhNYsWmqN72A9jiGY0F+PwDo4i9ZynMl4qPc24iUuRb9YjaE6/sQ1suyYNcYQ77AeX0hRYxYhG7PTfGIL6QCpAfqc4y8IfhZlck7ZqGiU4IJiUos5EatA3xWZbdpjF6ux1q1oiRtWQYPD0QYZR5hx4JaKjEM1/iWbY9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=RGq0rn4K; arc=none smtp.client-ip=101.71.155.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 12496460c;
+	Fri, 18 Apr 2025 09:46:15 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Antonio Hickey <contact@antoniohickey.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
 	linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 14/18] rust: pci: refactor to use `&raw mut`
-Date: Thu, 17 Apr 2025 21:41:35 -0400
-Message-ID: <20250418014143.888022-15-contact@antoniohickey.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250418014143.888022-1-contact@antoniohickey.com>
-References: <20250418014143.888022-1-contact@antoniohickey.com>
+	linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v3] PCI: dw-rockchip: Add system PM support
+Date: Fri, 18 Apr 2025 09:45:59 +0800
+Message-Id: <1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0IYS1YaTxhISUseGU8ZTEtWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9646933a4809cckunm12496460c
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTo6Hww5FjJLTxUMDjoSLi8v
+	ERIKCw5VSlVKTE9PQk9LTExMSEJPVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpJS0lJNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=RGq0rn4KB8o4qve8Gn2sEr3VZEC4v3ebdmoFxdbf6tPQLIedtRTAoITWuqIuNt+8AYOo3xjH9NxhI4TqpBBIVP4n5Jaeq42u30RlqAnzw8Po83GRlEUGpgdLFa+0O0ZeCYHUgpkZ0ywlk1SkS5jpMFEt9gFBxaIrXXdwKuXwqzs=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=tAnUEtBhTHweDMKSeGThgbL6GGunvad+35JgxNSWfBY=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Replacing all occurrences of `addr_of_mut!(place)`
-with `&raw mut place`.
+This patch adds system PM support for Rockchip platforms by adding
+.pme_turn_off and .get_ltssm hook and tries to reuse possible existing
+code.
 
-This will allow us to reduce macro complexity, and improve consistency
-with existing reference syntax as `&raw mut` is similar to `&mut`
-making it fit more naturally with other existing code.
+It's tested on RK3576 EVB1 board with Some NVMes and PCIe-2-SATA/XHCI
+devices. And check the PCIe protocol analyzer to make sure the L2 process
+fits the spec.
 
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://github.com/Rust-for-Linux/linux/issues/1148
-Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+  nvme nvme0: missing or invalid SUBNQN field.
+  nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
+  nvme nvme0: 8/0/0 default/read/poll queues
+  nvme nvme0: Ignoring bogus Namespace Identifiers
+
+  echo N > /sys/module/printk/parameters/console_suspend
+  echo core > /sys/power/pm_test
+  echo mem > /sys/power/state
+
+  PM: suspend entry (deep)
+  Filesystems sync: 0.000 seconds
+  Freezing user space processes
+  Freezing user space processes completed (elapsed 0.001 seconds)
+  OOM killer disabled.
+  Freezing remaining freezable tasks
+  Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+
+  ...
+
+  rockchip-dw-pcie 22400000.pcie: PCIe Gen.2 x1 link up
+  OOM killer enabled.
+  Restarting tasks ... done.
+  random: crng reseeded on system resumption
+  PM: suspend exit
+  nvme nvme0: 8/0/0 default/read/poll queues
+  nvme nvme0: Ignoring bogus Namespace Identifiers
+
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
- rust/kernel/pci.rs | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index c97d6d470b28..4ad82f10a8b3 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -17,11 +17,7 @@
-     types::{ARef, ForeignOwnable, Opaque},
-     ThisModule,
+Changes in v3:
+- amend the commit msg suggested by Bjorn
+- reuse more code suggested by Diederik
+- bail out EP case suggested by Niklas
+
+Changes in v2:
+- Use NOIRQ_SYSTEM_SLEEP_PM_OPS
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 197 +++++++++++++++++++++++---
+ 1 file changed, 177 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 56acfea..4bcd4006 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -21,6 +21,7 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ 
++#include "../../pci.h"
+ #include "pcie-designware.h"
+ 
+ /*
+@@ -37,8 +38,14 @@
+ #define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+ #define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+ #define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
++#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
+ #define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+ #define PCIE_CLIENT_INTR_MASK_MISC	0x24
++#define PCIE_CLIENT_POWER		0x2c
++#define PCIE_CLIENT_MSG_GEN		0x34
++#define PME_READY_ENTER_L23		BIT(3)
++#define PME_TURN_OFF			(BIT(4) | BIT(20))
++#define PME_TO_ACK			(BIT(9) | BIT(25))
+ #define PCIE_SMLH_LINKUP		BIT(16)
+ #define PCIE_RDLH_LINKUP		BIT(17)
+ #define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+@@ -63,6 +70,7 @@ struct rockchip_pcie {
+ 	struct gpio_desc *rst_gpio;
+ 	struct regulator *vpcie3v3;
+ 	struct irq_domain *irq_domain;
++	u32 intx;
+ 	const struct rockchip_pcie_of_data *data;
  };
--use core::{
--    marker::PhantomData,
--    ops::Deref,
--    ptr::{addr_of_mut, NonNull},
--};
-+use core::{marker::PhantomData, ops::Deref, ptr::NonNull};
- use kernel::prelude::*;
  
- /// An adapter for the registration of PCI drivers.
-@@ -459,7 +455,7 @@ impl AsRef<device::Device> for Device {
-     fn as_ref(&self) -> &device::Device {
-         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
-         // `struct pci_dev`.
--        let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
-+        let dev = unsafe { &raw mut (*self.as_raw()).dev };
+@@ -159,6 +167,13 @@ static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
+ 	return rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
+ }
  
-         // SAFETY: `dev` points to a valid `struct device`.
-         unsafe { device::Device::as_ref(dev) }
++static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
++{
++	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
++
++	return rockchip_pcie_get_ltssm(rockchip) & PCIE_LTSSM_STATUS_MASK;
++}
++
+ static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+ {
+ 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+@@ -248,8 +263,46 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+ 	return 0;
+ }
+ 
++static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
++	struct device *dev = rockchip->pci.dev;
++	int ret;
++	u32 status;
++
++	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
++	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
++	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
++				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
++				 PCIE_PME_TO_L2_TIMEOUT_US);
++	if (ret) {
++		dev_warn(dev, "Failed to send PME_Turn_Off\n");
++		return;
++	}
++
++	/* 2. Wait for PME_TO_Ack, bit 9 will be set once received */
++	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_INTR_STATUS_MSG_RX,
++				 status, status & BIT(9), PCIE_PME_TO_L2_TIMEOUT_US / 10,
++				 PCIE_PME_TO_L2_TIMEOUT_US);
++	if (ret) {
++		dev_warn(dev, "Failed to receive PME_TO_Ack\n");
++		return;
++	}
++
++	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
++	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
++	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
++				 status, status & PME_READY_ENTER_L23,
++				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
++				 PCIE_PME_TO_L2_TIMEOUT_US);
++	if (ret)
++		dev_err(dev, "Failed to get ready to enter L23 message\n");
++}
++
+ static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
+ 	.init = rockchip_pcie_host_init,
++	.pme_turn_off = rockchip_pcie_pme_turn_off,
+ };
+ 
+ /*
+@@ -404,10 +457,12 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+ 	struct device *dev = rockchip->pci.dev;
+ 	int ret;
+ 
+-	rockchip->phy = devm_phy_get(dev, "pcie-phy");
+-	if (IS_ERR(rockchip->phy))
+-		return dev_err_probe(dev, PTR_ERR(rockchip->phy),
+-				     "missing PHY\n");
++	if (!rockchip->phy) {
++		rockchip->phy = devm_phy_get(dev, "pcie-phy");
++		if (IS_ERR(rockchip->phy))
++			return dev_err_probe(dev, PTR_ERR(rockchip->phy),
++					     "missing PHY\n");
++	}
+ 
+ 	ret = phy_init(rockchip->phy);
+ 	if (ret < 0)
+@@ -430,6 +485,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = rockchip_pcie_link_up,
+ 	.start_link = rockchip_pcie_start_link,
+ 	.stop_link = rockchip_pcie_stop_link,
++	.get_ltssm = rockchip_pcie_get_pure_ltssm,
+ };
+ 
+ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+@@ -489,13 +545,32 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockchip, u32 mode)
++{
++	u32 val;
++
++	/* LTSSM enable control mode */
++	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
++	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
++
++	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
++}
++
++static void rockchip_pcie_unmask_dll_indicator(struct rockchip_pcie *rockchip)
++{
++	u32 val;
++
++	/* unmask DLL up/down indicator */
++	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
++	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
++}
++
+ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+ 				      struct rockchip_pcie *rockchip)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_pcie_rp *pp;
+ 	int irq, ret;
+-	u32 val;
+ 
+ 	if (!IS_ENABLED(CONFIG_PCIE_ROCKCHIP_DW_HOST))
+ 		return -ENODEV;
+@@ -512,12 +587,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+ 		return ret;
+ 	}
+ 
+-	/* LTSSM enable control mode */
+-	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+-	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+-
+-	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++	rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_RC_MODE);
+ 
+ 	pp = &rockchip->pci.pp;
+ 	pp->ops = &rockchip_pcie_host_ops;
+@@ -529,9 +599,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+ 		return ret;
+ 	}
+ 
+-	/* unmask DLL up/down indicator */
+-	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
+-	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
++	rockchip_pcie_unmask_dll_indicator(rockchip);
+ 
+ 	return ret;
+ }
+@@ -558,12 +626,7 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
+ 		return ret;
+ 	}
+ 
+-	/* LTSSM enable control mode */
+-	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+-	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+-
+-	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++	rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_EP_MODE);
+ 
+ 	rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
+ 	rockchip->pci.ep.page_size = SZ_64K;
+@@ -677,6 +740,94 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int rockchip_pcie_suspend(struct device *dev)
++{
++	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
++	struct dw_pcie *pci = &rockchip->pci;
++	int ret;
++
++	if (rockchip->data->mode == DW_PCIE_EP_TYPE) {
++		dev_err(dev, "suspend is not supported in EP mode\n");
++		return -EOPNOTSUPP;
++	}
++
++	rockchip->intx = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_MASK_LEGACY);
++
++	ret = dw_pcie_suspend_noirq(pci);
++	if (ret) {
++		dev_err(dev, "failed to suspend\n");
++		return ret;
++	}
++
++	rockchip_pcie_phy_deinit(rockchip);
++	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
++	reset_control_assert(rockchip->rst);
++	if (rockchip->vpcie3v3)
++		regulator_disable(rockchip->vpcie3v3);
++	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
++
++	return 0;
++}
++
++static int rockchip_pcie_resume(struct device *dev)
++{
++	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
++	struct dw_pcie *pci = &rockchip->pci;
++	int ret;
++
++	if (rockchip->data->mode == DW_PCIE_EP_TYPE) {
++		dev_err(dev, "resume is not supported in EP mode\n");
++		return -EOPNOTSUPP;
++	}
++
++	reset_control_assert(rockchip->rst);
++
++	ret = clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
++	if (ret) {
++		dev_err(dev, "clock init failed\n");
++		goto err_clk;
++	}
++
++	if (rockchip->vpcie3v3) {
++		ret = regulator_enable(rockchip->vpcie3v3);
++		if (ret)
++			goto err_power;
++	}
++
++	ret = rockchip_pcie_phy_init(rockchip);
++	if (ret) {
++		dev_err(dev, "phy init failed\n");
++		goto err_phy_init;
++	}
++
++	reset_control_deassert(rockchip->rst);
++
++	rockchip_pcie_writel_apb(rockchip, HIWORD_UPDATE(0xffff, rockchip->intx),
++				 PCIE_CLIENT_INTR_MASK_LEGACY);
++
++	rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_RC_MODE);
++	rockchip_pcie_unmask_dll_indicator(rockchip);
++
++	ret = dw_pcie_resume_noirq(pci);
++	if (ret) {
++		dev_err(dev, "fail to resume\n");
++		goto err_resume;
++	}
++
++	return 0;
++
++err_resume:
++	rockchip_pcie_phy_deinit(rockchip);
++err_phy_init:
++	if (rockchip->vpcie3v3)
++		regulator_disable(rockchip->vpcie3v3);
++err_power:
++	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
++err_clk:
++	reset_control_deassert(rockchip->rst);
++	return ret;
++}
++
+ static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
+ 	.mode = DW_PCIE_RC_TYPE,
+ };
+@@ -707,11 +858,17 @@ static const struct of_device_id rockchip_pcie_of_match[] = {
+ 	{},
+ };
+ 
++static const struct dev_pm_ops rockchip_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(rockchip_pcie_suspend,
++				  rockchip_pcie_resume)
++};
++
+ static struct platform_driver rockchip_pcie_driver = {
+ 	.driver = {
+ 		.name	= "rockchip-dw-pcie",
+ 		.of_match_table = rockchip_pcie_of_match,
+ 		.suppress_bind_attrs = true,
++		.pm = &rockchip_pcie_pm_ops,
+ 	},
+ 	.probe = rockchip_pcie_probe,
+ };
 -- 
-2.48.1
+2.7.4
 
 
