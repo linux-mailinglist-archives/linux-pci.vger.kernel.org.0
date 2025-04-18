@@ -1,119 +1,107 @@
-Return-Path: <linux-pci+bounces-26209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 566FCA93497
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 10:24:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEEC3A934A4
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 10:29:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 050E81B6628A
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 08:24:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 846EE1B648D6
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 08:29:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54CF726B2C4;
-	Fri, 18 Apr 2025 08:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E090C26B2B1;
+	Fri, 18 Apr 2025 08:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jeu8QH+M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Ixu8ln"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1884B268C55;
-	Fri, 18 Apr 2025 08:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6191DA21;
+	Fri, 18 Apr 2025 08:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964678; cv=none; b=oJAulFQb3ibNg1lC26mea1Pbt2mBmN+LBDb8DFasBzGJbPICrZ0RdDFjyh3o6rx2yb85Yerbsf7Ye+iBQmxWhyGb7mXykatamUG58+z+Vk4r80SV8ua1i33wclb/9itZpp8bMrsrk7n7mr5BIAuy1iM9ewiGuCmExCXjkDZ2uRc=
+	t=1744964974; cv=none; b=CMLfQMzCqEPXGNJ1DXivmW1Ejx67Z7eNI605G9OctHfyFR98DkyXQRiPMrH2WtbUa78gTAGMJNzS9iOEqUmcNPA41NXCpUrxeBgnvygbLE3GFtEFbpHLJafwaE4I0M3YqioWy+XEjKtMJAtJ1gLVEW2decO7yQ9oK/zGWh9Mmak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964678; c=relaxed/simple;
-	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=JOGb3BJogmtqYrBHoh67YdEvVEdMcTE7K94IuFjQe93wRVHl0ZsuGIiKPT7jFaZWBjsc8Vc+GjjKjtX8gTU4uwyzvj3H/ddI62p20HHPz8ID9X0OdVg0tksrJzP6v6aUxCU/8k89/lo6P7smGxTCpaPU+eYkpF02aSKuxasz6BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jeu8QH+M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E8CC4CEE2;
-	Fri, 18 Apr 2025 08:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744964677;
-	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Jeu8QH+M1Br42zGYHGcZhAAXWDmCsjRzAlZ5hrEVlRdeHLRNgShMGYULuWj2jXTUu
-	 Gz7qZ/eC1LrK3mZRFcZPWAT+IQyGAZenZFtPYjcTwJ1eHyVOd433z8hLR083M13UnG
-	 Yz/+BNG057GgyY5KPqpOgSbRjjTVgnHLeq1Ud0qZ2tGps68D/qD0WQ7yukthbeyyXl
-	 Paw/QUmFQnR9Kbj1T+Hv5MbVp9AdYXzzTInkm93qqgjZdJGkWNWWB3uLc4zoT3AMWE
-	 N6c8o0QTJOlGOc0MMWELCLcwB8D4a+uh/yHZFCLHNgGQafGvhfq5bL0WPin3TZ3DYa
-	 lL5fCH47k7yLw==
-Date: Fri, 18 Apr 2025 03:24:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1744964974; c=relaxed/simple;
+	bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ehyTs0wrUNzCXknN4X3zt9wNxjOMV28UrQUZDg3vCc54gn7uqSQLMCUaO6UY04AqB6Um8jlO2Ralp2noxN4bFgTB+t+XOq1GrRGRSGPKRtpQHIju4DAbG3b6xuUoiQkm0F7hwl65Rj1020TLSiHk4IskekYW6R+f9Pp5LB1K81E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0Ixu8ln; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549b159c84cso2086811e87.3;
+        Fri, 18 Apr 2025 01:29:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744964971; x=1745569771; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
+        b=G0Ixu8lnu1iqlOTLMwLa3u9p6orBujj2XUA9n25sGYBwXBhfQD+bYaMYeCD2JZE4Pt
+         eVXhgjLDo9LnKnq+RhDCxfc8OB0DtTj1HuPtGyEMG3zwh/y0P3OHco55qtRxPbuOFUtD
+         cD8V0BUoRqJkYGXOfON/0xz9YxyrXgsoVJecgbrRDOH7rCaZR5Cbs31nMXGlfLg0qi0z
+         yQ7hkcATA5/jSJ9brr4xstuK49UcRtJlW+t4qZqrkbjdLCiDCWs106PEogLHAK8DiEL+
+         ReNVqgyZVytFZMrJXORCFlnXY9xjh6w0QWNI9SdSdsS8GkBS1udYoq5bU8SfIogMLwmC
+         MoPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744964971; x=1745569771;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
+        b=SttvKVr3IFtvxzvUwv0t6DXn0+sppl6EE/d9/Z3Frt8A/Cy+K0Awe1IgsclitBIV8z
+         gxjD018XYYXMmS9/NDHgGuNBGoLN51YDeE7jwO00hZUA2MBcBkP1GjzgRg+fyi9TmcQE
+         QjdEq2c059itJYokKLppYbI1Pwy2hI+R2trcEGg3SY9ya6mb1BULfOfpYh7N/9cWVDdx
+         fd8xS5lPzg6I7dIDLydN/LmpaxgKu75Ei438B+tALOHrQu1eRE64oQ3r9dsJ48E3Lc95
+         bujp95kcP9zN0v0ZcIQrS3tUrbw65mn08hbG/e4stnPz4OpqkyC3rzWicHdIxaCTwlRu
+         7hcw==
+X-Gm-Message-State: AOJu0Yw/5PNcrrC4/ttAGKJ2nUY6NzK1lyY+RG97ZP4xcJrPxSZDIdN7
+	/4sB3kv8vMQ8070UVz29gNuLUgSJbOqsontkDYrsA2MGjeu1eV/bmPJ+Wg==
+X-Gm-Gg: ASbGncsPrfqzjNCNrmDsnQwkNeM5EPqkiYbDlAfdQ040qLob8TQkW/5pwTPgb/9v6sk
+	qrm85vwxmUdmTLpflOVnU/0+cc9arhFFCVM0qKLe+ID7dY6dvuwCy5O6dHxF5ABxt+pbLpGhlcQ
+	vPNwxCtWeoxWHxMmQ9fQk/gcQeFLqu2HvDqCSlNllTTBn9C2z2yelxbtByGK1wJlHmdpSU2rJgM
+	WyN70HeQWUvennFUIDLf4XzB6mvTBbRgyFX7535fTN7LsMoGDIVqcrI908fjIAC2zq0KlWD7Jyw
+	4wsEdyy9pIepNhyBe+uQmf/pCiaDRU4T4yOsQa2MY58hHmQrKu0DA64eBA==
+X-Google-Smtp-Source: AGHT+IFUTm0W49Qs/USupxCHL/NXGEOwE+ROyG8Iv52IIXe6ndsNi4djYlFd0wAdt3CQ7vpCPkN3hw==
+X-Received: by 2002:a05:6512:2346:b0:545:e19:ba1c with SMTP id 2adb3069b0e04-54d6e62cb0amr470052e87.19.1744964970781;
+        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
+Received: from foxbook (adtu187.neoplus.adsl.tpnet.pl. [79.185.232.187])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e524csm129527e87.182.2025.04.18.01.29.29
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
+Date: Fri, 18 Apr 2025 10:29:26 +0200
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION 6.14] Some PCI device BARs inacessible
+Message-ID: <20250418102926.690ac42c@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: nm@ti.com, baocheng.su@siemens.com, linux-pci@vger.kernel.org, 
- diogo.ivo@siemens.com, krzk+dt@kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, kw@linux.com, 
- robin.murphy@arm.com, jan.kiszka@siemens.com, kristo@kernel.org, 
- s-vadapalli@ti.com, linux-arm-kernel@lists.infradead.org, 
- lpieralisi@kernel.org, vigneshr@ti.com, iommu@lists.linux.dev, 
- linux-kernel@vger.kernel.org, bhelgaas@google.com, helgaas@kernel.org, 
- m.szyprowski@samsung.com, devicetree@vger.kernel.org, conor+dt@kernel.org, 
- ssantosh@kernel.org
-To: huaqian.li@siemens.com
-In-Reply-To: <20250418073026.2418728-3-huaqian.li@siemens.com>
-References: <20241030205703.GA1219329@bhelgaas>
- <20250418073026.2418728-1-huaqian.li@siemens.com>
- <20250418073026.2418728-3-huaqian.li@siemens.com>
-Message-Id: <174496467399.2597920.14844354232532512833.robh@kernel.org>
-Subject: Re: [PATCH v7 2/8] dt-bindings: PCI: ti,am65: Extend for use with
- PVU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-On Fri, 18 Apr 2025 15:30:20 +0800, huaqian.li@siemens.com wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
-> to specific regions of host memory. Add the optional property
-> "memory-regions" to point to such regions of memory when PVU is used.
-> 
-> Since the PVU deals with system physical addresses, utilizing the PVU
-> with PCIe devices also requires setting up the VMAP registers to map the
-> Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
-> mapped to the system physical address. Hence, describe the VMAP
-> registers which are optional unless the PVU shall be used for PCIe.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
-> ---
->  .../bindings/pci/ti,am65-pci-host.yaml        | 34 +++++++++++++++++--
->  1 file changed, 31 insertions(+), 3 deletions(-)
-> 
+This is a heads up that an apparent PCI regression has been reported
+and mistakenly assigned to USB in the kernel bugzilla:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+https://bugzilla.kernel.org/show_bug.cgi?id=220016
 
-yamllint warnings/errors:
+Visible symptom is missing USB devices, but the whole controller fails
+to probe, apparently due to devm_request_mem_region() returning NULL,
+see drivers/usb/core/hcd-pci.c and usb_hcd_pci_probe().
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dtb: pcie@5500000 (ti,am654-pcie-rc): 'memory-region' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+Same systems also show a similar failure with some AHCI controller.
+It seems specific to particular ASUS AMD motherboards.
 
-doc reference errors (make refcheckdocs):
+Somebody found that disabling CONFIG_PCI_REALLOC_ENABLE_AUTO helps.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250418073026.2418728-3-huaqian.li@siemens.com
+That's all I know, reporters can be reached via bugzilla.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Regards,
+Michal
 
