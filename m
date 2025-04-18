@@ -1,145 +1,175 @@
-Return-Path: <linux-pci+bounces-26219-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDE55A93726
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 14:34:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F36D4A937A1
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 15:10:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CDF61B606E8
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 12:34:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14BD0176161
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 13:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B049221F0C;
-	Fri, 18 Apr 2025 12:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B1B27604E;
+	Fri, 18 Apr 2025 13:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bJvzxzPl"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B5t3bSZd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89F31A3168;
-	Fri, 18 Apr 2025 12:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACBD276030;
+	Fri, 18 Apr 2025 13:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979647; cv=none; b=hB0SoLL2q0W5b8esAImvasCVg3StKWfLDu89JtyQfmnzAIS8GOxsbBOa5ML2nRSscrMgglK6qKx1VERZWSSPu1m5je27w8nLLO2dIwB8kbX+gnjZjHqJrpxvHkemmuztgQ4C0wz1fbq3KMQ3ZB1jvExB1EO/M8s1Ui/Yd1LJyRc=
+	t=1744981851; cv=none; b=b6Uv1GSP5MmUDWjJhhRzKtZWnZs0cAIqKUbMQ170dp9+NXV2WUGKxCw8sY8Bg+CYqFoXN9Jqux2DGFeTaiXyKb3oeU7grdhTu41RDVtpuBBFG1hrJshpeVUzY3cSyzdHT+n/YgVh6DwPGiTDqJk8SdglB3+vzXEVGA4epwpRyjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979647; c=relaxed/simple;
-	bh=EYjpeUAANM8+5uNFVCZfMTzKPxQienpfphayIHsTXTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mtq0xkHEF8TT/kDVF5B92TsRO/tLgjHfbmMo/iukernoHsRQ1misG27TU7Wxum9lsqklgcuYcE09KPTQOXqXax5BtdsEAN9vA2UD8LEskjHuel+L/yfCvECBP8E6n6eG2Yf/sZQmH5D/urF80iSNE2dCAOVlliGPKdoBBvW92Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bJvzxzPl; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=UBDa95ya3cXHyPB4tt8cCTy+Vp36SNsAM/119FvW6N4=;
-	b=bJvzxzPlNdGkw+LZC9dvPrYW8aqNO6eGW8ZI3fbxhzW7pvN1GW+LJpa+uDxhPK
-	ebJvUlDMfYrQp0SIiVtO/C98MDAXCMT47eYpfWD2oB33MOZupFs/kxCAr8fxfaDZ
-	0P6UlRP8rMCpLq4lua26jUN0JW7yEy7sqCYR6ghEjl8dU=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDXH0qFRgJosq3aAw--.53778S2;
-	Fri, 18 Apr 2025 20:33:10 +0800 (CST)
-Message-ID: <22720eef-f5a3-4e72-9c41-35335ec20f80@163.com>
-Date: Fri, 18 Apr 2025 20:33:08 +0800
+	s=arc-20240116; t=1744981851; c=relaxed/simple;
+	bh=JTTWxqBrwEtLKx6O5TyIr4GBL3p0TLD2eTF5sLveJGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FdsiXrtRyUQQPSzyFJiq1Rm21XbGyvv+XZNmnmEqNZ78MXXgaiAeALVT5I7uvwvCeADM7RxGBHM4pYegPoJpckOJGZSgyGuFVtlFa6ToInxBQnaYMYma440KbkuPfCgUYeTyDdSDsrWDeiFgiv0XffaKymPz6JquPlrViAMiox0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B5t3bSZd; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8AC884333F;
+	Fri, 18 Apr 2025 13:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744981840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=flWAz2w14wq7W+OFxNQQycVZnw0/ZbM/Zjd3vHnpprk=;
+	b=B5t3bSZdX2Pd3XrVzuwEHF2KinZWkp5ZqrcvrtLQLoDFV4L/lSO9PtQI1lRmvm9jWuqbwg
+	r6TLbHTP1PwPFSC+jXorCpZF3Ey3loGgGda6H2O4yjQzjdJrNVWOlk0bwSHzI5JplKUDsg
+	GwOCyZfyyLFd7K4ig98jOczKvpBZcOjJaQ2wZMWuqYq9TlMMEaK7yr5oHZsdAh1j+ED3Ew
+	NEJeHaRcd/8pveKH3k29fv3niVN9Fm86fCMZFHKVFMT+lcZCWAZhrU+JCRI+QBtNICDKDo
+	CDMMC5zWgNSQx0LxfBAU5w44jp7ZAJvMkRZOCEU1GAW4B7VvnDvY4s/SH1hhUQ==
+Date: Fri, 18 Apr 2025 15:10:36 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree
+ support for x86
+Message-ID: <20250418151036.719f982b@bootlin.com>
+In-Reply-To: <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	<20250407145546.270683-12-herve.codina@bootlin.com>
+	<Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+	<20250408154925.5653d506@bootlin.com>
+	<Z_U0DkSemHK0lrJW@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-To: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org,
- kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250417165219.GA115235@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250417165219.GA115235@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDXH0qFRgJosq3aAw--.53778S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGw1xCw47Kw47Gr45WryfZwb_yoW5CF1Upa
-	yag3W5Kr1DGF4fJw4kZw1F9Fy0yrnxAFW3Xw15t3yDZ3s8AFW3ArWqka12kFyxWrn7G3W3
-	JFyF9FW3Xwn8ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ul0PhUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwgzo2gCPnz1oQAAsr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffekjeehffeihfefueehveegvdeiieeludekhffhjeeuffdvudevgeevtdeiueefnecuffhomhgrihhnpegrnhgrnhguthgvtghhrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
+Hi Andy,
 
+On Tue, 8 Apr 2025 17:34:54 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-On 2025/4/18 00:52, Bjorn Helgaas wrote:
-> On Thu, Apr 17, 2025 at 10:39:49AM +0200, Niklas Cassel wrote:
->> On Thu, Apr 17, 2025 at 04:07:51PM +0800, Hans Zhang wrote:
->>> On 2025/4/17 15:48, Niklas Cassel wrote:
->>>
->>> Hi Niklas and Shawn,
->>>
->>> Thank you very much for your discussion and reply.
->>>
->>> I tested it on RK3588 and our platform. By setting pci=pcie_bus_safe, the
->>> maximum MPS will be automatically matched in the end.
->>>
->>> So is my patch no longer needed? For RK3588, does the customer have to
->>> configure CONFIG_PCIE_BUS_SAFE or pci=pcie_bus_safe?
->>>
->>> Also, for pci-meson.c, can the meson_set_max_payload be deleted?
->>
->> I think the only reason why this works is because
->> pcie_bus_configure_settings(), in the case of
->> pcie_bus_config == PCIE_BUS_SAFE, will walk the bus and set MPS in
->> the bridge to the lowest of the downstream devices:
->> https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/probe.c#L2994-L2999
->>
->> So Hans, if you look at lspci for the other RCs/bridges that don't
->> have any downstream devices connected, do they also show DevCtl.MPS 256B
->> or do they still show 128B ?
->>
->> One could argue that for all policies (execept for maybe PCIE_BUS_TUNE_OFF),
->> pcie_bus_configure_settings() should start off by initializing DevCtl.MPS to
->> DevCap.MPS (for the bridge itself), and after that pcie_bus_configure_settings()
->> can override it depending on policy, e.g. set MPS to 128B in case of
->> pcie_bus_config == PCIE_BUS_PEER2PEER, or walk the bus in case of
->> pcie_bus_config == PCIE_BUS_SAFE.
->>
->> That way, we should be able to remove the setting for pci-meson.c as well.
+> On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
+> > On Mon, 7 Apr 2025 18:36:28 +0300
+> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
+> > > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:  
 > 
-> Thanks, I came here to say basically the same thing.  Ideally I think
-> the generic code in pcie_bus_configure_settings() should be able to
-> increase MPS or decrease it such that neither meson_set_max_payload()
-> nor rockchip_pcie_set_max_payload() is required.
+> ...
 > 
-> However, the requirement to pick a Kconfig setting makes it a mess.  I
-> would love to get rid of those Kconfig symbols.  I don't like the
-> command-line parameters either, but it would definitely be an
-> improvement if we could nuke the Kconfig symbols and rely on the
-> command-line parameters.
+> > > This is incorrect, they never had ACPI to begin with. Also there is third
+> > > platform that are using DT on x86 core — SpreadTrum based phones.  
+> > 
+> > I will rework the commit log to avoid 'mixing ACPI and device-tree'
+> > 
+> > For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
+> > I could use to filter our this x86 systems?  
 > 
-> It's also a problem when devices are hot-added after the hierarchy has
-> already been set up because the new device might not work correctly in
-> the existing config.
+> Hmm... good question. I don't think it was anything. The Airmont core just
+> works and doesn't require anything special to be set. And platform is x86 with
+> the devices that are established on ARM, so nothing special in device tree
+> either, I suppose. Basically any x86 platform with OF should be excluded,
+> rather think of what should be included. But I see that as opposite
+> requirements to the same function. I have no idea how to solve this. Perhaps
+> find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
+> Especially if we want to install a custom kernel there...
 > 
-> It's a hard problem to solve.
+> > Anything I find upstream related to SpreadTrum seems base on ARM cpus.
+> > I probably miss something.  
 > 
-> For new platforms without an install base, maybe it would be easier to
-> rely on the command-line parameters since there aren't a bunch of
-> users that would have to change the Kconfig.
+> There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
+> DT code were made to support those cases.
+> 
+> > > And not sure about AMD stuff (Geode?).  
+> > 
+> > Same here, if some AMD devices need to be filtered out, is there a specific
+> > Kconfig symbol I can use ?  
+> 
+> This is question to AMD people. I have no clue.
+> 
+> [1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
+> 
+> [2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
+> and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
 > 
 
-Dear Bjorn,
+I have tried to find a solution for this topic.
 
-Thanks your for reply. Niklas and I attempted to modify the relevant 
-logic in drivers/pci/probe.c and found that there was a lot of code 
-judging the global variable pcie_bus_config. At present, there is no 
-good method. I will keep trying.
+Indeed, this patch enables fw_devlink based on device-tree on all x86
+platform except OLPC and CE4100.
 
-I wonder if you have any good suggestions? It seems that the code logic 
-regarding pcie_bus_config is a little complicated and cannot be modified 
-for the time being?
+You have mentioned some other x86 based system that could have issues with
+fw_devlink and it seems to be hard to have a complete list of systems for
+which we should not enable fw_devlink (potential issues and so regression
+against current kernel behavior).
+
+As you also proposed, we can thing on the opposite direction and enable
+fw_devlink on x86 systems that need it.
+
+We need it because we need the device-tree description over PCI device feature
+(CONFIG_PCI_DYNAMIC_OF_NODES) on x86 in order to support the LAN966x use case.
+
+What do you think about the following condition?
+
+	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
+ 		return 0; /* Not enabled */
+
+CONFIG_PCI_DYNAMIC_OF_NODES has already to set explicitly by the user.
+
+
+Do you think it makes sense and could be a good alternative instead of
+filtering out a list of x86 systems ?
 
 Best regards,
-Hans
-
+Hervé
 
