@@ -1,122 +1,151 @@
-Return-Path: <linux-pci+bounces-26211-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26212-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41CF4A9358C
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 11:49:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5739CA93647
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 13:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5A4C18908F0
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 09:49:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A10053B4164
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 11:03:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B087209696;
-	Fri, 18 Apr 2025 09:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79B98215055;
+	Fri, 18 Apr 2025 11:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHCsEGUc"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VehwYp+Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE36520299D
-	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 09:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F721D5170;
+	Fri, 18 Apr 2025 11:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969770; cv=none; b=T/f2qojgsKpIPjEawql+K3yRW5OnEhFx2yw52XscfXc+U4RFkH3S7c0C+k/b8XptyDyyyWBShD0Cu12J/G2INpMaYXuC4+qgZnfYTRepUJVr87MJuX1E3HHZJogzcFpMWvqrDjigQEUmiaCSSfoRAclE7e0DTQVAVDAu9POOcCQ=
+	t=1744974196; cv=none; b=i65tgg32Pbbf1Rs9o1TFjOFtdwIeZ9XNfoKJ3/29ZjkpPtv/z8deaGduOXWklJIMBR3oSq5LWqv0FL4da7cGM4Gsjc/lQQ1NvijCnFMNH5BmN8F95yN7A8qGh3FyUe1RfMl23wrTDws9Yujvk3AF3IA7FFFETVoNAAOmJW4d3sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969770; c=relaxed/simple;
-	bh=6Pq3Dbsaw91zeezOZl7rj7E4CkNxDlFOD8bMl2buu2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oF0U3hBdBP33rFWIDxu7XPtIfDerXj3X7uOEfYtmYk3T1Xs0UrvmqXaKkl53l8ZaWBRjZzK+PQraSpJt6pOJmu/qEpCRMvINHC59dWCufMg8u5+8V5/+i2FZiWIABZzPsp4QRP5OpfMXufFOKniii7FlBUqd/4Txy2iCStuZ3Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aHCsEGUc; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so2561916b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 02:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744969768; x=1745574568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
-        b=aHCsEGUc69XJMZVU6uYS4/HHXA4Lucy1s9aQwdMP1uSDsKlULA1IMnsg21Kvxr4UHM
-         xJZ+KGOZugeFXPUDrgx2LqRvz8sq5kniO9nfLy2gH7R8QyWt+uIMU6zaVPACkDZlHMNM
-         RNaN7arciUjpjbY+XB0iQP0oggFLlnvF/hNw2TWfOtxkX0E2mlRi5DGzPBpPb00fJabv
-         fpv92W4dLiR2tY7HwMbNg8Gzg12x6xuQzSNhG4pJLfiFrkHrmAcyiW3G7S0Oqj4yCQtk
-         fvAMBjAgmvlbawBSUHCtRQvUTajE2xkOwb5MxvsQ2UT9vVJur0UbeNOzqDG7ELS/MFYi
-         ayfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744969768; x=1745574568;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
-        b=RA/FFown6GPh+4P2gndeZ1V1/Hi0ruPm/dXXhDmzJ8O5AMw3c/DY8c0I6BoNGnlJyr
-         4N8ihCNrzLCs60EVx5befzHUGlVGu825KjaR5F3BkGbuKFqvfwKwsUtqvnUqHlnbKAmW
-         QLZVzsEu0qog7T+mBx+rZjGHO73rUJaOTLHAPCmMB9dQ7CTN5qOJcAaUNNSrgzLtwyWA
-         CEt+Dt4JbDf+qrI5T0u0TGoh3MuSJiQaz62HCSTGcGV/iOV2DvopQC6CCPE3qI+2vaaH
-         84G6Ux+WOlaaJoqixddSmhEapiZJ/i0V06R9WnHusg08+eD51beLJFq53OeS1NTbr+w/
-         J39w==
-X-Gm-Message-State: AOJu0YzNlk9rvtmu7Oox8vFqO5/FZGMOtQ/TNhYAwpq5s6V6pFIcnGtQ
-	RqbvjYKqB9vy2l0xdkeeqD482h0YwGZHgacvZz7z8bpic/lo4zr06IayRYbOBQ==
-X-Gm-Gg: ASbGncvEaikQ+1JgQtJHIIQhCzdKSwntRrDAOZU8s1pc6BRtKZoi93KiXt8rxQTIve3
-	wqrsfC0gPQEGYIsHFsI2RLKxv4mrYw0NBFGuxMjgCMiMBGIh67h4lNoD0cvSiaA/fbLSmdViY1T
-	XJ/rNy+rvNxFaP/EJbKBgidSc3Nb4UqVzmc5Iu6nXOipQBgKEpkMb/xlRfDh8/IL+l6GSYCEuMA
-	71sDOiS1ldij/Dp1bJ4TmPS9uen2FdYH8o+BC9yK8aUh0xiNeeSNgjfJMsdT9dd8DGLVYOZB6oa
-	HxksP2fh0oMOs8SYjNxvOLsV4eSgrKMd5Yclu8x1C4E5hwYWuGO0
-X-Google-Smtp-Source: AGHT+IEco0sKoFDRmf6mUfY5e0OyAEg6+5tFe/Gl6VeKc86avVTKr4g6pIZxHkWblne5PixuG6TsNA==
-X-Received: by 2002:a05:6a20:9c9a:b0:1f3:20be:c18a with SMTP id adf61e73a8af0-203cc60880bmr2607193637.10.1744969767905;
-        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157c783sm1079830a12.77.2025.04.18.02.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: bhelgaas@google.com,
-	kw@linux.com,
-	lpieralisi@kernel.org
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] MAINTAINERS: Move Manivannan Sadhasivam as PCI Native host bridge and endpoint maintainer
-Date: Fri, 18 Apr 2025 15:19:02 +0530
-Message-ID: <20250418094905.9983-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744974196; c=relaxed/simple;
+	bh=PjqyHyK5COfrkquZogeuVG2kH6978BWxx66MKNuvwLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBT2F0KY5/PDK9aLtdQ4zqSrTz6oRkmikOHtPAx+9haLt/yfQA5VGqJ/4xQi6xDPtxIPHVxAypP5+teFoGUgE7PF3+kkthz0quk4dpQRljmNVi9jPl164PP/rfs9BM5G13VB8BQD7qE/N6Eqi/hsNqbpb7CzkuwNxGCDlx1kCsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VehwYp+Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A8BC4CEE2;
+	Fri, 18 Apr 2025 11:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744974195;
+	bh=PjqyHyK5COfrkquZogeuVG2kH6978BWxx66MKNuvwLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VehwYp+Zw0bjkfYwTbzP0I7WZY54cQyqybNTZp0YpLjLtFQ+m2fjW7QBdpilF/fiX
+	 bM3axOGj4v9YzwXVzb3xM+Qr/Lf0Rqukc52i2RCb2LsgaLuhtGMBlqOa1bUOCuNjPD
+	 GfqPkYxqioc/rNtKFlGXZO7SinXX7joS1LDKIu0Q=
+Date: Fri, 18 Apr 2025 13:03:13 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	PCI <linux-pci@vger.kernel.org>, linux-s390@vger.kernel.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 6.14 000/449] 6.14.3-rc1 review
+Message-ID: <2025041852-unlined-rug-e71e@gregkh>
+References: <20250417175117.964400335@linuxfoundation.org>
+ <CA+G9fYvz0kujF4NjLwwTMcejDF-7k7_nhmroZNUJTBg4H4Kz8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvz0kujF4NjLwwTMcejDF-7k7_nhmroZNUJTBg4H4Kz8Q@mail.gmail.com>
 
-I'm currently maintaining the PCI endpoint subsystem and reviewing the
-native host bridge and endpoint drivers. However, this affects my endpoint
-maintainership role since I cannot merge endpoint patches that depend on
-the controller drivers (which is more common). Moreover, the controller
-driver patches would also benefit from a helping hand in maintaining them.
+On Fri, Apr 18, 2025 at 12:00:33PM +0530, Naresh Kamboju wrote:
+> On Thu, 17 Apr 2025 at 23:23, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.14.3 release.
+> > There are 449 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.3-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Regressions on arm64 and s390 allmodconfig and allyesconfig builds failed
+> on the stable rc 6.14.3-rc1 with gcc-13 and clang-20.
+> 
+> There are two different types of build errors on arm64 and s390.
+> These regressions on arm64 are also found on stable-rc 6.13 and 6.12.
+> 
+> First seen on the 6.14.3-rc1
+>  Good: v6.14.2
+>  Bad:  v6.14.2-450-g0e7f2bba84c1
+> 
+> Regressions found on arm64 s390:
+>   - build/gcc-13-allmodconfig
+>   - build/gcc-13-allyesconfig
+>   - build/clang-20-allmodconfig
+>   - build/clang-20-allyesconfig
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Build regression: arm64 s390 ufs-qcom.c implicit declaration
+> 'devm_of_qcom_ice_get'
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build log arm64
+> drivers/ufs/host/ufs-qcom.c: In function 'ufs_qcom_ice_init':
+> drivers/ufs/host/ufs-qcom.c:128:15: error: implicit declaration of
+> function 'devm_of_qcom_ice_get'; did you mean 'of_qcom_ice_get'?
+> [-Werror=implicit-function-declaration]
+>   128 |         ice = devm_of_qcom_ice_get(dev);
+>       |               ^~~~~~~~~~~~~~~~~~~~
+>       |               of_qcom_ice_get
+> drivers/ufs/host/ufs-qcom.c:128:13: error: assignment to 'struct
+> qcom_ice *' from 'int' makes pointer from integer without a cast
+> [-Werror=int-conversion]
+>   128 |         ice = devm_of_qcom_ice_get(dev);
+>       |             ^
+> cc1: all warnings being treated as errors
 
-So I'd like to step up to maintain the native host bridge and endpoint
-drivers together with the endpoint subsystem.
+Offending commit now dropped from everywhere, I'll push out new -rcs
+soon.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> ## Build log s390
+> arch/s390/pci/pci_fixup.c: In function 'zpci_ism_bar_no_mmap':
+> arch/s390/pci/pci_fixup.c:19:13: error: 'struct pci_dev' has no member
+> named 'non_mappable_bars'
+>    19 |         pdev->non_mappable_bars = 1;
+>       |             ^~
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ce2b64f4568d..ed035c9b3a61 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18631,7 +18631,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
- PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
- M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
- M:	Krzysztof Wilczyński <kw@linux.com>
--R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- R:	Rob Herring <robh@kernel.org>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--- 
-2.43.0
+Will go drop the offending commit now too, thanks!
 
+greg k-h
 
