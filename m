@@ -1,105 +1,111 @@
-Return-Path: <linux-pci+bounces-26160-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26161-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E186A93102
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 05:55:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80E6EA93150
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 06:52:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 159477AC6D7
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 03:54:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E585466695
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 04:52:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CD12512FB;
-	Fri, 18 Apr 2025 03:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C91FC253B55;
+	Fri, 18 Apr 2025 04:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwfNZg+P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E041A0730
-	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 03:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48221DA21
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 04:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744948511; cv=none; b=i1MZOLXtDfX2pRrPvUMy+9/G/VWAUollvLD1Juo/SnPWUVvHXIf0ym1ikjP/wTVACtZmdFn03s1Vj1UmPDfNQwb6tanw/sdCBQDD5tsVohvEZYHU0V/LPPkajhmiHuJbH9No9vO2Dsvo2Q/B3JUPEEc+c5IgSDMz0DsWjAzydrU=
+	t=1744951973; cv=none; b=qi4ZGzSsoh9mjs88x3VZmOCRHrILMNfzeExF+RfneBZFEYSYR7D8mqa8OWgzN25SYhl8CABdYjeUc01z1GmT7Fc2d9cuBnl3luSszV8AY7dzl8aX8MO8xZXD5r54Wo/WjHAuEcAsv8DSZqnFSlh6vVng68Rvyp5KoXyEAN1+TEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744948511; c=relaxed/simple;
-	bh=6AP0PKLSwfD10E8cCiEDRjPWV5GtrFi3tKh3JiRZ1JQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5p5w/+kVNEcx3mZoQV/dJXbi40nc1eh9tmoC3S4fLN5ECUHr0bW4k+Hpgg56VxHy0cYDDn3aPrKj6/SNKtyW+n6j28ZKXWTvlLeI8B28Nrm4lGMK+h/uf5wwxtVeBHU2ONqvBqKyzu6MCdBlBI+Uce6vuOuNqYcsPBd32tzK6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 265BE2C4C3C8;
-	Fri, 18 Apr 2025 05:54:57 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 36457224E6; Fri, 18 Apr 2025 05:55:05 +0200 (CEST)
-Date: Fri, 18 Apr 2025 05:55:05 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Keith Busch <kbusch@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@kernel.org>,
-	Thomas Tai <thomas.tai@oracle.com>, poza@codeaurora.org,
-	Christoph Hellwig <hch@lst.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv3 09/10] PCI: Unify device inaccessible
-Message-ID: <aAHNGT60lleXqnW6@wunner.de>
-References: <20180918235702.26573-1-keith.busch@intel.com>
- <20180918235702.26573-10-keith.busch@intel.com>
- <e0606dfcf8780bf994432dc373581fdf0af18f8e.camel@kernel.crashing.org>
+	s=arc-20240116; t=1744951973; c=relaxed/simple;
+	bh=Niv/e2ULeqXuF0ruDrF7IxbZRP0058yoi5gAvaeq2yo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CUAtwbWrjL6vMdKSlGEg4HkXyTiYsorkJlrlT1Wv3dnMb0IFLE+JIxCK55ZhsqTGlXCKFgrFUkqCuH73XSMvwtwBfxNbHN+Y0GHVniBQAfR+Pkt/YlfRV2awkpkUWA9q03c2xe2qFCezosgb7gD48t6L0cx5EmUBnR0kuGvQRO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwfNZg+P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B612AC4CEE2;
+	Fri, 18 Apr 2025 04:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744951973;
+	bh=Niv/e2ULeqXuF0ruDrF7IxbZRP0058yoi5gAvaeq2yo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JwfNZg+PvCvCj9mZK6l7Y5OONpSKrKojrWuNkcXBMcgRsT36v+QQCgNnyHSC9PAPM
+	 XPgRhMPC4JD9lMfOA8ion40iBZWCY+UpmTa+FDSuYd4mqpGYJPRZK8Gz9zhb24v+je
+	 VUb2ScAVlTxLycMT6MeCW79hjZkI/vPFdyHvLlJ4VT40dISshjg52pZ6nScFMY30xv
+	 2TdGl2Jb16Ng6CgsqSw3/wDeDWBtEp4Lvt8WZW7kPqvd/knva0DPSnCVh8tPjGYBve
+	 FUNp/f1UA1q8yyL87tEj7qJyAjTACzeMmpZslbm9wVoY4o0ktWi+BVbUIDnf7YGWGg
+	 Nii2o4Iw6d9nA==
+From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Step down from the PCI maintainer role
+Date: Fri, 18 Apr 2025 04:52:51 +0000
+Message-ID: <20250418045251.7434-1-kwilczynski@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0606dfcf8780bf994432dc373581fdf0af18f8e.camel@kernel.crashing.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-[cc += PowerPC / EEH maintainers]
+Moving myself back to a reviewer role where I will be able to offer
+support with patch reviews and testing on a more ad hoc basis.
 
-Hi Ben,
+While at it, update my e-mail address and add relevant entries to
+the .mailmap file.
 
-On Tue, Sep 25, 2018 at 11:10:01AM +1000, Benjamin Herrenschmidt wrote:
-> On Tue, 2018-09-18 at 17:57 -0600, Keith Busch wrote:
-> > + * pci_dev_set_io_state - Set the new error state if possible.
-> > + *
-> > + * @dev - pci device to set new error_state
-> > + * @new - the state we want dev to be in
-> > + *
-> > + * Must be called with device_lock held.
-> 
-> Any reason why you don't do cmpxchg as I originally suggested (sorry
-> I've been away and may have missed some previous emails)
-> 
-> This won't work for PowerPC EEH. We will change the state from a
-> readl() so at interrupt time or any other context.
-> 
-> We really need the cmpxchg variant.
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+---
+ .mailmap    | 2 ++
+ MAINTAINERS | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Independently from your request, pci_dev_set_io_state() was
-converted to cmpxchg() in 2023 with commit 74ff8864cc84
-("PCI: hotplug: Allow marking devices as disconnected during
-bind/unbind").
+diff --git a/.mailmap b/.mailmap
+index 4f7cd8e23177..5224f3cc2d34 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -413,6 +413,8 @@ Krishna Manikandan <quic_mkrishn@quicinc.com> <mkrishn@codeaurora.org>
+ Krzysztof Kozlowski <krzk@kernel.org> <k.kozlowski.k@gmail.com>
+ Krzysztof Kozlowski <krzk@kernel.org> <k.kozlowski@samsung.com>
+ Krzysztof Kozlowski <krzk@kernel.org> <krzysztof.kozlowski@canonical.com>
++Krzysztof Wilczyński <kwilczynski@kernel.org> <krzysztof.wilczynski@linux.com>
++Krzysztof Wilczyński <kwilczynski@kernel.org> <kw@linux.com>
+ Kshitiz Godara <quic_kgodara@quicinc.com> <kgodara@codeaurora.org>
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+ Kuogee Hsieh <quic_khsieh@quicinc.com> <khsieh@codeaurora.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b827049501..2215a80930c9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18581,7 +18581,7 @@ F:	drivers/pci/controller/pcie-xilinx-cpm.c
+ 
+ PCI ENDPOINT SUBSYSTEM
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+-M:	Krzysztof Wilczyński <kw@linux.com>
++R:	Krzysztof Wilczyński <kwilczynski@kernel.org>
+ R:	Kishon Vijay Abraham I <kishon@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
+@@ -18632,7 +18632,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
+ 
+ PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+ M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
+-M:	Krzysztof Wilczyński <kw@linux.com>
++R:	Krzysztof Wilczyński <kwilczynski@kernel.org>
+ R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ R:	Rob Herring <robh@kernel.org>
+ L:	linux-pci@vger.kernel.org
+-- 
+2.49.0
 
-So you may now amend EEH to use pcie_do_recovery() or whatever
-you needed this for.
-
-I had kept your e-mail in my inbox as a reminder that there's a
-remaining issue here and just came across it while clearing out
-other messages.
-
-Thanks,
-
-Lukas
 
