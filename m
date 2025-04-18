@@ -1,242 +1,119 @@
-Return-Path: <linux-pci+bounces-26208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5FEFA93419
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 10:02:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 566FCA93497
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 10:24:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BA781B61155
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 08:03:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 050E81B6628A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 08:24:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A4AD26AA91;
-	Fri, 18 Apr 2025 08:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54CF726B2C4;
+	Fri, 18 Apr 2025 08:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfNjpKOb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jeu8QH+M"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA72613C82E;
-	Fri, 18 Apr 2025 08:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1884B268C55;
+	Fri, 18 Apr 2025 08:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744963365; cv=none; b=ECp6Dtj44++RHgsIXygdwSA4EnLlF5rRVZgRjXK7I3wEBcLiVpU4c5FR0Py0BCGu9iRbk5jIWvaexsMFGQ+EaZY5GKTiH6dcRAB0gm6hX6Hqqzk6RcPWsscJAClAWjF49T1Cri4Ei6pFfATSrsTJtfptMdbz0nwG/HnIByrkHEQ=
+	t=1744964678; cv=none; b=oJAulFQb3ibNg1lC26mea1Pbt2mBmN+LBDb8DFasBzGJbPICrZ0RdDFjyh3o6rx2yb85Yerbsf7Ye+iBQmxWhyGb7mXykatamUG58+z+Vk4r80SV8ua1i33wclb/9itZpp8bMrsrk7n7mr5BIAuy1iM9ewiGuCmExCXjkDZ2uRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744963365; c=relaxed/simple;
-	bh=dp/a0KQW6s1HUowZp3pVpovc87ZhWIisQB2UIJrvz9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TA+KUw5EU7AUsUXTBtDpuw6FbVq9E2Dm7m35csiJXjJTfOpSKckjdDWOddg1mGuTiBeyGHxO9jB6LsMU/AaaVakTyyuejgBxQaSZ4orf9OHgdew2Xp8NjHmrHIHs4NWSQHdif3pZQmD1mQVfsi6XDb+aQC4lcboNRXIlIe4Rxvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfNjpKOb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3F4C4CEE2;
-	Fri, 18 Apr 2025 08:02:39 +0000 (UTC)
+	s=arc-20240116; t=1744964678; c=relaxed/simple;
+	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=JOGb3BJogmtqYrBHoh67YdEvVEdMcTE7K94IuFjQe93wRVHl0ZsuGIiKPT7jFaZWBjsc8Vc+GjjKjtX8gTU4uwyzvj3H/ddI62p20HHPz8ID9X0OdVg0tksrJzP6v6aUxCU/8k89/lo6P7smGxTCpaPU+eYkpF02aSKuxasz6BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jeu8QH+M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E8CC4CEE2;
+	Fri, 18 Apr 2025 08:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744963364;
-	bh=dp/a0KQW6s1HUowZp3pVpovc87ZhWIisQB2UIJrvz9E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AfNjpKOb21ywlYC/OrmRmyZovar5QMJh+pzsXdQLXpgfvDc8s2FeKsSSmY9uXRTYw
-	 7wueHQYcigWmtPF+uctGlYB6aqVtEHv+CpGDOHl1li5M44Rc5SMCIoY6/r9MejZdQH
-	 YfSW7LPrPI/uKn3wu+W+GH0hzdb2JPLJEoABq2IVJ2AT4uHQc0IkJaUk/JTNFeZucb
-	 KZbcgbbNjw/HEo4kl9nYCTZuLh5jAH55WgCZcGrxraZ5NX/CyK0uoSq8QRicV6VWFF
-	 2omjCGL8y8CFmi6A3Nbm1MMks5Iz1Jz1pZsFO4W6VoN007BeBsG1aNaiETWWvXDioq
-	 cwUe4iTyuUaEg==
-Message-ID: <1284adf3-7e93-4530-9921-408c5eaeb337@kernel.org>
-Date: Fri, 18 Apr 2025 17:02:38 +0900
+	s=k20201202; t=1744964677;
+	bh=/9OfrWnCUxMfe0bzWWpOCEaGqaGAQjbwJjWfCuAqTJo=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Jeu8QH+M1Br42zGYHGcZhAAXWDmCsjRzAlZ5hrEVlRdeHLRNgShMGYULuWj2jXTUu
+	 Gz7qZ/eC1LrK3mZRFcZPWAT+IQyGAZenZFtPYjcTwJ1eHyVOd433z8hLR083M13UnG
+	 Yz/+BNG057GgyY5KPqpOgSbRjjTVgnHLeq1Ud0qZ2tGps68D/qD0WQ7yukthbeyyXl
+	 Paw/QUmFQnR9Kbj1T+Hv5MbVp9AdYXzzTInkm93qqgjZdJGkWNWWB3uLc4zoT3AMWE
+	 N6c8o0QTJOlGOc0MMWELCLcwB8D4a+uh/yHZFCLHNgGQafGvhfq5bL0WPin3TZ3DYa
+	 lL5fCH47k7yLw==
+Date: Fri, 18 Apr 2025 03:24:34 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
-To: Leon Romanovsky <leon@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
- Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Sagi Grimberg <sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
- kvm@vger.kernel.org, linux-mm@kvack.org,
- Niklas Schnelle <schnelle@linux.ibm.com>,
- Chuck Lever <chuck.lever@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Dan Williams
- <dan.j.williams@intel.com>, Chaitanya Kulkarni <kch@nvidia.com>,
- Nitesh Shetty <nj.shetty@samsung.com>, Leon Romanovsky <leonro@nvidia.com>
-References: <cover.1744825142.git.leon@kernel.org>
- <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: nm@ti.com, baocheng.su@siemens.com, linux-pci@vger.kernel.org, 
+ diogo.ivo@siemens.com, krzk+dt@kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, kw@linux.com, 
+ robin.murphy@arm.com, jan.kiszka@siemens.com, kristo@kernel.org, 
+ s-vadapalli@ti.com, linux-arm-kernel@lists.infradead.org, 
+ lpieralisi@kernel.org, vigneshr@ti.com, iommu@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, bhelgaas@google.com, helgaas@kernel.org, 
+ m.szyprowski@samsung.com, devicetree@vger.kernel.org, conor+dt@kernel.org, 
+ ssantosh@kernel.org
+To: huaqian.li@siemens.com
+In-Reply-To: <20250418073026.2418728-3-huaqian.li@siemens.com>
+References: <20241030205703.GA1219329@bhelgaas>
+ <20250418073026.2418728-1-huaqian.li@siemens.com>
+ <20250418073026.2418728-3-huaqian.li@siemens.com>
+Message-Id: <174496467399.2597920.14844354232532512833.robh@kernel.org>
+Subject: Re: [PATCH v7 2/8] dt-bindings: PCI: ti,am65: Extend for use with
+ PVU
 
-On 4/18/25 15:47, Leon Romanovsky wrote:
-> From: Kanchan Joshi <joshi.k@samsung.com>
+
+On Fri, 18 Apr 2025 15:30:20 +0800, huaqian.li@siemens.com wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
 > 
-> blk_rq_dma_map API is costly for single-segment requests.
-> Avoid using it and map the bio_vec directly.
+> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
+> to specific regions of host memory. Add the optional property
+> "memory-regions" to point to such regions of memory when PVU is used.
 > 
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Since the PVU deals with system physical addresses, utilizing the PVU
+> with PCIe devices also requires setting up the VMAP registers to map the
+> Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
+> mapped to the system physical address. Hence, describe the VMAP
+> registers which are optional unless the PVU shall be used for PCIe.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
 > ---
->  drivers/nvme/host/pci.c | 65 +++++++++++++++++++++++++++++++++++++----
->  1 file changed, 60 insertions(+), 5 deletions(-)
+>  .../bindings/pci/ti,am65-pci-host.yaml        | 34 +++++++++++++++++--
+>  1 file changed, 31 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 8d99a8f871ea..cf020de82962 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -216,6 +216,11 @@ struct nvme_queue {
->  	struct completion delete_done;
->  };
->  
-> +enum {
-> +	IOD_LARGE_DESCRIPTORS = 1, /* uses the full page sized descriptor pool */
-> +	IOD_SINGLE_SEGMENT = 2, /* single segment dma mapping */
-> +};
-> +
->  /*
->   * The nvme_iod describes the data in an I/O.
->   */
-> @@ -224,7 +229,7 @@ struct nvme_iod {
->  	struct nvme_command cmd;
->  	bool aborted;
->  	u8 nr_descriptors;	/* # of PRP/SGL descriptors */
-> -	bool large_descriptors;	/* uses the full page sized descriptor pool */
-> +	unsigned int flags;
->  	unsigned int total_len; /* length of the entire transfer */
->  	unsigned int total_meta_len; /* length of the entire metadata transfer */
->  	dma_addr_t meta_dma;
-> @@ -529,7 +534,7 @@ static inline bool nvme_pci_use_sgls(struct nvme_dev *dev, struct request *req,
->  static inline struct dma_pool *nvme_dma_pool(struct nvme_dev *dev,
->  		struct nvme_iod *iod)
->  {
-> -	if (iod->large_descriptors)
-> +	if (iod->flags & IOD_LARGE_DESCRIPTORS)
->  		return dev->prp_page_pool;
->  	return dev->prp_small_pool;
->  }
-> @@ -630,6 +635,15 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
->  static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
->  {
->  	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
-> +	unsigned int nr_segments = blk_rq_nr_phys_segments(req);
-> +	dma_addr_t dma_addr;
-> +
-> +	if (nr_segments == 1 && (iod->flags & IOD_SINGLE_SEGMENT)) {
 
-nvme_pci_setup_prps() calls nvme_try_setup_prp_simple() which sets
-IOD_SINGLE_SEGMENT if and only if the req has a single phys segment. So why do
-you need to count the segments again here ? Looking at the flag only should be
-enough, no ?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
-> +		dma_unmap_page(dev->dev, dma_addr, iod->total_len,
-> +				rq_dma_dir(req));
-> +		return;
-> +	}
->  
->  	if (!blk_rq_dma_unmap(req, dev->dev, &iod->dma_state, iod->total_len)) {
->  		if (iod->cmd.common.flags & NVME_CMD_SGL_METABUF)
-> @@ -642,6 +656,41 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
->  		nvme_free_descriptors(dev, req);
->  }
->  
-> +static bool nvme_try_setup_prp_simple(struct nvme_dev *dev, struct request *req,
-> +				      struct nvme_rw_command *cmnd,
-> +				      struct blk_dma_iter *iter)
-> +{
-> +	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
-> +	struct bio_vec bv = req_bvec(req);
-> +	unsigned int first_prp_len;
-> +
-> +	if (is_pci_p2pdma_page(bv.bv_page))
-> +		return false;
-> +	if ((bv.bv_offset & (NVME_CTRL_PAGE_SIZE - 1)) + bv.bv_len >
-> +	    NVME_CTRL_PAGE_SIZE * 2)
-> +		return false;
-> +
-> +	iter->addr = dma_map_bvec(dev->dev, &bv, rq_dma_dir(req), 0);
-> +	if (dma_mapping_error(dev->dev, iter->addr)) {
-> +		iter->status = BLK_STS_RESOURCE;
-> +		goto out;
-> +	}
-> +	iod->total_len = bv.bv_len;
-> +	cmnd->dptr.prp1 = cpu_to_le64(iter->addr);
-> +
-> +	first_prp_len = NVME_CTRL_PAGE_SIZE -
-> +			(bv.bv_offset & (NVME_CTRL_PAGE_SIZE - 1));
-> +	if (bv.bv_len > first_prp_len)
-> +		cmnd->dptr.prp2 = cpu_to_le64(iter->addr + first_prp_len);
-> +	else
-> +		cmnd->dptr.prp2 = 0;
-> +
-> +	iter->status = BLK_STS_OK;
-> +	iod->flags |= IOD_SINGLE_SEGMENT;
-> +out:
-> +	return true;
-> +}
-> +
->  static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
->  					struct request *req)
->  {
-> @@ -652,6 +701,12 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
->  	dma_addr_t prp1_dma, prp2_dma = 0;
->  	unsigned int prp_len, i;
->  	__le64 *prp_list;
-> +	unsigned int nr_segments = blk_rq_nr_phys_segments(req);
-> +
-> +	if (nr_segments == 1) {
-> +		if (nvme_try_setup_prp_simple(dev, req, cmnd, &iter))
-> +			return iter.status;
-> +	}
->  
->  	if (!blk_rq_dma_map_iter_start(req, dev->dev, &iod->dma_state, &iter))
->  		return iter.status;
-> @@ -693,7 +748,7 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
->  
->  	if (DIV_ROUND_UP(length, NVME_CTRL_PAGE_SIZE) >
->  	    NVME_SMALL_DESCRIPTOR_SIZE / sizeof(__le64))
-> -		iod->large_descriptors = true;
-> +		iod->flags |= IOD_LARGE_DESCRIPTORS;
->  
->  	prp_list = dma_pool_alloc(nvme_dma_pool(dev, iod), GFP_ATOMIC,
->  			&prp2_dma);
-> @@ -808,7 +863,7 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
->  	}
->  
->  	if (entries > NVME_SMALL_DESCRIPTOR_SIZE / sizeof(*sg_list))
-> -		iod->large_descriptors = true;
-> +		iod->flags |= IOD_LARGE_DESCRIPTORS;
->  
->  	sg_list = dma_pool_alloc(nvme_dma_pool(dev, iod), GFP_ATOMIC, &sgl_dma);
->  	if (!sg_list)
-> @@ -932,7 +987,7 @@ static blk_status_t nvme_prep_rq(struct nvme_dev *dev, struct request *req)
->  
->  	iod->aborted = false;
->  	iod->nr_descriptors = 0;
-> -	iod->large_descriptors = false;
-> +	iod->flags = 0;
->  	iod->total_len = 0;
->  	iod->total_meta_len = 0;
->  
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dtb: pcie@5500000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
 
--- 
-Damien Le Moal
-Western Digital Research
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250418073026.2418728-3-huaqian.li@siemens.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
