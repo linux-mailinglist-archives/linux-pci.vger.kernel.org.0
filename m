@@ -1,107 +1,122 @@
-Return-Path: <linux-pci+bounces-26210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEEC3A934A4
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 10:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41CF4A9358C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 11:49:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 846EE1B648D6
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 08:29:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5A4C18908F0
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 09:49:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E090C26B2B1;
-	Fri, 18 Apr 2025 08:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B087209696;
+	Fri, 18 Apr 2025 09:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Ixu8ln"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHCsEGUc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6191DA21;
-	Fri, 18 Apr 2025 08:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE36520299D
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 09:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744964974; cv=none; b=CMLfQMzCqEPXGNJ1DXivmW1Ejx67Z7eNI605G9OctHfyFR98DkyXQRiPMrH2WtbUa78gTAGMJNzS9iOEqUmcNPA41NXCpUrxeBgnvygbLE3GFtEFbpHLJafwaE4I0M3YqioWy+XEjKtMJAtJ1gLVEW2decO7yQ9oK/zGWh9Mmak=
+	t=1744969770; cv=none; b=T/f2qojgsKpIPjEawql+K3yRW5OnEhFx2yw52XscfXc+U4RFkH3S7c0C+k/b8XptyDyyyWBShD0Cu12J/G2INpMaYXuC4+qgZnfYTRepUJVr87MJuX1E3HHZJogzcFpMWvqrDjigQEUmiaCSSfoRAclE7e0DTQVAVDAu9POOcCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744964974; c=relaxed/simple;
-	bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ehyTs0wrUNzCXknN4X3zt9wNxjOMV28UrQUZDg3vCc54gn7uqSQLMCUaO6UY04AqB6Um8jlO2Ralp2noxN4bFgTB+t+XOq1GrRGRSGPKRtpQHIju4DAbG3b6xuUoiQkm0F7hwl65Rj1020TLSiHk4IskekYW6R+f9Pp5LB1K81E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0Ixu8ln; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549b159c84cso2086811e87.3;
-        Fri, 18 Apr 2025 01:29:32 -0700 (PDT)
+	s=arc-20240116; t=1744969770; c=relaxed/simple;
+	bh=6Pq3Dbsaw91zeezOZl7rj7E4CkNxDlFOD8bMl2buu2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oF0U3hBdBP33rFWIDxu7XPtIfDerXj3X7uOEfYtmYk3T1Xs0UrvmqXaKkl53l8ZaWBRjZzK+PQraSpJt6pOJmu/qEpCRMvINHC59dWCufMg8u5+8V5/+i2FZiWIABZzPsp4QRP5OpfMXufFOKniii7FlBUqd/4Txy2iCStuZ3Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aHCsEGUc; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so2561916b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 02:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744964971; x=1745569771; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-        b=G0Ixu8lnu1iqlOTLMwLa3u9p6orBujj2XUA9n25sGYBwXBhfQD+bYaMYeCD2JZE4Pt
-         eVXhgjLDo9LnKnq+RhDCxfc8OB0DtTj1HuPtGyEMG3zwh/y0P3OHco55qtRxPbuOFUtD
-         cD8V0BUoRqJkYGXOfON/0xz9YxyrXgsoVJecgbrRDOH7rCaZR5Cbs31nMXGlfLg0qi0z
-         yQ7hkcATA5/jSJ9brr4xstuK49UcRtJlW+t4qZqrkbjdLCiDCWs106PEogLHAK8DiEL+
-         ReNVqgyZVytFZMrJXORCFlnXY9xjh6w0QWNI9SdSdsS8GkBS1udYoq5bU8SfIogMLwmC
-         MoPA==
+        d=linaro.org; s=google; t=1744969768; x=1745574568; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
+        b=aHCsEGUc69XJMZVU6uYS4/HHXA4Lucy1s9aQwdMP1uSDsKlULA1IMnsg21Kvxr4UHM
+         xJZ+KGOZugeFXPUDrgx2LqRvz8sq5kniO9nfLy2gH7R8QyWt+uIMU6zaVPACkDZlHMNM
+         RNaN7arciUjpjbY+XB0iQP0oggFLlnvF/hNw2TWfOtxkX0E2mlRi5DGzPBpPb00fJabv
+         fpv92W4dLiR2tY7HwMbNg8Gzg12x6xuQzSNhG4pJLfiFrkHrmAcyiW3G7S0Oqj4yCQtk
+         fvAMBjAgmvlbawBSUHCtRQvUTajE2xkOwb5MxvsQ2UT9vVJur0UbeNOzqDG7ELS/MFYi
+         ayfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744964971; x=1745569771;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744969768; x=1745574568;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=s92j6pxzvlqV+3o2hee8gDhoG89WN1vgnuclnd0mk+Q=;
-        b=SttvKVr3IFtvxzvUwv0t6DXn0+sppl6EE/d9/Z3Frt8A/Cy+K0Awe1IgsclitBIV8z
-         gxjD018XYYXMmS9/NDHgGuNBGoLN51YDeE7jwO00hZUA2MBcBkP1GjzgRg+fyi9TmcQE
-         QjdEq2c059itJYokKLppYbI1Pwy2hI+R2trcEGg3SY9ya6mb1BULfOfpYh7N/9cWVDdx
-         fd8xS5lPzg6I7dIDLydN/LmpaxgKu75Ei438B+tALOHrQu1eRE64oQ3r9dsJ48E3Lc95
-         bujp95kcP9zN0v0ZcIQrS3tUrbw65mn08hbG/e4stnPz4OpqkyC3rzWicHdIxaCTwlRu
-         7hcw==
-X-Gm-Message-State: AOJu0Yw/5PNcrrC4/ttAGKJ2nUY6NzK1lyY+RG97ZP4xcJrPxSZDIdN7
-	/4sB3kv8vMQ8070UVz29gNuLUgSJbOqsontkDYrsA2MGjeu1eV/bmPJ+Wg==
-X-Gm-Gg: ASbGncsPrfqzjNCNrmDsnQwkNeM5EPqkiYbDlAfdQ040qLob8TQkW/5pwTPgb/9v6sk
-	qrm85vwxmUdmTLpflOVnU/0+cc9arhFFCVM0qKLe+ID7dY6dvuwCy5O6dHxF5ABxt+pbLpGhlcQ
-	vPNwxCtWeoxWHxMmQ9fQk/gcQeFLqu2HvDqCSlNllTTBn9C2z2yelxbtByGK1wJlHmdpSU2rJgM
-	WyN70HeQWUvennFUIDLf4XzB6mvTBbRgyFX7535fTN7LsMoGDIVqcrI908fjIAC2zq0KlWD7Jyw
-	4wsEdyy9pIepNhyBe+uQmf/pCiaDRU4T4yOsQa2MY58hHmQrKu0DA64eBA==
-X-Google-Smtp-Source: AGHT+IFUTm0W49Qs/USupxCHL/NXGEOwE+ROyG8Iv52IIXe6ndsNi4djYlFd0wAdt3CQ7vpCPkN3hw==
-X-Received: by 2002:a05:6512:2346:b0:545:e19:ba1c with SMTP id 2adb3069b0e04-54d6e62cb0amr470052e87.19.1744964970781;
-        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
-Received: from foxbook (adtu187.neoplus.adsl.tpnet.pl. [79.185.232.187])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e524csm129527e87.182.2025.04.18.01.29.29
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 18 Apr 2025 01:29:30 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:29:26 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION 6.14] Some PCI device BARs inacessible
-Message-ID: <20250418102926.690ac42c@foxbook>
+        bh=94mjTCd5D19GYEOOOc42WJyjuO/cBvrP1r4UDcaiP4M=;
+        b=RA/FFown6GPh+4P2gndeZ1V1/Hi0ruPm/dXXhDmzJ8O5AMw3c/DY8c0I6BoNGnlJyr
+         4N8ihCNrzLCs60EVx5befzHUGlVGu825KjaR5F3BkGbuKFqvfwKwsUtqvnUqHlnbKAmW
+         QLZVzsEu0qog7T+mBx+rZjGHO73rUJaOTLHAPCmMB9dQ7CTN5qOJcAaUNNSrgzLtwyWA
+         CEt+Dt4JbDf+qrI5T0u0TGoh3MuSJiQaz62HCSTGcGV/iOV2DvopQC6CCPE3qI+2vaaH
+         84G6Ux+WOlaaJoqixddSmhEapiZJ/i0V06R9WnHusg08+eD51beLJFq53OeS1NTbr+w/
+         J39w==
+X-Gm-Message-State: AOJu0YzNlk9rvtmu7Oox8vFqO5/FZGMOtQ/TNhYAwpq5s6V6pFIcnGtQ
+	RqbvjYKqB9vy2l0xdkeeqD482h0YwGZHgacvZz7z8bpic/lo4zr06IayRYbOBQ==
+X-Gm-Gg: ASbGncvEaikQ+1JgQtJHIIQhCzdKSwntRrDAOZU8s1pc6BRtKZoi93KiXt8rxQTIve3
+	wqrsfC0gPQEGYIsHFsI2RLKxv4mrYw0NBFGuxMjgCMiMBGIh67h4lNoD0cvSiaA/fbLSmdViY1T
+	XJ/rNy+rvNxFaP/EJbKBgidSc3Nb4UqVzmc5Iu6nXOipQBgKEpkMb/xlRfDh8/IL+l6GSYCEuMA
+	71sDOiS1ldij/Dp1bJ4TmPS9uen2FdYH8o+BC9yK8aUh0xiNeeSNgjfJMsdT9dd8DGLVYOZB6oa
+	HxksP2fh0oMOs8SYjNxvOLsV4eSgrKMd5Yclu8x1C4E5hwYWuGO0
+X-Google-Smtp-Source: AGHT+IEco0sKoFDRmf6mUfY5e0OyAEg6+5tFe/Gl6VeKc86avVTKr4g6pIZxHkWblne5PixuG6TsNA==
+X-Received: by 2002:a05:6a20:9c9a:b0:1f3:20be:c18a with SMTP id adf61e73a8af0-203cc60880bmr2607193637.10.1744969767905;
+        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
+Received: from thinkpad.. ([36.255.17.72])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157c783sm1079830a12.77.2025.04.18.02.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 02:49:27 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: bhelgaas@google.com,
+	kw@linux.com,
+	lpieralisi@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] MAINTAINERS: Move Manivannan Sadhasivam as PCI Native host bridge and endpoint maintainer
+Date: Fri, 18 Apr 2025 15:19:02 +0530
+Message-ID: <20250418094905.9983-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+I'm currently maintaining the PCI endpoint subsystem and reviewing the
+native host bridge and endpoint drivers. However, this affects my endpoint
+maintainership role since I cannot merge endpoint patches that depend on
+the controller drivers (which is more common). Moreover, the controller
+driver patches would also benefit from a helping hand in maintaining them.
 
-This is a heads up that an apparent PCI regression has been reported
-and mistakenly assigned to USB in the kernel bugzilla:
+So I'd like to step up to maintain the native host bridge and endpoint
+drivers together with the endpoint subsystem.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=220016
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Visible symptom is missing USB devices, but the whole controller fails
-to probe, apparently due to devm_request_mem_region() returning NULL,
-see drivers/usb/core/hcd-pci.c and usb_hcd_pci_probe().
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ce2b64f4568d..ed035c9b3a61 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18631,7 +18631,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
+ PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+ M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
+ M:	Krzysztof Wilczyński <kw@linux.com>
+-R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ R:	Rob Herring <robh@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
+-- 
+2.43.0
 
-Same systems also show a similar failure with some AHCI controller.
-It seems specific to particular ASUS AMD motherboards.
-
-Somebody found that disabling CONFIG_PCI_REALLOC_ENABLE_AUTO helps.
-
-That's all I know, reporters can be reached via bugzilla.
-
-Regards,
-Michal
 
