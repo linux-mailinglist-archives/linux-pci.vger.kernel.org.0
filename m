@@ -1,79 +1,108 @@
-Return-Path: <linux-pci+bounces-26153-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26154-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00BDDA92E2A
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 01:21:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B705CA92ECC
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 02:28:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79CB47B5EA2
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Apr 2025 23:20:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEAE14A0B21
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 00:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE4F224B10;
-	Thu, 17 Apr 2025 23:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AEC250EC;
+	Fri, 18 Apr 2025 00:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNC4w7Re"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="A37u9bG/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m4921.qiye.163.com (mail-m4921.qiye.163.com [45.254.49.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D45224AE4;
-	Thu, 17 Apr 2025 23:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB4A442C
+	for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 00:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931968; cv=none; b=CdfD8eKjIFDbVHCm37XWhgCLobbiFCmAhJKA1LHwed/8V0KZ+d4bAjJcztv6hwQX0fy/6GsN6Ua7xejllh1qfdSvwAhiHk+G7xn6ZBjRwUtHq1SHInSg2WHuL+dY/lbigPS2I9aQcrGRAqKn5Xgh9RrqyMbjJElUD11hFV6JKo4=
+	t=1744936094; cv=none; b=Wq6YtNr2X63hieI+lHUB2Vxw4Mv/4rXT8RL/6iDL7lCqcaGm2c0SsCJVAXmbR3aQJQt0VPNdZXcHkRY5sT10gQBnD+V2Q6+ew/nZsKbDKREMLJpYpGwPdlJ3ruwddpjrTAjA8vdWvmXxFOait+R+58nKEZMy4JaomhlFHZ/Wd/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744931968; c=relaxed/simple;
-	bh=GmU4kYSZtteVKJnRfYlmEJtmfazciAWvWhEJDvGI4OA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JtNDwe7A+eRbvwSPxjfXXwN75lUB2vry02BiQ8mvxj6j73KT95CcQO5W0pKJuEdmHLfpl89OPbjakKaZo+L47fCbvhRHkzxKS1roxRYv9BSlnxR7+xNlzlFJnL62WTz+pZZxkub0g1cXsZTdrMWrSrkxiAiSNDf5q3XhyaEiBWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNC4w7Re; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F6BC4CEE4;
-	Thu, 17 Apr 2025 23:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744931968;
-	bh=GmU4kYSZtteVKJnRfYlmEJtmfazciAWvWhEJDvGI4OA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=sNC4w7ReR+xJ6reoj8dMDSWbfSRiXxYhvI4Nkn279cVFtfAlOEPaBZIH44A9Pq08Q
-	 XxRrzD6wcSmgUn9mY5E6qL40W+fdZ2UZhkaJIrvPoF99sH7Zl/Z81JaJE5rbDVkjbu
-	 0i5xUWhR2ttA7OIknXCQHZoDtVzMRlBBOTxB8oeAhJ2UqA8oMmYwLmpyV4RV7mrOWe
-	 oHYOizSGjHDwSd3Ic4mAdtR9xyv4ncGP4k5M4VaQNreS5hql2X3pELa352F1nlKzte
-	 pm32ejf1lv+Wd+qee1vkmUxQ4z5qLCsM4HIBA1JM8uYdLnYtZJBE9P/SCEFWzdt10d
-	 riV6fjjQ3X8rw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71C78380AAEB;
-	Thu, 17 Apr 2025 23:20:07 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250417224143.GA134013@bhelgaas>
-References: <20250417224143.GA134013@bhelgaas>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250417224143.GA134013@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.15-fixes-2
-X-PR-Tracked-Commit-Id: bc0b828ef6e561081ebc4c758d0c4d166bb9829c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-Message-Id: <174493200597.45874.11276434309873731679.pr-tracker-bot@kernel.org>
-Date: Thu, 17 Apr 2025 23:20:05 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Alex Williamson <alex.williamson@redhat.com>, Cal Peake <cp@absolutedigital.net>, Athul Krishna <athul.krishna.kr@protonmail.com>, Kevin Tian <kevin.tian@intel.com>, Nishanth Aravamudan <naravamudan@nvidia.com>
+	s=arc-20240116; t=1744936094; c=relaxed/simple;
+	bh=SR08pTySedTwHd4a68w4MghDWMIDE6AHd/eHkhysxKI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=h3v5moUINyS7errVVZ60aPm/qCh7kUG7VZsSLM/uuGDfnB2rexHFbYGZDgqMXo+IGkclIlViAgqQeY4r9hF0qr46Yu7uy3AEyetU13JL2PGK80UWKtDjGwYeRK/JcTH7isOwkSmVwabd3WiPc+7sqYgBQIcSQ2CfU1bFcbSC6xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=A37u9bG/; arc=none smtp.client-ip=45.254.49.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 12470582a;
+	Fri, 18 Apr 2025 08:28:01 +0800 (GMT+08:00)
+Message-ID: <6490464f-c47a-9a63-e0a1-251d52781c9d@rock-chips.com>
+Date: Fri, 18 Apr 2025 08:27:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Add system PM support
+To: Niklas Cassel <cassel@kernel.org>
+References: <1744352048-178994-1-git-send-email-shawn.lin@rock-chips.com>
+ <Z_5aib0WGKfIANj_@ryzen> <aADdI7ByEImYy3Pq@ryzen>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <aADdI7ByEImYy3Pq@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR0ZHlZMTh4ZT05JS0lPQkhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96464b971d09cckunm12470582a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCI6CDo5DTJWQxUBMwECSDxO
+	PikaCwpVSlVKTE9PQkhNS0NJSk9OVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpCSE43Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=A37u9bG/VQcfB92CcXbjvVDg9qcerAsemNk2u76dK1k/Cc/rhyPel3uz/UP/x69T25x14uR1XQAPzbxxg/sTq2g2b6jpaDk4l2DMxBZu/wZQYH3Be+CVAuJS3NlAtNBi6+BeyIcBC6asK9YHKnC3hNSCRNgZqHboZ/6th+MA5pU=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=Jt8fEUVQruj1fDLANC6RjIVA6yS/VPpH2zThqfqOuxA=;
+	h=date:mime-version:subject:message-id:from;
 
-The pull request you sent on Thu, 17 Apr 2025 17:41:43 -0500:
+Hi Niklas
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.15-fixes-2
+在 2025/04/17 星期四 18:51, Niklas Cassel 写道:
+> On Tue, Apr 15, 2025 at 03:09:29PM +0200, Niklas Cassel wrote:
+>> On Fri, Apr 11, 2025 at 02:14:08PM +0800, Shawn Lin wrote:
+> 
+> (snip)
+> 
+>>> +
+>>> +	rockchip_pcie_ltssm_enable_control_mode(rockchip, PCIE_CLIENT_RC_MODE);
+>>
+>> Here you are setting PCIE_CLIENT_RC_MODE unconditionally.
+>>
+>> I really don't think that you have tested these callbacks with EP mode.
+>>
+>> If we look at pcie-qcom.c and pcie-qcom-ep.c, dev_pm_ops is defined in
+>> pcie-qcom.c, but not in pcie-qcom-ep.c.
+>>
+>> Perhaps it is starting to be time to have two separate drivers also for
+>> rockchip?
+> 
+> Hmm.. looking at pcie-tegra194.c, they do still have both RC and EP in the
+> same file, but they simply return -ENOTSUPP in the EP case:
+> https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/controller/dwc/pcie-tegra194.c#L2381-L2384
+> 
+> Perhaps you could do something similar?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+I'll look into it. Thanks for providing this useful hint.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> 
+> 
+> Kind regards,
+> Niklas
+> 
+> 
 
