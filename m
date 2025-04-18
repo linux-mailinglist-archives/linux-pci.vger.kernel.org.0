@@ -1,122 +1,145 @@
-Return-Path: <linux-pci+bounces-26218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2E0FA93720
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 14:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDE55A93726
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 14:34:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C62FC1B606E8
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 12:32:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CDF61B606E8
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 12:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C88221F0C;
-	Fri, 18 Apr 2025 12:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B049221F0C;
+	Fri, 18 Apr 2025 12:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AG4qW+0i"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bJvzxzPl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B6126B2D0;
-	Fri, 18 Apr 2025 12:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89F31A3168;
+	Fri, 18 Apr 2025 12:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744979555; cv=none; b=AoC0fHXvX00gmKPTOyrt8LJEbOOtl74nDgr1v2MYCyfi5HLkaLEsP/cQHbJYpzh5THJeE4SN6QwYHuvlTiSpCxrQTl1sG8kAlmiW7o03X3EzTiKIKjL8U3KUrXTsYXxYnfFmzAHWQmHaB5M7i1rWmZCcewXbs/IyI4l5XuuDP0w=
+	t=1744979647; cv=none; b=hB0SoLL2q0W5b8esAImvasCVg3StKWfLDu89JtyQfmnzAIS8GOxsbBOa5ML2nRSscrMgglK6qKx1VERZWSSPu1m5je27w8nLLO2dIwB8kbX+gnjZjHqJrpxvHkemmuztgQ4C0wz1fbq3KMQ3ZB1jvExB1EO/M8s1Ui/Yd1LJyRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744979555; c=relaxed/simple;
-	bh=fi1DbYhlrqF0U7IzqDP/M+/r8vdH95UNS8kWonbjyGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KIoZhD7Ffg+M/xPJWapzig5LnZlDBmnFwb1A28LzfMaVvQ6WzJsT4ZgDCzZKJCmHEW608XXt0z+40IDuqLLiJIxTdy2AtkTdrYWrK/z1Va8WIBp5RTOaeTugf9+H5DebNpKS6ecAxkEaWqygH7IElXDPE+WemuVbi0I6XqGBb04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AG4qW+0i; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736a72220edso1749800b3a.3;
-        Fri, 18 Apr 2025 05:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744979554; x=1745584354; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4uxNqOBD/ogCW1O0rrQ2A0HcfFujRPCySOpF/YO01oA=;
-        b=AG4qW+0iMjdDMp9h8+u/8MODMx2ZhRnrNeqNWksxxmnvYLNp1sN4cPNqgxJBWkQHHw
-         6ja9kaz4Q5fz4VjSFoqmUKZeGQbCa5MpqyumvCPwfXpggT9WqPVXrihSm6janzBMx1CX
-         QahHls910enJIkb/u6kPH7kZ9EqesycJDcnqFE0q+OOiA3HMPiOVjVeakoi/lbPr4Cjd
-         OH3ErFFt9pia9G3CJL80MeQHQRPI40Y0lC78IBPn165jnjxBbcTiPNLFYjPB6FrNnIQQ
-         OZEpshOMLzwQFEUo4i4UG9KzJMrFW9AIXX/IL3hoMw5zYNyxzSTxDyk9XU+zwlcGeNY3
-         2rNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744979554; x=1745584354;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4uxNqOBD/ogCW1O0rrQ2A0HcfFujRPCySOpF/YO01oA=;
-        b=vRmpnqsDdwES8Ved1XXA5WUyZ10QGRrfzKC7wL3blLScA8gKL5v/MChN//vVrA58JX
-         PjzAE4lZkddCOZn7MnP3IOQ2LYM/gYYp7Ht06SJCdFHCqweGYynyQ5LcPVk3+LqNBEGI
-         nfVOhDuuv635V/J2tVPFk2JgChEeufkmiafBUro3mG948rWOeWmzVipinSCsOmOaQXU5
-         v8oZ/7P6l3zq4qLXCYRGN06eJp/5AV19PIs4V5ksGZOohlP1xEVY934cbAlRz/oKDS5t
-         fGR7AbxWu9NwDyxLeqga8HbNv3RZ3K9OYBGaksOWM47Mxgf6MD/RvHko6vsJ8cYLNaEy
-         6CzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU20zLeXPB6GHQ2HsaK94sCZjgarLZMO/rUlfvYKDUbvUXJhMceLe2uGCrH1Rrb5m1146TokGcTkJ8vxtQ=@vger.kernel.org, AJvYcCWTnfrUz8cv0ZcTGkQumsnERYk9lbIbL4WUP/5Dr6x49QCDiwTyAEFZ2i+aQBTsGnKTcB/RTnkd+Ht5DA==@vger.kernel.org, AJvYcCWdV06fK+ZAcwDMQvkyDhOH3GBiXD9UptK+gwwd9kbw3U+jFwcnfhckNRfVvzmH4Fj94KY=@vger.kernel.org, AJvYcCWu25HxhOwetbOX2cRRICTSRLul3OhmhQfq8b+6qSBpGOzodaY4rCV6B62MQHS8a9oK3jkn0ZoW1Oqd@vger.kernel.org, AJvYcCXUgGTrkNaeV1NRXsKeQuskAw/PFFcRNiB7ojigcp9xA8oHm9qxjNedjcZBfg1EGI9WeyoFxcVe2af8swZL@vger.kernel.org, AJvYcCXZYDcsUiaWnvJKYozdMCulF7X59X7RJV2i4AUqdK4JEV4vGK2c+4o5AzgJHt4cuqSs6vqZ0XaJ9xEQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwe1rsioiPYtQHWizUlzgI4WF5R0IfOLDoO16JpxiBcx/gR2gE
-	+0tqo2v6GT1CgKTiv1QV8DkQ+fAE5beAuCg8uMfoO5sxpdUuM35UQ4MMXjaWZk0B1PFyeXG8SvN
-	tgEost9lgnBY6YGHrFMONnhDQJ4w=
-X-Gm-Gg: ASbGnctUBpR+gUSetI7U5hzaGXrS3uz79DnUr/DNOUwx3Bf5/joR9nuD2B4BvIjq1Rs
-	O5BCvJUlt9JUUp0K3EF9UlJJFcV7bWGvhPZqT7c0ocqvWAzcfl+KiD4ryHSx318uij79oWZjx+7
-	0c2dFb/ojfP3WnyGglLH6TOtwjh+nMA/px9LL7b6Ro/glkvc6LB+zYPzaC
-X-Google-Smtp-Source: AGHT+IE6KPLtDnTScFEtJJlvCdwmMFGgLV6Sh+PZ7MHmYiMb3jtvP1cSpc1ynbu9LO+7GJYkCunnvOZCbjH4BPDTV0s=
-X-Received: by 2002:a17:90b:2e03:b0:2fc:c262:ef4b with SMTP id
- 98e67ed59e1d1-3087bb6f117mr4849982a91.18.1744979553652; Fri, 18 Apr 2025
- 05:32:33 -0700 (PDT)
+	s=arc-20240116; t=1744979647; c=relaxed/simple;
+	bh=EYjpeUAANM8+5uNFVCZfMTzKPxQienpfphayIHsTXTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mtq0xkHEF8TT/kDVF5B92TsRO/tLgjHfbmMo/iukernoHsRQ1misG27TU7Wxum9lsqklgcuYcE09KPTQOXqXax5BtdsEAN9vA2UD8LEskjHuel+L/yfCvECBP8E6n6eG2Yf/sZQmH5D/urF80iSNE2dCAOVlliGPKdoBBvW92Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bJvzxzPl; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=UBDa95ya3cXHyPB4tt8cCTy+Vp36SNsAM/119FvW6N4=;
+	b=bJvzxzPlNdGkw+LZC9dvPrYW8aqNO6eGW8ZI3fbxhzW7pvN1GW+LJpa+uDxhPK
+	ebJvUlDMfYrQp0SIiVtO/C98MDAXCMT47eYpfWD2oB33MOZupFs/kxCAr8fxfaDZ
+	0P6UlRP8rMCpLq4lua26jUN0JW7yEy7sqCYR6ghEjl8dU=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDXH0qFRgJosq3aAw--.53778S2;
+	Fri, 18 Apr 2025 20:33:10 +0800 (CST)
+Message-ID: <22720eef-f5a3-4e72-9c41-35335ec20f80@163.com>
+Date: Fri, 18 Apr 2025 20:33:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744825142.git.leon@kernel.org> <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
- <1284adf3-7e93-4530-9921-408c5eaeb337@kernel.org>
-In-Reply-To: <1284adf3-7e93-4530-9921-408c5eaeb337@kernel.org>
-From: Kanchan Joshi <joshiiitr@gmail.com>
-Date: Fri, 18 Apr 2025 18:02:08 +0530
-X-Gm-Features: ATxdqUGyYBEsfK-IN2nZn9q0XDVh1xSRZINsNgbIk6fSYXOiPXAs6WAhmbL1EUw
-Message-ID: <CA+1E3r+9kEs-fqND-VD+y6FWfiGqr1vN8M0GufD3oHdwLdFcrQ@mail.gmail.com>
-Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, 
-	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, 
-	Yishai Hadas <yishaih@nvidia.com>, 
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>, 
-	Alex Williamson <alex.williamson@redhat.com>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-mm@kvack.org, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	Nitesh Shetty <nj.shetty@samsung.com>, Leon Romanovsky <leonro@nvidia.com>, vishak.g@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
+To: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org,
+ kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250417165219.GA115235@bhelgaas>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250417165219.GA115235@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDXH0qFRgJosq3aAw--.53778S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGw1xCw47Kw47Gr45WryfZwb_yoW5CF1Upa
+	yag3W5Kr1DGF4fJw4kZw1F9Fy0yrnxAFW3Xw15t3yDZ3s8AFW3ArWqka12kFyxWrn7G3W3
+	JFyF9FW3Xwn8ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ul0PhUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwgzo2gCPnz1oQAAsr
 
-> > +     if (nr_segments == 1 && (iod->flags & IOD_SINGLE_SEGMENT)) {
->
-> nvme_pci_setup_prps() calls nvme_try_setup_prp_simple() which sets
-> IOD_SINGLE_SEGMENT if and only if the req has a single phys segment. So why do
-> you need to count the segments again here ? Looking at the flag only should be
-> enough, no ?
 
-Yes, the flag will be enough.
-I started with nr_segments first, but felt the need of a flag when I
-reached to handle the unmap part.
 
-This can be changed if the series requires an iteration.
-Or I can do this as part of the cleanup which I anyway need to do to
-replace the "iod->aborted" field with a flag.
+On 2025/4/18 00:52, Bjorn Helgaas wrote:
+> On Thu, Apr 17, 2025 at 10:39:49AM +0200, Niklas Cassel wrote:
+>> On Thu, Apr 17, 2025 at 04:07:51PM +0800, Hans Zhang wrote:
+>>> On 2025/4/17 15:48, Niklas Cassel wrote:
+>>>
+>>> Hi Niklas and Shawn,
+>>>
+>>> Thank you very much for your discussion and reply.
+>>>
+>>> I tested it on RK3588 and our platform. By setting pci=pcie_bus_safe, the
+>>> maximum MPS will be automatically matched in the end.
+>>>
+>>> So is my patch no longer needed? For RK3588, does the customer have to
+>>> configure CONFIG_PCIE_BUS_SAFE or pci=pcie_bus_safe?
+>>>
+>>> Also, for pci-meson.c, can the meson_set_max_payload be deleted?
+>>
+>> I think the only reason why this works is because
+>> pcie_bus_configure_settings(), in the case of
+>> pcie_bus_config == PCIE_BUS_SAFE, will walk the bus and set MPS in
+>> the bridge to the lowest of the downstream devices:
+>> https://github.com/torvalds/linux/blob/v6.15-rc2/drivers/pci/probe.c#L2994-L2999
+>>
+>> So Hans, if you look at lspci for the other RCs/bridges that don't
+>> have any downstream devices connected, do they also show DevCtl.MPS 256B
+>> or do they still show 128B ?
+>>
+>> One could argue that for all policies (execept for maybe PCIE_BUS_TUNE_OFF),
+>> pcie_bus_configure_settings() should start off by initializing DevCtl.MPS to
+>> DevCap.MPS (for the bridge itself), and after that pcie_bus_configure_settings()
+>> can override it depending on policy, e.g. set MPS to 128B in case of
+>> pcie_bus_config == PCIE_BUS_PEER2PEER, or walk the bus in case of
+>> pcie_bus_config == PCIE_BUS_SAFE.
+>>
+>> That way, we should be able to remove the setting for pci-meson.c as well.
+> 
+> Thanks, I came here to say basically the same thing.  Ideally I think
+> the generic code in pcie_bus_configure_settings() should be able to
+> increase MPS or decrease it such that neither meson_set_max_payload()
+> nor rockchip_pcie_set_max_payload() is required.
+> 
+> However, the requirement to pick a Kconfig setting makes it a mess.  I
+> would love to get rid of those Kconfig symbols.  I don't like the
+> command-line parameters either, but it would definitely be an
+> improvement if we could nuke the Kconfig symbols and rely on the
+> command-line parameters.
+> 
+> It's also a problem when devices are hot-added after the hierarchy has
+> already been set up because the new device might not work correctly in
+> the existing config.
+> 
+> It's a hard problem to solve.
+> 
+> For new platforms without an install base, maybe it would be easier to
+> rely on the command-line parameters since there aren't a bunch of
+> users that would have to change the Kconfig.
+> 
 
--- 
-Kanchan
+Dear Bjorn,
+
+Thanks your for reply. Niklas and I attempted to modify the relevant 
+logic in drivers/pci/probe.c and found that there was a lot of code 
+judging the global variable pcie_bus_config. At present, there is no 
+good method. I will keep trying.
+
+I wonder if you have any good suggestions? It seems that the code logic 
+regarding pcie_bus_config is a little complicated and cannot be modified 
+for the time being?
+
+Best regards,
+Hans
+
 
