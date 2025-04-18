@@ -1,114 +1,167 @@
-Return-Path: <linux-pci+bounces-26221-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF296A93811
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 15:43:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EBA9A938C9
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 16:41:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A9E119E519A
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 13:44:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B9158E0641
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Apr 2025 14:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662C7278146;
-	Fri, 18 Apr 2025 13:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 277DC1C1ADB;
+	Fri, 18 Apr 2025 14:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NOfOAshs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oJ1v0weN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65566E555;
-	Fri, 18 Apr 2025 13:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347501B5EB5;
+	Fri, 18 Apr 2025 14:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744983834; cv=none; b=tOzGnuEM/41YX3CGsia/oUDcYtZS6t/hzzPG44AOynSMr6SG3OHdIUnEeFyfKO3UHeZazJdyE07P+Cc1kMVocRtFBbq1qjPG5HnpqVnzLEIS3BlhG4Y0qQia16Tgb8ycVVAqrneR0Lis3mwQ0KkGCPl8IjXfKBSVUnfLHE4ztFc=
+	t=1744987283; cv=none; b=Xd4sMrAqT60hqBK8wQPu4r2cGZs9JZdI+q2LdahlhWnEpIvz6qfPPoKqJBL1QTKfvwp5XmQvVgqjGQ5twyYddd5LRNaBpinqmPQn7YnY2q9EcmWA6My6y3tBeDEG6q4RfQAzQT3kjLt9jTbwKlWfBccaSgnVHFoKtHa7Ua39iSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744983834; c=relaxed/simple;
-	bh=Cnktq8nDwOo0enCBi8xzUPVV/YQByN0c6KsnAyAr6qo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k8MxPcHAKnRQJOxNk8XcPGtANmfml8tdthzgfaU48R2JRdGbUvLXGotmSCe13oLUb8/1W4X1sfZIZeSRLcJKdnVramZN60gxz6km4K/srB5Pq0xx9gwXElLfh2vLJi/o4sU+aW3USeGap8xB2hzDNlHDGpjdYACdSe01j8HNS3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NOfOAshs; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53IDhPpX310236
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 08:43:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744983805;
-	bh=WNj2Be0bKSfGk+fsGABndEIKFa0Oidh9U8eYMXOA2ds=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=NOfOAshsqJxkwafY5dgPwxjMkNwFRwWVc5bemqBrcPclY5Xy/klRH9ioK/07GcrwY
-	 OP2M/cROoTuC9+oD47MyO41WFVfv5PKiqVBc5aEOnx+jlEWSfQaEyfw6zIPSlHd6tK
-	 OkbqwLKecAsg090lWHGb/o4s4Ji5I0sc7MTiNY8Y=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53IDhPbo003348
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 18 Apr 2025 08:43:25 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
- Apr 2025 08:43:24 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 18 Apr 2025 08:43:24 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53IDhOLc051358;
-	Fri, 18 Apr 2025 08:43:24 -0500
-Date: Fri, 18 Apr 2025 08:43:24 -0500
-From: Nishanth Menon <nm@ti.com>
-To: <huaqian.li@siemens.com>
-CC: <helgaas@kernel.org>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-        <baocheng.su@siemens.com>, <bhelgaas@google.com>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <diogo.ivo@siemens.com>, <jan.kiszka@siemens.com>, <kristo@kernel.org>,
-        <krzk+dt@kernel.org>, <kw@linux.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <lpieralisi@kernel.org>,
-        <robh@kernel.org>, <s-vadapalli@ti.com>, <ssantosh@kernel.org>,
-        <vigneshr@ti.com>, <iommu@lists.linux.dev>
-Subject: Re: [PATCH v7 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA
- isolation
-Message-ID: <20250418134324.ewsfnze2btnx2r2w@country>
-References: <20241030205703.GA1219329@bhelgaas>
- <20250418073026.2418728-1-huaqian.li@siemens.com>
+	s=arc-20240116; t=1744987283; c=relaxed/simple;
+	bh=rgXIMKi6/tSfxkwtq9konCyEV8MeAup7artQDX39SBM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EqyucM8aDx+vlBowMUwgKJA3XgyRkwtEwDtNaIAkt9LbnHglTtHI07e98F6RtPSs9nLUK1UlMCe2X+e25Of7GvdnDaxmuFPc8zyaZ0Lm58PVxJ+3yvU2aAzF873vxi6hw+YXqnvoFBWA8fVM2EfTsZsh7mIRxOyL4AOq1IO5KT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oJ1v0weN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744987281; x=1776523281;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=rgXIMKi6/tSfxkwtq9konCyEV8MeAup7artQDX39SBM=;
+  b=oJ1v0weN9wfK3J9LBfx4naZYcpcq6kqZJ2aClO2KOIhEmA+s7vHKXWhw
+   27N0ZBEvB4KGbI486WuCyAIu4UaXepQeudr8fdFN2Bls6ZyzzBi2up0q5
+   49GuavpCPSr+OaIalR1hnscRDeLWF/GpGEhPTijND7/AGv/DAa9DgRSsn
+   IfWuOxGvEifwFXAnGfIyDoTT8TKQ4IyjFrFobQ4WJiu6XBJV8rDipie8e
+   2oYV8oNkahns/geXU0lYnAF3PBPKOlTAP6T+OQg0zLmV4c54GQlNbmM5u
+   nahW0SjRoryd+OthN9Io4TA8FqkS75CwpyFgaON2aaoBA6OJrRqzynSjl
+   w==;
+X-CSE-ConnectionGUID: V6UHsIm6RGqOe0DACczh2g==
+X-CSE-MsgGUID: Q46ZCCLtT/6Q17NwmnMVVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46779766"
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="46779766"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 07:41:20 -0700
+X-CSE-ConnectionGUID: Feijuyr6QDqu36tmlU8dnA==
+X-CSE-MsgGUID: yM7YjnaBQX6hY7bh5vrsKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
+   d="scan'208";a="131075726"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 07:41:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 18 Apr 2025 17:41:13 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Igor Mammedov <imammedo@redhat.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+Subject: Re: [PATCH 1/1] PCI: Restore assigned resources fully after
+ release
+In-Reply-To: <20250417163904.GA114476@bhelgaas>
+Message-ID: <f3e94bb7-ae6a-724a-107a-29889acc3642@linux.intel.com>
+References: <20250417163904.GA114476@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250418073026.2418728-1-huaqian.li@siemens.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/mixed; BOUNDARY="8323328-578828975-1744986899=:948"
+Content-ID: <7811f86b-fa44-22a9-ae95-f3be0f1c46a9@linux.intel.com>
 
-On 15:30-20250418, huaqian.li@siemens.com wrote:
-> 
-> Jan Kiszka (7):
->   dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
->   dt-bindings: PCI: ti,am65: Extend for use with PVU
->   soc: ti: Add IOMMU-like PVU driver
->   PCI: keystone: Add support for PVU-based DMA isolation on AM654
->   arm64: dts: ti: k3-am65-main: Add PVU nodes
->   arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
->   arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
->     behind PCI RC
-> 
-> Li Hua Qian (1):
->   swiotlb: Make IO_TLB_SEGSIZE configurable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I see at least 3 or 4 maintainers needing to co-ordinate, gets
-complicated as I am not sure which maintainer needs to pick up what
-patches in what dependency order. This looks like a mixed bag. Can
-we split this patch into independent series for each maintainer with
-clear indication of dependencies that is spread around a couple of
-kernel windows (maybe dts comes in last?)
+--8323328-578828975-1744986899=:948
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e87ceb53-e39a-ffd4-2057-6c41ae845227@linux.intel.com>
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+On Thu, 17 Apr 2025, Bjorn Helgaas wrote:
+
+> On Thu, Apr 03, 2025 at 12:31:37PM +0300, Ilpo J=E4rvinen wrote:
+> > PCI resource fitting code in __assign_resources_sorted() runs in
+> > multiple steps. A resource that was successfully assigned may have to
+> > be released before the next step attempts assignment again. The
+> > assign+release cycle is destructive to a start-aligned struct resource
+> > (bridge window or IOV resource) because the start field is overwritten
+> > with the real address when the resource got assigned.
+> >=20
+> > Properly restore the resource after releasing it. The start, end, and
+> > flags fields must be stored into the related struct pci_dev_resource in
+> > order to be able to restore the resource to its original state.
+> >=20
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list=
+ in sync")
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> Applied to pci/for-linus for v6.15, thanks!
+>=20
+> I'd like to add the following to the commit log if it's accurate:
+>=20
+>   + One symptom:
+>=20
+>   +   pci 0002:00:00.0: bridge window [mem size 0x00100000]: can't assign=
+; bogus alignment
+
+Yes, that is a good addition.
+
+--=20
+ i.
+
+>     Reported-by: Guenter Roeck <linux@roeck-us.net>
+>   + Closes: https://lore.kernel.org/r/01eb7d40-f5b5-4ec5-b390-a5c042c30af=
+f@roeck-us.net/
+>   + Reported-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>   + Closes: https://lore.kernel.org/r/3578030.5fSG56mABF@workhorse
+>=20
+> Let me know if that's wrong or there are additional reports.
+>=20
+> > ---
+> >  drivers/pci/setup-bus.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index 54d6f4fa3ce1..e994c546422c 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -187,6 +187,9 @@ static void pdev_sort_resources(struct pci_dev *dev=
+, struct list_head *head)
+> >  =09=09=09panic("%s: kzalloc() failed!\n", __func__);
+> >  =09=09tmp->res =3D r;
+> >  =09=09tmp->dev =3D dev;
+> > +=09=09tmp->start =3D r->start;
+> > +=09=09tmp->end =3D r->end;
+> > +=09=09tmp->flags =3D r->flags;
+> > =20
+> >  =09=09/* Fallback is smallest one or list is empty */
+> >  =09=09n =3D head;
+> > @@ -545,6 +548,7 @@ static void __assign_resources_sorted(struct list_h=
+ead *head,
+> >  =09=09pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
+> > =20
+> >  =09=09release_resource(res);
+> > +=09=09restore_dev_resource(dev_res);
+> >  =09}
+> >  =09/* Restore start/end/flags from saved list */
+> >  =09list_for_each_entry(save_res, &save_head, list)
+> >=20
+> > base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+> > --=20
+> > 2.39.5
+> >=20
+>=20
+--8323328-578828975-1744986899=:948--
 
