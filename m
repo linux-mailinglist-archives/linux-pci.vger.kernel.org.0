@@ -1,110 +1,86 @@
-Return-Path: <linux-pci+bounces-26289-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26290-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46C06A9442D
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 17:30:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 080DBA944BF
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 18:52:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8DE51898ABB
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 15:31:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D18F3A96F5
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 16:51:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C72D1D61B7;
-	Sat, 19 Apr 2025 15:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D5F1DEFF5;
+	Sat, 19 Apr 2025 16:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqy9yxI0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v58tI5tf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB72D613;
-	Sat, 19 Apr 2025 15:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A170E7E107
+	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 16:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745076646; cv=none; b=WZMdtSjrXxXjbG9omWsJNp5GH8guhQDe0Pl3oLmFnTmzdcNlLagtKsbPSAHsSFOMsRhKbYSCTDCjst3KHujoXGj7uydlVaNqR5kwyjKUwf1tv+DJ1Gw6WcMNdENlHK8ZplugqQMBC5RDOJ726toijEb8shHN/y6IXGitu/KEzFI=
+	t=1745081523; cv=none; b=CjAbaF7F8X68UrwsjhTqRS5z9gUyUdt/WzwKBjKu4z6nnuUpYgw2Mk491Yh/wvD7TbkRT248gcMaWFoqVysnbmlEnWWlUzyOSqRWR4efKbBb6c4b0nXjxLvOubmVBdFwn2qQbbTT36mYzoUjMz6cvKsGphN/3NMqmBIBIin6U9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745076646; c=relaxed/simple;
-	bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
+	s=arc-20240116; t=1745081523; c=relaxed/simple;
+	bh=0umZVab4MInIm6Hh9sW7E6pBic4UWXBleyLmUV0NDJ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ti17lqHbCON2jdLEZmzsy2kys466Bas8u5XvAfHoiBAlqukOGGy9Z8KTyaRseiSaL4WwKXbS06GNfNFV+NcEaUhk3r3TnsFJBOrO49tzDv9WJcykqKJZTq488p3U8dgZBmIX4YK8zoY4l+uuM3u29XvQaa1vaX1sHiCTtnRljuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqy9yxI0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745076645; x=1776612645;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
-  b=kqy9yxI0ZfoOWs1glYcuiUfAd8IeLhIOjzDKlyVWWtXmPI8Z9C3j6jdY
-   xg8nQpw9MkLbdPvL8dbzKq056ND84nxA0H+5Qujl7xO/ooR7uS2K/OOds
-   xAl+EoI3kw/L4UDV6+XO/MuBhtCt9LcHiEcCONqz+TvmGRdhQYERB0RHg
-   M/V4SXIwfEoEHO4b5XXwlXMh8dS4RWo6KnvzNsRFPiB2mIY3wGRL4f0VB
-   xW/6CqPb+7xI7w6rSL8+LulS6lJ4oL0UqgRQRwtzfgvZKF+8945e8fvif
-   qumRL0jDAoG5D4fndeSpAOK3l/R9fwoLOz1iZID/agGds9sJy/s0ohkO4
-   A==;
-X-CSE-ConnectionGUID: OO56U8EaR3y71mlFyqiocg==
-X-CSE-MsgGUID: 2P+9OFUcSfyqAHX5Eluckg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806652"
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="46806652"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:44 -0700
-X-CSE-ConnectionGUID: CuoieLxUT1K3ksC/Kut48Q==
-X-CSE-MsgGUID: ZSJTu6nsQF+IEiTNRnHGnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="154517506"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u6A9I-0000000DqsB-0AwJ;
-	Sat, 19 Apr 2025 18:30:32 +0300
-Date: Sat, 19 Apr 2025 18:30:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
- for x86
-Message-ID: <aAPBl7qdbUizMQko@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-12-herve.codina@bootlin.com>
- <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
- <20250408154925.5653d506@bootlin.com>
- <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
- <20250418151036.719f982b@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+9teGQhN8IflgGgZVfgV0oGyrCv2Lq6neVneLrjrmTBtvZwM/TGyoxaUlZRF47Q0BBOEiqSz2YXEsOG+a7HejqfWixLQy1UhgLWwEPzp6RdT3gJ6PJ+gGnIGD4ZcRBWPBVBav2sgh010YcaM3TMurKJJLYa5aJ997yrHx2AuGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v58tI5tf; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2295d78b433so32537235ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 09:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745081521; x=1745686321; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
+        b=v58tI5tf286k4dhYLLj/7Tq4eqUckl+Xz/PppA2E7MsTB9pUXI/R0tUPok235vOwlQ
+         tQZBUe+hxbWFXaaf3B6Bm3RhOgXodPSJStPHR5G4JLXdctEpVV4PBJjt7ExRyGvNFH9E
+         uYYx0ZiNI7ANP3JCPV8j7Id9q9l9I15UDG+acrpgqMjunrA7ZRI/8s0F942YF0i2WLa6
+         oRyQSmHdg4cy9a9+CNSryj3S02kJkCTSORpwGRDt/e6dbJ+LJLqYBkbR/XdBWkHYkV7d
+         aYdFsJ8nDiwRmjjHWd96wRza34NyNL0sSTSfzF+ZCKejE6EKYtDmut2Yp2suM+5bkRmr
+         MvUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745081521; x=1745686321;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+ZQg5iuK94qPLtJ84KAwd3BvA9WmtkRkwUWNrpfTPA=;
+        b=AVtBfR7vd5REd06k/oR514WefOTKEPKNXAsJdBuLQ848AvwR2lbVfs2Jz5RQT1UONR
+         aOxoYH8hwadRI/XTP7uuZ8+qxo9v5vU1mchUjW65wLw2nP33WYnVms1ePxVKIuuj4God
+         c0km7ccAtxh2HRd9c3YJ+oXFUyBzz0VEbCWCuvdX9lwxcSPvUj3U6QIxZzqXERcU85Oh
+         sl0/RiGpfPGmxuStTFQ/zFkdJuNK/GnJFurC2UpJZWilOjusKfecm62ey86ROrQ1sSjt
+         CRc8VACUmbvP5Y2rgfKev8rQqiEm80gLJNUR0qYkeYHJ3IZ59DyIwO7Ks6pOo/O7yeEs
+         W4ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXwzdFigmUAxQN4YwsiOguVGyz2dQi3NTwYRp7/ZljcSR/ojTacVtLv3T4YLZJn0i1nEPmLnENbb20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkQKcmp2gyZqB0G0qkTbC4SMFo/WmxNqsgNgy8bQMyiPC7+Hj5
+	bOAWH1pZ6rIShbeISty5BO1f0EJE21Jupr9aOETSSpH5TIzU5xONAXIEzebPzg==
+X-Gm-Gg: ASbGncsGGZC+i8/+favqp09J3Vhomq9GpxfcrMpVR8BCKYyE3h0UPHOlHv3hN98cpUY
+	xAJBIblH+j2yUMIiS3wnYKAwPVXHmMqf/t4kU5UgJByUXzw1Ye8A5ckmNJsV4V/0ztzuxpHPtgL
+	TyDs7VlqzFkuAmqNdJLSyNLnyMUxbZa2Ive/lCbFYpeaS1ekdop3CnFTXSDgHaUWe+cC4k22jVY
+	IVvFtKlpkTi9cdalQVcH18XZI83Dm1S4Wd1Kl3cyIZ1VbyQB0oDV6NUsHRXoAC1WxrkxOsHcm7A
+	wfIMjLGKsmeURqJLiHOXvB9a/ehevSP3PAkaCFcZibGDOHlejqXYqIa21Ph/cg==
+X-Google-Smtp-Source: AGHT+IHOvuDRuhzgmIYZ0PseMo6wMw5ZW9e3ASq9UuPs4rj4cDesFYOxLb1JejQpj1NRcFCMCHE/VQ==
+X-Received: by 2002:a17:903:228a:b0:21f:5638:2d8 with SMTP id d9443c01a7336-22c53620bdfmr86912015ad.53.1745081520863;
+        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
+Received: from thinkpad ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bde283sm36154275ad.6.2025.04.19.09.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 09:52:00 -0700 (PDT)
+Date: Sat, 19 Apr 2025 22:21:53 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+Subject: Re: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
+Message-ID: <pjacxodfaywqxabqeftguqcrz2eoib5l5l32oevy5j5rrwl5s6@hhglbkyrmnzg>
+References: <20250419133058.162048-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -114,87 +90,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250418151036.719f982b@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250419133058.162048-1-18255117159@163.com>
 
-On Fri, Apr 18, 2025 at 03:10:36PM +0200, Herve Codina wrote:
-> On Tue, 8 Apr 2025 17:34:54 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
-> > > On Mon, 7 Apr 2025 18:36:28 +0300
-> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:  
+On Sat, Apr 19, 2025 at 09:30:58PM +0800, Hans Zhang wrote:
+> If the call to pci_host_probe() in cdns_pcie_host_setup()
+> fails, PM runtime count is decremented in the error path using
+> pm_runtime_put_sync().But the runtime count is not incremented by this
+> driver, but only by the callers (cdns_plat_pcie_probe/j721e_pcie_probe).
+> And the callers also decrement theruntime PM count in their error path.
+> So this leads to the below warning from the PM core:
+> 
+> runtime PM usage count underflow!
+> 
+> So fix it by getting rid of pm_runtime_put_sync() in the error path and
+> directly return the errno.
+> 
+> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+> 
 
-...
+This is not the correct Fixes commit. In fact it took me a while to find the
+correct one. This exact same issue was already fixed by commit, 19abcd790b51
+("PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path").
 
-> > > > This is incorrect, they never had ACPI to begin with. Also there is third
-> > > > platform that are using DT on x86 core — SpreadTrum based phones.  
-> > > 
-> > > I will rework the commit log to avoid 'mixing ACPI and device-tree'
-> > > 
-> > > For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
-> > > I could use to filter our this x86 systems?  
-> > 
-> > Hmm... good question. I don't think it was anything. The Airmont core just
-> > works and doesn't require anything special to be set. And platform is x86 with
-> > the devices that are established on ARM, so nothing special in device tree
-> > either, I suppose. Basically any x86 platform with OF should be excluded,
-> > rather think of what should be included. But I see that as opposite
-> > requirements to the same function. I have no idea how to solve this. Perhaps
-> > find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
-> > Especially if we want to install a custom kernel there...
-> > 
-> > > Anything I find upstream related to SpreadTrum seems base on ARM cpus.
-> > > I probably miss something.  
-> > 
-> > There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
-> > DT code were made to support those cases.
-> > 
-> > > > And not sure about AMD stuff (Geode?).  
-> > > 
-> > > Same here, if some AMD devices need to be filtered out, is there a specific
-> > > Kconfig symbol I can use ?  
-> > 
-> > This is question to AMD people. I have no clue.
-> > 
-> > [1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
-> > 
-> > [2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
-> > and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
-> 
-> I have tried to find a solution for this topic.
-> 
-> Indeed, this patch enables fw_devlink based on device-tree on all x86
-> platform except OLPC and CE4100.
-> 
-> You have mentioned some other x86 based system that could have issues with
-> fw_devlink and it seems to be hard to have a complete list of systems for
-> which we should not enable fw_devlink (potential issues and so regression
-> against current kernel behavior).
-> 
-> As you also proposed, we can thing on the opposite direction and enable
-> fw_devlink on x86 systems that need it.
-> 
-> We need it because we need the device-tree description over PCI device feature
-> (CONFIG_PCI_DYNAMIC_OF_NODES) on x86 in order to support the LAN966x use case.
-> 
-> What do you think about the following condition?
-> 
-> 	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
->  		return 0; /* Not enabled */
-> 
-> CONFIG_PCI_DYNAMIC_OF_NODES has already to set explicitly by the user.
-> 
-> Do you think it makes sense and could be a good alternative instead of
-> filtering out a list of x86 systems ?
+But then, this bug got reintroduced while fixing the merge conflict in:
+49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
 
-At least this won't break old platforms that won't set that configuration
-option. Ideally, of course, it would be nice to have some kind of detection
-at run-time...
+I will change the tag while applying.
+
+- Mani
+
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8af95e9da7ce..741e10a575ec 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	if (!bridge->ops)
+>  		bridge->ops = &cdns_pcie_host_ops;
+>  
+> -	ret = pci_host_probe(bridge);
+> -	if (ret < 0)
+> -		goto err_init;
+> -
+> -	return 0;
+> -
+> - err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+> -	return ret;
+> +	return pci_host_probe(bridge);
+>  }
+> 
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> -- 
+> 2.25.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+மணிவண்ணன் சதாசிவம்
 
