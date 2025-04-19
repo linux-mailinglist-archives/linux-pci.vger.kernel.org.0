@@ -1,125 +1,79 @@
-Return-Path: <linux-pci+bounces-26283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F12A94350
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 13:52:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE91A9437F
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 14:57:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E32F189B7D6
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 11:52:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CD323A6649
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 12:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77701D63DF;
-	Sat, 19 Apr 2025 11:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96887185E7F;
+	Sat, 19 Apr 2025 12:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="REuvkCqC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6qYShQc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055CE1D63D8
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 11:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DB42AD0C;
+	Sat, 19 Apr 2025 12:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745063553; cv=none; b=lY8f4kcnh6uDgbuwFl9Q8HWHzi62x5Td2ja0XzZ8knEU9VMwwVaDCeLys7m5Zjp21HC2vsdChCxLA7/KwE6Hmacz11a1wdvd4k5eUOXyzSNMNR286yEQjbjVA/cMQsWJhrSBc9AElipuGI3kyfwiagAOJKdaqnogZ4HTuN0KgGo=
+	t=1745067473; cv=none; b=ji4B8nj/QKUUsnF5aJ+3D520o7BsoFaA58+ZhZ2rzAauXb6w8TS3hnQWo2ZqO4MchRazdYANOFubQSpRVxVrCAJnO4lZSWjW/A3bRZKSrOxH9uHyrl4IvgtjW8qxRRwKeQofytXT7WG0TyfRzVIkop3ovQm2l40Ihmyrdo7Y/L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745063553; c=relaxed/simple;
-	bh=qKCScRiTrGJSBiUpLn/HDVoJJ2eR6y7zraiOMMUk6Qk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mSN+/W2DhL6ncvEYq0C4XFEgGUJFqiIS/lvoKhZV38xrcNqte8Bo4NsaFBBOZ7ZXZqT+G5f8GMCDi2BE404ZnNemGqcYUqkeDoWfc6iVzGHbJzR2LhykdizMMRE0uQ8s1JPzr/+RKd0G34LskEJoGMFea4jx+q51+1peo6snqyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=REuvkCqC; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so2561809a91.2
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 04:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745063551; x=1745668351; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=px0hPaEeyRW/CvDRRPztfyMotj+Xv6y6UjJ57CxB080=;
-        b=REuvkCqC+bkJf3FkdwKvz7NnPzp7LeYZohW7O064oLAp8+MWRt/gtvsxlhnssOSu6r
-         Rz8CR74D1ymUyIJr4L30zOoBW3Lyg29Y1WHiFvRV3h7j/jOiU0pqTPQMoLj5AtoBElMB
-         0zoXfFWTzFX+ifWTWp1Y+VfEqWF3WTJtemMgZx3u2AcFe0Y7t9AmvgRGfnmhPHfIqLpA
-         RQg/IWFTgx+cXNUPR+rYSVzxmAt3x7w/TJjQe7cuB4Gx4kdYUmrUge6ZjPGqaxRPJD+b
-         jcc38qq0LAQxwL6epRiSl1h3acH4k0o/O1Tx0rqo61MARYg7FXfwFtcz2DRR/cA0OII0
-         3dDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745063551; x=1745668351;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=px0hPaEeyRW/CvDRRPztfyMotj+Xv6y6UjJ57CxB080=;
-        b=n8I7rsM+tTZDP2kR4gXrzrhyh/cd+nqVVbV3AkHI0ifGahPfV2DoaT+gHShDscTv4S
-         GzgQdjsMl/CBPE6x+sBQeURaivU3RMU2Zs6ZjwbWrz6Nr5hzF8E2YCvvT7AAf4aTOnE5
-         wwY9yRiqnWQrbQPohS+rzfLlcQVBRmlBYar/kQoVPfcvwSMYXf4ciO0NSVs3V4fem6kP
-         mXOJk3G9McwLPOl0K0o+lx0Z4T03925ydT2NkH9k3HTGUARrEZ8ZknRDV5Eb5T4trEhy
-         7MsCAwF1/NjKkqD+ssAnCY7VgMz0SqXJ3UvP5Ksv3dE/pOcjFiO4TYwJBAFVURRSWSql
-         76dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNKr22ilOHkcAFyss35OXB8S7uxFcM6HEZq2IUDbydmU5URNvVoNrueMvRz9M6i7NLiF2Gc+m8Xco=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz702jw/sH35n5lEViPvLvkxjIjHKjURvKdXukQ0e/Gzp8CW1cs
-	cDbHILV917VqK9OEywlPFeb+MSZEsCe18L/Fbb7NqQIziBbhx//kzErBryqmAA==
-X-Gm-Gg: ASbGncuRBe9miHh8EWLOKHtplWoTSuJEFoVkx//g2dpn8V1Ry+RPC13WLfCsq0bV3Ic
-	PUJ8OnHlu4uBZaGaHoBA9vpbWRK+rdRKF/494ty3Gp7a63mEq+7c26PnxB3lb/IvVXAv+LnRKrE
-	btNx1k8RdCLrF0eATHkGEqH64u7ZCaCOw4r2n3p+GfRCIo5hSOz+4w4Yn6ZOHfDo6fDo6rIyem8
-	TmApaXwKYYQ9wytZZu/+azvizhNRfxEH5lWW15w95NktMxGjFFuX3hn8XeeZ+W3V9cMN5Ut1tqb
-	XhuWM1sKqG457fNLWumED5gV9ESJGZvBYpf9m436JM5EZQl/DKr6Cw==
-X-Google-Smtp-Source: AGHT+IGxohOcrVLT2HpkDYi9xceN2Uhz9oDZW+ezY0LfwsFn53P6RbFmjao2TeMC0K8cXhOK65CtbQ==
-X-Received: by 2002:a17:90a:d010:b0:2fe:7f40:420a with SMTP id 98e67ed59e1d1-3087bb69218mr9255068a91.17.1745063551225;
-        Sat, 19 Apr 2025 04:52:31 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ece2f8sm32069075ad.189.2025.04.19.04.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 04:52:30 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Anand Moon <linux.amoon@gmail.com>,
-	Jensen Huang <jensenhuang@friendlyarm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1745067473; c=relaxed/simple;
+	bh=Ww5QipkZahala/LObwRqFjdUqfx1t+6o23DPXOZf1Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=usXzExqvYyyHeHHXgsNUh3tenJEcHFzNLGl5xG6wJkj8ccuS8Nyu3RAFfHlB+4/ESReeLplU2Am7DhCwaoyxUwmUgRgLB7HOUyimyiAEq8qdSGffC68cuE2FvqVMvo4ULkM1XytkFlFcP0qcXL0fRb3O80iuPGmlDkj2TIErJ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6qYShQc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E716FC4CEE7;
+	Sat, 19 Apr 2025 12:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745067472;
+	bh=Ww5QipkZahala/LObwRqFjdUqfx1t+6o23DPXOZf1Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z6qYShQcJGZCMqUIi24LWVuFNEQjPvARxmGG0QXKt2RedXvmA7mNcn5bRJH2xir5j
+	 8+XgsJbzKpDIo8KCx+rVsmOaW2/Gkv30OPMnf7LTmCz/fIJmAYCzo+NqegD9IZPQQI
+	 nl9JX4nY6/rkmjJRzD6lRw5xCMqG4e/jWx55QY0e3oZlcy11SstunZUDR6hekjLRNC
+	 SPuTgFIET6XStteRn9OX6F+3kuQDaKPdYU2l7pzK945mMUHeJZpo5w8FkDEMRaTGxs
+	 QNopUDOFdB7ttOXUNaG2gXmNEYPfKgDClLl6COH7e3HGr41QtgCFjLVpIVGS9ulX5C
+	 xzpXFFjdgp2mw==
+Date: Sat, 19 Apr 2025 14:57:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-Date: Sat, 19 Apr 2025 17:22:22 +0530
-Message-ID: <174506353387.39503.4719676281195371261.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
-References: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+Subject: Re: [PATCH v4 0/3] Implement TryFrom<&Device> for bus specific
+ devices
+Message-ID: <aAOdyzjHlCYYyOto@cassiopeiae>
+References: <20250321214826.140946-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321214826.140946-1-dakr@kernel.org>
 
+On Fri, Mar 21, 2025 at 10:47:52PM +0100, Danilo Krummrich wrote:
+> This series provides a mechanism to safely convert a struct device into its
+> corresponding bus specific device instance, if any.
 
-On Fri, 28 Mar 2025 18:58:22 +0800, Jensen Huang wrote:
-> The order of rockchip_pci_core_rsts follows the previous comments suggesting
-> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
-> reverse, which may lead to the link downgrading to 2.5 GT/s.
-> 
-> This patch restores the deassert order and comments for core_rsts, introduced in
-> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
-> 
-> [...]
+With the following changes, applied to nova-next, thanks.
 
-Applied, thanks!
+  * rebase onto [1], i.e. make TryFrom impl generic over device::DeviceContext
+  * drop Device::bus_type_raw(); use dev_is_platform(), devi_is_pci() Rust
+    helper instead
 
-[1/1] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-      commit: 84d79f3304645d6e87b936d2bf8b8310798efec2
+- Danilo
 
-Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+[1] https://lore.kernel.org/lkml/20250413173758.12068-1-dakr@kernel.org/
 
