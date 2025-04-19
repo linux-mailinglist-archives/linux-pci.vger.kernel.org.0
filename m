@@ -1,86 +1,91 @@
-Return-Path: <linux-pci+bounces-26276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E72CA942BA
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 12:05:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC6B8A942C9
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 12:25:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 755EA7AE6F1
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:04:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F22B517E8C4
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:25:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619971A5B9C;
-	Sat, 19 Apr 2025 10:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC181C8630;
+	Sat, 19 Apr 2025 10:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvNkFybM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="voSWt/2e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0B681732
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 10:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AF31C9B97
+	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 10:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745057113; cv=none; b=GCmrspV8kDGTzggQeHkyjFsx5QDBYlfLfCM7Bt4Hd97yLf/U9ZpN709kHzh016DGQROwCDxNLNjHsD9D9xHK8eRGd3hq//P/XJX99gIipGge8XBa3fVv2Iwhy9o/pFELTSOMQDgDHqOjn8IFjFiDeroJxVmVU+Awnlwt2a9PeuA=
+	t=1745058330; cv=none; b=UvnwJXUmS759Tku+j2EyLd8ImELsZYOtSo/3y0RsV0KlRRkDcr+w40UqHEKt8cC6GuJWerdMtkevHs5r9SQ6DXJWaEfPTfLzFHMBMz26r5vmmeAHFspf1L4ePcKjqIU9HzWvtBJKqUz0enWMxuOJj/HlP/0Zjo+XTtDIwPIY3O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745057113; c=relaxed/simple;
-	bh=YxW3cqzhLUFz+R0XycGm28dvj+CDZnjbThb7r5vymfU=;
+	s=arc-20240116; t=1745058330; c=relaxed/simple;
+	bh=DcO3ROOzgUjQ/5kHF2gjv5zDkM0gaI/3g2awacqfOjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMKjWV1cUsGZ69V+RPS4oP1QnF6AyIWsOcziHkt65uD/h0J66LDGOYIz5o8/8NMT6Lstw4+hsoakuzH/aX7mBqiiciAalNzvE3GAYQteM9mLzVUHG+fhiv30WKKd6DHrDLVu/D5qRlzO0BSiWJ8KVHjUoLHWMbCDEWnEWKc5vyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lvNkFybM; arc=none smtp.client-ip=209.85.215.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=jAmigZFYP/UQT7d8p/0/dGvQAMu3Pjfu6TKW8XCC8VVw1JD9HDHi2xg7iLj36FNX55UsoVB9u8piJSqiIiPGtwhgCpOaKyOpLjYZk8+svYgigeZF2anVnz3ISaf7HAFHL2Bku3VDswdiw+40K+si4+eQ6jPpuAhnszojDnDsIM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=voSWt/2e; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1943624a12.2
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 03:05:11 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736b98acaadso2483683b3a.1
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 03:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745057111; x=1745661911; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745058328; x=1745663128; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=fZnspsQOL1AOM7bi9Gsam7VgHf9mR0UVvK0+Pib4Ri0=;
-        b=lvNkFybMQUJLVj4JtHXU4RaRyAcvmd4oAyERAlEuqd1AudW7NG1FE8lFM5ZbRT72C+
-         XqjV1E0XK3AdjchsmeGbR9zBYwUiicvvqLJx//eqffZ0uUffCXP2XA/VNOJoY0KkRmsw
-         +dp/p4qr6SNjZ+PYsloctHxT3DCa302rcuca/aN8UdHjTx4YoRPXPvkFuVIih3ovlGY2
-         pP+tnAYR5hayrod05FQl+bnY3sB4ZMSI/PiPm3dBB0Mb/36LWWVuGFLWpRsjT2iH3Cp1
-         DB3We5Ta1kBb4Hb0rsGqi1poqfZ+kssCs29LTMw9uf1pdfM+jXtDXv/tR4+DS4aBIUT3
-         vM/Q==
+        bh=+kX6tt0WQrfY8YrNj+cDm3WUNmcy+WlRdyh2Q2criFg=;
+        b=voSWt/2exZApQJkXsx9jgzNyEoXVqw+TjZ0W5ES8hXuSRCBdEqXn/G7NmPM2InGzQK
+         PCY2iwQRfxkoX0dBYQZA0YtcjYWHsPqZR4igt1hOJRSJ0yxgYj8fQYu3eOnP+n/0fxOH
+         D8uQ6m0PnA9brLpyZ84wDSQoveY0DqzsN1ZpPLUQime45At7xzK7ZEgyO+zY2RRmNN/9
+         S72C09uoqRkUX7p+tHnSOFRjEQ2JROytRg/1veAlbZxxxq5C7ohRHrkyqn/znSAUarbT
+         5RfgD03ma4KxHwYGJYFKWsKhErJZmY+tAufnOJ4HRILgEnkz31Lw2+pZoArVYbQ0VcBE
+         f8tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745057111; x=1745661911;
+        d=1e100.net; s=20230601; t=1745058328; x=1745663128;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fZnspsQOL1AOM7bi9Gsam7VgHf9mR0UVvK0+Pib4Ri0=;
-        b=nXOGSnql7H2SMuWWAZaT5OuLWlg7cUXVZbP/KxEwy1sLuMlFLGh0e76dUakciTGrkR
-         ZJtjmc7OKvKJUSpwn9JpraMWTR9AsROZFBzlFZtsBisfsZ1R3SRFkGmzTuimXJg2m2zA
-         OKDQHOkYeewiGdL0YVW24urj6Mm8mqzOWPfbCQIQRSb4faGteWuew+XqW9LhscPKyQdb
-         0qA6RiTkae8SuMv9RXe4iEi3N1zo2MjD+Ad2DQgDPEyzV7daje5LpS4Kb4A+VuGrBJCj
-         AbsHvGOkB/1EPvuFytfV33G+TD8W5AIMCgoD06Th1ZLG0/zVupkMG4jiUEKBjSXaSWBO
-         xpBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3xy/1/KS8nrEJXtDmvnAmBq2MIAy/0RhYrxIW6R87VxYY1HyjGhKsAdVS8fKV+m5dS3jcyX0NrZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU7FtaOg992RDpliW8B26XVGfjQP/ijbHhK5pA0XZ8HGMYPxvc
-	jI7SrK0Lw/F1VguamXrKmjyC8DA9vDj7igcvxjvHMDCmQz59yhk7gx3uHkL7qg==
-X-Gm-Gg: ASbGncv2l8RY9Tc6jYnweQXlRUF38y+IBe4nAytBhw5akGyvKrxswqNh7QMUpT+TE5j
-	3NI28DY/8+RH7Aj9+nq5quBunpWoa8sChr8EkJjWXLjOaVqbIHrHiJYqB2qJ8LHirFYN6TEjz+s
-	Be3ER67bn3UtWaAzcY7XJDpEog4k0md/Mb5BodyU/T3txS1hK/PoBNe9NSBnlEGfa2MXHKt3KxI
-	AHICWgtcgh/D1w93y02z4lUPQvP8RtEoolJmZlmJ76poRagp0TOM17+UpXE4p0gAFEt23aHmRbe
-	mXJuJYXtl4fJ9BkiIjQfik4PLffwehDrVjhFqhpQvEcEa835TQZKwgvNM+wq6w==
-X-Google-Smtp-Source: AGHT+IG65vJcpfNX6xmMp18UpjmuQdRaXIXwcrTjjYFd+3ro4TsVx1269ri2TroDXZg+7G05wnIhgQ==
-X-Received: by 2002:a17:903:1a30:b0:224:1074:63af with SMTP id d9443c01a7336-22c5360c9d8mr89282745ad.34.1745057110969;
-        Sat, 19 Apr 2025 03:05:10 -0700 (PDT)
+        bh=+kX6tt0WQrfY8YrNj+cDm3WUNmcy+WlRdyh2Q2criFg=;
+        b=JTXHPQ4tDCI2JgisKq5MV2C+E4F4R10F2zCRbR80OxVrwiuMkoJxMFuuoWpHMWCmWc
+         xGYj13scvXpS5QrtXKjs4h9KS+kMxskteMit5o0R1blF8CA0qLfd5zTfQC+2ltxCJcpB
+         KjQznJ9cKLEvLtnDHFX+R/R+3eAmMoAIjLnI9Yxyz2iZjdfkrLSXSEM/h3iItWMxW0vi
+         X4EvSBHfItPd32aNPL8CszGXnSS5JZ7+KO+MUcLomMk9noPCdzs8v/EbCUMaq8AKJSYy
+         bTCkryDtCSug3YLkEVC36t0zr9VzGhENwudi1V63jGzdu0CgpZE2S6HKCUTUvg+Afo20
+         TGRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPi6BvR4lkH1yfWhejbmxa7PuTgQ9rW7VrmAizuua+bV74wDSxDUkyE2w/ux2p8rebPZNZx7rY1U4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3dj02WcQOuLMEtBBvh1gkEJCMa9tGiyN6VB/huE6ya5lop3XZ
+	VJZfK0PQhvV4myFN+Fk7yxw/Bix9x15aefaa03IK1qlPBEzmN9Be5jJK/X0X89E7NUrbMLn94tU
+	=
+X-Gm-Gg: ASbGncuzKmoTQ4HgcmwkmKmgwkI4S9RJhKcVx1YMxxihcJkq82mBWPsJtCFqQwFObHa
+	KlNuyyczd7sUTww6XgKx32Ukx+aCF86eiERM6JDq+4Tpq9LEjXPQmswXO9qZeJIEtwN1DRDWrO7
+	zOKzN13LzgR9MD18FNcur1pwJImQVCS9znBkvH41xCf+RpnGhHTWKY50IlReXv3i+X9Q5oncRNI
+	cTZJlzU0XieYGLAULtPE6hCpHU4tkVn2AWc2Kqr+sZUpSivbzOwdHInQQaxtk20xrinaoBaLUCd
+	VpI+cpbzw/vYtkyh8vITRqYvZ8Q0fWlUrRODzmWjb4xmBtaanPU6VGCKNzgoPw==
+X-Google-Smtp-Source: AGHT+IEvZE9JIei3Ibhx1cF0BrmFZhXKhDCAZ9hI+byU/7L8ln4sWb7BEEKyIKe3b7Qr6G6Sw5yIKg==
+X-Received: by 2002:a05:6a00:14d2:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-73dc14ad1a8mr8603047b3a.8.1745058327986;
+        Sat, 19 Apr 2025 03:25:27 -0700 (PDT)
 Received: from thinkpad ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bda70esm30696675ad.15.2025.04.19.03.05.07
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e0bbesm3035291b3a.37.2025.04.19.03.25.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 03:05:10 -0700 (PDT)
-Date: Sat, 19 Apr 2025 15:35:06 +0530
+        Sat, 19 Apr 2025 03:25:27 -0700 (PDT)
+Date: Sat, 19 Apr 2025 15:55:23 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [RESEND] PCI: cadence: Fix runtime atomic count underflow.
-Message-ID: <shhqkx5vt5dwbw452yf5cq6gubgcrqpzw6xatyo2m7laogg7gv@xpnspwe5x7ds>
-References: <20250301124418.291980-1-18255117159@163.com>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Daire McNamara <daire.mcnamara@microchip.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Kevin Xie <kevin.xie@starfivetech.com>, Minda Chen <minda.chen@starfivetech.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Mason Huo <mason.huo@starfivetech.com>, 
+	"open list:PCI DRIVER FOR PLDA PCIE IP" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] PCI: plda: Remove unused IRQ handler and simplify
+ IRQ request logic
+Message-ID: <dmzf2lup7iiqcqhq773rtrikb7sleoq743q7nbakrcpvcbzuf4@54qbngfpw2bc>
+References: <20250316171250.5901-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,54 +95,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250301124418.291980-1-18255117159@163.com>
+In-Reply-To: <20250316171250.5901-1-linux.amoon@gmail.com>
 
-On Sat, Mar 01, 2025 at 08:44:18PM +0800, Hans Zhang wrote:
-> From: "Hans Zhang" <18255117159@163.com>
+On Sun, Mar 16, 2025 at 10:42:45PM +0530, Anand Moon wrote:
+> The plda_event_handler() function has been removed since it only returned
+> IRQ_HANDLED without performing any processing. Additionally, the IRQ
+> request logic in plda_init_interrupts() has been streamlined by removing
+> the redundant devm_request_irq() call when the request_event_irq()
+> callback is not defined.
 > 
-> If the pci_host_probe fails to be executed and run one time
-> pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
-> cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
-> "runtime PM usage count underflow!".
+> Change ensures that interrupts are requested exclusively through the
+> request_event_irq() callback when available, enhancing code clarity
+> and maintainability.
 > 
 
-Please reword the description as:
+Could you please reword the description in the imperative form? I have
+mentioned this a couple of times in the past, but you are still not following it
+:(
 
-"If the call to pci_host_probe() in cdns_pcie_host_setup() fails, PM runtime
-count is decremented in the error path using pm_runtime_put_sync(). But the
-runtime count is not incremented by this driver, but only by the callers
-(cdns_plat_pcie_probe/j721e_pcie_probe). And the callers also decrement the
-runtime PM count in their error path. So this leads to the below warning from
-the PM core:
-
-runtime PM usage count underflow!
-
-So fix it by getting rid of pm_runtime_put_sync() in the error path and directly
-return the errno."
-
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-
-Fixes tag?
-
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> Changes help fix kmemleak reported following debug log.
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 8af95e9da7ce..fe0b8d76005e 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  
->  	return 0;
->  
-> - err_init:
-> -	pm_runtime_put_sync(dev);
-> -
-> +err_init:
->  	return ret;
 
-You can now directly do 'return ret' instead of using label.
+But you didn't say 'how'. In your last version you mentioned that it could be
+due to passing NULL as the 'devname' to devm_request_irq(). Can you verify that
+by passing an arbitrary name and see if the leak is disappearing?
+
+> $ sudo cat /sys/kernel/debug/kmemleak
+> unreferenced object 0xffffffd6c47c2600 (size 128):
+>   comm "kworker/u16:2", pid 38, jiffies 4294942263
+>   hex dump (first 32 bytes):
+>     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace (crc 4f07ff07):
+>     __create_object+0x2a/0xfc
+>     kmemleak_alloc+0x38/0x98
+>     __kmalloc_cache_noprof+0x296/0x444
+>     request_threaded_irq+0x168/0x284
+>     devm_request_threaded_irq+0xa8/0x13c
+>     plda_init_interrupts+0x46e/0x858
+>     plda_pcie_host_init+0x356/0x468
+>     starfive_pcie_probe+0x2f6/0x398
+>     platform_probe+0x106/0x150
+>     really_probe+0x30e/0x746
+>     __driver_probe_device+0x11c/0x2c2
+>     driver_probe_device+0x5e/0x316
+>     __device_attach_driver+0x296/0x3a4
+>     bus_for_each_drv+0x1d0/0x260
+>     __device_attach+0x1fa/0x2d6
+>     device_initial_probe+0x14/0x28
+> unreferenced object 0xffffffd6c47c2900 (size 128):
+>   comm "kworker/u16:2", pid 38, jiffies 4294942281
+> 
+> Fixes: 4602c370bdf6 ("PCI: microchip: Move IRQ functions to pcie-plda-host.c")
+
+This tag is not the one introduced the bug. It just moves the core around.
 
 - Mani
 
