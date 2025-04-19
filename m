@@ -1,117 +1,108 @@
-Return-Path: <linux-pci+bounces-26279-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26280-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4587AA942E5
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 12:40:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10DA5A9431D
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 13:35:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E85EC3BAD3B
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:40:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D5A0189524A
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 11:35:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47AB91D5154;
-	Sat, 19 Apr 2025 10:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C6D1D63D8;
+	Sat, 19 Apr 2025 11:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s7xgxUNY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZKJfcrWy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974281CD215
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 10:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9101C3FE4
+	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 11:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745059210; cv=none; b=Sq8OsxUM2OwZXzxk5FtjGz25y4eZK7DTShHnsY+//IHZYBXHKBjIBvSkAkikjdHBg6srRubISRoiMamHpt/aMCUh/t2hd53ho8B9E9EUyl8hWe0KCwjVAKrc7H+HbSnY75eH1MVuSHO91QgkqlMm8lxAZVUzxUntgdr5UIatMCs=
+	t=1745062533; cv=none; b=Dzq18BgVLU92V1SgzsI7mKuW+eJF2O6+EnPSCLQKeGMzmrWi8vAwRTUOAady4+0KkTkKN9LrxQbJhkZuNL1yzC8BbUjNUnmQIkLUm7mgHWpC8Y979v+OvAFdNmAGlqZycBnOsGgclIr1MYfPrC3WiHs8kKZmPkEyGtQ0kf3JhMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745059210; c=relaxed/simple;
-	bh=F/8HfcwjCYVciaSf8sOnCLPv0Ch0D3Hd1xngEvK2sAY=;
+	s=arc-20240116; t=1745062533; c=relaxed/simple;
+	bh=hSrFgG5GCJ1EOixVEk2PIVd25zGJ4lE+rWDW8ZzPJxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fOLUJG4yOQCycGJTRLzBplC2Iz85J0x5xuksnNFiKeN0/Wr5mj3uro5F8bPZNuJatubofAJ/MtzWt04j2pTjDXXenHYMQEuPFGGZ2zgBaZpHpStu73Dy7EhA90E36+1uoC8vAxYPsTC/n3q10F7tn8o13x8cnEXxY5U6RKPObgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s7xgxUNY; arc=none smtp.client-ip=209.85.216.44
+	 MIME-Version:Content-Type; b=M3IhUqm8T6tyK2455L2HRzWoxdbazpG3kLrEsRErr7M7JZQBHd7pUlNcosuBfwGos9nqnPWky37TaljkwcM5x6JJ1AIBiWnH3Uo3hEJ7xtmwl0k3V6GUQL7OxGHA469QBWXuThYQEA11yLmWwMad1poiYZ581Yai4b0ADyOSkZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZKJfcrWy; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso2497017a91.1
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 03:40:08 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-73712952e1cso2515442b3a.1
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 04:35:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745059208; x=1745664008; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745062530; x=1745667330; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zZZUE7lDwTEz2N4r/fX75wAzeLWxw2u+R07S3BlIwfA=;
-        b=s7xgxUNYXmDzOJkBJBgVo6llKNEBvNeds4w9odsFAwqXWP1RlmfawngWLomgOqT1If
-         adnhc7LoroqI2viuMaGQNtOlfJx0/Bi1vk/ovyQXHDxfq6fZ3v4/tLIVuKrg88Vv9xzg
-         ZpS0WXHLeyedrSMf8gunZEtSd2OlFy2md5v09UJ999CK/l9ATi3WihclE1l3WNatxDuM
-         q93gUe+7SOiwj+t+L3nw55UnLhspm4cG859YfZ6nJ96XgbpqHPDytcLlx6cTVGRJ7gTJ
-         E2+GMdGGD87ra263RvIRZGDE2FyqlxkMzOQMntliS/uH1nmR2y9BFZ4LglmQbrWh6x+P
-         I8tg==
+        bh=EqEfCzVm0s9gbAWdrawTqBLk3GajDKRamX+SOKwoyMA=;
+        b=ZKJfcrWy3rkpMfLUIl476Hg5K3R4kgNxgF0tVUEinRjtU4A2ufm548BQCtul2ppPUR
+         NfGBpDS32EFgmLKz9JFlPSNQ5IX8odxklTSr+vgrC0eHQqiNFIJpIfvkbZBDsoluH/Fz
+         Cjen+ZO+47bmVuMjIz/yM4E+YvW21XR4FYved5gR7jZ/fD4HJqq39Ubq5zhLU7Nm1+AU
+         II+qLPV78/hjU2DswHZCXiBW5XabDx6K+PMJ97KOxZm2WIAf2XEGv+m75b39cZnlwBcQ
+         cbpB/MJKYaZ487FTQdNj8EDtHV6eh3ErnO3SAhRQJF493g5dYKkzLAMoFkGQy2fGdtWs
+         wghg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745059208; x=1745664008;
+        d=1e100.net; s=20230601; t=1745062530; x=1745667330;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zZZUE7lDwTEz2N4r/fX75wAzeLWxw2u+R07S3BlIwfA=;
-        b=GoXXDKj/IRwfZK8TIjEYNXRGI+UGS9PTC4T7dcNHNbvID3TtLy30T/QvG9NDhTqF5n
-         xt/rFGTfJqxqMZR6ISvMGAyo2sGOEJc7SZirNsQBpAlTpYS3AS9dxIyI77hhVMuz0/n1
-         EAeYHm6ZnkTqp0GMQpqUfxaMA5QPyR9Bas27Jv5iwB1Cm8qWYMbNmb9gbweS2W8Ya/m+
-         c4t5Qz1oo9ASCjyhPS0hEAGiVQq1YzR7utB4ikhfjBu/ZsX/6F8HWwfoTb3dIuuGQp+Q
-         M6q83wg7g2/7EhZGa3KNzMjagKZgoQCaUoZwXhT3qt3gLmxwaPhZNNHlgscCKd/C0zCp
-         DBgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHdaoaMnGvlYagogxoD1ZzEQj+UX9ogmsjkx4eTOWwnpPMA0x/vk03QcCfPLHnOrB7LTQpuSSXuTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNjg47ro3o3/qaijrcHKN4nN9MzMepC0bmwY0NEiq6eRK1gI2Q
-	ezci7U+ybIL+wst6kyH0AQlgCx17K5xqhK/fjZPMUOy18IyPRFwmGLSj4oMDdQ==
-X-Gm-Gg: ASbGnctWYXRcJJCQw3FoKAx37a/eIbcN27advigJeBCUXV4ucWZOQ5LBkPuI787IZQQ
-	aVasFzLLAvaYevOzZ3LpRCFyxUQJiCpQvHDXKMlWyhEiI1bKUCQr1qEh7ESAY3No0xPaQ+MkK9S
-	genqen4MymeHLmx1NjSQwuZ8UOJNnhLrJBO4qyPbWGtpTbs0fu7ncDFUCQUSiZqiG4hpchC0vbh
-	CXCnVDgu7vQnuHo8EBomwerQNcuavoFC8BXR3Im/869/XfZt+dSYW0WzYAz1YSDMWtpm/Zrke8s
-	o+nSb68VHRlwRRrAMkbJ3YyXubJDe9GBSW1y7rZHSpTG3tSdHWEV1ZBofDAtOntH
-X-Google-Smtp-Source: AGHT+IG48rfT7dO1+AZbhGTz/iIYddl71I2wayyAJZkp73FfKaGBUzoje28Z41u2PE9+dTi/GMGgcg==
-X-Received: by 2002:a17:90b:57e6:b0:2ff:5016:7fd2 with SMTP id 98e67ed59e1d1-3087bbbfcb1mr8635818a91.24.1745059207952;
-        Sat, 19 Apr 2025 03:40:07 -0700 (PDT)
+        bh=EqEfCzVm0s9gbAWdrawTqBLk3GajDKRamX+SOKwoyMA=;
+        b=dgImXYsnJHOfgjmQ3+lu+rwrqeNWxUSMXrUWeQG8s9nI6+elWsXNoKDFQrugeMnOxD
+         bDsSvMpSXrK8PBhGXBiqhnjwABFJum3L6x+vjYHGUh9+l7ATHidw1B/QBkkVGYTS4cRg
+         SG7pyPKBB894qlDpJQGldhamulsZd0OqEXr8xXUhe8w5wbewI+OKXf+enAsCpAQjyhvj
+         2yt7CpndSJ1xt8uHM7jpPTh0uaSIwvPRlt7PXh0mN/fC3CU4rN1/kz6qXId3ismNw+u3
+         tPprR+QXjsZfn9fNIz0GkTknMXgFg51jQ2HsQXyq4HBEWIwzgJTzaDm+vEo8naAFeuHb
+         GV3A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7F53Oweco35EzU3m97JZiWTpZHA+/NV4xN5s4n+W9zxanO2kdkWjGJGcYtJO6m5qBDw7kMpHQd8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4iyQCFXtABkEkGaXEV82zGbpLncIOK22bGtelOgBLofFeA+/l
+	Sgm7nL31s4RU3/in2vkffyj26YomWUfEc+aGiyaC8MlnoK3LgPhymnn7W9HXxA==
+X-Gm-Gg: ASbGncvX52Gw+SAB8EvWVjHb0pQpktAhCETZ3EpsAwxNGBNrOREyyOZsQzEBWDyb1Jt
+	P/9JG27jYjNglx1SPRD6BahYoL8CNRYu9aqgfUMjX7MI4QNoaKn2QCiQzcLWAENtygUefTVK22D
+	xmfJPuwmsZVUOzTyDcZCKulnqtZFg1EGkDWlrxZPfkL+ur0WZIXyHE4Y4dJ84TDF0Ycgc+gXINF
+	URCg8zW9QQshncVbReNs+o00sqsP/JlRN4rm5vQLJKaSw96dKY1Bwud5+vZULhb7IMNgSWUsIp+
+	HzGFVKbwqbkftGFGbT8Mg4Jx76aupaE22s+FgxW/3So3+QfFppM4iA==
+X-Google-Smtp-Source: AGHT+IFKbXf8oiV98tgt3cEpHu3Ind6E5MOTHI2okQE5l7xhF/QuhKO27dk6PSwPkrsC8Rn2xyTTFw==
+X-Received: by 2002:a05:6a20:d485:b0:1f0:e42e:fb1d with SMTP id adf61e73a8af0-203cbd4513fmr9527773637.36.1745062530611;
+        Sat, 19 Apr 2025 04:35:30 -0700 (PDT)
 Received: from thinkpad.. ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ed23e3sm30785155ad.194.2025.04.19.03.39.59
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db139eecdsm2705742a12.22.2025.04.19.04.35.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 03:40:07 -0700 (PDT)
+        Sat, 19 Apr 2025 04:35:30 -0700 (PDT)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
+	Nitheesh Sekar <quic_nsekar@quicinc.com>,
+	Varadarajan Narayanan <quic_varada@quicinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Praveenkumar I <quic_ipkumar@quicinc.com>,
+	George Moussalem <george.moussalem@outlook.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	20250317100029.881286-1-quic_varada@quicinc.com,
+	20250317100029.881286-2-quic_varada@quicinc.com,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: Correct indentation and style in DTS example
-Date: Sat, 19 Apr 2025 16:09:44 +0530
-Message-ID: <174505916020.32700.15920085651288867306.b4-ty@linaro.org>
+Subject: Re: [PATCH v7 3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
+Date: Sat, 19 Apr 2025 17:05:18 +0530
+Message-ID: <174506248856.36993.6558804848056183191.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250324125202.81986-1-krzysztof.kozlowski@linaro.org>
-References: <20250324125202.81986-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250326-ipq5018-pcie-v7-3-e1828fef06c9@outlook.com>
+References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com> <20250326-ipq5018-pcie-v7-3-e1828fef06c9@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -122,22 +113,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Mon, 24 Mar 2025 13:52:01 +0100, Krzysztof Kozlowski wrote:
-> DTS example in the bindings should be indented with 2- or 4-spaces and
-> aligned with opening '- |', so correct any differences like 3-spaces or
-> mixtures 2- and 4-spaces in one binding.
+On Wed, 26 Mar 2025 12:10:57 +0400, George Moussalem wrote:
+> Add support for the PCIe controller on the Qualcomm
+> IPQ5108 SoC to the bindings.
 > 
-> No functional changes here, but saves some comments during reviews of
-> new patches built on existing code.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: PCI: Correct indentation and style in DTS example
-      commit: 37b52f92334c522d41c44ee4446e2a74cd830419
-[2/2] dt-bindings: PCI: sifive,fu740-pcie: Fix include placement in DTS example
-      commit: b3274b553aac4daddad998f426995b2388c8abb3
+[3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
+      commit: 5ae42cdeb1d23fc604fb6c8a23cff35a4a47b10e
 
 Best regards,
 -- 
