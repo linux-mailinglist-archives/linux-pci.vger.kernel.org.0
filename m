@@ -1,141 +1,190 @@
-Return-Path: <linux-pci+bounces-26271-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26272-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B891BA94201
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 08:55:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 999DBA94243
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:33:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF8F7446F43
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 06:55:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 352F819E25C3
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 08:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F7216DC28;
-	Sat, 19 Apr 2025 06:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE911FB3;
+	Sat, 19 Apr 2025 08:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjYh+aDd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hvql5noU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E312A86338
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 06:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B132F7E1
+	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 08:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745045705; cv=none; b=EgrnOi3uKLw9dyEbF6J4y6rhpbTTrn05FrwwAFX1tA6Jm93oy2UgisXpazZtOAQbWzAGx+KBk8RsUeZ/csZdBiwhgXSQMdg1jl7QzstOA4ArZpI3osrsVfaNKGBNBbj1aBQkSF/n6iGZD3ChVQXIuLCarebO131w+6sSIyYvxLM=
+	t=1745051616; cv=none; b=RxarwZ+22UicD+cP12P2o2FMOT88vuAY6xOJRgAkStOZ5E0qSV/8zyGfbrILaGGI+JSBamn45GAhfZKQ/DbK1QA+s1FavOZX3bqOj93Wwe3eZsQg33RbeY6LPIysBvByMOq/BkS5CSYOwqHrLxKAHr6REtQcsmt1GcfaFt3lUqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745045705; c=relaxed/simple;
-	bh=7V8yw5J+1i1mhYMW7TfQ/SiJZ+3ro2qr9nOVTet9OK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZNWm9y4UOiPkhrhb5IQwNhRW28F3MuMPd7XY73c7Mr52WXmUvsUhhzgkqpb2RCJ8EewXsVBzz0leBCkrAcgvJkp/xK+bn05eJwekTUK4XarZAZ6j7AzdCG+8FxCbuPQ4ZxmPUgBRkVGu8z+Agh4o4gfLVZOsVYr7w7LnPq8/Ebg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CjYh+aDd; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1745051616; c=relaxed/simple;
+	bh=tnZpf7E4jUTvl0WeReZ1fpPOpf5sY8X3PMWxEUc/hMQ=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hzd6NLNS9OA/WNvwVpypm6/JC99R5S0Cmlb8/aY1smSNKvZLxZ8wNPgCqJWkKzurXocaOjRcLK2VNJ7GbffbMo+JQFnAQ4FfzTXeK00urYuDUZYWoB2CUjhHTgn0OQfpRf33bjgFvb4QruiU+wb1Hrb8qZ+vWzZTtxTtRHIKyWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hvql5noU; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3035858c687so1877193a91.2
-        for <linux-pci@vger.kernel.org>; Fri, 18 Apr 2025 23:55:03 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-226185948ffso28905235ad.0
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 01:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745045703; x=1745650503; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TICD64AIOfQs/ZYDCIR8qIZ9IkU5scdShX781+egCtQ=;
-        b=CjYh+aDdsGaFzFCww/y1+WE/ILdbPlvJIS4u2LADV5HY5o+/yePU7RAFGHDe13afQh
-         tVOYTE7fVZPkhuP/tpJ3JPAfDNOyfqw0XvvcoVx9bNx4pFTJM7b6m+5SJN/G75NXLf+r
-         qOazSH9n1UMrg4brq7ugh/BCbI5SuFpPw58N2tXt6a+Sd9nxM1/fq9s+3S57X9CO7TqJ
-         ovu0DcEMQXqsOjur2i8yilgdfk+3N/TTxA1jt1/Mwr5pUmSanLFOGNBOSPLdq72LXcS9
-         SdZPlr1kLCq47CpzYPJXg2uV4TGsotzdVStTxMlbGVY4FdggR+C/feORJ207YYUCCy/t
-         lQpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745045703; x=1745650503;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=linaro.org; s=google; t=1745051614; x=1745656414; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TICD64AIOfQs/ZYDCIR8qIZ9IkU5scdShX781+egCtQ=;
-        b=IGlpP6sU91YP7E0XuauEq6Hn+kLvH30j/3+v0oVWyNfejhA19TG1wBu8uD5t2kYipy
-         X6huRK948PnltILVudmpPiSQjN+Y7q6DA6rhkccQgZncPMIgQ4cvnD3NGa0htI/Eox41
-         JdY0cfXtjkhMJYg9kkHJao1gJqlGH9lpVjiIKdNxxgplTui0g7w95mFtrbLJue1dOxr3
-         rvJ1vp9aDCGOHry3TOod3GKyX7RKA34HeVxMKQhpuanfhJVmcRP74+yrFa6V6Mcx0pCm
-         P++Rq2RhLX/AYR806FlM4TdpJJO2OkPQCYdVMAbCrV3Jlgl7IqIgZ9b98kCD5ENDEqmJ
-         hZvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZciLPN3uBNm+S0YwHYGXIlLlL/9Vaxvdh1zjzrSZEU2sJPBORh9+K8Ra/si7wlsfiR7WZAkTUL3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwerwP80g82ivd/oi4UbpCc9lIFU2qVpm8YrCUmXSedtHuFxrX5
-	DnEIZBB8emgPuxSq+vVDBr5NuQoUYT56+I2Oger4cVCgFRraL0o1hLkSvzxg6Q==
-X-Gm-Gg: ASbGnculD8fb9cjB47Ps3mw2QlVYyDDH8FZK0CxZ44szl3fYkDPvVI6NfbD/sTDG0+M
-	eJnjEfxlK9ngnaNHN7HROIrwVz62F7noAj6VzPgr/MhwXfeXpukzeaAmYx0pPST7kfXSDZHdQU4
-	eXmdYo0KT5oVxG9EN67NQ7A5wuLwZDjfGVvWJe4MrHVjmyiL622bs/LBfgWyNaPTq/bd96bCQng
-	6bzZRhYl0oNLP3VyK46XwmXoQwXPjKJ3G2j/sbQp03H3OBs8XbuF1KOwcZuZB7kTx0KmeyUeVdK
-	g5MbVYxhGzpr1jGUeSmeA+WrboIPnULtiKHMr+gCTFukB4VnoDVBxQ==
-X-Google-Smtp-Source: AGHT+IEF+s5cUaANZHoNtJTxHRWI2o+ROo6OeQ0i0fU+x5mBKy6gzJ99hJDGFllQSCcfHn9Y0iJK4Q==
-X-Received: by 2002:a17:90b:5827:b0:2ee:f076:20f1 with SMTP id 98e67ed59e1d1-3087ba53cd7mr8741809a91.0.1745045703223;
-        Fri, 18 Apr 2025 23:55:03 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e1149bcsm2380251a91.41.2025.04.18.23.54.56
+        bh=YaJakh9xM66cZD5S9FiPEP38vFx8wsqvS4Jg/X0PNME=;
+        b=hvql5noUBWhduRELCjYuWxqsXM62h38FUzeIfIza036HvLEHXf8e+4mgayEQjr2H61
+         PrhhzSEyoFzB0lLAepUKf+0QuF8ZqK/QkJgaD+cSvgybT/pla/RFn7N5subfYCpHRS0t
+         yCXlW6gIZ6v+6hEIcIHNmTvFZeflIXRlsHr2lZPtr4A40ZME5IZXeLpIrWSKWLUen6y8
+         fIHIMHOTiMBdITYQUDwu6D/uOkQ/RzX3SXsOEwB0VxrPeIqrrJMdbJMEQPdEIHziljBX
+         XsNpyg7DUJqJg8YYShxm0bVy3SH1g5/83u3oOFPUuRwiZfjJsO4fYYbwytDRKouIdLbY
+         5luA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745051614; x=1745656414;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YaJakh9xM66cZD5S9FiPEP38vFx8wsqvS4Jg/X0PNME=;
+        b=ApowxDanU/eEgwODjcjwl1sS/WINZQqi1pwwUR78cx2Lv/a+ECGusGwmPUKnBRRV5G
+         XIlaQi8al9P370etSkAtGmbxCgVMPp2RAs+TMW9RPE9VbBwkvxBlKUTkUL6Jf9vFXmTZ
+         QidLct2eoEPoNVarSZLu9cCwYix2c5z3I5P7HT7Iwo0bILFDsShmIUiZPTTo/vIwbCdZ
+         6s1GHp0ZqI7i9QeMaLyvHCGITEvZcgOjR/ezfFvMPK7qJEaAtlN3pWvJJYlmVfWwCK3J
+         8lWmGqKeHHN9wtA5DOvh2GTnE2DcSN9P6Q0Fx7SozcUNVOQAwz6Kbx3HxvNjHJgVt49f
+         WTmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxJ9fOQPvGqZfTy39a6Ftw/yNF1zjCBlQCskm3/7NU9kKwqTeD3qJ1h1dKME/nCqCop9UHR0QgmyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvbc7Nm5wZ5iWXVvkMz4lAhBzCCzLBSNM9F1q1Pqu28UHtwHzY
+	KGlI6X5vC5flA2vSK8vtmFw+vuivVefi37Zs7swrJClFbwvMOFL/lY6xTtAs7A==
+X-Gm-Gg: ASbGncuoKnVY+vzbE0yfvFd6haDg7CXzlHpif1V9anh9FLKAMg/FcS3uBFiCM546zjh
+	1li26xOR1R4GHEshsn3UuDD7BPMZkjSxusWUjdOlyJCb8GN11wiTrjt4T57Ajxk1ndYmOL7ozzV
+	gG3CMsm2vQpWXqxs9wDjFYX4Y2oYVmHnzaI3hS2FtIWMnHd9vviD37DvMOP1Xzvkgqb/6fX2nB3
+	oWKWd/sYkhoRbC27h/P2OrY2jsj4qlSdC6QX7Z55idft72+/4qSgl1OzjTu5xeZs1k0922YU6qY
+	3NLlvBrCvB+IXcPDu/lM19yUHMeGEeRDpv9ELmzY3SawXAuzO5s=
+X-Google-Smtp-Source: AGHT+IETJzORaZc9rUcQZjfqRJ8DIbC4gX4Kf2XDO9y1bvddXq8XcEhC0o1p38D01fW61AQYlWaodA==
+X-Received: by 2002:a17:903:2441:b0:220:ea90:191e with SMTP id d9443c01a7336-22c535679abmr74340825ad.4.1745051614002;
+        Sat, 19 Apr 2025 01:33:34 -0700 (PDT)
+Received: from thinkpad ([36.255.17.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf5425sm29195875ad.98.2025.04.19.01.33.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 23:55:02 -0700 (PDT)
+        Sat, 19 Apr 2025 01:33:33 -0700 (PDT)
+Date: Sat, 19 Apr 2025 14:03:27 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v9 0/5] PCI: dwc: Add support for configuring lane equalization presets
-Date: Sat, 19 Apr 2025 12:24:49 +0530
-Message-ID: <174504563258.14560.1691218790091373846.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
-References: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/23] arm64: dts: qcom: Add 'global' IRQ to supported
+ SoCs
+Message-ID: <zm75vxwx7pgcu6sok4g5ujrg2drc2jst3gscrl46jr7votygoo@5qsdre2fxtre>
+References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 
-
-On Fri, 28 Mar 2025 15:58:28 +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
+On Thu, Feb 27, 2025 at 07:10:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> Hi,
 > 
-> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> configure lane equalization presets for each lane to enhance the PCIe
-> link reliability. Each preset value represents a different combination
-> of pre-shoot and de-emphasis values. For each data rate, different
-> registers are defined: for 8.0 GT/s, registers are defined in section
-> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> an extra receiver preset hint, requiring 16 bits per lane, while the
-> remaining data rates use 8 bits per lane.
+> This series adds the Qualcomm specific 'global' IRQ to the supported SoCs.
+> This IRQ is used to receive the PCIe controller and link specific events
+> such as Link Up/Down, MSI, PTM etc... in the driver. Support for this IRQ
+> was already added to the pcie-qcom driver. So enabling this IRQ would allow
+> the driver to enumerate the endpoint device and also retrain the link when
+> the device is removed [1] without user intervention.
 > 
-> [...]
+> This series also adds missing MSI SPI IRQ to some of the SoCs.
+> 
+> Testing
+> =======
+> 
+> This series was tested on Qualcomm RB5 board based on SM8250 SoC and
+> Qualcomm Ride MX board based on SA8775p SoC.
+> 
+> NOTE
+> ====
+> 
+> I've left a few SoCs in the tree like QCS404, SC8280XP due to lack of
+> documentation. Those will be added later.
+> 
+> [1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org/
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Applied to controller/qcom, thanks!
+Applied the bindings patches to pci/dt-bindings!
 
-[2/5] PCI: of: Add of_pci_get_equalization_presets() API
-      commit: 2f12e20457a27599b6e1e1b0f08e6175e37c7e05
-[3/5] PCI: dwc: Update pci->num_lanes to maximum supported link width
-      commit: f1eb5da4d28b3788049ef98428b395fbab3478fd
-[4/5] PCI: Add lane equalization register offsets
-      commit: 165d80061e771390da26a29d362ceff96ab75da8
-[5/5] PCI: dwc: Add support for configuring lane equalization presets
-      commit: 3b35b43825f4e906d46519908dfff76a58d58bbb
+- Mani
 
-Best regards,
+> ---
+> Manivannan Sadhasivam (23):
+>       dt-bindings: PCI: qcom,pcie-sm8150: Add 'global' interrupt
+>       arm64: dts: qcom: sm8150: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sm8250: Add 'global' interrupt
+>       arm64: dts: qcom: sm8250: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sm8350: Add 'global' interrupt
+>       arm64: dts: qcom: sm8350: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sa8775p: Add 'global' interrupt
+>       arm64: dts: qcom: sa8775p: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sc7280: Add 'global' interrupt
+>       arm64: dts: qcom: sc7280: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom: Add 'global' interrupt for SDM845 SoC
+>       arm64: dts: qcom: sdm845: Add missing MSI and 'global' IRQs
+>       arm64: dts: qcom: msm8996: Add missing MSI SPI interrupts
+>       dt-bindings: PCI: qcom: Allow MSM8998 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: msm8998: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom: Allow IPQ8074 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: ipq8074: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom: Allow IPQ6018 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: ipq6018: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom,pcie-sc8180x: Add 'global' interrupt
+>       arm64: dts: qcom: sc8180x: Add 'global' PCIe interrupt
+>       arm64: dts: qcom: sar2130p: Add 'global' PCIe interrupt
+>       arm64: dts: qcom: x1e80100: Add missing 'global' PCIe interrupt
+> 
+>  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 10 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 10 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8250.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8350.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++--
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 20 +++++++-
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 40 ++++++++++++++--
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 54 +++++++++++++++++++---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi              | 20 +++++++-
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 28 ++++++++---
+>  arch/arm64/boot/dts/qcom/sar2130p.dtsi             | 12 +++--
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 14 ++++--
+>  arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 24 ++++++----
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 ++++++++++++++--
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi               | 12 +++--
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi               | 18 +++++---
+>  arch/arm64/boot/dts/qcom/sm8350.dtsi               | 12 +++--
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 18 +++++---
+>  20 files changed, 300 insertions(+), 82 deletions(-)
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250227-pcie-global-irq-dd1cd5688d71
+> 
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> 
+
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+மணிவண்ணன் சதாசிவம்
 
