@@ -1,90 +1,89 @@
-Return-Path: <linux-pci+bounces-26272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 999DBA94243
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:33:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F233A94253
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 10:37:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 352F819E25C3
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 08:33:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B6D07A98E1
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 08:35:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE911FB3;
-	Sat, 19 Apr 2025 08:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 392651A5B9B;
+	Sat, 19 Apr 2025 08:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hvql5noU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FBH+Fftj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B132F7E1
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 08:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEE91AF0C8
+	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 08:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745051616; cv=none; b=RxarwZ+22UicD+cP12P2o2FMOT88vuAY6xOJRgAkStOZ5E0qSV/8zyGfbrILaGGI+JSBamn45GAhfZKQ/DbK1QA+s1FavOZX3bqOj93Wwe3eZsQg33RbeY6LPIysBvByMOq/BkS5CSYOwqHrLxKAHr6REtQcsmt1GcfaFt3lUqM=
+	t=1745051817; cv=none; b=S4T1znSBElK73nXySgzuON740tv3b7S8y6CCofHOHij0/IbV3lKEGxmT+6ckN/1o2S6rHtUuVCoX9SsDdfdmWPbosvCXL0z/E8sHQRq75eGEXLKYmZ7yB5KXMjaeBBOjGiwPy+weXSHY3Fxtz+BMnLU9yY9luqL3/ShHj2d1KIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745051616; c=relaxed/simple;
-	bh=tnZpf7E4jUTvl0WeReZ1fpPOpf5sY8X3PMWxEUc/hMQ=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hzd6NLNS9OA/WNvwVpypm6/JC99R5S0Cmlb8/aY1smSNKvZLxZ8wNPgCqJWkKzurXocaOjRcLK2VNJ7GbffbMo+JQFnAQ4FfzTXeK00urYuDUZYWoB2CUjhHTgn0OQfpRf33bjgFvb4QruiU+wb1Hrb8qZ+vWzZTtxTtRHIKyWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hvql5noU; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1745051817; c=relaxed/simple;
+	bh=/cjQX46TG/1tQiEUY53/IXcAF6SECujuKDfyckSZ8M4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAKBSOQDDDO+lKzkXHSUKP+ouB3aXKq5R0Fup+4U5e0pqCp0+aBGZssdWkPdDWCmqe8IW2+pdEk0F403C1ZsdpZIyrqKhFDvLpke9elq5us20eLyPezQD1oq0aqVYtVfCJNA/RDLFwbgU0bib02SDLDkJHKaVgOWvpih2VburpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FBH+Fftj; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-226185948ffso28905235ad.0
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 01:33:34 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so3258564b3a.0
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 01:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745051614; x=1745656414; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745051815; x=1745656615; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YaJakh9xM66cZD5S9FiPEP38vFx8wsqvS4Jg/X0PNME=;
-        b=hvql5noUBWhduRELCjYuWxqsXM62h38FUzeIfIza036HvLEHXf8e+4mgayEQjr2H61
-         PrhhzSEyoFzB0lLAepUKf+0QuF8ZqK/QkJgaD+cSvgybT/pla/RFn7N5subfYCpHRS0t
-         yCXlW6gIZ6v+6hEIcIHNmTvFZeflIXRlsHr2lZPtr4A40ZME5IZXeLpIrWSKWLUen6y8
-         fIHIMHOTiMBdITYQUDwu6D/uOkQ/RzX3SXsOEwB0VxrPeIqrrJMdbJMEQPdEIHziljBX
-         XsNpyg7DUJqJg8YYShxm0bVy3SH1g5/83u3oOFPUuRwiZfjJsO4fYYbwytDRKouIdLbY
-         5luA==
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hWIuLilHx+0m0PNW09Z0k4xV/guGg8/Qmv8ZqaHqGFA=;
+        b=FBH+Fftj2XjkPn1OXUXpglgOKQBZrDNs0XOGePtrDCn/llECg2us4NDnv/1orXblln
+         RBr6QmduX8nm1HYmJcMHYym4LWjzOm8aZVAnZpDwT+spTXd/DqiOSUrv8OhF3uSxPIUD
+         X6XLFWkHwIdEBlUoMS9IO814rclcW7FvQRQd243h+tXXdCUYPWu99YcQ+8JM9L/wVdYe
+         B5jJFvADu1ae27WPcbBO1+m+0V/XB1i3hBO3BMc2vXDfULPHEwE6mraU7dCPUDv9vVDz
+         hGipwmCxZL6SDp1VqwkEoOTopG4weYngMgYXWyhzGDtR1SsbTHV9mxwf1LMpFSXFv2zo
+         T60A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745051614; x=1745656414;
+        d=1e100.net; s=20230601; t=1745051815; x=1745656615;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YaJakh9xM66cZD5S9FiPEP38vFx8wsqvS4Jg/X0PNME=;
-        b=ApowxDanU/eEgwODjcjwl1sS/WINZQqi1pwwUR78cx2Lv/a+ECGusGwmPUKnBRRV5G
-         XIlaQi8al9P370etSkAtGmbxCgVMPp2RAs+TMW9RPE9VbBwkvxBlKUTkUL6Jf9vFXmTZ
-         QidLct2eoEPoNVarSZLu9cCwYix2c5z3I5P7HT7Iwo0bILFDsShmIUiZPTTo/vIwbCdZ
-         6s1GHp0ZqI7i9QeMaLyvHCGITEvZcgOjR/ezfFvMPK7qJEaAtlN3pWvJJYlmVfWwCK3J
-         8lWmGqKeHHN9wtA5DOvh2GTnE2DcSN9P6Q0Fx7SozcUNVOQAwz6Kbx3HxvNjHJgVt49f
-         WTmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxJ9fOQPvGqZfTy39a6Ftw/yNF1zjCBlQCskm3/7NU9kKwqTeD3qJ1h1dKME/nCqCop9UHR0QgmyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvbc7Nm5wZ5iWXVvkMz4lAhBzCCzLBSNM9F1q1Pqu28UHtwHzY
-	KGlI6X5vC5flA2vSK8vtmFw+vuivVefi37Zs7swrJClFbwvMOFL/lY6xTtAs7A==
-X-Gm-Gg: ASbGncuoKnVY+vzbE0yfvFd6haDg7CXzlHpif1V9anh9FLKAMg/FcS3uBFiCM546zjh
-	1li26xOR1R4GHEshsn3UuDD7BPMZkjSxusWUjdOlyJCb8GN11wiTrjt4T57Ajxk1ndYmOL7ozzV
-	gG3CMsm2vQpWXqxs9wDjFYX4Y2oYVmHnzaI3hS2FtIWMnHd9vviD37DvMOP1Xzvkgqb/6fX2nB3
-	oWKWd/sYkhoRbC27h/P2OrY2jsj4qlSdC6QX7Z55idft72+/4qSgl1OzjTu5xeZs1k0922YU6qY
-	3NLlvBrCvB+IXcPDu/lM19yUHMeGEeRDpv9ELmzY3SawXAuzO5s=
-X-Google-Smtp-Source: AGHT+IETJzORaZc9rUcQZjfqRJ8DIbC4gX4Kf2XDO9y1bvddXq8XcEhC0o1p38D01fW61AQYlWaodA==
-X-Received: by 2002:a17:903:2441:b0:220:ea90:191e with SMTP id d9443c01a7336-22c535679abmr74340825ad.4.1745051614002;
-        Sat, 19 Apr 2025 01:33:34 -0700 (PDT)
+        bh=hWIuLilHx+0m0PNW09Z0k4xV/guGg8/Qmv8ZqaHqGFA=;
+        b=qHnt6MpVUVG+7XF+KWGFA8ii8k+RmdIt9yHTjDN3JJylB8/6FCFD3Z3oKnDk19dKC0
+         IKkeJoRHf7ignd4t3ExH3TlLWeYe5yq83h1mWQ458NkGyKszzOmnZgdp3mJJsOhlhpx0
+         oBZhPl4agv5YZXbi78MuMTRvJo566mk9tlaGXWpxHqbSt4wCNb1vio4xmvoYyTiAn/N0
+         yrRm7ESzsHrib3WzSsezGPpHespE4C/YP2OdXif8Qv9cZh2eDJoMEnLaVe7s8LMmvZRm
+         COPAJx3mx5FfsZPP4wEhv2fc7ZS6DteIAzN6yafl1Jl8V2oK2nVlZK88+0AcFB0gd62N
+         zh0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVYhkZbj/X4p+Z47wRVtt4gQhkgqTRvqt1cQ6IFmvZGBrgBAMy41MgvaEdfjE2s9C0Ptg3Baa2Updw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3AWz9zRMe97b8gawj7cBqyMvxAZXbpSDsiKxr4JHHq5pLmQyf
+	O7XVqRR4PiIshtUPfgua/BglpuX7FetgKNnrJvvDiJb0+30pLC///ir2MxQvHA==
+X-Gm-Gg: ASbGncuq5nyRcqyBuaixUncawFqHPrmh7MvRz0fqtwYeDiPZWQDip80dbvZBec0usK8
+	+imtqFVgXpgawsie7w1DNZBI5T0XseSezLA7Rc3reVGVL0SRcXY0Fm4G/hrndkDPZR0NzY2da2/
+	ogtjcDQfnyxGbJc8Ce4JmWjQ51n1WnHJW5RDenCLqYsxi8qhUcK60lAmJgScsB0DyUIcBtsEv5n
+	EvPZptM/81Kzc7UY+/VVafTRtkZP63BEnzqJcrO2W456CZCrThPvdhHpiXKvnZFI8dycUhGJ0yD
+	9KmGIjganXUcNSnOKp0HW8AjuByQxjzNMFbhZH3vDgVieFRjQkApStWiTwlnQA==
+X-Google-Smtp-Source: AGHT+IH3NDcdNNb8pbSv2t3bDQf2H8zk313Y64ucJBKvLy8gNjS7N5oRSvDjpG+wLPNMUPr2fDtP/Q==
+X-Received: by 2002:a05:6a20:9c9a:b0:1f3:20be:c18a with SMTP id adf61e73a8af0-203cc60880bmr6254890637.10.1745051814740;
+        Sat, 19 Apr 2025 01:36:54 -0700 (PDT)
 Received: from thinkpad ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf5425sm29195875ad.98.2025.04.19.01.33.29
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db14488casm2467771a12.56.2025.04.19.01.36.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 01:33:33 -0700 (PDT)
-Date: Sat, 19 Apr 2025 14:03:27 +0530
+        Sat, 19 Apr 2025 01:36:54 -0700 (PDT)
+Date: Sat, 19 Apr 2025 14:06:49 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/23] arm64: dts: qcom: Add 'global' IRQ to supported
- SoCs
-Message-ID: <zm75vxwx7pgcu6sok4g5ujrg2drc2jst3gscrl46jr7votygoo@5qsdre2fxtre>
-References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+	Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
+Message-ID: <oiwee2kiwex6dz3scmvpwc2x25tq4qmdah6kcvgqhhukmku3uj@va465i7ofstd>
+References: <20250107052108.8643-1-jianjun.wang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,95 +93,99 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+In-Reply-To: <20250107052108.8643-1-jianjun.wang@mediatek.com>
 
-On Thu, Feb 27, 2025 at 07:10:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> Hi,
+On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
+> Remove the usage of virt_to_phys, as it will cause sparse warnings when
+> building on some platforms.
 > 
-> This series adds the Qualcomm specific 'global' IRQ to the supported SoCs.
-> This IRQ is used to receive the PCIe controller and link specific events
-> such as Link Up/Down, MSI, PTM etc... in the driver. Support for this IRQ
-> was already added to the pcie-qcom driver. So enabling this IRQ would allow
-> the driver to enumerate the endpoint device and also retrain the link when
-> the device is removed [1] without user intervention.
-> 
-> This series also adds missing MSI SPI IRQ to some of the SoCs.
-> 
-> Testing
-> =======
-> 
-> This series was tested on Qualcomm RB5 board based on SM8250 SoC and
-> Qualcomm Ride MX board based on SA8775p SoC.
-> 
-> NOTE
-> ====
-> 
-> I've left a few SoCs in the tree like QCS404, SC8280XP due to lack of
-> documentation. Those will be added later.
-> 
-> [1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
 
-Applied the bindings patches to pci/dt-bindings!
+I'm changing the status of this patch as 'Changes Requested' in patchwork. Feel
+free to submit the next iteration incorporating review comments.
 
 - Mani
 
 > ---
-> Manivannan Sadhasivam (23):
->       dt-bindings: PCI: qcom,pcie-sm8150: Add 'global' interrupt
->       arm64: dts: qcom: sm8150: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sm8250: Add 'global' interrupt
->       arm64: dts: qcom: sm8250: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sm8350: Add 'global' interrupt
->       arm64: dts: qcom: sm8350: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sa8775p: Add 'global' interrupt
->       arm64: dts: qcom: sa8775p: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sc7280: Add 'global' interrupt
->       arm64: dts: qcom: sc7280: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom: Add 'global' interrupt for SDM845 SoC
->       arm64: dts: qcom: sdm845: Add missing MSI and 'global' IRQs
->       arm64: dts: qcom: msm8996: Add missing MSI SPI interrupts
->       dt-bindings: PCI: qcom: Allow MSM8998 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: msm8998: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom: Allow IPQ8074 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: ipq8074: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom: Allow IPQ6018 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: ipq6018: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom,pcie-sc8180x: Add 'global' interrupt
->       arm64: dts: qcom: sc8180x: Add 'global' PCIe interrupt
->       arm64: dts: qcom: sar2130p: Add 'global' PCIe interrupt
->       arm64: dts: qcom: x1e80100: Add missing 'global' PCIe interrupt
+>  drivers/pci/controller/pcie-mediatek.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
 > 
->  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 10 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 10 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8250.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8350.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++--
->  arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 20 +++++++-
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 40 ++++++++++++++--
->  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 54 +++++++++++++++++++---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi              | 20 +++++++-
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 28 ++++++++---
->  arch/arm64/boot/dts/qcom/sar2130p.dtsi             | 12 +++--
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 14 ++++--
->  arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 24 ++++++----
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 ++++++++++++++--
->  arch/arm64/boot/dts/qcom/sm8150.dtsi               | 12 +++--
->  arch/arm64/boot/dts/qcom/sm8250.dtsi               | 18 +++++---
->  arch/arm64/boot/dts/qcom/sm8350.dtsi               | 12 +++--
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 18 +++++---
->  20 files changed, 300 insertions(+), 82 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250227-pcie-global-irq-dd1cd5688d71
-> 
-> Best regards,
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 3bcfc4e58ba2..dc1e5fd6c7aa 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -178,6 +178,7 @@ struct mtk_pcie_soc {
+>   * @phy: pointer to PHY control block
+>   * @slot: port slot
+>   * @irq: GIC irq
+> + * @msg_addr: MSI message address
+>   * @irq_domain: legacy INTx IRQ domain
+>   * @inner_domain: inner IRQ domain
+>   * @msi_domain: MSI IRQ domain
+> @@ -198,6 +199,7 @@ struct mtk_pcie_port {
+>  	struct phy *phy;
+>  	u32 slot;
+>  	int irq;
+> +	phys_addr_t msg_addr;
+>  	struct irq_domain *irq_domain;
+>  	struct irq_domain *inner_domain;
+>  	struct irq_domain *msi_domain;
+> @@ -393,12 +395,10 @@ static struct pci_ops mtk_pcie_ops_v2 = {
+>  static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> -	phys_addr_t addr;
+>  
+>  	/* MT2712/MT7622 only support 32-bit MSI addresses */
+> -	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
+>  	msg->address_hi = 0;
+> -	msg->address_lo = lower_32_bits(addr);
+> +	msg->address_lo = lower_32_bits(port->msg_addr);
+>  
+>  	msg->data = data->hwirq;
+>  
+> @@ -510,10 +510,8 @@ static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
+>  static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
+>  {
+>  	u32 val;
+> -	phys_addr_t msg_addr;
+>  
+> -	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
+> -	val = lower_32_bits(msg_addr);
+> +	val = lower_32_bits(port->msg_addr);
+>  	writel(val, port->base + PCIE_IMSI_ADDR);
+>  
+>  	val = readl(port->base + PCIE_INT_MASK);
+> @@ -913,6 +911,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  	struct mtk_pcie_port *port;
+>  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *regs;
+>  	char name[10];
+>  	int err;
+>  
+> @@ -921,12 +920,18 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  		return -ENOMEM;
+>  
+>  	snprintf(name, sizeof(name), "port%d", slot);
+> -	port->base = devm_platform_ioremap_resource_byname(pdev, name);
+> +	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> +	if (!regs)
+> +		return -EINVAL;
+> +
+> +	port->base = devm_ioremap_resource(dev, regs);
+>  	if (IS_ERR(port->base)) {
+>  		dev_err(dev, "failed to map port%d base\n", slot);
+>  		return PTR_ERR(port->base);
+>  	}
+>  
+> +	port->msg_addr = regs->start + PCIE_MSI_VECTOR;
+> +
+>  	snprintf(name, sizeof(name), "sys_ck%d", slot);
+>  	port->sys_ck = devm_clk_get(dev, name);
+>  	if (IS_ERR(port->sys_ck)) {
 > -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+> 2.46.0
 > 
 
 -- 
