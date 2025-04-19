@@ -1,79 +1,132 @@
-Return-Path: <linux-pci+bounces-26284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BE91A9437F
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 14:57:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEEC7A9438B
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 15:14:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CD323A6649
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 12:57:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0141167C84
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 13:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96887185E7F;
-	Sat, 19 Apr 2025 12:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD1171D86FF;
+	Sat, 19 Apr 2025 13:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6qYShQc"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kgcfLObo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DB42AD0C;
-	Sat, 19 Apr 2025 12:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 364AD1C3F0C;
+	Sat, 19 Apr 2025 13:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745067473; cv=none; b=ji4B8nj/QKUUsnF5aJ+3D520o7BsoFaA58+ZhZ2rzAauXb6w8TS3hnQWo2ZqO4MchRazdYANOFubQSpRVxVrCAJnO4lZSWjW/A3bRZKSrOxH9uHyrl4IvgtjW8qxRRwKeQofytXT7WG0TyfRzVIkop3ovQm2l40Ihmyrdo7Y/L0=
+	t=1745068484; cv=none; b=RSOl095NOKBGX6KVsz9/Jjao6FDcypQBxha5Feuq7nExROBpLEhKe8HrRoCdXpVltDTjmRCiFZGAKOlRc8cD59lhF3j1PXmBGvijl0zqROz/kuw9KIobEdnrWlI+tc9/Ngkuxbk7h7jkWWL/dwGAslvhSmgQQ3moY4Bnp3JJIaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745067473; c=relaxed/simple;
-	bh=Ww5QipkZahala/LObwRqFjdUqfx1t+6o23DPXOZf1Rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=usXzExqvYyyHeHHXgsNUh3tenJEcHFzNLGl5xG6wJkj8ccuS8Nyu3RAFfHlB+4/ESReeLplU2Am7DhCwaoyxUwmUgRgLB7HOUyimyiAEq8qdSGffC68cuE2FvqVMvo4ULkM1XytkFlFcP0qcXL0fRb3O80iuPGmlDkj2TIErJ9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6qYShQc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E716FC4CEE7;
-	Sat, 19 Apr 2025 12:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745067472;
-	bh=Ww5QipkZahala/LObwRqFjdUqfx1t+6o23DPXOZf1Rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z6qYShQcJGZCMqUIi24LWVuFNEQjPvARxmGG0QXKt2RedXvmA7mNcn5bRJH2xir5j
-	 8+XgsJbzKpDIo8KCx+rVsmOaW2/Gkv30OPMnf7LTmCz/fIJmAYCzo+NqegD9IZPQQI
-	 nl9JX4nY6/rkmjJRzD6lRw5xCMqG4e/jWx55QY0e3oZlcy11SstunZUDR6hekjLRNC
-	 SPuTgFIET6XStteRn9OX6F+3kuQDaKPdYU2l7pzK945mMUHeJZpo5w8FkDEMRaTGxs
-	 QNopUDOFdB7ttOXUNaG2gXmNEYPfKgDClLl6COH7e3HGr41QtgCFjLVpIVGS9ulX5C
-	 xzpXFFjdgp2mw==
-Date: Sat, 19 Apr 2025 14:57:47 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
-Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Implement TryFrom<&Device> for bus specific
- devices
-Message-ID: <aAOdyzjHlCYYyOto@cassiopeiae>
-References: <20250321214826.140946-1-dakr@kernel.org>
+	s=arc-20240116; t=1745068484; c=relaxed/simple;
+	bh=sl5+eqOtpT0QSyZE8wpHEfq1xzNkUpXKTL5LEleiIdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TNkatOc9aMdS4BGzZID90rQClDH8wvlD5p2MaH9su66QGzQfzQ14PoTUxKZJ22EzIZJmpeZ8CzD9JD9RLsStW0ZVgPnUzpexsUCEK5f1V4fhSdDd11mfiud00zTHBdktdbc1JvBAapA6YKlan165obazKrjom4wTC4v5Xyq+7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kgcfLObo; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=bys+Y6TeZSzdEO+EMla5C2QbVwHWwodrEcI4+JxHHsA=;
+	b=kgcfLObo4NickwUWJeZGiomwGqaCh6xwrZ3fJq6RFftvEznObOP7v6hdShdKjR
+	sjgVovhmBpdLuwgGNIJELBzLHdZpRQDw0LjQpaBWl8UrgYiaa+yFXp/xRUco1Hmu
+	NkQBn2pB22KPWU+EbfGVGgp8vLOR1PV6Jeqaz1bNCqJ1w=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wB3jt2doQNopvW0Aw--.64843S2;
+	Sat, 19 Apr 2025 21:14:06 +0800 (CST)
+Message-ID: <a890091b-b28b-4122-a7ae-bbb8d750cd7d@163.com>
+Date: Sat, 19 Apr 2025 21:14:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321214826.140946-1-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND] PCI: cadence: Fix runtime atomic count underflow.
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250301124418.291980-1-18255117159@163.com>
+ <shhqkx5vt5dwbw452yf5cq6gubgcrqpzw6xatyo2m7laogg7gv@xpnspwe5x7ds>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <shhqkx5vt5dwbw452yf5cq6gubgcrqpzw6xatyo2m7laogg7gv@xpnspwe5x7ds>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wB3jt2doQNopvW0Aw--.64843S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr1xtFyDKFWDKr4kAF4fXwb_yoW8CF43pF
+	WDWayxCa10q3y2vFZ2v3WUXFyayasxJ348Jw4vg3W8uF13Cw12qFsrKFyYqFyDKr4qgr12
+	qw1qqasxCF4YyFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UKNtsUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwo0o2gDoOEXxAAAs-
 
-On Fri, Mar 21, 2025 at 10:47:52PM +0100, Danilo Krummrich wrote:
-> This series provides a mechanism to safely convert a struct device into its
-> corresponding bus specific device instance, if any.
 
-With the following changes, applied to nova-next, thanks.
 
-  * rebase onto [1], i.e. make TryFrom impl generic over device::DeviceContext
-  * drop Device::bus_type_raw(); use dev_is_platform(), devi_is_pci() Rust
-    helper instead
+On 2025/4/19 18:05, Manivannan Sadhasivam wrote:
+> On Sat, Mar 01, 2025 at 08:44:18PM +0800, Hans Zhang wrote:
+>> From: "Hans Zhang" <18255117159@163.com>
+>>
+>> If the pci_host_probe fails to be executed and run one time
+>> pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
+>> cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
+>> "runtime PM usage count underflow!".
+>>
+> 
+> Please reword the description as:
+> 
+> "If the call to pci_host_probe() in cdns_pcie_host_setup() fails, PM runtime
+> count is decremented in the error path using pm_runtime_put_sync(). But the
+> runtime count is not incremented by this driver, but only by the callers
+> (cdns_plat_pcie_probe/j721e_pcie_probe). And the callers also decrement the
+> runtime PM count in their error path. So this leads to the below warning from
+> the PM core:
+> 
+> runtime PM usage count underflow!
+> 
+> So fix it by getting rid of pm_runtime_put_sync() in the error path and directly
+> return the errno."
+> 
 
-- Danilo
+Hi Mani,
 
-[1] https://lore.kernel.org/lkml/20250413173758.12068-1-dakr@kernel.org/
+Thank you very much for your reply and suggestions.
+
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+> 
+> Fixes tag?
+
+Will add.
+
+> 
+>> ---
+>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 8af95e9da7ce..fe0b8d76005e 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   
+>>   	return 0;
+>>   
+>> - err_init:
+>> -	pm_runtime_put_sync(dev);
+>> -
+>> +err_init:
+>>   	return ret;
+> 
+> You can now directly do 'return ret' instead of using label.
+
+Will change.
+
+Best regards,
+Hans
+
 
