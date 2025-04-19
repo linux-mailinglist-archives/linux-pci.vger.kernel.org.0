@@ -1,159 +1,200 @@
-Return-Path: <linux-pci+bounces-26288-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26289-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3348A9440B
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 16:59:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46C06A9442D
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 17:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B1681798F4
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 14:59:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8DE51898ABB
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Apr 2025 15:31:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61791D8A10;
-	Sat, 19 Apr 2025 14:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C72D1D61B7;
+	Sat, 19 Apr 2025 15:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QvOgQpwy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqy9yxI0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D66EEB3
-	for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 14:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB72D613;
+	Sat, 19 Apr 2025 15:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745074773; cv=none; b=qmRMek+vpYeK8LuUVhxR3r+XmfRMbeZ8Hvt+Gue9DmqjINlDYW15eMxH+pKVZ77GDR/XbP36a6ZevCU7FTgihgLVz+avOsBB70LibDS3ai9nPzsytfgOwFEKGkKLlI+ESmBbgswF8sDcmN9nXt+YQ9Me2T1CjpVy5M8Ui3ggTIU=
+	t=1745076646; cv=none; b=WZMdtSjrXxXjbG9omWsJNp5GH8guhQDe0Pl3oLmFnTmzdcNlLagtKsbPSAHsSFOMsRhKbYSCTDCjst3KHujoXGj7uydlVaNqR5kwyjKUwf1tv+DJ1Gw6WcMNdENlHK8ZplugqQMBC5RDOJ726toijEb8shHN/y6IXGitu/KEzFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745074773; c=relaxed/simple;
-	bh=YBkcA+8VZy/wu0v2Bt7u8fQ1puMwyzk0J7Ggy/XGRnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RrksleDm5QE4pg3+nSGHRv4peNdFW4E9MVA2Vu3fs5G4hZLjC26XZOsF4eGYbEEh4BXWKV3M4FYib5ahHt7BE8MiW9+lk3wpSeJqyX0Ri3PBLY8nIVmJgWJHiiAaTJAOXV2TOg6UYAxVqqf6x8rtECWoYzb1w1AHOTz4KS7x1fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QvOgQpwy; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7396f13b750so2947630b3a.1
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 07:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745074771; x=1745679571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9q1NBR20RdtEJv8ykkYuXpJV8gE5og1ezdr6jbBl9lI=;
-        b=QvOgQpwyT0Dv2wXZm/PkFEOPPHR6kAGJ4ZmFDNmHVujVOgrxn3f/5IqyZsMTowUzWP
-         bQ464Qs1PZadMjJB3QbvZjH8fRxnXwyahWLJa3mNS++Y37PhsxpZffbI5wSIJxwSyk6V
-         1NesAeKS/yMu/KRU+dM8I1iXyc2ZJA4x+8l6UTZvUeBhTZMfWptlWFUlr3SvSZm8SEOS
-         ixkC5Kd+fXcVZ2OCKOyQ6EaieJDhiGklmkq9c1Ruw5JhNCZT4F8MgPt+KcjQNZzXqrs1
-         wFzZthD57IjiCIJyvFZKTpGg9UWpVj3mgNrxlwDEL/fvBT9VYeXBeJy8E1dgtFkuBplI
-         CZog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745074771; x=1745679571;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9q1NBR20RdtEJv8ykkYuXpJV8gE5og1ezdr6jbBl9lI=;
-        b=nmJqBfyQM8ys9jhYgRRrE8JzPb393SumXlqkuteJ3B8Zp8isw8Rb2ZIq4QP2uUAL10
-         UQfw7nnpn016k6l2t41XskeR2C2CFvCebgBcVDxDgLXw/wfXjaQ0gETsUUqqMNe/4NlT
-         PZWJdj/JSagX3HT7OjuRFJ+OsKxLoPxqifB14Gc4sfXTfCg4iTb3pOVc7On+ItNlWXbi
-         waiamhkprSLIJr43yPd/8GJAMieeO0V3G/xGj0ZJDbJTRtIQkaIkvt4isVf7uefiMApI
-         gOAgQBTuL9uugaanTAMdfRa+HS2uhSv0Z+/dMazFugaIfQXvlfBbbeYyiqKCZvD5vn0i
-         NSfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkNZayxiVk8b2W6N8auIYgeiVIQLFc4cJL96nNnxLfmkrMK11sQTixTgOCcUEe9UNp7o2mRZ7qpmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg6OQHnwWHGoGvu29mkgRnhddKotQWgpIU4opuewwfSM0BUjAa
-	/c58HAFmHz2SikMBWbcyT+71gq/6SZCbPhF9PlFFYKxbIv5JX2vDsoOJlIeU4g==
-X-Gm-Gg: ASbGncskoeLgA1hc+RcgGOYnqB7mLwTBgy6q7nleOwMG7Jhz90x/AIXo9On/kqSh9Em
-	pdj3s8heCqDg41qTvrgL7fKwLKifKl++7f/XezDfEGD76/5dgy5eGAEq2sOLu8cGER0lIKSntEU
-	UBjTRvH2tRfTsyLraPFhT9tcUMagN6St8x1M8b9X9ig24PqkAc63TnU1dJWeFm168SsNsQYmEmB
-	uhS4ypjNnrGTV5erU6FqLdSTjfog/cDfDPZvYm7tGy2HmW9OVwSgKQcZAQEfwH+jIYO0IN3dH7U
-	CI4jCL/dHU+2zJ7D3qigOLUsKUWXJChRyi4tD4TuiyI897tKUTs0gg==
-X-Google-Smtp-Source: AGHT+IE8xaP7gnD8F/5xNGraXuOjC5ioTqc6szU4p31LKem0A/5JV3SxYxZJSVmaL3fJhJ5WcSXIAg==
-X-Received: by 2002:a05:6a00:884:b0:730:97a6:f04 with SMTP id d2e1a72fcca58-73dc1494019mr9292391b3a.7.1745074771096;
-        Sat, 19 Apr 2025 07:59:31 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf90bd8csm3411547b3a.79.2025.04.19.07.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 07:59:30 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,
-	Marc Zyngier <maz@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Janne Grunau <j@jannau.net>,
-	Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
+	s=arc-20240116; t=1745076646; c=relaxed/simple;
+	bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ti17lqHbCON2jdLEZmzsy2kys466Bas8u5XvAfHoiBAlqukOGGy9Z8KTyaRseiSaL4WwKXbS06GNfNFV+NcEaUhk3r3TnsFJBOrO49tzDv9WJcykqKJZTq488p3U8dgZBmIX4YK8zoY4l+uuM3u29XvQaa1vaX1sHiCTtnRljuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqy9yxI0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745076645; x=1776612645;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=EJY6VnbO/oorT+t/r51LBHIJCvd7pfE+OXcRXcdWp/Y=;
+  b=kqy9yxI0ZfoOWs1glYcuiUfAd8IeLhIOjzDKlyVWWtXmPI8Z9C3j6jdY
+   xg8nQpw9MkLbdPvL8dbzKq056ND84nxA0H+5Qujl7xO/ooR7uS2K/OOds
+   xAl+EoI3kw/L4UDV6+XO/MuBhtCt9LcHiEcCONqz+TvmGRdhQYERB0RHg
+   M/V4SXIwfEoEHO4b5XXwlXMh8dS4RWo6KnvzNsRFPiB2mIY3wGRL4f0VB
+   xW/6CqPb+7xI7w6rSL8+LulS6lJ4oL0UqgRQRwtzfgvZKF+8945e8fvif
+   qumRL0jDAoG5D4fndeSpAOK3l/R9fwoLOz1iZID/agGds9sJy/s0ohkO4
+   A==;
+X-CSE-ConnectionGUID: OO56U8EaR3y71mlFyqiocg==
+X-CSE-MsgGUID: 2P+9OFUcSfyqAHX5Eluckg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806652"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="46806652"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:44 -0700
+X-CSE-ConnectionGUID: CuoieLxUT1K3ksC/Kut48Q==
+X-CSE-MsgGUID: ZSJTu6nsQF+IEiTNRnHGnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="154517506"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:30:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u6A9I-0000000DqsB-0AwJ;
+	Sat, 19 Apr 2025 18:30:32 +0300
+Date: Sat, 19 Apr 2025 18:30:31 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 00/13] PCI: apple: Add support for t6020
-Date: Sat, 19 Apr 2025 20:29:18 +0530
-Message-ID: <174507447951.53343.12422475035572217541.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
-References: <20250401091713.2765724-1-maz@kernel.org>
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
+ for x86
+Message-ID: <aAPBl7qdbUizMQko@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-12-herve.codina@bootlin.com>
+ <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+ <20250408154925.5653d506@bootlin.com>
+ <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
+ <20250418151036.719f982b@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250418151036.719f982b@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Fri, Apr 18, 2025 at 03:10:36PM +0200, Herve Codina wrote:
+> On Tue, 8 Apr 2025 17:34:54 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
+> > > On Mon, 7 Apr 2025 18:36:28 +0300
+> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
+> > > > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:  
 
-On Tue, 01 Apr 2025 10:17:00 +0100, Marc Zyngier wrote:
-> As Alyssa didn't have the bandwidth to deal with this series, I have
-> taken it over. All bugs are therefore mine.
+...
+
+> > > > This is incorrect, they never had ACPI to begin with. Also there is third
+> > > > platform that are using DT on x86 core — SpreadTrum based phones.  
+> > > 
+> > > I will rework the commit log to avoid 'mixing ACPI and device-tree'
+> > > 
+> > > For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
+> > > I could use to filter our this x86 systems?  
+> > 
+> > Hmm... good question. I don't think it was anything. The Airmont core just
+> > works and doesn't require anything special to be set. And platform is x86 with
+> > the devices that are established on ARM, so nothing special in device tree
+> > either, I suppose. Basically any x86 platform with OF should be excluded,
+> > rather think of what should be included. But I see that as opposite
+> > requirements to the same function. I have no idea how to solve this. Perhaps
+> > find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
+> > Especially if we want to install a custom kernel there...
+> > 
+> > > Anything I find upstream related to SpreadTrum seems base on ARM cpus.
+> > > I probably miss something.  
+> > 
+> > There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
+> > DT code were made to support those cases.
+> > 
+> > > > And not sure about AMD stuff (Geode?).  
+> > > 
+> > > Same here, if some AMD devices need to be filtered out, is there a specific
+> > > Kconfig symbol I can use ?  
+> > 
+> > This is question to AMD people. I have no clue.
+> > 
+> > [1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
+> > 
+> > [2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
+> > and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
 > 
-> The initial series [1] stated:
+> I have tried to find a solution for this topic.
 > 
-> "This series adds T6020 support to the Apple PCIe controller. Mostly
->  Apple shuffled registers around (presumably to accommodate the larger
->  configurations on those machines). So there's a bit of churn here but
->  not too much in the way of functional changes."
+> Indeed, this patch enables fw_devlink based on device-tree on all x86
+> platform except OLPC and CE4100.
 > 
-> [...]
+> You have mentioned some other x86 based system that could have issues with
+> fw_devlink and it seems to be hard to have a complete list of systems for
+> which we should not enable fw_devlink (potential issues and so regression
+> against current kernel behavior).
+> 
+> As you also proposed, we can thing on the opposite direction and enable
+> fw_devlink on x86 systems that need it.
+> 
+> We need it because we need the device-tree description over PCI device feature
+> (CONFIG_PCI_DYNAMIC_OF_NODES) on x86 in order to support the LAN966x use case.
+> 
+> What do you think about the following condition?
+> 
+> 	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
+>  		return 0; /* Not enabled */
+> 
+> CONFIG_PCI_DYNAMIC_OF_NODES has already to set explicitly by the user.
+> 
+> Do you think it makes sense and could be a good alternative instead of
+> filtering out a list of x86 systems ?
 
-Applied, thanks! 
+At least this won't break old platforms that won't set that configuration
+option. Ideally, of course, it would be nice to have some kind of detection
+at run-time...
 
-[01/13] PCI: apple: Set only available ports up
-        commit: 751bec089c4eed486578994abd2c5395f08d0302
-[02/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
-        commit: 6b7f49be74758a60b760d6c19a48f65a23511dbe
-[03/13] PCI: host-generic: Extract an ecam bridge creation helper from pci_host_common_probe()
-        commit: 03d6077605a24f6097681f7938820ac93068115e
-[04/13] PCI: ecam: Allow cfg->priv to be pre-populated from the root port device
-        commit: f998e79b80da3d4f1756d3289f63289fb833f860
-[05/13] PCI: apple: Move over to standalone probing
-        commit: cf3120fe852f5a5ff896aa3b2b6a0dfd9676ac31
-[06/13] PCI: apple: Dynamically allocate RID-to_SID bitmap
-        commit: d5d64a71ec55235810b4ef8256c7f400b24d7ce8
-[07/13] PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private interrupts
-        commit: 0dcb32f3e12e56f5f3bc659195e5691acbfb299d
-[08/13] PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-        commit: 02a982baee109180da03bb8e7e89cf63f0232f93
-[09/13] PCI: apple: Move port PHY registers to their own reg items
-        commit: 5da38e665ad59b15e4b8788d4c695c64f13a53e7
-[10/13] PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-        commit: 3add0420d2574344fc2b29d70cfde25bd9d67d47
-[11/13] PCI: apple: Use gpiod_set_value_cansleep in probe flow
-        commit: 484af093984c35773ee01067b8cea440c5d7e78c
-[12/13] PCI: apple: Abstract register offsets via a SoC-specific structure
-        commit: 0643c963ed0f902e94b813fdcbf97cbea48a6d1a
-[13/13] PCI: apple: Add T602x PCIe support
-        commit: f80bfbf4f11758c9e1817f543cd97e66c449d1b4
-
-I've fixed some trivial conflicts while applying. But please check the end
-result to make sure I didn't mess up:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/apple
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+With Best Regards,
+Andy Shevchenko
+
+
 
