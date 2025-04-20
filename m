@@ -1,96 +1,87 @@
-Return-Path: <linux-pci+bounces-26296-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26297-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6F1FA9469C
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Apr 2025 05:57:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7426A9469F
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Apr 2025 06:01:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 319073A2936
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Apr 2025 03:57:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE36B1758E4
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Apr 2025 04:01:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7387A3B2A0;
-	Sun, 20 Apr 2025 03:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDE31876;
+	Sun, 20 Apr 2025 04:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eNlxmfaN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z5julNA1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDECC2AF19
-	for <linux-pci@vger.kernel.org>; Sun, 20 Apr 2025 03:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDD9184F
+	for <linux-pci@vger.kernel.org>; Sun, 20 Apr 2025 04:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745121468; cv=none; b=O3RYZAzh56bj5MZkrNycjYUn2stOalKJy6w/PTCFuK/IZZEbZeLqo7SZxQYk3D0Mv5QK332kEtfUEewpTGDSxSgP3C6FD0xU0U8cUZTPnM+xhOs2NIjG/DKHQjGbxAHlWtLN+481kGUSsmWOnX7UPgUY5ZGxLYwwFEmpA0HeftE=
+	t=1745121711; cv=none; b=uQRpvNM3uGfKDsx0g0OSZ3dkfkJmT89wzu5yKk6nFpMn7SpHH4O9xm2OGVf2E/ZC5JvrgU1NiK46T53jPfZ/TR3ezTmY11FMmxbMTChS7BXegpzTQRsnfiErzer+NJly7EJazf1K2Vm8KcuNN0tlcoMuwvJGme8tFA7OWyPF+CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745121468; c=relaxed/simple;
-	bh=PnU5VSLjWELsGb55dW1Y0Mr//1GNiwQfxXI4Qvxz49o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGxdhG13mYSGlwix74rMETSWIssHYMxJQhMqVXoMg5OBAVInu9HpgdYDtbsyCSFX6XV+3G7X67qhYCunVsdPDo4Xrqk3pk+cVFY3pIFAr3/1F924PyV5ovjWRR75wkPR9ZXGA4z6/I3hh6u146SzZP5MoqM1pztL7DTE9aTLaGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eNlxmfaN; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1745121711; c=relaxed/simple;
+	bh=RZtdbUfIKfxTkmCM8R+J7evaChpX40eKMSCX+bILPXg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=s3ZzGald1mziODVH3R9cGGMQWjaaTh1RCarXNdYFG/kO9yYxoxqRk4kY7Y3TKz0J/Q++WHhIXGM1+pGGD2aDttfn7/Ee30Aj1gJz9RKj1FHGO6FW8jvhuCs42E+3ZXva+Rq9hL5GvqFG/G2MvvdAhjiJgR2evVMol++EBRTOQJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z5julNA1; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so2248315a12.2
-        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 20:57:46 -0700 (PDT)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b0da25f5216so1823620a12.1
+        for <linux-pci@vger.kernel.org>; Sat, 19 Apr 2025 21:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745121466; x=1745726266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1745121709; x=1745726509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d05aik5hC6LDlC1wwpArorOkpaXXSmFvs4JQTlxeA8w=;
-        b=eNlxmfaNRnpovhlhP+Y5UsPDDcctj/PZEofhDfrnzj3oJNlv8pwh80EoBrTK97xZN4
-         jU2Nx+ipPrgpUIWLUhFQ8qnBjJAj/IiKzfY7pkSEeZzhlcQra4wlq+PES1o2hVtGvB9K
-         UlPqAkVCD7tvE8+jmbfndI5nO6nNBL6dg0LneRYWQwchTX4WVIMtRw/8dS6WzL8so/r2
-         IyAIglgIM4FFunCPw+zxhyAXzLlqFee/ZUwAfrxgsQs+SmDmPd1fwvzD7gjeVuxSXKsd
-         f4kw3Uu1XPGylI/EGp4pCuG7ZGhP2vRsQEX0l2VAKGakMG+A9cm7caTw5zbIf5R/GDSQ
-         WIOg==
+        bh=qOrGRGfF/X+TBJyjdMVwiIdhbKamtHZWIXIJH1oh0q0=;
+        b=Z5julNA1EXrGZK7LR5/nTRcx7wxScd25vfr5UQRCPTyx1rHfQHxkEPFy4S8w7qdIVu
+         VbjJ+yp16ng14uLK2mv8cQ5rxRvVFpx4Tryycz2C4SLTflmlKGjmnk2Z3biRhEhpbu5v
+         pAJ25zOARl4jxwYP63C73ikGXcpc/uNmCCnQi5TR0UYwaj7MkDemTRNLbu3sP8Q6FbmE
+         U0Z3ITA7GiPpwJuUmXFHHZBKyRpVQjKldmKnxR5Yhkn441aHmqzF4Dnr7a2Kl0F/W5+T
+         Ly2OTmoe9dvzBA+/T6/ZghC9Q0/fSRBB8zJAjY8oG9ppz+kt4LhMSupCrglvOU4XbHOM
+         yBxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745121466; x=1745726266;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745121709; x=1745726509;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d05aik5hC6LDlC1wwpArorOkpaXXSmFvs4JQTlxeA8w=;
-        b=IrcIQNRzMEJbtFiaU6jdUgxOpye3dCh4baFFem71pFN5MkzhLi8ZbqfxsvLYZwgpZo
-         YivZE5M+hjCoUqw8OclRUtQdcvSP2xrVAQmlKaYV3vqT/2QpxqojVNn1u8MqC8dxfpME
-         CzmFhrnQGXbB2xKs3dFHSNqgtEGAmwtQmMYZUQlOPxAU930u8+LdqUgDLVNBb9wgi4co
-         O1v7pHuDJfpsRhhTYJMWIwXoslF7eccqYTVuFEgPGH1d2XakatisbMZDXHB0lIKeI4EF
-         MZYIIYWuzn51NDiCmF4Mh4CBSCZRAQoyqgveMcTZ4n6nKwfyUncnzP5SrJ6an7gclTLP
-         ijLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDZvoydxIwDOSOu4ksDUXEebdMEWkqcNDEaUZVzpPkIlkAQtPEN6pR76Ge+9lQbhBuILzyjSuBQic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEL8iRa90nSAaMEPGyK2xvcwG0/ashW3JeKXsA32RCXl0iOoD8
-	ejt2zsQgc3VUDX1Q9VpJ6eEtUrimBmQlaSeO9WIgt0xHc8KlisS9Q9pkguWFF9iMwreUMEgmQtw
-	=
-X-Gm-Gg: ASbGncuD9nsY5mJ8CIWNY/7sv/eowOtFwEcqlDh8ZOzrwUYOGut23y2w4OGPJVp2t+y
-	hKUFqHGmOk/7mnTw7HT3vEsyJsWMmyp2gwgXq01eJ2/iKrdhtLNiamYThqsJn7t7MYmH+oh6JVQ
-	uI5Wpf1JPYilHo7xy2tI45E+/RgPzkXNBQYbvJA3aAWKELiVHftWQxyPN1ZyjQvf3DPsFW4Tw7h
-	8QG/G+ZAbxL7Ev0syTU/t9zXmETreVwkST4cZxXwrhS9oiizy2NFMuVkS/yQtth1qFWYqCqsKWG
-	YLbXH0JKcYsQ68jOgE8qxXS8guUcn5eI7dDN0aZ4tvJ4wuRxv6+i
-X-Google-Smtp-Source: AGHT+IGqRmfFnfaKAG1NQHv5VKFPsQHr8AgFIidnjypNgyYAdT7Q7hhn0ht2DNSI6WuV2LK9EtuJpQ==
-X-Received: by 2002:a17:903:1a30:b0:224:1074:63af with SMTP id d9443c01a7336-22c5360c9d8mr122251965ad.34.1745121466025;
-        Sat, 19 Apr 2025 20:57:46 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4ba5sm41382555ad.120.2025.04.19.20.57.42
+        bh=qOrGRGfF/X+TBJyjdMVwiIdhbKamtHZWIXIJH1oh0q0=;
+        b=rRPgjbVErVyCSJX9tWsmcHatu56cMKSV2e09mXrVRwzen95MwBBY6xKam/mU4I4hry
+         WDycJfJQpPaG2RiZqu/lIbe+uBhQhWYifzdBQO7oyjiKjW9V0cj+DgVnXggvdTry0Dvs
+         lYr0iThUhq6hSQ+9jvBGmy1a3OmpbLkTpeSRsLMv/9SJWLdEq3DEcbt3KI68s37qUlYA
+         oyvBulvr5QTuE6AtLXsyPRxkUOt4TRhRarNPaMcD/o+nTAUxOEvznJfk1YDOl4c+xA8U
+         76y8TbddBCX98AKCKey+4Pgn8DL5D+URKLPwphElu0g7IrSiqmw5sa66fr/dlvAYdyUy
+         4qgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGmqj2LrdKiQC8PHH3RgAoqtGOIwNKkHj0dMWxAqLl24P9XlIfAf6s+ICqwHF334sxjAsp72lku0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfR/lO3Lv2YSgscuQmCfP9slYWS+nK0RZXqPulyjLTAS1nNSw8
+	ULnfCLfmQrVVQX/h06yd3iNRu4vi2mT1gEcTHgfsgLE7QWLwD0UITqkpGhO3RQ==
+X-Gm-Gg: ASbGncs92V8dzfAti/l+8wY8uq1VkDA5P0ULp0dHu3bmamprbSGXyrElq2EvM9Wr1zx
+	0udGSEQhODVR3daLkW687Ajp4hgyI5a7cdOYewgzxRsCMBP1ZanVNY1yrcsvzw+RNJLwNYsTQ/z
+	HrJ8mPlTcgWTraOvKsJwbNhHOsUEVJ+7IzUvaOznZxyR8J0T4iq7V4fUfS6Ug/ATztjOyyoX1mX
+	mEfH4NSQOpJKxyo+S2ShuQe9oJ7rQaP56qnn6yiqCoqmgjwTdzEjDMJngr3UHEVROV19etFSVdB
+	hTVbkcK4tWz4sQzL1o9IdXDqIOfQllrhdAq9T624Fswy8wVhwbb7og==
+X-Google-Smtp-Source: AGHT+IHgO3P1rmN0JwAW7tDozFXf0SGXvXbGA0YI1vlldkxeH2TUY9CqJvFC2tNhbHLvji2fOpuPhg==
+X-Received: by 2002:a17:90b:58cd:b0:2ee:9b09:7d3d with SMTP id 98e67ed59e1d1-3087bb6d168mr10943673a91.19.1745121709359;
+        Sat, 19 Apr 2025 21:01:49 -0700 (PDT)
+Received: from [127.0.1.1] ([36.255.17.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087dee8956sm4469659a91.8.2025.04.19.21.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 20:57:45 -0700 (PDT)
+        Sat, 19 Apr 2025 21:01:48 -0700 (PDT)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RESEND] PCI: rockchip-ep: Mark RK3399 as intx_capable
-Date: Sun, 20 Apr 2025 09:27:32 +0530
-Message-ID: <174512144432.5058.6969526836746985984.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416142749.336298-2-cassel@kernel.org>
-References: <20250416142749.336298-2-cassel@kernel.org>
+To: bhelgaas@google.com, kw@linux.com, Niklas Cassel <cassel@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+In-Reply-To: <20250416142825.336554-2-cassel@kernel.org>
+References: <20250416142825.336554-2-cassel@kernel.org>
+Subject: Re: [PATCH RESEND] misc: pci_endpoint_test: Defer IRQ allocation
+ until ioctl(PCITEST_SET_IRQTYPE)
+Message-Id: <174512170695.5723.16265162524139108187.b4-ty@linaro.org>
+Date: Sun, 20 Apr 2025 09:31:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,25 +89,30 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
 
-On Wed, 16 Apr 2025 16:27:49 +0200, Niklas Cassel wrote:
-> RK3399 can raise INTx interrupts, as can be seen by
-> rockchip_pcie_ep_send_intx_irq().
+On Wed, 16 Apr 2025 16:28:26 +0200, Niklas Cassel wrote:
+> Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
+> and 'no_msi'") changed so that the default IRQ vector requested by
+> pci_endpoint_test_probe() was no longer the module param 'irq_type',
+> but instead test->irq_type. test->irq_type is by default
+> IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE)).
 > 
-> This is also in line with the register description of
-> PCIE_CLIENT_LEGACY_INT_CTRL, section "17.6.3 PCIe Client Detail Register
-> Description" of the RK3399 TRM.
+> However, the commit also changed so that after initializing test->irq_type
+> to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type, if
+> the PCI device and vendor ID provides driver_data.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] PCI: rockchip-ep: Mark RK3399 as intx_capable
-      commit: a7d824b2df0d8b9e19c334594cdbffab97ff8d66
+[1/1] misc: pci_endpoint_test: Defer IRQ allocation until ioctl(PCITEST_SET_IRQTYPE)
+      commit: 9d564bf7ab67ec326ec047d2d95087d8d888f9b1
 
 Best regards,
 -- 
 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
 
