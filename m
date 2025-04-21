@@ -1,122 +1,119 @@
-Return-Path: <linux-pci+bounces-26331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BA8FA95061
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 13:46:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6026A95144
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 14:58:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DB66188EAB8
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 11:47:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 601653AD38F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 12:58:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB8E1CAA62;
-	Mon, 21 Apr 2025 11:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEE2B265613;
+	Mon, 21 Apr 2025 12:58:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dKoD5xUD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hOJYzMKp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8FE1DB546;
-	Mon, 21 Apr 2025 11:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BE91DB546;
+	Mon, 21 Apr 2025 12:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236007; cv=none; b=a+dvFtrS52hzsr15GIYMXy+oo2XJUwZ/MxNqNlrw0MX0hSu4uUHd0Ymp4d36Cvu2RbhFJfwRp26hifKSqSEYQiGNTMU8E9yYDxr3hl54a4erFDxIUfCEYDMahKoVXf/fiI5TtPW9wUKb3ld8Iz/LwY8mWvX+UhVtJfCaf3DPH4w=
+	t=1745240310; cv=none; b=XjAhF27D66yJ/0VRa34Lhwshxo3nzXAbguO73dc3TcKGuk5FVonwMVC9Jw2e9ydKc13IEaxpoDxZ0FF3WCkEjg36L89mckoYVvJTeCYqSSw4yc40Q9egMIpPKctiC/vk60n8SG+h1tv1mJVjgNPAZ7zJgNa3UJUewr8hkQ8QiiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236007; c=relaxed/simple;
-	bh=LhoBD6Hk5Y8BDPmeOJbsXnEeNxeHWVAfgyR6c47ax/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jDB2frWnhfpFVip4eMCd9IMXuZ90OM8pQvF0E05I04rF92tEybNmrUxWDPBQ5yoHAWesw5SuB9rHhsQy9+TuDu0A+eEiR5G5kabwV8v83pb1XENn7YHXYQahax4rviYEqacogPqTqpZAGrdIDSDbzWnTYp/S/yj9H6MHVErMGMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dKoD5xUD; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KXn/Q
-	AXx6ktszUXP77q4WQFVEYAlsySZj6s3Mkg/SdA=; b=dKoD5xUDgYwc1EoQAAAjv
-	HxJ8eZLGICvYnFDpZK97WykbiC3p4YlE4sqp9rUPXly4wcQxLXydOhUtcZFrFxhe
-	9s3znTLk37XuNTcO4W85oVpT3o224SMBGXFFvxUBlfPQMWWSIJgBFDiCjIhhfsYw
-	ORhrz4CVkGXLXRajUEFeDA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3zV_vLwZooPBmBg--.44597S2;
-	Mon, 21 Apr 2025 19:45:52 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: dwc: ep: Use FIELD_GET()
-Date: Mon, 21 Apr 2025 19:45:48 +0800
-Message-Id: <20250421114548.171803-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1745240310; c=relaxed/simple;
+	bh=scE+oan0V3netAVnAvlStP1ceftqTg7r+IH2oYiDtA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SDNk5lHRWkXMAIvQXiH+o6vlVEm/03rLIUYjvDj2vdsG6b8+kwu6WleanbIEme6bjEuIN5HpvcdGvMNX97YLd5M/NULvUSRK8URgrFmBpjavsCdxrOPd+yxusqSioMgqxd7AufH5+zKPF1jclAE2g3dUN+uPPpU/eUlQEw0HmrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hOJYzMKp; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745240309; x=1776776309;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=scE+oan0V3netAVnAvlStP1ceftqTg7r+IH2oYiDtA0=;
+  b=hOJYzMKp0lhGZ7TSVyrm0sTHH/Gz47pSB02Y2xGQEuJIMQ+3HJxmLeGn
+   rzGMgLh+o41bPIu9gxBIAPDOgcfReLUfP2+dPs5RNy8UDNKzYNbix8kgP
+   iqWDITwV5b4anueUF2zqnWWl2WKaT98m5VzKGvKLRuoEoqgWqcpdi2cfW
+   nDS8QsgbUVhfotbXZzbZit0crQqD8Y5zHn4i35yyMfvBVoCM002l7RmgS
+   kVurj620U04SqCHhffS6g2brnL2uFdpBdzGbTlIsXgKrzIM+p8HGD1hno
+   KDv4buhM5MAxJv9JJU9wuRZ1565xhi5/ExNrdCE9PwzQ45TWunNLIXiVF
+   g==;
+X-CSE-ConnectionGUID: zpg5nw5aQY+D5iR2zeo+mA==
+X-CSE-MsgGUID: IfQvi4qgTLa7ZfMO9ox1EA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46901430"
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="46901430"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 05:58:28 -0700
+X-CSE-ConnectionGUID: xw4oGS9qTp6pCxf+CYcwUA==
+X-CSE-MsgGUID: 3qeUjkA+TPa1bVpKzRS+nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="132229155"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 21 Apr 2025 05:58:25 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u6qj8-00007j-2d;
+	Mon, 21 Apr 2025 12:58:22 +0000
+Date: Mon, 21 Apr 2025 20:57:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+	Aaron Kling <webgeek1234@gmail.com>
+Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
+Message-ID: <202504212046.SmbccNZH-lkp@intel.com>
+References: <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3zV_vLwZooPBmBg--.44597S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar45uF4kCFWxtw18Zr1fZwb_yoW8uFW3pF
-	18Can0kF1UJF4UXws5ua93A3W5GanxG3y8Cas3GwsIvF9Fvryvq3yqyF9agw1xJF40vr45
-	G3ZrtwnxWFsxA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRyq2_UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx42o2gGKVyjFQAAsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
 
-Use FIELD_GET() and FIELD_PREP() to remove dependences on the field
-position, i.e., the shift value. No functional change intended.
+Hi Aaron,
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-I referred to Bjorn Helgaas' submitted patch.
-https://lore.kernel.org/all/20231010204436.1000644-2-helgaas@kernel.org/
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1a0bf9341542..f3daf46b5e63 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -256,11 +256,11 @@ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
- 		return offset;
- 
- 	reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--	nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
-+	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
- 
- 	for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL) {
- 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--		bar_index = reg & PCI_REBAR_CTRL_BAR_IDX;
-+		bar_index = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, reg);
- 		if (bar_index == bar)
- 			return offset;
- 	}
-@@ -875,8 +875,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
- 
- 	if (offset) {
- 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
--			PCI_REBAR_CTRL_NBAR_SHIFT;
-+		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
- 
- 		/*
- 		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
-@@ -897,7 +896,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
- 			 * is why RESBAR_CAP_REG is written here.
- 			 */
- 			val = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--			bar = val & PCI_REBAR_CTRL_BAR_IDX;
-+			bar = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, val);
- 			if (ep->epf_bar[bar])
- 				pci_epc_bar_size_to_rebar_cap(ep->epf_bar[bar]->size, &val);
- 			else
+[auto build test ERROR on e3a854b577cb05ceb77c0eba54bfef98a03278fa]
 
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+url:    https://github.com/intel-lab-lkp/linux/commits/Aaron-Kling-via-B4-Relay/irqdomain-Export-irq_domain_free_irqs/20250421-110400
+base:   e3a854b577cb05ceb77c0eba54bfef98a03278fa
+patch link:    https://lore.kernel.org/r/20250420-pci-tegra-module-v1-2-c0a1f831354a%40gmail.com
+patch subject: [PATCH 2/2] PCI: tegra: Allow building as a module
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250421/202504212046.SmbccNZH-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504212046.SmbccNZH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504212046.SmbccNZH-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm/probes/kprobes/test-kprobes.o
+ERROR: modpost: "__aeabi_uldivmod" [fs/bcachefs/bcachefs.ko] undefined!
+>> ERROR: modpost: "tegra_cpuidle_pcie_irqs_in_use" [drivers/pci/controller/pci-tegra.ko] undefined!
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
