@@ -1,255 +1,298 @@
-Return-Path: <linux-pci+bounces-26343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 635FAA957E3
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 23:19:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E6EDA957F0
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 23:25:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECA033B45B1
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 21:19:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6279A16F59A
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 21:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313741E9B0C;
-	Mon, 21 Apr 2025 21:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BA8D2165E9;
+	Mon, 21 Apr 2025 21:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hg+9nLHb"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AcsZ+Y8o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010007.outbound.protection.outlook.com [52.103.12.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2112163B2
-	for <linux-pci@vger.kernel.org>; Mon, 21 Apr 2025 21:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745270383; cv=none; b=aMlvRZmDXh6kFiMw/htYxr6aTuwFImLUqDva/iz0YiIfhnjo3sB2p+prWNC+iHD4tJXEagtSUVHU+CqOtd0S5Pu2mBU7hDzvm/T02/B0aB2pnY7iapnLtRrQ+ixJu8SNEXYLaU1rAslCTdQOBB1D2QET3QQcrUOvqdIFvPyPsTM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745270383; c=relaxed/simple;
-	bh=y9paRPe3EBkrJsPVpxL3MgtnKFa8kkeGioBWGvUF2m8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6w+Kk59wDe39Zq1tROvp2wcIYtdNVZZUY8xrhPg0acIqcGGADRUVmmpHo1zCJI7Hb+A+K/kdlQfEC832q6+GXI8XYr6afv50LScfG7X7WdVJHcacc9MpYR1WySbrcseJVNvRY7u4yxymaClwYKohBRIxNycFvq9QgBElhp2Y60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hg+9nLHb; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7369ce5d323so3360049b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 21 Apr 2025 14:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745270380; x=1745875180; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eOxnJAhc6wvN/76rnzdND4XiH0RAh5L8BLwUG18oaZY=;
-        b=hg+9nLHbVMT0DnYLSd3mxuVlld2iRFhdggTzatuUPcldXqDqHfAGgEC8Y8yCopsEqv
-         stQDGzVS1PgnnyJtd0JCd2ChzKXV2RykyH02luphnWpyirskt+ZKu2okx9gTFOz5CDqI
-         HPsstf8gpi+EYZn4x/DQtXI1GLEqL0eIa9b6N/1JcJKy9z6e/2FnKmWtSqBZsRNYLbb1
-         XCfYMHE4ivE5AjetY+ZeC9ToYJXy4a7wmE8cXNCcnpOt6PGn+EWpXCSXuoIb6fGjIR04
-         NZ8TuLvP1A3gWjX0RuBpL2qW7Flfj/j+mjOKj8xUFA1ZtGCLilPyO5WWQyDu87wBAnkd
-         clzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745270380; x=1745875180;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOxnJAhc6wvN/76rnzdND4XiH0RAh5L8BLwUG18oaZY=;
-        b=FBU4mxydC1jytsoIbOz7/7TIBjAB9kuH1wDpWxFFbcp7nBnpDLhgMLmLcM/uM2bjHp
-         n4U/sQCkbxMPCWN8xuaaTomYW9HxqIBuGul6ZWNtw5mopBNLYYf3mhVvU+ySVBJ0LrlG
-         6JwnprYvVG51be1Pq4XmJlzS8PaUuKTm6nLMuRijRyPVnSE2fBy0XLawOUdJfQy57P9s
-         JP8Yz2PNFnYBKkRvKBbeuKbAa4x0JIwj34jpGf4zagQyo5IaxizPAFIKRXXqX9h7uwVg
-         FvM2ViESC3ZbIyzA32X78vuofOxg8ZJbMAQPZB7Gy4+ghXGaz45Jhyqe9w/cxxaShlrh
-         VMMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrzegEWFpNeeAhvzDP81T9cbd1pfbY9RfF1kgQGdlPOf9OzsD8Oid+uEncCp1J/iQ4vtCKeuM1Jac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+6wR3OTeMKq8PEcJScaFjSguNjmGdFi8hxrQdV05wZjTNqT+E
-	IdWAopfEoC1u03ecyJNkdyslj/TuF5pFIGo9YlvT1KvDNsAldNWOJ438I8ch1g==
-X-Gm-Gg: ASbGnctuTwUksp2QY1PrD1BWOXMW6O8dRtQrjwMOicuZE/tAdt2j5ktdgmfeH0Ge9/E
-	1yze0TCEKwUYmoa6w9LC7UUi+HrOlX/All/G5gd1CObGGOahjY4LiZ8tHFIQdAgnvKLobrn/Sij
-	pFA/uQMSD7MRt3DXLjOuQsOXUM76r6sjGQKeILUgc50Nwy8fQnx2YqqUz09wVrifDdZtrgLGpqb
-	Oz1uebi4uKupsiwR4Ve8SjVQd8/QfWHuQ0bCec8wOpR+938+OtGYH9PUBcKpocB1Iq6kmGjHeys
-	jY5ZRt04GgcXEnCl4/TrhKTHSZjcPwnY1qamaUfwX68p1ZOAE+MGzzdwbxAe8HcvqtUEQ9zk5oF
-	bGVHEuQ==
-X-Google-Smtp-Source: AGHT+IFQHuZZplaf8sY7Y2IO0G/qjhqIBZAX4ciEU72ZJiY0NIk0kGrIvFbpMAl14ucHM0THPLNUAw==
-X-Received: by 2002:aa7:88d2:0:b0:736:339b:8296 with SMTP id d2e1a72fcca58-73dc1566852mr17070386b3a.18.1745270380314;
-        Mon, 21 Apr 2025 14:19:40 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfacdb9bsm7051875b3a.155.2025.04.21.14.19.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 14:19:39 -0700 (PDT)
-Date: Mon, 21 Apr 2025 14:19:35 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <aAa2Zx86yUfayPSG@google.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522A01DF72E;
+	Mon, 21 Apr 2025 21:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745270704; cv=fail; b=A53DtSnSK+qk8LQGTUz+CcykLf0UZMqoqBpJAGiBunjI7jeTnfzmW/3NUv7UsJdykTe8pidut+Y5WrE5zVq1LMEQKQPPHOLg7NmXqZ2lPYwU/Tkh5Rd4FWPDKfRhJEBwyBgJ0dXWSEAIUvAa9dNBpAZDVZZLd3qn2Sn0QAP11bI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745270704; c=relaxed/simple;
+	bh=AD4XQs0/3rc+ijhdkzIxOJWAu9s4rFvHAUaWqZjfSR0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xjso0hCPfgRwOd+hi++LclpVpva1EX/PM4D40o4CoDd6OsOkTC6Qe3IiV6W0Frbd9MKwFMsiTjkewYtIyHeiTaz0+rwD961gBTQmXX/evtbQ2TWo2RfbZwCzPzoFzVr/B56ZnrT9RhrI3COAoRk9tfikVyhIDKhERkckOr08wWY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AcsZ+Y8o; arc=fail smtp.client-ip=52.103.12.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fIBE7D2aTyiAwQq9gBwEiLr6/enSgmRY8vPqVojjEfXzYJ6mrWQnHGSwZkkp+iHdBvI430p4APg016I3DxgtW5sqQ7JW4WAcdZUMXbPerU8v2oRPoBNT1jWwDIyNT/W5tr0xCdoFe0Kj1osGiu67QB5J8+5/nGLBRS2rrboi2rvO6O43TGr3v3LFmRMM1vrS8UAjF9+rH+55IL6SULEj/51In9hoyPg72Qd9U6/M0ZvqrtEnRPjq+z+TbWXTSeijreTKAjN4OiB2CHtCnORFZ5Zs6E5v1z34y6qM6NA7bntACPvOMD/M/m0T1bv99uGZV1rCopciYWHKraAkfUBXqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7p3OVLg/dzXY30yhNQr6JvrkpOLkRqd2mrQHQImCngg=;
+ b=v9otex0nDoOxP4fvXgu/QGfKTAt5rXOqs0ZLTfSATjyKOgg/yOfCbR2ktrgYvcBa5kvTqgqjqD4do5JipaVZt4cq1wXROSLSRKnyR/SzzKfi8gjMq14/RzpDK7/gHcdawpwiv+I3K9PGklsTXspPlBGm8tbfXm1ssCJjYfHnpUBg+G5v5wRe50IlebHvTjjy81icUG0ePKsSRIn5jJgJVQZyv+qakE6srfxQzZWEZ2NEkxvyC31WDyN1EZ4dUdOgZbyvWbS0w4iOARTSc1WgNCwjsZoqUtO5mbM5l1lFp3q4D/RG1gT59Ldq2EuqZaKgKLnXTOklQ0OXeB2VG102JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7p3OVLg/dzXY30yhNQr6JvrkpOLkRqd2mrQHQImCngg=;
+ b=AcsZ+Y8oHl6wFezOBJ9FR+2J1s3sHw6LNlxScs9yuNXmbRmbwn7zQR3ohwCk0uHxP0KWvXDTEZAxf1c5HDbDct4D+eyUICdJQIgLMwPYOPpc63iYmOpmsqH3dkf8zMh5EBiB/sdOw8S+4CmeOwAz+sQmW5L2p4Nd1azeGAhT7+A7tCGW+YE4CrIT5lLjkAj/ZZwa8dFhfjRDrW6xI9kRBVZoK4GgwKFqwKUTlkT/5Sa8wwQNOznzVIaQpo/TsqRzMz/sfsXdq40gpwK3MukILgxO+hJZX8L0AyscEX3u7TUe2kzcdffezVwcvOWVfqIMa6GkyCz09H8cxhVJvPcCxQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB8357.namprd02.prod.outlook.com (2603:10b6:510:100::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.21; Mon, 21 Apr
+ 2025 21:24:58 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8678.015; Mon, 21 Apr 2025
+ 21:24:58 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org"
+	<x86@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+Thread-Topic: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions
+ for hypercall arguments
+Thread-Index: AQHbrjFiyn0GJkB9FUywLGBELxbpZ7OunwuAgAAH2aA=
+Date: Mon, 21 Apr 2025 21:24:58 +0000
+Message-ID:
+ <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
+In-Reply-To: <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8357:EE_
+x-ms-office365-filtering-correlation-id: 45931f01-f417-404b-16a0-08dd811af7f7
+x-ms-exchange-slblob-mailprops:
+ ymJijV9pwJk27+axzTH4qfXnaf5wM6uS3dnN6CW9su8qyF8HRJ/i6LlHhD5A62iMFhmAhrnalsr2lHR/b0HzzOFQo+bbn3iK/mCVR7xUr/bvVliL0TQeeBSE7esdlliDa65/KB3Jd+ogYd+QqO+ZZDT4tTvKMo/mfxC/y8/1tLMVHTwz6NABN1t7MyopT6wFQuPXxqHS9o/mJJoermsxVPbk+Dh1wU1TbcKAMwIKPLiyGwAnwA5beDTl5P2I+iX3WwGMX/FvV1Ea/mm6g/MRaiNpHhDpQqszUi9rgnMWWuGEU0xyw2n4/KO5sxwFJSk5zI0Pym4CU57rqy/M5I5koaeClrlSLwzZW3UgdiUmt5QXbuLvaqOSP9weA6hwGNoRLNvMvfvkfFwLtll5b30Y4/y0BVjkqUjjFBF88CJfrCObS1Scsq08FWx79exA+OqjPYR7FDJK15R7tgB7RALcuam93y7ogER4Ab/1Z5hLMmVTDjDGk0+uAeKOXJviTf5RUmGbzrSzMKfEXmQL3iQvbtcO+vPKvK9pH9XnfiGx2rhywcHaqeGmOWtcCVmJrfoCwIvkmcE8b/dLgXWEbhzxChdpXXn+hzqAc0OZTf1W157iPgn51QCrI5clO1z5Y5gmRnkYjVNHEIDl1HqDhR3DCiUQx7Khlh1rK5ws5+unmwAv+6DbEK7FyDsSeEvf4VFK2ZSYD9UZEfD47h5Ee0W7kM8E9UjBbdQ3y9naJQa4/wQ89zKR9lXLW2Fs8o324454Kk6wYYK0xrF16OJMSvuQbTD0+hzSdYsZuQu9AJhYo8mLYejmRMeivnQ0f4U+k3sN
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|15080799006|461199028|8062599003|8060799006|102099032|10035399004|3412199025|440099028|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?UFpHQxz8nevLI0+FhHgh5EFpsCK/1zg+RfJM6UAC/gkVLE/Zi8ueriI1jj/f?=
+ =?us-ascii?Q?MDcuYErzlmCErtefRMZRgfqBKevllL2VpGpP90ex2pzZTTQk/BPzkhJYLAVR?=
+ =?us-ascii?Q?zSB0YCEN5tmq2lc3ZKXoy+9WRjU3JNqqCm8wlJaIasiKyxH29gZUXo+YU/ah?=
+ =?us-ascii?Q?PWnMD/F2JeSWdvoP1WskpzHX6AMLtic/tsJNnmGy88LcJ3Wb8gzr85rZxbxO?=
+ =?us-ascii?Q?nkrJ266J0+DJGOyDUcYaHfUGA7aGSSgL8ogP82v578vi6+bOZbDqin76h3lt?=
+ =?us-ascii?Q?W4nMpCWfqXtmkuAKoL+DD6crUpsdnpUhHXuPQO2MAfvO/DACJDHqcI2NdSBY?=
+ =?us-ascii?Q?Q0LdXe2JhlofWQAHSEB1x2vpZZ+BvJuL2PHzgxaza+QgZxBNvy4f3xdAiQZ6?=
+ =?us-ascii?Q?zMCJL5mWeUV+rLMQh9Ayh/Y9TOsgWR5CJ8a96NMIBbKflYdq/D1Zv+MFHvjc?=
+ =?us-ascii?Q?b/Zs63D+bQmF4Rl8gDqDcftYTYC7V3f97YCakP0nTBc8DgCQxk4C9lee1C+e?=
+ =?us-ascii?Q?ksOX9G9C5F9efnF2ufil5sp9bpqpYhAPkal9+H+Wfl/3oxbDSkQQJFCGgLaP?=
+ =?us-ascii?Q?PGCFolx9BuN/XziiTFLfoqOH9WI0HWHVaqbBPtLyonSPl5YFwooKIzTyv+2F?=
+ =?us-ascii?Q?xC3H9Y1pgWJ46t/rVtQV341j5PxDF+WFAmJcligl9hcojXpurJ5mGcb6qTWa?=
+ =?us-ascii?Q?AKgBGSlif9ANRRKNI9dJRp5F03cQ++mQkLvQKihnjQ7BYKtPzPN9+mGfI9Os?=
+ =?us-ascii?Q?7+v3fzPy6KejAqZl5xzZXQ4nvxhATm/egqy74jnT3RnAYum3Ix/j3zJik+9C?=
+ =?us-ascii?Q?Knb68zPCHgCMwWLiXV91ipYgs4DMYI9qVX79gC0Y4kAEuUEv8mDhBBx4Yk9i?=
+ =?us-ascii?Q?tcV9c9A2TQnKzhx0dCv4oDbUpb/gD1Ts3vL+mwD4ncwnGBjQhNgS9TvifMxy?=
+ =?us-ascii?Q?ht+ASX4MSJkMc0uoxnsS0BDcoZegv+lK2aX1h8zqOl+1AYIBOWt+XDwpV9OA?=
+ =?us-ascii?Q?ZM2RzuZPkPDDvsBP6f0nb/N/lJ+ceoHYAG6fuDjg2ks8wvkJDxp4GwrPkXte?=
+ =?us-ascii?Q?uWNHy8LbrneDBaVTlgckxqnn5ytXMpFB+bxeEMqM4KjRCzLF2vqvg3tB2/Lb?=
+ =?us-ascii?Q?ZxN+YYVPCa5trb7dxwOiHi+Wdext/DoUGeGMOmeNPBqOG7uFbdCDJkQ=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?nu2J+F8hl3I7+M/pZKMBjclMCkNJZhRPJ3lhO7Bkw5MBCBIOIWngn3qswvAF?=
+ =?us-ascii?Q?Q3qY+PT973hXycOjxjGDWS9vPmq251cL2kknkJCO9gdSLw2nm/uCT0ZOIyTH?=
+ =?us-ascii?Q?e8LLAKGi6RtFHyT9epJJbVPsJV8bP6uUb3qbbBgaxOef2SL+Dt4TmgiiEQTJ?=
+ =?us-ascii?Q?3LK9l/SKwUR/bNwBZ27tPIw3z65AFGq61wXHEuUJBsZA5c9NDdI6FGOH3Kyy?=
+ =?us-ascii?Q?kcVp2NfOiWXSzV79mQvg+jUBRvOzzE1Eq5FCvEZnAdiuMAJKccIGwJ75prHS?=
+ =?us-ascii?Q?il/WM4uzcE8SpAp+fxreEdNCT83O68XZYDPIu+mj/3Sg1aqp6QPjv+XwzNwz?=
+ =?us-ascii?Q?avadiGSz4Jte0pb9PE+Ghq+ER3Ip0QHYk3Bb2tjxpEsojHoRZ7daNyMiizKY?=
+ =?us-ascii?Q?x4jkxfcGTxFdHJwTNGVoPjCifsxPAmVGGRZJBvgPTok2sUaB721HC+fdI+UE?=
+ =?us-ascii?Q?/GMxyfqqTrA9VXiX9hlO3l+cUu9wpBI+cZXsHDxurPBJHKimjAO4bs5DVXWJ?=
+ =?us-ascii?Q?gdZ/wjSivO9XF0cVqpt+GoxO3SX4yWYZBQqQ3ZoDJh2O6LLcUwh3DC8PY5pI?=
+ =?us-ascii?Q?D5XroGF8d8EUTq/JexsTv2o17x8nus2O8akdNLckfnSQsXZmJdyvh4T6FBOt?=
+ =?us-ascii?Q?yD5EEnmBYW3kSongBdrHdScg9KvNAlmD9YmkOX9zy4mUhxBteRlWDLOCe6S8?=
+ =?us-ascii?Q?PV6ILtLmxNROlp9juA/rcupWwBi3nast+lGnLjAdFYr2TTdyWJeqh4TsGqwH?=
+ =?us-ascii?Q?Ui5418uyv7evfujiMXtfEqiwiBWZJ2Lf/pgZ91Y4Mdt6ScjSJRMBpSf4RX8f?=
+ =?us-ascii?Q?niUzCkMvv7QYIfHBAcVlFVRlyA8BAA1I2RyGAh0aiqvFEHXgY1U3k78Ay9cj?=
+ =?us-ascii?Q?4jCr/tpib+l92N4oKrWEpz++LN1/+weSrU3qQMjHCJI5God6+mwqlLZM73iG?=
+ =?us-ascii?Q?PjqfSFh1ZTCntjazGiFv0wyjFlEInoIsLtuRVU9XLcG0NqKf37mIxNLHWILV?=
+ =?us-ascii?Q?aMTOK4yxbvaBdO2MaAH/NqiGW6tZOkqikQRgOx8ntXkm1bW6dwd/kvoXYYFQ?=
+ =?us-ascii?Q?nWGMv3n4VRiwNu2FrcK8aGZ+LaGRcp3IB7FJU8dVVGJOc938gqLYg3pdy3bT?=
+ =?us-ascii?Q?xVFEZVJMyzoAjaqdeoVwDTgt8SsGIxR0h2bUKNSK/wJuLofdnrMBN/Hct7OQ?=
+ =?us-ascii?Q?Hjn2pcspHwBaZVldYLd4kYQwXqRO6F34n8xiOUcISv07ReFm59bxzC1R/tE?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45931f01-f417-404b-16a0-08dd811af7f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 21:24:58.5414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8357
 
-Hi Robin,
+From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Monday, April 2=
+1, 2025 1:41 PM
+> >
+> > Current code allocates the "hyperv_pcpu_input_arg", and in
+> > some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> > page of memory allocated per-vCPU. A hypercall call site disables
+> > interrupts, then uses this memory to set up the input parameters for
+> > the hypercall, read the output results after hypercall execution, and
+> > re-enable interrupts. The open coding of these steps leads to
+> > inconsistencies, and in some cases, violation of the generic
+> > requirements for the hypercall input and output as described in the
+> > Hyper-V Top Level Functional Spec (TLFS)[1].
+> >
+> > To reduce these kinds of problems, introduce a family of inline
+> > functions to replace the open coding. The functions provide a new way
+> > to manage the use of this per-vCPU memory that is usually the input and
+> > output arguments to Hyper-V hypercalls. The functions encapsulate
+> > key aspects of the usage and ensure that the TLFS requirements are
+> > met (max size of 1 page each for input and output, no overlap of
+> > input and output, aligned to 8 bytes, etc.). Conceptually, there
+> > is no longer a difference between the "per-vCPU input page" and
+> > "per-vCPU output page". Only a single per-vCPU page is allocated, and
+> > it provides both hypercall input and output memory. All current
+> > hypercalls can fit their input and output within that single page,
+> > though the new code allows easy changing to two pages should a future
+> > hypercall require a full page for each of the input and output.
+> >
+> > The new functions always zero the fixed-size portion of the hypercall
+> > input area so that uninitialized memory is not inadvertently passed
+> > to the hypercall. Current open-coded hypercall call sites are
+> > inconsistent on this point, and use of the new functions addresses
+> > that inconsistency. The output area is not zero'ed by the new code
+> > as it is Hyper-V's responsibility to provide legal output.
+> >
+> > When the input or output (or both) contain an array, the new functions
+> > calculate and return how many array entries fit within the per-vCPU
+> > memory page, which is effectively the "batch size" for the hypercall
+> > processing multiple entries. This batch size can then be used in the
+> > hypercall control word to specify the repetition count. This
+> > calculation of the batch size replaces current open coding of the
+> > batch size, which is prone to errors. Note that the array portion of
+> > the input area is *not* zero'ed. The arrays are almost always 64-bit
+> > GPAs or something similar, and zero'ing that much memory seems
+> > wasteful at runtime when it will all be overwritten. The hypercall
+> > call site is responsible for ensuring that no part of the array is
+> > left uninitialized (just as with current code).
+> >
+> > The new functions are realized as a single inline function that
+> > handles the most complex case, which is a hypercall with input
+> > and output, both of which contain arrays. Simpler cases are mapped to
+> > this most complex case with #define wrappers that provide zero or NULL
+> > for some arguments. Several of the arguments to this new function
+> > must be compile-time constants generated by "sizeof()"
+> > expressions. As such, most of the code in the new function can be
+> > evaluated by the compiler, with the result that the code paths are
+> > no longer than with the current open coding. The one exception is
+> > new code generated to zero the fixed-size portion of the input area
+> > in cases where it is not currently done.
+> >
+> > [1]
+> https://learn.microsoft/.
+> com%2Fen-us%2Fvirtualization%2Fhyper-v-on-
+> windows%2Ftlfs%2Ftlfs&data=3D05%7C02%7C%7Ceefaa97bb91c4d5c9dfb08dd8114da
+> b3%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638808648755643707%
+> 7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCI
+> sIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D1S=
+2
+> 9jKMjSZgciblHrJzH1rVbPuIORh%2FrU1vFcviBBHE%3D&reserved=3D0
+> >
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> > ---
+> >
+> > Notes:
+> >     Changes in v3:
+> >     * Added wrapper #define hv_hvcall_in_batch_size() to get the batch =
+size
+> >       without setting up hypercall input/output parameters. This call c=
+an be
+> >       used when the batch size is needed for validation checks or memor=
+y
+> >       allocations prior to disabling interrupts.
+> >
+> >     Changes in v2:
+> >     * Added comment that hv_hvcall_inout_array() should always be calle=
+d with
+> >       interrupts disabled because it is returning pointers to per-cpu m=
+emory
+> >       [Nuno Das Neves]
+> >
+> >  include/asm-generic/mshyperv.h | 106 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 106 insertions(+)
+> >
+>
+> This is very cool, thanks for taking the time! I think the function namin=
+g
+> could be more intuitive, e.g. hv_setup_*_args(). I'd not block it for tha=
+t reason,
+> but would be super happy if you would update it. What do you think?
+>
 
-On 02/28/2025, Robin Murphy wrote:
-> In hindsight, there were some crucial subtleties overlooked when moving
-> {of,acpi}_dma_configure() to driver probe time to allow waiting for
-> IOMMU drivers with -EPROBE_DEFER, and these have become an
-> ever-increasing source of problems. The IOMMU API has some fundamental
-> assumptions that iommu_probe_device() is called for every device added
-> to the system, in the order in which they are added. Calling it in a
-> random order or not at all dependent on driver binding leads to
-> malformed groups, a potential lack of isolation for devices with no
-> driver, and all manner of unexpected concurrency and race conditions.
-> We've attempted to mitigate the latter with point-fix bodges like
-> iommu_probe_device_lock, but it's a losing battle and the time has come
-> to bite the bullet and address the true source of the problem instead.
-> 
-> The crux of the matter is that the firmware parsing actually serves two
-> distinct purposes; one is identifying the IOMMU instance associated with
-> a device so we can check its availability, the second is actually
-> telling that instance about the relevant firmware-provided data for the
-> device. However the latter also depends on the former, and at the time
-> there was no good place to defer and retry that separately from the
-> availability check we also wanted for client driver probe.
-> 
-> Nowadays, though, we have a proper notion of multiple IOMMU instances in
-> the core API itself, and each one gets a chance to probe its own devices
-> upon registration, so we can finally make that work as intended for
-> DT/IORT/VIOT platforms too. All we need is for iommu_probe_device() to
-> be able to run the iommu_fwspec machinery currently buried deep in the
-> wrong end of {of,acpi}_dma_configure(). Luckily it turns out to be
-> surprisingly straightforward to bootstrap this transformation by pretty
-> much just calling the same path twice. At client driver probe time,
-> dev->driver is obviously set; conversely at device_add(), or a
-> subsequent bus_iommu_probe(), any device waiting for an IOMMU really
-> should *not* have a driver already, so we can use that as a condition to
-> disambiguate the two cases, and avoid recursing back into the IOMMU core
-> at the wrong times.
-> 
-> Obviously this isn't the nicest thing, but for now it gives us a
-> functional baseline to then unpick the layers in between without many
-> more awkward cross-subsystem patches. There are some minor side-effects
-> like dma_range_map potentially being created earlier, and some debug
-> prints being repeated, but these aren't significantly detrimental. Let's
-> make things work first, then deal with making them nice.
-> 
-> With the basic flow finally in the right order again, the next step is
-> probably turning the bus->dma_configure paths inside-out, since all we
-> really need from bus code is its notion of which device and input ID(s)
-> to parse the common firmware properties with...
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com> # pci-driver.c
-> Acked-by: Rob Herring (Arm) <robh@kernel.org> # of/device.c
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> 
-> v2:
->  - Comment bus driver changes for clarity
->  - Use dev->iommu as the now-robust replay condition
->  - Drop the device_iommu_mapped() checks in the firmware paths as they
->    weren't doing much - we can't replace probe_device_lock just yet...
->  
->  drivers/acpi/arm64/dma.c        |  5 +++++
->  drivers/acpi/scan.c             |  7 -------
->  drivers/amba/bus.c              |  3 ++-
->  drivers/base/platform.c         |  3 ++-
->  drivers/bus/fsl-mc/fsl-mc-bus.c |  3 ++-
->  drivers/cdx/cdx.c               |  3 ++-
->  drivers/iommu/iommu.c           | 24 +++++++++++++++++++++---
->  drivers/iommu/of_iommu.c        |  7 ++++++-
->  drivers/of/device.c             |  7 ++++++-
->  drivers/pci/pci-driver.c        |  3 ++-
->  10 files changed, 48 insertions(+), 17 deletions(-)
-> 
+I'm not particularly enamored with my naming scheme, but it was the
+best I could come up with. My criteria were:
 
-[...]
+* Keep the length reasonably short to not make line length problems
+   any worse
+* Distinguish the input args only, input & output args, and array versions
+* Use the standard "hv_" prefix for Hyper-V related code
 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 6f2a33722c52..1813cfd0c4bd 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -1451,7 +1451,8 @@ static int platform_dma_configure(struct device *dev)
->  		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
->  		ret = acpi_dma_configure(dev, attr);
->  	}
-> -	if (ret || drv->driver_managed_dma)
-> +	/* @drv may not be valid when we're called from the IOMMU layer */
-> +	if (ret || !dev->driver || drv->driver_managed_dma)
->  		return ret;
->  
->  	ret = iommu_device_use_default_domain(dev);
+Using "setup" instead of "hvcall" seems like an improvement to me, and
+it is 1 character shorter.  The "hv" prefix would be there, but they wouldn=
+'t
+refer specifically to hypercalls. I would not add "_args" on the end becaus=
+e
+that's another 5 characters in length. So we would have:
 
-I wanted to report a regression here that was exposed by the new probing
-behavior. On Pixel 6, we load our kernel modules in parallel which means
-probing is done in parallel. This results in a race condition between the IOMMU
-thread and the device probing thread. What I'm seeing is at the top of the
-function `platform_dma_configure()` when we assign
-`drv = to_platform_driver(dev->driver);`, `dev->driver` is NULL which results
-in `drv = 0xf...ffd8`. In parallel, if the driver gets bound to the device
-before we reach the above if-statement, then `dev->driver != NULL` and we will
-de-reference `drv` --  resulting in a kernel panic.
+* hv_setup_in()
+* hv_setup_inout()
+* hv_setup_in_array()
+* hv_setup_inout_array()
+* hv_setup_in_batch_size() [??]
 
-To address this race condition and KP, we need to defer assigning `drv` until
-after we check if the driver is bound. Here is what works for me:
+Or maybe, something like this, or similar, which picks up the "args" string=
+,
+but not "setup":
 
------>8-----
+* hv_hcargs_in()
+* hv_hcargs_inout()
+* hv_hcargs_in_array()
+* hv_hcargs_inout_array()
+* hv_hcargs_in_batch_size() [??]
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 1813cfd0c4bd..6d124447545c 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1440,8 +1440,8 @@ static void platform_shutdown(struct device *_dev)
- 
- static int platform_dma_configure(struct device *dev)
- {
--       struct platform_driver *drv = to_platform_driver(dev->driver);
-        struct fwnode_handle *fwnode = dev_fwnode(dev);
-+       struct platform_driver *drv;
-        enum dev_dma_attr attr;
-        int ret = 0;
- 
-@@ -1451,8 +1451,12 @@ static int platform_dma_configure(struct device *dev)
-                attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
-                ret = acpi_dma_configure(dev, attr);
-        }
--       /* @drv may not be valid when we're called from the IOMMU layer */
--       if (ret || !dev->driver || drv->driver_managed_dma)
-+       /* @dev->driver may not be valid when we're called from the IOMMU layer */
-+       if (ret || !dev->driver)
-+               return ret;
-+
-+       drv = to_platform_driver(dev->driver);
-+       if (drv->driver_managed_dma)
-                return ret;
- 
-        ret = iommu_device_use_default_domain(dev);
---
+I'm very open to any other ideas because I'm not particularly
+happy with the hv_hvcall_* approach.
 
-Please let me know what you think.
-
-Thanks,
-Will
-
-[...]
+Michael
 
