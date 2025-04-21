@@ -1,216 +1,220 @@
-Return-Path: <linux-pci+bounces-26334-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26335-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAE80A95319
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 16:53:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B32E5A9534B
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 17:07:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 943BD1883BF1
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 14:53:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75147188E631
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Apr 2025 15:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C06149DE8;
-	Mon, 21 Apr 2025 14:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4981E1C6FF9;
+	Mon, 21 Apr 2025 15:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YwLdwQCL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJBMGDNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E8A139D0A
-	for <linux-pci@vger.kernel.org>; Mon, 21 Apr 2025 14:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC5514AD20;
+	Mon, 21 Apr 2025 15:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247206; cv=none; b=h6UGrUFwIwXI91RuVWi9PTFzbOGAvxt1dsDeP0S1kOMnABrguW4sOVu74U4RvWeTBBKOawg0rhUrRSuuWDo+8u8FibsTRgkNozJNsD4MHLydAvflkk4cnkfGH5MoLk017zd2sKUfaGJAdLQFOfB21qmV5/4GmYYGEFmN8PV2Jx8=
+	t=1745248051; cv=none; b=KtO9Z2VcOkfvE2e71guSC4XJ3TWSNpyG2Lys8+2FzKGgA5jOsIf1E6X3hb2QvHv63HeFxZ6SnEDTud7c8pZJAxree3jZAjwfLYBsfGbCR2lSwtFfpuF8zvEd2+kpWkhR4PknEU0bPVDzrGJ9wo86HGvw88bikUW05zlnlHCE96A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247206; c=relaxed/simple;
-	bh=LESRlj7KZifRMRVlVUCzrnfPDG7wPoAe3hzr240OKMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lu0JRpgM3DPDctl9ukiySHx4gkJ5vZ0DhK5VBHs5OmZAD5j4+erJEyOOhbe4tOug9f8VoGRTtjarjQNUltxhqWvdpwVExrQ4RUYp1KHDshpVwWq254ANavDIx0u/+B8nAoR9yS7636es3Vtjf62V7yiLP5+P8s+FNRdvXs9e05w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YwLdwQCL; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so41132155ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 21 Apr 2025 07:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745247204; x=1745852004; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TNHDYvZ+kXQIgJtW4CpMeV/F9LD9o9x0KLwHdWA+41Y=;
-        b=YwLdwQCLAEWov1T7OWgmzy8gc0Rnqw4l22N21GWsj5cg8iUdCRnDorD51iL751VAhS
-         EoQQEL2mjF6lN7ly6poJeXis3HhS81SKaQ2gVdiT4bQJfPmB3xd3niPn9ge7u5bnyqX8
-         zGtmiFbXDOjlEQH9qCa8PYeSIA3BXhtV9lJ8NiB8qufmwU9TZ4UTvxZs5r3BpKY85VVR
-         0GK/Ty3sVYUllgwalPDZwHJCa/AapQ8l2eTGlboNb1xTSMg8Jy/aFgJSRAqVZvp7koo5
-         cQvgmqPcDu1JoJr8jTSG9zEhlcDwxO4SiX5oKk1gA4HaujFHpakd+HyNmo5iGKC18eVr
-         fu7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745247204; x=1745852004;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNHDYvZ+kXQIgJtW4CpMeV/F9LD9o9x0KLwHdWA+41Y=;
-        b=qQGn20eEFxToOWToUYZbqULANw3pddqNY79CLJ/Pv98RdsbuW8pt5k/8uOudjuBp8l
-         p2gHDnInYIRmVxvB8tfTXoqYvzBbnAZKylyjxD9gR/0BHtFB2DYZCJVDYlZ6kB0ofSUP
-         jEk3i0YGD343nYc/FcvsZx+crzi57Z1vE+CffT/r1WKXY/eeF92Nolh47Es01xXlHj4I
-         spsB8KMEMsGQT84LamJGZNzBDYLzDogkfIHzKnEVlCOLRtXk/dqqUXymLDv6l1dNpsez
-         kVE9Yc+a2SzP8Grgl7Fk8ILcyrYZ3F2A1MFqGCbC2YZEyVXgVQLUmUJLPJlzlJs6Vm1W
-         SnaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrvvTmzb2UK9AYhovLx2UQrEahMWaymCFJdoP+/FxVOx98qwHeHRGTL3N+TudICdcHu05LjDnynFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx31yw+W6y8vcEpucsj/uDCquVJdrI5OiCN68Q9j5DgEdvXfcXq
-	hyi00zIHxmgwu7EVYiyMiaJ8dD4AZY8bqIeMUnyj08ryQlUY7tHiYXYICkbjng==
-X-Gm-Gg: ASbGncv0Z24lDOSyPbR1I4R1uB12FINK3SQluju965bWQVzQRwxbnnum2sCEyrXDzSY
-	C/yjUJT9IzwFF0uFCCZJGZfrh2Lsyd+6VJo4ANc9jK+f58ds+D+ZXKjQno2b87wdkjoKS/2XHjF
-	2n6BewY0MOPIY2rD8NaPuxIYyAuJyq04FCJgNzyeY+2EFNUTp8svVTkm7M1x2P/wXxKxbTxqwvt
-	qK84UayCCLYr3yIaMJfg3+dOihGnbqdfbCzDHEO8E+gE/Jk91fy4NRGL1m/xb42rHO0eJWUgz7X
-	x9NvieYY0Db89g6KddwyoIdFzRBzeJG8SeVcf8iB5CqrVVw07h+B
-X-Google-Smtp-Source: AGHT+IEFdCxUF0IGkc39Y6ivCpK40FOP5pObjbZbRz+JR102E0UDzHVcUjHWjvl2BLeEpo3bJDhIxA==
-X-Received: by 2002:a17:903:228f:b0:223:653e:eb09 with SMTP id d9443c01a7336-22c5356e485mr145692145ad.7.1745247203811;
-        Mon, 21 Apr 2025 07:53:23 -0700 (PDT)
-Received: from thinkpad ([120.56.203.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ecec61sm66006875ad.182.2025.04.21.07.53.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 07:53:23 -0700 (PDT)
-Date: Mon, 21 Apr 2025 20:23:18 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Niklas Cassel <cassel@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com, 
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <vc6z6pzgk2sjgkghnwfzlmj3dblrvpkfnsmnlb2nnkj2leju7t@uxy3kthse7g6>
-References: <20250417165219.GA115235@bhelgaas>
- <22720eef-f5a3-4e72-9c41-35335ec20f80@163.com>
- <225CC628-432C-4E88-AF2B-17C948B3790B@kernel.org>
- <8af8a418-b808-4a14-9969-1c6d549e1633@163.com>
+	s=arc-20240116; t=1745248051; c=relaxed/simple;
+	bh=po7Jc+hppAfgmCAjsxpSgRbNiUij6SS676p735sVSTg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=JgjflnxgfTQkgfWXxw4GDemerlC767n4Gi1Kr+Hxmz4Jq4DANkIQq5S+ijT8aWEabNqlHyXMukWQ6Lj45DK370JJJYi3ldFvuUVg0Zfm87IoqGo31vWG9Uw3b/+XpfWlVgiuMvpAT4OwvDXVBfyRJfIhl+Z1MoM9BGdl7ub1Sas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJBMGDNV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C44CC4CEE4;
+	Mon, 21 Apr 2025 15:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745248050;
+	bh=po7Jc+hppAfgmCAjsxpSgRbNiUij6SS676p735sVSTg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=lJBMGDNVO4uBX9LI1VO13H154IJ7lr6SHJlYGRo6ifKVh/jTu3cda20YLccPpQT/Z
+	 39LJfcGcsQIh1ieQeTOzWSGyz/IqvTnwvmkpIz+j5wycCU6cB++33OvxUcRRIR58MS
+	 XTkUR250eMUAbK4E/SY0HsErnxC+Gf55Kcmd3dvPF6Y8UGRKOuNebNivoh5v26ILZi
+	 nJzDGuRVPch994rFyDfXipqrb6XzroPj2RUW0Oom11qx45goH6Op/VdlOledHISwV+
+	 fudK0Tf7Vzga2GtiK2KAKFz5pyV10MmCDFK2Bk1ZtKDPQClSYl6K2K2y8Vmd6Km7Q9
+	 9yD8P07nFXXQw==
+Date: Mon, 21 Apr 2025 10:07:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8af8a418-b808-4a14-9969-1c6d549e1633@163.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: helgaas@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, vigneshr@ti.com, devicetree@vger.kernel.org, 
+ kw@linux.com, iommu@lists.linux.dev, nm@ti.com, bhelgaas@google.com, 
+ baocheng.su@siemens.com, jan.kiszka@siemens.com, conor+dt@kernel.org, 
+ lpieralisi@kernel.org, diogo.ivo@siemens.com, kristo@kernel.org, 
+ m.szyprowski@samsung.com, robin.murphy@arm.com, ssantosh@kernel.org, 
+ s-vadapalli@ti.com, krzk+dt@kernel.org, linux-pci@vger.kernel.org
+To: huaqian.li@siemens.com
+In-Reply-To: <20250418073026.2418728-1-huaqian.li@siemens.com>
+References: <20241030205703.GA1219329@bhelgaas>
+ <20250418073026.2418728-1-huaqian.li@siemens.com>
+Message-Id: <174524751981.2425537.9075012529757899431.robh@kernel.org>
+Subject: Re: [PATCH v7 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA
+ isolation
 
-On Sat, Apr 19, 2025 at 01:21:54AM +0800, Hans Zhang wrote:
+
+On Fri, 18 Apr 2025 15:30:18 +0800, huaqian.li@siemens.com wrote:
+> From: Li Hua Qian <huaqian.li@siemens.com>
+> 
+> Changes in v7:
+>  - add schema expressing dependency as suggested on pci-host bindings
+>  - resolve review comments on pci-keystone driver
+>  - add a new patch to make IO_TLB_SEGSIZE configurable
+>  - improve patches based on checkpath.pl
+> 
+> Changes in v6:
+>  - make restricted DMA memory-region available to all pci-keystone
+>    devices, moving property to unconditional section (patch 2)
+> 
+> Changes in v5:
+>  - resolve review comments on pci-host bindings
+>  - reduce DMA memory regions to 1 - swiotlb does not support more
+>  - move activation into overlay (controlled via firmware)
+>  - use ks_init_vmap helper instead of loop in
+>    rework ks_init_restricted_dma
+>  - add more comments to pci-keystone
+>  - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
+> 
+> Changes in v4:
+>  - reorder patch queue, moving all DTS changes to the back
+>  - limit activation to IOT2050 Advanced variants
+>  - move DMA pool to allow firmware-based expansion it up to 512M
+> 
+> Changes in v3:
+>  - fix ti,am654-pvu.yaml according to review comments
+>  - address review comments on ti,am65-pci-host.yaml
+>  - differentiate between different compatibles in ti,am65-pci-host.yaml
+>  - move pvu nodes to k3-am65-main.dtsi
+>  - reorder patch series, pulling bindings and generic DT bits to the front
+> 
+> Changes in v2:
+>  - fix dt_bindings_check issues (patch 1)
+>  - address first review comments (patch 2)
+>  - extend ti,am65-pci-host bindings for PVU (new patch 3)
+> 
+> Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+> against DMA-based attacks of external PCI devices. The AM65 is without
+> an IOMMU, but it comes with something close to it: the Peripheral
+> Virtualization Unit (PVU).
+> 
+> The PVU was originally designed to establish static compartments via a
+> hypervisor, isolate those DMA-wise against each other and the host and
+> even allow remapping of guest-physical addresses. But it only provides
+> a static translation region, not page-granular mappings. Thus, it cannot
+> be handled transparently like an IOMMU.
+> 
+> Now, to use the PVU for the purpose of isolated PCI devices from the
+> Linux host, this series takes a different approach. It defines a
+> restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+> buffers from a static memory carve-out. And to enforce that the devices
+> actually follow this, a special PVU soc driver is introduced. The driver
+> permits access to the GIC ITS and otherwise waits for other drivers that
+> detect devices with constrained DMA to register pools with the PVU.
+> 
+> For the AM65, the first (and possibly only) driver where this is
+> introduced is the pci-keystone host controller. Finally, this series
+> provides a DT overlay for the IOT2050 Advanced devices (all have
+> MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+> Application of this overlay will be handled by firmware.
+> 
+> Due to the cross-cutting nature of these changes, multiple subsystems
+> are affected. However, I wanted to present the whole thing in one series
+> to allow everyone to review with the complete picture in hands. If
+> preferred, I can also split the series up, of course.
+> 
+> Jan
 > 
 > 
-> On 2025/4/18 22:55, Niklas Cassel wrote:
-> > 
-> > 
-> > On 18 April 2025 14:33:08 CEST, Hans Zhang <18255117159@163.com> wrote:
-> > > 
-> > > Dear Bjorn,
-> > > 
-> > > Thanks your for reply. Niklas and I attempted to modify the relevant logic in drivers/pci/probe.c and found that there was a lot of code judging the global variable pcie_bus_config. At present, there is no good method. I will keep trying.
-> > > 
-> > > I wonder if you have any good suggestions? It seems that the code logic regarding pcie_bus_config is a little complicated and cannot be modified for the time being?
-> > 
-> > 
-> > Hans,
-> > 
-> > If:
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 364fa2a514f8..2e1c92fdd577 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2983,6 +2983,13 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
-> >           if (!pci_is_pcie(bus->self))
-> >                   return;
-> >    +       /*
-> > +        * Start off with DevCtl.MPS == DevCap.MPS, unless PCIE_BUS_TUNE_OFF.
-> > +        * This might get overriden by a MPS strategy below.
-> > +        */
-> > +       if (pcie_bus_config != PCIE_BUS_TUNE_OFF)
-> > +               smpss = pcie_get_mps(bus->self);
-> > +
+> Jan Kiszka (7):
+>   dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+>   dt-bindings: PCI: ti,am65: Extend for use with PVU
+>   soc: ti: Add IOMMU-like PVU driver
+>   PCI: keystone: Add support for PVU-based DMA isolation on AM654
+>   arm64: dts: ti: k3-am65-main: Add PVU nodes
+>   arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+>   arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+>     behind PCI RC
 > 
-> Dear Niklas,
+> Li Hua Qian (1):
+>   swiotlb: Make IO_TLB_SEGSIZE configurable
 > 
-> Thank you very much for your reply and thoughts.
+>  .../bindings/pci/ti,am65-pci-host.yaml        |  34 +-
+>  .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+>  arch/arm64/boot/dts/ti/Makefile               |   5 +
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+>  ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+>  drivers/pci/controller/dwc/pci-keystone.c     | 106 ++++
+>  drivers/soc/ti/Kconfig                        |   4 +
+>  drivers/soc/ti/Makefile                       |   1 +
+>  drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+>  include/linux/swiotlb.h                       |   2 +-
+>  include/linux/ti-pvu.h                        |  28 +
+>  kernel/dma/Kconfig                            |   7 +
+>  12 files changed, 801 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+>  create mode 100644 drivers/soc/ti/ti-pvu.c
+>  create mode 100644 include/linux/ti-pvu.h
 > 
-> pcie_get_mps: Returns maximum payload size in bytes
+> --
+> 2.34.1
 > 
-> I guess you want to obtain the DevCap MPS. But the purpose of the smpss
-> variable is to save the DevCtl MPS.
-> 
-> >           /*
-> >            * FIXME - Peer to peer DMA is possible, though the endpoint would need
-> >            * to be aware of the MPS of the destination.  To work around this,
-> > 
-> > 
-> > 
-> > does not work, can't you modify the code slightly so that it works?
-> > 
-> > I haven't tried myself, but considering that it works when walking the bus, it seems that it should be possible to get something working.
-> > 
-> 
-> 
-> After making the following modifications, my test shows that it is normal.
-> If the consideration is not comprehensive. Could Bjorn and Niklas please
-> review my revisions?
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 364fa2a514f8..5b54f1b0a91d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2951,8 +2951,7 @@ static int pcie_bus_configure_set(struct pci_dev *dev,
-> void *data)
->         if (!pci_is_pcie(dev))
->                 return 0;
-> 
-> -       if (pcie_bus_config == PCIE_BUS_TUNE_OFF ||
-> -           pcie_bus_config == PCIE_BUS_DEFAULT)
-> +       if (pcie_bus_config == PCIE_BUS_TUNE_OFF)
->                 return 0;
-> 
->         mps = 128 << *(u8 *)data;
-> @@ -2991,7 +2990,8 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
->         if (pcie_bus_config == PCIE_BUS_PEER2PEER)
->                 smpss = 0;
-> 
-> -       if (pcie_bus_config == PCIE_BUS_SAFE) {
-> +       if ((pcie_bus_config == PCIE_BUS_SAFE) ||
-> +           (pcie_bus_config != PCIE_BUS_TUNE_OFF)) {
->                 smpss = bus->self->pcie_mpss;
-> 
->                 pcie_find_smpss(bus->self, &smpss);
 > 
 > 
 
-As I replied to Niklas, I'd like to limit the changes to platforms having
-controller drivers. So here is my proposal:
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..d32a0f90beb1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3228,6 +3228,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
-         */
-        pci_assign_unassigned_root_bus_resources(bus);
- 
-+       if (pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-+               /* Configure root ports MPS to be MPSS by default */
-+               for_each_pci_bridge(dev, bus) {
-+                       if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+                               continue;
-+
-+                       pcie_write_mps(dev, 128 << dev->pcie_mpss);
-+                       pcie_write_mrrs(dev);
-+               }
-+       }
-+
-        list_for_each_entry(child, &bus->children, node)
-                pcie_bus_configure_settings(child);
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-- Mani
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
--- 
-மணிவண்ணன் சதாசிவம்
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250417 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/ti/' for 20250418073026.2418728-1-huaqian.li@siemens.com:
+
+arch/arm64/boot/dts/ti/k3-am6528-iot2050-basic-pg2.dtb: pcie@5600000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+arch/arm64/boot/dts/ti/k3-am6528-iot2050-basic.dtb: pcie@5600000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-m2.dtb: pcie@5500000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced.dtb: pcie@5600000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-pg2.dtb: pcie@5600000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-sm.dtb: pcie@5500000 (ti,am654-pcie-rc): 'memory-region' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#
+
+
+
+
+
 
