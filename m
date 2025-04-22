@@ -1,145 +1,170 @@
-Return-Path: <linux-pci+bounces-26438-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26439-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 894DDA9769D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 22:16:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA00AA977ED
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 22:45:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5518F3BD841
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 20:15:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D799C177761
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 20:45:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A391EB5C2;
-	Tue, 22 Apr 2025 20:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3D820F070;
+	Tue, 22 Apr 2025 20:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edMk6YdL"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O0fw7DBu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAD117BED0;
-	Tue, 22 Apr 2025 20:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8220228151C
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 20:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745352969; cv=none; b=utzjCjcpi1tkvnq9Ph4XnI5Efy4pNbZoVxaOzMwUniCVsFBZZVk9/2unqAmqBplF8OQYSxymJpU9fLYqUtIU5od75wmAr9PXbh9i3/zoNeBeP2yFc1wJH+5KNl2JJSC2YLV4o6YYlD/OsTkDQJloST/xhrtc500kKs7A+D1ROj8=
+	t=1745354757; cv=none; b=ueQ3TcY7AsRpkyy9ikxUhJK7M3mn8TftbSrw8S1lm/kyuBvJdi0WwkDwz7jQMMwCqc2KZm9gXpXb/vgwmvInPdcMN0Brh/pMJiMYu68zq2YTylyXvW8mZbEsPF5mqXR858OQ4wHPIRwXkSGT5eZDPFrvvNFZX9+HnfAhjZJ+u0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745352969; c=relaxed/simple;
-	bh=Vs7Qc14bKtAKxYTiOYVK2EPyto+5uFtO7mBwDT4QoPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f8GX/a6r/loX02HZye+Ag45QbiZBfnvGJmDqP8BInjJc9dtQUxmlUpWtIlCEE/ZJynBnX+HNhTum4ctU6/Efgl1uBPO7c/Bpi7JaDYn4F2AMRl+Cds5uTvKHzwrpcIs5adVJWin7VL0f0bD4K1Cbbn9aYAThP+8JhvMnnnhuEVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edMk6YdL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47761C4CEE9;
-	Tue, 22 Apr 2025 20:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745352968;
-	bh=Vs7Qc14bKtAKxYTiOYVK2EPyto+5uFtO7mBwDT4QoPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=edMk6YdLw9l4+NApwkWU2Kxhinxf85nQvd47TMEKbr0xvksdvxkpbPtNsqQIPf1oF
-	 qrg3n1uTXjEl1kM2Ty2Ai+OAb+g7/u1RJnp00HL4KTRG6p2cE6t+xAujhvFIjF4IJp
-	 sdwfip/7XQMDLwCZLb4NqGISJhWib6X01q4f+CcuqJLRBkxiXZ8cjcOmxqAQiqlbuC
-	 fxO8BWoLhAvw+aniD6nn8MRijqgWeBXFDYtGeL9TgfZ7nvoMB3d+cjWt6K3r0C6Kem
-	 X1IhQ2n5Zjr6RS0MmTekbJs/jDQa0jrWzTXAjkdO6ypunEXHjAEjHcpgbEXUmeb+JE
-	 YJ821jokCV0Pg==
-Date: Tue, 22 Apr 2025 22:15:34 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-Message-ID: <aAf45sGB8IBRxCB4@gmail.com>
-References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1745354757; c=relaxed/simple;
+	bh=T8MBUVCWxYofTrKp4GRcnmCtd9t0xV55BNUyuCp6fVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hujDAW/F1UO+ORGHCPYxRB+zm3RGRu6DLodg95mvrof4qjAn5ZeSPXGbS64hahqFnLgRR7+0qwIqRRIjENd0N4SdPf73jFddMwxnZT9t4lzBjXB0rirtSuhN/1AwdF6s7KaHGz27U5P9nnrdUSMPMl4hPX+Xhzs0hV78FmE26l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O0fw7DBu; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MI6qX5012895
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 20:45:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Qe1AqUfBNNSz2We8dhDKc49BliCl8BOCKYFYp/kgBg8=; b=O0fw7DBuJnfEFTnJ
+	doKyeUJQmi49b4Mqt75zHKsEGvJz82mtOsWCgUUxG78rmII4YRUWcJ4gQnmAEJDy
+	zxMLNpP25vEBpewt5Fx+vNdvt3kGgrKlhGf/x9nTkMKDx7pCnvvRYBDVkDpB78Te
+	FH/3XL2U6B8lmKf6EA3FX7gQq1i+j4S3NwqQcg36uWuJcjgh3sttd5XSnEEdZG/u
+	SdkiVSovdrKooOQc9+IOdSyxgy9yRMibXmrup+HrckobA6U5LUVi538qAMAus56t
+	PJ10gy/hZihw9nu/MhlBq7nGdJ/SxYJ7t9bvEigrnMbBvLF4ODsjlsyIP+uA01ZE
+	19Sbsg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642svh0p4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 20:45:54 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c555d4ad75so24058785a.0
+        for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 13:45:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745354753; x=1745959553;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qe1AqUfBNNSz2We8dhDKc49BliCl8BOCKYFYp/kgBg8=;
+        b=w3hRPKmAGsoiSVRTpVA9NRUmiGHYIzr0vItsBNPUq4JLxuHeMYGWmKeyyGr8WrXyuz
+         94o07xOoiw0dEbTQKsPqp4cByTFHQGHPP3TnWFTzXCaEews/i/mzXO9DY5oZqCgyxP4r
+         /Dn5E/vdLEUkR350PIxRKvvYrrql420y9O4OrBYaUlu/Ld51NnrlUinMaPqaMnn7xLr7
+         a1fUd52DezETzHAVpLGUfnkHEubPnEfJNVfLcKSqbt9kUT+SvWn9HclxbaojOUwEH6AO
+         ztPvdHY9H9+IL79w6UcHG9Z2Qnhefd6Djoy9bVEXEOtv+EGnPa/XcqV4AjRieIF4igf9
+         1APw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd2W/05b7NWsxpnTEQtgMIDEOZOeEFf5fMh/8n6A2L3pvLKYzCPSdeDNNK5qCBJJ1FLDmunfCvHZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzJiPrV0q8/ugRjB/ty8yfv901ufPnz6ZeHmh6eTv9Ll0f0p+U
+	g3KkpqdUSD8EjKeeGp0HmRX/x5YBt4GdWGMgyAwyHwF8wNZb0ZaHHzRjcn2NJUU5x+14S75Shds
+	u04T4uBCLPOwUc08RK9OwniwDkYkOre4q0LIuAF52cRn6HiXhlke5+Jm3o/s=
+X-Gm-Gg: ASbGncsToSW2EziJGuKG4AdRn1dvQeZk0jlkf68zi4r4LTE9r1RQMEKcau+y0M0YmoB
+	lg6Nlig6YFvJfdzuw6EZxw4KEK3hse4Wrb5vNLkFGG5p4quwR/9LY00XqVSpby4Ok6n6NYu7PHO
+	mpjp7nEEiiSQYXZgC2YLdMrStAr83ppeJ07BYCF6Ns6thryPMVzRdgCZF0tfmazXelrACkTSRJl
+	i2PD3k+6Ej7WWpKygPyWXxtVH5Xw5pDrNDVQKSmoFIYu0D4y8zmFir2BVgRlovPkgimAotjxUUa
+	E/PCxvbFzQ85hMyX0OrJq0PkMws8P1Awtjsd52UBKAnAnGrsT3EUpPI2TDinst2nhLM=
+X-Received: by 2002:a05:620a:2584:b0:7c7:a574:c0ac with SMTP id af79cd13be357-7c94d234d2bmr49139685a.3.1745354753277;
+        Tue, 22 Apr 2025 13:45:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzE1JLopbHa8TgCguglBA6+yMgoTOr4plS4X95RX42YJC/ZKWJV+SYHIWUESjwqyFN1LJYVA==
+X-Received: by 2002:a05:620a:2584:b0:7c7:a574:c0ac with SMTP id af79cd13be357-7c94d234d2bmr49137685a.3.1745354752949;
+        Tue, 22 Apr 2025 13:45:52 -0700 (PDT)
+Received: from [192.168.65.141] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefd8e3sm704214066b.98.2025.04.22.13.45.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 13:45:52 -0700 (PDT)
+Message-ID: <9be69535-08dd-4d60-b007-e9c50e706a58@oss.qualcomm.com>
+Date: Tue, 22 Apr 2025 22:45:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] PCI: qcom: Add support for multi-root port
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-2-1afec3c4ea62@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250419-perst-v3-2-1afec3c4ea62@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Bccuz8YgwkFJJzRmd-WYYBTK6ofvfHPt
+X-Proofpoint-ORIG-GUID: Bccuz8YgwkFJJzRmd-WYYBTK6ofvfHPt
+X-Authority-Analysis: v=2.4 cv=QLJoRhLL c=1 sm=1 tr=0 ts=68080002 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=UglFlXkU1CO26sHhVHIA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_10,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504220155
 
-
-* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-
-> When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-> configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
-> Tag Requester (note: there is currently no 10-Bit Tag support in the
-> kernel). While those can be configured to the recommended values by FW,
-> kernel may decide to overwrite the initial values.
+On 4/19/25 7:19 AM, Krishna Chaitanya Chundru wrote:
+> Move phy, perst handling to root port and provide a way to have multi-port
+> logic.
 > 
-> Unfortunately, there is no mechanism for FW to indicate OS which parts
-> of PCIe configuration should not be altered. Thus, the only option is
-> to add such logic into the kernel as quirks.
+> Currently, qcom controllers only support single port, and all properties
+> are present in the controller node itself. This is incorrect, as
+> properties like phy, perst, wake, etc. can vary per port and should be
+> present in the root port node.
 > 
-> There is a pre-existing quirk flag to disable Extended Tags. Depending
-> on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-> kernel thinks is the best for performance (the largest supported
-> value), resulting in performance degradation instead with these Root
-> Ports. (There would have been a pre-existing quirk to disallow
-> increasing MRRS but it is not identical to rejecting >128B MRRS.)
+> To maintain DT backwards compatibility, fallback to the legacy method of
+> parsing the controller node if the port parsing fails.
 > 
-> Add a quirk that disallows enabling Extended Tags and setting MRRS
-> larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
-> bifurcated to x2. Reject >128B MRRS only when it is going to be written
-> by the kernel (this assumes FW configured a good initial value for MRRS
-> in case the kernel is not touching MRRS at all).
+> pci-bus-common.yaml uses reset-gpios property for representing PERST, use
+> same property instead of perst-gpios.
 > 
-> It was first attempted to always write MRRS when the quirk is needed
-> (always overwrite the initial value). That turned out to be quite
-> invasive change, however, given the complexity of the initial setup
-> callchain and various stages returning early when they decide no changes
-> are necessary, requiring override each. As such, the initial value for
-> MRRS is now left into the hands of FW.
-> 
-> Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
-> 
-> v2:
-> - Explain in changelog why FW cannot solve this on its own
-> - Moved the quirk under arch/x86/pci/
-> - Don't NULL check value from pci_find_host_bridge()
-> - Added comment above the quirk about the performance degradation
-> - Removed all setup chain 128B quirk overrides expect for MRRS write
->   itself (assumes a sane initial value is set by FW)
-> 
->  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
->  drivers/pci/pci.c    | 15 ++++++++-------
->  include/linux/pci.h  |  1 +
->  3 files changed, 39 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index efefeb82ab61..aa9617bc4b55 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
->  
-> +/*
-> + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
-> + * performance with Extended Tags and MRRS > 128B. Workaround the performance
-> + * problems by disabling Extended Tags and limiting MRRS to 128B.
 
-No objections to your fix, just an obligatory:
+[...]
 
- s/Workaround
-  /Work around
+> -static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> +static void qcom_perst_assert_deassert(struct qcom_pcie *pcie, bool assert)
+>  {
+> -	gpiod_set_value_cansleep(pcie->reset, 1);
+> +	struct qcom_pcie_port *port, *tmp;
+> +	int val = assert ? 1 : 0;
 
-:)
+assert is already a boolean - are some checkers complaining?
 
-With that, FWIIW:
+[...]
 
-  Acked-by: Ingo Molnar <mingo@kernel.org>
+> +	/*
+> +	 * In the case of failure in parsing the port nodes, fallback to the
+> +	 * legacy method of parsing the controller node. This is to maintain DT
+> +	 * backwards compatibility.
 
-Thanks,
+It'd be simpler to call qcom_pcie_parse_port on the PCIe controller's
+OF node, removing the need for the if-else-s throughout the patch
 
-	Ingo
+Konrad
+
+
 
