@@ -1,225 +1,324 @@
-Return-Path: <linux-pci+bounces-26397-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26398-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DE8A96BBF
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 15:02:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75603A96CFC
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 15:37:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32408168F78
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:02:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6C3E401085
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9C22135DE;
-	Tue, 22 Apr 2025 13:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C47C28C5CF;
+	Tue, 22 Apr 2025 13:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IyJNqN6k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+be2En9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D9027466;
-	Tue, 22 Apr 2025 13:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F7928C5CD
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 13:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326943; cv=none; b=tQNK02M6LkwSeZRgUwYaFyDPVH62CXiqKZRPfBt+Aswwccw05Z1H7MfMsyAG6vsie1k0E/8FLIngFf5RFa3og/vQ9jbg3//1Q9hw6a1v7oldpko0l2KWl2MIk7mtm2YXDpMXienWE55/ENlu/LHB3qQdNXEm13HIlKsnnkigiAM=
+	t=1745328740; cv=none; b=s3eCxf6yY//ti1+fnlKw7r4hv7ztGIkYU9haQnHJxtbZw+7SE8beZ6kyer4mSJ+XbDjpXKzM36CdLAAiZZ7lOimUO9KYNvrv3gG7Eu65NjkBGZ7QCn0PMgqeAXkAVIS2WHMuOiP3lKzQJc/3Yad+KdkHhcl2/KnxgOSxWkZliJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326943; c=relaxed/simple;
-	bh=XCj1nJ3OncyLNSZrpgZACHzBripTp/bT3l0dBJWMy5A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VFAPalwTYQd+mKNuidNdc/ccVeLWN/Yt78nEWn+Nmq237A9we0PZFE6trmJ4BKSNUFxYCn8CqoGSmh0GHx314TCSgdcx6W6DD9ahs4nXpVkLX0xt7nHpkMy/PM9V4sh5rptnRScqarjsXOf7c+DaaPQDb8Z9pvSJo9zg+EAS7QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IyJNqN6k; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745326941; x=1776862941;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XCj1nJ3OncyLNSZrpgZACHzBripTp/bT3l0dBJWMy5A=;
-  b=IyJNqN6k1cXyuEiSIn2wk0gNTs/dSjsVhMLuLTa5cyYkC8dbsMebZm4v
-   FPbKo6U53sUHIW3ml4nlSWUrksPs9gOcj8ZNvPplnRflDefwH7W4SiBKL
-   1uoW4klmLKatNJFgjTuBYbF9I6/XQu7wg85Y4XJ+x8Egic9hlrYKR16Ki
-   MwU84+qqna5iKcHCGilqaImHtWmTYjCmSbXEH7bHuW1LxgW5oR582vRNi
-   LWGRSs5BzVipqwpQNBjiJR2TQ/K3dhNdXWRZN52lBUVf84gwuQZIkRAFH
-   ZqTdt6niVdmlpru5R9nNXjHCLVmHEXlAIZB6DhJUCR67fTjQP2UYRJO5v
-   w==;
-X-CSE-ConnectionGUID: LlQHuon/Q5GJdbzTj+QrFg==
-X-CSE-MsgGUID: nFeb5vtQT8ar0mqd6759ZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="47012381"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="47012381"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 06:02:20 -0700
-X-CSE-ConnectionGUID: odkkmjBNT1SISieZOSu+Xg==
-X-CSE-MsgGUID: uyldVBgeRpGvdyfHD8RS3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="132549094"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.148])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 06:02:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-Date: Tue, 22 Apr 2025 16:02:07 +0300
-Message-Id: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1745328740; c=relaxed/simple;
+	bh=yb0bAORIiJV71zHJh5Astf8trLHOdf6SdioMB+y2Z44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8KqMdX4WslGw0CiJ5ceP/g0ULUieooBBy8krrP/Z6Hh0b2cc2eut6HyYStelbQ1i1nXzim/PJZlRprYaKfZVqfvlzz1s4Q2kZQHZWOvO6SoG/ESnVtFe5iRHA9oMg71NYsE2w2pH5RMXkM9rwbFH7vBWm25TWSDVaILcCkc5Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+be2En9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73D4C4AF0C;
+	Tue, 22 Apr 2025 13:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745328740;
+	bh=yb0bAORIiJV71zHJh5Astf8trLHOdf6SdioMB+y2Z44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R+be2En9uZtGGwAE/3/GvDniOktIAwv5IBDddIokOKYRePLNoAUt+nCB8JjYf52Le
+	 oqATAiP7UkyweYT6+Zki9SGjz8kJ217QsKOIpCJULfh+7+94QbD2wkkzen7jA76M+W
+	 AiX3HRu4mhtF9+oXpM/ue9/IoUu4ErLV+YQi47PkqhzuWpIM6vQh0HHbmB1tw3If4P
+	 w2TFQIf1oI8QiS34fb/sliddYuY9RtVFXEbJnMegP6D8AclNfK3YfRkvwW+SPBQld3
+	 ifF90vkJ6twHLWkAppbYFaFXGgII4bTyHFndmAbtQFHRC00E+Kk6WdIX9ZU3jagKj/
+	 KgnjqJI3P5iaA==
+Date: Tue, 22 Apr 2025 15:32:16 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: dw-rockchip: Add system PM support
+Message-ID: <aAeaYDJzatvbVC2Q@ryzen>
+References: <1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com>
 
-When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
-Tag Requester (note: there is currently no 10-Bit Tag support in the
-kernel). While those can be configured to the recommended values by FW,
-kernel may decide to overwrite the initial values.
+Hello Shawn,
 
-Unfortunately, there is no mechanism for FW to indicate OS which parts
-of PCIe configuration should not be altered. Thus, the only option is
-to add such logic into the kernel as quirks.
+On Fri, Apr 18, 2025 at 09:45:59AM +0800, Shawn Lin wrote:
+> This patch adds system PM support for Rockchip platforms by adding
+> .pme_turn_off and .get_ltssm hook and tries to reuse possible existing
+> code.
+> 
+> It's tested on RK3576 EVB1 board with Some NVMes and PCIe-2-SATA/XHCI
+> devices. And check the PCIe protocol analyzer to make sure the L2 process
+> fits the spec.
+> 
+>   nvme nvme0: missing or invalid SUBNQN field.
+>   nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
+>   nvme nvme0: 8/0/0 default/read/poll queues
+>   nvme nvme0: Ignoring bogus Namespace Identifiers
+> 
+>   echo N > /sys/module/printk/parameters/console_suspend
+>   echo core > /sys/power/pm_test
+>   echo mem > /sys/power/state
+> 
+>   PM: suspend entry (deep)
+>   Filesystems sync: 0.000 seconds
+>   Freezing user space processes
+>   Freezing user space processes completed (elapsed 0.001 seconds)
+>   OOM killer disabled.
+>   Freezing remaining freezable tasks
+>   Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+> 
+>   ...
+> 
+>   rockchip-dw-pcie 22400000.pcie: PCIe Gen.2 x1 link up
+>   OOM killer enabled.
+>   Restarting tasks ... done.
+>   random: crng reseeded on system resumption
+>   PM: suspend exit
+>   nvme nvme0: 8/0/0 default/read/poll queues
+>   nvme nvme0: Ignoring bogus Namespace Identifiers
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v3:
+> - amend the commit msg suggested by Bjorn
+> - reuse more code suggested by Diederik
+> - bail out EP case suggested by Niklas
+> 
+> Changes in v2:
+> - Use NOIRQ_SYSTEM_SLEEP_PM_OPS
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 197 +++++++++++++++++++++++---
+>  1 file changed, 177 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 56acfea..4bcd4006 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+>  /*
+> @@ -37,8 +38,14 @@
+>  #define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>  #define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>  #define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
+>  #define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>  #define PCIE_CLIENT_INTR_MASK_MISC	0x24
+> +#define PCIE_CLIENT_POWER		0x2c
+> +#define PCIE_CLIENT_MSG_GEN		0x34
+> +#define PME_READY_ENTER_L23		BIT(3)
+> +#define PME_TURN_OFF			(BIT(4) | BIT(20))
+> +#define PME_TO_ACK			(BIT(9) | BIT(25))
+>  #define PCIE_SMLH_LINKUP		BIT(16)
+>  #define PCIE_RDLH_LINKUP		BIT(17)
+>  #define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+> @@ -63,6 +70,7 @@ struct rockchip_pcie {
+>  	struct gpio_desc *rst_gpio;
+>  	struct regulator *vpcie3v3;
+>  	struct irq_domain *irq_domain;
+> +	u32 intx;
+>  	const struct rockchip_pcie_of_data *data;
+>  };
+>  
+> @@ -159,6 +167,13 @@ static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
+>  	return rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
+>  }
+>  
+> +static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
+> +{
+> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +
+> +	return rockchip_pcie_get_ltssm(rockchip) & PCIE_LTSSM_STATUS_MASK;
+> +}
 
-There is a pre-existing quirk flag to disable Extended Tags. Depending
-on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-kernel thinks is the best for performance (the largest supported
-value), resulting in performance degradation instead with these Root
-Ports. (There would have been a pre-existing quirk to disallow
-increasing MRRS but it is not identical to rejecting >128B MRRS.)
+The name rockchip_pcie_get_pure_ltssm() is quite confusing.
 
-Add a quirk that disallows enabling Extended Tags and setting MRRS
-larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
-bifurcated to x2. Reject >128B MRRS only when it is going to be written
-by the kernel (this assumes FW configured a good initial value for MRRS
-in case the kernel is not touching MRRS at all).
+I think what makes most sense is that:
 
-It was first attempted to always write MRRS when the quirk is needed
-(always overwrite the initial value). That turned out to be quite
-invasive change, however, given the complexity of the initial setup
-callchain and various stages returning early when they decide no changes
-are necessary, requiring override each. As such, the initial value for
-MRRS is now left into the hands of FW.
+The current rockchip_pcie_get_ltssm() function is renamed to something like:
+rockchip_pcie_get_ltssm_status_reg()
+or
+rockchip_pcie_get_ltssm_status_reg_raw()
 
-Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Since some of the users of this function want the some other bits in the
+ltssm_status register, that is not the LTSSM state itself.
 
-v2:
-- Explain in changelog why FW cannot solve this on its own
-- Moved the quirk under arch/x86/pci/
-- Don't NULL check value from pci_find_host_bridge()
-- Added comment above the quirk about the performance degradation
-- Removed all setup chain 128B quirk overrides expect for MRRS write
-  itself (assumes a sane initial value is set by FW)
+(This can be done in patch 1/4.)
 
- arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pci.c    | 15 ++++++++-------
- include/linux/pci.h  |  1 +
- 3 files changed, 39 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index efefeb82ab61..aa9617bc4b55 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
- 
-+/*
-+ * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
-+ * performance with Extended Tags and MRRS > 128B. Workaround the performance
-+ * problems by disabling Extended Tags and limiting MRRS to 128B.
-+ *
-+ * https://cdrdv2.intel.com/v1/dl/getContent/837176
-+ */
-+static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-+{
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-+	u32 linkcap;
-+
-+	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-+	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
-+		return;
-+
-+	bridge->no_ext_tags = 1;
-+	bridge->only_128b_mrrs = 1;
-+	pci_info(pdev, "Disabling Extended Tags and limiting MRRS to 128B (performance reasons due to 2x PCIe link)\n");
-+}
-+
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
-+
- /*
-  * Fixup to mark boot BIOS video selected by BIOS before it changes
-  *
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d7c9f64ea24..2ca9cb30fbd3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5941,7 +5941,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
- int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
--	int ret;
-+	int ret, max_mrrs = 4096;
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-@@ -5961,13 +5961,14 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
- 
--	if (bridge->no_inc_mrrs) {
--		int max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->no_inc_mrrs)
-+		max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->only_128b_mrrs)
-+		max_mrrs = 128;
- 
--		if (rq > max_mrrs) {
--			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
--			return -EINVAL;
--		}
-+	if (rq > max_mrrs) {
-+		pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
-+		return -EINVAL;
- 	}
- 
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 0e8e3fd77e96..6dc7a05f4d4b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -603,6 +603,7 @@ struct pci_host_bridge {
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
- 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
-+	unsigned int	only_128b_mrrs:1;	/* Only 128B MRRS */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+The new callback / function pointer, .get_ltssm(), is initialized to a
+function called:
+rockchip_pcie_get_ltssm()
+or
+rockchip_pcie_get_ltssm_state()
 
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
--- 
-2.39.5
+(This can be done in the patch that adds suspend/resume itself (patch 4/4).)
 
+
+> +
+>  static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+>  {
+>  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+> @@ -248,8 +263,46 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  
+> +static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +	struct device *dev = rockchip->pci.dev;
+> +	int ret;
+> +	u32 status;
+> +
+> +	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
+> +	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
+> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
+> +				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
+> +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> +	if (ret) {
+> +		dev_warn(dev, "Failed to send PME_Turn_Off\n");
+> +		return;
+> +	}
+> +
+> +	/* 2. Wait for PME_TO_Ack, bit 9 will be set once received */
+> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_INTR_STATUS_MSG_RX,
+> +				 status, status & BIT(9), PCIE_PME_TO_L2_TIMEOUT_US / 10,
+> +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> +	if (ret) {
+> +		dev_warn(dev, "Failed to receive PME_TO_Ack\n");
+> +		return;
+> +	}
+> +
+> +	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
+> +	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
+> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
+> +				 status, status & PME_READY_ENTER_L23,
+> +				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
+> +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> +	if (ret)
+> +		dev_err(dev, "Failed to get ready to enter L23 message\n");
+> +}
+> +
+>  static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
+>  	.init = rockchip_pcie_host_init,
+> +	.pme_turn_off = rockchip_pcie_pme_turn_off,
+>  };
+>  
+>  /*
+> @@ -404,10 +457,12 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+>  	struct device *dev = rockchip->pci.dev;
+>  	int ret;
+>  
+> -	rockchip->phy = devm_phy_get(dev, "pcie-phy");
+> -	if (IS_ERR(rockchip->phy))
+> -		return dev_err_probe(dev, PTR_ERR(rockchip->phy),
+> -				     "missing PHY\n");
+> +	if (!rockchip->phy) {
+> +		rockchip->phy = devm_phy_get(dev, "pcie-phy");
+> +		if (IS_ERR(rockchip->phy))
+> +			return dev_err_probe(dev, PTR_ERR(rockchip->phy),
+> +					     "missing PHY\n");
+> +	}
+>  
+>  	ret = phy_init(rockchip->phy);
+>  	if (ret < 0)
+> @@ -430,6 +485,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = rockchip_pcie_link_up,
+>  	.start_link = rockchip_pcie_start_link,
+>  	.stop_link = rockchip_pcie_stop_link,
+> +	.get_ltssm = rockchip_pcie_get_pure_ltssm,
+>  };
+>  
+>  static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+> @@ -489,13 +545,32 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockchip, u32 mode)
+> +{
+> +	u32 val;
+> +
+> +	/* LTSSM enable control mode */
+> +	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+> +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+> +
+> +	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
+> +}
+
+I think that the name of this function is misleading.
+
+The comment:
+/* LTSSM enable control mode */
+
+represents:
+the field app_ltssm_enable_enhance
+
+i.e. step 9) in the TRM:
+"Set the app_ltssm_enable_enhance to enable enhance control mode of
+app_ltssm_enable"
+
+See also:
+"app_ltssm_enable_enhance is a new way to control the glue behavior of the
+app_ltssm_enable. It’s advised set app_ltssm_enable_enhance to “1” when the
+version >= 0x50600. The mechanisms of delaying the Hot reset are available
+only in app_ltssm_enable_enhance mode."
+
+
+So I think it is a bit confusing that this new function: rockchip_pcie_ltssm_enable_control_mode()
+is doing that _and_ setting the mode to RC mode / EP mode.
+
+Perhaps:
+
+Add a function that adds:
+rockchip_pcie_enable_enhanced_ltssm_control_mode()
+
+which does:
++     /* Enable the enhanced control mode of signal app_ltssm_enable */
++     val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
++     rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+
+(This can be done in patch 2/4.)
+
+
+Then add a that adds:
+rockchip_pcie_set_controller_mode()
+
+which does:
+rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
+
+(This can be done in patch 3/4.)
+
+
+Kind regards,
+Niklas
 
