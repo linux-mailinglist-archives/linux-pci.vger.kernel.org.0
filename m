@@ -1,54 +1,81 @@
-Return-Path: <linux-pci+bounces-26362-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26361-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F9F6A95E2D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 08:29:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC904A95E27
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 08:28:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8702E1899486
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 06:29:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9592A189958D
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 06:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FAA720FAA8;
-	Tue, 22 Apr 2025 06:28:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9DD21018F;
+	Tue, 22 Apr 2025 06:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QW0rpbca"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D45230BF2;
-	Tue, 22 Apr 2025 06:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5FB4778E;
+	Tue, 22 Apr 2025 06:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303284; cv=none; b=OCIfZ4eR2PotiERZFlfQOAH8BkXaua4eqfMW5cSQS8KGgqdJkxrXwUYCFIREfM3qR6LMCkO0V5fEJCggJY+g7o6+iPelGuievYPbKkTjFdhxip6u0sia2Su9ZvEOGaNpT4GAw9Q0ZLK4LOhbB21hhvobp9TZVThH5m+W3IE2Pss=
+	t=1745303278; cv=none; b=u52VX5lk+4WANkpkwZt2Tkek08rT/8uYSvCCDx9lfFVJp8k/NSxiINOzzXC0trNTcNt/iJ2L7Dgd2Eazl+lq6eutQ68ciwhwgRnRPLCalVCnmQvzlKBiTqkXqFDj2xx+nHAJVeDHMfuqq+0k+ITaJL2cTg8vK7A0/3pvLXygfTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303284; c=relaxed/simple;
-	bh=b/vwyo75mxMndN1Nz5HnL9ekjjoTmFO3t1a2DFAyEms=;
+	s=arc-20240116; t=1745303278; c=relaxed/simple;
+	bh=K/UAYNGW+EGbI1H04eX8UxOvRa4n5wUxixuO/0uoGJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TML2sTu4tmiAT6ieLIc+7gR+qkQT3Elm0jlBaR+geBYz1fxqzaq22PrNERD5OMYUJ2hUi6X3OTSfy0VNTXwthUDThKXT2AMV5uH1RYX7Aq7jWSmZWK7cyxfU+eF8CBBrR9yv1cPH+FGIXq2gP7O+wSRaHZx0/LhZkWoXZrXL2sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 161B4200A2A3;
-	Tue, 22 Apr 2025 08:27:32 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 620411AAC79; Tue, 22 Apr 2025 08:27:52 +0200 (CEST)
-Date: Tue, 22 Apr 2025 08:27:52 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: Potential issue with pci_prepare_to_sleep if there's no platform
- support for D3cold transition
-Message-ID: <aAc26NTVcXy1BCxU@wunner.de>
-References: <62de9027-e4cd-4192-90e8-64f4c4a8fe4b@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qUFvRXDdecCKxXPNQcciMM1owhRX9FxhSiBmf/RRvHtxkheVxtcsSGl+KFW22KR5lT81b9g6FSlrvHNcqhVdfEZaH5wvg0JsiAtp2iD3zQoUhxAtodUZ2CdyZf+PMtO8pGs682G6t2cCncQC490zaR7b4k9JADyRwi24KVPGUEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QW0rpbca; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B52C4CEED;
+	Tue, 22 Apr 2025 06:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745303277;
+	bh=K/UAYNGW+EGbI1H04eX8UxOvRa4n5wUxixuO/0uoGJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QW0rpbcaMDKlHGvmZFs7EWfVYZTF2SFlCR50sPjI+BZbZ+rHRKg33QAuRqAlmeKwl
+	 hw7/8EB+Yc0MAW3Qcc2No4o//tS1EIta9xnfM9gwive45sVzdc1MfufZEM0Je7cU3m
+	 aXN/RYcmHmsTtDrU6rhjAoII86M7gR1jEbLMKaR9rTZKG93G7wFS8Bjt72MK3PgKrb
+	 X182oDyajkgEYMC5steH0iQSzN8PjLNC22mBrm580ovmf0wwFTcBd93ktJ5YL0a7IO
+	 bXn39Vspt4zw+2SnWqR9Y2E16qv8ASf3RlJw/1bovKeC3C1ijPotmMOhEnBsDMenV+
+	 mMzYy0qavmPEA==
+Date: Tue, 22 Apr 2025 09:27:52 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v8 04/24] iommu: add kernel-doc for iommu_unmap and
+ iommu_unmap_fast
+Message-ID: <20250422062752.GA48485@unreal>
+References: <cover.1744825142.git.leon@kernel.org>
+ <d3ad1e84d896aea97ebbd01c414fb1f07dc791d3.1744825142.git.leon@kernel.org>
+ <20250422042330.GA27723@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,39 +84,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <62de9027-e4cd-4192-90e8-64f4c4a8fe4b@gmail.com>
+In-Reply-To: <20250422042330.GA27723@lst.de>
 
-[cc += Rafael, linux-acpi]
-
-On Mon, Apr 21, 2025 at 10:05:59PM +0200, Heiner Kallweit wrote:
-> If there's no platform support for transition to D3cold, then
-> pci_set_power_state(dev, D3cold) still returns 0, even though
-> power state is transitioned to D3hot only. We called
-> pci_enable_wake(dev, D3cold, wakeup) before, therefore PME for
-> D3hot may not be enabled. Is this a bug?
+On Tue, Apr 22, 2025 at 06:23:30AM +0200, Christoph Hellwig wrote:
+> On Fri, Apr 18, 2025 at 09:47:34AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > Add kernel-doc section for iommu_unmap and iommu_unmap_fast to document
+> > existing limitation of underlying functions which can't split individual
+> > ranges.
 > 
-> Background:
-> In __pci_set_power_state we have the following:
-> 
-> error = pci_set_low_power_state(dev, PCI_D3hot, locked);
-> if (pci_platform_power_transition(dev, PCI_D3cold))
-> 	return error;
-> 
-> The acpi_pci_set_power_state() stub returns -ENODEV.
-> Therefore, if error=0,  __pci_set_power_state() will
-> return 0 if pci_platform_power_transition() fails.
+> This actually only adds kerneldoc to iommu_unmap_fast.
 
-pci_prepare_to_sleep() calls pci_target_state() right at the top.
+Thanks, Jason documented iommu_unmap in this patch.
+https://lore.kernel.org/r/3-v3-b3a5b5937f56+7bb-arm_no_split_jgg@nvidia.com
 
-If wakeup is supported and enabled, pci_target_state() is supposed
-to find the deepest power state supporting wakeup.  If D3cold doesn't
-support wakeup, D3hot or a shallower state is returned.
-
-Hence I don't quite understand how the scenario you're describing
-could occur in practice.  Are you seeing actual issues and have tracked
-them down to incorrect handling in pci_prepare_to_sleep()?
-
-Thanks,
-
-Lukas
+I'll update the commit message.
 
