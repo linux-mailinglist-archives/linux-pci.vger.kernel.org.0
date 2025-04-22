@@ -1,123 +1,126 @@
-Return-Path: <linux-pci+bounces-26382-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26383-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A5B2A967D0
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:39:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77393A967CD
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:38:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D65A3188A3BA
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:38:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0367175847
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7935327CCDF;
-	Tue, 22 Apr 2025 11:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D60B27D766;
+	Tue, 22 Apr 2025 11:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ROQuW9o1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJq30b87"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC9F27CB17;
-	Tue, 22 Apr 2025 11:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6271B27CCF2;
+	Tue, 22 Apr 2025 11:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321804; cv=none; b=oFtBAm7GAMCrFLgSsxLMOag6tDwdhw7Hzx2+42GElmuJYuo/7mW/FwZt6+cKXFNJn6ulVOh8kl2YF20ETwCBgWaOg8kgHJTpWS8qctDmTUSzBSgS0q9DDpBkbDus+MLN1uFNUjKQLp7YPuQmVmTiO+DlrKlSPyOby4EDUlrnzO4=
+	t=1745321810; cv=none; b=rXW2JnlFqS1GE72AplJn/I0KLX+ZqEquwboVaZMhfxkLS0+RYepcLEYGvifYOjUZcIRB67ICxYLQhOLAZJnDdG0iEXJZwLeGv0jK5YXibpYo9B6T+v+swGqzQXVwVLhU+zJT+ldk9C7uMjUSTLn5Eg8D969hsLgjKz6f9cK6Eks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321804; c=relaxed/simple;
-	bh=MJldfOx2DArcafcToxkdvndWi6y6RoNm5FQ1BC9jUH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BG6lgFNyR3RxOL9+cprRhg43ueEH32blQP+MeNVnxNP0lfkz3HU/Nf6ODtO405zXCJ8BebCB1CZm0taGyzqUo7Qe659BtUBvAy6REryBpGZCPq1BIzbGBJLK8NgyV79DuxuXyauHJ4y5uNAG3qAgAMUzzYUZM/n8iz0tp/YR/6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ROQuW9o1; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=/h4icl4bJ4iZhQsY5JlIHbZk1g8xMGb+vnYxZQzIJw8=;
-	b=ROQuW9o1y2i4S7lZJHDMjqdJKr9LmZjYaKLRJCSit8lKC5hNJkfJTzirIOYiUJ
-	+ecUGD0PVEsA+Hp9rEKPhBOaZg8zxaNi1GAWSSFleiOuti+CSj5XmH9FZdGWXo5z
-	+lQGOb41PLR38/E0yFP9aNnaQrJAI6PZWbmmilAz3C8pU=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCX+C0efwdoQhSoBg--.12996S2;
-	Tue, 22 Apr 2025 19:36:00 +0800 (CST)
-Message-ID: <255a74b6-c16b-480e-b377-d87b3b6913b6@163.com>
-Date: Tue, 22 Apr 2025 19:35:58 +0800
+	s=arc-20240116; t=1745321810; c=relaxed/simple;
+	bh=r6X7KW5xA2Bid9qqNeraU4aDSG9uP20Keu4UbEk1LHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2UBD4KbZg/6raQShqix+QodTHMA0rZe1f6UY2I/2MT7hzqNwYMTX+NA/gdcA+pVpymO8Iej9DdwWdByFcHJg8TLr6SjhSLtw5qOmBavLfDxCDFZmS+nkzZhbpNVUHesk1JkGQumKIixljgC1LepiSbzz2jCYN+/tYmd1TZQh2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJq30b87; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA605C4CEE9;
+	Tue, 22 Apr 2025 11:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745321809;
+	bh=r6X7KW5xA2Bid9qqNeraU4aDSG9uP20Keu4UbEk1LHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FJq30b87/TflnB9DVVipFNU57Znk7OWclwNiEv1U1CkREJE7TpnQD5/hqoZtIuTZJ
+	 dTPGGSPbMLaLEb2zNkLd3Q778H6VAa8OOBofqBahNpMdxezfgyVohmR6Rd9GiEqit6
+	 rqQQDP3Pc8mFmUp7rVwkCwExrNjkUbpZzr5cC8mMpJGiZVgmXx+K5vas3ebglhBMWf
+	 RVeOeSh6BNTXES/fWcmFmi51oMgzzUf4ye8EeNe7AB8tBKDLrYmlZv3p0jO5PK+S/3
+	 YSBQMCWgd1JztmQ+CpvrmAO4qjEfa68n3WyOSSCxk7QhEyBqnidI1p8GTad9JjjkB8
+	 RxKZi4poFx/gQ==
+Date: Tue, 22 Apr 2025 14:36:43 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nitesh Shetty <nj.shetty@samsung.com>
+Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
+Message-ID: <20250422113643.GE48485@unreal>
+References: <cover.1744825142.git.leon@kernel.org>
+ <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
+ <20250422043955.GA28077@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-To: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250422112830.204374-1-18255117159@163.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250422112830.204374-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCX+C0efwdoQhSoBg--.12996S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr45XryfJw1DGw4xJr15twb_yoW5JFyxp3
-	Z8JFWfur43Jw4Ivan7Cw17ZFy8K3ZrAFyYgw4UKw18Ja40q3W8WFyfKF1F9Fy2qr4xKF12
-	q39rX34I9F4ava7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UsSdgUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOg83o2gHfDNa2wAAsA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422043955.GA28077@lst.de>
 
+On Tue, Apr 22, 2025 at 06:39:56AM +0200, Christoph Hellwig wrote:
+> On Fri, Apr 18, 2025 at 09:47:54AM +0300, Leon Romanovsky wrote:
+> > From: Kanchan Joshi <joshi.k@samsung.com>
+> > 
+> > blk_rq_dma_map API is costly for single-segment requests.
+> > Avoid using it and map the bio_vec directly.
+> 
+> This needs to be folded into the earlier patches or split prep patches
+> instead of undoing work done earlier, preferably combined with a bit
+> of code movement so that the new nvme_try_setup_prp_simple stays in
+> the same place as before and the diff shows it reusing code.
+> 
+> E.g. change
+> 
+> "nvme-pci: use a better encoding for small prp pool allocations" to
+> already use the flags instead of my boolean, and maybe include 
+> abort in the flags instead of using a separate bool so that we
+> don't increase hte iod size.
+> 
+> Slot in a new patch after that that dropping the single SGL segment
+> fastpath if we think we don't need that, although if we need the PRP
+> one I suspect that one would still be very helpful as well.
+> 
+> Add a patch if we want the try_ version of, although when keeping
+> the optimization for SGLs as well that are will look a bit different.
 
+I uploaded new tag dma-split-Apr-22 with the changes. At the end, I
+decided to keep SGL optimized path too, but didn't create separate
+patch for try_* variants as they require block iterator, which is
+introduced in conversion patch only.
 
-On 2025/4/22 19:28, Hans Zhang wrote:
-> 1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
-> 2. PCI: dw-rockchip: Reorganize register and bitfield definitions
-> 3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
 > 
-> ---
-> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
-> 
-> Bjorn Helgaas:
-> These would be material for a separate patch:
-> 
-> - The #defines for register offsets and bits are kind of a mess,
->    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
->    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
->    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
->    names, and they're not even defined together.
-> 
-> - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
->    PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
-> 
-> - PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
->    Sure wouldn't guess that from the names or the order of #defines.
-> 
-> - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
-> 
-> - Submissions based on the following v5 patches:
+> I'm happy to give away my patch authorship credits if that helps with
+> the folding.
 
-I'm very sorry. It should be like this:
-- Submissions based on the following patches:
+I kept you as an author. Please advise if I need to change it to be someone else.
 
-> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
-> ---
-> 
-> Hans Zhang (3):
->    PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
->    PCI: dw-rockchip: Reorganize register and bitfield definitions
->    PCI: dw-rockchip: Unify link status checks with FIELD_GET
-> 
->   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 58 +++++++++----------
->   1 file changed, 29 insertions(+), 29 deletions(-)
-> 
-> 
-> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
-> prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
-> prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
-> prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
-> prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
-
+Thanks
 
