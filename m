@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-26359-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26360-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6651A95DEC
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 08:15:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7368A95DF3
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 08:16:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 753221899162
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 06:16:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EB39177A4E
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 06:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC7D1F460A;
-	Tue, 22 Apr 2025 06:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3563922DF9F;
+	Tue, 22 Apr 2025 06:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="bImHcP36"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="PPSsELLx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F651F4275
-	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 06:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6F9224AF7
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 06:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302502; cv=none; b=r80jp3wpxObdjpuLHMOXwgtAQQzHo/jzp2IhlIsgcGOESJyLjp7zXqQGVc7TUgbyjAjO36KrRL2kA/0A6lqA3pfsy5epX+/RvUxaLL1LwbEq0GSAxFcB4B1EvLmhSPB/530ybcGyOxUTam0jAVD9wTuwqZEZU2wpc2j/G1aU9mg=
+	t=1745302515; cv=none; b=XIHfWzIfiVuj+NZwGF3kmA/dJ9hud/UtmPWqcrTdBl1fFJ/+QRI/UyFTSFAizP8sY1EecR7YYZgWFfeiyvQoqVuwE0YEXzg0bsa7/H2CgfXCjVj14lx9yVUw3Wz4Fc1aeV/xPJ4db0zpIrERw+pa5jLieBKge3lT7xE2gDzWHCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302502; c=relaxed/simple;
-	bh=5mBkSocatgO9jSyNhYC0BuhTkviGB1V5hfeJAbpimJI=;
+	s=arc-20240116; t=1745302515; c=relaxed/simple;
+	bh=RkCsTaz9CwM+ptsTdulur4tyDQBKXuz7vnqvgyJ++yk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KQEWSXXa+XEHCrqzArG+ZHI2upTBtrTTtEnGrxH15OcLBebZZc755d+1+RPEhPcye7XrXqhxdPLES3fl+xe6Ydzv+zCkOLJLJGmJ68JWhQcfP+neYQyYySoD4diiCdiJ+nRL5oM7h68vwNH5buc1xdrKr85UvN98o/0sOG2PDs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=bImHcP36; arc=none smtp.client-ip=185.136.64.226
+	 MIME-Version; b=ky2+joSGzsAmqZp6rkZ2apLN75KHq4JWTGZ8dBSS4rsZe7J9nZZbArSvfrsKZC0bMThoTDOSRPQ/ZRsceVoHcLcRZAttQlCkAsaOJdK0NpgF8630wrIy858bIo3TvTI4kO62PXXoc/jf9p2aBak4D/X3NZxUPP9+rYqifaOkqpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=PPSsELLx; arc=none smtp.client-ip=185.136.64.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 202504220614587d76ca3e7ef0c15bd5
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 20250422061505feeb143e721284edf5
         for <linux-pci@vger.kernel.org>;
-        Tue, 22 Apr 2025 08:14:59 +0200
+        Tue, 22 Apr 2025 08:15:05 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=huaqian.li@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=XNsdU6/xpqG6iIOFThnIblqGVb0yhpa5hT7U9NLK9MM=;
- b=bImHcP36Uq26mv+Yx4Omy2h1FGg6QQ/Vb3epmcVe7Ey+Oz73CvM0gEDmUXLVrkcUa2Kjrt
- v6oITahIjIdq2Y3u/M0rmrPP1xAMtk9FD/5w3lZLzJUdPD3xTkeI7kz++3soGDo8O4rg4DOZ
- kgpsthFg3EEqxjyXylJst0u5UJKJFh6YFayp6zST21QJNy8SIRlO0fxv0ZDIjmcuW71hfDvV
- yJqo1QnnYlgyFwkfPVR3/YY/yfvWwmvAV5hUgVSvYLIcQfhvVeRMgQjO4GoZ+1vuFjq7Tyuz
- 738CgGnaESBud8C7gojXZQJA8Fw9+LUB0gwcbfNVFvBwbqVgqPGlUJUA==;
+ bh=m+k4R1ykPx7LroqQFw7M5Rgek5SdYdedbJKCoZJkpKk=;
+ b=PPSsELLxz40I+fKKy5gLlmgtoxX28eTjkKMrywiLOXmYx+er7Z7hMfKcAda34cLuCbty7I
+ mBHsPeU3QMrPTFmKhpmDrhQDyWEYdC9Mo0LsvRIcbGHO4tkt6X9D8JzDevoqiVOKVJ8wEJLz
+ 7ilRiwGoAtmW2TuWmWh3kKWB/klaWqLIvuNAiU3DUGtK5bWeAk/iiXyIzjeWRnqIc6Mv8wii
+ 0uJflCWv/QrjYpIjeZP92k8mQZX4E+C2osOqU515Fxgn2wxBpeE3ohDFzc7mz3tQJFTI5Lca
+ GBzuVYs9Ul/pKp2pSnIrdGSudBHgf0S5AHrLfQY+GYuC05Jrcav589JQ==;
 From: huaqian.li@siemens.com
 To: helgaas@kernel.org
 Cc: baocheng.su@siemens.com,
@@ -64,9 +64,9 @@ Cc: baocheng.su@siemens.com,
 	s-vadapalli@ti.com,
 	ssantosh@kernel.org,
 	vigneshr@ti.com
-Subject: [PATCH  v8 6/7] arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
-Date: Tue, 22 Apr 2025 14:14:05 +0800
-Message-Id: <20250422061406.112539-7-huaqian.li@siemens.com>
+Subject: [PATCH v8 7/7] arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices behind PCI RC
+Date: Tue, 22 Apr 2025 14:14:06 +0800
+Message-Id: <20250422061406.112539-8-huaqian.li@siemens.com>
 In-Reply-To: <20250422061406.112539-1-huaqian.li@siemens.com>
 References: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
  <20250422061406.112539-1-huaqian.li@siemens.com>
@@ -82,50 +82,90 @@ Feedback-ID: 519:519-959203:519-21489:flowmailer
 
 From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Rewrap the long lines at this chance.
+Reserve a 64M memory region and ensure that all PCI devices do their DMA
+only inside that region. This is configured via a restricted-dma-pool
+and enforced with the help of the first PVU.
+
+Applying this isolation is not totally free in terms of overhead and
+memory consumption. It  makes only sense for variants that support
+secure booting, and generally only when this is actually enable.
+Therefore model it as overlay that can be activated on demand. The
+firmware will take care of this via DT fixup during boot and will also
+provide a way to adjust the pool size.
 
 Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/ti/Makefile               |  5 +++
+ ...am6548-iot2050-advanced-dma-isolation.dtso | 33 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 977c66a3a7c7..e816c03569ff 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -895,8 +895,13 @@ main_gpio1: gpio@601000 {
- 
- 	pcie0_rc: pcie@5500000 {
- 		compatible = "ti,am654-pcie-rc";
--		reg = <0x0 0x5500000 0x0 0x1000>, <0x0 0x5501000 0x0 0x1000>, <0x0 0x10000000 0x0 0x2000>, <0x0 0x5506000 0x0 0x1000>;
--		reg-names = "app", "dbics", "config", "atu";
-+		reg = <0x0 0x5500000 0x0 0x1000>,
-+		      <0x0 0x5501000 0x0 0x1000>,
-+		      <0x0 0x10000000 0x0 0x2000>,
-+		      <0x0 0x5506000 0x0 0x1000>,
-+		      <0x0 0x2900000 0x0 0x1000>,
-+		      <0x0 0x2908000 0x0 0x1000>;
-+		reg-names = "app", "dbics", "config", "atu", "vmap_lp", "vmap_hp";
- 		power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
-@@ -916,8 +921,13 @@ pcie0_rc: pcie@5500000 {
- 
- 	pcie1_rc: pcie@5600000 {
- 		compatible = "ti,am654-pcie-rc";
--		reg = <0x0 0x5600000 0x0 0x1000>, <0x0 0x5601000 0x0 0x1000>, <0x0 0x18000000 0x0 0x2000>, <0x0 0x5606000 0x0 0x1000>;
--		reg-names = "app", "dbics", "config", "atu";
-+		reg = <0x0 0x5600000 0x0 0x1000>,
-+		      <0x0 0x5601000 0x0 0x1000>,
-+		      <0x0 0x18000000 0x0 0x2000>,
-+		      <0x0 0x5606000 0x0 0x1000>,
-+		      <0x0 0x2910000 0x0 0x1000>,
-+		      <0x0 0x2918000 0x0 0x1000>;
-+		reg-names = "app", "dbics", "config", "atu", "vmap_lp", "vmap_hp";
- 		power-domains = <&k3_pds 121 TI_SCI_PD_EXCLUSIVE>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 03d4cecfc001..12c2cee955f2 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -73,8 +73,10 @@ k3-am654-gp-evm-dtbs := k3-am654-base-board.dtb \
+ k3-am654-evm-dtbs := k3-am654-base-board.dtb k3-am654-icssg2.dtbo
+ k3-am654-idk-dtbs := k3-am654-evm.dtb k3-am654-idk.dtbo k3-am654-pcie-usb2.dtbo
+ k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
++	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
+ 	k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie.dtbo
+ k3-am6548-iot2050-advanced-m2-bkey-usb3-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
++	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
+ 	k3-am6548-iot2050-advanced-m2-bkey-usb3.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic-pg2.dtb
+@@ -261,7 +263,10 @@ DTC_FLAGS_k3-am62p5-sk += -@
+ DTC_FLAGS_k3-am642-evm += -@
+ DTC_FLAGS_k3-am642-phyboard-electra-rdk += -@
+ DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced += -@
+ DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced-pg2 += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced-sm += -@
+ DTC_FLAGS_k3-am68-sk-base-board += -@
+ DTC_FLAGS_k3-am69-sk += -@
+ DTC_FLAGS_k3-j7200-common-proc-board += -@
+diff --git a/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+new file mode 100644
+index 000000000000..dfd75d2dc245
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * IOT2050, overlay for isolating DMA requests via PVU
++ * Copyright (c) Siemens AG, 2024
++ *
++ * Authors:
++ *   Jan Kiszka <jan.kiszka@siemens.com>
++ */
++
++/dts-v1/;
++/plugin/;
++
++&{/reserved-memory} {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	pci_restricted_dma_region: restricted-dma@c0000000 {
++		compatible = "restricted-dma-pool";
++		reg = <0 0xc0000000 0 0x4000000>;
++	};
++};
++
++&pcie0_rc {
++	memory-region = <&pci_restricted_dma_region>;
++};
++
++&pcie1_rc {
++	memory-region = <&pci_restricted_dma_region>;
++};
++
++&ti_pvu0 {
++	status = "okay";
++};
 -- 
 2.34.1
 
