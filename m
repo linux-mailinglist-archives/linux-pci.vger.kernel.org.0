@@ -1,113 +1,109 @@
-Return-Path: <linux-pci+bounces-26385-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26386-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE6D8A96801
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:43:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFB6A9680C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:44:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03DBD1642CB
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:43:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9A9F3A4F33
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25ADB433A6;
-	Tue, 22 Apr 2025 11:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F88327BF9E;
+	Tue, 22 Apr 2025 11:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIwB5WIV"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="1le15bX3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13D8F50F;
-	Tue, 22 Apr 2025 11:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B997A1BD01F;
+	Tue, 22 Apr 2025 11:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322220; cv=none; b=EE5JgWdnFkma8n26fqFiYOpp6Enskr1QWuUBU9s1Fu20QVU2e1Pk8N2qlk3v8FFyhOCU1lxnLihz+9iWMe1a0mTHL50AUrSiqTrgxfPZMehSX8AUuJgjztLpaewAO/kLVP8FZCqaM481ytvQ6uoYG1EwWM5Or95+HsdLWFkqUxU=
+	t=1745322284; cv=none; b=NBENtm1cOW+kyDHE+CipR/Q/2PQpHwSxbWNQ+fdQ967YmKI06e2i/LBHlLT0L4yaq3iKb8sude44ap8//IDiK2qFCEQAdgBwwpnJ7xf+7KxqO62ZVRevFl8JH1+rIcQsf4J1YgYldCHudkWo5hMEinewrFWzVIw9dXhMtr0ut/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322220; c=relaxed/simple;
-	bh=VOqgcuQXGdi3HGEckWBW0T3NXXHO43h2bQde17C8TQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RC7glCA954Bac9SLVDYKvep0kUHR82EtVKTN06YI3BO0GAN+20duajmItU5A5TpHPx5aKvPN/E8rTLE1whPEhdDv5pcRY68uIHudDREzoUcIepdu8rnLV3XThIARxU0KZ4+KU6Du0cpwUbbj1PKcbpU0HZ66tRBtrO4y2mXX6tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIwB5WIV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670DBC4CEEF;
-	Tue, 22 Apr 2025 11:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745322219;
-	bh=VOqgcuQXGdi3HGEckWBW0T3NXXHO43h2bQde17C8TQQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QIwB5WIVBHiAVyBY7oG2BnXK7Yy81JtRgE/8tw0AoKP399pDa5JTzt/wHYJCaEMIW
-	 azGjeIs+QL+Z8QoaXYvBvp2b+UmNgeaXfR2xn8/Uy04XgCPeDQooPsh2g/Wiwi+TXc
-	 qYg4WUa2MyxBbd+So8xO5NcDnQjBN4+FpM2xfo31ID5qKdiJeh8Bru9y0ogI45+0el
-	 dojh2bzct7iUAfXTe7LVaesIpbEwKrb/OzJ7U8Qfrbp2c1w9cUV6sHd0DFk9RJpxfz
-	 ht00n46ttF6piQ3GozCe+kF9pED8ymRNOuZi5piteE96bbejI4bVLNbYrYs5LiBWa+
-	 QQXPmw79pIUSQ==
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7302a769534so1046800a34.1;
-        Tue, 22 Apr 2025 04:43:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWY/ceg+NiGd0c0xZxudXqY+tQVe4pGY3qyR7A6s4oeaA++1K0auAQ1N1CmHAr4CahyAoFf/Ah/kgVB@vger.kernel.org, AJvYcCXmf8DnNn+qbIQ7HO3nAoFTXSE8hNhukoKJz3ykyedoOkuOFR2qLBNjwkxhfq00m7cVtInvY5hHxjGN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxjWiSw8GEIqzrDjKTcT1hTbDJmQ+3Z8sA2xWFbjaFtpmh2Xu/
-	n7OYAhqWzjQxrog3ZFjJYqrcAmsC9utlm+YvQxL2O1Y5AJKjKFJimDdeTiFMt05wRUBkyuCzU8+
-	90jjGN18v2I7PE8wI3yj4I0jlPJc=
-X-Google-Smtp-Source: AGHT+IFCxk8nVdfS637xkBJJXCBIB9GPonJFZH1TT3dr+j/gRAiqO7Guj+AeZwZk+zQH76AnqjiSFLnp1DRzHmJWUvg=
-X-Received: by 2002:a05:6870:a54f:b0:2d5:b7b7:2d6e with SMTP id
- 586e51a60fabf-2d5b7b7597bmr2501433fac.38.1745322218747; Tue, 22 Apr 2025
- 04:43:38 -0700 (PDT)
+	s=arc-20240116; t=1745322284; c=relaxed/simple;
+	bh=4+6Uck1wuf+x9FJYWRqaAdpe6qhjv2gI1bnK9Nfhl5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QpkfCiu1epJ5Uid4Kasp1BRCsJZy8vYUbqaU7DPMc/PPJ2Nunv8rlpUD87qD9RZWXcEjhmRM8pwxN7TunzKZacRTyVHMWvaHm83SiSK9UCokVSNEAFW/9TzFm1uFbzTiLv2MXGTXyJoeg7z5gSy1XOtb3ukdWnVyHvYLofDYHoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=1le15bX3; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=7sB1dmuD3GoUpGEiENNK8mtmzVT+tPo02Qc2OEU6BSI=; b=1le15bX3kNYT4sUNY2Wrjt/GOy
+	ii2yyzYgWEbcGsSzMMBiQ+xE+hPzZwy8wUPqDMJEYntpikNZhzaXLFYecyMRHkQyjoPe8iIhrwKDE
+	Ec8uTlmACS5xjGK94UqaO/TiTKUepSRje0NVodc+Vag4d5CYTfdP9egLdQFqHPtxBncnLeHmb3+nG
+	qrhWQPKlZ63/m3gUBPMDeBv+glssWPXZHqLfJefm3WpMIUSzj7NH6BnmRZWd3D21X3381/PYvUJn1
+	MgImJGhPrbFMBsW6YI1N7d7GgP7FioNbCJauCmJ05CR4/YwFl/aksPkTXqz9tACb+JMoeNobg391G
+	fnzu0iwg==;
+Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u7C3I-0002kK-4j; Tue, 22 Apr 2025 13:44:36 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	andersson@kernel.org,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH v9 0/2] rockchip: Add rk3576 pcie dts nodes
+Date: Tue, 22 Apr 2025 13:44:24 +0200
+Message-ID: <174532226023.263993.13596887054519094900.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250414145110.11275-1-kever.yang@rock-chips.com>
+References: <20250414145110.11275-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <62de9027-e4cd-4192-90e8-64f4c4a8fe4b@gmail.com> <aAc26NTVcXy1BCxU@wunner.de>
-In-Reply-To: <aAc26NTVcXy1BCxU@wunner.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 22 Apr 2025 13:43:23 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iWTd_ndpAr=q8QJC2MWSheq0UXVR6a1oyGSH063yzpFw@mail.gmail.com>
-X-Gm-Features: ATxdqUHGwVu31OeFpdX-0QtgAs8fGoucoiud8bDZzbH4-6ZOyqeHzXALINqRgu4
-Message-ID: <CAJZ5v0iWTd_ndpAr=q8QJC2MWSheq0UXVR6a1oyGSH063yzpFw@mail.gmail.com>
-Subject: Re: Potential issue with pci_prepare_to_sleep if there's no platform
- support for D3cold transition
-To: Lukas Wunner <lukas@wunner.de>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 8:28=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
-e:
->
-> [cc +=3D Rafael, linux-acpi]
->
-> On Mon, Apr 21, 2025 at 10:05:59PM +0200, Heiner Kallweit wrote:
-> > If there's no platform support for transition to D3cold, then
-> > pci_set_power_state(dev, D3cold) still returns 0, even though
-> > power state is transitioned to D3hot only. We called
-> > pci_enable_wake(dev, D3cold, wakeup) before, therefore PME for
-> > D3hot may not be enabled. Is this a bug?
 
-On platforms using ACPI, no it isn't.
+On Mon, 14 Apr 2025 22:51:08 +0800, Kever Yang wrote:
+> This patch set adds support for rk3576 pcie by adding the dts node,
+> and this series is a re-base on v6.15-rc1 and collect tags without code
+> change.
+> 
+> Please help take the dt-binding to PCI tree if there is no more change request.
+> 
+> Thanks,
+> Kever
+> 
+> [...]
 
-Internally, pci_enable_wake() evaluates _DSW and it doesn't
-distinguish between D3hot and D3cold as per the spec.
+Applied, thanks!
 
-> > Background:
-> > In __pci_set_power_state we have the following:
-> >
-> > error =3D pci_set_low_power_state(dev, PCI_D3hot, locked);
-> > if (pci_platform_power_transition(dev, PCI_D3cold))
-> >       return error;
-> >
-> > The acpi_pci_set_power_state() stub returns -ENODEV.
-> > Therefore, if error=3D0,  __pci_set_power_state() will
-> > return 0 if pci_platform_power_transition() fails.
->
-> pci_prepare_to_sleep() calls pci_target_state() right at the top.
->
-> If wakeup is supported and enabled, pci_target_state() is supposed
-> to find the deepest power state supporting wakeup.  If D3cold doesn't
-> support wakeup, D3hot or a shallower state is returned.
->
-> Hence I don't quite understand how the scenario you're describing
-> could occur in practice.  Are you seeing actual issues and have tracked
-> them down to incorrect handling in pci_prepare_to_sleep()?
+[2/2] arm64: dts: rockchip: Add rk3576 pcie nodes
+      commit: d4b9fc2af45d2b91b1654c4aaa1edcb4dd8f4918
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
 
