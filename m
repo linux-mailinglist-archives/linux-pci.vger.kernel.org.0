@@ -1,124 +1,94 @@
-Return-Path: <linux-pci+bounces-26418-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26419-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B07BEA973ED
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 19:49:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 211FEA97404
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 19:53:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F5D53A863D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 17:49:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2932B1B61812
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 17:53:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D05B02135BB;
-	Tue, 22 Apr 2025 17:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2C528FFF1;
+	Tue, 22 Apr 2025 17:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDHtQWjS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFDUeYUU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC6D14C5B0;
-	Tue, 22 Apr 2025 17:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADAD19F42C
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 17:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745344170; cv=none; b=URdMR+nhWct4/ffNZjv7Sw2TVhSPByrNxtIDHt34un16LScpp6tHR+CmvXrlEvbPCPkS7R7vdmgXXG1q14FDiApcooJogErju3Ku2uzhyLXra1DrtVL7LfLlkrCnOX2049VvjMX8/PLFhTGVaaMzbCbVXQFZDSafaE0d0yxOiJE=
+	t=1745344401; cv=none; b=nORmJK8Bq9LVVi4oNQMjxDLx59VaGn17ibTW+jyF6OQncfbVBwQK85NNyZioJPim/dYHXgR1oLoyzm1RvTz8xdz3m9rS513Z2hd0UjU++Q0g5CjAG92kbuhQ5MoD1XHsAVBKjPYNGUjEpyRTgUM5VLzu2cGjtvlSHPBWh2iHGAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745344170; c=relaxed/simple;
-	bh=NMUrajeGaevk9etR13v+Zo0jMwWofA3IhBlD3NT/Bow=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=eojbr9ZFiLmFpBEkxBKK8BYDPOxeSXy6EV5Ztu7re1VioYDFSftJ8u6/hGJaI1IHJlmTRncpsGZKAmHovSK6g8E2YbgnFWyVaDN5t8WIJIJCz3ppgVvqS3sl51dcVejGn1k5Zss8o61qeTiDK44P0lc73UD10hw600XhqiTgPbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DDHtQWjS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A13EC4CEE9;
-	Tue, 22 Apr 2025 17:49:30 +0000 (UTC)
+	s=arc-20240116; t=1745344401; c=relaxed/simple;
+	bh=o9Xryt4WwSkId/sswJVfPGkYcQPPaUVMZJnKfvsLbc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=eLb/DRMF0TwR8iv53QOt7sWjOQZwcx9H1+WG6dL0mXnQvbnTQ7GdeowfJi/rnogXzhz/R8idvEFNI3KxfTuTlY+wFFVDYG4KU8wmI6EGRluK1YxuUVVCPcBP3x4JtSzaUpeQMh4qXefFI/QvkEjFS40BsIg6JZ6+uY14Y7ijIq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFDUeYUU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 979B2C4CEE9;
+	Tue, 22 Apr 2025 17:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745344170;
-	bh=NMUrajeGaevk9etR13v+Zo0jMwWofA3IhBlD3NT/Bow=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DDHtQWjSQTxmMHgS3ri1MQSyvjg61Egx4BhiC1VwdoRitk5GEOHPa/2KkpYSWFYbW
-	 QoJuCcmAYrtToxX8CYvWKtjJJ9SE3lH08QQQdU0VURSnEjhJmLm+c4O3u5GndJbYle
-	 ZAsz+XFa2VqkPPVYyLyXt/LGQB5caYC2STVCUzECoRUWVsqMdHeYEfdECSEFWq8WDT
-	 b0zOYmlfaSSlsbW8wsw9SK3PEjv/3PpGqYT+nuo68MR1Kbp1a78qdWDCALzVWsUnI0
-	 cuCmGa3aqrg4y0zJ9P1DbmhOQ0FD7IcEIfIuwnyuTZuYlHuVxLAD/zWBzJZYzswu1k
-	 RG37+XA8DK1Dw==
-Received: from disco-boy.misterjones.org ([217.182.43.188] helo=www.loen.fr)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u7HkN-007ihb-Jq;
-	Tue, 22 Apr 2025 18:49:27 +0100
+	s=k20201202; t=1745344400;
+	bh=o9Xryt4WwSkId/sswJVfPGkYcQPPaUVMZJnKfvsLbc8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RFDUeYUUsBLrvTeU/t/hwsGND30PJ7FsAeY3YQxoQE6lKFO+RhtbqiAQk9Gy/Vlpp
+	 j/fzTmFYGph4KWE2rcLY3RuNkoi86S6TkkyymZx9cPyc7l1Ny36mwMHppeX5L7FxUf
+	 0gORYZO3jEAx0/alzpNgIXxAg2UIRnni/evLwDa8rZlTmlsGRUuuPnFDoRphziV1nt
+	 hEkYjLHSqgWj/k5I6NLPw/OqSkEhBvpV87CUBsfS/WVo5EXJpJz8UlupCyODpBX+a3
+	 zcuAYJKs5vJUSamW1SNkQL/hw9Co5moqsVGvj5DmWiAtHo2xyvbJXTiqTP/SgzuRmc
+	 33QJgFzfNC9Mw==
+Date: Tue, 22 Apr 2025 12:53:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, kw@linux.com, Niklas Cassel <cassel@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH RESEND] misc: pci_endpoint_test: Defer IRQ allocation
+ until ioctl(PCITEST_SET_IRQTYPE)
+Message-ID: <20250422175319.GA373387@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 22 Apr 2025 18:49:27 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne
- Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>, Sven Peter
- <sven@svenpeter.dev>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 07/13] PCI: apple: Move away from INTMSK{SET,CLR} for
- INTx and private interrupts
-In-Reply-To: <20250422174156.GA344533@bhelgaas>
-References: <20250422174156.GA344533@bhelgaas>
-User-Agent: Roundcube Webmail/1.4.15
-Message-ID: <739728922cbf097aa87dc41265478dfc@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 217.182.43.188
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, mark.kettenis@xs4all.nl
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174512170695.5723.16265162524139108187.b4-ty@linaro.org>
 
-On 2025-04-22 18:41, Bjorn Helgaas wrote:
-> On Tue, Apr 01, 2025 at 10:17:07AM +0100, Marc Zyngier wrote:
->> T602x seems to have dropped the rather useful SET/CLR accessors
->> to the masking register.
->> 
->> Instead, let's use the mask register directly, and wrap it with
->> a brand new spinlock. No, this isn't moving in the right direction.
+On Sun, Apr 20, 2025 at 09:31:46AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, 16 Apr 2025 16:28:26 +0200, Niklas Cassel wrote:
+> > Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
+> > and 'no_msi'") changed so that the default IRQ vector requested by
+> > pci_endpoint_test_probe() was no longer the module param 'irq_type',
+> > but instead test->irq_type. test->irq_type is by default
+> > IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE)).
+> > 
+> > However, the commit also changed so that after initializing test->irq_type
+> > to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type, if
+> > the PCI device and vendor ID provides driver_data.
+> > 
+> > [...]
 > 
->> @@ -261,14 +262,16 @@ static void apple_port_irq_mask(struct irq_data 
->> *data)
->>  {
->>  	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
->> 
->> -	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKSET);
->> +	guard(raw_spinlock_irqsave)(&port->lock);
->> +	rmw_set(BIT(data->hwirq), port->base + PORT_INTMSK);
+> Applied, thanks!
 > 
-> sparse v0.6.4-39-gce1a6720 complains about this (and similar usage
-> elsewhere):
-> 
->   $ make C=2 drivers/pci/
->   drivers/pci/controller/pcie-apple.c:311:13: warning: context
-> imbalance in 'apple_port_irq_mask' - wrong count at exit
->   drivers/pci/controller/pcie-apple.c:319:13: warning: context
-> imbalance in 'apple_port_irq_unmask' - wrong count at exit
-> 
-> But I guess we just have to live with this for now until somebody
-> makes sparse smarter:
-> 
-> https://lore.kernel.org/linux-sparse/CAHk-=wiVDZejo_1BhOaR33qb=pny7sWnYtP4JUbRTXkXCkW6jA@mail.gmail.com/
-> 
-> Nothing to do, just "huh".
+> [1/1] misc: pci_endpoint_test: Defer IRQ allocation until ioctl(PCITEST_SET_IRQTYPE)
+>       commit: 9d564bf7ab67ec326ec047d2d95087d8d888f9b1
 
-Huh indeed. Pretty sad to see a useful piece of tooling being left
-on the curb.
+a402006d48a9c ("misc: pci_endpoint_test: Remove global 'irq_type' and
+'no_msi'") appeared in v6.15-rc1, and apparently caused a regression
+that some driver fails to probe on such platforms.
 
-GSoC project?
+Since a402006d48a9c caused a regression and hasn't appeared in a
+release yet, this sounds like a candidate for v6.15 via pci/for-linus?
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+I can move it if you agree.  I *would* like to have a little more
+detail about the regression, e.g., the affected driver, so I can
+justify merging this after the merge window.
+
+Bjorn
 
