@@ -1,232 +1,327 @@
-Return-Path: <linux-pci+bounces-26420-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26421-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 321DDA97424
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 20:02:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39B7BA974B1
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 20:52:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F7A317FAF4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 18:02:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6633817603E
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 18:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7717C13C3F6;
-	Tue, 22 Apr 2025 18:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCAD52980C8;
+	Tue, 22 Apr 2025 18:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fIo/CBK1"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Mf4lNTTA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7332B1B3935;
-	Tue, 22 Apr 2025 18:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B9A1E47A3
+	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 18:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745344919; cv=none; b=rjWXOyrTvVgtlAKpgPVwJZugS/SD3ZzAj8b920jgy9aDhT64pD6myduHIHqX+oAZcs8MNSHhmYU+xe4G3Yi1lkOt2G6Z5+uh9cLOvUkGzzlzgZJjdfSe0TZ2uct9SF2LcbbbCw/9Udfthl0QTU8DU2FVQX6vM2UKirdskpdckik=
+	t=1745347926; cv=none; b=sUzExEKscSJf8gdSv9zr6bGpQNNtvhoudbW2NZjAvFHLaTlKIo5ac11Z+x1Zd3/4Y1HSQgfgRSV0lZbaxurrucNiBecHft/psRsfAQXcsvr2VicIOtycikHCae//gRuRlORBhGosvQ90Uy1g+AnL0amEmkcRYNpTpVHeiR0aPao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745344919; c=relaxed/simple;
-	bh=FUsRLb+BBmwXK3gMjV2rmuZ19NsY7pdYQ6IsB2J7suc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyIyX6Dm0iR3Re/T8YRelTlAxF2JCuaMEmSWUZsnzRLDUgkzUanc1Y4CzlP/7ECakSCdK9R/oQA6fQalZoT+PV/OpNr2GRWByQ2aCjoBU/pxiDXYjnnvSqO1269MEQk263PfyfDt9Zsp3ZrLorDGKzMxd8GpHl3Tz/TqC4JgMV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fIo/CBK1; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745344917; x=1776880917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FUsRLb+BBmwXK3gMjV2rmuZ19NsY7pdYQ6IsB2J7suc=;
-  b=fIo/CBK1vu4LGYcWh+ekTNMID3KdzV8VAqwYI9YWegl9dCkhVkH/4kEV
-   z4AyiQFxJBA8UjMY33SLVYrkTBOfRDcgZ+xPJGNgq/EDzqHn87tDi2ezt
-   Y34lQnqJLxNTz7U/zV0EXX9kkUMHNDzLJB1HSNMKGDryY+1JtXd1+sfN4
-   7GqL89bM3C/HLmKfgtOL1igjcujoDX1k55GqYNRdo3H7eAaeucVV35Pe9
-   x6h1Jzg/gJakwE/5u8jbXTADJoNhjhJ5D2d6UZxMUNld++GypPJnHCwL9
-   S1PzyyCGhVUTbnl4HYEPZZlJqk265Y6KA88toBqICdG0aVXK86IxGzdr4
-   A==;
-X-CSE-ConnectionGUID: EoT2pZ/5Q9OnrvS5hHBd+g==
-X-CSE-MsgGUID: 7NZObrazSUqve2JGkkZ8bw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="50746675"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="50746675"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 11:01:56 -0700
-X-CSE-ConnectionGUID: fDntXIZNT2y532SlyN/qEQ==
-X-CSE-MsgGUID: 50g6VasXQR2nxR4fTFLpiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="133032641"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 22 Apr 2025 11:01:54 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7HwN-0001EN-1B;
-	Tue, 22 Apr 2025 18:01:51 +0000
-Date: Wed, 23 Apr 2025 02:01:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	lukas@wunner.de, aravind.iddamsetty@linux.intel.com,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-Message-ID: <202504230101.o7uTJFn5-lkp@intel.com>
-References: <20250422135341.2780925-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1745347926; c=relaxed/simple;
+	bh=d1ZKYhOAkYo303gP+HNF16iUinqUdjSKGqVlLz4wbEc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=iKucy4pDrwB5LwOy7GEurfGEOsqA5zFO0Ygledbb4+pYyjCC39fSWNt4TVLCd7YEnagSkG84iXs8sx9PSvPXVWPzTByo4rkPjbb8IxqPNfF33aHS7un4Cd0VfqMoAunNsxJjPwFDExE1IMKEeWw0CXdChQo+/VFq91Ne0jmgsQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Mf4lNTTA; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso2930772f8f.0
+        for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 11:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745347922; x=1745952722; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0jYZzp2m3rJocRHqJkPGj8t9XumriM/fA2gWN3X5VLQ=;
+        b=Mf4lNTTALkuv61F+iS3e6OP4+iM9czmzDmAQO6Xr3AJmXX3YUtW/IkNeNq26Udb0E4
+         Ni3DVsKljIX+E0Tao+xNEaKtuVSCMEUKn9aEoSVpz/qa2t3TJ8nqOwCHzW62XNd+nLbq
+         VjXODcVTjKzms8/wQBYHhV44R6FzLelSNyZ4R60nHETpJsfBuFs/5h71fU0JHDglwfJz
+         ApRK/eu4jjLUGgm4NQ51XcFro654plFCD0tefLv5fKl0fIBXQ0Zl7ubNVz/6so5BPnfp
+         SWZXFkcYU3bC8GXbInSmW+SH0Z95Zw1vuvaoOs3za48jCSGXrRI8SB0urK7BEKhIYZ4O
+         2i1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745347922; x=1745952722;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0jYZzp2m3rJocRHqJkPGj8t9XumriM/fA2gWN3X5VLQ=;
+        b=e5uZZqUjuQaNXfEDMQq9SE2xMlAg7gT63vTO9wvT/Ejm8R9WNSqA1+kPHsWIUF+V+U
+         Z8Wu/38A20AjN81P3Q5EF0jb3qy8C8M+zzr6le24Q18QkszvXfMAqRPMacTK7Eg8OoXE
+         dxdLx+dOFRPxBH/yro3WlHEojSM81qkSvny3fZaPWxreHQr2owgTifXIHyrRMWPqhkrj
+         Pvvywixzc55pljsY2+N9gHCyOnq7/eELveuNSjrgVn5X9v23KKoBPqkuh1ICM9XeX2r/
+         4HLu78Vz+B/weiRUDf80ai2jergM9E+K2LL7ymgpAlloJksqAJfH6CqAwH7zW85FvbLn
+         ipCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCN+Yb7OVqGNM3qgTVkPc2MBCuZGveQAihHQLo9Qzb1PbeMG9QL8N60y5Osqm9wUI80NZbtaoz+n8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIr7nRAPieIRKFmrosU0k/bZ7V89K8JW12g751sRhkOp3VwFcv
+	DsCbYwq2cS+BKDc5zj9EFX9ivdRDStlEikWRXmsU70i70NWYsyVrEl99qtgMAEc=
+X-Gm-Gg: ASbGncsvF6cIDC7OBcIrmyZ4rDIrE1YC787qx3WdopW9M1m/FBS2SXre75lctBF1xZQ
+	pqcTiItbzi/EizeQ43kP1i6veZcMImUfztqkz/32+p+NlNgNU0U8xgK3qWWEwRDdkL4yQhPg4Ig
+	ITXediV0Nrt6i/X1UofZvUoPfftPEpkbAvsrqDpAoivBCNitkwSNroR6yak10p0iZu4BVyZjgls
+	deV7bA2FVdhW3ASvUjvTsj1yHhMrG33ZAb0lr7LA83PV7QGQeQBAPcQEx9W4I8fsX7dhrAwjhiz
+	2FQVc9qJwj3eUvGLcwYdC3T8Aar90/UvJR1D9vCXAlll69nhlHJY+LpU2HL5u2TyhLyyH3Mis2g
+	vkQaeuQ==
+X-Google-Smtp-Source: AGHT+IEHrA8/5iMMk838JwvYEMJ8MIlvTyjc4FVX8BePMsqeS4R2c2WZZfYix+jfAiEZqawBBzBmYw==
+X-Received: by 2002:a05:6000:1889:b0:39f:31f4:f2b9 with SMTP id ffacd0b85a97d-39f31f4f32fmr3786363f8f.32.1745347922481;
+        Tue, 22 Apr 2025 11:52:02 -0700 (PDT)
+Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433170sm15912911f8f.25.2025.04.22.11.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 11:52:02 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>
+Subject: [PATCH v9 -next 00/12] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Tue, 22 Apr 2025 20:53:09 +0200
+Message-ID: <cover.1745347417.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422135341.2780925-1-raag.jadav@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Raag,
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
 
-kernel test robot noticed the following build errors:
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration. To
+ensure compatibility with downstream, a devicetree already comprising the
+RP1 node is also provided, so it's not strictly necessary to use the
+dynamically loaded overlay if the devicetree is already fully defined at
+the origin.
+To achieve this modularity, the RP1 node DT definitions are arranged by
+file inclusion as per following schema (the arrow points to the includer,
+see also [9]):
+ 
+ rp1-pci.dtso         rp1.dtso
+     ^                    ^
+     |                    |
+rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b.dts
+                                               ^
+                                               |
+                                           bcm2712-rpi-5-b-ovl-rp1.dts
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.15-rc3 next-20250422]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Followup patches should add support for the several peripherals contained
+in RP1.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/PCI-PM-Avoid-suspending-the-device-with-errors/20250422-215734
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250422135341.2780925-1-raag.jadav%40intel.com
-patch subject: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-config: loongarch-randconfig-002-20250422 (https://download.01.org/0day-ci/archive/20250423/202504230101.o7uTJFn5-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250423/202504230101.o7uTJFn5-lkp@intel.com/reproduce)
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504230101.o7uTJFn5-lkp@intel.com/
+The patches are ordered as follows:
 
-All errors (new ones prefixed by >>):
+-PATCHES 1 to 3: add binding schemas for clock, gpio and RP1 peripherals.
+ They are needed to support the other peripherals, e.g. the ethernet mac
+ depends on a clock generated by RP1 and the phy is reset through the
+ on-board gpio controller.
 
-   In file included from include/linux/array_size.h:5,
-                    from include/linux/string.h:6,
-                    from include/linux/uuid.h:11,
-                    from include/linux/mod_devicetable.h:14,
-                    from include/linux/pci.h:27,
-                    from drivers/pci/pci-driver.c:7:
-   drivers/pci/pci-driver.c: In function 'pci_pm_suspend_noirq':
->> drivers/pci/pci-driver.c:887:14: error: implicit declaration of function 'pci_aer_in_progress' [-Wimplicit-function-declaration]
-     887 |         if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-         |              ^~~~~~~~~~~~~~~~~~~
-   include/linux/compiler.h:57:52: note: in definition of macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                    ^~~~
-   drivers/pci/pci-driver.c:887:9: note: in expansion of macro 'if'
-     887 |         if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-         |         ^~
+-PATCH 4 and 5: add clock and gpio device drivers.
+
+-PATCH 6: the devicetree node describing the RP1 chipset. Please
+ note that this patch should be taken by the same maintainer that will
+ also take patch 8, since the definition it contains is possibly used
+ by the dtso compiled in as binary blob and is closely coupled to the
+ driver.
+
+-PATCH 7: this is the main patch to support RP1 chipset. It can work
+ either with a fully defined devicetree (i.e. one that already included
+ the rp1 node since boot time) or with a runtime loaded dtb overlay
+ which is linked as binary blob in the driver obj. This duality is
+ useful to comply with both downstream and upstream needs (see [9]).
+ The real dtso is in devicetree folder while the dtso in driver folder is
+ just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+ The reason why drivers/misc has been selected as containing folder
+ for this driver can be seen in [6], [7] and [8].
+
+-PATCH 8: add the external clock node (used by RP1) to the main dts.
+
+-PATCH 9: the fully fledged devictree containing also the rp1 node.
+ This devicetree is functionally similar to the one downstream is using.
+
+-PATCH 10 (OPTIONAL): this patch introduces a new scenario about how
+ the rp1 node is specified and loaded in DT. On top of the base DT
+ (without rp1 node), the fw loads this overlay and the end result is
+ the same devicetree as in patch 9, which is then passed to the next
+ stage (either the kernel or u-boot/bootloader).
+ While this patch is not strictly necessary and can therefore be dropped
+ (see [10]), it's not introducing much extra work and maybe can come
+ in handy while debugging.
+
+-PATCH 11: add the relevant kernel CONFIG_ options to defconfig.
+
+-PATCH 12: enable CONFIG_OF_OVERLAY in order for 'make defconfig'
+ to produce a configuration valid for the RP1 driver. Without this
+ patch, the user has to explicitly enable it since the misc driver
+ depends on OF_OVERLAY.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been already promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Many thanks,
+Andrea della Porta
+
+Links:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+- [9]: https://lore.kernel.org/all/Z87wTfChRC5Ruwc0@apocalypse/
+- [10]: https://lore.kernel.org/all/CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoDWJ3=zd3cgcg@mail.gmail.com/#t
+
+CHANGES IN V9
+
+PATCH RELATED -------------------------------------------------
+
+- Rebased on next-20250422 to avoid errors while compiling the DTBs
+  against v6.15-rcX.
+
+- Dropped patch 3 from V8 ("Add common schema for devices accessible
+  through PCI BARs") because it's already accepted in upstream tree.
+  The cover letter has been adjusted accordingly.
+
+- Patch 6: Style change: added a blank line in the commit comment.
+
+- Patch 7: Added: Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
+
+- Patch 9 and 10: added 'broadcom' to the subject.
+
+- Current patch 9 is now in front of every other dts related patches
+  since it's functionally required for later patches to work.
+
+- Patch 12: Added: Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 
 
-vim +/pci_aer_in_progress +887 drivers/pci/pci-driver.c
+BINDINGS ------------------------------------------------------
 
-   851	
-   852	static int pci_pm_suspend_noirq(struct device *dev)
-   853	{
-   854		struct pci_dev *pci_dev = to_pci_dev(dev);
-   855		const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-   856	
-   857		if (dev_pm_skip_suspend(dev))
-   858			return 0;
-   859	
-   860		if (pci_has_legacy_pm_support(pci_dev))
-   861			return pci_legacy_suspend_late(dev);
-   862	
-   863		if (!pm) {
-   864			pci_save_state(pci_dev);
-   865			goto Fixup;
-   866		}
-   867	
-   868		if (pm->suspend_noirq) {
-   869			pci_power_t prev = pci_dev->current_state;
-   870			int error;
-   871	
-   872			error = pm->suspend_noirq(dev);
-   873			suspend_report_result(dev, pm->suspend_noirq, error);
-   874			if (error)
-   875				return error;
-   876	
-   877			if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
-   878			    && pci_dev->current_state != PCI_UNKNOWN) {
-   879				pci_WARN_ONCE(pci_dev, pci_dev->current_state != prev,
-   880					      "PCI PM: State of device not saved by %pS\n",
-   881					      pm->suspend_noirq);
-   882				goto Fixup;
-   883			}
-   884		}
-   885	
-   886		/* Avoid suspending the device with errors */
- > 887		if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-   888			pci_save_state(pci_dev);
-   889	
-   890			/*
-   891			 * If the device is a bridge with a child in D0 below it,
-   892			 * it needs to stay in D0, so check skip_bus_pm to avoid
-   893			 * putting it into a low-power state in that case.
-   894			 */
-   895			if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
-   896				pci_prepare_to_sleep(pci_dev);
-   897		}
-   898	
-   899		pci_dbg(pci_dev, "PCI PM: Suspend power state: %s\n",
-   900			pci_power_name(pci_dev->current_state));
-   901	
-   902		if (pci_dev->current_state == PCI_D0) {
-   903			pci_dev->skip_bus_pm = true;
-   904			/*
-   905			 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
-   906			 * downstream device is in D0, so avoid changing the power state
-   907			 * of the parent bridge by setting the skip_bus_pm flag for it.
-   908			 */
-   909			if (pci_dev->bus->self)
-   910				pci_dev->bus->self->skip_bus_pm = true;
-   911		}
-   912	
-   913		if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
-   914			pci_dbg(pci_dev, "PCI PM: Skipped\n");
-   915			goto Fixup;
-   916		}
-   917	
-   918		pci_pm_set_unknown_state(pci_dev);
-   919	
-   920		/*
-   921		 * Some BIOSes from ASUS have a bug: If a USB EHCI host controller's
-   922		 * PCI COMMAND register isn't 0, the BIOS assumes that the controller
-   923		 * hasn't been quiesced and tries to turn it off.  If the controller
-   924		 * is already in D3, this can hang or cause memory corruption.
-   925		 *
-   926		 * Since the value of the COMMAND register doesn't matter once the
-   927		 * device has been suspended, we can safely set it to 0 here.
-   928		 */
-   929		if (pci_dev->class == PCI_CLASS_SERIAL_USB_EHCI)
-   930			pci_write_config_word(pci_dev, PCI_COMMAND, 0);
-   931	
-   932	Fixup:
-   933		pci_fixup_device(pci_fixup_suspend_late, pci_dev);
-   934	
-   935		/*
-   936		 * If the target system sleep state is suspend-to-idle, it is sufficient
-   937		 * to check whether or not the device's wakeup settings are good for
-   938		 * runtime PM.  Otherwise, the pm_resume_via_firmware() check will cause
-   939		 * pci_pm_complete() to take care of fixing up the device's state
-   940		 * anyway, if need be.
-   941		 */
-   942		if (device_can_wakeup(dev) && !device_may_wakeup(dev))
-   943			dev->power.may_skip_resume = false;
-   944	
-   945		return 0;
-   946	}
-   947	
+- File renaming: bcm2712-rpi-5-b.dts is now the fully populated board dts
+  (i.e. the one that includes rp1 node), while the overlay-ready
+  one is now bcm2712-rpi-5-b-ovl-rp1.dts.
+
+- bcm2712-rpi-5-b.dts: Added an explanatory comment about the usage
+  of this file.
+
+
+RP1 CLOCK DRIVER ------------------------------------
+
+- Implemented the delay needed to ensure the pll vco is stable (was
+  a TODO comment).
+
+
+RP1 MISC DRIVER -----------------------------------
+
+- rp1_pci.c: Capitalized any IRQ occurrences in message strings.
+
+
+Andrea della Porta (12):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
+  arm64: dts: broadcom: Add board DTS for Rpi5 which includes RP1 node
+  arm64: dts: broadcom: Add overlay for RP1 device
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+  arm64: defconfig: Enable OF_OVERLAY option
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   58 +
+ .../devicetree/bindings/misc/pci1de4,1.yaml   |  137 ++
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  198 +++
+ MAINTAINERS                                   |    8 +
+ arch/arm64/boot/dts/broadcom/Makefile         |    4 +-
+ .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  |  121 ++
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  117 +-
+ arch/arm64/boot/dts/broadcom/rp1-common.dtsi  |   42 +
+ arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi   |   14 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |   11 +
+ arch/arm64/configs/defconfig                  |    4 +
+ drivers/clk/Kconfig                           |    9 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1510 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   20 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.dtso                 |   25 +
+ drivers/misc/rp1/rp1_pci.c                    |  333 ++++
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   11 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  790 +++++++++
+ .../clock/raspberrypi,rp1-clocks.h            |   61 +
+ include/linux/pci_ids.h                       |    3 +
+ 26 files changed, 3376 insertions(+), 108 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/misc/rp1/rp1_pci.c
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.35.3
+
 
