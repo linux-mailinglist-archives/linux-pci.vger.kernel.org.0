@@ -1,171 +1,215 @@
-Return-Path: <linux-pci+bounces-26443-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29A4BA979C9
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 23:55:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1B38A97A70
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 00:25:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F93F4613A4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 21:55:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B95A7AEB92
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 22:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F03152BCF76;
-	Tue, 22 Apr 2025 21:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B59244687;
+	Tue, 22 Apr 2025 22:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mNtzwtl4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUAiTsFD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6089C1F869E
-	for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 21:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745358935; cv=none; b=UfTj3uiDTb4q26k6VJ6EBAhMxv+tP+F3Xauw5hbJKthLmf42tmOnPdD/VloYFuWAwaDM3MnDb6HgsDz0DkvudBDnfYNMgfd4j00TMVK98D58IgNCf1cfkWI1/bFlUmQxgweCl2RzF5RJ6viSDxnYRLMB+UKqldx2axUcCe1YGE0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745358935; c=relaxed/simple;
-	bh=IBg6T/8bdZueoIIYbP2yfI78xemmRKXPfW+X6Epwyb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzCTyKjETKwsXwSxFH9W9kSs7Vy3xQ7998FmPB6aoXhc528U1eLFDVd99Yvq8hL+yKB4Pe5A1ropDK/5k67FMzcYmBczOYo7gFqAkFW7d20fWKAfmFCzPByqeBmgAdmGM7RI8jx7rJZHRfZFUnCuJh9RbDxGIXCeYRflQuya87E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mNtzwtl4; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c33e5013aso66298385ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 22 Apr 2025 14:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745358934; x=1745963734; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6asYMkdcVOCJg0CB/GTsjjXoi08Jnm+cXJbFRuu7HS8=;
-        b=mNtzwtl4JAHZuhoc2HzSch8z8+L0KSMRub2FADRi2yRKAXF5gqNmxiX/ASd3KPKCD0
-         dR35IalbwZ10/julJmkFHlwAQKQ7tgg6RX/DO+Gx/4eKhM6JAy4inXLZoj8uROrL4aor
-         +wPI+5xwsS7hzMmsz8OBtqDOfxx0U8r89/zHLM/8fFDgpPCxQsL5zg69c+iV9wv3kS9R
-         ENMqGwSN1FQFBW43oo63lGcQw4WI+zW1TLJYAiCMCUYEk2GBqpaq94KY0vU9IxUM2MAa
-         K0dWQ2IRNpeGZR4bCzbnS/Jnl3axCQmYsS2NOSx9hbxQntCnLAT35OLwdhJLswFRaKsi
-         g1dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745358934; x=1745963734;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6asYMkdcVOCJg0CB/GTsjjXoi08Jnm+cXJbFRuu7HS8=;
-        b=T9wmsQkbCmK3ykY6i3fjGS5W8eblwVEnv6rip+H2rsgKgErH4DC0TGOYBrN5NO+04f
-         pFK5pvei54gH12hd1pjOUylVV9WNdqP9L2e5WfbW4UrgER4cSZo3QxWxkJSonvJ8BeJz
-         Ek5vv0ykmgEbBxAx9f9brUyXp0UeFefc5hfq5CCkjnDBofnnaCqtOLHvRfuNm0T5fEhm
-         e0qhAPOG9vuauNlNBjlot9yBDo80MMwLRipHiBKTjohLw4BChCht0ObK/TnrXhNXdL4l
-         FiiUHf0wVkbZhOmkhWfmgBSHvTVNtjuD6kGTVwPFqs/5VBsuxt89nC4PZ8p4Bf0qIvcf
-         fzFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnPdFjtCLo/xL1O9KP2IBlDB2tqy9KBQay07pL1S1jMLzLAdcuaUR4SV8EpO098NVdLylB7BafKk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxufNNezRPBCe/auiC7kiUBkbFbNjziPAA3uEeZToBMPLKONemQ
-	8/p4r2L+hgHC6HzoIo53F0oglDPqpoxNzYU5akY31yqOOhhYlUKEJXXsCqgJVw==
-X-Gm-Gg: ASbGncvCb+xv25E/QwoubRUYv83fip7EJ5V/qsM9T7ltrrl8UhG7Lcy9VopqcgjySUK
-	Dzg/F1WF7i/OY3eZuem9PiG4sg3pHIeuo2gJXsuXIoXWSr1op0/lJH7hilz9TxYJLDIKZifS4yO
-	NRR7f/4wduyQg7kd43xRMA+LoZ6ewQX3QxqxLOTKHHXZ/ytdB+0QDvsBk+N7zuvfFkE/NiNm5C3
-	NcFpOCrCXs0se/mLNTv6tFV//Q27gancpkLrYcByNAPRn47RHi3FCbo+UIGNdyncHAJ4tslqeZ+
-	42EUN9/6RfLjx126aDJDLMBsyflMeAL8EIfNjQQOMGrloH8I8FEHloWrLoxSZ6bBrScxHCjQLR2
-	1j4GONQ==
-X-Google-Smtp-Source: AGHT+IGj1WS3gCYuWNM31cHMqZpSCdXyw2eIzHGcK/aumOJ6NuA9dKBVMTjVtVR1uQU6qgyTGOQ+uQ==
-X-Received: by 2002:a17:902:ce82:b0:216:53fa:634f with SMTP id d9443c01a7336-22c536303e4mr222403105ad.48.1745358933312;
-        Tue, 22 Apr 2025 14:55:33 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf3eb1sm90943865ad.82.2025.04.22.14.55.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:55:32 -0700 (PDT)
-Date: Tue, 22 Apr 2025 14:55:28 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <aAgQUMbsf0ADRRNc@google.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <aAa2Zx86yUfayPSG@google.com>
- <20250422190036.GA1213339@ziepe.ca>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702E81E990E;
+	Tue, 22 Apr 2025 22:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745360694; cv=fail; b=Ua4W0k8RmKfSZeIi0P6cjk0n6eP4T0EPajIo12vIwVcjI3frAsAVXMlzC54HSX7+ru1ctdIo80flr3C6lHJj0evrwpMdqztg7W2AZsfAQwrDSBaEX8PQnMwHMuV7nBrBXbUV29DqEbKEPsffk7lwIYEPa/BLiTz5PL0jGBcq2H4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745360694; c=relaxed/simple;
+	bh=SK8grD3zzXTGeOAL/vWKosDFsE9SCVOUG8D4xV2KKF4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WGIM6KXdXnf7iHX06ErQcVXueLOGVoGMChan5rkN5F/m9eHjNAM2MqYQPPlOqU+1Q8pPMwMbRhufCiERucRTO67aLHVTB6f6dHEkh6iFDAKgfeMFeXZxCg/GHZn53iPADnDGP6U48WmG5yP3SsoKfpvnR+LKcH6bXFV3bQO/3gM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bUAiTsFD; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745360692; x=1776896692;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=SK8grD3zzXTGeOAL/vWKosDFsE9SCVOUG8D4xV2KKF4=;
+  b=bUAiTsFDmmr2Q7bOySmTOGxMjk13vXHMK2bi/lTrrcfkTxj+MHv8P7Qc
+   +lv92k79d3z6QQvwAXPYdgl+vDjvyL4a7lEeFoDh73y5EUM50F+LStPi/
+   YTieQfgYin9az70bpt3S0OobzoRSFGB1LHWNdr7uV6VJvt/yWeXYPN9dv
+   qJb+/Oq0kXwaFLgVfMVeG9LCq70F9oV0vYsPW5RbKlz7RAKG4b+k4JCe3
+   zUhA+TKzCf/s84jRF9aHsibknoDxDRwby5zbT7HqVYo1peqgbgk5bODQe
+   tKUwHyZoaVwkTfXrf3AxdUliqstUw0yPvrEjayeWZyKU/oyVMNKaoErJh
+   Q==;
+X-CSE-ConnectionGUID: 0gjOFBQtQBCtoMCPOKH/7A==
+X-CSE-MsgGUID: PzwRiBgDSXCy7A3t9eANsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57594627"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="57594627"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:24:51 -0700
+X-CSE-ConnectionGUID: xnVzS8tdSYmmylSaJCyi/Q==
+X-CSE-MsgGUID: z8kF1iJFQm+NUXR06gMqKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="132443809"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:24:51 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 22 Apr 2025 15:24:50 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 22 Apr 2025 15:24:50 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 22 Apr 2025 15:24:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ocpAIB+Zi/ykO17DBnYwhh9MpFc8h6L5pEXo8t00en8RxphxAAYeHLCoaaec7/ecztakGAR+yCRwz+JK3TA0sAIcvyW5vSIO2B29Wp/CnveRNWORjE2drc3BmNPtS5jiZ/ClZwlKX04G9ZAILCvqJt4JGipiTkCIrWRXhWSE+e7GCC4TYQXeMit05bh0111M4d5aIxd7DJ/E75V15THElX1GacEu9iD4oein0hJ0l2lNfsCa8Lbh8A/Lu5puHGTNZTbYSM1TbUsa6CnrLT7tXA0Q7IrCa1+zNY2xwkLcwIWih13+XkKrRdb3FVqdaVM1cUn++qbRaBN9aDNGvl9dVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wIgaBEWbgud37nEM3xjAOChwXBzRDAcXPGjCbEK/7wc=;
+ b=J4cl5XB587IhFqDtFa9nmyqncmfAWqdd2v8bcP8Sbt0nslWhbsDfQLm4mXF0JAQhaigvajulFTMhkgUphPvSv5XKDmbr4cee0Vp1YeTc+N3s9lzJ/oWE+aIzPXgsmR1XrAUQi5QOrSaRG6eXBjB0dbp8qyeX24Off/9hDIXAmk7JPKENHh4pca1zX/p9f68BVBKdTiJUEOP1lsIPT1LbbDQNdIC8RSkFtQ7rzPAAGqVWaDU1ijhklK1O0Ec//bkUl4inaW0wHfwk/hsd+uUj0FKiP6TEhrtCnDF/m1ZfIjdBoQ3rPwKmOXTmD3cjQbZ+MaFYbmkIbraknW52MA6kKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by BL3PR11MB6364.namprd11.prod.outlook.com (2603:10b6:208:3b7::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
+ 2025 22:24:20 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8655.031; Tue, 22 Apr 2025
+ 22:24:20 +0000
+Date: Tue, 22 Apr 2025 15:24:16 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Ilpo =?iso-8859-1?Q?J=E4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <6808171089b0f_71fe294d0@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
+ <20250422200857.GA381276@bhelgaas>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250422200857.GA381276@bhelgaas>
+X-ClientProxiedBy: MW4P221CA0008.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::13) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422190036.GA1213339@ziepe.ca>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL3PR11MB6364:EE_
+X-MS-Office365-Filtering-Correlation-Id: 751b5c7b-a82e-4922-883e-08dd81ec6d27
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?zwgVEudIBBlDUWOXJLRr6Ovy1a8HX/9tuzkracb/SkIdFvtIBpOBK6HoQDZK?=
+ =?us-ascii?Q?7HaA0Ef3qWiDC1VhV15bsnBdRJMqt7kUbr3YGBJJNDAD5XlkuCw5dHUofK4l?=
+ =?us-ascii?Q?GMT7EZ0OAquzS+bre1fmvxLq3gketGvlwjL4KWfyc/u82Q0tAdHY9RdabpVA?=
+ =?us-ascii?Q?cft1AdQuiJp/n4UksvWlynbbi22Xs169sNoNodtm2EW/xfM2B/oRCsMCPz2o?=
+ =?us-ascii?Q?R+9Q+rqbr0z69B8YigQh2bu8n1WbA08ry/btMlUIDYyrWYLbJ0dRBIp/KRHB?=
+ =?us-ascii?Q?D9XAEI5mLyp7BdlxJIQm2utxNvfWqhIQ/Cd8r3zGGl5ltJeBeCd6UGHNnSB6?=
+ =?us-ascii?Q?GTw8ij2aS/l4WkA9WgmZyJAMSoYYcb74qWNoL/kVCobrhMtBQR7sYaofm09C?=
+ =?us-ascii?Q?5b4sLQ/szsb57gYIwPp51yRTWGrvUbClcJqTHemaHW2LJHdLXmFV5sMSHbvT?=
+ =?us-ascii?Q?aqE/ba+bqLSwGOehYzVB+aw56ulqk5VgHPaCsFEkMSrIEn8qZ1KfgHxAvzno?=
+ =?us-ascii?Q?5isOhVdtsfOJdTlqVzZsm0cKPBJEON44GhNmrUVDcrl8bBoOMxSmHZkwSq7+?=
+ =?us-ascii?Q?gKWYHs81W/k8xZVhHVFLEVuiYFS/Kq/EBdpEOLop0zPm6hTOr5bOOhmYLdD9?=
+ =?us-ascii?Q?GBKogsbEDIzxX3M6fGOLMxwm2/15IaAcR46xJoy8LlHtnmCKp4WPaPspF1HX?=
+ =?us-ascii?Q?Iao+KDr+WLpFFXSolRMxCm53WnRcJmvN+jVdAxnSvop0sfDe9drJG02ddjrI?=
+ =?us-ascii?Q?rceAzxeIWLay7XIAqrjwUm2rsnxfsG2flUyDCBqKx5n9nooVufgXWS9aqTIc?=
+ =?us-ascii?Q?xFg2ApKbhxfTUsAnHkO+FzvAz/sxcvd8fdsy4ObnaSusbzxXIJAe81MhYhNb?=
+ =?us-ascii?Q?1WWKJ8ZLSrTy/brLtEcVEunSggy1IufA9WtFr1SuVRFPjl+ulBJJXETDb2FW?=
+ =?us-ascii?Q?fzpfkj+2IO+WNaBRDHiXEEqxbnBeh266lsgx6F9t2hHien7et6727Kn3YYSN?=
+ =?us-ascii?Q?EraYxZqXLC2mf5dsco1kmnMChQfjOoz3Pze7PHtN8mmPCFeEtLCUYUlh91Ay?=
+ =?us-ascii?Q?xhqxpABxqLkRsy7exdEVgAmninGCpi9fCvGlp5h8geANJkyJr1JLu6kP4eSo?=
+ =?us-ascii?Q?pdxxPXppFZcslU9bGxYZ/V0bVcqbzvbOg+AxDb39yZt9SUgqfgfqT6E9K54e?=
+ =?us-ascii?Q?VCTJOss8Z6wSAfr7dsyHKEkb7dxqmeOvGlH1QQ1VzCHFMsEW9T3O7ivzpOwq?=
+ =?us-ascii?Q?jItIzzjD4TJnJ8ssnIf1YlnBVrq3eCnqqbO3ZE/9guYGjgyYUdzosoGhVaH/?=
+ =?us-ascii?Q?CAIY8rhM+OlIOAFXfi96UCRFx8fPVHQ41N5e3+zQfiPDBdLpZsoZpcHq2OIE?=
+ =?us-ascii?Q?vEskyEokSyPdDmqyt89eeh5J/r3xtX7HEJOHIQyFPhVenK9IjoxaLaLgOmQC?=
+ =?us-ascii?Q?la8VFLIAK00=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cdUE7gOFqPwqH3YDor/7nzo//yonTGRmJb50HSuhaeS0tmKH6vCDPtaahoeY?=
+ =?us-ascii?Q?nxkUKu5hwAbl1poA2Yr7Wknn3IC/sGcKd4iMS8j4GaOy2lz9Fi5f1DAKqSEz?=
+ =?us-ascii?Q?dDvOZ9wmasUu52BZ2vbtonk/WMnFpAY/wl9geSikIXuDlgRSznC0MTSTXTFK?=
+ =?us-ascii?Q?F0iQkvWjzptXvgroDPzVr5py8xBkNsd/+9Hdg22we0aPeMLgBjaBQYzwA2d2?=
+ =?us-ascii?Q?EJWIW0Tk4JglotiVxAeVcmK718cWdLp6MIZ1BipUT0u0jBuWSrxhxR/PMU7V?=
+ =?us-ascii?Q?XdaAfbFYJoPBAU7sEnvR1XZmxG/+6GkkRm+1+okmncKljhiKV36x1roisO2x?=
+ =?us-ascii?Q?eLN+rn3xqgezRLsJ2eqx+uYs2F7plElq03+CsmP5xISs0R/2WjlCOkev+vM+?=
+ =?us-ascii?Q?3PHKsmRIHRcn5YJBMd0LNav/Em4ilc+j/Z8uwme+ydy3O5xymvhAriQEUxbr?=
+ =?us-ascii?Q?T7xxtjSSSsHRJrwuf1eA8OexM4O0XHmxgzyXxndYGgnKgglhbDa8hPM83Omd?=
+ =?us-ascii?Q?qoT6ucpnsFWZgPyvxsRox8QMniZiWwDhODsDTslPgQwOQk3/x/1em/EOgpFn?=
+ =?us-ascii?Q?Jx+bZyf7k3RBtiRw03/Dve2hdVQsgrBpghl0cCRdukBIY0jtKiOZ4gtYIkdv?=
+ =?us-ascii?Q?rTqvI6tm924dLFKBot+QiS4lkOCzhn6/ico3lw3Guq2R4z7J1GYnr42EqhnH?=
+ =?us-ascii?Q?QRx030ukNmJV6J4vvUks+F5UJc8Ef0bmTaQU88dd+D2mLG1V4fQmOC+xGcQu?=
+ =?us-ascii?Q?cHVoME4059LJ9w/WsjJDyL/sbFDx9UYBiqSJfhEJN8xHl3eBqKs32+38331y?=
+ =?us-ascii?Q?lNTEpN5AwFS+803e2RMCnJpzSuntHa0F9rhPcEE547e7qb/C4XCDdegjk9lt?=
+ =?us-ascii?Q?QweiBEm1VwmzvzSQ7tRsVHz31H5Ur1BVmhJ1m5AWKs0NjswRNkrU681Jt/1C?=
+ =?us-ascii?Q?I5GW1PhHMpQ0AUoyOIhrGU76SFr1iT0iH4ky9B2WdZwTrC3qMeATQhVGsfv6?=
+ =?us-ascii?Q?Ta7m+vFm9Ge7459gsEGCMpOZrvGzt7oeijC6241ojBhj9bWngzI7buOYPwO5?=
+ =?us-ascii?Q?B1KE9eO5zjEYcfdy9vJaGvABTK0UOZ4iQTb3+mZ/lO1JNUl4gu+gJY6ywBYJ?=
+ =?us-ascii?Q?HQ+lFA95XIvoesiu9iaBiLVkmqZ2Dw5pv0Cvyf42bcOGwK7/13SAJar54Irq?=
+ =?us-ascii?Q?Kz7C+NhjidxHZjmxUTnnAjPyvDbGDYTU3RsI/e7uurD8hYVGilc4l4hZBFRa?=
+ =?us-ascii?Q?XIRWLgnEb5zr9VjR/ND0/V7nFwAkuMmz8PYNyV6THUtXImCxGHMtvScQCUf/?=
+ =?us-ascii?Q?zaCWqRY0l+RuE5K6F4uw2uDYDZtsKBlvNu/92SrwCq3HNvHEW6ezpQq+fHlG?=
+ =?us-ascii?Q?8NelcDUucGAQfZNiVsi5cFcCFEzWjMAnJ1ExaAyQehCkZtYlk00SdWfKvnMh?=
+ =?us-ascii?Q?xlr+s0k7vA7QtOPiUfpA8K4yhvZqFSKA+z/huv59Jm5fqTXaUXMplzUBYnPM?=
+ =?us-ascii?Q?jPUO7wSsOL/3AYcJIL+9CeioJ0DfuooQ+ZTHtlASuhvn5nH5LDiOKdffKDWn?=
+ =?us-ascii?Q?vWfTLH618WH5rtOd2hxTqlbm4knQJbmUSep++/E5GqN9cmhF9//0agaWtIHx?=
+ =?us-ascii?Q?mw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 751b5c7b-a82e-4922-883e-08dd81ec6d27
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 22:24:20.1815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KZIwRZME1tt7OwrHxewTs5jelfzfq7tSwBrcuNvVUURRRIJQW3QAXExKt9rnLp5VhHRSdSoaOOHN5NQS9i2UXTjR5XEbTCR3HV7PwVqZKy0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6364
+X-OriginatorOrg: intel.com
 
-Hi Jason,
+Bjorn Helgaas wrote:
+[..]
+> v1/rfc: https://lore.kernel.org/all/20250304135108.2599-1-ilpo.jarvinen@linux.intel.com/
+> 
+> I suppose it's quixotic to hope for anything better than quirks that
+> have to be added or updated for every new processor that comes along.
+> 
+> ACPI _HPX might be a possible way for the platform to tell us what to
+> do here.  ACPI r6.5, sec 6.2.9 says it's for hot-added devices and
+> "Functions not configured by the platform firmware during initial
+> system boot" (how are we supposed to determine that?)  In any case,
+> Linux does evaluate _HPX for every device in pci_configure_device().
+> 
+> I'm not sure _HPX really works; it's very general, and I would expect
+> to see reports of problems if firmware really tried to use it.
+> 
+> Or, I guess a _DSM function would be a possible way to communicate
+> this.
 
-On 04/22/2025, Jason Gunthorpe wrote:
-> On Mon, Apr 21, 2025 at 02:19:35PM -0700, William McVicker wrote:
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 1813cfd0c4bd..6d124447545c 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -1440,8 +1440,8 @@ static void platform_shutdown(struct device *_dev)
-> >  
-> >  static int platform_dma_configure(struct device *dev)
-> >  {
-> > -       struct platform_driver *drv = to_platform_driver(dev->driver);
-> >         struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > +       struct platform_driver *drv;
-> >         enum dev_dma_attr attr;
-> >         int ret = 0;
-> >  
-> > @@ -1451,8 +1451,12 @@ static int platform_dma_configure(struct device *dev)
-> >                 attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
-> >                 ret = acpi_dma_configure(dev, attr);
-> >         }
-> > -       /* @drv may not be valid when we're called from the IOMMU layer */
-> > -       if (ret || !dev->driver || drv->driver_managed_dma)
-> > +       /* @dev->driver may not be valid when we're called from the IOMMU layer */
-> > +       if (ret || !dev->driver)
-> > +               return ret;
-> > +
-> > +       drv = to_platform_driver(dev->driver);
-> > +       if (drv->driver_managed_dma)
-> >                 return ret;
-> >  
-> >         ret = iommu_device_use_default_domain(dev);
-> 
-> The diagnosis looks right to me, but pedantically I think it should
-> have a READ_ONCE():
-> 
-> struct driver *drv = READ_ONCE(dev->driver);
-> 
-> And then never touch dev->driver again in the function.
-> 
-> Send a proper patch?
-> 
-> Jason
-
-Thanks for the response! Yes, that would work as well. I'll send a v2 revision
-once I get it tested.
-
-On this note, I was looking through `of_dma_configure_id()` and am also
-wondering if we may hit other race conditions if the device is still being
-probed and the dma properties (like the coherent dma mask) haven't been fully
-populated? Just checking if the driver is bound, doesn't seem like enough to
-start configuring the DMA when async probing can happen.
-
-Thanks,
-Will
+Ok, I am reading this as "Maintainer asserts the quirk is unsavory,
+please make this be something that Linux can ask the platform firmware
+if it needs to apply, or make existing _HPX just work. Either of those
+is preferable to a new entry in the quirk table."
 
