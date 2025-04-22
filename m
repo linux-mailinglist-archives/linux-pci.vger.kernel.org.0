@@ -1,62 +1,60 @@
-Return-Path: <linux-pci+bounces-26413-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26414-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D522EA971FD
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 18:09:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1F11A97310
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 18:50:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4CD918977F4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 16:09:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7CBB37A84E7
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 16:48:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB23E28F956;
-	Tue, 22 Apr 2025 16:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8419B296179;
+	Tue, 22 Apr 2025 16:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX3Z65O5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ae9PaHLI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0D720102C;
-	Tue, 22 Apr 2025 16:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5061A296175;
+	Tue, 22 Apr 2025 16:49:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338167; cv=none; b=JdhOK2cufGqqifInAbboux/Bn/0HFE3WEntTljgHt/6tSaWB2CPtQHLdatxrF5w7eRRS/G5LUMVCrd29vEPfIca8zF27DyKb5uQuutKHygtMmBNJ4fb3AB+Yp9fdsMk7ZMieJ4wXpy2FcsU1CxQ356D1BrqVpvm9F3g/fMpmUOw=
+	t=1745340576; cv=none; b=L9WNJJHB7DXPVE/blUc1Zr6V4ukoGQqJI0LRZQkUGAp2BM8qxxqk2f1EvnWv6C9Z8mUrB0z2gvs1kDaq8bKTnyIfRaxPjtJwu1LN7Y8GpQ5CYs82yYUKq7w7c8eJB3XgX+z51Rju/pBq/yrm+iuerrRPZqu5OXFWFVq0AZ441NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338167; c=relaxed/simple;
-	bh=Qd8a4qsvk9G4mClmpO236TQ3jYEPXO158QQTn0cWxKo=;
+	s=arc-20240116; t=1745340576; c=relaxed/simple;
+	bh=s9kMwJjDJ2rcuOzb9LFbxhZCz0C30M7jGjVo/6qeYK4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dGA5+b+cArV6dIFwPjDmNC/iTf0wyi+ocUCPKDxf2aYkJyseq/pW3G9ghCDVJQUu1OGuT+43q9/rQsr6ZRUeFtJiWEGA+mfK20mUlQ6AQMA1sLGf51D7jOpnhEmWN5RGKfoIsEdA/MSeca9VAA5+65ZmqSRTZroKZp90mNvdmr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX3Z65O5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D83FCC4CEE9;
-	Tue, 22 Apr 2025 16:09:26 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lN1DcvFzqCRJ+nw/X51W33ne3iQz9t6ed415jw+WszqytSRVRChM/gN/Ksd+2VifNiie9igFEHkWK40NQuFMYNs9CoQK0GWpQceWH0j1OJbTomfsiahC8p5H9BlbeWFDzqVCeHAUx30GMOjw8jAaoM4xHs1nWWg+u04j8LV20Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ae9PaHLI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940C1C4CEE9;
+	Tue, 22 Apr 2025 16:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745338167;
-	bh=Qd8a4qsvk9G4mClmpO236TQ3jYEPXO158QQTn0cWxKo=;
+	s=k20201202; t=1745340575;
+	bh=s9kMwJjDJ2rcuOzb9LFbxhZCz0C30M7jGjVo/6qeYK4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HX3Z65O5qlPLh9w2tzD5zgqTmEEUNEK6frdS/LWvlhyQODlex5+w4HSJdCbGoofuA
-	 0gQn+BMTfXd7XLr5lao+kMAgSu5Txq5IIBHoQq02UTsB1+yfusdHTZI/mXSP95k5IE
-	 JCqMtjnYl26+MirO5su+/S/djJo/B6kalqrlikwIdjb4Vu39zEDTDScyyECsjs7Fai
-	 xj3CMInF+87Vc5jbImMVngqirfWPFFY/EVDQg/io5f0AlQfwCXr3BL8xM6gBslPVaG
-	 2Q2/l3deREN+8U1BisoC7SipI13tcn9e/v9PO9fsuIMRuduBgAtTmFYvGLoD4BtpK9
-	 aTOM6KqJS8fLw==
-Date: Tue, 22 Apr 2025 11:09:25 -0500
+	b=ae9PaHLIH2pXGK2vvhTyEi/fVGiLgSKV4bCaKMpxmdsSaiLLWnZqNuS4RAWP3Ppc1
+	 czwixz4vaqciUviy4ZyA5cTYsFXWnFNkvVLSdc96cu84GvEpu5vZFRPCS6j4nx1WOJ
+	 s7rH2IZeDPUtON+2lVgPeSoIAQpvH3FV0AucL6BANOrTyIhrVv5NvD8KwjR2fZ4JEj
+	 m1j7NI9i/5kGbRWvlvrcB6IUMKSY/thPOJc09MpEGq15sUqADWF7keSXCuXbBaHCP5
+	 UrvpBGwig4QBQYxOJHvAs4ehuBg0gVVnzDgfGFfWNllCDiSk0EnVLm/amLooatEfVi
+	 3VdUuE8Fz+rBw==
+Date: Tue, 22 Apr 2025 11:49:34 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jonas Gorski <jonas.gorski@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org,
-	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
- symbols
-Message-ID: <20250422160925.GA331992@bhelgaas>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, vigneshr@ti.com,
+	kishon@kernel.org, 18255117159@163.com, cassel@kernel.org,
+	wojciech.jasko-EXT@continental-corporation.com,
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH v4 2/4] PCI: cadence-host: Introduce
+ cdns_pcie_host_disable helper for cleanup
+Message-ID: <20250422164934.GA333709@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,64 +63,215 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402132634.18065-1-johan+linaro@kernel.org>
+In-Reply-To: <20250417124408.2752248-3-s-vadapalli@ti.com>
 
-[cc->to Catalin, Will: note the arm64 Kconfig change; my understanding
-is that this shouldn't break existing configs]
+On Thu, Apr 17, 2025 at 06:14:06PM +0530, Siddharth Vadapalli wrote:
+> Introduce the helper function cdns_pcie_host_disable() which will undo
+> the configuration performed by cdns_pcie_host_setup(). Also, export it
+> for use by existing callers of cdns_pcie_host_setup(), thereby allowing
+> them to cleanup on their exit path.
 
-On Wed, Apr 02, 2025 at 03:26:30PM +0200, Johan Hovold wrote:
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
-> 
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
-> 
-> Let's rename also the Kconfig symbols before this gets any worse.
-> 
-> The ath11k, ath12k and arm64 changes could go theoretically go through
-> the corresponding subsystem trees in turn once they have the new
-> symbols, but to avoid tracking dependencies over multiple cycles it is
-> much preferred to have all of these go in through the PCI tree.
-> 
-> The wifi patches have been acked by Jeff and I don't think Will or
-> Catalin will mind the single rename in arm64 if they don't see this
-> message in time.
-> 
-> Note that the patches could be squashed into one, but keeping them
-> separate highlights the changes done to other subsystems. I also find it
-> easier to review the changes this way.
-> 
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists, but the former should also go in through PCI anyway while we can
-> make sure that the defconfig update matches the new slot symbol.
-> 
-> Note that getting this rename into rc1 would be great as that way it
-> would end up in most subsystem trees soon as well.
-> 
-> Johan
-> 
-> 
-> Changes in v2:
->  - drop deprecated symbol for the new slot driver to avoid having to a
->    add a new user visible symbol (e.g. any early adopters will be asked
->    to enable the renamed option again)
-> 
->  - move arm64 patch last two avoid temporarily not having the pwrseq
->    driver selected (Jonas)
-> 
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
->   arm64: Kconfig: switch to HAVE_PWRCTRL
-> 
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 22 ++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 23 insertions(+), 13 deletions(-)
+For the merge commit log and eventual pull request, can you give me a
+hint about the motivation for this?  Based on the other patches in
+this series, my guess is that this is required for making the j721e
+driver buildable as a module and removable?
 
-Applied to pci/pwrctrl for v6.16, thanks!
-
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> 
+> v3 patch is at:
+> https://lore.kernel.org/r/20250410104426.463453-3-s-vadapalli@ti.com/
+> No changes since v3.
+> 
+> Regards,
+> Siddharth.
+> 
+>  .../controller/cadence/pcie-cadence-host.c    | 104 ++++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h |   5 +
+>  2 files changed, 109 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 96055edeb099..741508738f88 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -152,6 +152,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> +static void cdns_pcie_host_disable_ptm_response(struct cdns_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val & ~CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> +}
+> +
+>  static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+>  {
+>  	u32 val;
+> @@ -177,6 +185,26 @@ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+>  	return ret;
+>  }
+>  
+> +static void cdns_pcie_host_deinit_root_port(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	u32 value, ctrl;
+> +
+> +	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, 0xffff);
+> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0xff);
+> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0xff);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, 0xffffffff);
+> +	cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, 0xffff);
+> +	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
+> +	value = ~(CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +}
+> +
+>  static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -393,6 +421,32 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
+>          return resource_size(entry2->res) - resource_size(entry1->res);
+>  }
+>  
+> +static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	enum cdns_pcie_rp_bar bar;
+> +	u32 value;
+> +
+> +	/* Reset inbound configuration for all BARs which were being used */
+> +	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
+> +		if (rc->avail_ib_bar[bar])
+> +			continue;
+> +
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), 0);
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), 0);
+> +
+> +		if (bar == RP_NO_BAR)
+> +			continue;
+> +
+> +		value = ~(LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
+> +			  LM_RC_BAR_CFG_APERTURE(bar, bar_aperture_mask[bar] + 2));
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +	}
+> +}
+> +
+>  static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -430,6 +484,29 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>  	return 0;
+>  }
+>  
+> +static void cdns_pcie_host_deinit_address_translation(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
+> +	struct resource_entry *entry;
+> +	int r;
+> +
+> +	cdns_pcie_host_unmap_dma_ranges(rc);
+> +
+> +	/*
+> +	 * Reset outbound region 0 which was reserved for configuration space
+> +	 * accesses.
+> +	 */
+> +	cdns_pcie_reset_outbound_region(pcie, 0);
+> +
+> +	/* Reset rest of the outbound regions */
+> +	r = 1;
+> +	resource_list_for_each_entry(entry, &bridge->windows) {
+> +		cdns_pcie_reset_outbound_region(pcie, r);
+> +		r++;
+> +	}
+> +}
+> +
+>  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -487,6 +564,12 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  	return cdns_pcie_host_map_dma_ranges(rc);
+>  }
+>  
+> +static void cdns_pcie_host_deinit(struct cdns_pcie_rc *rc)
+> +{
+> +	cdns_pcie_host_deinit_address_translation(rc);
+> +	cdns_pcie_host_deinit_root_port(rc);
+> +}
+> +
+>  int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>  {
+>  	int err;
+> @@ -499,6 +582,14 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>  }
+>  EXPORT_SYMBOL_GPL(cdns_pcie_host_init);
+>  
+> +static void cdns_pcie_host_link_disable(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +
+> +	cdns_pcie_stop_link(pcie);
+> +	cdns_pcie_host_disable_ptm_response(pcie);
+> +}
+> +
+>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -524,6 +615,19 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>  }
+>  EXPORT_SYMBOL_GPL(cdns_pcie_host_link_setup);
+>  
+> +void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
+> +{
+> +	struct pci_host_bridge *bridge;
+> +
+> +	bridge = pci_host_bridge_from_priv(rc);
+> +	pci_stop_root_bus(bridge->bus);
+> +	pci_remove_root_bus(bridge->bus);
+> +
+> +	cdns_pcie_host_deinit(rc);
+> +	cdns_pcie_host_link_disable(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(cdns_pcie_host_disable);
+> +
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct device *dev = rc->pcie.dev;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 4b7f295e24e7..0b6bed1ac146 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -523,6 +523,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
+>  int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+> +void cdns_pcie_host_disable(struct cdns_pcie_rc *rc);
+>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  			       int where);
+>  #else
+> @@ -541,6 +542,10 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	return 0;
+>  }
+>  
+> +static inline void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
+> +{
+> +}
+> +
+>  static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  					     int where)
+>  {
+> -- 
+> 2.34.1
+> 
 
