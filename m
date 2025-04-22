@@ -1,142 +1,116 @@
-Return-Path: <linux-pci+bounces-26378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEBE3A9675C
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:30:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE54EA967AA
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 13:36:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B0C5166E57
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:29:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BCD1178FE4
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Apr 2025 11:36:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D520627C17A;
-	Tue, 22 Apr 2025 11:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DDE20B801;
+	Tue, 22 Apr 2025 11:35:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ffWwJuQl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qsd2/Oj8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C812627BF8E;
-	Tue, 22 Apr 2025 11:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9151EB1AA;
+	Tue, 22 Apr 2025 11:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321362; cv=none; b=IZpbkyMont/P7fvWJNDEEcISDqDxZob/uwKjJxW14QcTX+bjXm+Ptlca6AEcuI0WrJG8zGjOLPENx/+IltawxTRG9wCFQDQBCc8Qmux1jdSrGIuEJuEW68JvKuXUx/uSmNpd6uN4AczwJsyDPppfmDtoc7lzdFwUSijFfMBPak4=
+	t=1745321735; cv=none; b=k0bdF0tcfPw1INbrtMHRO6jnFeGl01k/OoNyg9380kLHsfnzTh311NAhTh45dCfpyE/kt9CFK4Fz0YyynNaIWvwlWA2vk8amRV+9ZBI8R7ZIBfJQ606XujQw8ZeGi6cjMg6FNcT4m/oLDxqWJdL9Nbh13C3hQ4PnsJTLtoucrNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321362; c=relaxed/simple;
-	bh=UkHWEuBBr+u8ftNbMm92bUAY3+Nu0EQHSO4PpBia6Vc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BooccKUcO+mwJdNWrbDd0oNC990snUjTlKBXGt4XD96MvWLww+Fy121a7B7Zc4MYbsn6vVFWcdG8E0eiV3DnAh7pMvrnlg8IpIoLUULnnzdGnv1S3YgZ6cHjwVnmF9zkXvo9i1hsmR4zHwih1zqWPLE/OVs4FJU2JqsOL3ajVZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ffWwJuQl; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=UcMbM
-	shhTN629KReXGX3TYRD3YyfD5t4evcTtPI62xY=; b=ffWwJuQlVGRB3iU6gQehP
-	RX2Fm49XILUdXAOPl3uNeKlx6gXE0ilHB2zMdPj2dzM7YpMicYUeWg95HUadpkIs
-	1gdztOSczSG7t9OLwDcwdXfZffMRCt1z0vv3hJumHxuqBm2EYDpjgMgedGg1I9jc
-	J35CogHN9LzIFOwnXMMHeU=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wCXbK1gfQdoRW2NBg--.44191S5;
-	Tue, 22 Apr 2025 19:28:38 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	shawn.lin@rock-chips.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 3/3] PCI: dw-rockchip: Unify link status checks with FIELD_GET
-Date: Tue, 22 Apr 2025 19:28:30 +0800
-Message-Id: <20250422112830.204374-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250422112830.204374-1-18255117159@163.com>
-References: <20250422112830.204374-1-18255117159@163.com>
+	s=arc-20240116; t=1745321735; c=relaxed/simple;
+	bh=iyIAAmPJNlz3e5gWT5Kk9P9NWMtpV70iP2nADcdxgfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SFe9Vu0XcaAB6IIPc13Sl5UEYmYd1j669tLDv1kA5T/pTjOhz6+NxosWegR0Q+LLw1aD1lK4yfEC6kATPP9uO05y3fxl0rzWXXm+va8l+6QxVjxOpbsYz/saMcTltyF1Kd0d1xwoDwmkf8AADWHfMaGc02Ih/mpC6YwgA/ayOLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qsd2/Oj8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438DDC4CEEC;
+	Tue, 22 Apr 2025 11:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745321734;
+	bh=iyIAAmPJNlz3e5gWT5Kk9P9NWMtpV70iP2nADcdxgfw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Qsd2/Oj84sxfH8BnbFIuKLhjSmYzFcLJOdoqyUbluLNb/RkJUVIgOpjMvG+7KJyh6
+	 sq0cn+MAvwZz4jEl7Lw78rU9TieE+Mhd/wX5KgDiCqP88ymO7ExiCT2r+1DVd+H/zu
+	 5+ApLuxwmsphup3ib4DhazauAYACtlis1FE6flSHCxH+PS3C49VwAL/Z53tQxrNlfx
+	 OgOTleJOXuFl4brJSwlda6PBP7wKaXMqd2cv5r0zbTnvNBy7WXZ4+nBNG4ZHdxfUn6
+	 kJubSLHhTVj58Qx84dWEzw2fdCzRv8VaD30Yn8F8wKfgnGtzWEiGDfuEWEkn6k5bvP
+	 1vYK/nFCz6hfg==
+Date: Tue, 22 Apr 2025 06:35:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jensen Huang <jensenhuang@friendlyarm.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Anand Moon <linux.amoon@gmail.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
+Message-ID: <20250422113532.GA321792@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXbK1gfQdoRW2NBg--.44191S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF15Gr13CFWxtr1UZr18Zrb_yoW5XFyxpa
-	98AFWqkF48Gw409F1kCa98XrWFyFnI9ayUCrn7K3WxW3ZIyr1UW3WUWr9xtr4xJrs8CFy3
-	Cw4rta4xJF43ZrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRvdyUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwo3o2gHegppZgAAsB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
 
-Link-up detection manually checked PCIE_LINKUP bits across RC/EP modes,
-leading to code duplication. Centralize the logic using FIELD_GET. This
-removes redundancy and abstracts hardware-specific bit masking, ensuring
-consistent link state handling.
+On Fri, Mar 28, 2025 at 06:58:22PM +0800, Jensen Huang wrote:
+> The order of rockchip_pci_core_rsts follows the previous comments suggesting
+> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
+> reverse, which may lead to the link downgrading to 2.5 GT/s.
+> 
+> This patch restores the deassert order and comments for core_rsts, introduced in
+> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
+> 
+> Tested on NanoPC-T4 with Samsung 970 Pro.
+> 
+> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
+> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+Thanks for the fix!  It looks like 18715931a5c0 appeared in v6.14, so
+we should probably add a stable tag so it gets backported there?
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index cdc8afc6cfc1..2b26060af5c2 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -196,10 +196,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
- 	u32 val = rockchip_pcie_get_ltssm(rockchip);
- 
--	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
--		return 1;
--
--	return 0;
-+	return FIELD_GET(PCIE_LINKUP_MASK, val) == 3;
- }
- 
- static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
-@@ -499,7 +496,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	struct dw_pcie *pci = &rockchip->pci;
- 	struct dw_pcie_rp *pp = &pci->pp;
- 	struct device *dev = pci->dev;
--	u32 reg, val;
-+	u32 reg;
- 
- 	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -508,8 +505,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
--		val = rockchip_pcie_get_ltssm(rockchip);
--		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
-+		if (rockchip_pcie_link_up(pci)) {
- 			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
- 			/* Rescan the bus to enumerate endpoint devices */
- 			pci_lock_rescan_remove();
-@@ -526,7 +522,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	struct rockchip_pcie *rockchip = arg;
- 	struct dw_pcie *pci = &rockchip->pci;
- 	struct device *dev = pci->dev;
--	u32 reg, val;
-+	u32 reg;
- 
- 	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -540,8 +536,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	}
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
--		val = rockchip_pcie_get_ltssm(rockchip);
--		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
-+		if (rockchip_pcie_link_up(pci)) {
- 			dev_dbg(dev, "link up\n");
- 			dw_pcie_ep_linkup(&pci->ep);
- 		}
--- 
-2.25.1
-
+> ---
+>  drivers/pci/controller/pcie-rockchip.h | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 11def598534b..4f63a03d535c 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -320,11 +320,15 @@ static const char * const rockchip_pci_pm_rsts[] = {
+>  	"aclk",
+>  };
+>  
+> +/*
+> + * Please don't reorder the deassert sequence of the following
+> + * four reset pins.
+> + */
+>  static const char * const rockchip_pci_core_rsts[] = {
+> -	"mgmt-sticky",
+> -	"core",
+> -	"mgmt",
+>  	"pipe",
+> +	"mgmt",
+> +	"core",
+> +	"mgmt-sticky",
+>  };
+>  
+>  struct rockchip_pcie {
+> -- 
+> 2.49.0-1
+> 
 
