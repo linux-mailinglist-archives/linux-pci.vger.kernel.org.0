@@ -1,156 +1,258 @@
-Return-Path: <linux-pci+bounces-26604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86696A997B4
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 20:18:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E56E7A997EF
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 20:31:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8F075A4441
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 18:18:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22E1B4A2C1D
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 18:31:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B088028E5FD;
-	Wed, 23 Apr 2025 18:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB5B226B09F;
+	Wed, 23 Apr 2025 18:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mw0BLyt3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcgI1gCg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293D628DEF0
-	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 18:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC1B14900B;
+	Wed, 23 Apr 2025 18:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432299; cv=none; b=L982tOZmVInlxAdeszNFIr0bxxV+QEbikUAhUiNCMclVPXDfFenwdL5GT2HbesliD5NKupQOH13CQ8XF42s73d70GcWhLhSjKZM+YUhCk//KX/BdVivDeAMH3V6DCyAmo1ymCDi9RWjNK+Z/tIb/rHoXeMU45dxKz2SenKGLId0=
+	t=1745433085; cv=none; b=qpHLbWiuyATxcpG83f2C3sweGU2Dtakw+rGIHcjicO3G1LyRObNUDR2FQt1QVZnoiIV9BPzE2I5wGmR0U8E3yEza9l2GmdygXxykTOjJa4Lo66dLiNviK2cNyn7I7HeMO7nxJ4PDOsE4Hu7u92lldPfddWIGwge6eatoqRpee98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432299; c=relaxed/simple;
-	bh=4Lb81w2s/iHKlg0tr1kLg33vsHa3w3DDNgPzLbNjD+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A9QplRKl9VLxfhFRp7jKolTN2uCDKRjiEzoeLgh1Ae+9QCRJeKhUQPS/BO5maQXHObrdroNkdaQr1myrx2XyS5zMO8AqSB8D2DJm/onL8B9rZS24wfqBjIWHmPzr0Vlmj/MOs0mNV3/Mfaic9BKd5YkdO1hRXONb9kX+DQjYO8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mw0BLyt3; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso1978566d6.2
-        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 11:18:15 -0700 (PDT)
+	s=arc-20240116; t=1745433085; c=relaxed/simple;
+	bh=tJBn0sbdCDEFGfNg120jO88woAsVmT552TfvpbvWXyo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ZUI/gFNLwHxXBHDK0SGl5Pw2r6AEu2K6J6fvgh1ZpUJzoiXL77Ty3inrtrrmSjtx1yJmzI9N1BZKYCk7O/MGlaL+C5GOTP3rGHobm0vnGgQ3OWBvBAnH3ZKOzciHoNrM3nQExOib/xyG6ZGfCSx/kdjgUm2zqAh8HoOSaWcGKgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcgI1gCg; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so1329542a91.1;
+        Wed, 23 Apr 2025 11:31:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745432295; x=1746037095; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S2K4Lg9UXWodayqGkEaP9bm9sDSNteHJq58dHhFg6dY=;
-        b=mw0BLyt31cJrngz/aBlEqUNCOkBB1gSFAicpqFxsnuU55usihLqj9CppOCLuDQTA44
-         QGx2p6pdozkZhZRlIGlFVwDs2dtgpe6fKnSF94krJoWMELaEUPODqoGDeQkQzFCw7fMV
-         18e8lwSuBtKVpxOxM6QBw77NM9mD/y5Y2FmSeg4RArtyuojpdQcARSL6ApYsWQ+PskiA
-         VYLc9AXF9mmC8s11Eb3OYyph7ohBk6xnHFnCP4/3jXhK/bh74E+StCO4Lj+LW7u56WRs
-         9XeG6U9hTlaw3CySXpgHG9sCEMP7zHmh4QNZbhH5sLPkW3k0S9B3Insiwp1+IWlISncI
-         SbKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432295; x=1746037095;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745433083; x=1746037883; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S2K4Lg9UXWodayqGkEaP9bm9sDSNteHJq58dHhFg6dY=;
-        b=UygiIMKRjDNleTk7lLGyZKKUjMqdagNP6o0r4LWAc8h9cuLs1jZx5MuCNy8Mn4s8Bp
-         NPnOoDrSNlpmTVfnU3eltCBJbA3Pk0dclrS3WNovxcBb+DHXUPWJ7nXs4hqQWbXXNrZK
-         Vb19zfLC+ZgQ+mFUJZ6h5RGN05Vs1YB2FD9uxA9Yaa+455tgvDkhWy+KX8DK7Bmxl1KK
-         oC5SO03qMVKbs3bYSUfrpVKAbSGj+0Kfp7cN+Dyr3nsKsofojnMc5D8XAfobGrptsTyP
-         2VNe5xAkbPx/CLEOyO+1l98uawfNG7pK880nJYuLt2WfsA/MjfBV7pLBIEWTQ7DJffBz
-         JC7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWvxNJi0tk+GTzT6/Hc3FUbfmonfo8FOtGqjq463JoOBsHXExrSAT/DB/oRZmInSglO3MD0AuOxDoA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz+IGXApKB++9dZgOWlkrC/3kc8uYvGv1q4EsTpGD8+ciSJhvj
-	yMSyWvfkcRlQ9wKiNG2TZ8/7vijn0QMuQdlqc1XsO5ffkoVsnwHGdJmnKz/yuPA=
-X-Gm-Gg: ASbGncvFFBt7MicLpdOn6+84mat1q8MO4gvhDKnjifDGyu+4iMWNJPDEefzS/n5KEfb
-	6rwPB+gHzoni3G5+sU3BqmJjjpIYBHry6pPms+J/l+1/7VGbrakLjsTOm7mu6fmHQ6c6QisAuBy
-	ngAkv/EH9ifqtGBHx2eP7iiof9s8Shz/VqtOaW/SxmhoVPLYCq3gLGVUa67DBSOEQ7328SomUdL
-	2DcRiMpxGcZYns86Zq7G0pwdXF585PJMpjSVvEpQvpAHECjdHuU73R1+aN8KwV89CuNXvYasxZk
-	NjigKP0YdVGrfwU/7+cc1uNjpdT5Kz3Ia4/fRzyH6UeL+Plq97GanEDtpvUbu/hooBjlbwGRSox
-	bWw+ZvaGiJS4COCxGl3I=
-X-Google-Smtp-Source: AGHT+IG4/MsY26Rj4xYm6pWmvlAPuVFdcPLdJFOh3iEBlJVLpm+B1c5dpvU4P4SztDpvWCyGwRESRw==
-X-Received: by 2002:a05:6214:21c4:b0:6e6:5f28:9874 with SMTP id 6a1803df08f44-6f4bed4600emr4321856d6.2.1745432294768;
-        Wed, 23 Apr 2025 11:18:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af1433sm73395536d6.19.2025.04.23.11.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 11:18:14 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7efl-00000007M0V-3VVh;
-	Wed, 23 Apr 2025 15:18:13 -0300
-Date: Wed, 23 Apr 2025 15:18:13 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: William McVicker <willmcvicker@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <20250423181813.GU1213339@ziepe.ca>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <aAa2Zx86yUfayPSG@google.com>
- <20250422190036.GA1213339@ziepe.ca>
- <aAgQUMbsf0ADRRNc@google.com>
- <20250422234153.GD1213339@ziepe.ca>
- <aAkj5P1I-e9lylIU@google.com>
+        bh=cOpQeKb3vixx81nI9GHXsTk9qiiQQKOXE/nG8kKovQA=;
+        b=bcgI1gCgRpEsoG/X2cNMAmoOd6LX9CC7i1NNGugvhJ5d/WyqhZmFJpJ7j50yGv/2UW
+         ZOrkthQZXIvgWZBUJt0q3WJTioWXLPUE1ZASz0D+goo9xFGSmZ7d3Ogf3IFnd6VrTwYD
+         abcNDTS4If7DugBTFie2yvddfb5DKeiKIsmUYdAYB67JXLFPaYigaQbXBgBukAsVHioZ
+         5rjsyJbH2mIXq3l52EwgC2GpVBAzzQI2iO9BqA5mVS1Kd/UWg7ph6e+IqQB9fRruv4ow
+         Bp/m6CH0Fo9oKQSY7lktY1MRJPjRQWfJLxo36Wvh/yfWmzif09s63J1jtcakAiuF35vd
+         3YlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745433083; x=1746037883;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cOpQeKb3vixx81nI9GHXsTk9qiiQQKOXE/nG8kKovQA=;
+        b=SFbVjwWjb5BhTEkAWw5xt+Fgxy2XKMAfT9o1nzryjRzghOLlfGc26fuIrO8sZ/jlDc
+         ByegdsQhbM/HVwVupRTcCnDcz28QyrIuc4GET9aw9D+hcs4MpdzbgkOo7n6jz3WNKRTb
+         BxG2LgBG3H/4cwLD2fJeMEQIImyFv0fXHgI+yszNPW2nnVxCrAcW125QcPRXScmK2Q3r
+         tLobjM06gzmDdaOhSmLadIvb3FI9L5icb1kbeUeVM5IFeIXPCavHMYMvqnmAAYCIXFmw
+         9G/2WZipsq/Z0WQTbguzTf3c+0Ib7LCixFKtWDSoRRyhXnOjKw4FckOac0mB1zSqq9D4
+         C7XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQWO47ZtJHFByJNyICNqPDKMJYw/4A4OiY0x7zJADfcgm+ZfOaAu9utTpdKJ2nwz8c2xdV0Ji8f8nvpLQ=@vger.kernel.org, AJvYcCV2NPwgNfsN4tJKaa0pjptK5ZiioiOyZVCUSFQq1rhN4G+HBtsoiMCqTGLF7dJiijXJ9vVqMxidW/Iql48=@vger.kernel.org, AJvYcCWFcbvXnR7BfOAUxcj9WK63fzt3K/exnQ6FKWTP6q5lVPCF6yjW0tcBHuX7uKYqLUam/+Q+5F7XUA3ryNQcxfpBoirHbw==@vger.kernel.org, AJvYcCWU6RCNqr6Kh6CuOO14CkSrijPo9g2AqCqoaJu7UJo8YdlJAw9lGiupLsoz5QAEO4D75lYVNV2kRxqK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNnUer6kmvyqV4XFf7hgcwg6QYFht/x5XkIn1Je+DF8BDYbyVr
+	jufMbwzagJHmvTRskJONBi6NU3o0y9ZX2xEmnLenHbBYns4d1ghi
+X-Gm-Gg: ASbGncuPbUAPL5F+kQJThMpHXAaAKVM4OOBnBwZ4junpqW0opgvD2LFp9NmW9zmLI8S
+	CQfPuVJAgtq58aSXxqZKpLtTIT65jZJ3zL8E4wmL43yc16qxTxoQ1+DzlZhK683iQqd1hwUHxRk
+	uBgXJ2eySGBwIGv/twERJgXWxqrQAWhZ3BjqHXCmRl8Z+U6YLkxPLX5TPbOCXzBmbYrjlU0mh08
+	QNHpRssmxJBv6Ot+sj4eiCayFOHSE5DyyWEiZMQLj7fFWIG/msufIRzLFJ+YyKvtRcomBqnDt6n
+	vL9woy/9Itx3/hqhawoogG5mYDzNRa+C37c7AV9z6Wqz
+X-Google-Smtp-Source: AGHT+IEHrNiRnTXjVPBRN3km9ezXq9nftJR+dFDQktX4gOLxCfeSk1aB3DWtqmO/wcVrpprP5KJBrA==
+X-Received: by 2002:a17:90b:58ed:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-309ec5e69fdmr363341a91.6.1745433083197;
+        Wed, 23 Apr 2025 11:31:23 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309e0d06b13sm1984557a91.43.2025.04.23.11.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 11:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAkj5P1I-e9lylIU@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 23 Apr 2025 15:31:17 -0300
+Message-Id: <D9E8DY5E0CTO.2O6K5NWUGKA6Z@gmail.com>
+Subject: Re: [PATCH 6/7] platform/x86/dell: alienware-wmi: update sysfs
+ visibility macros
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "David E. Box" <david.e.box@linux.intel.com>, <corbet@lwn.net>,
+ <bhelgaas@google.com>, <hdegoede@redhat.com>,
+ <ilpo.jarvinen@linux.intel.com>, <vkoul@kernel.org>,
+ <yung-chuan.liao@linux.intel.com>, <pierre-louis.bossart@linux.dev>,
+ <sanyog.r.kale@intel.com>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <dakr@kernel.org>, <dan.j.williams@intel.com>,
+ <andriy.shevchenko@linux.intel.com>
+Cc: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <Dell.Client.Kernel@dell.com>, <linux-sound@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250423175040.784680-1-david.e.box@linux.intel.com>
+ <20250423175040.784680-7-david.e.box@linux.intel.com>
+In-Reply-To: <20250423175040.784680-7-david.e.box@linux.intel.com>
 
-On Wed, Apr 23, 2025 at 10:31:16AM -0700, William McVicker wrote:
-> On 04/22/2025, Jason Gunthorpe wrote:
-> > On Tue, Apr 22, 2025 at 02:55:28PM -0700, William McVicker wrote:
-> > 
-> > > On this note, I was looking through `of_dma_configure_id()` and am also
-> > > wondering if we may hit other race conditions if the device is still being
-> > > probed and the dma properties (like the coherent dma mask) haven't been fully
-> > > populated? Just checking if the driver is bound, doesn't seem like enough to
-> > > start configuring the DMA when async probing can happen.
-> > 
-> > I think the reasoning at work here is that the plugin path for a
-> > struct device should synchronously setup the iommu.
-> > 
-> > There is enough locking there that the iommu code won't allow the
-> > device plugin to continue until the iommu is fully setup under the
-> > global lock.
-> > 
-> > The trick of using dev->driver is only a way to tell if this function
-> > is being called from the driver plugin path just before starting the
-> > driver, or from the iommu code just before configuring the iommu.
-> > 
-> > Given that explanation can you see issues with of_dma_configure_id() ?
-> > 
-> > Jason
-> 
-> I think the only concern is when a driver calls dma_set_mask_and_coherent() in
-> it's probe function. If we can handle that case in an asynchrounous manner,
-> then I think we are good.
+On Wed Apr 23, 2025 at 2:50 PM -03, David E. Box wrote:
+> Replace deprecated visibility macros and align group naming with new API.
+>
+> In alienware-wmi-base.c, use NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(rgb_zone=
+s)
+> to define the rgb_zones attribute group concisely. To preserve the existi=
+ng
+> userspace ABI, rename zone_attr_visible and rgb_zones_attr_visible to
+> zone_group_visible and rgb_zones_group_visible, respectively, to reflect =
+the
+> 'rgb_zones' group.
+>
+> In alienware-wmi-wmax.c, replace DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() with
+> the renamed DEFINE_SYSFS_GROUP_VISIBILITY() macro for the hdmi, amplifier=
+,
+> and deepsleep attributes to match the updated API.
+>
+> While here, add missing sysfs.h include and sort headers alphabetically. =
+No
+> functional changes are intended.
+>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
-You should never get to a driver probe function while iommu setup is
-still concurrently running. That would be a major bug and break alot
-of stuff.
+Thanks! I like these new macros.
 
-Jason
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+
+Small comment bellow.
+
+> ---
+>  .../platform/x86/dell/alienware-wmi-base.c    | 23 ++++++++-----------
+>  .../platform/x86/dell/alienware-wmi-wmax.c    |  7 +++---
+>  2 files changed, 13 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-base.c
+> index 64562b92314f..ee41892e562c 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+> @@ -10,10 +10,11 @@
+> =20
+>  #include <linux/acpi.h>
+>  #include <linux/cleanup.h>
+> -#include <linux/module.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/dmi.h>
+>  #include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sysfs.h>
+>  #include "alienware-wmi.h"
+> =20
+>  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+> @@ -326,8 +327,8 @@ static ssize_t lighting_control_state_store(struct de=
+vice *dev,
+> =20
+>  static DEVICE_ATTR_RW(lighting_control_state);
+> =20
+> -static umode_t zone_attr_visible(struct kobject *kobj,
+> -				 struct attribute *attr, int n)
+> +static umode_t rgb_zones_attr_visible(struct kobject *kobj,
+> +				      struct attribute *attr, int n)
+>  {
+>  	if (n < alienfx->num_zones + 1)
+>  		return attr->mode;
+> @@ -335,13 +336,12 @@ static umode_t zone_attr_visible(struct kobject *ko=
+bj,
+>  	return 0;
+>  }
+> =20
+> -static bool zone_group_visible(struct kobject *kobj)
+> +static bool rgb_zones_group_visible(struct kobject *kobj)
+>  {
+>  	return alienfx->num_zones > 0;
+>  }
+> -DEFINE_SYSFS_GROUP_VISIBLE(zone);
+> =20
+> -static struct attribute *zone_attrs[] =3D {
+> +static struct attribute *rgb_zones_attrs[] =3D {
+>  	&dev_attr_lighting_control_state.attr,
+>  	&dev_attr_zone00.attr,
+>  	&dev_attr_zone01.attr,
+> @@ -349,12 +349,7 @@ static struct attribute *zone_attrs[] =3D {
+>  	&dev_attr_zone03.attr,
+>  	NULL
+>  };
+> -
+> -static struct attribute_group zone_attribute_group =3D {
+> -	.name =3D "rgb_zones",
+> -	.is_visible =3D SYSFS_GROUP_VISIBLE(zone),
+> -	.attrs =3D zone_attrs,
+> -};
+> +NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(rgb_zones);
+> =20
+>  /*
+>   * LED Brightness (Global)
+> @@ -410,7 +405,7 @@ static int alienfx_probe(struct platform_device *pdev=
+)
+>  }
+> =20
+>  static const struct attribute_group *alienfx_groups[] =3D {
+> -	&zone_attribute_group,
+> +	&rgb_zones_group,
+>  	WMAX_DEV_GROUPS
+>  	NULL
+>  };
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-wmax.c
+> index 0c3be03385f8..559415849bcc 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/platform_profile.h>
+> +#include <linux/sysfs.h>
+
+JFYI, this line conflicts with linux-next.
+
+--=20
+ ~ Kurt
+
+>  #include <linux/wmi.h>
+>  #include "alienware-wmi.h"
+> =20
+> @@ -356,7 +357,7 @@ static bool hdmi_group_visible(struct kobject *kobj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->hdmi_mux;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(hdmi);
+> =20
+>  static struct attribute *hdmi_attrs[] =3D {
+>  	&dev_attr_cable.attr,
+> @@ -404,7 +405,7 @@ static bool amplifier_group_visible(struct kobject *k=
+obj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->amplifier;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(amplifier);
+> =20
+>  static struct attribute *amplifier_attrs[] =3D {
+>  	&dev_attr_status.attr,
+> @@ -475,7 +476,7 @@ static bool deepsleep_group_visible(struct kobject *k=
+obj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->deepslp;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(deepsleep);
+> =20
+>  static struct attribute *deepsleep_attrs[] =3D {
+>  	&dev_attr_deepsleep.attr,
+
 
