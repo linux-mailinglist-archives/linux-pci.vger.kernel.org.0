@@ -1,123 +1,124 @@
-Return-Path: <linux-pci+bounces-26523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8295A986C2
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:07:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F14E6A987EA
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:55:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2357C4405D5
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:07:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D66C443C3E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:55:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B602550CB;
-	Wed, 23 Apr 2025 10:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC102268C49;
+	Wed, 23 Apr 2025 10:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VJUCQCIt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553CE4430;
-	Wed, 23 Apr 2025 10:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4186517D346;
+	Wed, 23 Apr 2025 10:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745402860; cv=none; b=BryI/NxY6C6ZWhlzUQtuFZOTRBpCq9+dKlI1ioFblNxVOG7bRiv+tvM96BYJMfx0acTjrEOJE4/7fmaDWlFFmlnmq5Q7GQVrgImx3ATf2ZqhiqYUE+X9jDtXCZKNTa5Mp6fRU2uVu1E2Oxe+ZKjqav5jQYreVxeZYHovGWZyYIM=
+	t=1745405707; cv=none; b=GKVABEb14IOZVdTPxAiwyzqYtSzcdIoTBxE+aT/5XnRRdiq99uL8Gm1VClW8fw0t62PyCvveM6icucZ+K0ybkAbhr+IIYxCi/DT5Rway4J93QPE3gBubG1gAqkuGq70dIiqQmeM6/IkdyiHRRYZqLBzHBvkU8Nm9pL0KvtNEB3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745402860; c=relaxed/simple;
-	bh=wQXTEMkWgFliKoE1gEUn4FynzE0KnIEdc7gUFG1pCng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sfouEt6w7WNup4X08GOyPXQ4QHx3P45U+Yz3KTYrYDwvnbnlxMjqApVrw6DHFjy4Fz0B16PDIcnDljKBIUSDqNNx+g81K048QHuSpsdHc87/4+OcI4YKfJC/D6vEKDObWgzA+Xsq3pXvr/ZJ5XNQw3L1eHYgbl5Iy1UcmukVTFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 31AD5200A2AA;
-	Wed, 23 Apr 2025 12:07:04 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 499E735835; Wed, 23 Apr 2025 12:07:27 +0200 (CEST)
-Date: Wed, 23 Apr 2025 12:07:27 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1745405707; c=relaxed/simple;
+	bh=LydAg/3DZqJBoy3RvGL9TnEWtAS497xWnCoRb7eMUN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hVGeXT/PgH82KEMa6y7DpoFKTzGqwyrmyFiphYLQJvaGV9ZU08fC6Ckxtctl9iwc4wqqzILAqojB00gTdRZtmUxf5tfiaUEnR/6k5sVRyMUxAiu3zVC9XAzfgGrUkG4YpCloJvFZNkHIi/bjYw9KuZdCfHYt9BDn4UrrjfrcIUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VJUCQCIt; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8Zmrb
+	eq6bLjH06q2d/S498jz0cbVk1UENxMwcMkAn1U=; b=VJUCQCItXqAHYSERxhXjG
+	bogofW1u71PDTk9/YcgKwHGZN3XSd8B+zNnzTV9GekBPgDrmFhovExSPKcONQ2Nl
+	QKohm02Z8KmKgOAXEf8STgZ/0iA3/pncnoCMSrwEv4xi/SttMnUj/6d/v2MwP7SJ
+	DeIDW1gRBnkVAXYPle2cAo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S2;
+	Wed, 23 Apr 2025 18:54:18 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de
+Cc: manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with
- PCI_LINK_LBMS_SEEN flag
-Message-ID: <aAi734h55l7g6eXH@wunner.de>
-References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2 0/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
+Date: Wed, 23 Apr 2025 18:54:12 +0800
+Message-Id: <20250423105415.305556-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
+X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFykKw4ruF1kZry5tryfCrg_yoW5Jry7p3
+	Z8JFZ8ur43Jw40van7tw17XFy8K3ZrCFyY9w4UKw18Xa40qa48WFyftF1rury7XrWxKF17
+	ZwsrX3yI9a4av3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE4E_JUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDws4o2gIwTqxqgAAsf
 
-[cc += Maciej, start of thread is here:
-https://lore.kernel.org/r/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
-]
+1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
 
-On Tue, Apr 22, 2025 at 02:55:47PM +0300, Ilpo Järvinen wrote:
-> +void pcie_reset_lbms(struct pci_dev *port)
->  {
-> -	struct pcie_bwctrl_data *data;
-> -
-> -	guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
-> -	data = port->link_bwctrl;
-> -	if (data)
-> -		atomic_set(&data->lbms_count, 0);
-> -	else
-> -		pcie_capability_write_word(port, PCI_EXP_LNKSTA,
-> -					   PCI_EXP_LNKSTA_LBMS);
-> +	clear_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
-> +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
->  }
+---
+Changes for v2:
+- Add register annotations to enhance readability.
+- Use macro definitions instead of magic numbers.
 
-Hm, previously the LBMS bit was only cleared in the Link Status register
-if the bandwith controller hadn't probed yet.  Now it's cleared
-unconditionally.  I'm wondering if this changes the logic somehow?
+https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+
+Bjorn Helgaas:
+These would be material for a separate patch:
+
+- The #defines for register offsets and bits are kind of a mess,
+  e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+  PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+  PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+  names, and they're not even defined together.
+
+- Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+  PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+
+- PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+  Sure wouldn't guess that from the names or the order of #defines.
+
+- PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+
+- Submissions based on the following v5 patches:
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+---
+
+Hans Zhang (3):
+  PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+  PCI: dw-rockchip: Reorganize register and bitfield definitions
+  PCI: dw-rockchip: Unify link status checks with FIELD_GET
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 87 +++++++++++--------
+ 1 file changed, 50 insertions(+), 37 deletions(-)
 
 
->  static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
->  {
-> -	unsigned long count;
-> -	int ret;
-> -
-> -	ret = pcie_lbms_count(dev, &count);
-> -	if (ret < 0)
-> -		return lnksta & PCI_EXP_LNKSTA_LBMS;
-> +	if (test_bit(PCI_LINK_LBMS_SEEN, &dev->priv_flags))
-> +		return true;
->  
-> -	return count > 0;
-> +	return lnksta & PCI_EXP_LNKSTA_LBMS;
->  }
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
+prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
+prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
+prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
+-- 
+2.25.1
 
-Another small logic change here:  Previously pcie_lbms_count()
-returned a negative value if the bandwidth controller hadn't
-probed yet or wasn't compiled into the kernel.  Only in those
-two cases was the LBMS flag in the lnksta variable returned.
-
-Now the LBMS flag is also returned if the bandwidth controller
-is compiled into the kernel and has probed, but its irq handler
-hasn't recorded a seen LBMS bit yet.
-
-I'm guessing this can happen if the quirk races with the irq
-handler and wins the race, so this safety net is needed?
-
-This is quite subtle so I thought I'd ask.  The patch otherwise
-LGTM, so assuming the two subtle logic changes above are intentional
-and can be explained, this is
-
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-
-Thanks,
-
-Lukas
 
