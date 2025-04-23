@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-26564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FADDA9953C
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 18:34:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2DD5A99524
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 18:31:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E7451B85627
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 16:31:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5474C7B234E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 16:30:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4596E288CA5;
-	Wed, 23 Apr 2025 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D8A2289364;
+	Wed, 23 Apr 2025 16:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POP75IdI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIVehaMh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE63288C80;
-	Wed, 23 Apr 2025 16:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B86A288C9A;
+	Wed, 23 Apr 2025 16:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425817; cv=none; b=t8EVQbnJsAJ2po8Fi8vgOocm3LmllVrLqNRuD6MFDnl2ZjZxM87Xx7AKdFV9Uj29s8rn3mRccTFTEMMFVFzLoUrf8BvZbKf7zzO0amOiA9VyrkzDNY8NRceU3KDqA50ZSMgESsQvY9heLbIkDoppYv3OlA6wp35awOewpENlkxw=
+	t=1745425819; cv=none; b=AhB6fy5Tn2Izab9Gx/purRDU5XiO8UBK0zUny7D0NdB90y0/nR4t2Epb6jLuisyv9KHZ60pnd6Wcanl7NFdTju8o/smD4l6wJWnKnqd2QnGkz6WuZFluH7OGrJzWL+FvvlZFxqC7omUDRlnGCru4C3FFz1HwkeO3P8AT9FCdNhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425817; c=relaxed/simple;
-	bh=DFFkISZ+wsor0lGXgM1JwIFeqscLbz0j3F8wFkfSE04=;
+	s=arc-20240116; t=1745425819; c=relaxed/simple;
+	bh=cxq8SQPIttegAQ/VdXTVQPKMu7L6YbwbWuqPynYdF28=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rfG5yH+c5UDyRPB0dvcJkTZXU11TIx35v4C0t3WcCxMhFgNsl59T1Gj0t9Ey5+hP43SBPqoLlAmyGdUTO2INLH2JOEKL6xJp1ixwDl7Nq4UP/OHMsq0Rj663pDsEEgl/Y5rxeTpFm9at5skCGNdQDx86jwNXg3BkJuuXqSqlSlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=POP75IdI; arc=none smtp.client-ip=209.85.222.176
+	 In-Reply-To:To:Cc; b=QmVTaexD1z9B7XkMNq+EhuVQMh32PJ3c6werqqDD2feDNwGXMdaTLUOIC4UM6E6/QZZHnK5tigncJs3dN86JVu976EiOL95Wc095l8adtejCuU8zDDhyaLZLlJFktcAwt0Pn8hHqKI0UKEkqiwVuGZlM1jzHOM3zzR0d79ugPsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIVehaMh; arc=none smtp.client-ip=209.85.222.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c9376c4dbaso8904985a.0;
-        Wed, 23 Apr 2025 09:30:15 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c560c55bc1so736985a.1;
+        Wed, 23 Apr 2025 09:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745425814; x=1746030614; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745425816; x=1746030616; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=z0ja/1pV62iEC0nEku9AQfzl6u3YciLHVA48FbywNX0=;
-        b=POP75IdIsAqLdw2pCXZeBex+4HNrD6SyyMmiSgJaxDV06UXtiNPuRfRFiN3Tn2t6JZ
-         lwwVApG25CgTRbezbBbu/VtV1TJmPpl/gmnzBsWyZ3NfQ/0en6tfdVcCy76UDLrbYd0e
-         vl+TzAaB+86ANuvEMof2rz5LLBwRqcSLPx9eLZ+QByr9vq9mcm7OkiLRy7pwDrwCu89Q
-         LnGv+o6p4PX6NgAN6e0I/PP4f+i7c7StpqNo0QskZoOw/qz6ivU+C/w4TdYJQq2nQ5WL
-         6oEu6Mi3npxhbabepjaPKmwjqC1QARBzpJ6tiMyHxzNVwaHOd5mzO+BTdgQexOzPj3NR
-         Dk3Q==
+        bh=7OzkWd7763iU7orIo6m7aRkDgbxfxBvtpXsSVHS4Bj8=;
+        b=IIVehaMhx1NmWJ3wSD/QwDC28TqHL63XgffwGOQLDpR3lZrRToK5uC//8TuUsrkmAt
+         cDpxt8Amso8QOiEsWxF27meQLSZPkeu3TT6vcQBTy6mpW8n9afoTwBcQ+Bc7z9nKpLaZ
+         hboY3Q9EzV5f8pLkGSq6BtBtYpLuwUZoQfOYen8ArZz+8g3b+SqOKeLgTLLI1q/rXqL2
+         eQma9bGQPd2NP2d8D7JfMJqSUsvYGMZJp4V09Gn6IH5j/TNtMHkLS46xqMdFwTibSkPG
+         4DpckiaRKuGlQ1LvdW4lriT+wFIh/toJv51ezqG6gz4jNVwJ35zdWQncg31pVlnissXH
+         ngPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745425814; x=1746030614;
+        d=1e100.net; s=20230601; t=1745425816; x=1746030616;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z0ja/1pV62iEC0nEku9AQfzl6u3YciLHVA48FbywNX0=;
-        b=Wlxv+i66iCWyZen06MStBsZxsORXW5HnaGjQtiV3fgiV1T9bMdrJb0JH/S0I8NG37q
-         OlG/VxwEHcVWOd197zNVookcmaGZ0WZ/wqc6jhTkiKXVrduHWuL+ngA3Y6GOtmigZOhS
-         yNqxjCGmsJAD8tOF8AFiK6QXr27S9kFU5pt6ZJffbwHMSsqhKSnL1XaE6QSO3t0r/f6g
-         l9YhbzOp5GL/W51psSbPjwT8tsw3AFiynLgfQSmOe4rhxFvNKKXIfUWfvl6clfx3onfc
-         N3syMSYPizBgEP6zRVqdiRh6YIJstwtx6+HNrQ3Lb269B+FOjMmCaIMgj6eTR7Eg9/b1
-         AgjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVk2/xW+xWclkeOdHdhvmKeBsT6JaH5egkiXBGx8mxbrTAlFF/0dVTPAoV0hOizVs+POSoCxtJlZH+0@vger.kernel.org, AJvYcCX0WPRJo2rkmuEABT/l/1Kr6+qlvcRa3ZGN6baHD2d4KOhSYefs6B6soiDcxRxRCrd56Pf/nZl8xWly4Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1ng6rAkQHJvyWax4LV9HLnEs04jVFGx7XUCJOvqyAz6nKvd+X
-	9SyZmUz94z4uVqJsvjDICIVN79L7rRkbFNnt8KCMSzWcrpq56BBEkVBgfOADc94=
-X-Gm-Gg: ASbGncvgxoVGOmRXHNlJQ10GSPdfN6Ikg9E8Dugj2N11HQvVefU+ex29rte6mdmLHRD
-	KX5Bg4tySqqfctd48GUMfDD4z7R9ANLY3GL0eJrvoafaMqSao74VZ5ULZ3RlXG4Uwwqb0C1gTok
-	kAjaofqXObzAQgVmbGJa7D0a5g0XMEqNp9N5fPxOsRN0jnsKYB2Od7fHEtZA3g8kaoHcxoccTDM
-	G8peyJ///g7sZsDhLr1gG4jE68R73ZkCgwOsY2j36ArpwvlxaVAglpWI0Hcs5O4njJKuomc8Drm
-	0ZBVEU7q8xhwmDEc2Q7ZR0R1mA6b7ivV8/Yfg64lnZo+Fu1Vx0/tgmt7ZTG7wPcqrorVLiTmu4/
-	cd+JUE2Fq9p/zoEqDtzbpaaVWShGmqzu4OS2IMo55NqfI2Mw4sw==
-X-Google-Smtp-Source: AGHT+IF5nP6uIzCJ30umK2Oe32c6tsM0b+7FfAl7tqdWBVvzvhSqUHfBW0bTdBQ9UcSX5b5SX5lr1A==
-X-Received: by 2002:a05:620a:290d:b0:7c9:1c6f:b4c8 with SMTP id af79cd13be357-7c94d847c9cmr636861085a.15.1745425814007;
-        Wed, 23 Apr 2025 09:30:14 -0700 (PDT)
+        bh=7OzkWd7763iU7orIo6m7aRkDgbxfxBvtpXsSVHS4Bj8=;
+        b=vG88HictbgZnPoKTTVg77B8MT+LXO9erfTI3nrxr3e/Nrczer2vHgkUkRzU5h8GtYd
+         6E3mhIZC2P5b1dJmvc3AyHfYSun8UzvO9IY0TbW4g3bx7U2yXUBMZ3yuWPmhgO3YOXrz
+         uF58pURb+ACI+jvqMTcw0Koi9ETCHbP/Yby4CkD4KMxAHfGBk2l5K+I0vaeOIRRz9gJe
+         rhRBa6EEwFv4fUpKRfzJFmAdD/Sd/U5paLkPWJgPsbd/FmL421MGMIxTBhk6hXxYaJz+
+         UU5LFqlpPjlS2WNIBIW25l1LHrMjTZ78t7HwkYyaRrLbDH+ubU8eFHC5YB86ZMrOha8q
+         cPzA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2tYLuuutc+B+VoMPkr3bhFtth02IG8+nH1GYXCkG9yu5WY+Wq/O4/ZildLWd7sAcH4U2sHXYTJ57I@vger.kernel.org, AJvYcCVnJzDAb/DuDXor1yE/Xon4mqGJBQ4gPdI0xEXC6rzU3SGuowpgaopM+xle4qd2RRyOl8nQIT4zezqr4GI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwxQPUycN8cEUpkUX7LTDRQ4mQqqaUHzUymKhR7fL9DBXJWKms
+	HJbBN0OYhvHxcrS6n2jP9zzXOVYybmS7yRNqjgES2XMq0i/cHcVY
+X-Gm-Gg: ASbGnctVX+/n7fDYqmHmMuGagV86MJ/MXkr0Masy50TyD7uBno4hraljBYambg0wlQG
+	UW+v1qfC1UKz4YeBgvJp3/29OrRF3QsNJneYiVhLP+yyc1VJAMV3waL890GQcVvtfSSnBlPpktT
+	yUeNoWIERAflzK9dTQD89d9m/jEr4qGTl0NOI2H7U9hy6Kk0hIC3/xFSpd9Nm6xcv6UH25kz+mT
+	o7YcjXq7vYEfHlczhjycv+YCd0AczuAUiW9wpsUH+LuY4wX4iZVM7G+l1WMft2LNhfb0CsWrT1W
+	GHgaxq0wtingH7CrwoQr7GKCedA4g+9OHbB97/GAmRX8OgEG4UMNpoA39NV2ZlobI7qLV1N2R2Z
+	MlClQFQpe+ur6+ptsKBbkYwD8LV9qdP/DhC3MCUftqdPMcCnFztkCZBGdfyqX
+X-Google-Smtp-Source: AGHT+IHd54GP84hEi7muy02a3dkpCB1UaHkY3LKmMK+FWfm1/jROl/vYID1fEQeR9RjJbDXGy7hOTQ==
+X-Received: by 2002:a05:620a:28ca:b0:7c5:94b2:99da with SMTP id af79cd13be357-7c955dc3934mr35101185a.28.1745425815793;
+        Wed, 23 Apr 2025 09:30:15 -0700 (PDT)
 Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:e2b6])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4dac4sm698031885a.86.2025.04.23.09.30.12
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4dac4sm698031885a.86.2025.04.23.09.30.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 09:30:13 -0700 (PDT)
+        Wed, 23 Apr 2025 09:30:14 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 23 Apr 2025 12:30:02 -0400
-Subject: [PATCH v3 1/6] rust: list: simplify macro capture
+Date: Wed, 23 Apr 2025 12:30:03 -0400
+Subject: [PATCH v3 2/6] rust: list: use consistent type parameter style
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-list-no-offset-v3-1-9d0c2b89340e@gmail.com>
+Message-Id: <20250423-list-no-offset-v3-2-9d0c2b89340e@gmail.com>
 References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
 In-Reply-To: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -100,57 +100,55 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
 
-Avoid manually capturing generics; use `ty` to capture the whole type
-instead.
+Refer to the type parameters of `impl_has_list_links{,_self_ptr}!` by
+the same name used in `impl_list_item!`. Capture type parameters of
+`impl_list_item!` as `tt` using `{}` to match the style of all other
+macros that work with generics.
 
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- rust/kernel/list/impl_list_item_mod.rs | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ rust/kernel/list/impl_list_item_mod.rs | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/impl_list_item_mod.rs
-index a0438537cee1..5ed66fdce953 100644
+index 5ed66fdce953..49f5af12e796 100644
 --- a/rust/kernel/list/impl_list_item_mod.rs
 +++ b/rust/kernel/list/impl_list_item_mod.rs
-@@ -43,7 +43,7 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID> {
+@@ -41,7 +41,7 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID> {
+ /// Implements the [`HasListLinks`] trait for the given type.
+ #[macro_export]
  macro_rules! impl_has_list_links {
-     ($(impl$(<$($implarg:ident),*>)?
+-    ($(impl$(<$($implarg:ident),*>)?
++    ($(impl$({$($generics:tt)*})?
         HasListLinks$(<$id:tt>)?
--       for $self:ident $(<$($selfarg:ty),*>)?
-+       for $self:ty
+        for $self:ty
         { self$(.$field:ident)* }
-     )*) => {$(
-         // SAFETY: The implementation of `raw_get_list_links` only compiles if the field has the
-@@ -51,9 +51,7 @@ macro_rules! impl_has_list_links {
+@@ -51,7 +51,7 @@ macro_rules! impl_has_list_links {
          //
          // The behavior of `raw_get_list_links` is not changed since the `addr_of_mut!` macro is
          // equivalent to the pointer offset operation in the trait definition.
--        unsafe impl$(<$($implarg),*>)? $crate::list::HasListLinks$(<$id>)? for
--            $self $(<$($selfarg),*>)?
--        {
-+        unsafe impl$(<$($implarg),*>)? $crate::list::HasListLinks$(<$id>)? for $self {
+-        unsafe impl$(<$($implarg),*>)? $crate::list::HasListLinks$(<$id>)? for $self {
++        unsafe impl$(<$($generics)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
              const OFFSET: usize = ::core::mem::offset_of!(Self, $($field).*) as usize;
  
              #[inline]
-@@ -85,18 +83,14 @@ pub unsafe trait HasSelfPtr<T: ?Sized, const ID: u64 = 0>
+@@ -81,16 +81,16 @@ pub unsafe trait HasSelfPtr<T: ?Sized, const ID: u64 = 0>
+ /// Implements the [`HasListLinks`] and [`HasSelfPtr`] traits for the given type.
+ #[macro_export]
  macro_rules! impl_has_list_links_self_ptr {
-     ($(impl$({$($implarg:tt)*})?
+-    ($(impl$({$($implarg:tt)*})?
++    ($(impl$({$($generics:tt)*})?
         HasSelfPtr<$item_type:ty $(, $id:tt)?>
--       for $self:ident $(<$($selfarg:ty),*>)?
-+       for $self:ty
+        for $self:ty
         { self.$field:ident }
      )*) => {$(
          // SAFETY: The implementation of `raw_get_list_links` only compiles if the field has the
          // right type.
--        unsafe impl$(<$($implarg)*>)? $crate::list::HasSelfPtr<$item_type $(, $id)?> for
--            $self $(<$($selfarg),*>)?
--        {}
-+        unsafe impl$(<$($implarg)*>)? $crate::list::HasSelfPtr<$item_type $(, $id)?> for $self {}
+-        unsafe impl$(<$($implarg)*>)? $crate::list::HasSelfPtr<$item_type $(, $id)?> for $self {}
++        unsafe impl$(<$($generics)*>)? $crate::list::HasSelfPtr<$item_type $(, $id)?> for $self {}
  
--        unsafe impl$(<$($implarg)*>)? $crate::list::HasListLinks$(<$id>)? for
--            $self $(<$($selfarg),*>)?
--        {
-+        unsafe impl$(<$($implarg)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
+-        unsafe impl$(<$($implarg)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
++        unsafe impl$(<$($generics)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
              const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
  
              #[inline]
