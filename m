@@ -1,45 +1,80 @@
-Return-Path: <linux-pci+bounces-26545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26546-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B432A98C92
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 16:15:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD86A98CA7
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 16:19:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6623AE016
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 14:15:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF3193B44CF
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 14:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187FC27054C;
-	Wed, 23 Apr 2025 14:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0019F1A2387;
+	Wed, 23 Apr 2025 14:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OhudICsc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6CeChcg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A463149E17;
-	Wed, 23 Apr 2025 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB8D15575C;
+	Wed, 23 Apr 2025 14:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417748; cv=none; b=YeiofIzVpSEX/sCo+cW7+q0k1MVR16o8SQP7+houhvkcZvjnwFu66g8J5Cj2Qdhdfav4vgqFrOkVLZuMP4MU6FXo4Jw0WbKrR5ZKtc1MAGMoErtKonwLWEmEYLnizD2KLX3VX3owlM5ZvnJn3lcdYjq7bHJYsaB3XQAQFvV0uT0=
+	t=1745417963; cv=none; b=Ff570s5tu9xmV/0Ucm63j833cnqGYdieD5gsn21C4/16e93GfoFc5qyD2wkImDqqXacC42wNnxV+t/Eoqsp7YsQp6IMiiCjM8dpSaB9/ekcJt8M9pMpgh72bBZYMs/uJKi+njVTzae6iT/CIBGWUubyeawhSNZY3AV/DAYVOk6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417748; c=relaxed/simple;
-	bh=/DMHVsEnD/BzUR8poZu4/uOWVkwpTFT3gHjSxGkCoR0=;
+	s=arc-20240116; t=1745417963; c=relaxed/simple;
+	bh=a3QuU/5M1g+2fdWE9+BThS9HdAQLNNLFa8gLlgzAxpM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IVkUdHsmxivs8qgeye/YNwqhE5sAOS96J/JZuanR0w3j/tocxKnKf36HkaoXSSGwA3KaI35ya4YbubVhzUS+VKIXsWuwV4120Rd3Z6HO/d+gBaReei6lbJFG1OhYD1fqYw8lB1pMk4jcINHLJbTqjtkcXEGN5yToEe9GvDGYKyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OhudICsc; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=6xbZYXykMjgKMSpp52ywZEBlzjIEow9Ok6NjY0siqUc=;
-	b=OhudICscJ21Kt98vX6rUiv4cDB7SwN1mK2jKC53EgKi7bz9iuBd6o/OE+zMLPn
-	h22rs/khVJeHuPHZ0OA+edvEA6E1n/cPPN9+Y3cU6bJa/Yn28bnAYQPf0J8DGPQe
-	Q3WkU7dElgsQe6x4t39U2vpOY5z5mL0muVjmEway1Grho=
-Received: from [192.168.71.89] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDHnCTi9QhoY7rzBQ--.27617S2;
-	Wed, 23 Apr 2025 22:14:59 +0800 (CST)
-Message-ID: <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com>
-Date: Wed, 23 Apr 2025 22:14:57 +0800
+	 In-Reply-To:Content-Type; b=XtBzrwn4bOZBzqGIKYwSFX02K3Kt0r9qsc7KsYBB4lO/uMrIAPm8FYAgF7mXb0qgFUltrpA63rRLvjS8Fp0/2b1iA8Qccr1YtGLJ51KoUV5efTPoYcqLY9tV53sFSlQe+PHq7Y2aH2xeKkGblwVeRdPQKAfKRME5MG+rRS06P80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6CeChcg; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso63799205e9.1;
+        Wed, 23 Apr 2025 07:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745417960; x=1746022760; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BC2k5eQglcx0fx1dsDzep368jwlMehiurszSSCQbWeE=;
+        b=i6CeChcga3okk7XYQK6FSsK+zqu+5AQ1n4DxHyaWGpfcKoP7TMrCUk66vvq13FCtSi
+         6LDXY1kf8pp5b+wc1e579iZzcyjlOsh1pKK8GZ5aYa9Zag39rgJIKrsnNx/hgfR7iwkc
+         5b7UNma451OURsVjZgxiLmr/DEsXratgPNzWjuzM/xIkENBxdBmsRCREiBj0+bS2XPn7
+         DvhVBNRXH93kSQ5RgsIzGu7ztqOsptbpcJ6c0E1fjGncVF2p8Qu1iIEaLT82V8onA82y
+         DSieKMMvpDiI0kZRwXhmlZQdEPYSNkuJDRx9tpNZ2Vf15CZaYjI0lDR7Hf2m4iseGmje
+         acyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745417960; x=1746022760;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BC2k5eQglcx0fx1dsDzep368jwlMehiurszSSCQbWeE=;
+        b=iQPLLND/dBaBp+tq/9wOg8X83FBmzGqMTFK7uS/h0gAvam6gowbuzdpr9LAoUa7kjW
+         0ppzrWPQkYvdI8gPAeTednPF/QRBcNgFz1r1M0e2VIM4LCFNJ31il7ToH4I4IRz/C91t
+         nd6Xf67C8A8H+7Oate4dbhfb2hjPntEiDgD579yezQN6kgKlvg5lyqoIkVQANObSKRPD
+         Zr1zycutVF/M4/CYN43kqvfhkgtMty0exStXZiQeqlh6pCdVQJErLJ+idIUhzQ33OaWV
+         0FrYDlWXP22xp+n6VaKKjlaibvEohXkUCHaLbieNnHHertfofhWj3M4jEp8Wu9ATN7a0
+         zdLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVV+DS4tWFjzs2UVfs7ITOZ9l6GAcs2eetRtpOAqIo1YebIAS2kqUyG4h45A/9jDrnlx8ZYycc2vk3y@vger.kernel.org, AJvYcCWozwA8tMEctsrF43CQ+vDzoHanjmOomRIjy3QawXkDZjL4fSGv/S4ULKKMwibdlpSVCRZkJC2cfCML6Sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY6GomtO35gZymtubAAmNjhEd0VgNlSgDDtmqnOngswTZqGcKz
+	FSECatfeYY/ldf3kySz2F+PHxNUdIqlodnnlF36L5abjxuoe+ydj
+X-Gm-Gg: ASbGncudwfTpsuLY71tnh/wzdvgm2/ojia41mDLwcxn8/yWgjGWhrLy0C/KYQlBrrg5
+	inkAX55tAS/PEUnysPL3ZODoccVCCqpWzd+PPsI9oJYLXwrwIdyIJdJH9P4VPxphkW5NZNZVyBi
+	NoHtyGpwMYzYwRQ54pTO2/bSKyxCGv+TAWUGTbSWBavadECd0x754cvjzvuLFUwLIxBV7eigSAD
+	dq9xULGtmbBzqaN5Db04udpXMDdxHBgC3K/Fb4uBOb3wpupcsj/Vjx4Kh8V99AnBgViQxU4JZFB
+	UU8rW5FAAO9hJEKsx09yMlF7W/j+fi7UV6ssIR5QKOB5KE3RiAy34W2bUKaA7mIDzjiQNry4DUB
+	wJxexd8FSw/lzSKs57qPy+w27g+raCMjb9U4f1yMAyyaSTqDi
+X-Google-Smtp-Source: AGHT+IEQEla6uy7DVJVg+zOPOZf5zyoJStwY2Be9b+4OI0Pna2znCZx1xFa/uFU/v2hwQVxZh58K4Q==
+X-Received: by 2002:a05:600c:1c8e:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-4406ab6c278mr187494845e9.2.1745417960075;
+        Wed, 23 Apr 2025 07:19:20 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-3-64-116-27.eu-central-1.compute.amazonaws.com. [3.64.116.27])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d369f1sm27473715e9.29.2025.04.23.07.19.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 07:19:19 -0700 (PDT)
+Message-ID: <72dc3881-2056-48b6-a710-f497d614dd53@gmail.com>
+Date: Wed, 23 Apr 2025 22:19:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,197 +82,78 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250423105415.305556-1-18255117159@163.com>
- <20250423105415.305556-3-18255117159@163.com> <aAjufPQnBsR6ysAH@ryzen>
+Subject: Re: IRQ domain logging?
+To: Bjorn Helgaas <helgaas@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250422210705.GA382841@bhelgaas>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAjufPQnBsR6ysAH@ryzen>
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250422210705.GA382841@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PSgvCgDHnCTi9QhoY7rzBQ--.27617S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1xGry5KryDKF4ktr1xAFb_yoWxur1fp3
-	4DAFyIyr45tay7Z3s5uFs8XFWIqrnxKFWUWrsagrWUZ3WkAw48Gw1j9FyrWFy3Jr4kCrWf
-	uwn8C34SgFWakrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBq2_UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxg4o2gI7X36cgAAs0
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2025/4/23 21:43, Niklas Cassel wrote:
-> On Wed, Apr 23, 2025 at 06:54:14PM +0800, Hans Zhang wrote:
->> Register definitions were scattered with ambiguous names (e.g.,
->> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
->> hierarchical grouping. Magic values for bit operations reduced code
->> clarity.
->>
->> Group registers and their associated bitfields logically. This improves
->> maintainability and aligns the code with hardware documentation.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 71 ++++++++++++-------
->>   1 file changed, 45 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index fd5827bbfae3..6cf75160fb1c 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -34,30 +34,49 @@
->>   
->>   #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
->>   
->> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
->> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
->> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
->> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
->> -#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
->> -#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
->> -#define PCIE_CLIENT_INTR_MASK_MISC	0x24
->> -#define PCIE_CLIENT_POWER		0x2c
->> -#define PCIE_CLIENT_MSG_GEN		0x34
->> -#define PME_READY_ENTER_L23		BIT(3)
->> -#define PME_TURN_OFF			(BIT(4) | BIT(20))
->> -#define PME_TO_ACK			(BIT(9) | BIT(25))
->> -#define PCIE_SMLH_LINKUP		BIT(16)
->> -#define PCIE_RDLH_LINKUP		BIT(17)
->> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
->> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
->> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
->> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
->> +/* General Control Register */
->> +#define PCIE_CLIENT_GENERAL_CON		0x0
->> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
->> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
->> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
->> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
->> +
->> +/* Interrupt Status Register Related to Message Reception */
->> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
->> +
->> +/* Interrupt Status Register Related to Legacy Interrupt */
->>   #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
->> +
->> +/*  Interrupt Status Register Related to Miscellaneous Operation */
+On 4/23/2025 5:07 AM, Bjorn Helgaas wrote:
+> Hi Thomas,
 > 
-> double spaces, other comments just have one space.
+> IRQ domains and IRQs are critical infrastructure, but we don't really
+> log anything when we discover controllers or set them up.  Do you
+> think there would be any value in exposing some of this structure in
+> dmesg to help people (like me!) understand how these are connected to
+> devices and drivers?
 > 
-
-Hi Niklas,
-
-Thank you very much for your reply. Will change.
-
+> For example, in a simple qemu system:
 > 
->> +#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
->> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
->> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
->> +
->> +/* Interrupt Mask Register Related to Legacy Interrupt */
->>   #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
->> +
->> +/* Interrupt Mask Register Related to Miscellaneous Operation */
->> +#define PCIE_CLIENT_INTR_MASK_MISC	0x24
->> +
->> +/* Power Management Control Register */
->> +#define PCIE_CLIENT_POWER_CON		0x2c
->> +#define  PME_READY_ENTER_L23		BIT(3)
->> +
->> +/*  Message Generation Control Register */
+>    IOAPIC[0]: apic_id 0, version 32, address 0xfec00000, GSI 0-23
+>    ACPI: Using IOAPIC for interrupt routing
+>    ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+>    ACPI: PCI: Interrupt link GSIA configured for IRQ 16
+>    hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+>    ACPI: \_SB_.GSIA: Enabled at IRQ 16
+>    pcieport 0000:00:1c.0: PME: Signaling with IRQ 24
+>    00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+>    ata1: SATA max UDMA/133 abar m4096@0xfeadb000 port 0xfeadb100 irq 28 lpm-pol 0
 > 
-> double spaces, other comments just have one space.
+> I think these are all wired interrupts, and maybe IRQ==GSI (?), and I
+> think the ACPI link devices are configurable connections between an
+> INTx and the IOAPIC, but it's kind of hard to connect them all
+> together.
 > 
-
-Will change.
-
+> This from an arm64 system is even more obscure to me:
 > 
->> +#define PCIE_CLIENT_MSG_GEN_CON		0x34
->> +#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
->> +#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
->> +
->> +/* Hot Reset Control Register */
->>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
->> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
->> +
->> +/* LTSSM Status Register */
->>   #define PCIE_CLIENT_LTSSM_STATUS	0x300
->> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
->> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
->> +#define  PCIE_SMLH_LINKUP		BIT(16)
->> +#define  PCIE_RDLH_LINKUP		BIT(17)
->> +#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
->> +#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
->>   
->>   struct rockchip_pcie {
->>   	struct dw_pcie pci;
->> @@ -176,13 +195,13 @@ static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
->>   static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
->>   {
->>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
->> -				 PCIE_CLIENT_GENERAL_CONTROL);
->> +				 PCIE_CLIENT_GENERAL_CON);
->>   }
->>   
->>   static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
->>   {
->>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
->> -				 PCIE_CLIENT_GENERAL_CONTROL);
->> +				 PCIE_CLIENT_GENERAL_CON);
->>   }
->>   
->>   static int rockchip_pcie_link_up(struct dw_pcie *pci)
->> @@ -274,8 +293,8 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
->>   	u32 status;
->>   
->>   	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
->> -	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
->> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
->> +	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN_CON);
->> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN_CON,
->>   				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
->>   				 PCIE_PME_TO_L2_TIMEOUT_US);
->>   	if (ret) {
->> @@ -294,7 +313,7 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
->>   
->>   	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
->>   	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
->> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
->> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER_CON,
->>   				 status, status & PME_READY_ENTER_L23,
->>   				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
->>   				 PCIE_PME_TO_L2_TIMEOUT_US);
->> @@ -552,7 +571,7 @@ static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockch
->>   	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
->>   	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
->>   
->> -	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
->> +	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CON);
+>    NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>    GICv3: 256 SPIs implemented
+>    Root IRQ handler: gic_handle_irq
+>    GICv3: GICv3 features: 16 PPIs
+>    kvm [1]: vgic interrupt IRQ18
+>    xhci-hcd xhci-hcd.0.auto: irq 67, io mem 0xfe800000
 > 
-> I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
-> (to match PCIE_CLIENT_MSG_GEN_CON).
+> I have no clue where irq 67 goes.
 > 
-> But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
-> PCIE_CLIENT_HOT_RESET_CTRL.
+> Maybe there's no useful way to log anything here, I dunno; it just
+> occurred to me when looking at Jiri's series to reduce the number of
+> irqdomain interfaces.  PCI controller drivers do a lot of interrupt
+> domain setup, and if that were more visible/concrete in dmesg, I think
+> I might understand it better. 
+The current visibility into interrupt routing in systems is fragmented, 
+making it challenging to observe the routing behavior of specific 
+interrupts or interrupt types. For enthusiasts exploring system 
+internals, having a ​traceroute-like tool to map interrupt handling 
+paths would significantly enhance transparency and debugging capabilities.
+
+e.g. How an MSI is routed and remapped between different domains on x86
+
+MSI pci-dev-->ioapic-->iommu-->apic-->cpu
+
+But so far it seems there is no enough info from KABI(/proc /sysfs 
+syscall, dmesg etc) to compose a complete chain like that ?
+
+Thanks,
+Ethan
 > 
-> _CTRL seems like a more common shortening. How about renaming all three to
-> end with _CTRL ?
-
-I saw that TRM is named like this.
-
-PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON / 
-PCIE_CLIENT_HOT_RESET_CTRL
-
-Shall we take TRM as the standard or your suggestion?
-
-Best regards,
-Hans
-
-
+> Bjorn
+> 
 
 
