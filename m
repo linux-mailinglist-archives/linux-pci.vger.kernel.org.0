@@ -1,64 +1,60 @@
-Return-Path: <linux-pci+bounces-26613-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26614-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17FC7A9997E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 22:31:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC78BA99990
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 22:43:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 295611B83EC4
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 20:32:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 844B83BC03E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 20:43:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB38268C73;
-	Wed, 23 Apr 2025 20:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B66E226B953;
+	Wed, 23 Apr 2025 20:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwQdKPre"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7q0UEC5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2139F2673A5;
-	Wed, 23 Apr 2025 20:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E111269AF9;
+	Wed, 23 Apr 2025 20:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440305; cv=none; b=N75eSt+5NoInpGf9NX415/uJEaqpC6Nm6gH2bhn8cXLNBHe1RBCfRw+ySG5CvY9LcSpkhmwzsASmtkNmuJKShlfbsuwhczL7IUt/+VbcWi9MjeGQSX//DNO+d0Kpcs1zMgSoWxDSN3cUgOC5o00lQQuJd+tdM8A6lZYLW1ZDidg=
+	t=1745441018; cv=none; b=YI4v1u7uxxuCi0O2FGVH8kptSUkWgBqPIQkCuWXtrv5k7gCgEadFr5j9/r2TQuHLjdacnXcaDC8OdSUeAuAzlklBvIAZd97qBeF+PK6atwyxAErkyFePRa4TUqXebBt55b49iS2TtLF1WGhSmrlu7M2cd/O9bSE1W6etjktUz8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440305; c=relaxed/simple;
-	bh=sdH9DfsumybijEPv6nEjkMCI0xiJIyMrHI8wkvWKjIE=;
+	s=arc-20240116; t=1745441018; c=relaxed/simple;
+	bh=HrL/5UsnsNjf51o3+tYUbdc3ePvfKmSpex/M7qcCV0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Et9fZXymyCIx9KVHiB+4PARKdEcQMkbYce9X+WH/QGG029kH8g7lEupinH+nNbdheb6Kyyk8Bcn2eS4/nR5LU7IWxPL0AJ6Q21Lc8e8XOiIZjdQSJnvwyAvbG5pktrzfGfDYsI/1p9zreTysBLJOoWv/i0hcmvuBhaGinCMrGgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwQdKPre; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE9CC4CEE2;
-	Wed, 23 Apr 2025 20:31:44 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=mYQ+lUNLPOlyO/mrl2q2h/FMOt+CtzKKGjj+mKLk8Hb+Kw4mK7ots6vjSyjxBnukAzRMCDFqczaySnNhPqCJQ9zzALzUAdEjRtCUcipw+9WGQ5xEFZFZ7orNX92zAnAjAclpO04B0sBFc2JiYWlSuM7axusZtmVGTIxXX3nNReE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7q0UEC5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFDB3C4CEE2;
+	Wed, 23 Apr 2025 20:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745440304;
-	bh=sdH9DfsumybijEPv6nEjkMCI0xiJIyMrHI8wkvWKjIE=;
+	s=k20201202; t=1745441018;
+	bh=HrL/5UsnsNjf51o3+tYUbdc3ePvfKmSpex/M7qcCV0w=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dwQdKPreceeLuEcZ/eiHS5XfDm3IL1B1L8ok4n9wtPTne5mTEVG/Y2tFtHw4pCWYa
-	 kI6NlrAlD42cR49N9wtVGL1KhtLFSaNDJgXxMPxKciW++V7XVo5kz86nqAVJO9jhGD
-	 KzNl+XqqoWshlRj7+pczP8m7LMbCyKIfsYiVXiXd1ueCsbvKiYz+XLozVXnUbVSkpQ
-	 uypjekvs5aml0SAgI4ZwMrwLaRhz+Cw4LTvy+CL6qKmkemqOGE5tBDrvNybT24qRkZ
-	 r67ucZy9S2krnelvXFlKtRVQlPWkEjmb/U6EBSJ0a5xmIL/2mmY1Uo2ke4M7lhK3tW
-	 jR5rmeeRoP8jA==
-Date: Wed, 23 Apr 2025 15:31:43 -0500
+	b=X7q0UEC57iIo8snpOnLNlXN2Q8guqDBQihA1ZEnGi9CsJ1GW4aa5UnCTDVmZZOGnv
+	 HurnvhwOpPkFSXdCCw93hrOwP/VrN5Dl3kaXHqj9XDdpH3Tr5OvrEEON9/DKSqWI3M
+	 0DbDHac6N49q2CLjEYJz6MI01csZCjFN1J34BSQxgS8S6CmtLSfx72rfvVifqlb3xB
+	 37r4x/JIeZkgbEj1ba4pKNQzlgdT8VeUeZHr4KWJPhTIzsU0pfBJhzadEx4WzK5Poc
+	 kCBJJ+rojfIYLjaFV29WLZ9meddmlm5tuazz7CXtrhgRL2IqNWoGD3vljjYDlBhdmC
+	 NHh+5lurYvUyw==
+Date: Wed, 23 Apr 2025 15:43:36 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Jon Pan-Doh <pandoh@google.com>,
-	Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Liu Xinpeng <liuxp11@chinatelecom.cn>,
-	Darren Hart <darren@os.amperecomputing.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-Message-ID: <20250423203143.GA442813@bhelgaas>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] [v2] PCI: add CONFIG_MMU dependency
+Message-ID: <20250423204336.GA452880@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,163 +63,357 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c51f0f8b-99c2-49df-9112-650b3c5382f4@oracle.com>
+In-Reply-To: <20250423202215.3315550-1-arnd@kernel.org>
 
-On Wed, Apr 23, 2025 at 03:52:27PM +0200, Karolina Stolarek wrote:
-> On 25/03/2025 16:07, Karolina Stolarek wrote:
-> > Currently, CXL and GHES feature use pci_print_aer() function to
-> > log AER errors. Its implementation is pretty similar to aer_print_error(),
-> > duplicating the way how native PCIe devices report errors. We shouldn't
-> > log messages differently only because they are coming from a different
-> > code path.
-> > 
-> > Make CXL devices and GHES to call aer_print_error() when reporting
-> > AER errors. Add a wrapper, aer_print_platform_error(), that translates
-> > aer_capabilities_regs to aer_err_info so we can use pci_print_aer()
-> > function.
-> > 
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > ---
-> > v2:
-> >    - Don't expose aer_err_info to the world; as aer_recover_queue()
-> >      is tightly connected to the ghes code, introduce a wrapper for
-> >      aer_print_error()
-> >    - Move aer_err_info memset to the wrapper, don't expect the
-> >      caller to clean it for us
-> > 
-> >    I'm still working on the logs; in the meantime, I think, we can
-> >    continue reviewing the patch.
+On Wed, Apr 23, 2025 at 10:16:32PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> I wasn't able to produce logs for the CXL path (that is, Restricted CXL
-> Device, as CXL1.1 devices not supported by the driver due to a missing
-> functionality; confirmed by Terry) and faced issues when trying to inject
-> errors via GHES. Is the lack of logs a blocker for this patch? I tested
-> other CXL scenarios and my changes didn't cause regression, as far as I
-> know.
+> It turns out that there are no platforms that have PCI but don't have an MMU,
+> so adding a Kconfig dependency on CONFIG_PCI simplifies build testing kernels
+> for those platforms a lot, and avoids a lot of inadvertent build regressions.
+> 
+> Add a dependency for CONFIG_PCI and remove all the ones for PCI specific
+> device drivers that are currently marked not having it.
+> 
+> There are a few platforms that have an optional MMU, but they usually cannot
+> have PCI at all. The one exception is Coldfire MCF54xx, but this is mainly
+> for historic reasons, and anyone using those chips should really use the
+> MMU these days.
+> 
+> Link: https://lore.kernel.org/lkml/a41f1b20-a76c-43d8-8c36-f12744327a54@app.fastmail.com/
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com> # SCSI
+> Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: update changelog text
+> 
+> Bjorn, can you take this through the PCI tree? I thought about splitting
+> it up by subsystem, but it's really one thing that I'm doing here, and
+> doing it in one bit makes more sense to me.
 
-Yes, I do think we need to say something about the output format
-changes.
+Applied to pci/misc for v6.16, thanks!
 
-I assume you're trying GHES on machines that actually do
-firmware-first error handling, right?  I found several GHES logs by
-searching the web for "APEI Generic Hardware Error Source" "PCIe
-error".  The majority were Dell boxes.
+The PCI tree is based on -rc1, so there were a few minor merge
+conflicts, but they're obvious.
 
-If you can't produce actual logs for comparison, I think we can take
-info from a sample log somebody has posted and synthesize what the
-changes would be after this patch.
-
-> >   drivers/cxl/core/pci.c |  2 +-
-> >   drivers/pci/pcie/aer.c | 64 ++++++++++++++++++++----------------------
-> >   include/linux/aer.h    |  4 +--
-> >   3 files changed, 33 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index 013b869b66cb..9ba711365388 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -885,7 +885,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
-> >   	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
-> >   		return;
-> > -	pci_print_aer(pdev, severity, &aer_regs);
-> > +	aer_print_platform_error(pdev, severity, &aer_regs);
-> >   	if (severity == AER_CORRECTABLE)
-> >   		cxl_handle_rdport_cor_ras(cxlds, dport);
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index a1cf8c7ef628..ec34bc9b2332 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -760,47 +760,42 @@ int cper_severity_to_aer(int cper_severity)
-> >   EXPORT_SYMBOL_GPL(cper_severity_to_aer);
-> >   #endif
-> > -void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> > -		   struct aer_capability_regs *aer)
-> > +static void populate_aer_err_info(struct aer_err_info *info, int severity,
-> > +				  struct aer_capability_regs *aer_regs)
-> >   {
-> > -	int layer, agent, tlp_header_valid = 0;
-> > -	u32 status, mask;
-> > -	struct aer_err_info info;
-> > -
-> > -	if (aer_severity == AER_CORRECTABLE) {
-> > -		status = aer->cor_status;
-> > -		mask = aer->cor_mask;
-> > -	} else {
-> > -		status = aer->uncor_status;
-> > -		mask = aer->uncor_mask;
-> > -		tlp_header_valid = status & AER_LOG_TLP_MASKS;
-> > -	}
-> > -
-> > -	layer = AER_GET_LAYER_ERROR(aer_severity, status);
-> > -	agent = AER_GET_AGENT(aer_severity, status);
-> > +	int tlp_header_valid;
-> >   	memset(&info, 0, sizeof(info));
-> > -	info.severity = aer_severity;
-> > -	info.status = status;
-> > -	info.mask = mask;
-> > -	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
-> > -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> > -	__aer_print_error(dev, &info);
-> > -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
-> > -		aer_error_layer[layer], aer_agent_string[agent]);
-> > +	info->severity = severity;
-> > +	info->first_error = PCI_ERR_CAP_FEP(aer_regs->cap_control);
-> > -	if (aer_severity != AER_CORRECTABLE)
-> > -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> > -			aer->uncor_severity);
-> > +	if (severity == AER_CORRECTABLE) {
-> > +		info->id = aer_regs->cor_err_source;
-> > +		info->status = aer_regs->cor_status;
-> > +		info->mask = aer_regs->cor_mask;
-> > +	} else {
-> > +		info->id = aer_regs->uncor_err_source;
-> > +		info->status = aer_regs->uncor_status;
-> > +		info->mask = aer_regs->uncor_mask;
-> > +		tlp_header_valid = info->status & AER_LOG_TLP_MASKS;
-> > +
-> > +		if (tlp_header_valid) {
-> > +			info->tlp_header_valid = tlp_header_valid;
-> > +			info->tlp = aer_regs->header_log;
-> > +		}
-> > +	}
-> > +}
-> > -	if (tlp_header_valid)
-> > -		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> > +void aer_print_platform_error(struct pci_dev *pdev, int severity,
-> > +			      struct aer_capability_regs *aer_regs)
-> > +{
-> > +	struct aer_err_info info;
-> > -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> > -			aer_severity, tlp_header_valid, &aer->header_log);
-> > +	populate_aer_err_info(&info, severity, aer_regs);
-> > +	aer_print_error(pdev, &info);
-> >   }
-> > -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> > +EXPORT_SYMBOL_NS_GPL(aer_print_platform_error, "CXL");
-> >   /**
-> >    * add_error_device - list device to be handled
-> > @@ -1146,7 +1141,8 @@ static void aer_recover_work_func(struct work_struct *work)
-> >   			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
-> >   			continue;
-> >   		}
-> > -		pci_print_aer(pdev, entry.severity, entry.regs);
-> > +
-> > +		aer_print_platform_error(pdev, entry.severity, entry.regs);
-> >   		/*
-> >   		 * Memory for aer_capability_regs(entry.regs) is being
-> > diff --git a/include/linux/aer.h b/include/linux/aer.h
-> > index 02940be66324..5593352dfb51 100644
-> > --- a/include/linux/aer.h
-> > +++ b/include/linux/aer.h
-> > @@ -64,8 +64,8 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
-> >   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> >   #endif
-> > -void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> > -		    struct aer_capability_regs *aer);
-> > +void aer_print_platform_error(struct pci_dev *pdev, int severity,
-> > +			      struct aer_capability_regs *aer_regs);
-> >   int cper_severity_to_aer(int cper_severity);
-> >   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
-> >   		       int severity, struct aer_capability_regs *aer_regs);
+> ---
+>  drivers/accel/qaic/Kconfig              | 1 -
+>  drivers/firewire/Kconfig                | 2 +-
+>  drivers/gpu/drm/Kconfig                 | 2 +-
+>  drivers/gpu/drm/amd/amdgpu/Kconfig      | 3 +--
+>  drivers/gpu/drm/ast/Kconfig             | 2 +-
+>  drivers/gpu/drm/gma500/Kconfig          | 2 +-
+>  drivers/gpu/drm/hisilicon/hibmc/Kconfig | 1 -
+>  drivers/gpu/drm/loongson/Kconfig        | 2 +-
+>  drivers/gpu/drm/mgag200/Kconfig         | 2 +-
+>  drivers/gpu/drm/nouveau/Kconfig         | 3 +--
+>  drivers/gpu/drm/qxl/Kconfig             | 2 +-
+>  drivers/gpu/drm/radeon/Kconfig          | 2 +-
+>  drivers/gpu/drm/tiny/Kconfig            | 2 +-
+>  drivers/gpu/drm/vmwgfx/Kconfig          | 2 +-
+>  drivers/gpu/drm/xe/Kconfig              | 2 +-
+>  drivers/net/ethernet/broadcom/Kconfig   | 1 -
+>  drivers/pci/Kconfig                     | 1 +
+>  drivers/pci/pci.c                       | 4 ++--
+>  drivers/scsi/bnx2fc/Kconfig             | 1 -
+>  drivers/scsi/bnx2i/Kconfig              | 1 -
+>  drivers/vfio/pci/Kconfig                | 2 +-
+>  21 files changed, 17 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/accel/qaic/Kconfig b/drivers/accel/qaic/Kconfig
+> index a9f866230058..5e405a19c157 100644
+> --- a/drivers/accel/qaic/Kconfig
+> +++ b/drivers/accel/qaic/Kconfig
+> @@ -8,7 +8,6 @@ config DRM_ACCEL_QAIC
+>  	depends on DRM_ACCEL
+>  	depends on PCI && HAS_IOMEM
+>  	depends on MHI_BUS
+> -	depends on MMU
+>  	select CRC32
+>  	help
+>  	  Enables driver for Qualcomm's Cloud AI accelerator PCIe cards that are
+> diff --git a/drivers/firewire/Kconfig b/drivers/firewire/Kconfig
+> index 905c82e26ce7..a5f5e250223a 100644
+> --- a/drivers/firewire/Kconfig
+> +++ b/drivers/firewire/Kconfig
+> @@ -83,7 +83,7 @@ config FIREWIRE_KUNIT_SELF_ID_SEQUENCE_HELPER_TEST
+>  
+>  config FIREWIRE_OHCI
+>  	tristate "OHCI-1394 controllers"
+> -	depends on PCI && FIREWIRE && MMU
+> +	depends on PCI && FIREWIRE
+>  	help
+>  	  Enable this driver if you have a FireWire controller based
+>  	  on the OHCI specification.  For all practical purposes, this
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 89d00265d578..831bd384f1fd 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -393,7 +393,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
+>  
+>  config DRM_HYPERV
+>  	tristate "DRM Support for Hyper-V synthetic video device"
+> -	depends on DRM && PCI && MMU && HYPERV
+> +	depends on DRM && PCI && HYPERV
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_GEM_SHMEM_HELPER
+> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> index 7b95221d2f3d..64e603f971b8 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_AMDGPU
+>  	tristate "AMD GPU"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on !UML
+>  	select FW_LOADER
+>  	select DRM_CLIENT
+> @@ -68,7 +68,6 @@ config DRM_AMDGPU_CIK
+>  config DRM_AMDGPU_USERPTR
+>  	bool "Always enable userptr write support"
+>  	depends on DRM_AMDGPU
+> -	depends on MMU
+>  	select HMM_MIRROR
+>  	select MMU_NOTIFIER
+>  	help
+> diff --git a/drivers/gpu/drm/ast/Kconfig b/drivers/gpu/drm/ast/Kconfig
+> index da0663542e8a..242fbccdf844 100644
+> --- a/drivers/gpu/drm/ast/Kconfig
+> +++ b/drivers/gpu/drm/ast/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_AST
+>  	tristate "AST server chips"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_GEM_SHMEM_HELPER
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/gma500/Kconfig b/drivers/gpu/drm/gma500/Kconfig
+> index 1613e51eff2d..e4c80e1a6da5 100644
+> --- a/drivers/gpu/drm/gma500/Kconfig
+> +++ b/drivers/gpu/drm/gma500/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_GMA500
+>  	tristate "Intel GMA500/600/3600/3650 KMS Framebuffer"
+> -	depends on DRM && PCI && X86 && MMU && HAS_IOPORT
+> +	depends on DRM && PCI && X86 && HAS_IOPORT
+>  	select DRM_CLIENT_SELECTION
+>  	depends on ACPI_VIDEO || !ACPI
+>  	depends on I2C
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Kconfig b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> index 98d77d74999d..d1f3f5793f34 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> @@ -2,7 +2,6 @@
+>  config DRM_HISI_HIBMC
+>  	tristate "DRM Support for Hisilicon Hibmc"
+>  	depends on DRM && PCI
+> -	depends on MMU
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_DISPLAY_HELPER
+>  	select DRM_DISPLAY_DP_HELPER
+> diff --git a/drivers/gpu/drm/loongson/Kconfig b/drivers/gpu/drm/loongson/Kconfig
+> index 552edfec7afb..d739d51cf54c 100644
+> --- a/drivers/gpu/drm/loongson/Kconfig
+> +++ b/drivers/gpu/drm/loongson/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_LOONGSON
+>  	tristate "DRM support for Loongson Graphics"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on LOONGARCH || MIPS || COMPILE_TEST
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/Kconfig
+> index 412dcbea0e2d..a962ae564a75 100644
+> --- a/drivers/gpu/drm/mgag200/Kconfig
+> +++ b/drivers/gpu/drm/mgag200/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_MGAG200
+>  	tristate "Matrox G200"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_GEM_SHMEM_HELPER
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+> index 9ba89b35d1a2..4fae780f7d78 100644
+> --- a/drivers/gpu/drm/nouveau/Kconfig
+> +++ b/drivers/gpu/drm/nouveau/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_NOUVEAU
+>  	tristate "Nouveau (NVIDIA) cards"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on (ACPI_VIDEO && ACPI_WMI && MXM_WMI) || !(ACPI && X86)
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	select IOMMU_API
+> @@ -86,7 +86,6 @@ config DRM_NOUVEAU_SVM
+>  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+>  	depends on DEVICE_PRIVATE
+>  	depends on DRM_NOUVEAU
+> -	depends on MMU
+>  	depends on STAGING
+>  	select HMM_MIRROR
+>  	select MMU_NOTIFIER
+> diff --git a/drivers/gpu/drm/qxl/Kconfig b/drivers/gpu/drm/qxl/Kconfig
+> index 69427eb8bed2..d8f24bcae34b 100644
+> --- a/drivers/gpu/drm/qxl/Kconfig
+> +++ b/drivers/gpu/drm/qxl/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_QXL
+>  	tristate "QXL virtual GPU"
+> -	depends on DRM && PCI && MMU && HAS_IOPORT
+> +	depends on DRM && PCI && HAS_IOPORT
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_TTM
+> diff --git a/drivers/gpu/drm/radeon/Kconfig b/drivers/gpu/drm/radeon/Kconfig
+> index f51bace9555d..c479f0c0dd5c 100644
+> --- a/drivers/gpu/drm/radeon/Kconfig
+> +++ b/drivers/gpu/drm/radeon/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_RADEON
+>  	tristate "ATI Radeon"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on AGP || !AGP
+>  	select FW_LOADER
+>  	select DRM_CLIENT_SELECTION
+> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+> index 95c1457d7730..c50186a65464 100644
+> --- a/drivers/gpu/drm/tiny/Kconfig
+> +++ b/drivers/gpu/drm/tiny/Kconfig
+> @@ -37,7 +37,7 @@ config DRM_BOCHS
+>  
+>  config DRM_CIRRUS_QEMU
+>  	tristate "Cirrus driver for QEMU emulated device"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_GEM_SHMEM_HELPER
+> diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/Kconfig
+> index 6c3c2922ae8b..aab646b91ca9 100644
+> --- a/drivers/gpu/drm/vmwgfx/Kconfig
+> +++ b/drivers/gpu/drm/vmwgfx/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config DRM_VMWGFX
+>  	tristate "DRM driver for VMware Virtual GPU"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on (X86 && HYPERVISOR_GUEST) || ARM64
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_TTM
+> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+> index dd256b355613..bb3f34a29f4e 100644
+> --- a/drivers/gpu/drm/xe/Kconfig
+> +++ b/drivers/gpu/drm/xe/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_XE
+>  	tristate "Intel Xe Graphics"
+> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=y))
+> +	depends on DRM && PCI && (m || (y && KUNIT=y))
+>  	depends on INTEL_VSEC
+>  	select INTERVAL_TREE
+>  	# we need shmfs for the swappable backing store, and in particular
+> diff --git a/drivers/net/ethernet/broadcom/Kconfig b/drivers/net/ethernet/broadcom/Kconfig
+> index 46d07b81097f..1bcf406a9e36 100644
+> --- a/drivers/net/ethernet/broadcom/Kconfig
+> +++ b/drivers/net/ethernet/broadcom/Kconfig
+> @@ -98,7 +98,6 @@ config BNX2
+>  config CNIC
+>  	tristate "QLogic CNIC support"
+>  	depends on PCI && (IPV6 || IPV6=n)
+> -	depends on MMU
+>  	select BNX2
+>  	select UIO
+>  	help
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index da28295b4aac..9c0e4aaf4e8c 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -21,6 +21,7 @@ config GENERIC_PCI_IOMAP
+>  menuconfig PCI
+>  	bool "PCI support"
+>  	depends on HAVE_PCI
+> +	depends on MMU
+>  	help
+>  	  This option enables support for the PCI local bus, including
+>  	  support for PCI-X and the foundations for PCI Express support.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 186858293df5..206f271e869a 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4257,7 +4257,7 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>  #ifndef pci_remap_iospace
+>  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+>  {
+> -#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+> +#if defined(PCI_IOBASE)
+>  	unsigned long vaddr = (unsigned long)PCI_IOBASE + res->start;
+>  
+>  	if (!(res->flags & IORESOURCE_IO))
+> @@ -4290,7 +4290,7 @@ EXPORT_SYMBOL(pci_remap_iospace);
+>   */
+>  void pci_unmap_iospace(struct resource *res)
+>  {
+> -#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+> +#if defined(PCI_IOBASE)
+>  	unsigned long vaddr = (unsigned long)PCI_IOBASE + res->start;
+>  
+>  	vunmap_range(vaddr, vaddr + resource_size(res));
+> diff --git a/drivers/scsi/bnx2fc/Kconfig b/drivers/scsi/bnx2fc/Kconfig
+> index ecdc0f0f4f4e..3cf7e08df809 100644
+> --- a/drivers/scsi/bnx2fc/Kconfig
+> +++ b/drivers/scsi/bnx2fc/Kconfig
+> @@ -5,7 +5,6 @@ config SCSI_BNX2X_FCOE
+>  	depends on (IPV6 || IPV6=n)
+>  	depends on LIBFC
+>  	depends on LIBFCOE
+> -	depends on MMU
+>  	select NETDEVICES
+>  	select ETHERNET
+>  	select NET_VENDOR_BROADCOM
+> diff --git a/drivers/scsi/bnx2i/Kconfig b/drivers/scsi/bnx2i/Kconfig
+> index 0cc06c2ce0b8..75ace2302fed 100644
+> --- a/drivers/scsi/bnx2i/Kconfig
+> +++ b/drivers/scsi/bnx2i/Kconfig
+> @@ -4,7 +4,6 @@ config SCSI_BNX2_ISCSI
+>  	depends on NET
+>  	depends on PCI
+>  	depends on (IPV6 || IPV6=n)
+> -	depends on MMU
+>  	select SCSI_ISCSI_ATTRS
+>  	select NETDEVICES
+>  	select ETHERNET
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index c3bcb6911c53..2b0172f54665 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menu "VFIO support for PCI devices"
+> -	depends on PCI && MMU
+> +	depends on PCI
+>  
+>  config VFIO_PCI_CORE
+>  	tristate
+> -- 
+> 2.39.5
 > 
 
