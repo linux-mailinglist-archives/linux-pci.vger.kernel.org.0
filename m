@@ -1,42 +1,43 @@
-Return-Path: <linux-pci+bounces-26524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26526-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F14E6A987EA
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:55:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4310A987EE
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:55:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D66C443C3E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:55:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD45A1B644F5
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC102268C49;
-	Wed, 23 Apr 2025 10:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8F4D26F44D;
+	Wed, 23 Apr 2025 10:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VJUCQCIt"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aIq/Vi1R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4186517D346;
-	Wed, 23 Apr 2025 10:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E443326D4F2;
+	Wed, 23 Apr 2025 10:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405707; cv=none; b=GKVABEb14IOZVdTPxAiwyzqYtSzcdIoTBxE+aT/5XnRRdiq99uL8Gm1VClW8fw0t62PyCvveM6icucZ+K0ybkAbhr+IIYxCi/DT5Rway4J93QPE3gBubG1gAqkuGq70dIiqQmeM6/IkdyiHRRYZqLBzHBvkU8Nm9pL0KvtNEB3k=
+	t=1745405714; cv=none; b=mDsAvwYzySyyiM9YmLGXELIN+5PW7q5apld2NC4q14QloGncZd9BlugKiLkK3BKlZ0Hhby+12W+x0ekHCOKLQ0/zCQ6UtnjXTB6aiyz5MUo4zCPeOL70D/0yc3eljL0AIUeaNGjG2eyeLR8EuJhQRXM7UExadVWJooYUNik4WkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405707; c=relaxed/simple;
-	bh=LydAg/3DZqJBoy3RvGL9TnEWtAS497xWnCoRb7eMUN8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hVGeXT/PgH82KEMa6y7DpoFKTzGqwyrmyFiphYLQJvaGV9ZU08fC6Ckxtctl9iwc4wqqzILAqojB00gTdRZtmUxf5tfiaUEnR/6k5sVRyMUxAiu3zVC9XAzfgGrUkG4YpCloJvFZNkHIi/bjYw9KuZdCfHYt9BDn4UrrjfrcIUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VJUCQCIt; arc=none smtp.client-ip=117.135.210.5
+	s=arc-20240116; t=1745405714; c=relaxed/simple;
+	bh=HKLmHV0ZtG/a4Tkd0yHHJS/176AZM+g1/tCMQTabZzk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HKOmKcljYKKUPo7fXZgQubIzKGuEM9R0Ad3Gp6x+2jMYwbiDPF7HKKYBbKLvnfdffLHvqNQbRFUTJVTcgA52XwfL0Tn4CnBmDXKp9DUDwxm4IJIr+F7p3qmNDx3VOn9HZvCHEz6KZCzTz9MgHTER4Mgig8f6PJQe9bgYEKc9F7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aIq/Vi1R; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8Zmrb
-	eq6bLjH06q2d/S498jz0cbVk1UENxMwcMkAn1U=; b=VJUCQCItXqAHYSERxhXjG
-	bogofW1u71PDTk9/YcgKwHGZN3XSd8B+zNnzTV9GekBPgDrmFhovExSPKcONQ2Nl
-	QKohm02Z8KmKgOAXEf8STgZ/0iA3/pncnoCMSrwEv4xi/SttMnUj/6d/v2MwP7SJ
-	DeIDW1gRBnkVAXYPle2cAo=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=EY9gG
+	G+ynYNdnB1j3/6lY26zStHwpPSt9Msjmy1Whvk=; b=aIq/Vi1RZ9umh5TXnWfqp
+	ho99u5DwjrwTC4TYqEmQfQSgxhiBVvEVcn4qQJmAXHYgfMWUpRvWZNk387DjgYiq
+	gUngwA1HvcbJOPa79n6Sv23DPoL8o8q7CewSSHkx5FGu61jkINS14nVhaU82yC9o
+	oSt7R9eO9NZucwwZMKbvNU=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S2;
-	Wed, 23 Apr 2025 18:54:18 +0800 (CST)
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S3;
+	Wed, 23 Apr 2025 18:54:19 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -50,11 +51,14 @@ Cc: manivannan.sadhasivam@linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 0/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
-Date: Wed, 23 Apr 2025 18:54:12 +0800
-Message-Id: <20250423105415.305556-1-18255117159@163.com>
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v2 1/3] PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+Date: Wed, 23 Apr 2025 18:54:13 +0800
+Message-Id: <20250423105415.305556-2-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250423105415.305556-1-18255117159@163.com>
+References: <20250423105415.305556-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,62 +66,38 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFykKw4ruF1kZry5tryfCrg_yoW5Jry7p3
-	Z8JFZ8ur43Jw40van7tw17XFy8K3ZrCFyY9w4UKw18Xa40qa48WFyftF1rury7XrWxKF17
-	ZwsrX3yI9a4av3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE4E_JUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDws4o2gIwTqxqgAAsf
+X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWruw1kCw48Gw15WrykXrW8WFg_yoWkXrXE9r
+	yUuF4xXryDKrWSk392yw4xZFn0yas7ur1xGFZYgFsIva47Kr4rXry8ZrWrX3WDGr43JFyf
+	t34vyF4ruayxtjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRZeOp7UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwI4o2gIwTqxrQABsQ
 
-1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
-2. PCI: dw-rockchip: Reorganize register and bitfield definitions
-3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
+The PCIE_CLIENT_GENERAL_DEBUG register offset is defined but never
+used in the driver. Its presence adds noise to the register map and
+may mislead future developers.
 
+Remove this redundant definition to keep the register list minimal
+and aligned with actual hardware usage.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 ---
-Changes for v2:
-- Add register annotations to enhance readability.
-- Use macro definitions instead of magic numbers.
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
-
-Bjorn Helgaas:
-These would be material for a separate patch:
-
-- The #defines for register offsets and bits are kind of a mess,
-  e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
-  PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
-  PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
-  names, and they're not even defined together.
-
-- Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
-  PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
-
-- PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
-  Sure wouldn't guess that from the names or the order of #defines.
-
-- PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
-
-- Submissions based on the following v5 patches:
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
----
-
-Hans Zhang (3):
-  PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
-  PCI: dw-rockchip: Reorganize register and bitfield definitions
-  PCI: dw-rockchip: Unify link status checks with FIELD_GET
-
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 87 +++++++++++--------
- 1 file changed, 50 insertions(+), 37 deletions(-)
-
-
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
-prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
-prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
-prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
-prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 0e0c09bafd63..fd5827bbfae3 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -54,7 +54,6 @@
+ #define PCIE_CLIENT_GENERAL_CONTROL	0x0
+ #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+ #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+-#define PCIE_CLIENT_GENERAL_DEBUG	0x104
+ #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+ #define PCIE_CLIENT_LTSSM_STATUS	0x300
+ #define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
 -- 
 2.25.1
 
