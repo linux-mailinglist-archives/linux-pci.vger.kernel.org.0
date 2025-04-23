@@ -1,143 +1,243 @@
-Return-Path: <linux-pci+bounces-26544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5251A98C02
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 15:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B432A98C92
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 16:15:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0444A5A0181
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 13:55:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6623AE016
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 14:15:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6155F1DFDAB;
-	Wed, 23 Apr 2025 13:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187FC27054C;
+	Wed, 23 Apr 2025 14:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsj9dmlI"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OhudICsc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C31AF0B5;
-	Wed, 23 Apr 2025 13:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A463149E17;
+	Wed, 23 Apr 2025 14:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416489; cv=none; b=fHKA60g0ae7evhRatWgg3pCXYqm2PUJkn5GFw1urT2TrrmRSWUKMvQYRgY3qgQWHGsy0dHbSnW2qgb2ChAoD/Ii1ahE/ge8BlpcDU4tcBfl+BdOAb8fPLAK8YUtd4lE1ZzjAaeajQPp39do4r+2T0Tj8Rjs1jRdL4Kyx0xszLrU=
+	t=1745417748; cv=none; b=YeiofIzVpSEX/sCo+cW7+q0k1MVR16o8SQP7+houhvkcZvjnwFu66g8J5Cj2Qdhdfav4vgqFrOkVLZuMP4MU6FXo4Jw0WbKrR5ZKtc1MAGMoErtKonwLWEmEYLnizD2KLX3VX3owlM5ZvnJn3lcdYjq7bHJYsaB3XQAQFvV0uT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416489; c=relaxed/simple;
-	bh=OTgMdZaw+c5NGr/9Til4thtTT36TGX8yCwq4TYTPiks=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Xx67uYPsVtoFsqfbEpb+jml3yik7IRaowWDycgXr5ltAeqryMhIEYypr0O3Y7CotgSZGJuyfPiXlwhXLw2FqFhxaH/b5ZCo/wDrl1Dg54avPiid6gNeEafT52qji86IHUux2ecWW8XeyrgmzZ58wBtOgrLSqy0wdAk+JGqfQYkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bsj9dmlI; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476977848c4so72577681cf.1;
-        Wed, 23 Apr 2025 06:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745416486; x=1746021286; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CuqgNpQtYEXMZS1DrSHgUIFvXUKBF5Ic3ONpr4JBBA0=;
-        b=bsj9dmlI/y+qVwuPI8z5UWasVIqaUpV5q2DST2q7hyvF4+w8TRgf1FlNq6YddEkW3N
-         5/LrQdeCNE0p3ElzNCBf3HzI9ixCZW29Nj05MT7KhBeAcAgMr1YHivhaFwwf3h81vfIx
-         bYS+kMIGxrxrqxs4xlT2AS5HLoI/F6B7g/VJ6C/CShJ5Aazf2jMyF0POrxDF3htPWawu
-         zoA40ZWInPIfe7Hg3N64Lo19P1pNC/ZqyFDGtkbrgek6d7Nbmx2o1OAx/QATc2Fgiaaf
-         d2zjw5o45RgHe/W66l5QbO82HG8QMuwUv/NrBjkzDkEtlbD+yuyYcuAEivOohJnL7rib
-         5LAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745416486; x=1746021286;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CuqgNpQtYEXMZS1DrSHgUIFvXUKBF5Ic3ONpr4JBBA0=;
-        b=WkeF8EmP46PtUhHi+0nykwtH7B1oP18MKy1dEYaCynXW8bjQxxx+BbSm5eoPxFpQJ6
-         ToFm/yE1pPHd8rC91eZDjoWebqo9mTJWr2S/dt3f2ZQ3w/3Aj8Uc20fCoaFmBrANkNtF
-         lxXLhhElzjg71GyxCQpVBlRGwm55OT6a+2puJkivKps8x2NNdmCwxvb4Ry4YnKBsKs32
-         LXYKAiOwwHIyVyANVMA8rZX452ia/LYxKxDeRRbQeY1N1bj+Fh332PKYKAZmpOHQZDbQ
-         MBk8K3KFyM6d4/nv2lUPWdlJPSTE7LBSu5WC45a5nOrySmfpxw5C1ve34MaluHLckLbC
-         LS0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFdOSgHAjBXjjbyy/0EqFJ09XHGC244viMaaOg+5p6XgnuhsW1pLawnKu4eUDLNJHtyYLrZN/guIbs28CU@vger.kernel.org, AJvYcCUZYderfpL79wXZeaQqfhd7ZOJ4X2n1gantCzRQJ8tcb0+GNSaJeSyDrSUZzHLeWrWe6d7/i1d35OdJAnyr@vger.kernel.org, AJvYcCWO1L9JPp75OVmy/Ljm5qJLLdE7uvVlydwPVtHBkTl8idQbtLSChi7oGMxJXjptdcN3KVB1Al4k3d1O@vger.kernel.org, AJvYcCWXwhC/d5VFvQeCc7q0Qx3+KXaxxHbAu2VMZlBivfSUT1VNCF1wvo7uXuDibrpQDJVqWZtCHjaBzZlfthObzwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgW1uuisN84477ie/eBYrm3URdIcAtm/6lNOOd0evyMTVzZkw1
-	bzOAFitybbCbkRFbiSfYOoMtB+2mClsya1HoyPAGlJ6ZJHOJ4nSw
-X-Gm-Gg: ASbGncuFp4O1qhuaWyX2oTgFFA907CBHvGycdecpfF1eAzVwy+xR2RCj6Im8lrWjoxQ
-	6t1J7tfp4G/VLSbc6RFOc6EJx3jiXmAEe0mfjjL0E8pcmCN9zg1hHbBE05bLjZZIsTXG/EEcUOx
-	ddKdG3bJwCb2rYnusd7eWP9sNjLvLP8hLC5OB5LYyDwReiJ2QWFLNxrf+RhHVKqAY7FC2JXACFc
-	ri35CwisfJz/bLhiRWqAK93SP09uz2iP+bljIAWXRrFCkdmt/ELNFc4LGVfCdJBGNEVoQNep78h
-	sdOu5SislPEf0dSi+g6M8jKwp5LB4ySE2RkE648D/1uXv731ILOoSjC/aFfds+q/2xc0ykzEicZ
-	1ioFYJ39PtCAWhvtY7Vr4/ydZaMUiWsmqPiH6INRe6sm+x5MrAvjEghr8UUnn
-X-Google-Smtp-Source: AGHT+IGeEjYsFDhltXcZCq9irwEbKANOyTBHg4Za/JkGXn9YfvMrHB2vnBRdejBXniq5yhRW3lC/Ww==
-X-Received: by 2002:a05:622a:28d:b0:478:f03c:b3dc with SMTP id d75a77b69052e-47aec491329mr332173931cf.41.1745416486510;
-        Wed, 23 Apr 2025 06:54:46 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:e2b6])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9cf9f7dsm68135461cf.74.2025.04.23.06.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 06:54:46 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 23 Apr 2025 09:54:39 -0400
-Subject: [PATCH v19 3/3] MAINTAINERS: add entry for Rust XArray API
+	s=arc-20240116; t=1745417748; c=relaxed/simple;
+	bh=/DMHVsEnD/BzUR8poZu4/uOWVkwpTFT3gHjSxGkCoR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IVkUdHsmxivs8qgeye/YNwqhE5sAOS96J/JZuanR0w3j/tocxKnKf36HkaoXSSGwA3KaI35ya4YbubVhzUS+VKIXsWuwV4120Rd3Z6HO/d+gBaReei6lbJFG1OhYD1fqYw8lB1pMk4jcINHLJbTqjtkcXEGN5yToEe9GvDGYKyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OhudICsc; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=6xbZYXykMjgKMSpp52ywZEBlzjIEow9Ok6NjY0siqUc=;
+	b=OhudICscJ21Kt98vX6rUiv4cDB7SwN1mK2jKC53EgKi7bz9iuBd6o/OE+zMLPn
+	h22rs/khVJeHuPHZ0OA+edvEA6E1n/cPPN9+Y3cU6bJa/Yn28bnAYQPf0J8DGPQe
+	Q3WkU7dElgsQe6x4t39U2vpOY5z5mL0muVjmEway1Grho=
+Received: from [192.168.71.89] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgDHnCTi9QhoY7rzBQ--.27617S2;
+	Wed, 23 Apr 2025 22:14:59 +0800 (CST)
+Message-ID: <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com>
+Date: Wed, 23 Apr 2025 22:14:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield
+ definitions
+To: Niklas Cassel <cassel@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250423105415.305556-1-18255117159@163.com>
+ <20250423105415.305556-3-18255117159@163.com> <aAjufPQnBsR6ysAH@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aAjufPQnBsR6ysAH@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-rust-xarray-bindings-v19-3-83cdcf11c114@gmail.com>
-References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-In-Reply-To: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Tamir Duberstein <tamird@gmail.com>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-X-Mailer: b4 0.15-dev
+X-CM-TRANSID:PSgvCgDHnCTi9QhoY7rzBQ--.27617S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1xGry5KryDKF4ktr1xAFb_yoWxur1fp3
+	4DAFyIyr45tay7Z3s5uFs8XFWIqrnxKFWUWrsagrWUZ3WkAw48Gw1j9FyrWFy3Jr4kCrWf
+	uwn8C34SgFWakrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBq2_UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxg4o2gI7X36cgAAs0
 
-Add an entry for the Rust xarray abstractions.
 
-Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa1e04e87d1d..925d64be9dd6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26310,6 +26310,17 @@ F:	lib/test_xarray.c
- F:	lib/xarray.c
- F:	tools/testing/radix-tree
- 
-+XARRAY API [RUST]
-+M:	Tamir Duberstein <tamird@gmail.com>
-+M:	Andreas Hindborg <a.hindborg@kernel.org>
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+W:	https://rust-for-linux.com
-+B:	https://github.com/Rust-for-Linux/linux/issues
-+C:	https://rust-for-linux.zulipchat.com
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-next
-+F:	rust/kernel/xarray.rs
-+
- XBOX DVD IR REMOTE
- M:	Benjamin Valentin <benpicco@googlemail.com>
- S:	Maintained
+On 2025/4/23 21:43, Niklas Cassel wrote:
+> On Wed, Apr 23, 2025 at 06:54:14PM +0800, Hans Zhang wrote:
+>> Register definitions were scattered with ambiguous names (e.g.,
+>> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
+>> hierarchical grouping. Magic values for bit operations reduced code
+>> clarity.
+>>
+>> Group registers and their associated bitfields logically. This improves
+>> maintainability and aligns the code with hardware documentation.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 71 ++++++++++++-------
+>>   1 file changed, 45 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index fd5827bbfae3..6cf75160fb1c 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -34,30 +34,49 @@
+>>   
+>>   #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
+>>   
+>> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> -#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
+>> -#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> -#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> -#define PCIE_CLIENT_POWER		0x2c
+>> -#define PCIE_CLIENT_MSG_GEN		0x34
+>> -#define PME_READY_ENTER_L23		BIT(3)
+>> -#define PME_TURN_OFF			(BIT(4) | BIT(20))
+>> -#define PME_TO_ACK			(BIT(9) | BIT(25))
+>> -#define PCIE_SMLH_LINKUP		BIT(16)
+>> -#define PCIE_RDLH_LINKUP		BIT(17)
+>> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
+>> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
+>> +/* General Control Register */
+>> +#define PCIE_CLIENT_GENERAL_CON		0x0
+>> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> +
+>> +/* Interrupt Status Register Related to Message Reception */
+>> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
+>> +
+>> +/* Interrupt Status Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+>> +
+>> +/*  Interrupt Status Register Related to Miscellaneous Operation */
+> 
+> double spaces, other comments just have one space.
+> 
 
--- 
-2.49.0
+Hi Niklas,
+
+Thank you very much for your reply. Will change.
+
+> 
+>> +#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
+>> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> +
+>> +/* Interrupt Mask Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+>> +
+>> +/* Interrupt Mask Register Related to Miscellaneous Operation */
+>> +#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> +
+>> +/* Power Management Control Register */
+>> +#define PCIE_CLIENT_POWER_CON		0x2c
+>> +#define  PME_READY_ENTER_L23		BIT(3)
+>> +
+>> +/*  Message Generation Control Register */
+> 
+> double spaces, other comments just have one space.
+> 
+
+Will change.
+
+> 
+>> +#define PCIE_CLIENT_MSG_GEN_CON		0x34
+>> +#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
+>> +#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
+>> +
+>> +/* Hot Reset Control Register */
+>>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> +
+>> +/* LTSSM Status Register */
+>>   #define PCIE_CLIENT_LTSSM_STATUS	0x300
+>> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>> +#define  PCIE_SMLH_LINKUP		BIT(16)
+>> +#define  PCIE_RDLH_LINKUP		BIT(17)
+>> +#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> +#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>>   
+>>   struct rockchip_pcie {
+>>   	struct dw_pcie pci;
+>> @@ -176,13 +195,13 @@ static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
+>>   static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static int rockchip_pcie_link_up(struct dw_pcie *pci)
+>> @@ -274,8 +293,8 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
+>>   	u32 status;
+>>   
+>>   	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
+>> -	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
+>> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
+>> +	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN_CON);
+>> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN_CON,
+>>   				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US);
+>>   	if (ret) {
+>> @@ -294,7 +313,7 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
+>>   
+>>   	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
+>>   	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
+>> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
+>> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER_CON,
+>>   				 status, status & PME_READY_ENTER_L23,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US);
+>> @@ -552,7 +571,7 @@ static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockch
+>>   	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+>>   	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+>>   
+>> -	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
+>> +	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CON);
+> 
+> I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
+> (to match PCIE_CLIENT_MSG_GEN_CON).
+> 
+> But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
+> PCIE_CLIENT_HOT_RESET_CTRL.
+> 
+> _CTRL seems like a more common shortening. How about renaming all three to
+> end with _CTRL ?
+
+I saw that TRM is named like this.
+
+PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON / 
+PCIE_CLIENT_HOT_RESET_CTRL
+
+Shall we take TRM as the standard or your suggestion?
+
+Best regards,
+Hans
+
+
 
 
