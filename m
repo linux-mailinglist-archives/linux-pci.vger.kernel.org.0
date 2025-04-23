@@ -1,155 +1,77 @@
-Return-Path: <linux-pci+bounces-26496-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26498-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D30A1A9832B
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:25:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AD3BA98388
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DE4217E5F0
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 08:25:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A07443A4E9C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 08:33:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF0128FFD5;
-	Wed, 23 Apr 2025 08:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J12nDPRU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 397A6285405;
+	Wed, 23 Apr 2025 08:23:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8732228F95F;
-	Wed, 23 Apr 2025 08:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE9E285401;
+	Wed, 23 Apr 2025 08:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396131; cv=none; b=DXUMPRZCdojAiYDSF4QPeh3bCTvN+HAOAwYArNHKW93wIEQTn7BfIzYxL2PWu1xS47REQ4HgrXSfUsz4G++tmnbIrRayh+a4jKFWBkGtgFFc40LkZ1tVf4T/4AI2m6OB8K6o0dHVz8krvbrE+6MrPUNOjZ+ib3UMmWij0i0+DlY=
+	t=1745396623; cv=none; b=hjPvQ4ZZzpM4XTp+yKQd8Oj93XsbHZ39CwrXz9Y5pkqxEpMZ4GnBAkIfzZobmJ7qvGzq4FaWXTg1G2jduUiyTuaDRBBiglqnyMv5ED9x4eze9QyqQ6qNZCa8vIaCsrndIcp0bZ31fVZqL+LpEFLHiB13t6A9jPBgawgvniE/+V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396131; c=relaxed/simple;
-	bh=hJ7Ip9+BoZAGI5de25k6VVDZHayvfvf2mLK8emkWpDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gAoFM8ojfffgHwKxDLfu12teThRYCcyM0C+/mRMvNYou3fBLzepTqkcfCaX3kt8T96EiJ98eL+6O7H5ueqHFc1gZh7FWuI54Y3/3LfK6HcL13GVkojv74mwCo1GhlVQ2slg2ymn8i0RC2O6oQUMDj8ZgyXADcig1MO1eWMFYK0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J12nDPRU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA44FC4CEE2;
-	Wed, 23 Apr 2025 08:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745396130;
-	bh=hJ7Ip9+BoZAGI5de25k6VVDZHayvfvf2mLK8emkWpDU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J12nDPRU3cH7wA88Iu9BFVrY+PzsKtMJ7xncym3a/Q+sMbBCS7mLM3ryCPgfwbt4+
-	 VfesgKcyGq1stn/1qMWS0rL0/jhFKx98nQP5G9WUIPyi6U66Kj1H2z5Cp+DRsrjzsp
-	 2/XrS33uwHNvshj+OP+6nyD8KmO74H0MbhjK/6yY7scz7tsm8Jsap/FHPMQdW4g0Xu
-	 T5CFKk5USJ5XElRY01pmoB94PGC10Pllk2VaLO/uxA0SClhTgNbPWpAKkOAyDN7459
-	 8vRn1WHXTwkLPiavmersXQcNwP6Sz1WdbV+biC8HCQeqVCWW6Zf1OZLtauCglURDip
-	 0i7XWKreZyV0w==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v9 24/24] nvme-pci: store aborted state in flags variable
-Date: Wed, 23 Apr 2025 11:13:15 +0300
-Message-ID: <9432af8b4b3b947ed6b280e722389c188d5c957e.1745394536.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745394536.git.leon@kernel.org>
-References: <cover.1745394536.git.leon@kernel.org>
+	s=arc-20240116; t=1745396623; c=relaxed/simple;
+	bh=hUoqsp8kYW98lcqyttv8aTu4OTJd/sEM4L+uCbnHJPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGoP6QZpZ5AI3F6khQ9fE0xeFHDQeDxWMCJbA/QipOy9hAqtKB+qcVGUht7KlJozh+Sk1ZtigeGkStNZrWTtUSyguGR/kO5Ej/GxAXUwnw8y9bbihAa4MbwmgIjqkgIa1lxjoSzihGOXyxSvunuAhKzO59eN1xblGRrXsSx0hl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id B253B2C00093;
+	Wed, 23 Apr 2025 10:23:25 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E5878107CA; Wed, 23 Apr 2025 10:23:30 +0200 (CEST)
+Date: Wed, 23 Apr 2025 10:23:30 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: IRQ domain logging?
+Message-ID: <aAijgnvHRYu_Dlqe@wunner.de>
+References: <20250422210705.GA382841@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422210705.GA382841@bhelgaas>
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Tue, Apr 22, 2025 at 04:07:05PM -0500, Bjorn Helgaas wrote:
+> This from an arm64 system is even more obscure to me:
+> 
+>   NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>   GICv3: 256 SPIs implemented
+>   Root IRQ handler: gic_handle_irq
+>   GICv3: GICv3 features: 16 PPIs
+>   kvm [1]: vgic interrupt IRQ18
+>   xhci-hcd xhci-hcd.0.auto: irq 67, io mem 0xfe800000
+> 
+> I have no clue where irq 67 goes.
 
-Instead of keeping dedicated "bool aborted" variable, let's reuse
-newly introduced flags variable and save space.
+There's quite a bit of information available in /proc/interrupts,
+/proc/irq/ and /sys/kernel/irq/, I guess that's what most people use.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/nvme/host/pci.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index eb60a486331c..f69f1eb4308e 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -219,6 +219,7 @@ struct nvme_queue {
- enum {
- 	IOD_LARGE_DESCRIPTORS = 1, /* uses the full page sized descriptor pool */
- 	IOD_SINGLE_SEGMENT = 2, /* single segment dma mapping */
-+	IOD_ABORTED = 3, /* abort timed out commands */
- };
- 
- /*
-@@ -227,7 +228,6 @@ enum {
- struct nvme_iod {
- 	struct nvme_request req;
- 	struct nvme_command cmd;
--	bool aborted;
- 	u8 nr_descriptors;	/* # of PRP/SGL descriptors */
- 	unsigned int flags;
- 	unsigned int total_len; /* length of the entire transfer */
-@@ -1029,7 +1029,6 @@ static blk_status_t nvme_prep_rq(struct nvme_dev *dev, struct request *req)
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	blk_status_t ret;
- 
--	iod->aborted = false;
- 	iod->nr_descriptors = 0;
- 	iod->flags = 0;
- 	iod->total_len = 0;
-@@ -1578,7 +1577,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req)
- 	 * returned to the driver, or if this is the admin queue.
- 	 */
- 	opcode = nvme_req(req)->cmd->common.opcode;
--	if (!nvmeq->qid || iod->aborted) {
-+	if (!nvmeq->qid || (iod->flags & IOD_ABORTED)) {
- 		dev_warn(dev->ctrl.device,
- 			 "I/O tag %d (%04x) opcode %#x (%s) QID %d timeout, reset controller\n",
- 			 req->tag, nvme_cid(req), opcode,
-@@ -1591,7 +1590,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req)
- 		atomic_inc(&dev->ctrl.abort_limit);
- 		return BLK_EH_RESET_TIMER;
- 	}
--	iod->aborted = true;
-+	iod->flags |= IOD_ABORTED;
- 
- 	cmd.abort.opcode = nvme_admin_abort_cmd;
- 	cmd.abort.cid = nvme_cid(req);
--- 
-2.49.0
-
+Lukas
 
