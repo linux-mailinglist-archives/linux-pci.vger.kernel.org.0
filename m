@@ -1,87 +1,113 @@
-Return-Path: <linux-pci+bounces-26622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A66A99B7A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 00:23:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A221A99B92
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 00:36:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38F3917A03D
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 22:23:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7138E1B80AD9
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 22:36:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4D01EF099;
-	Wed, 23 Apr 2025 22:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4766E1FECBD;
+	Wed, 23 Apr 2025 22:36:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8hgffYk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/ZDUlll"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF6E1DE4E6
-	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 22:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123731E32D5;
+	Wed, 23 Apr 2025 22:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745446988; cv=none; b=OXlT84LWmrMY+0zdGGst+CvUAakBp58atRLybvxMAk9D1lb8XJKFM7zhQeaxoQVV8ldDqnQy5y9IU+jyqEHv5iQTULwO2K9GXdPs0T/yPTJsjdXeKtYSET0cYbB2bkvYqNqLNKoYN4vvTrZI8rhvtN+d/G1YWUBjOuw+eExDtBw=
+	t=1745447788; cv=none; b=Qw8GSeJ+jmXHjigQeZIvsfpydggteeukEj3rmuT5+INIPvxZqie4lOn6DS7tkiMjCTP/BHMaq6h6qbKKq+d9FKnt5OMzRelguoviigY08BcMZBoSP+VUgi5r3XYoJJX6fslVw6T2rrNMrzBAD3seDbscmGHkHILBlud9xTvmwWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745446988; c=relaxed/simple;
-	bh=3Za4OyAWmGdEWCOX4stfrH+a41PXHF4wT1Je5Vv67xI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=jCAfmlduGP2wWLU0AO+0R+s/V8ebleTHEc5/nO1DNDZ2/Mfw4l9on9gGFt/6AHVhNdgWZ1TeFEfjtzeSBeYWFe01I13PQXa26+zQx+Puk71ER9sX2r1YCJ51BP/mU6r/HHcarsytxnrovmMG0EeJ2I7FLnGjq45xxNfN1BI9v+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8hgffYk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8953FC4CEE2;
-	Wed, 23 Apr 2025 22:23:07 +0000 (UTC)
+	s=arc-20240116; t=1745447788; c=relaxed/simple;
+	bh=BwWGHTaXVHl3VuDngynvTOc6nh/DwTjuEj5r8iOOtyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LkLdjgku6QozjSh5Y1yAEyKT3CIoKGy57ou75d2NMltnXtlLxwjqPPTwhaqY3VGxhj2zu3cNSnDtDLePATrsluF6iyY2/bs0qKsamnhg8jEK9h3SSgGSIL9q7+UTHI1KQBWkX/w13oth/w8trjDX62nieUgInmbI5/5/S0ReFog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/ZDUlll; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E75C4CEE2;
+	Wed, 23 Apr 2025 22:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745446988;
-	bh=3Za4OyAWmGdEWCOX4stfrH+a41PXHF4wT1Je5Vv67xI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=d8hgffYkqMNfZPLoRlARFBtp/uxhjXSEFf0CB7VzRDY/yxo1x8nn5j2DVA+S9SYhL
-	 UxEqjM1NDE1g2GYKoBe7IEFa5Bd1Z77dtqykObuk0x+Dr7Nub+LypRYva5K9ZsfYLg
-	 KcF2rvAP3ICt8dy7Smx8lezboz4jLUvDxSLCS6j/Xh8WG0EGVcYK7LXPIPPyVk9ZTk
-	 YlkTCLVQKKAKbQNoTuqhLezHX08OG06kEFg/d6M2xPTk8OvTcdp4qGuv0KXrNpTFzj
-	 9ke3SQpmsM0XloFOYL9Uo/5xQIGDZA8A/+lXE+pApGAmpHkQbMdpdfh7t+F0SkqVD7
-	 Rjb81h1hpqatQ==
-Date: Thu, 24 Apr 2025 00:23:05 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, bhelgaas@google.com,
- kw@linux.com, Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_RESEND=5D_misc=3A?=
- =?US-ASCII?Q?_pci=5Fendpoint=5Ftest=3A_Defe?=
- =?US-ASCII?Q?r_IRQ_allocation_until_ioctl=28PCITEST=5FSET=5FIRQTYPE=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250423221920.GA460034@bhelgaas>
-References: <20250423221920.GA460034@bhelgaas>
-Message-ID: <BECE293B-614E-45F4-8B15-9D29018FD47B@kernel.org>
+	s=k20201202; t=1745447787;
+	bh=BwWGHTaXVHl3VuDngynvTOc6nh/DwTjuEj5r8iOOtyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=g/ZDUlllBa27BiaVXP+jeFCQLf7rJCrPpkKdPxEnq7UQ/oAUouszDpMq11R3oYPx/
+	 FKW1nqJ7FmgkbzoxdEWsfmFvDS8rtpVXe4384eR9ZabBmhduCaRSGqIDIfn1bCqDLh
+	 h7UPgbLCCp9HQRrrJXrVtZvGfIeiZl0Op+L0BwmVTXOemxcCWPt8b4H9Wk/EasAfmd
+	 WMqU/pf/OSZP6S1TWIjumkikzwaspLg3jZzfYo2Et9zz2najo407xrckYE4BuS2V/r
+	 hZv1IeNN9h6VCgj+6APl1HUM+e1MrBvYrbAHTFBotcvwraNqqTiwsBEOYnzxlLRx+S
+	 mTCJxzDNmE42A==
+Date: Wed, 23 Apr 2025 17:36:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.li@nxp.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
+Message-ID: <20250423223625.GA460759@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLS8qfRRRQ-FEirqo6FGWD4ypU5_=uc1mVu_U_Voga1=w@mail.gmail.com>
 
+On Wed, Apr 23, 2025 at 08:02:04AM -0500, Rob Herring wrote:
+> On Tue, Apr 22, 2025 at 12:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Apr 04, 2025 at 05:15:57PM -0500, Rob Herring (Arm) wrote:
+> > > The content in these files has been moved to the schemas in dtschema.
+> > > pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
+> > > pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
+> > > msi-map property in pci-host-bridge.yaml.
+> >
+> > I guess "dtschema" refers to
+> > https://github.com/devicetree-org/dt-schema?
+> 
+> Yes.
+> 
+> > I kinda wish there was some direct link from the Linux kernel source
+> > to dt-schema where all this information now lives (Requester ID
+> > format, iommu-map, msi-map, linux,pci-domain, reg (and reference to
+> > IEEE Std 1275-1994), interrupt mapping info, external-facing, etc).
+> > Being a DT neophyte, I need all the help I can get ;)
+> 
+> Links to each property wouldn't really scale. Might as well copy all
+> the common schemas into the kernel tree at that point.
 
+Right.  In my ignorance, I found it useful to just grep the Linux
+source for these properties, but that doesn't work any more.
 
-On 24 April 2025 00:19:20 CEST, Bjorn Helgaas <helgaas@kernel=2Eorg> wrote=
-:
->>=20
->> For those platforms, without this patch, you will get:
->>   pci-endpoint-test 0001:01:00=2E0: Invalid IRQ type selected
->>   pci-endpoint-test 0001:01:00=2E0: probe with driver pci-endpoint-test=
- failed with error -22
->
->So I guess this means it's "only" the host side
->pci_endpoint_test_driver that won't probe, and the problem only
->happens on the host controllers listed above or controllers with
->programmable Vendor/Device ID that are set to match one of these?
+> > There are a few dangling references to pci.txt:
+> >
+> >   Documentation/devicetree/bindings/pci/aardvark-pci.txt: - max-link-speed: see pci.txt
+> >   Documentation/devicetree/bindings/pci/aardvark-pci.txt: - reset-gpios: see pci.txt
+> >   Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:- bus-range: see pci.txt
+> >   Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:  1275-1994 (see pci.txt) with the following restriction:
+> 
+> If no one cares enough to convert these, then I don't think the link matters.
 
-Correct!
+I guess the descriptions of these now live at
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
 
+There are a few Documentation/devicetree/bindings/ files that include
+URLs like that, but maybe that's not considered a canonical source?
 
-Kind regards,
-Niklas
+Bjorn
 
