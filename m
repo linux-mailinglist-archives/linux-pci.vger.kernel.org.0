@@ -1,219 +1,131 @@
-Return-Path: <linux-pci+bounces-26511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 309CCA98510
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 11:13:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E17B1A9851D
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 11:16:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03AD37AF75A
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 09:11:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9590F3A4598
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 09:13:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029CD25C807;
-	Wed, 23 Apr 2025 09:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9C319F464;
+	Wed, 23 Apr 2025 09:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="RYspRLmC"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LgwuElfp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B6A223DFE
-	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 09:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6961F463B
+	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 09:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399542; cv=none; b=SHOXI6p+4SGRZLJkXXroxK8m3ilaWX8b6y22IfI28IESyNg/KfWbGxuAcztQGHyTGzrWNvEs4UIhLxACtvfn9eFwZfV3hR0EzSIxIoiIKFOzsHhXbl4kl6XbWkJCSWlL2LS8sT3rFtKx5FhCHOvWLo7LqA0BNIpMHtS+hQ1EL/I=
+	t=1745399622; cv=none; b=fBQTBbjFZLKaRaBq1t3koCnUHUoQKmFcOu3BCHEf2kMOPSu6HT+ibsZZrtNavHj7LZcsiqg5m4DBrZr+ZvWuf3OQR9D/xATztuXs2/rSXj5iH0CulYEjNRFiwTBgiuDk3ew/t2VY+77O/XsxMoh4YUPb4feELn0cGA6Cka0fASE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399542; c=relaxed/simple;
-	bh=de1r1o2u9lGBX4KI8lIOzHQacrEwN8MR7tL+rtn6y+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iZydpmrBdcpgqTfiLmgKW1sqAFheP4QvfBExr9AP6lc0oxQfs8VpEx4+dcTYGE3wvx04oJsmcUrOJTsOrXcPFbF4bttWSQ1AJZF6+Pna+jnWnvjTLRYTnc5qMDaysr3Mn1+uowTbohk1chG+yL18hcseBbSQOjWVQwgSYVgcrls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=RYspRLmC; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 04DAA41A30
-	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 09:12:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1745399538;
-	bh=rRzYjzT3WDJpMJezd9qFsBfMHFovYScnhtnYa/Dy/yw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=RYspRLmCYC5A0OHyJ4mfmVDNANhKkPXRLbl07tK8rdwwnbeONT9NwQYrdE896QBiQ
-	 o66HFhLKpgJLFrtBRJCK9/uGBBUErFq4cscOhOcRCgcqlUYiFKrTm8c+OSh3PwXGmA
-	 hK0GmovKj+cQsz30ELiHxF6vHmzTu03AZukjmiVyixeudM/CXVs4Kcyb4x/NUyhL0M
-	 2EjauSkhtPTxOP/3zBzt80tnDBreA8iOjwXTJjXDeFZTlb9+GNsYYAq/kqN8BBLyw1
-	 Le0Dw/KEiVMKwPJJHdWRh04awsR5+H1lKxY7Ip5R9Nm2jgj24fIrJZY3OpeTgVqCLF
-	 SR8ASViEtO++w==
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d22c304adso2721385e9.0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 02:12:18 -0700 (PDT)
+	s=arc-20240116; t=1745399622; c=relaxed/simple;
+	bh=YsunVWLJv9qgaPhrr/QKtBvOSrEpfPc1uNDsP5UJSIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r3Wi5pxhcBJ+OFT+O0T5P+sBBELyopO86OuVa0ulf4EfoD7jX/ovZgbwSErXbnCK5JYI7Zv5cdkPGsGIgxent5jqC+GoAI+hUcRf6Jri29jbnALFeHtw7atIL3q07Wp/TX+y4xQtFjl8pOJbHb+nsPBlb6n/5crWeR9x39H+Pdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LgwuElfp; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso643057866b.1
+        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 02:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745399619; x=1746004419; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6D3Kj5y6LQM0GkGMDpCZ97hnqQlmKF4F8r2fuWuGeQs=;
+        b=LgwuElfp8wzS7W14L9O7VBv97Lsmo3ABW7szEcs2g6ppaJKVy+TAtwfzV/Qzu3T09n
+         vNJtvgmkEYFl3X7DQndb5uAGQPZnDgu92Jrf7hkVKttEmJoKjWLJX91QiW1tn55swbG3
+         80i+CDQo7HK9nF4/Ud3iFg2XOKzmkwkmoNd4JpyGKU8zEhU3zEONcZUI3GWOY+GHiK7H
+         jL+61IRB53OykLOg9KmKH6nThN2hIRSqFuWQVzgUpddaBKoa8rpUmna6AEgIqvTbqACJ
+         wI9VIZiZ3wbP9jyAngf1XdjqZ5uoEx/zYTrAFNFd4rcXiZxiK7cbxVjQDFe4lQRzlb9r
+         8A1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745399535; x=1746004335;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rRzYjzT3WDJpMJezd9qFsBfMHFovYScnhtnYa/Dy/yw=;
-        b=P0ffaqz6ZeoCA1k2pAVeY106Xrylxws80c5Y0fM6H1JeIo2uCEy4BeYRqVdJauJV7s
-         hKkbKg6FYXwwA+1E9Ky4P1qJiVMhwHMwN4SE3Iutq59KuCC+p7CXoBx7fcDTvowZNALD
-         wZbJT0XFcMnZ0B/1ujs5+10S2j0AC4ZAjbfLyTjLblqEOShXCDjG2c7x0+pqbcqffa9Z
-         /6FWzfOogXSq5n1hCC5l7lrLOeIGHPv58UK7B3jL77CXYOBBxcJf+cn/vidRZ4R0Alpm
-         ZA2+fk/tNIg04omdvBYwkPkCxpIeVrugNGm3QiSoi8veKfoCkujeeUFzNRXzZWkrmfwY
-         bcyw==
-X-Forwarded-Encrypted: i=1; AJvYcCW31oQQpgrctM+bHLaXEXMUNh7rzT3snw2X8F5p9R84z05F0HTfFYsSsNoUnUtQLCJ4U7N02TE+0pQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0FUQPO/8cR4174xPPOtoUG0rOPBc/7K5608fU7EEz9oI4y6ac
-	JmcsAvtmlKt6K2f08OmLwUIicnQF7lO2hdj0MWXCfq0NPhwTunvzyr2vTR31zxDa+TTR7Epb7Cr
-	jizQGiEwJRzwgpxB809ro6NPI2Fifvjz5XQPnS5iawUA9GX9m9KqlaSSPuNDe8fTab/easXVqsb
-	vE4PsYPMHYt1YcCs1vkJg/vxD4q3ZnJ6e9MP8dvQTFUF2+/Nvs
-X-Gm-Gg: ASbGnctq/GesHzBLdkeZEGAJNDVtO7VLLW8H16vCt3SLnCKrO/sOHYHjmab3agyaMSj
-	pBtTQlx7MJ2XL+lNTVCysLymxXJuwTqUVOs1eh1dw/uyXC+MdCO3Ew3v04boChzuwRzRLYA==
-X-Received: by 2002:a05:600d:a:b0:43c:ec72:3daf with SMTP id 5b1f17b1804b1-44092d9db46mr16915215e9.14.1745399534877;
-        Wed, 23 Apr 2025 02:12:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNWXSk9foZwQq3PNothLWFONL+TEe1gc+Hom1pXzJ1+KM4OJAQbWuk7BYcKSu/hSgMUi94sYl7iXFeZe7wnuQ=
-X-Received: by 2002:a05:600d:a:b0:43c:ec72:3daf with SMTP id
- 5b1f17b1804b1-44092d9db46mr16914935e9.14.1745399534529; Wed, 23 Apr 2025
- 02:12:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745399619; x=1746004419;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6D3Kj5y6LQM0GkGMDpCZ97hnqQlmKF4F8r2fuWuGeQs=;
+        b=s67WL2y9/C2GhixcASB92RSFFGE+Uslcjajw14uLKxGZoK2aUBck6U6s7no7UEN0xB
+         ChGlWWomF2h8Nl66wG2vnSiiuKgi+JrsaJgposx2LJBv0Hoq4RxpH/y6XArbCYMGiGfJ
+         VpJ3EuEYdUtTCZbr4qsRTcwCJryW4+ZNhgOQhytLxV4wa52lmS1zodR9NhjA6Ox4RIvh
+         vqWjNLL7jMB7GaMa3q8c99xypnUjbrvzBImos/5V3R9+CCZtoNpkbZOkkV854yM13t0G
+         GFQMumxkjAED5fbIU+qtEbuKaOcWkux/8nm1HtZOYcRg4URDOpYynY6jOMxmQjpEL42e
+         qxEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPGmYYPGHnsvu1v1uJ5fPLnQtTvKVMB04n/Vf66n6kC0EbwEzYXB2C9+FVQLWW/cEQ8IRqNVIhPDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLaNI5+uIyg3arWJOCRjW4H6PXQ11Vg1ZzLIrhu7Geod0XC20G
+	fwIrbtYgA6Jhl1P3/tSxH3iOZBzV9OFyHQO5x5sHG5kz9QmpGNinMd9ys6OssHQ=
+X-Gm-Gg: ASbGnctoSFnmBcAWh2SkLIqmwhl9yokc47pii71UOTDYDOPzoxnHMl/zuS6r2sbwTAZ
+	x6RQb6VnsfoPUZdcbXOBXsyWO40QtWIEfMfwbjkvyA46/g4dEDl0dQgNkgKM/i9kh8/Sg6eQ1RX
+	H35OqV6hdyc9qZk4duA9BsrAtwT16Wks0IiEMCNs7fMwLE6dQZiUL3d9kLacZuYL1U5wY0/UGi2
+	NsEuPk+kCpp0tpz8ma4LtlJhTgsKlS5x9GA6BqNJwZ5dgSpowzU2bQy/E0IBeM95zn16Z6jWeq9
+	KZnev0itnYddljJYTZFnb/GOPgGbeZw0B8lsNZWyjlj1PVkFqxFlkqib74qisek+5ZZ/EaXp5Aj
+	EN5qSZcZ+
+X-Google-Smtp-Source: AGHT+IFzxFQiGoaAPQvdB7be6/KuqryShsyFvmGaT1Th41MerZiCt57msNGvadM1uAaSSZVi3+rZ7Q==
+X-Received: by 2002:a17:907:c807:b0:ac7:eece:17d6 with SMTP id a640c23a62f3a-acb74b2c9a7mr1856705066b.17.1745399619029;
+        Wed, 23 Apr 2025 02:13:39 -0700 (PDT)
+Received: from [192.168.1.100] (79-100-236-126.ip.btc-net.bg. [79.100.236.126])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef47763sm780902166b.141.2025.04.23.02.13.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 02:13:38 -0700 (PDT)
+Message-ID: <24a6236b-3e4f-4174-914a-373ddcc90fb0@suse.com>
+Date: Wed, 23 Apr 2025 12:13:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418193411.GA168278@bhelgaas> <74142526-b11a-4b31-b3f4-09391ed7927c@intel.com>
- <CAMqyJG1nm2mYnsXeF=h_xM_0ydAVFK9gdEznJO8hwd-B_2sm_w@mail.gmail.com>
-In-Reply-To: <CAMqyJG1nm2mYnsXeF=h_xM_0ydAVFK9gdEznJO8hwd-B_2sm_w@mail.gmail.com>
-From: En-Wei WU <en-wei.wu@canonical.com>
-Date: Wed, 23 Apr 2025 17:12:03 +0800
-X-Gm-Features: ATxdqUHI33eM4qfMxz3S3rPsmdmY-rrMO06WwiUJdELGj_noXFNpLYEbrbU5O10
-Message-ID: <CAMqyJG3YfKZ9LX4C2OuhPMrKTNGr=tHFquwnNiZBEb7JsXnurQ@mail.gmail.com>
-Subject: Re: [PATCH net 3/3] igc: return early when failing to read EECD register
-To: Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, davem@davemloft.net, kuba@kernel.org, 
-	pabeni@redhat.com, edumazet@google.com, andrew+netdev@lunn.ch, 
-	netdev@vger.kernel.org, vitaly.lifshits@intel.com, dima.ruinskiy@intel.com, 
-	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, Mor Bar-Gabay <morx.bar.gabay@intel.com>, 
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 -next 10/11] arm64: dts: broadcom: bcm2712: Add PCIe DT
+ nodes
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ bcm-kernel-feedback-list@broadcom.com, Stanimir Varbanov
+ <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Andrea della Porta <andrea.porta@suse.com>,
+ Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
+ <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+References: <20250120130119.671119-1-svarbanov@suse.de>
+ <20250120130119.671119-11-svarbanov@suse.de>
+ <20250128215254.1902647-1-florian.fainelli@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <stanimir.varbanov@suse.com>
+In-Reply-To: <20250128215254.1902647-1-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Sure, I'll access the machine and do the debugging next week.
+Hi,
 
-Thanks,
-En-Wei.
+On 1/28/25 11:52 PM, Florian Fainelli wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> On Mon, 20 Jan 2025 15:01:18 +0200, Stanimir Varbanov <svarbanov@suse.de> wrote:
+>> Add PCIe devicetree nodes, plus needed reset and mip MSI-X
+>> controllers.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+>> ---
+> 
+> Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
 
+Florian, this somehow missed v6.15?
 
-On Wed, 23 Apr 2025 at 17:10, En-Wei WU <en-wei.wu@canonical.com> wrote:
->
-> Sure, I'll access the machine and do the debugging next week.
->
-> Thanks,
-> En-Wei.
->
-> On Wed, 23 Apr 2025 at 01:16, Tony Nguyen <anthony.l.nguyen@intel.com> wrote:
->>
->>
->>
->> On 4/18/2025 12:34 PM, Bjorn Helgaas wrote:
->> > [+cc Kalesh, Przemek, linux-pci]
->> >
->> > On Tue, Jan 07, 2025 at 11:01:47AM -0800, Tony Nguyen wrote:
->> >> From: En-Wei Wu <en-wei.wu@canonical.com>
->> >>
->> >> When booting with a dock connected, the igc driver may get stuck for ~40
->> >> seconds if PCIe link is lost during initialization.
->> >>
->> >> This happens because the driver access device after EECD register reads
->> >> return all F's, indicating failed reads. Consequently, hw->hw_addr is set
->> >> to NULL, which impacts subsequent rd32() reads. This leads to the driver
->> >> hanging in igc_get_hw_semaphore_i225(), as the invalid hw->hw_addr
->> >> prevents retrieving the expected value.
->> >>
->> >> To address this, a validation check and a corresponding return value
->> >> catch is added for the EECD register read result. If all F's are
->> >> returned, indicating PCIe link loss, the driver will return -ENXIO
->> >> immediately. This avoids the 40-second hang and significantly improves
->> >> boot time when using a dock with an igc NIC.
->> >>
->> >> Log before the patch:
->> >> [    0.911913] igc 0000:70:00.0: enabling device (0000 -> 0002)
->> >> [    0.912386] igc 0000:70:00.0: PTM enabled, 4ns granularity
->> >> [    1.571098] igc 0000:70:00.0 (unnamed net_device) (uninitialized): PCIe link lost, device now detached
->> >> [   43.449095] igc_get_hw_semaphore_i225: igc 0000:70:00.0 (unnamed net_device) (uninitialized): Driver can't access device - SMBI bit is set.
->> >> [   43.449186] igc 0000:70:00.0: probe with driver igc failed with error -13
->> >> [   46.345701] igc 0000:70:00.0: enabling device (0000 -> 0002)
->> >> [   46.345777] igc 0000:70:00.0: PTM enabled, 4ns granularity
->> >>
->> >> Log after the patch:
->> >> [    1.031000] igc 0000:70:00.0: enabling device (0000 -> 0002)
->> >> [    1.032097] igc 0000:70:00.0: PTM enabled, 4ns granularity
->> >> [    1.642291] igc 0000:70:00.0 (unnamed net_device) (uninitialized): PCIe link lost, device now detached
->> >> [    5.480490] igc 0000:70:00.0: enabling device (0000 -> 0002)
->> >> [    5.480516] igc 0000:70:00.0: PTM enabled, 4ns granularity
->> >>
->> >> Fixes: ab4056126813 ("igc: Add NVM support")
->> >> Cc: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
->> >> Signed-off-by: En-Wei Wu <en-wei.wu@canonical.com>
->> >> Reviewed-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
->> >> Tested-by: Mor Bar-Gabay <morx.bar.gabay@intel.com>
->> >> Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
->> >> ---
->> >>   drivers/net/ethernet/intel/igc/igc_base.c | 6 ++++++
->> >>   1 file changed, 6 insertions(+)
->> >>
->> >> diff --git a/drivers/net/ethernet/intel/igc/igc_base.c b/drivers/net/ethernet/intel/igc/igc_base.c
->> >> index 9fae8bdec2a7..1613b562d17c 100644
->> >> --- a/drivers/net/ethernet/intel/igc/igc_base.c
->> >> +++ b/drivers/net/ethernet/intel/igc/igc_base.c
->> >> @@ -68,6 +68,10 @@ static s32 igc_init_nvm_params_base(struct igc_hw *hw)
->> >>      u32 eecd = rd32(IGC_EECD);
->> >>      u16 size;
->> >>
->> >> +    /* failed to read reg and got all F's */
->> >> +    if (!(~eecd))
->> >> +            return -ENXIO;
->> >
->> > I don't understand this.  It looks like a band-aid that makes boot
->> > faster but doesn't solve the real problem.
->> >
->> > In its defense, I guess that with this patch, the first igc probe
->> > fails, and then for some reason we attempt another a few seconds
->> > later, and the second igc probe works fine, so the NIC actually does
->> > end up working correct, right?
->> >
->> > I think the PCI core has some issues with configuring ASPM L1.2, and I
->> > wonder if those are relevant here.  If somebody can repro the problem
->> > (i.e., without this patch, which looks like it appeared in v6.13 as
->> > bd2776e39c2a ("igc: return early when failing to read EECD
->> > register")), I wonder if you could try booting with "pcie_port_pm=off
->> > pcie_aspm.policy=performance" and see if that also avoids the problem?
->> >
->> > If so, I'd like to see the dmesg log with "pci=earlydump" and the
->> > "sudo lspci -vv" output when booted with and without "pcie_port_pm=off
->> > pcie_aspm.policy=performance".
->>
->> We weren't able to get a repro here.
->>
->> En-Wei would you be able to provide this to Bjorn?
->>
->> Thanks,
->> Tony
->>
->> >>      size = FIELD_GET(IGC_EECD_SIZE_EX_MASK, eecd);
->> >>
->> >>      /* Added to a constant, "size" becomes the left-shift value
->> >> @@ -221,6 +225,8 @@ static s32 igc_get_invariants_base(struct igc_hw *hw)
->> >>
->> >>      /* NVM initialization */
->> >>      ret_val = igc_init_nvm_params_base(hw);
->> >> +    if (ret_val)
->> >> +            goto out;
->> >>      switch (hw->mac.type) {
->> >>      case igc_i225:
->> >>              ret_val = igc_init_nvm_params_i225(hw);
->> >> --
->> >> 2.47.1
->> >>
->>
+> --
+> Florian
+
 
