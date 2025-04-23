@@ -1,109 +1,99 @@
-Return-Path: <linux-pci+bounces-26588-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26589-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EF40A996ED
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 19:44:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3CC2A99701
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 19:50:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DF9F1B8689A
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 17:44:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B23F4A1205
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 17:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E6C28B50C;
-	Wed, 23 Apr 2025 17:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467CD28CF43;
+	Wed, 23 Apr 2025 17:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jy/A49MZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJRcWaEY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513A11E2606;
-	Wed, 23 Apr 2025 17:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B0D1E2606
+	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 17:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430271; cv=none; b=ZeQK3oVnksT8IOJzaG8A+I9slS4o0fJW4h6UyHY76ZrB5huYLAgT6OsqFmdJ4m5Ps0kQ6i148ljwtd93CvW+anNGQbweTbNwN26qpWn2L5hzpd0uhacXc5SJi9LINpahn+GxNHbS93+SjrHD56E5mLk+JNr0sLC4V28BpeTsAX0=
+	t=1745430619; cv=none; b=sYdf2Fx277AHpeC1u9+yepSvDp8jSKHge7PoWKEi6uKz/gAIO9KEXxJ/GvqGx/RZ0Go6o7Z/tyQmMWMmO1gSmGGRsGlfQ5MgNdEjvrfu1qKcw6gOpjL59EmRROnaVrJ3xd7FYUj0SjW0EQpTunSiKse0disNA0o91VHMoEhwdVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430271; c=relaxed/simple;
-	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=heYR0alFbt/Ukt7cPjcbX0c2FXehnRnWQ3mCZV2n6QPdBSKGAWZtUrv7C3oZxHDMcUUl7p/AsiK73HzdFOdIqqolhK+MoDOgnB4jr6N5I1CPxFDVgIQ+LJNh0gp4MRBCiGwVoP9QIkeyMfAudIRkXRu5xbHd4Jpt4E5HwuN9mv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jy/A49MZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F09C4CEE8;
-	Wed, 23 Apr 2025 17:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745430271;
-	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Jy/A49MZDzCLBXYnUn4t4vwseHKFwyR3byI7Kl3qOIGr1MXXGKAONVfV6+yQ4UC9B
-	 i/7hz2Hv546V7nbVnjV9E+JfdZU+7kFD9laAkDxU8ftxnVpOespE1y7hohw8fSKG1a
-	 W86uRzMUwPP+n9LX3+f2B51jmbhlKtHOV+IuuAosppg8mWPicIZV3Z2DIwb1BjBqiR
-	 AjlGEU2HeBqWqkHc6HxMeF9b76pLXn38ULza+2VvRbifgz6S8l7wL94raFz4GO7qQ2
-	 x2jAb/F1ErK4gAId5HGOkYs2SvzdG+sMx2jr/gBiCptHoiADid8BRxPhc752qoxp6I
-	 SEF+3UApACXew==
-Date: Wed, 23 Apr 2025 12:44:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Brian Norris <briannorris@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when
- unregistering
-Message-ID: <20250423174429.GA441684@bhelgaas>
+	s=arc-20240116; t=1745430619; c=relaxed/simple;
+	bh=QKLzY5f3t4EqQuvNvZUJMhe8wGcsETDFaBVHKn2S1ZE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mvg9xUcgGJfcMbWzA9H+sVcXjZ6UA3SQqbgZQ16+eyH1/zbsq8bUzQMS4O6nBF5ZrxscnC4ewu2cH5EQYxXMYlsr3I13skOE0874INGSxAlCSt0xZ0PBVjbkMzrQW7pno8ZETt9SF1qpO7hucf69oWQAXfM9jovvLueLx8AeQ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qJRcWaEY; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ea256f039so774555e9.0
+        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 10:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745430616; x=1746035416; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkyJVJvayedppw3sWI0GPM8RDyFc8O66hqcaSSD9G1g=;
+        b=qJRcWaEYBikXP19+uYElvGZq6TzXtAKOvh+Z8knRkVw7pYvoNy7GCvE9gDi0FTxn8a
+         zt/ai7O2d448J+Zl03Xaxj5LgwJaJAda/qi95APCI9VpUnJH/L54wavzRTyot1WGWZJN
+         GqApr1uuuAVxBOXX8FWaaSnB+YwZxsnidF3NTb1/OP3vVr4tGcCTIwySuqxi/avbMM8H
+         UkicHH0Cj08LBjgxZW8Tsw5Ep7e61caW6Ua6CTzO5RXIkb8O88G5vB6l0LKkX3MEe6fm
+         lAklLTNpCd2exi2Bk+YTXP6NOBew+6OlYon6MkuNkbWONg7US7PpsGhDQ4SBOccDqbkZ
+         z4Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745430616; x=1746035416;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkyJVJvayedppw3sWI0GPM8RDyFc8O66hqcaSSD9G1g=;
+        b=Twwe0aXI7ATVcuJNBMPkadhY5u/ojh4zayHzohsMvVjEG8aNJJdvpB+JhmtlBqUBeJ
+         fIuq9wuhFwv7SqG+AtXATy3OthTfpofzB878t9Ew7hVZmqr+/1AhC6WPCa3xG4E22xUo
+         8vvXfXUX5eVvKKeefxJV10unwcaYjuXQfetqc5G66KEa1YDWFosCFecZL/TYXTCAv798
+         uAFtW66FXEf0cgsnZ5tJiIIMCOYJuCASF7/6lWhxZmc8JxiSw/IIYTZAtWTcjavKRdHS
+         Vl+c1GMjyOeSlISpBBmk2LPYcZssXnS2ikcQ0QC8bAtha6xapn3i4+O8pTml/VrBgVTl
+         dstQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWskCSu0uOKZhqOhgWSoa9VUe6t163p+mBWQeqOQzPX39pK1i8hgnjjpq19bu9+jxt+4PrZkuqhyVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBOexV8kjdLsEwNB14LHSzsACFgsDkzfEE1xbSpLGoFOOOv2dO
+	ENa4IOlZ/XwvLrL1i0Qk3j32Hs+NB9vE0GguRS6747Pusm02umNSRUzNX6HJz8Zx+XyJCSi6Jjm
+	TTHyyJcBLIkjl2A==
+X-Google-Smtp-Source: AGHT+IGG7oMigeybpqlDwQJK15daVwyXJWLa97UKCcbNBzHZq/BAg+CdNCG/eCJ9V70GXVK9Jn1nxqxkOah8wwQ=
+X-Received: from wmhu12.prod.google.com ([2002:a05:600c:a36c:b0:43c:ef7b:ffac])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3107:b0:43c:f64c:447f with SMTP id 5b1f17b1804b1-4406ac163bemr144465395e9.29.1745430615921;
+ Wed, 23 Apr 2025 10:50:15 -0700 (PDT)
+Date: Wed, 23 Apr 2025 17:50:13 +0000
+In-Reply-To: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
+Mime-Version: 1.0
+References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
+Message-ID: <aAkoVfiZDAXdYxrr@google.com>
+Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Apr 09, 2025 at 11:53:13AM -0700, Brian Norris wrote:
-> From: Brian Norris <briannorris@google.com>
+On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
+> The bulk of this change occurs in the last commit, please its commit
+> messages for details.
 > 
-> It's possible to trigger use-after-free here by:
-> (a) forcing rescan_work_func() to take a long time and
-> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
-> 
-> I'm unlucky to trigger both of these in development. It's likely much
-> more difficult to hit this in practice.
-> 
-> Anyway, we should ensure our work is finished before we allow our data
-> structures to be cleaned up.
-> 
-> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
-> Cc: Konrad Dybcio <konradybcio@kernel.org>
-> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Looking for ack/reviewed-by from Bartosz before doing anything here.
+This works with Rust Binder and Ashmem.
 
-> ---
-> 
->  drivers/pci/pwrctrl/core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-> index 9cc7e2b7f2b5..6bdbfed584d6 100644
-> --- a/drivers/pci/pwrctrl/core.c
-> +++ b/drivers/pci/pwrctrl/core.c
-> @@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
->   */
->  void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
->  {
-> +	cancel_work_sync(&pwrctrl->work);
-> +
->  	/*
->  	 * We don't have to delete the link here. Typically, this function
->  	 * is only called when the power control device is being detached. If
-> -- 
-> 2.49.0.604.gff1f9ca942-goog
-> 
+Tested-by: Alice Ryhl <aliceryhl@google.com>
 
