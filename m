@@ -1,162 +1,83 @@
-Return-Path: <linux-pci+bounces-26525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF2D3A987EC
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:55:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8510A987FC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 12:58:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC0AB443D70
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:55:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4DA31B642D0
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 10:58:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A8926D4F1;
-	Wed, 23 Apr 2025 10:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B00C26C3A6;
+	Wed, 23 Apr 2025 10:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GpmujaI8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+++FiXM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BEC826D4C6;
-	Wed, 23 Apr 2025 10:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30512BAF7;
+	Wed, 23 Apr 2025 10:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405711; cv=none; b=c9uJ+L1LMr4TlTGcGddIIaVowpjChQLryKlusnNP8Q2i83tvlj+J+bNmoXbsMHbNtjkRiMHtVD15s9I5BQaazqblbtuQ+9pomUVlg9piW9OOjGcoRogSkNU6KKrL/O6YZ/7RK3jmBUJ77O9TWn+gdR75SF10TFGgTI9d3f+9hK8=
+	t=1745405885; cv=none; b=p/1sdj8b04th0LZ7V04U0Gj3LHluoHmuvSojWSUck8x+kouwioKMDCAmYUF+rR3vJZOnsUGl+QVVM4VGV7MTJIQmy6KVhC2cVnasP30ZTZjFbc8YSHlEOXmuzJfDqDoCG4PLr7Fn42xUd/pndplXZqXWRzJFg+RTOtncIgqp8Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405711; c=relaxed/simple;
-	bh=wvUZeNvbPTQtNmJGim0FkGS4BcohX3rf0yyLJJKnivc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nr1VAGj0yFc+ShGgUmnO8AgjXu22AdUwjkFqq5yXEW5ajMg2OrEEXM6O7JvYjJJUdm/KkyJxcTFTsIJjZqTTMcg6heuEtnicD/GVd6cwgqxq76+hQN7SznuKJTNvraFrkwoTwM8Fkvnx9/knFiVxR/hWZiTqc2StWYnnhdSKN6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GpmujaI8; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=BwcYZ
-	3QAYUzjwMBUPfQj13lIgXFp+SqbT5MeM2baqWQ=; b=GpmujaI8FCZcKvs82Yh3z
-	zYps0LtQ7AUYKfvsrt4o+w9MeEgsfcFMpON4kByy8qL/8vOB0Ha4cu5bQIMBVX9C
-	snluvgaim8xQ4FfgXhZNtyfWlaIEkNRjT1BUiC7BYQWFC6xXlsV+3TKIWvYbb14F
-	eFT81BmbPVGms5iUa1+OGc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S5;
-	Wed, 23 Apr 2025 18:54:22 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	shawn.lin@rock-chips.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 3/3] PCI: dw-rockchip: Unify link status checks with FIELD_GET
-Date: Wed, 23 Apr 2025 18:54:15 +0800
-Message-Id: <20250423105415.305556-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250423105415.305556-1-18255117159@163.com>
-References: <20250423105415.305556-1-18255117159@163.com>
+	s=arc-20240116; t=1745405885; c=relaxed/simple;
+	bh=Zn1rhX3sBq9a790THaJgA+kJ6YndcCXata6x97D7ano=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bytYTxA4QDf1H58OFy+0iMOlbnV6FFnBPS4FKsVzlJ+WvK1q3+eZy4ZD34Dpszx8caWkop2M/S/r2Ar0pJEwHSe3HBhCIIO6SsS78gW1sQlV6/bjz12STspVZZD4aM3wTChgxg7OmrKvInqMwzDXMey2EL5ciNOv7IT3rOmPi48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+++FiXM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A64C4CEE2;
+	Wed, 23 Apr 2025 10:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745405884;
+	bh=Zn1rhX3sBq9a790THaJgA+kJ6YndcCXata6x97D7ano=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k+++FiXMPt27gKJSDL2IV97tBfO1L0+4O0KKE9vEv8eiS0BCILUu6r5dfvGaSi2Lt
+	 7za/BH0efWJUJZ9ONGR5QL1vX5lJCP8AyRHhkwHlbz9oWW/C8G38pBkI/ZTay+hEP6
+	 fsEnBxZJZNu9GEmQyDeDqw40RMn3mR+qi3wDwXW15tEBNcE6AuvIb0GqzvbOuwOMA7
+	 dxfEWXtjhMAzR77drOxJfWtEbJVMf314OnnnuuX4oUtOHwuPSGjJPTb9L+w1vBKRhb
+	 l6DOgztO2MnAB3cInal0xYaFAYGZLOi4td8LzumCxRJZWTbjw/wEfls04v4rt2X4gX
+	 LkzJyCLVKAThQ==
+Message-ID: <397609a9-bd8d-470a-97f7-05d7b5a0a4ab@kernel.org>
+Date: Wed, 23 Apr 2025 19:57:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF15Gr13Cw17GFW7Zw18Zrb_yoW5uF4xpa
-	98Aa4vkr48Gw4j9F1kCFZ5ZFW5tFnI9ayUCrn7K3WxW3ZIyw1UG3WUWr9Iqr4xJr4rCFy3
-	Cw4rta4xJr43ZwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UoBTwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwI4o2gIwTqyAgAAs9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: Fix path for NVMe PCI endpoint target
+ driver
+To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc: rick.wertenbroek@heig-vd.ch,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250423095643.490495-1-rick.wertenbroek@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250423095643.490495-1-rick.wertenbroek@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Link-up detection manually checked PCIE_LINKUP bits across RC/EP modes,
-leading to code duplication. Centralize the logic using FIELD_GET. This
-removes redundancy and abstracts hardware-specific bit masking, ensuring
-consistent link state handling.
+On 4/23/25 6:56 PM, Rick Wertenbroek wrote:
+> The path for the driver points to an non-existant file.
+> Update path with the correct file: drivers/nvme/target/pci-epf.c
+> 
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 +++++++------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 6cf75160fb1c..8c2b2b642ba7 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -8,6 +8,7 @@
-  * Author: Simon Xue <xxm@rock-chips.com>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/gpio/consumer.h>
- #include <linux/irqchip/chained_irq.h>
-@@ -73,9 +74,8 @@
- 
- /* LTSSM Status Register */
- #define PCIE_CLIENT_LTSSM_STATUS	0x300
--#define  PCIE_SMLH_LINKUP		BIT(16)
--#define  PCIE_RDLH_LINKUP		BIT(17)
--#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-+#define  PCIE_LINKUP			0x3
-+#define  PCIE_LINKUP_MASK		GENMASK(17, 16)
- #define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
- 
- struct rockchip_pcie {
-@@ -209,10 +209,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
- 	u32 val = rockchip_pcie_get_ltssm(rockchip);
- 
--	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
--		return 1;
--
--	return 0;
-+	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
- }
- 
- static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
-@@ -512,7 +509,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	struct dw_pcie *pci = &rockchip->pci;
- 	struct dw_pcie_rp *pp = &pci->pp;
- 	struct device *dev = pci->dev;
--	u32 reg, val;
-+	u32 reg;
- 
- 	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -521,8 +518,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
--		val = rockchip_pcie_get_ltssm(rockchip);
--		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
-+		if (rockchip_pcie_link_up(pci)) {
- 			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
- 			/* Rescan the bus to enumerate endpoint devices */
- 			pci_lock_rescan_remove();
-@@ -539,7 +535,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	struct rockchip_pcie *rockchip = arg;
- 	struct dw_pcie *pci = &rockchip->pci;
- 	struct device *dev = pci->dev;
--	u32 reg, val;
-+	u32 reg;
- 
- 	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -553,8 +549,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	}
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
--		val = rockchip_pcie_get_ltssm(rockchip);
--		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
-+		if (rockchip_pcie_link_up(pci)) {
- 			dev_dbg(dev, "link up\n");
- 			dw_pcie_ep_linkup(&pci->ep);
- 		}
+
 -- 
-2.25.1
-
+Damien Le Moal
+Western Digital Research
 
