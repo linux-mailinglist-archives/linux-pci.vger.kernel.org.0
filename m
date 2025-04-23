@@ -1,157 +1,140 @@
-Return-Path: <linux-pci+bounces-26514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76BBEA9855F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 11:25:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9945EA98592
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 11:32:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4098B1B636C8
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 09:25:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 508613AC7E1
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 09:32:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1519425C82D;
-	Wed, 23 Apr 2025 09:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C892A1DF991;
+	Wed, 23 Apr 2025 09:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVne6kNu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFC225C827;
-	Wed, 23 Apr 2025 09:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D3D2701DF;
+	Wed, 23 Apr 2025 09:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745400290; cv=none; b=V9Bsuetd0Oy5dSVV/ZC8b/EX4LA4hv2XGIJENhE8L2XXnC/bHFcz8cKJ2A2CPiHdFI/EYeXZX4Bx4MRpyvJyX4bb3uTMLdjzplk9FN2P6o9gUTUdao+H/MQzoipFy6xRLhJ4nzULqg6YWK8knzkrV0/2ocw1txh/dkU4yRKS09M=
+	t=1745400743; cv=none; b=DFFdGYkDTPQFN1cq5wiLK9A64J5H0zRuObA043vYUOEF6QJAIUl+GTz9lB0B3My/5KzctWHwDm+L+j7UmN28nCZFJgMJm0SmVf78cJ7iBZF/eF7WRQ6gZogTyaRN+nQ8Wl45BGFI7SUvMhwIh7SjYYtl40PXAxj/PQt1U1ixv7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745400290; c=relaxed/simple;
-	bh=9qj0pay5ZmjZRZZ7HXJ8BmXLMpn26cC+yQmeKmbVZkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ey/5or73uZIpdjqqJPoP+eIYmfVdqyhlUHKqgQ6mOwZk5g05nLrDVNg0fGhzN6tP11aO0uL4BSqjLWkLtD/D24IVLSHWYxNNHorUMU5vL9iO9bu1cqMXX/56N2GV1+xLAyIFwewemmvjm6wccQoo9LxB9sTldTfsaco2ZvAivxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E67E268AFE; Wed, 23 Apr 2025 11:24:37 +0200 (CEST)
-Date: Wed, 23 Apr 2025 11:24:37 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>, Keith Busch <kbusch@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Nitesh Shetty <nj.shetty@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v9 23/24] nvme-pci: convert to blk_rq_dma_map
-Message-ID: <20250423092437.GA1895@lst.de>
-References: <cover.1745394536.git.leon@kernel.org> <7c5c5267cba2c03f6650444d4879ba0d13004584.1745394536.git.leon@kernel.org>
+	s=arc-20240116; t=1745400743; c=relaxed/simple;
+	bh=aYLu6xNAjH0O0LUykFOSGkDTTVlyAPDb1573K5hiCZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JrimyuVloz5DMpTsH6qjD9+GqoAHWDFoN63ApiUmZMbSW9rL6uQcQq1q2spvJa5lFS28cWivHIxybF0vVrSGmnnzOi0oaLv9SQsXK2RD7lzPmN/tlvYmIhVQhco0z9SNHABRDlDXDxAYK08L9Tm7QYvLLjdez7wxdaE+n8oGTMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVne6kNu; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af5139ad9a2so3931717a12.1;
+        Wed, 23 Apr 2025 02:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745400740; x=1746005540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CpvYx4I4dXv7Dap9phUEXTzOU2IX4DONLJbyNUltq+w=;
+        b=YVne6kNu50BaxhbBRx02NPmDTe8uQC6NG9yMpEjS0pQqkt4XGJfKa04krPWI3PwLKJ
+         GDOT+ii76zB+PxgsM9w/2XdgTeM0RbuqUobSJUgfLBChpnMqzdz/EOC6NYsYHZDGCdwb
+         3vB8D1TtwbpLdCcWmlMq2dKfAvxl+R3qcpb8lAbUUDT7G9rLnLqNxckPIejzSjNddDTN
+         DBA8ZUGSETJsB//tCteLsNSia3fWuSnfe/U1UIpfMmnE68j4ac2iZ3o9zYCknoldVGwK
+         UwIsfjUiayiC5AvW0O+bhHnCJI1SsrDBBFkFwMXbV8cill8zZb1wOPTVcxgctaD4/L5V
+         LMLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745400740; x=1746005540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CpvYx4I4dXv7Dap9phUEXTzOU2IX4DONLJbyNUltq+w=;
+        b=NRFmRRCsAbFU8vzlDShIijtC8ifQtpqqMEgS6oEJJlBIIZ4yX8qrqQ1IGReTlhkksV
+         lHMpCplUFbnR5rrFzHtXD3amIpoy6Cygjvk3U1MI+M6FkkG0DchCAKMxMjWjVIoXyHMi
+         hS6o+oBNdAW8yFXEfYuueNYJgooA8Vcw/I51DkvJ2kZAHQCa+JBFi/MuonbCO/z8rLU/
+         qT3aw45Q0ZM2ljpLdnt2mUdsyMNO04oM/9HTeuVCwb9RoH0enjxuHCFSvu3kKChvL4OG
+         /54rfPZbxLUbGFY5Jhim/lTxO3oy3X/Cc86pv7OAzPiucbhbl2m4Zdms7jvVVs7OM9lm
+         p6YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUR//TeRDAi0VzaXl57dmx3cY8W/x2wY4YX9lDloDhIyx4pvgLbb3R/r++1pQgNe1qxXRiG8deT4NP+@vger.kernel.org, AJvYcCVphZrIVW9EnMVdtugWIKfeLELAP3lhaN8bVD+yHhfwiZz2PaV+cpFYwjGjar0/VIqv3FJbJyFma4sY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlDgOqRM+YQp2jzIl1VLkrsFSC3DfZjoHYL51YqZoJqVdQrGJU
+	SY2D9BkquCUsTIlgsIXluS12MeZK82ucHLhb91yLL4LJSM/hWuvkxR1/pHRVfdzmuckNAf0G/sV
+	7v9toiY80Ln5AY+JG9TbAHRjHUbA=
+X-Gm-Gg: ASbGncsTUVHuQbRUtXyW9+XP/fWb9EPi0I11uPZT0gJB8KZR1EN/Fzt+LQne+2qchBM
+	JcrkkpL1sNm1r/+Kz0YqpuEJ1o9WIfGHTyFFB/GU6QFQ0Ndv//To9cYJkhdwSUe5IOSCmy5/iWN
+	9oaAk6i00wNMpdad3CwmZV8A==
+X-Google-Smtp-Source: AGHT+IGE8sObaNyKSiPkO/qpSiUeuKAoTJJOunfvuIWb7LoyW0/brJrvAJTkDYKHXnj40W7gIv+eM7F0rIEcowv9baM=
+X-Received: by 2002:a17:90b:274a:b0:2ee:b875:6d30 with SMTP id
+ 98e67ed59e1d1-3087bb525cemr28936199a91.9.1745400740319; Wed, 23 Apr 2025
+ 02:32:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c5c5267cba2c03f6650444d4879ba0d13004584.1745394536.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <62de9027-e4cd-4192-90e8-64f4c4a8fe4b@gmail.com>
+ <aAc26NTVcXy1BCxU@wunner.de> <CAJZ5v0iWTd_ndpAr=q8QJC2MWSheq0UXVR6a1oyGSH063yzpFw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iWTd_ndpAr=q8QJC2MWSheq0UXVR6a1oyGSH063yzpFw@mail.gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Date: Wed, 23 Apr 2025 11:32:08 +0200
+X-Gm-Features: ATxdqUHnoN02QKdGtRupZAwXQafde4nJbce3gtu3QSEXhRoH_QXALjZij0_4wQ4
+Message-ID: <CAFSsGVudMV+=0M7m_LC0xuJF=spTwk-691_W=wmnuuNFxCK1AA@mail.gmail.com>
+Subject: Re: Potential issue with pci_prepare_to_sleep if there's no platform
+ support for D3cold transition
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I don't think the meta SGL handling is quite right yet, and the
-single segment data handling also regressed.  Totally untested
-patch below, I'll try to allocate some testing time later today.
+On Tue, Apr 22, 2025 at 1:43=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Tue, Apr 22, 2025 at 8:28=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wr=
+ote:
+> >
+> > [cc +=3D Rafael, linux-acpi]
+> >
+> > On Mon, Apr 21, 2025 at 10:05:59PM +0200, Heiner Kallweit wrote:
+> > > If there's no platform support for transition to D3cold, then
+> > > pci_set_power_state(dev, D3cold) still returns 0, even though
+> > > power state is transitioned to D3hot only. We called
+> > > pci_enable_wake(dev, D3cold, wakeup) before, therefore PME for
+> > > D3hot may not be enabled. Is this a bug?
+>
+> On platforms using ACPI, no it isn't.
+>
+> Internally, pci_enable_wake() evaluates _DSW and it doesn't
+> distinguish between D3hot and D3cold as per the spec.
+>
+> > > Background:
+> > > In __pci_set_power_state we have the following:
+> > >
+> > > error =3D pci_set_low_power_state(dev, PCI_D3hot, locked);
+> > > if (pci_platform_power_transition(dev, PCI_D3cold))
+> > >       return error;
+> > >
+> > > The acpi_pci_set_power_state() stub returns -ENODEV.
+> > > Therefore, if error=3D0,  __pci_set_power_state() will
+> > > return 0 if pci_platform_power_transition() fails.
+> >
+> > pci_prepare_to_sleep() calls pci_target_state() right at the top.
+> >
+> > If wakeup is supported and enabled, pci_target_state() is supposed
+> > to find the deepest power state supporting wakeup.  If D3cold doesn't
+> > support wakeup, D3hot or a shallower state is returned.
+> >
+> > Hence I don't quite understand how the scenario you're describing
+> > could occur in practice.  Are you seeing actual issues and have tracked
+> > them down to incorrect handling in pci_prepare_to_sleep()?
 
-Right now I don't have a test setup for metasgl, though.  Keith,
-do you have a good qemu config for that?  Or anyone else?
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f69f1eb4308e..80c21082b0c6 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -634,7 +634,11 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 	dma_addr_t dma_addr;
- 
- 	if (iod->flags & IOD_SINGLE_SEGMENT) {
--		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
-+		if (iod->cmd.common.flags &
-+		    (NVME_CMD_SGL_METABUF | NVME_CMD_SGL_METASEG))
-+			dma_addr = le64_to_cpu(iod->cmd.common.dptr.sgl.addr);
-+		else
-+			dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
- 		dma_unmap_page(dev->dev, dma_addr, iod->total_len,
- 				rq_dma_dir(req));
- 		return;
-@@ -922,35 +926,37 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req)
- 	return nvme_pci_setup_prps(dev, req);
- }
- 
--static __always_inline void nvme_unmap_metadata(struct nvme_dev *dev,
--						struct request *req)
-+static void nvme_unmap_metadata(struct nvme_dev *dev, struct request *req)
- {
- 	unsigned int entries = req->nr_integrity_segments;
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	struct nvme_sgl_desc *sg_list = iod->meta_list;
- 	enum dma_data_direction dir = rq_dma_dir(req);
--	dma_addr_t dma_addr;
- 
--	if (iod->flags & IOD_SINGLE_SEGMENT) {
--		dma_addr = le64_to_cpu(iod->cmd.common.dptr.sgl.addr);
--		dma_unmap_page(dev->dev, dma_addr, iod->total_len, rq_dma_dir(req));
-+	/*
-+	 * If the NVME_CMD_SGL_METASEG flag is not set and we're using the
-+	 * non-SGL linear meta buffer we know that we have a single input
-+	 * segment as well.
-+	 *
-+	 * Note that it would be nice to always use the linear buffer when
-+	 * using IOVA mappings and kernel buffers to avoid the SGL
-+	 * indirection, but that's left for a future optimization.
-+	 */
-+	if (!(iod->cmd.common.flags & NVME_CMD_SGL_METASEG)) {
-+		dma_unmap_page(dev->dev,
-+			le64_to_cpu(iod->cmd.common.dptr.prp1),
-+			iod->total_len, rq_dma_dir(req));
- 		return;
- 	}
- 
- 	if (!blk_rq_dma_unmap(req, dev->dev, &iod->dma_meta_state,
- 			      iod->total_meta_len)) {
--		if (iod->cmd.common.flags & NVME_CMD_SGL_METASEG) {
--			unsigned int i;
-+		unsigned int i;
- 
--			for (i = 0; i < entries; i++)
--				dma_unmap_page(dev->dev,
--				       le64_to_cpu(sg_list[i].addr),
--				       le32_to_cpu(sg_list[i].length), dir);
--		} else {
--			dma_unmap_page(dev->dev, iod->meta_dma,
--				       rq_integrity_vec(req).bv_len, dir);
--			return;
--		}
-+		for (i = 0; i < entries; i++)
-+			dma_unmap_page(dev->dev,
-+			       le64_to_cpu(sg_list[i].addr),
-+			       le32_to_cpu(sg_list[i].length), dir);
- 	}
- 
- 	dma_pool_free(dev->prp_small_pool, iod->meta_list, iod->meta_dma);
+On non-ACPI systems pci_target_state() just looks at the device
+capabilities. The described scenario can happen if device supports
+wake from D3cold, but platform has no means to switch a device to
+D3cold. I'm thinking of e.g. RTL8125 on ARM. Typically I don't expect
+an issue because boot-up default on these devices is to have PME wake
+from all states enabled. So it's more of a theoretical exercise at the
+moment.
 
