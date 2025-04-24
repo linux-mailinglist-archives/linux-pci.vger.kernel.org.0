@@ -1,158 +1,208 @@
-Return-Path: <linux-pci+bounces-26625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14FA9A99C15
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 01:33:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF9DEA99DA6
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 03:05:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 058DD1B8433E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Apr 2025 23:33:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B01681946A18
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 01:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C4022F77B;
-	Wed, 23 Apr 2025 23:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oxpQR22A"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018D013B58A;
+	Thu, 24 Apr 2025 01:04:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022139.outbound.protection.outlook.com [40.107.75.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CEF21FF50
-	for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 23:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745451219; cv=none; b=F2bbvq/17f8m1O2y14LiDW73/mN9hf+BAAK0CvsEQkmK2ARAHHOe68YISFPbYSDYgiove/vLQfgii2Ju3il5gR5nt8sA8FiphiwOxQlCKKDAMQHyZrzSUkZelKj99XNwNhZtKT7SYldTh56tB+9dPBGx1IqsphPJmu/PhB/K6zc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745451219; c=relaxed/simple;
-	bh=El3tntKet6XFP5tu5jRccRiIHcbcsNXplDjGS1RgqqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHg28Z0gQdRgUfsZj78uaevs7a+SQ3SrmMRmDUD9VLH3X0zMuTjzu0oXX3l9ErUFJ0edlcH+WAEs8K5mSwUBZicTMNBHre26m4qudb8tF/8BVSIazgmq/muj749+4HXeCepGVK67a+9PzmlY7l1K/YGnF0FnveFFLv2os1Azyu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oxpQR22A; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47688ae873fso4464891cf.0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 16:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745451216; x=1746056016; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L7oRP2YqJwVB6GeEu4BqvXzZqclhisHpp0fN6LY14JQ=;
-        b=oxpQR22AuCBUupk33WzKrsqOuEfDjGF5EniClxzPYJi+H/2OHhj3xqGjwCfB3IjXj1
-         IS44abUFubw81ik89SK+dFDMZisPitToRy3EjPnxuoq9OkV+yz2s0Dd26VYZBM4RiMKf
-         LNZPMNSpZe8jxWLp38ZCMDDKtCWhhAEaNccFys3J39EgF9Oa5YZ6+Oi0PJ9u2qeAGeb+
-         x42QOq7flqmXeNRLssg9BL3MbzD8TDfAQ3F1ZEg2N3dERLvQfW0Wo9v5YoPExvUsoEdC
-         IJPMcscXB538yc3/hVCCR4MgBTNPsBOr+AloLAvkeppeSsp27pJkz8n/J7Twj4P35Hbl
-         gDmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745451216; x=1746056016;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L7oRP2YqJwVB6GeEu4BqvXzZqclhisHpp0fN6LY14JQ=;
-        b=OCDgj9VAJtl7XzaT6eGtvs3cL6qw9ByOwBNCcZ3U3nNorNiLfA1AI/dJHaxAtte1dO
-         0OXeL2GWgUht2LtSVTxn9BWEWmzt5gn1kGsFOTOM0m/+plwemsrixZi56SPtLfI6/SOQ
-         F3iqD7AWfML0WadZFwfxQm9UfSe5qJ5a/K7g3qW3L9GjkHBadKemJBCTalaB4xrqKWB+
-         tAnJKa/VsUWxquagcvdVVkm6f65Sk4A6i+dEE562V1W/Bpss6/pGoBvttk0WV0sz5UkW
-         AwUAL1m8HyvSdqKnivXgCwnOLexKJo2Ddr9al72BEYJy9DOKrcSXr6F2HrJfOprmSObc
-         048g==
-X-Forwarded-Encrypted: i=1; AJvYcCVjg0ixGTJTgtyAWBu7bJYsGGqiu+3ROO0wlFE83yktdt/UZg9cwiaRJo6KrsnPM+ptUhKhToz7AZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrlcVinerer0MQyWO5rX+TWUrMNSxSWBECrLDq/xHXm4rTKN7z
-	802A1oxrkpctXASAS+dtm+Vlb44p5GP8D8H6Pnr736L7iKwLJItz2Z5yh1nBw7Y=
-X-Gm-Gg: ASbGncsnr+MIEOtTNaEfUk3U7ZAJs2Od5MjI1vfAXg3d+8LOwGR7j3YmrR7xjDbl4BB
-	KDSKJhc0uDohZrQbqrsHR2rB89/jxLPzGQjCQ48aNcPZJADWtE2GnzDacU7ZLBICiB4kNUJsuLr
-	+hWE6dEjI3wUEfmyYUNMVY55mIyyG6rKV7gSG6owaEEoJKShqco9EPuZSJ+Xt9td5pnMq2VHWl3
-	NCmZm+IKH7m5M894Pkqoaou5UD1bFby8uXvQaMvtmZDWvUFAK8HlhYoWZnhxBcL3ZguDizzaCrg
-	gwHE9lQ9zUi3ne5sXdAyOg5zv76YE9FdKPLX2NNaL3ZgUMnDcrBj3y+CV1n79EAWJDHvXb629Sp
-	2qFdAxSyxiteI9z+Ms3g=
-X-Google-Smtp-Source: AGHT+IHp4LWhqR/rJc6pqFU95w2BqdqjYtJ4SAe1Mvc/v+Ufccgyj7hWc7Mm96oBr3hzP4lBlnfnCQ==
-X-Received: by 2002:a05:622a:388:b0:476:b783:c94d with SMTP id d75a77b69052e-47eb4fbb928mr6490361cf.35.1745451216599;
-        Wed, 23 Apr 2025 16:33:36 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ea1ba154asm2538601cf.67.2025.04.23.16.33.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 16:33:35 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7jax-00000007PKl-19Zx;
-	Wed, 23 Apr 2025 20:33:35 -0300
-Date: Wed, 23 Apr 2025 20:33:35 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mika =?utf-8?B?UGVudHRpbMOk?= <mpenttil@redhat.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
- mapped bit
-Message-ID: <20250423233335.GW1213339@ziepe.ca>
-References: <cover.1745394536.git.leon@kernel.org>
- <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
- <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
- <20250423181706.GT1213339@ziepe.ca>
- <36891b0e-d5fa-4cf8-a181-599a20af1da3@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B962701BA;
+	Thu, 24 Apr 2025 01:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.139
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745456696; cv=fail; b=b3mAQYexiKeie4cHakimzXZV0VM77CXdIDA5+pED8PQ2mRbUVTf+Y4PTyqP5yt6uewZZjfpV1tpEUj74qrRq/geDOkBdjkWR2kVZju/+LcpMqFAVjnuPZuIdHwtCka3U4tDpH2FRQFO0HLSfQ78M7Azj2OcUOWOvpqVtSB+HPbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745456696; c=relaxed/simple;
+	bh=JFCpliW96HV3c5JMXf7mGtGEenEHmFczUhl4kkI+Gjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BxXj4j/dk3RTGXx5pGkGs7qwtGY+e+cuf1h8nuc+ujBaR5VaOyfplkH2H3tM2JJC3HUrpS89xQIWWCQyyDTX6jvWtwsn3CY4RhCVLjp5V08EWiSFppqiR1uULtgdHGyszPOlpS0EiaCozEm5HIKqTVVXRO4qVsSRpqggd2xXl48=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H4CJLWprYEpURMXBIYEjwgoKZm+zpZRXosNfmUW3XMSJ8Tuw6wN/bVVUkASHL1W24PT/9UERXXfdChw0L6NVau9r/jlmp92XQ+8+i9rM4+G2n7W7MsuptIIK/qndcaBS4arwct4bSfidVZw6/WRmTETbUv4lw74XqwaaTul0188piN0y5L6ehSYcxTexQHqq9BrcQQYMXh4Vx1XrolGm3zBkKCAF/KJbUE45olLb8AmraOmlxP6ZJ73NqLEavIPLLBRE83BTWBpe+l20SJx7El5hkgL8ZaXgPWYRHdHB8LZlxcTIK5HgvBxq4fdYrgBxj0tWYH5JqOvvlMU8rh1wZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h83M5q3L2zQODZaf0cw+iVLwq8X2RsB0UhZ6IW17NtE=;
+ b=htOeWWtpO2Qszj+qZZru9pykcXEwakCneSOoY34H0Z82nPF+2MNBxOYhumoGf51K9j1gbyY0oRuhPc0Zf6CV0oZ30EVyxKrvF259XF/oROp8VgmbN/ma24Sf/xS8EBFuQP4nKBUcVkbzdskCaFdei8+f32rMB6fTmNMHZYZdwBRs/FN/Y1Zuhv7FsniUTuH7j2/cIbJJO0MpyjoOenvBGdSJ3gDBlKk+U1SntTRL4XODD8RsGm6rKOP6Sdj1XBHFzpaitZQFnYRzou+2kcqAMfrgOmjYbfKv5BuaR1MzPk4vDpqRfFMwq3B2s2aVPEmOSeBOiXSqx2wen7uIZKRDzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TY2PR02CA0070.apcprd02.prod.outlook.com (2603:1096:404:e2::34)
+ by TY0PR06MB5681.apcprd06.prod.outlook.com (2603:1096:400:275::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Thu, 24 Apr
+ 2025 01:04:48 +0000
+Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
+ (2603:1096:404:e2:cafe::8b) by TY2PR02CA0070.outlook.office365.com
+ (2603:1096:404:e2::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.38 via Frontend Transport; Thu,
+ 24 Apr 2025 01:04:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 01:04:47 +0000
+Received: from localhost.localdomain (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id A79CF40A5BFE;
+	Thu, 24 Apr 2025 09:04:46 +0800 (CST)
+From: hans.zhang@cixtech.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: peter.chen@cixtech.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: [PATCH v4 0/5] Enhance the PCIe controller driver
+Date: Thu, 24 Apr 2025 09:04:39 +0800
+Message-ID: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <36891b0e-d5fa-4cf8-a181-599a20af1da3@redhat.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|TY0PR06MB5681:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 87b94f69-0e23-42b3-cb82-08dd82cc0223
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1Xsqqqk1STS9cqBn0npUaBbyRKpXMHAYyTXa8gdvtLoMV1v3dvDDXsT4AE7U?=
+ =?us-ascii?Q?O03Z9QUiYnYYmoA1W0r8aBP0uf+PqGI/WQsQAUlGxHxqcs4qyTuNlTPP1z5l?=
+ =?us-ascii?Q?1cK4KJd9RJ/p/O2x5BjBv3Rm+ZQ6L1rAAcsWTc6XaaBJbsiRNqweSucr32+Q?=
+ =?us-ascii?Q?K7s8ZSK/AXZYYZWJbw462BEamhN8Q/Pm2k4Gu+qSa6BDnS3ohmYTQGVaZeS5?=
+ =?us-ascii?Q?Jy5n6xjABVcsSZqcWrhlpw1bcxakdhpzoFwHAaTA5L1bCZn/tJJDI/+1PG8Y?=
+ =?us-ascii?Q?mPq0+tbuM+2ds2xZVfHpSJmQrHnhMwKqfbiNq7x1iHb+vRlFTU1fBHPvs9gT?=
+ =?us-ascii?Q?hNU976hXIm7B1sWbx00tNbdGqCtKLfXgzjQEG583eocSvXEWt2sOtqBI0NGp?=
+ =?us-ascii?Q?O3960RkYIhi9sB9VVE+IPPoVXTsPIfbpwCHDTWWXSl/RtW8TB7W+0BrCAk85?=
+ =?us-ascii?Q?d9+dAc56sOCB7W7T6I6zPb6hnJ8jeu+EnNE70tJnj5KV3ReMJDscFrYTNsyW?=
+ =?us-ascii?Q?hvv33yO5C8K1lh62CqhptmZhk7/SXo2d9B/IJy/7c0SEnwGMRmyEAfJLPLRN?=
+ =?us-ascii?Q?05Vq59e91sB14W44FSzgzKR3IOp24jUfefkjFNf/zOs9c16YZ1FUFQihSMaD?=
+ =?us-ascii?Q?BXn6aeW0ug68bDv1TDJ2BYO+8yQNQRr4XZXNvodMoX9NtLvruMqSMcoR+cL3?=
+ =?us-ascii?Q?xQTuD1F4pvKk+urVCZgA4O3H8g40dB7uKoKqIt3Td1uXDFPEYxTL89TZTPt1?=
+ =?us-ascii?Q?3VQl4WvffspLWDX8A5LNN9nrsWmxiSoRCHkQ/GOUzf6BNo89oXYHBcDJD4fb?=
+ =?us-ascii?Q?YAvHzQF+xfuWXmP0VFuE6Eyimh4+sMuXeoqVWYwb0i4u8ylSZqxU536/akq6?=
+ =?us-ascii?Q?Dyc3bf39b09Kjl9lfrUBvCV3JxP67/gUg8A91JOfttupdtNBxGgg5kPrCXBx?=
+ =?us-ascii?Q?6uy8awtSfkdtOSzuRyhKZvZMIZmZjH16A7Z1YN7tzvBGFkPIdqCZJ/G0XSa4?=
+ =?us-ascii?Q?JXJKsgKrORRa+mtS/vbW+TUP0ZLZXpi7xrVy7fVwubeuSLd08MhzUV1osqWA?=
+ =?us-ascii?Q?R9x3Leva8E6SMOcqf+tTvdC/xqEXUd2Ml6V1edYQBdbhZ/RouX1UlxEfwQNT?=
+ =?us-ascii?Q?tQy2KF2sxIm70moyomrL0XODJwC1LSaCSbJCph0FWTqDdied8CKKlxEaSIRi?=
+ =?us-ascii?Q?FRgD4eWE157aP541JkkFDLNgyuLMORPFIVQMhWYMTSsDgMq8Ie9CX0orb/bi?=
+ =?us-ascii?Q?QAzbb3n0538vOSSX5F4bYBE1tmnYvw8lYtZMFqlNEmEHCb3N96GMVhTDiEQu?=
+ =?us-ascii?Q?Td4a/URAGzwMvTgP/Ad2KPE6R4awlrygZ6rfp00Az8Qr5y+KBoDFJjRCg9k+?=
+ =?us-ascii?Q?wN68JtjCuaooZ/J3o/cvugo6xUW8iSPcXAdYOcJrR6O3u7A13I+AIKUCGkJe?=
+ =?us-ascii?Q?LWtXrSGM3mTJe7n51/DX5PHmKz/yJKbMt5xrZbsLRidxZ/CVU30hNzMcDCjI?=
+ =?us-ascii?Q?E9ffZP/N4AE9P+jgyNdCz/vhtXWJKiJRgGJu?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 01:04:47.5286
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87b94f69-0e23-42b3-cb82-08dd82cc0223
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB84.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5681
 
-On Wed, Apr 23, 2025 at 09:37:24PM +0300, Mika Penttilä wrote:
-> 
-> On 4/23/25 21:17, Jason Gunthorpe wrote:
-> > On Wed, Apr 23, 2025 at 08:54:05PM +0300, Mika Penttilä wrote:
-> >>> @@ -36,6 +38,13 @@ enum hmm_pfn_flags {
-> >>>  	HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
-> >>>  	HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
-> >>>  	HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
-> >>> +
-> >>> +	/*
-> >>> +	 * Sticky flags, carried from input to output,
-> >>> +	 * don't forget to update HMM_PFN_INOUT_FLAGS
-> >>> +	 */
-> >>> +	HMM_PFN_DMA_MAPPED = 1UL << (BITS_PER_LONG - 7),
-> >>> +
-> >> How is this playing together with the mapped order usage?
-> > Order shift starts at bit 8, DMA_MAPPED is at bit 7
-> 
-> hmm bits are the high bits, and order is 5 bits starting from
-> (BITS_PER_LONG - 8)
+From: Hans Zhang <hans.zhang@cixtech.com>
 
-I see, so yes order occupies 5 bits [-4,-5,-6,-7,-8] and the
-DMA_MAPPED overlaps, it should be 9 not 7 because of the backwardness.
+Enhances the exiting Cadence PCIe controller drivers to support
+HPA (High Performance Architecture) Cadence PCIe controllers.
 
-Probably testing didn't hit this because the usual 2M order of 9 only
-sets bits -4 and -8 .. The way the order works it doesn't clear the
-0 bits, which I wonder if is a little bug..
+The patch set enhances the Cadence PCIe driver for HPA support.
+The "compatible" property in DTS is added with  more enum to support
+the new platform architecture and the register maps that change with
+it. The driver read register and write register functions take the
+updated offset stored from the platform driver to access the registers.
+The driver now supports the legacy and HPA architecture, with the
+legacy code changes beingminimal.
 
-Jason
+SoC related changes are not available in this patch set.
+
+The TI SoC continues to be supported with the changes incorporated.
+
+The changes are also in tune with how multiple platforms are supported
+in related drivers.
+
+The scripts/checkpatch.pl has been run on the patches with and without
+--strict. With the --strict option, 4 checks are generated on 1 patch
+(PATCH v3 3/6) of the series), which can be ignored. There are no code
+fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
+is clean.
+
+The ./scripts/kernel-doc --none have been run on the changed files.
+
+The changes are tested on TI platforms. The legacy controller changes are
+tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
+platform available within Cadence.
+
+Changes for v4
+	- Add header file bitfield.h to pcie-cadence.h.
+	- Addressed the following review comments.
+	  Merged the TI patch as it.
+	  Removed initialization of struct variables to '0'.
+
+Changes for v3
+	- Patch version v3 added to the subject.
+	- Use HPA tag for architecture descriptions.
+	- Remove bug related changes to be submitted later as a separate patch.
+	- Two patches merged from the last series to ensure readability to address
+    the review comments.
+	- Fix several description related issues, coding style issues and some
+    misleading comments.
+	- Remove cpu_addr_fixup() functions.
+
+Manikandan K Pillai (5):
+  dt-bindings: pci: cadence: Extend compatible for new RP configuration
+  dt-bindings: pci: cadence: Extend compatible for new EP configurations
+  PCI: cadence: Add header support for PCIe HPA controller
+  PCI: cadence: Add support for PCIe Endpoint HPA controller
+  PCI: cadence: Add callback functions for RP and EP controller
+
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       |   6 +-
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     |   6 +-
+ drivers/pci/controller/cadence/pci-j721e.c    |  12 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 170 +++++++--
+ .../controller/cadence/pcie-cadence-host.c    | 276 ++++++++++++--
+ .../controller/cadence/pcie-cadence-plat.c    |  73 +++-
+ drivers/pci/controller/cadence/pcie-cadence.c | 197 +++++++++-
+ drivers/pci/controller/cadence/pcie-cadence.h | 340 +++++++++++++++++-
+ 8 files changed, 1011 insertions(+), 69 deletions(-)
+
+
+base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+-- 
+2.47.1
+
 
