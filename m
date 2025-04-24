@@ -1,129 +1,216 @@
-Return-Path: <linux-pci+bounces-26680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D9EDA9ACBE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 14:02:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 061F0A9ACC6
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 14:03:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE642925E66
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 12:01:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FEB7442858
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 12:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5099E22A4F6;
-	Thu, 24 Apr 2025 12:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3156202F79;
+	Thu, 24 Apr 2025 12:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mL54jm9M"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OZjGp2DO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE8D1F873F
-	for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 12:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C580502B1;
+	Thu, 24 Apr 2025 12:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496108; cv=none; b=TdJ9JsbCSr+ddb0RY19on2uGa1JrF661vq0er1gr7GuCRODYL+HqRxYJ7fonKE6adeb6+bwj/c93Rk0WmCDcWEnwj7zLpCEuOeClZMSP6FwRQuwZLPZx0MwafDdQcynGgfHl9gOrLzX0GxFDmm8aBV6COpp3XJdESwepBI1kxhU=
+	t=1745496215; cv=none; b=c5u5ZCCOphz+Cc0VS66jorhV5fhCua4vzKiQ2gTSyzU/6vwmtBvi+8a6iu1LguEL7C3n8DH98WJxl2JDPOV5N3lCjsXmjEaJB/+iKwRWfLQBwA3qQl4MSI4O/fcSlbPfC41o83uBsA9xqlLiKpVwSjCFa8MStt6IahdO0qs6CuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496108; c=relaxed/simple;
-	bh=t4m1Gy9zsGjSppvDn/a5XRWg7SvRp/w7DgqplM900q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CLyhVhGYM2H+RZ6uaug2HZulH2M7iDnTaId7IGalLKWIifVc58RWPsEMTZ3RizXQOKTHy6OuOf330ERqiuC6bu8xMOs/kyBgbkcp+lWMCkRelogT+O4mtcxwN0lGdxXy3yI28IXRDh4pI0c7Zy4verH3PnrkF49n11Qnnn0J8rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mL54jm9M; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f2b05f87bcso9688296d6.3
-        for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 05:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745496105; x=1746100905; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oZL+E3RNHbpFWOEVEZ+vdGqOh3AavrEOxiuPbcP0VN0=;
-        b=mL54jm9MipqZ/go/LHdmqJ9r7pUIZQdAXLW1m+lC+JRETYnPFv6f6FWwkTBBNK9keN
-         IbRXkDkcfMSZMzZnxqbpHiqEhUY8C8EWvs4t09PkgUUt7TvmgHFyOhAs/JIhGj6xW9ij
-         HelnhQXrAtkhfws/E7z5ouE8XNB68fgK1gGrE6Cl5joljljzhaT1bjFfkWJtMM9o40y/
-         kyvVPsVGufx8Jkj4q6WTJI/p+HHH9EFbDkts1ixEwrkjidi2wiDBkOM1fG6EMzAXOsUU
-         wsC+H5Wb7Zcb2i4Q6WXsvYkif+kmEMdAF5cpBf7hOzkomnR/h0ZX7pDpP74TibpZl2cA
-         jN2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496105; x=1746100905;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZL+E3RNHbpFWOEVEZ+vdGqOh3AavrEOxiuPbcP0VN0=;
-        b=wuXmona8/5zr+TzK9v9+y4sHUjZt8ZwjGbU7A2yfduAN5Y1oPs9CAv7TP/BREanwYG
-         cyDi890Y08EnQ0IThZgoSHhZsc+4x0mxtanFefKili+26Z49PRT9mq0s/xUMyiEjBNrp
-         qNodVmuIwPfi3V88PeUNsYZVDKAcfd+292ERRME9ILOpFKBGo+jTUowbYBA5ulmPswZS
-         KPfjEzodJw3C4H9gkEp2uh1kMbHlIgczfiGQVgz0o1E58+G3J/keFAxBWDoxKkR/+LDI
-         3UhzcHI9QdZp3+QD3qjHD+PI1ZcYdcTsPcZAjItwFRZPGETaj/It3bAdjIhD73bFsmtx
-         nm4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVkYENTcBNi18j5ISRjeK8j3i+wnycy6Gx7KJldBd7O7tcG8nkjrDzQA4K4OKVyulmuZejDS38QBSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWqrjGtjHPrvUf781JEq2/rTn+w6KL4m4mC5X4hytmkk+0V5/U
-	UPAJqqWKjeR2iIlRWAzqCTZzaB+HzxKOKuxL+teevD5Y1emVStTVw9nRwDpNUmg=
-X-Gm-Gg: ASbGncucjo+svcnW4yypZT9Oyk5qHdfcLW47sVmn9h8YKWWrxf+7Bbv6/pbZUvGCvMx
-	THUB6ZDQXfTC7wyQaMiMlzZZ1uq0yQ4ynt4ejJFsBgpgP4EaH3OjR0T/bRDEOU0SCe2y4Z3slLN
-	6QClQuhiofWJ1fISzomCOkm6j0sfu1F744sMLjTtj5bXLjh0I030ggnKTvueYrLFvnFvUbedQxo
-	fVUmI4o3MGw322nyMXudx0HnjMXNQYhxSK7+d0i0B20KBKtpvTuILKM3sJN2pq9iLnj5FT611Nd
-	NP7xa4qceHYJYmvVBRFEUu2TaA21Zx5TeFL+Ld04JvGyCL6sMUBmgudMb+mcMmF0FDogJGsdZ/f
-	xjd6H7cEzB2SjI+HBKwg=
-X-Google-Smtp-Source: AGHT+IExjEYw2YciNBoIdkd9/pqHrN50d+y5G+B8wJfJbAXK4p9NBvT5uybfEubjkC+mcuj7maAkHA==
-X-Received: by 2002:a05:6214:d02:b0:6f2:d260:b2f4 with SMTP id 6a1803df08f44-6f4bfc95a23mr43959916d6.37.1745496104857;
-        Thu, 24 Apr 2025 05:01:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c093870bsm8528646d6.45.2025.04.24.05.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:01:44 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7vGx-00000007T99-2aD0;
-	Thu, 24 Apr 2025 09:01:43 -0300
-Date: Thu, 24 Apr 2025 09:01:43 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: jane.chu@oracle.com
-Cc: logane@deltatee.com, hch@lst.de, gregkh@linuxfoundation.org,
-	willy@infradead.org, kch@nvidia.com, axboe@kernel.dk,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-block@vger.kernel.org
-Subject: Re: Report: Performance regression from ib_umem_get on zone device
- pages
-Message-ID: <20250424120143.GX1213339@ziepe.ca>
-References: <fe761ea8-650a-4118-bd53-e1e4408fea9c@oracle.com>
- <20250423232828.GV1213339@ziepe.ca>
- <84867704-1b25-422a-8c56-6422a2ef50a9@oracle.com>
+	s=arc-20240116; t=1745496215; c=relaxed/simple;
+	bh=Z8PDMx0Ew/K5wTTQM4IZ5TGCRv0Kr7FOrjwROTttpvo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Dckqnxt2darp50ZG5rL4oqy9HKTsjfDU0pGs22iB3Ww8D0e6/ytXr3DtBc3Utl1NGrOH0QpAZgSqaKXp+SEXyrAVgxK86W7sLP1YKvCnYmEz9/fJ3snxgJJBDURYLbsk0VtgJjSumdsvjxPNJHaFHvbSQOpFu1BSn1v3iNKQzes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OZjGp2DO; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OAevx0020647;
+	Thu, 24 Apr 2025 12:03:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=Jo6O5+zoHyUB9al+w4/VZLdlMtAo
+	GFBgTkHWrLvm7mw=; b=OZjGp2DO2KbrStUfR0J6fH6zyc70MmjIGAU/mDx8g53Q
+	MvE9y/apIm2mXevsi45Blk6a/sBn8uPj4pqsz61QKKdFHRQs8SYvVrMOHGjQjXdY
+	XGDQtTSppeJgTioR/IjcKmuKz5btxKxoQb4aDRrNHbH+SMzthLLLfwk+SIWAXJtW
+	UpstYsBV9th1S8Qvu/2698arGa6hOHi1nu7ci3xdhYpNxMw8U46nmD9tP4xTxUa0
+	KdTrpmwoYD7+X6vxLkVTVH7VeMPoTkXi8xDVM5RYC+yuaalflEtMilpjBlHhOzjP
+	K9CHsD8pJ45Ga5GH87rCRUqm96IojZJp3ESx666Apg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467krsrcf1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 12:03:27 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53OBjEKO023410;
+	Thu, 24 Apr 2025 12:03:27 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467krsrcev-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 12:03:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBQi3c004062;
+	Thu, 24 Apr 2025 12:03:26 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jg003a1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 12:03:26 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53OC3Ok823069012
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 12:03:24 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C53B65805C;
+	Thu, 24 Apr 2025 12:03:24 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D598258054;
+	Thu, 24 Apr 2025 12:03:21 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 24 Apr 2025 12:03:21 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+Date: Thu, 24 Apr 2025 14:02:53 +0200
+Subject: [PATCH] PCI/ERR: s390/pci: Use pci_uevent_ers() in PCI recovery
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84867704-1b25-422a-8c56-6422a2ef50a9@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-add_err_uevents-v1-1-3384d6b779c6@linux.ibm.com>
+X-B4-Tracking: v=1; b=H4sIAGwoCmgC/x3MSwqAMAxF0a1Ixhaq+N+KiEjz1EyqpCqCuHeLw
+ zO496EAFQTqkocUlwTZfESWJuTWyS8wwtGU27y0RVabiXmE6njigj+CqeaGC64dbOsoVrtilvs
+ /9sP7folunTRhAAAA
+X-Change-ID: 20250417-add_err_uevents-6f8d4d7ce09c
+To: Lukas Wunner <lukas@wunner.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3671;
+ i=schnelle@linux.ibm.com; h=from:subject:message-id;
+ bh=Z8PDMx0Ew/K5wTTQM4IZ5TGCRv0Kr7FOrjwROTttpvo=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDK4NJolZZy1/CUrT0fynJpS3KievWzSi19MMlpLf+w6w
+ HqnyeF2RykLgxgXg6yYIsuiLme/dQVTTPcE9XfAzGFlAhnCwMUpABPRncvw32tv+q1bludjVgWF
+ Wu856lxS5brr2cKAusVXn30w7dh25Q7D/2K/R3+kYh9PPtyq+Mbo0l3pxtVz2+qM3y5YJ//m5I6
+ gdH4A
+X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
+ fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA3OCBTYWx0ZWRfXw+cxXmiBnkNg zhI6A4mFpotyYFSoHGmj2+Lf/XK4WZ8UQniLocLHF8Sd1RNIKeu2yd57C6ja5LvAcpdO+nWTyV/ 6Mh2MDQvJShrXuk3SHwBdpuiSpu1eEqgxF2pDaw+G7kuIarj+on/IbRBnOUOeocYQuFRvjnLcVY
+ KGQfe7Dba4t0ZbKcuQ1c2MMohbYuIFuDa1ij3jBZX/093ND0uPdFyHGYvM2hc1pi8dy9hOs6dmP HHgSVJMIcNrCu3ePZ5u4H49Yj6kmYHjH94jD07DUmhvLSY+7bD30zW0V5+Nj2R9m2PZz8+JjYjD onLK/BO85iKLXoIB935Fa2/wil4yDaexWEQD16CGC8Ve65MR/fW8/0pNZZWtimbB/Er4clov3w0
+ SgYyTfUmdZXCM9Vc7lo3v9atg7CyQTziJSQX8zoTFT12s98Mx+B8N+84r9Xjlti6epL0FVBS
+X-Proofpoint-GUID: dbnkhbxciHtsYIoLs2zglo8X1y3N0u68
+X-Authority-Analysis: v=2.4 cv=IciHWXqa c=1 sm=1 tr=0 ts=680a288f cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=8LeQyvkg2U568Q-kuFUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 8f8lk5dYEoCD4mpqY5A3O5mU-rl7utfK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_05,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 clxscore=1011 spamscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240078
 
-On Wed, Apr 23, 2025 at 10:35:06PM -0700, jane.chu@oracle.com wrote:
-> 
-> On 4/23/2025 4:28 PM, Jason Gunthorpe wrote:
-> > > The flow of a single test run:
-> > >    1. reserve virtual address space for (61440 * 2MB) via mmap with PROT_NONE
-> > > and MAP_ANONYMOUS | MAP_NORESERVE| MAP_PRIVATE
-> > >    2. mmap ((61440 * 2MB) / 12) from each of the 12 device-dax to the
-> > > reserved virtual address space sequentially to form a continual VA
-> > > space
-> > Like is there any chance that each of these 61440 VMA's is a single
-> > 2MB folio from device-dax, or could it be?
-> > 
-> > IIRC device-dax does could not use folios until 6.15 so I'm assuming
-> > it is not folios even if it is a pmd mapping?
-> 
-> I just ran the mr registration stress test in 6.15-rc3, much better!
-> 
-> What's changed?  is it folio for device-dax?  none of the code in
-> ib_umem_get() has changed though, it still loops through 'npages' doing
+Issue uevents during PCI recovery using pci_uevent_ers() as done by EEH
+and AER PCIe recovery routines.
 
-I don't know, it is kind of strange that it changed. If device-dax is
-now using folios then it does change the access pattern to the struct
-page array somewhat, especially it moves all the writes to the head
-page of the 2MB section which maybe impacts the the caching?
+Cc: stable@vger.kernel.org
+Fixes: 4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery")
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+Question: pci_uevent_ers() ignores PCI_ERS_RESULT_NEED_RESET which also
+means that unless we use PCI_ERS_RESULT_NONE instead of the return of
+error_detected() like EEH also does. there is no event for beginning
+recovery. This is also true for AER and seems odd, is this intentional?
 
-Jason
+Npte: The fixes tag / Cc stable is maybe a bit borderline but I think
+having the events on EEH and AER but not on s390 warrants it. Thoughts?
+---
+ arch/s390/pci/pci_event.c | 3 +++
+ drivers/pci/pci-driver.c  | 2 +-
+ include/linux/pci.h       | 2 +-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
+index 7bd7721c1239a20e13cd3c618cce6679f36b0d06..37609bc2b514c00b5b91d6edd2ec366d59ae9f49 100644
+--- a/arch/s390/pci/pci_event.c
++++ b/arch/s390/pci/pci_event.c
+@@ -91,6 +91,7 @@ static pci_ers_result_t zpci_event_notify_error_detected(struct pci_dev *pdev,
+ 	pci_ers_result_t ers_res = PCI_ERS_RESULT_DISCONNECT;
+ 
+ 	ers_res = driver->err_handler->error_detected(pdev,  pdev->error_state);
++	pci_uevent_ers(pdev, PCI_ERS_RESULT_NONE);
+ 	if (ers_result_indicates_abort(ers_res))
+ 		pr_info("%s: Automatic recovery failed after initial reporting\n", pci_name(pdev));
+ 	else if (ers_res == PCI_ERS_RESULT_NEED_RESET)
+@@ -226,6 +227,7 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
+ 		ers_res = zpci_event_do_reset(pdev, driver);
+ 
+ 	if (ers_res != PCI_ERS_RESULT_RECOVERED) {
++		pci_uevent_ers(pdev, PCI_ERS_RESULT_DISCONNECT);
+ 		pr_err("%s: Automatic recovery failed; operator intervention is required\n",
+ 		       pci_name(pdev));
+ 		status_str = "failed (driver can't recover)";
+@@ -235,6 +237,7 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
+ 	pr_info("%s: The device is ready to resume operations\n", pci_name(pdev));
+ 	if (driver->err_handler->resume)
+ 		driver->err_handler->resume(pdev);
++	pci_uevent_ers(pdev, PCI_ERS_RESULT_RECOVERED);
+ out_unlock:
+ 	pci_dev_unlock(pdev);
+ 	zpci_report_status(zdev, "recovery", status_str);
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index c8bd71a739f724e09b4dd773fb0cf74bddda1728..5cc031fae9a0210d66959ce6082539e52cdd81b4 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1584,7 +1584,7 @@ static int pci_uevent(const struct device *dev, struct kobj_uevent_env *env)
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_PCIEAER) || defined(CONFIG_EEH)
++#if defined(CONFIG_PCIEAER) || defined(CONFIG_EEH) || defined(CONFIG_S390)
+ /**
+  * pci_uevent_ers - emit a uevent during recovery path of PCI device
+  * @pdev: PCI device undergoing error recovery
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 0e8e3fd77e96713054388bdc82f439e51023c1bf..71628a9c61bd7bc90fdbd9bc6ab68603ac8800dd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2688,7 +2688,7 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
+ 	return false;
+ }
+ 
+-#if defined(CONFIG_PCIEPORTBUS) || defined(CONFIG_EEH)
++#if defined(CONFIG_PCIEPORTBUS) || defined(CONFIG_EEH) || defined(CONFIG_S390)
+ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #endif
+ 
+
+---
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250417-add_err_uevents-6f8d4d7ce09c
+
+Best regards,
+-- 
+Niklas Schnelle
+
 
