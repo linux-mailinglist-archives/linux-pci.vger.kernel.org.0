@@ -1,127 +1,131 @@
-Return-Path: <linux-pci+bounces-26654-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E793A9A05C
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 07:12:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C0B4A9A066
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 07:19:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A42E31946327
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:12:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FE525A7CC4
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:19:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB3EC19CC3A;
-	Thu, 24 Apr 2025 05:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62CB41A23B0;
+	Thu, 24 Apr 2025 05:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNBdN9VG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZA9NLSwz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FDE46B8;
-	Thu, 24 Apr 2025 05:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6533F35963;
+	Thu, 24 Apr 2025 05:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745471544; cv=none; b=auT7O1FlSaQGyhMqbI4qAMiLFarLpCeyn1qYhAu8INoK1StKCa/JutFrgy5AVRObO1BL88FAw6IzcA515680ODnMNCOTHnN8PYuGsVtE3be6RV+OMhdFEDmKwv3JJadUaMzVAnslcCe4aXClo+aMUnJdGUTOC6JVASkhMUdDBPo=
+	t=1745471974; cv=none; b=MH9GTP8452dGVjxF0cQJdM2ikSHRhFP9j0xmCw9wPHd1LjFb+DWni0KokgM094pGT5alA2FTh9a9rmYDcrZnWn7J7xqm1NCbNayB/w0BOA3P1CtSoUIdWV1zK6IfuVQAltYE8I13QQyRRz6jxGPriv9AcgspD3KeqE7vhIyNZEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745471544; c=relaxed/simple;
-	bh=Fk9ShdsGiK8Xytvks9AI3asFePC1OQGuvSXxW8ODAXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bci4iro+rNxLzkoRk+PrSAJHLnawJVWs3IS8y++9uEvaCTqdCDEo3GomKE4VtvNWRHoPR8PNoLrxtc7WR4u+Qoeqlj7KVmB2avLeLHl8vnY7PV7EfGy+Si8tb5SDkgKle6J6Bt5G5jK49m2jmA7EaU2PnYpak235idmhEJEmda0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNBdN9VG; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745471542; x=1777007542;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fk9ShdsGiK8Xytvks9AI3asFePC1OQGuvSXxW8ODAXI=;
-  b=JNBdN9VGL0EWTTR3WaSdrC0CPnwClwEnpAcHk0YywsvjRr5vAA8/Q+Nx
-   z/HM3JKGdBDfRVXRgyv+CebFns1gGomVc0eUzwpK1D2pLVo+Y55O3y4k2
-   97ilaRQC3mfoK3NcpXIq9hWjzFe3DcX5PcoNqtsvs8F6a5595u9hK5mR3
-   DQRtHlKQnqAqphlx7joK0VOWPh4SzMsurMnkqSlIBJAN/g+rdXOglUBub
-   LkZYIll9ZblfpKiMO2GvCKL1mYw31lmDVi7eDJu09Iw8KLbUgv7t8Yuhb
-   hV2DA+u3DyRhR89z6ERkZyv0aNJRAcxjBUweQsw/r/4uNjQuvV+mVh+1s
-   w==;
-X-CSE-ConnectionGUID: LGDcaJgZScmqm4p5kLPEpA==
-X-CSE-MsgGUID: PkKns9cbSMeml7oLExKvqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57285042"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="57285042"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 22:12:20 -0700
-X-CSE-ConnectionGUID: IgdT/VwoS5OHDluMdiJhVg==
-X-CSE-MsgGUID: nsy8zcjSTRq5OSQexTZgQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="137504687"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 22:12:17 -0700
-Date: Thu, 24 Apr 2025 08:12:14 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	lukas@wunner.de, aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-Message-ID: <aAnILntDM4xwaoPX@black.fi.intel.com>
-References: <20250422135341.2780925-1-raag.jadav@intel.com>
- <20250422194537.GA380850@bhelgaas>
+	s=arc-20240116; t=1745471974; c=relaxed/simple;
+	bh=4ryzhcUAeRnEsFAHV5+kuidBXWoDMlQmTIfVZyXdDEw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AU/FK1vtu9SXl+OnnqRP/ggOJbPOhvMcJih9wqE3Bl//E8C+rQNBi9Tes+5qJzqo/lyha/PZXNWODFSwbglt9/Rf0fRyMMnsV062p3G8lexu6i8N7W6bCdl696WD6avHsuqy9hjZFe1AScLljLj/DcF16gIwBwdGJxi2R/x5vjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZA9NLSwz; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53O5JAvq1756408
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 00:19:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745471950;
+	bh=AlHahpXnp8IJeAHPagZczFwQdB2gTDNHE9Q1Zh7iQoM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=ZA9NLSwzw4l+T1crMjoGLiAMzSUx1V07zKqDk+BL6ZeDY1f+AHsiUvPWZZzaL2scP
+	 +/KD3ycD23xEnj1CD8W6UBS7BRXBmunBtTpYw0h7QOHHQSAz9gCizXg2QyhJAs4VbP
+	 cUYR8DE/hTkrfiUSLHPjZVJojedvakxIfs7aFIUw=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53O5JAgn022471
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 24 Apr 2025 00:19:10 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 24
+ Apr 2025 00:19:10 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 24 Apr 2025 00:19:10 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53O5J8Ux080258;
+	Thu, 24 Apr 2025 00:19:09 -0500
+Date: Thu, 24 Apr 2025 10:49:08 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Arnd Bergmann <arnd@kernel.org>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof
+ =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Rob
+ Herring <robh@kernel.org>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Kishon
+ Vijay Abraham I <kishon@kernel.org>,
+        Thomas Richard
+	<thomas.richard@bootlin.com>,
+        =?utf-8?B?VGjDqW8=?= Lebrun
+	<theo.lebrun@bootlin.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] pci: j721e: fix host/endpoint dependencies
+Message-ID: <573c92aa-f891-47c9-9ea8-c71e89694a11@ti.com>
+References: <20250423162523.2060405-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250422194537.GA380850@bhelgaas>
+In-Reply-To: <20250423162523.2060405-1-arnd@kernel.org>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 22, 2025 at 02:45:37PM -0500, Bjorn Helgaas wrote:
-> On Tue, Apr 22, 2025 at 07:23:41PM +0530, Raag Jadav wrote:
-> > If an error is triggered before or during system suspend, any bus level
-> > power state transition will result in unpredictable behaviour by the
-> > device with failed recovery. Avoid suspending such a device and leave
-> > it in its existing power state.
-> > 
-> > This only covers the devices that rely on PCI core PM for their power
-> > state transition.
-> > 
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > ---
-> > 
-> > v2: Synchronize AER handling with PCI PM (Rafael)
-> > 
-> > More discussion on [1].
-> > [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> 
-> Thanks for the pointer, but the commit log for this patch needs to be
-> complete in itself.  "Unpredictable behavior" is kind of hand-wavy and
-> doesn't really help understand the problem.
-> 
-> >  drivers/pci/pci-driver.c |  3 ++-
-> >  drivers/pci/pcie/aer.c   | 11 +++++++++++
-> >  include/linux/aer.h      |  2 ++
-> >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index f57ea36d125d..289a1fa7cb2d 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *dev)
-> >  		}
-> >  	}
-> >  
-> > -	if (!pci_dev->state_saved) {
-> > +	/* Avoid suspending the device with errors */
-> > +	if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-> 
-> This looks potentially racy, since hardware can set bits in
-> PCI_EXP_DEVSTA at any time.
+On Wed, Apr 23, 2025 at 06:25:16PM +0200, Arnd Bergmann wrote:
 
-Which is why it's placed in ->suspend_noirq() callback. Can it still race?
+Hello Arnd,
 
-Raag
+Thank you for the Fix.
+
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The j721e driver has a single platform driver that can be built-in or
+> a loadable module, but it calls two separate backend drivers depending
+> on whether it is a host or endpoint.
+> 
+> If the two modes are not the same, we can end up with a situation where
+> the built-in pci-j721e driver tries to call the modular host or endpoint
+> driver, which causes a link failure:
+> 
+> ld.lld-21: error: undefined symbol: cdns_pcie_ep_setup
+> >>> referenced by pci-j721e.c
+> >>>               drivers/pci/controller/cadence/pci-j721e.o:(j721e_pcie_probe) in archive vmlinux.a
+> 
+> ld.lld-21: error: undefined symbol: cdns_pcie_host_setup
+> >>> referenced by pci-j721e.c
+> >>>               drivers/pci/controller/cadence/pci-j721e.o:(j721e_pcie_probe) in archive vmlinux.a
+> 
+> Rework the dependencies so that the 'select' is done by the common
+> Kconfig symbol, based on which of the two are enabled. Effectively
+> this means that having one built-in makes the other either built-in
+> or disabled, but all configurations will now build.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+Regards,
+Siddharth.
 
