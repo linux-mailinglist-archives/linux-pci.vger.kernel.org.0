@@ -1,133 +1,125 @@
-Return-Path: <linux-pci+bounces-26645-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49C0DA99F9C
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:31:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E9BFA99FA1
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:37:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9EBF87AFAAE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 03:30:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 711FC1944E67
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 03:37:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A48331993A3;
-	Thu, 24 Apr 2025 03:31:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3665F198851;
+	Thu, 24 Apr 2025 03:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vk/l1kK5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2uvbdCn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D2317B506;
-	Thu, 24 Apr 2025 03:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F0B4502A;
+	Thu, 24 Apr 2025 03:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745465488; cv=none; b=GWSlbWcd5jydmhJXyvc8F24xi3Yx51F4pWKbOxdjFO+oe7ve0CvF+mQaRQ84+0xle/NZHQnKT8Lukywmj2znLysKZF8cvBIvuvwcl/KQrW0ricKN7acu11Jqy1v0f5dXCRK/f8qccEYdPCmBKp7EQgHOwqSFYMbUpKNdg696STY=
+	t=1745465817; cv=none; b=RHWaGAamszRFhguBewTuncvKzp+yk/sP3imDWl8O9TCz+yzxb32bY0b68H3aPUKshLLPRLiqcClDIxhEZ3CPS45cOtATwBbnqJTCjiu3HWMM3TSdTRiivlX+48gm17qbYC13ge/uuR4+uJJLj2L5kwcgphHZ8PPTw5TLgprPfa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745465488; c=relaxed/simple;
-	bh=y2kLle1MrYmSqCGMWABEiUSCyaHfJ+RdhWHi3vtj+AA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCz95+do8cwU0LK0K0HX1gosQfqc3hWxsTu54gFUe6U5O2/uaGIYUimCl34pns5TRPx0qjUHshr77bX/eLeXaG2oKKLWL+wnvoMptoLk1xdhYDdAfSlBWDy9Y9qi0AT50eWQPRRPOj/fxJx0CJJsdBSuVkPbNltKuj5LYXHH0zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vk/l1kK5; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745465488; x=1777001488;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y2kLle1MrYmSqCGMWABEiUSCyaHfJ+RdhWHi3vtj+AA=;
-  b=Vk/l1kK51qaxm11f7KpvBGIymP2p+f+e3pfWrcTZYmWLu21uR5KR20bF
-   1buBtUnuk1zDeKCECFMzhzx8XalwYacuD6fBf+vLZucUSBGhNK6s2thX7
-   WFr2roOedZQLIW4xDV5qUczK8q+WmlT6SokYB4Fx+uLWY34H2ObqEKUSw
-   7BcCm0081WtHYDAkJLpyZQMKFk30U3Nc+v/ukHd5U0cGXGICKdokq5cqV
-   /QYxQo9+pRQdbtDdcWXnfjEBoe8VWnNg8HKl8DJ2Pzyyr2YURF31pkei1
-   jtWp0Ffsc3TpTsQn1tM5edmi1lHSskNo7wJyKAUYc/s0XVJuxF17peBLj
-   Q==;
-X-CSE-ConnectionGUID: W32yidTJStyP1Zd1upp39A==
-X-CSE-MsgGUID: 5sZjHLRVQJulK9XO5+GlIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46787544"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="46787544"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:31:27 -0700
-X-CSE-ConnectionGUID: fEM4eomdQBSmLpVcSi364Q==
-X-CSE-MsgGUID: Yl7Nxak5TyKyrZ+wFPh+dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137488251"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:31:24 -0700
-Message-ID: <a65d90f2-b6c6-4230-af52-8f676b3605c5@linux.intel.com>
-Date: Thu, 24 Apr 2025 11:27:07 +0800
+	s=arc-20240116; t=1745465817; c=relaxed/simple;
+	bh=HhzHNCgULNfL7LJBad0ypUxqGGDAtAMFWHnub7l1hGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckrppIoZpchtE9JISSRkOqBsrD4L4Wmn6FCZQd1yYk2zMA4MHE5mXY0hTp83B5sk6zwaIQ1EN05wECL1jN+F5rntXlIs8Jig3zCY8qlulRnvjAMNJhVHcdfGU0Vs0CizxSJ6486vhpWHPoT93kHswrXH2UARIrriY+c55BvkT28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2uvbdCn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EE4C4CEE3;
+	Thu, 24 Apr 2025 03:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745465816;
+	bh=HhzHNCgULNfL7LJBad0ypUxqGGDAtAMFWHnub7l1hGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u2uvbdCnr/2SmEEKHo9pru/KihtClbAMmd9KLYKDx6Txb1PNnrCinzs9VUVK+HCIC
+	 /27h8ZbE2/2kuprCaA684E/y+kcgglhBFPNq1hzbFJbDoZVSDfjuA2C/R7G01SkvWg
+	 BOV+onquxFFWrXSxG7DsSh9elFpU8DyNeYXp2AXlGOCNjxeXvCJhUqVIVZkN8yX8k7
+	 kHu6iG6hqkYBqdS5S7VceUIG3pg4iWigKzOT4KyxpxkP05lMfhcpn4Vboc24q4JfVI
+	 rY/O4YzA5/erTSV5y9xqAkN3O7lF8zOm+jrHQ1PoDnvTtzdkopHcJSqJWiZef5QBZr
+	 bPChJ8ipUBTkA==
+Date: Thu, 24 Apr 2025 11:36:48 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: hans.zhang@cixtech.com
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, peter.chen@cixtech.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manikandan K Pillai <mpillai@cadence.com>
+Subject: Re: [PATCH v4 3/5] PCI: cadence: Add header support for PCIe HPA
+ controller
+Message-ID: <aAmx0CaXh24co_cm@nchen-desktop>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-4-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rc] iommu: Skip PASID validation for devices without PASID
- capability
-To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
- yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
-References: <20250424020626.945829-1-tdave@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250424020626.945829-1-tdave@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424010445.2260090-4-hans.zhang@cixtech.com>
 
-On 4/24/25 10:06, Tushar Dave wrote:
-> Generally PASID support requires ACS settings that usually create
-> single device groups, but there are some niche cases where we can get
-> multi-device groups and still have working PASID support. The primary
-> issue is that PCI switches are not required to treat PASID tagged TLPs
-> specially so appropriate ACS settings are required to route all TLPs to
-> the host bridge if PASID is going to work properly.
+On 25-04-24 09:04:42, hans.zhang@cixtech.com wrote:
+> From: Manikandan K Pillai <mpillai@cadence.com>
 > 
-> pci_enable_pasid() does check that each device that will use PASID has
-> the proper ACS settings to achieve this routing.
-> 
-> However, no-PASID devices can be combined with PASID capable devices
-> within the same topology using non-uniform ACS settings. In this case
-> the no-PASID devices may not have strict route to host ACS flags and
-> end up being grouped with the PASID devices.
-> 
-> This configuration fails to allow use of the PASID within the iommu
-> core code which wrongly checks if the no-PASID device supports PASID.
-> 
-> Fix this by ignoring no-PASID devices during the PASID validation. They
-> will never issue a PASID TLP anyhow so they can be ignored.
-> 
-> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
-> Cc:stable@vger.kernel.org
-> Signed-off-by: Tushar Dave<tdave@nvidia.com>
-> ---
->   drivers/iommu/iommu.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 4f91a740c15f..e01df4c3e709 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -3440,7 +3440,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->   
->   	mutex_lock(&group->mutex);
->   	for_each_group_device(group, device) {
-> -		if (pasid >= device->dev->iommu->max_pasids) {
-> +		/*
-> +		 * Skip PASID validation for devices without PASID support
-> +		 * (max_pasids = 0). These devices cannot issue transactions
-> +		 * with PASID, so they don't affect group's PASID usage.
-> +		 */
-> +		if ((device->dev->iommu->max_pasids > 0) &&
-> +		    (pasid >= device->dev->iommu->max_pasids)) {
+> +/**
+> + * struct cdns_plat_pcie_of_data - Register bank offset for a platform
+> + * @is_rc: controller is a RC
+> + * @is_hpa: Controller architecture is HPA
+> + * @ip_reg_bank_off: ip register bank start offset
+> + * @ip_cfg_ctrl_reg_off: ip config control register start offset
+> + * @axi_mstr_common_off: AXI master common register start
+> + * @axi_slave_off: AXI slave offset start
+> + * @axi_master_off: AXI master offset start
+> + * @axi_hls_off: AXI HLS offset start
+> + * @axi_ras_off: AXI RAS offset
+> + * @axi_dti_off: AXI DTI offset
 
-What the iommu driver should do when set_dev_pasid is called for a non-
-PASID device? The iommu driver has no sense of iommu group, hence it has
-no knowledge about this device sharing an iommu group with another PASID
-capable device.
+The variable's suffix _off may confuse the reader, since off stands for
+something is turned off and also used at device driver commonly,
+suggest using _offset and align with your other code.
+
+> + */
+> +struct cdns_plat_pcie_of_data {
+> +	u32 is_rc:1;
+> +	u32 is_hpa:1;
+> +	u32 ip_reg_bank_off;
+> +	u32 ip_cfg_ctrl_reg_off;
+> +	u32 axi_mstr_common_off;
+> +	u32 axi_slave_off;
+> +	u32 axi_master_off;
+> +	u32 axi_hls_off;
+> +	u32 axi_ras_off;
+> +	u32 axi_dti_off;
+>  };
+>  
+> +static inline void cdns_pcie_hpa_writel(struct cdns_pcie *pcie,
+> +					enum cdns_pcie_reg_bank bank,
+> +					u32 reg,
+> +					u32 value)
+> +{
+> +	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
+
+More than one blank space after "=".
+
+> +}
+> +
+> +static inline u32 cdns_pcie_hpa_readl(struct cdns_pcie *pcie,
+> +				      enum cdns_pcie_reg_bank bank,
+> +				      u32 reg)
+> +{
+> +	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
+
+ditto
+
+-- 
+
+Best regards,
+Peter
 
