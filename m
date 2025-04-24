@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-26677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B88EBA9AB41
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 13:00:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43390A9AB52
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 13:03:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50EC73B7124
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 10:59:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B1C3B119A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 11:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA4322258B;
-	Thu, 24 Apr 2025 11:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C521E1DE5;
+	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJyy0YXK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2cbMhlW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA9215771;
-	Thu, 24 Apr 2025 11:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868905BAF0;
+	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492408; cv=none; b=AjOaX0/gz+9Adjplypq9wLk5KxHDfobr2McUJVTa7RE2H5dUz4lRnTsQQOjVV0rxztQLn7CGKDiozRccRwuXj14MZ9GgMHgTM4+N6SWsoJyM+P2g5iof9fIHU8cMGAoHRTjD9Nmb1UPkH9tg0KasCqq/RlMfrKtBOnaVUuT/9Jc=
+	t=1745492590; cv=none; b=uJ1fJL1lhh8ltCaiu4oNexvsFJhqW//F4M7qzkHZQo+c8d3tSEFwydXqhr/y+vHW7JTCwv7I2x7FNMjEwLskhzyMrXElIZ8qrq05KE0ef4WdP59bQumm0impZfFvpVXzG28W/y1KoVakxVQ3YuxwYqBIchqNjd/oOiYXwRVTbOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492408; c=relaxed/simple;
-	bh=FUCQAFWdBsTzh3ISwglLz2C+UdrgUnxa1ScDArq2zrM=;
+	s=arc-20240116; t=1745492590; c=relaxed/simple;
+	bh=hyV+/TI+fPXrUMs5YluLUXdPfqeyfP2h6M8iUeti5MY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U/M5QslJ4+7zj+nR0NQgbmuidm87TG4+nyhEp5jmQ2uplE9ZWHLK6q84sG5/NvrVz6VZ1ImI9DPXPWw4cVcge9ykDaDD+OjmxWVbOjlnCCdENjUS3gm1sp70qU0wBi5DwlUB0tu0swFi87KpBqipyliDBKbvX1veKbkt1zqGE44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJyy0YXK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A846C4CEE3;
-	Thu, 24 Apr 2025 11:00:08 +0000 (UTC)
+	 To:Cc:Content-Type; b=pmd5RWHiZpzQUJS+EeuvKuJhEKjcr+OQt8jrFYy21ib2VU45SYBYgd5HzeTEus/w/UIvVarolm0qRXMdxfOpoO7yXeLDONhMjsM+Phvoz4671wp/iok4Ryn1GXmfpxmTCUO/O+GhIuiO/61itFVsz9OUFfThNVD9peMyfDxcQeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2cbMhlW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D989C4CEEE;
+	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745492408;
-	bh=FUCQAFWdBsTzh3ISwglLz2C+UdrgUnxa1ScDArq2zrM=;
+	s=k20201202; t=1745492590;
+	bh=hyV+/TI+fPXrUMs5YluLUXdPfqeyfP2h6M8iUeti5MY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rJyy0YXKWBr3qsWkr806vRB6cI4YknNqBL9xcJwbJzsmtoRv0FcNyPi3JMdfAtmHz
-	 Yo1wcMVEmWnu4+wjoIJWH3uR3v8dbtvubUQWt4si8Cfk9hR25AQU6APsBG/1WFELmE
-	 wO4HDzEZxxHjbV2TPwkEBjb/Vu+aDfuJI2heISks80xUdzvJaXXTKopBoql2W+rSPU
-	 NTUjpYm55FFj486lK/PEMu22GOfqP4J0pN7rBXFvO2mHHjOh/AhiIIxqvJiGARmj9N
-	 aOXN7W1uFznC0RbcG2IZwFt590CpXasyQKMYTr1c1/MXA74ev2xQ3VS+4mJB+vwU9q
-	 8IfxvmG9abe6A==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d09d495c6cso194137fac.3;
-        Thu, 24 Apr 2025 04:00:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUeWG14RVPfoNCR5iHhnK0feTXFfDGYDdnTeLSiyZMuo8rOna9bZ7rf/VbuuP8hCioKmtwHLAy4l0YV@vger.kernel.org, AJvYcCUuTF5EEnsU0DrsHdkRk45qtx2nmtzl0EdxyaMEE92Jk7kgzAL6c6zDKulkqO/GUQ+T8KD4MWOIXOjNUnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysE+Vq6tq9OJW8r4FFmNCB+4DhUHOmoROE55lTLTfpe8qUONQo
-	fLIa6jRhyufpMevzZYK4k7n/JkdYHxhw/FSxz5tKz9xMhOhbnGRBk0zcHYcsZGx9U2eDVh+Z2vD
-	fD7OfzutQBhf56d6p7UtZTsc4IYc=
-X-Google-Smtp-Source: AGHT+IHte21cVQEWAahEKnIVsuZJBPGR7By5iPTfjit7uIclLc276KTM7v2HwfR+or+tBr5Kso5z6u6WlsiwlBVICU8=
-X-Received: by 2002:a05:6870:56a0:b0:296:beb3:aa40 with SMTP id
- 586e51a60fabf-2d96e6de018mr1187554fac.36.1745492406720; Thu, 24 Apr 2025
- 04:00:06 -0700 (PDT)
+	b=F2cbMhlWSmroQr6V7U7MJeyYamhmUktI54VvxE5JAo7r92a5NOYpNbXdX8JX5VMfC
+	 NlKP0uQgt6sBltNXg+JM/40C96ktw4X+gneJpkL7goachiUefdtSiocDh0NY8I2lTD
+	 SsuUj5zi+GsN44Gbj9XMG068QVcBslAdsdMjq+thgI+TrAxPV374GK79xko/Dt+78C
+	 AbgMK6gJ6sKg4GQGm+c5BufC8+O+8wjlYE1orRsPXsZoHaayinLBT3PCGf3LeND+vx
+	 ZWlptoRUlVWCDqDxvd4gPyqL649I1YbvjKWjH2t7hsTgTmFEoCFTHH1zSgmnY8TVHP
+	 Pw23Ek+2DK6cg==
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2cc82edcf49so200644fac.1;
+        Thu, 24 Apr 2025 04:03:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTA7vZ8VWgZqRsiLk6R48cXMo7J5YvxvXTBVonn8yaBwwvzLKutNMCrlubKrKQiysq+F5k1FQ4Pe0N@vger.kernel.org, AJvYcCWG5m8YGbyQEAQEBOsgOvpONHO4thtlYBvvUHcOUGsRcz5UbnVKZI15LA49y7HmOOHeL+DfZz/e+9pEEMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD2K7GWSW/Qfm9cZnJE+QVsHKT4DrpgpIh/qBTnDKoAh9C/hjT
+	jcyp7P3Itlg93u8sbTIUQ+ESHUAqgttApaP+8T1m7uADJ7d6mM/Osa4LfCMK4ygu1vuyktVILNa
+	P9Kg5nbB2ZX0iXJDBUSGUDCvTYBs=
+X-Google-Smtp-Source: AGHT+IFuQoKZgYFAaJXa+tjHxd3y8Tbv98mGDsNqE4JwXLSX7Dz+sVyptUZDaMZZaRtXOPRS1KhBxFD5PtrDST30ZPc=
+X-Received: by 2002:a05:6870:b018:b0:29e:503a:7ea3 with SMTP id
+ 586e51a60fabf-2d96e742783mr1092286fac.36.1745492589290; Thu, 24 Apr 2025
+ 04:03:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,27 +58,29 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250422135341.2780925-1-raag.jadav@intel.com>
- <20250422194537.GA380850@bhelgaas> <aAnILntDM4xwaoPX@black.fi.intel.com>
-In-Reply-To: <aAnILntDM4xwaoPX@black.fi.intel.com>
+ <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com> <aAnOUouuqOC3-Yb8@black.fi.intel.com>
+In-Reply-To: <aAnOUouuqOC3-Yb8@black.fi.intel.com>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 24 Apr 2025 12:59:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ifgqzqP8N+NXJ=UVZ434SiyzgZjn1EuWy4HTT4TKOGWg@mail.gmail.com>
-X-Gm-Features: ATxdqUGHWU9XhOrwHUjDxteSxZhLVLFkcZwF2MaVL0w5Gkap2DwrDkErc5gOYMI
-Message-ID: <CAJZ5v0ifgqzqP8N+NXJ=UVZ434SiyzgZjn1EuWy4HTT4TKOGWg@mail.gmail.com>
+Date: Thu, 24 Apr 2025 13:02:58 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gQ-6ZehL5HNhFvOWDEyXdS++uaMn1AOB7whoMTKzj-ZQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHvg7m1RiahxQi7XF-iyjgNJFF7XEVHvOXVxSn28guFCFFwPREgNxb6bDk
+Message-ID: <CAJZ5v0gQ-6ZehL5HNhFvOWDEyXdS++uaMn1AOB7whoMTKzj-ZQ@mail.gmail.com>
 Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
 To: Raag Jadav <raag.jadav@intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, rafael@kernel.org, mahesh@linux.ibm.com, 
-	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, mahesh@linux.ibm.com, oohall@gmail.com, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
 	aravind.iddamsetty@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 7:12=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> w=
+On Thu, Apr 24, 2025 at 7:38=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> w=
 rote:
 >
-> On Tue, Apr 22, 2025 at 02:45:37PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Apr 22, 2025 at 07:23:41PM +0530, Raag Jadav wrote:
+> On Wed, Apr 23, 2025 at 02:41:52PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Apr 22, 2025 at 3:55=E2=80=AFPM Raag Jadav <raag.jadav@intel.co=
+m> wrote:
+> > >
 > > > If an error is triggered before or during system suspend, any bus lev=
 el
 > > > power state transition will result in unpredictable behaviour by the
@@ -96,11 +98,7 @@ el
 > > > More discussion on [1].
 > > > [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=3D9eRPuW08t-6Pwzdy=
 MXsC6FZRKYJtY03Q@mail.gmail.com/
-> >
-> > Thanks for the pointer, but the commit log for this patch needs to be
-> > complete in itself.  "Unpredictable behavior" is kind of hand-wavy and
-> > doesn't really help understand the problem.
-> >
+> > >
 > > >  drivers/pci/pci-driver.c |  3 ++-
 > > >  drivers/pci/pcie/aer.c   | 11 +++++++++++
 > > >  include/linux/aer.h      |  2 ++
@@ -112,18 +110,30 @@ MXsC6FZRKYJtY03Q@mail.gmail.com/
 > > > +++ b/drivers/pci/pci-driver.c
 > > > @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *de=
 v)
-> > >             }
-> > >     }
+> > >                 }
+> > >         }
 > > >
-> > > -   if (!pci_dev->state_saved) {
-> > > +   /* Avoid suspending the device with errors */
-> > > +   if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
+> > > -       if (!pci_dev->state_saved) {
+> > > +       /* Avoid suspending the device with errors */
+> > > +       if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
 > >
-> > This looks potentially racy, since hardware can set bits in
-> > PCI_EXP_DEVSTA at any time.
+> > Apart from the potential raciness mentioned by Bjorn, doing it just
+> > here is questionable because this is not the only place where the PCI
+> > device power state can change.
+> >
+> > It would be better to catch this in pci_set_low_power_state() IMO.
 >
-> Which is why it's placed in ->suspend_noirq() callback. Can it still race=
-?
+> I'm not sure if we should prevent power state transition for the users
+> that explicitly want to transition.
+>
+> Also, the device state can potentially be corrupted because of the errors=
+,
+> so we'd probably want to avoid pci_save_state() as well, which is what
+> I attempted here.
 
-With the hardware?  Yes.
+But it's not what the changelog is saying.
+
+If you want to avoid pci_save_state(), there are also other places
+when it is called and then you also may want to avoid the transition
+because if the state is not saved, it won't be possible to restore it.
 
