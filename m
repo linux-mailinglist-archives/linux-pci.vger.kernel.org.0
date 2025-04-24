@@ -1,226 +1,571 @@
-Return-Path: <linux-pci+bounces-26640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CED5CA99F00
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 04:56:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7E4DA99F13
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 04:59:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7FF41946B5D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 02:56:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD2261946BCC
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 02:59:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30D51433B1;
-	Thu, 24 Apr 2025 02:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C121A76AE;
+	Thu, 24 Apr 2025 02:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="esVsFhw2";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nr70wTJw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeE1RD9C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB8F7E9;
-	Thu, 24 Apr 2025 02:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463367; cv=fail; b=M5X9xsYI/UAit3ZH/afw9u6DOl4YRYYVYmUKJqO0sQjdmkE90DfDYXKE0HNxyyYoD956ZfIsfhYHd3nRWBqMRl4KRKB+NBXDZ4i3nkZSHWnUbHmGTzU/ZIsbdej1AP0EA2xa0oY0fN+8dOeFfO/Z7alz18ro4mFhuQJjRpOxR0I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463367; c=relaxed/simple;
-	bh=liAD1V3kY/lYjkl9lARSyNZBCYLNug4vLN585USAsmo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gjmutSEB+URnkcbeWTVbaidrUslsCPYus1bBP8sB/FIFpHQvs3dca0L18XpH0FMH6+82hVKkE8DUAilVRenDUwCstSlA1RJDysZTvSAK8rydsTB1t4EFJ/w+XZ/V1RbhvNHBkidw++CrXz3uUHq6+1J4UmFblUcpw9HEP0HqNyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=esVsFhw2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nr70wTJw; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O2VxNK018153;
-	Thu, 24 Apr 2025 02:55:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=XIhPm/PnlsFsNKtJL2q+myzcy3uCB9z7lSFdrtUTFV8=; b=
-	esVsFhw2NJ1aQiExiZapMJQMwsxs3+YCwSzl7259ZnPeJCp/QyBJlkKaKf2eQrkK
-	3VYESNope9j1y3KTZED68jc1Tmr8ypTFk1FdTxuc/Ns476/c/HPxVZDxZkv78/G1
-	2RHs/GcbXiEAO385BXAIkQLJvl7Zkj5Z6Wq5z29/29uUD/B2EULgDxwLsliNXDLt
-	3Hoq3LidAY1ZuHAJJwiagjIDX4oGE3rLk6W+n/F81FR78Nd77rLgvn8kRLgT6cnQ
-	rdV87Rx5InUb6NK21KCz/labHQCqZqYgRa6FYkYdTSjTgsqTakDNnhgV7cLcJHx+
-	OsQQO0Y+pDsR2XobIPB4kg==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jkjjxey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 02:55:48 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53O2hw7H017347;
-	Thu, 24 Apr 2025 02:55:47 GMT
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010005.outbound.protection.outlook.com [40.93.11.5])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 466jvfxvph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 02:55:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IE3COgCMQKwKRvkb+m8o21QpJoWT6MnmG/nB8e6W09MWWsmiq98/YCcYLBZfoAyeir/Aw17cKErHN+RSY0dVoodrqhi+Lu8Rw/k6AIPXoChLK4kBx8qgKsqMqqaH0xQgt0TVeAbWqv8Ng0KNUgq7C0quaLI31f0cuNdfqvKJF8nlaGQ/WQd4Qdv55BQehI6akyr4LR4hOhKbAeFK6JRA2mh4o8kZN0Q3evqiSObcIpyfnkgaAejkRcAEdvooeY0g6Y3ddGCdrYl+AMnPYBPUfaH3ZBR92jhoteZFNDwuyAs7O/L/cxj0xGDD3JdKwaPK2r4DmjQqV7e0KtOvk4AYIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XIhPm/PnlsFsNKtJL2q+myzcy3uCB9z7lSFdrtUTFV8=;
- b=PbhSC5f/JWNtExObEUJVBScEKv9JpZGDnS02GTXrXAIk0SfM+xbtZVHkvnjLb6oT/R5s8eAwTorvcSHhhoWKPfyG3qhxgCaOCttn70Tlz0kifn/e/m3zapnoc/dGVWZ++DITybM6eN2JjCaiwrznQdVj0/Xt22yYZkXQ7J/4bSm5aRlig9ap57itdXnrPuc2RHkxORTyyYbEi2ZsEUzeOFsR+kIlQ7oNb4gC3OWRTqUTDSLKRW8WjUjVwvz5pGKCkXACWF/1FLRsFC9fhyLtQsaaS3Nkz1gp5DRU7IzG3TmNItDmGpqasR8uRqKOsuFrqCs4sZwHM/tP5GnAmpdF3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XIhPm/PnlsFsNKtJL2q+myzcy3uCB9z7lSFdrtUTFV8=;
- b=nr70wTJw0rs5g7DsOB+BkgYLF7mhQMEPe0CBTJI8E/5zu6XWEhDviqdBtsT2pmAQMVQdeD+1mbiOgFPunEgCO1etWIWyqYsJNMpkLZPJcRaaktTy8Q2WmNBX2UHWt/QQtRZk8u44njkz9lUjA8Yzms2RiT/hA3RoX7SiX3P3CUE=
-Received: from SA2PR10MB4780.namprd10.prod.outlook.com (2603:10b6:806:118::5)
- by DS0PR10MB6078.namprd10.prod.outlook.com (2603:10b6:8:ca::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.22; Thu, 24 Apr 2025 02:55:44 +0000
-Received: from SA2PR10MB4780.namprd10.prod.outlook.com
- ([fe80::b66:5132:4bd6:3acb]) by SA2PR10MB4780.namprd10.prod.outlook.com
- ([fe80::b66:5132:4bd6:3acb%3]) with mapi id 15.20.8655.030; Thu, 24 Apr 2025
- 02:55:44 +0000
-Message-ID: <40f142be-12e1-407f-8b64-05d8c12f31b9@oracle.com>
-Date: Wed, 23 Apr 2025 19:55:39 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: Report: Performance regression from ib_umem_get on zone device
- pages
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: logane@deltatee.com, hch@lst.de, gregkh@linuxfoundation.org,
-        willy@infradead.org, kch@nvidia.com, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org
-References: <fe761ea8-650a-4118-bd53-e1e4408fea9c@oracle.com>
- <20250423232828.GV1213339@ziepe.ca>
-Content-Language: en-US
-From: jane.chu@oracle.com
-In-Reply-To: <20250423232828.GV1213339@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0332.namprd03.prod.outlook.com
- (2603:10b6:408:f6::7) To SA2PR10MB4780.namprd10.prod.outlook.com
- (2603:10b6:806:118::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A591A5BB1;
+	Thu, 24 Apr 2025 02:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745463553; cv=none; b=kKfg0BlJ7d/7OAObFIMVUijaCjdi9grz+1ad6K9jNP5uoiURyEqHZ5uzKtGik0zho+GSIhU5/5kW4iRj79lzP/zcv23BpOvWvenWJZr/5PzqO7tnhd2Jux4xOLYvrsYPfh0Xaq8UsqqVYnGyJVA45OSXk5r07FQudyaucM5Oaa8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745463553; c=relaxed/simple;
+	bh=fxMOSTeWF4gTTvTARekkkBNlyM3mNYmCqO9haMVO4TU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d5zWq3VO3oBIB2AUBBIARzr2FSGFctdlxNCWKNNxzlRXWDoFN5bOwnITH55+pfrwdFCUbHt/Cu8qmVyz8DMYv6+wts8TQLzjWRdGCpgfJOFbBqMYFeYh2+oomGITF/gqdhYFf+nZ0HuLZe0r+NzgVA0aC2ryB0eh6uRNo6F4pGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeE1RD9C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B65C4CEE2;
+	Thu, 24 Apr 2025 02:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745463552;
+	bh=fxMOSTeWF4gTTvTARekkkBNlyM3mNYmCqO9haMVO4TU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WeE1RD9CkVv3hjxChKHjUI52b7t2/VjNao2QczXAHYtqNPyz0y41jqdj/2hRJxs9i
+	 G+Dv7y7rIHXQnzZMy3IJcaCsfaWTSd6K2MC6ZtmBfNdb+Q+CVDGyE0lh72NXbZxJjt
+	 5T/JQpowLTcFkpHF1/F7QVFBNilx+hkHh3u7E90frtiQtmrt/d/Nh+AZyO1mR1QOWO
+	 6ak/pjtLVTuzTP8WU8InXPHJyVdE1S1vkp7FDNTbZavxxlzA7sCglIFJGDu4KOENCh
+	 sbm4xU62M687iKrzPUi+kNqEqclXaptRls2nOLBeUmZYQfhl8wMiWNO/ImQSAI3GDC
+	 h+hhG27kTiGZA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so686677a12.2;
+        Wed, 23 Apr 2025 19:59:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcFzRI5eVj4VkBNKvQjU5zYbTApRufnfY3Bbs7X2HzxKKSGIBHECj5xt6C8l+keZkTYDpGcLTQwdnd@vger.kernel.org, AJvYcCUx6bz+VGFRZS5noc7iO0p0N6gR9yisfsB7hNiHUq1G4L4mLd900ao+g5ems3qWZcYZiqKvOqRRjFGsKmAe@vger.kernel.org, AJvYcCXFSRcN2r41VKu1pxcNglgOS7NhJtY5/dS7iJyZwnE1RDQ9dDemFB82BsF9jGGLybs9m4/tbAS0RF35@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAStMgAvnoj7YzMdYauSwXfaMyPYD+D8ktjTyfPHiHS1ZYjQ9x
+	MG+KSupguN8yPf6hSRNlnYrklhL1qCd4SrNBgIPBvvDbmsaIG9EL2okM8F9M0TPEeoKcMJm0uMt
+	P55hwZJcraqT1vZDfjqDNaugJiQ==
+X-Google-Smtp-Source: AGHT+IFv4KhcMp5wwuGxhIkPJA2U3LF3Shm+u2l+eIKkq6EP5MBdSy6E4xX6A6kwzo0gpdONN/LaKrKAcZalBTwkD4k=
+X-Received: by 2002:a05:6402:4407:b0:5ee:497:67d6 with SMTP id
+ 4fb4d7f45d1cf-5f6df53e6dfmr1066009a12.33.1745463550895; Wed, 23 Apr 2025
+ 19:59:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PR10MB4780:EE_|DS0PR10MB6078:EE_
-X-MS-Office365-Filtering-Correlation-Id: be24d8c3-b3cb-4b06-a3fe-08dd82db816a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L2UwTU1KWFNkU3g2bGhzQ1NEZWNQZmVCLzNQY3NwNHZBNkJhRzZybThxOGx6?=
- =?utf-8?B?bkRjOTVyVnBsaFFiTGFTdHVIVWVSb1pEVndNSFRPV3JGa2xRVVlueERVMVRL?=
- =?utf-8?B?MWRPWHhsaXNXNDJZcHhZNGxVdzBVdW5FbFVya3Y2d3pLcWdmcWlKTWUwWW5a?=
- =?utf-8?B?eDlNeDhFMS9ac2d4bnJoRk83MFdTQWVXakluNTB1eWU3OGNBd1BtYXZSVk16?=
- =?utf-8?B?VXFFNm5KU1YyaVNvUDlGZWNpaUtVNmg4dTJ0T3hKd0txdnRsTkppenBUY05r?=
- =?utf-8?B?QWNGYWlwR2k4ZSs3ckRCdU1TQ3JwN09vR1QzTnVkTThMcGVjYVQ3WVAyTXZm?=
- =?utf-8?B?WGZORS9qaDJTUlN5MnV3V2FsQUdOSjkwdFdCTE96OVNlUlROVzhYUEFMazhO?=
- =?utf-8?B?M2JhaHFqUzJuVFN6VXFZSS9aRWNnODQ5bEhEYnpDb0R0RjV4MHozTnNuQ0VK?=
- =?utf-8?B?SVZWWnhrT3BnUzJFQkhpV2VlRXlFN1ROaUZwZC9OVFlqUURkTFRiaVE0NXpn?=
- =?utf-8?B?ZW1xYTZlYks2UFltU21SL1hhc2JxSUdacmZKZmlSeU1yUkJENWVqdXJzeFY2?=
- =?utf-8?B?dm5GZDQ4bk1mSWhRcVJFa0ZycnpBa25FUG1oY0pMNEhZNWJ1WkJBeU1KRk1p?=
- =?utf-8?B?ZXY3SW45clgremJFK2QxNUhpVlg3cU5VeWlVRXVVMUUzSWRqQnJ2aVZLSmti?=
- =?utf-8?B?WWRyWUE0dFhkeFpWL0pQZFV0R0IvMVVsNHpGV2N4ZUFhcjhBTGVuUTJJaFdy?=
- =?utf-8?B?UDlGRGY3azZVN2FwQWIwaU85YlJkVi9xbkRreXYraVdGazZrbEVaL3duN2R1?=
- =?utf-8?B?a0ZYOUsvTUVHYURRK04xSGwwMW5Pc0NQSHhQQ2cyQkNpUE1iOUt1TVlnd240?=
- =?utf-8?B?N1ZuNXp5ZFVlZUtmL01FS2VHcEpTWGVnb25JdXk5YnpqOExPU3NmWkVYWW9z?=
- =?utf-8?B?djJiTGt1eWpFVEN6ZXd1UkQ2eTBCOWZ3dkRRM1lLMXBick1TVEJBdzI3UTVW?=
- =?utf-8?B?ZVpSU2ZMM2ZQeC9meEMxay9JQkFMQzQ1Q2JRai9iQjBwd0gxK1FjQUtUczcr?=
- =?utf-8?B?enFnMmhXcDB2aWxFaTZXYmVoQVUvZWI2OTFzakFJa0prNHJ0SlpkWnpxazZs?=
- =?utf-8?B?bkJXNUViRE9xamNlRXpKTlZITHE2MzNYUnEwNUJWdVdDWW1tODNzK1FHNit2?=
- =?utf-8?B?VzBremhaZk8vcW4zKzJEbGpTdWtYRU9pR0t4QS9vK29rNFRvWVloRnk0YUpL?=
- =?utf-8?B?S0pFUXM3NjhZdTJLaGQzUEVSMnRrQlVqbU9acEcra3dmc0F0UTJXNG5UVlVN?=
- =?utf-8?B?dDdoaWpqekovUHpaYVNpSlQ5c1JnR1BuMUtsaVNuZWc0UHVnVlBrbWh2QjZh?=
- =?utf-8?B?YWZjbzFYZ3dxdkFIUVg4NTE3KzFLZkRmY1RqeGtEOUFJTGNnWjhFNG91a2xt?=
- =?utf-8?B?NnNKWEpQQjh6aXZ5WnhOVUlZMWIxRFo0ZHVPMEVKR2V0WWtCUE4yMUt3NzJY?=
- =?utf-8?B?cEJjNkg2aE4wNTVpTnRWUUJTbEw0QlE0VWgwdUh2SFlMVzk1alZHMjVZWDZC?=
- =?utf-8?B?ZGJVTW9qSjU5R2lxY1F6cjBnSnkvMHVWcWNXRmswMGs5dVhhQldINllMYjhS?=
- =?utf-8?B?dXpIWVF1Qm8rTS9DbDJ6VWFmbEE3ZVZVMmZNZ0piWEVnMHRXcHV5MXhnQjBs?=
- =?utf-8?B?UXJlenpqbnp1ODVTWE9MWWpSNW9LZVN0bEZvRlNOZkhJTnhTVGNQd2kvK2Rh?=
- =?utf-8?B?aUZLL2FTb0YrSFB6dVRoSk1sK1hHRTh1bytJd0VVOWFXaVE4YkdqMG04UTJP?=
- =?utf-8?B?V1ZHT1JtUnJYWkNPaU5iVk53RUFNcUJid0t2VFp6M0F0NWlDYzBwQ2RpeEs5?=
- =?utf-8?B?YWVuK0xPOVJXZG9JWldmeXM2WWlQMDd4ZVZMajM2aEdTTlMwNWpqWU5xbk4z?=
- =?utf-8?Q?y86nm2Mro64=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4780.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?THIvVGNmYkhwUE05dVoydENRQkt1Tkh3T1JLS3cvVTR3dkdFUkJIWTFoNWdn?=
- =?utf-8?B?VGFodFJUZTgzN0ROL0piakgrbnBOdEhSdDl3ek9Pd0RINGJOZFMrN2syV2c1?=
- =?utf-8?B?ekI4L0JaRU00QlZSeUduQzlBWGIzeXFBaUhNc0ZKbW5tSTBIU1AwV1c5YUE5?=
- =?utf-8?B?K0I0bjVXWG9GMGMzVWVFUGJEZGUvWU1iZTN2MFdrajExeG9YWW80MDdoK1h0?=
- =?utf-8?B?eTJaVFRQbXBWQ2dkQkp1UGxVY2s4UDM0ckU4R1BCYkplVkNXcDZORVFsS214?=
- =?utf-8?B?d2ZoYmx0R1RJVUh1YVJTZjBpa09Ma1dVeG54c3JrQlJINXcyS2xmODk1bGds?=
- =?utf-8?B?Z0Z2czVJSUlwUVY2M3VudUowTlNPRGp0bkI0b1E4Tm9FRytOL0RudnhtSk80?=
- =?utf-8?B?a0FFeGFqVEoxV2tXVGdBMDNHamRIcWlSK0IvL0VPT2Z0clU5dVBrMUVJaXAz?=
- =?utf-8?B?dm5LQ0xYSHplSURLNnVlbm4zSTFrRlpJMzA0RHpiOVlTM1NYYm1ydnJGOFM3?=
- =?utf-8?B?VWhwWFlxeXVMenVaR0xIeEJYcktmN0wzeGZKa2pPanE5RWdacndoaU4yZHFO?=
- =?utf-8?B?MDNRVkxFVHNQcDFscEFaL0J2ZHdMdWZSa1BrVXFydlhWZUs3T1lVR3BJeFRN?=
- =?utf-8?B?cm9ycUdnQldHZmFJVUlacjFIemQ3SXJPUnRaYjFnTnBNRGRheXg2QUV6Tlow?=
- =?utf-8?B?TlBWWVNWOENsTmVWNG9yLzc5K0NIbHdZaHJGMXU3THowS1VxM3RlVTN4R1lz?=
- =?utf-8?B?T0k0Ymh2eFVwYmtTYlNLY0hWOFpIQys3RVdnZk9rM01XM1F1eHkvMXJwUFVt?=
- =?utf-8?B?TWE0K2hPYXQvUnJ6NGF6VyszM0xTTHBCM3NhRHhLWE5pNTdUanI5QUV0dlh3?=
- =?utf-8?B?SmY5RzdRSFBnQTh4OEtObWdUU0gwT3EzcGVMMHcyOTU1SGZYdlNPby9YYlZP?=
- =?utf-8?B?WFNSUGE1Wm1ydXJFRFB4SnVrMitvaGdaaWdZWldvVHhweHpUWEdqZzk5U3Nt?=
- =?utf-8?B?VUJtbThEZkMwb0d3RTd1YTZWTnN1R2NTU0pLTkdJTEJmV1VHMmF0RnRBa3hj?=
- =?utf-8?B?YnZ0ZlNZczdoTVYyMGM4SXlYd0x3b1NOcGJQRnBJZXhNMjNtMmpqUEFPNXV4?=
- =?utf-8?B?TWJJeGpXL253NXB0YVI1T3ZKOG5ra2NlYk1tclZNU0c2RU5XdWE3emtBQ0gx?=
- =?utf-8?B?YUY3M0JiVk9WWjVrWkthR3ZHbmxFYVF0aTF4ZDBFY1czQkZvUUFCZ0YzV0Jo?=
- =?utf-8?B?TDBqd1ltdVgxMWFtMUIxa0xZc2MzZk1Laks0ZFRTYzh2SzRtclVyM0E1SGNx?=
- =?utf-8?B?aG4vVWg2aHl6L2tmRXQzQmxXTXZabFRlakgwYWlla1dQR0RSVG9Edm53VmZq?=
- =?utf-8?B?a2JUc3J2cC85NS9PRlIxR2JGRU1ta2w5SU9zRXhDbjJWYXJxcFp2S3NZNnlL?=
- =?utf-8?B?amFQbWgwQmtsR2NvZElsOGdpS2d1QWpVR0x4NWh4eWZhd1M3RUdla29idEpD?=
- =?utf-8?B?VXF5SCtNL0JHMEpYVjYxU1R4Qk4zZTVwOGVNZ0RmaWFQTklEYWNkNXBzOE84?=
- =?utf-8?B?My9sODRHMW1XeCsybThEQjJpcHU0alVFNUljQkpZVmg3dXBNMDRTUEQydm1P?=
- =?utf-8?B?MU42aktEWjdYbytmeFAwUGhHa1dNUDRIR0p0TGhJZHBjcG5Scm9GaVIzbVZj?=
- =?utf-8?B?UDdTMWlyYjZVWHdlSGFSYzlibmJ5cUVHSnJYRjRCZVZmb2dBZnRKeVM4K1U3?=
- =?utf-8?B?c3VrTVAxQW9nbUFzeHJ1OHRETGpjVHc3bTBGZVRaMnkwdElXazFZR2oxcWFt?=
- =?utf-8?B?Q0xpOXVOWkNVc3lZWFpFS0NLNVpwUXVOcE5ITFk1VlNBejVYY0dWZytIb2dQ?=
- =?utf-8?B?b0s4S3BjbzJZNEFGdkYwYWlnbDhOUlFiNTF6SkdzbzRJdWRWRGVhVzNXT2tx?=
- =?utf-8?B?K09NY3l1aTZMVXIrd0Z6SmQ3SEZnRFNocUlTVHN2U1pSaGNwa2Z5NDZVZnpI?=
- =?utf-8?B?VVlGYTNXV2hoY29YSmtpRHd4aUNwaFpQT0RiRTFFbEFGM0pZS3BDblZJdThR?=
- =?utf-8?B?d3d1Y2twTWVwSHAyMFRKai90cWV5Qk42cXJEWE5iTVltSEp6U21raVN0RXZv?=
- =?utf-8?Q?M54p9pnIvJSuWAW6sQkEZJV7b?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	cRReBOJxeLyUz/tn8N0UgwHK1SjMIIV+BQYse9V36J0mZlisuYXx9sZv2Dor+RX7FyN6gtagvHzkcBwUpEQm/5tYYBfQiN9q8STLJ6WHWyrRRhFnP0s15xqYypz4vABx/MnM2w2mfQrEJBBV0eE0olIHciz/gw4/E9H7oVDGSkeutTZ2k3K41AHIEXveu91DZzh5tRY730w37hl579mFMhDrTko0aZLgTy/dCWpCHWBRnxAaQaHwS9pCvyskdV/hQMRRKLhBLCQysLh7EmUMOn+nZ0bJQcJYKWUy3dfR69noE7SG5XEQXSF2RB6EXWnmVpxKaJjRi98RUZNFxNogSzcHolg5EU+8a/ckeSMSe3eUSWRMFQsakfiIAkxLjfAJpScXBBy1YercByYTP2FVxdH6RL7A8CyCdS1RLU5QtBvigfGTJ8sH0ORxrr6UA/Em+zJwIShSXzhzMEJI9ukXUy9RCaZibUc2TfzHQ2H1CF2MqCNkxKQalgXveQMcq172M2y5asxBmosG7v+RQkMHKq8QrSLrsrLnDJgn1X+plSJUtNp/cZ7WouVn66Q67V/Iw5Dee26o11yOM5J/uEozs0R2sm8i6TpJyN1rYzn85bA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be24d8c3-b3cb-4b06-a3fe-08dd82db816a
-X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4780.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 02:55:43.9686
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 38eqFz0bc4fNE03yUZE3AG8qpcZKx9qaY1OsTJpj3vdLBEgkgmXrYy5ZGmTGTKP/39pxEIMBxB879pGaWEQqKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6078
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2504240015
-X-Proofpoint-GUID: mbRv2Eh3vRrwrAK1ioMXkuueC5GFMQ_s
-X-Proofpoint-ORIG-GUID: mbRv2Eh3vRrwrAK1ioMXkuueC5GFMQ_s
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAxNSBTYWx0ZWRfX27l/jQHwUoHd 4WI+axlLU6Hloq9ktW/eEbbS3j8v/W9UXcGoH1dd+huZXTKJ2gfT4i8c9hZnVM0Ff/fK9HRjXFb 67rjqHhWpDAxCcl9oBLbwwT+ejZnbnXzd7OKYITqwR/AjqPhzQw0GyfOOInZXTyZfDXPDoi6wgc
- T+Ikc1eFKdh1g/UvMRalsRlKe4OSa7LIfjRH/z8V86nG7zPi3qWEYoXErCZfhaYCTkkWAsfKjUI jet5utfHjl0oxiPlg6IVws8bPunkhGZRAdknpxdj+LfeVEoOZxSufod+T5N/YXutiE27r0TyTzp UJWxU7bURX7ngo7UgI5miC9UN3kdi14uAHFjN1X0yZZlf/Sl2oYyZ44G2SjOvZ+rojpXncSf0GN OwXqhbYb
+References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
+ <20250411103656.2740517-6-hans.zhang@cixtech.com> <20250411202420.GA3793660-robh@kernel.org>
+ <CH2PPF4D26F8E1C8ABE8B2902E5775F594FA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <CH2PPF4D26F8E1C8ABE8B2902E5775F594FA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 23 Apr 2025 21:58:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLNteS0m_32HuCjY8Mk9Wf+z6=HBpM7Wv=zLVqNs-7Y1Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFu9CpzyR3MpZWb8PUFUdjFEzWRxSIpaUljVIXKyFhbcTtKtiOOHQCd9vg
+Message-ID: <CAL_JsqLNteS0m_32HuCjY8Mk9Wf+z6=HBpM7Wv=zLVqNs-7Y1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "hans.zhang@cixtech.com" <hans.zhang@cixtech.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Apr 13, 2025 at 10:52=E2=80=AFPM Manikandan Karunakaran Pillai
+<mpillai@cadence.com> wrote:
+>
+> >> +void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int
+> >devfn,
+> >> +                               int where)
+> >> +{
+> >> +    struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
+> >> +    struct cdns_pcie_rc *rc =3D pci_host_bridge_priv(bridge);
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    unsigned int busn =3D bus->number;
+> >> +    u32 addr0, desc0, desc1, ctrl0;
+> >> +    u32 regval;
+> >> +
+> >> +    if (pci_is_root_bus(bus)) {
+> >> +            /*
+> >> +             * Only the root port (devfn =3D=3D 0) is connected to th=
+is bus.
+> >> +             * All other PCI devices are behind some bridge hence on
+> >another
+> >> +             * bus.
+> >> +             */
+> >> +            if (devfn)
+> >> +                    return NULL;
+> >> +
+> >> +            return pcie->reg_base + (where & 0xfff);
+> >> +    }
+> >> +
+> >> +    /*
+> >> +     * Clear AXI link-down status
+> >> +     */
+> >
+> >That is an odd thing to do in map_bus. Also, it is completely racy
+> >because...
+> >
+> >> +    regval =3D cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
+> >CDNS_PCIE_HPA_AT_LINKDOWN);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >CDNS_PCIE_HPA_AT_LINKDOWN,
+> >> +                         (regval & GENMASK(0, 0)));
+> >> +
+> >
+> >What if the link goes down again here.
+> >
+> >> +    desc1 =3D 0;
+> >> +    ctrl0 =3D 0;
+> >> +
+> >> +    /*
+> >> +     * Update Output registers for AXI region 0.
+> >> +     */
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(busn);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(0),
+> >addr0);
+> >> +
+> >> +    desc1 =3D cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
+> >> +
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0));
+> >> +    desc1 &=3D ~CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK;
+> >> +    desc1 |=3D CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
+> >> +    ctrl0 =3D CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
+> >> +
+> >> +    if (busn =3D=3D bridge->busnr + 1)
+> >> +            desc0 |=3D
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
+> >> +    else
+> >> +            desc0 |=3D
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
+> >> +
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC0(0), desc0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(0), ctrl0);
+> >
+> >This is also racy with the read and write functions. Don't worry, lots
+> >of other broken h/w like this...
+> >
+> >Surely this new h/w supports ECAM style config accesses? If so, use
+> >and support that mode instead.
+> >
+>
+> As an IP related driver, the  ECAM address in the SoC is not available. F=
+or SoC, the
+> Vendor can override this function in their code with the ECAM address.
 
 
-On 4/23/2025 4:28 PM, Jason Gunthorpe wrote:
-> IIRC device-dax does could not use folios until 6.15 so I'm assuming
-> it is not folios even if it is a pmd mapping?
+>
+> >> +
+> >> +    return rc->cfg_base + (where & 0xfff);
+> >> +}
+> >> +
+> >>  static struct pci_ops cdns_pcie_host_ops =3D {
+> >>      .map_bus        =3D cdns_pci_map_bus,
+> >>      .read           =3D pci_generic_config_read,
+> >>      .write          =3D pci_generic_config_write,
+> >>  };
+> >>
+> >> +static struct pci_ops cdns_pcie_hpa_host_ops =3D {
+> >> +    .map_bus        =3D cdns_pci_hpa_map_bus,
+> >> +    .read           =3D pci_generic_config_read,
+> >> +    .write          =3D pci_generic_config_write,
+> >> +};
+> >> +
+> >>  static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+> >>  {
+> >>      u32 pcie_cap_off =3D CDNS_PCIE_RP_CAP_OFFSET;
+> >> @@ -154,8 +220,14 @@ static void
+> >cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+> >>  {
+> >>      u32 val;
+> >>
+> >> -    val =3D cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> >> -    cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val |
+> >CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> >> +    if (!pcie->is_hpa) {
+> >> +            val =3D cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> >> +            cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val |
+> >CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> >> +    } else {
+> >> +            val =3D cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG,
+> >CDNS_PCIE_HPA_LM_PTM_CTRL);
+> >> +            cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG,
+> >CDNS_PCIE_HPA_LM_PTM_CTRL,
+> >> +                                 val |
+> >CDNS_PCIE_HPA_LM_TPM_CTRL_PTMRSEN);
+> >> +    }
+> >>  }
+> >>
+> >>  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+> >> @@ -340,8 +412,8 @@ static int cdns_pcie_host_bar_config(struct
+> >cdns_pcie_rc *rc,
+> >>               */
+> >>              bar =3D cdns_pcie_host_find_min_bar(rc, size);
+> >>              if (bar !=3D RP_BAR_UNDEFINED) {
+> >> -                    ret =3D cdns_pcie_host_bar_ib_config(rc, bar, cpu=
+_addr,
+> >> -                                                       size, flags);
+> >> +                    ret =3D pcie->ops->host_bar_ib_config(rc, bar, cp=
+u_addr,
+> >> +                                                        size, flags);
+> >>                      if (ret)
+> >>                              dev_err(dev, "IB BAR: %d config failed\n"=
+, bar);
+> >>                      return ret;
+> >> @@ -366,8 +438,7 @@ static int cdns_pcie_host_bar_config(struct
+> >cdns_pcie_rc *rc,
+> >>              }
+> >>
+> >>              winsize =3D bar_max_size[bar];
+> >> -            ret =3D cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, w=
+insize,
+> >> -                                               flags);
+> >> +            ret =3D pcie->ops->host_bar_ib_config(rc, bar, cpu_addr, =
+winsize,
+> >flags);
+> >>              if (ret) {
+> >>                      dev_err(dev, "IB BAR: %d config failed\n", bar);
+> >>                      return ret;
+> >> @@ -408,8 +479,8 @@ static int cdns_pcie_host_map_dma_ranges(struct
+> >cdns_pcie_rc *rc)
+> >>      if (list_empty(&bridge->dma_ranges)) {
+> >>              of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> >>                                   &no_bar_nbits);
+> >> -            err =3D cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+> >> -                                               (u64)1 << no_bar_nbits=
+, 0);
+> >> +            err =3D pcie->ops->host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+> >> +                                                (u64)1 << no_bar_nbit=
+s, 0);
+> >>              if (err)
+> >>                      dev_err(dev, "IB BAR: %d config failed\n",
+> >RP_NO_BAR);
+> >>              return err;
+> >> @@ -467,17 +538,159 @@ int
+> >cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+> >>              u64 pci_addr =3D res->start - entry->offset;
+> >>
+> >>              if (resource_type(res) =3D=3D IORESOURCE_IO)
+> >> -                    cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+> >> -                                                  true,
+> >> -                                                  pci_pio_to_address(=
+res-
+> >>start),
+> >> -                                                  pci_addr,
+> >> -                                                  resource_size(res))=
+;
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   true,
+> >> +                                                   pci_pio_to_address=
+(res-
+> >>start),
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >> +            else
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   false,
+> >> +                                                   res->start,
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >> +
+> >> +            r++;
+> >> +    }
+> >> +
+> >> +    return cdns_pcie_host_map_dma_ranges(rc);
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    u32 value, ctrl;
+> >> +
+> >> +    /*
+> >> +     * Set the root complex BAR configuration register:
+> >> +     * - disable both BAR0 and BAR1.
+> >> +     * - enable Prefetchable Memory Base and Limit registers in type =
+1
+> >> +     *   config space (64 bits).
+> >> +     * - enable IO Base and Limit registers in type 1 config
+> >> +     *   space (32 bits).
+> >> +     */
+> >> +
+> >> +    ctrl =3D CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_DISABLED;
+> >> +    value =3D CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE
+> >|
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_ENABLE |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_32BITS;
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >> +                         CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
+> >> +
+> >> +    if (rc->vendor_id !=3D 0xffff)
+> >> +            cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+> >> +
+> >> +    if (rc->device_id !=3D 0xffff)
+> >> +            cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+> >> +
+> >> +    cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
+> >> +    cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
+> >> +    cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE,
+> >PCI_CLASS_BRIDGE_PCI);
+> >> +
+> >> +    return 0;
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
+> >> +                                 enum cdns_pcie_rp_bar bar,
+> >> +                                 u64 cpu_addr, u64 size,
+> >> +                                 unsigned long flags)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    u32 addr0, addr1, aperture, value;
+> >> +
+> >> +    if (!rc->avail_ib_bar[bar])
+> >> +            return -EBUSY;
+> >> +
+> >> +    rc->avail_ib_bar[bar] =3D false;
+> >> +
+> >> +    aperture =3D ilog2(size);
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+> >> +            (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> >> +    addr1 =3D upper_32_bits(cpu_addr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
+> >> +                         CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0(bar),
+> >addr0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
+> >> +                         CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR1(bar),
+> >addr1);
+> >> +
+> >> +    if (bar =3D=3D RP_NO_BAR)
+> >> +            return 0;
+> >> +
+> >> +    value =3D cdns_pcie_hpa_readl(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >CDNS_PCIE_HPA_LM_RC_BAR_CFG);
+> >> +    value &=3D ~(HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_APERTURE(bar,
+> >bar_aperture_mask[bar] + 2));
+> >> +    if (size + cpu_addr >=3D SZ_4G) {
+> >> +            if (!(flags & IORESOURCE_PREFETCH))
+> >> +                    value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+> >> +            value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+> >> +    } else {
+> >> +            if (!(flags & IORESOURCE_PREFETCH))
+> >> +                    value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+> >> +            value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+> >> +    }
+> >> +
+> >> +    value |=3D HPA_LM_RC_BAR_CFG_APERTURE(bar, aperture);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
+> >> +
+> >> +    return 0;
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *=
+rc)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(rc);
+> >> +    struct resource *cfg_res =3D rc->cfg_res;
+> >> +    struct resource_entry *entry;
+> >> +    u64 cpu_addr =3D cfg_res->start;
+> >> +    u32 addr0, addr1, desc1;
+> >> +    int r, busnr =3D 0;
+> >> +
+> >> +    entry =3D resource_list_first_type(&bridge->windows,
+> >IORESOURCE_BUS);
+> >> +    if (entry)
+> >> +            busnr =3D entry->res->start;
+> >> +
+> >> +    /*
+> >> +     * Reserve region 0 for PCI configure space accesses:
+> >> +     * OB_REGION_PCI_ADDR0 and OB_REGION_DESC0 are updated
+> >dynamically by
+> >> +     * cdns_pci_map_bus(), other region registers are set here once f=
+or all.
+> >> +     */
+> >> +    addr1 =3D 0;
+> >> +    desc1 =3D CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(0),
+> >addr1);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
+> >> +
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+> >> +            (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> >> +    addr1 =3D upper_32_bits(cpu_addr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(0),
+> >addr0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(0),
+> >addr1);
+> >> +
+> >> +    r =3D 1;
+> >> +    resource_list_for_each_entry(entry, &bridge->windows) {
+> >> +            struct resource *res =3D entry->res;
+> >> +            u64 pci_addr =3D res->start - entry->offset;
+> >> +
+> >> +            if (resource_type(res) =3D=3D IORESOURCE_IO)
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   true,
+> >> +                                                   pci_pio_to_address=
+(res-
+> >>start),
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >>              else
+> >> -                    cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+> >> -                                                  false,
+> >> -                                                  res->start,
+> >> -                                                  pci_addr,
+> >> -                                                  resource_size(res))=
+;
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   false,
+> >> +                                                   res->start,
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >>
+> >>              r++;
+> >>      }
+> >> @@ -489,11 +702,11 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+> >>  {
+> >>      int err;
+> >>
+> >> -    err =3D cdns_pcie_host_init_root_port(rc);
+> >> +    err =3D rc->pcie.ops->host_init_root_port(rc);
+> >>      if (err)
+> >>              return err;
+> >>
+> >> -    return cdns_pcie_host_init_address_translation(rc);
+> >> +    return rc->pcie.ops->host_init_address_translation(rc);
+> >>  }
+> >>
+> >>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+> >> @@ -503,7 +716,7 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc
+> >*rc)
+> >>      int ret;
+> >>
+> >>      if (rc->quirk_detect_quiet_flag)
+> >> -            cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> >> +            pcie->ops->detect_quiet_min_delay_set(&rc->pcie);
+> >>
+> >>      cdns_pcie_host_enable_ptm_response(pcie);
+> >>
+> >> @@ -566,8 +779,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> >>      if (ret)
+> >>              return ret;
+> >>
+> >> -    if (!bridge->ops)
+> >> -            bridge->ops =3D &cdns_pcie_host_ops;
+> >> +    if (!bridge->ops) {
+> >> +            if (pcie->is_hpa)
+> >> +                    bridge->ops =3D &cdns_pcie_hpa_host_ops;
+> >> +            else
+> >> +                    bridge->ops =3D &cdns_pcie_host_ops;
+> >> +    }
+> >>
+> >>      ret =3D pci_host_probe(bridge);
+> >>      if (ret < 0)
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> index b24176d4df1f..8d5fbaef0a3c 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> @@ -43,7 +43,30 @@ static u64 cdns_plat_cpu_addr_fixup(struct cdns_pci=
+e
+> >*pcie, u64 cpu_addr)
+> >>  }
+> >>
+> >>  static const struct cdns_pcie_ops cdns_plat_ops =3D {
+> >> +    .link_up =3D cdns_pcie_linkup,
+> >>      .cpu_addr_fixup =3D cdns_plat_cpu_addr_fixup,
+> >> +    .host_init_root_port =3D cdns_pcie_host_init_root_port,
+> >> +    .host_bar_ib_config =3D cdns_pcie_host_bar_ib_config,
+> >> +    .host_init_address_translation =3D
+> >cdns_pcie_host_init_address_translation,
+> >> +    .detect_quiet_min_delay_set =3D
+> >cdns_pcie_detect_quiet_min_delay_set,
+> >> +    .set_outbound_region =3D cdns_pcie_set_outbound_region,
+> >> +    .set_outbound_region_for_normal_msg =3D
+> >> +
+> >cdns_pcie_set_outbound_region_for_normal_msg,
+> >> +    .reset_outbound_region =3D cdns_pcie_reset_outbound_region,
+> >> +};
+> >> +
+> >> +static const struct cdns_pcie_ops cdns_hpa_plat_ops =3D {
+> >> +    .start_link =3D cdns_pcie_hpa_startlink,
+> >> +    .stop_link =3D cdns_pcie_hpa_stop_link,
+> >> +    .link_up =3D cdns_pcie_hpa_linkup,
+> >> +    .host_init_root_port =3D cdns_pcie_hpa_host_init_root_port,
+> >> +    .host_bar_ib_config =3D cdns_pcie_hpa_host_bar_ib_config,
+> >> +    .host_init_address_translation =3D
+> >cdns_pcie_hpa_host_init_address_translation,
+> >> +    .detect_quiet_min_delay_set =3D
+> >cdns_pcie_hpa_detect_quiet_min_delay_set,
+> >> +    .set_outbound_region =3D cdns_pcie_hpa_set_outbound_region,
+> >> +    .set_outbound_region_for_normal_msg =3D
+> >> +
+> >cdns_pcie_hpa_set_outbound_region_for_normal_msg,
+> >> +    .reset_outbound_region =3D cdns_pcie_hpa_reset_outbound_region,
+> >
+> >What exactly is shared between these 2 implementations. Link handling,
+> >config space accesses, address translation, and host init are all
+> >different. What's left to share? MSIs (if not passed thru) and
+> >interrupts? I think it's questionable that this be the same driver.
+> >
+> The address of both these have changed as the controller architecture has
+> changed. In the event these driver have to be same driver, there will lot=
+ of
+> sprinkled "if(is_hpa)" and that was already rejected in earlier version o=
+f code.
 
-I just looked at 6.15-rc3, device-dax is not using folio. Maybe I'm 
-missing some upcoming patches?
+I'm saying they should *not* be the same driver because you don't
+share hardly anything. Again, what is really common here?
 
-thanks,
--jane
+> Hence it was done similar to other drivers by architecture specific "ops"=
+.
 
+Yes, and IMO driver private/custom ops is the wrong direction to go.
+Read my prior reply below again.
+
+> The "if(is_hpa)" is now very limited where a specific ops functions does =
+not make
+> any sense.
+
+But you still have them. In a separate driver, you would have 0.
+
+> >A bunch of driver specific 'ops' is not the right direction despite
+> >other drivers (DWC) having that. If there are common parts, then make
+> >them library functions multiple drivers can call.
 
