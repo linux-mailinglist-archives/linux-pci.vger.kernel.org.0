@@ -1,139 +1,137 @@
-Return-Path: <linux-pci+bounces-26678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43390A9AB52
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 13:03:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A1F7A9AC6D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 13:50:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B1C3B119A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 11:02:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2F285A6E97
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 11:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C521E1DE5;
-	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 089B422DF9F;
+	Thu, 24 Apr 2025 11:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2cbMhlW"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BLIegG1s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868905BAF0;
-	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD4322D793;
+	Thu, 24 Apr 2025 11:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492590; cv=none; b=uJ1fJL1lhh8ltCaiu4oNexvsFJhqW//F4M7qzkHZQo+c8d3tSEFwydXqhr/y+vHW7JTCwv7I2x7FNMjEwLskhzyMrXElIZ8qrq05KE0ef4WdP59bQumm0impZfFvpVXzG28W/y1KoVakxVQ3YuxwYqBIchqNjd/oOiYXwRVTbOk=
+	t=1745495351; cv=none; b=KeUr4EGrzpVf6mC2xOtH9T67qJnGSWzaxFj2M52edobqRsEU0qT2+ORasrXXQIftcAyxlMWNraEVGY97k0LvyP2gY48bg61XbuwZurvBT1y4H4a3RL6x8txDgH52PWkPCjsI9h7ZvtWlnmBHwpNXvtM3TD0Qi1Ock1ZSHBHPolo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492590; c=relaxed/simple;
-	bh=hyV+/TI+fPXrUMs5YluLUXdPfqeyfP2h6M8iUeti5MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pmd5RWHiZpzQUJS+EeuvKuJhEKjcr+OQt8jrFYy21ib2VU45SYBYgd5HzeTEus/w/UIvVarolm0qRXMdxfOpoO7yXeLDONhMjsM+Phvoz4671wp/iok4Ryn1GXmfpxmTCUO/O+GhIuiO/61itFVsz9OUFfThNVD9peMyfDxcQeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2cbMhlW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D989C4CEEE;
-	Thu, 24 Apr 2025 11:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745492590;
-	bh=hyV+/TI+fPXrUMs5YluLUXdPfqeyfP2h6M8iUeti5MY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F2cbMhlWSmroQr6V7U7MJeyYamhmUktI54VvxE5JAo7r92a5NOYpNbXdX8JX5VMfC
-	 NlKP0uQgt6sBltNXg+JM/40C96ktw4X+gneJpkL7goachiUefdtSiocDh0NY8I2lTD
-	 SsuUj5zi+GsN44Gbj9XMG068QVcBslAdsdMjq+thgI+TrAxPV374GK79xko/Dt+78C
-	 AbgMK6gJ6sKg4GQGm+c5BufC8+O+8wjlYE1orRsPXsZoHaayinLBT3PCGf3LeND+vx
-	 ZWlptoRUlVWCDqDxvd4gPyqL649I1YbvjKWjH2t7hsTgTmFEoCFTHH1zSgmnY8TVHP
-	 Pw23Ek+2DK6cg==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2cc82edcf49so200644fac.1;
-        Thu, 24 Apr 2025 04:03:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTA7vZ8VWgZqRsiLk6R48cXMo7J5YvxvXTBVonn8yaBwwvzLKutNMCrlubKrKQiysq+F5k1FQ4Pe0N@vger.kernel.org, AJvYcCWG5m8YGbyQEAQEBOsgOvpONHO4thtlYBvvUHcOUGsRcz5UbnVKZI15LA49y7HmOOHeL+DfZz/e+9pEEMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD2K7GWSW/Qfm9cZnJE+QVsHKT4DrpgpIh/qBTnDKoAh9C/hjT
-	jcyp7P3Itlg93u8sbTIUQ+ESHUAqgttApaP+8T1m7uADJ7d6mM/Osa4LfCMK4ygu1vuyktVILNa
-	P9Kg5nbB2ZX0iXJDBUSGUDCvTYBs=
-X-Google-Smtp-Source: AGHT+IFuQoKZgYFAaJXa+tjHxd3y8Tbv98mGDsNqE4JwXLSX7Dz+sVyptUZDaMZZaRtXOPRS1KhBxFD5PtrDST30ZPc=
-X-Received: by 2002:a05:6870:b018:b0:29e:503a:7ea3 with SMTP id
- 586e51a60fabf-2d96e742783mr1092286fac.36.1745492589290; Thu, 24 Apr 2025
- 04:03:09 -0700 (PDT)
+	s=arc-20240116; t=1745495351; c=relaxed/simple;
+	bh=+b3iW2ysAZx8jNrvMtsp4DTDofLqBwY1FfDTQqqkE/w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=j4VhdLbiHZgtZFCPLUV5h3KiPCDr2Grjq+pPIM+UClRTUdwJ5vTD2Nxeyixbgnv05i/GkdZwmtBRPhWBGnKCQV5kdKxXMNC1koo02PSGzQT3Ml0Djsd0KAXTeEMA+MC3NdKhAf1eZrmSIjSM+0rEnaSdoNKIE9wATAy2Gox9fQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BLIegG1s; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745495339; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=qs4/QnFg9rNhrfOh3L9B6LkK0j0hm6vYUMcuTxooLVc=;
+	b=BLIegG1sS3L5UgRQ3YukmLaki7gcEhOR6mX8dL7TUGPWTmoYrmXdflbuXnBmEDqomQZ9B6DnIGQ/FZXL+dUmN3VhPBfyCeG27MWVcdT7RLEj+Qwm6IubwUxfrFm/WLL1i4fh6mRsmFFgxZ7ttCR8P1z7Pzo9DwyM7l193zgk6OA=
+Received: from 30.246.162.65(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WXzJaco_1745495338 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 19:48:59 +0800
+Message-ID: <7f6c49d5-e11e-488b-bb67-4051abcb02f4@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 19:48:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422135341.2780925-1-raag.jadav@intel.com>
- <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com> <aAnOUouuqOC3-Yb8@black.fi.intel.com>
-In-Reply-To: <aAnOUouuqOC3-Yb8@black.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 24 Apr 2025 13:02:58 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gQ-6ZehL5HNhFvOWDEyXdS++uaMn1AOB7whoMTKzj-ZQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHvg7m1RiahxQi7XF-iyjgNJFF7XEVHvOXVxSn28guFCFFwPREgNxb6bDk
-Message-ID: <CAJZ5v0gQ-6ZehL5HNhFvOWDEyXdS++uaMn1AOB7whoMTKzj-ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, mahesh@linux.ibm.com, oohall@gmail.com, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
-	aravind.iddamsetty@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
+ terry.bowman@amd.com, tianruidong@linux.alibaba.com
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+ <20250217024218.1681-4-xueshuai@linux.alibaba.com>
+ <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
+ <1dea64ef-3c9f-4bff-820f-34d8f3a6a1d4@linux.alibaba.com>
+ <362fcb01-8d9c-49e6-be83-5a784c1e5f3e@linux.alibaba.com>
+In-Reply-To: <362fcb01-8d9c-49e6-be83-5a784c1e5f3e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 7:38=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> w=
-rote:
->
-> On Wed, Apr 23, 2025 at 02:41:52PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Apr 22, 2025 at 3:55=E2=80=AFPM Raag Jadav <raag.jadav@intel.co=
-m> wrote:
-> > >
-> > > If an error is triggered before or during system suspend, any bus lev=
-el
-> > > power state transition will result in unpredictable behaviour by the
-> > > device with failed recovery. Avoid suspending such a device and leave
-> > > it in its existing power state.
-> > >
-> > > This only covers the devices that rely on PCI core PM for their power
-> > > state transition.
-> > >
-> > > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > > ---
-> > >
-> > > v2: Synchronize AER handling with PCI PM (Rafael)
-> > >
-> > > More discussion on [1].
-> > > [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=3D9eRPuW08t-6Pwzdy=
-MXsC6FZRKYJtY03Q@mail.gmail.com/
-> > >
-> > >  drivers/pci/pci-driver.c |  3 ++-
-> > >  drivers/pci/pcie/aer.c   | 11 +++++++++++
-> > >  include/linux/aer.h      |  2 ++
-> > >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > > index f57ea36d125d..289a1fa7cb2d 100644
-> > > --- a/drivers/pci/pci-driver.c
-> > > +++ b/drivers/pci/pci-driver.c
-> > > @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *de=
-v)
-> > >                 }
-> > >         }
-> > >
-> > > -       if (!pci_dev->state_saved) {
-> > > +       /* Avoid suspending the device with errors */
-> > > +       if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-> >
-> > Apart from the potential raciness mentioned by Bjorn, doing it just
-> > here is questionable because this is not the only place where the PCI
-> > device power state can change.
-> >
-> > It would be better to catch this in pci_set_low_power_state() IMO.
->
-> I'm not sure if we should prevent power state transition for the users
-> that explicitly want to transition.
->
-> Also, the device state can potentially be corrupted because of the errors=
-,
-> so we'd probably want to avoid pci_save_state() as well, which is what
-> I attempted here.
 
-But it's not what the changelog is saying.
 
-If you want to avoid pci_save_state(), there are also other places
-when it is called and then you also may want to avoid the transition
-because if the state is not saved, it won't be possible to restore it.
+在 2025/3/17 14:02, Shuai Xue 写道:
+> 
+> 
+> 在 2025/3/3 12:33, Shuai Xue 写道:
+>>
+>>
+>> 在 2025/3/3 11:43, Sathyanarayanan Kuppuswamy 写道:
+>>>
+>>> On 2/16/25 6:42 PM, Shuai Xue wrote:
+>>>> The AER driver has historically avoided reading the configuration space of
+>>>> an endpoint or RCiEP that reported a fatal error, considering the link to
+>>>> that device unreliable. Consequently, when a fatal error occurs, the AER
+>>>> and DPC drivers do not report specific error types, resulting in logs like:
+>>>>
+>>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>>    nvme nvme0: frozen state error detected, reset controller
+>>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>>
+>>>> AER status registers are sticky and Write-1-to-clear. If the link recovered
+>>>> after hot reset, we can still safely access AER status of the error device.
+>>>> In such case, report fatal errors which helps to figure out the error root
+>>>> case.
+>>>>
+>>>> After this patch, the logs like:
+>>>>
+>>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>>    nvme nvme0: frozen state error detected, reset controller
+>>>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>>>>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>>>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>
+>>> IMO, above info about device error details is more of a debug info. Since the
+>>> main use of this info use to understand more details about the recovered
+>>> DPC error. So I think is better to print with debug tag. Lets see what others
+>>> think.
+>>>
+>>> Code wise, looks fine to me.
+>>
+>> thanks, looking forward to more feedback.
+>>>
+>>>
+> 
+> Hi, all,
+> 
+> Gentle ping.
+> 
+> Thanks.
+> Shuai
+> 
+
+
+Hi, all,
+  
+Gentle ping.
+  
+Thanks.
+Shuai
 
