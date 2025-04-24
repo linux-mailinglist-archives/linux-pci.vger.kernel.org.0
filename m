@@ -1,225 +1,319 @@
-Return-Path: <linux-pci+bounces-26652-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26653-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D268BA9A056
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 07:10:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC8FA9A05A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 07:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE67B1946871
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:10:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4593194630D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 05:11:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2573319ABC3;
-	Thu, 24 Apr 2025 05:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 868A11BD9C8;
+	Thu, 24 Apr 2025 05:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eRefqykN"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Hht326GN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B20C46B8;
-	Thu, 24 Apr 2025 05:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A9D19ABC3
+	for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 05:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745471439; cv=none; b=bT+ypgr8qBa1gfFyBam3ShMY/hCt6mI1LkkYo8aYJc7uoODUt3DkTI9/3XrybABbwwOeQPOXdyHROj9aPpxJOCYqNECIk7nE5ZyMIh108QlYFCF4Nafreves4MS/UR1e7GJHoIykOuhm8buXGWC2Pkh+H+f8Kl/LP+cGHvRC+7E=
+	t=1745471498; cv=none; b=e5f0o0Dj9hakx1cHwfaeNRWP3eGXj4PvvTbtxhEt65o6m29VokuGKn43+vLQwLi85EIvOojhGYbFScDqwhqsAWRPURvcdzaW+ChQMvaYzGTcJsQrzNiEUzE4Q+usr/3tiFXBh7luvOxScF+zVAyq/03VgQhoGsy96GiR6l+Ikm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745471439; c=relaxed/simple;
-	bh=aUibNOi4wIJ1AXiiBvpHR5w08ZL2ufaUMo0mWDBPf0M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mtNk70mSVEbUib7ey8ZyCvJe/lhNtbGawyzaIbDadJY9AV9RkLtk0I/6E//lfTTHAhwfOJecdf8mNlAPbtUX7K6dOAqSdPppPrQmiptTjJ+AOYNPvp68SApTTo5N8babDFBQDKXhYzv1kKzcoD1czmQlpibfp5u4kPNsNS3Rl3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eRefqykN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F7Ik010247;
-	Thu, 24 Apr 2025 05:10:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	s=arc-20240116; t=1745471498; c=relaxed/simple;
+	bh=Ri/NiDodk6HGL3QDS5RHMwUZqLMNgjaQ59NxwIFu/gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VKueDsthVYhsLgAsRAAQoK5NQj3HrEoxGUg/LkOgApSoNHCvZveY3syLrX2tqhrqBWN46GqNzikojJDBP06VsmOyjrHw+1MAXt744HXAyDtlk4lj35GGsjf0ZEwYljc9ckpT4DRA6oCdR0R5ct+RdKIrvhtK0L5Os67zIJnCCic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Hht326GN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FA06007649
+	for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 05:11:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	y6uklshMzdSMHuZH+J6BxTcK8hg8qxnv2flF+CFCLBM=; b=eRefqykN2CiEnTK6
-	J4q6Mum6vCsAlOorafqAD1Ti3iLAZFgVclfPJIAL7QlYIrWWHw6+O2QMzgk/ncUK
-	Cs9g5Eb64kpXqaj0FpGCOcBMBjwLRnWY4Q6kMJ45wGjmIdTO2L62n60I0Aib9AE6
-	CZtI7Tq0iJw8+RxUtjyZOdNCAXQGuVOLXvNa4toZ7kqxI5UiNFN3o9HYzsS62/8e
-	S+i1iNUyoqklQyRWP5hV7YKQWDfhA/727su8Mr++mciXyzxVjdiuwNCD8APs0f+y
-	Q3ObRywY14yEeYVb6lR9b3cLAxOr82Hdqra9fDmGUnYiB+dv0YHzz5qKSA4wg0kX
-	Bx/YEQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3m8j1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:10:27 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O5AQik000529
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:10:26 GMT
-Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
- 2025 22:10:22 -0700
-Message-ID: <854259d9-c9e6-4b25-8787-0999099bbf4d@quicinc.com>
-Date: Thu, 24 Apr 2025 13:09:59 +0800
+	1g/H3A2mjEOxfLNFKxbSpvE+IXNCVSXHyxhD/lc8Qpo=; b=Hht326GNTGeNIhfc
+	0bf6tRk7BA8fhuYrp8hqO63xWhHH3qGlL16PFWaRNiRkFlWnsuFgmMYT+DsPyKXf
+	RNJ3+0GKm+plbaYw/hnAbuGA0DkDtcdWLS7PVXl2imeqlXKWz5rAl4Gh0PZeMPh8
+	2AeSCzyI7O8XbOib+gLfE+NFRw02kARZEb4HGjTxj4sybrmZAo/F0iACblYP+YD1
+	BacGfbstmaMabLkAJJ+uKx1NJz8PhDYyk0bSC6iAG7+nC4JG0cTJ9g7dMyv0rVBm
+	p8fY3M2jWkrebL0+YqJ5+sw64ILJYq9qjF4OcwwDyOSqgYVnOmZMOShUAVNAisiS
+	N5+UjA==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1m9fn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 05:11:34 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so613692a91.3
+        for <linux-pci@vger.kernel.org>; Wed, 23 Apr 2025 22:11:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745471493; x=1746076293;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1g/H3A2mjEOxfLNFKxbSpvE+IXNCVSXHyxhD/lc8Qpo=;
+        b=Sj6Yx5w2T6eHYmaSnt6MTYTODGzH7jQVrAKUqQhNtQ7DARp459XMhBMlogZFSade+3
+         B9DgiNmGCTG5nBXxs2aamoXYzXyz7OMOnH4k/KS2DHMlNblTvXCyA4MGoKtS4AWpBSiQ
+         KoLZd2QLfYVK5m20Pz/7UfWOhKaew16SG7RBrfqhYHo2LCA1lF5wgI5K/l7DJA/2UMYP
+         HqBzh/e3BQT0EqsCGaSzc/TdcpU4wxG5ZJJFaCKapkx0N4RFoe0AnmyntYs5FYmqjz6y
+         k8IEZEFMsyOxeG0sC9sS553sjYPdqaq3uZK0y+btR1J88nxauK11wBToiO9/x5zdBp79
+         FNQA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8vP2Pi/7iOM2NajJNjEfNOICPEkGCxAOBfWce/3bfF2wN72UiNJNFyCWcJkWNPpj3lmgs+eWjt3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVJD9MeMYuCiyLFo0b/QCuxE/D7CwBUETTpdVB1JZYbRlmyQlI
+	6RisZMHCM4F5wOt4K0ElmJbBlRGpm7ncNgrR0KMzfmqvvDhEVQipC2aDbhqLQHztXgfTw/HtVwg
+	DEnzv4MWQrrjfteZnhDJPj/1Lc1c5dg97N0ljPYMbyv9Q4LJTyvsAAnqGQ6w=
+X-Gm-Gg: ASbGncuglzAQfrKDxFvKgcIdj6AmYBx0VwgMD/KtmPc0Sf5otkreyV78hTj+hZ7XJxc
+	UO+DDCG37vw/J0bHgQjl8OzIDz4b4iSf5GV9UsNon7vszl8uytTed/e4RFp3jo4CC2DYR2my0db
+	sO6jex9ppSkS7eX1lcovSdqRwn3HwGkqxSvB3fc2H9NRrtbfr7MZ6V66GVljhOfzYxmxxcO6GPv
+	ChcJfdh1qpEsbrRhh2pv9rqqojworP+2rXZ0HGwQDTHTl49maaPDrhjWdLYCpd9JK3w4Gw2yZOB
+	xrsvEzrm3HURveVZ6KHNkXy3XYPRBkMCiYBrvSGmqw==
+X-Received: by 2002:a17:90b:2741:b0:301:98fc:9b51 with SMTP id 98e67ed59e1d1-309ed24bd2cmr1791964a91.5.1745471493253;
+        Wed, 23 Apr 2025 22:11:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5SApp51kUWo79y5fXsGYF6r+exe1bnqAhOk9GnTlMlKAb5gSFGBzPaTpNXkU2mQHZEv7Q9g==
+X-Received: by 2002:a17:90b:2741:b0:301:98fc:9b51 with SMTP id 98e67ed59e1d1-309ed24bd2cmr1791931a91.5.1745471492726;
+        Wed, 23 Apr 2025 22:11:32 -0700 (PDT)
+Received: from [10.92.199.136] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef097d56sm320932a91.29.2025.04.23.22.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 22:11:32 -0700 (PDT)
+Message-ID: <31f071d7-db56-f032-749e-92bc387238b8@oss.qualcomm.com>
+Date: Thu, 24 Apr 2025 10:41:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-To: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>,
-        Niklas Cassel
-	<cassel@kernel.org>
-CC: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <krishna.chundru@oss.qualcomm.com>,
-        <quic_vbadigan@quicinc.com>, <quic_mrana@quicinc.com>,
-        <quic_cang@quicinc.com>
-References: <20250422103623.462277-1-quic_wenbyao@quicinc.com>
- <aAjqEUifc-W-MmJy@ryzen> <d862f711-428c-4e3a-b80d-e45d14e7b781@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 5/5] PCI: qcom: Add support for resetting the slot due
+ to link down event
 Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <d862f711-428c-4e3a-b80d-e45d14e7b781@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 74Rsdrto-fSODPcKzVf1pO7S-VLDt8Xi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAzMCBTYWx0ZWRfX7PP8Yfr33IBz +t4FKfkbJvE9NcGu/gnOrok+a1AQNUQjnSZ06HOtPromcgx8YVeed5IINrceyIEybe5rCw+A3M5 m45afVdpkosWmY93mp+yDqsb5dMP+MoBaii24VYkXnPmmNEhmxnvqf3wW8ZdyUYe23LapfRymNt
- PCSc8E9Myg+GdhnKUwqdnovHsRk+IeQNub0bi+jl2YSLc8hdHDHBdE/sXWLNRG88ZSzaZ460fxk XIbNEAEfFkUGPYauiRdVafk5V3sPgA3YLwBDGiLztsqfLv1IP72oXcfLS66TfWYFGfsbYOPiZmc 59za+7omOmQYA9uPSbLMMcg+5MnjPkKEMMUoyGj9qYLLpx1b6Py6pFVijYZ8nCHFwx9J5o+02t6
- 06TK2h1r0Fa+Hevblu1zDc3r3lcYx94kRr7qEqFH+18xOAKUDTo1d9j3kQvsTnvrMu5T0ClA
-X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=6809c7c3 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=tzRSLQwXOsdqKkk70FoA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 74Rsdrto-fSODPcKzVf1pO7S-VLDt8Xi
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+        cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+References: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
+ <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
+ <f32b2ece-f7ed-45ab-2867-9d276b88cf62@oss.qualcomm.com>
+ <hmyeha6ygi6mxzsdivo2z5ccpvl5l2xietr3axxpl4zwojiavo@wuli4qazg446>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <hmyeha6ygi6mxzsdivo2z5ccpvl5l2xietr3axxpl4zwojiavo@wuli4qazg446>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: BhcqSRtUFueWICHQniIt2A67S9sRFWUD
+X-Proofpoint-ORIG-GUID: BhcqSRtUFueWICHQniIt2A67S9sRFWUD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAzMSBTYWx0ZWRfX6nW0EqdGnAq5 /5Yaxfgdq9fSLCTp5voI4EOBn1ZAK1lFQnNcP22Leuxods6rqxmCRkX8lasZ/qiQbGhGJWP3lsS lZ5LEb66O+Vk88tDCk1NtKKOwtb/5ja1hpiB5u8qSVv0UXzca+MtcZ2K5ZklSpKxh7f5kiI8CKQ
+ HSKnFbguJSMTiX2uKIXFft914woLokxdNf/aorYti8JsPIK9HyCn7nnOBRWBWz2nSi+RCwnfzle B6pyKl+cHolRb48dQYjdoad8+DXNTJaWboQQV/u8s7abUs3tEDXtmhkNjBvaSesMW/CLnmiRyDG wQsXuj3ZFkmlHaqTYUraqo6Q2SUdYUpXTI8Eh4RcrEu3DYF+fVwK68QHJFE3/YQW45bI8FMUhcD
+ tFof6XWaWsTRyOx8BKk6PLcN3B6OtZ+Mv4a4HMG7Shw9kA1mIQwcaJNBbbKlKhkSR/IUNO8v
+X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=6809c806 cx=c_pps a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=HZEN96OWHqwnsOiu:21 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=lE8Iksk3R2_BZhG9ioYA:9 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 clxscore=1011 bulkscore=0 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240030
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240031
 
 
-On 4/24/2025 10:49 AM, Wenbin Yao (Consultant) wrote:
-> On 4/23/2025 9:24 PM, Niklas Cassel wrote:
->> On Tue, Apr 22, 2025 at 06:36:23PM +0800, Wenbin Yao wrote:
->>> As per DWC PCIe registers description 4.30a, section 1.13.43, 
->>> NUM_OF_LANES
->>> named as PORT_LOGIC_LINK_WIDTH in PCIe DWC driver, is referred to as 
->>> the
->>> "Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express
->>> Base 3.0 Specification, revision 1.0. This section explains the 
->>> conditions
->>> need be satisfied for entering Polling.Configuration:
->>>
->>> "Next state is Polling.Configuration after at least 1024 TS1 Ordered 
->>> Sets
->>> were transmitted, and all Lanes that detected a Receiver during Detect
->>> receive eight consecutive training sequences.
->>>
->>> Otherwise, after a 24 ms timeout the next state is:
->>> Polling.Configuration if
->>> (i) Any Lane, which detected a Receiver during Detect, received eight
->>> consecutive training sequences and a minimum of 1024 TS1 Ordered 
->>> Sets are
->>> transmitted after receiving one TS1 or TS2 Ordered Set.
->>> And
->>> (ii) At least a predetermined set of Lanes that detected a Receiver 
->>> during
->>> Detect have detected an exit from Electrical Idle at least once since
->>> entering Polling.Active.
->>>
->>> Note: This may prevent one or more bad Receivers or Transmitters from
->>> holding up a valid Link from being configured, and allow for additional
->>> training in Polling.Configuration. The exact set of predetermined 
->>> Lanes is
->>> implementation specific.
->>>
->>> Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered Sets
->>> should have detected an exit from Electrical Idle at least once since
->>> entering Polling.Active."
->>>
->>> In a PCIe link that supports multiple lanes, if 
->>> PORT_LOGIC_LINK_WIDTH is
->>> set to lane width hardware supports, all lanes that detect a receiver
->>> during the Detect phase must receive eight consecutive training 
->>> sequences.
->>> Otherwise, the LTSSM cannot enter Polling.Configuration and link 
->>> training
->>> will fail.
->>>
->>> Therefore, always set PORT_LOGIC_LINK_WIDTH to 1, regardless of the 
->>> number
->>> of lanes the port actually supports, to make linking up more robust. 
->>> This
->>> setting will not affect the intended link width if all lanes are
->>> functional. Additionally, the link can still be established with at 
->>> least
->>> one lane if other lanes are faulty.
->>>
->>> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
->>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
->>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
->>> ---
->>> Changes in v2:
->>> - Reword commit message.
->>> - Link to v1: 
->>> https://lore.kernel.org/all/1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com/
->>>
->>>   drivers/pci/controller/dwc/pcie-designware.c | 5 +----
->>>   1 file changed, 1 insertion(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
->>> b/drivers/pci/controller/dwc/pcie-designware.c
->>> index 97d76d3dc..be348b341 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>> @@ -797,22 +797,19 @@ static void 
->>> dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->>>       /* Set link width speed control register */
->>>       lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->>>       lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
->>> +    lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->>>       switch (num_lanes) {
->>>       case 1:
->>>           plc |= PORT_LINK_MODE_1_LANES;
->>> -        lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->>>           break;
->>>       case 2:
->>>           plc |= PORT_LINK_MODE_2_LANES;
->>> -        lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
->>>           break;
->>>       case 4:
->>>           plc |= PORT_LINK_MODE_4_LANES;
->>> -        lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
->>>           break;
->>>       case 8:
->>>           plc |= PORT_LINK_MODE_8_LANES;
->>> -        lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
->>>           break;
->>>       default:
->>>           dev_err(pci->dev, "num-lanes %u: invalid value\n", 
->>> num_lanes);
->>> -- 
->>> 2.34.1
->>>
->> I still see the link to my EP (which also have this patch) using all
->> four lanes according to lspci, so:
+
+On 4/24/2025 10:30 AM, Manivannan Sadhasivam wrote:
+> On Fri, Apr 18, 2025 at 08:11:47AM +0530, Krishna Chaitanya Chundru wrote:
 >>
->> Tested-by: Niklas Cassel <cassel@kernel.org>
-Thank you, Niklas, for kindly testing this patch and providing feedback.
-Wenbin seems to have misunderstood you; sorry for this.
->
-> This setting will not affect the intended link width if all lanes are
-> functional. Additionally, the link can still be established with at least
-> one lane if other lanes are faulty.
->
--- 
-With best wishes
-Qiang Yu
+>>
+>> On 4/17/2025 10:46 PM, Manivannan Sadhasivam via B4 Relay wrote:
+>>> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>
+>>> The PCIe link can go down under circumstances such as the device firmware
+>>> crash, link instability, etc... When that happens, the PCIe slot needs to
+>>> be reset to make it operational again. Currently, the driver is not
+>>> handling the link down event, due to which the users have to restart the
+>>> machine to make PCIe link operational again. So fix it by detecting the
+>>> link down event and resetting the slot.
+>>>
+>>> Since the Qcom PCIe controllers report the link down event through the
+>>> 'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
+>>> bit in PARF_INT_ALL_MASK register.
+>>>
+>>> Then in the case of the event, call pci_host_handle_link_down() API
+>>> in the handler to let the PCI core handle the link down condition.
+>>>
+>>> The API will internally call, 'pci_host_bridge::reset_slot()' callback to
+>>> reset the slot in a platform specific way. So implement the callback to
+>>> reset the slot by first resetting the PCIe core, followed by reinitializing
+>>> the resources and then finally starting the link again.
+>>>
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> ---
+>>>    drivers/pci/controller/dwc/Kconfig     |  1 +
+>>>    drivers/pci/controller/dwc/pcie-qcom.c | 90 +++++++++++++++++++++++++++++++++-
+>>>    2 files changed, 89 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>>> index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..ce04ee6fbd99cbcce5d2f3a75ebd72a17070b7b7 100644
+>>> --- a/drivers/pci/controller/dwc/Kconfig
+>>> +++ b/drivers/pci/controller/dwc/Kconfig
+>>> @@ -296,6 +296,7 @@ config PCIE_QCOM
+>>>    	select PCIE_DW_HOST
+>>>    	select CRC8
+>>>    	select PCIE_QCOM_COMMON
+>>> +	select PCI_HOST_COMMON
+>>>    	help
+>>>    	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
+>>>    	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> index dc98ae63362db0422384b1879a2b9a7dc564d091..6b18a2775e7fcde1d634b3f58327ecc7d028e4ec 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> @@ -34,6 +34,7 @@
+>>>    #include <linux/units.h>
+>>>    #include "../../pci.h"
+>>> +#include "../pci-host-common.h"
+>>>    #include "pcie-designware.h"
+>>>    #include "pcie-qcom-common.h"
+>>> @@ -55,6 +56,7 @@
+>>>    #define PARF_INT_ALL_STATUS			0x224
+>>>    #define PARF_INT_ALL_CLEAR			0x228
+>>>    #define PARF_INT_ALL_MASK			0x22c
+>>> +#define PARF_STATUS				0x230
+>>>    #define PARF_SID_OFFSET				0x234
+>>>    #define PARF_BDF_TRANSLATE_CFG			0x24c
+>>>    #define PARF_DBI_BASE_ADDR_V2			0x350
+>>> @@ -130,8 +132,11 @@
+>>>    /* PARF_LTSSM register fields */
+>>>    #define LTSSM_EN				BIT(8)
+>>> +#define SW_CLEAR_FLUSH_MODE			BIT(10)
+>>> +#define FLUSH_MODE				BIT(11)
+>>>    /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+>>> +#define PARF_INT_ALL_LINK_DOWN			BIT(1)
+>>>    #define PARF_INT_ALL_LINK_UP			BIT(13)
+>>>    #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
+>>> @@ -145,6 +150,9 @@
+>>>    /* PARF_BDF_TO_SID_CFG fields */
+>>>    #define BDF_TO_SID_BYPASS			BIT(0)
+>>> +/* PARF_STATUS fields */
+>>> +#define FLUSH_COMPLETED				BIT(8)
+>>> +
+>>>    /* ELBI_SYS_CTRL register fields */
+>>>    #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
+>>> @@ -169,6 +177,7 @@
+>>>    						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
+>>>    #define PERST_DELAY_US				1000
+>>> +#define FLUSH_TIMEOUT_US			100
+>>>    #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
+>>> @@ -274,11 +283,14 @@ struct qcom_pcie {
+>>>    	struct icc_path *icc_cpu;
+>>>    	const struct qcom_pcie_cfg *cfg;
+>>>    	struct dentry *debugfs;
+>>> +	int global_irq;
+>>>    	bool suspended;
+>>>    	bool use_pm_opp;
+>>>    };
+>>>    #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+>>> +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
+>>> +				  struct pci_dev *pdev);
+>>>    static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+>>>    {
+>>> @@ -1263,6 +1275,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+>>>    			goto err_assert_reset;
+>>>    	}
+>>> +	pp->bridge->reset_slot = qcom_pcie_reset_slot;
+>>> +
+>>>    	return 0;
+>>>    err_assert_reset:
+>>> @@ -1300,6 +1314,73 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+>>>    	.post_init	= qcom_pcie_host_post_init,
+>>>    };
+>>> +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
+>>> +				  struct pci_dev *pdev)
+>>> +{
+>>> +	struct pci_bus *bus = bridge->bus;
+>>> +	struct dw_pcie_rp *pp = bus->sysdata;
+>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>>> +	struct device *dev = pcie->pci->dev;
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	/* Wait for the pending transactions to be completed */
+>>> +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
+>>> +					 val & FLUSH_COMPLETED, 10,
+>>> +					 FLUSH_TIMEOUT_US);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Flush completion failed: %d\n", ret);
+>>> +		goto err_host_deinit;
+>>> +	}
+>>> +
+>>> +	/* Clear the FLUSH_MODE to allow the core to be reset */
+>>> +	val = readl(pcie->parf + PARF_LTSSM);
+>>> +	val |= SW_CLEAR_FLUSH_MODE;
+>>> +	writel(val, pcie->parf + PARF_LTSSM);
+>>> +
+>>> +	/* Wait for the FLUSH_MODE to clear */
+>>> +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
+>>> +					 !(val & FLUSH_MODE), 10,
+>>> +					 FLUSH_TIMEOUT_US);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Flush mode clear failed: %d\n", ret);
+>>> +		goto err_host_deinit;
+>>> +	}
+>>> +
+>>> +	qcom_pcie_host_deinit(pp);
+>>> +
+>>> +	ret = qcom_pcie_host_init(pp);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Host init failed\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = dw_pcie_setup_rc(pp);
+>>> +	if (ret)
+>>> +		goto err_host_deinit;
+>>> +
+>>> +	/*
+>>> +	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
+>>> +	 * non-sticky.
+>>> +	 */
+>>> +	if (pcie->global_irq)
+>>> +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
+>>> +			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
+>> do we need to enable linkup again here, since all the devices are
+>> enumerated previously, the linkup irq will do a rescan again which is
+>> not needed.
+> 
+> Right. I was trying to keep the irq enablement on par with probe(), but LINK_UP
+> is strictly not needed. I will drop it.
+> 
+>> Instead of linkup we update icc & opp bandwidths after
+>> dw_pcie_wait_for_link() in the below.
+>>
+> 
+> Why do we need to update ICC and OPP?
+After link retrain, if the link data rate has reduced due to some
+electrical issue or some other reason we may need to update the icc and
+opp votings here.
 
+- Krishna Chaitanya.
+> 
+> - Mani
+> 
 
