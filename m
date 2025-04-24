@@ -1,244 +1,208 @@
-Return-Path: <linux-pci+bounces-26708-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26709-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF09AA9B4C7
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 18:58:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50FEAA9B4FE
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 19:10:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4314C9A7482
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 16:58:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C5F0174501
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 17:10:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC0A28DEF9;
-	Thu, 24 Apr 2025 16:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6E028150B;
+	Thu, 24 Apr 2025 17:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUw/iDT+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCOcxplP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9290D28DEE0;
-	Thu, 24 Apr 2025 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621FE28469B
+	for <linux-pci@vger.kernel.org>; Thu, 24 Apr 2025 17:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513873; cv=none; b=QrwAKvC0dfGLOx7BQw/xlMUcLKn0hfl8Gdcw+wUF2Rrp+/A0snFM6LTWo8GRh8zA9LXhzm6cgot+YMzzjrVfNkCepIWm+C5fEzevTt8dsevCZd35GhNNJ4m6deD3R0UVZUOrvRddg7YJKOY+Yz/iue+Dbv2FPCL1awoUq/sdt9U=
+	t=1745514637; cv=none; b=S2Ao2RZruXVdQ1tgaQs3mHdXe4wPGzFg7cyC4/DMY7ptTDYMCic1MLgfljEXSH9Nf1p6Hl/lbnZPCjSQ2WnxXl18RrOh26z0Ewd9pvg7+4wEHYyrW14VXi2IfUT8upxhXJTZ1DVSbTLA/3X4q16Uq21rX2Mgq1/bcQPncrDRJ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513873; c=relaxed/simple;
-	bh=d79kcU9GfFoXHHLFwRO0mS3MDxIZKtB6Ybwg07CqBHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkQJnMYMbXQ0n5ivz0p+55HNvAtaiV9lgdiSUdQuSEQdg4GDhORN7HVN1U5pj5pOtL1j02j1ZLe7ALCOLxCNFHM5LRdqlhsbSIDw88zlwQou6Dz3J01nU0DKv1hQjWRGMMToNAYEBiEH0yPjbd9DbkRIbDEF+OTc5UkpjMTIvPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUw/iDT+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA94C4CEE8;
-	Thu, 24 Apr 2025 16:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745513872;
-	bh=d79kcU9GfFoXHHLFwRO0mS3MDxIZKtB6Ybwg07CqBHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nUw/iDT+6gw5mOAM5j6Vw9sQKNjGnCcO2p1tds/nPvQxhm5QqiPeva6vHDs9PQ9h4
-	 QXE/+JHx5hp33jrRTeNto+yvVZlOdnwBVexbS0ps9/BcZu6UB2BURU7jWrCktVt3Yx
-	 vWe5TrzysIRNgwm+Zq9fP1WcPAu4YCQJSuiY5lpjOGRBMXds2/kxSK0dg9TJOgUreR
-	 H95fBBiMKtPoQ7U/Uhv2WpPXHLgqH5eydc9N4p0cpWZm/YIssotgOIeG/9vUMq0f0T
-	 /JOaV1ftzzrlpbq9qJkcazC7BQW7c8AwUEgTxyCdNBx/w0mGJWM9fQGq8FVtdTULzF
-	 MqmPC9KUeSl1Q==
-Date: Thu, 24 Apr 2025 17:57:43 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Message-ID: <20250424165743.GJ3042781@horms.kernel.org>
-References: <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1745514637; c=relaxed/simple;
+	bh=YrAYibUJa0SUHPQXdszaHtgxiCsHJW+9BMOsjFdR0Os=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=uDo73W4kQ3h6pioTgmQlgm9BMVDJZwhFzmDI53chYQkWD+CHaxsGI4hTjtIK3J6WjCnJLhxPxtQnoA5h0DBUi7XjnTSEhNdtfE9eGkMvxwCRW1llQA4Z69CJllGmFgkKzO4Ciaz/97Zd8YWRyZa/FmXmpFx5C4TVhsqcfWu+mbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCOcxplP; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745514635; x=1777050635;
+  h=date:from:to:cc:subject:message-id;
+  bh=YrAYibUJa0SUHPQXdszaHtgxiCsHJW+9BMOsjFdR0Os=;
+  b=TCOcxplPKXgiEktRl351eImk4mMxHOfO3l9ZqlxUuAkgO19Z8M31Yq0s
+   JX+6k86yxR9SQIKDy8FUIxt7IwocfnPzpOf+p/fSgQFdfMlBPccMg2sX3
+   tCdQ/eOH/W47S+6tmlcl2bd7Ulu3cgYlcPMMypL/IlBR2rm9C28CkUUgw
+   10GK+FCn9v8A3Qup+u0QHvRG+FiGAauGkH64wYRZD5uuWkizZ/A15su64
+   Y5nPoOLUShKp8h1h1Q6lZU7rH6/mIekfe0kjz+r9p8C7/B2f3LDO8geqx
+   xUYm0ApoBsEsGzvzHmQEVvMHaaVFXf1zxeXpnHf4P8OXQI4IcOG/aDwPs
+   Q==;
+X-CSE-ConnectionGUID: zwb5l/+XTECXidMLg+rslA==
+X-CSE-MsgGUID: 2HkiL904TP2XgJPxU0VYmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57809774"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="57809774"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 10:10:35 -0700
+X-CSE-ConnectionGUID: UL0xrbvJSlOx6lCrQCE7nQ==
+X-CSE-MsgGUID: 9tMfrgWjRGG/epLEfUvIQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="133200132"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 24 Apr 2025 10:10:34 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u805n-0004O2-0W;
+	Thu, 24 Apr 2025 17:10:31 +0000
+Date: Fri, 25 Apr 2025 01:09:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ b981b25ce67bbc0e527499fab3dd6f51a4b4e4fd
+Message-ID: <202504250130.u083pnoo-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-On Wed, Apr 16, 2025 at 08:36:21AM -0700, Shradha Gupta wrote:
-> Currently, the MANA driver allocates pci vector statically based on
-> MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> up allocating more vectors than it needs.
-> This is because, by this time we do not have a HW channel and do not know
-> how many IRQs should be allocated.
-> To avoid this, we allocate 1 IRQ vector during the creation of HWC and
-> after getting the value supported by hardware, dynamically add the
-> remaining vectors.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: b981b25ce67bbc0e527499fab3dd6f51a4b4e4fd  Merge branch 'pci/misc'
 
-Hi Shradha,
+elapsed time: 1459m
 
-Some minor nits from my side.
+configs tested: 115
+configs skipped: 2
 
-...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250424    gcc-8.5.0
+arc                   randconfig-002-20250424    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                       imx_v4_v5_defconfig    clang-21
+arm                   randconfig-001-20250424    gcc-7.5.0
+arm                   randconfig-002-20250424    gcc-7.5.0
+arm                   randconfig-003-20250424    clang-21
+arm                   randconfig-004-20250424    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250424    clang-21
+arm64                 randconfig-002-20250424    gcc-8.5.0
+arm64                 randconfig-003-20250424    clang-21
+arm64                 randconfig-004-20250424    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250424    gcc-12.4.0
+csky                  randconfig-002-20250424    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250424    clang-21
+hexagon               randconfig-002-20250424    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250424    gcc-12
+i386        buildonly-randconfig-002-20250424    clang-20
+i386        buildonly-randconfig-003-20250424    clang-20
+i386        buildonly-randconfig-004-20250424    clang-20
+i386        buildonly-randconfig-005-20250424    gcc-12
+i386        buildonly-randconfig-006-20250424    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250424    gcc-14.2.0
+loongarch             randconfig-002-20250424    gcc-12.4.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                            alldefconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250424    gcc-10.5.0
+nios2                 randconfig-002-20250424    gcc-10.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250424    gcc-9.3.0
+parisc                randconfig-002-20250424    gcc-7.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc                       ppc64_defconfig    clang-21
+powerpc               randconfig-001-20250424    clang-21
+powerpc               randconfig-002-20250424    clang-17
+powerpc               randconfig-003-20250424    clang-21
+powerpc64             randconfig-001-20250424    clang-21
+powerpc64             randconfig-002-20250424    clang-21
+powerpc64             randconfig-003-20250424    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250424    clang-21
+riscv                 randconfig-002-20250424    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250424    gcc-9.3.0
+s390                  randconfig-002-20250424    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                          kfr2r09_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250424    gcc-12.4.0
+sh                    randconfig-002-20250424    gcc-6.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250424    gcc-10.3.0
+sparc                 randconfig-002-20250424    gcc-11.5.0
+sparc64               randconfig-001-20250424    gcc-9.3.0
+sparc64               randconfig-002-20250424    gcc-7.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250424    clang-21
+um                    randconfig-002-20250424    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250424    gcc-12
+x86_64      buildonly-randconfig-002-20250424    clang-20
+x86_64      buildonly-randconfig-003-20250424    gcc-12
+x86_64      buildonly-randconfig-004-20250424    clang-20
+x86_64      buildonly-randconfig-005-20250424    clang-20
+x86_64      buildonly-randconfig-006-20250424    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250424    gcc-14.2.0
+xtensa                randconfig-002-20250424    gcc-14.2.0
 
-...
-
-> @@ -465,9 +475,10 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
->  	struct gdma_irq_context *gic;
->  	struct gdma_context *gc;
->  	unsigned int msi_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
-> +	unsigned long flags, flag_irq;
->  	struct device *dev;
-> -	int err = 0;
-> +	int err = 0, count;
-
-As this is Networking code, please preserve the arrangement of local
-variables in reverse xmas tree order - longest line to shortest.
-
-Edward Cree's tool can be useful in this area:
-https://github.com/ecree-solarflare/xmastree
-
->  
->  	gc = gd->gdma_context;
->  	dev = gc->dev;
-> @@ -482,7 +493,22 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
->  	}
->  
->  	queue->eq.msix_index = msi_index;
-> -	gic = &gc->irq_contexts[msi_index];
-> +
-> +	/* get the msi_index value from the list*/
-> +	count = 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count == msi_index) {
-> +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-
-Please consider line wrapping to 80 columns or less, as is still preferred
-in Networking code.
-
-Likewise elsewhere in this patch.
-
-checkpatch.pl --max-line-length=80
-can be helpful here.
-
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-> +	if (!gic)
-> +		return -1;
->  
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_add_rcu(&queue->entry, &gic->eq_list);
-> @@ -497,8 +523,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
->  	struct gdma_irq_context *gic;
->  	struct gdma_context *gc;
->  	unsigned int msix_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
-> +	unsigned long flags, flag_irq;
->  	struct gdma_queue *eq;
-> +	int count;
-
-Reverse xmas tree here too.
-
->  
->  	gc = gd->gdma_context;
->  
-> @@ -507,7 +535,22 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
->  	if (WARN_ON(msix_index >= gc->num_msix_usable))
->  		return;
->  
-> -	gic = &gc->irq_contexts[msix_index];
-> +	/* get the msi_index value from the list*/
-> +	count = 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count == msix_index) {
-> +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-
-Does gic need to be initialised to NULL before the list_for_each loop
-to ensure that it is always initialised here?
-
-Flagged by Clang 20.1.2 KCFLAGS=-Wsometimes-uninitialized builds, and Smatch
-
-> +	if (!gic)
-> +		return;
-> +
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
->  		if (queue == eq) {
-
-...
-
-> @@ -1317,29 +1372,92 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
->  	return 0;
->  }
->  
-> -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
->  {
->  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> -	unsigned int max_queues_per_port;
->  	struct gdma_irq_context *gic;
-> -	unsigned int max_irqs, cpu;
-> -	int start_irq_index = 1;
-> -	int nvec, *irqs, irq;
-> +	int *irqs, irq, skip_first_cpu = 0;
-> +	unsigned long flags;
->  	int err, i = 0, j;
-
-Reverse xmas tree here too.
-
->  
->  	cpus_read_lock();
-> -	max_queues_per_port = num_online_cpus();
-> -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> -		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> +	if (!irqs) {
-> +		err = -ENOMEM;
-> +		goto free_irq_vector;
-> +	}
-
-...
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
