@@ -1,236 +1,135 @@
-Return-Path: <linux-pci+bounces-26661-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81F57A9A26E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 08:39:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 047B6A9A2A8
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 08:55:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D864217A32E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 06:39:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DBC11945C2A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Apr 2025 06:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60C1B1DD9AB;
-	Thu, 24 Apr 2025 06:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30AFA1E0E0C;
+	Thu, 24 Apr 2025 06:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MfKywKDD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBMG74Uf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D471B4F1F;
-	Thu, 24 Apr 2025 06:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745476750; cv=fail; b=lOOJz9SAFZ83VHXZkonTYuMOn/qRMNRC9EErD8oyYVj53Pf7o+TW0+X4KO5KFUEOjA8k4PjNfwtd1KesUW7EjKpdqiAE3ioGVG2DOI01hJNFXTkWbb2Wp6KGJcF5ST+Jpl+BTDF+ZOOMk5qqu6Egs6S+SsZbZlZSRD50OKll0g0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745476750; c=relaxed/simple;
-	bh=YQaZBg/njmOlfnRoRgtPvYtCmDRlTniqf0H10FAurcU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=A8+xkUtQ0M2Kj2S5Wu99XIn7tmo9qmTpVxfA/qJarf/E/OGpARZkU5hWt/eU6w1Kdbv628tcnjPtdAVxW/CIjMVWy0aE4wpNqIj5DNG14n2z6mb/P2Ri/1zA8wvstfRQNtrksY8181chzpQAanPOqNUkNALbFtnvlG1oyaisyLM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MfKywKDD; arc=fail smtp.client-ip=40.107.220.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OlZlWNtaoCDZFGamBX2zYpUGrmrU5nDjhpDn1y9cAkmrLP7LfBnB0h9PwN3+m4ofyhXJVOfBSuC5nz/133Hw0pKLkUDF3OAexGCxO/2zBXWBaieKRXdBkiarq3muP/LaKx0nBhUKPbisqEG5XFUQJro3kSNO2FIbvK39dJW1O93auu3w5tTq7BEeFxbBubhYmkm5kHDapeHC+DM4Pp60X0wUHjJukI3yc6zJ2Gzyx7eeMjSgTddrJwmQbYo3urqJKPrJdXotqEundrfWn2MNXG2omH8DM6wTrX5qSoTIR7b0c8TPKTNBNtYOgJGr4l6FjjN3ObNg1trMS55vTqPhKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cP9Jg4hOm4Mv4dbLJunui5022D+xDqbUwdlYwjd8848=;
- b=UioNGwO1OnxIt/RfYk2FUaCot7JcKEUMX2ZXXckIJGVqxAphuGZQ9qpKa9OjgFKe+mlLnjBZoAxuvcyAcDa6h5/ljEf5v98KauxaCN/429xuXh29rsxswtZawIhAeS2PzG1xZ45QwgEXha4nChP/gfci3wSGK+GNvUNNwUwrHuzJU1pU/zPxvaPzsY5Q5OVyCvR20f7QEZpohDRjXww2NU5FXk1BH9fu0eYBjVJIzO4Xk6CW+LllSCB8sNzJdr5xc0isIM8TwZ1QUgpcwkzMZWXKF29XE0tgd+m73K8mfGmuGIhN8Cj6IVxU5yfwN4I8hwBc6uf6nP5wPfoPxLsmzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cP9Jg4hOm4Mv4dbLJunui5022D+xDqbUwdlYwjd8848=;
- b=MfKywKDDCCDu+zjmTHVRCG8LbGeXkT9Kv3Gb9NWryXjrWh+G1uFT8LZWWNC3xrtgNnOvUaGSRowVCU41nfL19AFmgZUCDa+TPHvGIEVuzdkd+Zm/Nlmx1SaUFy053iB8B35EP+dGYXf67pxoS/AxLohbuPpjbvW4VyMGPfK9hoA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- DM6PR12MB4354.namprd12.prod.outlook.com (2603:10b6:5:28f::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.22; Thu, 24 Apr 2025 06:39:06 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 06:39:06 +0000
-Message-ID: <8ef5da0e-f857-43a0-8cdf-b69f52b4b93a@amd.com>
-Date: Thu, 24 Apr 2025 12:08:56 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rc] iommu: Skip PASID validation for devices without PASID
- capability
-To: Baolu Lu <baolu.lu@linux.intel.com>, Tushar Dave <tdave@nvidia.com>,
- joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- kevin.tian@intel.com, jgg@nvidia.com, yi.l.liu@intel.com,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
-References: <20250424020626.945829-1-tdave@nvidia.com>
- <a65d90f2-b6c6-4230-af52-8f676b3605c5@linux.intel.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <a65d90f2-b6c6-4230-af52-8f676b3605c5@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0236.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::20) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E280D84FAD;
+	Thu, 24 Apr 2025 06:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745477718; cv=none; b=Cahe5lCyUTmA8xhd5zNt1JeNf0V32o4SFDOWvdfXw03N6HdaPASevNCkwAl7tnkt+m9d3polvbhE2VGeFpV0Dfj7LJEgetXss6LBabVIbxNz+ju7uxrdV4r0rNTOBE4OOlUGKTqojHm+gyj0lONLhawLBesQPE23Ntm7w+U+zZw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745477718; c=relaxed/simple;
+	bh=O2NhhAxby4h2wdAG9lotXu0r8Mq+CnbUeKJ51V9RGiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7bKa4MgWy8nnA6slFa2MAFA9CV2ZUhWO4Uh4kZuTcii5MbyTHnx6tbhzWVcJY+DGNMclihNzuATN0sy7NMkBWLiUHD7tJHVgMQUgj9Ac3/GTyCy/egdRHu1XBkx3OHyRW41a8hEW6K9t3iLTBCoWU9DwVNNGnVAHHcAaShh1pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBMG74Uf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A31C4CEE3;
+	Thu, 24 Apr 2025 06:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745477717;
+	bh=O2NhhAxby4h2wdAG9lotXu0r8Mq+CnbUeKJ51V9RGiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JBMG74Uf2ayBsAyXOsGDu/Pky6ixNS1c4BDJHd4lwbNECLO5LrTPDLt1r0eNUPLy0
+	 ynut6BgnWakwJKSAx+8FK+EGFCkITnvLnelLONPxIjuG0tdC90cdj3pniHXtHm9Fxa
+	 wl45/ZTtb8BKv0iNv76Ij9tfHUWh6rTMYx7CAUO3rppkqiaLH7xleBCQXesauRPbp2
+	 FUUzSE+hvgKs3WwAsv1qWr/zBPK1T2EbndRkbynGnImy0ZnvZycZXxoAzu4XEX+teR
+	 a2VWk0rzolhjEPmNfygA5hJqIMt43/HcuEsUyDD2XFjdC06yV7sioUDVdESF6SAvcW
+	 F+H5S2kqGr5vg==
+Date: Thu, 24 Apr 2025 09:55:11 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 03/24] iommu: generalize the batched sync after map
+ interface
+Message-ID: <20250424065511.GL48485@unreal>
+References: <cover.1745394536.git.leon@kernel.org>
+ <2ce6a74ddf5e13a7fdb731984aa781a15f17749d.1745394536.git.leon@kernel.org>
+ <20250423171537.GJ1213339@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|DM6PR12MB4354:EE_
-X-MS-Office365-Filtering-Correlation-Id: f858c8af-9669-4d3b-79fe-08dd82fab5e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UlZsRW05Q3ZNdml1U1RWbmhEK3FWVFQvN0x6VVJERGxZVkpFL2VkZjcxOXBK?=
- =?utf-8?B?UDNTK1FuSDdoVC9yZ1p3YjBLd1BmMnVkODBVa3hyR05jN1NoWFB6MTF6Nm1P?=
- =?utf-8?B?QTZnMWhwN1Yya0JuSk5hOEJPaW5EKzhaSk9WZ1hoaGhzTTN6TDYzVzV2Q0tV?=
- =?utf-8?B?MU9ONnVRbm5QZ05HWHJpcEVob1pwdWV4TWtZUVpsVE55c0toT3gwN3VTMjBD?=
- =?utf-8?B?aXlFc1ZqRXBuWjEzMVZYeTlSdmpVUFQxWWNVQ2dXV2ZXckxrcGsvY3FIdmZQ?=
- =?utf-8?B?NU1VUStDVktpUEhRaHlMUlFHZ0gvVXlSL29LbUNmdURmT1pRYlBvRWsvU242?=
- =?utf-8?B?S2tpUFJ5RlhEVmhIUU5majZCRE1DbWh3WEcyNS9WeTNTT0JoSEZQSEt1dnAw?=
- =?utf-8?B?Njk2ZWNQSXNWd0NCM0VwRXJQNmpNY3RaWWV1czBJaWVDNXVaVno2aWxXYVhz?=
- =?utf-8?B?dmYySWZ5MkkrSlkzODZOc1JnT1pza25hUURZd0JTd0d2Zm5jVGtlSFF4RXpu?=
- =?utf-8?B?K2hjQkZEaGVPNXJ3d2dtRGZSTHd5MElaUHVZR2JRRC9rVW45NjR0djZ0R3Fa?=
- =?utf-8?B?b3hibGRjbEZoZFZXK2YycURXZnF1TG5aU2JiMFpSZHdxYnpZVEdUTHRray9k?=
- =?utf-8?B?cHd6ZmlxczVEcEhDU2d6cTVFbENGSE1BQm84TmxuemRHWE9OS1dhYnE2Tmlh?=
- =?utf-8?B?V25aWkpTTFp6R1lSUnNld3JvOWtBQkRiYmRIMTZMRmZ1Q1BlSi9COVZWL1Zv?=
- =?utf-8?B?SUpxd3VGVXhydllROFRmaHJZUy9oWElzL09yU0psNS9vVEtMOXpTTVJVSFVQ?=
- =?utf-8?B?d1ZSN3ZKWk1QMUNhc05NSDB0bk5ZR1JOTDRCdHNhMHM4T0Fxa0dGYmxIOVBs?=
- =?utf-8?B?M3RRcWRGRlUwaklIUU1NV1VYT3ZaMSt6Vi90YzZqTEpHM0k0V01tVDVpZXMx?=
- =?utf-8?B?b0x1V00rdGVERHZ2enBtNUVhR0psNnByR0MxKytOQjJqRW1HV1B2b3FvS29y?=
- =?utf-8?B?RWpQUkQ4Mmd0VjYyRm95b2RzZDAwOVg3N2FvZTJkUC8wWm05NktrcG5CM3p3?=
- =?utf-8?B?NXhkZFU4bFVoNGhMSDZpWEJTUWRXWjErR0tMK0FHUzcrY1d5TFpqdGs0U3RR?=
- =?utf-8?B?bUVodExjb0llb0IrNWhNdE11cS95VnpHRGRJTFIrNTBUOEZtOXh2WE1EVUVm?=
- =?utf-8?B?clRLOFNLNGdDcCszVWR0NE9WTXNPRnYyUXhDM2xXTmN3OW1MRUpMdncrZitH?=
- =?utf-8?B?M1p2cFNEeVhmeE00UllrQ2tDV0tvNldKMFk4QUNYK3EwOFdRTXlJUGFoYUc4?=
- =?utf-8?B?WUJzcVhjYjhEQjBBV0JXV3FnZzBnZTF1N2ZiV2ZlMklycWFDKzBsR1dYT1Jr?=
- =?utf-8?B?T0NkSk5FeUx6eldjQUlUcVlNdUlEamVGWkM3eGdVQ3c0U0ROZEIzRUl1Zzlo?=
- =?utf-8?B?WDhHNWVJbC90d1hYd1hTdXlrRXpySWY3akd5dEd0eG9OclNXaDgvTU44NzQr?=
- =?utf-8?B?Rnk0MHVhRHJ2YmU2V3dHdWxLbFBMU0NLdW5CZk9ZM20rYXg5YlNVbFBZVHVP?=
- =?utf-8?B?V3lqd3dCNjlpeksxK295RW83elVEaFkwUG0yT1pIV290RnNuK2RSTjVBM3Ur?=
- =?utf-8?B?UHdmd0d0dHVwb3dweG80ekdFYzBSaHdBamlDdXJjR1hxVFZxRkxEZVRnUWky?=
- =?utf-8?B?OERHVTlZZEF2T24wQisvcGxwWXF0M293MWpOSVdCa2RtYzAyRGd6R1MvNEJ4?=
- =?utf-8?B?UnJtTjlvbEhHbGhrNVZVZVVUbE95NFlhbDFGKzNWM1VqbFZnTmd3eXhQa1NW?=
- =?utf-8?B?RjRoUFRJNkpNSEpBSkljRytGU2EvUjNGM3A1SzRCNC9IRVE5VDdvZURLWHA5?=
- =?utf-8?B?S0hqdkZ6YjdWcXpzU2hXa1pZNHRPNXI0eW54enVKWVNyVjIvWXVHbDI0Uk9I?=
- =?utf-8?B?OFlJMTRuUjNhb3RpQmNPVm9RTUNsZjBva2hmSDNzcXNmVy8vWCtwdkxpWW1q?=
- =?utf-8?B?RzV5Q1hNNGFnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K010TXdxcGpENUp6YkdGK1kvcWlaM3dkdFcyUGxYVnB6TTMxR0ZOUURDRFVZ?=
- =?utf-8?B?aTB3QUV6RVBubjNNOU1FeEE1QTN1UHhMcEdTRE9jNkxoVUNsUGYvNUkyc1BQ?=
- =?utf-8?B?YkpVK3ZuWDlWTDFPclNRays3Qi8yNlBLdmNreCtmaDVGZkZyZUlmY3RuT2hI?=
- =?utf-8?B?VlREQTd3VHQzZGphbFVrTktzTFlIZjdyZjNDdG4rM01ndElqUjNaL1dxd2xh?=
- =?utf-8?B?ZU1WWjcwRjBBMWc4Uk1QaTR0eGVsNkNlUTVqSnMvdittRnpEUnJrZlpwVzgr?=
- =?utf-8?B?cFBrT3BmODRKOE92d0RXWHh3R0J3clBiL0RwUFpTSnduakgwYmNBK1hpU0xl?=
- =?utf-8?B?R3dlc1A4aDY5MkFHZGJaWVVxRS9uSmNGdmpxeDNzYjFYZmphRjN3eEFYZERp?=
- =?utf-8?B?dUJYQjRpKzBQV3FPNkx5eW5GZExwejRPMnlCc2hia3RXRzdtUWFVTXdDVDVs?=
- =?utf-8?B?dngzR3FRYlhzeW5MeHI2Tk5YdmlleFByVlFPWWRPbXpHd1l5MVhJdGY1QndO?=
- =?utf-8?B?Ni94SGI0ZUw4WUNTRlRRbG1UbmFWSDJENy9ueXFjSklycjlsY1JHeW9paXFB?=
- =?utf-8?B?dHJvOHROdUorTjI5QTM5SU5LbGJzQksvQUhSRzdkZS8zQ1JHWW8yUlZtbGNR?=
- =?utf-8?B?a2tqZ21WQU1sY0Q4T2NCM3lqVndoL0RQUmlmQ1BudEo1enN0bDJnSHhPL3Jy?=
- =?utf-8?B?VWNqR2tnbzJ4anFwR1hseGdXS3BmalFIenpJSjFQVDFPRGNoYUsyd0lnaHRZ?=
- =?utf-8?B?SWNlMUtuMnQxOFpDQUNRaTBLWm9pU3RkV09CTXF5TTV1dkZCSDdYQ2RramZ6?=
- =?utf-8?B?UjI3Z1ZRT2tKNWhVLzFRVTUzaXprUEhrQStrWU9iR2xkK0dZTStQYjVKYWxJ?=
- =?utf-8?B?aHdZS0xLSGFqcTZkcXVxUExsb1M5ZlJTYkx4cTlWUTkvcHVJQnBuWGFzeE9W?=
- =?utf-8?B?M2NvSStyWUJLY2o5RVFaV3BTcGdERDdXdUpkRG5qVENpbHo4bVVRRHl2UmlH?=
- =?utf-8?B?a1dhc2hsUnJWZEwzV0s1Vy95WUp2N2ZWNFN3eURmL1RBVDV4TFdPOFdIZzR6?=
- =?utf-8?B?L1FoRVVqOXZzUmlzNEtkTTVSNHRpS3Bxb0ZQNjNxRnMyclRVaVRRQ1NWekox?=
- =?utf-8?B?cnJHakI3MkZCUlE0dVJ6bUZVeDhNSlVlTldoWEtnWlc3azI0UWM4Zm9EdDFw?=
- =?utf-8?B?cldrRmd1cDhNcDd4M0tVVC9SNElFNUVYZFFYMjFQam1Dd3lqcU9YeC9iVmts?=
- =?utf-8?B?SU5hb2RNelJ3aWpZaUFQdjhNcDU5NG9wbWFBSDNwZ1dnbnI4ZU1MQnM0UlNu?=
- =?utf-8?B?SkQ1MjNvYXRaVm41K252Vnk2SFJBVnQrYzhrcTNtSEJWejc5THlFT2ZNOFdr?=
- =?utf-8?B?dnQzTjk1T1p3M3NHVmN1Y1c0TXRpYks5aUZkVU82Mi9nMHhza01CZDlmLzY4?=
- =?utf-8?B?WjljNzl2WHJrakx4SG5nUkhWK1BYbjhnVC9ZRFpTTFFURU9vQXE5Q3pLcGhs?=
- =?utf-8?B?Mit4TGxHMWQ2Nm8weGxieHJlTWdmblRDeWs3SUlGcHAvbWdtSUhFZkxXdlhs?=
- =?utf-8?B?MTBsdHlnVndLVUpqSDhSTExOekZxSE1yUlFvVDZ2emxsaUF5MlNwQTQ4cUNT?=
- =?utf-8?B?QlFmeEo3RVhFOVJCUExKak1zQ242SHRVTHFEMzJLK3lJRjdLdlNJcXFzUXRU?=
- =?utf-8?B?SkxGMlNNNm4wcVBMRjdUblo3ZHh2b0RRbjlQbTB4RmppQTQzRnowYk0vVUxm?=
- =?utf-8?B?dDhHQ2p4NmkxN0FzTUhQSnBJMWtEdHRLWWU0L21ScnhtMkU4elNLbXFzalVB?=
- =?utf-8?B?MEkwdnpUc1VvdUhqbXV3dXVtUkRvbkI0YlR6SDNXeG5UZGF4L05aMkRvVzJK?=
- =?utf-8?B?QTFzT0FVOE1tYVFqMWhleVMvNy81Z2lyWmlTWnA2S3JJbXRiMFRJWEc2UzNr?=
- =?utf-8?B?aFFiY21HSGE0LzVIZ3ozS3FiYU5rSHRSWVBEUG9YcjRRdTRTTDlLYjBQQS9F?=
- =?utf-8?B?RG91ZUhmQklsd0YyQjVCWUxaZnkyRkFYbTJ0em03ck0zWk1RQURicmI5dzFm?=
- =?utf-8?B?UUMvMFFxWmRpT0UxY0Rzc2hpWG5LMnk3NjlNU3hqTnVWSkZaSjhFOURCZkJ6?=
- =?utf-8?Q?4PMJUSMBUhWC1zcm6Qiw+uyVS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f858c8af-9669-4d3b-79fe-08dd82fab5e6
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 06:39:06.5387
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TynGhLXeb1V0y0fDnKyZVBKX4xD8PZi3bKjpGaY/mcjfdvooeAvFO6dK4HLrliZizfCMUuVsnfOvFu81GFbQeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4354
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423171537.GJ1213339@ziepe.ca>
 
-On 4/24/2025 8:57 AM, Baolu Lu wrote:
-> On 4/24/25 10:06, Tushar Dave wrote:
->> Generally PASID support requires ACS settings that usually create
->> single device groups, but there are some niche cases where we can get
->> multi-device groups and still have working PASID support. The primary
->> issue is that PCI switches are not required to treat PASID tagged TLPs
->> specially so appropriate ACS settings are required to route all TLPs to
->> the host bridge if PASID is going to work properly.
->>
->> pci_enable_pasid() does check that each device that will use PASID has
->> the proper ACS settings to achieve this routing.
->>
->> However, no-PASID devices can be combined with PASID capable devices
->> within the same topology using non-uniform ACS settings. In this case
->> the no-PASID devices may not have strict route to host ACS flags and
->> end up being grouped with the PASID devices.
->>
->> This configuration fails to allow use of the PASID within the iommu
->> core code which wrongly checks if the no-PASID device supports PASID.
->>
->> Fix this by ignoring no-PASID devices during the PASID validation. They
->> will never issue a PASID TLP anyhow so they can be ignored.
->>
->> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
->> Cc:stable@vger.kernel.org
->> Signed-off-by: Tushar Dave<tdave@nvidia.com>
->> ---
->>   drivers/iommu/iommu.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 4f91a740c15f..e01df4c3e709 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -3440,7 +3440,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->>         mutex_lock(&group->mutex);
->>       for_each_group_device(group, device) {
->> -        if (pasid >= device->dev->iommu->max_pasids) {
->> +        /*
->> +         * Skip PASID validation for devices without PASID support
->> +         * (max_pasids = 0). These devices cannot issue transactions
->> +         * with PASID, so they don't affect group's PASID usage.
->> +         */
->> +        if ((device->dev->iommu->max_pasids > 0) &&
->> +            (pasid >= device->dev->iommu->max_pasids)) {
+On Wed, Apr 23, 2025 at 02:15:37PM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 23, 2025 at 11:12:54AM +0300, Leon Romanovsky wrote:
+> > From: Christoph Hellwig <hch@lst.de>
+> > 
+> > For the upcoming IOVA-based DMA API we want to use the interface batch the
+> > sync after mapping multiple entries from dma-iommu without having a
+> > scatterlist.
 > 
-> What the iommu driver should do when set_dev_pasid is called for a non-
-> PASID device?
+> Grammer:
+> 
+>  For the upcoming IOVA-based DMA API we want to batch the
+>  ops->iotlb_sync_map() call after mapping multiple IOVAs from
+>  dma-iommu without having a scatterlist. Improve the API.
+> 
+>  Add a wrapper for the map_sync as iommu_sync_map() so that callers don't
+>  need to poke into the methods directly.
+> 
+>  Formalize __iommu_map() into iommu_map_nosync() which requires the
+>  caller to call iommu_sync_map() after all maps are completed.
+> 
+>  Refactor the existing sanity checks from all the different layers
+>  into iommu_map_nosync().
+> 
+> >  drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
+> >  include/linux/iommu.h |  4 +++
+> >  2 files changed, 33 insertions(+), 36 deletions(-)
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> 
+> > +	/* Discourage passing strange GFP flags */
+> > +	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> > +				__GFP_HIGHMEM)))
+> > +		return -EINVAL;
+> 
+> There is some kind of overlap with the new iommu_alloc_pages_node()
+> here that does a similar check, nothing that can be addressed in this
+> series but maybe a TBD for later..
 
-Per device max_pasids check should cover that right?
+This series is based on pure -rc1 to allow creation of shared branch,
+while you removed iommu_alloc_pages_node() in IOMMU tree. So we must
+merge it first and tidy the code after that.
 
-FYI. One example of such device is some of the AMD GPUs which has both VGA and
-audio in same group. while VGA supports PASID, audio is not. This used to work
-fine when we had AMD IOMMU PASID specific driver. GPUs stopped using PASIDs in
-upstream kernel. So I didn't look into this part in details.
+Thanks
 
--Vasant
-
+> 
+> Jason
+> 
 
