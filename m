@@ -1,189 +1,153 @@
-Return-Path: <linux-pci+bounces-26764-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26765-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52EF5A9CD23
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 17:33:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AF63A9CD80
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 17:47:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 944354A686C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 15:33:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47ACF4C8905
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 15:46:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC73926C3AE;
-	Fri, 25 Apr 2025 15:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEBE028E618;
+	Fri, 25 Apr 2025 15:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j05UV5dP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022113.outbound.protection.outlook.com [40.107.75.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB9F25DD17;
-	Fri, 25 Apr 2025 15:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595198; cv=fail; b=lAXWg7o674ZNm54sDvfd/tc61SAN5D5Ym9UlLT/uWF9MTdIB7WWNvylUqg1aJ9N3f7RUO5Aa0ftU6+DVShi764Hx//RUU0inC7BCBbCnlG+jPiEM1x1trASKgnnVRkr722yjGmcrEnrk5z1TTtVK/7yps4auNhu+BpD2H60GPZ4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595198; c=relaxed/simple;
-	bh=QGYbkcGqsKONHSy9/yVc5p1c/uc6S/EqyW5RdGOO/8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWXG+WJZKWutoulxVMfdIeOh0ALzLEsmy6e/F5cIjUU2RSQvjES4Y3yUXrtqlK6obLiqZGFnNZ2ZRCX8vlrUBoWRSyDVCYSampRduv0512aeeQ21s9mAswCXwixNXnjuTLLkb+p8+u6vSPqPL9mba98o/qgOyGWdIaJ+rgjrLnY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CPhOGipnQoFWxiKr+dJtqeXwsM3Oqj6kP0OeGSO2sksXGXdMR3bz0YM6KwzZJiiDcH5wS7gZwTXTPrrkIdq+Wbk38QMtsy0AcGOpGPo4vRacnKnDXWTh2XTkWaThGAOFMr2f0RaNP6gz97sweODAgUqhpvjb0jqUnz4AaCiHoTucWn1CnT7B0+/slJGvvY9+Ku0/P0W5qIF6cqkinL/N3yV41wIOR+Q4lwUGlrZMQW43vpK4auzNb2DXc+iZWzpixE/vGIBmimRKlu4jZ86V4FZ92yfF0osAcfdJOg/F4l/l6FbKRsMIYrHv38Dc06GyVm1ya1yQBuLjmprUnZL4Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nJNrcF0FIHXEYZsntD5pbLhkeUZCY2pTGoUPqBRsYCs=;
- b=u9tF0SobfPSoNcULH2DZWKksiIzFTiTU14pdeVmLphv4QtzR+SlKLvjdC3W1tuDEt2NEcx5lShXuNJ/r3Y/5EU2izFEZK1lmMJCi9vMtGWH4T4ejkTQ5NtD0PuPKyk80MM5J9HGJkjayFS21vqeIZuViXDn2/P6e3XYx1k1TFszMlDkoJJHZNcQRKKjk1NEEDLl3tFTSnPbv4CqGS5nZ2Fg08qq2w0mHm+HP323YsWrIkX+ykNLvcX2HsTaXun6C+a2ZP4EaOyNhiYS8C5ZGh4xg7NXQkyjkWNmbs3NgcI9New5YgftnA/HkFoeQG9Af5912n4H9BycgSjlnJSsW3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYCP286CA0056.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b5::17)
- by TY1PPFDEC2C26D0.apcprd06.prod.outlook.com (2603:1096:408::92c) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.25; Fri, 25 Apr
- 2025 15:33:08 +0000
-Received: from TY2PEPF0000AB87.apcprd03.prod.outlook.com
- (2603:1096:400:2b5:cafe::78) by TYCP286CA0056.outlook.office365.com
- (2603:1096:400:2b5::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.39 via Frontend Transport; Fri,
- 25 Apr 2025 15:33:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB87.mail.protection.outlook.com (10.167.253.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 15:33:07 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id E645441604E7;
-	Fri, 25 Apr 2025 23:33:05 +0800 (CST)
-Message-ID: <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
-Date: Fri, 25 Apr 2025 23:33:02 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3710127932E
+	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 15:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745595979; cv=none; b=e2/p1IrJcaY3dZah0nDp4UyykSzZ0XEbRDvhtqhpihezKp9Q3a2WNnTKew7BQCujsClKUWIqoTyahdTtlvyqzNQ8ZzAymv2VbwBxUdRJ347wiD5bFhh/WgLmTJTc9c6PAoltjTIJsdX8z9ZWOvChFSa7HkCO0EJ/eIJ4gIDQ3O4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745595979; c=relaxed/simple;
+	bh=OEN/M7xAkfDtjvNwKlr/jucG4cQOWcjtHRGd69J9SGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cDi7KLQMjP1P63JMbU+UaqFskm1b1lIuEkkkiAyJOdbD+ZnL24tW6kofYkZeHI59GSSlgagdpAS2u0GGYQQ45q6SShNEOHFBgvvQfDfIb1tGfwfxq3PbDn1Mi2klDI+Dse+1Gu5ANW5EVcP/ZYaFnOgDhoVhOnXOE8ckvdX9peQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j05UV5dP; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399838db7fso2615262b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 08:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745595976; x=1746200776; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b0yjiKObWEJiwO02DaOrPmXbmFq+eaftYKKT34xnJk0=;
+        b=j05UV5dPOBy43iHV+sWZT+yAPem7J7c/EFHZyA9g/WbDbkdHA4L4U5mlWTvXyZ/pya
+         1KZJEJJM8+mH1KufUe/KDFW17zAkJGGDWvnFdxr/+IdzMlfmg5rBFAfZppMbD+pPs9yq
+         SAfquee+kxH36o3IUKPzBN/PKsk66fQnTs8ouVt0hYQXar0wscnL7c+zFIrOgInHwI47
+         ImAPwxXq8Vj0/1RdLNd8DkqhtEZ4UrDL0MKceZzGhd3rnQfEMWKIoFYF/bhPuhYyOK7v
+         2GB9WWtKRTUxIOGhVnuVdqzrkCR4ab6v+RC47jbQWN2hoxuAdbFyqMcGs6N3jJHUEt9Z
+         wVaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745595976; x=1746200776;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b0yjiKObWEJiwO02DaOrPmXbmFq+eaftYKKT34xnJk0=;
+        b=nR2fCEyj2DVJESN2ZC+orDAnjaY8K7ZBdRrx8+Y/kfFVusVU4xOi7bcAD6I/GmlaWg
+         JgwzUNlrTwUjV8w+n2O8B6lk7Z8uu40Tsj2Afxf63OJGVLLcMmIJMdl56e9xQxf1KmBY
+         ysmv4pvgOwb3Mzy8fYkCNticQbUw3lgWOYuz2vdjlRMHB/s+AP3yg2OctyRQpwpd/el+
+         iZMlR852WjCvAVATanR2+RdWKh82U+PfywceO3yXP8A5rVvStqy5zU/P4GBBiYijEF0d
+         pBP96yEbPfeIDxH3N5AfAGuDJm9W0FRaFuahmHp8abDUsyiUCkZ70hiSby6PCveqTGYi
+         VsWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWv+GLu8+7OvmudBeTUT2NtwaBsRbgxHdTmUXlnsQO66zlJgIVla95m1zcq6lbN3Zbiz7UKhtRgFws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR0OMZDONN77V/YsLi6uEtM9E/q8+j4IgIl2vj57u6FnYcsVZ5
+	mQdg2DWSjB0ND0NicK1SXnuZpv8jRf7GBgZ8Duq1DUXvfQ35YEEoSqQc1Bq2CQ==
+X-Gm-Gg: ASbGncu6TwFiYred8hyWs5czi+vkD7DeLZiOMuRfmBOWK8u1ReZ99TO18wg4qOqVduq
+	Wzg9lh4TIfI/yd8pv45iMWOTZ3xYh+n6t+w84bKWGrb4tp9f4nqkvhNAsds27DLBNrb8EAZnhKV
+	gCkgok7ZYcI9BU4DaozT2T1fqV9VgRm2aM3zvGLFGschoNh27FeQ8O9ePeEAkGk9XJZGfhT2RrN
+	5ieFxfEY62obO5HEJLCIeNE9UtapAhtDEGsQtXfbCEadzDH3q0eILEnOO8DTfoXYibHjVWcjQuM
+	Bab0nyFppOMOOo0U+AXsnUrqa1qf3UxzZPOkdl4BKRMjQ7cNTga0
+X-Google-Smtp-Source: AGHT+IGs6qXZbOiWmzBGdrbn2GeizUSvYWBYF7LQu+E/gHowSvXPMU/F/cIhQAuYikQ05w1s5IHkLg==
+X-Received: by 2002:a05:6a00:e1b:b0:736:b3cb:5db with SMTP id d2e1a72fcca58-73e268ee7b6mr11186888b3a.11.1745595976351;
+        Fri, 25 Apr 2025 08:46:16 -0700 (PDT)
+Received: from thinkpad ([120.56.201.179])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25967608sm3316408b3a.81.2025.04.25.08.46.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 08:46:15 -0700 (PDT)
+Date: Fri, 25 Apr 2025 21:16:09 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com, 
+	quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 01/10] PCI: update current bus speed as part of
+ pci_bus_add_devices()
+Message-ID: <azxdhgvf6vo6eilmdmxa2ryir33h5uqwuru2a7jrgjuunyncrb@q3fdjhcaskjm>
+References: <20250313-mhi_bw_up-v2-1-869ca32170bf@oss.qualcomm.com>
+ <20250313170001.GA738398@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-To: Conor Dooley <conor@kernel.org>,
- Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
- <20250424-proposal-decrease-ba384a37efa6@spud>
- <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250425-drained-flyover-4275720a1f5a@spud>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <20250425-drained-flyover-4275720a1f5a@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB87:EE_|TY1PPFDEC2C26D0:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6ece377-799c-41e3-88d7-08dd840e7a69
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QkRETHhkdUlneFQyQ0NFWEtlVXEwckNheEFnWEpiZFlpbVlBS2VWYm5oSW9w?=
- =?utf-8?B?TUVRQm8vT0FQMS8yNWpFZi9HWHFOd055b284ek44SmJsZlN1dVpLVVhDVXhp?=
- =?utf-8?B?M3ZsVVQzVEdjNkhVU0MvOFFiSy9tWmpSSHM4b2dmc0JuVXg5TFJYRldPb3Na?=
- =?utf-8?B?SmJxT3drb3JoY25zdU1ZNDZwTDduZUtEcG16blBsT1NKb2VqczZOMUNwSm9F?=
- =?utf-8?B?MHJ3ZGk4cFhxcEwvRjQ4UC9PU003NEpsYTB1bEpET3h6Y25ZaFRKNnUxTUpl?=
- =?utf-8?B?QW9DUGVLRitRZHZRbVB6aXcwYU1tclp6MXVhRHNMK09mNm13SFJRcmJoOHRI?=
- =?utf-8?B?WlRXVm1VNVZQU0V6NUQwNFRMWFJBTndiTHhQSFVOQ0dxaHhjTHZyR3U5Q2Ji?=
- =?utf-8?B?c29qamk4S2tWSXNPRjlabXZUanU0ZnBsMVBHbEFFbGd6b0hWK21vU1NSb1hN?=
- =?utf-8?B?RGxSbEsrMkZnbWM1elVGWVR4cFZkcVg2aXdEa2JObElxVEUrcnFpbE5BemUz?=
- =?utf-8?B?L1JSZXRMWnBibm03OXFtVEpSTXM5elVLSEljY0hiQ0tzQVdvRnV0U3NyK0dH?=
- =?utf-8?B?UEswWFZGM3hjQzNOOXJYcXN3Z1JHSzBuSk40Q1RpdW15OWFHN3Q0MmtjNWxQ?=
- =?utf-8?B?ekV3ZGVMTXNrckFvQlJ4NkRTZ2NRNVg4emdPRE8vSlM0WmpQZmpmanRNYm9Y?=
- =?utf-8?B?N0IxeU1kdnVwZUlPaGlsR0Z6YzdScUpYNWZPSjhEZjFZN0lCYXZBOVFaZDBp?=
- =?utf-8?B?aGI2WDRwTmRVcmhRUzc5ZTlrcjMvY3pYV2U3eWFXRSs4aVdWMUFQK3R5TkQy?=
- =?utf-8?B?aWlxUWt2bzRLRmtwYXFIcWRNa1VTT1FLeUtqSUFpWmNIUGZ1Q3Q5VWNrQzZL?=
- =?utf-8?B?eG5FSmFqM2x6UXZucUhLRTJtZWpCeWprQmVIcmQyQjU0NTByZXRqcVFGSytE?=
- =?utf-8?B?aVM1b0h6YmNyR2svOWc0QnJFa1B0RUlEUmNsZ0dDc3JoYmJiWXMwREpMWjA4?=
- =?utf-8?B?OHpVVFdjZVF3VzVDeXJyTVVFOG1pSld0aVcweFNwYjU2WUVJSlpDTFAxQnBB?=
- =?utf-8?B?cnVSaE0xZk9BOXJYZEMvSEMybncveXJvS2JINVhRSTV4eld4U1hvV2VZTDJ5?=
- =?utf-8?B?enQ0cDUzczQ0dHVEelMrSlhXT0FpL3gwRWZCQWFTbDdJSHAwNjRkOXB6ZGRr?=
- =?utf-8?B?THV5aVlnNWxsKzhkck9FcmlPMnRJWFM2dGM5dUd3VGZsNzdsNHdNc0w0bThC?=
- =?utf-8?B?SXN6MVVWdkcxNmxrVGZwYnNZU2lOblFLUGZUNnRLaktSUWVhRlFGa011am1r?=
- =?utf-8?B?UmwybTdncXJVQjVMUHdNeXk2QVg1ZHhvMU05ckI1cHY4T3dGZ2dheVMzSlBi?=
- =?utf-8?B?ZHE0T3pmR3QwOWdwOTVqeHJDYmt5dVBpQ1VaK1VmczBiSVh2MkZCYWhqaW1M?=
- =?utf-8?B?bzFaZXZBeEVuN21aUGxiVjF5QmhjeHJhZzEzOUFFMkFuRm1rdWgrZkhpMlBL?=
- =?utf-8?B?M3RybnJIYW1aZHAySTN4ajJJem44djNscW52aE5kWTJ2bFI0VDRwYnp1RWxH?=
- =?utf-8?B?QTlKR3ExN0FJc2ZVRUJuWG4wSlZyUURiZEpmWld6dDV6NlhuZ29mL2xFNFlC?=
- =?utf-8?B?NFpLOHJNRENoZ0VPOUF1bWU2MTloZ1FqRVp0Z2Z4SGpzcWErcVVkNDFTVldt?=
- =?utf-8?B?L0FrMHBPL3NjcldOc3k5b0NsUHFpOGoxUUZocG8xOXBjbzlhRVltNTM5ZEFh?=
- =?utf-8?B?by91VnVtWjBrRTYrL2hBMXRZZWRpcExhRFVpN2d6Y25oNmFCMU5VaUl2T0lS?=
- =?utf-8?B?M1IwOENCbDJ4OTJXVmZFQ0svR3hSWklUTFV2WTVPUGJBajlRQU1NdnllaWlo?=
- =?utf-8?B?Ym4wMExoTytPSFdpdEhPdjVCQVRtRk5tZ1k4Sml2WVZlN3lVelo0cXJrQnRH?=
- =?utf-8?B?UDQ0R0Qwdko3ZE9MR3VYYTJXbGpyLzFybFlFVEUxRFJlSzZOMEZGaXRKZU1H?=
- =?utf-8?B?b2QyMkNOcFdIT2JVVVo3Skt5KzE5TWM3TC9DNGplOUtpR1NKYjlqa1pPRGpP?=
- =?utf-8?B?cUFDWXpMdGdtTTZQZTgrZjZTcjkrUlQ2bVpkdz09?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 15:33:07.0715
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6ece377-799c-41e3-88d7-08dd840e7a69
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB87.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PPFDEC2C26D0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250313170001.GA738398@bhelgaas>
 
+On Thu, Mar 13, 2025 at 12:00:01PM -0500, Bjorn Helgaas wrote:
+> [+cc Bartosz since this is related to pwrctrl]
+> 
+> On Thu, Mar 13, 2025 at 05:10:08PM +0530, Krishna Chaitanya Chundru wrote:
+> > If the link is not up till the pwrctl drivers enable power to endpoints
+> > then cur_bus_speed will not be updated with correct speed.
+> > 
+> > As part of rescan, pci_bus_add_devices() will be called and as part of
+> > it update the link bus speed.
+> > 
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ---
+> >  drivers/pci/bus.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 98910bc0fcc4..994879071d4c 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -432,6 +432,9 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+> >  	struct pci_dev *dev;
+> >  	struct pci_bus *child;
+> >  
+> > +	if (bus->self)
+> > +		pcie_update_link_speed((struct pci_bus *)bus);
+> 
+> Why the cast?  I guess to discard "const"?  I would prefer to avoid
+> that if we can.
+> 
+> The only existing callers of pcie_update_link_speed() are from bwctrl,
+> where it obviously makes sense because bwctrl manages link speed, and
+> from pci_set_bus_speed() in the pci_alloc_child_bus() path.
+> 
+> If we call pcie_update_link_speed() here, do we still need the
+> pci_set_bus_speed() in pci_alloc_child_bus()?
+> 
+> Bartosz, so you have any suggestions?  Is there a point in pwrctrl
+> where it would make sense to do this, similar to what bwctrl does?
+> 
 
+I'm not Bartosz, but I could speak for pwrctrl.
 
-On 2025/4/25 22:48, Conor Dooley wrote:
-> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
->>>
->>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
->>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
->>>>> From: Manikandan K Pillai<mpillai@cadence.com>
->>>>>
->>>>> Document the compatible property for HPA (High Performance
->>> Architecture)
->>>>> PCIe controller EP configuration.
->>>> Please explain what makes the new architecture sufficiently different
->>>> from the existing one such that a fallback compatible does not work.
->>>>
->>>> Same applies to the other binding patch.
->>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
->>> soc-specific compatible for your integration not needed?
->>>
->> The sky1 SoC support patches will be developed and submitted by the Sky1
->> team separately.
-> Why? Cixtech sent this patchset, they should send it with their user.
+This should really be part of pci_pwrctrl_notify() in pwrctrl driver. Pwrctrl
+driver is already getting notified with device additions and removals. So the
+update can be performed once the device addition happens.
 
-Hi Conor,
+- Mani
 
-Please look at the communication history of this website.
-
-https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
-
-
-Best regards,
-Hans
+-- 
+மணிவண்ணன் சதாசிவம்
 
