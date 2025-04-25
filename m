@@ -1,151 +1,100 @@
-Return-Path: <linux-pci+bounces-26756-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26757-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32255A9CA08
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 15:20:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AED9A9CAA9
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 15:41:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6971F1BC42F4
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 13:20:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F8737A63CE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 13:40:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCE278F2D;
-	Fri, 25 Apr 2025 13:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i1aRFLeY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4968C25A329;
+	Fri, 25 Apr 2025 13:39:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB835695;
-	Fri, 25 Apr 2025 13:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADE0C25A2CC;
+	Fri, 25 Apr 2025 13:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587203; cv=none; b=q0Kdl01Se7wHYCfIuhd2Pu/xmvFZ64z1WdMB5LK+38lpkMS7gOyeWsFTCSlzQW3FSDkMqfGPPHVqd3R4NFhnIFeCApk/bMaYFI+2oDZ4IPeultFtgs47uYmsqANQBCrP5dyVe96XEPFU0N6qBTSnvXuDkjvO8Mv5ExkPVPpZ6YQ=
+	t=1745588390; cv=none; b=bUPWZrk5rSHpexsdQptUS1uzR8zd9K0VJQvjXhnuePttBZSVHGIkN/BDncHE53BwAfZZrGruIv41yfutLabxdX1H32gD7kmbbciDyDlDkanlbyVOUtv3wa3bbENpCII9BX6DPeQPKKYCinR0FG+Tirp+hGqBQe32SUBxALbFUUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587203; c=relaxed/simple;
-	bh=Mb1PcuxuqGZBuRSePtPlbyzRcP49+xM4Om4ipDtwN20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IlX606AVy5mLi4xbhdYIRUUDgFtQ9DVeCLjIoghPeK1tTDHz9Ayt9J/igZTY9xhkbIZmTDq4HvZH/YMDuOWvRV9CS1BZIvWruOM/dyNzJXXLwAtu0MvxsV4/3HAyOQM6qcQNy0qqNs8ojx/IWeZ8B1ZJgpRBZbu9odk1W6fwW30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i1aRFLeY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452C3C4CEE4;
-	Fri, 25 Apr 2025 13:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745587202;
-	bh=Mb1PcuxuqGZBuRSePtPlbyzRcP49+xM4Om4ipDtwN20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i1aRFLeYLDF4zMUJDOaNISIavzGnIsPK/X2Trk7AjYOsXODOBT5fM6VcZMTr5m51w
-	 PGZ7Z1wXOW5n7ew+GToxDyQdb8ih1xZBxl0b7ca/Mb4Af0TLV/f6RJOZn4v4+Isllh
-	 AiMuzIYINZJrnUkSjKnS7LPuDVrTyxf20k7sgycQ=
-Date: Fri, 25 Apr 2025 15:20:00 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v9 -next 07/12] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <2025042551-agency-boozy-dc3b@gregkh>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <e971e31f6a14af608bba2f09b8c749f619381ac0.1745347417.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1745588390; c=relaxed/simple;
+	bh=dqb8vZ0QzGl1lb+a6KWe7g4pKVohHseW5ueItvPNZzI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JzvN37PRg4kU9E1MgXkeU/rvAT5TVLXaB53NL8WGbue47ylqDDdClRw+/qUU28LpUJzdSGPyFUnlMsnqQMSAIsW0yiL5yooYvmQoBZoxfq/SvnVogFxc2rbTx0yNv5uTvCS0KwyFhiyJi6W+diabX5yCPNH6MkRumE5ZjphOsVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDC8D1A2D;
+	Fri, 25 Apr 2025 06:39:42 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3EBA13F59E;
+	Fri, 25 Apr 2025 06:39:47 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: joro@8bytes.org,
+	will@kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Will McVicker <willmcvicker@google.com>
+Subject: [PATCH] PCI: Fix driver_managed_dma check
+Date: Fri, 25 Apr 2025 14:39:29 +0100
+Message-Id: <20250425133929.646493-4-robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e971e31f6a14af608bba2f09b8c749f619381ac0.1745347417.git.andrea.porta@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 08:53:16PM +0200, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
-> 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
-> 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
-> 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
-> 
->  rp1-pci.dtso <---- rp1-common.dtsi
-> 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
-> 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
-> 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
-> 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
-> ---
->  MAINTAINERS                   |   1 +
->  drivers/misc/Kconfig          |   1 +
->  drivers/misc/Makefile         |   1 +
->  drivers/misc/rp1/Kconfig      |  20 ++
->  drivers/misc/rp1/Makefile     |   3 +
->  drivers/misc/rp1/rp1-pci.dtso |  25 +++
->  drivers/misc/rp1/rp1_pci.c    | 333 ++++++++++++++++++++++++++++++++++
->  drivers/pci/quirks.c          |   1 +
->  include/linux/pci_ids.h       |   3 +
->  9 files changed, 388 insertions(+)
->  create mode 100644 drivers/misc/rp1/Kconfig
->  create mode 100644 drivers/misc/rp1/Makefile
->  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
->  create mode 100644 drivers/misc/rp1/rp1_pci.c
+Since it's not currently safe to take device_lock() in the IOMMU probe
+path, that can race against really_probe() setting dev->driver before
+attempting to bind. The race itself isn't so bad, since we're only
+concerned with dereferencing dev->driver itself anyway, but sadly my
+attempt to implement the check with minimal churn leads to a kind of
+TOCTOU issue, where dev->driver becomes valid after to_pci_driver(NULL)
+is already computed, and thus the check fails to work as intended.
 
+Will and I both hit this with the platform bus, but the pattern here is
+the same, so fix it for correctness too.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Will McVicker <willmcvicker@google.com>
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/pci/pci-driver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index c8bd71a739f7..66e3bea7dc1a 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1634,7 +1634,7 @@ static int pci_bus_num_vf(struct device *dev)
+  */
+ static int pci_dma_configure(struct device *dev)
+ {
+-	struct pci_driver *driver = to_pci_driver(dev->driver);
++	const struct device_driver *drv = READ_ONCE(dev->driver);
+ 	struct device *bridge;
+ 	int ret = 0;
+ 
+@@ -1651,8 +1651,8 @@ static int pci_dma_configure(struct device *dev)
+ 
+ 	pci_put_host_bridge_device(bridge);
+ 
+-	/* @driver may not be valid when we're called from the IOMMU layer */
+-	if (!ret && dev->driver && !driver->driver_managed_dma) {
++	/* @drv may not be valid when we're called from the IOMMU layer */
++	if (!ret && drv && !to_pci_driver(drv)->driver_managed_dma) {
+ 		ret = iommu_device_use_default_domain(dev);
+ 		if (ret)
+ 			arch_teardown_dma_ops(dev);
+-- 
+2.39.2.101.g768bb238c484.dirty
+
 
