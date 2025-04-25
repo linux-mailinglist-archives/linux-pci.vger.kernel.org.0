@@ -1,209 +1,397 @@
-Return-Path: <linux-pci+bounces-26778-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26779-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9CB5A9CEBC
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B31CEA9CEC0
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:50:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10FE99C1737
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:49:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EE563B9265
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:50:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591C31DEFDA;
-	Fri, 25 Apr 2025 16:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96E21E1A3D;
+	Fri, 25 Apr 2025 16:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLQOU3uM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021117.outbound.protection.outlook.com [52.101.129.117])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E7F1DDA31;
-	Fri, 25 Apr 2025 16:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599664; cv=fail; b=qjGpcV9hBSLTr+kZnN+nEJRLRO7ONYZOfpsSDtsSXfndG2VHW9P2/hlU1WhGkeAMXOafk7mrUbLlfL/POeNejfLrGx0CcXqe/QxWVnd5ygxo4D1DINUaegS2jBD3GWdcZi5S7Z99wdSSKtJmnFnbC/pXCqo8c6Y0rWjy45sQgHQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599664; c=relaxed/simple;
-	bh=MQN6u8xjaNd3vllZQxrA0NbNi0CLgkKP9SRlNJYJ9bo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObPEdqYjSyEZ4ogEmnnmPdpepLaS8hk8PJPOKTVKc0j6r8WzgmQFFqRPQWEcZJr7Xjgq3O9u+VAA00vAo0btyGPqUSdskkuMxw2XMjqpo1/VnctMbruupSVLhelNYP+WjNpQRKnA+r+oNww333u6fiWZOIKaKxQANf5EhONy2dA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KQ+s+kAaRQnmOPxFeHhV+8pBWAuKlqW9qLlNHWjz3vnyryilbVyf7psNFG0d/PqtD7ml3X2tZH6q9ysCOejX/veHMyqOPpspO/a7ZJc2MTRk/tF5JmoeGHSSzBtit6oWOaRPWxp/vTuxU2xnnFg6iIHRZAZkl7ZGDV8LfwzQMuOE8V/QTLR7UBrLAdC2rCD3Cyf4I1UtD+eI7WWJmZUWwqHBqkcluVCKrqafYwZWbJ1dufT6sTuvPPsbfmNaAWdDIRutZK0rCTHNEcsnxtqMcl8D251zrouLJU/EvQLVJatZ0WccW1AisLemBnaSKQ2OXIdf5O25BEU66T/TVJ08Rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wSJCRRP6Pn6iWRiZvLOOXbaI7O4Cx9EoU1qStjwXR+4=;
- b=dxcdEhcP3CmF8ZCMV3nC0Q5Wyyqd2WenKkpQp+wHcGDgejahuYBmocUaonjLCdKlm9Ar1uLFRPYVpOVZGg4ikm9j45tNHumUVQAgSgOMXrFAatFm26fbGSYx80/kLhWKd6RdlyR6sep9J0KgsWUlLWl5Rb9n+pnHNXkTgmgeQS8EeGw4qei5psazjudQZ6ble9yG1A7rQZcQU+Yq4AoLYGe77m7EqUUkWrGhzyPnsI/c7riiiUP/ksN0haTdtPtEaOMHXCwhR/puGj2rqvbCr/Mbh3TrsZoLhfQako8t9P2es2FbbcGd3OJyQKvI4zJbZZz15ktqrCVOdHUzGEhOLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYCP286CA0338.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:38e::17)
- by JH0PR06MB6851.apcprd06.prod.outlook.com (2603:1096:990:42::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Fri, 25 Apr
- 2025 16:47:34 +0000
-Received: from OSA0EPF000000C8.apcprd02.prod.outlook.com
- (2603:1096:400:38e:cafe::e) by TYCP286CA0338.outlook.office365.com
- (2603:1096:400:38e::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Fri,
- 25 Apr 2025 16:47:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000C8.mail.protection.outlook.com (10.167.240.54) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 16:47:32 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id F202F41604EB;
-	Sat, 26 Apr 2025 00:47:31 +0800 (CST)
-Message-ID: <20d64403-d778-4601-80a4-b782225f70ff@cixtech.com>
-Date: Sat, 26 Apr 2025 00:47:28 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B4919A2A3;
+	Fri, 25 Apr 2025 16:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745599671; cv=none; b=oQseGlJJuyNa9bUZvk1lp9b4gFa2VxWI/eLyKlP6NlXdgCyNuTpL4iXfVFEprCEWFMbosuEMXQzxMRwUrYXOY46lA7uZUqLBig3SjMjv0MXy/uiYjlyytEdurXfBjrlVIAGW195EwAMP5fCEriyE88Bt/e5mE028gVdpz7WfWLw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745599671; c=relaxed/simple;
+	bh=FFxelLyQhizUrgBRLtTl6Mt5QLcllVjsjcCtcjbSdXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j4bs5n4IG3NrbHC7VXb0mUcej+RaUZLjZ4xsve/b++5h3aBTyu+6PESO/CWX0E7OW2azUvagU6n9IEbHTS7xqkBkgb3v2FwVAiZ5R/3dAWegsRPsn+ixwt4r/o+IXvIWxYo0mcMlWvMT5bcWm9HLAYwZ0A42M5zPXbroYFK7g7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLQOU3uM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFA6C4CEE4;
+	Fri, 25 Apr 2025 16:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745599671;
+	bh=FFxelLyQhizUrgBRLtTl6Mt5QLcllVjsjcCtcjbSdXk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=kLQOU3uMw/G3uqOs1AQd6/lwKpto5Wrl14h7srjhGFHtQVxqzUOWPG+vXU3CbR99G
+	 V4Gnb7Uz/7mIiJNTCeyQ9jtsz6G2nfMqk7P4gw1hNB2pPAoEzP+FZGhgut8w6eH/eS
+	 LeqwQ2ufHSQMxT6rfASiuEKW7KHsnY9ua/9czMX2GRJ0ooR/Gu2Py3bM+tt9tVWri4
+	 OJPQZcABe9/SthiqNQ+gEB7w/AEBgHHxqf1mTsrcOrRCX89iGQGR0a71bm8y8QCRja
+	 0Fu5h7+iMX9Pz+IgHbTG4KGdvpIY2++XDY2V90TkbTkjoaTZIi113VqmAFrRTOp1+9
+	 ksrxgr/6aJvew==
+Date: Fri, 25 Apr 2025 10:47:38 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] PCI: hv: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aAu8qsMQlbgH82iN@kspp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-To: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>,
- Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
- <20250424-proposal-decrease-ba384a37efa6@spud>
- <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250425-drained-flyover-4275720a1f5a@spud>
- <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
- <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000C8:EE_|JH0PR06MB6851:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90cb3ba4-cb55-43a1-155e-08dd8418e034
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eTFuNWRrcFpJdW5hY29jMm1QN0d3REJQZFZSdkJ0YmdGZTQ3RFZqV1gySHF2?=
- =?utf-8?B?RHBqVmxGVXhNVnBibVMyMUMzYi9jSTF2aFJCSHNWRHZHV0t6cHVuSEs1cVd0?=
- =?utf-8?B?eVZTRy9CZ3VmSXppeGZ3cHJWOEhBYlVJUElad3ljV3VXNFRhMmg0S0lueDZo?=
- =?utf-8?B?RTBqcmVhL0VFbTg4aGhrWXhXSk5SM1ZCT2pNTHZsREFNQitmY3FoRnUzWmZC?=
- =?utf-8?B?alFCWjhEckJWaG8yUmtkNDlyaHRMT1A4NEovaHZRblZmeURMckplRzJFSlRB?=
- =?utf-8?B?cVlxQjRQQksvRVZEdk43U1BqcGRGdUhEWkM1dW1hQWdvRDdZQms0Ui9OZFh5?=
- =?utf-8?B?K2NkS2REM2VOOXhtMkhtYUZTYm9uQlRVblZscFdsRGhURld5WGlJWUJlODFq?=
- =?utf-8?B?OUJ2b3lRUWlEQ0lnQzB5R1JnbXc2aWpISUc1NEY4allveHc0T1krdzF6bzVB?=
- =?utf-8?B?U2lTRDlBUzdLYXF0czRseDBicm9NM3BEL05tRmJwblR5ZExhbUt0clFCRG4r?=
- =?utf-8?B?QnlKLzhWZVlZelEzWGJwa2xqd3ViaGFpSmNhR0tIZmcxU05HMzRKNEgyVURk?=
- =?utf-8?B?a3k1aWFoNCtMWTJzWGtQRUo2WURlVWsxWEIwVXlFYy9rZzlKckFjb2lCSnhE?=
- =?utf-8?B?eDhxZnhOL2dOTXI0TjBnSWhKZzFGSjVNQWt3bUdtbHdCTGVGS2dFYTg0Vi94?=
- =?utf-8?B?ZFFNcWVwNUZQcjc1aDFTeXVDVVJpV3VnLzZTUDBCVGpRSW9zRUMweUY1THZV?=
- =?utf-8?B?UG9WeVVTZ0NqUFgreFAyUjFRaGtpL1RSZ0V3UXJRN0VNcWZTMWM3ZklZRFZo?=
- =?utf-8?B?WEkxMGxjZEgzQythQzVPbXUzR3VnSFlqNFBSd21LdmQ0M3VuZ0RETmc0OHVh?=
- =?utf-8?B?bytsMzNpRzR6OUZUWUhBa2dJVDZ4eEM0aGhEd1llTmErcy9JS215aytKU3lk?=
- =?utf-8?B?ckxLSXBKRWw3bEpRTmE1MHhWeTVoSTVlUFZ6UytIS2FLNkFMbFF6a0xqVG5n?=
- =?utf-8?B?MXA5cDF2UDBQNzBXTktDS2Y5aTZKTk9DK2dDK1FlWGJIVUxUcnBYVG1ZL2dL?=
- =?utf-8?B?dVRzS2hXbU1iQnFFY2dYK0RhbUMvNXVaNTJseFMzRDRydnRwb1l5dFowWUt1?=
- =?utf-8?B?dWFTVC93VGRZL2dIbUYrVU1NQ1ZTVkJnMDJKSkwvWjkvbUtTbW1CTmlBL251?=
- =?utf-8?B?UFJJL0xHU0wzeldIQ05ZWDR5NnI2bjZhQjB6RXlwblEwazF5KzJhMGVMd2xk?=
- =?utf-8?B?VmVoQVExS0FnYngyNHNrVDQxZzFsT2dRSWdGd2svcHdkMEE0dmVsOXRvNEI3?=
- =?utf-8?B?UkZQMkRHSXpXdTFTMUx2eUthaG1MWERIRjExTFREVmUrRHJhNUw2VzJJT3E2?=
- =?utf-8?B?S2xydjFiTjNzWElnNCtqOWVqSjdqVjFBRGJzNE9DVEJPZ3ZtQVdxN2pkU29t?=
- =?utf-8?B?UmZLdzY5SUdOTEg5NGhsNDBOZ20vN1NCVjZVSm9aU29EL0l6S3Q3bmYrWSt0?=
- =?utf-8?B?b1VKZnFmZlVtOEtydnR3b0ljaFFRbzFIUFJQV3hod0hJOXpDeThUV3JrL2ZK?=
- =?utf-8?B?K2NvcE1lUVAxb1RyNko2YzcxSWhmQkY0dnRvUG15bUFDbFpUaE9SRE5Yc3RF?=
- =?utf-8?B?OEI5c2RucTYxTFRNYmt1QnJrQ296NEErVVRJWmV2Q2lEOWdnZ0FBYnJ1MVlh?=
- =?utf-8?B?REhtWmhaR1A5OC9SaklEZGdnRDNhZzc2WnBISXJmbzdSb0FpQThIVzRUR0Vv?=
- =?utf-8?B?NWNMeDJabERtajYzNWZwOU84L01QMU53and2Zm05TFVybjRROGpoTXZNOFF5?=
- =?utf-8?B?TG1ocjJSbmRqeGNpdzJzMStDZWpuUERiVVdXdXR3MHZYV2FicWtmTm15TDIw?=
- =?utf-8?B?N1QvTStHY1dnbHZKOGdGaE5MbGNQc1lyMVhRUkU4cVp2QkhIMGVPZG1WQjNG?=
- =?utf-8?B?bWtSYSttOEIrdjdYMjRoVEVRclcrSUZmZkkvL1d1TXQxZ2VFa05mcWkwR3k4?=
- =?utf-8?B?aHBWUS92RHZXdjl6b2tPNTVRbk9aMEtRcjlubmlDOWc2RWlyakxTbFQ3ZDJI?=
- =?utf-8?Q?ZacmoJ?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 16:47:32.9568
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90cb3ba4-cb55-43a1-155e-08dd8418e034
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C8.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6851
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
+of a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-On 2025/4/26 00:21, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
-> 
-> On 25/04/2025 17:33, Hans Zhang wrote:
->>
->>
->> On 2025/4/25 22:48, Conor Dooley wrote:
->>> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
->>>>>
->>>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
->>>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
->>>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
->>>>>>>
->>>>>>> Document the compatible property for HPA (High Performance
->>>>> Architecture)
->>>>>>> PCIe controller EP configuration.
->>>>>> Please explain what makes the new architecture sufficiently different
->>>>>> from the existing one such that a fallback compatible does not work.
->>>>>>
->>>>>> Same applies to the other binding patch.
->>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
->>>>> soc-specific compatible for your integration not needed?
->>>>>
->>>> The sky1 SoC support patches will be developed and submitted by the Sky1
->>>> team separately.
->>> Why? Cixtech sent this patchset, they should send it with their user.
->>
->> Hi Conor,
->>
->> Please look at the communication history of this website.
->>
->> https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
-> 
-> And in that thread I asked for Soc specific compatible. More than once.
-> Conor asks again.
-> 
-> I don't understand your answers at all.
+So, with these changes, fix the following warnings:
 
-Dear Krzysztof,
+drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-I'm very sorry. Due to the environmental issue of Manikandan sending 
-patches, I just want to express that I'm forwarding the patches for 
-Manikandan. Some parts were developed together by us and verified by me.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 126 ++++++++++++----------------
+ 1 file changed, 55 insertions(+), 71 deletions(-)
 
-Please also ask Manikandan to reply to Conor and Krzysztof's questions.
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e1eaa24559a2..f2b5036bcf64 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1420,10 +1420,8 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+ 			     sysdata);
+-	struct {
+-		struct pci_packet pkt;
+-		char buf[sizeof(struct pci_read_block)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_read_block));
+ 	struct hv_read_config_compl comp_pkt;
+ 	struct pci_read_block *read_blk;
+ 	int ret;
+@@ -1435,17 +1433,16 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	comp_pkt.buf = buf;
+ 	comp_pkt.len = len;
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+-	pkt.pkt.completion_func = hv_pci_read_config_compl;
+-	pkt.pkt.compl_ctxt = &comp_pkt;
+-	read_blk = (struct pci_read_block *)&pkt.pkt.message;
++	pkt->completion_func = hv_pci_read_config_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	read_blk = (struct pci_read_block *)pkt->message;
+ 	read_blk->message_type.type = PCI_READ_BLOCK;
+ 	read_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	read_blk->block_id = block_id;
+ 	read_blk->bytes_requested = len;
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, read_blk,
+-			       sizeof(*read_blk), (unsigned long)&pkt.pkt,
++			       sizeof(*read_blk), (unsigned long)pkt,
+ 			       VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -1500,11 +1497,8 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+ 			     sysdata);
+-	struct {
+-		struct pci_packet pkt;
+-		char buf[sizeof(struct pci_write_block)];
+-		u32 reserved;
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_write_block) + sizeof(u32));
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_write_block *write_blk;
+ 	u32 pkt_size;
+@@ -1515,10 +1509,9 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 
+ 	init_completion(&comp_pkt.host_event);
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+-	pkt.pkt.completion_func = hv_pci_write_config_compl;
+-	pkt.pkt.compl_ctxt = &comp_pkt;
+-	write_blk = (struct pci_write_block *)&pkt.pkt.message;
++	pkt->completion_func = hv_pci_write_config_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	write_blk = (struct pci_write_block *)pkt->message;
+ 	write_blk->message_type.type = PCI_WRITE_BLOCK;
+ 	write_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	write_blk->block_id = block_id;
+@@ -1532,10 +1525,10 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	 * and new hosts, because, on them, what really matters is the length
+ 	 * specified in write_blk->byte_count.
+ 	 */
+-	pkt_size += sizeof(pkt.reserved);
++	pkt_size += sizeof(u32);
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, write_blk, pkt_size,
+-			       (unsigned long)&pkt.pkt, VM_PKT_DATA_INBAND,
++			       (unsigned long)pkt, VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+ 		return ret;
+@@ -1589,17 +1582,14 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 			     struct tran_int_desc *int_desc)
+ {
+ 	struct pci_delete_interrupt *int_pkt;
+-	struct {
+-		struct pci_packet pkt;
+-		u8 buffer[sizeof(struct pci_delete_interrupt)];
+-	} ctxt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_delete_interrupt));
+ 
+ 	if (!int_desc->vector_count) {
+ 		kfree(int_desc);
+ 		return;
+ 	}
+-	memset(&ctxt, 0, sizeof(ctxt));
+-	int_pkt = (struct pci_delete_interrupt *)&ctxt.pkt.message;
++	int_pkt = (struct pci_delete_interrupt *)pkt->message;
+ 	int_pkt->message_type.type =
+ 		PCI_DELETE_INTERRUPT_MESSAGE;
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+@@ -1798,6 +1788,12 @@ static u32 hv_compose_msi_req_v3(
+ 	return sizeof(*int_pkt);
+ }
+ 
++union int_pkts {
++	struct pci_create_interrupt v1;
++	struct pci_create_interrupt2 v2;
++	struct pci_create_interrupt3 v3;
++};
++
+ /**
+  * hv_compose_msi_msg() - Supplies a valid MSI address/data
+  * @data:	Everything about this MSI
+@@ -1811,6 +1807,13 @@ static u32 hv_compose_msi_req_v3(
+  */
+ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message, sizeof(union int_pkts));
++	struct pci_create_interrupt *pkt_v1 =
++				(struct pci_create_interrupt *)pkt->message;
++	struct pci_create_interrupt2 *pkt_v2 =
++				(struct pci_create_interrupt2 *)pkt->message;
++	struct pci_create_interrupt3 *pkt_v3 =
++				(struct pci_create_interrupt3 *)pkt->message;
+ 	struct hv_pcibus_device *hbus;
+ 	struct vmbus_channel *channel;
+ 	struct hv_pci_dev *hpdev;
+@@ -1826,14 +1829,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 */
+ 	u16 vector_count;
+ 	u32 vector;
+-	struct {
+-		struct pci_packet pci_pkt;
+-		union {
+-			struct pci_create_interrupt v1;
+-			struct pci_create_interrupt2 v2;
+-			struct pci_create_interrupt3 v3;
+-		} int_pkts;
+-	} __packed ctxt;
+ 	bool multi_msi;
+ 	u64 trans_id;
+ 	u32 size;
+@@ -1910,14 +1905,13 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 * can't exceed u8. Cast 'vector' down to u8 for v1/v2 explicitly
+ 	 * for better readability.
+ 	 */
+-	memset(&ctxt, 0, sizeof(ctxt));
+ 	init_completion(&comp.comp_pkt.host_event);
+-	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
+-	ctxt.pci_pkt.compl_ctxt = &comp;
++	pkt->completion_func = hv_pci_compose_compl;
++	pkt->compl_ctxt = &comp;
+ 
+ 	switch (hbus->protocol_version) {
+ 	case PCI_PROTOCOL_VERSION_1_1:
+-		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
++		size = hv_compose_msi_req_v1(pkt_v1,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+ 					vector_count);
+@@ -1925,7 +1919,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	case PCI_PROTOCOL_VERSION_1_2:
+ 	case PCI_PROTOCOL_VERSION_1_3:
+-		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
++		size = hv_compose_msi_req_v2(pkt_v2,
+ 					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+@@ -1933,7 +1927,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		break;
+ 
+ 	case PCI_PROTOCOL_VERSION_1_4:
+-		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
++		size = hv_compose_msi_req_v3(pkt_v3,
+ 					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					vector,
+@@ -1950,8 +1944,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		goto free_int_desc;
+ 	}
+ 
+-	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
+-				     size, (unsigned long)&ctxt.pci_pkt,
++	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, pkt->message,
++				     size, (unsigned long)pkt,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret) {
+@@ -2034,7 +2028,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 *
+ 	 * Cf. hv_pci_onchannelcallback().
+ 	 */
+-	vmbus_request_addr_match(channel, trans_id, (unsigned long)&ctxt.pci_pkt);
++	vmbus_request_addr_match(channel, trans_id, (unsigned long)pkt);
+ free_int_desc:
+ 	kfree(int_desc);
+ drop_reference:
+@@ -2464,10 +2458,8 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+ 	struct q_res_req_compl comp_pkt;
+-	struct {
+-		struct pci_packet init_packet;
+-		u8 buffer[sizeof(struct pci_child_message)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_child_message));
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -2477,18 +2469,17 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 
+ 	hpdev->hbus = hbus;
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+ 	init_completion(&comp_pkt.host_event);
+ 	comp_pkt.hpdev = hpdev;
+-	pkt.init_packet.compl_ctxt = &comp_pkt;
+-	pkt.init_packet.completion_func = q_resource_requirements;
+-	res_req = (struct pci_child_message *)&pkt.init_packet.message;
++	pkt->compl_ctxt = &comp_pkt;
++	pkt->completion_func = q_resource_requirements;
++	res_req = (struct pci_child_message *)pkt->message;
+ 	res_req->message_type.type = PCI_QUERY_RESOURCE_REQUIREMENTS;
+ 	res_req->wslot.slot = desc->win_slot.slot;
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, res_req,
+-			       sizeof(struct pci_child_message),
+-			       (unsigned long)&pkt.init_packet,
++			       __member_size(pkt->message),
++			       (unsigned long)pkt,
+ 			       VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -2827,10 +2818,8 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	struct pci_dev *pdev;
+ 	unsigned long flags;
+ 	int wslot;
+-	struct {
+-		struct pci_packet pkt;
+-		u8 buffer[sizeof(struct pci_eject_response)];
+-	} ctxt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_eject_response));
+ 
+ 	hpdev = container_of(work, struct hv_pci_dev, wrk);
+ 	hbus = hpdev->hbus;
+@@ -2859,8 +2848,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	if (hpdev->pci_slot)
+ 		pci_destroy_slot(hpdev->pci_slot);
+ 
+-	memset(&ctxt, 0, sizeof(ctxt));
+-	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
++	ejct_pkt = (struct pci_eject_response *)pkt->message;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+@@ -3805,10 +3793,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ {
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct vmbus_channel *chan = hdev->channel;
+-	struct {
+-		struct pci_packet teardown_packet;
+-		u8 buffer[sizeof(struct pci_message)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message, 1);
+ 	struct hv_pci_compl comp_pkt;
+ 	struct hv_pci_dev *hpdev, *tmp;
+ 	unsigned long flags;
+@@ -3850,15 +3835,14 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		return ret;
+ 	}
+ 
+-	memset(&pkt.teardown_packet, 0, sizeof(pkt.teardown_packet));
+ 	init_completion(&comp_pkt.host_event);
+-	pkt.teardown_packet.completion_func = hv_pci_generic_compl;
+-	pkt.teardown_packet.compl_ctxt = &comp_pkt;
+-	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
++	pkt->completion_func = hv_pci_generic_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	pkt->message[0].type = PCI_BUS_D0EXIT;
+ 
+-	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
+-				     sizeof(struct pci_message),
+-				     (unsigned long)&pkt.teardown_packet,
++	ret = vmbus_sendpacket_getid(chan, pkt->message,
++				     __member_size(pkt->message),
++				     (unsigned long)pkt,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -3873,7 +3857,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		 * Cf. hv_pci_onchannelcallback().
+ 		 */
+ 		vmbus_request_addr_match(chan, trans_id,
+-					 (unsigned long)&pkt.teardown_packet);
++					 (unsigned long)pkt);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+-- 
+2.43.0
 
-Best regards,
-Hans
 
