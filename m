@@ -1,196 +1,160 @@
-Return-Path: <linux-pci+bounces-26769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CC9FA9CDEC
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:18:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69EC1A9CDF5
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:22:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D36A99E09DF
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:18:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27C381B63014
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47C4519E7FA;
-	Fri, 25 Apr 2025 16:18:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8531991D2;
+	Fri, 25 Apr 2025 16:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zXP+EO+i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ2Ozn56"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBC446447
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 16:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503204A24;
+	Fri, 25 Apr 2025 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597901; cv=none; b=jQrq60X+v5yVXrktiT6NjCxJ2LfHq71xEm/Da7ckVTEgJx3KD1blWMSgglSmaV1yb7gE5sAY4D3a50VWOAaeZVEZ1t5lYz5zJrXh9zdJR1Mmc+7MUhPaVh3AQgnm3tZ+4jjA0+k7icB7LwXS2w5yNadefVL/p4mJyCeLz9J7CLA=
+	t=1745598116; cv=none; b=IIrAWvV3WnobCoDg1p6zKlE5+u6LtkH4QaAe1vVSz7TFyBOO8n53doQSwmq8NPD01KQFuGAb6c+v4B05CSLqul3EcVxlQNzl5/wRqv5Uoh46z8F0Apm0JdwVLV7gIUF13zxPG37MzG63t9JSfyp6jhtDjAjF5qe2+Gj+63AC4Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745597901; c=relaxed/simple;
-	bh=3dcytkIIOKjYNTYbCvwxv8RLp8Sf8wMdUwsN320D9Ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLdA3U+wZHPk3/S+06yYRe8+pSdUxIj9jWkEN4//s/T4yVMgEbKenhRdTrGGlbaQuStbdhvszUo81I2gYAiE0zlxNHoFYt/aYNUJlftFj1Gmvcn/HMhtMCKPk/C9zrrxTlom71RpEq8tfu/3IOOFwOtsodyOpQ41+6tkt/acfho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zXP+EO+i; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so3243209b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 09:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745597897; x=1746202697; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zZbqNinw0GvgPs1iizzcZ6AlHQrRMk2Lrby4q0n+fcU=;
-        b=zXP+EO+iI9Xt5G+2oQdKqI5po+MYKrnBD+f3ZY1hpIYJt4xM53Odpwc197d9kUAY9O
-         B0WhScuLvjfkL4/n6lwPfHoLf3VitdmMENBemKsf5n6mZA6fE3ccTl4l+bEpZoYNt9IN
-         OGCm3LYmCmFK+X7WdR8n3SZq0Acoilfa1DS6ys/ieTR1AWEZlprcieEvXkS0ZmORh/G7
-         VuAW7iw2SdplqVLs9fDNpJ8s5Pift2U4eXKYu5xsc4K07BOUXWfGHWd1ylrxwUlStdvr
-         RUw5RQ0VHgJ76Bl2GsKxpzoURqGNtWtzLROZlFYrUTowAnYEtQqzXCYJWSPw9y8oG1oI
-         DtJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745597897; x=1746202697;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zZbqNinw0GvgPs1iizzcZ6AlHQrRMk2Lrby4q0n+fcU=;
-        b=QupDygPoN+U2WgHUZpEFZTVWQ2V28MNx61bX7dsq7eN7yyPLdJWelUBZatMD6WGkOs
-         ACzciQzsvP7vDLOxYWjFZnDMNDRAdwLWgDBSZkWHLJ5CohXqIkacnR5n9CIFVoA1I9BI
-         PrdYTXzxFrfw5H+ooxrR+/VOw6chbr5wuRMeObe/xVeljoQCiBWF0xPfPo37z1KeMOjL
-         AwbQ0PkZqwD6lqCcw8WsutuSsfnhByulwyHX1jDFKJSQu7gCU9baSOZXGJGSXL8hunUi
-         z5yvTS+RNzwXMyoWfMdp0Szmir9oRnYWjENtS/k8pAcDuyhDZu7YKdQvwghrxXnZR96a
-         E7Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXwnHbqcPnlRwAjEolJc4mnCdyiaHuqAQjpPWuBquKyp/Rvt1zrqbGzXhNYJYXj/hPZmQ11nZyCST8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHzG0ReK8AJeN11XMqFF8xd0JG2g012LA3FXUKUweJniAxlR6F
-	1sJcVYhD7+HkTjAA+aXhg1ouTbeP8a/bw2H07GkAdb8toZBTBWzMCLzktBJPuw==
-X-Gm-Gg: ASbGncv7kdqwYsYy8fZiqVhGhu2AoIPtwygcdPf1CfA5gmDM0A7O+pyF/5zg7QcCscR
-	4NlbIbC8gYUmzorI3VwpjOSWmX1URw4spdkaVBHQcbHy472EFR7pQhbrSk4Vk/QvqB6GgCBJrRv
-	jic2En6SN9wMqNvALGXNX/oUuhn+jFwOI2mj0KOtZ/Goy2PGqjNOCkwPJ9b4QVKJdv8cyAmd8Im
-	lHuQ0UZjI8J41QqnBW+nN9XE0+Leu3JwcD9DaJ0ezi0XDcvk4xitSZrJ4ofTOJH/i9fQ68TfO9s
-	SEYxc/C1LRDAuQ2ZMU48K3sFKuZMs4K9VS7YH9HK1Dzi/yLKLlrQ
-X-Google-Smtp-Source: AGHT+IFJ8f+Ljs0TwETyk/DKUrALYADuqKxZ4P01us48D6R3+0qlUDjyPo+P1Thcb08Psu0HHHpIew==
-X-Received: by 2002:a05:6a20:c702:b0:1f5:9cdc:54bb with SMTP id adf61e73a8af0-20445ee29a1mr8972811637.11.1745597896910;
-        Fri, 25 Apr 2025 09:18:16 -0700 (PDT)
-Received: from thinkpad ([120.56.201.179])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f45d2sm3080986a12.11.2025.04.25.09.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:18:16 -0700 (PDT)
-Date: Fri, 25 Apr 2025 21:48:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, linux-wireless@vger.kernel.org, 
-	ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com, 
-	quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v2 06/10] bus: mhi: host: Add support to read MHI
- capabilities
-Message-ID: <ywqbhivo7k7jmuptueeqhirlkpk5inbfaucuvmvnpj6ppcpzd4@whdsaymdvtaf>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
- <20250313-mhi_bw_up-v2-6-869ca32170bf@oss.qualcomm.com>
+	s=arc-20240116; t=1745598116; c=relaxed/simple;
+	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d/olZ2hXTkr6c1bNqcPGqRKKTbX0artdsSTkHFMnNhvlB3Scc8jVdXKdelpnPru7qWUcN+ieEsnKktxzfaxNL6SwDcrB3Q3+IuHZ7X9JrZXi+eY6wtk8FDwGekhu/RYYRcWI/oAWD7BBhd87b8PHKYTCYyCGgzRT3gkLKZU9xUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ2Ozn56; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B51C4CEE4;
+	Fri, 25 Apr 2025 16:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745598115;
+	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XQ2Ozn56t6c+UjaG1t4ey2DSK551MgyG4HFkZ/Ew45G65wPgF+NdyFNMrtG5KmoM0
+	 OHJFaFePEInFrNtLK/0vEJ5U2e2BqT+Bj/j96TFFX0OY29ZI5/2RzL1nNiEqRNFHYE
+	 szUktDf2F3VkEPn/YS6dgKP86ORvyNWsKzNtCWlsUXcrTTv8VqqDG5o8geP0zMpRV7
+	 r7s7+alqadplye5QdpyEdeBxQTUMchJUbE+dT1lyDU2kIZw+Cjy0dY8fz4cjwzyNaB
+	 /hVKsXPTIJc0LgIlABYVWzPWO0l3dhnIccjinEHERjb1VgUM7QhrSRqXXbvQa9jqvz
+	 aAjU0uD2G2WuA==
+Message-ID: <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
+Date: Fri, 25 Apr 2025 18:21:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313-mhi_bw_up-v2-6-869ca32170bf@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+To: Hans Zhang <hans.zhang@cixtech.com>, Conor Dooley <conor@kernel.org>,
+ Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250425-drained-flyover-4275720a1f5a@spud>
+ <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 05:10:13PM +0530, Krishna Chaitanya Chundru wrote:
-> From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+On 25/04/2025 17:33, Hans Zhang wrote:
 > 
-> As per MHI spec sec 6.6, MHI has capability registers which are located
+> 
+> On 2025/4/25 22:48, Conor Dooley wrote:
+>> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
+>>>>
+>>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
+>>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
+>>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
+>>>>>>
+>>>>>> Document the compatible property for HPA (High Performance
+>>>> Architecture)
+>>>>>> PCIe controller EP configuration.
+>>>>> Please explain what makes the new architecture sufficiently different
+>>>>> from the existing one such that a fallback compatible does not work.
+>>>>>
+>>>>> Same applies to the other binding patch.
+>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
+>>>> soc-specific compatible for your integration not needed?
+>>>>
+>>> The sky1 SoC support patches will be developed and submitted by the Sky1
+>>> team separately.
+>> Why? Cixtech sent this patchset, they should send it with their user.
+> 
+> Hi Conor,
+> 
+> Please look at the communication history of this website.
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
 
-Add spec version also since these capability registers are present in newer
-versions only.
+And in that thread I asked for Soc specific compatible. More than once.
+Conor asks again.
 
-- Mani
+I don't understand your answers at all.
 
-> after the ERDB array. The location of this group of registers is
-> indicated by the MISCOFF register. Each capability has a capability ID to
-> determine which functionality is supported and each capability will point
-> to the next capability supported.
-> 
-> Add a basic function to read those capabilities offsets.
-> 
-> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/bus/mhi/common.h    |  4 ++++
->  drivers/bus/mhi/host/init.c | 29 +++++++++++++++++++++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
-> index dda340aaed95..eedac801b800 100644
-> --- a/drivers/bus/mhi/common.h
-> +++ b/drivers/bus/mhi/common.h
-> @@ -16,6 +16,7 @@
->  #define MHICFG				0x10
->  #define CHDBOFF				0x18
->  #define ERDBOFF				0x20
-> +#define MISCOFF				0x24
->  #define BHIOFF				0x28
->  #define BHIEOFF				0x2c
->  #define DEBUGOFF			0x30
-> @@ -113,6 +114,9 @@
->  #define MHISTATUS_MHISTATE_MASK		GENMASK(15, 8)
->  #define MHISTATUS_SYSERR_MASK		BIT(2)
->  #define MHISTATUS_READY_MASK		BIT(0)
-> +#define MISC_CAP_MASK			GENMASK(31, 0)
-> +#define CAP_CAPID_MASK			GENMASK(31, 24)
-> +#define CAP_NEXT_CAP_MASK		GENMASK(23, 12)
->  
->  /* Command Ring Element macros */
->  /* No operation command */
-> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-> index a9b1f8beee7b..0b14b665ed15 100644
-> --- a/drivers/bus/mhi/host/init.c
-> +++ b/drivers/bus/mhi/host/init.c
-> @@ -467,6 +467,35 @@ int mhi_init_dev_ctxt(struct mhi_controller *mhi_cntrl)
->  	return ret;
->  }
->  
-> +static int mhi_get_capability_offset(struct mhi_controller *mhi_cntrl, u32 capability, u32 *offset)
-> +{
-> +	u32 val, cur_cap, next_offset;
-> +	int ret;
-> +
-> +	/* get the 1st supported capability offset */
-> +	ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MISCOFF,
-> +				 MISC_CAP_MASK, offset);
-> +	if (ret)
-> +		return ret;
-> +	do {
-> +		if (*offset >= mhi_cntrl->reg_len)
-> +			return -ENXIO;
-> +
-> +		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		cur_cap = FIELD_PREP(CAP_CAPID_MASK, val);
-> +		next_offset = FIELD_PREP(CAP_NEXT_CAP_MASK, val);
-> +		if (cur_cap == capability)
-> +			return 0;
-> +
-> +		*offset = next_offset;
-> +	} while (next_offset);
-> +
-> +	return -ENXIO;
-> +}
-> +
->  int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->  {
->  	u32 val;
-> 
-> -- 
-> 2.34.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
 
