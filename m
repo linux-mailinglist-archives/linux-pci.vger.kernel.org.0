@@ -1,121 +1,94 @@
-Return-Path: <linux-pci+bounces-26737-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26738-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 997B3A9C4E8
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:13:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE07A9C511
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:17:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D12E97A2897
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:12:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9388D171B62
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:17:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D36D23F417;
-	Fri, 25 Apr 2025 10:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99FBF1C8600;
+	Fri, 25 Apr 2025 10:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVJ5ldkx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E01A1C8600;
-	Fri, 25 Apr 2025 10:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701F926AC3;
+	Fri, 25 Apr 2025 10:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575974; cv=none; b=LljsHBChPtoU7XJldkD9jnilFK4p+8D73lPaojcTbeDI7ChJirESX9B/cgLfLN4FV1lfZR3B0npkSrqDmJpMAzZd+fQ4BiPQxrUR9E11GLRXCPcElWLlmlxPFwx416P6mm6g33GbosZnpI/lFXXgMiIKiDzzvEtj5Y3n1XHJZts=
+	t=1745576270; cv=none; b=hPOry2OlLHG2P9gez92D2FeByByVhLDxFzoL9BcLf+LLSVVx6R+/URIRHyM+bw3a/OYxNGkinctPqGcoBXZ23uDC5LMzpW7Aw6sld8H/tEWS7KdbrMryF2zCdXjqWXXbLoqxzzBbUb9yDSfJA3lJDve+TNHjLkEsQUSn41gzs+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575974; c=relaxed/simple;
-	bh=IHATJE1khszjObdsQyGJmBlU9Z+SAnlkzb5F0C6Gbvs=;
+	s=arc-20240116; t=1745576270; c=relaxed/simple;
+	bh=jHetIDcoEMJE5Pmx9hfvbqtA0k/bgENuEA9snYJ/JQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOu8Uojz1o8+lbco0a60+JyJIin/p4WUuK0uFsId3ng/Hk0dV/CoPTYh+E5VMsEIyi7vjSGjcigZPQDsXsnFh/iJK1PbhquXs2wC1XHW0bTMQLfbXWtiPF2TztNOp1z4Tdil12ozqcXMdV1A365NL8dey3O+4QQQwdvYRQWriFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 5E9332C4CBD4;
-	Fri, 25 Apr 2025 12:12:22 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 1E1F1EAA1C; Fri, 25 Apr 2025 12:12:49 +0200 (CEST)
-Date: Fri, 25 Apr 2025 12:12:49 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with
- PCI_LINK_LBMS_SEEN flag
-Message-ID: <aAtgIfG8VG7vLDPN@wunner.de>
-References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
- <aAi734h55l7g6eXH@wunner.de>
- <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com>
- <aAnOOj91-N6rwt2x@wunner.de>
- <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYCCRD5sXfb/DTWUTlcTARBpnJCguv0OGVA66JfB/FZ3LyeCLPyfqS3rEHO/s5R7G8kH2J8rM4Gg6bd4UB+4VTKJdAqJnDxIg2/v9A8iahRs01XThS/sTdwHC0V9dqXrUeuqK9KEezOVd5Fk7VCHhPcEZLJAIIUHxvOQj4mAViA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVJ5ldkx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE911C4CEE4;
+	Fri, 25 Apr 2025 10:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745576269;
+	bh=jHetIDcoEMJE5Pmx9hfvbqtA0k/bgENuEA9snYJ/JQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JVJ5ldkx0bzzY1siTZptS8iOsMb0rh/16B4dalCRuYsdMQMrTWOtVWXpNGJYSu4bI
+	 Pki4Y99cTUBsZ0ykhSfWQKuC6WO5chHnfGNNxAKOlsCCX9Tcc16vOAzY2v8YJpV3sT
+	 TJAcd3su86PT9qJWA6lqkKuaZrmTuoXJVRrIE6yWwINzDi0VTnLgJv8/XAvSuBBzE3
+	 uV9bkJn+JAwuW5M+NTSyH1EedQSY66k7kTs4+G5c4/EJ2THhDU8zE2LC51SXHAOqJV
+	 AdVDZeBeyvk542mjAKuzcXrQWY4sSlDC94JM3lZYoL2xbnK1BS5US0haYNRtQOiHAh
+	 DRR5WztJ7O4VA==
+Date: Fri, 25 Apr 2025 12:17:43 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, thomas.petazzoni@bootlin.com,
+	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] PCI: Remove redundant MPS configuration
+Message-ID: <aAthR8ZXSqfe6fzV@ryzen>
+References: <20250425095708.32662-1-18255117159@163.com>
+ <20250425095708.32662-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
+In-Reply-To: <20250425095708.32662-3-18255117159@163.com>
 
-On Thu, Apr 24, 2025 at 03:37:38PM +0300, Ilpo Järvinen wrote:
-> On Thu, 24 Apr 2025, Lukas Wunner wrote:
-> >   The only concern here is whether the cached
-> >   link speed is updated.  pcie_bwctrl_change_speed() does call
-> >   pcie_update_link_speed() after calling pcie_retrain_link(), so that
-> >   looks fine.  But there's a second caller of pcie_retrain_link():
-> >   pcie_aspm_configure_common_clock().  It doesn't update the cached
-> >   link speed after calling pcie_retrain_link().  Not sure if this can
-> >   lead to a change in link speed and therefore the cached link speed
-> >   should be updated?  The Target Link Speed isn't changed, but maybe
-> >   the link fails to retrain to the same speed for electrical reasons?
+On Fri, Apr 25, 2025 at 05:57:08PM +0800, Hans Zhang wrote:
+> With the PCI core now centrally configuring root port MPS to
+> hardware-supported maximums (via 128 << pcie_mpss) during host probing,
+> platform-specific MPS adjustments are redundant. This patch removes the
+> custom the configuration of the max payload logic to align with the
+> standardized initialization flow.
 > 
-> I've never seen that to happen but it would seem odd if that is forbidden 
-> (as the alternative is probably that the link remains down).
+> By eliminating redundant code, this change prevents conflicts with global
+> PCIe hierarchy tuning policies and reduces maintenance overhead. The Meson
+> driver now fully relies on the core PCI framework for MPS configuration,
+> ensuring consistency across the PCIe topology while preserving
+> hardware-specific MRRS handling.
 > 
-> Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as the 
-> last step, then the irq handler returning IRQ_NONE doesn't matter.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
+>  drivers/pci/controller/pci-aardvark.c  |  2 --
 
-Why pcie_reset_lbms()?  I was rather thinking that pcie_update_link_speed()
-should be called from pcie_retrain_link().  Maybe right after the final
-pcie_wait_for_link_status().
-
-That would ensure that the speed is updated in case retraining from
-pcie_aspm_configure_common_clock() happens to lead to a lower speed.
-And the call to pcie_update_link_speed() from pcie_bwctrl_change_speed()
-could then be dropped.
-
-PCIe r6.2 sec 7.5.3.19 says the Target Link Speed "sets an upper limit
-on Link operational speed", which implies that the actual negotiated
-speed might be lower.
+Since you are touching two drivers (and the changes are not exactly identical),
+I suggest that you do one patch per driver.
 
 
-> > - pciehp's remove_board() calls the function after bringing down the slot
-> >   to avoid a stale PCI_LINK_LBMS_SEEN flag.  No real harm in clearing the
-> >   bit in the register at this point I guess.  But I do wonder, is the link
-> >   speed updated somewhere when a new board is added?  The replacement
-> >   device may not support the same speeds as the previous device.
-> 
-> The supported speeds are always recalculated using dev->supported_speeds. 
-> A new board implies a new pci_dev structure with newly read supported 
-> speeds. Also, bringing the link up with the replacement device will also 
-> trigger LBMS so the new Link Speed should be picked up by that.
-> 
-> Racing LBMS reset from remove_board() with LBMS due to the replacement 
-> board shouldn't result in stale Link Speed because of:
-> 
-> board_added()
->   pciehp_check_link_status()
->     __pcie_update_link_speed()
-
-Good!  That's the information I was looking for.
-
-Thanks,
-
-Lukas
+Kind regards,
+Niklas
 
