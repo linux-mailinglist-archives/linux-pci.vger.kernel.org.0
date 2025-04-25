@@ -1,276 +1,119 @@
-Return-Path: <linux-pci+bounces-26746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEFC9A9C670
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:59:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C02AA9C662
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:58:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CF593B2882
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:57:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 710241BA5197
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA7E22F3BE;
-	Fri, 25 Apr 2025 10:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBC423D284;
+	Fri, 25 Apr 2025 10:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="QK67PW4F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k685Zw1u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93FA54438B;
-	Fri, 25 Apr 2025 10:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4522F3BE;
+	Fri, 25 Apr 2025 10:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578661; cv=none; b=Wn5+ZwbDRwB14liFLz8K7bCoiPn+bweokSB0/hsLjXuw6spDkgR7x86QbIDz4ddWy6x8mjM0r56p9UrOQ6oejkAKBrTLTsWXjUJ4a5Gp/AZJk3uuOjMZO03j2oIF5K47euQxajGtYbRISgXxg+2n7zzekb5n8PhsSbRJFSjX1fw=
+	t=1745578689; cv=none; b=CrDa6PYCh2qzZMdDCaI7Aey5JXdI/402aixyI5Vh4zX6SWFr1SYcGElgoAIQfI6Ooar6IO3rZDSNu2MdM/cyFjhG1gQReBs6jwTZgLyCArQvnQfXIBzB4/ViaiULWURyC4Zmd48wJ3W8DehmgX1KJdOEthPQPDxA/gDutEPCkXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578661; c=relaxed/simple;
-	bh=78RWYMFDC6mWs3yvvBcOidNI0oUxCEx1K0w0K1PKkNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tUt68u++QwXAGK28xwrdO3+Hi8G34UjJoSC7H9RzURlW/uoRRfylGA8oW12zDJXw+qZxdhrL5bGIit84Bh3DiKMKxtvCuu6QgZZZQBI3TpWa7l6o3iQKtaRQlQXpxc/sa7FFsMrtR2eqzp9Q7d0Jw4hbPlhszpZkLpLakrndv3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=QK67PW4F; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=nli07KgLUrDYMWH1Lc6yMKqrWlicadkP3LHn0B363Ng=;
-	b=QK67PW4FjfSzrmfyXNv5GmvlkVPoZEf2davAV77hrwJvc+qVVB1LzVsDPWl8vz
-	p6/EwY+XU+RSGhim+vaB3ppkMRytTNQrWT/BipxTXBhDRmekRXwrvClHv5dDlPaU
-	SI21SaaGPJ2Ule5IuvpoUNSfCKl4KLveY51UECCuqwoL0=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCH5yx1agto6+qPCQ--.28259S2;
-	Fri, 25 Apr 2025 18:56:55 +0800 (CST)
-Message-ID: <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com>
-Date: Fri, 25 Apr 2025 18:56:53 +0800
+	s=arc-20240116; t=1745578689; c=relaxed/simple;
+	bh=4Wn7tH9mtEyjm/uMupHTDegpcB+IXg7Sq+ep6rcVgSY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jpTwB+z1QITGDHGCFfMYdlqA0VICWIJhrmVyDbXLLByfShQBuizasKUsw8Om/pp1zCY2A/VrqtgaI2nGCg9oMVLQaPrSQGsanNNONVMPyCTr+RPRJW7EAfF7QmtFVG6n2VgDsHoA0PnNfP3pCG+zK7Q9ftaCnOml9lLOnBpXhY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k685Zw1u; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745578688; x=1777114688;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4Wn7tH9mtEyjm/uMupHTDegpcB+IXg7Sq+ep6rcVgSY=;
+  b=k685Zw1uqN7TvSxVWP0lnvqZ0oLq7yJnIgxDgyanHAPsH6N9upRyqlcM
+   P/YlgBsMCB3AhAkFVjt93jWeZNcX58BXLOdjxRtrNVCneyR7r3aDQOUmy
+   WWiqSEuNHSIlUt6ViNIvPeNw+VwB/fPnEzVhQejIu/n5oRLWeVGlwszi3
+   tZBN6faWGbkFQl1WuAKhKQ0tPS7LoOJ2jjTIKSPLIKxC7ZZULBRkze+4J
+   8DzzENK9hno1NzeO8kWfEC8MjftOBBMVolK8zQWGmQNWcXl6jVlyRq/Sk
+   lQC5AmFl6ih44Yvc+vYp5jrmzbyNqjeggwb+2awqQDqK8zMnS7y4wlBQC
+   w==;
+X-CSE-ConnectionGUID: gfawOh2XS1eueu1zi2hiyw==
+X-CSE-MsgGUID: C75WOvpYRZuhugzbq4DQ1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57879073"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="57879073"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:58:07 -0700
+X-CSE-ConnectionGUID: oo8HXNhmTfCk2oNGOF8L6Q==
+X-CSE-MsgGUID: CpDbRpwAR9WvQna2kn5dmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133381856"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:58:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 13:57:56 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: corbet@lwn.net, bhelgaas@google.com, kuurtb@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, vkoul@kernel.org, 
+    yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
+    sanyog.r.kale@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, dakr@kernel.org, 
+    dan.j.williams@intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    Dell.Client.Kernel@dell.com, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 4/7] pci: doe: Replace sysfs visibility macro
+In-Reply-To: <20250423175040.784680-5-david.e.box@linux.intel.com>
+Message-ID: <8d261613-60d3-8825-e073-1b39daadc29a@linux.intel.com>
+References: <20250423175040.784680-1-david.e.box@linux.intel.com> <20250423175040.784680-5-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum
- during host probing
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, thomas.petazzoni@bootlin.com,
- manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com, pali@kernel.org,
- neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250425095708.32662-1-18255117159@163.com>
- <20250425095708.32662-2-18255117159@163.com> <aAtikPOYlGeJCsiA@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAtikPOYlGeJCsiA@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCH5yx1agto6+qPCQ--.28259S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WFy8Jw4fXr47ury3ZFyrZwb_yoW3Xw17pF
-	W2qF42yF4kJF43Ka97tF18uFWjq3ZY9FW3JFsxJr1qv3Z3u3Z5C3sFkFyFq3y7Jr9Yvr1U
-	taykJ340vFs8JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzmhwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDws6o2gLX6dyxAABsx
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 23 Apr 2025, David E. Box wrote:
 
-
-On 2025/4/25 18:23, Niklas Cassel wrote:
-> On Fri, Apr 25, 2025 at 05:57:07PM +0800, Hans Zhang wrote:
->> Current PCIe initialization logic may leave root ports operating with
->> non-optimal Maximum Payload Size (MPS) settings. While downstream device
->> configuration is handled during bus enumeration, root port MPS values
->> inherited from firmware or hardware defaults might not utilize the full
->> capabilities supported by the controller hardware. This can result in
->> suboptimal data transfer efficiency across the PCIe hierarchy.
->>
->> During host controller probing phase, when PCIe bus tuning is enabled,
->> the implementation now configures root port MPS settings to their
->> hardware-supported maximum values. By iterating through bridge devices
->> under the root bus and identifying PCIe root ports, each port's MPS is set
->> to 128 << pcie_mpss to match the device's maximum supported payload size.
->> The Max Read Request Size (MRRS) is subsequently adjusted through existing
->> companion logic to maintain compatibility with PCIe specifications.
->>
->> Explicit initialization at host probing stage ensures consistent PCIe
->> topology configuration before downstream devices perform their own MPS
->> negotiations. This proactive approach addresses platform-specific
->> requirements where controller drivers depend on properly initialized root
->> port settings, while maintaining backward compatibility through
->> PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
->> utilized without altering existing device negotiation behaviors.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
+> Replace deprecated DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() call with the new
+> DEFINE_SYSFS_GROUP_VISIBILITY() helper for the pci_doe_features_sysfs group
+> in drivers/pci/doe.c.
 > 
-> Perhaps Mani deserves a Suggested-by tag?
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/pci/doe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index aae9a8a00406..18b355506dc1 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -119,7 +119,7 @@ static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
+>  
+>  	return !xa_empty(&pdev->doe_mbs);
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
+> +DEFINE_SYSFS_GROUP_VISIBILITY(pci_doe_features_sysfs)
+
+Hi David,
+
+Is it intentional to not have semicolon at the end?
+
+>  const struct attribute_group pci_doe_sysfs_group = {
+>  	.name	    = "doe_features",
 > 
 
-Dear Niklas,
-
-Thank you very much for your reply. Ok. Sorry, I missed it. I 'm going 
-to add Suggested-by tag.
-
-> 
->> ---
->>   drivers/pci/probe.c | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 364fa2a514f8..3973c593fdcf 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -3206,6 +3206,7 @@ EXPORT_SYMBOL_GPL(pci_create_root_bus);
->>   int pci_host_probe(struct pci_host_bridge *bridge)
->>   {
->>   	struct pci_bus *bus, *child;
->> +	struct pci_dev *dev;
->>   	int ret;
->>   
->>   	pci_lock_rescan_remove();
->> @@ -3228,6 +3229,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->>   	 */
->>   	pci_assign_unassigned_root_bus_resources(bus);
->>   
->> +	if (pcie_bus_config != PCIE_BUS_TUNE_OFF) {
->> +		/* Configure root ports MPS to be MPSS by default */
->> +		for_each_pci_bridge(dev, bus) {
->> +			if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
->> +				continue;
->> +
->> +			pcie_write_mps(dev, 128 << dev->pcie_mpss);
->> +			pcie_write_mrrs(dev);
-> 
-> The comment says configure MPS, but the code also calls pcie_write_mrrs().
-> 
-> Should we update the comment or should we remove the call to pcie_write_mrrs()?
-> 
-
-I have tested and found that the result is the same whether 
-pcie_write_mrrs() is called or not.
-
-> Note that even when calling pcie_write_mrrs(), it will not update MRRS for the
-> common case (pcie_bus_config == PCIE_BUS_DEFAULT).
-
-But I discovered a problem:
-
-0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-          ......
-          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                  DevCap: MaxPayload 512 bytes, PhantFunc 0
-                          ExtTag- RBE+
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
-
-
-
-			Should the DevCtl MaxPayload be 256B?
-
-But I tested that the file reading and writing were normal. Is the 
-display of 512B here what we expected?
-
-Root Port 0003:30:00.0 has the same problem. May I ask what your opinion is?
-
-
-		......
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
-          ......
-          Capabilities: [70] Express (v2) Endpoint, MSI 00
-                  DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-unlimited, L1 unlimited
-                          ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
-SlotPowerLimit 0W
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-FLReset-
-                          MaxPayload 256 bytes, MaxReadReq 512 bytes
-		......
-
-
-
-
-
-Several PCIe ports that I enabled.
-
-root@cix-localhost:~# cat /proc/version
-Linux version 6.15.0-rc2-00015-gced1536aaf04-dirty (hans@hans) ......
-root@cix-localhost:~# lspci
-0000:c0:00.0 PCI bridge: Device 1f6c:0001
-0000:c1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-NVMe SSD Controller S4LV008[Pascal]
-0001:90:00.0 PCI bridge: Device 1f6c:0001
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-NVMe SSD Controller PM9A1/PM9A3/980PRO
-0003:30:00.0 PCI bridge: Device 1f6c:0001
-0003:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
-RTL8125 2.5GbE Controller (rev 05)root@cix-localhost:~# lspci -vvv
-0000:c0:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-          ......
-          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                  DevCap: MaxPayload 512 bytes, PhantFunc 0
-                          ExtTag+ RBE+
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
-		......
-0000:c1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-NVMe SSD Controller S4LV008[Pascal] (prog-if 02 [NVM Express])
-          ......
-          Capabilities: [70] Express (v2) Endpoint, MSI 00
-                  DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s
-unlimited, L1 unlimited
-                          ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
-SlotPowerLimit 0W
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-FLReset-
-                          MaxPayload 512 bytes, MaxReadReq 512 bytes
-		......
-0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-          ......
-          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                  DevCap: MaxPayload 512 bytes, PhantFunc 0
-                          ExtTag- RBE+
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
-		......
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
-          ......
-          Capabilities: [70] Express (v2) Endpoint, MSI 00
-                  DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-unlimited, L1 unlimited
-                          ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
-SlotPowerLimit 0W
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-FLReset-
-                          MaxPayload 256 bytes, MaxReadReq 512 bytes
-		......
-0003:30:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-          ......
-          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                  DevCap: MaxPayload 512 bytes, PhantFunc 0
-                          ExtTag- RBE+
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
-		......
-0003:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
-RTL8125 2.5GbE Controller (rev 05)
-          ......
-          Capabilities: [70] Express (v2) Endpoint, MSI 01
-                  DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-<512ns, L1 <64us
-                          ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
-SlotPowerLimit 0W
-                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                          MaxPayload 256 bytes, MaxReadReq 4096 bytes
-          ......
-
-Best regards,
-Hans
+-- 
+ i.
 
 
