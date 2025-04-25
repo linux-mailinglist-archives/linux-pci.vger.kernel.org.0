@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-26760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA2DA9CB88
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:23:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A18A8A9CB8E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:23:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96F453AC204
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 14:20:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB9FA189C7FB
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 14:22:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1BE253359;
-	Fri, 25 Apr 2025 14:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447C22594B9;
+	Fri, 25 Apr 2025 14:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GaGj7k2R"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KzhEE2qm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC803242D99;
-	Fri, 25 Apr 2025 14:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4367F2594B4;
+	Fri, 25 Apr 2025 14:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745590736; cv=none; b=jAvAQB6t2uSaLaIhODMWdakTEgpkynwPwSJWndnhvn25GZ3xIbEjOPjqiu3sHTVkaoRc2dLf6PqE7pYeWivxUm/SgkgKRi+TVer3a8ueDkDk0LOfux9Zw3l5s25TjtS6DYeP9VqSL6Niefvimn8qmSxOx+aWztwZmP3kWsbd3ao=
+	t=1745590889; cv=none; b=j2uheEFXeHAvUofDymy+/mbPpt8ifMeKIHkcxlt0MbnTXyA2EQbMLztCkT7zw+o7fbQSHwL3mMmnS0vs2LEruN7JHruLBqNyjVdCYyf6dsXGHxSUweYvKzI1TQA0c330lpGFs+u6hHLwYahSDiR/F2SmTCn4tJbw61OtWP/jMAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745590736; c=relaxed/simple;
-	bh=zj8iEYBmgTZCdGRMrPhxZ4jZfaarUGk5o1ezZy1Rm9s=;
+	s=arc-20240116; t=1745590889; c=relaxed/simple;
+	bh=GQvWhApWb5wkib+UB0jlhNRWJNmTNt/ktUBASFkbyUc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cn9l5KrHWqjm3vUyLzYKPbFW8oKlV6rjxjzahkspJatCzvVGlmQoHl7QKPE7T3x8BE3CD7DVstZox+YbJxV2Z2siSSjcQDEvu6ZDe015yIAehIT/zWJcEPRQpmzLD1SM/MGjssaEugz3R4FhBE1tTSASCtTrwlJRfmSDwXxS3F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GaGj7k2R; arc=none smtp.client-ip=220.197.31.5
+	 In-Reply-To:Content-Type; b=sLhdgHlWIGr2rKZDq7sl2cwCEWMoIe6qKrNDxo41YUFsE4GZmXiJSR+mMuMMG8jf8iD7cHA82MZs0p+oALsxgRVJ0tZTiOT3k3pUMF+q/auvRtW/E7luj1cIts8IRz5IYFxkXf7IwnoWuRfMtMAh7/MXAumPRrhgmaP/XyJFYTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KzhEE2qm; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=T5dUauytFt6G0vhlS6nMmP45chnWZOXEMoc/tzxHhIM=;
-	b=GaGj7k2R/HA+At4zWfBYbU5M1Nqxcf4OPnU9y/mEnnsYleW6Td0tc+noxG7Ufo
-	sBnc+qihnveVY8CAK+jyZEZuemSJ2FBpEeg51ULwZeDMQCMeCAQNKmVpRNpu5Ykv
-	DNV/h0xkLAGJLhUGuCBbOQA9oX4vk6QkfTfGIlltPs9Ug=
+	Content-Type; bh=XQYBdxu34VR0VSrWEORHz7bVPlHkrPo4i9PmBo0cNQk=;
+	b=KzhEE2qm1q8ynq7e9nb+3UmJpHkBwLvvsVuNDVfC9TNpQr811xVeXyqrM3y6Xc
+	YkpjliF9RF3VLsHI0ZKmn5iULR6+VIOGHXlKIeRZ94WGqpI5dzZg3GR8n1T62qD8
+	3zhebkc3/wl2bWEkSCnn7tYDCiYQPeFPU7HTs33oCDcMk=
 Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnn7+UmQtocRMiCQ--.4501S2;
-	Fri, 25 Apr 2025 22:17:57 +0800 (CST)
-Message-ID: <1904ac4c-832a-4d2c-ab8b-15d3fdf515d0@163.com>
-Date: Fri, 25 Apr 2025 22:17:55 +0800
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wA3mC0vmgto4FqxCQ--.32274S2;
+	Fri, 25 Apr 2025 22:20:32 +0800 (CST)
+Message-ID: <a6e097e4-6d57-4db2-a541-ebd9e4a9856b@163.com>
+Date: Fri, 25 Apr 2025 22:20:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,249 +47,99 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum
- during host probing
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, heiko@sntech.de,
- thomas.petazzoni@bootlin.com, yue.wang@amlogic.com, pali@kernel.org,
- neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+Subject: Re: [PATCH v2 2/2] PCI: Remove redundant MPS configuration
+To: neil.armstrong@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+ bhelgaas@google.com, heiko@sntech.de, thomas.petazzoni@bootlin.com,
+ manivannan.sadhasivam@linaro.org, yue.wang@Amlogic.com
+Cc: pali@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
  khilman@baylibre.com, jbrunet@baylibre.com,
  martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
 References: <20250425095708.32662-1-18255117159@163.com>
- <20250425095708.32662-2-18255117159@163.com> <aAtikPOYlGeJCsiA@ryzen>
- <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com> <aAuSXhmRiKQabjLO@ryzen>
+ <20250425095708.32662-3-18255117159@163.com>
+ <e6752451-4492-4ae2-9bad-3865c4945dbe@linaro.org>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAuSXhmRiKQabjLO@ryzen>
+In-Reply-To: <e6752451-4492-4ae2-9bad-3865c4945dbe@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnn7+UmQtocRMiCQ--.4501S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuFWDCFy7Xry3ArW8Cw4xCrg_yoWxZF17pr
-	WaqF43trWkJFW5ta9rtF1UuFW7twsYvFW3tFsxGr1kta1fuFn3CwsFgry0qw47Cr9YvF1U
-	taykJ3y0qF98Ja7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jorWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxg6o2gLk-CiFQAAst
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wA3mC0vmgto4FqxCQ--.32274S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr4kXF4UKrW7KrW3CryfWFg_yoW5XrWUpF
+	W3uF4SyF48Jr4rWFsFyan5CFWftasIkr9rJr9xGr1xuF9FyFsrJFyayFWF9a4xZr42gFnY
+	yr1Fg347C3Z8tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UGoGdUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxI6o2gLk-CiIQABsS
 
 
 
-On 2025/4/25 21:47, Niklas Cassel wrote:
-> Hello Hans,
-> 
-> On Fri, Apr 25, 2025 at 06:56:53PM +0800, Hans Zhang wrote:
+On 2025/4/25 19:59, neil.armstrong@linaro.org wrote:
+> On 25/04/2025 11:57, Hans Zhang wrote:
+>> With the PCI core now centrally configuring root port MPS to
+>> hardware-supported maximums (via 128 << pcie_mpss) during host probing,
+>> platform-specific MPS adjustments are redundant. This patch removes the
+>> custom the configuration of the max payload logic to align with the
+>> standardized initialization flow.
 >>
->> But I discovered a problem:
+>> By eliminating redundant code, this change prevents conflicts with global
+>> PCIe hierarchy tuning policies and reduces maintenance overhead. The 
+>> Meson
+>> driver now fully relies on the core PCI framework for MPS configuration,
+>> ensuring consistency across the PCIe topology while preserving
+>> hardware-specific MRRS handling.
 >>
->> 0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
->>           ......
->>           Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
->>                   DevCap: MaxPayload 512 bytes, PhantFunc 0
->>                           ExtTag- RBE+
->>                   DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->>                           RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
->>                           MaxPayload 512 bytes, MaxReadReq 1024 bytes
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
+>>   drivers/pci/controller/pci-aardvark.c  |  2 --
+>>   2 files changed, 19 deletions(-)
 >>
->>
->>
->> 			Should the DevCtl MaxPayload be 256B?
->>
->> But I tested that the file reading and writing were normal. Is the display
->> of 512B here what we expected?
->>
->> Root Port 0003:30:00.0 has the same problem. May I ask what your opinion is?
->>
->>
->> 		......
->> 0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
->> NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
->>           ......
->>           Capabilities: [70] Express (v2) Endpoint, MSI 00
->>                   DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
->> unlimited, L1 unlimited
->>                           ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
->> SlotPowerLimit 0W
->>                   DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->>                           RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
->> FLReset-
->>                           MaxPayload 256 bytes, MaxReadReq 512 bytes
->> 		......
+>> diff --git a/drivers/pci/controller/dwc/pci-meson.c 
+>> b/drivers/pci/controller/dwc/pci-meson.c
+>> index db9482a113e9..126f38ed453d 100644
+>> --- a/drivers/pci/controller/dwc/pci-meson.c
+>> +++ b/drivers/pci/controller/dwc/pci-meson.c
+>> @@ -261,22 +261,6 @@ static int meson_size_to_payload(struct 
+>> meson_pcie *mp, int size)
+>>       return fls(size) - 8;
+>>   }
+>> -static void meson_set_max_payload(struct meson_pcie *mp, int size)
+>> -{
+>> -    struct dw_pcie *pci = &mp->pci;
+>> -    u32 val;
+>> -    u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> -    int max_payload_size = meson_size_to_payload(mp, size);
+>> -
+>> -    val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+>> -    val &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>> -    dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
+>> -
+>> -    val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+>> -    val |= PCIE_CAP_MAX_PAYLOAD_SIZE(max_payload_size);
+>> -    dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
+>> -}
+>> -
+>>   static void meson_set_max_rd_req_size(struct meson_pcie *mp, int size)
+>>   {
+>>       struct dw_pcie *pci = &mp->pci;
+>> @@ -381,7 +365,6 @@ static int meson_pcie_host_init(struct dw_pcie_rp 
+>> *pp)
+>>       pp->bridge->ops = &meson_pci_ops;
+>> -    meson_set_max_payload(mp, MAX_PAYLOAD_SIZE);
+>>       meson_set_max_rd_req_size(mp, MAX_READ_REQ_SIZE);
 > 
-> Here we see that the bridge has a higher DevCtl.MPS than the DevCap.MPS of
-> the endpoint.
-> 
-> Let me quote Bjorn from the previous mail thread:
-> 
-> """
->    - I don't think it's safe to set MPS higher in all cases.  If we set
->      the Root Port MPS=256, and an Endpoint only supports MPS=128, the
->      Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
->      that case the RP may respond with a 256-byte payload the Endpoint
->      can't handle.
-> """
-> 
-> 
-> 
-> I think the problem with this patch is that pcie_write_mps() call in
-> pci_host_probe() is done after the pci_scan_root_bus_bridge() call in
-> pci_host_probe().
-> 
-> So pci_configure_mps() (called by pci_configure_device()),
-> which does the limiting of the bus to what the endpoint supports,
-> is actually called before the pcie_write_mps() call added by this patch
-> (which increases DevCtl.MPS for the bridge).
-> 
-> 
-> So I think the code added in this patch needs to be executed before
-> pci_configure_device() is done for the EP.
-> 
-> It appears that pci_configure_device() is called for each device
-> during scan, first for the bridges and then for the EPs.
-> 
-> So I think something like this should work (totally untested):
-> 
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -45,6 +45,8 @@ struct pci_domain_busn_res {
->          int domain_nr;
->   };
->   
-> +static void pcie_write_mps(struct pci_dev *dev, int mps);
-> +
->   static struct resource *get_pci_domain_busn_res(int domain_nr)
->   {
->          struct pci_domain_busn_res *r;
-> @@ -2178,6 +2180,11 @@ static void pci_configure_mps(struct pci_dev *dev)
->                  return;
->          }
->   
-> +       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-> +               pcie_write_mps(dev, 128 << dev->pcie_mpss);
-> +       }
-> +
->          if (!bridge || !pci_is_pcie(bridge))
->                  return;
-> 
-> 
-> 
-> But we would probably need to move some code to avoid the
-> forward declaration.
-> 
-
-Dear Niklas,
-
-Thank you very much for your reply and suggestions. The patch you 
-provided has been tested by me and is normal.
+> Seems you can also remove meson_set_max_rd_req_size() since it's
+> done by pcie_write_mrrs()
 
 
+Dear neil,
 
-Bjorn and Mani, thoughts?
+Thank you very much for your reply and reminder.
 
-
-Please see the following log:
-
-lspci -vvv
-0000:c0:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag+ RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 512 bytes, MaxReadReq 1024 bytes
-         ......
-
-0000:c1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-NVMe SSD Controller S4LV008[Pascal] (prog-if 02 [NVM Express])
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 512 bytes, MaxReadReq 512 bytes
-         ......
-
-0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-         ......
-
-0003:30:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0003:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. 
-RTL8125 2.5GbE Controller (rev 05)
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 01
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-<512ns, L1 <64us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 256 bytes, MaxReadReq 4096 bytes
-         ......
-
-0004:00:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0004:01:00.0 Network controller: Realtek Semiconductor Co., Ltd. 
-RTL8852BE PCIe 802.11ax Wireless Network Controller
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-<4us, L1 <64us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop- 
-FLReset-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-         ......
-
+I want to wait for the result of the first patch discussion, and then 
+see if we need to remove meson_set_max_rd_req_size().
 
 Best regards,
 Hans
-
 
 
