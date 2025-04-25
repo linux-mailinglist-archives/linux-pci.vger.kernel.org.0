@@ -1,96 +1,89 @@
-Return-Path: <linux-pci+bounces-26773-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CE54A9CE34
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:33:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C643A9CE3F
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:36:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04E0B9E7AF3
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:32:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 237381C010AE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:36:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18FDE199E84;
-	Fri, 25 Apr 2025 16:33:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B70FA1A9B2B;
+	Fri, 25 Apr 2025 16:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUojlsDi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfMLaA9S"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E506C18D656;
-	Fri, 25 Apr 2025 16:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2D41A9B53;
+	Fri, 25 Apr 2025 16:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598782; cv=none; b=bR3qJBOaG/8S5mMB4YwOX11AeRcsLPM+N48ITSn+8H/p8sD+A7MteIee6pJbx/2yLuIUQgju4oI6GimRAGBzqRj13UoMEvFouCyMckKBLtqj0JoBcwj44oT0tqHGQQzGFUkyGDFgPbQo5kp5V4ANBrfQF97/C4dWLXcv/Cm+ioI=
+	t=1745598958; cv=none; b=g93fkORlKr4MQIVghWJFbC2CV+PTPLW15h5/J9ScNMEVFKlTh3NDuq7E9mjldm2LujrJPWWFmWls0NUNSMA6cbz8iYJtR28C4mTp9OUSwFa19PgwzY2lWF7gqlIimnbSCUKjbSOkIAJ/u1RvCTwsooFCNudv4KYL4VPF4aLRQBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598782; c=relaxed/simple;
-	bh=qdn06Ig19le3g25nTF9qwPRm9Ux+kIwtPnK5A7jKUQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IFGlMmIMbM7YKnyzNiGpfpxjJNd2wvamp07a8kGLcE1t+m37KWSY51jQy7P+rNRbyVBn80BtrpdSKLUGB6T2dxEjGYpBQtHcsm1c18C298OIrV3jP+x42YYuAyse3m2O8l+xG0CIBfyZMTBTzGfaoXcVC8AuF6H6e2l4/Lj02LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUojlsDi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDCBC4CEE4;
-	Fri, 25 Apr 2025 16:33:01 +0000 (UTC)
+	s=arc-20240116; t=1745598958; c=relaxed/simple;
+	bh=FsR4f8RipLNPNkpkDoIHdHQnHxmjYdk4APWukvEffD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qQNf5yveGqTYwVry1havz4+TP9W1yj/T+guuf7IAW5u0r2beBMbN95vdBtHUZmHZxqp85TWWTbj82QmXHSsLjGS8yIsDxucoz9KXV5R2Bji2OvF+GZPI9g/48crOav1gfPRfshS2RToC1dO8lFnz1lgg7OPlpKP0LmS8OaEyFOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfMLaA9S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D0BC4CEE4;
+	Fri, 25 Apr 2025 16:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598781;
-	bh=qdn06Ig19le3g25nTF9qwPRm9Ux+kIwtPnK5A7jKUQs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SUojlsDiuPeT8+ts6cC0HnLoXfaejPjPoKtvLv4aSgZzuO1bfuU45w8JhwQIToRwx
-	 HzXiNK/vxj87OmkOtAvNb6ZpxdvaWMGkIGqWrCQ+PbLd+t5IVR3/fK608nN/iAHtEw
-	 ft6QJ4TXAbFZPGP35QzD0fyu5MNwKXRDFnzYAmlwLQxkw8imWwQUov9suPoCjBW7nT
-	 1ikUsg5bRVANvQzcOSEpHfSe+M10n4VkNY6W4wffSJnxwzCG91Ud6p3vZpTftpvbQP
-	 TIa0GJn/jv7kEIVbfqn+ni6h4A+zw0Qeh+XAUodSlLlBulXoS5fsA8Ac/VWyQgwSIX
-	 toW8Uh2qezHmg==
-Date: Fri, 25 Apr 2025 11:32:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 0/2] PCI: Clean up match_driver flag usage
-Message-ID: <20250425163259.GA546441@bhelgaas>
+	s=k20201202; t=1745598958;
+	bh=FsR4f8RipLNPNkpkDoIHdHQnHxmjYdk4APWukvEffD4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RfMLaA9SCMn4O8Dq+CtX3lf7Nc63kO8LsATyxdnS8mFHA1v3NsH01veC5keY6dSlY
+	 OXb8/P3EgnNVNJyHzdUm32fZMqhPSPFGNiAzBLNkIxl95k1pXuot+Xg43iV6AuPcV1
+	 /5pEsEs9agtKxVq+jTtx01tfc+zjCkYA6cnu0KXhr6tntRZUEwvDZdve5sqKFO8Cq5
+	 X9fL7UBMFLaHJoZ3kdY5dprxAfAQInGL4S9fB17varuwuwSyYuqknykqYdrtOd3nmI
+	 x3B9V02oOypHvO49Nt3Tmwev0BWSndmvEKtaXa+fm+nwlVScJ85vzcwCFD+M5KZEWB
+	 rOeXBX7TXxvyw==
+Date: Fri, 25 Apr 2025 09:35:56 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury Norov
+ <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron
+ <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
+ Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+ <peterz@infradead.org>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ Paul Rosswurm <paulros@microsoft.com>, Shradha Gupta
+ <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Message-ID: <20250425093556.30104eda@kernel.org>
+In-Reply-To: <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+	<1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1745572340.git.lukas@wunner.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 11:24:20AM +0200, Lukas Wunner wrote:
-> A small puzzle piece to improve maintainability of the PCI core:
-> 
-> The match_driver flag in struct pci_dev is used to postpone driver
-> binding until all PCI devices have been enumerated.
-> 
-> The AMD IOMMU driver fiddles with the flag to work around breakage
-> introduced 10 years ago.  The breaking change has since been reverted,
-> so accessing the flag appears to be superfluous and is hereby dropped
-> (patch [1/2]).  The patch needs an ack from AMD IOMMU maintainers.
-> 
-> This clears the way for moving the flag to struct pci_dev's priv_flags
-> and thus prevent any further abuse outside the PCI core (patch [2/2]).
-> 
-> There are already two patches queued up in this cycle which amend
-> priv_flags with new definitions for bits 4, 5 and 6 (on the pci/hotplug
-> and pci/bwctrl topic branches), hence the bit number used here is 7.
-> 
-> Lukas Wunner (2):
->   Revert "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI
->     devices"
->   PCI: Limit visibility of match_driver flag to PCI core
-> 
->  drivers/iommu/amd/init.c |  3 ---
->  drivers/pci/bus.c        |  4 +++-
->  drivers/pci/pci-driver.c |  2 +-
->  drivers/pci/pci.h        | 11 +++++++++++
->  drivers/pci/probe.c      |  1 -
->  include/linux/pci.h      |  2 --
->  6 files changed, 15 insertions(+), 8 deletions(-)
+On Fri, 25 Apr 2025 03:54:38 -0700 Shradha Gupta wrote:
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
+> +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
 
-Provisionally applied to pci/enumeration for build testing, pending
-ack from AMD IOMMU folks.
+Could you please test your submissions on a kernel with debug options
+enabled? Thank you!
+-- 
+pw-bot: cr
 
