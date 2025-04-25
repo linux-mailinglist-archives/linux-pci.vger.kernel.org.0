@@ -1,168 +1,121 @@
-Return-Path: <linux-pci+bounces-26736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CFECA9C4B7
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:09:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 997B3A9C4E8
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:13:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AED392156D
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:08:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D12E97A2897
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18BB23BCE3;
-	Fri, 25 Apr 2025 10:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fh+Rcq4J"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D36D23F417;
+	Fri, 25 Apr 2025 10:12:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B2C23C8A3
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 10:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E01A1C8600;
+	Fri, 25 Apr 2025 10:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575695; cv=none; b=ggKnEaA9QC7xEWqoXJQ1sglkM0saQMwhod5dz/R43WV6MB4G/ds+QFjukgSKz83LS5PGc0VmWryPBeFkWg8/O9xzgaZbVGobxx7Rqozz+8cV9OTywayESdSFFcyu5HpfeUtiCycflhgzzLZONuJPGKRYJbGIsgMKp9L+J0Cy5i4=
+	t=1745575974; cv=none; b=LljsHBChPtoU7XJldkD9jnilFK4p+8D73lPaojcTbeDI7ChJirESX9B/cgLfLN4FV1lfZR3B0npkSrqDmJpMAzZd+fQ4BiPQxrUR9E11GLRXCPcElWLlmlxPFwx416P6mm6g33GbosZnpI/lFXXgMiIKiDzzvEtj5Y3n1XHJZts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575695; c=relaxed/simple;
-	bh=8W6PDJRTnPXYvMLSNBG6flWYTbiSLNvRa3oqH8q/3YE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JWjHEaR4qJJ5lH9u3N+mI1UFdDTWFWTnYWCdscEo5AbVHbmb2Uj9Yg5tvM0AIZsZpy63vPBiXSFh4F7ElgsScdYKlTSchV8XbX7cb0Bvt0BJGhrz3rP5MOD6iHan6KNKg+9y72nOzwGfoTfO59delvoy8e854Hrp06wMv/+qIpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fh+Rcq4J; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2255003f4c6so22503545ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 03:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745575693; x=1746180493; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=5njHyJvz30qiVz7OEO7ktfy/1HyqmXVebkk5L4HQaNE=;
-        b=fh+Rcq4JmW5i5WWJGrDjuzs0Flq4KXcmgvEwcuk1iqrxDB2mdGspBQvf2XxXNidf8K
-         6UX5rBwlIHmzVDLhsE7/mhkCwlZXn9tPBMrZWG9iQ14240YDsl45HZwDkWQELKm9RnbT
-         STytZ08x9l1Dg13e+sLNEFy5Qdw0Gv/2XcjNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575693; x=1746180493;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5njHyJvz30qiVz7OEO7ktfy/1HyqmXVebkk5L4HQaNE=;
-        b=QgW91qmjwARizEtf6w0sXNLw+aSpHY7li1N8xBdtCju6AOpXHL7qumOGFmS60wd/Wj
-         MetFxhzW8tSGp7pKw0S/Lu2fLn1HLet0UlQJyRrZ9fHX6YYu1lWi8Juw+WZCNuD+pCCI
-         TL7D3JXjAO7Ek/QuyTOSDBG/2HG4iMFe7Rbp6/fFcqiR0PFmlE/UgX+xzjRxfcHyyhA0
-         sRV21r7F313T9npH4R1lhL8OtqKZGvnP4beS8yRbH4xTc5cMFv6U570VqzBkdGtJ4deo
-         3pe/6VwTTLHkyGgcLeZuy7HYpk7MAuGps/8BXmTqfYUTEf2RDueAy8r52g/3SH+n7mmC
-         AgJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUW1eQFD03aiQwwISeGpDd/fA602GZrfn4ukqmj0Zhw62fK4Jp9z7ZqnBBMTF1c9lYeDh8raiGXmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx37P1h9a8spAWZAs6FAfI/73fN/mWP16GbfKnJeM+fpDlfK/3k
-	RPOP7eQLO7McPpmqTDq6uGkE9dW8SLcURb4n/ASIXrjR9NRHWR2Vrv/CWaAfXg==
-X-Gm-Gg: ASbGncuiZU+XiMJJOzSh6FQ30BPaTMBzv+nO1edhGsPZERMkxAXvK1mHLgTheFpA1OJ
-	XcD+Vgp5hgGBAG5SJAR9dmHNUvCi1F0iGkkU2gyPuiNVYet8HnnDuD6Fzlmwlk7VxPk+jCz/F4L
-	ilJTbalrseRuPkmYYTPnrRraP/7hf8HioP3dMtipj0m5LBk/ArS6rRUcvv76wTr44aNT8slrlrv
-	DKEmoTl+G4IM8h7apS/YxCUAf4HGFk8uLpu/bfzZOE6OkDfQ0QH3yvz802LqhUNk7wzFqcB2+N4
-	IID+57wvRCljpRNlzIbr8TBvYXxTv8nBydeGn3a0udMSn0Iboh26tqB0hHgKG5Ga6SCF78sMFlN
-	MyLncx0MBkH4WLfNv+IZub7c1KG0Fxfax/w==
-X-Google-Smtp-Source: AGHT+IEiRvydw+zpgaMow96w2Xm30w4pgcn8Jd4sCNL+n0Zk30vooImhsYXcKB8Md13tN2KuPsGqvg==
-X-Received: by 2002:a17:903:1947:b0:223:26da:4b8e with SMTP id d9443c01a7336-22dbf5d9eeemr28512845ad.4.1745575693162;
-        Fri, 25 Apr 2025 03:08:13 -0700 (PDT)
-Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faee2d59sm2546400a12.70.2025.04.25.03.08.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 03:08:12 -0700 (PDT)
-Message-ID: <49011014-8ad7-4392-b2be-736ecd25cf22@broadcom.com>
-Date: Fri, 25 Apr 2025 12:08:03 +0200
+	s=arc-20240116; t=1745575974; c=relaxed/simple;
+	bh=IHATJE1khszjObdsQyGJmBlU9Z+SAnlkzb5F0C6Gbvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZOu8Uojz1o8+lbco0a60+JyJIin/p4WUuK0uFsId3ng/Hk0dV/CoPTYh+E5VMsEIyi7vjSGjcigZPQDsXsnFh/iJK1PbhquXs2wC1XHW0bTMQLfbXWtiPF2TztNOp1z4Tdil12ozqcXMdV1A365NL8dey3O+4QQQwdvYRQWriFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 5E9332C4CBD4;
+	Fri, 25 Apr 2025 12:12:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1E1F1EAA1C; Fri, 25 Apr 2025 12:12:49 +0200 (CEST)
+Date: Fri, 25 Apr 2025 12:12:49 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with
+ PCI_LINK_LBMS_SEEN flag
+Message-ID: <aAtgIfG8VG7vLDPN@wunner.de>
+References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
+ <aAi734h55l7g6eXH@wunner.de>
+ <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com>
+ <aAnOOj91-N6rwt2x@wunner.de>
+ <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 -next 10/12] arm64: dts: broadcom: Add overlay for RP1
- device
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <4bd8dbb374f15a01e3b3ea27f9e802cd702c1bab.1745347417.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <4bd8dbb374f15a01e3b3ea27f9e802cd702c1bab.1745347417.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
 
-
-
-On 4/22/2025 8:53 PM, Andrea della Porta wrote:
-> Define the RP1 node in an overlay. The inclusion tree is
-> as follow (the arrow points to the includer):
+On Thu, Apr 24, 2025 at 03:37:38PM +0300, Ilpo Järvinen wrote:
+> On Thu, 24 Apr 2025, Lukas Wunner wrote:
+> >   The only concern here is whether the cached
+> >   link speed is updated.  pcie_bwctrl_change_speed() does call
+> >   pcie_update_link_speed() after calling pcie_retrain_link(), so that
+> >   looks fine.  But there's a second caller of pcie_retrain_link():
+> >   pcie_aspm_configure_common_clock().  It doesn't update the cached
+> >   link speed after calling pcie_retrain_link().  Not sure if this can
+> >   lead to a change in link speed and therefore the cached link speed
+> >   should be updated?  The Target Link Speed isn't changed, but maybe
+> >   the link fails to retrain to the same speed for electrical reasons?
 > 
->                        rp1.dtso
->                            ^
->                            |
-> rp1-common.dtsi ----> rp1-nexus.dtsi
+> I've never seen that to happen but it would seem odd if that is forbidden 
+> (as the alternative is probably that the link remains down).
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as the 
+> last step, then the irq handler returning IRQ_NONE doesn't matter.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Why pcie_reset_lbms()?  I was rather thinking that pcie_update_link_speed()
+should be called from pcie_retrain_link().  Maybe right after the final
+pcie_wait_for_link_status().
 
+That would ensure that the speed is updated in case retraining from
+pcie_aspm_configure_common_clock() happens to lead to a lower speed.
+And the call to pcie_update_link_speed() from pcie_bwctrl_change_speed()
+could then be dropped.
+
+PCIe r6.2 sec 7.5.3.19 says the Target Link Speed "sets an upper limit
+on Link operational speed", which implies that the actual negotiated
+speed might be lower.
+
+
+> > - pciehp's remove_board() calls the function after bringing down the slot
+> >   to avoid a stale PCI_LINK_LBMS_SEEN flag.  No real harm in clearing the
+> >   bit in the register at this point I guess.  But I do wonder, is the link
+> >   speed updated somewhere when a new board is added?  The replacement
+> >   device may not support the same speeds as the previous device.
+> 
+> The supported speeds are always recalculated using dev->supported_speeds. 
+> A new board implies a new pci_dev structure with newly read supported 
+> speeds. Also, bringing the link up with the replacement device will also 
+> trigger LBMS so the new Link Speed should be picked up by that.
+> 
+> Racing LBMS reset from remove_board() with LBMS due to the replacement 
+> board shouldn't result in stale Link Speed because of:
+> 
+> board_added()
+>   pciehp_check_link_status()
+>     __pcie_update_link_speed()
+
+Good!  That's the information I was looking for.
+
+Thanks,
+
+Lukas
 
