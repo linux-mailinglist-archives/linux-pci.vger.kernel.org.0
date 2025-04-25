@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-26734-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26735-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2FB5A9C4A5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:07:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EEEAA9C4AD
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 12:08:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FB345A3B76
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:07:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BCD35A363C
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 10:08:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB38238C2A;
-	Fri, 25 Apr 2025 10:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C5423D29B;
+	Fri, 25 Apr 2025 10:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hi9sU/dE"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MExBNHst"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9AA23236D
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 10:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E6123D28C
+	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 10:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575668; cv=none; b=gzWi9faRsO31WcIoqvklDVFFuMk5iyn0sPseBjy5rbsJHhp32djC4QOnelZx1HpTh2sBwv2grX6wNlUt3FBb3OCh06BGh7yTsuDfBOnnd9SSQUdvOdHVx5d7oXfGKddWh0nGrqhs3N92lLfj21qXNiyRi7YpHaP3GcCNUSSXnUo=
+	t=1745575678; cv=none; b=rZUty85YmWDuazPvSByVbz7Qo5gfY/DAicBlxrfDvAToMygjhRE7a0BnYidMz4uprq5GugQuM6faxMFChENzZxKPPu2SGv27ktYe6Dyk32kkn03mZuVKA1PotjGze5AODMr6U1Ya66EFpMPxPduVbBgvobSSdwJnlS9LLqmnx6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575668; c=relaxed/simple;
-	bh=qV1pZ+3JNp92kKS0xXXAb/pAJaziKcnWjRvO2Z5j/JI=;
+	s=arc-20240116; t=1745575678; c=relaxed/simple;
+	bh=gMfPESXVEcHFW7aCs7FCE1eoGX1vKGJ5//35Wtfc/wk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O1VlL6F9OhRNOdcp+srdrvr/Qeger6ZpqDC1LPYlSKg4tvG46dy1/tIuCfNb0rmqcAL31X9ZhySD3a1n77p5nlDjUoMzxlFovqq09kah/1WZr0+qGRLCXdaSqH9eM04CH5J1Et+vQgVUtbdNwJUqnK6D+7fMeBQe4wxtPZYWhmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hi9sU/dE; arc=none smtp.client-ip=209.85.210.171
+	 In-Reply-To:Content-Type; b=PFaev16aGwB6DtRu9g23ueog3WrxxInD6RP74qM2wOhx3MMd9gvIKo+Cqe0rVnAOMp/IqzYW6mouTRc8Ssi3MC0KPArl75S38vtzY8Y1yA6tS+5LCEmXz0yO8ozxH8nXdxacUefpIzjL+U0RRjifw5TTg5vEmdduDjxOhVX1rb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MExBNHst; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c277331eso3060561b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 03:07:46 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2295d78b433so22903055ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 03:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745575666; x=1746180466; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1745575676; x=1746180476; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=5B7y37K/WGDfH6iYqZP3IbPETHIDt3dOJy9LPqxh618=;
-        b=hi9sU/dEpFQfBFlaD5a7O2qhVFpneBbrm9Jc4YWpt7nxK7cZtmdKE50fsj+XqWrp1+
-         F8Wx4KzDWJBw7F25oW1NleaBjZB90nyK6+CRT7lQP0TbSYv7aRmSSYzKQQiib9HaV+CB
-         wX1A5dfcphrBYCEpmV3tY6oaAYsNC9wy1bImo=
+        bh=qL/GfRaKKdsAK+0kAIMrtxaOj8SSMTgBlKehhO/P69U=;
+        b=MExBNHstst+XK1XSn677+eThyDa9I03J5pApCiVUMUrUdqWm/Y8ysMIJ/qaUVlEXxA
+         AgCOxCzqgeKWcV6hnJWrzbXVhSMDUm/0CQLbgNi/mxWhNoRrJ/cPm3KhipMcGgbuRSpV
+         L684Yej7Flf32ppzSg/cQqIKfC8m3xjBifwqw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575666; x=1746180466;
+        d=1e100.net; s=20230601; t=1745575676; x=1746180476;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5B7y37K/WGDfH6iYqZP3IbPETHIDt3dOJy9LPqxh618=;
-        b=cvQSL7zEPOqMnjeB0Lb1G8PDbkTiTLvnCQaETcbPV7XPRJFnC/f3hPAtkJ5m6oiubF
-         tFz3jFSirvid4rRfEFKMQR/2t4/j9e2n+3EAz99m6r7dRZjRjCAGBCPT97g4fnUQTixm
-         3wEtjhy0/c11bmuIjXnRz/yoPVZ6cmkT9vJaL5J53OQJFTDPgLxaRaVhsUj0fNSIeFvd
-         app2XJdIqW8YSVJpAJqVsJh+hVjacwjScU2eumKE22Y93j+UdYUbfu1MAS6H18b2SCKF
-         VajviNyJmqz6Z74b+3wdjr0AoH9x7B29qSu6HtEZ4n9tYFB66NthNKjBuNkhboOSpigz
-         RgaA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+mFHapZlHF9uBEKt0tnd6IbC8RQAmyZKftcvB+I+9606xOGPIqAlODlnFku+gHp7iwXRWZxFOu6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0eyLWZVzR5gKSW0TCH4q9U2tRwUQW/v5IgXCOHnoSRxQ7t2i5
-	zSrydfVkBECAmneHRz/3tS6K5br4tYVrqStiohdlZuVxk6JST7Ii0m6nxIJaLA==
-X-Gm-Gg: ASbGncvQ9KhQDmtrpwWrl+X2C3YYwRPDQW1G6QKrrYb3JyC2wvdL7Qx2Fq8SdVSPKRy
-	zhTxTiopqh0+VkJbWhSC+vTWs2SNjjt9iOPtTa5KBLhVinEoUnYj2EOCDWIwC/tyTZipRhenJuk
-	Rxad+MTCOEtogYRmEbpFl+Mnh0lD/YRYMkv/GuRpF3qxFOPOZ+cUIarX6tMhFv3Be9IKaiqk5G5
-	1oE0WyZ7JMBG75hpWhx5XceTyBb+4aMhBgVx3MxyCIyWAmkS0arYJ0y0C3vrmLQqz7oQclTshZB
-	KBPdbCJNo1aSIKBt6vSiChrCewk0xntnfbRvrRHeqtsqpk/Ouq7ptbKcdeUUh92zUKixssJeayw
-	yH5DdMqsAjne6krXOYTfHTx2IS5nuR6yg2w==
-X-Google-Smtp-Source: AGHT+IH+RPx8vMoFBrGnE2UELbu76oBxdqLLmuOZ9MxvthItxwA6UQaxgwbV1lK1NsLiE9He6IufKQ==
-X-Received: by 2002:a05:6a21:6b0b:b0:1f3:1ba1:266a with SMTP id adf61e73a8af0-2045b1257f0mr2341262637.0.1745575666250;
-        Fri, 25 Apr 2025 03:07:46 -0700 (PDT)
+        bh=qL/GfRaKKdsAK+0kAIMrtxaOj8SSMTgBlKehhO/P69U=;
+        b=s5tSGa9AQ4Fwj9sRr4XSOQqVNnVGGK8FKnuFj2zbt7grdFd84I3l1aIrUGhW49q5zs
+         DpUVjU/++yNnhNxo8fzGw3XtAITWwHt1qdwtCNnmKTTYMBljhb6MOjrOfRes9Gcjao2l
+         WbfakEasFq4Nzr+dLSwwTA3TsR2ELtkEz4gvfHpu8GlR0vkaYlHfxkb/O3ahz9SOpxP1
+         tS1xkkzLDsqswS+U+xcW7fKate4J39QmnywjRoR71RconXldq6ZuwIuAgBXg45LXWLkO
+         9DJxbr7M9oivw3uw4xJoEb3bRgpr8o5wQkuCB+Uv2WwbllVM7caWETxTgIyoA/0YcYkS
+         Japw==
+X-Forwarded-Encrypted: i=1; AJvYcCVs0sAlL72je5q4QG/oMFrs/z4EaZq9FYtn5hX8EDqkK0gJrZ10/3RFlyl1mh85R/JP+sZXw61n6+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/UZ2bzf3E+PMaCs+86+eJyawf5XGU5rMk4QBMBAsnLKH12WTM
+	5kDNKb7lYokjMhvkalNqoLRyp1BkKdf3iG5/htaxAijqdYJiNySCOKlFbziQmA==
+X-Gm-Gg: ASbGncsrWsdYW85Fq+mRdEkLrar3O+Td9aWagpMyqPeVa6AaFMy2JiJLHjh/4akj5w/
+	dgiPY1qRzW4/OSeiufGefIssKYY3gftk912OyHNmD9A2wTNgP9nSYvYqfbzHc1J6ylW+0j7Mjdv
+	aygpcdngy43h6dmWGmMefVExMZmcdb6BCyoLPOjbaEfiRelNxRiLHWHwyANCvZx9zM9Dzevrqsk
+	IpfVjQvc9+gQr6D8EpGGhC2yZNl4VCNlxq31YDIxoQW0lZ3ZPgCP8pYPsn9DkxHWYxrTZeeG9hG
+	/bbOrfeO5JeS0OZdthXHx+zdBb8LFkBzxc9uUN4/UY4O7OqsSD+0Xi6DvED99wYlTS25/6qWh1W
+	Lu4i69weS7bmFLVrdEQ9UqEFZ+AY5B0CL4g==
+X-Google-Smtp-Source: AGHT+IGJly1kAkAD/iMSo8eYESOtBt5XFa27wC92s+9+rjyn8NGcwgtok/8JfVLMz7TNZGrC97pXKg==
+X-Received: by 2002:a17:903:2450:b0:216:794f:6d7d with SMTP id d9443c01a7336-22dbf6354d8mr28313265ad.48.1745575676208;
+        Fri, 25 Apr 2025 03:07:56 -0700 (PDT)
 Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48b2sm2564155a12.8.2025.04.25.03.07.36
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48b2sm2564155a12.8.2025.04.25.03.07.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 03:07:45 -0700 (PDT)
-Message-ID: <78cdc9c7-47f5-4522-8dea-b0bb3228dd7b@broadcom.com>
-Date: Fri, 25 Apr 2025 12:07:33 +0200
+        Fri, 25 Apr 2025 03:07:55 -0700 (PDT)
+Message-ID: <e6207e73-05bc-4a50-a23f-0d4b3dc02c4d@broadcom.com>
+Date: Fri, 25 Apr 2025 12:07:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,8 +80,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 -next 11/12] arm64: defconfig: Enable RP1
- misc/clock/gpio drivers
+Subject: Re: [PATCH v9 -next 12/12] arm64: defconfig: Enable OF_OVERLAY option
 To: Andrea della Porta <andrea.porta@suse.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -109,7 +108,7 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  Dave Stevenson <dave.stevenson@raspberrypi.com>,
  kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
 References: <cover.1745347417.git.andrea.porta@suse.com>
- <928679d1511a43b8dda150009eb023b4eaaff5a2.1745347417.git.andrea.porta@suse.com>
+ <8baf7818aae1fe5be046015e4bd8121ccc9acb20.1745347417.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -144,16 +143,16 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <928679d1511a43b8dda150009eb023b4eaaff5a2.1745347417.git.andrea.porta@suse.com>
+In-Reply-To: <8baf7818aae1fe5be046015e4bd8121ccc9acb20.1745347417.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 4/22/2025 8:53 PM, Andrea della Porta wrote:
-> Select the RP1 drivers needed to operate the PCI endpoint containing
-> several peripherals such as Ethernet and USB Controller. This chip is
-> present on RaspberryPi 5.
+> The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
+> option. Enable that option in defconfig in order to produce a kernel
+> usable on RaspberryPi5 avoiding to enable it separately.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
