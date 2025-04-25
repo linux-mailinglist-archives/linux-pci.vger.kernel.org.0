@@ -1,193 +1,270 @@
-Return-Path: <linux-pci+bounces-26788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4849A9D385
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 22:52:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72305A9D3C7
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 23:03:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33342179265
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 20:52:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D59A43B543B
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 21:03:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CBDA223DD0;
-	Fri, 25 Apr 2025 20:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B889217723;
+	Fri, 25 Apr 2025 21:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TNgYJy8Y"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aeZuSezj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2075.outbound.protection.outlook.com [40.107.236.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719F0221F2A
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 20:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614326; cv=none; b=QWRsV4FYuLTgD5BH3vqLL0NtLRhDT8eh+UcOVf6MSY9EjlA/IHT2Sh0SyUA9DRTZigjipi3AedUCx933lEgoc9Ci7aQZHBBxmZy5JOxhFf7s/mwe8HKADCWLRXDy63e58BNTXVQL7s4goXN62PdS0s4D37ydiHwJPkTeV5lgmXA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614326; c=relaxed/simple;
-	bh=kAToM2XUXvvC5laIERANy/QDIAazwPQuoIadpAVkohQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LptaqAO8ylKanqSC9DhNgWWZOnk26TeE0MDayIoh/d70aPSV8JEPqaFAc46LsCjqDFCBecDKuXuoJLSTOPC6HXvdViLp00DxkImNB5I0IuUcNfoCwsV2Ix2cRSLFDLOpVJJPjZV9j7D3XXyjo+clWZnGAK0fSz8/I0Xq4yaL4bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TNgYJy8Y; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJwWs032080
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 20:52:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	khW+OjIu3QFmUYnH4/qhhaS7xRKHn2LSxx6Dexoku1Q=; b=TNgYJy8YLl6+dENP
-	8ww9i+7XwieZ6kWucsJqjvRHXJPliQhHagU1H74m1RGdoSQLbLJEYkt50EA0s7aq
-	lgubZPZe5PrKt0qvh7h/G8wwL/zJUa0WIJmcdug5dD6Bg+saz/f1Og2LngVJV0Nu
-	iFTCvk/YFMcMSobQcsyYapjWNXkf2Xw547VIyCxTFicSeLbjIKF2pZQWfyBCZkO7
-	32poQt/HJQIhLJnkMer/vUfno0zw4cUno0vCP904TTBHVErCSwr2AbwRaOxQLXs5
-	+fw4MRlxchyg1ZGPbrmoEDsiVDU6uT4iLWqnSQDEigF8OYiW9oRRg+BPAOaouPb1
-	ZDU6DA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1a4m9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 20:52:03 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8fb83e15fso6515436d6.0
-        for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 13:52:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745614322; x=1746219122;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=khW+OjIu3QFmUYnH4/qhhaS7xRKHn2LSxx6Dexoku1Q=;
-        b=Gcpy6Nwnw52X7tjOo1608qgx/XuMjbQ0lFgFqVB4qFWt4iqi+iZ3BkUC9rQygMBXLR
-         X8+HXG9iWfilP4RlsZgyghiQdMI2s7BGhv7G7bAeVNBcopHeTsnRLzl+1VDmwEEcgZfB
-         yxfi4dBVMGt9DHXl/oCEe6yBiFA5t1DYZ4SkX2KshvFTEjDiEcm4SNr1CmKY24bAmBC8
-         FQvaFVHmNWUcqojH5yvaUWF5ZotAAOPCEsftdauISyUzXxP1Bg9nztDX1SJBojQVsv39
-         2xopBYTPUTnvP6OQB3a0dU0ZZMNfuKW4Z0vjxoHGk6RtB1eFQ6K4Zlvak6EntzhCkhVZ
-         ljHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEaD8kxSAzn3+f6e1OfxwpE4XTMH4apt+s+q3/bRh3o8447MWHx9AMCOD7XT6b6om7IDi2Rc++w3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFOIJd0o4gQ09ni5MStu3HhygjhfnW70tecO8v5MArgMZStCMC
-	l3dn0nIPek7/Ghx9PG454gANU+faLZEG4shMl3ebbZEdxfnZh5Wj4Yog5xmyrmzjLN1t8K0LNqz
-	EiCYjxwXlxnIBgBs/19UoeHIdXqBj1swg3visJcmbqfPmM/gb93LJdIUkkuE=
-X-Gm-Gg: ASbGncsTNg1TSgPywsL6YtcBnVsMkybcxI50wTNR2Mly548In2vr74wjapW2M340Ubw
-	NILZZwAdUJ2Z5IkyV9vMkm+8bs+SxrMILAwUMoECtY9lJntnjeKC+LopkThsqCkXouEloJulteH
-	NcqvzlQc/T5Sc2lPZi7XJ8TChO7ysJJdEvdFiUFxqV9YBU3YkmDWfUTMEDQv8Ilbwqijjtht7vU
-	FMv7NpYTy+RsQBlLzeJrrzKD1U773UpkleZnVZtwg2JJZiWrpf5Qla8knCC3m0nZ2HOZig9ymlM
-	VSAyBfLFP/m0nbXusqnJT6tDTDH7mgayW9lYpYd6zNrz8LTXSgAnYYGITUsKq9ZJvkU=
-X-Received: by 2002:a05:620a:1a04:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7c9607ce29bmr234168485a.14.1745614322383;
-        Fri, 25 Apr 2025 13:52:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELNiJdwRrt+X3+ZmBmj8ToCx5SguQhymg571V2ufzv8cclkQ1COqWoTRaO72k8xjo3W2vT0Q==
-X-Received: by 2002:a05:620a:1a04:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7c9607ce29bmr234165185a.14.1745614321971;
-        Fri, 25 Apr 2025 13:52:01 -0700 (PDT)
-Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecfa354sm185152266b.120.2025.04.25.13.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 13:52:01 -0700 (PDT)
-Message-ID: <04201672-3d7c-4994-bdbd-959ec7a697a2@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 22:51:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F54B19047A;
+	Fri, 25 Apr 2025 21:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745615003; cv=fail; b=Ab+f8WLMlbx6Z+ejy6ufcRsDci7Cwiq+eqKSSbb6i+bVTFGGkoRtV6Nl+nZ7VIIFfCgO2DkKJvouCBXrFIRM1nv652iqbzux6BmZDyG45pNzdRKCzkNrfycJZwlhVlwMPt1gfIIg/Q010SHTBfc0TsIfQJzyFVJ/6Wtmh9afUi8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745615003; c=relaxed/simple;
+	bh=nKhhtL+3nIC0Ur/WOjczIYYGSAiVeO8NRaqpZYKYmzg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oXdpTY9ekZOOCBVjNj1t0RGmbff/H7Edv05bYp1SheHrMzteLF+gPKYeuDj+qwJKf4NM/9ls6oX5CSQ3iWgM5HIVSvLthCKFyZypzEJstWomqEI5ZPQhnIxg99wTsSEVhKBXKdrsC2uGQ/coSsSOh0WK0UbQck2hk9esPLfOpsA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aeZuSezj; arc=fail smtp.client-ip=40.107.236.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mn9w42t6gCTF8t5+nwSIh0mpOT05OGuy0eBcV6P9kA+O2jLBZR2K4He062q88o1FCmAklRI5aOukG2yfizIGrbH6weJKjvdLKfdRsrd3BZVTIpoRDXObYnEZ1HxHq8nhxSc3trLhNRDeKbOtOdURYbzYuinRQb/eJ3QdOKPMFx9AH45xnVvpGlgzPlwU4/m4ap3r8GV9rT2vAY/fnhktN1sMjMPU3W/yC8OtbaS5AedlzIUV1F/pTxhGR+xz+GdA+WGD8JPm3oC/VeRPvJMb17yzyZShUAiXawJh6yhPWbVD2Hrg4+ycoq8OzI//DTBsrMM8mo5OxpuI0brQsxe64A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8QRTYdZFK34J+mOeM9OxNbdy7Ij9m/nMG6fCj+26DeE=;
+ b=ree/7WhWQBJAl21zSBgdwYRW2/2GmrkqzjtAyX7RFKQBsqiy6nqrrPccJkytliwlwHMD33EyvFyI7eoyHMbpGYq+yg75Lq3k/iTmwMmdpNO9NMy6FcV3Gvfk81Fm/ou3/gE4I2h+SUVmwQmHt7to/7ZgM4j7u0c8ueKV7cfIHOFjAc0XwE908RQbBnKdMa8Dd5QLNze7yAPAunWkkfslf/defw3fLTlp2Q3zxO2ptGkHYMuw2+hfIlrv0OEvEHcDXSP/zKaT0t2fhoAWG2oD4Vpot6TMKJ7DukEGpq1d2vAMxbgqvV2wLyXVh4OJ5QbePpuNwq8daVKSj9hWdhLYvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8QRTYdZFK34J+mOeM9OxNbdy7Ij9m/nMG6fCj+26DeE=;
+ b=aeZuSezjfBmLVTZCn5YhfUixoX/Y6oWoXR5GL7+fDqddEja5MYdRLpybVmlyfzO6Wj0akEa2rGN6jtgxa8vM2ebanHfnJ8ke8JaO46llQb9fW+IlaI8ydN6oSVr79rJrw3+9kv4cRhH+5rI5ki2r4Ose0IHq7psUKYhQ256JuAM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DM4PR12MB8557.namprd12.prod.outlook.com (2603:10b6:8:18b::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.26; Fri, 25 Apr 2025 21:03:17 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
+ 21:03:17 +0000
+Message-ID: <856de824-49a1-4bf4-8d09-8549e90232ee@amd.com>
+Date: Fri, 25 Apr 2025 16:03:14 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 04/16] cxl/aer: AER service driver forwards CXL error
+ to CXL driver
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+ <20250327014717.2988633-5-terry.bowman@amd.com>
+ <20250423160443.00006ee0@huawei.com>
+ <e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
+ <20250425141849.00003c92@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250425141849.00003c92@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0048.namprd05.prod.outlook.com
+ (2603:10b6:803:41::25) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/2] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-To: george.moussalem@outlook.com, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Nitheesh Sekar <quic_nsekar@quicinc.com>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Praveenkumar I <quic_ipkumar@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        20250317100029.881286-1-quic_varada@quicinc.com,
-        20250317100029.881286-2-quic_varada@quicinc.com,
-        Sricharan R <quic_srichara@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250425-ipq5018-pcie-v8-0-03ee75c776dc@outlook.com>
- <20250425-ipq5018-pcie-v8-1-03ee75c776dc@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250425-ipq5018-pcie-v8-1-03ee75c776dc@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: HNqtRYZvsohr84kJTWbBXHhXz4ZQ1X-i
-X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=680bf5f3 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=UqCG9HQmAAAA:8
- a=g69xjaZfg-qW7mxf-08A:9 a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: HNqtRYZvsohr84kJTWbBXHhXz4ZQ1X-i
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE1MCBTYWx0ZWRfX5SYjio2Fzpmj 1yBwvLZEAZDS82FmPxEjFYMn6a73f8cseKZjoVUq9Hz0NWxMQJ0Y+wiMwPIS7ADVi0XcQIkRd3N kEViSGnWRcPlx6n5nD3k0YEUMihqlK3pWmY+AQyql2/x3z+lKRdfybI5cOH+ADRDsPHRQm2Emjy
- r5GWuUI2dKRES9H4J3R3Uav3u9AKIrJR1PZroe5J2ekO7Au6dTgM5XXI7exoW/FNDf1W2tYIyKk IvZHO61EOYy7uxBCp1Yq4YDfdJVPoDp9b6om8zmkWzaIXh1YuLrDz6DgOAY+JRFUkPSzC94hDjj g3JIS5myfw8ICEVh+2IQ4fhfE5sz05Pazn8mSJ4bxd4D79TIULd3r/SnP4vFnLkdhzNNfhJsHzE
- jCcvOvcIaA8Psanjd8+efjKhe6F14xp2nWdJGQsWU3mGHlGHEmhkljb3K8d+gEH+bm1CSgUa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=746 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250150
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM4PR12MB8557:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ffca2e1-6f52-4546-0ca0-08dd843c99d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWRZTGN1SUtkWVhuWnR6QVBNYW5CdWJpcHZxNGh0N0ZQckpGK21FazBHMlcy?=
+ =?utf-8?B?WWVZa096MmtWS0QyRmdCM2Q3WEM4b3pqWmpYZTR1VS9OMFpWa1dqMFlkR1RI?=
+ =?utf-8?B?R0tHdlFSS1FYYnlESlcyTHlkbGRuL3RXU09KNm8zR25mMEFGNzBEenM2eUJm?=
+ =?utf-8?B?WG1aL3hGOHNiYmJ5bFpFRE81Z3NsVDY2bXRXaU1QMXZtdEFpdFJyTDlGS2hF?=
+ =?utf-8?B?bWMvb1MwMTJwL1BEUDUvbkpOUENtTWt2VXo2Z0t5WU54dktjUkJ5SE9ucUdT?=
+ =?utf-8?B?ME0wcVZUVHVvU2pBUml4QUVxak1EZHBMK2Y4LzFjUE9zTjAyV0FnWUcyWUpt?=
+ =?utf-8?B?U2hrbElkUnVCVHdXK1B4cTFrdWhpQWdjTVpRc0ljSnhETzlLM2JpdUxmcFk3?=
+ =?utf-8?B?aWl1bzdtdUpBUkZyekdCcUYwM3lQcm5ock1QeWlHNFRaQ1JlV3lSOGxyaVJO?=
+ =?utf-8?B?cmZsaFFzYWY4OGc5OTRWT2ZiVmVvWi9TejFlOU90RVNTaEFCcHFReWI1ZGox?=
+ =?utf-8?B?UlJGN1JiOU5taTRvOUNLSUd1VXA0KzRWc0lsMXB1Q0tmaUIyVml5bGZvemda?=
+ =?utf-8?B?VmFkWmRBMm56Y0h1dmJheEd0cXlzaHlyaGRwbkwvL0FNb0NKajBjdDZhRkM2?=
+ =?utf-8?B?ZFB0M2FMeDlzUTczZk15bm00b1JsbXVETHIrcnlxK3BGZGNPWXgzalY4djNX?=
+ =?utf-8?B?YzJOTXFNK3l2U1ErU1BXY1Z0U3BVSGx2em1YM2JwQW9teWlTVVMxd0hiLzg4?=
+ =?utf-8?B?MlUxOGE2RHZFUmxpZExJdVYzMkFmVmRmT0NMeXpWTG9Wb3Q3aTExc29na2h4?=
+ =?utf-8?B?cU1KTHE5WFlwcUNYNWw5MStrMkloM1MxTXNwM2tGcVZYTENZR0NYZ3VSbHl0?=
+ =?utf-8?B?MExQc0ZteHRHSUR5dkZsanJzUzNRZnBQMzhsMk10eHY4YSt0SXRISEVCT215?=
+ =?utf-8?B?NitRa0Jyb2Y3Wml5TDNNQzFaY3Roc0k2ZjFSeTZhN09tcHljZjU2WE1jak1i?=
+ =?utf-8?B?b0p3T3QrUDI3N1JHaW43RGZESlVabXdtSkljbnRhQUV3cGszZXdxOFBQSEFh?=
+ =?utf-8?B?L3JWS1hKOU9hR2dRZmJuSis1RFlucFlSYUZwRC9XSVFaaVZkQ2JpQTM4SmVF?=
+ =?utf-8?B?V2hOUzA0Z3R5UDNIWXp6UWxzUzZrR0UyM2o3Qm4vam1OdkU2OUFmTVRuWjNT?=
+ =?utf-8?B?Y2tRV1l4M2JyRGl3akxEZVhxdEpNTTlOU0xHRWx0ZjlMZGRCWFZDbzhVV3lq?=
+ =?utf-8?B?bHlXNUdoVDA2MGxOL3JyR2poODNrdDlNb3pKVStaZGt0Q3g1SEpsbkwvNUla?=
+ =?utf-8?B?K1BxTjJLZktGd1RWd00wcjQ0azdSMTQ5S1htbnJzTkNHZVg2OUFCeGNnWjhp?=
+ =?utf-8?B?ZHJMRlV6SGM1TTR6VFNxeXRHeUhucS9COGIxNGlkcWFkSU5UY3NiRG82Vys2?=
+ =?utf-8?B?WEQvZnNERzhsSzRyMGxTa212UC9UV2xFT0hLMWpHVkR0VWNkV0lGL2ptOElZ?=
+ =?utf-8?B?bk9ib0VsOGdkdnlWYWxKNm41OXFXdjgvQVplbUVuTVdheURTRzhKYXl6aXJ5?=
+ =?utf-8?B?bkkxWGNDRkduM2Yra3M2bEZUM1NleGhjQThicWcyMmxXU2wyeWhUSjZydmtI?=
+ =?utf-8?B?NWhGVnRpUERESEV5UTFlbU82QnNhbHZkT1l1NXNYNEZxSWw0UmZURS8ydVZK?=
+ =?utf-8?B?YXFueTkvbjhzNXplaFpjbmZKOWJGRzZua1J2SEIydUFnQUoyRjUwbzA1cmx2?=
+ =?utf-8?B?Ykd4K3FTazRZbGpteThONzd6elNGcWxvN3k0SkRocDFnV2lDb2w5L3ovdkM5?=
+ =?utf-8?B?dUl3b3ZBRU1BMVgwOVhPWUVnUzMvdndIOTg1UWh5UW9WaUE3aURKb3l3KzlN?=
+ =?utf-8?B?SkVnTWhDcFpDbk1OT1Q3QkNyblFRTFBqRWRibFVQcHpWSk1LNFJ2S1dFb3Bn?=
+ =?utf-8?Q?uEteBNdyxtA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S2JpNjRndnpnTjlCYjBzdjdvMUd1YWEvM053M3YrMWZWUnBGYTJ4dW5UaUp3?=
+ =?utf-8?B?NURhVHB4a2s3TDI2TEgwZHlyc3ZMd1l3VWlzbm5sV1BRSUJELzZlSUJHM0Ro?=
+ =?utf-8?B?eFdSWjFTNEtSQWJZbTgxS3JPNXNXZndScTVqZys3dGpPNlR2WVl4YlBMV3hx?=
+ =?utf-8?B?alVCZXg5djAyRmFLWllWMlNTdUxqbm45VjJ3SlhlRVNaVFBIa2pBeWEwdUFi?=
+ =?utf-8?B?MmJZMDVtdFAxODA0aEtUNERBWHpYWEsyS05kSWQyOEM4Vmg1UUwvTnNwbmU2?=
+ =?utf-8?B?ZkpwR0dWMld4SlFMaXhqUTVjd2FIaWdiLyttNVYxNlgyU1l0RDFpT3d1RGlx?=
+ =?utf-8?B?dGRXdGVJVHVnVU5FRjBKOHpZbXJzK01jc1JkNGUvRWdPZEN3TjB2WTZBWFJN?=
+ =?utf-8?B?aEZrVmtHNE1lc0EzN0dSRFZoWFowTmI0Vkt2TmpDajBrd1h5cW5XVC85Q1pX?=
+ =?utf-8?B?dy9ZZkVYcjRkM0c5L2xpQ3F1VnVGN2NzbmhuMytjVEhTd28zQVZXOVNzUjFl?=
+ =?utf-8?B?ckF0UFg3MENkeVhZR2NYMEhEYjFXMWRUQXdmWkE3TGtsdmtiaEgvdkNmQkFD?=
+ =?utf-8?B?a1pCa2Y1NjA0Wm42VVNhamZzM2Z2UDFMTG15aTFpL0JTWW45eEpyT3pOczl3?=
+ =?utf-8?B?SmlGRjB6YXgvK2pXM2liOXh6bUovU2ZzbGoxbkZPQjFRTUlzQnNCOU55cjh1?=
+ =?utf-8?B?cnBPYnVsUUk4ZS9CY1hIRlkxQnNZTkNYaXE1ZjhmQS9ZcDk3K1BsVTNjdDR4?=
+ =?utf-8?B?Qkh4bU9lc2JCc0toYW53d0tETHVVMXJQVFI3YXF5eXRFckRQWGs1Tkh3ZFVv?=
+ =?utf-8?B?NEtnamhWM29zL3N6cFhjcWpGNXBMRWh0SWhkL24wL3RQM1hvUjRPSFBSdDQ0?=
+ =?utf-8?B?bmhsM3h4K3BXQVcyZml4blNUbXZPd3I1cllxeUVya3hCd2YvNVRVdGtRK1pD?=
+ =?utf-8?B?RE5kcTlscGg3M3RXQk5sZDdrSFhwRnZjSkQ1MzV6YzhJYmQzMS9vbG5Falc5?=
+ =?utf-8?B?TXIvdDBvQzhaKzFkMURmNWIrRWFXT3FGMnJGL1BzQWtEdlNLdTV1SmxlWG1Y?=
+ =?utf-8?B?SjB1Z3hXejZkMTBjeSt6SU41RFBIdVIvZ2pKYUxkdnJvUGVRTXRGeWpubkJR?=
+ =?utf-8?B?YkVsZDBoMmtSckl0L0JhMmwzbUFDTnE3VXRqTVczdWI0bytrZzFzbHIxRkln?=
+ =?utf-8?B?c2x5TW15d1Y4clovZ2xQeHNwdExYMGFvWmpCRGJ3MGtBRElXQ3ptQ0FTMXVY?=
+ =?utf-8?B?Nk9CdURMbU05SWFEYjdUN2c4U2RQSjhmRHU5ZlFtcTdRRlllWi83Q2VqVCs5?=
+ =?utf-8?B?WTFCeGZGRVpMd3RYMXZxNXhoRlNPWEM4a0tISlBpWS8yVms4eXlYREh6NWly?=
+ =?utf-8?B?T2wyZVZvRTFhc0ZUNjFPTHgwUCtpMDdCaFJwWXFNanIxNHRNWDZWdUptaU1P?=
+ =?utf-8?B?WXV3aU5HOU1EZEtVaEhUcUV0amhHNElzU0RwRlJSd1VWMkdVVmM0d1U5NHJp?=
+ =?utf-8?B?eEQrTUJ0SWg3bWdTL1FGRFNtQ1EzUk5vUVducTRac1lkVHZNUkd4aGhoRitY?=
+ =?utf-8?B?a3hIU2pTdUpLOFV3V3Q5QzMvS2NKNy9VNThIQkgzLzgwcFlOeGQzYzVsQ2h3?=
+ =?utf-8?B?bE1tVlI1enY5WlQ0OEFQaGZjOUJtQ3ExVXd2N0wrcnpwSkd5YTNBakFIa2U3?=
+ =?utf-8?B?Z0xDenFlMnoxNkM2NFAzSWRZQk02S1VsTDdOUkRyUTZBZDRVZTB4aTJYQ1gv?=
+ =?utf-8?B?UG80YXRQQVV4N0VJTGtOZlh6c0FJQ2VYM1BDSGYveGNkWE1xVG1HVlJ0WWZP?=
+ =?utf-8?B?di9kMDluaUhiS1RKbmVPV2hiSnVYRTFMRk9PaFRIaFM0UWVPUmQ0OCtDMHJR?=
+ =?utf-8?B?VWNsMk5ZMjhyb0J2U240K25UcGxIQ2JMd2dJZ25lYUxMaTdKVnpFTW5wNUZi?=
+ =?utf-8?B?RWRwdnJQOFd0VjEzNVp6MDJTQUJnYXVaUHp1Vko4R0xXUVVpL2xxdGhtemdj?=
+ =?utf-8?B?MGd2bmkxd2NOM3l6d1drUEZqMGRHdXY4ZG9wSUR3UkEydktpZklmSkxsRURi?=
+ =?utf-8?B?SUxSdEdpYnE3NXpaQVB4MXR5RTRJZFZESXEyNTZUNk9lK1JtYUpDa3JIWUZ1?=
+ =?utf-8?Q?YoOmg9MKYPF6/Gw6Hcth/+6Qc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ffca2e1-6f52-4546-0ca0-08dd843c99d2
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 21:03:17.3244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FR7SPfxfAiFr3nMo8knWASdxtCtD3GsD7khwZoOjJCvoOh7q8bMUShNSHd7bBRFPM1BhpxqgaR9eudBhgcAEDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8557
 
-On 4/25/25 2:00 PM, George Moussalem via B4 Relay wrote:
-> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> 
-> Add phy and controller nodes for a 2-lane Gen2 and
-> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
-> one global interrupt.
-> 
-> NOTE: the PCIe controller supports gen3, yet the phy is limited to gen2.
-> 
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 246 +++++++++++++++++++++++++++++++++-
->  1 file changed, 244 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> index 8914f2ef0bc47fda243b19174f77ce73fc10757d..917c6eb7c227e405e9216125cff15551f57839a5 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> @@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
->  			status = "disabled";
->  		};
->  
-> +		pcie1_phy: phy@7e000{
 
-"@7e000 {"
 
-[...]
+On 4/25/2025 8:18 AM, Jonathan Cameron wrote:
+> On Thu, 24 Apr 2025 09:17:45 -0500
+> "Bowman, Terry" <terry.bowman@amd.com> wrote:
+>
+>> On 4/23/2025 10:04 AM, Jonathan Cameron wrote:
+>>> On Wed, 26 Mar 2025 20:47:05 -0500
+>>> Terry Bowman <terry.bowman@amd.com> wrote:
+>>>  
+>>>> The AER service driver includes a CXL-specific kfifo, intended to forward
+>>>> CXL errors to the CXL driver. However, the forwarding functionality is
+>>>> currently unimplemented. Update the AER driver to enable error forwarding
+>>>> to the CXL driver.
+>>>>
+>>>> Modify the AER service driver's handle_error_source(), which is called from
+>>>> process_aer_err_devices(), to distinguish between PCIe and CXL errors.
+>>>>
+>>>> Rename and update is_internal_error() to is_cxl_error(). Ensuring it
+>>>> checks both the 'struct aer_info::is_cxl' flag and the AER internal error
+>>>> masks.
+>>>>
+>>>> If the error is a standard PCIe error then continue calling pcie_aer_handle_error()
+>>>> as done in the current AER driver.
+>>>>
+>>>> If the error is a CXL-related error then forward it to the CXL driver for
+>>>> handling using the kfifo mechanism.
+>>>>
+>>>> Introduce a new function forward_cxl_error(), which constructs a CXL
+>>>> protocol error context using cxl_create_prot_err_info(). This context is
+>>>> then passed to the CXL driver via kfifo using a 'struct work_struct'.
+>>>>
+>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>  
+>>> Hi Terry,
+>>>
+>>> Finally got back to this.  I'm not following how some of the reference
+>>> counting in here is working.  It might be fine but there is a lot
+>>> taking then dropping device references - some of which are taken again later.
+>>>  
+>>>> @@ -1082,10 +1094,44 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+>>>>  	pci_info(rcec, "CXL: Internal errors unmasked");
+>>>>  }
+>>>>  
+>>>> +static void forward_cxl_error(struct pci_dev *_pdev, struct aer_err_info *info)
+>>>> +{
+>>>> +	int severity = info->severity;  
+>>> So far this variable isn't really justified.  Maybe it makes sense later in the
+>>> series?  
+>> This is used below in call to cxl_create_prot_err_info().
+> Sure, but why not just do
+>
+> if (cxl_create_prot_error_info(pdev, info->severity, &wd.err_info)) {
+>
+> There isn't anything modifying info->severity in between so that local
+> variable is just padding out the code to no real benefit.
+>
 
-> +		pcie0_phy: phy@86000{
+I was following a common pattern I observed where a local variable pointer is assigned
+to a struct member reference when passing as a function call parameter. I suppose it helps
+readability but not necessary here.
 
-ditto
+Sure, I'll make that change.
 
-[...]
+>>>> +		pci_err(pdev, "Failed to create CXL protocol error information");
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	struct device *cxl_dev __free(put_device) = get_device(err_info->dev);  
+>>> Also this one.  A reference was acquired and dropped in cxl_create_prot_err_info()
+>>> followed by retaking it here.  How do we know it is still about by this call
+>>> and once we pull it off the kfifo later?  
+>> Yes, this is a problem I realized after sending the series.
+>>
+>> The device reference incr could be changed for all the devices to the non-cleanup
+>> variety. Then would add the reference incr in the caller after calling cxl_create_prot_err_info().
+>> I need to look at the other calls to to cxl_create_prot_err_info() as well.
+>>
+>> In addition, I think we should consider adding the CXL RAS status into the struct cxl_prot_err_info.
+>> This would eliminate the need for further accesses to the CXL device after being dequeued from the
+>> fifo. Thoughts?
+> That sounds like a reasonable solution to me.
+>
+> Jonathan
+>
+Ok.
 
-> +
-> +			/*
-> +			 * While the PCIe controller supports gen3,
-> +			 * the phy is limited to gen2. Hence, limit
-> +			 * the link speed to gen2.
-> +			 */
-
-/* The controller supports Gen3, but the connected PHY is only Gen2-capable */
-
-and it nicely fits into 1 line!
-
-With that:
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+-Terry
 
