@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-26771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26772-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DDB1A9CDFE
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:24:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94E24A9CE1E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E4751C00078
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:24:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64AFF9E6527
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642E61993B9;
-	Fri, 25 Apr 2025 16:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F09119CD0B;
+	Fri, 25 Apr 2025 16:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h87yuawY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmAx8ep+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345A2192D9D;
-	Fri, 25 Apr 2025 16:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119B5199FAB;
+	Fri, 25 Apr 2025 16:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598277; cv=none; b=A/uvZFB53z6QynSWOUOLdNdn1SYbKOcipB0dGX9KSYfyXO4T6/0KP3QC0dGiPgqvu+NJwwxmmh/1isfjZjPKw+N2n3Yx3v1mvEKOHr15Z9BzBPgPQyMC0HgkjnsJo5dxZ8f91Bm/ItzgKNh2CWCYl2lVea3q9xwoUjoZkHB7M6U=
+	t=1745598428; cv=none; b=fR9uwyzdP4XImOnjmFI0yvcV0fbYecbW13iPbv6AynARLfSx/p37S1dm8U67x9ExcVpsBLI8ZBgeHjGdPmV+zvm5DSn7zlXKg74lmbtynl7ABS6w+vqq3rUnyyLQhXfzrkdODO+wby7vUoPyd9qIMbRG5xTZ7tqorZeapQp4aX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598277; c=relaxed/simple;
-	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
+	s=arc-20240116; t=1745598428; c=relaxed/simple;
+	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YkNxCuY/qmdBfTQtv5lV1BNHmItzPum968PRwE5e1t/WvGMzPxyW4/v7PZUqYSQ8vc6H/mJkt9uCB0z2AuGgHFU94OXm41GZ0CMYJnrySISTTTiXVsew/HVP2SGQvuAGLvJXEUVgbCRHuWOwcZYM3NLYvncPcSxn4LW5ToTMMuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h87yuawY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC211C4CEE4;
-	Fri, 25 Apr 2025 16:24:33 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=p0CYiltLgvpiQ/IJwxwP+YlRZ+rJPRj3+GLlZYea0yB+UzDO7o7Vn5U5Y6fhtnFoxnW0YMJ2NwAzu2HcnyWmYT9tsQ5np8QL86K0bi7CPG9gmKskmu6zObfYOcIa1V7Nhb021SysFITupZkIxmAQspY0eNhhD8Yt9aIdCc1S6E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmAx8ep+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF7BC4CEE4;
+	Fri, 25 Apr 2025 16:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598276;
-	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
+	s=k20201202; t=1745598427;
+	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h87yuawYT+EKcR4ArMVXNZPbEuY1HCk3rkbmyoVXdv8miu/hBa40JymGrA6n/zVA/
-	 OeQKiPxNJoEhMD5LWcHT2EG3rRa9aDYVXlRarAAiwuLLEKDGP4OYOb0dmZbLXWc2oj
-	 Wh0UWtMQmerqCAZ63G5s00LxsBfoBt0xMC7yPwsVAt9fhGyrbB94mn9XU4sZ6J2b1X
-	 oArEu7niQa+jMcBtHp1h+hP9dE8iqXsSEUT9GQhuBIpgpmozvxXNthD+DSvNUT2Sws
-	 X554GUKukZ1gr1f94Mr3NA5YP2k/6kozZZpHDWOz2s3MJCvDAXNsPpfA7nlSdhWh7D
-	 V3MOroidqWlaw==
-Message-ID: <df9da79c-dc1a-4e90-82eb-f3af71f13494@kernel.org>
-Date: Fri, 25 Apr 2025 18:24:32 +0200
+	b=UmAx8ep+zizvn5Y301UKtoLPLk0Rrq+W7gesbRNPckYDCHO1SsPXGbnlK4/hDv71f
+	 TyowylOW8bYjPGry481TaxQSiFOhBcRTZqNb0p/xboaGLs0+Oft/yDAg2ZyPe+VJ7d
+	 ml3oVo9wKFJ5DoeyO4DYxuHskbGzJsiOHxOkK9ssct1zCDdSmLPL7rF+FCSbOYRqlV
+	 w5R3urJKmSfxT71HFFflV5ky52ig/CNv6PgqXtQXtBQW/vbLzYSeLu1BxyXwxbJ8K5
+	 8S7T67yBMtTBoNxNLAt4Qpd8E9T7UUxgVWvdk4dvNIoMftae13E4Gfm3IcNeGTeGiO
+	 CuTgz7lsgG0hg==
+Message-ID: <25f5e8e4-1b64-478f-84ab-eede2c669655@kernel.org>
+Date: Fri, 25 Apr 2025 18:27:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,13 +50,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/5] Enhance the PCIe controller driver
+Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP
+ controller
 To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
  kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Manikandan K Pillai <mpillai@cadence.com>
 References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-6-hans.zhang@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,54 +105,60 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+In-Reply-To: <20250424010445.2260090-6-hans.zhang@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
+> From: Manikandan K Pillai <mpillai@cadence.com>
 > 
-> Enhances the exiting Cadence PCIe controller drivers to support
-> HPA (High Performance Architecture) Cadence PCIe controllers.
+> Add support for the Cadence PCIe HPA controller by adding
+> the required callback functions. Update the common functions for
+> RP and EP configuration. Invoke the relevant callback functions
+> for platform probe of PCIe controller using the callback function.
+> Update the support for TI J721 boards to use the updated Cadence
+> PCIe controller code.
 > 
-> The patch set enhances the Cadence PCIe driver for HPA support.
-> The "compatible" property in DTS is added with  more enum to support
-> the new platform architecture and the register maps that change with
-> it. The driver read register and write register functions take the
-> updated offset stored from the platform driver to access the registers.
-> The driver now supports the legacy and HPA architecture, with the
-> legacy code changes beingminimal.
+> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+> Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> ---
+>  drivers/pci/controller/cadence/pci-j721e.c    |  12 +
+>  .../pci/controller/cadence/pcie-cadence-ep.c  |  29 +-
+>  .../controller/cadence/pcie-cadence-host.c    | 263 ++++++++++++++++--
+>  .../controller/cadence/pcie-cadence-plat.c    |  27 +-
+>  drivers/pci/controller/cadence/pcie-cadence.c | 197 ++++++++++++-
+>  drivers/pci/controller/cadence/pcie-cadence.h |  11 +-
+>  6 files changed, 495 insertions(+), 44 deletions(-)
 > 
-> SoC related changes are not available in this patch set.
-> 
-> The TI SoC continues to be supported with the changes incorporated.
-> 
-> The changes are also in tune with how multiple platforms are supported
-> in related drivers.
-> 
-> The scripts/checkpatch.pl has been run on the patches with and without
-> --strict. With the --strict option, 4 checks are generated on 1 patch
-> (PATCH v3 3/6) of the series), which can be ignored. There are no code
-> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
-> is clean.
-> 
-> The ./scripts/kernel-doc --none have been run on the changed files.
-> 
-> The changes are tested on TI platforms. The legacy controller changes are
-> tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
-> platform available within Cadence.
-> 
-> Changes for v4
-> 	- Add header file bitfield.h to pcie-cadence.h.
-> 	- Addressed the following review comments.
-> 	  Merged the TI patch as it.
-> 	  Removed initialization of struct variables to '0'.
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index ef1cfdae33bb..154b36c30101 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -164,6 +164,14 @@ static const struct cdns_pcie_ops j721e_pcie_ops = {
+>  	.start_link = j721e_pcie_start_link,
+>  	.stop_link = j721e_pcie_stop_link,
+>  	.link_up = j721e_pcie_link_up,
+> +	.host_init_root_port = cdns_pcie_host_init_root_port,
+> +	.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
+> +	.host_init_address_translation = cdns_pcie_host_init_address_translation,
+> +	.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
+> +	.set_outbound_region = cdns_pcie_set_outbound_region,
+> +	.set_outbound_region_for_normal_msg =
+> +					    cdns_pcie_set_outbound_region_for_normal_msg,
+> +	.reset_outbound_region = cdns_pcie_reset_outbound_region,
 
-So the rest you did not address?
+How did you resolve Rob's comments?
 
-That's not acceptable. You ignored several comments such way. Either
-discussion did not finish or you agree to implement all comments. If you
-do not agree, then sending new version hides the previous discussion.
+These were repeated I think three times finally with:
+
+"Please listen when I say we do not want the ops method used in other
+drivers. "
+
+I think you just send the same ignoring previous discussion which is the
+shortest way to get yourself NAKed.
+
+
 Best regards,
 Krzysztof
 
