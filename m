@@ -1,164 +1,169 @@
-Return-Path: <linux-pci+bounces-26772-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26774-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94E24A9CE1E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:28:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6499AA9CE35
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:34:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64AFF9E6527
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:26:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5835A16DADB
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:34:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F09119CD0B;
-	Fri, 25 Apr 2025 16:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B871A00ED;
+	Fri, 25 Apr 2025 16:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmAx8ep+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dygSeYVb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119B5199FAB;
-	Fri, 25 Apr 2025 16:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5255119F115
+	for <linux-pci@vger.kernel.org>; Fri, 25 Apr 2025 16:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598428; cv=none; b=fR9uwyzdP4XImOnjmFI0yvcV0fbYecbW13iPbv6AynARLfSx/p37S1dm8U67x9ExcVpsBLI8ZBgeHjGdPmV+zvm5DSn7zlXKg74lmbtynl7ABS6w+vqq3rUnyyLQhXfzrkdODO+wby7vUoPyd9qIMbRG5xTZ7tqorZeapQp4aX8=
+	t=1745598841; cv=none; b=BaFYdZvhkoBeyHQQiQHPa0TyZzyh3i3BSIJYbUbmCsp6zdor8C+POlf05ixWGC4MZ5N2yREIalwZatxEGMN5P0+kvIkoJebrUJ1R/3XHA98W1/CctXvXKCk1UfesU/vhHWGl71EGCrwl/UsG7iEcgO5c1H7Q6D22cLQg0JjVAUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598428; c=relaxed/simple;
-	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p0CYiltLgvpiQ/IJwxwP+YlRZ+rJPRj3+GLlZYea0yB+UzDO7o7Vn5U5Y6fhtnFoxnW0YMJ2NwAzu2HcnyWmYT9tsQ5np8QL86K0bi7CPG9gmKskmu6zObfYOcIa1V7Nhb021SysFITupZkIxmAQspY0eNhhD8Yt9aIdCc1S6E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmAx8ep+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF7BC4CEE4;
-	Fri, 25 Apr 2025 16:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598427;
-	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UmAx8ep+zizvn5Y301UKtoLPLk0Rrq+W7gesbRNPckYDCHO1SsPXGbnlK4/hDv71f
-	 TyowylOW8bYjPGry481TaxQSiFOhBcRTZqNb0p/xboaGLs0+Oft/yDAg2ZyPe+VJ7d
-	 ml3oVo9wKFJ5DoeyO4DYxuHskbGzJsiOHxOkK9ssct1zCDdSmLPL7rF+FCSbOYRqlV
-	 w5R3urJKmSfxT71HFFflV5ky52ig/CNv6PgqXtQXtBQW/vbLzYSeLu1BxyXwxbJ8K5
-	 8S7T67yBMtTBoNxNLAt4Qpd8E9T7UUxgVWvdk4dvNIoMftae13E4Gfm3IcNeGTeGiO
-	 CuTgz7lsgG0hg==
-Message-ID: <25f5e8e4-1b64-478f-84ab-eede2c669655@kernel.org>
-Date: Fri, 25 Apr 2025 18:27:02 +0200
+	s=arc-20240116; t=1745598841; c=relaxed/simple;
+	bh=u1V74D4vVu2FoZASwEnzWG7Nqf24mqXLJWj3A4SEvw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a29aa27On/2vgxOhpOyEnaUl6++6yl6FFsFjTVIFaUk9v2iUuQfJ+dw/OMMzAWgtRdOIm7eAQk3GPA4YIoFbdkngFQlN6yVSDmqLSoNqzDAnHA3jLNdpIIQ7oKMKBrd+T7GIyin0iA6GscqZH6zc9jF4FllFWZ6tKGCFbBbITMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dygSeYVb; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745598841; x=1777134841;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u1V74D4vVu2FoZASwEnzWG7Nqf24mqXLJWj3A4SEvw4=;
+  b=dygSeYVbkPmCukY5WIRVBO+KNyNOVdiHLISchZGiY7dNTv/xuA7cMqrT
+   GO5BBRgCTCkgF4mheyx6ye9ebIL+u/3wOUUDC/SqtEBlOFn6+x/lUZ7FJ
+   JLCgVWjBtMybZPvobk5ivCzyHbH6ZWkC58GnYcDovCAAh0qrsVDVLzOsq
+   bu7nnKBZp2EoG3GWGnCNYPlnG+JJd7twT527dUb1LHAKnTAXJ4S8N9ykT
+   Dw6QjdLpw1O0IWhbqv894vmV4XXeKv7dVN2OfOBqTghS+lF/fLoeRQJy1
+   N/xYqVErAqIVaMvco1lBrY0Ioam0nATz8kcelZhTynMew/YVExb+JJEF2
+   A==;
+X-CSE-ConnectionGUID: pByvUzCxT0aG/VWq3vxZ+Q==
+X-CSE-MsgGUID: 4nQA2iyRQVOV0azqXH5XwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47280790"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47280790"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 09:34:00 -0700
+X-CSE-ConnectionGUID: PGn7jOLuSSW2LxL5u14jeQ==
+X-CSE-MsgGUID: RJnnuV3bTsOQcX+WI45Vrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132820919"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa010.jf.intel.com with ESMTP; 25 Apr 2025 09:33:56 -0700
+Date: Sat, 26 Apr 2025 00:29:17 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>, gregkh@linuxfoundation.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 08/11] PCI/IDE: Add IDE establishment helpers
+Message-ID: <aAu4XanJRnSuFXr/@yilunxu-OptiPlex-7050>
+References: <174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com>
+ <174107250147.1288555.16948528371146013276.stgit@dwillia2-xfh.jf.intel.com>
+ <yq5a7c3edot5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP
- controller
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
- kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Manikandan K Pillai <mpillai@cadence.com>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-6-hans.zhang@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250424010445.2260090-6-hans.zhang@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5a7c3edot5.fsf@kernel.org>
 
-On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
-> From: Manikandan K Pillai <mpillai@cadence.com>
+On Mon, Apr 21, 2025 at 11:43:58AM +0530, Aneesh Kumar K.V wrote:
+> Dan Williams <dan.j.williams@intel.com> writes:
 > 
-> Add support for the Cadence PCIe HPA controller by adding
-> the required callback functions. Update the common functions for
-> RP and EP configuration. Invoke the relevant callback functions
-> for platform probe of PCIe controller using the callback function.
-> Update the support for TI J721 boards to use the updated Cadence
-> PCIe controller code.
+> > There are two components to establishing an encrypted link, provisioning
+> > the stream in Partner Port config-space, and programming the keys into
+> > the link layer via IDE_KM (IDE Key Management). This new library,
+> > drivers/pci/ide.c, enables the former. IDE_KM, via a TSM low-level
+> > driver, is saved for later.
+> >
+> ....
 > 
-> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
-> Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c    |  12 +
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  29 +-
->  .../controller/cadence/pcie-cadence-host.c    | 263 ++++++++++++++++--
->  .../controller/cadence/pcie-cadence-plat.c    |  27 +-
->  drivers/pci/controller/cadence/pcie-cadence.c | 197 ++++++++++++-
->  drivers/pci/controller/cadence/pcie-cadence.h |  11 +-
->  6 files changed, 495 insertions(+), 44 deletions(-)
+> > +/**
+> > + * pci_ide_stream_setup() - program settings to Selective IDE Stream registers
+> > + * @pdev: PCIe device object for either a Root Port or Endpoint Partner Port
+> > + * @ide: registered IDE settings descriptor
+> > + *
+> > + * When @pdev is a PCI_EXP_TYPE_ENDPOINT then the PCI_IDE_EP partner
+> > + * settings are written to @pdev's Selective IDE Stream register block,
+> > + * and when @pdev is a PCI_EXP_TYPE_ROOT_PORT, the PCI_IDE_RP settings
+> > + * are selected.
+> > + */
+> > +void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
+> > +{
+> > +	struct pci_ide_partner *settings = to_settings(pdev, ide);
+> > +	int pos;
+> > +	u32 val;
+> > +
+> > +	if (!settings)
+> > +		return;
+> > +
+> > +	pos = sel_ide_offset(pdev->nr_link_ide, settings->stream_index,
+> > +			     pdev->nr_ide_mem);
+> >
 > 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index ef1cfdae33bb..154b36c30101 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -164,6 +164,14 @@ static const struct cdns_pcie_ops j721e_pcie_ops = {
->  	.start_link = j721e_pcie_start_link,
->  	.stop_link = j721e_pcie_stop_link,
->  	.link_up = j721e_pcie_link_up,
-> +	.host_init_root_port = cdns_pcie_host_init_root_port,
-> +	.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
-> +	.host_init_address_translation = cdns_pcie_host_init_address_translation,
-> +	.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
-> +	.set_outbound_region = cdns_pcie_set_outbound_region,
-> +	.set_outbound_region_for_normal_msg =
-> +					    cdns_pcie_set_outbound_region_for_normal_msg,
-> +	.reset_outbound_region = cdns_pcie_reset_outbound_region,
+> This and the similar offset caclulation below needs the EXT_CAP_ID_IDE offset 
+> 
+> modified   drivers/pci/ide.c
+> @@ -10,11 +10,13 @@
+>  #include <linux/bitfield.h>
+>  #include "pci.h"
+>  
+> -static int sel_ide_offset(int nr_link_ide, int stream_index, int nr_ide_mem)
+> +static int sel_ide_offset(struct pci_dev *pdev, int nr_link_ide,
+> +			  int stream_index, int nr_ide_mem)
+>  {
+>  	int offset;
+>  
+> -	offset = PCI_IDE_LINK_STREAM_0 + nr_link_ide * PCI_IDE_LINK_BLOCK_SIZE;
+> +	offset = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
+> +	offset += PCI_IDE_LINK_STREAM_0 + nr_link_ide * PCI_IDE_LINK_BLOCK_SIZE;
 
-How did you resolve Rob's comments?
+ide_cap, nr_link_ide, nr_ide_mem are all cached in pci_dev structure at
+the end of pci_ide_init().
 
-These were repeated I think three times finally with:
+So either use all cached value in pdev (not for pci_ide_init()):
 
-"Please listen when I say we do not want the ops method used in other
-drivers. "
+  static int sel_ide_offset(struct pci_dev *pdev, int stream_index)
 
-I think you just send the same ignoring previous discussion which is the
-shortest way to get yourself NAKed.
+or don't use any cached value:
 
+  static int sel_ide_offset(u16 dev_cap, int nr_link_ide, int stream_index, int nr_ide_mem)
 
-Best regards,
-Krzysztof
+or keep sel_ide_offset() unchanged, alway do:
+
+  ide_cap + sel_ide_offset()
+
+>  
+>  	/*
+>  	 * Assume a constant number of address association resources per
+> @@ -66,7 +68,7 @@ void pci_ide_init(struct pci_dev *pdev)
+>  	nr_streams = min(1 + FIELD_GET(PCI_IDE_CAP_SEL_NUM_MASK, val),
+>  			 CONFIG_PCI_IDE_STREAM_MAX);
+>  	for (int i = 0; i < nr_streams; i++) {
+> -		int offset = sel_ide_offset(nr_link_ide, i, nr_ide_mem);
+> +		int offset = sel_ide_offset(pdev, nr_link_ide, i, nr_ide_mem);
+>  		int nr_assoc;
+>  		u32 val;
+
+With your change, the next line will be broken:
+
+-		pci_read_config_dword(pdev, ide_cap + offset, &val);
++		pci_read_config_dword(pdev, offset, &val);
+
+Thanks,
+Yilun
 
