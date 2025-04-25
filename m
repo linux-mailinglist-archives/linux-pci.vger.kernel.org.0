@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-26770-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26771-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69EC1A9CDF5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DDB1A9CDFE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 18:24:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27C381B63014
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:22:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E4751C00078
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Apr 2025 16:24:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8531991D2;
-	Fri, 25 Apr 2025 16:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642E61993B9;
+	Fri, 25 Apr 2025 16:24:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ2Ozn56"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h87yuawY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503204A24;
-	Fri, 25 Apr 2025 16:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345A2192D9D;
+	Fri, 25 Apr 2025 16:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598116; cv=none; b=IIrAWvV3WnobCoDg1p6zKlE5+u6LtkH4QaAe1vVSz7TFyBOO8n53doQSwmq8NPD01KQFuGAb6c+v4B05CSLqul3EcVxlQNzl5/wRqv5Uoh46z8F0Apm0JdwVLV7gIUF13zxPG37MzG63t9JSfyp6jhtDjAjF5qe2+Gj+63AC4Go=
+	t=1745598277; cv=none; b=A/uvZFB53z6QynSWOUOLdNdn1SYbKOcipB0dGX9KSYfyXO4T6/0KP3QC0dGiPgqvu+NJwwxmmh/1isfjZjPKw+N2n3Yx3v1mvEKOHr15Z9BzBPgPQyMC0HgkjnsJo5dxZ8f91Bm/ItzgKNh2CWCYl2lVea3q9xwoUjoZkHB7M6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598116; c=relaxed/simple;
-	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	s=arc-20240116; t=1745598277; c=relaxed/simple;
+	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d/olZ2hXTkr6c1bNqcPGqRKKTbX0artdsSTkHFMnNhvlB3Scc8jVdXKdelpnPru7qWUcN+ieEsnKktxzfaxNL6SwDcrB3Q3+IuHZ7X9JrZXi+eY6wtk8FDwGekhu/RYYRcWI/oAWD7BBhd87b8PHKYTCYyCGgzRT3gkLKZU9xUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ2Ozn56; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B51C4CEE4;
-	Fri, 25 Apr 2025 16:21:52 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=YkNxCuY/qmdBfTQtv5lV1BNHmItzPum968PRwE5e1t/WvGMzPxyW4/v7PZUqYSQ8vc6H/mJkt9uCB0z2AuGgHFU94OXm41GZ0CMYJnrySISTTTiXVsew/HVP2SGQvuAGLvJXEUVgbCRHuWOwcZYM3NLYvncPcSxn4LW5ToTMMuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h87yuawY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC211C4CEE4;
+	Fri, 25 Apr 2025 16:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598115;
-	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	s=k20201202; t=1745598276;
+	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XQ2Ozn56t6c+UjaG1t4ey2DSK551MgyG4HFkZ/Ew45G65wPgF+NdyFNMrtG5KmoM0
-	 OHJFaFePEInFrNtLK/0vEJ5U2e2BqT+Bj/j96TFFX0OY29ZI5/2RzL1nNiEqRNFHYE
-	 szUktDf2F3VkEPn/YS6dgKP86ORvyNWsKzNtCWlsUXcrTTv8VqqDG5o8geP0zMpRV7
-	 r7s7+alqadplye5QdpyEdeBxQTUMchJUbE+dT1lyDU2kIZw+Cjy0dY8fz4cjwzyNaB
-	 /hVKsXPTIJc0LgIlABYVWzPWO0l3dhnIccjinEHERjb1VgUM7QhrSRqXXbvQa9jqvz
-	 aAjU0uD2G2WuA==
-Message-ID: <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
-Date: Fri, 25 Apr 2025 18:21:50 +0200
+	b=h87yuawYT+EKcR4ArMVXNZPbEuY1HCk3rkbmyoVXdv8miu/hBa40JymGrA6n/zVA/
+	 OeQKiPxNJoEhMD5LWcHT2EG3rRa9aDYVXlRarAAiwuLLEKDGP4OYOb0dmZbLXWc2oj
+	 Wh0UWtMQmerqCAZ63G5s00LxsBfoBt0xMC7yPwsVAt9fhGyrbB94mn9XU4sZ6J2b1X
+	 oArEu7niQa+jMcBtHp1h+hP9dE8iqXsSEUT9GQhuBIpgpmozvxXNthD+DSvNUT2Sws
+	 X554GUKukZ1gr1f94Mr3NA5YP2k/6kozZZpHDWOz2s3MJCvDAXNsPpfA7nlSdhWh7D
+	 V3MOroidqWlaw==
+Message-ID: <df9da79c-dc1a-4e90-82eb-f3af71f13494@kernel.org>
+Date: Fri, 25 Apr 2025 18:24:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,27 +50,13 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-To: Hans Zhang <hans.zhang@cixtech.com>, Conor Dooley <conor@kernel.org>,
- Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/5] Enhance the PCIe controller driver
+To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+ kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
- <20250424-proposal-decrease-ba384a37efa6@spud>
- <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250425-drained-flyover-4275720a1f5a@spud>
- <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -116,45 +102,54 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+In-Reply-To: <20250424010445.2260090-1-hans.zhang@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/04/2025 17:33, Hans Zhang wrote:
+On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
+> Enhances the exiting Cadence PCIe controller drivers to support
+> HPA (High Performance Architecture) Cadence PCIe controllers.
 > 
-> On 2025/4/25 22:48, Conor Dooley wrote:
->> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
->>>>
->>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
->>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
->>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
->>>>>>
->>>>>> Document the compatible property for HPA (High Performance
->>>> Architecture)
->>>>>> PCIe controller EP configuration.
->>>>> Please explain what makes the new architecture sufficiently different
->>>>> from the existing one such that a fallback compatible does not work.
->>>>>
->>>>> Same applies to the other binding patch.
->>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
->>>> soc-specific compatible for your integration not needed?
->>>>
->>> The sky1 SoC support patches will be developed and submitted by the Sky1
->>> team separately.
->> Why? Cixtech sent this patchset, they should send it with their user.
+> The patch set enhances the Cadence PCIe driver for HPA support.
+> The "compatible" property in DTS is added with  more enum to support
+> the new platform architecture and the register maps that change with
+> it. The driver read register and write register functions take the
+> updated offset stored from the platform driver to access the registers.
+> The driver now supports the legacy and HPA architecture, with the
+> legacy code changes beingminimal.
 > 
-> Hi Conor,
+> SoC related changes are not available in this patch set.
 > 
-> Please look at the communication history of this website.
+> The TI SoC continues to be supported with the changes incorporated.
 > 
-> https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+> The changes are also in tune with how multiple platforms are supported
+> in related drivers.
+> 
+> The scripts/checkpatch.pl has been run on the patches with and without
+> --strict. With the --strict option, 4 checks are generated on 1 patch
+> (PATCH v3 3/6) of the series), which can be ignored. There are no code
+> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
+> is clean.
+> 
+> The ./scripts/kernel-doc --none have been run on the changed files.
+> 
+> The changes are tested on TI platforms. The legacy controller changes are
+> tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
+> platform available within Cadence.
+> 
+> Changes for v4
+> 	- Add header file bitfield.h to pcie-cadence.h.
+> 	- Addressed the following review comments.
+> 	  Merged the TI patch as it.
+> 	  Removed initialization of struct variables to '0'.
 
-And in that thread I asked for Soc specific compatible. More than once.
-Conor asks again.
+So the rest you did not address?
 
-I don't understand your answers at all.
-
+That's not acceptable. You ignored several comments such way. Either
+discussion did not finish or you agree to implement all comments. If you
+do not agree, then sending new version hides the previous discussion.
 Best regards,
 Krzysztof
 
