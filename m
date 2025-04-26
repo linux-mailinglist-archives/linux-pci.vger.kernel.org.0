@@ -1,101 +1,113 @@
-Return-Path: <linux-pci+bounces-26828-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26829-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6646A9DCF4
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 21:49:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5CF6A9DD00
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 22:00:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 445FC4A07C0
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 19:49:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFB567A9830
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 19:58:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4EC01D5161;
-	Sat, 26 Apr 2025 19:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9577F1EDA13;
+	Sat, 26 Apr 2025 19:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rl8BRUVW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fudcxCQw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D7019DF8B;
-	Sat, 26 Apr 2025 19:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A19D6AD3;
+	Sat, 26 Apr 2025 19:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745696987; cv=none; b=CGRhjGg3lvdRdNaP6UlR2edUdFahxznBZo2bPAe9y9Shbd7gUU7hSFZKqvPZqPOuVMYDD1mJ4OxQA+LOL3Kq6g0oJ465/FV/TnmGc86A8sSzx4Qw7lm2yqYV1o+CvebYzrDu9OXhBbKSEeVK9mDC8fsM11HmNt/d4Ah0B78oFxM=
+	t=1745697599; cv=none; b=AyykO0kt75G+A+lLgsoWT8pjF9MY6SHEU33cVQJfoZ4AkF13lUCXrW4ayuxN50pFOYO041LdfjLl6889QZSWnoXRr2wTNta4NbiIZe6iiR2SWmO4/uVUFh9CaLIeV5lLnUyZ+6qGCftPkSJ6IheBSE726S7u7HarwKzRjmNpREU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745696987; c=relaxed/simple;
-	bh=0QhmbA6z9dDYLS2F8XMNw6kfXNMzDVFZileQBPf7FD4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=okIkNX15cUJe2maHEvmjeF51o3tdzRbBKasUh/YyRw/U8BYvLSWLagOkm5P/2C6bYxQ3jvxHJiRzIASwJABcfFPZQ0CpcFzy15unN5D5ktUE9jNObdmexf0P60jGuWQhjN1UgvYPpV8r/ggYc1q0enFcYLpBlARE/7XeXXM25hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rl8BRUVW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B46ADC4CEE2;
-	Sat, 26 Apr 2025 19:49:40 +0000 (UTC)
+	s=arc-20240116; t=1745697599; c=relaxed/simple;
+	bh=TzEmWAzJLhRlvC2GfkBxcVxzqlomY+7M9h6HqY0KE9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jMADaytX1mrvuUiqgiH587EFlIHV/zTgE5a5OuEve6Ttma/Lubi+MM1CjhqT6aAyrmSajEpTLS3EYaJCeRox5nbRGljom/RtGEJZPg64+dat+Au1eiWZme1lpfQBi9SZov9jmu/BGIy2lwTfpNdAwPcMBw5QcqXbt3+5P4epo4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fudcxCQw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CDCC4CEE2;
+	Sat, 26 Apr 2025 19:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745696986;
-	bh=0QhmbA6z9dDYLS2F8XMNw6kfXNMzDVFZileQBPf7FD4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Rl8BRUVWnwk40+UZPvP+4t2WYn8HGeTQNpGvPvvDZsEbd9JMOIGCz9r6KaNAfKeU1
-	 EO+/2SfjbKWzSh50Pg3Fib7v9rcn4S+8ULMAPQIfOTMQSrw9oiRT8v+R71aJ8sMtM9
-	 5BIlgUfsBeW98YAtX37EGKQpUOj6FT3AJQuKj6bUavnjdUtDBoyqTjrXerWE5fW6/3
-	 EQegwLXDdRU9oMK3h0da3CBdFZ9SbUyrHMLwNu/SRdE9EQlI2gcA43M994ftrnE5+h
-	 9Evt3Hdfenz1iQNEkJC9DvK9SLqg9i70zcTT4g3xFucbQ/H4HKxw0XDDJUPgBXC88l
-	 cr6KcbYFXdFcw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>, Tamir Duberstein <tamird@gmail.com>
-Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-In-Reply-To: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-Subject: Re: [PATCH v19 0/3] rust: xarray: Add a minimal abstraction for
- XArray
-Message-Id: <174569693396.840230.8180149993897629324.b4-ty@kernel.org>
-Date: Sat, 26 Apr 2025 21:48:53 +0200
+	s=k20201202; t=1745697598;
+	bh=TzEmWAzJLhRlvC2GfkBxcVxzqlomY+7M9h6HqY0KE9E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fudcxCQwzbO2wJ3OrI5CbvgZThqsfiE+81rRQIIprbazFKW0sF+Iq4Sgu9DB62R+Y
+	 v4lU9R0p6kmvG2ODWTY/iQEeVytL5jjJYt5lbD3qwbnTKEu+hbJuuQJauVfxmn6L3H
+	 XPmv6TFmRgg4xTb3yyv5ivDRHjazJSJdd7OHllRRGqauzxAi8BVPMV9/Kzo07r+quP
+	 RdfwaKEulKL6cjZVXGUFeWnsmI5ViwvcUmwLu9v8Kve3Pj2Dk9XVP/fld0L7vudcpd
+	 3ZbHokTYA2ONiyS0xjTFFCa3CDg8i7wD4L+4/aeWhZupnN/89f/duF4fpT7zIWdrZ1
+	 l7skLD+LffHnA==
+Date: Sat, 26 Apr 2025 14:59:57 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Yi Lai <yi1.lai@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Ondrej Jirman <megi@xff.cz>
+Subject: [GIT PULL] PCI fixes for v6.15
+Message-ID: <20250426195957.GA598020@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev
 
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-On Wed, 23 Apr 2025 09:54:36 -0400, Tamir Duberstein wrote:
-> This is a reimagining relative to earlier versions[0] by Asahi Lina and
-> Maíra Canal.
-> 
-> It is needed to support rust-binder, though this version only provides
-> enough machinery to support rnull.
-> 
-> 
-> [...]
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Applied, thanks!
+are available in the Git repository at:
 
-[1/3] rust: types: add `ForeignOwnable::PointedTo`
-      commit: a68f46e837473de56e2c101bc0df19078a0cfeaf
-[2/3] rust: xarray: Add an abstraction for XArray
-      commit: dea08321b98ed6b4e06680886f60160d30254a6d
-[3/3] MAINTAINERS: add entry for Rust XArray API
-      commit: 1061e78014e80982814083ec8375c455848abdb4
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-v6.15-fixes-3
 
-Best regards,
--- 
-Andreas Hindborg <a.hindborg@kernel.org>
+for you to fetch changes up to 442cacac2d9935a0698332a568afcb5c6ab8be17:
 
+  misc: pci_endpoint_test: Defer IRQ allocation until ioctl(PCITEST_SET_IRQTYPE) (2025-04-23 17:04:48 -0500)
 
+----------------------------------------------------------------
+
+- When releasing a start-aligned resource, e.g., a bridge window, save
+  start/end/flags for the next assignment attempt; fixes a v6.15-rc1
+  regression (Ilpo Järvinen)
+
+- Move set_pcie_speed.sh from TEST_PROGS to TEST_FILE; fixes a bwctrl
+  selftest v6.15-rc1 regression (Ilpo Järvinen)
+
+- Add Manivannan Sadhasivam as maintainer of native host bridge and
+  endpoint drivers (Manivannan Sadhasivam)
+
+- In endpoint test driver, defer IRQ allocation from .probe() until ioctl()
+  to fix a regression on platforms where the Vendor/Device ID match doesn't
+  include driver_data (Niklas Cassel)
+
+----------------------------------------------------------------
+Ilpo Järvinen (2):
+      PCI: Restore assigned resources fully after release
+      selftests/pcie_bwctrl: Fix test progs list
+
+Manivannan Sadhasivam (1):
+      MAINTAINERS: Move Manivannan Sadhasivam as PCI Native host bridge and endpoint maintainer
+
+Niklas Cassel (1):
+      misc: pci_endpoint_test: Defer IRQ allocation until ioctl(PCITEST_SET_IRQTYPE)
+
+ MAINTAINERS                                  |  2 +-
+ drivers/misc/pci_endpoint_test.c             | 21 +--------------------
+ drivers/pci/setup-bus.c                      |  4 ++++
+ tools/testing/selftests/pcie_bwctrl/Makefile |  3 ++-
+ 4 files changed, 8 insertions(+), 22 deletions(-)
 
