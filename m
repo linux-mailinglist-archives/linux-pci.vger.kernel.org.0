@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-26837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26838-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF8F1A9DD31
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 23:18:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0125A9DD33
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 23:24:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D1E81698CB
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 21:18:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 127C39236DA
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 21:23:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F8BC1F30B3;
-	Sat, 26 Apr 2025 21:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883741F4C99;
+	Sat, 26 Apr 2025 21:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfburaK5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHDW/jas"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF3018C01D;
-	Sat, 26 Apr 2025 21:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8BF1D5CDD;
+	Sat, 26 Apr 2025 21:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745702331; cv=none; b=ax2rzVB2y1iM8uDQjC96p8yBQ+QVED+W1Ut4D5h3RRoFzTIvu3SRf94xgD/2DI67MruUjlljMkeEQZfmdLovN4rplCUZiaMOgcsf4w67PEZ6mb5c6eTMVRDnw4GK7f8QYzrHgHjvhDZdOdaO1y+CKxKYTa6Y9ty66oQrnOLdQRQ=
+	t=1745702649; cv=none; b=NyK/c4duVpb4g/FbK1FSNkQ6qYKOGz4W0qIF2rXnr8oPMt5DHhSCVn3TwDEPVgnGH9tRO4+yJf9YBZz1yLYo+G4IjEF9TAg1V2vo2HLcE9EyYRs/so8RK1jWY656TD254g0EoNv+OGqJVNaz3xrphLIMZUVJMa+8K2Utixwm220=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745702331; c=relaxed/simple;
-	bh=FWU3uRb/BVym7zV1oNgyiAOCm/+1+K1NCZVD2UFQRTY=;
+	s=arc-20240116; t=1745702649; c=relaxed/simple;
+	bh=KLJnmowEU+MNFxEcyRwWXecaoBq3TaKxQVFB2EjCS64=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nTwYksvIeflxpKP1er6ie+gPQpZJGKwxgAWoYkQ0I9CYyqNIFv9jOnp2tqBHehg07P0SW+bhmD4p3+efr5Mvb5WBtvIvd1xmU0JMEscXE/0L5AtennMZZgkdkvx4YvXLAO59ZjXH2rP6OQqnmNCYnEAdjS+XYn9bapVrbnOpz9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfburaK5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BDEC4CEE2;
-	Sat, 26 Apr 2025 21:18:46 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=k6O0CXcFwBntrdengXTBLeMziAPKTL+ZnI677cOLfpwp44VSk4ojmKDxdvHYqA7T8BYbrUtmmgHm0B7G0v87pecueXvX7j/w6vuhOY9MLD9M6eTiammU/djJAwMlEv+MtBUsLb4rLudtaSih1io1WHtNE/1D3naSL2B3yFasLI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHDW/jas; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD93C4CEE2;
+	Sat, 26 Apr 2025 21:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745702330;
-	bh=FWU3uRb/BVym7zV1oNgyiAOCm/+1+K1NCZVD2UFQRTY=;
+	s=k20201202; t=1745702648;
+	bh=KLJnmowEU+MNFxEcyRwWXecaoBq3TaKxQVFB2EjCS64=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MfburaK5/HqL4wosqJEf6RzRQObnrRIObbxbrKUnFJ5owVmcvRouzoX3laglt0412
-	 QEvTL1/+QxaZkjfIdbqEml0YSw9KArNhFNqWJvisWt8pTAG/hs8vCAmC7Y72oq/mnj
-	 uiW0/NbWw8FHdSkIRncA/Q3RdoNY6Yg6YdArjLG4MKEEoRddWCRlZCV4h3EThlYu4X
-	 wP5whI3R+g0gZT0qpiKxA1B62QByDOsY10R15yJgBJL93+QKo/TTzRBygIUPfwRyBm
-	 tkQTBpPMPhy1/+HnL3J+JaSelAIKIQqbhZE9rAT8Oo1lFYWtE73dUJcFGAWWWuR48Z
-	 kXPM/jstjjqiw==
-Date: Sat, 26 Apr 2025 23:18:43 +0200
+	b=HHDW/jas22rogQcHXyRbn73zocRA7tKgEeZL6XGO+/fEnn7FZfvQGswBIy7LfayiG
+	 eSSfQG+R/XmYm6JOo2OexX5rPOaHH2mQpQhVWEqBjCylWCZTSpRB2SxBJ2/uxz+Ocp
+	 Q23DBCsCZeUsjY00sjtGZLTsKDtXUT28KyhacRXxCsuC8lWhufoUPQXwIL8+ECFYnf
+	 hRfFSRDr3qqSoOXnNZ+ZksZurGwSWvvvTFuvp7eUtqoc3Kqz7IJtDkErYYcALcpXgB
+	 y1w6BnvvNk00dEj4MwhTyNG9PQm2tt8VTpK8Sd6cmBgb5SisnsiTeCtW4Zqclkdwp+
+	 nzyj5TkjhH/KA==
+Date: Sat, 26 Apr 2025 23:24:01 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Benno Lossin <benno.lossin@proton.me>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -52,11 +52,9 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
 	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
-Message-ID: <aA1Ns2GELPVbEsWV@pollux>
-References: <20250426133254.61383-1-dakr@kernel.org>
- <20250426133254.61383-2-dakr@kernel.org>
- <D9GUNZ0PMDA4.AZXA0FWQUSB0@proton.me>
+Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
+Message-ID: <aA1O8Wem1FhyybF5@pollux>
+References: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,54 +63,87 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9GUNZ0PMDA4.AZXA0FWQUSB0@proton.me>
+In-Reply-To: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
 
-On Sat, Apr 26, 2025 at 08:24:14PM +0000, Benno Lossin wrote:
+On Sat, Apr 26, 2025 at 08:28:30PM +0000, Benno Lossin wrote:
 > On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
-> > Implement an unsafe direct accessor for the data stored within the
-> > Revocable.
+> > Implement a direct accessor for the data stored within the Devres for
+> > cases where we can proof that we own a reference to a Device<Bound>
+> > (i.e. a bound device) of the same device that was used to create the
+> > corresponding Devres container.
 > >
-> > This is useful for cases where we can proof that the data stored within
-> > the Revocable is not and cannot be revoked for the duration of the
-> > lifetime of the returned reference.
+> > Usually, when accessing the data stored within a Devres container, it is
+> > not clear whether the data has been revoked already due to the device
+> > being unbound and, hence, we have to try whether the access is possible
+> > and subsequently keep holding the RCU read lock for the duration of the
+> > access.
+> >
+> > However, when we can proof that we hold a reference to Device<Bound>
+> > matching the device the Devres container has been created with, we can
+> > guarantee that the device is not unbound for the duration of the
+> > lifetime of the Device<Bound> reference and, hence, it is not possible
+> > for the data within the Devres container to be revoked.
+> >
+> > Therefore, in this case, we can bypass the atomic check and the RCU read
+> > lock, which is a great optimization and simplification for drivers.
 > >
 > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > > ---
-> > The explicit lifetimes in access() probably don't serve a practical
-> > purpose, but I found them to be useful for documentation purposes.
-> > ---
-> >  rust/kernel/revocable.rs | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
+> >  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
 > >
-> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> > index 971d0dc38d83..33535de141ce 100644
-> > --- a/rust/kernel/revocable.rs
-> > +++ b/rust/kernel/revocable.rs
-> > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
-> >          self.try_access().map(|t| f(&*t))
-> >      }
+> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> > index 1e58f5d22044..ec2cd9cdda8b 100644
+> > --- a/rust/kernel/devres.rs
+> > +++ b/rust/kernel/devres.rs
+> > @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
 > >  
-> > +    /// Directly access the revocable wrapped object.
+> >          Ok(())
+> >      }
+> > +
+> > +    /// Obtain `&'a T`, bypassing the [`Revocable`].
 > > +    ///
-> > +    /// # Safety
+> > +    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
+> > +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
 > > +    ///
-> > +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
-> > +    /// for the duration of `'a`.
+> > +    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
+> > +    /// has been created with.
+> > +    ///
+> > +    /// # Example
+> > +    ///
+> > +    /// ```no_run
 > 
-> Ah I missed this in my other email, in case you want to directly refer
-> to the lifetime, you should keep it defined. I would still remove the
-> `'s` lifetime though.
-> > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
-> > +        // SAFETY: By the safety requirement of this function it is guaranteed that
-> > +        // `self.data.get()` is a valid pointer to an instance of `T`.
+> The `no_run` is not necessary, as you don't run any code, you only
+> define a function.
+
+Yet, I'd like to keep it to make it obvious that this test isn't supposed to
+run.
+
+> > +    /// # use kernel::{device::Core, devres::Devres, pci};
+> > +    ///
+> > +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
+> > +    ///     let bar = devres.access_with(dev.as_ref())?;
+> > +    ///
+> > +    ///     let _ = bar.read32(0x0);
+> > +    ///
+> > +    ///     // might_sleep()
+> > +    ///
+> > +    ///     bar.write32(0x42, 0x0);
+> > +    ///
+> > +    ///     Ok(())
+> > +    /// }
 > 
-> I don't see how the "not-being revoked" state makes the `data` ptr be
-> valid. Is that an invariant of `Revocable`? (it's not documented to have
-> any invariants)
+> Missing '```'?
 
-What else makes it valid?
+Good catch -- interestingly the doctest did compile anyways.
 
-AFAICS, try_access() and try_access_with_guard() argue the exact same way,
-except that the reason for not being revoked is the atomic check and the RCU
-read lock.
+> 
+> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
+> 
+> I don't think that we need the `'d` lifetime here (if not, we should
+> remove it).
+
+If the returned reference out-lives dev it can become invalid, since it means
+that the device could subsequently be unbound. Hence, I think we indeed need to
+require that the returned reference cannot out-live dev.
 
