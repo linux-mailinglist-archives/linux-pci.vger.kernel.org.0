@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-26833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4629CA9DD13
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 22:19:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC295A9DD15
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 22:24:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AFA9167B00
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 20:19:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 069E91B63110
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 20:24:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3321F416A;
-	Sat, 26 Apr 2025 20:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572851F463C;
+	Sat, 26 Apr 2025 20:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OvzA7apG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="G1V1/x6z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C040D1F3B9E;
-	Sat, 26 Apr 2025 20:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AFE1E521D;
+	Sat, 26 Apr 2025 20:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745698735; cv=none; b=As5VhjdHA7BKXCnNxR39Vmsw7oL1EmDrWfPSQu+cyYDOSMDy0d7k/4OuoxfE3G6AFzDpg7mLj9pxctYtmGuQzGJoOFAimO0gBwBsPwZzONsD8kRoRVsEXEX6rUCTii2O4nC+rQSGoFTtQnvcjoMmXjAcqdZC1UJC/5m5Nd2Kamk=
+	t=1745699064; cv=none; b=N12gHJBeANVqIsipSPSyNmiRTn2KARNXA4QedPqRZJa8TQw1GI8qph+XGxkPiXIShjfPaNNvLUNfgQS3P8X7G0Uzrnouf8zf9k7ZTwrSffhSVGxim8OIQUn70kDwfDEJACheArOnS1rpo/nEqWQBVmFYWaTCS1lRpm70WTPoiiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745698735; c=relaxed/simple;
-	bh=2vGbCA/0GPQ+a2cVcbBjhlUeb/j9DM9E3nexa0LHANE=;
+	s=arc-20240116; t=1745699064; c=relaxed/simple;
+	bh=W7yJt/mvMYn+AiXd1ocYGzWFxGZn+D21+8VJo8/aaAs=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZhfJX2Jd3N0/xx6k7yYMslzq1AlkIVpxh+4cdq+839We8V6Du6ROxChudFosR4ol7DQ3ges2bdjqhMp7WNJJfWvl9n4m2EBnxIbiF1J5BRh/k9trZ+7b4X6rmdOvgVNzu5aextPjCDBjGXxRXVaNawZO7Hcu8mQbJrP+jCf4O2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OvzA7apG; arc=none smtp.client-ip=79.135.106.31
+	 MIME-Version:Content-Type; b=YyrsVaDpt/sxGr/mN2w6Wf8rIEJCz0i6hOSPGAxmsMSZd4NNVgdiasjY5mVw4w68KsZ3gsyPxC2e5D1bPK5FfojpXr53yVs4G8KuVov7y/HXA17VjbQzi4yarZOYV6734HpqFUG7VKDjYZt7OOYkXCBR7rUgNcFnrP186BPMzwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=G1V1/x6z; arc=none smtp.client-ip=185.70.43.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1745698725; x=1745957925;
-	bh=QZPkJsafjKMhe6Qtp58doq4pwYWbn6MnQzCYXsM+OOA=;
+	s=protonmail; t=1745699059; x=1745958259;
+	bh=ZqrMC1FBNaZtDqXi2xjyzgHvSnX3qnhRhW+5yfJ/Aro=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=OvzA7apGLS9NeiDu5/tfkeiqZTN8fpW36g49KGg50Nl8hyIpuJYbUPgRfKK4HvJRT
-	 Cx4lTABNdwsjNTZ3CIuQqSnn7ta+aib2BsM77zhk6mBnMmh+gK4E1EX/zTe5DQoIak
-	 ZEt+tgHFuDXJZoNHWA7M5Oj8DvCrI9VrYYuisA+dfPqja9mfpBXBeX6UAu//5j9wgh
-	 yorCVyhZCMp6G2BCo/MLlM6flV1A3HkQvA7Ik1gkNkEBW5q7QnlrjO8apB+ceyrPu6
-	 EyMP4lIsFVVvLZUko0+DfsojKyKpm67oI/KWzVPa2z6CZT++bcpDrx2tcdtkjjCijY
-	 jPkMi9tjHwjRw==
-Date: Sat, 26 Apr 2025 20:18:39 +0000
-To: Christian Schrefl <chrisi.schrefl@gmail.com>, Danilo Krummrich <dakr@kernel.org>
+	b=G1V1/x6zzOKEkMJ7zGXT+JLr04MbpU7eMX4BtnZlONpB7t2RnpGW+i2W+F/Ne9Si4
+	 PTu/IOk0R0R5v5Qru3vUQrwS00B7C2Ol8TBnUxq7dIqpnpiIsqslt/AARIDmzAcOp0
+	 B4WInww5pIudaXFfeuIEWdyRpiPFAvyLs53eayKlkqOubQh7LKbFnEpmwmb303cXJS
+	 JT2ePdH+MOWJX93txbs/RE3IUsHiAPxV0BrfTBDsQbqfyaIzegotpjaEjGviCuxwut
+	 NZ1QE2MsWsV2nqU036iF0A68JCBy8C03liECIa7r8Z578y9Gi5EWW5gE53VtpKEsU6
+	 Xvn/A5ZCDEDEQ==
+Date: Sat, 26 Apr 2025 20:24:14 +0000
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
 From: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <D9GUJPGAOB21.3UTRD7M9OPLFJ@proton.me>
-In-Reply-To: <78853ac7-c9d2-4485-bbb3-859d2425e729@gmail.com>
-References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-3-dakr@kernel.org> <ce224b78-5c26-46d9-9b69-6bceb1bda62d@gmail.com> <aA0TIWj50RYogLxj@pollux> <78853ac7-c9d2-4485-bbb3-859d2425e729@gmail.com>
+Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
+Message-ID: <D9GUNZ0PMDA4.AZXA0FWQUSB0@proton.me>
+In-Reply-To: <20250426133254.61383-2-dakr@kernel.org>
+References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-2-dakr@kernel.org>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 224823809a2d2f8e90e8047e6daa2bedf3b62381
+X-Pm-Message-ID: 70eec72072a9ad48951960ba6eba8511d3c908ee
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,98 +62,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat Apr 26, 2025 at 7:18 PM CEST, Christian Schrefl wrote:
-> On 26.04.25 7:08 PM, Danilo Krummrich wrote:
->> On Sat, Apr 26, 2025 at 06:53:10PM +0200, Christian Schrefl wrote:
->>> On 26.04.25 3:30 PM, Danilo Krummrich wrote:
->>>> Implement a direct accessor for the data stored within the Devres for
->>>> cases where we can proof that we own a reference to a Device<Bound>
->>>> (i.e. a bound device) of the same device that was used to create the
->>>> corresponding Devres container.
->>>>
->>>> Usually, when accessing the data stored within a Devres container, it =
-is
->>>> not clear whether the data has been revoked already due to the device
->>>> being unbound and, hence, we have to try whether the access is possibl=
-e
->>>> and subsequently keep holding the RCU read lock for the duration of th=
-e
->>>> access.
->>>>
->>>> However, when we can proof that we hold a reference to Device<Bound>
->>>> matching the device the Devres container has been created with, we can
->>>> guarantee that the device is not unbound for the duration of the
->>>> lifetime of the Device<Bound> reference and, hence, it is not possible
->>>> for the data within the Devres container to be revoked.
->>>>
->>>> Therefore, in this case, we can bypass the atomic check and the RCU re=
-ad
->>>> lock, which is a great optimization and simplification for drivers.
->>>>
->>>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->>>> ---
->>>>  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 35 insertions(+)
->>>>
->>>> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
->>>> index 1e58f5d22044..ec2cd9cdda8b 100644
->>>> --- a/rust/kernel/devres.rs
->>>> +++ b/rust/kernel/devres.rs
->>>> @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, dat=
-a: T, flags: Flags) -> Result {
->>>> =20
->>>>          Ok(())
->>>>      }
->>>> +
->>>> +    /// Obtain `&'a T`, bypassing the [`Revocable`].
->>>> +    ///
->>>> +    /// This method allows to directly obtain a `&'a T`, bypassing th=
-e [`Revocable`], by presenting
->>>> +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] =
-instance has been created with.
->>>> +    ///
->>>> +    /// An error is returned if `dev` does not match the same [`Devic=
-e`] this [`Devres`] instance
->>>> +    /// has been created with.
->>>
->>> I would prefer this as a `# Errors` section.
->>=20
->> I can make this an # Errors section.
->>=20
->>> Also are there any cases where this is actually wanted as an error?
->>> I'm not very familiar with the `Revocable` infrastructure,
->>> but I would assume a mismatch here to be a bug in almost every case,
->>> so a panic here might be reasonable.
->>=20
->> Passing in a device reference that doesn't match the device the Devres i=
-nstance
->> was created with would indeed be a bug, but a panic isn't the solution, =
-since we
->> can handle this error just fine.
->>=20
->> We never panic the whole kernel unless things go so utterly wrong that w=
-e can't
->> can't recover from it; e.g. if otherwise we'd likely corrupt memory, etc=
-.
->>> (I would be fine with a reason for using an error here in the=20
->>> commit message or documentation/comments)
->>=20
->> I don't think we need this in this commit or the method's documentation,=
- it's a
->> general kernel rule not to panic unless there's really no other way.
+On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+> Implement an unsafe direct accessor for the data stored within the
+> Revocable.
 >
-> Alright I'm fine with it then.
+> This is useful for cases where we can proof that the data stored within
+> the Revocable is not and cannot be revoked for the duration of the
+> lifetime of the returned reference.
 >
-> I just don't think that most users of the function would be able to
-> gracefully recover from that other than failing the probe
-> or whatever, but it makes sense to allow the caller to deal with this.
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+> The explicit lifetimes in access() probably don't serve a practical
+> purpose, but I found them to be useful for documentation purposes.
+> ---
+>  rust/kernel/revocable.rs | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> index 971d0dc38d83..33535de141ce 100644
+> --- a/rust/kernel/revocable.rs
+> +++ b/rust/kernel/revocable.rs
+> @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self,=
+ f: F) -> Option<R> {
+>          self.try_access().map(|t| f(&*t))
+>      }
+> =20
+> +    /// Directly access the revocable wrapped object.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure this [`Revocable`] instance hasn't been r=
+evoked and won't be revoked
+> +    /// for the duration of `'a`.
 
-Failing the probe *is* "gracefully" handling the error. As Danilo said,
-a panic is the last resort when the whole world is on fire and you want
-to avoid doing more damage to the system.
+Ah I missed this in my other email, in case you want to directly refer
+to the lifetime, you should keep it defined. I would still remove the
+`'s` lifetime though.
+> +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
+> +        // SAFETY: By the safety requirement of this function it is guar=
+anteed that
+> +        // `self.data.get()` is a valid pointer to an instance of `T`.
+
+I don't see how the "not-being revoked" state makes the `data` ptr be
+valid. Is that an invariant of `Revocable`? (it's not documented to have
+any invariants)
 
 ---
 Cheers,
 Benno
+
+> +        unsafe { &*self.data.get() }
+> +    }
+> +
+>      /// # Safety
+>      ///
+>      /// Callers must ensure that there are no more concurrent users of t=
+he revocable object.
+
 
 
