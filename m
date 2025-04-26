@@ -1,179 +1,230 @@
-Return-Path: <linux-pci+bounces-26825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90AD2A9DC79
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 19:18:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DCB8A9DC7A
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 19:19:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D98F44A1D64
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 17:18:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B26833B81FF
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 17:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE21625C827;
-	Sat, 26 Apr 2025 17:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C2825CC49;
+	Sat, 26 Apr 2025 17:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0X7r01J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byRS9LQt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6BC12E7F;
-	Sat, 26 Apr 2025 17:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CFA12E7F;
+	Sat, 26 Apr 2025 17:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745687922; cv=none; b=kWjvJ2YO5Lb2f2X/EodvDoIC8EOR6WcbaBPBj5KtEwFal9a7TBqQzMpDfkV1Xaa5f/YhGCY+2rLSQSgGT2ZeHb9sDGTTGk9K+3RkEwee50/dliBABFWDR4VHyc0M7YaN8VsAkc4+I6TvxmZngW8gJcbvhPC97s3xVGcAeNsXkTc=
+	t=1745687989; cv=none; b=Hw1lsFviWWllVHQPnRC1vaQkJBqH4VgQTiUHL4oNAPJJhadJ1rC3gwePqrsvre8M4NnHC4SEF0sMLjjnTUWBIRXQI+7xhq9M00FWOzL/241KDQS94ki4q5iTU1PhWi/gRHZw7tMLNabO/gS/gvKZ/jM6XKkozUOHTDqQo+k721s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745687922; c=relaxed/simple;
-	bh=l0FTPLLZSYbU4Vippcp2K1GUr2PByQrS8bEbSei9hDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u2wTO/iseBVLB7rPlozdU0LPuy4wj+nmSwq3tI80NxIoVTqjmxc56j2cby4iKvY2PdCY2ykFgCg9MBSpJTFuvujUPkRi4YDmZZll9o5Froqt1eASjxJbfz/G3h7O6LfwMDRR98ep3PKQE2KjhL0h1UBZb+HWv5dq7VFQNa85LtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0X7r01J; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1745687989; c=relaxed/simple;
+	bh=c5Le8ZEobH1qbEctBgs4t72H9Ggm5a5AZyV+cPlyxqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEh1uPVrPOWrqaER2IhRwHUhM30g5fNTcRQYLCz9Mu0SEkoWu4ogJWxIHfvVFh0K3Qlb/ze+AJUWrNSYRTUVsLxuo7THposWS2vZzsJ8qXz8JaPWZgFOM/sEynHPhWXeLcWzcA60ULgtocEkz9p/ijtu5rrG2FOlTtgPdnOLmp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byRS9LQt; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c0dfba946so2381725f8f.3;
-        Sat, 26 Apr 2025 10:18:40 -0700 (PDT)
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4766cb762b6so40107631cf.0;
+        Sat, 26 Apr 2025 10:19:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745687919; x=1746292719; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5yNeen9I0oxXgts9VxQEHXzGWP3A4D9qnojdBg1mq7o=;
-        b=G0X7r01JhRG3yPBiML+ECma017OO0YcY87drhs1rge+0v9HH5rnP4ISDD1Hm7NUD/o
-         nRsQiz6yXHPVEHhXbYpDHQCjGZKC2RYL183ADcl1NhJdYJCndJBEnWLBfE/iEjCnG99r
-         SasofEiU1Y8bkIsC/h+Aoh0PeZ2xk+8VMmaPFjDEMX7MKoGxs5cQV8sxuLHzSeyOp5W8
-         XcHjtA8Fb09j66PrWA430qJHowVN5h3Ipnd2kwH52W6N+/QlYZpXUxVQ7pIFcB52tmC1
-         On6CoET+K22Ec6BQ6onaRItVf5i49se7j0LV/t86P5COaRjG3ubJyWQj0+FkIheLkO9X
-         oxQg==
+        d=gmail.com; s=20230601; t=1745687985; x=1746292785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UK/TDbxb2X5K00OclS68L8knPg1NMKWTxwXfQikrTpY=;
+        b=byRS9LQtsPjDYhPO5S55GWXLuCJz/Kvn0GusGoKJG9KWo6ckx2NAL53KcFctWmQHjm
+         XZQwLtxcC6SldmglL3gSBTBcck5k8zx8hzppgNVeZgBVkQmAYsCUCOKS6hvRgOovpjXx
+         ipNCEEW5t+A5PZsEFwOJj2fNsyZ6BfSPj6ImHX954i0GDUVAanWpd4DQFnSIsGGGLk7o
+         IjIU5GpPPxld/uKWdEVUi8fdD1xTTQhnv94UT+FhjssADxXoPztgm7Qhocv4KJz/stn3
+         zrBbGaI8BKogmR9+eP6K4KOI2l60td6XQZzNeUCtVlWLuqr0BlkCeeIFh0pq23j4ffg7
+         JfZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745687919; x=1746292719;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5yNeen9I0oxXgts9VxQEHXzGWP3A4D9qnojdBg1mq7o=;
-        b=VBXX45sECPQdxeqqJCa02A5xcZTkCRQyKW0bmz9pfSA8WwExPqTxX7Ako2uG7SYfad
-         mOZy6NXgo7Zwww6PydYABsAuA2JpanpBztyJoQTm/HagnofD5zl2DFpd/vdl8kUnFmfp
-         9DoXN9L91j4rn6kU226c0hoav5yFgcMdavBUoJJbrVAtT/crYEnwzRYr5CrnPd4IT4NB
-         tDhPJUxU1QNaKQgU7BGM8Amuy6ZlhWHUaoSAZDysL9B83RjSHitIJf6TbWSZphg16SLd
-         uwCXvz4wE6DgPMqPaj5v1k2VoD9jteozPhBsSeKFwJozmm5QQF8DqGM9sYzImb890vf/
-         z0Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUdN2m9Kxf9LxIXw1SYqttMsjjATPxKBChWSvcvHJvq4jVJatqCO6lcf1uHA7QXroGe45Ot30qb1IEf@vger.kernel.org, AJvYcCUe/924d52LWZ4qcEB1qlYmjb9NvGRxX+jE/S6uRpkXO3UrcQR8DLazG8xV7gwB6vnsRqra8atrp6q1SItHjn0=@vger.kernel.org, AJvYcCV3VBhla2KXFOvm5bT4ShydZMSdt2yw/N6IU/QwZeL85mkkku58JZXmm5O0gis8y4SESJc1xi3BRUwAW5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMNtdcBMFHaR0rp0kMRjcpsPf3gTNIp8ZiY6lIADH2ETX6o0BA
-	Yj73HRSohc6tqyE2cVo6vRakRu7oqAnCwPobKHxyCqJiwzIyN8kC
-X-Gm-Gg: ASbGncvjWkJBy5kYQAbvoNRFaeMuUvsVRoroxZnWcztIa6yTfHXbnEqbPzqR7/T3pIF
-	YQA5nJQ+ItrpL10vPUPI1PJdUKXi9tTZ7I//m0Z7a8WINXMJdTyy4QR0Tiet1Kidb4Tho2Dcby8
-	kq+QS9TggCtQz0xIXSWWS634aPRtuL0igy4ytWrFjYfgNvxVG7dDj1w2e5GWStXKaIuJ9B/uVHi
-	sXY2VBmuxvH+fTSj6J6r9OzdMitI4QrK0sd97vPED8ZsPC7FuYrHba2elIZPHgVke4DRv+/b/f4
-	yCulsI3FsYIwmpNkcqcDSOfdu8pps4cuQ+W+fYIfDvRcIASp32rZkg==
-X-Google-Smtp-Source: AGHT+IGMhzyR+os8CmvxFQFS8cmxO6gnXqAXR+4QtfFFPWjpjUsfjAA1gbBCSVkcUtJ9KmJGiKa0yg==
-X-Received: by 2002:a5d:498d:0:b0:390:f6aa:4e72 with SMTP id ffacd0b85a97d-3a07aa6dcc5mr1908207f8f.18.1745687919205;
-        Sat, 26 Apr 2025 10:18:39 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a02csm68676835e9.27.2025.04.26.10.18.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 10:18:38 -0700 (PDT)
-Message-ID: <78853ac7-c9d2-4485-bbb3-859d2425e729@gmail.com>
-Date: Sat, 26 Apr 2025 19:18:37 +0200
+        d=1e100.net; s=20230601; t=1745687985; x=1746292785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UK/TDbxb2X5K00OclS68L8knPg1NMKWTxwXfQikrTpY=;
+        b=T0tsqhn1QfM67dIAYZWNqcOYas4uxFVGCV0jhb2vz7N/aMIwFxpBDz2CyJ+IIHL174
+         EM35ZugmWLFKvS0g7aExUu7WCkNe3Lz960Nmut4A3vjtzeArpdt6LQp/YCUAHoy/m2t8
+         +W9xRPJD5Yp4dWoOC/GE7lbxW2ImwO9ebj9YlFpU6ZkdDi3OjfrTh87Jkh4Lz8YkQv1A
+         N+ocAX/2xVAGrPFLTbe1+a/I4+wR0RyGJgi4nXRD6zOVcwywaewfyuI7fCedLA/2caG0
+         UTHI7yWYdd0e0LeHaxUS8AhObq2lSqaB00NJpbgtmP6Vm8nGWlN5KKHfnq1rvXHlcwS4
+         ROwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnpg+LEFZal6biGlHgkWKbXcxVpKgoO8f+HB5DYhbv5ijN/sWRjh9AZ2HV60cwfftPqJJH8f7vCWSaEUY=@vger.kernel.org, AJvYcCWa6xYN/Vz4S4RzPpBamhpbfCr/Nc6i2Ry1bvznfUjNArRYGdwI5K4U955/PsNCf2gpqBChFYpn2XuA4Zhfo+s=@vger.kernel.org, AJvYcCXuRVl5GAGGkz6Dx6lHuNKQwK3m3Vi/5TSdMnhoJp3ecij1z/dJOIy+J8uFthx5iCug/p4j6YdYVLkf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQob059TTfXqTUgTY1ZNpHA/NgpxuQB8pGC51bbRFihjpJMJhb
+	vjhsEFMqe/0qyScO0OnKeGVaUYnqB3kFxVJiUXkuL5UFPSjIzidk
+X-Gm-Gg: ASbGncvBsBCR9dzopI6t8umm2pMYsgjtJFxhvOuTp8zjKUaEIiSZLr0mLZlEAGeThk1
+	zF3TmqN6rDHi/dnPnzy3vIdv9eYvum4RJaKkJqSsYukzBGbI4F7GFva6LP+YpMPe+JAP6IeJbuR
+	3h0H158P0GNa8zL2GBQ47NdCnjXAxJBB0uJ44ROqF8Kj8e/z3pJdNwanbs6lAdf9s+aVhjL75O5
+	0q8MYvUjemgnRnoIuhqKtXCExpNVZZGSufokfPQmllAYJZ2MD0bg5fbvOcbpAmrUlGe6RG/Fyx4
+	OawaiRpx3ZLeR27cVZfk5+BuRgd/SuodGwgDPAg3EHCt/88X0umxZkafDLaR9G5UGmQjKTSlWX8
+	BFT+bhDbDPTnngTr0ZDOjzWHNNOb6OQc=
+X-Google-Smtp-Source: AGHT+IHNzAek2lfoMRtxfjUyRezjzdqtPNUtMArLCxJust8DO4LakM0Wsh1g2p7GvEZP2GZhF/ijnA==
+X-Received: by 2002:a05:622a:1925:b0:474:fa6b:c402 with SMTP id d75a77b69052e-47ec4c0d252mr160960441cf.18.1745687985176;
+        Sat, 26 Apr 2025 10:19:45 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f0d21a2sm41619771cf.27.2025.04.26.10.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 10:19:44 -0700 (PDT)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 25FBA1200043;
+	Sat, 26 Apr 2025 13:19:44 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Sat, 26 Apr 2025 13:19:44 -0400
+X-ME-Sender: <xms:sBUNaLMf4a4N8jmKjGK32WNiASFj-pd6RmRI_R_xaws-tGEtelIaeg>
+    <xme:sBUNaF9tT3OsT26dGligpq2pxe0T55K_CXl0foWkR2wBWPys03wOUolchN2tucWAp
+    eO15IpFBVCrRu25SA>
+X-ME-Received: <xmr:sBUNaKRDCaLrVspc83RIlHoOO8jfJvjAvZBFCZd0Q2n_CpwzhfA43lR_>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheehjeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeejveffleefvefgudejieeffeeklefgleeh
+    heehvefhgeffkedvhedutddtjedugeenucffohhmrghinhepthhrhigprggttggvshhsrd
+    hmrghpnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
+    sghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtie
+    egqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhi
+    gihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhs
+    ihdrshgthhhrvghflhesghhmrghilhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslh
+    hinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomh
+    dprhgtphhtthhopehkfihilhgtiiihnhhskhhisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopeiihhhifiesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghjihgrsehnvhhiug
+    hirgdrtghomhdprhgtphhtthhopehjhhhusggsrghrugesnhhvihguihgrrdgtohhm
+X-ME-Proxy: <xmx:sBUNaPuQyiiCNiEe1ZJNbTODYOK1MozCMzewF1uMX-rbw0a531mSxg>
+    <xmx:sBUNaDcBKeo5Z2riKdoi8RIwZgHcK4DBTEE4fqqt4cS_i_5TkFjqDA>
+    <xmx:sBUNaL2KJ9zKMZpiiq5mk7xuS1YYfJwf9VR1_0asv8L7cSxe2NSDkw>
+    <xmx:sBUNaP9xVYJ8cNCxWjHPpnlhEbokvu5ZU6YzwiC1-2IA2rF6QZI6rA>
+    <xmx:sBUNaG9wkYTeZl9WOrttrBzuMRUUxN6E-zYjEyJzCUKtI5E8l2Sc7DsO>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 26 Apr 2025 13:19:43 -0400 (EDT)
+Date: Sat, 26 Apr 2025 10:19:42 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>,
+	gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
+Message-ID: <aA0Vruu-rJWt146b@Mac.home>
+References: <20250426133254.61383-1-dakr@kernel.org>
+ <20250426133254.61383-2-dakr@kernel.org>
+ <aa747122-fc78-45db-a410-ceb53b4df65e@gmail.com>
+ <aA0P4lr0A2s--5bI@Mac.home>
+ <aA0RgOL09bBa0M19@pollux>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
- kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
- jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
- joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250426133254.61383-1-dakr@kernel.org>
- <20250426133254.61383-3-dakr@kernel.org>
- <ce224b78-5c26-46d9-9b69-6bceb1bda62d@gmail.com> <aA0TIWj50RYogLxj@pollux>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <aA0TIWj50RYogLxj@pollux>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aA0RgOL09bBa0M19@pollux>
 
-On 26.04.25 7:08 PM, Danilo Krummrich wrote:
-> On Sat, Apr 26, 2025 at 06:53:10PM +0200, Christian Schrefl wrote:
->> On 26.04.25 3:30 PM, Danilo Krummrich wrote:
->>> Implement a direct accessor for the data stored within the Devres for
->>> cases where we can proof that we own a reference to a Device<Bound>
->>> (i.e. a bound device) of the same device that was used to create the
->>> corresponding Devres container.
->>>
->>> Usually, when accessing the data stored within a Devres container, it is
->>> not clear whether the data has been revoked already due to the device
->>> being unbound and, hence, we have to try whether the access is possible
->>> and subsequently keep holding the RCU read lock for the duration of the
->>> access.
->>>
->>> However, when we can proof that we hold a reference to Device<Bound>
->>> matching the device the Devres container has been created with, we can
->>> guarantee that the device is not unbound for the duration of the
->>> lifetime of the Device<Bound> reference and, hence, it is not possible
->>> for the data within the Devres container to be revoked.
->>>
->>> Therefore, in this case, we can bypass the atomic check and the RCU read
->>> lock, which is a great optimization and simplification for drivers.
->>>
->>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->>> ---
->>>  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>
->>> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
->>> index 1e58f5d22044..ec2cd9cdda8b 100644
->>> --- a/rust/kernel/devres.rs
->>> +++ b/rust/kernel/devres.rs
->>> @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
->>>  
->>>          Ok(())
->>>      }
->>> +
->>> +    /// Obtain `&'a T`, bypassing the [`Revocable`].
->>> +    ///
->>> +    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
->>> +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
->>> +    ///
->>> +    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
->>> +    /// has been created with.
->>
->> I would prefer this as a `# Errors` section.
+On Sat, Apr 26, 2025 at 07:01:52PM +0200, Danilo Krummrich wrote:
+> On Sat, Apr 26, 2025 at 09:54:58AM -0700, Boqun Feng wrote:
+> > On Sat, Apr 26, 2025 at 06:44:03PM +0200, Christian Schrefl wrote:
+> > > On 26.04.25 3:30 PM, Danilo Krummrich wrote:
+> > > > Implement an unsafe direct accessor for the data stored within the
+> > > > Revocable.
+> > > > 
+> > > > This is useful for cases where we can proof that the data stored within
+> > > > the Revocable is not and cannot be revoked for the duration of the
+> > > > lifetime of the returned reference.
+> > > > 
+> > > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > > > ---
+> > > > The explicit lifetimes in access() probably don't serve a practical
+> > > > purpose, but I found them to be useful for documentation purposes.
+> > > > --->  rust/kernel/revocable.rs | 12 ++++++++++++
+> > > >  1 file changed, 12 insertions(+)
+> > > > 
+> > > > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> > > > index 971d0dc38d83..33535de141ce 100644
+> > > > --- a/rust/kernel/revocable.rs
+> > > > +++ b/rust/kernel/revocable.rs
+> > > > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
+> > > >          self.try_access().map(|t| f(&*t))
+> > > >      }
+> > > >  
+> > > > +    /// Directly access the revocable wrapped object.
+> > > > +    ///
+> > > > +    /// # Safety
+> > > > +    ///
+> > > > +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
+> > > > +    /// for the duration of `'a`.
+> > > > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
+> > > I'm not sure if the `'s` lifetime really carries much meaning here.
+> > > I find just (explicit) `'a` on both parameter and return value is clearer to me,
+> > > but I'm not sure what others (particularly those not very familiar with rust)
+> > > think of this.
+> > 
+> > Yeah, I don't think we need two lifetimes here, the following version
+> > should be fine (with implicit lifetime):
+> > 
+> > 	pub unsafe fn access(&self) -> &T { ... }
+> > 
+> > , because if you do:
+> > 
+> > 	let revocable: &'1 Revocable = ...;
+> > 	...
+> > 	let t: &'2 T = unsafe { revocable.access() };
+> > 
+> > '1 should already outlive '2 (i.e. '1: '2).
 > 
-> I can make this an # Errors section.
+> Yes, this is indeed sufficient, that's why I wrote
 > 
->> Also are there any cases where this is actually wanted as an error?
->> I'm not very familiar with the `Revocable` infrastructure,
->> but I would assume a mismatch here to be a bug in almost every case,
->> so a panic here might be reasonable.
+> 	"The explicit lifetimes in access() probably don't serve a practical
+> 	purpose, but I found them to be useful for documentation purposes."
 > 
-> Passing in a device reference that doesn't match the device the Devres instance
-> was created with would indeed be a bug, but a panic isn't the solution, since we
-> can handle this error just fine.
+> below the commit message. :)
 > 
-> We never panic the whole kernel unless things go so utterly wrong that we can't
-> can't recover from it; e.g. if otherwise we'd likely corrupt memory, etc.
->> (I would be fine with a reason for using an error here in the 
->> commit message or documentation/comments)
-> 
-> I don't think we need this in this commit or the method's documentation, it's a
-> general kernel rule not to panic unless there's really no other way.
 
-Alright I'm fine with it then.
+Sorry, I overlooked.
 
-I just don't think that most users of the function would be able to
-gracefully recover from that other than failing the probe
-or whatever, but it makes sense to allow the caller to deal with this.
+> Any opinions in terms of documentation purposes?
+> 
 
-Cheers
-Christian
+I think for access() the explicit lifetimes is unnecessary, because it's
+a one-lifetime case, the two explicit lifetimes would make a simple case
+looking complicated.
 
+For access_with(), that's needed and a good idea.
+
+Just my two cents.
+
+Regards,
+Boqun
+
+> > > 
+> > > Either way:
+> > > 
+> > > Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> > > 
+> > > > +        // SAFETY: By the safety requirement of this function it is guaranteed that
+> > > > +        // `self.data.get()` is a valid pointer to an instance of `T`.
+> > > > +        unsafe { &*self.data.get() }
+> > > > +    }
+> > > > +
+> > > >      /// # Safety
+> > > >      ///
+> > > >      /// Callers must ensure that there are no more concurrent users of the revocable object.
+> > > 
 
