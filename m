@@ -1,179 +1,152 @@
-Return-Path: <linux-pci+bounces-26802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC74A9D979
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 10:48:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD88BA9DAF2
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 15:07:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCDEA7A8F17
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 08:46:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CF4E179FC1
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 13:07:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAAA2512E6;
-	Sat, 26 Apr 2025 08:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA87F81724;
+	Sat, 26 Apr 2025 13:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTABcfo6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEoTnsf6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80251D8DE4;
-	Sat, 26 Apr 2025 08:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E774120B;
+	Sat, 26 Apr 2025 13:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745657271; cv=none; b=FX81+WmumiKz7UKHqk+ntX9N+rwr5uQ2694NSZX9vv8Pkj3EDleC5yKQUBowlDRAzSlSqZ5K3Td6Le06LRL2/a8fLngk7sxn/56/32vuzL8GLk97gEPvFkaB+HTln3tCX1FO0xK77oLi4GDaD+Nbo19HZP02QXF05pCJM9bg+34=
+	t=1745672829; cv=none; b=uMgPkZCBvfZ+ZJ9xX48pqTB1W0LCg1pKjYsOm3TGObVXoHPS3IughHNr/CVyxPZqRI3m5crXp/NrgonUdXMdrvEEs0c2gvA/QXT2zqqBfYZ2v0ywVZ8NUtDk/oWbEiYHJSspcuLSWCHgFbfofBT/je4UtM8s3ZFPQ0RsoDMFETI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745657271; c=relaxed/simple;
-	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cU0FTtx12aQX7TldzqajyRKwDd3wPXvvcYd3QP0lY7VIBtAyPFKf+LUrTHXnjM7ZIft6mF33PVvIjsOXyNJjCo73lRN38yY2UZvLeCd9nw/q42vCoZUjDNZmSCm42bq1B1tQ/E2WBAD0FzSrC/oKKJjLrTgJwBwm6f/KFI4eh1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTABcfo6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0654BC4CEE8;
-	Sat, 26 Apr 2025 08:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745657271;
-	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=UTABcfo6244t1yLjNqtebadpBMWpLStD0HXuIpSgcszl9lrLf0yf71UgCkR3EoHP+
-	 vbnui9fBd76v723pI0iRja0z4mSXYJSvkFyP4/tISLzEFiFKa7m2JSQhtH243g6f80
-	 cz5sykVT/PZrr6eEcRGJGnkVWU1QOlUTgy3wLRzsvrFQOvU4JHxfmtZWHKvjRrfRUS
-	 fsUvar5fBwlOsayFk4DkaXGWu4iQ7mbGEaK1pdP513sXnAJ6sFphzVto6SwS4JLlyG
-	 fgPjLCyv5at66q35UapwuYSsnDg7xwZ30yGlZcPH6WFpSauffZp78IS2aeKKyc+XDo
-	 Nr122Qbw+3dAw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96F4C369D9;
-	Sat, 26 Apr 2025 08:47:50 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Sat, 26 Apr 2025 12:47:21 +0400
-Subject: [PATCH v9 2/2] arm64: dts: qcom: ipq5018: Enable PCIe
+	s=arc-20240116; t=1745672829; c=relaxed/simple;
+	bh=tP+8zaOhxz1rLnbBTSygHoqJ133ZXSPGoXBXXm9NE0c=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LUZVL6V/N59kFq+cpgT1PtrT3L2sooRrF1nLVKa9Bqf+z2oXn223tTEe90XyJlKvSgbhXVjZbWEg6R3zBWcBuiafT4qcs+mOYmrxcjY1yAZZYDPK4xY+TVZyNg6YRHaMIuFowgWBEDpWbYlPRQ7p3ZQMpsPD2ITe8cFiCanNJvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEoTnsf6; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745672828; x=1777208828;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tP+8zaOhxz1rLnbBTSygHoqJ133ZXSPGoXBXXm9NE0c=;
+  b=JEoTnsf6XV+YbYv2J+hzq3JhJorMtdp9WfH9xaMkMYno4lLFQKh0lg6g
+   sJbbG+fkNCcmLcmhDAXU4UBnd9GaFmL1v34sgro0YqrCD/E+7qewKQOd7
+   6SC+/pvS7PrI5hvw/FtNZiY157/hONZWBW2J17cWL+ImTMdTQwQBfVMDY
+   CL0OPsCihSY62Jnnfbxnu8P92qzWABwl5atxHt8XWwYXzGyN0us0//ilA
+   QFiUrMMtg+GgzhsAWgeiOmNbn1f48ZCkfWv9eIKC/SsWl0yD2Dr75kp/M
+   Hz2JX+KS1TXnl/t72rwVhNnCTUULBSxAtqZIIUhjHd7BURf8tU/QfBzcB
+   A==;
+X-CSE-ConnectionGUID: dB1Zm1HxSuqlWw+H07LW9A==
+X-CSE-MsgGUID: GwEpi+r4SSqh5nZ9NQ8LDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="57964027"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="57964027"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:07:05 -0700
+X-CSE-ConnectionGUID: RGjYzt7ASDeYdX+vRbDOVw==
+X-CSE-MsgGUID: 6QrmOG/mR8aeRL3O0vgrHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="134057442"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:07:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 26 Apr 2025 16:06:56 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: corbet@lwn.net, bhelgaas@google.com, kuurtb@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, vkoul@kernel.org, 
+    yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
+    sanyog.r.kale@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, dakr@kernel.org, 
+    dan.j.williams@intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    Dell.Client.Kernel@dell.com, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 4/7] pci: doe: Replace sysfs visibility macro
+In-Reply-To: <5546db361d2d474b97d80345473628d0e5a55093.camel@linux.intel.com>
+Message-ID: <a8581a58-e994-ff5e-6bdc-ca9efe319da1@linux.intel.com>
+References: <20250423175040.784680-1-david.e.box@linux.intel.com>  <20250423175040.784680-5-david.e.box@linux.intel.com>  <8d261613-60d3-8825-e073-1b39daadc29a@linux.intel.com> <5546db361d2d474b97d80345473628d0e5a55093.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250426-ipq5018-pcie-v9-2-1f0dca6c205b@outlook.com>
-References: <20250426-ipq5018-pcie-v9-0-1f0dca6c205b@outlook.com>
-In-Reply-To: <20250426-ipq5018-pcie-v9-0-1f0dca6c205b@outlook.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nitheesh Sekar <quic_nsekar@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Praveenkumar I <quic_ipkumar@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
- 20250317100029.881286-1-quic_varada@quicinc.com, 
- 20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745657268; l=2062;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=OKmTrcmt0ksiQwz9dz8aVIs/K+GfvvlMVFo78Mfk/ZA=;
- b=rV0etEqqpSlZRcytneg10NcKG8RAOvyDsfbwXwAY97bz9Nj6HGPetzIPY8+RBPQsDtlKI8Q/t
- cKs3ntwbB2ADl5MmOQ2qSpeide1bVr2mNbwcpwcCVt5+flGX6QTrxrx
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Type: multipart/mixed; boundary="8323328-1919316634-1745672816=:944"
 
-From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Enable the PCIe controller and PHY nodes for RDP 432-c2.
+--8323328-1919316634-1745672816=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
- arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 40 ++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+On Fri, 25 Apr 2025, David E. Box wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-index 8460b538eb6a3e2d6b971bd9637309809e0c0f0c..43def95e9275258041e7522ba4098a3767be3df1 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-@@ -9,6 +9,8 @@
- 
- #include "ipq5018.dtsi"
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	model = "Qualcomm Technologies, Inc. IPQ5018/AP-RDP432.1-C2";
- 	compatible = "qcom,ipq5018-rdp432-c2", "qcom,ipq5018";
-@@ -28,6 +30,20 @@ &blsp1_uart1 {
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	pinctrl-0 = <&pcie0_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 15 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 16 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	status = "okay";
-+};
-+
- &sdhc_1 {
- 	pinctrl-0 = <&sdc_default_state>;
- 	pinctrl-names = "default";
-@@ -43,6 +59,30 @@ &sleep_clk {
- };
- 
- &tlmm {
-+	pcie0_default: pcie0-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio14";
-+			function = "pcie0_clk";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio15";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio16";
-+			function = "pcie0_wake";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio9";
+> On Fri, 2025-04-25 at 13:57 +0300, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 23 Apr 2025, David E. Box wrote:
+> >=20
+> > > Replace deprecated DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() call with the =
+new
+> > > DEFINE_SYSFS_GROUP_VISIBILITY() helper for the pci_doe_features_sysfs=
+ group
+> > > in drivers/pci/doe.c.
+> > >=20
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > ---
+> > > =C2=A0drivers/pci/doe.c | 2 +-
+> > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> > > index aae9a8a00406..18b355506dc1 100644
+> > > --- a/drivers/pci/doe.c
+> > > +++ b/drivers/pci/doe.c
+> > > @@ -119,7 +119,7 @@ static bool pci_doe_features_sysfs_group_visible(=
+struct
+> > > kobject *kobj)
+> > > =C2=A0
+> > > =C2=A0=09return !xa_empty(&pdev->doe_mbs);
+> > > =C2=A0}
+> > > -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
+> > > +DEFINE_SYSFS_GROUP_VISIBILITY(pci_doe_features_sysfs)
+> >=20
+> > Hi David,
+> >=20
+> > Is it intentional to not have semicolon at the end?
+>=20
+> Hi Ilpo,
+>=20
+> I was just doing a straight name swap and didn't not notice the lack of a
+> semicolon. Of course, since DEFINE_SYSFS_GROUP_VISIBILITY() expands to a
+> function definition, a trailing semicolon isn't necessary.
+>=20
+> I suspect the issue is with the other instances where it was added, which=
+ makes
+> the usage inconsistent. What would you suggest?
 
--- 
-2.49.0
+Hi,
 
+When I saw that lack of semicolon, my first assumption was there's=20
+something special here that _requires_ leaving the semicolon out, which=20
+turned out untrue after an unnecessary roundtrip to read the macro. So IMO=
+=20
+it would be better to have the semicolon there to tell the reader there's=
+=20
+nothing of special interest here.
 
+Also, you used semicolon in the example. :-)
+
+--=20
+ i.
+
+--8323328-1919316634-1745672816=:944--
 
