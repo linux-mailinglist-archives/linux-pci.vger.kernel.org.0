@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-26806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61D6AA9DB2B
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 15:34:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D056A9DB2E
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 15:34:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 350CA7A713B
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 13:32:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A38954A53BC
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 13:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A14B1C3BEA;
-	Sat, 26 Apr 2025 13:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F22C1C5F05;
+	Sat, 26 Apr 2025 13:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zag3MiWr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFAQNP3o"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAE21B81C1;
-	Sat, 26 Apr 2025 13:33:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348D319AA63;
+	Sat, 26 Apr 2025 13:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745674422; cv=none; b=dzaJ2dTd4WBdGbgsfloOYn485YZnRX5P6418dgnDjVmc0Wpl5zcLhKyzBzCeRVMpIDZjcYISyRZizz0yMxGyX7X18TbX2DTSLpaIAiLUNmJD1JQNABhy2/ADOKv9SEgdTJE+tkxoYgZcZGuLRdr2zSSl5qUTn5uW1wOLoz5X3Mw=
+	t=1745674427; cv=none; b=Yi2HQ+X6Me4Be2Jv5PWQ2QESTE+8Q2CCyOvmFmED1FWBFR1p4gaYH0019odx6b5mha2rp+9rwdIXwm3J6lmeNvfytWF1lihgJ+pLki2AkFbRzSTFlQtbmQppu8kdRSgKbjE7/V0C3iMrvHLKcSwy2ZP0eM/0CsC6gcTCdrCoQQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745674422; c=relaxed/simple;
-	bh=UW+j65AYZdybdRL+KuUdB/sVtlErJkIEvsNeks47yGo=;
+	s=arc-20240116; t=1745674427; c=relaxed/simple;
+	bh=laYEX4TBOsk4CcxMpavBgNe9zSjYXY1+gGE9Nqbpo0o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F9b1bs8qJDkh7tprfmdi5azz0D2v354ek+53ttHVkdGW1etCqVASsTalV3imdZ3PmCLy4JG0EQWKEsIm8swaur9LpLMcYACT0SjQ3mFKh88odrxPxDI0FHyMEsKrEVxH6/i1K/rEQy7JC+3NuQpXRK+X33C7czH/IJuTA7OVfM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zag3MiWr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A222C4CEE2;
-	Sat, 26 Apr 2025 13:33:36 +0000 (UTC)
+	 MIME-Version; b=PDSrjxsV0H/VHnxwcLw3sjm1ePvQ/T7b2+lLvAl7mVA/0OQrnIwfTES+8rOMhDBa8Cgg4zUkkf7i9Eo6aUhdFIhHYlkHRknfI+wTk4bcHL+EOTmDw+3oe8sA3+vwv9RL+qzSlzFW5CP7ZCqS0+Hv+UTYpJ3kCua2/9CGAs2ZDPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFAQNP3o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461BEC4CEEB;
+	Sat, 26 Apr 2025 13:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745674421;
-	bh=UW+j65AYZdybdRL+KuUdB/sVtlErJkIEvsNeks47yGo=;
+	s=k20201202; t=1745674427;
+	bh=laYEX4TBOsk4CcxMpavBgNe9zSjYXY1+gGE9Nqbpo0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zag3MiWr0NmzUNNuwkhGufY7DfjrUl2ClThRXYGi/qLuun/Kez9hJBY7urs1YFQ59
-	 FhzGoIMYOt/C+M1pZoaH3Dlh3/HDn3X5XKabhKQFk5Ee8QLMAfSE0NakNXumqCnstD
-	 Yc5yLZw+ReduCmIWC0VLqf8UEgLdE8NFuyE/p7C6uvmDE2tGjFpysJ6BIsRlpXad/J
-	 ODp3Z+2q3C/38fHshVZZaZQNbG1DxlxzuACk1EZenxM/69nc5Fw3F8cdI5CEMpMhJT
-	 a9B4YRCq9JxurXkP1bB2PbUe0/P7hyTMmR5ScNXbakzDYCDsZdXC/zP2wAfmgHYw1A
-	 MupvNrqWdM4Dw==
+	b=YFAQNP3o2dgumNhdt4IINojtRaRI0vPHnjCeANYqFDQAOA9JqJ+uosVRwgYL1fDSt
+	 /qxgQo7YqICaJR1znVoKBL94DooX65wr9AmMbcOaxdQYyApo0smumJG/S0RDu0/RNV
+	 OHTIm57p1XzQN2+rrmtc39VQHzjV6RJpYeKR077q8Wo649xQ0+NqRtMaVLEKl/dxOL
+	 luuD2UPXVLt0WUwCArTj+SkRux7pc/neUb2GgReXgaTeJNkec3v4uSWv3fjj/y27kQ
+	 5SLAKmV9WrxznBBd7KZA2rlcSry+OzG2bl6aTzN4nlhpvO9Xc9cWoMBI7TxUvXo2Hj
+	 WjfU683UKqmqg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -67,9 +67,9 @@ Cc: linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Date: Sat, 26 Apr 2025 15:30:40 +0200
-Message-ID: <20250426133254.61383-3-dakr@kernel.org>
+Subject: [PATCH 3/3] samples: rust: pci: take advantage of Devres::access_with()
+Date: Sat, 26 Apr 2025 15:30:41 +0200
+Message-ID: <20250426133254.61383-4-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250426133254.61383-1-dakr@kernel.org>
 References: <20250426133254.61383-1-dakr@kernel.org>
@@ -81,77 +81,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement a direct accessor for the data stored within the Devres for
-cases where we can proof that we own a reference to a Device<Bound>
-(i.e. a bound device) of the same device that was used to create the
-corresponding Devres container.
-
-Usually, when accessing the data stored within a Devres container, it is
-not clear whether the data has been revoked already due to the device
-being unbound and, hence, we have to try whether the access is possible
-and subsequently keep holding the RCU read lock for the duration of the
-access.
-
-However, when we can proof that we hold a reference to Device<Bound>
-matching the device the Devres container has been created with, we can
-guarantee that the device is not unbound for the duration of the
-lifetime of the Device<Bound> reference and, hence, it is not possible
-for the data within the Devres container to be revoked.
-
-Therefore, in this case, we can bypass the atomic check and the RCU read
-lock, which is a great optimization and simplification for drivers.
+For the I/O operations executed from the probe() method, take advantage
+of Devres::access_with(), avoiding the atomic check and RCU read lock
+required otherwise entirely.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ samples/rust/rust_driver_pci.rs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 1e58f5d22044..ec2cd9cdda8b 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 9ce3a7323a16..3e1569e5096e 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
+             GFP_KERNEL,
+         )?;
  
-         Ok(())
+-        let res = drvdata
+-            .bar
+-            .try_access_with(|b| Self::testdev(info, b))
+-            .ok_or(ENXIO)??;
+-
+-        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n", res);
++        let bar = drvdata.bar.access_with(pdev.as_ref())?;
++        dev_info!(
++            pdev.as_ref(),
++            "pci-testdev data-match count: {}\n",
++            Self::testdev(info, bar)?
++        );
+ 
+         Ok(drvdata.into())
      }
-+
-+    /// Obtain `&'a T`, bypassing the [`Revocable`].
-+    ///
-+    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-+    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
-+    ///
-+    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
-+    /// has been created with.
-+    ///
-+    /// # Example
-+    ///
-+    /// ```no_run
-+    /// # use kernel::{device::Core, devres::Devres, pci};
-+    ///
-+    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
-+    ///     let bar = devres.access_with(dev.as_ref())?;
-+    ///
-+    ///     let _ = bar.read32(0x0);
-+    ///
-+    ///     // might_sleep()
-+    ///
-+    ///     bar.write32(0x42, 0x0);
-+    ///
-+    ///     Ok(())
-+    /// }
-+    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
-+        if self.0.dev.as_raw() != dev.as_raw() {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: `dev` being the same device as the device this `Devres` has been created for
-+        // proofes that `self.0.data` hasn't been revoked and is guaranteed to not be revoked as
-+        // long as `dev` lives; `dev` lives at least as long as `self`.
-+        Ok(unsafe { self.deref().access() })
-+    }
- }
- 
- impl<T> Deref for Devres<T> {
 -- 
 2.49.0
 
