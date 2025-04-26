@@ -1,87 +1,88 @@
-Return-Path: <linux-pci+bounces-26812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A7CAA9DC42
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 18:37:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 650A2A9DC43
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 18:39:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 730C3923EA5
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 16:37:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB37C16D0FA
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Apr 2025 16:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005202BD04;
-	Sat, 26 Apr 2025 16:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02392BD04;
+	Sat, 26 Apr 2025 16:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a9khOaym"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1Km1ydp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6D56FC5
-	for <linux-pci@vger.kernel.org>; Sat, 26 Apr 2025 16:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8E86FC5
+	for <linux-pci@vger.kernel.org>; Sat, 26 Apr 2025 16:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745685444; cv=none; b=RcX4uwieMyR3FsEyS0DlJQd+UI2g3zcgvK2eC3feUV9P66xbXDI5hMh12lD+ppXYqugoVj4YylaOfUpl4CL60iKUKNm7mWY6Fgl6JI6TqbnszuDkm5enFaiCzjXrCsge9Rl7x8bHGpHS+rXBv1rMnFUYS4pAdIFMFBA4j9BKFyk=
+	t=1745685536; cv=none; b=QZiGtIb9pEqEbdVKFjJiokt3nqsoM/PavucoA2l7mb3rGRJJKxRi9eWkvQJJ+EbB9E2GwZ0dO1emFsPrNUdEe9ZUJg+HZiVKpjx116YYrLZ4WEXxnu8x3itWZaZA7pFF/dFDMqXho2NglaBE+PUR3isnqxLajQfQNhjayHPjk3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745685444; c=relaxed/simple;
-	bh=AQLvDcFu0u5hojHsdQsk5RQUNk8ss7dPl24bi1LvOXw=;
+	s=arc-20240116; t=1745685536; c=relaxed/simple;
+	bh=8NmQ31JIOCwm9eDKD+EV0AeZzEhaUvdpHkVyhmqMPrs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DrCgZHM1D+akmk7XSPf+7vWiIUa5Avi3bueiYESX0+33p7BdAVT4yrCpy/q14Vhku9NhvWMtpSxVq6PdK9/17AWGGv7cW/kMMJVIiaMCRUZcjqun77AV4Ly/0rrFrqqem1KLdT0X7oPXzsMT8k+epfJOn7oTiyTyYZh45DBhOAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a9khOaym; arc=none smtp.client-ip=209.85.216.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=mh6XyAmlgwW2dbv1ZUXVIShKdF59OvVzoD13Yv+azkuB24sW5IhUzBrHmoQSClsj4TqgNSPwqLPd5BTKltybJho9TtW39SU63WBn4w7SrARdsmLPNlg8lABaJremCvKBw6higdHlCx0DTMeuwxiUWf5xX7nt4agzzGY7ycuv1F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P1Km1ydp; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so4639075a91.3
-        for <linux-pci@vger.kernel.org>; Sat, 26 Apr 2025 09:37:22 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3204747b3a.2
+        for <linux-pci@vger.kernel.org>; Sat, 26 Apr 2025 09:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745685442; x=1746290242; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745685533; x=1746290333; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=sBO+yo8qtG1t8OuviuDRDUOzweQIXzPrJJJJLil9oPU=;
-        b=a9khOaymPtEAmk7V8A/e5LvSiQOKmcsAilpc0jVTc2Pf4D51N6z9/0PqwTlUu8K85+
-         9Y0eXLLNddxbUNWhhCq+LkR5rdA2s+95iT3707JoV+AqXN8BZ6lN/729rJS5LMai+rQO
-         85a+5phJeIGoqitldrLrcrxLkdSGB5pDNHKmK1U5cOv7k+MgiXtAa1rmfWv1pwSOdt2X
-         auZKi+ABGJSPv+XVOZRci3j5PFphaShy9B6yIfvWxYhaMY2Hx8pu4DUYVocvykTywfQb
-         AKhLHIGP0XGizHIWj8FRXHyrzpB1VlE2MGu+ptJ6RlGGyAMsXIOYi8oh05Yk4ZUyuuSJ
-         WvVA==
+        bh=0wfc1VqSeVbmVhsH2U0jIGnvId3nw503zH5VDDWhWLQ=;
+        b=P1Km1ydpdzQHq0BsUk+2kdJ9IiXdY/tO2D1dQO0biPrXOM1JiwiNxEU4tcu3/6GiZj
+         R6HrDthJDXulm8gaWpLP10GZ4+xk+t/2bqNkEgqquiotYorbwUFPsvKu+Li71ln9q/vR
+         JUt/3FbsHg9lGevfp2Oqd1/RI5ZWisW+pJLwDaGQViP1ZAEVIP354z00FEdJt2eeSib1
+         Y1PwlOOs/gE3aZDTnaL26ksNdjoCvZudE/fzrKdHmv5eWl8KgDXT2EPwxxKAQ45SxHIO
+         VDXQwF8uSrKoRF+t7cY24QujcmjVE19MeHZ9cKKW8DR4GneCR9zOmQ+n9qXLt/dhwePt
+         uWnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745685442; x=1746290242;
+        d=1e100.net; s=20230601; t=1745685533; x=1746290333;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBO+yo8qtG1t8OuviuDRDUOzweQIXzPrJJJJLil9oPU=;
-        b=GLghKYmzlSQbzTta5MTIH4ubU2QVU7oRMexNciIKNLboSojq81ACLRUJGo5KalcnmY
-         SIy8nFZEF1+hYt9LVl83JwhnywIKaCzDLJvRqJi7YJPdX/l5cF33StNfs0OJgfy3oIRL
-         2CdSr6VVdPe30ksdssd11IGxUzfCgIQ1VT67DlSmwr0L4+9Nq7agPIFNiaN5hCVS2vFD
-         ktLG2gahevADLkHuUOD9/H7zdN1aclQbr9RTUpHq9l8Xd9kzJFVfQHIik8v/kL+j+EGM
-         bA7aRCp0JhLLhyIKPi9UitIr28H/JSnhvLdljnUEdBOcmxQzkMYDSNXJA0MA/LUb8NjV
-         3G+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZl/Eg59ejXUrT2ClwLrEBddsSuhOOFP9PyaLjkJtJrzmbcJUHmt8JKNHc3UFEaJ8TpVuKJPgp/8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMU2neD9BOHbK2RvhnMr61EuCyJxlNwHZAaBABlvOv50vXhvR2
-	0q7+6nN1KgbRAFb8cXFxx6bVmdCPnRQ0ntUUshNJuYURHP+3iSGN8+askQ5sfg==
-X-Gm-Gg: ASbGnctGJUep4AtOfrPp56B6Z3kwJoqPjJkFYqfdDUFs90jvwDMEHLd3oyDBoXiuoAk
-	BBTl8hZy06Q+skuXMEOh79faTjsELxqzKLLd7Ntlh5k45UtVz7WIGCfgJq1Ix+mUom2EzW6CNbQ
-	FQ0TN2bO8C/8zRw7C+bVTJFQy70kNbhs6Btj6DEQElmOze2KyCL2Z9Vla5DFJFu4zXslMyRo6/y
-	hP5c08AskQjKUPuEnpYXPg7GfU7cW9uZIbBi0Z3t/QGpSfGFkLYg654jTZzpKeOUPrZYSpBj0fZ
-	S6rG1/5H5dDsZUccw00YfNKrqsTGj3u0Ttob/3F/zU2fC1o8qcc2v2xdAUbcnY8=
-X-Google-Smtp-Source: AGHT+IFXKMHWf1SVJasg0DZUo4ESWUazBYbWUy8Iz3f3K02XzQJmHwLbqw703263vdImT6mLuKRF2g==
-X-Received: by 2002:a17:90b:57c8:b0:2fe:8c22:48b0 with SMTP id 98e67ed59e1d1-309f7dfddc6mr9788329a91.15.1745685442491;
-        Sat, 26 Apr 2025 09:37:22 -0700 (PDT)
+        bh=0wfc1VqSeVbmVhsH2U0jIGnvId3nw503zH5VDDWhWLQ=;
+        b=aL7rLBibX+Q0ivYREcAf7oNHUnvlybWKFZuyJsj8ZN29bfl0AZDe+yPPXAJN/Eh2W8
+         hvva95X3EGoTeSbuYs1ZeWWddzFfqVtNWW7sqH7FnngR/biI1l/u/dhHzn76QuEWJ3/A
+         Z+DNngppxAlefiuqLfo1Ml8nD8KgxLOVPbzDOMxMIVxlo83OMjnEa8qcLNLp7bb9X/tg
+         OFy3WAkmP+8R4RJ0rG5xRt4vEVneuG2+WVxALjhy1HKcKPZb1V7S/Pu8+MI52PsT1Hfk
+         pFgM0LNmXriUhx90lcIb9GV0hJBXanPpYfNUx/qiGS40ugEXWcb2DE7U1UCaVQT/JXb/
+         8+4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWIaBmD+dXptVuNbm6PzNS7+E1e60znG1Q0TFX8itk9ZJI38bwhfKw9ljYJGnHxxN+Ggqt7XhHT5e0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySBHzyV0sFw9K25TXf91oNKgtu02vNSAeQhLGuiD88PxhkwEqy
+	7z+0S19tYLj334+qY4lpeypDj/25N7uZlyzrxKlFqc/JsBWj8dyHUmknjRH+7g==
+X-Gm-Gg: ASbGncuQDR7heSc9Sid69c0kMKGRUAyJqx+cX7ETPUqJtNra0v0mQl8UmXgaE4JiWz+
+	HwhgPDylrvU8HHsUrveRJa2cEqxKUaz5l+R/eoPzVAp1ewAn0FqpuZG/pQwG3JZY1NU+JoqGHN7
+	ncGpex42LbpwDyZD+k2loBToM3MgOBQAtt7J1NG6hYhnAmammx/SMT0vVLRiqr6jTrh7zXn+lK/
+	2QcbW9AOMfzGN9xNU8SC0V8uukRgE/4D2Is9Is9n8KlTZrAM19AY6nJlHw1K4Dcud/a7w5LO2ct
+	yJzUJcHgm7mk1m1tsx1kxsY9iavolKV59HMw7S1XLY9FMcwqRCbS
+X-Google-Smtp-Source: AGHT+IEc27jG/DGwOoH4jKHwCMogOEml1REPJvuYp82y+3VBMRgJF0QNzNBYww14N5kJQs7N1n0m4A==
+X-Received: by 2002:a05:6a00:2286:b0:739:4a93:a5db with SMTP id d2e1a72fcca58-73ff7396ad8mr4159447b3a.22.1745685533022;
+        Sat, 26 Apr 2025 09:38:53 -0700 (PDT)
 Received: from thinkpad ([120.60.143.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef097fa5sm5580351a91.23.2025.04.26.09.37.20
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a66dsm5170138b3a.102.2025.04.26.09.38.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 09:37:22 -0700 (PDT)
-Date: Sat, 26 Apr 2025 22:07:17 +0530
+        Sat, 26 Apr 2025 09:38:52 -0700 (PDT)
+Date: Sat, 26 Apr 2025 22:08:48 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Shawn Lin <shawn.lin@rock-chips.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
 	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 2/3] PCI: dw-rockchip: Enable L0S capability
-Message-ID: <zrgc3s7lb2zrcjlfirf3lvldslxhc4khu2xkxdhtixowhspyla@krzj4rl46kez>
+Subject: Re: [PATCH v4 3/3] PCI: dw-rockchip: Move
+ rockchip_pcie_ep_hide_broken_ats_cap_rk3588() to .init()
+Message-ID: <oppgjbuagt44e46esmm4tqdc5moitym3jwaj5psagng55exz7f@4eqwbit5yi6w>
 References: <1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com>
- <1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com>
+ <1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,94 +92,72 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com>
 
-On Thu, Apr 17, 2025 at 08:35:10AM +0800, Shawn Lin wrote:
-> L0S capability isn't enabled on all SoCs by default, so enabling it
-> in order to make ASPM L0S work on Rockchip platforms. We have been
-> testing it for quite a long time and found the default FTS number
-> provided by DWC core doesn't work stable and make LTSSM switch between
-> L0S and Recovery, leading to long exit latency, even fail to link
-> sometimes. So override it to the max 255 which seems work fine under test
-> for both PHYs used by Rockchip platforms.
+On Thu, Apr 17, 2025 at 08:35:11AM +0800, Shawn Lin wrote:
+> There is no reason to call rockchip_pcie_ep_hide_broken_ats_cap_rk3588()
+> from the pre_init() callback, instead of the normal init() callback.
 > 
+> Thus, move the rockchip_pcie_ep_hide_broken_ats_cap_rk3588() call from
+> the pre_init() callback to the init() callback, as:
+> 1) init() will still be called before link training is enabled, so the
+>    quirk will still be applied before the host has can see our device.
+> 2) This allows us to remove the pre_init() callback, as it is now unused.
+> 3) It is a more robust design, as the init() callback is called by
+>    dw_pcie_ep_init_registers(), which will always be called after a core
+>    reset. The pre_init() callback is only called once, at probe time.
+> 
+> No functional changes.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
 > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
 > ---
 > 
 > Changes in v4:
-> - Add Niklas's review tag
+> - rewrite commit message
 > 
-> Changes in v3:
-> - Add rockchip_pcie_enable_l0s() and called from .init()
+> Changes in v3: None
+> Changes in v2: None
 > 
-> Changes in v2:
-> - Move n_fts to probe function
-> - rewrite the commit message
-> 
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 21dc99c..e4519c0 100644
+> index e4519c0..7790a9f 100644
 > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
 > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -182,6 +182,21 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
->  	return 0;
+> @@ -278,17 +278,13 @@ static void rockchip_pcie_ep_hide_broken_ats_cap_rk3588(struct dw_pcie_ep *ep)
+>  		dev_err(dev, "failed to hide ATS capability\n");
 >  }
 >  
-> +static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
-> +{
-> +	u32 cap, lnkcap;
-> +
-> +	/* Enable L0S capability for all SoCs */
-> +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	if (cap) {
-> +		lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> +		lnkcap |= PCI_EXP_LNKCAP_ASPM_L0S;
-> +		dw_pcie_dbi_ro_wr_en(pci);
-> +		dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
-> +		dw_pcie_dbi_ro_wr_dis(pci);
-> +	}
-> +}
-> +
->  static int rockchip_pcie_start_link(struct dw_pcie *pci)
+> -static void rockchip_pcie_ep_pre_init(struct dw_pcie_ep *ep)
+> -{
+> -	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
+> -}
+> -
+>  static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
 >  {
->  	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-> @@ -231,6 +246,8 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->  	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
->  					 rockchip);
->  
-> +	rockchip_pcie_enable_l0s(pci);
-> +
->  	return 0;
->  }
->  
-> @@ -271,6 +288,8 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
 >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
 >  	enum pci_barno bar;
 >  
-> +	rockchip_pcie_enable_l0s(pci);
-> +
+>  	rockchip_pcie_enable_l0s(pci);
+> +	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
+>  
 >  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
 >  		dw_pcie_ep_reset_bar(pci, bar);
->  };
-> @@ -599,6 +618,10 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	rockchip->pci.ops = &dw_pcie_ops;
->  	rockchip->data = data;
+> @@ -359,7 +355,6 @@ rockchip_pcie_get_features(struct dw_pcie_ep *ep)
 >  
-> +	/* Default N_FTS value (210) is broken, override it to 255 */
-> +	rockchip->pci.n_fts[0] = 255; /* Gen1 */
-> +	rockchip->pci.n_fts[1] = 255; /* Gen2+ */
-> +
->  	ret = rockchip_pcie_resource_get(pdev, rockchip);
->  	if (ret)
->  		return ret;
+>  static const struct dw_pcie_ep_ops rockchip_pcie_ep_ops = {
+>  	.init = rockchip_pcie_ep_init,
+> -	.pre_init = rockchip_pcie_ep_pre_init,
+>  	.raise_irq = rockchip_pcie_raise_irq,
+>  	.get_features = rockchip_pcie_get_features,
+>  };
 > -- 
 > 2.7.4
 > 
