@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-26851-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26852-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F8CA9E116
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 10:41:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 474FEA9E139
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 10:56:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7EC61A829E5
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 08:41:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 902BE17EE2F
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 08:56:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1140119048A;
-	Sun, 27 Apr 2025 08:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C159E247288;
+	Sun, 27 Apr 2025 08:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="AaxiIQj+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="RW4uMR0H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308A02472BD
-	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 08:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53B7246326
+	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 08:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745743274; cv=none; b=bPeHg7kOERs6g6WUBmHnJyMyoxAQOwa/dfvXe9Dn8p3iN6bToMjzreUhvoSy7cvHI+zZFA1qeE21oZ9Wd8B0/dVwDRjPqHQlIpbQty4ZSVV5DYt7yW52MvLrHMIyMSPfisIYhdh1PR4wIVCZs07wxGavK5rokRGt3oQ4EYKD9As=
+	t=1745744198; cv=none; b=U7YdNtiHl5W+vtYvMEf1sKa+W1+GfMxghpij4KDxS/YCYqcBiLEWWT1LNbjCcsN04arsM1HdBim4S5I4qc8AJlNLLCvKGPGKj+0h7ILcUqfgatZXJbGnoC+jY1TNozdJJB1d5GQPS25Uqjtt1Yo+ONC8N6wzW7NFLnVI+X8AruM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745743274; c=relaxed/simple;
-	bh=6ttQTFlnLRk5umQOwmKH2yxEnh/cM8lnhIS1sNIMgwE=;
+	s=arc-20240116; t=1745744198; c=relaxed/simple;
+	bh=eS7yzfDWlqN6IRBfAXgT8yj7yIjtM1geYYgjXUyjIUc=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=czVkcwqH8aAhl++WaWk/RK2RKZRRtNUufXE417IQYK1lc3cRKRFt70AnQvwzxe8iDGTttE3Hw5PYVo15U8jubrE3uUslZnbVCsbcawi9zT1pt+U3kqZjTe/QuQObQkQwnQjV9YWzhqRnWWWJV0lTqOAKa2n1+oYnsrRQCoA5HbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=AaxiIQj+; arc=none smtp.client-ip=109.224.244.16
+	 MIME-Version:Content-Type; b=CSrXg5q1g9SjJ0jEOlzSo0wLFOgmzAjcyl2sRsHPj6grGr7ai5wz29tAtsoSCthBWTaPSqe4yF9/N+OLeMUx27q0aoFEugzxm1TOzefNmQNombMx1X8CH6DzZ845DNcVILAE32e+xG/Jl6h2npvKZsH6x+qv5XXEORpEgOimNDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=RW4uMR0H; arc=none smtp.client-ip=109.224.244.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1745743266; x=1746002466;
-	bh=EuMz3kZQGQn4bADul2EcojS+v3oCdcGvpvDdhtvlJVw=;
+	s=ttfjfcex3bdgxjbbczeexkt3ae.protonmail; t=1745744193; x=1746003393;
+	bh=WIsNNrHNWvNmxZ3FsMH+MSWRK3+6s9rB7du+OZv23xg=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=AaxiIQj+sRwbNym/0B8oK8rQIsYn42qeTwKNTcAUbPIf8PbRUajZThVJPQzzV71xi
-	 zDFvOarPSExw3Elq+3Q5o9e8uRVxMCsIZ89UHEmTXLYvwP+Nlx0X8j+GfNmAWk9Zp+
-	 YsTqUGaWYqocGnjGjycMmMqHxX4T2QnKmo1CWs0v7HwAPlkbmWXRCLZhI7myhttxeG
-	 Tr3ZoBp/4YQ0nUfMf9gYZ31zxf2KyynwGevbhHzab1tUGc3RVdd3pdEwsJgZjVZdJU
-	 2D0wJtl2AAnwwjlfl3zVXP4Olxg81MYTGDsK//vYcB4stO9qBXPWXJ4Z59x9QZfXCf
-	 yClrqHjrGKtyA==
-Date: Sun, 27 Apr 2025 08:41:02 +0000
+	b=RW4uMR0Haf5ghjyQC/oHwitNUD52iHRmBSFxM63IEP0BhBkwBr1FpZOsnkbfQYi8/
+	 f7rCmQ9XNi5bFlLGE+4ndWzmaak1potJ1us0ibISznCyr4Red2XrPHkL5imBucWgKh
+	 OrLY6Y0QUgY0frdPaEevqEuaj8fQEhV2ucvbYwlbNe4PI81beeDaa68qlynfne+jOW
+	 AAbG8Uj4CLg17hvEEXXGcvGnSeP2zFilAEJ5WFxczlyCErTS7xg3Gq6+TLk6Wa2eH4
+	 GBtD8InIh7qXlwChbHCzVVNwXg662Ur7eI+JxEcITXM5WSn1kSEk+5velE1SngpumQ
+	 iA5/neHqX3jPg==
+Date: Sun, 27 Apr 2025 08:56:29 +0000
 To: Danilo Krummrich <dakr@kernel.org>
 From: Benno Lossin <benno.lossin@proton.me>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <D9HAC6KW2GTG.ICOFCQX4A2U3@proton.me>
-In-Reply-To: <aA1O8Wem1FhyybF5@pollux>
-References: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me> <aA1O8Wem1FhyybF5@pollux>
+Subject: Re: [PATCH 3/3] samples: rust: pci: take advantage of Devres::access_with()
+Message-ID: <D9HAO06XMT9X.1NL63T3GBQG7B@proton.me>
+In-Reply-To: <aA1PjHrG4yT7XpCI@pollux>
+References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-4-dakr@kernel.org> <D9GUSVZY3ZT7.O3RTG4N0ZIK0@proton.me> <aA1PjHrG4yT7XpCI@pollux>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: bb8e0fa1479c64fc29feef18bdaa8bd6644ac35b
+X-Pm-Message-ID: 9b50c9087772bc346d8770f942d75f0cd6d416ef
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,33 +62,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat Apr 26, 2025 at 11:24 PM CEST, Danilo Krummrich wrote:
-> On Sat, Apr 26, 2025 at 08:28:30PM +0000, Benno Lossin wrote:
+On Sat Apr 26, 2025 at 11:26 PM CEST, Danilo Krummrich wrote:
+> On Sat, Apr 26, 2025 at 08:30:39PM +0000, Benno Lossin wrote:
 >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
->> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) =
--> Result<&'s T> {
+>> > For the I/O operations executed from the probe() method, take advantag=
+e
+>> > of Devres::access_with(), avoiding the atomic check and RCU read lock
+>> > required otherwise entirely.
+>> >
+>> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>> > ---
+>> >  samples/rust/rust_driver_pci.rs | 12 ++++++------
+>> >  1 file changed, 6 insertions(+), 6 deletions(-)
+>> >
+>> > diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_drive=
+r_pci.rs
+>> > index 9ce3a7323a16..3e1569e5096e 100644
+>> > --- a/samples/rust/rust_driver_pci.rs
+>> > +++ b/samples/rust/rust_driver_pci.rs
+>> > @@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::Id=
+Info) -> Result<Pin<KBox<Self>
+>> >              GFP_KERNEL,
+>> >          )?;
+>> > =20
+>> > -        let res =3D drvdata
+>> > -            .bar
+>> > -            .try_access_with(|b| Self::testdev(info, b))
+>> > -            .ok_or(ENXIO)??;
+>> > -
+>> > -        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n"=
+, res);
+>> > +        let bar =3D drvdata.bar.access_with(pdev.as_ref())?;
 >>=20
->> I don't think that we need the `'d` lifetime here (if not, we should
->> remove it).
+>> Since this code might inspire other code, I don't think that we should
+>> return `EINVAL` here (bubbled up from `access_with`). Not sure what the
+>> correct thing here would be though...
 >
-> If the returned reference out-lives dev it can become invalid, since it m=
-eans
-> that the device could subsequently be unbound. Hence, I think we indeed n=
-eed to
-> require that the returned reference cannot out-live dev.
+> I can't think of any other error code that would match better, EINVAL see=
+ms to
+> be the correct thing. Maybe one could argue for ENODEV, but I still think=
+ EINVAL
+> fits better.
 
-I meant the following signature:
+The previous iteration of the sample used the ENXIO error code.
 
-    pub fn access_with<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a =
-T>
+In this sample it should be impossible to trigger the error path. But
+others might copy the code into a context where that is not the case and
+then might have a horrible time debugging where the `EINVAL` came from.
+I don't know if our answer to that should be "improve debugging errors
+in general" or "improve the error handling in this case". I have no
+idea how the former could look like, maybe something around
+`#[track_caller]` and noting the lines where an error was created? For
+the latter case, we could do:
 
-You don't need to specify the additional `'d` one, since lifetimes allow
-subtyping [1]. So if I have a `&'s self` and a `&'d Device<Bound>` and
-`'d: 's`, then I can supply those arguments to my suggested function and
-the compiler will shorten `'d` to be `'s` or whatever is correct in the
-context.
-
-[1]: https://doc.rust-lang.org/nomicon/subtyping.html#subtyping
+    let bar =3D match drvdata.bar.access_with(pdev.as_ref()) {
+        Ok(bar) =3D> bar,
+        Err(_) =3D> {
+            // `bar` was just created using the `pdev` above, so this shoul=
+d never happen.
+            return Err(ENXIO);
+        }
+    };
 
 ---
 Cheers,
