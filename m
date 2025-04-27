@@ -1,140 +1,204 @@
-Return-Path: <linux-pci+bounces-26871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CACFEA9E378
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 16:17:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 295D5A9E38F
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 16:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FA641898536
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 14:18:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F7917A61B
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 14:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A367586347;
-	Sun, 27 Apr 2025 14:17:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E6118F2FC;
+	Sun, 27 Apr 2025 14:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADklFkzv"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TqUXsezz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77ABB23AD;
-	Sun, 27 Apr 2025 14:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F491A9B53;
+	Sun, 27 Apr 2025 14:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763463; cv=none; b=jQENo1Gqk26MSWl9c7v0fILkFkaJ0180A/0Y+VNckxvJFXNbuCZHsrZIaAcMDM2bAzhMx3DP3dJ6htiXRIzCISwq0zafs7hIRc88wkt9LhbQCon58Y8SsUqAjPJsxvnLl+CEZAWqjNl0+e9exHfuNyKCr5cBnUT1OfkeuUtpHS0=
+	t=1745764076; cv=none; b=CzMQ7QXIyoj4SPhQBzqosciqQVdfTmN4rprQOckNsw/hWsFED6Kamtm4/pdhdcm94ok5UevYGV7SFkys93/CqirLq78DWCIOj3nQW2PljW82U0Jev48ar3gtghHN3TqdJ8EXBaXdNillMtat+3vk1OkpJp4D+mire5eeIyB8If8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763463; c=relaxed/simple;
-	bh=MacNpFrVB9lWzT12etspQTBQaCfmPqMr9/4hdD7jTA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saBYVVSeYDN2u1cZKoha6jvx8AkJ582s9+dah3Kltgvz/2SAXauD/cJLk1ZV2xOT5y2du5LkTHr64dy2audFCdLrYwGckAtWLCv+dFaVaxW0J4d1Eq7G69vmimQzxzYHczq6gwEJaq/yb9YTdFY29300Pwg6f2V80vx12NbMaTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADklFkzv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAFFC4CEE3;
-	Sun, 27 Apr 2025 14:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745763462;
-	bh=MacNpFrVB9lWzT12etspQTBQaCfmPqMr9/4hdD7jTA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ADklFkzv+4jwcEEx/tTAg0khYw6qhHY7i23kzmvV1iS56dwwV/3mxN7so7Vh44qjG
-	 J6V2spXCw6NcJBPE2iRXKfyj/wjUiZbYdGYgow1fsSqHTY/YuOifTzzam1TBWNNC0I
-	 hHHKg1KYztcCA65o6MYfSTluy5yIln9ExswXrmsnmB0tnk7gGJUC837ADiSJn95Pca
-	 EGD4tbgUIm+PDXZiktZZHSTsUyi4iw16FuVFEd1KIHlHXLr0jvFbfZ2kPF7JNeA+oG
-	 CEkMt3wAIVhP+4JPr42dVHVFPHHkqPF4219+folsVha50SVzO8UuDywiv+KmZCIH1z
-	 e5wFKxr6lns/w==
-Date: Sun, 27 Apr 2025 16:17:35 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <aA48f5Bbhe6ZXGJX@pollux>
-References: <20250426133254.61383-1-dakr@kernel.org>
- <20250426133254.61383-3-dakr@kernel.org>
- <D9HG66ONN8E4.1DK7SLRLD0YJZ@nvidia.com>
+	s=arc-20240116; t=1745764076; c=relaxed/simple;
+	bh=ZQTTJ8FIBhozJKse5Fs8qRc9zjDXqQ6FkY5VyfEabDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i7OOENRCfkbE7L8ZIlP803ERvti0DPE/jkGM55B8X57cb/UsxWOJRw3kY6tP3C5i4LVWGifmCEQ6FQ3dznRS/KejN3OuteD6EmxFqG0ThvipRENt/EBdKvNyNNNAdFe7+EuWyKdxpJ9IfKrXbXqJh70nGO0qZ3It1uXmxh0GAC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TqUXsezz; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=6hi3ytW2JJOVFOaND+zNAN3cQVQYz5DqcVtZd66jYcc=;
+	b=TqUXsezzrI68t0pq8SAyOPLMcSZPD/TOy9nhOxYI1Pxb9h73VjBklZt2FnMyLb
+	/yOdzzwpq7iocWGZnF1CR6arfo9YsdKOLHb4KSNxzWdC+fP/le8rPRAwSZSqVkD7
+	cN4XPeeAtY5hlEmypu149GH+lqLQ7fbvcP00fSGqnqVy8=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wA3jySSPg5ofRKLCw--.19505S2;
+	Sun, 27 Apr 2025 22:26:27 +0800 (CST)
+Message-ID: <c12ac95a-51d6-45a6-bf1b-29964e817a7d@163.com>
+Date: Sun, 27 Apr 2025 22:26:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9HG66ONN8E4.1DK7SLRLD0YJZ@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] PCI: dw-rockchip: Reorganize register and bitfield
+ definitions
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com,
+ shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, Niklas Cassel <cassel@kernel.org>
+References: <20250427125316.99627-1-18255117159@163.com>
+ <20250427125316.99627-3-18255117159@163.com>
+ <mbgc46teac74goifhuj4fegmtaagfoqkhlm4uid23jurbvi2xa@wnhycs77kk6w>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <mbgc46teac74goifhuj4fegmtaagfoqkhlm4uid23jurbvi2xa@wnhycs77kk6w>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wA3jySSPg5ofRKLCw--.19505S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr13Ww18try3uF1DCFykZrb_yoW7Xr47pa
+	4DAa4Ikr45t3y7Z3sY9F98ZFWIqrnxKFWUGrs3K3y8u3WkAw18Gr1jgF95Wry7Jr4kAryf
+	uwn8u34xWFWakrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBrWwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhw8o2gOIurF2wACsL
 
-On Sun, Apr 27, 2025 at 10:15:17PM +0900, Alexandre Courbot wrote:
-> On Sat Apr 26, 2025 at 10:30 PM JST, Danilo Krummrich wrote:
-> > Implement a direct accessor for the data stored within the Devres for
-> > cases where we can proof that we own a reference to a Device<Bound>
-> > (i.e. a bound device) of the same device that was used to create the
-> > corresponding Devres container.
-> >
-> > Usually, when accessing the data stored within a Devres container, it is
-> > not clear whether the data has been revoked already due to the device
-> > being unbound and, hence, we have to try whether the access is possible
-> > and subsequently keep holding the RCU read lock for the duration of the
-> > access.
-> >
-> > However, when we can proof that we hold a reference to Device<Bound>
-> > matching the device the Devres container has been created with, we can
-> > guarantee that the device is not unbound for the duration of the
-> > lifetime of the Device<Bound> reference and, hence, it is not possible
-> > for the data within the Devres container to be revoked.
-> >
-> > Therefore, in this case, we can bypass the atomic check and the RCU read
-> > lock, which is a great optimization and simplification for drivers.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index 1e58f5d22044..ec2cd9cdda8b 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-> >  
-> >          Ok(())
-> >      }
-> > +
-> > +    /// Obtain `&'a T`, bypassing the [`Revocable`].
-> > +    ///
-> > +    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-> > +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
-> > +    ///
-> > +    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
-> > +    /// has been created with.
-> > +    ///
-> > +    /// # Example
-> > +    ///
-> > +    /// ```no_run
-> > +    /// # use kernel::{device::Core, devres::Devres, pci};
-> > +    ///
-> > +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
-> > +    ///     let bar = devres.access_with(dev.as_ref())?;
-> > +    ///
-> > +    ///     let _ = bar.read32(0x0);
-> > +    ///
-> > +    ///     // might_sleep()
-> > +    ///
-> > +    ///     bar.write32(0x42, 0x0);
-> > +    ///
-> > +    ///     Ok(())
-> > +    /// }
-> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
+
+
+On 2025/4/27 22:14, Manivannan Sadhasivam wrote:
+> On Sun, Apr 27, 2025 at 08:53:15PM +0800, Hans Zhang wrote:
+>> Register definitions were scattered with ambiguous names (e.g.,
+>> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
+>> hierarchical grouping. Magic values for bit operations reduced code
+>> clarity.
+>>
+>> Group registers and their associated bitfields logically. This improves
+>> maintainability and aligns the code with hardware documentation.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 49 ++++++++++++-------
+>>   1 file changed, 31 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index e7d33d545d5b..a778f4f61595 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -33,24 +33,37 @@
+>>   
+>>   #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
+>>   
+>> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> -#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> -#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> -#define PCIE_SMLH_LINKUP		BIT(16)
+>> -#define PCIE_RDLH_LINKUP		BIT(17)
+>> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
+>> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
+>> +/* General Control Register */
+>> +#define PCIE_CLIENT_GENERAL_CON		0x0
 > 
-> Coming from `Revocable::try_access_with` (and the standard library in
-> general), the name of this method made me think that it would take a
-> closure to run while the resource is held. Maybe we should differenciate
-> the names a bit more? Maybe just `access` is fine, or
-> `access_with_device`?
+> Is this the actual name of the register as per the documentation? Just asking
+> because of '_CON' instead of '_CONTROL'.
+> 
 
-Seems reasonable -- access() it is then.
+Hi Mani,
+
+Yes. I saw that RK3588 TRM is named like this.
+
+PCIE_CLIENT_GENERAL_CON
+
+Best regards,
+Hans
+
+
+> - Mani
+> 
+>> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> +
+>> +/* Interrupt Status Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+>> +
+>> +/* Interrupt Status Register Related to Miscellaneous Operation */
+>> +#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
+>> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> +
+>> +/* Interrupt Mask Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+>> +
+>> +/* Interrupt Mask Register Related to Miscellaneous Operation */
+>> +#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> +
+>> +/* Hot Reset Control Register */
+>>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> +
+>> +/* LTSSM Status Register */
+>>   #define PCIE_CLIENT_LTSSM_STATUS	0x300
+>> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>> +#define  PCIE_SMLH_LINKUP		BIT(16)
+>> +#define  PCIE_RDLH_LINKUP		BIT(17)
+>> +#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> +#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>>   
+>>   struct rockchip_pcie {
+>>   	struct dw_pcie pci;
+>> @@ -161,13 +174,13 @@ static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
+>>   static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static int rockchip_pcie_link_up(struct dw_pcie *pci)
+>> @@ -516,7 +529,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+>>   	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+>>   
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   
+>>   	pp = &rockchip->pci.pp;
+>>   	pp->ops = &rockchip_pcie_host_ops;
+>> @@ -562,7 +575,7 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
+>>   	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+>>   
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   
+>>   	rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
+>>   	rockchip->pci.ep.page_size = SZ_64K;
+>> -- 
+>> 2.25.1
+>>
+> 
+
 
