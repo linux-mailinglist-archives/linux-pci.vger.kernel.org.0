@@ -1,140 +1,133 @@
-Return-Path: <linux-pci+bounces-26862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26865-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8924FA9E2E4
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 13:57:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32DFFA9E318
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 14:54:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F158518986A9
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 11:57:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B5EB5A2A1B
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 12:54:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748072522A8;
-	Sun, 27 Apr 2025 11:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDF2F154457;
+	Sun, 27 Apr 2025 12:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jd4oxdYl"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FP3RFEvR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A5C2522B3
-	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 11:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F3972AEE1;
+	Sun, 27 Apr 2025 12:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745755060; cv=none; b=pTaGpvVoVbnJzkf/NYum0df0gDutfCbAISTn7TJuGriWgnRrxmJLXaMVzMW7eGUWf7oFk6zxeewCaHI48NU/mn7G/Fw47wPsw0fCybrSb+/gXVGNKRROMp6JsXmcYCUCeeqAgdxy5AsbUhbnjyzD35RSNlxU99Ga2xwHNosJiiQ=
+	t=1745758447; cv=none; b=XoAmLsVbBo2Rn3Qa5eRjXD0xpUX5npyPgtE5W2Pr7trZhZeh06DNzPh4kZQL71QbcYQKZZg3CTO+D25ADSDbQp1+68YxXoOlGYf576wdjVG3nqNjgyv6lJjX/bNf8DC7F9sbfLLQwwR5Y3XqMfn+aXILqCYASXTHSvG8dqbEwZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745755060; c=relaxed/simple;
-	bh=PBjPcyuMpEZLQB0/vy9bfQ0v8f/kjSCCYbtmIsssx3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P/+n6TbDyjckNm6Yq6Ro8wTpjps0ENfJ6lj5Zw7PLl5hCIWvhJB8kaJszLqkeiORIYRqWAhaqE5B6/rVLVdcTP4caVt/3I9ILhiBz8R45/rzepR6NmSSCtm3oKwtsnSmaScApgkFSchMJ0VDRQzlaOE+/4cl9/oxK9MSs+cgHJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jd4oxdYl; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22435603572so43310635ad.1
-        for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 04:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745755058; x=1746359858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
-        b=jd4oxdYl7a3NsbJR/n601htvltqlVFMHsf1khc22SANgvMJh8j2exWQ8ae0qOAFFIl
-         1U9BRsmRjkyVdi6upAgIROnSo6uQ42/Ji5OW4F23kRmwl2iCzGfqgXAF1Jlm9RjgKsbk
-         y0HxAI/cR7AeNNL14bSyDbnxEZrsyHW2/BLGXPxACsDmRb9RBX4/xWJWgG1zWMSoREQf
-         t25BBI8L4RuEi3mBX8TzrdPLSqo2AZOi/jHNtZGXdVnmrwEjUfo3s9CkTpQoor1bdx1p
-         oP1BaA5VOGId6zPlwFhfE/xBpZWVZM8o5f5mvNsAWoO4uc93jD9i+CbwjAS7zKoq9BZV
-         b0QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745755058; x=1746359858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
-        b=G/OMurpAbdihr8N676d5ofQliYg2/Ud4EzwT4c5gQQA4SGEZ+kxNXL3ZjVGxI96KiM
-         qrQNAJ5H/yM6rf72As81G3282neuOol3iPWfxKkNnJ74N0uM6/vUqb72JfQTa8J0XBdJ
-         3LXEGChBHigHaf826iDIq5Fk1RdmPjJZolSAt2Zk90h4UzHlE0knpPAXIKlXcrm123Sj
-         F0E+4egxfk9FedjBzlI2iPMM/wF23u4qJtxaPLaV0JPUqo9ppu+DWgjmGvPKRTIpOG7B
-         6C82irNqceiFl4IPvN+XtNgxMC+buBLL6OXZmGFRZTd78+j8dvTs9XtFhFI6BLjX9ay5
-         BziQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUsf3mYQWKUrcXmkovI9MjCiACt7+SEeWNIkz2zwCR3cLvUxNaFVbPxC9ekicB82f67R1FcNKo1Ug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyudUTtbeT2XSqRqLha4yc3WF4bYP1WsK9C9YA6mTic1dKftAb8
-	sArwWtLougoolhLnjOx3lQ2dPKNphZUJjm6qR55X/nTt7KH7KTpatfowg3KKfA==
-X-Gm-Gg: ASbGncuCyckMH3VC6Bp91YRLA+3jcpe2BXckL93vGSuKWdmDIkbBXzpRJy/ZVw6pmsD
-	90+7V9aK2la4tDAEgV23JjTQRyg2IBrmr7JLaWm2dFQLXosQLmQOm6HaC26/9tjnZjCO34gL1rl
-	4U8leVuQfXTMB92++YibSueg+3DHE/lSIClfsStKMtpO0vjjjNMUf6Eaowkj/ggvhy7KwvFYa19
-	LO2GUdKz1FDTwnKL4JewWLjsPdfcmQ/0RTfafolv9bbsvbMmijOYYp7Nt2+T7OLhUFs66dGYxFX
-	mI+YFicCzr1a/+xKo1bnsk85hQ3xrga7h97uNaKa1+VQGKrndaCgwu8=
-X-Google-Smtp-Source: AGHT+IF5v/6Ko/fvCwFf4ZE0KXGbwqh1gFSaF2rE1KE1z2Bwiq95JPxzfmr1/BPwNIqto7+dgvX58A==
-X-Received: by 2002:a17:902:da8e:b0:225:b718:4dff with SMTP id d9443c01a7336-22dbf7487ffmr128283355ad.53.1745755057990;
-        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
-Received: from thinkpad.. ([120.60.143.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5103259sm62956035ad.185.2025.04.27.04.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
+	s=arc-20240116; t=1745758447; c=relaxed/simple;
+	bh=GSlbB56K0ESuzYRh6DM1zXQRUOraBVh6Wp+RgeVaZ9o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=soE9DzIwHzBhga27f6wvht/zEXRNKljELw3yrzKEJAgOPkQ75+U/NqYq9PgUdfLUNFX6EYBdQcKPxEru7lP3YPtYDt6n8qDU2MkrgPoaphxl6RtaFcGu9DEL1j1jzT222wgdowtL53e1UwV9Sl+UfCahf03fCzGRjMULlPKIbWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FP3RFEvR; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=a4qEw
+	fske43/vfxYVnMiAvY6fWKRLGjrP0gzaLq1nD4=; b=FP3RFEvRSxhbARzBfEvlf
+	VV5ox97bb+Qk1pM4K86E10rDHHvT21qSGKzb/UvzCR2tF4kd+X31noRgJhvZw35y
+	D33ppMi9AGHENYdvMTqodWe/+TIUVwkNFPeYBofk4vFuGmi18xAGdkNNiKyAE/UB
+	To7h/tNcLjJ4drwTbth8BQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3LwC9KA5oNqx8Cw--.63816S2;
+	Sun, 27 Apr 2025 20:53:19 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
 	kw@linux.com,
-	robh@kernel.org,
 	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	heiko@sntech.de
+Cc: manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	shawn.lin@rock-chips.com,
 	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v6 0/7] Add some enhancements for i.MX95 PCIe
-Date: Sun, 27 Apr 2025 17:27:28 +0530
-Message-ID: <174575498081.15979.12453799870165824890.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
-References: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v4 0/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
+Date: Sun, 27 Apr 2025 20:53:13 +0800
+Message-Id: <20250427125316.99627-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3LwC9KA5oNqx8Cw--.63816S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJFyfXw4kGrWkWw1DCF47XFb_yoW5Gw1fpF
+	s8WFZ3Wr47Jw4Fvan7Kw17ZFy8K3ZxCFZ8Zw4DKw1xJ34Yg3W8WFyfKF1F9ry7JrWIgF1I
+	vw47X3409FyYya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEwIDUUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx88o2gOJqQ3gAAAsc
+
+1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
+
+---
+Changes for v4:
+- According to Mani's suggestion, submit based on the following branches
+  and do not rely on others' patches.
+
+  Because of *this* dependency, I couldn't apply this series. I'd suggest
+  to respin this series avoiding the above mentioned patch and just rebase
+  on top of controller/dw-rockchip branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
+
+Changes for v3:
+- Delete the redundant Spaces in the comments of patch 2/3.
+
+Changes for v2:
+- Add register annotations to enhance readability.
+- Use macro definitions instead of magic numbers.
+
+https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+
+Bjorn Helgaas:
+These would be material for a separate patch:
+
+- The #defines for register offsets and bits are kind of a mess,
+  e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+  PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+  PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+  names, and they're not even defined together.
+
+- Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+  PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+
+- PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+  Sure wouldn't guess that from the names or the order of #defines.
+
+- PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+
+- Submissions based on the following patches:
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+---
+
+Hans Zhang (3):
+  PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+  PCI: dw-rockchip: Reorganize register and bitfield definitions
+  PCI: dw-rockchip: Unify link status checks with FIELD_GET
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 65 ++++++++++---------
+ 1 file changed, 36 insertions(+), 29 deletions(-)
 
 
-On Wed, 16 Apr 2025 16:13:07 +0800, Richard Zhu wrote:
-> Add some enhancements for i.MX95 PCIe.
-> - Refine the link procedure to speed up link training.
-> - Add two ERRATA SW workarounds.
-> - To align PHY's power on sequency, add COLD reset.
-> - Add PLL clock lock check.
-> - Save/retore the LUT table in supend/resume callbacks.
-> - 3/7 relies on "arm64: dts: imx95: Correct the range of PCIe app-reg region"
->   https://lore.kernel.org/imx/20250314060104.390065-1-hongxing.zhu@nxp.com/
-> 
-> [...]
-
-Applied, thanks!
-
-[1/7] PCI: imx6: Start link directly when workaround is not required
-      commit: 9c03e30e3ade32136fed5a4ab7872dcb205687d3
-[2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in workaround link training
-      commit: 4a4be0c088e3029a482ef8ac98bb2acb94af960e
-[3/7] PCI: imx6: Toggle the cold reset for i.MX95 PCIe
-      commit: 47f54a902dcd3b756e8e761f2c4c742af57dfff0
-[4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit L23 ready
-      commit: ce0c43e855c7f652b6351110aaaabf9b521debd7
-[5/7] PCI: imx6: Let i.MX95 PCIe compliance with 8GT/s Receiver Impedance ECN
-      commit: 744a1c20ce933dcaca0f161fe7da115902a2f343
-[6/7] PCI: imx6: Add PLL clock lock check for i.MX95 PCIe
-      commit: 047e8b6b3bc3e6b25bfa12896a39d9fb82b591be
-[7/7] PCI: imx6: Save and restore the LUT setting for i.MX95 PCIe
-      commit: e4d66131caaf18d7c3c69914513f4be0519ddaaf
-
-Best regards,
+base-commit: d4a5d7e6d91f6e53c8bf6ec72b7ee6c51f781695
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.25.1
+
 
