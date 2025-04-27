@@ -1,133 +1,167 @@
-Return-Path: <linux-pci+bounces-26883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4941EA9E40F
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 19:18:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A103EA9E414
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 19:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B16AF7ACFA8
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 17:17:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C81F23A9F9E
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 17:28:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D481C831A;
-	Sun, 27 Apr 2025 17:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E0611DE3C0;
+	Sun, 27 Apr 2025 17:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhZKKAic"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWezRnjw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EC3111A8
-	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 17:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F764142E67;
+	Sun, 27 Apr 2025 17:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745774293; cv=none; b=cCL0pTcoensjZ5olgrxSUU2zB1Y5baTwWW/D5+UPdO4O/4U4Guk7ex4tp/OAMii2sUD6wxCC3BzL7t2+trDp6Kf2lzYOKpU3hCJ/B2piPwrfFeBh89yFwcooo2m08vMzH4KmFUUBcolwYV7GY3xz7LMd6oDnS6r8TbzGw+FFP2M=
+	t=1745774918; cv=none; b=TZ3Znw+4Ijbf2n9pnzay2nAIgnUrJNNtZb59GgcNz7LQ/Sjxt7INC8eSUAxKPhN/piAFZTBpqHSM5mkwru/Rzp4BlYi2eP1Y/CDTFRVseh9WDFDZQ95JVaxfs1vLjCQdZkEDbFkghKBqUW6AL7imfzJ+lXEL58gZTYNDth5tV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745774293; c=relaxed/simple;
-	bh=Gnuhvv4KUPpANGsE/eqvgSDbJAwmlBusMJ3GevX5lOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xpn9K4tvyXdyaO6iX9Ycpn5ydJUj4DegISwt8o+dZAX2xqTg7JugEtwfkzoRNOB6CT8hjtPUwKFUeKBKgFjydkmlMne2tDOexMl3fVT5xQjKh4IJv8wEL1jsMpZpDqMBl4aixVdFfnnLdXGvWohhjGbU+k4j0hafzJUz/nPgs/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JhZKKAic; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3081f72c271so3717429a91.0
-        for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 10:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745774291; x=1746379091; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KGfvwG0lJjJnssDIjMncK4zxO5Uxbjv3u3y95m4bzb0=;
-        b=JhZKKAicpAMPht75H97BPVzxZmy8tDXrEgWi2SXAOF5J3/gK0GrC9fnM1+HR2kYQFX
-         vvDogMoKWtOcHZrCg8G7AdoowGVqvuUwRJ9tT2cuaW7ECNVB7fUhmi4bAl/ql0kqk2ud
-         dLuQDpBN7Ncow0/05j6Qu98EC1my3CJWyAzlcEzzhn1IeJyS1+8ysR6/qnvHIgQrfrM8
-         JbCed1VKP6x9jG8qDCOG+C4QaM3EsA13FLsVPLB1Pq+BnWcxLfQN5o83EeSDeCcuIzvD
-         jzrUjrEQbdBw5UtBI5UvV4xY1ECJiVnFh+hg5PkYa6RCD55Q6fEWiEZzqDTKbw9dGude
-         w7yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745774291; x=1746379091;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KGfvwG0lJjJnssDIjMncK4zxO5Uxbjv3u3y95m4bzb0=;
-        b=E9wya7fGX7Te87jsLSnAIMJ6sIsU72JNFf4yg1R0r+Lxbrndj65Gt5ivf9DFmHmyMJ
-         WmJ+7+7NU+MLx0DXsVT6BYsBYxaXD6qT5csGFP9ILGcL/FsG2kdIFXkvTC4PPETawb7J
-         EUDcaG4VgCb/waRed/I8QH5/xi7+DzQWm+Mr/+cviXr+TtswDI5cI2WUFpid9jTpsQS1
-         yn/14wvVWZKoLUGHlATeH+irnhyZdLdEGsIgwMsnzQo+DWy0pczHzliwl0P99YjgfTJY
-         96zawO97Xd3vB4pMQlVeH7EY7PB77i3i2ugo+Y4vc/v5/aVtv7Irz5gifN/j8R5lKMzc
-         lcMw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Xl6RkDd/OITRZ5g/AysRQVyPWB6cythv4Z7KuoWsBrhWtxI/tFSy0AxCvi4LMs7EX+vutw9ftVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOL2YDgZI/5aqFvRuggUH8/Qp9wQSpUtlLPQafIB0K72W52pf4
-	euQ4RRxrjwmidfdrUllJzeBzQz+ysomunEnYndpSEJc6dRGRKL080rWJ8Yv/wg==
-X-Gm-Gg: ASbGncugp1zWzMQQwomTtgcY91+FWZC/mcETsxz1Ji7IESWwXYYvHNnFrDdmM/SCdYQ
-	BisCdNAiHv6G6ssuQ1phS76v5Y2szT0kUa4Rcht6il8ykRbqRFWrdSdu4vmaAUQgEtxeTwNth2X
-	yeBtHpMlZeAcCI0AA9TK2ANfCUWKyLfJYLrbqMCC7Jo1c6cQfFfDEE415mHq4v+ODCvGMyGrogw
-	MWA0sXlP4Vg3pNBzTt1i3VF7Hcw6ZXop5Jr+HxT1vM4Sn3eXaZ6WDUbmtsGTGk6mf6dikL6URqV
-	/hVkDeBYb610LmJizMU2ieAKZzvUO5ntCx4fhTBnUz+/jvMviWzD
-X-Google-Smtp-Source: AGHT+IGEJGjOrAHuRlC8FW7W5k8PqHO+m0uDpo2VUIDPeTQamnBsMG6rTDTesDmrV+/O1+7KTWI9/w==
-X-Received: by 2002:a17:90b:1f84:b0:2ee:f677:aa14 with SMTP id 98e67ed59e1d1-30a013075b4mr8795318a91.13.1745774291083;
-        Sun, 27 Apr 2025 10:18:11 -0700 (PDT)
-Received: from thinkpad.. ([120.60.52.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7741sm66038245ad.156.2025.04.27.10.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 10:18:10 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Jerome Brunet <jbrunet@baylibre.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntb@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v5 0/2] PCI: endpoint: space allocation fixups
-Date: Sun, 27 Apr 2025 22:47:55 +0530
-Message-ID: <174577426298.86106.8309026357756060948.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424-pci-ep-size-alignment-v5-0-2d4ec2af23f5@baylibre.com>
-References: <20250424-pci-ep-size-alignment-v5-0-2d4ec2af23f5@baylibre.com>
+	s=arc-20240116; t=1745774918; c=relaxed/simple;
+	bh=JrwaRlQRSbsnDWUu8IbBHR4MU4nqMGZK9i4gOpXUCBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AsROD9wA/II3HKTx2diW7VvQejnkPOyjY1JQYd9QYQv8R5VlGkuXeO9i5Nn1Nb3B9QKd3TWdqmZi4wf1jbCB6SjRneXB2KfgxUeS3fgF7lcAxpaxoZo2HaWDYHQScgvt0hoE9VKQHysFXGVaf8I+NKzFg0TAHK0KtmmXTMS3624=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWezRnjw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1347FC4CEE3;
+	Sun, 27 Apr 2025 17:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745774917;
+	bh=JrwaRlQRSbsnDWUu8IbBHR4MU4nqMGZK9i4gOpXUCBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sWezRnjwEwe4W/vTCGZD6EzWc+ng2GZn1SNhcVfbRX2Gt3mGeemTBxqbMV7SEv6V+
+	 /qP0OJqTyfuy6UP75avtZVw0bGQz7Z1rY91rXj+yAMl1gByUeX4hpaq3/vrBJMxsZW
+	 xKwoaFbyhfWqbKxi/6jglVtDoCGRGNpK6vEkycx95vN/+QqMrYI18iyTBAkx7X7q0x
+	 5cY09FA5OjJdck/Way8CiGV76uPDPniHJnwizzQCWQzFfwIAIFycN0jmscNJwgqQOK
+	 npf+1TzgDJeX5ozl/tP2GTWbF/bfLSFrSerTrKUXwAYEI/ovTBX5ksEw5x66A8oKpn
+	 r8DXZIQLcPYBQ==
+Date: Sun, 27 Apr 2025 19:28:30 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
+Message-ID: <aA5pPsMRP-0Vjmgv@pollux>
+References: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me>
+ <aA4DNEHgrKMmzxBP@pollux>
+ <D9HLAAZJRDKB.3CRXXMTLLPQ9J@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9HLAAZJRDKB.3CRXXMTLLPQ9J@proton.me>
 
-
-On Thu, 24 Apr 2025 10:34:03 +0200, Jerome Brunet wrote:
-> This patchset fixes problems while trying to allocate space for PCI
-> endpoint function.
+On Sun, Apr 27, 2025 at 05:15:48PM +0000, Benno Lossin wrote:
+> On Sun Apr 27, 2025 at 12:13 PM CEST, Danilo Krummrich wrote:
+> > On Sun, Apr 27, 2025 at 08:37:00AM +0000, Benno Lossin wrote:
+> >> On Sat Apr 26, 2025 at 11:18 PM CEST, Danilo Krummrich wrote:
+> >> > On Sat, Apr 26, 2025 at 08:24:14PM +0000, Benno Lossin wrote:
+> >> >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+> >> >> > Implement an unsafe direct accessor for the data stored within the
+> >> >> > Revocable.
+> >> >> >
+> >> >> > This is useful for cases where we can proof that the data stored within
+> >> >> > the Revocable is not and cannot be revoked for the duration of the
+> >> >> > lifetime of the returned reference.
+> >> >> >
+> >> >> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> >> >> > ---
+> >> >> > The explicit lifetimes in access() probably don't serve a practical
+> >> >> > purpose, but I found them to be useful for documentation purposes.
+> >> >> > ---
+> >> >> >  rust/kernel/revocable.rs | 12 ++++++++++++
+> >> >> >  1 file changed, 12 insertions(+)
+> >> >> >
+> >> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> >> >> > index 971d0dc38d83..33535de141ce 100644
+> >> >> > --- a/rust/kernel/revocable.rs
+> >> >> > +++ b/rust/kernel/revocable.rs
+> >> >> > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
+> >> >> >          self.try_access().map(|t| f(&*t))
+> >> >> >      }
+> >> >> >  
+> >> >> > +    /// Directly access the revocable wrapped object.
+> >> >> > +    ///
+> >> >> > +    /// # Safety
+> >> >> > +    ///
+> >> >> > +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
+> >> >> > +    /// for the duration of `'a`.
+> >> >> 
+> >> >> Ah I missed this in my other email, in case you want to directly refer
+> >> >> to the lifetime, you should keep it defined. I would still remove the
+> >> >> `'s` lifetime though.
+> >> >> > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
+> >> >> > +        // SAFETY: By the safety requirement of this function it is guaranteed that
+> >> >> > +        // `self.data.get()` is a valid pointer to an instance of `T`.
+> >> >> 
+> >> >> I don't see how the "not-being revoked" state makes the `data` ptr be
+> >> >> valid. Is that an invariant of `Revocable`? (it's not documented to have
+> >> >> any invariants)
+> >> >
+> >> > What else makes it valid?
+> >> 
+> >> IMO an `# Invariants` section with the corresponding invariant that
+> >> `data` is valid when `is_available` is true.
+> >
+> > Yeah, I agree that the # Invariants section is indeed missing and should be
+> > fixed.
+> >
+> >> > AFAICS, try_access() and try_access_with_guard() argue the exact same way,
+> >> > except that the reason for not being revoked is the atomic check and the RCU
+> >> > read lock.
+> >> 
+> >> Just because other code is doing the same mistake doesn't make it
+> >> correct. If I had reviewed the patch at that time I'm sure I would have
+> >> pointed this out.
+> >
+> > I would say that try_access() and try_access_with_guard() are wrong, they rely
 > 
-> The problems, and related fixups, have been found while trying to link two
-> renesas rcar-gen4 r8a779f0-spider devices with the vNTB endpoint
-> function. This platform has 2 configurable BAR0 and BAR2, with an alignment
-> of 1MB, and fairly small fixed BAR4 of 256B.
+> Did you mean to write `wouldn't`? Otherwise the second part doesn't
+> match IMO.
+
+Yes, I meant "wouldn't". :)
+
 > 
-> [...]
+> > on the correct thing, we just missed documenting the corresponding invariant.
+> 
+> Yeah it's not a behavior error, but since you agree that something
+> should be fixed, there also is something that is 'wrong' :)
+> 
+> >> I opened an issue about this:
+> >> 
+> >>     https://github.com/Rust-for-Linux/linux/issues/1160
+> >
+> > Thanks for creating the issue!
+> >
+> > What do you suggest for this patch?
+> 
+> I don't mind if you take it with the lifetime changes, so
+> 
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> 
+> But I'd like the invariant to be documented (maybe we should tag the
+> issue with good-first-issue -- I don't actually think it is one, but
+> maybe you disagree).
 
-Applied, thanks!
+Yes, it should be documented; regarding the issue you created, I'd be fine
+marking it as good-first-issue.
 
-[1/2] PCI: endpoint: improve fixed_size bar handling when allocating space
-      commit: df4b24b510c9ceac32aeb3ed5904fd93b06a51b8
-[2/2] PCI: endpoint: pci-epf-vntb: simplify ctrl/spad space allocation
-      commit: b47493ff0d43608257a24d65f5b26a4a6376ff9b
-
-Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+But I'd also be fine sending a fix for this myself outside the scope of this
+series.
 
