@@ -1,78 +1,45 @@
-Return-Path: <linux-pci+bounces-26867-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26868-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C719CA9E31E
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 14:54:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4373EA9E329
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 14:59:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 065165A23BD
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 12:54:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B20D3BC070
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 12:59:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78D3FB663;
-	Sun, 27 Apr 2025 12:54:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5082AEE1;
+	Sun, 27 Apr 2025 12:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gdl6s05O"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W+o3lnqk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9128B1AC88A
-	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 12:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A8D1610C;
+	Sun, 27 Apr 2025 12:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758452; cv=none; b=Q3Z4XzZSjUPARpMhe9LoG+zMiF98iph6ZBaggzXUdD4l/ZSX2W/5dd/IPS5FCHdbf/du9Vc1qdRitSUrPafahhIybXCS2Al5nyHw+SOeD5sbVd65Wn14XxlYBVwsuO1hU56tiwUwUo6G7ZinR3IerfeXH2gYeUPvZB2f4aJBfEw=
+	t=1745758791; cv=none; b=Wade4wa4f0hme6/g2mOUMeY4hPOzvLyTgKZAJ5iF/CPsnBqseTvmSUlW+15aCIBxGH2Hfzn/kBqnfKzu2sve8xsgU7TZ4E/3ilkF7IUXNw/Xqw7zp/eA1uUlEeYIx4kef2ex99yw9EeUtr8FlbNfTKastoebOhfKOSxYIOw8Lv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758452; c=relaxed/simple;
-	bh=m0ncI8ywbDUYe+YOGHI5QGQIaD+jjjvzA74NbJAljbI=;
+	s=arc-20240116; t=1745758791; c=relaxed/simple;
+	bh=DYfyxH/ZFe6ArRfv/bzScnGtIGzfArNFDSQdJeA1yCU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jHb8n0xXUKr45IfZvF54nT0TQciYxsQaIDyJeKZEW28C0Y51j42YmpmfLougHYo/OC9OVi9zoXtavi1nitj+GjrweNba/XDnFtfk0sdniBC3f7K1CjIdmKRss3EVGbKKvhkQm+FtPTCoPM2c4M6sPuSksjvrHKEmTPPsTK9LV0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gdl6s05O; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso36090225e9.3
-        for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 05:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745758449; x=1746363249; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nA7928bge5F0w9D37QG7wtoorVGmVQz/sIPfIZUOAl8=;
-        b=Gdl6s05OnjNLBWdEtAimPl48fULBh1OPs/ZvOvqFt0O1U9bCevItqTK2hmdMIoR5fT
-         dForR/YSLO+cNInBbL6SlZLVI/4iD8Fw+raqAjPqJQanbcpsiBORpycmnV6hjtRUSezn
-         CTOT4F6zSPAHi+T9YKim2Wv7U45Ll8Zp1cy98tepzHWRhrHLNlaGkSmIun4UwFWn31Lu
-         xOOLuX0K2u6LRRTEKkwOSRIn0Yfe/hdmeW4ledYCDe/0yPwVlCMoYbYzhcobET6Ps7HL
-         WaJbWVfgvsOA0WMO2+828nFBbREk3inx2pxkmNTmVpvHmL3C9KcDGbg23Z3oPP8gHhUC
-         5PzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745758449; x=1746363249;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nA7928bge5F0w9D37QG7wtoorVGmVQz/sIPfIZUOAl8=;
-        b=OOn0yqQXAh64z4acyozq+qVId5OrBQLo0F0wY5l/hMG1igIX9Q3i6wxJ4mhjVv+erQ
-         BaXpnbfdP/lZLrIEPdhbGHxuUOwsHeFv4X7Es0KkUEjRJcsch5mz8gsi+u+Sr4BZI0r4
-         qlhqgaRQONOWm7s4cVW4V4juCWzvR0T7q0LNGxZZ2Hy8AvWMCt76VrPPBfoViygFipoZ
-         QCAqQBaeNk+DGvZn46oSw4K2qXLiZwWYMtO3aCMM3rsqLk3TeIYZTBFohZSn/t+R0221
-         Or0zP9dTH2HkHKkWv/06QAfYr4uspWCPsjhigMtsAtOkPL4mslfe+xyUDMtPOFlHTCwK
-         nW+A==
-X-Gm-Message-State: AOJu0Yww8Bs6jbymLg1p/UIs//ix/+X7BfTibV6sILQPsdvE1x6ZttOU
-	SAHBbr4cyvctLWaQtZRVMO2jpECwAp6o+i7eFDjLlqBcotMjNytk
-X-Gm-Gg: ASbGncuQ0gMvwJbG8GcKw+q6EB6oPvG6xYrH2A63oqsjJBpW9BuQB232P8Ur5TGGD72
-	R9LPcMvX+JVI+mA2lKWS3TdZR2osou6UglbnVhpjfeJ2fauHE9Hf6ryg+AbcCPLbNMhsnvXpxvL
-	3tum5GUVbTHDEXWBAc/RL1CB8slz9WwSW+tGD5iuHYZhGol+9cUwt8vp/IPtiiYDSBIlVDTHyih
-	8MY3H57Ui0DVcNYBmEM/eePs3+HTS4WYYxXZqqpYZgRt9afLR9iyx23XXVBwKHLYT7urSRN190j
-	C74anqAzTBYZFMPViZWuxEwEbm60j2A3+1WS51IUnSdk9osVoUBk
-X-Google-Smtp-Source: AGHT+IEBSIo0/tf1XX3NJMfYoKKJQPVBsh9PHQ2CDOzDz/xSHr9oMGUEneulT6WpnLK1CqCm2HsISA==
-X-Received: by 2002:a05:600c:4f46:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-440aea50effmr25791195e9.32.1745758448768;
-        Sun, 27 Apr 2025 05:54:08 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad112sm123288985e9.24.2025.04.27.05.54.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Apr 2025 05:54:08 -0700 (PDT)
-Message-ID: <ae60787a-7e98-4180-838a-34df402c8f86@gmail.com>
-Date: Sun, 27 Apr 2025 14:54:07 +0200
+	 In-Reply-To:Content-Type; b=mHqBFIcKGTAWQi0/DAdpz2ke/USIrifjBt8Dmc8zCo9TuLF97y41mZEwO1xQYZRA5fP6WsektxK6kbekkAWUO5aYKKnrnDikHHGR19KE5q9VlzDcFqtvP/rM8HN0SLmwlojJ2nJX/YXEuYJs40lYzGh4yomn2As2ZVCFVWDECAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W+o3lnqk; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=DQSPcZTtwb3AyD/BZAXLpksdXqfkUHT2zq46CYmEdMo=;
+	b=W+o3lnqkGrJokPTPdUKgRc8dwTJEGEBZXqXDzpzBAphAGv0S3ucsCC4ciSNyAw
+	54nZPdtYvnX8mrIZkIeARrVv6XR6YPeuLTUchZ6CIOc/K3nrrY9ggild7Dg5fJ5o
+	a+uwQyRZELgr/MsaeTeo5jAxITNQvaWR0fHQYNyhcuSbY=
+Received: from [192.168.142.52] (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgC3lQ4ZKg5onKoZBA--.22488S2;
+	Sun, 27 Apr 2025 20:59:08 +0800 (CST)
+Message-ID: <40658509-180d-435b-aa1c-663e7536eba2@163.com>
+Date: Sun, 27 Apr 2025 20:59:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,114 +47,85 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Explicitly put devices into D0 when initializing
-To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
- bhelgaas@google.com, rafael.j.wysocki@intel.com,
- huang.ying.caritas@gmail.com, stern@rowland.harvard.edu
-Cc: linux-pci@vger.kernel.org
-References: <20250424043232.1848107-1-superm1@kernel.org>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20250424043232.1848107-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 0/3] PCI: dw-rockchip: Reorganize register and bitfield
+ definitions
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com,
+ shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250423153214.16405-1-18255117159@163.com>
+ <yhcnrmmmphqz2egrws5sxobysf6ntnd7xxl5vuzo34y5aunbj5@pe7i352kgdm7>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <yhcnrmmmphqz2egrws5sxobysf6ntnd7xxl5vuzo34y5aunbj5@pe7i352kgdm7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PigvCgC3lQ4ZKg5onKoZBA--.22488S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWr4fAFykAw45XrWfGF4Uurg_yoW5GFy8pa
+	s5Ga93Cr47Jw4xAan2yr1xZFy0g3ZxAF98Zws8Kw1jyay5X3WfXFWS9F1Y9ry7Xr4fKr1I
+	vw47Xw1I934Yva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UloGQUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwU8o2gOJqRbegAAsQ
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> AMD BIOS team has root caused an issue that NVME storage failed to come
-> back from suspend to a lack of a call to _REG when NVME device was probed.
->
-> commit 112a7f9c8edbf ("PCI/ACPI: Call _REG when transitioning D-states")
-> added support for calling _REG when transitioning D-states, but this only
-> works if the device actually "transitions" D-states.
->
-> commit 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI
-> devices") added support for runtime PM on PCI devices, but never actually
-> 'explicitly' sets the device to D0.
->
-> To make sure that devices are in D0 and that platform methods such as
-> _REG are called, explicitly set all devices into D0 during initialization.
->
-> Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v2:
->  * Move runtime PM calls after setting to D0
->  * Use pci_pm_power_up_and_verify_state()
-> ---
->  drivers/pci/pci-driver.c |  6 ------
->  drivers/pci/pci.c        | 13 ++++++++++---
->  drivers/pci/pci.h        |  1 +
->  3 files changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index c8bd71a739f72..082918ce03d8a 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -555,12 +555,6 @@ static void pci_pm_default_resume(struct pci_dev *pci_dev)
->  	pci_enable_wake(pci_dev, PCI_D0, false);
->  }
->  
-> -static void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
-> -{
-> -	pci_power_up(pci_dev);
-> -	pci_update_current_state(pci_dev, PCI_D0);
-> -}
-> -
->  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
->  {
->  	pci_pm_power_up_and_verify_state(pci_dev);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0cec..8d125998b30b7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3192,6 +3192,12 @@ void pci_d3cold_disable(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_d3cold_disable);
->  
-> +void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
-> +{
-> +	pci_power_up(pci_dev);
-> +	pci_update_current_state(pci_dev, PCI_D0);
-> +}
-> +
->  /**
->   * pci_pm_init - Initialize PM functions of given PCI device
->   * @dev: PCI device to handle.
-> @@ -3202,9 +3208,6 @@ void pci_pm_init(struct pci_dev *dev)
->  	u16 status;
->  	u16 pmc;
->  
-> -	pm_runtime_forbid(&dev->dev);
-> -	pm_runtime_set_active(&dev->dev);
-> -	pm_runtime_enable(&dev->dev);
->  	device_enable_async_suspend(&dev->dev);
->  	dev->wakeup_prepared = false;
->  
-> @@ -3266,6 +3269,10 @@ void pci_pm_init(struct pci_dev *dev)
->  	pci_read_config_word(dev, PCI_STATUS, &status);
->  	if (status & PCI_STATUS_IMM_READY)
->  		dev->imm_ready = 1;
-> +	pci_pm_power_up_and_verify_state(dev);
-> +	pm_runtime_forbid(&dev->dev);
-> +	pm_runtime_set_active(&dev->dev);
-> +	pm_runtime_enable(&dev->dev);
->  }
->  
->  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b81e99cd4b62a..49165b739138b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -148,6 +148,7 @@ void pci_dev_adjust_pme(struct pci_dev *dev);
->  void pci_dev_complete_resume(struct pci_dev *pci_dev);
->  void pci_config_pm_runtime_get(struct pci_dev *dev);
->  void pci_config_pm_runtime_put(struct pci_dev *dev);
-> +void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev);
->  void pci_pm_init(struct pci_dev *dev);
->  void pci_ea_init(struct pci_dev *dev);
->  void pci_msi_init(struct pci_dev *dev);
-Applying this patch makes my laptop power-off quickly and no hardware-related services gets stuck anymore during shutdown.
 
-Tested-by: Denis Benato <benato.denis96@gmail.com>
+
+On 2025/4/27 19:10, Manivannan Sadhasivam wrote:
+> On Wed, Apr 23, 2025 at 11:32:11PM +0800, Hans Zhang wrote:
+>> 1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+>> 2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+>> 3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
+>>
+>> ---
+>> Changes for v3:
+>> - Delete the redundant Spaces in the comments of patch 2/3.
+>>
+>> Changes for v2:
+>> - Add register annotations to enhance readability.
+>> - Use macro definitions instead of magic numbers.
+>>
+>> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+>>
+>> Bjorn Helgaas:
+>> These would be material for a separate patch:
+>>
+>> - The #defines for register offsets and bits are kind of a mess,
+>>    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+>>    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+>>    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+>>    names, and they're not even defined together.
+>>
+>> - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+>>    PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+>>
+>> - PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+>>    Sure wouldn't guess that from the names or the order of #defines.
+>>
+>> - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+>>
+>> - Submissions based on the following v5 patches:
+>> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+>> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+>> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+> 
+>> https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+> 
+> Because of *this* dependency, I couldn't apply this series. I'd suggest to
+> respin this series avoiding the above mentioned patch and just rebase on top of
+> controller/dw-rockchip branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
+
+Dear Mani,
+
+Thank you very much for your reply and suggestions. I have submitted the 
+V4 patch based on the controller/dw-rockchip branch. Please help merge 
+it. :)
+
+V4:
+https://patchwork.kernel.org/project/linux-pci/cover/20250427125316.99627-1-18255117159@163.com/
+
+Best regards,
+Hans
+
 
