@@ -1,125 +1,171 @@
-Return-Path: <linux-pci+bounces-26887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA4CDA9E41E
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 19:39:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02635A9E44E
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 21:08:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23788174060
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 17:39:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 082723AF4CA
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 19:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985F31DF26A;
-	Sun, 27 Apr 2025 17:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A919919DF8B;
+	Sun, 27 Apr 2025 19:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mj8FXkbf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRI5jv3+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0448F15530C
-	for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 17:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783A81F941;
+	Sun, 27 Apr 2025 19:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745775541; cv=none; b=pJedBWak/tlDE/dLt5f/V1JTdkI//mE6hBmsuiKSUn83oBgP0ylCLzOOXlDOier5bP+WADG8Y5MuvdGonZGZr/aRY3WdKxmJoBsnDKf3h4cAEH53LesQgJOjC2/4w8G+eY/Ic7D83lO9ScbxQbxsl1EpUjweob6+80973G6efHc=
+	t=1745780931; cv=none; b=nGs1i4XbYCgbxZaPNXdcmOcvluedp2gXPOSs59rkyd8c+Kk+3yChqkXz9VbZQdbr9xi9bkezhUD2LMDiWDQGhXE2Rl499atfBsv33daPBKGRDWdKMb5iiF1nOpiHF0unZvNgLwgfa5nM2rPcYlD1GXJaiKFzK+oLFuFVI5bryCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745775541; c=relaxed/simple;
-	bh=xlOkb+AA7EeoOdc+SBv2SlUBLZ444ktBXbA5itkBKrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mgFgJ5+FNjXxvcTu2vGH7wQTmnTahdQQbSBlUAUcMYNwfQUlZfngM5vPVI8tnuJ41oOX8YHGaeWOvh4xirfNj0ctZAYSgBgIwQx8a7lwIGbSL+E73un3M2pI/OAEfKl8Ag3Gp7X9PapV16gT1NMG9AIXXsMhWDWNNZbQUOLzOsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mj8FXkbf; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227914acd20so42374715ad.1
-        for <linux-pci@vger.kernel.org>; Sun, 27 Apr 2025 10:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745775539; x=1746380339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vQlOF7pnuoHcV4tUzU9FAAnsi+yiSpTmFNxdSuCGH2w=;
-        b=Mj8FXkbfunkSE18HhuzSHu4wNXue46L4eyK1um4fP0zZA+/wZIxQtCehMiy3k8HWK5
-         zTr6skiGx8KaOMWhEPCIcbZYvp4qWAS2N6hgeSf3J7hlEr6HphBMtXj40hClGxVe3PWi
-         2hyKdt4hg98/OceoiFc49UwHcVR++anQVqQ341lwGAKZVgfdjbz39dTyizOMXh8X2Pe4
-         h3kdal2AMuWC7EKs6GbcJt8XoHrxcni9W77GGcjb6tfmk/xQxNNk2UpEUTMBUa+VX6fc
-         Knm+RaCnAFhxW98wwbYvD4npZ2u0yQLpsdnm+QmFym2g4htklIQq8RhgIcpcn1TAENoj
-         LOuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745775539; x=1746380339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vQlOF7pnuoHcV4tUzU9FAAnsi+yiSpTmFNxdSuCGH2w=;
-        b=Nmh4hL8JDBwN997+ebjeC0k6s9gx7ANGLTivnfIrpjic46ZxNLQ9k/PfoxBnV0C1Y9
-         5Ibz7zHwc+xbslOv/CW8XwHx/fa1q44MZe044RHZcmaLu8hubOzEVTEzeLo58SXFMw/0
-         wqS2yFydNRJdHtjBQ4VhURNKttp+Hcbyz+L+/3OD0vpKm3Yau7WCut/x/YHIvTQAzVWW
-         OWQmxwO1gI13IFQDxWqBUNbEn3T0F9Y4itqFDt13fIFaTV1VvcU5HB96A2xFOVgclKOj
-         4zZltHiLMk74ZjWQKYP/ByoXG1fO46rnzqfj1Wdy5r/D6aiWgTP/QKw5wBiTGeTMTzJY
-         1Gsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGs5EAW9BYgpwrgCRPfN9LRmUZs3tbdiyhH/0iX2ifOzv3k85pF8vSY3mA+YNF/WyCs/FzmtfRskA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPxmxkQqcUW6mJ0zmgzarC5zebuVypcITbTciKYZaHmR2WWmCR
-	5VqKKswkv/8RhhmFkdJgFyzoaS1DcP4+js3ktL4HcUyjN3brmVf+p1qCV/WcZw==
-X-Gm-Gg: ASbGncsV1MVbjkorRDwoSNOLK/YOATiaOlZGF4ybt+Y2ps4DP5OL2BVRhI1BaEakzXM
-	+hb2FWBBFhO22o5SzbSeU5RBR+qXwSRBSut+Ajv+EebsiYAX8EgDPeO5B8mQRgqiSCZ28M44iFQ
-	Zg8hkF+gsnVld06r2shdihkMPBxKGV7B29Qh72cHsQOwfqpsRoAeT7F7ZwTQoTZP6/Saoi4TPdZ
-	TXzvZZrDjI9uH+MK1GuwpGcGG6XDf8B+kavkHeWXgrS2Innmrr6SsfGryjakpMMgmG5oOinIWsR
-	FYRk6xFDZ1GT4GcuR+mYPhX5kU/i/pKvGe1sIyuM8EC/oM+AuUVo
-X-Google-Smtp-Source: AGHT+IEU5IH9SCIsyt0qXj4mqk3Sr5u/bdn7eIkZRJYO1TNJJ8pz73ALG1a7lc4tKhheycKSRkIO8A==
-X-Received: by 2002:a17:902:d4c2:b0:220:ff82:1c60 with SMTP id d9443c01a7336-22db481b546mr195207145ad.14.1745775539333;
-        Sun, 27 Apr 2025 10:38:59 -0700 (PDT)
-Received: from thinkpad.. ([120.60.52.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbad7dsm66569285ad.60.2025.04.27.10.38.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 10:38:58 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Diederik de Haas <didi.debian@cknow.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Fix function call sequence in rockchip_pcie_phy_deinit
-Date: Sun, 27 Apr 2025 23:08:49 +0530
-Message-ID: <174577552237.92328.3418257212908173284.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250417142138.1377451-1-didi.debian@cknow.org>
-References: <20250417142138.1377451-1-didi.debian@cknow.org>
+	s=arc-20240116; t=1745780931; c=relaxed/simple;
+	bh=afv3Mgyi1BfkBpf0MStrpUY87jKDJnug026Jb+53Dmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2WkHurnr5eKe7DPT449jPaaJMK4pApszXF1Waf1KCb1UVf4CkB1zhrkHlaAMbm1f7dBKsWC6b1r2+dCbeLgtnDUFXfJdBISbXw5++/2IQni2YT2KUM3pm6CV1qgPOpqUGZkIVIVufiVThK3F/XUCGybgfz3FAeioOPz36pYOr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRI5jv3+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96781C4CEE3;
+	Sun, 27 Apr 2025 19:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745780930;
+	bh=afv3Mgyi1BfkBpf0MStrpUY87jKDJnug026Jb+53Dmw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dRI5jv3+R+XkkHJqTVPyGynT/8ucmcw5oB4wixNNn5MYXDhzgube+7PSbOhh62SxO
+	 vW6ICFGJW4U9SCawCu1XpZv2enitVdEwC7v4ef0Lxn3CWJKXhAA4Bj+0WQSJuVCUZj
+	 /iZdExKjvwYkiAz3ddlzVsKkCzDeWCNddmhd1apjsNQSEMdvY4xGNF0ldj3+IsxGkC
+	 koi+gzksl52E1xOqra1CMS5LT44nymzXiHPFa1YO9kK8UHJrKusrrECI+P0QC43aQr
+	 GbEju1ybSQrvy7jtA4Q+1gkpYLXfCl1irU+JdWH2F1oAoskxyOCJ2Zcq8jx2kpWrql
+	 E98+mwCN4ecfQ==
+Message-ID: <f39ae724-8f5b-4738-9308-995e68adfcf1@kernel.org>
+Date: Sun, 27 Apr 2025 21:08:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ Hans Zhang <hans.zhang@cixtech.com>, Conor Dooley <conor@kernel.org>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250425-drained-flyover-4275720a1f5a@spud>
+ <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+ <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
+ <DS0PR07MB10492178596F396BC1A52BE2FA2862@DS0PR07MB10492.namprd07.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <DS0PR07MB10492178596F396BC1A52BE2FA2862@DS0PR07MB10492.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 27/04/2025 05:55, Manikandan Karunakaran Pillai wrote:
+> work.
+>>>>>>>
+>>>>>>> Same applies to the other binding patch.
+>>>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
+>>>>>> soc-specific compatible for your integration not needed?
+>>>>>>
+>>>>> The sky1 SoC support patches will be developed and submitted by the
+>> Sky1
+>>>>> team separately.
+>>>> Why? Cixtech sent this patchset, they should send it with their user.
+>>>
+>>> Hi Conor,
+>>>
+>>> Please look at the communication history of this website.
+>>>
+>>> https://urldefense.com/v3/__https://patchwork.kernel.org/project/linux-
+>> pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F
+>> 8E1C.namprd07.prod.outlook.com/__;!!EHscmS1ygiU1lA!Gh-
+>> UeyTbbr2R3ocWWa4QZHM_GYBRXws7a5zc3lZvSy_XYVCkcg8mmeEaAWS4wEvI
+>> SMV2tGCEylE$
+>>
+>> And in that thread I asked for Soc specific compatible. More than once.
+>> Conor asks again.
+>>
+>> I don't understand your answers at all.
+> 
+> The current support is for the IP from Cadence.  There can be multiple SoC developed based on this IP and it is for
+> the SoC companies to build in support as and when the SoC support needs to be available.
+> 
+> Since the CIX SoC is available, it can be send together with this patch. 
+> However, I do not understand the need for  clubbing these in a single patch.
 
-On Thu, 17 Apr 2025 16:21:18 +0200, Diederik de Haas wrote:
-> The documentation for the phy_power_off() function explicitly says
-> 
->   Must be called before phy_exit().
-> 
-> So let's follow that instruction.
-> 
-> 
-> [...]
+No one asks for this. The point is such IP blocks are usually customized
+per SoC this generic compatibles are not enough. That's the argument
+here, not whether you can have multiple vendors (we all know this,
+imagine we know Cadence, Synopsys etc) or whether you want to combine
+here Cix or not. Answer rather how much software interface is compatible
+or common between different implementations.
 
-Applied, thanks!
-
-[1/1] PCI: dw-rockchip: Fix function call sequence in rockchip_pcie_phy_deinit
-      commit: 286ed198b899739862456f451eda884558526a9d
+... AND even then you always need soc specific compatible. See writing
+bindings for the reason (or any other tutorial/guide/speech about
+writing bindings).
 
 Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Krzysztof
 
