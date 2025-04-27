@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-26856-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26857-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D2F1A9E264
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 12:13:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40861A9E270
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 12:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7849189F100
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 10:13:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDEF57A80FE
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Apr 2025 10:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB852405E5;
-	Sun, 27 Apr 2025 10:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CA222172E;
+	Sun, 27 Apr 2025 10:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udUSNP0I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KroMEyYh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E61ABEC5;
-	Sun, 27 Apr 2025 10:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19691C54A2;
+	Sun, 27 Apr 2025 10:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745748798; cv=none; b=bFOK8Q2vkFcXYPKZXRlqdn6HucFUpPRF+C24MDdyb2C3m0TZrxUPIvPzLeNNWy1D2tBCNlN55VjypoWzRnIrLAEiRZPqoG+gmiz8ffqm2nUcIuMz1j2Y4Uw9CtxfpbeEJbKd1PxNLvehLlkM6FZY10r0gguC+qVqch0mHcqqAak=
+	t=1745749214; cv=none; b=EXsoBEXRY5flzInyX/gnVsCZ1l9XzJpfu1oE/0QXqI+o/4Eiwm2tJAdFr3vryklk8e9YG5s+BTheJc2CFrAMeYl26+PRyQloNl2QwM4DdApr3vUTi0Ic+Gid4yzy4xswgk1ELV1/RcB03w20J9RPkvP4rF/hnPgmAZOE0iH99KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745748798; c=relaxed/simple;
-	bh=yegWmCWPr2oBxNhpO1pLh+k+JNbNoD8FKo7GQBRmCuA=;
+	s=arc-20240116; t=1745749214; c=relaxed/simple;
+	bh=rO9yvrRMS4fVoUd43WSIQgQh+yAB8RwSauej7gzYZlg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxJ22+zNYkDW6isSR2dNs2H7c4SWyG00GFGvBHMI2AjyPStFVAOuxHTM+XXnYSmnvgow8k5CunuFyNcXR4b+ExlAPWcZbq0/9oX09hsnG0+7aCBa1Gwx10JpiYGoQYiucrU/gOtxogDuqOKvnjZXMnPNxFkzzW5Cn9pn+Dk2bo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udUSNP0I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905FEC4CEE3;
-	Sun, 27 Apr 2025 10:13:11 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2qkpRxxcZ7JVSsc4IVZG40TxDZnX5FW5YI+mCi486UWmdmr6XgSoj3YBgRV6UhrCdWg8TQJgTPjlVDUlY/8vS7mZ++KlOR4ohUsaI6U8BxpZKQa+SWCtzxVDY4jrcBa0L+GrSI+k9AketdGXrFP0oT+ACMt+jEo47qyczW0Yfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KroMEyYh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FBDC4CEE3;
+	Sun, 27 Apr 2025 10:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745748796;
-	bh=yegWmCWPr2oBxNhpO1pLh+k+JNbNoD8FKo7GQBRmCuA=;
+	s=k20201202; t=1745749214;
+	bh=rO9yvrRMS4fVoUd43WSIQgQh+yAB8RwSauej7gzYZlg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=udUSNP0IT8mcewRV2I8tuq9DP95xYgTlZ7nt+etgUFssGHTIMXDnKCRuAjv6sxKbq
-	 MkFWDdM1bWjKLAYoqeqDqxnDw4NJXs3rVA0iFw1YRewHpCYmO7RwPci+IDD2nCr/vj
-	 cI++n+TrL7q7SKO5vTKyconTFptAEzbVto57W2cwBLDD9y+dNr0QLgjvR6cHT6EXxS
-	 264GbpV6Xwk1W4QinDdw5kweYwCRClDl677vTXzRL+6CIXk2dOHtc0O+TjUxB0CcRN
-	 OuAaayF1Zrtw1TdS2B3YjBJXlXf8jUZ1f+L7U92+KULcGWSHioEKU/2X8Q+UPODJbl
-	 gwwCBC5hs6rxA==
-Date: Sun, 27 Apr 2025 12:13:08 +0200
+	b=KroMEyYhTOKykzhhb+Mhkp4qgOVKnwYCGdPx8IkZfCq99k0ZzBwOMW1KbePtWAIND
+	 E/1FznEWwXH1reWBIwWERTzEJi5CyWOvuaE1ixw8Ys2iIs5vhiWnkcWeQXb1kjRr83
+	 fDb/q+Wsj0IuCGSgGDkvTBKp09WUe/YkdRE105075hrrwE/kl7WtkQn7wiVE8pI4/d
+	 3/oW+oJ1ApsQ4TywKjOjjrPw/LBvvkauA++DlW1YbDPtdKOxo2aL4J1QsKqUp7KgkJ
+	 ZXazzyg9IBI1KGAttQtdrrlg/UckH8xt8fukEGnobsO0pzuMHRvhFp3S2+Or8pRh2u
+	 ZOLolzdwRVV/g==
+Date: Sun, 27 Apr 2025 12:20:06 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Benno Lossin <benno.lossin@proton.me>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -52,9 +52,14 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
 	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
-Message-ID: <aA4DNEHgrKMmzxBP@pollux>
-References: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me>
+Subject: Re: [PATCH 3/3] samples: rust: pci: take advantage of
+ Devres::access_with()
+Message-ID: <aA4E1itCT7RczSD6@pollux>
+References: <20250426133254.61383-1-dakr@kernel.org>
+ <20250426133254.61383-4-dakr@kernel.org>
+ <D9GUSVZY3ZT7.O3RTG4N0ZIK0@proton.me>
+ <aA1PjHrG4yT7XpCI@pollux>
+ <D9HAO06XMT9X.1NL63T3GBQG7B@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,77 +68,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me>
+In-Reply-To: <D9HAO06XMT9X.1NL63T3GBQG7B@proton.me>
 
-On Sun, Apr 27, 2025 at 08:37:00AM +0000, Benno Lossin wrote:
-> On Sat Apr 26, 2025 at 11:18 PM CEST, Danilo Krummrich wrote:
-> > On Sat, Apr 26, 2025 at 08:24:14PM +0000, Benno Lossin wrote:
+On Sun, Apr 27, 2025 at 08:56:29AM +0000, Benno Lossin wrote:
+> On Sat Apr 26, 2025 at 11:26 PM CEST, Danilo Krummrich wrote:
+> > On Sat, Apr 26, 2025 at 08:30:39PM +0000, Benno Lossin wrote:
 > >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
-> >> > Implement an unsafe direct accessor for the data stored within the
-> >> > Revocable.
-> >> >
-> >> > This is useful for cases where we can proof that the data stored within
-> >> > the Revocable is not and cannot be revoked for the duration of the
-> >> > lifetime of the returned reference.
+> >> > For the I/O operations executed from the probe() method, take advantage
+> >> > of Devres::access_with(), avoiding the atomic check and RCU read lock
+> >> > required otherwise entirely.
 > >> >
 > >> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > >> > ---
-> >> > The explicit lifetimes in access() probably don't serve a practical
-> >> > purpose, but I found them to be useful for documentation purposes.
-> >> > ---
-> >> >  rust/kernel/revocable.rs | 12 ++++++++++++
-> >> >  1 file changed, 12 insertions(+)
+> >> >  samples/rust/rust_driver_pci.rs | 12 ++++++------
+> >> >  1 file changed, 6 insertions(+), 6 deletions(-)
 > >> >
-> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> >> > index 971d0dc38d83..33535de141ce 100644
-> >> > --- a/rust/kernel/revocable.rs
-> >> > +++ b/rust/kernel/revocable.rs
-> >> > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
-> >> >          self.try_access().map(|t| f(&*t))
-> >> >      }
+> >> > diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+> >> > index 9ce3a7323a16..3e1569e5096e 100644
+> >> > --- a/samples/rust/rust_driver_pci.rs
+> >> > +++ b/samples/rust/rust_driver_pci.rs
+> >> > @@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
+> >> >              GFP_KERNEL,
+> >> >          )?;
 > >> >  
-> >> > +    /// Directly access the revocable wrapped object.
-> >> > +    ///
-> >> > +    /// # Safety
-> >> > +    ///
-> >> > +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
-> >> > +    /// for the duration of `'a`.
+> >> > -        let res = drvdata
+> >> > -            .bar
+> >> > -            .try_access_with(|b| Self::testdev(info, b))
+> >> > -            .ok_or(ENXIO)??;
+> >> > -
+> >> > -        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n", res);
+> >> > +        let bar = drvdata.bar.access_with(pdev.as_ref())?;
 > >> 
-> >> Ah I missed this in my other email, in case you want to directly refer
-> >> to the lifetime, you should keep it defined. I would still remove the
-> >> `'s` lifetime though.
-> >> > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
-> >> > +        // SAFETY: By the safety requirement of this function it is guaranteed that
-> >> > +        // `self.data.get()` is a valid pointer to an instance of `T`.
-> >> 
-> >> I don't see how the "not-being revoked" state makes the `data` ptr be
-> >> valid. Is that an invariant of `Revocable`? (it's not documented to have
-> >> any invariants)
+> >> Since this code might inspire other code, I don't think that we should
+> >> return `EINVAL` here (bubbled up from `access_with`). Not sure what the
+> >> correct thing here would be though...
 > >
-> > What else makes it valid?
+> > I can't think of any other error code that would match better, EINVAL seems to
+> > be the correct thing. Maybe one could argue for ENODEV, but I still think EINVAL
+> > fits better.
 > 
-> IMO an `# Invariants` section with the corresponding invariant that
-> `data` is valid when `is_available` is true.
+> The previous iteration of the sample used the ENXIO error code.
 
-Yeah, I agree that the # Invariants section is indeed missing and should be
-fixed.
+Yes, because the cause of error for try_access_with() failing would have been
+that the device was unbound already, hence a different error code.
 
-> > AFAICS, try_access() and try_access_with_guard() argue the exact same way,
-> > except that the reason for not being revoked is the atomic check and the RCU
-> > read lock.
+> In this sample it should be impossible to trigger the error path. But
+> others might copy the code into a context where that is not the case and
+> then might have a horrible time debugging where the `EINVAL` came from.
+
+I think it should always pretty unlikely design wise to supply a non-matching
+device.
+
+> I don't know if our answer to that should be "improve debugging errors
+> in general" or "improve the error handling in this case". I have no
+> idea how the former could look like, maybe something around
+> `#[track_caller]` and noting the lines where an error was created? For
+> the latter case, we could do:
 > 
-> Just because other code is doing the same mistake doesn't make it
-> correct. If I had reviewed the patch at that time I'm sure I would have
-> pointed this out.
+>     let bar = match drvdata.bar.access_with(pdev.as_ref()) {
+>         Ok(bar) => bar,
+>         Err(_) => {
+>             // `bar` was just created using the `pdev` above, so this should never happen.
+>             return Err(ENXIO);
 
-I would say that try_access() and try_access_with_guard() are wrong, they rely
-on the correct thing, we just missed documenting the corresponding invariant.
+If the caller really put in a non-matching device we can't say for sure that the
+cause is ENXIO, the only thing we know is that the code author confused device
+instances, so I think EINVAL is still the correct thing to return.
 
-> I opened an issue about this:
-> 
->     https://github.com/Rust-for-Linux/linux/issues/1160
-
-Thanks for creating the issue!
-
-What do you suggest for this patch?
+The problem that it might be difficult to figure out the source of the error
+code has always been present in the kernel, and while I'm not saying we
+shouldn't aim for improving this, I don't think this patch is quite the place
+for this.
 
