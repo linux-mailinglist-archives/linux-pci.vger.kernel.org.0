@@ -1,155 +1,123 @@
-Return-Path: <linux-pci+bounces-26928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F984A9EC8D
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 11:37:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBAC5A9F08A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:23:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D27993BB206
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 09:35:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4511E4600C7
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 12:23:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9047E27A91E;
-	Mon, 28 Apr 2025 09:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F2F267B99;
+	Mon, 28 Apr 2025 12:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyqXQ6VB"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkhNkodw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NFq8vrNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E460263F5B;
-	Mon, 28 Apr 2025 09:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D69263F49;
+	Mon, 28 Apr 2025 12:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832261; cv=none; b=SbuMfK4cuBLLMFvJXVUEdxf/SS3ZR3KTIVaKlyIiWwSkxavAomECMr0nhKQZN1LrymyX1wsfhjq4OFyj3Z/dV4l5VvQH7OrxH/uAogznHZdI2kv3KTLPZEj1PWgmNdbm+6CoKYDPwWkJSytj1yFrHsuYjG/L7LGIB7IAW3nRb7E=
+	t=1745842982; cv=none; b=erwAzm0dI0OCtgk7/4a/7cu1Tdv+vQMA4K8N2mfjoM4rLeHf1vFOkybAzY6LpAKcgpsgaKaFlmf4vq+MBHZeRG9ZwEI2MxnLtv2zYs+NvVojg2Psi+HYeWH/EY+bkGraycBswMKoUW/wZX+C4hYbELsK6vN7imbwURrq+0a+2/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832261; c=relaxed/simple;
-	bh=JltzEs94lpehyHx6nl6wHRaPQKIRgU/HyWicrIFjUro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i8mbF1sFmXl/wShn023sj+q8DSPUPUqTZFh2MVY76MzhYChzQFbhXXuHHbW9mOI4krua6MxY2p5sHGOxjRm+c1RIloccEAHExXMxgEz/i9D3zJVuBq0bgRkzXoECHhj99A5NrFlH1nWiRtX5OJjhmh6gwdls6GqekVyivY6I2KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyqXQ6VB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C09AC4CEE4;
-	Mon, 28 Apr 2025 09:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745832260;
-	bh=JltzEs94lpehyHx6nl6wHRaPQKIRgU/HyWicrIFjUro=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DyqXQ6VBPGUV60WqF+uTbZzXAsUAIJ9C1BCb2KV9m8F42ozYCzXInlnKQFxIS2b36
-	 s+SctZer4F7Q5NkzQQld7WJZo9qsmkj9svarVHnHcf2ojzaBTAeBo4/HXSAAYmAED9
-	 0xAI51RXFcaNAViqGFTvgw71I5NRyjdQoBDcESxnGQBEZOfbe7wMnLan2Z1+J+qRj+
-	 8OEN5Dl/+rgO5hpebjkaj1SMCY1/3eRJ/TzmFUnFCx9NWXXoE71dQT6bHrYlzaqCDj
-	 cQfDk5LtjtwfeRrBMl5iLWmlcl+SqiMKCEXYnYeUEY8YsO01MnQzVcNjFdveNAbkls
-	 vBmDT0QLSZCQA==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v10 24/24] nvme-pci: store aborted state in flags variable
-Date: Mon, 28 Apr 2025 12:22:30 +0300
-Message-ID: <ef01afea04a2aca3217ce1b52ec99bcd80e99f00.1745831017.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745831017.git.leon@kernel.org>
-References: <cover.1745831017.git.leon@kernel.org>
+	s=arc-20240116; t=1745842982; c=relaxed/simple;
+	bh=qu645lgNZlFFzG0htqALVnBK1i71+x8/vctlUfK0K+M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KEV5rDtGylNZadt3kTzkz+JJ/tHEO6LKH4vpa1+ftqIvgAS0XTlpSxIfMTHKSVK9ib8YDzTYiS5UDfh5AzgaesCSky/rvlwhazD55b6wmV/v9ePWBUNPPQihbmT2pxxyET8nH4eCDswiiN1wwwU0EKpuYOg9HolaFztTnmXZjm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pkhNkodw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NFq8vrNV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745842978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
+	b=pkhNkodwO4KW67rRMrgKHj8goQcEjLfSkdCc5rgJ+k/ImFFmmRMDNJEZ3fG2y/3RgjJAG8
+	A5IX/fR4cVAZmRogZ1ZH+O+vTWtRJcxBBsHVk8Kd3GrgFndTXJagY9PJsbDoJxNVAOgEpm
+	yXeq4NSQ2euBkVK/y44Gefnsd1LozszWF1YDpok/kKW5+sbejD/Bof/FVk5YAN4nKknOEr
+	1RP0cTuahcxrFMijTXukp7M2R6pDrO4zco/0B6GtpxoxBjE220VdpEBg8rTKiTpvARujQm
+	0aDDIpBbal5EMqSzNvWLWukfGCJ/pfW2muskJQhZhvvRMEgTFg2YZbxY92M5Lg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745842978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
+	b=NFq8vrNVQP+PQ/rGE0c7BJnVMM38KGRo7gMhYmSerEMU6XlRBeoXKuwgnzHdckRs5fHmGR
+	ol0CKgEM1LjXlTAQ==
+To: Bjorn Helgaas <helgaas@kernel.org>, Shradha Gupta
+ <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury
+ Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan
+ Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring
+ <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
+ Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+ <peterz@infradead.org>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>, Shradha
+ Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
+ MSI-X alloc
+In-Reply-To: <20250425163748.GA546623@bhelgaas>
+References: <20250425163748.GA546623@bhelgaas>
+Date: Mon, 28 Apr 2025 14:22:57 +0200
+Message-ID: <87ldrkqxum.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Fri, Apr 25 2025 at 11:37, Bjorn Helgaas wrote:
 
-Instead of keeping dedicated "bool aborted" variable, let's reuse
-newly introduced flags variable and save space.
+Subject prefix wants to be PCI/MSI
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/nvme/host/pci.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+  git log --format=oneline path/to/file
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index eb835425b496..9f3e2d8cbd04 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -219,6 +219,7 @@ struct nvme_queue {
- enum {
- 	IOD_LARGE_DESCRIPTORS = 1 << 0, /* uses the full page sized descriptor pool */
- 	IOD_SINGLE_SEGMENT = 1 << 1, /* single segment dma mapping */
-+	IOD_ABORTED = 1 << 2, /* abort timed out commands */
- };
- 
- /*
-@@ -227,7 +228,6 @@ enum {
- struct nvme_iod {
- 	struct nvme_request req;
- 	struct nvme_command cmd;
--	bool aborted;
- 	u8 nr_descriptors;	/* # of PRP/SGL descriptors */
- 	u8 flags;
- 	unsigned int total_len; /* length of the entire transfer */
-@@ -1027,7 +1027,6 @@ static blk_status_t nvme_prep_rq(struct nvme_dev *dev, struct request *req)
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	blk_status_t ret;
- 
--	iod->aborted = false;
- 	iod->nr_descriptors = 0;
- 	iod->flags = 0;
- 	iod->total_len = 0;
-@@ -1576,7 +1575,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req)
- 	 * returned to the driver, or if this is the admin queue.
- 	 */
- 	opcode = nvme_req(req)->cmd->common.opcode;
--	if (!nvmeq->qid || iod->aborted) {
-+	if (!nvmeq->qid || (iod->flags & IOD_ABORTED)) {
- 		dev_warn(dev->ctrl.device,
- 			 "I/O tag %d (%04x) opcode %#x (%s) QID %d timeout, reset controller\n",
- 			 req->tag, nvme_cid(req), opcode,
-@@ -1589,7 +1588,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req)
- 		atomic_inc(&dev->ctrl.abort_limit);
- 		return BLK_EH_RESET_TIMER;
- 	}
--	iod->aborted = true;
-+	iod->flags |= IOD_ABORTED;
- 
- 	cmd.abort.opcode = nvme_admin_abort_cmd;
- 	cmd.abort.cid = nvme_cid(req);
--- 
-2.49.0
+gives you a pretty decent hint
 
+
+
+> On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
+>> For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
+>> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+>> to prepare the desc is also needed.
+
+Please write things out: ... to prepare the MSI descriptor ....
+
+This is not twitter.
+
+>> Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
+>> MSI-X vector allocation.
+>> 
+>> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+>> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+
+> Thanks for the update and for splitting this from the hv driver
+> update.  Will watch for Thomas's ack here.
+
+Other than that:
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
