@@ -1,149 +1,121 @@
-Return-Path: <linux-pci+bounces-26894-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26895-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D45AA9E7B9
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 07:22:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53ED8A9E8F8
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 09:14:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ADB816FECA
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 05:22:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 762373B69E6
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 07:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B03C419CD17;
-	Mon, 28 Apr 2025 05:22:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAAEA1D63C5;
+	Mon, 28 Apr 2025 07:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LQF4LCPc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4NQSVEk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B86211C;
-	Mon, 28 Apr 2025 05:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770E71D514E;
+	Mon, 28 Apr 2025 07:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745817774; cv=none; b=ZOiU5ecO1FdIQWUP3UeMXmKvP1KzDxLm90aVSN0TZEQ/D/m1ol4A6CSdzZn8U7ADq1EwCjVtMlJrqirHDtvCJgDOliprO17CjPzw5LcNFREj4Gidq1jCZzy+2aKEwKTJ+qt70tM/DVwSZjs0qiTKAXEoIguoEmkW9mz57B40SLc=
+	t=1745824487; cv=none; b=AQWXw5NSVU0iZDO6Yc60XPvcBle8AJCA+F1BDUi4hNod1rso2e/yu3B4M9Wh8Olt085L3dKoQuEGNgI9SedTOSJgzvXx+kdwECxqG9coYvhRwyEKTVZZK/i8PeUpaVzQgBOo7wR0HOJ2RSBaTNVRbjA1NGCRWTap8JMDUhQoPdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745817774; c=relaxed/simple;
-	bh=jtSfhfb2ioHRWbZWT+63t8YNhpIBQ0ZhuuyyvWSeItU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irSXyeqWFYq7Xginagk2wMLXinOoWTyhtoHVzLVUa1SNR5utabb3zCwKdA0e1HC3ROfKKkclY2w2BsJJLzxw2ZJZwfBpbXbkhQaZxdkXHc9hdNNLpEL3jQvWe6OEv75FRt9dApo9M/4zBZt7PTyg5n1LDbu2BPBc3Rx3VgpC7vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LQF4LCPc; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 76598204E7CD; Sun, 27 Apr 2025 22:22:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76598204E7CD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745817772;
-	bh=D2m/5uVeF+LrzPXcvVJrndC9Z3eMXkYAhDUqE9KBCms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LQF4LCPcjReWNzV+bzz1eNshSYLiTWAb4Bv7KVnG7soq9x3lFuOzujz6HJzvw2Lap
-	 2Q6CS1WFf4WY5QuuzXjaH9h/WUC1HhQ7ldCXjmqql8bA/UJrywf+EyqyF+dA63w1I7
-	 VWUpC+XWaUvlyyIrfpHHFEjak/SlPV8R+rGK+124=
-Date: Sun, 27 Apr 2025 22:22:52 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
- MSI-X alloc
-Message-ID: <20250428052252.GA31705@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745578437-14878-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250425163748.GA546623@bhelgaas>
+	s=arc-20240116; t=1745824487; c=relaxed/simple;
+	bh=Bzv1ncWrZjgkqy6XnIMS5/4bommgSxaGXnH8i64OXYk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bP/aklkV8up0/Oyijshjn9AAFdeooIeMlc8peeX95bLNMwQn0OScrP9iFHHWZsdvSbGFovHCk1imPNPUgY47QLeK8LrE9Ea+kamHnLL0Q3avaOlbnWrrmvAJXzcGyEj91OdCNhnWkUBRh/H6VF7j7eK8TJ1yaZgtzVn4tyk79tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4NQSVEk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 601B2C4CEE4;
+	Mon, 28 Apr 2025 07:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745824487;
+	bh=Bzv1ncWrZjgkqy6XnIMS5/4bommgSxaGXnH8i64OXYk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=r4NQSVEksO3YmPYu/shJOPfU0zsD1qENe6qf71KvNgY9PINe/DYhnHzd81bPUYYmH
+	 LMfg0cQCDnryLskd8OeY94gUhJqtsiiZQJqtDEYSeUG7fbE5v7mM/EeAcWoseTpKsA
+	 ycShJ8XzJlX6DzBa0WzVrOAiJnCzm55qflEb/GhDw5Whs5Fd4BJw9aNxmGvHTx3UC0
+	 n1EW6ZG7eQyixX0ZXcr9pFxjrWLf5rs3i+BO1HeulRu5MWmIWiZW7cs+Kb7Ru7TSSI
+	 3o21mvezkCIsddByZVdCHKabnV1bd40qQvAQsngTBgFqU+iuOZVVo7MYZMD96s4bLW
+	 KB9dKnazS4csg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Matthew Wilcox"
+ <willy@infradead.org>,  "Bjorn Helgaas" <bhelgaas@google.com>,  "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  "FUJITA Tomonori" <fujita.tomonori@gmail.com>,  "Rob
+ Herring (Arm)" <robh@kernel.org>,  "Tamir Duberstein" <tamird@gmail.com>,
+  =?utf-8?Q?Ma=C3=ADra?= Canal <mcanal@igalia.com>,  "Asahi Lina"
+ <lina@asahilina.net>,
+  <rust-for-linux@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v19 0/3] rust: xarray: Add a minimal abstraction for XArray
+In-Reply-To: <87ldrl4mwp.fsf@kernel.org> (Andreas Hindborg's message of "Sun,
+	27 Apr 2025 17:57:58 +0200")
+References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
+	<174569693396.840230.8180149993897629324.b4-ty@kernel.org>
+	<-4ES_myfpiIqBRA27qXi1g19UfFVV7HMTi9wB6PA5Zs-yv3UgTg3Rnq5nnUiNWz9b1cnux0LNB7K_0t-49B7Pg==@protonmail.internalid>
+	<aA5Bp3Psj7yWg9wu@pollux> <87ldrl4mwp.fsf@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Mon, 28 Apr 2025 09:14:34 +0200
+Message-ID: <87cycw4v1h.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425163748.GA546623@bhelgaas>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 11:37:48AM -0500, Bjorn Helgaas wrote:
-> On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
-> > For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
-> > the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
-> > to prepare the desc is also needed.
-> > 
-> > Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
-> > MSI-X vector allocation.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> Thanks for the update and for splitting this from the hv driver
-> update.  Will watch for Thomas's ack here.
-> 
-> For future postings, you might consider limiting the "To:" line to
-> people you expect to actually act on the patch, and moving the rest to
-> "Cc:".
+Andreas Hindborg <a.hindborg@kernel.org> writes:
 
-Thanks Bjorn, Noted.
-> 
-> > ---
-> >  drivers/pci/msi/irqdomain.c | 5 +++--
-> >  include/linux/msi.h         | 2 ++
-> >  2 files changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-> > index d7ba8795d60f..43129aa6d6c7 100644
-> > --- a/drivers/pci/msi/irqdomain.c
-> > +++ b/drivers/pci/msi/irqdomain.c
-> > @@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
-> >  	pci_msix_unmask(irq_data_get_msi_desc(data));
-> >  }
-> >  
-> > -static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > -				  struct msi_desc *desc)
-> > +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > +			   struct msi_desc *desc)
-> >  {
-> >  	/* Don't fiddle with preallocated MSI descriptors */
-> >  	if (!desc->pci.mask_base)
-> >  		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
-> >  }
-> > +EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
-> >  
-> >  static const struct msi_domain_template pci_msix_template = {
-> >  	.chip = {
-> > diff --git a/include/linux/msi.h b/include/linux/msi.h
-> > index 86e42742fd0f..d5864d5e75c2 100644
-> > --- a/include/linux/msi.h
-> > +++ b/include/linux/msi.h
-> > @@ -691,6 +691,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
-> >  					     struct irq_domain *parent);
-> >  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
-> >  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-> > +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > +			   struct msi_desc *desc);
-> >  #else /* CONFIG_PCI_MSI */
-> >  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
-> >  {
-> > -- 
-> > 2.34.1
-> > 
+> "Danilo Krummrich" <dakr@kernel.org> writes:
+>
+>> On Sat, Apr 26, 2025 at 09:48:53PM +0200, Andreas Hindborg wrote:
+>>>
+>>> On Wed, 23 Apr 2025 09:54:36 -0400, Tamir Duberstein wrote:
+>>> > This is a reimagining relative to earlier versions[0] by Asahi Lina a=
+nd
+>>> > Ma=C3=ADra Canal.
+>>> >
+>>> > It is needed to support rust-binder, though this version only provides
+>>> > enough machinery to support rnull.
+>>> >
+>>> >
+>>> > [...]
+>>>
+>>> Applied, thanks!
+>>>
+>>> [1/3] rust: types: add `ForeignOwnable::PointedTo`
+>>>       commit: a68f46e837473de56e2c101bc0df19078a0cfeaf
+>>> [2/3] rust: xarray: Add an abstraction for XArray
+>>>       commit: dea08321b98ed6b4e06680886f60160d30254a6d
+>>> [3/3] MAINTAINERS: add entry for Rust XArray API
+>>>       commit: 1061e78014e80982814083ec8375c455848abdb4
+>>
+>> I assume this went into xarray-next? If so, you probably want to adjust =
+the
+>> MAINTAINERS entry accordingly.
+>
+> Yes, thanks for catching that. I'm very much in the learning phase
+> still.
+>
+
+I changed the branch to `xarray-rust` on my side.
+
+
+Best regards,
+Andreas Hindborg
+
+
+
 
