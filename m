@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-26938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 719C1A9F30B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 16:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88D0DA9F30E
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 16:02:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DD5A3B4250
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:01:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFECD3B9EA1
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:01:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792EB20CCC8;
-	Mon, 28 Apr 2025 14:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D809E26C387;
+	Mon, 28 Apr 2025 14:01:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNvwuZpN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="id8IA0JP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9AB156677;
-	Mon, 28 Apr 2025 14:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2B826B2D6;
+	Mon, 28 Apr 2025 14:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848911; cv=none; b=a7VbXOOEeYkiYI10droMmNxm0OKL0xhfKPyWbjvQ6fZx9IsqEijvRXQamgMNvnDJV2ybhEgxQtk1nPRpPjf756zsezuObzX5pNb6VBQf75vokMPu1She5aZGWLOdtgDkGemn6T+PMEhePklLHUUyqYcIqSZvi+68HOmrPHmQzn0=
+	t=1745848917; cv=none; b=Svaj77cY0GO+eerR+8T9pbo59mKaxCmU9vRWCyQvkj422cxNY02U9ZqT+c/vvG5hjedXTsx9Z6NfvS52Se16ZRbUo28guLdpWKv/LtDGxIzXWNEsJX4tGnCZ2VPhfzjIhPsXf9c3Jk4xET5VcBbTDfpbXAS3bI/Rlu/J8LLKE7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848911; c=relaxed/simple;
-	bh=CUjbBsKsU/IXjZc/+tfdQ4SEXR2i4Xv3hgob/3UPMOY=;
+	s=arc-20240116; t=1745848917; c=relaxed/simple;
+	bh=5M8AWy35CAncMHrQE1PZU5bOW2RDloVLDLoTAFvZ3MA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5rM9Oxlrry5oHEH/W2OjXux5KVkpNPdsQ/JRpr+KydlUDUuUGwdNNSFoI/r5Z6jPINn7j4jyJntSl5lRbg7yNbClh4EQlcHxq1yn5s2PON7h2VDwBLLgW79/jkGY7YyGerfRlLHwGfGwgaR09DjMIvj6PlvNXcmhkGWttYVdwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNvwuZpN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B97C4CEEA;
-	Mon, 28 Apr 2025 14:01:45 +0000 (UTC)
+	 MIME-Version; b=aO6HIAtZxR08d+u6626yNKEoFWY6RMiZHI2eVhpbi2x5yGah//LytTqk2NYV7QLoOCGHi9cy7mBHGZ9TeuKYIkz6dfA0gbAyfT874D1YdKRV07H+dNzCsP/zEU12xOs+8SN94GS6CJyG1g7mB2CwRAsI0B9M1CGmWN2+fK7suXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=id8IA0JP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D5DC4CEE4;
+	Mon, 28 Apr 2025 14:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745848910;
-	bh=CUjbBsKsU/IXjZc/+tfdQ4SEXR2i4Xv3hgob/3UPMOY=;
+	s=k20201202; t=1745848916;
+	bh=5M8AWy35CAncMHrQE1PZU5bOW2RDloVLDLoTAFvZ3MA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mNvwuZpNdykQnyVoSxc1MCSSI7Y7ycTKp33Zzt5HnYlYQ6RQc+t94MNAY7ItWkwm/
-	 2pL9oaAofETHZzPCQe9wr1IAc30+waQW6caJB1Bt8Ee4gCLNAasyxsfxJ5D+j4a5I9
-	 6RTo4Io0NvyBGSMyVkyIyp6JAIsGW4aiiWGVSkjcgZZM5LIWW6TGZRmxJ2cHiy58O8
-	 UPa1t/+tqUaeNkK+YaOh8Ppuuu7q6DT82mlxKfCq/FK7Z5NQ//6wWrt5GculsCPtyD
-	 2ftcFl+uSCMwxzZHXwBfFRYMCxwbOHHRjWwvIOieqczikakCouhhM6twMlreDrGhiU
-	 RKc1NjtPMCA1A==
+	b=id8IA0JP+++5cZz4RIVLAbb1dShoh3Nm0GaSCXncUuOVlz81ErC1HXtWd+Suk1g9m
+	 HUE3DDZ1Vw8xb/XR3aNaFc9YISQ14Jg7fliGaSF2AGIkM1fQYzi21XkNOxH7e2/p1O
+	 z/0HHzMrsepWG7+j3Vwt0+zcN92e7CLHkCzPeEHmRmZPA4AibqWiD5gEe1i3SISbc1
+	 7hPcfWcbq7NuLDiflZLAe5JE0lKZ05i0f+rNN67oHR7p8CsS8EuRIzO+NrmWkB7QB8
+	 HJRwbQej3AV021hXQfjzU0Ih41DqT4Ms6A5oYHOj+Fo4k2Dcrtr45sYs68h1gognBc
+	 gMuSy/53r/HgQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -68,9 +68,9 @@ Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>,
 	Christian Schrefl <chrisi.schrefl@gmail.com>
-Subject: [PATCH v2 1/3] rust: revocable: implement Revocable::access()
-Date: Mon, 28 Apr 2025 16:00:27 +0200
-Message-ID: <20250428140137.468709-2-dakr@kernel.org>
+Subject: [PATCH v2 2/3] rust: devres: implement Devres::access_with()
+Date: Mon, 28 Apr 2025 16:00:28 +0200
+Message-ID: <20250428140137.468709-3-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
 References: <20250428140137.468709-1-dakr@kernel.org>
@@ -82,43 +82,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement an unsafe direct accessor for the data stored within the
-Revocable.
+Implement a direct accessor for the data stored within the Devres for
+cases where we can prove that we own a reference to a Device<Bound>
+(i.e. a bound device) of the same device that was used to create the
+corresponding Devres container.
 
-This is useful for cases where we can prove that the data stored within
-the Revocable is not and cannot be revoked for the duration of the
-lifetime of the returned reference.
+Usually, when accessing the data stored within a Devres container, it is
+not clear whether the data has been revoked already due to the device
+being unbound and, hence, we have to try whether the access is possible
+and subsequently keep holding the RCU read lock for the duration of the
+access.
+
+However, when we can prove that we hold a reference to Device<Bound>
+matching the device the Devres container has been created with, we can
+guarantee that the device is not unbound for the duration of the
+lifetime of the Device<Bound> reference and, hence, it is not possible
+for the data within the Devres container to be revoked.
+
+Therefore, in this case, we can bypass the atomic check and the RCU read
+lock, which is a great optimization and simplification for drivers.
 
 Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/revocable.rs | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ rust/kernel/devres.rs | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-index 971d0dc38d83..db4aa46bb121 100644
---- a/rust/kernel/revocable.rs
-+++ b/rust/kernel/revocable.rs
-@@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
-         self.try_access().map(|t| f(&*t))
-     }
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 1e58f5d22044..cf6fc09b2c05 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -181,6 +181,44 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
  
-+    /// Directly access the revocable wrapped object.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
-+    /// as long as the returned `&T` lives.
-+    pub unsafe fn access(&self) -> &T {
-+        // SAFETY: By the safety requirement of this function it is guaranteed that
-+        // `self.data.get()` is a valid pointer to an instance of `T`.
-+        unsafe { &*self.data.get() }
-+    }
+         Ok(())
+     }
 +
-     /// # Safety
-     ///
-     /// Callers must ensure that there are no more concurrent users of the revocable object.
++    /// Obtain `&'a T`, bypassing the [`Revocable`].
++    ///
++    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
++    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
++    ///
++    /// # Errors
++    ///
++    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
++    /// has been created with.
++    ///
++    /// # Example
++    ///
++    /// ```no_run
++    /// # use kernel::{device::Core, devres::Devres, pci};
++    ///
++    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
++    ///     let bar = devres.access(dev.as_ref())?;
++    ///
++    ///     let _ = bar.read32(0x0);
++    ///
++    ///     // might_sleep()
++    ///
++    ///     bar.write32(0x42, 0x0);
++    ///
++    ///     Ok(())
++    /// }
++    /// ```
++    pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a T> {
++        if self.0.dev.as_raw() != dev.as_raw() {
++            return Err(EINVAL);
++        }
++
++        // SAFETY: `dev` being the same device as the device this `Devres` has been created for
++        // proves that `self.0.data` hasn't been revoked and is guaranteed to not be revoked as
++        // long as `dev` lives; `dev` lives at least as long as `self`.
++        Ok(unsafe { self.deref().access() })
++    }
+ }
+ 
+ impl<T> Deref for Devres<T> {
 -- 
 2.49.0
 
