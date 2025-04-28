@@ -1,121 +1,106 @@
-Return-Path: <linux-pci+bounces-26942-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26945-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25F3EA9F61C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 18:46:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9829CA9F6F2
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 19:12:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BBF37AA8F6
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 16:45:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02FEB17A8C6
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 17:12:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12D327A929;
-	Mon, 28 Apr 2025 16:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2140F28E60C;
+	Mon, 28 Apr 2025 17:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tlk2eBun"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Nhtfs8GY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942BD7082D;
-	Mon, 28 Apr 2025 16:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8021A28BA85;
+	Mon, 28 Apr 2025 17:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858784; cv=none; b=bzY94I3H4nk6RVYMGYY1JRmHHU/ZWiabr4x+PL/UoWk9MYMs7o3tICFRTgPuT8ejpZaFErYVLm2Ui8K+3duTrAvopinNn2mf+GFETskQPZw45l2GoM1+kx6Kom60z3kV1b0dLijVyqt9+2Kvbks5GtP2sn1hklTCCDvMz6M2Vtw=
+	t=1745860316; cv=none; b=lI1nxZhlMvBs4jJkskWXvMq4xnFb4DzzgKOXYzSYN3aQ/IUIDvnUwbo6LeSai6GouY6VNm5FriKWWcVPYlilrLKVWrfnPJRVjVOT8GI0KRjmqsu6ydfgpAaQJcq7sESapsdY+B+PzjfeovRaUWFzI/SSmi6y0dzXTTkkza/FdlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858784; c=relaxed/simple;
-	bh=Z8PCmnJ0yV8qERDqeQfISVPvJ3tqJw2Q7aIBdlyPo/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ae2QHgO7A/bt1204w33xdWN12kgigiEFQJlJnh3M5hxE4LU7C4sNygoYDu4IThr2JEhZ56PJ4AtLGJ1RHj549wAQ7zjtiOD9U/zzmYdahNJr4kWuaN8hMCSXTHpyzZ858GU25uc8kR6r7ESHkfpJj+DOtUNTq/Pe3ycdQt1B52s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tlk2eBun; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90AEC4CEEC;
-	Mon, 28 Apr 2025 16:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745858784;
-	bh=Z8PCmnJ0yV8qERDqeQfISVPvJ3tqJw2Q7aIBdlyPo/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tlk2eBunYES27PROXmHIGQe3zmMP6HvdTE2sKVLCxFcGCmH8DHxdGjHqd3wobjohg
-	 VwJfw0ItrR32xKrcgdCW8TRpmdlk+DeJY1swcEr9VbaiBCu3yyJuag7MxpY9rcCj1j
-	 8nTXrf6GECR+mLe+QAKunFydd77qXJZBtfWsqaoubYbzZfTupDTo+1dZCG4DPhnIKw
-	 GE9ORFXi++TgAbviRRmsybWuVr08WLZvPsjcAv5o6bRpncDLzkKDP2jiGKorIc8UjF
-	 OQmxqQxbREQlcM8XfaIRqR6lFGfo4bo5dy+E+StVFWQQTe6kZ8U9u+SSstYkVmXSTR
-	 4chXnE6KS/Cag==
-Date: Mon, 28 Apr 2025 10:46:19 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Nitesh Shetty <nj.shetty@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v10 23/24] nvme-pci: convert to blk_rq_dma_map
-Message-ID: <aA-w20gOKus5hyAV@kbusch-mbp.dhcp.thefacebook.com>
-References: <cover.1745831017.git.leon@kernel.org>
- <007e00134d49160d5edab94a72c35b7b91429b09.1745831017.git.leon@kernel.org>
+	s=arc-20240116; t=1745860316; c=relaxed/simple;
+	bh=fCsS8SVUonQ+8IdW0IZhO5lmrpWAhj+OAjCTb6i/g/4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TXpnv0NEvUYMR92pCHoGrC0UJ7PJOC+Fgh4pHU/o1s90JzAYw6D0vspAhoIIe2wDraU1ddYbJlkMJAvNPWbvaI0Gy01hKBMyIOBKKOi4bj3Fj6u+IT9MFX5dfpJaEt2W6z4OubBZeMcTUImgYTKCfvdkgqm2liNwjpHMpKCiFbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Nhtfs8GY; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=MJ1Uv
+	YoXWhfZap7nd66XJTEzKwW73kWiiLL1y6iU2RM=; b=Nhtfs8GYLVIsgRYxsv26V
+	P3TBORYWw1lKtETEDGAHlvzbONVm0X5UiNpfqvTDV55VUIMxEiNN8QMKSoACbjvb
+	9XW6MZHn5IN5rR2tFioBMyBH6d42VBkmMo7dbdzCVLmPkCPwOids9bRfX7esuZ4L
+	gUPGCSfNmUGcyOqgrIGiRI=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCH4haitg9otPCfDA--.1694S2;
+	Tue, 29 Apr 2025 01:10:59 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org
+Cc: cassel@kernel.org,
+	robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 0/3] Standardize link status check to return bool
+Date: Tue, 29 Apr 2025 01:10:24 +0800
+Message-Id: <20250428171027.13237-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <007e00134d49160d5edab94a72c35b7b91429b09.1745831017.git.leon@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCH4haitg9otPCfDA--.1694S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWDAFWfZw1xur4rJw4xZwb_yoW8Ww1Dpa
+	45tayxAF1rtF4YvF1Yy3WDC34Yq3ZrZF9rK393Wa4fWFyfCFWUXry5GFySqasxtrW0qw17
+	KF15t3W7JFs3JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zieOJUUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxw9o2gPr6StEQAAsJ
 
-On Mon, Apr 28, 2025 at 12:22:29PM +0300, Leon Romanovsky wrote:
-> +	do {
-> +		if (WARN_ON_ONCE(mapped == entries)) {
-> +			iter.status = BLK_STS_IOERR;
-> +			break;
-> +		}
-> +		nvme_pci_sgl_set_data(&sg_list[mapped++], &iter);
+1. PCI: dwc: Standardize link status check to return bool.
+2. PCI: mobiveil: Refactor link status check.
+3. PCI: cadence: Simplify j721e link status check.
 
-I think this should say "++mapped" so that the data blocks start at
-index 1 (continued below...)
+Hans Zhang (3):
+  PCI: dwc: Standardize link status check to return bool.
+  PCI: mobiveil: Refactor link status check.
+  PCI: cadence: Simplify j721e link status check.
 
-> +		iod->total_len += iter.len;
-> +	} while (blk_rq_dma_map_iter_next(req, dev->dev, &iod->dma_meta_state,
-> +				 &iter));
->  
-> -out_unmap_sg:
-> -	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
-> -out_free_sg:
-> -	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
-> -	return BLK_STS_RESOURCE;
-> +	nvme_pci_sgl_set_seg(sg_list, sgl_dma, mapped);
+ drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
+ drivers/pci/controller/dwc/pci-dra7xx.c                | 2 +-
+ drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
+ drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
+ drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
+ drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
+ drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
+ drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
+ drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
+ drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
+ drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
+ drivers/pci/controller/dwc/pcie-qcom-ep.c              | 4 ++--
+ drivers/pci/controller/dwc/pcie-qcom.c                 | 2 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
+ drivers/pci/controller/dwc/pcie-tegra194.c             | 2 +-
+ drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
+ drivers/pci/controller/dwc/pcie-visconti.c             | 2 +-
+ drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
+ drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
+ 21 files changed, 34 insertions(+), 53 deletions(-)
 
-because this here is setting sg_list index 0 to be the segment
-descriptor.
 
-And you also need to increment sgl_dma to point to the element after
-sg_list, otherwise it's pointing right back to itself, creating a looped
-list.
+base-commit: 286ed198b899739862456f451eda884558526a9d
+-- 
+2.25.1
 
-> +	if (unlikely(iter.status))
-> +		nvme_unmap_metadata(dev, req);
-> +	return iter.status;
->  }
 
