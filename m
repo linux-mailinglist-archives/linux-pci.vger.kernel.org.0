@@ -1,123 +1,124 @@
-Return-Path: <linux-pci+bounces-26930-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26931-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBAC5A9F08A
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:23:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3D91A9F137
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4511E4600C7
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 12:23:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE8C05A359E
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 12:44:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F2F267B99;
-	Mon, 28 Apr 2025 12:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06AC26A0C5;
+	Mon, 28 Apr 2025 12:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkhNkodw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NFq8vrNV"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jDzVAhjF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D69263F49;
-	Mon, 28 Apr 2025 12:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CE3269D13;
+	Mon, 28 Apr 2025 12:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842982; cv=none; b=erwAzm0dI0OCtgk7/4a/7cu1Tdv+vQMA4K8N2mfjoM4rLeHf1vFOkybAzY6LpAKcgpsgaKaFlmf4vq+MBHZeRG9ZwEI2MxnLtv2zYs+NvVojg2Psi+HYeWH/EY+bkGraycBswMKoUW/wZX+C4hYbELsK6vN7imbwURrq+0a+2/M=
+	t=1745844182; cv=none; b=Yuhg1j9UjAko2Wp6h/d515VUMsgoiAqU8AH0tYx5C5XGDhWj3aZyQYDLuP3h8fZB6qRuIpZOyMFiQ85/B79P4FbowpsHUFI9K8LEY7wtBYJdEUSUNrKTJgokZ0IJBlIkbAcfttzM9tajmnpME8ul4LI+YOnBlROsvgUcu9g5Gp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842982; c=relaxed/simple;
-	bh=qu645lgNZlFFzG0htqALVnBK1i71+x8/vctlUfK0K+M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KEV5rDtGylNZadt3kTzkz+JJ/tHEO6LKH4vpa1+ftqIvgAS0XTlpSxIfMTHKSVK9ib8YDzTYiS5UDfh5AzgaesCSky/rvlwhazD55b6wmV/v9ePWBUNPPQihbmT2pxxyET8nH4eCDswiiN1wwwU0EKpuYOg9HolaFztTnmXZjm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pkhNkodw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NFq8vrNV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745842978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
-	b=pkhNkodwO4KW67rRMrgKHj8goQcEjLfSkdCc5rgJ+k/ImFFmmRMDNJEZ3fG2y/3RgjJAG8
-	A5IX/fR4cVAZmRogZ1ZH+O+vTWtRJcxBBsHVk8Kd3GrgFndTXJagY9PJsbDoJxNVAOgEpm
-	yXeq4NSQ2euBkVK/y44Gefnsd1LozszWF1YDpok/kKW5+sbejD/Bof/FVk5YAN4nKknOEr
-	1RP0cTuahcxrFMijTXukp7M2R6pDrO4zco/0B6GtpxoxBjE220VdpEBg8rTKiTpvARujQm
-	0aDDIpBbal5EMqSzNvWLWukfGCJ/pfW2muskJQhZhvvRMEgTFg2YZbxY92M5Lg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745842978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
-	b=NFq8vrNVQP+PQ/rGE0c7BJnVMM38KGRo7gMhYmSerEMU6XlRBeoXKuwgnzHdckRs5fHmGR
-	ol0CKgEM1LjXlTAQ==
-To: Bjorn Helgaas <helgaas@kernel.org>, Shradha Gupta
- <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan
- Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
- <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring
- <robh@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
- Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
- Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
- <peterz@infradead.org>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>, Shradha
- Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
- MSI-X alloc
-In-Reply-To: <20250425163748.GA546623@bhelgaas>
-References: <20250425163748.GA546623@bhelgaas>
-Date: Mon, 28 Apr 2025 14:22:57 +0200
-Message-ID: <87ldrkqxum.ffs@tglx>
+	s=arc-20240116; t=1745844182; c=relaxed/simple;
+	bh=yDz9n3TWyahGCVi9xPiIqDZuE2MgYN7oXN7oGplbqgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A/YYDY5Cb0Upl0mSNzNbsQ2+SpX8VeDUqjHeJDu8ktILbOwERqUrttb7vBLV7HtN/kB8Bc+Wzjrqc/W3QHYPczj6+dOlIXrSX9LcB7Oz0z34IbHyZNozETB1gVHmEi7Onn9vWXRdgJCYxBpMCderm6Gqvwfe1wv5x5sllgyoWrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jDzVAhjF; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=GoBfJ
+	MIbIlI6zPaXaf2aHXumRMjBzcYSuUOqst3TWOg=; b=jDzVAhjF51fqsqiXmrycZ
+	hvIRsk4TZcLWzi1JRxs7dm5odb8tcZp29PgxXZhPMjaXqcZab8RHNJh/3VOcHa8X
+	OwVr4wVFeRuTY2SOw3aSfC4lOirDDH6zjI6FI08Bn5AlvcOXO8SLPULP0ixVwiIX
+	dUPmjNLdy38Y/qDB4yzB3w=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDXClu3dw9oiuSODA--.26989S2;
+	Mon, 28 Apr 2025 20:42:32 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	kw@linux.com
+Cc: robh@kernel.org,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v2] PCI: dwc: ep: Use FIELD_GET()
+Date: Mon, 28 Apr 2025 20:42:30 +0800
+Message-Id: <20250428124230.112648-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXClu3dw9oiuSODA--.26989S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar48Jryxur4DuF47GFyDWrg_yoW8uF18p3
+	W8Can0kF1UJF45X3ykua93ZFn8GanxG3y8Aa93GrsIvF9Fvry0q3yqyF95K34xJF40vF45
+	C3W7tw13WFsxA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimLvtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhg9o2gO9M4mjgABsJ
 
-On Fri, Apr 25 2025 at 11:37, Bjorn Helgaas wrote:
+Use FIELD_GET() to remove dependences on the field position, i.e., the
+shift value. No functional change intended.
 
-Subject prefix wants to be PCI/MSI
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+---
+Changes for v2:
+- The patch commit message were modified.
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-  git log --format=oneline path/to/file
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..f3daf46b5e63 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -256,11 +256,11 @@ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
+ 		return offset;
+ 
+ 	reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-	nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
++	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 	for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		bar_index = reg & PCI_REBAR_CTRL_BAR_IDX;
++		bar_index = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, reg);
+ 		if (bar_index == bar)
+ 			return offset;
+ 	}
+@@ -875,8 +875,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 
+ 	if (offset) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+-			PCI_REBAR_CTRL_NBAR_SHIFT;
++		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 		/*
+ 		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
+@@ -897,7 +896,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 			 * is why RESBAR_CAP_REG is written here.
+ 			 */
+ 			val = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-			bar = val & PCI_REBAR_CTRL_BAR_IDX;
++			bar = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, val);
+ 			if (ep->epf_bar[bar])
+ 				pci_epc_bar_size_to_rebar_cap(ep->epf_bar[bar]->size, &val);
+ 			else
 
-gives you a pretty decent hint
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.25.1
 
-
-
-> On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
->> For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
->> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
->> to prepare the desc is also needed.
-
-Please write things out: ... to prepare the MSI descriptor ....
-
-This is not twitter.
-
->> Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
->> MSI-X vector allocation.
->> 
->> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
->> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-> Thanks for the update and for splitting this from the hv driver
-> update.  Will watch for Thomas's ack here.
-
-Other than that:
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
