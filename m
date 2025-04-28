@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-26937-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26938-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F85EA9F309
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 16:01:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 719C1A9F30B
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 16:02:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 548D01897151
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:02:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DD5A3B4250
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Apr 2025 14:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AA625E829;
-	Mon, 28 Apr 2025 14:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792EB20CCC8;
+	Mon, 28 Apr 2025 14:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBqxa9MH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNvwuZpN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57DB156677;
-	Mon, 28 Apr 2025 14:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9AB156677;
+	Mon, 28 Apr 2025 14:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848905; cv=none; b=YGf7/t7NpyQeVe7MfJffZdSy4+G81nSS2nB6jWCFd615oCNFzEJRJbVspbik9F+rAkKKhlC40SiSIbAZA0c4FgPC9h6JVBG04Z+ctqsB+xvROkg8yD2lvrA4itjxv3tPKgdahsnJ+jcUlpZLCH7gg/MmWa6X8bkO7zljK7afBHg=
+	t=1745848911; cv=none; b=a7VbXOOEeYkiYI10droMmNxm0OKL0xhfKPyWbjvQ6fZx9IsqEijvRXQamgMNvnDJV2ybhEgxQtk1nPRpPjf756zsezuObzX5pNb6VBQf75vokMPu1She5aZGWLOdtgDkGemn6T+PMEhePklLHUUyqYcIqSZvi+68HOmrPHmQzn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848905; c=relaxed/simple;
-	bh=AkNxV8lGLsUolM5DerUPl2T/JNmeZR9jvv0aQqgBJHY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S4shXLr1vucd61KPInBuoawvLCzybKAIX6+rjWWhKDLWF1cboA/KXwDTiTAH2nVZQhs2ilg9bWOdS2n9n5ve6kohYwjjzDKb3yehCTlQkalpy48YaSITDpQojb2TjUlFQ3J8aGuJMfs0FAT32V762cPItcI6zCb2+PbES9S2nhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBqxa9MH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F35C4CEE4;
-	Mon, 28 Apr 2025 14:01:40 +0000 (UTC)
+	s=arc-20240116; t=1745848911; c=relaxed/simple;
+	bh=CUjbBsKsU/IXjZc/+tfdQ4SEXR2i4Xv3hgob/3UPMOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g5rM9Oxlrry5oHEH/W2OjXux5KVkpNPdsQ/JRpr+KydlUDUuUGwdNNSFoI/r5Z6jPINn7j4jyJntSl5lRbg7yNbClh4EQlcHxq1yn5s2PON7h2VDwBLLgW79/jkGY7YyGerfRlLHwGfGwgaR09DjMIvj6PlvNXcmhkGWttYVdwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNvwuZpN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B97C4CEEA;
+	Mon, 28 Apr 2025 14:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745848905;
-	bh=AkNxV8lGLsUolM5DerUPl2T/JNmeZR9jvv0aQqgBJHY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HBqxa9MHWKYwKc7sX3vr4SN4S52q/tJiJt6AwMSGlCmdqVrdBgiRMyopuu7yHfVG6
-	 OKQpAm/E+QU4GSeH/Hm3+0ViV0wrXOvcZDO8QS7azUa8d7KzwWBNTT88Uw7DPTNU+K
-	 CLAkBw0vwa8BQz+7w8Ut/X6hTAEjM1DxnAvpL2r0d0WrZOVffvEZYdwRN+e46TZFlK
-	 lVMvrPk0FBE+6glYDVzvum9Ug16ulFlnKHwAIaJXgLmpZcXhInhlLtu+ECBUcuLVxP
-	 QyYstHQEXKehfmMlSboO4wbH/t2CLW73sBxOARi16RPumBakCFlEw1lIJWYpwKyMRL
-	 jrHNA5VhFOdlg==
+	s=k20201202; t=1745848910;
+	bh=CUjbBsKsU/IXjZc/+tfdQ4SEXR2i4Xv3hgob/3UPMOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mNvwuZpNdykQnyVoSxc1MCSSI7Y7ycTKp33Zzt5HnYlYQ6RQc+t94MNAY7ItWkwm/
+	 2pL9oaAofETHZzPCQe9wr1IAc30+waQW6caJB1Bt8Ee4gCLNAasyxsfxJ5D+j4a5I9
+	 6RTo4Io0NvyBGSMyVkyIyp6JAIsGW4aiiWGVSkjcgZZM5LIWW6TGZRmxJ2cHiy58O8
+	 UPa1t/+tqUaeNkK+YaOh8Ppuuu7q6DT82mlxKfCq/FK7Z5NQ//6wWrt5GculsCPtyD
+	 2ftcFl+uSCMwxzZHXwBfFRYMCxwbOHHRjWwvIOieqczikakCouhhM6twMlreDrGhiU
+	 RKc1NjtPMCA1A==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -65,11 +66,14 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 0/3] Devres optimization with bound devices
-Date: Mon, 28 Apr 2025 16:00:26 +0200
-Message-ID: <20250428140137.468709-1-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>,
+	Christian Schrefl <chrisi.schrefl@gmail.com>
+Subject: [PATCH v2 1/3] rust: revocable: implement Revocable::access()
+Date: Mon, 28 Apr 2025 16:00:27 +0200
+Message-ID: <20250428140137.468709-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
+References: <20250428140137.468709-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,51 +82,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series implements a direct accessor for the data stored within
-a Devres container for cases where we can prove that we own a reference
-to a Device<Bound> (i.e. a bound device) of the same device that was used
-to create the corresponding Devres container.
+Implement an unsafe direct accessor for the data stored within the
+Revocable.
 
-Usually, when accessing the data stored within a Devres container, it is
-not clear whether the data has been revoked already due to the device
-being unbound and, hence, we have to try whether the access is possible
-and subsequently keep holding the RCU read lock for the duration of the
-access.
+This is useful for cases where we can prove that the data stored within
+the Revocable is not and cannot be revoked for the duration of the
+lifetime of the returned reference.
 
-However, when we can prove that we hold a reference to Device<Bound>
-matching the device the Devres container has been created with, we can
-guarantee that the device is not unbound for the duration of the
-lifetime of the Device<Bound> reference and, hence, it is not possible
-for the data within the Devres container to be revoked.
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/revocable.rs | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Therefore, in this case, we can bypass the atomic check and the RCU read
-lock, which is a great optimization and simplification for drivers.
-
-The patches of this series are also available in [1].
-
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
-
-Changes in v2:
-  - Revocable::access(): remvoe explicit lifetimes; don't refer to 'a in
-    the safety requirement
-  - Devres::access()
-    - rename Devres::access_with() to Devres::access()
-    - add missing '```' at the end of the example
-    - remove 's lifetime
-    - add # Errors section
-
-Danilo Krummrich (3):
-  rust: revocable: implement Revocable::access()
-  rust: devres: implement Devres::access_with()
-  samples: rust: pci: take advantage of Devres::access_with()
-
- rust/kernel/devres.rs           | 38 +++++++++++++++++++++++++++++++++
- rust/kernel/revocable.rs        | 12 +++++++++++
- samples/rust/rust_driver_pci.rs | 12 +++++------
- 3 files changed, 56 insertions(+), 6 deletions(-)
-
-
-base-commit: 3be746ebc1e6e32f499a65afe405df9030153a63
+diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+index 971d0dc38d83..db4aa46bb121 100644
+--- a/rust/kernel/revocable.rs
++++ b/rust/kernel/revocable.rs
+@@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
+         self.try_access().map(|t| f(&*t))
+     }
+ 
++    /// Directly access the revocable wrapped object.
++    ///
++    /// # Safety
++    ///
++    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
++    /// as long as the returned `&T` lives.
++    pub unsafe fn access(&self) -> &T {
++        // SAFETY: By the safety requirement of this function it is guaranteed that
++        // `self.data.get()` is a valid pointer to an instance of `T`.
++        unsafe { &*self.data.get() }
++    }
++
+     /// # Safety
+     ///
+     /// Callers must ensure that there are no more concurrent users of the revocable object.
 -- 
 2.49.0
 
