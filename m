@@ -1,257 +1,98 @@
-Return-Path: <linux-pci+bounces-26982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26245AA0319
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 08:22:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C3AEAA037D
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 08:36:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 008AC1B61C03
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 06:22:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09B811793E6
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 06:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D2D288CAD;
-	Tue, 29 Apr 2025 06:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2AF72741C8;
+	Tue, 29 Apr 2025 06:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTGc5PsS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DnWOW7Cn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T80HuCt5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D930276046;
-	Tue, 29 Apr 2025 06:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629881E2834;
+	Tue, 29 Apr 2025 06:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907534; cv=none; b=MoisXsWJm788O/KUFOo10kvuHfeox3wN4gE4FiirGHOFA7uaqAnfT6SCQwKurb+D1LbIBqGcoaGFdqmOCou+oDBkQ9VQNz+iwXPFYrp7nHDhNOymWARq5aXnw42DrVyQYc8cV1KxsksOtYOcgRBAL9LGB3sej6etg6SJoPlFdAo=
+	t=1745908582; cv=none; b=aiB8FeKxVzrruxWEFPBT9fYGLP4WbK3dEwRXdSWcnRmGnLiTllCwYot4vbQGxc2lGHRqUqcWsggwHlR7Jkt2fbVLoYAN9nvEoDMFKiOB6hd6+V82vx2DF9gBFlXhPJ5AyFyj6qEIhnD5TfVmFKG7Yj6sJJ7Oq1KeyCoZv3MYFT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907534; c=relaxed/simple;
-	bh=vExQvIRKgBFgSfzxHEyrFALVuzPRUmMmvaWq9RovN60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l1oTR+Lk3dcq0scby1EjfHnjtlDQ23cXHbvslB9GuJDHp11E8eh13kQ1vK81UTit35v4zIqRHl5r+3tcEmJsjAgyL52rEkZ82dxHIB42ZVpsQEX5A9q+VpcbNDuGavsoP9AaKsuBY2oFF1oHpQgj5tYhJ2LGgXDVyS683XjNXPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTGc5PsS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F91C4CEE3;
-	Tue, 29 Apr 2025 06:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745907533;
-	bh=vExQvIRKgBFgSfzxHEyrFALVuzPRUmMmvaWq9RovN60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kTGc5PsSm7YoP9EmrE3/tfdAeh2ilrH28OMMhkA1i7TaGCseb+D12f8U4iRskFrE0
-	 RSM+Ykr/eeWEOV3E2nvuETPKv5WgV2r3K5S0fSLkCufCBscRZZxm5uTAwOKKZQ34F/
-	 w5YLetGv0DGVj4FS79jc9/KMtke5/3tgrMHoSQ+QeJcqJgLI/MgFlbbaDFejjar1j7
-	 p+0iatgN6tx2738QkPeIAJSzLkpoG/pCdY9ka1HCzAgLK31eNn58UEn17swH4oZLFI
-	 lBdvSt34FC1+vbqL/TFGUu3Gtp8x21gTZM2GnLCqybPJvtISk7Z3RIRONLDJ0zW3JA
-	 NWZpkM6/vXKLw==
-Date: Tue, 29 Apr 2025 09:18:49 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v10 06/24] iommu/dma: Factor out a iommu_dma_map_swiotlb
- helper
-Message-ID: <20250429061849.GL5848@unreal>
-References: <cover.1745831017.git.leon@kernel.org>
- <f9a6a7874760a2919bea1f255bb3c81c6369ed1c.1745831017.git.leon@kernel.org>
- <8416e94f-171e-4956-b8fe-246ed12a2314@linux.intel.com>
- <20250429055339.GJ5848@unreal>
- <9d1abdbc-4b21-47e2-bcaf-6bc8ca365b01@linux.intel.com>
+	s=arc-20240116; t=1745908582; c=relaxed/simple;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=P/i7gGPpMnHg476dH4q+IRG1fRDERufv9thHwMOiCsvocZGjihbeTINh/EjZNGSKp8apxqnz3KRGKK5ad+8gewxBD14xZZZugTl6lNB6uxJLc6zouVRxz8KeyKGT/5ICga/Br86sEEbccN1A926QEgvsG7Ri6m9AeY/GfuQfG1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DnWOW7Cn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T80HuCt5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745908580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	b=DnWOW7CnOsAcV22vpKV63CbsY0ldb+5sbM3yvyIQcc2zf6QyVfsmfvL9wBypHs4nV0ld6Z
+	Zurxv7W1oMofpW0eEtAhlj+MHvHdG+GZ++ae2mgPOD6N9tkJ9LdUbpn/5wuZlsj/NUa6yp
+	acICJrAun4fhOZx5xqB7vp7BwzSyN8fIJj5rH/gqUrN3Ijb0ryMTJ5ISxKG5fqqRSmgjrb
+	dhG74v4QmZtjs2LYPyfXRSY/kuAZBRt+zfh4bgwBgwenZkjRI8AVseHBLAKaWK5cs6bJsZ
+	S31BdCGodkYHMMsRb0freXUSXiu4/hCKHRA9XHkXLmQrWgulGV7LBZPsRZ8hrA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745908580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	b=T80HuCt5ESK3U117L2ud9Kpxqr73T+IhsCP8hk5od1nGiAlIYD21ojyx0oNzqnpjESRh7i
+	HuNjlGSQmCMYsBDQ==
+To: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy?=
+ =?utf-8?Q?=C5=84ski?=
+ <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
+ <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, Aaron Kling
+ <webgeek1234@gmail.com>
+Subject: Re: [PATCH v2 1/3] irqdomain: Export irq_domain_free_irqs
+In-Reply-To: <20250428-pci-tegra-module-v2-1-c11a4b912446@gmail.com>
+References: <20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com>
+ <20250428-pci-tegra-module-v2-1-c11a4b912446@gmail.com>
+Date: Tue, 29 Apr 2025 08:36:19 +0200
+Message-ID: <877c33qxss.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d1abdbc-4b21-47e2-bcaf-6bc8ca365b01@linux.intel.com>
+Content-Type: text/plain
 
-On Tue, Apr 29, 2025 at 01:58:06PM +0800, Baolu Lu wrote:
-> On 4/29/25 13:53, Leon Romanovsky wrote:
-> > On Tue, Apr 29, 2025 at 12:58:18PM +0800, Baolu Lu wrote:
-> > > On 4/28/25 17:22, Leon Romanovsky wrote:
-> > > > From: Christoph Hellwig<hch@lst.de>
-> > > > 
-> > > > Split the iommu logic from iommu_dma_map_page into a separate helper.
-> > > > This not only keeps the code neatly separated, but will also allow for
-> > > > reuse in another caller.
-> > > > 
-> > > > Signed-off-by: Christoph Hellwig<hch@lst.de>
-> > > > Tested-by: Jens Axboe<axboe@kernel.dk>
-> > > > Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
-> > > > Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
-> > > 
-> > > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > > 
-> > > with a nit below ...
-> > > 
-> > > > ---
-> > > >    drivers/iommu/dma-iommu.c | 73 ++++++++++++++++++++++-----------------
-> > > >    1 file changed, 41 insertions(+), 32 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > > > index d3211a8d755e..d7684024c439 100644
-> > > > --- a/drivers/iommu/dma-iommu.c
-> > > > +++ b/drivers/iommu/dma-iommu.c
-> > > > @@ -1138,6 +1138,43 @@ void iommu_dma_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
-> > > >    			arch_sync_dma_for_device(sg_phys(sg), sg->length, dir);
-> > > >    }
-> > > > +static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
-> > > > +		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> > > > +{
-> > > > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > > > +	struct iova_domain *iovad = &domain->iova_cookie->iovad;
-> > > > +
-> > > > +	if (!is_swiotlb_active(dev)) {
-> > > > +		dev_warn_once(dev, "DMA bounce buffers are inactive, unable to map unaligned transaction.\n");
-> > > > +		return (phys_addr_t)DMA_MAPPING_ERROR;
-> > > > +	}
-> > > > +
-> > > > +	trace_swiotlb_bounced(dev, phys, size);
-> > > > +
-> > > > +	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
-> > > > +			attrs);
-> > > > +
-> > > > +	/*
-> > > > +	 * Untrusted devices should not see padding areas with random leftover
-> > > > +	 * kernel data, so zero the pre- and post-padding.
-> > > > +	 * swiotlb_tbl_map_single() has initialized the bounce buffer proper to
-> > > > +	 * the contents of the original memory buffer.
-> > > > +	 */
-> > > > +	if (phys != (phys_addr_t)DMA_MAPPING_ERROR && dev_is_untrusted(dev)) {
-> > > > +		size_t start, virt = (size_t)phys_to_virt(phys);
-> > > > +
-> > > > +		/* Pre-padding */
-> > > > +		start = iova_align_down(iovad, virt);
-> > > > +		memset((void *)start, 0, virt - start);
-> > > > +
-> > > > +		/* Post-padding */
-> > > > +		start = virt + size;
-> > > > +		memset((void *)start, 0, iova_align(iovad, start) - start);
-> > > > +	}
-> > > > +
-> > > > +	return phys;
-> > > > +}
-> > > > +
-> > > >    dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> > > >    	      unsigned long offset, size_t size, enum dma_data_direction dir,
-> > > >    	      unsigned long attrs)
-> > > > @@ -1151,42 +1188,14 @@ dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> > > >    	dma_addr_t iova, dma_mask = dma_get_mask(dev);
-> > > >    	/*
-> > > > -	 * If both the physical buffer start address and size are
-> > > > -	 * page aligned, we don't need to use a bounce page.
-> > > > +	 * If both the physical buffer start address and size are page aligned,
-> > > > +	 * we don't need to use a bounce page.
-> > > >    	 */
-> > > >    	if (dev_use_swiotlb(dev, size, dir) &&
-> > > >    	    iova_offset(iovad, phys | size)) {
-> > > > -		if (!is_swiotlb_active(dev)) {
-> > > 
-> > > ... Is it better to move this check into the helper? Simply no-op if a
-> > > bounce page is not needed:
-> > > 
-> > > 	if (!dev_use_swiotlb(dev, size, dir) ||
-> > > 	    !iova_offset(iovad, phys | size))
-> > > 		return phys;
-> > 
-> > Am I missing something? iommu_dma_map_page() has more code after this
-> > check, so it is not correct to return immediately:
-> > 
-> >    1189 dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> >    1190               unsigned long offset, size_t size, enum dma_data_direction dir,
-> >    1191               unsigned long attrs)
-> >    1192 {
-> > 
-> > <...>
-> > 
-> >    1201         /*
-> >    1202          * If both the physical buffer start address and size are page aligned,
-> >    1203          * we don't need to use a bounce page.
-> >    1204          */
-> >    1205         if (dev_use_swiotlb(dev, size, dir) &&
-> >    1206             iova_unaligned(iovad, phys, size)) {
-> >    1207                 phys = iommu_dma_map_swiotlb(dev, phys, size, dir, attrs);
-> >    1208                 if (phys == (phys_addr_t)DMA_MAPPING_ERROR)
-> >    1209                         return DMA_MAPPING_ERROR;
-> >    1210         }
-> >    1211
-> >    1212         if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-> >    1213                 arch_sync_dma_for_device(phys, size, dir);
-> >    1214
-> >    1215         iova = __iommu_dma_map(dev, phys, size, prot, dma_mask);
-> >    1216         if (iova == DMA_MAPPING_ERROR)
-> >    1217                 swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
-> >    1218         return iova;
-> >    1219 }
-> 
-> static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t
-> phys,
-> 		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> {
-> <...>
-> 	/*
-> 	 * If both the physical buffer start address and size are page aligned,
-> 	 * we don't need to use a bounce page.
-> 	 */
-> 	if (!dev_use_swiotlb(dev, size, dir) ||
-> 	    !iova_offset(iovad, phys | size))
-> 		return phys;
-> <...>
-> }
-> 
-> Then,
-> 
-> dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> 	unsigned long offset, size_t size, enum dma_data_direction dir,
-> 	unsigned long attrs)
-> {
-> <...>
-> 	phys = iommu_dma_map_swiotlb(dev, phys, size, dir, attrs);
-> 	if (phys == (phys_addr_t)DMA_MAPPING_ERROR)
-> 		return DMA_MAPPING_ERROR;
-> <...>
-> }
+On Mon, Apr 28 2025 at 20:05, Aaron Kling via wrote:
 
-Such change will cause to extra function call for everyone who doesn't
-use SWIOTLB (RDMA, HMM e.t.c).
+$subject: .... irq_domain_free_irqs()
 
-In addition, iommu_dma_map_swiotlb() is called through
-dma_iova_link -> 
-	iommu_dma_iova_link_swiotlb -> 
-		iommu_dma_iova_bounce_and_link() -> 
-			iommu_dma_map_swiotlb()
-and dma_iova_link() has this "if (dev_use_swiotlb(dev, size, dir) && iova_unaligned(iovad, phys, size))"
-very early at call stack.
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> Add export for irq_domain_free_irqs() so that we can allow drivers like
+> the pci-tegra driver to be loadable as a module.
 
-So, in dma_iova_link() we will find ourselves with same check twice.
+Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
+be built as a module.
 
-Thanks
+See https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
 
-> 
-> Thanks,
-> baolu
-> 
+With that addressed:
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
 
