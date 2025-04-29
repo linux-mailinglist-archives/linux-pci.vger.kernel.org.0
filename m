@@ -1,133 +1,166 @@
-Return-Path: <linux-pci+bounces-26988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01DD6AA0637
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 10:52:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D77DEAA067B
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 11:01:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1F583BC50F
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 08:51:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C021F1881CB0
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 09:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F257F29C33B;
-	Tue, 29 Apr 2025 08:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C4229E04C;
+	Tue, 29 Apr 2025 09:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cgjw/DkY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="23km6hkT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1E9296D05;
-	Tue, 29 Apr 2025 08:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916686; cv=none; b=k3rF/+/BbdtIYxAmWDaxmMjFX7+J9vK5cOMjD2m9du5ht/b9zADQItDL3XXBXv1w+/7EVso7GDE3qkkd6L+5Q75w35ZENM9mSj2gQEgidapgGO/eu5nOik5Aqvcn6balSwGYs67gTHY3F7OCOMuq/qCY1pxaHQEch6Jf5VjZHVk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916686; c=relaxed/simple;
-	bh=i/zN+eLtunYqB8Jo8o4ZtByDNbSfXn6uTc2DKMgPDy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TaAVX2F6QANt9Ad88eKir1Yk9KdmAIZ84Avy6sBcbHYKEkrFhw+ElAr/EvQxRR6GK1Pq44gorIKACdKK1OZH1X0+kGFYgs9kDlqThGRW/qnvpSSa2XTHMJ0bukTf0YCP3f65+QnC7NEwbKdw2lUbj5N6m7S+10g/xPWNQ1ofwRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cgjw/DkY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id E3B2320BCAD1; Tue, 29 Apr 2025 01:51:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3B2320BCAD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745916684;
-	bh=bH/gRq3HkYAXOdTEm1wWVnhs8e9j9zydL0IGXdJm9z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cgjw/DkYa5RLPVsfa6JDQm+dTp5wS2msU1njQGR9PFHfHPdRXRN/MfFd7Cdtsqceo
-	 51OTUVgym3hohVal4H1IaQ9w9ihTFNs5egVT7EOIdvMsRPX0H3Beyoe3k6dpDz5hyG
-	 fLNGYYUCi3uj3ZLKjhLc5V89rUxB75dSa7hMu7+w=
-Date: Tue, 29 Apr 2025 01:51:24 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Message-ID: <20250429085124.GC10839@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
- <aA-Evojnzt2z0RdH@yury>
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2065.outbound.protection.outlook.com [40.107.93.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ED929E05B;
+	Tue, 29 Apr 2025 09:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745917260; cv=fail; b=KNkUtRxCVrIat7smI+QS0C/h68f6e04JaErlozUBCu7jiRhHQWIwPazp/en2GpdL5TM+dAWBlxASpap0vXJIh3rkNcopgbzYL0jyhpZhe4SplcP/bRrp4kDo8Rv3wXYTXHz/gTDX1NnfVPI9btzB+rpe8AkdlPSHeVJqbZgKR9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745917260; c=relaxed/simple;
+	bh=OKPXnlTGhZandJ8zgvsU+sBp2Umfj1fcBqQM+kZg6No=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KlWvY0rJN+Wg3rdK/k2PpIbgqIY2GF7s4ui8VhmnhVLiVaDbT6oWSPjxYNn+gLJVHim/xNEqrelKCAbSU+FR4I7+GO4ZRY9SQygQFqyb7vpLIDiRUAMbCfdKrEQ1FthliAUge/CYxS82S9TguEWbBjRjTbPLk6+cUuBjoi284TU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=23km6hkT; arc=fail smtp.client-ip=40.107.93.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CN4kB4qLlhH9Mof7zE97WeynuPC9n1sb1BecV/y4IL5enrb+ERR8qi5Lc+0wUyS6WLZ2nNReckEv+DfS8/ZZRLpuOg3AfIzlLGCjyQGxKP3DZztLrUGzTuPt9REpMD0MtknJ3AiIPZeTuX9/C0oIEcT9Dn81VOUF31HJwlOpuhZxv3PmeJW6251MVzYdGeMG3IYRd3Gfh1nnbPw0iyjsZYwiHTYPa2cfftrxI+25yCX9Uuc27S7bgb8qrgoLNBMLINyuft53H9YbNqONdnhbZcIQWSx/5sUMo3xR8eEBUqfMHV+F8GDS96ROscdzHvoDve9hgOY3DRPj/TNQIlP/Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8tm69Ta7oo5MXiRt0d3hVAcD1WV2WJqDpUtzBXaIRPs=;
+ b=h7+RK1Cd5rDK+Xi2iv3wScSVGQcFZqkgbNghwAkMZ03vhOKmfJNzr5hiPrJ+ZYLxoP94Qtcrk+5cEAm/GhrBbc6TnB6F8KkYiqx8BbdmtAQ0/FOnIDJ+cyb7JYzaWeNnraueMjccI6hjv4luWN7qX9tmCBUb0KW+Nvn3PSwIIz07gkuGaFCXMoRWk5f/J6oTiTc0a2+AyS6+79ppUbVZcspnY0hsT7yh2P3/Gyu4iDaBqUu6CKIYzmQIkVURWf5qBon020TNTc1dnCis5gEU5XXX7WZ1pDelfCV8u3MZiVxEAnxMzTE898xXT26RkVOSwjzypqEFF5bWkg1YmV7muw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8tm69Ta7oo5MXiRt0d3hVAcD1WV2WJqDpUtzBXaIRPs=;
+ b=23km6hkTofJRi1WWFPB+vat9h3gakbm7sstmdu2Gb3HRL1fEJSW5ZW6Uy8pP4nQ6fjcRJmZ6hVyAzhe75ZjQzSGMKXPa7L9apZC8B9sC/4uSqa+3XhMcy8r13wY0mCMWZubX5CI3msjPdCqCn/agBVVy030uoBLyFHBlAVws+xQ=
+Received: from BN8PR15CA0030.namprd15.prod.outlook.com (2603:10b6:408:c0::43)
+ by IA0PR12MB8974.namprd12.prod.outlook.com (2603:10b6:208:488::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
+ 2025 09:00:56 +0000
+Received: from BN2PEPF000044A3.namprd02.prod.outlook.com
+ (2603:10b6:408:c0:cafe::63) by BN8PR15CA0030.outlook.office365.com
+ (2603:10b6:408:c0::43) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Tue,
+ 29 Apr 2025 09:00:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A3.mail.protection.outlook.com (10.167.243.154) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Tue, 29 Apr 2025 09:00:56 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
+ 2025 04:00:55 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
+ 2025 04:00:54 -0500
+Received: from xhdlc201955.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 29 Apr 2025 04:00:48 -0500
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [PATCH v2 0/2] Add support for AMD Versal Gen 2 MDB PCIe RP PERST#
+Date: Tue, 29 Apr 2025 14:30:44 +0530
+Message-ID: <20250429090046.1512000-1-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-Evojnzt2z0RdH@yury>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: sai.krishna.musham@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A3:EE_|IA0PR12MB8974:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8454e59-bff9-47a9-3531-08dd86fc5a56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cgYy2AHXI5m6aSt0ynK/VUrIh+wEwDYrbVO3VSVzxVDENsCqMO19u65cglXn?=
+ =?us-ascii?Q?x6fS1IuFZSDP51gxTRb8fNXOtPTbIB6L8GkU2IYbw6Z9gOYwPqZZ5hcUdMYW?=
+ =?us-ascii?Q?j18WVI8K6uneXC3zqBgGNdiwTKoMGr/aRxjkr3GDIdklm76J+mnuJ1MnqJ8N?=
+ =?us-ascii?Q?0vkEkucbx+jJlJ//FxM4me2CrsKcgIkv6ruh48r6+Mp1U/DEy5bpoBGlmwNn?=
+ =?us-ascii?Q?N/TsQDR8yrYWqojIdyEpD32KynXZUV0c5PLhH5uVa9fTyVreOC4dHQTGekf3?=
+ =?us-ascii?Q?NPSgOYdPoZc4eKTrW8gKiNs7/NJEBud8WSJo5pE5eVheTjKtM1keL+xOxR7R?=
+ =?us-ascii?Q?WDSqcSjuIXLogH6ebcVEkIsXpdvC5jDWKP1RqrSMYJM2gq75zbEs5a+X4yiZ?=
+ =?us-ascii?Q?61TED8k+v+Cro5utqbJw2bvy2FFW/UOs/UHUn1ad7z0pf/HExc11LR+7kfTN?=
+ =?us-ascii?Q?cNTmaSOyaL5sm5dlZjhMJo6g6thuCpLvydF+8SyKNsw/alnWesXf2B4WQ0Q4?=
+ =?us-ascii?Q?k/nWuuLgh5WLavtOVJsKNm40Rr0mYdOwQcxspEsUTYadKbxVkFhxvDNKUt4N?=
+ =?us-ascii?Q?P/jCAtaAUMycmvZyAqyeUtbgW5T6PdeloEu8KHV0f/mKdzz5asgQ2CX5lto8?=
+ =?us-ascii?Q?nTBEfumoQflI1LL3KYC7fn4OJ43Y5IEVsi38phbWap7999wVZ+I+EARnJX+F?=
+ =?us-ascii?Q?CvnhU6vA5IAdkvoJHucFZ+LyDRNcmtvMJcjgFUKiElIbnO1CodtIW+CygtHk?=
+ =?us-ascii?Q?80SgC43g7D6QmcEJNkv8spkDCmtCueWH0lxN1/eRK0FdJNvNWZBr0czj8z3W?=
+ =?us-ascii?Q?41Wue+AG0Ed/R61aFJg4TEhtK5hpEjP8IGVrjdh7WPr+PHTArV68X3s3hdX3?=
+ =?us-ascii?Q?U+s3D6cysrNwq3naJzdYZc1QMhIT6x6//OqyFPJz+LuVhxtw6kFrUbFyOKA4?=
+ =?us-ascii?Q?janbZ1olgKBSEiF8RyoWn0JzyWV6sD1DAbaYcmcI4b+SkYf5FW/J4+XFnlHD?=
+ =?us-ascii?Q?A1ETqsMKNlUkPKDPhOjwwgdPLKfkDmjcQfD6LJpo92MgLsS/VT1Cbj6fb5LV?=
+ =?us-ascii?Q?+woFsWfmkUozGu01J2tlU+FUUh0fV8AYhzUwVyF2ebk+tj1bREGz3mHSUHD1?=
+ =?us-ascii?Q?eDnxZlDMPEGDwLSbWMMnKRMgEDdzOxDQvhSiuJ21XA9SnfoRXI5FxMycDkjV?=
+ =?us-ascii?Q?VpvaQOmRxa8hc9fNyw2Zjjxbev061paw+Cbj6yIrr2z9mHh+vEX+VGGvnn9q?=
+ =?us-ascii?Q?7x4nOLH/d+NYtvECn+PhqG8V7gpegjHj832V+wKKb6vr+FN+KWUmoSNWHsWd?=
+ =?us-ascii?Q?V4STHeTP4mXyqR/X5XGFOwD3/+VvAWmrzavFc+1IVXv5PpBRfaZz7+t7ezcL?=
+ =?us-ascii?Q?G5lfvFP46d+Nv1DwEudMkoID3BXOm66Rt5L9WtjDaw8ak5ASnefEd8npD35v?=
+ =?us-ascii?Q?cl9WMKr8Krlsb0dXCR4ZgVl8cb70kw8Z2+T+6/2gTspJ5o6n0mOE3Y4wvyQy?=
+ =?us-ascii?Q?JgffxgoBsx032HmNELV7hBecZiIlO9rtYr5p?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 09:00:56.1521
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8454e59-bff9-47a9-3531-08dd86fc5a56
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A3.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8974
 
-On Mon, Apr 28, 2025 at 09:38:06AM -0400, Yury Norov wrote:
-> On Fri, Apr 25, 2025 at 03:54:38AM -0700, Shradha Gupta wrote:
-> > Currently, the MANA driver allocates MSI-X vectors statically based on
-> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> > up allocating more vectors than it needs. This is because, by this time
-> > we do not have a HW channel and do not know how many IRQs should be
-> > allocated.
-> > 
-> > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> > after getting the value supported by hardware, dynamically add the
-> > remaining MSI-X vectors.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Changes in v2:
-> >  * Use string 'MSI-X vectors' instead of 'pci vectors'
-> >  * make skip-cpu a bool instead of int
-> >  * rearrange the comment arout skip_cpu variable appropriately
-> >  * update the capability bit for driver indicating dynamic IRQ allocation
-> >  * enforced max line length to 80
-> >  * enforced RCT convention
-> >  * initialized gic to NULL, for when there is a possibility of gic
-> >    not being populated correctly
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 323 ++++++++++++++----
-> >  include/net/mana/gdma.h                       |  11 +-
-> >  2 files changed, 269 insertions(+), 65 deletions(-)
-> 
-> To me, this patch looks too big, and it doesn't look like it does
-> exactly one thing.
-> 
-> Can you split it to a few small more reviewable chunks? For example,
-> I authored irq_setup() helper. If you split its rework and make it
-> a small preparation patch, I'll be able to add my review tag.
-> 
-> Thanks,
-> Yury
+Add reset-gpios property to example device tree node
 
-Thank you for the comments Yury. I think I can split this patch into the 
-irq_setup() preparation patch and other functionalities. Would also
-investigate if these other functionalities can also be split, before sending
-out the next version.
+Add support for PCIe Root Port PERST# signal handling
 
-Regards,
-Shradha.
+Sai Krishna Musham (2):
+  dt-bindings: PCI: amd-mdb: Add `reset-gpios` property to example
+    device tree
+  PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
+
+ .../bindings/pci/amd,versal2-mdb-host.yaml       |  2 ++
+ drivers/pci/controller/dwc/pcie-amd-mdb.c        | 16 ++++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+-- 
+2.44.1
+
 
