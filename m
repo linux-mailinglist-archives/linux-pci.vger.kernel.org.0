@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-26976-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26977-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05265AA0033
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 05:15:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF90AAA0195
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 07:02:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44F437A97C2
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 03:14:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17BAF4604A3
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 05:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA73B26B081;
-	Tue, 29 Apr 2025 03:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C9826FD9E;
+	Tue, 29 Apr 2025 05:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ko1kScYs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O3/B9y4P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDEC1D5ABF;
-	Tue, 29 Apr 2025 03:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3201DE8B2;
+	Tue, 29 Apr 2025 05:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745896519; cv=none; b=Dk4KRA5f/wqz4JGhjkmgamD3RF31cm2H26/SFwDv6ezKMJf2nY3nAUP9rHGYUzWZ9mGTR1RPJr03G5+6uM8ptOR2OLXzZxDUggisWlzG+reVdMk3ZMO2eLLkMg8KJ4VYRPJVbOIMQp+5tebf9YuI3CsSX39M+wztZynrvEGbphw=
+	t=1745902961; cv=none; b=kfokqoovuVNXVpz2wdojvSzuIVuLsezQH54XJX6YEGQ+vAGrGBOvL6sxuLAo4IwHq29beslTn3VFTWvOD8VTcsTEIOZdu5GO+8tyHUUmmAxrczD+mONdqDE/NX6S1Dsj5KvfQxHf8haOxcHsbpCc4AQf5UMpVj0pj69ajhz9DXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745896519; c=relaxed/simple;
-	bh=gF3+aJs3Gf/hJScKyT1fbK46ZtYQ+FrmHh+AQDsrL0w=;
+	s=arc-20240116; t=1745902961; c=relaxed/simple;
+	bh=yJHygitItCE7AjT4PE9hDK5eTwShgF8pqCV5bUS99tg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=heqSH1TPJsLFKMaFUE/tF8+V91M7BoXGULmJ+GpR2w0no6pdGzEcwAUpSe+3l/24zDKS7d6/EIWT12IUi7fUycR0Iocp2vvn+7ThurtwuE1wU0q9DkoCqcL5LWSvYUrX+5MbeMzV3fnVQCMcuaAjy7F5guhNthMB5lmZ/1ZOmnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ko1kScYs; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=YUs1S8cIexrshtbv7ynAmgrXMdL8m0TdE9AL4nXK+zrchQBdChlWBxcG4pktN42JtYfBgfOgvWwnmff3Bd3x0iPqwS4IzyZ1Mt+ND/0H01JcvaocWOrMhwPNT7jOpmjjqcEPD4coLqXrLLtoVupxPoYAwUmDAHnOSi3QAG4RwjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O3/B9y4P; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745896517; x=1777432517;
+  t=1745902960; x=1777438960;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=gF3+aJs3Gf/hJScKyT1fbK46ZtYQ+FrmHh+AQDsrL0w=;
-  b=Ko1kScYsg+YyREB4A+YRch1TOVHQz8KWGhn4Ui5UZUtAbUzkIixv78bP
-   tXJSAHQmEb8eIu+/GG3ieYLFsMuFQR2COmLPRMX09BiOBXXDL/CjzNdHn
-   jwDDCAEFxi4fXFoPytugtHDg3E4Y3iV9VwW8eLQ+AxCoh/T/uonwZIt/g
-   eecJ7JzHceD+e8vNmIf87SOmNktZ/NYD/kfTEabHadtuCdWdpQnrtA9Ag
-   A8l1UgR31LKxhfK+uloIJg9DDyl0HJb9STYzIiwDANRcMXKu+n6fM0iDF
-   zWD/2zhQdz5jdvbUljCu3sHRwNUSoWVLY92N8JukW/abJXRIXscBYttDU
-   g==;
-X-CSE-ConnectionGUID: /+1i8YPtRcKh0efR4BJNsA==
-X-CSE-MsgGUID: naMycftATTinNUijWUxKfg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="50164771"
+  bh=yJHygitItCE7AjT4PE9hDK5eTwShgF8pqCV5bUS99tg=;
+  b=O3/B9y4PSKompQLB0b5RmqlYynOa+ey8T/WjvjEQApg2E8p9tNnzsvuv
+   GLK08LTAUYmruhTO0/EBvwgVXvWNbwxnazkIZtP/VDWUdsPI9jjlRkX/C
+   3GKfUol2SqoUKZ+75V+3vPWYVTn0I7IjZQmny0KRCdzJvJjIoWZovcFRX
+   eNC1RqscY22pE6/Cgj9ddVprRYiuZ53OEepRSXJ0SrUCZd94wz9EnlawQ
+   CNdLYxWnRBWvt6VHikTzmmxjg7zZqlCUZ8t3WR93VuxAab/1yzm5X8f6M
+   I6u1L2PDwDxAuiLHWQi86ksYUCQ4N0Zl8/qNlPwhucjXaFMvgCEYmNXPq
+   w==;
+X-CSE-ConnectionGUID: W7Z1V5aiQ/+jIW15i6Nc/w==
+X-CSE-MsgGUID: k9fEfIDTQ7We2T56517w2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="35121395"
 X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="50164771"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 20:15:16 -0700
-X-CSE-ConnectionGUID: ed4rLAGbTImlyIcMdAHXJw==
-X-CSE-MsgGUID: 8LoauE1fTyG98pnYRixuDg==
+   d="scan'208";a="35121395"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 22:02:39 -0700
+X-CSE-ConnectionGUID: a5E3m5JXQF+Vct9TFcNxPw==
+X-CSE-MsgGUID: WNPv/oL5TCup2x/mZ3mf+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="133600998"
+   d="scan'208";a="138896368"
 Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 20:15:07 -0700
-Message-ID: <0086302d-1cb3-43dd-a989-e4b1995a0d22@linux.intel.com>
-Date: Tue, 29 Apr 2025 11:10:54 +0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 22:02:30 -0700
+Message-ID: <8416e94f-171e-4956-b8fe-246ed12a2314@linux.intel.com>
+Date: Tue, 29 Apr 2025 12:58:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,17 +67,17 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 05/24] dma-mapping: Provide an interface to allow
- allocate IOVA
+Subject: Re: [PATCH v10 06/24] iommu/dma: Factor out a iommu_dma_map_swiotlb
+ helper
 To: Leon Romanovsky <leon@kernel.org>,
  Marek Szyprowski <m.szyprowski@samsung.com>, Jens Axboe <axboe@kernel.dk>,
  Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
- Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Sagi Grimberg <sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
+Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Yishai Hadas <yishaih@nvidia.com>,
  Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
  Kevin Tian <kevin.tian@intel.com>,
  Alex Williamson <alex.williamson@redhat.com>,
@@ -91,137 +91,102 @@ Cc: Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
  Chuck Lever <chuck.lever@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>,
  Matthew Wilcox <willy@infradead.org>, Dan Williams
  <dan.j.williams@intel.com>, Kanchan Joshi <joshi.k@samsung.com>,
- Chaitanya Kulkarni <kch@nvidia.com>
+ Chaitanya Kulkarni <kch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
 References: <cover.1745831017.git.leon@kernel.org>
- <30f0601d400711b3859deeb8fef3090f5b2020a4.1745831017.git.leon@kernel.org>
+ <f9a6a7874760a2919bea1f255bb3c81c6369ed1c.1745831017.git.leon@kernel.org>
 Content-Language: en-US
 From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <30f0601d400711b3859deeb8fef3090f5b2020a4.1745831017.git.leon@kernel.org>
+In-Reply-To: <f9a6a7874760a2919bea1f255bb3c81c6369ed1c.1745831017.git.leon@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 4/28/25 17:22, Leon Romanovsky wrote:
-> From: Leon Romanovsky<leonro@nvidia.com>
+> From: Christoph Hellwig<hch@lst.de>
 > 
-> The existing .map_page() callback provides both allocating of IOVA
-
-.map_pages()
-
-> and linking DMA pages. That combination works great for most of the
-> callers who use it in control paths, but is less effective in fast
-> paths where there may be multiple calls to map_page().
+> Split the iommu logic from iommu_dma_map_page into a separate helper.
+> This not only keeps the code neatly separated, but will also allow for
+> reuse in another caller.
 > 
-> These advanced callers already manage their data in some sort of
-> database and can perform IOVA allocation in advance, leaving range
-> linkage operation to be in fast path.
-> 
-> Provide an interface to allocate/deallocate IOVA and next patch
-> link/unlink DMA ranges to that specific IOVA.
-> 
-> In the new API a DMA mapping transaction is identified by a
-> struct dma_iova_state, which holds some recomputed information
-> for the transaction which does not change for each page being
-> mapped, so add a check if IOVA can be used for the specific
-> transaction.
-> 
-> The API is exported from dma-iommu as it is the only implementation
-> supported, the namespace is clearly different from iommu_* functions
-> which are not allowed to be used. This code layout allows us to save
-> function call per API call used in datapath as well as a lot of boilerplate
-> code.
-> 
-> Reviewed-by: Christoph Hellwig<hch@lst.de>
+> Signed-off-by: Christoph Hellwig<hch@lst.de>
 > Tested-by: Jens Axboe<axboe@kernel.dk>
 > Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
 > Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
+
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+with a nit below ...
+
 > ---
->   drivers/iommu/dma-iommu.c   | 86 +++++++++++++++++++++++++++++++++++++
->   include/linux/dma-mapping.h | 48 +++++++++++++++++++++
->   2 files changed, 134 insertions(+)
+>   drivers/iommu/dma-iommu.c | 73 ++++++++++++++++++++++-----------------
+>   1 file changed, 41 insertions(+), 32 deletions(-)
 > 
 > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 9ba8d8bc0ce9..d3211a8d755e 100644
+> index d3211a8d755e..d7684024c439 100644
 > --- a/drivers/iommu/dma-iommu.c
 > +++ b/drivers/iommu/dma-iommu.c
-> @@ -1723,6 +1723,92 @@ size_t iommu_dma_max_mapping_size(struct device *dev)
->   	return SIZE_MAX;
+> @@ -1138,6 +1138,43 @@ void iommu_dma_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
+>   			arch_sync_dma_for_device(sg_phys(sg), sg->length, dir);
 >   }
 >   
-> +/**
-> + * dma_iova_try_alloc - Try to allocate an IOVA space
-> + * @dev: Device to allocate the IOVA space for
-> + * @state: IOVA state
-> + * @phys: physical address
-> + * @size: IOVA size
-> + *
-> + * Check if @dev supports the IOVA-based DMA API, and if yes allocate IOVA space
-> + * for the given base address and size.
-> + *
-> + * Note: @phys is only used to calculate the IOVA alignment. Callers that always
-> + * do PAGE_SIZE aligned transfers can safely pass 0 here.
-
-Have you considered adding a direct alignment parameter to
-dma_iova_try_alloc()? '0' simply means the default PAGE_SIZE alignment.
-
-I'm imagining that some devices might have particular alignment needs
-for better performance, especially for the ATS cache efficiency. This
-would allow those device drivers to express the requirements directly
-during iova allocation.
-
-> + *
-> + * Returns %true if the IOVA-based DMA API can be used and IOVA space has been
-> + * allocated, or %false if the regular DMA API should be used.
-> + */
-> +bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
-> +		phys_addr_t phys, size_t size)
+> +static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
+> +		size_t size, enum dma_data_direction dir, unsigned long attrs)
 > +{
-> +	struct iommu_dma_cookie *cookie;
-> +	struct iommu_domain *domain;
-> +	struct iova_domain *iovad;
-> +	size_t iova_off;
-> +	dma_addr_t addr;
+> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> +	struct iova_domain *iovad = &domain->iova_cookie->iovad;
 > +
-> +	memset(state, 0, sizeof(*state));
-> +	if (!use_dma_iommu(dev))
-> +		return false;
+> +	if (!is_swiotlb_active(dev)) {
+> +		dev_warn_once(dev, "DMA bounce buffers are inactive, unable to map unaligned transaction.\n");
+> +		return (phys_addr_t)DMA_MAPPING_ERROR;
+> +	}
 > +
-> +	domain = iommu_get_dma_domain(dev);
-> +	cookie = domain->iova_cookie;
-> +	iovad = &cookie->iovad;
-> +	iova_off = iova_offset(iovad, phys);
+> +	trace_swiotlb_bounced(dev, phys, size);
 > +
-> +	if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
-> +	    iommu_deferred_attach(dev, iommu_get_domain_for_dev(dev)))
-> +		return false;
-> +
-> +	if (WARN_ON_ONCE(!size))
-> +		return false;
+> +	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
+> +			attrs);
 > +
 > +	/*
-> +	 * DMA_IOVA_USE_SWIOTLB is flag which is set by dma-iommu
-> +	 * internals, make sure that caller didn't set it and/or
-> +	 * didn't use this interface to map SIZE_MAX.
+> +	 * Untrusted devices should not see padding areas with random leftover
+> +	 * kernel data, so zero the pre- and post-padding.
+> +	 * swiotlb_tbl_map_single() has initialized the bounce buffer proper to
+> +	 * the contents of the original memory buffer.
 > +	 */
-> +	if (WARN_ON_ONCE((u64)size & DMA_IOVA_USE_SWIOTLB))
-
-I'm a little concerned that device drivers might inadvertently misuse
-the state->__size by forgetting about the high bit being used for
-DMA_IOVA_USE_SWIOTLB. Perhaps adding a separate flag within struct
-dma_iova_state to prevent such issues?
-
-> +		return false;
+> +	if (phys != (phys_addr_t)DMA_MAPPING_ERROR && dev_is_untrusted(dev)) {
+> +		size_t start, virt = (size_t)phys_to_virt(phys);
 > +
-> +	addr = iommu_dma_alloc_iova(domain,
-> +			iova_align(iovad, size + iova_off),
-> +			dma_get_mask(dev), dev);
-> +	if (!addr)
-> +		return false;
+> +		/* Pre-padding */
+> +		start = iova_align_down(iovad, virt);
+> +		memset((void *)start, 0, virt - start);
 > +
-> +	state->addr = addr + iova_off;
-> +	state->__size = size;
-> +	return true;
+> +		/* Post-padding */
+> +		start = virt + size;
+> +		memset((void *)start, 0, iova_align(iovad, start) - start);
+> +	}
+> +
+> +	return phys;
 > +}
-> +EXPORT_SYMBOL_GPL(dma_iova_try_alloc);
+> +
+>   dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+>   	      unsigned long offset, size_t size, enum dma_data_direction dir,
+>   	      unsigned long attrs)
+> @@ -1151,42 +1188,14 @@ dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+>   	dma_addr_t iova, dma_mask = dma_get_mask(dev);
+>   
+>   	/*
+> -	 * If both the physical buffer start address and size are
+> -	 * page aligned, we don't need to use a bounce page.
+> +	 * If both the physical buffer start address and size are page aligned,
+> +	 * we don't need to use a bounce page.
+>   	 */
+>   	if (dev_use_swiotlb(dev, size, dir) &&
+>   	    iova_offset(iovad, phys | size)) {
+> -		if (!is_swiotlb_active(dev)) {
+
+... Is it better to move this check into the helper? Simply no-op if a
+bounce page is not needed:
+
+	if (!dev_use_swiotlb(dev, size, dir) ||
+	    !iova_offset(iovad, phys | size))
+		return phys;
 
 Thanks,
 baolu
