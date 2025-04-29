@@ -1,101 +1,117 @@
-Return-Path: <linux-pci+bounces-26995-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-26999-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC0DAA0B43
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 14:12:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B33BAA0BB5
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 14:31:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 322DF3B3887
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 12:11:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 193974603EA
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Apr 2025 12:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9372A2C17A9;
-	Tue, 29 Apr 2025 12:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32873524F;
+	Tue, 29 Apr 2025 12:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bNJhQN+S"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GvXzxD8o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA66B2C2589;
-	Tue, 29 Apr 2025 12:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3202C17AB
+	for <linux-pci@vger.kernel.org>; Tue, 29 Apr 2025 12:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928711; cv=none; b=u3OqYx61IliyPIFLJhRe00JmfQzenzjyJSSTPFQO4VceM9Ex1uOyahaWPQ1jDgRKQ6i9JLC7OBCsnS6xL+uNUzayG0I2VRTYxMmdMgbQJ0lm824z6xkYzXdFl9gti/1x+6VSNmS3hJgNxoeKyDH3NIiGZuXXh5DJL7X5w/Uhs4M=
+	t=1745929800; cv=none; b=d93guF/KBIRn0eq9QckhmQzMuUnZXWuoPyHhTthvWV9iBBznhcSbqy4ps8KBg0IsSl+IWg0a3Pm4wa7Yn8A8IoJHOCzGTBSsANc6A7kj0TyyaTSooaJ5wp0Q2Gl6kcWYNEw/AHrceZe7KPs8PdMoBzyKcAB4bmlG+E5yt+fqfZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928711; c=relaxed/simple;
-	bh=ClPZna7i5122Wr09xYbtgoqUCmhyRpCbBMozYYurono=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hw23mJ67pV90FRNQEpenCdzFwBJmbuUQdn0MoGZHgAbmQAmaRE+dxv9ZoC8+L0SihBmAUeObPDmcwv05ozyd2RuhHLXEUp1u9yISAtS7hVxZI9/vusKYnFPuoZMBpRnVz3aoA0PkgD08ILieQNNfzu/e82gWesKghl5mlI7Ib10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bNJhQN+S; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=0l6Sm
-	MR9BzhKNVS+UMt/7W8m+RHOtktucSCIuVkRrGU=; b=bNJhQN+S4PJO7yOxwi7JQ
-	I3uu4TnYFgFsLDS8GBN+9SoqTkinmuD/1OjApfTeN18rCWmkMiXlPrIAsJEX1HPx
-	8qio/IyUfMuMq/ZZDoTUGoKhncK8C2xAt2TpEjRLC8xz6rVniY0VD9UOvGHLvMVd
-	NZZyDFmGJYF7/giVV8hpAQ=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHUkXjwRBoU_m0DA--.22532S5;
-	Tue, 29 Apr 2025 20:11:22 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org
-Cc: cassel@kernel.org,
-	robh@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 3/3] PCI: cadence: Simplify j721e link status check
-Date: Tue, 29 Apr 2025 20:11:09 +0800
-Message-Id: <20250429121109.16864-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250429121109.16864-1-18255117159@163.com>
-References: <20250429121109.16864-1-18255117159@163.com>
+	s=arc-20240116; t=1745929800; c=relaxed/simple;
+	bh=fspc3DFcSox1gyyee1r9hEoJNZDYkCPhN2qCzyuWCLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JnT9U9qUvdj/4YjoXIcoYke0AdsHnTtt+7CRXeuo2q4M2uq/1b7OpCCGClTQmQdwJWRY+xNWKm24mj26itgiYMjdim93gmcCL1lR5VpCbDQbt581qdCuxMzSTwy4zBk9YsSecPQvHocUd+h4zhtOWtX2bqBL9dP5g69Uapa/p3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=GvXzxD8o; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so82356006d6.3
+        for <linux-pci@vger.kernel.org>; Tue, 29 Apr 2025 05:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1745929797; x=1746534597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fspc3DFcSox1gyyee1r9hEoJNZDYkCPhN2qCzyuWCLE=;
+        b=GvXzxD8oRwhhVzjNbV2jdHw0mz5JxM4ox2OE7i20JCyA2Y7XIoL7gYEEaqUmPEJKqg
+         saoJXZI/Zcju6zbadTmNxI0neJ6pk9r8w6WYYmK1BTH4cfV0ExZFFBou0AP43PPZHmcC
+         UFyALwg3A/XpUVS70ArqD3y/VAaOvYhYv8yJ47X6Vs4RanvbpdOYJt+RJcl9fhOvemjn
+         AVqGfwM8C3RR7Q4GkSugy/vZ3CsqoHC/vaIyAdecNDl38PKY7b8lSlcicxyYjJhoH4dg
+         +bu54vsxwVl+8KxE8KXDA6EnZSzd54Yn6U96gZFjg3WoXzT8S0qqTThFRnC2SJ5Bs5qI
+         /tOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745929797; x=1746534597;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fspc3DFcSox1gyyee1r9hEoJNZDYkCPhN2qCzyuWCLE=;
+        b=hiGqLFtpkCUCcPdvevPyeMyhUjudnz1gQdZ1hlnPzDndxOFj6iBgn+ZNMaQpPPKptv
+         mV6Cr8YijlgyA0ViqhvylR49oi/WS5dCc9ao7T2cDK8CeAa1+XAEFHSz9f6DgWRXOzdr
+         dkYBlQMEsslowb76RYxUXqboPlRMxiYcvd7hhKf8pHbg7Yx4AT/2Xi0edt0XZX09tU5t
+         fwNyasWRTlmGZksAWX9uAZXMA4oQY5MqhLjje5iT1W+sdckNzurGamBaN9uJRn1Y2lwb
+         hSOl/uzK2DGH30Q2702/J0g10CIQ/11ZayyVgxU0xObftJ8yu5IMPTTI+jy65dR5NXgn
+         MMRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMkd6df/UuLX1eh4KF3Sgv/mAU7tKNKePQjPSQMWZwD3cJcFLomXpaak4LX1T9M1F9QmG1fXLCxXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxufZ15GotH134a5tI7dyWZxwpFFyUR5yBpUrJWsJfhDyRiZF9u
+	XVOF/A5DShUbU5ajurbubNulax0YPXD0w9LlZiCL9wEtoknjTzGFsJXBGjzETgM=
+X-Gm-Gg: ASbGncsyZe2nXYYUNMxVtJFlxcGBieWsiO6kncUvong3gzdQdJQuGXEaW0yivepTugM
+	Ce6IqnWLOSnlD2h4dCWma/nhpT1HSZ77lm/ExkNMKkyv26Z1HwE8uklozfyIYYu0foOer/+ss9f
+	mb/NyzVUdxsR52akv2Jd7TAgjamLj9MDoS/+2KKCobVSg7LfzU4pwLMoT1vyNYh3VYg+mWpO/dk
+	O2Ta5zyuQtKrmLIP7jmEirA6lHf6ejs008HjOeIcTqq/6YBHQJKV9j3doTxX+e1KINUHL0T3qxP
+	RzAV7eBDfMTEl3EsYqa2E93PUkPlR7lvLA1DwjcxsHgZhHjWdvfwcdWGqvlaxls/wpx2G8ZMqxS
+	fqqEmt3ckM78ZVuclP2Q=
+X-Google-Smtp-Source: AGHT+IEgx9EB53XUdGV7vC29k/JxBvqJ89luumOzPRGbpdqAFnmUSowtG6tg8X/s0U1VWu7lyHl1sQ==
+X-Received: by 2002:a05:6214:d6d:b0:6f2:d45c:4a1d with SMTP id 6a1803df08f44-6f4d1f9d772mr228245476d6.38.1745929797482;
+        Tue, 29 Apr 2025 05:29:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aae68csm71890226d6.97.2025.04.29.05.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 05:29:56 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u9k60-0000000A4cD-1RSJ;
+	Tue, 29 Apr 2025 09:29:56 -0300
+Date: Tue, 29 Apr 2025 09:29:56 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: jane.chu@oracle.com
+Cc: logane@deltatee.com, hch@lst.de, gregkh@linuxfoundation.org,
+	willy@infradead.org, kch@nvidia.com, axboe@kernel.dk,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org
+Subject: Re: Report: Performance regression from ib_umem_get on zone device
+ pages
+Message-ID: <20250429122956.GB2260621@ziepe.ca>
+References: <fe761ea8-650a-4118-bd53-e1e4408fea9c@oracle.com>
+ <20250423232828.GV1213339@ziepe.ca>
+ <84867704-1b25-422a-8c56-6422a2ef50a9@oracle.com>
+ <20250424120143.GX1213339@ziepe.ca>
+ <bab1c156-ed5a-4c1d-8f0a-dd1e39e17c99@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHUkXjwRBoU_m0DA--.22532S5
-X-Coremail-Antispam: 1Uf129KBjvdXoWruryDKrWxAr1kJF15ZFW5ZFb_yoWDArc_ZF
-	1rZF4IyFsrurZIkFy2yF4ayFyrAayIva12ga93tF15AFyxJr4UCF1UZrWDWa4xua15AFn8
-	Aw1qqFn8AryjyjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUBbk7UUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwI+o2gQwOcdMQAAsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bab1c156-ed5a-4c1d-8f0a-dd1e39e17c99@oracle.com>
 
-Replace explicit if-else condition with direct return statement in
-j721e_pcie_link_up(). This reduces code verbosity while maintaining
-the same logic for detecting PCIe link completion.
+On Mon, Apr 28, 2025 at 12:11:40PM -0700, jane.chu@oracle.com wrote:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+> 6.15-rc3 is orders of magnitude better.
+> Agreed that device-dax's using folio are likely the heros. I've yet to check
+> the code and bisect, maybe pin_user_page_fast() adds folios to page_list[]
+> instead of 4K pages?
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index ef1cfdae33bb..bea1944a7eb2 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -153,11 +153,7 @@ static bool j721e_pcie_link_up(struct cdns_pcie *cdns_pcie)
- 	u32 reg;
- 
- 	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
--	reg &= LINK_STATUS;
--	if (reg == LINK_UP_DL_COMPLETED)
--		return true;
--
--	return false;
-+	return (reg & LINK_STATUS) == LINK_UP_DL_COMPLETED;
- }
- 
- static const struct cdns_pcie_ops j721e_pcie_ops = {
--- 
-2.25.1
+It does not.
 
+I think a bisection would be interesting information
+
+Jason
 
