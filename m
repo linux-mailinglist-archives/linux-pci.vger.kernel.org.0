@@ -1,136 +1,129 @@
-Return-Path: <linux-pci+bounces-27044-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27045-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08C97AA48D4
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 12:41:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FE03AA4B31
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 14:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 371BA3A78FC
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 10:36:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61F874C5746
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 12:32:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22EEC25C711;
-	Wed, 30 Apr 2025 10:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A886258CC3;
+	Wed, 30 Apr 2025 12:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="FmUjbCUe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DunsLNG7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B99325D8E1
-	for <linux-pci@vger.kernel.org>; Wed, 30 Apr 2025 10:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362B625A334
+	for <linux-pci@vger.kernel.org>; Wed, 30 Apr 2025 12:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009201; cv=none; b=R4b4X0Y5uRjgLg7khmq4Qu0xW98aS0Ce/+DtGNFpCOCI/aqQwChcuCeldqzgy1pyecZnG682oodW+QcCZGv3OBDbLDi2uFavlAFh8wOtJqypNm/ZWkqj5k3kbzr1WtMROc9uMdPOvWPsj6erru/cCROULXOXfItzHxQA+GOxAdE=
+	t=1746016335; cv=none; b=XdczngqTIsveBFuuiTuouPaJEfX3VA5kc3Qy1mugMSsU1pKNS3p9hihJxxJTAdSzeVxs0do1pWHjOXjDRey37OgHcvV7NI+Ava0U5EDUpdzgbVikUDVPI5qNMjf6D/rjQ2QNWKuiwSlmUTOI7LzsxtRUBUGvtCXxpuBr0MYQBJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009201; c=relaxed/simple;
-	bh=/qb3LqOk0CPpYt1EbGZXh/Cw0pmf2cmac/XhDTHJc/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eLGTeECjUxDWWm21M38BS1lTP0UbryU0pLJ4Y4z6ZXsfrZvhk+MDXmFrFU1kggOhUR0rdfQt17FH12DH/8grcHAwmhOfF7/29i5kf74GHgDBkXAUzTz1IiyN4ZpWZvRamyD+yQFTUMFsAMnMOZulzaqzxHBtqL0l0XljLd/g61I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=FmUjbCUe; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac29fd22163so1062751666b.3
-        for <linux-pci@vger.kernel.org>; Wed, 30 Apr 2025 03:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1746009198; x=1746613998; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5/1UiigIwXR8rjSUy1c3Sx5vxGn2/huSophWGwjW0Zc=;
-        b=FmUjbCUel/sDyoT96HiYbVfnZDo+v2BW0CCcZWw0bXzJ++Q4SVcTJ49ikGG0R++cfq
-         aXg03AGEJAXs54SuWkde7nF8hOWT036NHNkkwZyQsmFXJJLUa13uq3yJbgxKKdfn/axD
-         oS2YzykAKuXhdWJixjv+yoMhJcDe+ZMoicXN3L0MfJ6CaV5RkevYwhMZSzU2eEK8xjBz
-         BSp8I4HfY6DB/hd0OxI22CAhdUvJZKRe0xh3HFZm1j4vSWyszzyczuAsbnvBEbr1EbaP
-         0GkgnSQ1h6N0FyWhYWwsBoKgXXTSv41dldS8FRWOFIUv5RkGduvGzmRT1Jx6Y3LR4/br
-         7QFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746009198; x=1746613998;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5/1UiigIwXR8rjSUy1c3Sx5vxGn2/huSophWGwjW0Zc=;
-        b=H+0AtWzyZtL2ZPw6tkSKQH3H0ub9zA+msZICt1joRJwEY+wC/uiSnGPQr6YbdpDsOb
-         0LR8yn1N9bFBJtw4TpG3FvV6cRLWVCU0yQ1wvba0VbnorV0fZm4CmpDThULFm2a+C8WZ
-         TaEbh+wm33pJXlqM6uaD0IuJuACQsmA9ADOzy+JERcNCYxVqQhanUcUKO3XCd5moQ8JE
-         x07Mv8zl9URUFCi4QEqY6Wj/YXC1Q+Vw1FPzWdsxLmUsJwW8RJUwkkOA1EA9FByT+y7z
-         sJs0IvWIAikdvFZYJiDNsmTWRXMyiFO+R2C18nIOpGweeuNgtMQ23gpO0kgRIQVMug7V
-         uCcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVo5ol2QS/Fbs86hgvYbb/njn1l5XDB5k42UVhTzlYhgW1bXeOhXdOIiH4MfCauTGCvaL8rItHLW5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWtUIRoQ4ABoDnRXYtS3BDSWjjhq3F4CzjqArVDm8SLYJAxltM
-	9zUvyiIsR0cSW3MQqq7v7opQU+nX1OX8VOLnutPmyB2yuZ4yOxgQYGtQfbkxnts=
-X-Gm-Gg: ASbGncu3zlILzbdAB96oYEF1pHegFno2298aLhr7PHbaTmzRFEMxZ/VmkazH2xtO2XR
-	Fpwip12OqO9HlMC7HTrLFOoXiQu5V5BNSY7CjmqcR6imHtCL/+5pLWpoAosCs4TvmVL1fB2w6lY
-	qtsdiQ4oXWz470e0rYtrs5p3yG6/dA++NqlfBZvWR4R2tUnB6bLKjNgJ2W1FbJCzJlhKvvYMBTh
-	qrBleTOmMxENj34c7SrNoIBauBm5EoVJC/5HeCoG2c0m8zV4ordIltM9gONK6tg7Ku129xKN/OH
-	0+YgdTtTDu3Y0ZKZ1PKBEwsnnAeApxES2ou4AnneumzIwutjZQK0qviaTLcgeoEYrGP79vo=
-X-Google-Smtp-Source: AGHT+IHBcCruFD2Sx7wtL0cb9Uodi9fNatKRjptTZekaQF3eLuwGTgjpuo5/jbKcvNzZcB+Y1bBY1g==
-X-Received: by 2002:a17:907:3ea2:b0:ace:da39:7170 with SMTP id a640c23a62f3a-acedc768b2fmr307149666b.55.1746009197623;
-        Wed, 30 Apr 2025 03:33:17 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed6af86sm909390366b.133.2025.04.30.03.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 03:33:16 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	saravanak@google.com,
-	p.zabel@pengutronix.de
-Cc: claudiu.beznea@tuxon.dev,
-	linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 8/8] arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
-Date: Wed, 30 Apr 2025 13:32:36 +0300
-Message-ID: <20250430103236.3511989-9-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1746016335; c=relaxed/simple;
+	bh=qIgoPY8a90SnQq9lGujk17v54XYTdFWi+HVjzQhfcsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=spVyIrkDi+8euriTjfRcXpT0NTK92n/GIFewQSM3e5g7Ji38ooNS3nSrihboVyZUuepIpSPPMwfyvKOYkrJimVbTuYS4pKq1PJm0wH3/ffVlL2tLCWdjRhXfkqSWZD5O++HqupEnUtvLODayj3mX2GBXcrp5W0NgWwLy25awVrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DunsLNG7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F94FC4CEE9;
+	Wed, 30 Apr 2025 12:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746016335;
+	bh=qIgoPY8a90SnQq9lGujk17v54XYTdFWi+HVjzQhfcsY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DunsLNG7/hVB/8aMguhvHvQgCiLyNDoLl0/5OQ1odIDC17l6kagpfSMf3TSzYb4EV
+	 juKpXDou2UV0L/2h+8Zo9sqiDJbkEYtzz5odRFiDLJt8M5YKEoLVptXo2RLC0r/p0G
+	 Ecw6e/qYLk4vrtbmyToteQHo94c+YXuq1AhrhPskCFqSjeDZUMTsj1AIYidpg8BCoM
+	 vNFOLa6Emy47n2aTilQhQMnewz6fsVRsYBh7ub4DAmIBVGdVbZ/95cH3fF0kPmNJek
+	 YU0KXwxZc5HVYSMiZ3Mi/FTFzY9WIlvIJTg7hPCjzpxJRlYeopKnrT7p7U+tVIcgeQ
+	 mU7b34uMlIutg==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: dlemoal@kernel.org,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 1/2] PCI: dwc: ep: Fix broken set_msix() callback
+Date: Wed, 30 Apr 2025 14:31:59 +0200
+Message-ID: <20250430123158.40535-3-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2760; i=cassel@kernel.org; h=from:subject; bh=qIgoPY8a90SnQq9lGujk17v54XYTdFWi+HVjzQhfcsY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDKEJOx2tJoLpO69t6H074TF53IuHVxTMPnWgYTCHu0LK o9Yd12c0lHKwiDGxSArpsji+8Nlf3G3+5TjindsYOawMoEMYeDiFICJSBkw/M89f077ZePy0MLI 7BLB7D2VRy7mbq1K4m7cJMZTo6j7U5ThD/+KprKu/f9FWVf6mCekx5xJqA3O/7C4Mvny6eUaN8y /MQEA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+While the parameter 'interrupts' to the functions pci_epc_set_msi() and
+pci_epc_set_msix() represent the actual number of interrupts, and
+pci_epc_get_msi() and pci_epc_get_msix() return the actual number of
+interrupts.
 
-Enable PCIe for the Renesas RZ/G3S SoC.
+These endpoint library functions just mentioned will however supply
+"interrupts - 1" to the EPC callback functions pci_epc_ops->set_msi() and
+pci_epc_ops->set_msix(), and likewise add 1 to return value from
+pci_epc_ops->get_msi() and pci_epc_ops->get_msix(), even though the
+parameter name for the callback function is also named 'interrupts'.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+While the set_msix() callback function in pcie-designware-ep writes the
+Table Size field correctly (N-1), the calculation of the PBA offset
+is wrong because it calculates space for (N-1) entries instead of N.
+
+This results in e.g. the following error when using QEMU with PCI
+passthrough on a device which relies on the PCI endpoint subsystem:
+failed to add PCI capability 0x11[0x50]@0xb0: table & pba overlap, or they don't fit in BARs, or don't align
+
+Fix the calculation of PBA offset in the MSI-X capability.
+
+Fixes: 83153d9f36e2 ("PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments")
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a92c4122a8b9..b36a96777018 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -226,6 +226,7 @@ CONFIG_PCIE_MEDIATEK_GEN3=m
- CONFIG_PCI_TEGRA=y
- CONFIG_PCIE_RCAR_HOST=y
- CONFIG_PCIE_RCAR_EP=y
-+CONFIG_PCIE_RENESAS_RZG3S_HOST=m
- CONFIG_PCIE_ROCKCHIP_HOST=m
- CONFIG_PCI_XGENE=y
- CONFIG_PCI_IMX6_HOST=y
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..24026f3f3413 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -585,6 +585,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct dw_pcie_ep_func *ep_func;
+ 	u32 val, reg;
++	u16 actual_interrupts = interrupts + 1;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+ 	if (!ep_func || !ep_func->msix_cap)
+@@ -595,7 +596,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+ 	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+ 	val &= ~PCI_MSIX_FLAGS_QSIZE;
+-	val |= interrupts;
++	val |= interrupts; /* 0's based value */
+ 	dw_pcie_writew_dbi(pci, reg, val);
+ 
+ 	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+@@ -603,7 +604,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+ 
+ 	reg = ep_func->msix_cap + PCI_MSIX_PBA;
+-	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
++	val = (offset + (actual_interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+ 	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+ 
+ 	dw_pcie_dbi_ro_wr_dis(pci);
 -- 
-2.43.0
+2.49.0
 
 
