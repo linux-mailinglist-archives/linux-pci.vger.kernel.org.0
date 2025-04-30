@@ -1,76 +1,125 @@
-Return-Path: <linux-pci+bounces-27048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 397DDAA4D79
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 15:29:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDDA4AA50C7
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 17:50:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF257985324
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 13:28:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AC03173BD6
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 15:50:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40D625B1E3;
-	Wed, 30 Apr 2025 13:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C425D2DC760;
+	Wed, 30 Apr 2025 15:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iNpPjjLD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B832DC774;
-	Wed, 30 Apr 2025 13:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2EB52609EC;
+	Wed, 30 Apr 2025 15:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019741; cv=none; b=tWYayngt8mNLbjk3tIynatWMdqFVmH6uxizX+pZ+odjmLEaC0Ikpr9S/DsWJdtHlOgtl11kUZqBmQDJLuiYdf+/t84CMa9hycpxIcGXBQe2y3OArxkqU+3P3iIkkuZtbhSEra9PO7gDSwxAsoQFwxm2q/d0/nz4l61otqKYBX3E=
+	t=1746028244; cv=none; b=lSqzzW3jvBaq+Qn0vyNnQwtyvNmYOA7zfrsDs9bLsWb7JwoD8REPlqx6Vnh1J57HkPIaH9DYaRsnJcgxCDmcPQ89Fr+XbetlpPTJT4IjJeuw3to/A6vqRCo4u5Fby1br5liGHeRXtV/G60WxoMxh+iLttzxfpA2O61OFPiY0vbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019741; c=relaxed/simple;
-	bh=iepFqjTnG5ZKfsAvZMKKlCR3NMQcNm1fZnc9Ww3gYO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OrZYuIPYDbUxw44Rr2CivEJ9Jya/osSDdTBHH7lbXeDlkKcA7J9j4qg6HdQMiFbtDdROouaE1pyMFrm4V0T/573ygHfnSCE+4o+iN5VFjfJBABfX6v9f1jfd4ncLSrN2B7K88OQji1JTIC+6vsFPlurYGmqeF69sezxb1PHiNyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 42B492C4CBD8;
-	Wed, 30 Apr 2025 15:20:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 52E0D4F35C; Wed, 30 Apr 2025 15:20:43 +0200 (CEST)
-Date: Wed, 30 Apr 2025 15:20:43 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Keith Busch <kbusch@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
-Message-ID: <aBIjqwn7Txl6TuP0@wunner.de>
-References: <20250430083526.4276-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1746028244; c=relaxed/simple;
+	bh=/W2Ic4tKA97M9bMUtoPjZi1J8CCbti4QeU2swqC2iFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qiesdVmciqVx4olfkPSHVhmP3gHcOB95/ToY4fI7XXQqodcWhmPppL5UC9/5rkGQ/X02IqADaNdngXrYAkJVgxW55f4AynHos5uLnLf1pAKoIttbVeeY76Mxk4bTPlseefFy0D7PZ/3ObsSX74ybZPWOuGMtgjVJOUyUBQwWciw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iNpPjjLD; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=2ipwuktyL4IYrX9QXx/qInbelFH4y7kMFN28HkTAvhQ=;
+	b=iNpPjjLDz6EdD5R4/9fK8E9OmIw40897IJyzAwoAG6brClDAePPB9KPJS73B2M
+	c0SHXHZutwDtPNHUe6B0CgkUR0tpBlNMv7gGtA7xm5cANRMrnczaV72BCfGPMHLD
+	+GjKsGThSkDkIjK/b9dBHaLdcRVst7yvq0x3MBUBcSkR4=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnt_CXRhJok9OzDQ--.16197S2;
+	Wed, 30 Apr 2025 23:49:43 +0800 (CST)
+Message-ID: <96f0f689-5fa1-40b1-9381-41dbd4836ad6@163.com>
+Date: Wed, 30 Apr 2025 23:49:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/6] PCI: Refactor capability search into common
+ macros
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250429125036.88060-1-18255117159@163.com>
+ <20250429125036.88060-4-18255117159@163.com>
+ <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250430083526.4276-1-ilpo.jarvinen@linux.intel.com>
+X-CM-TRANSID:_____wDnt_CXRhJok9OzDQ--.16197S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw1fWryxWr4ktF4kuw48WFg_yoW8CFy8pF
+	y8Aw4aya1DKay3Ca4DZa18XFyaq393CrW7Wrn8Jw1FqFs09F9aqr4rKa1rAFW2kr95A3W2
+	qrWYqFyUA3WUCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxM-o2gSP2WsegAAs2
 
-On Wed, Apr 30, 2025 at 11:35:26AM +0300, Ilpo Järvinen wrote:
-> The commit a4e772898f8b ("PCI: Add missing bridge lock to
-> pci_bus_lock()") made the lock function to call depend on
-> dev->subordinate but left pci_slot_unlock() unmodified creating locking
-> asymmetry compared with pci_slot_lock().
 
-Worth noting that this isn't just for symmetry:  It seems the bridge
-is unlocked twice because pci_bus_unlock() unlocks bus->self and
-pci_slot_unlock() then unconditionally unlocks the same bridge device
-again.
 
-Thanks,
+On 2025/4/30 16:03, Ilpo JÃ¤rvinen wrote:
+> On Tue, 29 Apr 2025, Hans Zhang wrote:
+> 
+>> The PCI Capability search functionality is duplicated across the PCI core
+>> and several controller drivers. The core's current implementation requires
+>> fully initialized PCI device and bus structures, which prevents controller
+>> drivers from using it during early initialization phases before these
+>> structures are available.
+>>
+>> Move the Capability search logic into a header-based macro that accepts a
+>> config space accessor function as an argument. This enables controller
+>> drivers to perform Capability discovery using their early access
+>> mechanisms prior to full device initialization while sharing the
+>> Capability search code.
+>>
+>> Convert the existing PCI core Capability search implementation to use this
+>> new macro.
+>>
+>> The macros now implement, parameterized by the config access method. The
+> 
+> This sentence is incomplete (and sounds pretty much duplicated
+> information anyway).
+> 
 
-Lukas
+Dear Ilpo,
+
+Thank you very much for pointing out my problems patiently. These will 
+be deleted.
+
+>> PCI core functions are converted to utilize these macros with the standard
+>> pci_bus_read_config accessors.
+> 
+> This info is duplicated.
+> 
+
+Will delete.
+
+>> Controller drivers can later use the same
+>> macros with their early access mechanisms while maintaining the existing
+>> protection against infinite loops through preserved TTL checks.
+>>
+>> The ttl parameter was originally an additional safeguard to prevent
+>> infinite loops in corrupted config space.  However, the
+>> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
+>> Removing redundant ttl handling simplifies the interface while maintaining
+>> the safety guarantee. This aligns with the macro's design intent of
+>> encapsulating TTL management.
+
+Best regards,
+Hans
+
 
