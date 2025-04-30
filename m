@@ -1,275 +1,376 @@
-Return-Path: <linux-pci+bounces-27032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F7EEAA44B9
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 10:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA190AA44BB
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 10:04:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00A681C01854
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 08:04:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2948B1C02290
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Apr 2025 08:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B127421129C;
-	Wed, 30 Apr 2025 08:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6978E213E90;
+	Wed, 30 Apr 2025 08:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBFir0Pu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/YKKXJB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8752C1EB19B;
-	Wed, 30 Apr 2025 08:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E902213E79;
+	Wed, 30 Apr 2025 08:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000213; cv=none; b=MWvaAUM+gtZ9zzEFqsPgHeBP+tp2NkGuMMoat4DZdJh8pd3EIiWdZ6Cl5vUGnFqvqDXiODjBF3atwXCIEeWJq9z5Ok7tQsl6QcaAs+8k9pghZ3f2WqH1CrHI0D8lTr1lI9IZeEdZYGW1wilDN4kMZ9c92FLNPYaWcAnWz2yzlzE=
+	t=1746000221; cv=none; b=AZRZs9EJWTRlZucYYpW9c8yAgC8I0ni9NCp0eYVufjsj/9iJUir2rD7G4yhOYqg4LNO830oA6i8vSbPNYicV82F+2qBqLDxGBpnVRi/BCgrLjkQYWhnO0PzUOIz6gJ2lDLNldEB4KT7wNF49aQihROnzZmD2TSHTH6XiIW/zrz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000213; c=relaxed/simple;
-	bh=RlnABCF7WCe8RVLZReHP66Pa73bC8yt5d8eBUmJneKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMaKjwJVI0Cm6x3uyQUtQ14FM577qx61jMPmIqFW/ZLbN4GYq4ag1q7vmhofNr6ZzxthfY7Y2WJOebY249WmrPajIg+co/In+bYWqtILlcG77W+ytUyP1y1L+tkpsIVCa7VtKw9Bz4+UywVLfh08R0E0dT6DUS4jAkRVoDoGpnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBFir0Pu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA10CC4CEE9;
-	Wed, 30 Apr 2025 08:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746000212;
-	bh=RlnABCF7WCe8RVLZReHP66Pa73bC8yt5d8eBUmJneKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UBFir0PumNtsyhRcyxswUYKkQFbxj4U9rU1ILc/gnLeWlVWvWv0AuFFR43w79q5nI
-	 lC4XHCpPUuxLiQHZVitSfmKwA6wzrN51gkEOBiB68nyFedAw2890mXFFrv2N4plGkF
-	 pgbSjCp3p7CloUXv9rEuHPCBg6Y3UTFTOvh5VIe67CAnVmKpZL94v1bv2zaoD/Ezy6
-	 ITkdVoR9Ywz5gzKHONxvQ7XL+hLOnjuc4Kc8U3odszxuh2aAUl69V1msFUfo0iZZzJ
-	 Xx7yB3KU9KZriVTBdH7We3SMz1tHsqQRzd6Y4QcIM81vRccWPu7/S7kMdzj46aRSHE
-	 TNVSXGWOHcoyA==
-Date: Wed, 30 Apr 2025 10:03:27 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alistair Francis <alistair@alistair23.me>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [PATCH] PCI: dwc: Add support for slot reset on link down event
-Message-ID: <aBHZT_mOruwH7HxJ@ryzen>
-References: <20250430-b4-pci_dwc_reset_support-v1-1-f654abfa7925@wdc.com>
+	s=arc-20240116; t=1746000221; c=relaxed/simple;
+	bh=6drvUTZA3XtBOUMIg3nWg1p34cXvyVA8kv/Z5HSimH0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LqhbWbFoGYuDKDyWmfq49Ee0fC0qN6Gjl191QY8me8vFMyMGknCLHQrA+WqHXAc9bVpJYV+TLCJa2x4OAcUxCRWsknGnLNBdy18nneCQWOFGofpR/8dKlsNn4DwW+XG4bmX4dG+OrwXi0nHfCHl7oEoc/atZbF7bGCU0/sevGX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/YKKXJB; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746000219; x=1777536219;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6drvUTZA3XtBOUMIg3nWg1p34cXvyVA8kv/Z5HSimH0=;
+  b=I/YKKXJB9NjV9SDjwxBfe/t11yhvUTUfATA9buvjBa1gYKn/wslSO6mX
+   jld3QNgQqwsFtMUHldBSWC+PKW2QMbYsbmmZezZaRhj6/oVZVse6Nacr3
+   BqxWcX/I33YclDBopsiJYKzb4jkxbPjZjdOpO33jkQbYK5xdQQmFEDw9W
+   UTyhS9e3SY3KsBUFpD5vU1VvSEDZnL2T3tIE+mGBXFSm2pcjv1dN0Vony
+   kavGhJC/ZIcZjRfqmt3mMajC1v/W1g8fd+7lNvltRoLUauQjfvxq4T0eb
+   amEfOYVtmfPrvHDxEm5a/lB2QMGwFGWMuA1ynI0AGqyH25GMwjP7mW2Ba
+   w==;
+X-CSE-ConnectionGUID: uxoPJhkFTEiLfFm/Rnv4cg==
+X-CSE-MsgGUID: NUG+vlogTX2vvw6sUFAntw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="46765194"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="46765194"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:03:38 -0700
+X-CSE-ConnectionGUID: NdU+fwu2SgiA6jQQ8luuWg==
+X-CSE-MsgGUID: 4pl1v2KVRbmYb3k3a9C1Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="139233702"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:03:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 30 Apr 2025 11:03:30 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 3/6] PCI: Refactor capability search into common
+ macros
+In-Reply-To: <20250429125036.88060-4-18255117159@163.com>
+Message-ID: <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
+References: <20250429125036.88060-1-18255117159@163.com> <20250429125036.88060-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-b4-pci_dwc_reset_support-v1-1-f654abfa7925@wdc.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hello Wilfred,
+On Tue, 29 Apr 2025, Hans Zhang wrote:
 
-Nice to see this feature :)
+> The PCI Capability search functionality is duplicated across the PCI core
+> and several controller drivers. The core's current implementation requires
+> fully initialized PCI device and bus structures, which prevents controller
+> drivers from using it during early initialization phases before these
+> structures are available.
+> 
+> Move the Capability search logic into a header-based macro that accepts a
+> config space accessor function as an argument. This enables controller
+> drivers to perform Capability discovery using their early access
+> mechanisms prior to full device initialization while sharing the
+> Capability search code.
+> 
+> Convert the existing PCI core Capability search implementation to use this
+> new macro.
+> 
+> The macros now implement, parameterized by the config access method. The
 
-On Wed, Apr 30, 2025 at 05:43:51PM +1000, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+This sentence is incomplete (and sounds pretty much duplicated 
+information anyway).
+
+> PCI core functions are converted to utilize these macros with the standard
+> pci_bus_read_config accessors.
+
+This info is duplicated.
+
+> Controller drivers can later use the same
+> macros with their early access mechanisms while maintaining the existing
+> protection against infinite loops through preserved TTL checks.
 > 
-> The PCIe link may go down in cases like firmware crashes or unstable
-> connections. When this occurs, the PCIe slot must be reset to restore
-> functionality. However, the current driver lacks link down handling,
-> forcing users to reboot the system to recover.
+> The ttl parameter was originally an additional safeguard to prevent
+> infinite loops in corrupted config space.  However, the
+> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
+> Removing redundant ttl handling simplifies the interface while maintaining
+> the safety guarantee. This aligns with the macro's design intent of
+> encapsulating TTL management.
 > 
-> This patch implements the `reset_slot` callback for link down handling
-> for DWC PCIe host controller. In which, the RC is reset, reconfigured
-> and link training initiated to recover from the link down event.
-> 
-> This patch by extension fixes issues with sysfs initiated bus resets.
-> In that, currently, when a sysfs initiated bus reset is issued, the
-> endpoint device is non-functional after (may link up with downgraded link
-> status). With this patch adding support for link down recovery, a sysfs
-> initiated bus reset works as intended. Testing conducted on a ROCK5B board
-> with an M.2 NVMe drive.
-> 
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
-> Hey all,
+> Changes since v9:
+> - None
 > 
-> This patch builds ontop of [1] to extend the reset slot support for the
-> DWC PCIe host controller. Which implements link down recovery support
-> for the DesignWare PCIe host controller by adding a `reset_slot` callback.
-> This allows the system to recover from PCIe link failures without requiring a reboot.
-> 
-> This patch by extension improves the behavior of sysfs-initiated bus resets.
-> Previously, a `reset` issued via sysfs could leave the endpoint in a
-> non-functional state or with downgraded link parameters. With the added
-> link down recovery logic, sysfs resets now result in a properly reinitialized
-> and fully functional endpoint device. This issue was discovered on a
-> Rock5B board, and thus testing was also conducted on the same platform
-> with a known good M.2 NVMe drive.
-> 
-> Thanks!
-> 
-> [1] https://lore.kernel.org/all/20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org/
+> Changes since v8:
+> - The patch commit message were modified.
 > ---
->  drivers/pci/controller/dwc/Kconfig            |  1 +
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 89 ++++++++++++++++++++++++++-
->  2 files changed, 88 insertions(+), 2 deletions(-)
+>  drivers/pci/pci.c | 70 +++++---------------------------------
+>  drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 95 insertions(+), 61 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..878c52de0842e32ca50dfcc4b66231a73ef436c4 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -347,6 +347,7 @@ config PCIE_ROCKCHIP_DW_HOST
->  	depends on OF
->  	select PCIE_DW_HOST
->  	select PCIE_ROCKCHIP_DW
-> +	select PCI_HOST_COMMON
->  	help
->  	  Enables support for the DesignWare PCIe controller in the
->  	  Rockchip SoC (except RK3399) to work in host mode.
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 3c6ab71c996ec1246954f52a9454c8ae67956a54..4c2c683d170f19266e1dfe0efde76d6feb23bf7a 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -23,6 +23,8 @@
->  #include <linux/reset.h>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 1c29e8f20cb5..8a1f47e8f5cc 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -9,7 +9,6 @@
+>   */
 >  
->  #include "pcie-designware.h"
-> +#include "../../pci.h"
-> +#include "../pci-host-common.h"
+>  #include <linux/acpi.h>
+> -#include <linux/align.h>
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -31,7 +30,6 @@
+>  #include <asm/dma.h>
+>  #include <linux/aer.h>
+>  #include <linux/bitfield.h>
+> -#include <uapi/linux/pci_regs.h>
+>  #include "pci.h"
 >  
->  /*
->   * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-> @@ -83,6 +85,9 @@ struct rockchip_pcie_of_data {
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-> +				       struct pci_dev *pdev);
-> +
->  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
->  {
->  	return readl_relaxed(rockchip->apb_base + reg);
-> @@ -256,6 +261,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->  					 rockchip);
->  
->  	rockchip_pcie_enable_l0s(pci);
-> +	pp->bridge->reset_slot = rockchip_pcie_rc_reset_slot;
->  
->  	return 0;
+>  DEFINE_MUTEX(pci_slot_mutex);
+> @@ -426,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
 >  }
-> @@ -455,6 +461,11 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
->  	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
->  	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
 >  
-> +	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
-> +		dev_dbg(dev, "hot reset or link-down reset\n");
-> +		pci_host_handle_link_down(pp->bridge);
-> +	}
-> +
->  	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
->  		if (rockchip_pcie_link_up(pci)) {
->  			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> @@ -536,8 +547,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  		return ret;
+>  static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+> -				  u8 pos, int cap, int *ttl)
+> +				  u8 pos, int cap)
+>  {
+> -	u8 id;
+> -	u16 ent;
+> -
+> -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> -
+> -	while ((*ttl)--) {
+> -		if (pos < PCI_STD_HEADER_SIZEOF)
+> -			break;
+> -		pos = ALIGN_DOWN(pos, 4);
+> -		pci_bus_read_config_word(bus, devfn, pos, &ent);
+> -
+> -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+> -		if (id == 0xff)
+> -			break;
+> -		if (id == cap)
+> -			return pos;
+> -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+> -	}
+> -	return 0;
+> +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
+> +				     devfn);
+>  }
+>  
+>  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+>  			      u8 pos, int cap)
+>  {
+> -	int ttl = PCI_FIND_CAP_TTL;
+> -
+> -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+> +	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+>  }
+>  
+>  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+> @@ -555,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+>   */
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+>  {
+> -	u32 header;
+> -	int ttl;
+> -	u16 pos = PCI_CFG_SPACE_SIZE;
+> -
+> -	/* minimum 8 bytes per capability */
+> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> -
+>  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+>  		return 0;
+>  
+> -	if (start)
+> -		pos = start;
+> -
+> -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+> -		return 0;
+> -
+> -	/*
+> -	 * If we have no capabilities, this is indicated by cap ID,
+> -	 * cap version and next pointer all being 0.
+> -	 */
+> -	if (header == 0)
+> -		return 0;
+> -
+> -	while (ttl-- > 0) {
+> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> -			return pos;
+> -
+> -		pos = PCI_EXT_CAP_NEXT(header);
+> -		if (pos < PCI_CFG_SPACE_SIZE)
+> -			break;
+> -
+> -		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+> -			break;
+> -	}
+> -
+> -	return 0;
+> +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
+> +					    dev->bus, dev->devfn);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>  
+> @@ -650,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>  
+>  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  {
+> -	int rc, ttl = PCI_FIND_CAP_TTL;
+> +	int rc;
+>  	u8 cap, mask;
+>  
+>  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+> @@ -659,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  		mask = HT_5BIT_CAP_MASK;
+>  
+>  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> -				      PCI_CAP_ID_HT, &ttl);
+> +				      PCI_CAP_ID_HT);
+>  	while (pos) {
+>  		rc = pci_read_config_byte(dev, pos + 3, &cap);
+>  		if (rc != PCIBIOS_SUCCESSFUL)
+> @@ -670,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  
+>  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+>  					      pos + PCI_CAP_LIST_NEXT,
+> -					      PCI_CAP_ID_HT, &ttl);
+> +					      PCI_CAP_ID_HT);
 >  	}
 >  
-> -	/* unmask DLL up/down indicator */
-> -	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
-> +	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
-> +	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
->  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
+>  	return 0;
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5e1477d6e254..79cd6402ba8d 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -2,7 +2,9 @@
+>  #ifndef DRIVERS_PCI_H
+>  #define DRIVERS_PCI_H
 >  
->  	return ret;
-> @@ -688,6 +699,80 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
+> +#include <linux/align.h>
+>  #include <linux/pci.h>
+> +#include <uapi/linux/pci_regs.h>
 >  
-> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-> +				  struct pci_dev *pdev)
-> +{
-> +	struct pci_bus *bus = bridge->bus;
-> +	struct dw_pcie_rp *pp = bus->sysdata;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-> +	struct device *dev = rockchip->pci.dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	dw_pcie_stop_link(pci);
-> +	rockchip_pcie_phy_deinit(rockchip);
-> +
-> +	ret = reset_control_assert(rockchip->rst);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = rockchip_pcie_phy_init(rockchip);
-> +	if (ret)
-> +		goto disable_regulator;
-> +
-> +	ret = reset_control_deassert(rockchip->rst);
-> +	if (ret)
-> +		goto deinit_phy;
-> +
-> +	ret = rockchip_pcie_clk_init(rockchip);
-> +	if (ret)
-> +		goto deinit_phy;
+>  struct pcie_tlp_log;
+>  
+> @@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>  int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>  			u32 *val);
+>  
+> +/* Standard Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search
+> + * @cap: Capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Iterates through the capability list in PCI config space to find
+> + * the specified capability. Implements TTL (time-to-live) protection
+> + * against infinite loops.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+> +({									\
+> +	int __ttl = PCI_FIND_CAP_TTL;					\
+> +	u8 __id, __found_pos = 0;					\
+> +	u8 __pos = (start);						\
+> +	u16 __ent;							\
+> +									\
+> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+> +									\
+> +	while (__ttl--) {						\
+> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+> +			break;						\
+> +									\
+> +		__pos = ALIGN_DOWN(__pos, 4);				\
+> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
 
-Here you call rockchip_pcie_clk_init(), but I don't see that we ever called
-clk_bulk_disable_unprepare() after stopping the link. I would have expected
-the clk framework to have given us a warning about enabling clocks that are
-already enabled.
+You seem to have dropped the return value checks?
 
-
+> +									\
+> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+> +		if (__id == 0xff)					\
+> +			break;						\
+> +									\
+> +		if (__id == (cap)) {					\
+> +			__found_pos = __pos;				\
+> +			break;						\
+> +		}							\
+> +									\
+> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+> +	}								\
+> +	__found_pos;							\
+> +})
 > +
-> +	ret = pp->ops->init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "Host init failed: %d\n", ret);
-> +		goto deinit_clk;
-> +	}
+> +/* Extended Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search (0 for initial search)
+> + * @cap: Extended capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Searches the extended capability space in PCI config registers
+> + * for the specified capability. Implements TTL protection against
+> + * infinite loops using a calculated maximum search count.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
+> +({										\
+> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
+> +	u16 __found_pos = 0;							\
+> +	int __ttl, __ret;							\
+> +	u32 __header;								\
+> +										\
+> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
+> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
+> +		__ret = read_cfg(args, __pos, 4, &__header);			\
+> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
+> +			break;							\
+> +										\
+> +		if (__header == 0)						\
+> +			break;							\
+> +										\
+> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
+> +			__found_pos = __pos;					\
+> +			break;							\
+> +		}								\
+> +										\
+> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
+> +	}									\
+> +	__found_pos;								\
+> +})
 > +
-> +	/* LTSSM enable control mode */
-> +	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-> +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-> +
-> +	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE, PCIE_CLIENT_GENERAL_CON);
-> +
-> +	ret = dw_pcie_setup_rc(pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to setup RC: %d\n", ret);
-> +		goto deinit_clk;
-> +	}
-> +
-> +	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
-> +	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
-> +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
-> +
-> +	ret = dw_pcie_start_link(pci);
-> +	if (ret)
-> +		return ret;
+>  /* Functions internal to the PCI core code */
+>  
+>  #ifdef CONFIG_DMI
+> 
 
-Here you are simply returning ret in case of error,
-should we perhaps goto error if this function fails?
+-- 
+ i.
 
-
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret)
-> +		return ret;
-
-Here, I think that we should simply call dw_pcie_wait_for_link()
-without checking for error.
-
-1) That is what Mani does in the qcom patch that implements the
-reset_slot() callback.
-2) That is what we do in:
-https://github.com/torvalds/linux/blob/master/drivers/pci/controller/dwc/pcie-designware-host.c#L558-L559
-
-(Ignore errors, the link may come up later)
-
-
-Kind regards,
-Niklas
 
