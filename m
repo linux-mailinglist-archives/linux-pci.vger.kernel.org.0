@@ -1,295 +1,270 @@
-Return-Path: <linux-pci+bounces-27077-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E35B1AA6503
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 23:01:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28AF2AA65B9
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 23:43:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 461414A6630
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 21:01:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9D3F7A5C2F
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 21:42:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D481825EF8E;
-	Thu,  1 May 2025 21:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 273FF226D00;
+	Thu,  1 May 2025 21:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FFyuonpn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZCb6p+6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210BA22156A;
-	Thu,  1 May 2025 21:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746133255; cv=fail; b=WQGA0PYmdspwObJ1cy5sPQoK+jqR9uPDLKPxNvKODLvLGjUMIr4af2v3OGEppQpW9/7qnmBaJ2npGUXkw77GGSmxSoxZRk1VLrItP/vFbJm7SYxbKj1Y1rbDM4kxYW+4LQqbKPoU+lfb8wgxKCGS7iIflhx7iOfFWqH5SXq0iKs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746133255; c=relaxed/simple;
-	bh=WkcS294b/ii9ogtIIvfXG+zRm4VFxC57Bb2QYwS4VhA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c/wsFNnb5ZSWQvZwwNS72OHg+hP9U5TdUgSo17CCsdeRY68G9Cku4BRJrnvVj4mOwJA6f+7JFhs+xQbwrwJjRppvlM//7LBgWQj3pGNUmvZmzEj0ek5gJZ/2tbjHRGNnAh19HN+W9Twp47mwaWnhATxA5Gjdgbzkdy9PCEDHj0k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FFyuonpn; arc=fail smtp.client-ip=40.107.220.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BSVnlG2XLDb8ZKm8WLnoNeBiaSj0ybZvkJbEqN5Hcv+AiaWlaxQoeusUUmhh7qByXF/qRlvdjH1ql5UZTXJUlirYqLE6nXT/dhmYbnREQkJzu68wjzVXTeUTJbjmYW5ZwSiDXE5nYkjqcbghD6VU3kawozZnezycvpl6xBy5ynjz3W+4/1cKU/wFgx83QYAzmDJ1a6NUg6FlKKt8KtdL6VxQMRaVZl4Pue5czrP1lbrYooaF2KPdQe9r8ksJOOTbLuEQb364twCXodhZevFnctkiGDBj5bSDgzBUR/YCoe1B/hCzI982UI+NnUDdbPQ6lGzkm/ZfzNL9Z6ZfPZpwgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mf1hc8ioBso5skW4fRWXvtd1yoWmPw6vdoxPFdArIDY=;
- b=y4nezt1RiJhpMGtSBYi66cUCzwxn4dWzNfkz9pCId1UPz5rvCgADVwBWDnZJlHblH5tSLxQaADubWja7WoZXPXiFHoG6ttbUSk3sF6eWLkcLn2+PTw7ZLqI1Kto8Aan9AQUw7GuP+ABxurQLYLO7vpkR7vnSVciaRXUJhHMq5o0u3jmKpTIu8ADueiUF+PJTjt+Hv0JZCsjtqjwGjNNQEId2XKaN0nANTrrpx9eKmyXsrYldef7UH2T/fxWb20Gpryx/MD3PjGeTzDZhz9RuIzFHKZA0EKG5Gap+EbV2WvhxuvpGfh83s86K8dAssxJSaQGL+nPGue+yh1MUIy13Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mf1hc8ioBso5skW4fRWXvtd1yoWmPw6vdoxPFdArIDY=;
- b=FFyuonpnn9Dd4akRAYN+OoX+2hYUoufDaMh2PfRff0VuSYxz8mqqKrSHmPy++/W15Morn0oTObDAOtuB+ZOJ+OwxVoAJ08svJRRiFo0d7/mzq+M6jNiHXCf4ZPjQ+8A+3L4WUhIEgqPsucgLn3J9qpuWNtjbqolDGcD8PgyKYlog+QMIxgGLQ42oMFyI9BgG0MtFQSo57NmxpOtPceOdINlyMuYJ7ILg8Ai7hzY5floe+Q6V4HwDqlsObLJ5vueTvUoun26beaLiCwmyHiSiWCuaWuzB/C90GGJ+zMGUXIZpyuJrChC6oPRd+Ik5Sn2AUEOnhjVz1NZMvbqxZLGnAA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL3PR12MB6643.namprd12.prod.outlook.com (2603:10b6:208:38f::17)
- by IA0PR12MB7723.namprd12.prod.outlook.com (2603:10b6:208:431::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 1 May
- 2025 21:00:49 +0000
-Received: from BL3PR12MB6643.namprd12.prod.outlook.com
- ([fe80::4c5a:f9d8:3aa4:4d2f]) by BL3PR12MB6643.namprd12.prod.outlook.com
- ([fe80::4c5a:f9d8:3aa4:4d2f%5]) with mapi id 15.20.8699.012; Thu, 1 May 2025
- 21:00:48 +0000
-Message-ID: <5b74482c-38c3-4720-81b8-67c599184e39@nvidia.com>
-Date: Thu, 1 May 2025 14:00:45 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 rc] iommu: Skip PASID validation for devices without
- PASID capability
-To: Vasant Hegde <vasant.hegde@amd.com>, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
- yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
-References: <20250430025426.976139-1-tdave@nvidia.com>
- <85cab331-d19b-4cd7-83cb-02def31c71ac@amd.com>
-Content-Language: en-US
-From: Tushar Dave <tdave@nvidia.com>
-In-Reply-To: <85cab331-d19b-4cd7-83cb-02def31c71ac@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4P221CA0020.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::25) To BL3PR12MB6643.namprd12.prod.outlook.com
- (2603:10b6:208:38f::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014B21F4608
+	for <linux-pci@vger.kernel.org>; Thu,  1 May 2025 21:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746135813; cv=none; b=LbK3WLNnu2hBlawwRb1thhGyZHWBwmqqs6vaAaz5Udr9GMHBpK/OU5SwSJX3ShK4ZXGCvsDoh8xd2mpD31axODazdgqTIOrsdn5q5+NdDibEYJi5WxwqbF7uW6f4npbUrXRcuG2id38NU8e3LiJrbZwd7U0laxh6NiG5scYpVts=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746135813; c=relaxed/simple;
+	bh=NCVkwU3Me6tu/j/7H8xvaLzczrU6JR8qeD5IGtliCMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MQr9K7rF2A035o210scZVJGO1JMF5HO6tpJ0bNhQcnYtoAYksYXxMphPG8g7xgn6mwevHnRWmmr51y+wXdup+Y7ltdbc+SB5fqq9i4gOjP44kgtGcTt8+WOTzuT3mW+SYKwCtRnDH/lX60igdGTkj5yEZ+60dr5pzo2Wnuzv8/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZCb6p+6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53145C4CEE3;
+	Thu,  1 May 2025 21:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746135812;
+	bh=NCVkwU3Me6tu/j/7H8xvaLzczrU6JR8qeD5IGtliCMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sZCb6p+6Oh22sm4CX+ScoPK+E2tt0tHxqqnUWfJKDuiYITtAd2QCCEPHDykyLkafZ
+	 MCvXJYrIiWHSLtG35PhqH99JT/EA0s5UXp+jKnWDP5S21MCnCcQJLQ6emehgUxqRBd
+	 qujEByOMFlJNWCA2VlB65ua1Fr1XuMrjiBBHH0gd1xFmnGl9Yh+kHTDCh1MJtoHWew
+	 h6IuxN3CqrqZQ3xhsluQrdgmxtvMzhoL5jWa4ZQFdviJItZTTi39EE8cGTHDCduWDm
+	 9aDMixfsQAWGFsvbX9tfdkw0q6MjSB/vTKIbxjY9+Pn8GC4VbbhbEOoP+XTN7fXLKV
+	 x8+YRLTFGTgiA==
+Date: Thu, 1 May 2025 16:43:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-pci@vger.kernel.org,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v5 1/8] PCI/AER: Check log level once and propagate down
+Message-ID: <20250501214331.GA782778@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB6643:EE_|IA0PR12MB7723:EE_
-X-MS-Office365-Filtering-Correlation-Id: 152f886d-912c-47bf-b63d-08dd88f33fdb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RnJac0pueElYcm96dmZKQXlCeCtUeXZTdXd2ZFVWLzl3WHdPUU13a0JpanUv?=
- =?utf-8?B?L2RMV0RQSDRrdzRkakNNYmt2d1lhVUJwdEFnM01FWXJOZnZzUWhRS2lsZEZi?=
- =?utf-8?B?WVUrWHJ3aHhxcWQ2Y3F1UkdISndzZys1Z1ZBMis4eHRUUWtMUEwweVRPMkxI?=
- =?utf-8?B?UGIvZXFHZE9RVEZWMmFjSzBsTERqMWpHOVJ2TkZrRXNXUk13elhlQnJaVkk5?=
- =?utf-8?B?Z3g1UmdKczB4Vk45YmhTM3FvT204dDh3cmdYRnA3QjFQTE96R21UVlR1YXFO?=
- =?utf-8?B?ODBzQzY5ODIxWkI0Um8rcFNhVHBGdWgxZ0U4SytKbzhwMTNuTm9mUHNzVjZG?=
- =?utf-8?B?N0lyS2hzbXdZNEZiYkMwcVRiQmhIc2grY21tSXM0c0lxMkZpMVdWeC81UXVS?=
- =?utf-8?B?TFM5ZkdocGxRZjVMbVc4dFBiekM0a2padGh6Z2J6UEVzU3lWUlB6b3hldHdK?=
- =?utf-8?B?MTNVSWtKU21naWUvNmw2RDJRTE15bTlVSzFFS09Md3dkVmxvV2trU01Qbzh3?=
- =?utf-8?B?OElXUVI3NmNsUms3ZFQzaXVMRjBwZllMM0U0dFA3UVRoOVlSWHNydG1nSDQ1?=
- =?utf-8?B?WnRrbGFZanQyYmdIRFZXSGViS1IxYUxTeERrUEVhOUJFVWxKbHgrOXFXWURi?=
- =?utf-8?B?M3pNV3dEeEdZUldhNmNtRFJ6UThJenh5MlU1enB4V1htTjZPaEppdmtBaTVp?=
- =?utf-8?B?MXBTdVlTekM0Rlg1WTViNWdybm5XS2pNWDNhWGdqU1VoNTlWNXprNzh5MXR6?=
- =?utf-8?B?L09TL0xTSFVOd0wraFFENHFqLysvWW9wMHZjV09nbTlKZEh0a3djSzVJMjdT?=
- =?utf-8?B?OGZHRjlQTEZaTkxucjR2NVFHSkQrclV1UVJmRWY3TW5uSHRiUHRWU0ttdU5m?=
- =?utf-8?B?RGxOd3RZdXJhdUd1NWV1ZE91TEVtR1dCNWE5N3FCUWZ0NlRjVGlneGkrNUVt?=
- =?utf-8?B?NmZLZmprbkxURGJhMStaWDIrMzk2TkFlNkVIS0k5eStWWVJOU3M2NVRONzdY?=
- =?utf-8?B?TVM0ZU1VQ3pZUTJJSFFWMjNxR3B3akVIcVgwVFh5RmsvTnM2STQ5bFdmdSt2?=
- =?utf-8?B?VmhRR1JsOHVaU2tROGNweXN3UUxDKzVFQ0M0L2dSL2U5RXRGa1hERVBVcjRR?=
- =?utf-8?B?RnlMM2RDUUFON3VySTQyZ1UvMXdzQ3ZzcklmSXhhalM3SDZicW9kbnExcnhP?=
- =?utf-8?B?QVFVQVlkbUpOL2ppRU5HM3lZOGIxL0ZYdGwyTGtGTFBxMjZzaWpQWE9WNWk3?=
- =?utf-8?B?US95UndodXZ3eEN0MkZXM2h5N0puS3N0aDBxNEgwdGllZGxhNWs5M3ZTVVY2?=
- =?utf-8?B?RStTRk1ua2FtMjNpemIyd1pManFNaERSNE9sem9GTjNsRGw1T0VzOEU4clhI?=
- =?utf-8?B?T3hoOTBZRytZZzdyWUIrblVtY09sZ1R4STYyaE01ZnN2QWJ4aGRrd3p3OE95?=
- =?utf-8?B?dWcxVGcvNTh4d1p3aU11bU1SWTRRNmRWMnk2UVZDekw4WG5hWnFrZWMwUTM1?=
- =?utf-8?B?VWhKYTlxelZHZ3RKUEhNM1JGZCs0ZExIUTZVeCs0U0lrZGtKbFl5SExzU2tj?=
- =?utf-8?B?UCtBaXM4ZnRyRGhOWmlzVmZQaDI5YXRxTWx4MW9pajZqRW8zRkdYcTI0M2xH?=
- =?utf-8?B?bklWSnJTaWkrY1dyVXNvREE2Y0JiSnU3L250Q1RzcDdpOFJzQ2R1dG1welVk?=
- =?utf-8?B?ZWxINzErRy9sUXh5TlRyVGlNWHY0Y0UvazFvZDZoWFI3NnYycGZCMmh4K3hp?=
- =?utf-8?B?bkVnWEt2bjZvOFJFRzhYdTFzN2NjaEppNEc1R0V1Z1F2akd5WHg0KzIzeHEr?=
- =?utf-8?B?QzY5Y0kzZCtjVWc1OVNmdEU1VEJSVUxyVVovMFV0Tzk5V1g2U2VZUmh3ald5?=
- =?utf-8?B?RVhNZnNjMUNQL3puOE11dzJ5K0Z4QWxldFJENVVYTmd1R2EwVllVemNXcnVX?=
- =?utf-8?Q?YtFhjK7Uvdw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6643.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SlNyNDdRVkZad3d0M21iSlZXY2Y2clBsN0RRalkraysyUWZGNFJCQ3dab2t3?=
- =?utf-8?B?Y0l0eGVlL1ZEOVNZSjBjN3k0eHVvc2xDVkMvM1NLdUxYVDNOeS9jSHhyendI?=
- =?utf-8?B?WmxoOFFZKzFWbEdWMFd3ZGRpeGhORzIzRmNmdzlUZ3FScUpMRjFyblovVDlN?=
- =?utf-8?B?c2pZaVdLa0ZWcWl4NmVtLzJqOENVanpHNENVN0dQTHpOZDNIUTJVazUzYU5C?=
- =?utf-8?B?ZVVlV1NFRHF5b0FhQ05KOGR3eGQycS90NlpPNTNMWStUQURKY25OZFhPTDAx?=
- =?utf-8?B?MTcyaEhjajU5N0N2YXNLUWNTYkdMbERYV0Z2SXQxdHBzT2pYNFpBclBjRkdZ?=
- =?utf-8?B?VnlFZU55OWdSMjVBTG9WaWlsWUp1cXkvYktLOU5YNnVqcW5HZEEwd1dWUE1H?=
- =?utf-8?B?ZzR2LzF1TFU3RTRFclVCaXllRVZBTXdRaVZaQTFzdlE0clNEeENVWTNDMDQy?=
- =?utf-8?B?UDc4Yklac3NULy81SEtMRXE1azJKTGc1UytwVjdja3NzdVRxTGtCYTZjNXds?=
- =?utf-8?B?NmZQOVR1dWpBeitpWEpmZXlGMVpNZlpEQ2RLMVA0ZVkrZDZOUU4xOUg4M0tO?=
- =?utf-8?B?UXlxTHA2cGFiMjhuUHZFeDNERC9oZ2FHUFhaUnZUTGZxY0JFWlFVNk1OS2M2?=
- =?utf-8?B?Y1B6aXBoRnovQjgrdmJwdDZPRjdMSlJIemI0L0l0OG5HeGlyNFFMUkNwQ2Uz?=
- =?utf-8?B?TlowZjJPNnJGVnVKZ016ZHA3b2p2ZUI5bTk5Ulk0UXVVNnI0Y1Y4TlpMejJ5?=
- =?utf-8?B?bWN4eXlvaHhOS1JJTW1CaTFBQ0RZVG9GclFKWVlTMlEyRzh3Rm5qVFJpSE5Z?=
- =?utf-8?B?QW00QzVYd3BJWlg5cm5ma2tsUEJ4U3IySThPcCtwcTJ2bnpLZXU4K0pmazdI?=
- =?utf-8?B?UUZvK1JnRUd3SlRNd1U0ak5yeFR0Qno5bWFUb1dpMVJlYWd2WHFILzJSZXNn?=
- =?utf-8?B?VFVEZ2k1MXZyUnNERTRXK2RONjh0eThEOG0wbW1VUW5MYkZmYTZFbE10b0Jl?=
- =?utf-8?B?cys1UUtxMWtUOGluVXZETHNLTUQ1QnlFOFRqVm9QY1E1ME1Rb0FreTBoZW9r?=
- =?utf-8?B?ZnAyVGhCTk1VWHArWjl0Rm9QWExKL1VqQytUaWJPYWJ3cW5LTW1Gb212a1Vw?=
- =?utf-8?B?RFhqbCsrNk5yN2hHRlVIajIwcnBldFB1OFgvZ1FsUElyQTNMMG5aU3JmVlMx?=
- =?utf-8?B?dUN0bThYRkptOU1Ga2ZZYXNTa0dWbXh2RmFEaE02WVNtTG9pUGNRc21heVhI?=
- =?utf-8?B?SmFNQlFubGFJU25sVXMzSS95R2RNMnJBQW5aQ2FKcDBaZ3VHbTE3bzdmVm9Z?=
- =?utf-8?B?QVN6RU9YdTd6RWlKY1hmSkx4UGlhWjdxVWhnRHFBa1d6Qjd4NXFuZ0VaRGZ5?=
- =?utf-8?B?NnJ3WXR4aHFHNHFPaXE0K2FPTFhzbm9lWlQzbFNJK3R3OE1GamFobkJkSDBT?=
- =?utf-8?B?UG5GaFJ3aFhOSUc1UGFadUpwcDI5T3djakkrUTNra1U3aEtrRkxNdkQzb1Jl?=
- =?utf-8?B?T1NyKzlXSDllL0RkdFNWb2JnS2V5Z1NMUVRmT0NaM2FGYXpjeXBlMnRmclRH?=
- =?utf-8?B?VHRmUFBLMUQwR0c1L2o5UUNRakVhMC9zeTR5K1YyTjdWdTEzTzZ3eUpCUFFL?=
- =?utf-8?B?aFhkSWRZZUY3a0Izc1g5a3JWTkM5L2lKcXprVGI1cmhYcjZTNUlWZWdnY3R3?=
- =?utf-8?B?cHNiVjRndEZjbjJhdGY2TGxzTklEVzhRR2hvamh2T2lRSmlrNHlVUG5HTWxF?=
- =?utf-8?B?NXNSSDJ2SlBjeUhPbU15ZE5RQlNGOGVDMEIzT0J1cVU2SlRJRDVhSTMwWTRF?=
- =?utf-8?B?cHo4cGVDcW9LMEhPSDNtWWVXVnFqUUtoa0pXelJDZTJIMmZlWEMzRUt1Z3dR?=
- =?utf-8?B?aFhtVkpQS0YvZG5XNjFhYjF4MVNnQmlRWFI2UWN2b3ppemRsTndKTEpQakxj?=
- =?utf-8?B?TzVVenhLdmhVOElFOWRxOUN5WlFkWlA0K05FcmtQSTkrSjg3Rlcwc1BuZFZl?=
- =?utf-8?B?a2NYVHJPcUtWZHoyNU14V0JyTldiY0ZaRC9qR3NsWlIvVDlESmlKZlFHenNS?=
- =?utf-8?B?ajNsTmJqcjlCc2xMNVZsbzlGUnNTRG44V2J1cE01cHN0UC9NRzNQT1BBSlNM?=
- =?utf-8?Q?PrIchm6rMJNVw2qR+Ko1MLysS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 152f886d-912c-47bf-b63d-08dd88f33fdb
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6643.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 21:00:48.8046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rp3yx4pkIt37gU9ex9aYm68UTkX1rN6UHZT/H+th1JkBvJ2wIVV26pVgaIYBOSmSXuij4eMFgMZH0Ulgw4PTOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7723
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321015806.954866-2-pandoh@google.com>
 
-
-
-On 5/1/25 03:58, Vasant Hegde wrote:
-> On 4/30/2025 8:24 AM, Tushar Dave wrote:
->> Generally PASID support requires ACS settings that usually create
->> single device groups, but there are some niche cases where we can get
->> multi-device groups and still have working PASID support. The primary
->> issue is that PCI switches are not required to treat PASID tagged TLPs
->> specially so appropriate ACS settings are required to route all TLPs to
->> the host bridge if PASID is going to work properly.
->>
->> pci_enable_pasid() does check that each device that will use PASID has
->> the proper ACS settings to achieve this routing.
->>
->> However, no-PASID devices can be combined with PASID capable devices
->> within the same topology using non-uniform ACS settings. In this case
->> the no-PASID devices may not have strict route to host ACS flags and
->> end up being grouped with the PASID devices.
->>
->> This configuration fails to allow use of the PASID within the iommu
->> core code which wrongly checks if the no-PASID device supports PASID.
->>
->> Fix this by ignoring no-PASID devices during the PASID validation. They
->> will never issue a PASID TLP anyhow so they can be ignored.
->>
->> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Tushar Dave <tdave@nvidia.com>
->> ---
->>
->> changes in v2:
->> - added no-pasid check in __iommu_set_group_pasid and __iommu_remove_group_pasid
->>
->>   drivers/iommu/iommu.c | 22 ++++++++++++++++------
->>   1 file changed, 16 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 60aed01e54f2..8251b07f4022 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -3329,8 +3329,9 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
->>   	int ret;
+On Thu, Mar 20, 2025 at 06:57:59PM -0700, Jon Pan-Doh wrote:
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
 > 
-> initialize ret to zero?
-
-Thanks Vasant.
-
-How about:
-
-         for_each_group_device(group, device) {
--               ret = domain->ops->set_dev_pasid(domain, device->dev,
--                                                pasid, NULL);
--               if (ret)
--                       goto err_revert;
-+               if (device->dev->iommu->max_pasids > 0) {
-+                       ret = domain->ops->set_dev_pasid(domain, device->dev,
-+                                                        pasid, NULL);
-+                       if (ret)
-+                               goto err_revert;
-+               }
-         }
-
-Let me know.
-
--Tushar
-
+> When reporting an AER error, we check its type multiple times
+> to determine the log level for each message. Do this check only
+> in the top-level functions (aer_isr_one_error(), pci_print_aer()) and
+> propagate the result down the call chain.
 > 
-> -Vasant
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Reported-by: Sargun Dhillon <sargun@meta.com>
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> Reviewed-by: Jon Pan-Doh <pandoh@google.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pci.h      |  2 +-
+>  drivers/pci/pcie/aer.c | 34 +++++++++++++++++-----------------
+>  drivers/pci/pcie/dpc.c |  2 +-
+>  3 files changed, 19 insertions(+), 19 deletions(-)
 > 
->>   
->>   	for_each_group_device(group, device) {
->> -		ret = domain->ops->set_dev_pasid(domain, device->dev,
->> -						 pasid, NULL);
->> +		if (device->dev->iommu->max_pasids > 0)
->> +			ret = domain->ops->set_dev_pasid(domain, device->dev,
->> +							 pasid, NULL);
->>   		if (ret)
->>   			goto err_revert;
->>   	}
->> @@ -3342,7 +3343,8 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
->>   	for_each_group_device(group, device) {
->>   		if (device == last_gdev)
->>   			break;
->> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
->> +		if (device->dev->iommu->max_pasids > 0)
->> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
->>   	}
->>   	return ret;
->>   }
->> @@ -3353,8 +3355,10 @@ static void __iommu_remove_group_pasid(struct iommu_group *group,
->>   {
->>   	struct group_device *device;
->>   
->> -	for_each_group_device(group, device)
->> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
->> +	for_each_group_device(group, device) {
->> +		if (device->dev->iommu->max_pasids > 0)
->> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
->> +	}
->>   }
->>   
->>   /*
->> @@ -3391,7 +3395,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->>   
->>   	mutex_lock(&group->mutex);
->>   	for_each_group_device(group, device) {
->> -		if (pasid >= device->dev->iommu->max_pasids) {
->> +		/*
->> +		 * Skip PASID validation for devices without PASID support
->> +		 * (max_pasids = 0). These devices cannot issue transactions
->> +		 * with PASID, so they don't affect group's PASID usage.
->> +		 */
->> +		if ((device->dev->iommu->max_pasids > 0) &&
->> +		    (pasid >= device->dev->iommu->max_pasids)) {
->>   			ret = -EINVAL;
->>   			goto out_unlock;
->>   		}
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b8911d1e10dc..75985b96ecc1 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -551,7 +551,7 @@ struct aer_err_info {
+>  };
+>  
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> +void aer_print_error(struct pci_dev *dev, struct aer_err_info *info, const char *level);
+
+I'm (finally) getting back to this series because it really needs to
+make v6.16.
+
+It would definitely be nice to determine the log level once instead of
+several times, but I'm not sure I like passing "level" through the
+whole chain because it seems like a lot of change to get that benefit:
+
+  - it changes the prototype for __aer_print_error(),
+    aer_print_error(), and aer_process_err_devices()
+
+  - it removes the info->severity test from aer_print_error(), but
+    leaves it in __aer_print_error() and pci_print_aer(), which need
+    it for other reasons
+
+All these functions take a pointer to a struct aer_err_info, and if we
+want to compute the log level once, maybe we could stash the result in
+struct aer_err_info, similar to what we did with ratelimited[] here:
+https://lore.kernel.org/all/20250321015806.954866-7-pandoh@google.com/
+
+I'm rebasing this series to v6.15-rc1 and will post a v6 proposal
+soon.
+
+>  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>  		      unsigned int tlp_len, bool flit,
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 9cff7069577e..45629e1ea058 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -670,20 +670,18 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>  }
+>  
+>  static void __aer_print_error(struct pci_dev *dev,
+> -			      struct aer_err_info *info)
+> +			      struct aer_err_info *info,
+> +			      const char *level)
+>  {
+>  	const char **strings;
+>  	unsigned long status = info->status & ~info->mask;
+> -	const char *level, *errmsg;
+> +	const char *errmsg;
+>  	int i;
+>  
+> -	if (info->severity == AER_CORRECTABLE) {
+> +	if (info->severity == AER_CORRECTABLE)
+>  		strings = aer_correctable_error_string;
+> -		level = KERN_WARNING;
+> -	} else {
+> +	else
+>  		strings = aer_uncorrectable_error_string;
+> -		level = KERN_ERR;
+> -	}
+>  
+>  	for_each_set_bit(i, &status, 32) {
+>  		errmsg = strings[i];
+> @@ -696,11 +694,11 @@ static void __aer_print_error(struct pci_dev *dev,
+>  	pci_dev_aer_stats_incr(dev, info);
+>  }
+>  
+> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+> +void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+> +		     const char *level)
+>  {
+>  	int layer, agent;
+>  	int id = pci_dev_id(dev);
+> -	const char *level;
+>  
+>  	if (!info->status) {
+>  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> @@ -711,8 +709,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+>  	agent = AER_GET_AGENT(info->severity, info->status);
+>  
+> -	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+> -
+>  	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+>  		   aer_error_severity_string[info->severity],
+>  		   aer_error_layer[layer], aer_agent_string[agent]);
+> @@ -720,7 +716,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+>  		   dev->vendor, dev->device, info->status, info->mask);
+>  
+> -	__aer_print_error(dev, info);
+> +	__aer_print_error(dev, info, level);
+>  
+>  	if (info->tlp_header_valid)
+>  		pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
+> @@ -765,15 +761,18 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  {
+>  	int layer, agent, tlp_header_valid = 0;
+>  	u32 status, mask;
+> +	const char *level;
+>  	struct aer_err_info info;
+>  
+>  	if (aer_severity == AER_CORRECTABLE) {
+>  		status = aer->cor_status;
+>  		mask = aer->cor_mask;
+> +		level = KERN_WARNING;
+>  	} else {
+>  		status = aer->uncor_status;
+>  		mask = aer->uncor_mask;
+>  		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+> +		level = KERN_ERR;
+>  	}
+>  
+>  	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> @@ -786,7 +785,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>  
+>  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> -	__aer_print_error(dev, &info);
+> +	__aer_print_error(dev, &info, level);
+>  	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+>  		aer_error_layer[layer], aer_agent_string[agent]);
+>  
+> @@ -1257,14 +1256,15 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  	return 1;
+>  }
+>  
+> -static inline void aer_process_err_devices(struct aer_err_info *e_info)
+> +static inline void aer_process_err_devices(struct aer_err_info *e_info,
+> +					   const char *level)
+>  {
+>  	int i;
+>  
+>  	/* Report all before handle them, not to lost records by reset etc. */
+>  	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>  		if (aer_get_device_error_info(e_info->dev[i], e_info))
+> -			aer_print_error(e_info->dev[i], e_info);
+> +			aer_print_error(e_info->dev[i], e_info, level);
+>  	}
+>  	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+>  		if (aer_get_device_error_info(e_info->dev[i], e_info))
+> @@ -1300,7 +1300,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  		aer_print_port_info(pdev, &e_info);
+>  
+>  		if (find_source_device(pdev, &e_info))
+> -			aer_process_err_devices(&e_info);
+> +			aer_process_err_devices(&e_info, KERN_WARNING);
+>  	}
+>  
+>  	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+> @@ -1319,7 +1319,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  		aer_print_port_info(pdev, &e_info);
+>  
+>  		if (find_source_device(pdev, &e_info))
+> -			aer_process_err_devices(&e_info);
+> +			aer_process_err_devices(&e_info, KERN_ERR);
+>  	}
+>  }
+>  
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index df42f15c9829..9e4c9ac737a7 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -289,7 +289,7 @@ void dpc_process_error(struct pci_dev *pdev)
+>  	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+>  		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>  		 aer_get_device_error_info(pdev, &info)) {
+> -		aer_print_error(pdev, &info);
+> +		aer_print_error(pdev, &info, KERN_ERR);
+>  		pci_aer_clear_nonfatal_status(pdev);
+>  		pci_aer_clear_fatal_status(pdev);
+>  	}
+> -- 
+> 2.49.0.395.g12beb8f557-goog
 > 
 
