@@ -1,183 +1,273 @@
-Return-Path: <linux-pci+bounces-27070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B1D5AA610C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 17:57:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E9A3AA610D
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 17:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00E849C29A0
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 15:56:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81CA34A7720
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 15:57:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1FF20B807;
-	Thu,  1 May 2025 15:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6426D214A74;
+	Thu,  1 May 2025 15:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VR+3thRX"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EiQjXGII"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazolkn19012054.outbound.protection.outlook.com [52.103.20.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC101210185;
-	Thu,  1 May 2025 15:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746115001; cv=none; b=bKQkUjlU6/mHMQTrQia2gDxcF5OSh8RWu1XVCrdEm7P6DvJeoR9q2pJmIX0CuwSB/aw+dXNv8I7aAjnPHnNk/8PMWmy+hEmMThzj/+VRfWyiUl2Z/IbyRR8FTc/Av5IsoGkfLS0GpAsDN199gdYa17xXTpUc/Ut1NX3sHUWqfq8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746115001; c=relaxed/simple;
-	bh=dpeZyhbEJMm07kKSWpfBGYSW9Zg23u7YX8CGdRY1guk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RDYMao7brH+G5MBpdRcFA9EGpF/ytMHMi462EOLK0J+rgMT4lFVQwqwhdRkYKd8FJSP67g85roHf4Wng+Utd4noCl5KfDCAyxJt/fQ88V1cWbVPdP5DK4kztT/ex9XItmwoJbVn7aPpikCKlmm9IFPkb771v4EzHJj5Ed6d/EWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VR+3thRX; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so3403485e9.1;
-        Thu, 01 May 2025 08:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746114998; x=1746719798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iQy0NQT+3evnck4iehrKrqmJJc+AvuO+V5yJn4et+1Q=;
-        b=VR+3thRXROMUAXDJTYD5knmWX/jkHlmyJXJVT6P7cuH4L9lae6q8OXbnM2Yb+Xj3D/
-         uUHyNSrT6y2U9kHLH44abQz0FAYWXn965rMwqFjY5rSaIrHyiXAAd1jyZnXf/H77GQgo
-         7VFREtb6ppPt9vRc8zvdeSZBHDpSq1aleoMtZbGvTXV2f8UE5+fJEVC+k8DDCX6riTPp
-         ZCcGOlMZtAK7nUPW7T9hDULMOiXSJqDAMBD/+4SlPA46x6vRDAgMedJQCDYqaHQ6XCr9
-         JAFOnj1lLR4idumLujq385klG3fS4+0frRS4tYCEcKXB4MXqlxxr6ALyxjF3xEkEwEFF
-         3HAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746114998; x=1746719798;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iQy0NQT+3evnck4iehrKrqmJJc+AvuO+V5yJn4et+1Q=;
-        b=DUKUQgvZd61ZW8GGqFMUvMl0kD3s8bjZKM/kMCr4lzL5x1yMum2Wfj4QO48/SI8kg1
-         KidPmG8V59HdJiOPnREglVFTHMpYZiaB7dJejzWRR1PrhiiBK9KAWPacEIjtmWL5Vcjx
-         F2CCTHC0OK9bSB82rTIR98luJuLFN9uKSRFRUKDJDt9j7vxzVrhtTk6a5mot9b0o6Xp6
-         cxPGKv4C3nGTfwE6i8WMQaX7snmNTlR/mYG+I1Bgalb8YhbiwsORF0KdphfDVZInNv69
-         I+slzVZw1nXSxOMZ+p+H/iznQE4KQViuqJggjy7KIgA8Tro049cGvaqZnLTTkiRYSLwt
-         L1Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNV4XtUU3YKWDHtuRdlR+1GQm8ifEN+jvGbTNBzB54imgfYrrIQK0HTH7evNgMdFAali1cyqNAqPf29Pw=@vger.kernel.org, AJvYcCXhnsOumRlYli0OkDKD10P2wResJyX+iwDBipCM82M+QftmXTpBFOII0u+u6dHFRmgbWJQHqBVHEh6l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH6hauR/4a2dqtcFqRUY+ORok9f0vpAW58TUGINkbLP/xTa5Sa
-	joIggL68IWTPfuUe3X2DhOGRdFpcwWice8lvyg4YkvJ2/Mtn/k9A
-X-Gm-Gg: ASbGncsROCdAWIEdYNtmEdGiM/GtGSTyOjHArsHrJOYxxtaideMXtTQ/74Pk1pAwqDM
-	8D+qU6zDvHBgk5jPn+/vulVpLCzrtdzbvIkLj9sFAzJq22LQ6N52wn1jKAXR7Gy6PxazoYLsVHY
-	rUjCqkuq4g0qcq7HoKW0O+h7nTGWEjkuIWCFDdcIkNEqE7DrpFnlkjO8hA1GSeBRH3yc8PADP5J
-	uAspyzZKYlFgtWnXIpVI6+V79WdaYC1clgRv6x1nKEz7e7hXefufhNumuOEEueXQ8fD6BshOG1D
-	+T34A4pDRyN1lDhZti8wq4vqu/QimUSZBfylEA==
-X-Google-Smtp-Source: AGHT+IEDVY77OeKaGakqap7NdROdScgPMVbro1o6hQwKT98+l+7AyAFCKp64NO45BaUXR98syN72vg==
-X-Received: by 2002:a05:600c:4e52:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-441b2695cc2mr62734405e9.27.1746114998156;
-        Thu, 01 May 2025 08:56:38 -0700 (PDT)
-Received: from pc.. ([197.232.62.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ee37dsm16226065e9.22.2025.05.01.08.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 08:56:37 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: manivannan.sadhasivam@linaro.org,
-	kw@linux.com
-Cc: kishon@kernel.org,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	julia.lawall@inria.fr,
-	Erick Karanja <karanja99erick@gmail.com>
-Subject: [PATCH 2/2] PCI: endpoint: Use scoped_guard for manual mutex lock/unlock
-Date: Thu,  1 May 2025 18:56:12 +0300
-Message-ID: <88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1746114596.git.karanja99erick@gmail.com>
-References: <cover.1746114596.git.karanja99erick@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B10C20C490;
+	Thu,  1 May 2025 15:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746115013; cv=fail; b=dXmFroBeD5pQbrY8QcCzocfnpXWTf+mvPSfUVVrYI9ZIP6AobPqKaJ+PvPvgrCAU1utZm+S9UMvVmpTj9cNcaXScOCHM8ztjwtvAzCOdcUz0HDo2KAVDcA5Ty1XWtp4G2rhe7pLcmgRBU8+FJfzpFm21wjFzc3DksTUYKNiGOdk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746115013; c=relaxed/simple;
+	bh=YoFGgGwJ7/q6ZO/iYentb517lxZ7xkE1tKk9uMvwuks=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ED5s1dipoNYqcc3v5iyY3fimIw8iYy+Spurv6iFAg95F99JjLB27d5rVtBidlC4VZuBvFXM+2H6WKklbCUt+hBwvFU8Fniu+KkFFQMkWGj06gO1hFs2MamY1Vkl0qDk3kN9no1TVAmDpWVlUX2kxEnMcAD91DmP0DGXzemTeN18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EiQjXGII; arc=fail smtp.client-ip=52.103.20.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xk5qNLYBtQ2G5vIBHjjRlpB2Nyf4Dg1U0bYe/CbesYOjBfZqIHHe1FUfC+1DhScW228fQmRc3ZV8cdUHNxygQSTYzplrvbcnSBLSfvAepyVuK9HQs8jbIrCi8O2Cj7CdjCcwdWW+wiQI07G2HsDfvavbs9W+pPPkDurLycYJB7QD1CklZtigt94bFAvIjBmiRWx9h9kGzAi6PvXPfa8r8XlDoc7RqevbIKwzJG+9gI+cJ2abaLsj0pLZkI+47HeQsyGJup3Gj+nDG6B3hGLR81saGvbBD1vr8Q5NHGI4KYIuf+itRlDqpDFgThw60biErMGHQH/druEZL1fiigm+Lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O/74U5nNzfit5FyjKj3I1mSEaTY/oRDXiy0YWiJKgSA=;
+ b=k5B6rduCjRsgMXiHj/mp/7730m72ILOI6v6t5NKg+6nqOQz+fRsUgNfp9dfjmo9z6bdi3FTGos4hfeV3wdT6EyVqU7e50UFwJB3taED4zlNVkgjg+IOoyQQ2EGgbCEyloe62TqnfZsVJ1+PEaxcWVNgvyNfbOCOj4biCDXINLmPXg6SAZRZ7h/coy0LhxFNii5bYBhUGw6GltLgMAxqsPq3UT4Ta1kfOkTLkCdUkyTBEWRtIAsHeKRb0Pfn0viNdbX87K0D1AaBEZMWZ37gFsettSeJimh50UNXxaHQP3d+ErKC9hoKoivy72PI1W0bBfgmzhe3vymlY+Et/pXGR1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O/74U5nNzfit5FyjKj3I1mSEaTY/oRDXiy0YWiJKgSA=;
+ b=EiQjXGIIEvqpz0Y9vX4hz05SSOfRlMbFNOaLFx317iej0uf+1f3tWvqoMsA6mwJ1K0a9mU3sDQEGJbk9s0aY5jIVvf+SaKywffigEPm6/Vv9Fr+Tjc00G2DUBOo9AqPnjqhgU/cTRC4F073t1zPl4Umz8cPMqeu0t8TcBf9gtKH8KWeCOhFEDfHwnBA/mQ8PpRlj2lXANgiea4QB2gEfUPze8B8hHzkODh0gSZNBqg0K7xpjSQInrwtWHIFCeOf60vu8SNmbIJc44S7keiHKwSzfcfmlGAOEUBqqX1AqCKBUu9D1KjRFLS3mWsODibcqz7B1FMdWdz//+thfdekhgg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM4PR02MB9192.namprd02.prod.outlook.com (2603:10b6:8:108::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.18; Thu, 1 May
+ 2025 15:56:48 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Thu, 1 May 2025
+ 15:56:48 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nipun Gupta
+	<nipun.gupta@amd.com>, Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long
+ Li <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn
+ Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Wilczy?ski
+	<kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+	<haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Konstantin Taranov <kotaranov@microsoft.com>, Simon
+ Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>, Maxim Levitsky
+	<mlevitsk@redhat.com>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>, Shradha
+ Gupta <shradhagupta@microsoft.com>
+Subject: RE: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Thread-Topic: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Thread-Index: AQHbtdCa+2CaoQUHl0GxlQrhegIb5rO319gQgAYF3ACAABdo8A==
+Date: Thu, 1 May 2025 15:56:48 +0000
+Message-ID:
+ <SN6PR02MB4157EAC71A53E152EE684A4DD4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <SN6PR02MB4157FF2CA8E37298FC634491D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250501142354.GA6208@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To:
+ <20250501142354.GA6208@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM4PR02MB9192:EE_
+x-ms-office365-filtering-correlation-id: 01dd7660-8a0a-46e2-0f9b-08dd88c8c7bb
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|19110799003|8060799006|461199028|15080799006|4302099013|3412199025|440099028|10035399004|41001999003|12091999003|102099032|56899033|1602099012;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ma14D1QRAFvQqiU0Tlhwz0nXiX6hgSezMQI4Nq7ccX+zTBOg+vXcVenyZZYT?=
+ =?us-ascii?Q?xDuG5jIR+gmY/z9IO2Zm+g7ovYnV7BjpMXrwbC5Kf6aa8k60vaLCT4GxT/TX?=
+ =?us-ascii?Q?UN4PwqinDUJpHMPPnSaSi5GQ8aG1dZqr2iFgU7JSEb1jSZSIQQ0uNa/ZAyZR?=
+ =?us-ascii?Q?VHMGklLfQ7SG+blu8m5ch/N0eqTxRWGA7q9jrA92oX8bm5R0L3kXZUQljGI5?=
+ =?us-ascii?Q?5o12qO0Rcfhxn+frFqrykf8jcP2PDP4i1fGJlAW8yVYNc5SwM/+AyFUtsh6u?=
+ =?us-ascii?Q?V9HM53zpeO0bVqn3NyKBCdD0GQNHYJtT8Blj/Cji7KJo5jAAaZDgcMADFz8b?=
+ =?us-ascii?Q?uGKogSoSc1VFidqHuZr0EaYVZgTPlVe0835p2L83q+NGsJL6eulfPL+4/EhK?=
+ =?us-ascii?Q?4W4kq2whesUiw6maycbd1K4A1oM7JOqK7IILCtVVPnPMyCIASkJfnRGqgw6y?=
+ =?us-ascii?Q?ACoh67qof+/pSBj3d8xXrz9TIdgrgaZvp8FBd1QXACMK0y2gXwFdPAlCVVD7?=
+ =?us-ascii?Q?3ObYwjSbiTIP9clNlM5lS8DAly/pWrlLU2a6tv5RB+5Ek5q4uK+vPf4RIqRw?=
+ =?us-ascii?Q?Rab2C6xZyofgAOd18u7SH+jILc0TFowafkv5GLY/SnrM7mpXlsxRneDYMHlE?=
+ =?us-ascii?Q?1GzsgZZhRh5T9xTeEyPB/fSH63T88TVt3z7vLCqXgB8B1i0AnUnYhA2nb0Z6?=
+ =?us-ascii?Q?s/GG/2oQHKQEe5p52DjPGxS1B3qkfw+/j8KRDKfkVoPgHO3ljk2uaCRRXQse?=
+ =?us-ascii?Q?zfh1/HKetimt/Zwr8g9JAs8JTbhCcjXdo19vLxYigJTRA+vAQaACl3v7OMS5?=
+ =?us-ascii?Q?IZ7lsakv0l4INenRrO/5clQ8rp6TLG3fuiVOTH1I3a1kYy/dau9vBPhFmaQY?=
+ =?us-ascii?Q?JkMI4w/SEUTLQOl9IArZASrGomWFwn2vnn/DNkjG2kvxETAl8b+/ynL6yL91?=
+ =?us-ascii?Q?4RgNJ0ngN5ZoTh5U+IYCDiUmG2HHUKmooYsOnjcBS2QBWGXbOQ9jEUOqXvit?=
+ =?us-ascii?Q?53iTyTiUjd4rKnKDL0elrShZkGnHdXDhZRg9hMKaP7vJoDsEAhhJ232nR7yZ?=
+ =?us-ascii?Q?ZjMAL9yl4Tv3NDa1UlaT7dTf1aEAbklx2aeYn6eUHnauGBYJtsr10xfnp37n?=
+ =?us-ascii?Q?UeVRM8bzeoXgj3Wha5w0immZ322NLlHyGUFkE7P7ENuNV7q4aVO0uxHbIA3M?=
+ =?us-ascii?Q?LzcxTfeQ8cjJW2sKnZVzT+Lvgbsma8rph84sWt5vRBa/Cb+VGED+Y3PuITTz?=
+ =?us-ascii?Q?1E9gMuNZeO3dl5bruIakE1NKVuw0txWaghkbNsIuQcsdtsbg2Ze32cuF7sKh?=
+ =?us-ascii?Q?bpKh7YV48XZTYsfy6uC7ojhf?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?bNyCRUksnxxpuMdfaWDZJXT4nYHQekOftEK1eJhmIomxdX+921p3MIH1hgoV?=
+ =?us-ascii?Q?93dn08k5KPxCkfcZgjhaGqYsik4R9mUlGWmfLR5G+A4yBBrr12NIVkxQ/j/7?=
+ =?us-ascii?Q?gcGe0sfddiAE6c/jPWr1+Y8jiT/IUkUcgUu2ux0X/rVUF/patEB+MXHw/0vq?=
+ =?us-ascii?Q?rDYspRmGoY2tFngBJy4VrgGj34ywmD6YzxcFE7BAFs+c3h8FX6fqkVNTngzF?=
+ =?us-ascii?Q?yFMVza5BDVnDB5+iJy4AuW2z+GEF+AnP/H14FATqwketfcK8ruAhaKLb8jJ3?=
+ =?us-ascii?Q?1CMl8qAEp+bHzxlIqK2k8v8I7mY7VJTaMkSLKXemnPeWSnr5fveFImJI6iEl?=
+ =?us-ascii?Q?DDFNbWMeO4pjfZqNGRMnF4FNXc3aKHg8RFei35T1v57K1oXQQmCUojqi3I93?=
+ =?us-ascii?Q?9+2vwq9nrCMfoTYQtLoBllehTQn8yAfqK6tLBZpNn47QqFSTQuwqFwHK5f/H?=
+ =?us-ascii?Q?9q8JTTFQTqsvA6t30tMC7l+ldAeUn35XOLsPR1qUfLejbTUjxItXLEeqm/yM?=
+ =?us-ascii?Q?kbooNwnQQAzxcZ3k1DakOKPK6XMEJefU0H88QoL5poM8ZbfpdrYWPxBfHzPt?=
+ =?us-ascii?Q?YfJSgNwyqYJ1WRW0z5o1teJQ6QpkYraSyEj53XX0/I4BBlfpbcZFKjct3sMV?=
+ =?us-ascii?Q?l3VYShcxiSILWQwrWJBQMcIUXo4FDNUx9/ruJoN23jNBtAHHwH5U92QR2TZo?=
+ =?us-ascii?Q?c9ISpLbHg7oHZZflXNQeji6EUcTJrRLbQRH0B9x1QwhO8g6fIjhz+YqKUOdZ?=
+ =?us-ascii?Q?Qx8rJp5wpzTiqHvlMrPJO+XB8gLKt2i5Lz4U1ZecBa9G/JkPcOnjolnBCAPz?=
+ =?us-ascii?Q?3RQ6K8MddVMZ5rcVy9hhu7FH55+e2lY9PLEvptWRXcUfEK7CugiesSjKzhEU?=
+ =?us-ascii?Q?6p3QbVmE2x/83uH9Ly+zjpYM4vVhJI/zp/pfqsBdg37Qv529bUT7PPSz+33d?=
+ =?us-ascii?Q?5GJgQs+rAKIwSI3DE2gYW6CSqU1KFx0PAj2RSVqIuqLdLUVr4NVfKLV42ZYt?=
+ =?us-ascii?Q?nYPJJQu53wt/gaa1SOV5whJfqOOLg2+lL44EO6dy2hW9d6qrFnHj8vOw38w/?=
+ =?us-ascii?Q?J8zHR3W3rgSFRrLpH9bDDQ6xODqhxUXMkmRkA/I9gbgkKZ8z4BF2jMiGikTc?=
+ =?us-ascii?Q?62OSWsnPkAMVp1d1G9nfDa+mw46s5S49tpvj7//NykwPIf9rOdjR3jVexWaW?=
+ =?us-ascii?Q?Lewj2QHh2UPeglScQZ/+zau5jrKbnfQh+P0JPPpkg6gl/kzvf1R/iDE0ph8?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01dd7660-8a0a-46e2-0f9b-08dd88c8c7bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 15:56:48.1883
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR02MB9192
 
-This refactor replaces manual mutex lock/unlock with scoped_guard()
-in places where early exits use goto. Using scoped_guard()
-avoids error-prone unlock paths and simplifies control flow.
+From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Thursday, May =
+1, 2025 7:24 AM
+>=20
+> On Thu, May 01, 2025 at 05:27:49AM +0000, Michael Kelley wrote:
+> > From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, Ap=
+ril 25,
+> 2025 3:55 AM
+> > >
+> > > Currently, the MANA driver allocates MSI-X vectors statically based o=
+n
+> > > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases en=
+ds
+> > > up allocating more vectors than it needs. This is because, by this ti=
+me
+> > > we do not have a HW channel and do not know how many IRQs should be
+> > > allocated.
+> > >
+> > > To avoid this, we allocate 1 MSI-X vector during the creation of HWC =
+and
+> > > after getting the value supported by hardware, dynamically add the
+> > > remaining MSI-X vectors.
+> >
+> > I have a top-level thought about the data structures used to manage a
+> > dynamic number of MSI-X vectors. The current code allocates a fixed siz=
+e
+> > array of struct gdma_irq_context, with one entry in the array for each
+> > MSI-X vector. To find the entry for a particular msi_index, the code ca=
+n
+> > just index into the array, which is nice and simple.
+> >
+> > The new code uses a linked list of struct gdma_irq_context entries, wit=
+h
+> > one entry in the list for each MSI-X vector.  In the dynamic case, you =
+can
+> > start with one entry in the list, and then add to the list however many
+> > additional entries the hardware will support.
+> >
+> > But this additional linked list adds significant complexity to the code
+> > because it must be linearly searched to find the entry for a particular
+> > msi_index, and there's the messiness of putting entries onto the list
+> > and taking them off.  A spin lock is required.  Etc., etc.
+> >
+> > Here's an intermediate approach that would be simpler. Allocate a fixed
+> > size array of pointers to struct gdma_irq_context. The fixed size is th=
+e
+> > maximum number of possible MSI-X vectors for the device, which I
+> > think is MANA_MAX_NUM_QUEUES, or 64 (correct me if I'm wrong
+> > about that). Allocate a new struct gdma_irq_context when needed,
+> > but store the address in the array rather than adding it onto a list.
+> > Code can then directly index into the array to access the entry.
+> >
+> > Some entries in the array will be unused (and "wasted") if the device
+> > uses fewer MSI-X vector, but each unused entry is only 8 bytes. The
+> > max space unused is fewer than 512 bytes (assuming 64 entries in
+> > the array), which is neglible in the grand scheme of things. With the
+> > simpler code, and not having the additional list entry embedded in
+> > each struct gmda_irq_context, you'll get some of that space back
+> > anyway.
+> >
+> > Maybe there's a reason for the list that I missed in my initial
+> > review of the code. But if not, it sure seems like the code could
+> > be simpler, and having some unused 8 bytes entries in the array
+> > is worth the tradeoff for the simplicity.
+> >
+> > Michael
+>=20
+> Hey  Michael,
+>=20
+> Thanks for your inputs. We did think of this approach and in fact that
+> was how this patch was implemented(fixed size array) in the v1 of our
+> internal reviews.
+>=20
+> However, it came up in those reviews that we want to move away
+> from the 64(MANA_MAX_NUM_QUEUES) as a hard limit for some new
+> requirements, atleast for the dynamic IRQ allocation path. And now the
+> new limit for all hardening purposes would be num_online_cpus().
+>=20
+> Using this limit and the fixed array size approach creates problems,
+> especially in machines with high number of vCPUs. It would lead to
+> quite a bit of memory/resource wastage.
+>=20
+> Hence, we decided to go ahead with this design.
+>=20
+> Regards,
+> Shradha.
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
----
- drivers/pci/endpoint/pci-epc-core.c | 53 +++++++++++++----------------
- 1 file changed, 24 insertions(+), 29 deletions(-)
+One other thought:  Did you look at using an xarray? See
+https://www.kernel.org/doc/html/latest/core-api/xarray.html.
+It has most of or all the properties you need to deal with
+a variable number of entries, while handling all the locking
+automatically. Entries can be accessed with just a simple
+index value.
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index beabea00af91..3f3ff36fa8ab 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -709,7 +709,6 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
- {
- 	struct list_head *list;
- 	u32 func_no;
--	int ret = 0;
- 
- 	if (IS_ERR_OR_NULL(epc) || epf->is_vf)
- 		return -EINVAL;
-@@ -720,36 +719,32 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
- 	if (type == SECONDARY_INTERFACE && epf->sec_epc)
- 		return -EBUSY;
- 
--	mutex_lock(&epc->list_lock);
--	func_no = find_first_zero_bit(&epc->function_num_map,
--				      BITS_PER_LONG);
--	if (func_no >= BITS_PER_LONG) {
--		ret = -EINVAL;
--		goto ret;
--	}
--
--	if (func_no > epc->max_functions - 1) {
--		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
--		ret = -EINVAL;
--		goto ret;
-+	scoped_guard(mutex, &epc->list_lock) {
-+		func_no = find_first_zero_bit(&epc->function_num_map,
-+					      BITS_PER_LONG);
-+		if (func_no >= BITS_PER_LONG)
-+			return -EINVAL;
-+
-+		if (func_no > epc->max_functions - 1) {
-+			dev_err(&epc->dev, "Exceeding max supported Function Number\n");
-+			return -EINVAL;
-+		}
-+
-+		set_bit(func_no, &epc->function_num_map);
-+		if (type == PRIMARY_INTERFACE) {
-+			epf->func_no = func_no;
-+			epf->epc = epc;
-+			list = &epf->list;
-+		} else {
-+			epf->sec_epc_func_no = func_no;
-+			epf->sec_epc = epc;
-+			list = &epf->sec_epc_list;
-+		}
-+
-+		list_add_tail(list, &epc->pci_epf);
- 	}
- 
--	set_bit(func_no, &epc->function_num_map);
--	if (type == PRIMARY_INTERFACE) {
--		epf->func_no = func_no;
--		epf->epc = epc;
--		list = &epf->list;
--	} else {
--		epf->sec_epc_func_no = func_no;
--		epf->sec_epc = epc;
--		list = &epf->sec_epc_list;
--	}
--
--	list_add_tail(list, &epc->pci_epf);
--ret:
--	mutex_unlock(&epc->list_lock);
--
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(pci_epc_add_epf);
- 
--- 
-2.43.0
+I don't have first-hand experience writing code using xarrays,
+so I can't be sure that it would simplify things for MANA IRQ
+allocation, but it seems to be a very appropriate abstraction
+for this use case.
+
+Michael
+
 
 
