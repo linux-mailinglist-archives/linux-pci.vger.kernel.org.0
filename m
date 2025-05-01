@@ -1,145 +1,120 @@
-Return-Path: <linux-pci+bounces-27060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65629AA5BEC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 10:08:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB442AA5C65
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 10:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB4B71BC6783
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 08:08:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60B4B1BC46C3
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 08:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849E625B1CE;
-	Thu,  1 May 2025 08:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUoQIEcX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF0B620E70C;
+	Thu,  1 May 2025 08:57:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485B91EB1BC;
-	Thu,  1 May 2025 08:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98297B67F;
+	Thu,  1 May 2025 08:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746086886; cv=none; b=PUmf9S59pU1knTjhWnBgxxT58OqkJosFlsVQFvtmt68EdGUQDfi5ukPEFQdW5D1XA9xXvl5D6Ikp247tESMrbx63PIrlU7d4zEJc8dMXtsS8EIhfGuAG9GFZ+GzPM6N2kAQYr6W0wIU0gyha+11/FTzFws2nnJiezFMvoz//MRM=
+	t=1746089852; cv=none; b=LyPlyVr4AOOB0BWdfZXuBUbS+Trna0vzGD2d3Vylc9BhiRMmG3qDcQgqpawTnhOsN7oi5Mr8ctDazMDcrnKC7D/+2T+OcosfRpOJQm+RPHH5Gy8ayq8OZSIR7HhLSq0CE+y50MaQQ1BqthaTOX4fky+FzjgCO9DT7ZV1jkjZQvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746086886; c=relaxed/simple;
-	bh=IStBRnpyyrHvlZPdYcBnykN4iVCRJyDlookDYaJRMfQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rrNkqaVltD8qbb9/lW/jpZZ24Y2lrt8je0DF4kItGdkU653Rhf33sHkFJXZtZjCGNpLnTqtkz9EREU/uFG2XHB58Q9v3GVN9BmptCYZdKDAvsW0uGvlnq4Ke3B4seFWwvWjuiBsOKxU0sADbyr8cYsTn5IphNl+Ws92tNU45vbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUoQIEcX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A2CC4CEE3;
-	Thu,  1 May 2025 08:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746086885;
-	bh=IStBRnpyyrHvlZPdYcBnykN4iVCRJyDlookDYaJRMfQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=PUoQIEcXTaYGPpDgDZBPPM2Nx0CfYuKohnsinfUyx+0lLFL+wophwPydaq6iP70U/
-	 olzoJuMDUNb58lF8UXmWhX502Keys3kn4tbH2R1JhC0g0QpFVASWovUtYpBUb3Ye69
-	 PYERBZ9qwMwWyj2usDUUICp371jE6oR9vxRQZWO3H7nUF814ZDrtOLNO1Vodsn7cxv
-	 Uq3GM0pbkcCRWMHqW9zQ5SPkOiDOUXMiPfPZXprMC0LY+kLtDzXLA4GxnxMICJYzWR
-	 OSIZARWloIDSlZ4QQ2GxZy23/+lpOhVvwJlp5Kjwg3Ah0orExSViCQJfU/I1qBnt+L
-	 F/ID36einUWzg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Tamir Duberstein" <tamird@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,
-  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  "Benno Lossin" <benno.lossin@proton.me>,  "Trevor Gross"
- <tmgross@umich.edu>,  "Matthew Wilcox" <willy@infradead.org>,  "Bjorn
- Helgaas" <bhelgaas@google.com>,  "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "FUJITA Tomonori" <fujita.tomonori@gmail.com>,  "Rob Herring (Arm)"
- <robh@kernel.org>,  =?utf-8?Q?Ma=C3=ADra?= Canal <mcanal@igalia.com>,
-  "Asahi Lina"
- <lina@asahilina.net>,  <rust-for-linux@vger.kernel.org>,
-  <linux-fsdevel@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v19 1/3] rust: types: add `ForeignOwnable::PointedTo`
-In-Reply-To: <CAH5fLghKLZR7i6YQk8cQrvfOr11xEKia5LHtj1fn8dD3Stv0dQ@mail.gmail.com>
- (Alice
-	Ryhl's message of "Thu, 01 May 2025 09:17:27 +0200")
-References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-	<20250423-rust-xarray-bindings-v19-1-83cdcf11c114@gmail.com>
-	<20250430193112.4faaff3d.gary@garyguo.net>
-	<CAJ-ks9nrrKvbfjt-6RPk0G-qENukWDvw=6ePPxyBS-me-joTcw@mail.gmail.com>
-	<O9Mwwb_kcAVFpynz6f5Cjax4QQ7IJt8Mr55uZncKwzD61jq6aau--57jVhqRVzIsejnCsiNeMpDUoH8-80q7JA==@protonmail.internalid>
-	<CAH5fLghKLZR7i6YQk8cQrvfOr11xEKia5LHtj1fn8dD3Stv0dQ@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Thu, 01 May 2025 10:07:49 +0200
-Message-ID: <87y0vg21pm.fsf@kernel.org>
+	s=arc-20240116; t=1746089852; c=relaxed/simple;
+	bh=NX5JUCt46+4GqNtg8X+ChtfZbEdZgy9OrKqUvWu2n5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d73Sm4bOpQNB9VkZd6/k1nyTgZuhnj+0k1fCmCHqpiQgxQ08SrzRhz/QF75e9qwo5c8sWxpJ9gvQnFzfu98GAPFPfo9dA29eY08lNMHFhZNGp5upKVejz9owt1jL0FmDcKbROtI0SRZznp9AvbLbQnB+zFN3675hSRhAQQs0KB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2A2BA200AFFC;
+	Thu,  1 May 2025 10:57:14 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 277705CCF5; Thu,  1 May 2025 10:57:20 +0200 (CEST)
+Date: Thu, 1 May 2025 10:57:20 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <aBM3cLA_sw7iWoJf@wunner.de>
+References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo Järvinen wrote:
+> When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
+> configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
+> Tag Requester (note: there is currently no 10-Bit Tag support in the
+> kernel).
+[...]
+> Add a quirk that disallows enabling Extended Tags and setting MRRS
+> larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
+> bifurcated to x2. Reject >128B MRRS only when it is going to be written
+> by the kernel (this assumes FW configured a good initial value for MRRS
+> in case the kernel is not touching MRRS at all).
 
-> On Wed, Apr 30, 2025 at 8:57=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
->>
->> On Wed, Apr 30, 2025 at 11:31=E2=80=AFAM Gary Guo <gary@garyguo.net> wro=
-te:
->> >
->> > On Wed, 23 Apr 2025 09:54:37 -0400
->> > Tamir Duberstein <tamird@gmail.com> wrote:
->> > > -impl<T: 'static, A> ForeignOwnable for Box<T, A>
->> > > +// SAFETY: The `into_foreign` function returns a pointer that is we=
-ll-aligned.
->> > > +unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
->> > >  where
->> > >      A: Allocator,
->> > >  {
->> > > +    type PointedTo =3D T;
->> >
->> > I don't think this is the correct solution for this. The returned
->> > pointer is supposed to opaque, and exposing this type may encourage
->> > this is to be wrongly used.
->>
->> Can you give an example?
->
-> This came up when we discussed this patch in the meeting yesterday:
-> https://lore.kernel.org/all/20250227-configfs-v5-1-c40e8dc3b9cd@kernel.or=
-g/
->
-> This is incorrect use of the trait. The pointer is supposed to be
-> opaque, and you can't dereference it. See my reply to that patch as
-> well:
-> https://lore.kernel.org/all/CAH5fLggDwPBzMO2Z48oMjDm4qgoNM0NQs_63TxmVEGy+=
-gtMpOA@mail.gmail.com/
+I note that there's the existing quirk_brcm_5719_limit_mrrs(),
+which limits MRRS to 2048 on certain revisions of Broadcom
+Ethernet adapters.  This became necessary to work around an
+internal FIFO problem, see commit 2c55a3d08ade ("tg3: Scale back
+code that modifies MRRS") and commit 0b471506712d ("tg3: Recode
+PCI MRRS adjustment as a PCI quirk").
 
+The quirk works by overriding the MRRS which was originally set
+on enumeration by pcie_bus_configure_settings().  The overriding
+happens at enable time, i.e. when a driver starts to makes use
+of the device:
 
-For reference, the outcome of the discussion yesterday:
+do_pci_enable_device()
+  pci_host_bridge_enable_device()
+  pcibios_enable_device()
+  pci_fixup_device()
+    quirk_brcm_5719_limit_mrrs()
 
- - The use of `ForeignOwnable` in the configfs series is not correct. The p=
-ointer
-   must be opaque. I will drop the use of `ForeignOwnable` and adapt
-   `Arc` methods `into_raw`/`from_raw` instead. I had a plan to make the
-   code generic over the pointer type with a bound on `ForeignOwnable`.
-   A new trait is required for that now.
+Now if you look further above in do_pci_enable_device(), there's
+a call to pci_host_bridge_enable_device(), which invokes the
+->enable_device() callback in struct pci_host_bridge.
+Currently there's only a single host brige driver implementing
+that callback, controller/dwc/pci-imx6.c.
 
- - There may be a use case for a trait that allows passing ownership of
-   an object to C, similar to `ForeignOwnable` but with a non-opaque
-   pointer. Trait methods would be `into_raw`, `from_raw`, `borrow`.
+One option would be to set that callback on the host bridge
+if a Granite Rapids Root Port is found.  And then enforce the
+mrrs limit in the callback.  That approach may be more acceptable
+upstream than adding a custom "only_128b_mrrs" bit to struct
+pci_host_bridge.
 
- - The solution for alignment adopted in this (xarray) series is not
-   ideal. However, given the timeline we will proceed merging the series
-   as is, and then change the solution to the one outlined by Gary in
-   the next cycle.
+Another option would be to amend x86's pcibios_enable_device()
+to check whether there's a Granite Rapids Root Port above the
+device and enforce the mrrs limit if so.
 
-@Gary you mentioned an implementation of the solution you outlined is
-already posted to the list. I can't seem to find it, can you point to
-it?
+The only downside I see is that the Broadcom quirk will run
+afterwards and increase the MRRS again.  But it's highly unlikely
+that one of these old Broadcom chips is used on a present-day
+Granite Rapids server, so it may not be a problem in practice.
+And the worst thing that can happen is suboptimal performance.
 
-Best regards,
-Andreas Hindborg
+Thanks,
 
-
+Lukas
 
