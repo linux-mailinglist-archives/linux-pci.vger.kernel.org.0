@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-27069-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27070-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8971BAA6107
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 17:56:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B1D5AA610C
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 17:57:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD73A4A3411
-	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 15:56:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00E849C29A0
+	for <lists+linux-pci@lfdr.de>; Thu,  1 May 2025 15:56:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB27020C49C;
-	Thu,  1 May 2025 15:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1FF20B807;
+	Thu,  1 May 2025 15:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCJ/oktI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VR+3thRX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FE01BF37;
-	Thu,  1 May 2025 15:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC101210185;
+	Thu,  1 May 2025 15:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746114994; cv=none; b=aR5q9VSD/wfBok++Qa4XIIWxJNUDdCB/p0jH11k6GDwAx5iW/T239hEghkvYTx+eU3Nwl36VnjO+6SrE6zkgXXIxry/V23XDDIGCc/lw7MRtR3UhLFrfe7E/WvdNNAgEKumGc9eaY9QyhvFhLt7b97etZatat7TueQYkY2tAfHU=
+	t=1746115001; cv=none; b=bKQkUjlU6/mHMQTrQia2gDxcF5OSh8RWu1XVCrdEm7P6DvJeoR9q2pJmIX0CuwSB/aw+dXNv8I7aAjnPHnNk/8PMWmy+hEmMThzj/+VRfWyiUl2Z/IbyRR8FTc/Av5IsoGkfLS0GpAsDN199gdYa17xXTpUc/Ut1NX3sHUWqfq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746114994; c=relaxed/simple;
-	bh=MVsOI5XqGV6KrnpEGByFDvmB/EVjzHVKI1q52/IKofA=;
+	s=arc-20240116; t=1746115001; c=relaxed/simple;
+	bh=dpeZyhbEJMm07kKSWpfBGYSW9Zg23u7YX8CGdRY1guk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=koLtKIIK4B/cCzAsACB5Ed9qAp4OEtTQtTAbOdB1aEFR8Bh3P2GH0QeNfl53UXVIf7TJznxXVZimghALYUuMbhaASG2BrDRKSV32ximshH7x6Oydz/habEOJ0V3aKa0RjdtqR7Dmg+3hFUDERQrHXLrO0hHA9b+weLrvLB6gaFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCJ/oktI; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=RDYMao7brH+G5MBpdRcFA9EGpF/ytMHMi462EOLK0J+rgMT4lFVQwqwhdRkYKd8FJSP67g85roHf4Wng+Utd4noCl5KfDCAyxJt/fQ88V1cWbVPdP5DK4kztT/ex9XItmwoJbVn7aPpikCKlmm9IFPkb771v4EzHJj5Ed6d/EWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VR+3thRX; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so8350815e9.3;
-        Thu, 01 May 2025 08:56:32 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so3403485e9.1;
+        Thu, 01 May 2025 08:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746114991; x=1746719791; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746114998; x=1746719798; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nm4Nt13v74NWTqm06gLw4HBrGjUTYIB/z/gIzW15jYY=;
-        b=ZCJ/oktIz/PFIpilZMzepqKubwcJZsDyRuKaa04eKZkFPe4avHUsJHFWtxGviAsbB7
-         EgsrEpZ/59VsbLOzxkQfFKj2R3hWJxXXYfYCGuzZPDMZ+pkswr05cOcuBsNrVs9NxS4C
-         1r7BJhpoyFgVKbSUPOlmExKJOkPR6foSgm3CLGmnXCGbuQS4v8jGSdnGQdcS9dSxs5WP
-         u7DdB3TwiSAHWzhf+V7Gm2EpbGZ9h9nWYPaNnJPfKit+2B8sxr4D4gG47r2U7ERVry39
-         ssViywPyU5peB1ox5qE+zDPtW9EbePVnku78BZQsncn/cJOpHnhMP8XzmqHN9T3YwT+6
-         JcuQ==
+        bh=iQy0NQT+3evnck4iehrKrqmJJc+AvuO+V5yJn4et+1Q=;
+        b=VR+3thRXROMUAXDJTYD5knmWX/jkHlmyJXJVT6P7cuH4L9lae6q8OXbnM2Yb+Xj3D/
+         uUHyNSrT6y2U9kHLH44abQz0FAYWXn965rMwqFjY5rSaIrHyiXAAd1jyZnXf/H77GQgo
+         7VFREtb6ppPt9vRc8zvdeSZBHDpSq1aleoMtZbGvTXV2f8UE5+fJEVC+k8DDCX6riTPp
+         ZCcGOlMZtAK7nUPW7T9hDULMOiXSJqDAMBD/+4SlPA46x6vRDAgMedJQCDYqaHQ6XCr9
+         JAFOnj1lLR4idumLujq385klG3fS4+0frRS4tYCEcKXB4MXqlxxr6ALyxjF3xEkEwEFF
+         3HAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746114991; x=1746719791;
+        d=1e100.net; s=20230601; t=1746114998; x=1746719798;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nm4Nt13v74NWTqm06gLw4HBrGjUTYIB/z/gIzW15jYY=;
-        b=WFBAWfNLDiIFtn1FLXoH7Clg9VeWq7AIiMFlSJfqHQdRIC4wXZSDxV/d4xOb4ddYPQ
-         k86UMdo0Aw73LW24fEjn3dJPFDx/vhM+54m4MYypEYMsk1Di1utbJjVL9aS/oTYL0aT3
-         1wtIxm65IQb8QdI+PZtzG4fxVCc3Hp9vWZDN2tHB8f21jTlo0FA7f6XznCd2CVyfw5xy
-         /n8kzl7vK6kIVa4CPn9t5zcUkyHUOkpfFvPPeTNdkD+NMJPacBBikEvCITo2ZMNgijwM
-         7qL2JyzG91kRW/29PVyOXnmOM/kaEHlJ0hrMx8mDHZJdbZmdjJ3Vx2v1m59pHcK+AGaH
-         E7jA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6dZyeWXYfHLCKZrb+4hbzb8wQPyzZfKa1vsRk9lNUgCu2c6Bi1Hg7ApZPykOK0mSbzqgB++rA94rJGKI=@vger.kernel.org, AJvYcCVu+deutVQ8EXt4XuJ7UWjV2BkoSqFLEwG7Ar0gEcYnNzW8vvL0PKKlDhm7m4+iYhtNRwxeTZIQImoc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxhZTwlb+aY0DvUkQVQNJGw3Q4sSKcYJ+mETpPgoRvBP385bta
-	0kGQq3WVAphZg449jSYo0TJwiJXA72HbSdeUuAQkRkSOB1nDI02U
-X-Gm-Gg: ASbGnctvVupIrlwAhn3GpVjLs3PE6sWmg2WLZ8c9obkTXAs6h1VIkXM/HRHP0F2twOq
-	iSm9cLl/pOJUEznRNVG0my4aUj9NstlCqcy2+rztfeE1Z79ZKbrA9om74xaQ0cGih4d8lAIXhbm
-	tlaMQO7dGRHy5ars3OisJyMTTlULRr/UBFa972S3A6T84JQjIrBHXE3tDCm8UMH37322P7R3EjC
-	s1d+kFHkN2I0LLFyv4j9JW9+C+ubqy44JjcbtRkSw3uJ3X2samWBEut43HIZ5nFvk+9uDElHMMo
-	k/r5nO55WDFJ2WV7xV4pWnmE/SnmLosvtZKedw==
-X-Google-Smtp-Source: AGHT+IG7OsJ/A21HZKJb7jfB7o7Yk1A+q+JvY1AWJUrAgnJ8W/COw6WfERcuSrvLd6XO5qInOBishg==
-X-Received: by 2002:a05:600c:8507:b0:43c:f8fe:dd82 with SMTP id 5b1f17b1804b1-441b265b10bmr68379705e9.18.1746114990801;
-        Thu, 01 May 2025 08:56:30 -0700 (PDT)
+        bh=iQy0NQT+3evnck4iehrKrqmJJc+AvuO+V5yJn4et+1Q=;
+        b=DUKUQgvZd61ZW8GGqFMUvMl0kD3s8bjZKM/kMCr4lzL5x1yMum2Wfj4QO48/SI8kg1
+         KidPmG8V59HdJiOPnREglVFTHMpYZiaB7dJejzWRR1PrhiiBK9KAWPacEIjtmWL5Vcjx
+         F2CCTHC0OK9bSB82rTIR98luJuLFN9uKSRFRUKDJDt9j7vxzVrhtTk6a5mot9b0o6Xp6
+         cxPGKv4C3nGTfwE6i8WMQaX7snmNTlR/mYG+I1Bgalb8YhbiwsORF0KdphfDVZInNv69
+         I+slzVZw1nXSxOMZ+p+H/iznQE4KQViuqJggjy7KIgA8Tro049cGvaqZnLTTkiRYSLwt
+         L1Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNV4XtUU3YKWDHtuRdlR+1GQm8ifEN+jvGbTNBzB54imgfYrrIQK0HTH7evNgMdFAali1cyqNAqPf29Pw=@vger.kernel.org, AJvYcCXhnsOumRlYli0OkDKD10P2wResJyX+iwDBipCM82M+QftmXTpBFOII0u+u6dHFRmgbWJQHqBVHEh6l@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH6hauR/4a2dqtcFqRUY+ORok9f0vpAW58TUGINkbLP/xTa5Sa
+	joIggL68IWTPfuUe3X2DhOGRdFpcwWice8lvyg4YkvJ2/Mtn/k9A
+X-Gm-Gg: ASbGncsROCdAWIEdYNtmEdGiM/GtGSTyOjHArsHrJOYxxtaideMXtTQ/74Pk1pAwqDM
+	8D+qU6zDvHBgk5jPn+/vulVpLCzrtdzbvIkLj9sFAzJq22LQ6N52wn1jKAXR7Gy6PxazoYLsVHY
+	rUjCqkuq4g0qcq7HoKW0O+h7nTGWEjkuIWCFDdcIkNEqE7DrpFnlkjO8hA1GSeBRH3yc8PADP5J
+	uAspyzZKYlFgtWnXIpVI6+V79WdaYC1clgRv6x1nKEz7e7hXefufhNumuOEEueXQ8fD6BshOG1D
+	+T34A4pDRyN1lDhZti8wq4vqu/QimUSZBfylEA==
+X-Google-Smtp-Source: AGHT+IEDVY77OeKaGakqap7NdROdScgPMVbro1o6hQwKT98+l+7AyAFCKp64NO45BaUXR98syN72vg==
+X-Received: by 2002:a05:600c:4e52:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-441b2695cc2mr62734405e9.27.1746114998156;
+        Thu, 01 May 2025 08:56:38 -0700 (PDT)
 Received: from pc.. ([197.232.62.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ee37dsm16226065e9.22.2025.05.01.08.56.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ee37dsm16226065e9.22.2025.05.01.08.56.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 08:56:30 -0700 (PDT)
+        Thu, 01 May 2025 08:56:37 -0700 (PDT)
 From: Erick Karanja <karanja99erick@gmail.com>
 To: manivannan.sadhasivam@linaro.org,
 	kw@linux.com
@@ -81,9 +81,9 @@ Cc: kishon@kernel.org,
 	linux-kernel@vger.kernel.org,
 	julia.lawall@inria.fr,
 	Erick Karanja <karanja99erick@gmail.com>
-Subject: [PATCH 1/2] PCI: endpoint: Replace manual mutex handling with scoped_guard()
-Date: Thu,  1 May 2025 18:56:11 +0300
-Message-ID: <49b27386eb57432d204153794bfd20f78aa72253.1746114596.git.karanja99erick@gmail.com>
+Subject: [PATCH 2/2] PCI: endpoint: Use scoped_guard for manual mutex lock/unlock
+Date: Thu,  1 May 2025 18:56:12 +0300
+Message-ID: <88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1746114596.git.karanja99erick@gmail.com>
 References: <cover.1746114596.git.karanja99erick@gmail.com>
@@ -101,430 +101,81 @@ avoids error-prone unlock paths and simplifies control flow.
 
 Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 358 +++++++++----------
- 1 file changed, 166 insertions(+), 192 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 53 +++++++++++++----------------
+ 1 file changed, 24 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 6643a88c7a0c..57ef522c3d07 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -323,57 +323,52 @@ static int pci_epf_mhi_edma_read(struct mhi_ep_cntrl *mhi_cntrl,
- 	if (buf_info->size < SZ_4K)
- 		return pci_epf_mhi_iatu_read(mhi_cntrl, buf_info);
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index beabea00af91..3f3ff36fa8ab 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -709,7 +709,6 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ {
+ 	struct list_head *list;
+ 	u32 func_no;
+-	int ret = 0;
  
--	mutex_lock(&epf_mhi->lock);
+ 	if (IS_ERR_OR_NULL(epc) || epf->is_vf)
+ 		return -EINVAL;
+@@ -720,36 +719,32 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 	if (type == SECONDARY_INTERFACE && epf->sec_epc)
+ 		return -EBUSY;
+ 
+-	mutex_lock(&epc->list_lock);
+-	func_no = find_first_zero_bit(&epc->function_num_map,
+-				      BITS_PER_LONG);
+-	if (func_no >= BITS_PER_LONG) {
+-		ret = -EINVAL;
+-		goto ret;
+-	}
 -
--	config.direction = DMA_DEV_TO_MEM;
--	config.src_addr = buf_info->host_addr;
-+	scoped_guard(mutex, &epf_mhi->lock) {
-+		config.direction = DMA_DEV_TO_MEM;
-+		config.src_addr = buf_info->host_addr;
- 
--	ret = dmaengine_slave_config(chan, &config);
--	if (ret) {
--		dev_err(dev, "Failed to configure DMA channel\n");
--		goto err_unlock;
--	}
-+		ret = dmaengine_slave_config(chan, &config);
-+		if (ret) {
-+			dev_err(dev, "Failed to configure DMA channel\n");
-+			return ret;
+-	if (func_no > epc->max_functions - 1) {
+-		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
+-		ret = -EINVAL;
+-		goto ret;
++	scoped_guard(mutex, &epc->list_lock) {
++		func_no = find_first_zero_bit(&epc->function_num_map,
++					      BITS_PER_LONG);
++		if (func_no >= BITS_PER_LONG)
++			return -EINVAL;
++
++		if (func_no > epc->max_functions - 1) {
++			dev_err(&epc->dev, "Exceeding max supported Function Number\n");
++			return -EINVAL;
 +		}
- 
--	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
--				  DMA_FROM_DEVICE);
--	ret = dma_mapping_error(dma_dev, dst_addr);
--	if (ret) {
--		dev_err(dev, "Failed to map remote memory\n");
--		goto err_unlock;
--	}
-+		dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
-+					  DMA_FROM_DEVICE);
-+		ret = dma_mapping_error(dma_dev, dst_addr);
-+		if (ret) {
-+			dev_err(dev, "Failed to map remote memory\n");
-+			return ret;
++
++		set_bit(func_no, &epc->function_num_map);
++		if (type == PRIMARY_INTERFACE) {
++			epf->func_no = func_no;
++			epf->epc = epc;
++			list = &epf->list;
++		} else {
++			epf->sec_epc_func_no = func_no;
++			epf->sec_epc = epc;
++			list = &epf->sec_epc_list;
 +		}
- 
--	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
--					   DMA_DEV_TO_MEM,
--					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
--	if (!desc) {
--		dev_err(dev, "Failed to prepare DMA\n");
--		ret = -EIO;
--		goto err_unmap;
--	}
-+		desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
-+						   DMA_DEV_TO_MEM,
-+						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
-+		if (!desc) {
-+			dev_err(dev, "Failed to prepare DMA\n");
-+			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
-+			return -EIO;
-+		}
- 
--	desc->callback = pci_epf_mhi_dma_callback;
--	desc->callback_param = &complete;
-+		desc->callback = pci_epf_mhi_dma_callback;
-+		desc->callback_param = &complete;
- 
--	cookie = dmaengine_submit(desc);
--	ret = dma_submit_error(cookie);
--	if (ret) {
--		dev_err(dev, "Failed to do DMA submit\n");
--		goto err_unmap;
--	}
-+		cookie = dmaengine_submit(desc);
-+		ret = dma_submit_error(cookie);
-+		if (ret) {
-+			dev_err(dev, "Failed to do DMA submit\n");
-+			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
-+			return ret;
-+		}
- 
--	dma_async_issue_pending(chan);
--	ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
--	if (!ret) {
--		dev_err(dev, "DMA transfer timeout\n");
--		dmaengine_terminate_sync(chan);
--		ret = -ETIMEDOUT;
-+		dma_async_issue_pending(chan);
-+		ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
-+		if (!ret) {
-+			dev_err(dev, "DMA transfer timeout\n");
-+			dmaengine_terminate_sync(chan);
-+			ret = -ETIMEDOUT;
-+		}
++
++		list_add_tail(list, &epc->pci_epf);
  	}
+ 
+-	set_bit(func_no, &epc->function_num_map);
+-	if (type == PRIMARY_INTERFACE) {
+-		epf->func_no = func_no;
+-		epf->epc = epc;
+-		list = &epf->list;
+-	} else {
+-		epf->sec_epc_func_no = func_no;
+-		epf->sec_epc = epc;
+-		list = &epf->sec_epc_list;
+-	}
 -
--err_unmap:
--	dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
--err_unlock:
--	mutex_unlock(&epf_mhi->lock);
+-	list_add_tail(list, &epc->pci_epf);
+-ret:
+-	mutex_unlock(&epc->list_lock);
 -
- 	return ret;
+-	return ret;
++	return 0;
  }
- 
-@@ -394,57 +389,52 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
- 	if (buf_info->size < SZ_4K)
- 		return pci_epf_mhi_iatu_write(mhi_cntrl, buf_info);
- 
--	mutex_lock(&epf_mhi->lock);
--
--	config.direction = DMA_MEM_TO_DEV;
--	config.dst_addr = buf_info->host_addr;
-+	scoped_guard(mutex, &epf_mhi->lock) {
-+		config.direction = DMA_MEM_TO_DEV;
-+		config.dst_addr = buf_info->host_addr;
- 
--	ret = dmaengine_slave_config(chan, &config);
--	if (ret) {
--		dev_err(dev, "Failed to configure DMA channel\n");
--		goto err_unlock;
--	}
-+		ret = dmaengine_slave_config(chan, &config);
-+		if (ret) {
-+			dev_err(dev, "Failed to configure DMA channel\n");
-+			return ret;
-+		}
- 
--	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
--				  DMA_TO_DEVICE);
--	ret = dma_mapping_error(dma_dev, src_addr);
--	if (ret) {
--		dev_err(dev, "Failed to map remote memory\n");
--		goto err_unlock;
--	}
-+		src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
-+					  DMA_TO_DEVICE);
-+		ret = dma_mapping_error(dma_dev, src_addr);
-+		if (ret) {
-+			dev_err(dev, "Failed to map remote memory\n");
-+			return ret;
-+		}
- 
--	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
--					   DMA_MEM_TO_DEV,
--					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
--	if (!desc) {
--		dev_err(dev, "Failed to prepare DMA\n");
--		ret = -EIO;
--		goto err_unmap;
--	}
-+		desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
-+						   DMA_MEM_TO_DEV,
-+						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
-+		if (!desc) {
-+			dev_err(dev, "Failed to prepare DMA\n");
-+			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
-+			return -EIO;
-+		}
- 
--	desc->callback = pci_epf_mhi_dma_callback;
--	desc->callback_param = &complete;
-+		desc->callback = pci_epf_mhi_dma_callback;
-+		desc->callback_param = &complete;
- 
--	cookie = dmaengine_submit(desc);
--	ret = dma_submit_error(cookie);
--	if (ret) {
--		dev_err(dev, "Failed to do DMA submit\n");
--		goto err_unmap;
--	}
-+		cookie = dmaengine_submit(desc);
-+		ret = dma_submit_error(cookie);
-+		if (ret) {
-+			dev_err(dev, "Failed to do DMA submit\n");
-+			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
-+			return ret;
-+		}
- 
--	dma_async_issue_pending(chan);
--	ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
--	if (!ret) {
--		dev_err(dev, "DMA transfer timeout\n");
--		dmaengine_terminate_sync(chan);
--		ret = -ETIMEDOUT;
-+		dma_async_issue_pending(chan);
-+		ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
-+		if (!ret) {
-+			dev_err(dev, "DMA transfer timeout\n");
-+			dmaengine_terminate_sync(chan);
-+			ret = -ETIMEDOUT;
-+		}
- 	}
--
--err_unmap:
--	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
--err_unlock:
--	mutex_unlock(&epf_mhi->lock);
--
- 	return ret;
- }
- 
-@@ -497,67 +487,59 @@ static int pci_epf_mhi_edma_read_async(struct mhi_ep_cntrl *mhi_cntrl,
- 	dma_addr_t dst_addr;
- 	int ret;
- 
--	mutex_lock(&epf_mhi->lock);
-+	scoped_guard(mutex, &epf_mhi->lock) {
-+		config.direction = DMA_DEV_TO_MEM;
-+		config.src_addr = buf_info->host_addr;
- 
--	config.direction = DMA_DEV_TO_MEM;
--	config.src_addr = buf_info->host_addr;
-+		ret = dmaengine_slave_config(chan, &config);
-+		if (ret) {
-+			dev_err(dev, "Failed to configure DMA channel\n");
-+			return ret;
-+		}
- 
--	ret = dmaengine_slave_config(chan, &config);
--	if (ret) {
--		dev_err(dev, "Failed to configure DMA channel\n");
--		goto err_unlock;
--	}
-+		dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
-+					  DMA_FROM_DEVICE);
-+		ret = dma_mapping_error(dma_dev, dst_addr);
-+		if (ret) {
-+			dev_err(dev, "Failed to map remote memory\n");
-+			return ret;
-+		}
- 
--	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
--				  DMA_FROM_DEVICE);
--	ret = dma_mapping_error(dma_dev, dst_addr);
--	if (ret) {
--		dev_err(dev, "Failed to map remote memory\n");
--		goto err_unlock;
--	}
-+		desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
-+						   DMA_DEV_TO_MEM,
-+						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
-+		if (!desc) {
-+			dev_err(dev, "Failed to prepare DMA\n");
-+			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
-+			return -EIO;
-+		}
- 
--	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
--					   DMA_DEV_TO_MEM,
--					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
--	if (!desc) {
--		dev_err(dev, "Failed to prepare DMA\n");
--		ret = -EIO;
--		goto err_unmap;
--	}
-+		transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
-+		if (!transfer) {
-+			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
-+			return -ENOMEM;
-+		}
- 
--	transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
--	if (!transfer) {
--		ret = -ENOMEM;
--		goto err_unmap;
--	}
-+		transfer->epf_mhi = epf_mhi;
-+		transfer->paddr = dst_addr;
-+		transfer->size = buf_info->size;
-+		transfer->dir = DMA_FROM_DEVICE;
-+		memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
- 
--	transfer->epf_mhi = epf_mhi;
--	transfer->paddr = dst_addr;
--	transfer->size = buf_info->size;
--	transfer->dir = DMA_FROM_DEVICE;
--	memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
-+		desc->callback = pci_epf_mhi_dma_async_callback;
-+		desc->callback_param = transfer;
- 
--	desc->callback = pci_epf_mhi_dma_async_callback;
--	desc->callback_param = transfer;
-+		cookie = dmaengine_submit(desc);
-+		ret = dma_submit_error(cookie);
-+		if (ret) {
-+			dev_err(dev, "Failed to do DMA submit\n");
-+			kfree(transfer);
-+			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
-+			return ret;
-+		}
- 
--	cookie = dmaengine_submit(desc);
--	ret = dma_submit_error(cookie);
--	if (ret) {
--		dev_err(dev, "Failed to do DMA submit\n");
--		goto err_free_transfer;
-+		dma_async_issue_pending(chan);
- 	}
--
--	dma_async_issue_pending(chan);
--
--	goto err_unlock;
--
--err_free_transfer:
--	kfree(transfer);
--err_unmap:
--	dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
--err_unlock:
--	mutex_unlock(&epf_mhi->lock);
--
- 	return ret;
- }
- 
-@@ -576,67 +558,59 @@ static int pci_epf_mhi_edma_write_async(struct mhi_ep_cntrl *mhi_cntrl,
- 	dma_addr_t src_addr;
- 	int ret;
- 
--	mutex_lock(&epf_mhi->lock);
-+	scoped_guard(mutex, &epf_mhi->lock) {
-+		config.direction = DMA_MEM_TO_DEV;
-+		config.dst_addr = buf_info->host_addr;
- 
--	config.direction = DMA_MEM_TO_DEV;
--	config.dst_addr = buf_info->host_addr;
-+		ret = dmaengine_slave_config(chan, &config);
-+		if (ret) {
-+			dev_err(dev, "Failed to configure DMA channel\n");
-+			return ret;
-+		}
- 
--	ret = dmaengine_slave_config(chan, &config);
--	if (ret) {
--		dev_err(dev, "Failed to configure DMA channel\n");
--		goto err_unlock;
--	}
-+		src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
-+					  DMA_TO_DEVICE);
-+		ret = dma_mapping_error(dma_dev, src_addr);
-+		if (ret) {
-+			dev_err(dev, "Failed to map remote memory\n");
-+			return ret;
-+		}
- 
--	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
--				  DMA_TO_DEVICE);
--	ret = dma_mapping_error(dma_dev, src_addr);
--	if (ret) {
--		dev_err(dev, "Failed to map remote memory\n");
--		goto err_unlock;
--	}
-+		desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
-+						   DMA_MEM_TO_DEV,
-+						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
-+		if (!desc) {
-+			dev_err(dev, "Failed to prepare DMA\n");
-+			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
-+			return -EIO;
-+		}
- 
--	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
--					   DMA_MEM_TO_DEV,
--					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
--	if (!desc) {
--		dev_err(dev, "Failed to prepare DMA\n");
--		ret = -EIO;
--		goto err_unmap;
--	}
-+		transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
-+		if (!transfer) {
-+			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
-+			return -ENOMEM;
-+		}
- 
--	transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
--	if (!transfer) {
--		ret = -ENOMEM;
--		goto err_unmap;
--	}
-+		transfer->epf_mhi = epf_mhi;
-+		transfer->paddr = src_addr;
-+		transfer->size = buf_info->size;
-+		transfer->dir = DMA_TO_DEVICE;
-+		memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
- 
--	transfer->epf_mhi = epf_mhi;
--	transfer->paddr = src_addr;
--	transfer->size = buf_info->size;
--	transfer->dir = DMA_TO_DEVICE;
--	memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
-+		desc->callback = pci_epf_mhi_dma_async_callback;
-+		desc->callback_param = transfer;
- 
--	desc->callback = pci_epf_mhi_dma_async_callback;
--	desc->callback_param = transfer;
-+		cookie = dmaengine_submit(desc);
-+		ret = dma_submit_error(cookie);
-+		if (ret) {
-+			dev_err(dev, "Failed to do DMA submit\n");
-+			kfree(transfer);
-+			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
-+			return ret;
-+		}
- 
--	cookie = dmaengine_submit(desc);
--	ret = dma_submit_error(cookie);
--	if (ret) {
--		dev_err(dev, "Failed to do DMA submit\n");
--		goto err_free_transfer;
-+		dma_async_issue_pending(chan);
- 	}
--
--	dma_async_issue_pending(chan);
--
--	goto err_unlock;
--
--err_free_transfer:
--	kfree(transfer);
--err_unmap:
--	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
--err_unlock:
--	mutex_unlock(&epf_mhi->lock);
--
- 	return ret;
- }
+ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
  
 -- 
 2.43.0
