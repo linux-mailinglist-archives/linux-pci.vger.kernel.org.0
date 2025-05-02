@@ -1,107 +1,538 @@
-Return-Path: <linux-pci+bounces-27086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 748E4AA6B26
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 08:59:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D92DAA6CB0
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 10:42:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BC9198545D
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 06:59:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBD9B1BC04BD
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 08:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC7EF266B7D;
-	Fri,  2 May 2025 06:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZ+518aa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0107F22AE6B;
+	Fri,  2 May 2025 08:42:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C4A266B5C;
-	Fri,  2 May 2025 06:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950D822AE6D;
+	Fri,  2 May 2025 08:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746169146; cv=none; b=dKrM1n3Pnr9hS2B1O+aKjVQD1WKucP2BJy2NjohSdeQuvpXQSWgWd7ak7NumtVB9vVjfWWxaNyEPs+hAdKtJMTE+Fyq9Cry7GHy+qTLaBlgUo7fb/HgiIGjT+QrR7GNDcGrAGvFmks9c0s7k3/vIWvH6WmcNkDPgghGBM2+Z3wo=
+	t=1746175324; cv=none; b=su46rkU+lKRD83XDsrYfCixwMq4EIVKIxaJ5rcf/hihehPPMwUz0ZVhaTtcbjX3luxRqoP4XD/XvvHU5crlWeDtpP/anHytygFEv2oVfs2GODwBvkq+rKfkhJrhWlc2aKV8PO3mjGTaMphvVxaU0j+YYH1UrNEuV0fzmRhdqCTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746169146; c=relaxed/simple;
-	bh=6sClcWYGukBbkpULYb0l3opl4yAyv99xyShFUXuykaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tJKgwe1ZzcR45TzPZJx7TQGPU+CI/EVg9qvfKul1fiDFeabXfG74ElzA+ZC6erb9tYhYs4dY6zn7q72GROieZpMLeAH6Sggy5Ckq6Qpaw5vWLMX7iVDW9GOK//Jhng9RsiB9Pjqtf5JJ72G8fOrSl1iAhetXWEd6BTyn+HIq+QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZ+518aa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E737C4CEE4;
-	Fri,  2 May 2025 06:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746169146;
-	bh=6sClcWYGukBbkpULYb0l3opl4yAyv99xyShFUXuykaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YZ+518aayrvUeQVuipI53moncuZzz4Ed/Dxji11skD7ZoU/b8gOmjfcFisHFnOejD
-	 2H5xYuuxFMt83VfJdsM7XgiERYCLpi+Vp7GPfHA9/+FVKOMljmLiY8ZpT6e/iKg7wJ
-	 nizYqciu1F9qXd4WqTODYU2hO5nO8p7Tr2SM3InYqL1ZXhj48gc2MHuwECjTbfWsSE
-	 nxl0K8UkWJ+BABy1L3v4uOSlh1iyZZ7HEgsGwd+N3IkkBZvgbSi8bl0oBeX9CNQqF/
-	 vE/ksOsT8chgpOzjxV3Qp8JItztaXuCleeQfhQHliip5rBU/ZMNjodJXuwNkE5CpKp
-	 dWtzAxdeOe4nw==
-Date: Fri, 2 May 2025 08:59:00 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alistair Francis <alistair@alistair23.me>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [PATCH v2] PCI: dwc: Add support for slot reset on link down
- event
-Message-ID: <aBRtNOLQ6R-5iOB4@ryzen>
-References: <20250501-b4-pci_dwc_reset_support-v2-1-d6912ab174c4@wdc.com>
+	s=arc-20240116; t=1746175324; c=relaxed/simple;
+	bh=P/tDpIjlaLLUMdrFjVAn6eBkwk3xBBEevAOjFD94nN4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bb4gEvqQ5PlJQNRQbOfrfVrPrc07P9CMMV79bpR/C0AfTk76kuw2WnEvGjIgCXixqR9xObS5Yl6xeHGGHFfnaFzsihKa3+55GRlX2ApdV2yhvF1Ehzm94m6bdm2925YkNmvriXYuBWrhaDrDPVlv7GMlRrGMeg6BcXfpFLOCPxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zpkmr0wN1z6K90T;
+	Fri,  2 May 2025 16:37:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 028471400D9;
+	Fri,  2 May 2025 16:41:59 +0800 (CST)
+Received: from localhost (10.48.156.249) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 May
+ 2025 10:41:58 +0200
+Date: Fri, 2 May 2025 09:41:55 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Erick Karanja <karanja99erick@gmail.com>
+CC: <manivannan.sadhasivam@linaro.org>, <kw@linux.com>, <kishon@kernel.org>,
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <julia.lawall@inria.fr>
+Subject: Re: [PATCH 1/2] PCI: endpoint: Replace manual mutex handling with
+ scoped_guard()
+Message-ID: <20250502094155.00003f74@huawei.com>
+In-Reply-To: <49b27386eb57432d204153794bfd20f78aa72253.1746114596.git.karanja99erick@gmail.com>
+References: <cover.1746114596.git.karanja99erick@gmail.com>
+	<49b27386eb57432d204153794bfd20f78aa72253.1746114596.git.karanja99erick@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501-b4-pci_dwc_reset_support-v2-1-d6912ab174c4@wdc.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hello Wilfred,
+On Thu,  1 May 2025 18:56:11 +0300
+Erick Karanja <karanja99erick@gmail.com> wrote:
 
-On Thu, May 01, 2025 at 11:57:39AM +1000, Wilfred Mallawa wrote:
-> @@ -688,6 +699,79 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+In the patch name always mention which driver it is.
+
+
+> This refactor replaces manual mutex lock/unlock with scoped_guard()
+> in places where early exits use goto. Using scoped_guard()
+> avoids error-prone unlock paths and simplifies control flow.
+
+In this case that only works because you've replicated the other
+unwinding coding in various error paths.  That's more error prone
+so I'm not convinced this particular case is a good use of scoped cleanup.
+
+> 
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 358 +++++++++----------
+>  1 file changed, 166 insertions(+), 192 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index 6643a88c7a0c..57ef522c3d07 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -323,57 +323,52 @@ static int pci_epf_mhi_edma_read(struct mhi_ep_cntrl *mhi_cntrl,
+>  	if (buf_info->size < SZ_4K)
+>  		return pci_epf_mhi_iatu_read(mhi_cntrl, buf_info);
+>  
+> -	mutex_lock(&epf_mhi->lock);
+> -
+> -	config.direction = DMA_DEV_TO_MEM;
+> -	config.src_addr = buf_info->host_addr;
+> +	scoped_guard(mutex, &epf_mhi->lock) {
+
+I'd be tempted to use
+guard(mutex)(&epf_mhi->lock); given your scope goes to the end
+of the function.
+
+That will reduce the diff and make it easier to spot any functional changes...
+
+> +		config.direction = DMA_DEV_TO_MEM;
+> +		config.src_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> +		ret = dmaengine_slave_config(chan, &config);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to configure DMA channel\n");
+> +			return ret;
+> +		}
+>  
+> -	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> -				  DMA_FROM_DEVICE);
+> -	ret = dma_mapping_error(dma_dev, dst_addr);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to map remote memory\n");
+> -		goto err_unlock;
+> -	}
+> +		dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> +					  DMA_FROM_DEVICE);
+> +		ret = dma_mapping_error(dma_dev, dst_addr);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to map remote memory\n");
+> +			return ret;
+> +		}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> -					   DMA_DEV_TO_MEM,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> -	if (!desc) {
+> -		dev_err(dev, "Failed to prepare DMA\n");
+> -		ret = -EIO;
+> -		goto err_unmap;
+> -	}
+> +		desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> +						   DMA_DEV_TO_MEM,
+> +						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +		if (!desc) {
+> +			dev_err(dev, "Failed to prepare DMA\n");
+> +			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+
+In cases like this where is other cleanup to do the advantages of scoped
+cleanup are greatly reduced.  I'm not sure it is a good idea here.
+
+
+
+> +			return -EIO;
+> +		}
+>  
+> -	desc->callback = pci_epf_mhi_dma_callback;
+> -	desc->callback_param = &complete;
+> +		desc->callback = pci_epf_mhi_dma_callback;
+> +		desc->callback_param = &complete;
+>  
+> -	cookie = dmaengine_submit(desc);
+> -	ret = dma_submit_error(cookie);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to do DMA submit\n");
+> -		goto err_unmap;
+> -	}
+> +		cookie = dmaengine_submit(desc);
+> +		ret = dma_submit_error(cookie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to do DMA submit\n");
+> +			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> +			return ret;
+> +		}
+>  
+> -	dma_async_issue_pending(chan);
+> -	ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
+> -	if (!ret) {
+> -		dev_err(dev, "DMA transfer timeout\n");
+> -		dmaengine_terminate_sync(chan);
+> -		ret = -ETIMEDOUT;
+
+This path previously hit the err_unmap condition and now it doesn't.
+Why that functional change?
+
+> +		dma_async_issue_pending(chan);
+> +		ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
+> +		if (!ret) {
+> +			dev_err(dev, "DMA transfer timeout\n");
+> +			dmaengine_terminate_sync(chan);
+> +			ret = -ETIMEDOUT;
+
+return -ETIMEDOUT;
+
+> +		}
+>  	}
+> -
+Even in good path were were previously unmapping and now we aren't.
+> -err_unmap:
+> -	dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> -err_unlock:
+> -	mutex_unlock(&epf_mhi->lock);
+> -
+>  	return ret;
+return 0; //assuming no way to get here with ret set.
+
+>  }
+>  
+> @@ -394,57 +389,52 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
+>  	if (buf_info->size < SZ_4K)
+>  		return pci_epf_mhi_iatu_write(mhi_cntrl, buf_info);
+>  
+> -	mutex_lock(&epf_mhi->lock);
+> -
+> -	config.direction = DMA_MEM_TO_DEV;
+> -	config.dst_addr = buf_info->host_addr;
+> +	scoped_guard(mutex, &epf_mhi->lock) {
+> +		config.direction = DMA_MEM_TO_DEV;
+> +		config.dst_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> +		ret = dmaengine_slave_config(chan, &config);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to configure DMA channel\n");
+> +			return ret;
+> +		}
+>  
+> -	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> -				  DMA_TO_DEVICE);
+> -	ret = dma_mapping_error(dma_dev, src_addr);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to map remote memory\n");
+> -		goto err_unlock;
+> -	}
+> +		src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> +					  DMA_TO_DEVICE);
+> +		ret = dma_mapping_error(dma_dev, src_addr);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to map remote memory\n");
+> +			return ret;
+> +		}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> -					   DMA_MEM_TO_DEV,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> -	if (!desc) {
+> -		dev_err(dev, "Failed to prepare DMA\n");
+> -		ret = -EIO;
+> -		goto err_unmap;
+> -	}
+> +		desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> +						   DMA_MEM_TO_DEV,
+> +						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +		if (!desc) {
+> +			dev_err(dev, "Failed to prepare DMA\n");
+> +			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> +			return -EIO;
+> +		}
+>  
+> -	desc->callback = pci_epf_mhi_dma_callback;
+> -	desc->callback_param = &complete;
+> +		desc->callback = pci_epf_mhi_dma_callback;
+> +		desc->callback_param = &complete;
+>  
+> -	cookie = dmaengine_submit(desc);
+> -	ret = dma_submit_error(cookie);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to do DMA submit\n");
+> -		goto err_unmap;
+> -	}
+> +		cookie = dmaengine_submit(desc);
+> +		ret = dma_submit_error(cookie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to do DMA submit\n");
+> +			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> +			return ret;
+> +		}
+>  
+> -	dma_async_issue_pending(chan);
+> -	ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
+> -	if (!ret) {
+> -		dev_err(dev, "DMA transfer timeout\n");
+> -		dmaengine_terminate_sync(chan);
+> -		ret = -ETIMEDOUT;
+> +		dma_async_issue_pending(chan);
+> +		ret = wait_for_completion_timeout(&complete, msecs_to_jiffies(1000));
+> +		if (!ret) {
+> +			dev_err(dev, "DMA transfer timeout\n");
+> +			dmaengine_terminate_sync(chan);
+> +			ret = -ETIMEDOUT;
+return -EITMEDOUT;
+Same issue with logic change to no unmap any more.
+
+> +		}
+>  	}
+> -
+> -err_unmap:
+> -	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> -err_unlock:
+> -	mutex_unlock(&epf_mhi->lock);
+> -
+>  	return ret;
+
+return 0; if no way to get here without an error set
+
+>  }
+>  
+> @@ -497,67 +487,59 @@ static int pci_epf_mhi_edma_read_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  	dma_addr_t dst_addr;
+>  	int ret;
+>  
+> -	mutex_lock(&epf_mhi->lock);
+> +	scoped_guard(mutex, &epf_mhi->lock) {
+> +		config.direction = DMA_DEV_TO_MEM;
+> +		config.src_addr = buf_info->host_addr;
+>  
+> -	config.direction = DMA_DEV_TO_MEM;
+> -	config.src_addr = buf_info->host_addr;
+> +		ret = dmaengine_slave_config(chan, &config);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to configure DMA channel\n");
+> +			return ret;
+> +		}
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> +		dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> +					  DMA_FROM_DEVICE);
+> +		ret = dma_mapping_error(dma_dev, dst_addr);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to map remote memory\n");
+> +			return ret;
+> +		}
+>  
+> -	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> -				  DMA_FROM_DEVICE);
+> -	ret = dma_mapping_error(dma_dev, dst_addr);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to map remote memory\n");
+> -		goto err_unlock;
+> -	}
+> +		desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> +						   DMA_DEV_TO_MEM,
+> +						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +		if (!desc) {
+> +			dev_err(dev, "Failed to prepare DMA\n");
+> +			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> +			return -EIO;
+> +		}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> -					   DMA_DEV_TO_MEM,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> -	if (!desc) {
+> -		dev_err(dev, "Failed to prepare DMA\n");
+> -		ret = -EIO;
+> -		goto err_unmap;
+> -	}
+> +		transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
+> +		if (!transfer) {
+> +			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> +			return -ENOMEM;
+> +		}
+>  
+> -	transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
+> -	if (!transfer) {
+> -		ret = -ENOMEM;
+> -		goto err_unmap;
+> -	}
+> +		transfer->epf_mhi = epf_mhi;
+> +		transfer->paddr = dst_addr;
+> +		transfer->size = buf_info->size;
+> +		transfer->dir = DMA_FROM_DEVICE;
+> +		memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
+>  
+> -	transfer->epf_mhi = epf_mhi;
+> -	transfer->paddr = dst_addr;
+> -	transfer->size = buf_info->size;
+> -	transfer->dir = DMA_FROM_DEVICE;
+> -	memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
+> +		desc->callback = pci_epf_mhi_dma_async_callback;
+> +		desc->callback_param = transfer;
+>  
+> -	desc->callback = pci_epf_mhi_dma_async_callback;
+> -	desc->callback_param = transfer;
+> +		cookie = dmaengine_submit(desc);
+> +		ret = dma_submit_error(cookie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to do DMA submit\n");
+> +			kfree(transfer);
+> +			dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> +			return ret;
+> +		}
+>  
+> -	cookie = dmaengine_submit(desc);
+> -	ret = dma_submit_error(cookie);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to do DMA submit\n");
+> -		goto err_free_transfer;
+> +		dma_async_issue_pending(chan);
+>  	}
+> -
+> -	dma_async_issue_pending(chan);
+> -
+> -	goto err_unlock;
+> -
+> -err_free_transfer:
+> -	kfree(transfer);
+> -err_unmap:
+> -	dma_unmap_single(dma_dev, dst_addr, buf_info->size, DMA_FROM_DEVICE);
+> -err_unlock:
+> -	mutex_unlock(&epf_mhi->lock);
+> -
 >  	return ret;
 >  }
 >  
-> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-> +				       struct pci_dev *pdev)
-> +{
-> +	struct pci_bus *bus = bridge->bus;
-> +	struct dw_pcie_rp *pp = bus->sysdata;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-> +	struct device *dev = rockchip->pci.dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	dw_pcie_stop_link(pci);
-> +	rockchip_pcie_phy_deinit(rockchip);
-> +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+> @@ -576,67 +558,59 @@ static int pci_epf_mhi_edma_write_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  	dma_addr_t src_addr;
+>  	int ret;
+>  
+> -	mutex_lock(&epf_mhi->lock);
+> +	scoped_guard(mutex, &epf_mhi->lock) {
+> +		config.direction = DMA_MEM_TO_DEV;
+> +		config.dst_addr = buf_info->host_addr;
+>  
+> -	config.direction = DMA_MEM_TO_DEV;
+> -	config.dst_addr = buf_info->host_addr;
+> +		ret = dmaengine_slave_config(chan, &config);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to configure DMA channel\n");
+> +			return ret;
+> +		}
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> +		src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> +					  DMA_TO_DEVICE);
+> +		ret = dma_mapping_error(dma_dev, src_addr);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to map remote memory\n");
+> +			return ret;
+> +		}
+>  
+> -	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+> -				  DMA_TO_DEVICE);
+> -	ret = dma_mapping_error(dma_dev, src_addr);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to map remote memory\n");
+> -		goto err_unlock;
+> -	}
+> +		desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> +						   DMA_MEM_TO_DEV,
+> +						   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +		if (!desc) {
+> +			dev_err(dev, "Failed to prepare DMA\n");
+> +			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> +			return -EIO;
+> +		}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> -					   DMA_MEM_TO_DEV,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> -	if (!desc) {
+> -		dev_err(dev, "Failed to prepare DMA\n");
+> -		ret = -EIO;
+> -		goto err_unmap;
+> -	}
+> +		transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
+> +		if (!transfer) {
+> +			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> +			return -ENOMEM;
+> +		}
+>  
+> -	transfer = kzalloc(sizeof(*transfer), GFP_KERNEL);
+> -	if (!transfer) {
+> -		ret = -ENOMEM;
+> -		goto err_unmap;
+> -	}
+> +		transfer->epf_mhi = epf_mhi;
+> +		transfer->paddr = src_addr;
+> +		transfer->size = buf_info->size;
+> +		transfer->dir = DMA_TO_DEVICE;
+> +		memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
+>  
+> -	transfer->epf_mhi = epf_mhi;
+> -	transfer->paddr = src_addr;
+> -	transfer->size = buf_info->size;
+> -	transfer->dir = DMA_TO_DEVICE;
+> -	memcpy(&transfer->buf_info, buf_info, sizeof(*buf_info));
+> +		desc->callback = pci_epf_mhi_dma_async_callback;
+> +		desc->callback_param = transfer;
+>  
+> -	desc->callback = pci_epf_mhi_dma_async_callback;
+> -	desc->callback_param = transfer;
+> +		cookie = dmaengine_submit(desc);
+> +		ret = dma_submit_error(cookie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to do DMA submit\n");
+> +			kfree(transfer);
+> +			dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> +			return ret;
+> +		}
+>  
+> -	cookie = dmaengine_submit(desc);
+> -	ret = dma_submit_error(cookie);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to do DMA submit\n");
+> -		goto err_free_transfer;
+> +		dma_async_issue_pending(chan);
+>  	}
+> -
+> -	dma_async_issue_pending(chan);
+> -
+> -	goto err_unlock;
+> -
+> -err_free_transfer:
+> -	kfree(transfer);
+> -err_unmap:
+> -	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> -err_unlock:
+> -	mutex_unlock(&epf_mhi->lock);
+> -
+>  	return ret;
+>  }
+>  
 
-Sorry that I didn't see/mention this earlier, but the order which we deinit
-things should be the reversed order of how we initialized things.
-
-(i.e. it should match the ordering of the error path.)
-
-In both the error path of this function, and the error path of
-rockchip_pcie_probe(), we do deinit_clk before deinit_phy, so I suggest we
-do the same here.
-
-
-Kind regards,
-Niklas
 
