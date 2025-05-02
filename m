@@ -1,95 +1,92 @@
-Return-Path: <linux-pci+bounces-27092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27093-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85AC6AA7617
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 17:31:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D437AA7624
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 17:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92744188C55A
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 15:31:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D3B07ABE59
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 15:33:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 127362571A3;
-	Fri,  2 May 2025 15:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1460259493;
+	Fri,  2 May 2025 15:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KXuLcfX3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mB9rHwOF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D121898E9
-	for <linux-pci@vger.kernel.org>; Fri,  2 May 2025 15:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8172586C5
+	for <linux-pci@vger.kernel.org>; Fri,  2 May 2025 15:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199898; cv=none; b=CXZhhMKLwjLwgkSIAP8Kq8A4CgjgR1L8OAPc72bpIIWt/53qFcUZb7S6UQXWnbi5esGv++NXdKWLEdYdThy86MrLXAfZcyrjw8lROHZHHIep05iyM28lZZ+aXnbs6h6nc2G/9uZ/Za8OG9eCrhP2AtQTIS6e0ps/P0GLDInn70o=
+	t=1746200033; cv=none; b=PKpGuSPLULI4Ck/txuk6ENObJyFDgKRSQhX0wz5nuKY7k71XEXC0Hgpo4l6/2IR9PzieBxJbGD3K0ClS8dIjoovAV3LV6MUoMx9NiRv8T+PlQRqkLlw/hy26ZqR7ElU/ey+5LQSVJDRA3KyxRGM57K8pjdEVirIS0sZ+rpv34rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199898; c=relaxed/simple;
-	bh=RgsUVPW9FmjBBY4GM2k1ebX3w5AMTDdulNA13o2n7dE=;
+	s=arc-20240116; t=1746200033; c=relaxed/simple;
+	bh=5rFlY49Gy7MqAan8qMT69245dWRNC9TAb+2SwDWa/eM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QO908OoAO3ON1tGkFGq/lod9rvW0r8W4gwku6C0XlQb+W8AZSswkEBqoT92C5sCS4F2kOViyAuivTWKRXu2vsTRoLVGdnQGa5MPf0gVjNQ3wRbRwPig3Xk+Y7p5rn6s6A6HFWd+Itcaxrt5pM1ADmfn41t5QhSNXxF9XI6rgdOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KXuLcfX3; arc=none smtp.client-ip=209.85.210.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=UyqvBE+vQBqDDEcT3U4iVJzyEJ7hBNtk2XUZ6JNXsdPgA78s5rUchcZf1culG6afn2J9Jrwfl0adFFHoQ0D+Cp/EuqfsUg0kT6dAzURH59vb7CBMgtPI9iCvv9lK1RwRyWl8PiiXhJrSuOaDgcvp4TcUvM/PW4N4LsjYr7e2Oxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mB9rHwOF; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739be717eddso1911993b3a.2
-        for <linux-pci@vger.kernel.org>; Fri, 02 May 2025 08:31:35 -0700 (PDT)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so1646374a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 02 May 2025 08:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746199895; x=1746804695; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746200031; x=1746804831; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=uQe+MROJ/ag6KDFyVS/w9IQL57geisNKdBHBf0gkBb4=;
-        b=KXuLcfX38uY+Pvxv4kIoYPGRlHxegAnL83ODbJcghGU2zZ+4BdpH5ptoY5St8DcQzT
-         Q6cG+IaAmB0wbaICxOYafQ0h2DmqysBU+Opf7Mw58wAaHWgNBSyVXu667w0snuRwHWgR
-         jeLgfTGhtts6JTyGeMTjhKc31hibPo7QcsG9BjC8myt+6flnOk1VxAQzw7cSJD4XqX+d
-         9DcT85kKvQBv3Ge9XLqyLLrGxJOfKXYja4g9E/S9sHmIlzAosY7zI7S5MQbi2bBLAQoj
-         kVB+ts10xJNC0I5lnpIkZ7AGHHtBMTIVHa5XqkkjGg82Z0MbP3zurzCso8yAR/L/vJIH
-         7eHg==
+        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
+        b=mB9rHwOFyLtV9SjomCRXMN92o9rWkn/Tj+B2gcOWoLEptMMG/H12fZ+C4/MZzhisJH
+         VccXx9Q0Pwi8H5O9wYEl17du9RSaiGkLBE8HBgn9vY6EBPeMwlzhm/CUjHnhpQmy+pXX
+         aHTbGbsMaz/MXEdLy/cb9/+xIi/Dv9AAGHQBiKO5IjckCwk9HNw8G03V/oKrUWaYD4k3
+         pQ/BzUu/TiJTPUbiW7KydBt/NKldOyxx0rFDLCYu+NcnSEQ0SSjm4BpUntM4BphfGeYO
+         00CAHfezzlXSK/Xo/jxbx52dJFqz8/UD0yAeqK2PSOjUtJEdYhlAsDoNLpqG/yZ1+y92
+         N5wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746199895; x=1746804695;
+        d=1e100.net; s=20230601; t=1746200031; x=1746804831;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uQe+MROJ/ag6KDFyVS/w9IQL57geisNKdBHBf0gkBb4=;
-        b=VGh/YU2tSv1VWN/Av72IXchfkfiYVSvaRKky9IeMoacXD2xH6a0KC1aXzFrtzxK9Wx
-         Swdj6LkDTjGTZ7yJ1Ao0albm3ElEPN8NhWsJIJ4IHMXJgBr0lKw6ofiH4ZVyFhn/e3QE
-         8tTVW8mmM+I0QPGz//EkLBuwjnf0g9fwjEaGp/28L4SOqA12o+uMpLUA5jhJ7Pll3e4O
-         k14Y7doiVd4KjCjVVu8f0aL6626KX+1z4Fc3HBsuYQ1xFVt+VjQwlBlPNq/KPZGm06p/
-         fgXc6RU5vUSRXRLW9mdVv7cojIxNFo77hoKKVOYicDziLiE6jpvvhlcG3PJAdujq8ASF
-         WnoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWA1eX6IUR0+/aI3qVuUOfElr9GU+vjzdwE82+2ZHr8rtfbxMonuAmpcACqfSZt8w1pZOxbruGIYjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2BG2CntPm5AcFfayHzGElWSRamwYdtDhwK9nUIQQag2BN6HBG
-	ZNTqTUvleC+j5tbrSctst2DhxPCQswnYguEqhiAUjuAhTttiox6dx919QdFvIA==
-X-Gm-Gg: ASbGncuoP7vCDiPLpc++xyZTQD45WGqUhJ/6D0qghh6iclOY6Yv3vIGG0ch0Ki7lV0V
-	tjUGtsECUgpistsMdk/6spM4USom6VN5+5rRN3UiToyvr16dlYtdwTgR5szjRhIz36Nx68855/x
-	QVICpG4ctcA4rIy4/o9s+3vYzd9jnetcpBEQP8KKkTZ1GhKS2SOly+2glBd8ydTOY837M8NE+ze
-	3qL5fwjFPEh9lDcCNMTk+4E+nEayHkjcGB+8j1fR2uKL2SDjy4XDI8EzGyE/bOGKDqBGIJo2w89
-	vZOZFoamSC6xsfDskl5eNwxAeeSzmDUbM079rY14LwRx1GjyxJ7MwMdAZwZoS72g
-X-Google-Smtp-Source: AGHT+IFdGWX9Sw1XBBVo+bVrO9YSbA26fhevpmOJ0/HG3/Dt/hywD45Ieea7g6tn4SCocxQu/IFEJw==
-X-Received: by 2002:a05:6a21:9103:b0:1f5:64a4:aeac with SMTP id adf61e73a8af0-20cdfcfc84cmr4720910637.33.1746199895470;
-        Fri, 02 May 2025 08:31:35 -0700 (PDT)
+        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
+        b=IkaBFsnuxWklDVqyp+uV/LiYjkFFUe33BiD7agqVpeEXLzKBm3MADiCv4bQavgstAS
+         tHH+c7UkD25LbiTnIhkPOys6uyABaHwItYA1FUEPU4oJ6erllHx8Fg8oaOpZoKqsDqtt
+         gt96v0355hSKR0SEHpY4Sa3VwtWCA4436hl4P8Q8+GVKlpQ1Z3SHpasoznS2KrMPMNYj
+         xGnX5IL7PUbqgLT+3JfhaTrivad/tt+lMjSa+Cp1JRcG/CU/uM7x6uf/a8IF3udw74NC
+         kp/RjDRo4qGg2R46+t84MlAK50GWDpfLmEGPPcMqR/fgWacEk3Hju0sOGw6jKcwVK6Ct
+         6apw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdRFqlwTm5pCieabAvqud1VX4iRVTpbXeD+7I2vNExysVJPC3bSJRaqab4bHlr6ap+PuO5p2CmzgY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY3VJo6bAeNKJqMVj2RemhXGZHjU1YUwDo4uMyrahlCYJIwAuX
+	0ywFZK29dp5N6Cbo3dLXYxJTknwzpdyfYefV6cA+HyS5QsabCwD5kagNzE2F8AvtXLfZqfXf3Gs
+	=
+X-Gm-Gg: ASbGncuPCaSPTc5j0g1BYd8wcVvHP+Q3L9JR1wzV0a8Q9R1O5BwvcWyrE/B5FwjR6tS
+	JGBxt7lVMb+pwFtANh9yTGfvQL18bgqZrlaz4wBK9n36d/PoPcnxkP/RSc3I7h0/EVgEdVqJD+i
+	t1rcVm/Zfn+t7MGQpO7OfzV58sM3Sjo9R5IB6D9Go/vmiZSEhJbQ6PX/lOkjQkEOzDtvMGxS5iZ
+	NUjQuJ6xHspqWqBVWfgpAVg1ION+Di61Pr/+xu2/1Nf1hsmaDoSaftBz+SJvXAraeaAIYd4GxV/
+	u9oWNNSR1sUVKJsMdzEo3k9LMTkhd1ifok9+kNOL3pEQTBtYuj05JA==
+X-Google-Smtp-Source: AGHT+IHLXisD3c2J54ZWFDiygB6xrYnjRSUfVuj5VJsMbLrYQomvw2y4f37h/jQnsxHbfb2LtmC93g==
+X-Received: by 2002:a17:90b:4fc3:b0:309:ebe3:1ef9 with SMTP id 98e67ed59e1d1-30a4e5ae182mr6519708a91.12.1746200030960;
+        Fri, 02 May 2025 08:33:50 -0700 (PDT)
 Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbbb15sm1767568b3a.58.2025.05.02.08.31.31
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0aasm6496034a91.35.2025.05.02.08.33.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:31:34 -0700 (PDT)
-Date: Fri, 2 May 2025 21:01:29 +0530
+        Fri, 02 May 2025 08:33:50 -0700 (PDT)
+Date: Fri, 2 May 2025 21:03:44 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Aaron Kling <webgeek1234@gmail.com>
+To: webgeek1234@gmail.com
 Cc: Thomas Gleixner <tglx@linutronix.de>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
-Message-ID: <4u4h27w77sdjvy43b3yonidhfjuvljylms3qxqfaqwyw3v32qo@kzgrrenxr6yz>
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
- <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
- <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
- <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
- <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
- <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com>
- <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
- <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] PCI: tegra: Allow building as a module
+Message-ID: <skblez3ros5kdix42prwjn4hethckxtfw2dmqvgdirczg5tz7r@pxti3m23mfix>
+References: <20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com>
+ <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,86 +96,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
+In-Reply-To: <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
 
-On Mon, Apr 28, 2025 at 05:39:23PM -0500, Aaron Kling wrote:
-> On Sun, Apr 27, 2025 at 10:57 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Mon, Apr 21, 2025 at 11:33:01AM -0500, Aaron Kling wrote:
-> > > On Mon, Apr 21, 2025 at 3:54 AM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
-> > > > > On Mon, Apr 21, 2025 at 2:52 AM Manivannan Sadhasivam
-> > > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > > >
-> > > > > > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Relay wrote:
-> > > > > > > From: Aaron Kling <webgeek1234@gmail.com>
-> > > > > > >
-> > > > > > > The driver works fine as a module, so allow building as such.
-> > > > > > >
-> > > > > >
-> > > > > > In the past, the former irqchip maintainer raised concerns for allowing the
-> > > > > > irqchip drivers to be removed from the kernel. The concern was mostly (afaik)
-> > > > > > due to not disposing all IRQs before removing the irq_domain.
-> > > > > >
-> > > > > > So Marek submitted a series [1] that added a new API for that. But that series
-> > > > > > didn't progress further. So if you want to make this driver a module, you need
-> > > > > > to do 2 things:
-> > > > > >
-> > > > > > 1. Make sure the cited series gets merged and this driver uses the new API.
-> > > > > > 2. Get an Ack from Thomas (who is the only irqchip maintainer now).
-> > > > >
-> > > > > Should this be a hard blocker for building this one driver as a
-> > > > > module? I did a quick grep of drivers/pci/controller for irq_domain,
-> > > > > then compared several of the hits to the Kconfig. And every single one
-> > > > > is tristate. Tegra is by far not a unique offender here.
-> > > > >
-> > > >
-> > > > Not 'unique', yes. But the situation is a bit worse atm. Some of the patches
-> > > > (making the driver as a module) were merged in the past without addressing the
-> > > > mapping issue.
-> > > >
-> > > > Please take a look at the reply from Marc:
-> > > > https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
-> > > >
-> > > > Even though Marc said that disposing IRQs is not enough to make sure there are
-> > > > no dangling pointers of the IRQs in the client drivers, I'm inclined to atleast
-> > > > allow modular drivers if they could dispose all the mappings with the new API.
-> > > > This doesn't mean that I'm not cared about the potential issue, but the removing
-> > > > of modules is always an 'experimental' feature in the kernel. So users should be
-> > > > aware of what they are doing. Also, we have not seen any reported issues after
-> > > > disposing the IRQs from the controller drivers. That also adds to my view on
-> > > > this issue.
-> > > >
-> > > > That being said, the safest option would be to get rid of the remove callback
-> > > > and make the module modular. This will allow the driver to be built as a module
-> > > > but never getting removed (make sure .suppress_bind_attrs is also set).
-> > > .suppress_bind_attrs is already set in this driver. But what happens
-> > > cleanup on shutdown if the remove is dropped? Would it be better to
-> > > move remove to shutdown for this case?
-> > >
-> >
-> > remove() won't be called on shutdown path, you need to populate the shutdown()
-> > callback for that. But do note that both remove() and shutdown() serves
-> > different purpose, so do not just rename the function.
+On Mon, Apr 28, 2025 at 08:05:48PM -0500, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
 > 
-> I did some more looking into this today and came across 662b94c3195654
-> [0]. That commit stated to add support to the driver to be built as a
-> module, but didn't touch the Kconfig, so I'm unsure how that ever
-> worked. But Manivannan, can you please take a look at that commit and
-> its message? I'm not familiar with pcie and what is required for
-> proper de-initialization. That commit added the remove method for the
-> stated purpose of making the driver a module. Implying that none of
-> that was needed on shutdown when built-in. So if the intent is to make
-> a permanent module which cannot be unloaded, as you're asking for,
-> does that mean it's safe to just fully revert that commit?
+> This changes the module macro back to builtin, which does not define an
+> exit function. This will prevent the module from being unloaded. There
+> are concerns with modules not cleaning up IRQs on unload, thus this
+> needs specifically disallowed.
 > 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  drivers/pci/controller/Kconfig     | 2 +-
+>  drivers/pci/controller/pci-tegra.c | 5 ++++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
+>  	  driver.
+>  
+>  config PCI_TEGRA
+> -	bool "NVIDIA Tegra PCIe controller"
+> +	tristate "NVIDIA Tegra PCIe controller"
+>  	depends on ARCH_TEGRA || COMPILE_TEST
+>  	depends on PCI_MSI
+>  	help
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index b3cdbc5927de3742161310610dc5dcb836f5dd69..1539d172d708c11c3d085721ab9416be3dea6b12 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2802,4 +2802,7 @@ static struct platform_driver tegra_pcie_driver = {
+>  	.probe = tegra_pcie_probe,
+>  	.remove = tegra_pcie_remove,
 
-Yeah, that commit was simply wrong and pointless. But the revert won't be
-straightforward. So I'd recommend to simply drop the .remove() callback and the
-associated code and finally make the driver tristate.
+Please drop the .remove() callback also which becomes unused.
 
 - Mani
 
