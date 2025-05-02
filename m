@@ -1,159 +1,128 @@
-Return-Path: <linux-pci+bounces-27088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D8F9AA6CB6
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 10:43:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 092FBAA6E3C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 11:37:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FBCA1BC0756
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 08:43:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1AA44A72D1
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 09:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4A322ACE7;
-	Fri,  2 May 2025 08:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AC722F75D;
+	Fri,  2 May 2025 09:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaddnoRa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBBF8828;
-	Fri,  2 May 2025 08:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401EA22E00E;
+	Fri,  2 May 2025 09:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175400; cv=none; b=EZJZI9s8KS+27SaBZDyzJvnRb5f50uOf5gS5zt+YEkJxYPrLoIq1nUzZhgyPaPP9yqwHDs7YuKleI1F1tWlt/bMWk4VXWKUFK8bvVd/qqVRRZpSdaOgnxu2bwYUwttx16wsls3F1mRKXeC1frddeTaBosPFyV9oGcp8xUBUmC4M=
+	t=1746178610; cv=none; b=ds1MHTETB566+/MNrPnVXgTd37VTQvcct6F3XI8n8QSkuC1pT6S4Zvmku3tzhqYvy3aI2V+VFbiHIUCPs6wtdxRESyRDlfsiChmUGmQY/FlBIwLrbs1p/Ikph759AjWehIl5cGiHUnFFuhRoABoPbrKGqmEp20ckJXk4wV2bYrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175400; c=relaxed/simple;
-	bh=x2aq1XKqHbH6eCxQRGcIKB3OrIuNOfWz2k3HWH6042s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LWUJDpIJyBZeYDKm8iLpY8nHDql6wFFHmfone03xyNFZVU/19dACXZoEee9ye1teORRQYGQFHHklY7jSMfKhKd43QwKzpji9eXHNjOCdEzbFgpdPeUXtU1TwmCpI1Qs7Nuw9GmkrJYiF9JN2t2Dc/M6Zct+IqaPQXSkoOofkRtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZpkpJ5b0Nz6K5rg;
-	Fri,  2 May 2025 16:38:16 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A06D41402FE;
-	Fri,  2 May 2025 16:43:15 +0800 (CST)
-Received: from localhost (10.48.156.249) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 May
- 2025 10:43:14 +0200
-Date: Fri, 2 May 2025 09:43:13 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Erick Karanja <karanja99erick@gmail.com>
-CC: <manivannan.sadhasivam@linaro.org>, <kw@linux.com>, <kishon@kernel.org>,
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <julia.lawall@inria.fr>
-Subject: Re: [PATCH 2/2] PCI: endpoint: Use scoped_guard for manual mutex
- lock/unlock
-Message-ID: <20250502094313.000055d1@huawei.com>
-In-Reply-To: <88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
-References: <cover.1746114596.git.karanja99erick@gmail.com>
-	<88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746178610; c=relaxed/simple;
+	bh=qO5Uzrf4EcWUBp68VsfzP2cwci35gHFejxNmBHPXlpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhPzZ+pDY2mnHLmtLdfbbxqiQLfurH62oa6EZ+uME2/JElx5PMQoYmTOVFlz6e88cH9aB7DpJwUQASd2rMkGt+D1aArps0/d/fG9LQoucWpyB0D/hdPhkBxxiSy7AYfzgoLWXpEWL2U0rmGINo4rLsla7Y3rQpVzlv8Aq0tOVWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaddnoRa; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746178608; x=1777714608;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qO5Uzrf4EcWUBp68VsfzP2cwci35gHFejxNmBHPXlpw=;
+  b=AaddnoRaxpGiRV3SnV6P/9BHBcp+3iwmUMKSdJ7kyVeb/VMqQTHLaApG
+   6/8IxZP0hXD759UndlvqHRMe4qLEtQQYAvrzyLW8F73Eu+FBN7WJAXO1D
+   o+XZ1aOMNcvyrs2+kOTIfUbgENwNE/howmQYKbJOQSWkV2uH8PJcf6OXC
+   8JHmZOD8Mhwpzw/GMTYC1JVVLtMZLmKEJsxWYTf+ZsyYhBNvXg5/0fwkh
+   H+mUFVAiPWpQrQMM7sXUpMeD3PGFML1HDULlEEyh60miYrrII6oAfeUOz
+   AuX2XAOKHmDJGvmqagTQ4nPQdBZXaU8uEySyd/mWjUzkeVwspu/dgUUSc
+   g==;
+X-CSE-ConnectionGUID: StbgYm2aSLGzB8pb4FfnSA==
+X-CSE-MsgGUID: +f1/i89MQryICylVpJeQoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="59221032"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="59221032"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:36:47 -0700
+X-CSE-ConnectionGUID: GyzI4gIgSUmLH4cFY4xw0w==
+X-CSE-MsgGUID: 1BkqQ91nTsK5J39c28Uq0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134497643"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 02 May 2025 02:36:44 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAmp0-0004ev-1J;
+	Fri, 02 May 2025 09:36:42 +0000
+Date: Fri, 2 May 2025 17:36:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
+Message-ID: <202505021641.QEim367T-lkp@intel.com>
+References: <20250502013447.3416581-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502013447.3416581-1-robh@kernel.org>
 
-On Thu,  1 May 2025 18:56:12 +0300
-Erick Karanja <karanja99erick@gmail.com> wrote:
+Hi Rob,
 
-> This refactor replaces manual mutex lock/unlock with scoped_guard()
-> in places where early exits use goto. Using scoped_guard()
-> avoids error-prone unlock paths and simplifies control flow.
-> 
-> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 53 +++++++++++++----------------
->  1 file changed, 24 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index beabea00af91..3f3ff36fa8ab 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -709,7 +709,6 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
->  {
->  	struct list_head *list;
->  	u32 func_no;
-> -	int ret = 0;
->  
->  	if (IS_ERR_OR_NULL(epc) || epf->is_vf)
->  		return -EINVAL;
-> @@ -720,36 +719,32 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
->  	if (type == SECONDARY_INTERFACE && epf->sec_epc)
->  		return -EBUSY;
->  
-> -	mutex_lock(&epc->list_lock);
-> -	func_no = find_first_zero_bit(&epc->function_num_map,
-> -				      BITS_PER_LONG);
-> -	if (func_no >= BITS_PER_LONG) {
-> -		ret = -EINVAL;
-> -		goto ret;
-> -	}
-> -
-> -	if (func_no > epc->max_functions - 1) {
-> -		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
-> -		ret = -EINVAL;
-> -		goto ret;
-> +	scoped_guard(mutex, &epc->list_lock) {
-This one is better, but using
-	guard(mutex)(&epc->list_lock);
-Is going to make for an easier to read patch and lower indent etc.
+kernel test robot noticed the following build warnings:
 
-Unless there is some subsystem related reason that scoped_guard() is
-preferred then I'd go that way.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.15-rc4 next-20250501]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +		func_no = find_first_zero_bit(&epc->function_num_map,
-> +					      BITS_PER_LONG);
-> +		if (func_no >= BITS_PER_LONG)
-> +			return -EINVAL;
-> +
-> +		if (func_no > epc->max_functions - 1) {
-> +			dev_err(&epc->dev, "Exceeding max supported Function Number\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		set_bit(func_no, &epc->function_num_map);
-> +		if (type == PRIMARY_INTERFACE) {
-> +			epf->func_no = func_no;
-> +			epf->epc = epc;
-> +			list = &epf->list;
-> +		} else {
-> +			epf->sec_epc_func_no = func_no;
-> +			epf->sec_epc = epc;
-> +			list = &epf->sec_epc_list;
-> +		}
-> +
-> +		list_add_tail(list, &epc->pci_epf);
->  	}
->  
-> -	set_bit(func_no, &epc->function_num_map);
-> -	if (type == PRIMARY_INTERFACE) {
-> -		epf->func_no = func_no;
-> -		epf->epc = epc;
-> -		list = &epf->list;
-> -	} else {
-> -		epf->sec_epc_func_no = func_no;
-> -		epf->sec_epc = epc;
-> -		list = &epf->sec_epc_list;
-> -	}
-> -
-> -	list_add_tail(list, &epc->pci_epf);
-> -ret:
-> -	mutex_unlock(&epc->list_lock);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_add_epf);
->  
+url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/dt-bindings-PCI-Convert-v3-v360epc-pci-to-DT-schema/20250502-093635
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250502013447.3416581-1-robh%40kernel.org
+patch subject: [PATCH] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
+reproduce: (https://download.01.org/0day-ci/archive/20250502/202505021641.QEim367T-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505021641.QEim367T-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
+   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
+   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
+   make[1]: *** [Makefile:1801: htmldocs] Error 2
+   make: *** [Makefile:248: __sub-make] Error 2
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
