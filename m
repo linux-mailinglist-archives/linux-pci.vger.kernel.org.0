@@ -1,84 +1,65 @@
-Return-Path: <linux-pci+bounces-27085-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27086-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B7F3AA6A87
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 08:09:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 748E4AA6B26
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 08:59:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 110601BA4475
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 06:10:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BC9198545D
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 06:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5281EBFFF;
-	Fri,  2 May 2025 06:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC7EF266B7D;
+	Fri,  2 May 2025 06:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AiVEFlUu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZ+518aa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279C31E51E3;
-	Fri,  2 May 2025 06:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C4A266B5C;
+	Fri,  2 May 2025 06:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166092; cv=none; b=Mu7S7ernV6ip37iU5KZ5t9o1kEg/0bGLMOydjeVZLqEjtXKdVQ0V7medHtGYEzV1hxuXvX2nOdXlNKTCZLLklXK2JQdZ/bJcNCyn2w4kooG5JwnGEEwMaBIdl80VLN6dR9kDpdy/u54CJD1eTZqxIpECYCO7dtCZMFjDbPd8gVI=
+	t=1746169146; cv=none; b=dKrM1n3Pnr9hS2B1O+aKjVQD1WKucP2BJy2NjohSdeQuvpXQSWgWd7ak7NumtVB9vVjfWWxaNyEPs+hAdKtJMTE+Fyq9Cry7GHy+qTLaBlgUo7fb/HgiIGjT+QrR7GNDcGrAGvFmks9c0s7k3/vIWvH6WmcNkDPgghGBM2+Z3wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166092; c=relaxed/simple;
-	bh=Vx2THve1rmsHzjpjDKRkcdp0KoxQt1d23ap0dGDJAX0=;
+	s=arc-20240116; t=1746169146; c=relaxed/simple;
+	bh=6sClcWYGukBbkpULYb0l3opl4yAyv99xyShFUXuykaE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X5V2fI9jIUoDSI1cSx/LCAaFDbH26DF5lmja4l7HfM9WrfRX+aEx8VaiEEMFghxqzvkglnCiH+lXPeNvbLSQY9JUDe3cYlHvlmL2nayTBMY7GvNhkBPm6UxtRitexvTddlt83kuljimMueOhjVz0szZwTMECGIulaTjkWPsOsuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AiVEFlUu; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 789102020964; Thu,  1 May 2025 23:08:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 789102020964
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746166089;
-	bh=9+r69ZddY1UZkHR3/FwhIdCjqmNBZaadDjUSZVoYSAo=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=tJKgwe1ZzcR45TzPZJx7TQGPU+CI/EVg9qvfKul1fiDFeabXfG74ElzA+ZC6erb9tYhYs4dY6zn7q72GROieZpMLeAH6Sggy5Ckq6Qpaw5vWLMX7iVDW9GOK//Jhng9RsiB9Pjqtf5JJ72G8fOrSl1iAhetXWEd6BTyn+HIq+QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZ+518aa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E737C4CEE4;
+	Fri,  2 May 2025 06:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746169146;
+	bh=6sClcWYGukBbkpULYb0l3opl4yAyv99xyShFUXuykaE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AiVEFlUu8IfyCCGNVGXAeB65x7LTHiBsP3cyaB05BdyktmMQdrW7BvdxLv00u1I+K
-	 r1g0rPMQqAsJ3B7qyaA52zhAQgAZXeGda+rIgFQ4eUeNd7kZJ40alPQW5JDCrpituU
-	 tCG1qe5CmLcW70KOfqLSp6O8Dh//y+Ae1fadP70w=
-Date: Thu, 1 May 2025 23:08:09 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	b=YZ+518aayrvUeQVuipI53moncuZzz4Ed/Dxji11skD7ZoU/b8gOmjfcFisHFnOejD
+	 2H5xYuuxFMt83VfJdsM7XgiERYCLpi+Vp7GPfHA9/+FVKOMljmLiY8ZpT6e/iKg7wJ
+	 nizYqciu1F9qXd4WqTODYU2hO5nO8p7Tr2SM3InYqL1ZXhj48gc2MHuwECjTbfWsSE
+	 nxl0K8UkWJ+BABy1L3v4uOSlh1iyZZ7HEgsGwd+N3IkkBZvgbSi8bl0oBeX9CNQqF/
+	 vE/ksOsT8chgpOzjxV3Qp8JItztaXuCleeQfhQHliip5rBU/ZMNjodJXuwNkE5CpKp
+	 dWtzAxdeOe4nw==
+Date: Fri, 2 May 2025 08:59:00 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Wilfred Mallawa <wilfred.opensource@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy?ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Message-ID: <20250502060809.GA10704@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
- <SN6PR02MB4157FF2CA8E37298FC634491D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250501142354.GA6208@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB4157EAC71A53E152EE684A4DD4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alistair Francis <alistair@alistair23.me>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Subject: Re: [PATCH v2] PCI: dwc: Add support for slot reset on link down
+ event
+Message-ID: <aBRtNOLQ6R-5iOB4@ryzen>
+References: <20250501-b4-pci_dwc_reset_support-v2-1-d6912ab174c4@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,104 +68,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157EAC71A53E152EE684A4DD4822@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250501-b4-pci_dwc_reset_support-v2-1-d6912ab174c4@wdc.com>
 
-On Thu, May 01, 2025 at 03:56:48PM +0000, Michael Kelley wrote:
-> From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Thursday, May 1, 2025 7:24 AM
-> > 
-> > On Thu, May 01, 2025 at 05:27:49AM +0000, Michael Kelley wrote:
-> > > From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, April 25,
-> > 2025 3:55 AM
-> > > >
-> > > > Currently, the MANA driver allocates MSI-X vectors statically based on
-> > > > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> > > > up allocating more vectors than it needs. This is because, by this time
-> > > > we do not have a HW channel and do not know how many IRQs should be
-> > > > allocated.
-> > > >
-> > > > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> > > > after getting the value supported by hardware, dynamically add the
-> > > > remaining MSI-X vectors.
-> > >
-> > > I have a top-level thought about the data structures used to manage a
-> > > dynamic number of MSI-X vectors. The current code allocates a fixed size
-> > > array of struct gdma_irq_context, with one entry in the array for each
-> > > MSI-X vector. To find the entry for a particular msi_index, the code can
-> > > just index into the array, which is nice and simple.
-> > >
-> > > The new code uses a linked list of struct gdma_irq_context entries, with
-> > > one entry in the list for each MSI-X vector.  In the dynamic case, you can
-> > > start with one entry in the list, and then add to the list however many
-> > > additional entries the hardware will support.
-> > >
-> > > But this additional linked list adds significant complexity to the code
-> > > because it must be linearly searched to find the entry for a particular
-> > > msi_index, and there's the messiness of putting entries onto the list
-> > > and taking them off.  A spin lock is required.  Etc., etc.
-> > >
-> > > Here's an intermediate approach that would be simpler. Allocate a fixed
-> > > size array of pointers to struct gdma_irq_context. The fixed size is the
-> > > maximum number of possible MSI-X vectors for the device, which I
-> > > think is MANA_MAX_NUM_QUEUES, or 64 (correct me if I'm wrong
-> > > about that). Allocate a new struct gdma_irq_context when needed,
-> > > but store the address in the array rather than adding it onto a list.
-> > > Code can then directly index into the array to access the entry.
-> > >
-> > > Some entries in the array will be unused (and "wasted") if the device
-> > > uses fewer MSI-X vector, but each unused entry is only 8 bytes. The
-> > > max space unused is fewer than 512 bytes (assuming 64 entries in
-> > > the array), which is neglible in the grand scheme of things. With the
-> > > simpler code, and not having the additional list entry embedded in
-> > > each struct gmda_irq_context, you'll get some of that space back
-> > > anyway.
-> > >
-> > > Maybe there's a reason for the list that I missed in my initial
-> > > review of the code. But if not, it sure seems like the code could
-> > > be simpler, and having some unused 8 bytes entries in the array
-> > > is worth the tradeoff for the simplicity.
-> > >
-> > > Michael
-> > 
-> > Hey  Michael,
-> > 
-> > Thanks for your inputs. We did think of this approach and in fact that
-> > was how this patch was implemented(fixed size array) in the v1 of our
-> > internal reviews.
-> > 
-> > However, it came up in those reviews that we want to move away
-> > from the 64(MANA_MAX_NUM_QUEUES) as a hard limit for some new
-> > requirements, atleast for the dynamic IRQ allocation path. And now the
-> > new limit for all hardening purposes would be num_online_cpus().
-> > 
-> > Using this limit and the fixed array size approach creates problems,
-> > especially in machines with high number of vCPUs. It would lead to
-> > quite a bit of memory/resource wastage.
-> > 
-> > Hence, we decided to go ahead with this design.
-> > 
-> > Regards,
-> > Shradha.
-> 
-> One other thought:  Did you look at using an xarray? See
-> https://www.kernel.org/doc/html/latest/core-api/xarray.html.
-> It has most of or all the properties you need to deal with
-> a variable number of entries, while handling all the locking
-> automatically. Entries can be accessed with just a simple
-> index value.
-> 
-> I don't have first-hand experience writing code using xarrays,
-> so I can't be sure that it would simplify things for MANA IRQ
-> allocation, but it seems to be a very appropriate abstraction
-> for this use case.
-> 
-> Michael
->
-Thanks Michael,
+Hello Wilfred,
 
-This does look promising for our usecase. I will try it with this patch,
-update the thread and then send out the next version as required.
+On Thu, May 01, 2025 at 11:57:39AM +1000, Wilfred Mallawa wrote:
+> @@ -688,6 +699,79 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
+> +				       struct pci_dev *pdev)
+> +{
+> +	struct pci_bus *bus = bridge->bus;
+> +	struct dw_pcie_rp *pp = bus->sysdata;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +	struct device *dev = rockchip->pci.dev;
+> +	u32 val;
+> +	int ret;
+> +
+> +	dw_pcie_stop_link(pci);
+> +	rockchip_pcie_phy_deinit(rockchip);
+> +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
 
-Regards,
-Shradha.
+Sorry that I didn't see/mention this earlier, but the order which we deinit
+things should be the reversed order of how we initialized things.
+
+(i.e. it should match the ordering of the error path.)
+
+In both the error path of this function, and the error path of
+rockchip_pcie_probe(), we do deinit_clk before deinit_phy, so I suggest we
+do the same here.
+
+
+Kind regards,
+Niklas
 
