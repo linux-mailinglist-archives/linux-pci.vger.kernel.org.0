@@ -1,92 +1,86 @@
-Return-Path: <linux-pci+bounces-27093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D437AA7624
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 17:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4478AAA762C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 17:36:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D3B07ABE59
-	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 15:33:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D2287AC439
+	for <lists+linux-pci@lfdr.de>; Fri,  2 May 2025 15:35:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1460259493;
-	Fri,  2 May 2025 15:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DC502571BD;
+	Fri,  2 May 2025 15:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mB9rHwOF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xsf9AdLd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8172586C5
-	for <linux-pci@vger.kernel.org>; Fri,  2 May 2025 15:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A2E2550D4
+	for <linux-pci@vger.kernel.org>; Fri,  2 May 2025 15:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200033; cv=none; b=PKpGuSPLULI4Ck/txuk6ENObJyFDgKRSQhX0wz5nuKY7k71XEXC0Hgpo4l6/2IR9PzieBxJbGD3K0ClS8dIjoovAV3LV6MUoMx9NiRv8T+PlQRqkLlw/hy26ZqR7ElU/ey+5LQSVJDRA3KyxRGM57K8pjdEVirIS0sZ+rpv34rs=
+	t=1746200198; cv=none; b=TifsJW87YNEPDwOVKtzgGMacE+zu6H6TrP7P1b1crnELx8Ym7GhdvfG8YxsG+MmVhDz31H4GxTVNhyCFSMxGj/BxiBgCkRyaL1Rz19Hx6IoRF6eeFrwxZjQmH9aydgiX3aozaFiJljJhupPMiCKgDna89kcjpxiMYqeFmYed3OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200033; c=relaxed/simple;
-	bh=5rFlY49Gy7MqAan8qMT69245dWRNC9TAb+2SwDWa/eM=;
+	s=arc-20240116; t=1746200198; c=relaxed/simple;
+	bh=3BAV8Vn4xGGDhP96Ad7to89CEGi5VAjBKGPATV/9yrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UyqvBE+vQBqDDEcT3U4iVJzyEJ7hBNtk2XUZ6JNXsdPgA78s5rUchcZf1culG6afn2J9Jrwfl0adFFHoQ0D+Cp/EuqfsUg0kT6dAzURH59vb7CBMgtPI9iCvv9lK1RwRyWl8PiiXhJrSuOaDgcvp4TcUvM/PW4N4LsjYr7e2Oxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mB9rHwOF; arc=none smtp.client-ip=209.85.215.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+lANlLOC4Hp2bDUFp2b7qENm0XnvxGk2rbohH77d39xlANbZ6mdRS07qSzkiCZ3qUZZIHRiAgBvw+ZX0/Ha59/6+8A7OmfFUAIYS0BAoIA9FbtCSd8kSmW0OhNH3GHtWHq5jK40mFnLVuayJwP2ut2yse9iDVn5QZskUQJAF3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xsf9AdLd; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so1646374a12.3
-        for <linux-pci@vger.kernel.org>; Fri, 02 May 2025 08:33:51 -0700 (PDT)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-739525d4e12so2328663b3a.3
+        for <linux-pci@vger.kernel.org>; Fri, 02 May 2025 08:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746200031; x=1746804831; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746200196; x=1746804996; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
-        b=mB9rHwOFyLtV9SjomCRXMN92o9rWkn/Tj+B2gcOWoLEptMMG/H12fZ+C4/MZzhisJH
-         VccXx9Q0Pwi8H5O9wYEl17du9RSaiGkLBE8HBgn9vY6EBPeMwlzhm/CUjHnhpQmy+pXX
-         aHTbGbsMaz/MXEdLy/cb9/+xIi/Dv9AAGHQBiKO5IjckCwk9HNw8G03V/oKrUWaYD4k3
-         pQ/BzUu/TiJTPUbiW7KydBt/NKldOyxx0rFDLCYu+NcnSEQ0SSjm4BpUntM4BphfGeYO
-         00CAHfezzlXSK/Xo/jxbx52dJFqz8/UD0yAeqK2PSOjUtJEdYhlAsDoNLpqG/yZ1+y92
-         N5wA==
+        bh=ID/3gEVRaELChbZF1u1wTlxxoC3hlcOuUi/IoEPjJzQ=;
+        b=Xsf9AdLd1uXRrktRw3bXyCetKFazuNAiY6MmKMhw7Huoxf0UKsVfY99NtNrhyzvifo
+         5HS7lXf3kumJPcB/qgOMCs3FFBQ88AWfmR5ivPRWWCWzTRbqRfGp4WnCBGi/6o6pox5R
+         60L6MlKFew+SE3DkrLzb7FdoangsNxGKLiazJugK8ukzfFyzSuK17DALS3aa7P2P+cTs
+         I/zLDFCUHB+G0zZZpJw6Fku+hueyrOb/vc5hHOphWgg1RTXJ2ZgVT9hGLpxOzPqc90tn
+         xFmCiebpWfwB1jEnK4xpLECVnMo8xSzKH8+SvMZKl5Q/ZxqM/jPgS/hmlotpLbuJt4Mq
+         +Mdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200031; x=1746804831;
+        d=1e100.net; s=20230601; t=1746200196; x=1746804996;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
-        b=IkaBFsnuxWklDVqyp+uV/LiYjkFFUe33BiD7agqVpeEXLzKBm3MADiCv4bQavgstAS
-         tHH+c7UkD25LbiTnIhkPOys6uyABaHwItYA1FUEPU4oJ6erllHx8Fg8oaOpZoKqsDqtt
-         gt96v0355hSKR0SEHpY4Sa3VwtWCA4436hl4P8Q8+GVKlpQ1Z3SHpasoznS2KrMPMNYj
-         xGnX5IL7PUbqgLT+3JfhaTrivad/tt+lMjSa+Cp1JRcG/CU/uM7x6uf/a8IF3udw74NC
-         kp/RjDRo4qGg2R46+t84MlAK50GWDpfLmEGPPcMqR/fgWacEk3Hju0sOGw6jKcwVK6Ct
-         6apw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdRFqlwTm5pCieabAvqud1VX4iRVTpbXeD+7I2vNExysVJPC3bSJRaqab4bHlr6ap+PuO5p2CmzgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY3VJo6bAeNKJqMVj2RemhXGZHjU1YUwDo4uMyrahlCYJIwAuX
-	0ywFZK29dp5N6Cbo3dLXYxJTknwzpdyfYefV6cA+HyS5QsabCwD5kagNzE2F8AvtXLfZqfXf3Gs
-	=
-X-Gm-Gg: ASbGncuPCaSPTc5j0g1BYd8wcVvHP+Q3L9JR1wzV0a8Q9R1O5BwvcWyrE/B5FwjR6tS
-	JGBxt7lVMb+pwFtANh9yTGfvQL18bgqZrlaz4wBK9n36d/PoPcnxkP/RSc3I7h0/EVgEdVqJD+i
-	t1rcVm/Zfn+t7MGQpO7OfzV58sM3Sjo9R5IB6D9Go/vmiZSEhJbQ6PX/lOkjQkEOzDtvMGxS5iZ
-	NUjQuJ6xHspqWqBVWfgpAVg1ION+Di61Pr/+xu2/1Nf1hsmaDoSaftBz+SJvXAraeaAIYd4GxV/
-	u9oWNNSR1sUVKJsMdzEo3k9LMTkhd1ifok9+kNOL3pEQTBtYuj05JA==
-X-Google-Smtp-Source: AGHT+IHLXisD3c2J54ZWFDiygB6xrYnjRSUfVuj5VJsMbLrYQomvw2y4f37h/jQnsxHbfb2LtmC93g==
-X-Received: by 2002:a17:90b:4fc3:b0:309:ebe3:1ef9 with SMTP id 98e67ed59e1d1-30a4e5ae182mr6519708a91.12.1746200030960;
-        Fri, 02 May 2025 08:33:50 -0700 (PDT)
+        bh=ID/3gEVRaELChbZF1u1wTlxxoC3hlcOuUi/IoEPjJzQ=;
+        b=HtWUN9iqEA67mlofLACWTEb3WfKzfqPnkZb4wDjzINVkVcxuT0zbigc0DXrNhAbYue
+         /el7385zAPV83p1IPEWVou7DaSe9sHU7Mf9PxRdLiaXeYxeSalXF2gk5vvG+5lamnL00
+         6NetGCZR74NFJQfR52ILGmP9a9z8NCvhl1+R4apO49/QhXTGAHkdr5+WI/XMFVNy/0Ra
+         QPnQQ22c3ant5HcgW8uwdfaG9nQ50E1iE4l3cmMQ9TjA2sEqJPgTZ8aPNk/TJoZEHsS0
+         097b1lio2CSmLkbdoW+4E3bGad80Fy8TpBvk48zcNQCeqf892amCT9QVFytMC47zae8I
+         t5Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqND87rG0vNaXXWFUKk1NuTfORFkZ/FUwemp3SRFXB5T0PxUpseU7IuMUxgkH6DhD1mIsKHcMVrcs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHwS/z5Ngpf/b4h1yJCtEg/noEubokmYXNBz/DWsadve7smpve
+	ZsDg+mUZ7CH4iExZsgDL50KjkgaTaI8mInF6XJhQ8eu9QLBe85ybLpEvNcy3gQ==
+X-Gm-Gg: ASbGncsyk+YmfbmDBmYBtY92byyXIOAE990GpGSWD+MWvSdIZPzcrx6t0ggVqdw6y5d
+	Wp1nwTQYsND/I6zJe7YJGd4J8G6aqv1KDh4qPbRTn+JtyaAlgSpcNXrh0xSJTsBNGew0WF0wuYm
+	7bFPlDfmEBpI8qwDtU0T0O75y/hoMYLuZ+eEBHHI/WoMOdIGeMAZXJkaKnKVWIytz+iLqlozaIs
+	Ch3z5hDPDJgc2Ak8MKBoZW3ZqVo6j+KXIO1m6QiFg2Ge1Xl9sDE94H9WLM/fBXD/Ly5R2CtwHaO
+	8f0KYp85TMqruq2FkdDabut7PvLZxFW/sHMYbhxAyh5Ipw5JWnDwxA==
+X-Google-Smtp-Source: AGHT+IFb0CRE5XpBeKP67vibx/Q9XRU6cVwp3u+88sAT+xVnNz7vp/obg79d1d6ykFtM6a7ldH9EkA==
+X-Received: by 2002:a05:6a21:3943:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-20cdc0f55fdmr5042626637.0.1746200195776;
+        Fri, 02 May 2025 08:36:35 -0700 (PDT)
 Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0aasm6496034a91.35.2025.05.02.08.33.47
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b7cb28sm913569a12.42.2025.05.02.08.36.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:33:50 -0700 (PDT)
-Date: Fri, 2 May 2025 21:03:44 +0530
+        Fri, 02 May 2025 08:36:35 -0700 (PDT)
+Date: Fri, 2 May 2025 21:06:31 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: webgeek1234@gmail.com
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] PCI: tegra: Allow building as a module
-Message-ID: <skblez3ros5kdix42prwjn4hethckxtfw2dmqvgdirczg5tz7r@pxti3m23mfix>
-References: <20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com>
- <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	jingoohan1@gmail.com, cassel@kernel.org, robh@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Standardize link status check to return bool
+Message-ID: <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
+References: <20250428171027.13237-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,46 +90,54 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
+In-Reply-To: <20250428171027.13237-1-18255117159@163.com>
 
-On Mon, Apr 28, 2025 at 08:05:48PM -0500, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
+On Tue, Apr 29, 2025 at 01:10:24AM +0800, Hans Zhang wrote:
+> 1. PCI: dwc: Standardize link status check to return bool.
+> 2. PCI: mobiveil: Refactor link status check.
+> 3. PCI: cadence: Simplify j721e link status check.
 > 
-> This changes the module macro back to builtin, which does not define an
-> exit function. This will prevent the module from being unloaded. There
-> are concerns with modules not cleaning up IRQs on unload, thus this
-> needs specifically disallowed.
-> 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  drivers/pci/controller/Kconfig     | 2 +-
->  drivers/pci/controller/pci-tegra.c | 5 ++++-
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
->  	  driver.
->  
->  config PCI_TEGRA
-> -	bool "NVIDIA Tegra PCIe controller"
-> +	tristate "NVIDIA Tegra PCIe controller"
->  	depends on ARCH_TEGRA || COMPILE_TEST
->  	depends on PCI_MSI
->  	help
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index b3cdbc5927de3742161310610dc5dcb836f5dd69..1539d172d708c11c3d085721ab9416be3dea6b12 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2802,4 +2802,7 @@ static struct platform_driver tegra_pcie_driver = {
->  	.probe = tegra_pcie_probe,
->  	.remove = tegra_pcie_remove,
 
-Please drop the .remove() callback also which becomes unused.
+Thanks for the cleanup. Looks good to me except the redundancy conversion that
+Niklas noted. So with that change,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
+
+> Hans Zhang (3):
+>   PCI: dwc: Standardize link status check to return bool.
+>   PCI: mobiveil: Refactor link status check.
+>   PCI: cadence: Simplify j721e link status check.
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
+>  drivers/pci/controller/dwc/pci-dra7xx.c                | 2 +-
+>  drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
+>  drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
+>  drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
+>  drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
+>  drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
+>  drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
+>  drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
+>  drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
+>  drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c              | 4 ++--
+>  drivers/pci/controller/dwc/pcie-qcom.c                 | 2 +-
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
+>  drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
+>  drivers/pci/controller/dwc/pcie-tegra194.c             | 2 +-
+>  drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
+>  drivers/pci/controller/dwc/pcie-visconti.c             | 2 +-
+>  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
+>  21 files changed, 34 insertions(+), 53 deletions(-)
+> 
+> 
+> base-commit: 286ed198b899739862456f451eda884558526a9d
+> -- 
+> 2.25.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
