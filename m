@@ -1,505 +1,269 @@
-Return-Path: <linux-pci+bounces-27111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02AFEAA80D7
-	for <lists+linux-pci@lfdr.de>; Sat,  3 May 2025 15:20:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B81AA8113
+	for <lists+linux-pci@lfdr.de>; Sat,  3 May 2025 16:36:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26F497AB9C4
-	for <lists+linux-pci@lfdr.de>; Sat,  3 May 2025 13:19:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C14A23B7A33
+	for <lists+linux-pci@lfdr.de>; Sat,  3 May 2025 14:36:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EBE4266EEC;
-	Sat,  3 May 2025 13:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fr3VtQ79"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 335BF1552FD;
+	Sat,  3 May 2025 14:36:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021091.outbound.protection.outlook.com [52.101.129.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380AF266560
-	for <linux-pci@vger.kernel.org>; Sat,  3 May 2025 13:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746278414; cv=none; b=ZyU+YwLceyUjRrLFnyZZL3Zu2H2SLKhHNHJUTdoLqPVdkALjhF8qR67jeWpLQrQQpWSay04iRGaeYftKvGdvArN0F1OGZUhaSMbtnW1Sj2ZCVZ+Z6mGfFSzA8R2r/5eHD5fL2DJv8O0cqn0vdNmxpwXEaRWFfKdHpa92K6YEDmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746278414; c=relaxed/simple;
-	bh=ed3DeabF7aBPv9pg8P8XvtmLV9tXVo/RMkaYO0eG698=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HXNBY55GKlWrkDB/RHesTMjx0Ks9+9vqPQqEbjjclNWwWY84UeAYiqffO08oCnlj0DYxIHcfPrEcyiR6k2ZR1CGKU35puJCSGcGfKQxtaXYtYgF0ql5PQwIp12EXWIvTYw1jYrqhfaSbS4DVHMAno+Ef3Qxp/wOoQTYdHwwF8h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fr3VtQ79; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c33e5013aso32206475ad.0
-        for <linux-pci@vger.kernel.org>; Sat, 03 May 2025 06:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746278411; x=1746883211; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SK9YRsQUqLL0xcebcLQIiook7NHZ9YSziSFQTHbkXNw=;
-        b=Fr3VtQ790ptfoz2CNgQelmZ1BWJ3mLY0JCJRRJGY5fUl3ZvySks3sDLAXm+VVHvAvI
-         9K96TE73eU0XhqpffHcTdrpQZc6+XhVpaY1MzEzPiQ2yT590gvwmtGbxgigeP0H32ds7
-         potxXNUBV3A5KdElWvfyEF5fHVyfg0ywkkiXfKQwCBA7LiO7/QKZqkAWCxhBHkBlbYS5
-         /6GfFibc/57ngAtYHZGIaqLclKECD2QIr52goHsbmCoGwvxLrsiUDKUWQe1NDlymH0V+
-         AHlEY9iXbTznujR3GVVbWUIUc1fQOPAUC8awaUmM938fH7lpJ/RKyLztoPyhhiN5SWAz
-         h4mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746278411; x=1746883211;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SK9YRsQUqLL0xcebcLQIiook7NHZ9YSziSFQTHbkXNw=;
-        b=eXJmjzpFBsMY1dC3V6mKWJs4ESXOVQIDYElN4GMe6K8qBae32hxFLLQtr+xdRcq+/Q
-         xYP8qEtEBJglaHZ3G7Zle7aLmWB2BrmKXZViN772ZaQDG/kPJ4PVtK8OT7tSlInHyx0X
-         2fZmXvppbPRx1B8wcvGY+71CeeCTH5VDRfcPtuSGtPdgp7vDtEJw0/6FG6nZJB+2Olis
-         wr5Oy0o2qn3W5TUABB1rNF+wVVfLXP+uwstMhNl1RFzGmO5RMnpiLdZwMe0l8h3n9cZe
-         X6UqDVuSFdukZeBoKxf0vIdW14h0+YOV9euE5PNVd4+aZKEoXzRFUse3oUrcWfmMw3GO
-         Ytng==
-X-Forwarded-Encrypted: i=1; AJvYcCXbnzD0dstWbC2AyqBpK0+/wFofnVsM63YZjuxXYbinRZjHmi7AbwR4Ge7QUAhlXLWGIayXKy51TOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsoO2M4KNypIz+3iVfOjvT8XMVwY4Z8W8KQ5xOBM6Rs18thyh0
-	WyrRlMugL7OOHKpmYQ9caRbEdvadPwkvbYY7hRC32a/Y7FesWpSE0hNlIYu/SQ==
-X-Gm-Gg: ASbGncswAbCQC6+5yv8NaFr2IwptHp6OZ0oXFvZ/8855HV+9ZWlGzu3ECLmnBxSlpdI
-	hFGIV0WIKQzVqwm42t2KGU7QE20byvHczFJBhzY8nGW2cfznMctigB4iLDTcv1mhveuWdVazXdf
-	/6zONd49REC3O9fdkMOQBJiy3PWZx0WDfdQ8iA2Vp6kkq2caBuPpwLR4nQJEsf4EcUT7H8jNM5i
-	NtC1D6qn09cuuhC9L0lfA6Gi9JKVT/3jy3Lv8tVGxKYEbLGiKTjTA+ldDjT2RSIIZfsQ9EFLv/S
-	yUMt9+dXazvkvAiSnVOZEhDnOx7iOKh1vMJ6IsL8P1b+riutf0kdRQ==
-X-Google-Smtp-Source: AGHT+IGy8W2NM1vrlsV7C/5pIguwy5iwnjQP7ZKxdJnUkQqYyO2bhEbFndX+h1mtJEdm1wVzpSsa1w==
-X-Received: by 2002:a17:902:ce8c:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22e1eae3f54mr12032305ad.37.1746278411236;
-        Sat, 03 May 2025 06:20:11 -0700 (PDT)
-Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a230sm3427874b3a.12.2025.05.03.06.20.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 06:20:10 -0700 (PDT)
-Date: Sat, 3 May 2025 18:50:05 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Szymon Durawa <szymon.durawa@linux.intel.com>
-Cc: helgaas@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
-	Nirmal Patel <nirmal.patel@linux.intel.com>, Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Subject: Re: [PATCH v3 7/8] PCI: vmd: Add support for second rootbus under VMD
-Message-ID: <yjntzbop2iuoqbop7aqvt2nbe7yczqy7ay3lw4e37zkumr5djp@ohkqwejntsrx>
-References: <20241122085215.424736-1-szymon.durawa@linux.intel.com>
- <20241122085215.424736-8-szymon.durawa@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE02F367;
+	Sat,  3 May 2025 14:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746283004; cv=fail; b=Yfw9IdMaswelTDKVCEutZJm03diGWosQGlBGooyge1y0Gh7V27EsFi7CeVugiT4P+dPL8Ns79BmoM7QmN8G/1MxbqeDTFaQBg+5IbvrjefKB2y5h3vom0ikh3yd3JJA0dCveJa+TLmYK9RTBreqoFk/UnTM/SCkY/D7IMaDExl4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746283004; c=relaxed/simple;
+	bh=bdX9uZ4aBDPfRJd+Cq1cUO7FGQBMIW229qH3WmqYKIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SVkG5OO/c5L8or6DegsLZvtxwIlkg2aMh7OPw9aFuf6HQnRE4rBCXxbf6B5uUD2YOK15eGTGwwEghlDz998+DWcvNynwnuseo4l7+MCeVcrHP/tqwslXVRjBR4jtPt4Yvs8xD3WczZzAkitQ1tnOzF8hKOQecf0/yM4SaHjJ29c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y1Jn99GY0Z5vvhVeb4HxfhTNbfpiusJVqQbUddqrd39qCvE0stR3HCja8n1dW9AiXn1sxnuSZGhbrpXdfriH2dm+ULg/gQVvxw6AD8MNnw+Mh2VsQcmIexwA5U2sqwihkxoy/JP50FzaUkt8FNgUiPeXrx5HzP1NM2P1qs7Hsej8uUZsQ1lx4CZX/J7bKWw0neXErLb5Zdn7Vak6YUpUqSSvWiAI23Bo2zTB58uZiQU1m9SwCuwLGeMmbE//VltrtzgLYmhz8mIztjhpqWOYPOUdLI9IG9YAr7fK8kQJUVzmL4Kppxl4kg5MB/aEigavjnbyVBWSEMZ6kZqL/7HS9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j3dEtCBjQChu7SeoI4xxG8dNuxDLgmO92LQ3qPIljcg=;
+ b=INaHg8x5lLa/zd0YswRLYBAeSufTVOuZeY+JrOYu+vjBqOy1pCzLDt/clN7Xmw20juyUBrilDh5sR0mjsfcTuB6Jo5Iz2NEIDeMol4M7fSC96SlukgRYPZzhtB2156v2zweokDRjL1CwZQ6XMJ6WQrRJIDzqbB/xhhjdCZ8gM2yNXPq/f2UmE2wSPDBrKabl3kBlrxLU/u/ycUIUA3iJLdN+XAkd9NzDnvKR92TMaS6d8LwPRizIVP03eZSmi6+wjRvFRZSiOdYS5y/486mvoefwdy9q3GJlEcpa1jTOYpGJns/7uTmAInX9Idchs0iSDTnIemoq79wrDFIOfcNRuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=grimberg.me smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCP286CA0276.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3c9::13)
+ by TYZPR06MB5843.apcprd06.prod.outlook.com (2603:1096:400:285::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Sat, 3 May
+ 2025 14:36:36 +0000
+Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
+ (2603:1096:400:3c9:cafe::91) by TYCP286CA0276.outlook.office365.com
+ (2603:1096:400:3c9::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.26 via Frontend Transport; Sat,
+ 3 May 2025 14:36:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Sat, 3 May 2025 14:36:35 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 3313641604E5;
+	Sat,  3 May 2025 22:36:34 +0800 (CST)
+Message-ID: <8c590b78-6f54-4ae2-9263-3553b5e27527@cixtech.com>
+Date: Sat, 3 May 2025 22:36:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
+ suspend
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
+ hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250502150027.GA818097@bhelgaas>
+ <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
+ <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
+ <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
+ <58e343d9-adf3-4853-9dec-df7c1892d6b2@cixtech.com>
+ <onw47gzc6mda2unsew36b2cmp2et3ijrjqlmgpueeko5vucgph@wrkaiqlbo2fp>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <onw47gzc6mda2unsew36b2cmp2et3ijrjqlmgpueeko5vucgph@wrkaiqlbo2fp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241122085215.424736-8-szymon.durawa@linux.intel.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|TYZPR06MB5843:EE_
+X-MS-Office365-Filtering-Correlation-Id: b666e743-01c4-4e7c-44d9-08dd8a4fe80c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y2o4V0I4T0ZnTG95NnRwS2dDU2pxRFgvYXJXVHZrWktRaEQwd1c5a3BYUS9J?=
+ =?utf-8?B?d0FXQTR2WUwvc21DQlFobFRJNzI1NUlkcFNZU3FhOUJDb1YrVWFVVDY1azl1?=
+ =?utf-8?B?SFNQcUNUTHBRSTB1STc5UDVaZ3NVUlltVG1jcVNiTTA3eGtaVnV5Tk51OUEv?=
+ =?utf-8?B?bVVXNlA5S1pHaC9VZWRRVUVVeG03SWl0clVSaFlqekNvbUtvNXdCelNHOVdH?=
+ =?utf-8?B?RDF4cEFzNU1vandDL01aUktnSmpaSEcrMXpOOTNVbkM5QXhHeGZmNHVBRW9J?=
+ =?utf-8?B?T2dyNEpJUEMzTG9tWkUyZUJiY01BQkE4QjlPTjR2QjNQLzh6eWZseTliSGV1?=
+ =?utf-8?B?ZHhyUWNrQmsxN1VJMnA0RnRDNGlHbnpWZHVBbHQ2Q2wrV0pxNHZudE0zMys1?=
+ =?utf-8?B?S1VmRWxKa3BDbjZRR0NOSEhnbXdNMWR2alRZRkZUU08za3dDWVliYW9vUlRj?=
+ =?utf-8?B?YUo4dFJwVC85MzBaNmpUaDVjeUVxK0dqemVTWVNTRXdrREdSK2JuK2pzU05G?=
+ =?utf-8?B?MzVmeFFsYUdYWTBqMmdydjhITnY5T3NoTGFNMUdaSGh1MzV1YmRQNzNsNDdr?=
+ =?utf-8?B?aTJiaVRXM09adm81UTQ1V3ROZE5kNW8vM3hMMDF1aGNGZTVSa282ZVF4cGto?=
+ =?utf-8?B?dXdjVkxkNlFCNnYvT1NxalZSbjJJZ2g0M1ZOU3kveWY2WFl6ZFFqeDlrUXFo?=
+ =?utf-8?B?V056WFlvQ1JBWmZkYXMxWW10TGRJRk9NNDVjbVB0dlJPZlVkYTduQWJQSjk4?=
+ =?utf-8?B?SjdYc042SnFVYmJUQWtmZThFN0JiYi9qaFVhNHB6UnpWaFFLbFA1N1BoZjBm?=
+ =?utf-8?B?UXpRd2diTEI0VGRpOXQxeVQ5amtrQktJTnZhbGI4R0F6d1FaWjVYWnFmSXFt?=
+ =?utf-8?B?RUxZa2ZRUTYvNnhGa0N0WXRsWTdhZmxpR25VL2c3WE9GY3JXZ2x0dDRDeUxI?=
+ =?utf-8?B?RmRnTzJMOFRjMDlnUUlucXdDQWNWTm9ZbUZER2lvQUJoQzRHclVBa0U5OXpE?=
+ =?utf-8?B?OVcxTXhlOXZwV01LYWtxanIrRUFtcVJpWE9DekV6aUJqdDlPT25Ec1kyUVVi?=
+ =?utf-8?B?bHh6c3g4MDJOTnI2QWNLY1Ard0s0UkpPMmhjT0pCaFJtb090MjlTRUJrV200?=
+ =?utf-8?B?QUIzYkJNa2pIWWttb1lBVTQxajRDbEcweGFML0g4bS9mZTJWVXMyR010LzlF?=
+ =?utf-8?B?N0RFWEpCRnVvdUtlaUNXdVAvTERDZUFqdXdxekltZ0VFbzJBamhENk9nb3NK?=
+ =?utf-8?B?MlFTWnBHZE5WZlZXSnVKTWgxd1hJWXFwRWVZK0Y0M2RWQU1TYTYyVy8yaVUv?=
+ =?utf-8?B?YW0vQ2oxVnhpdGpTWS9XWjh6QVdXNktPc21tVUpzZmxPWWV6NUdnRXF0RC9U?=
+ =?utf-8?B?MHplUmlGSk0xdkJDRDB5V0RpWEZmMk9GY09JaHd3Yll6elV3VnBBWVNIVC9o?=
+ =?utf-8?B?TFZLV0xXeWlJTjdhM0pNbnBWUW5XNk50Y01XSlNReUNIQ2hkSWQxOWYraVAz?=
+ =?utf-8?B?b09zMjFMbUZKZlA3R2t6b2F6aUo4YVRTUFpwWEVXMUZteGVjMk9qQnovYmhB?=
+ =?utf-8?B?cnZWZVRtMHFBUDhucnl3NHBFM29pSWY5QXB1REc1RHZ3YStncVVtWjFYaXV6?=
+ =?utf-8?B?aFdFdEVORDdPaUpLSlZmaEJUeENDSmhORlVyUC9qMlZuSVhHT0xIS080UXV2?=
+ =?utf-8?B?QUxCZTZ2R3NhTGJNZjZtRG4xMFIxb0RmZ1F6NmZwcmppWlFKSUprMkxuMEdY?=
+ =?utf-8?B?bVpjZXVJTHN5ei81azB2dDRqd0ZxUHVMbm05Z1hCUGZhaDNSK20xTktnSndj?=
+ =?utf-8?B?bW45UnMrbUJUU1BYS05jVU11MnJ0Zi95WUVuQjlwa2txdUlMblJNOW12S1VK?=
+ =?utf-8?B?UkdwQ3g3NjVBMkRXODFEWElycUxIejBxdGxxeUpxOGszeXdETXRTWjZhdjZv?=
+ =?utf-8?B?dzJnS1RYeFppRjBRK015RXRpVkVyc041ZHU1UTNVaWtGWnA1dDBKKy9qYWVS?=
+ =?utf-8?B?bWJMaTJoaDNLT3duNnhXdjNNMXBmRlNFelVyNGdLTkNZQnVidFpmRlkwaHk1?=
+ =?utf-8?Q?OScg+F?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 14:36:35.1307
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b666e743-01c4-4e7c-44d9-08dd8a4fe80c
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB84.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5843
 
-On Fri, Nov 22, 2024 at 09:52:14AM +0100, Szymon Durawa wrote:
-> Starting from Intel Arrow Lake VMD enhancement introduces second rootbus
-> support with fixed root bus number (0x80). It means that all 3 MMIO BARs
-> exposed by VMD are shared now between both buses (current BUS0 and
-> new BUS1).
+
+
+On 2025/5/3 02:05, Manivannan Sadhasivam wrote:
+> EXTERNAL EMAIL
 > 
-> Add new BUS1 enumeration and divide MMIO space to be shared between
-> both rootbuses. Due to enumeration issues with rootbus hardwired to a
-> fixed non-zero value, this patch will work with a workaround proposed
-> in next patch. Without workaround user won't see attached devices for BUS1
-> rootbus.
+> On Sat, May 03, 2025 at 12:20:52AM +0800, Hans Zhang wrote:
+>>
+>>
+>> On 2025/5/3 00:07, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/5/2 23:58, Manivannan Sadhasivam wrote:
+>>>> EXTERNAL EMAIL
+>>>>
+>>>> On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
+>>>>>
+>>>>>
+>>>>> On 2025/5/2 23:00, Bjorn Helgaas wrote:
+>>>>>> EXTERNAL EMAIL
+>>>>>>
+>>>>>> On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
+>>>>>>> From: Hans Zhang <hans.zhang@cixtech.com>
+>>>>>>>
+>>>>>>> When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
+>>>>>>
+>>>>>> CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
+>>>>>> dynamically regardless of the config.
+>>>>>>
+>>>>>
+>>>>> Dear Bjorn,
+>>>>>
+>>>>> Thank you very much for your reply.
+>>>>>
+>>>>> Yes. To reduce the power consumption of the SOC system, we have
+>>>>> enabled ASPM
+>>>>> L1 by default.
+>>>>>
+>>>>>>> NVMe controllers fail to release LPI MSI-X interrupts during system
+>>>>>>> suspend, leading to a system hang. This occurs because the driver's
+>>>>>>> existing power management path does not fully disable the device
+>>>>>>> when ASPM is active.
+>>>>>>
+>>>>>> I have no idea what this has to do with ASPM L1.  I do see that
+>>>>>> nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
+>>>>>> janky and racy).  But this doesn't explain anything about what would
+>>>>>> cause a system hang.
+>>>>>
+>>>>> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0:
+>>>>> PM: calling
+>>>>> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
+>>>>> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
+>>>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
+>>>>> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+>>>>> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
+>>>>> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+>>>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
+>>>>> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
+>>>>> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
+>>>>> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
+>>>>> pcie_phy_common_exit end
+>>>>> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
+>>>>> sky1_pcie_suspend_noirq
+>>>>> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
+>>>>> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
+>>>>> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
+>>>>> 7110000.system-controller:clock-controller: PM: calling
+>>>>> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
+>>>>> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
+>>>>> 7110000.system-controller:clock-controller: PM:
+>>>>> genpd_suspend_noirq+0x0/0x80
+>>>>> returned 0 after 1 usecs
+>>>>> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
+>>>>>
+>>>>>
+>>>>> Hans: Before I added the printk for debugging, it hung here.
+>>>>>
+>>>>>
+>>>>> I added the log output after debugging printk.
+>>>>>
+>>>>> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
+>>>>> Our hardware is in STR(suspend to ram), and the controller and
+>>>>> PHY will lose
+>>>>> power.
+>>>>>
+>>>>> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
+>>>>> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
+>>>>> controller and PHY will be reinitialized. If suspend does not
+>>>>> close the AXI
+>>>>> and APB clock, and the AXI is reopened during the resume
+>>>>> process, the APB
+>>>>> clock will cause the reference count of the kernel API to accumulate
+>>>>> continuously.
+>>>>>
+>>>>
+>>>> So this is the actual issue (controller loosing power during system
+>>>> suspend) and
+>>>> everything else (ASPM, MSIX write) are all side effects of it.
+>>>>
+>>
+>> Dear Mani,
+>>
+>> There are some things I don't understand here. Why doesn't the NVMe SSD
+>> driver release the MSI/MSIx interrupt when ASPM is enabled? However, if ASPM
+>> is not enabled, the MSI/MSIx interrupt will be released instead.
+>>
 > 
-
-Series mostly looks good to me. But I'm not comfortable with patches 7 and 8 due
-to the dependency. Patch 7 is adding the second root bus, but the devices will
-only be detected after applying patch 8, which will break bisecting.
-
-Can you try moving patch 8 before 7? Or merge both of them?
-
-- Mani
-
-> Suggested-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-> Signed-off-by: Szymon Durawa <szymon.durawa@linux.intel.com>
-> ---
->  drivers/pci/controller/vmd.c | 208 ++++++++++++++++++++++++++++++-----
->  1 file changed, 180 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 6d8397b5ebee..6cd14c28fd4e 100755
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -26,6 +26,7 @@
->  #define VMD_RESTRICT_0_BUS_START 0
->  #define VMD_RESTRICT_1_BUS_START 128
->  #define VMD_RESTRICT_2_BUS_START 224
-> +#define VMD_RESTRICT_3_BUS_START 225
->  
->  #define PCI_REG_VMCAP		0x40
->  #define BUS_RESTRICT_CAP(vmcap)	(vmcap & 0x1)
-> @@ -38,15 +39,33 @@
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
->  
-> +#define VMD_PRIMARY_BUS0 0x00
-> +#define VMD_PRIMARY_BUS1 0x80
-> +#define VMD_BUSRANGE0 0xc8
-> +#define VMD_BUSRANGE1 0xcc
-> +#define VMD_MEMBAR1_OFFSET 0xd0
-> +#define VMD_MEMBAR2_OFFSET1 0xd8
-> +#define VMD_MEMBAR2_OFFSET2 0xdc
-> +#define VMD_BUS_END(busr) ((busr >> 8) & 0xff)
-> +#define VMD_BUS_START(busr) (busr & 0x00ff)
-> +
-> +/*
-> + * Add VMD resources for BUS1, it will share the same MMIO space with
-> + * previous VMD resources.
-> + */
->  enum vmd_resource {
->  	VMD_RES_CFGBAR = 0, /* VMD Bus0 Config BAR */
->  	VMD_RES_MBAR_1, /* VMD Bus0 Resource MemBAR 1 */
->  	VMD_RES_MBAR_2, /* VMD Bus0 Resource MemBAR 2 */
-> +	VMD_RES_BUS1_CFGBAR, /* VMD Bus1 Config BAR */
-> +	VMD_RES_BUS1_MBAR_1, /* VMD Bus1 Resource MemBAR 1 */
-> +	VMD_RES_BUS1_MBAR_2, /* VMD Bus1 Resource MemBAR 2 */
->  	VMD_RES_COUNT
->  };
->  
->  enum vmd_rootbus {
->  	VMD_BUS_0 = 0,
-> +	VMD_BUS_1,
->  	VMD_BUS_COUNT
->  };
->  
-> @@ -90,6 +109,12 @@ enum vmd_features {
->  	 * proper power management of the SoC.
->  	 */
->  	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
-> +
-> +	/*
-> +	 * Starting from Intel Arrow Lake, VMD devices have their VMD rootports
-> +	 * connected to additional BUS1 rootport.
-> +	 */
-> +	VMD_FEAT_HAS_BUS1_ROOTBUS	= (1 << 6)
->  };
->  
->  #define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
-> @@ -97,7 +122,8 @@ enum vmd_features {
->  #define VMD_FEATS_CLIENT	(VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |	\
->  				 VMD_FEAT_HAS_BUS_RESTRICTIONS |	\
->  				 VMD_FEAT_OFFSET_FIRST_VECTOR |		\
-> -				 VMD_FEAT_BIOS_PM_QUIRK)
-> +				 VMD_FEAT_BIOS_PM_QUIRK |		\
-> +				 VMD_FEAT_HAS_BUS1_ROOTBUS)
->  
->  static DEFINE_IDA(vmd_instance_ida);
->  
-> @@ -155,6 +181,7 @@ struct vmd_dev {
->  	u8			first_vec;
->  	char			*name;
->  	int			instance;
-> +	bool			bus1_rootbus;
->  };
->  
->  static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
-> @@ -532,11 +559,16 @@ static inline void vmd_acpi_end(void) { }
->  
->  static void vmd_domain_reset(struct vmd_dev *vmd)
->  {
-> -	u16 bus, max_buses = resource_size(&vmd->resources[VMD_RES_CFGBAR]);
-> +	u16 bus, bus_cnt = resource_size(&vmd->resources[VMD_RES_CFGBAR]);
->  	u8 dev, functions, fn, hdr_type;
->  	char __iomem *base;
->  
-> -	for (bus = 0; bus < max_buses; bus++) {
-> +	if (vmd->bus1_rootbus) {
-> +		bus_cnt += resource_size(&vmd->resources[VMD_RES_BUS1_CFGBAR]);
-> +		bus_cnt += 2;
-> +	}
-> +
-> +	for (bus = 0; bus < bus_cnt; bus++) {
->  		for (dev = 0; dev < 32; dev++) {
->  			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
->  						PCI_DEVFN(dev, 0), 0);
-> @@ -582,12 +614,24 @@ static void vmd_attach_resources(struct vmd_dev *vmd)
->  {
->  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[VMD_RES_MBAR_1];
->  	vmd->dev->resource[VMD_MEMBAR2].child = &vmd->resources[VMD_RES_MBAR_2];
-> +
-> +	if (vmd->bus1_rootbus) {
-> +		vmd->resources[VMD_RES_MBAR_1].sibling =
-> +			&vmd->resources[VMD_RES_BUS1_MBAR_1];
-> +		vmd->resources[VMD_RES_MBAR_2].sibling =
-> +			&vmd->resources[VMD_RES_BUS1_MBAR_2];
-> +	}
->  }
->  
->  static void vmd_detach_resources(struct vmd_dev *vmd)
->  {
->  	vmd->dev->resource[VMD_MEMBAR1].child = NULL;
->  	vmd->dev->resource[VMD_MEMBAR2].child = NULL;
-> +
-> +	if (vmd->bus1_rootbus) {
-> +		vmd->resources[VMD_RES_MBAR_1].sibling = NULL;
-> +		vmd->resources[VMD_RES_MBAR_2].sibling = NULL;
-> +	}
->  }
->  
->  /*
-> @@ -660,7 +704,7 @@ static int vmd_get_phys_offsets(struct vmd_dev *vmd, bool native_hint,
->  	return 0;
->  }
->  
-> -static int vmd_get_bus_number_start(struct vmd_dev *vmd)
-> +static int vmd_get_bus_number_start(struct vmd_dev *vmd, unsigned long features)
->  {
->  	struct pci_dev *dev = vmd->dev;
->  	u16 reg;
-> @@ -679,6 +723,19 @@ static int vmd_get_bus_number_start(struct vmd_dev *vmd)
->  		case 2:
->  			vmd->busn_start[VMD_BUS_0] = VMD_RESTRICT_2_BUS_START;
->  			break;
-> +		case 3:
-> +			if (!(features & VMD_FEAT_HAS_BUS1_ROOTBUS)) {
-> +				pci_err(dev, "VMD Bus Restriction detected type %d, but BUS1 Rootbus is not supported, aborting.\n",
-> +					BUS_RESTRICT_CFG(reg));
-> +				return -ENODEV;
-> +			}
-> +
-> +			/* BUS0 start number */
-> +			vmd->busn_start[VMD_BUS_0] = VMD_RESTRICT_2_BUS_START;
-> +			/* BUS1 start number */
-> +			vmd->busn_start[VMD_BUS_1] = VMD_RESTRICT_3_BUS_START;
-> +			vmd->bus1_rootbus = true;
-> +			break;
->  		default:
->  			pci_err(dev, "Unknown Bus Offset Setting (%d)\n",
->  				BUS_RESTRICT_CFG(reg));
-> @@ -805,6 +862,30 @@ static void vmd_configure_cfgbar(struct vmd_dev *vmd)
->  		       (resource_size(res) >> 20) - 1,
->  		.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
->  	};
-> +
-> +	if (vmd->bus1_rootbus) {
-> +		u16 bus0_range = 0;
-> +		u16 bus1_range = 0;
-> +
-> +		pci_read_config_word(vmd->dev, VMD_BUSRANGE0, &bus0_range);
-> +		pci_read_config_word(vmd->dev, VMD_BUSRANGE1, &bus1_range);
-> +
-> +		/*
-> +		 * Resize BUS0 CFGBAR range to make space for BUS1
-> +		 * owned devices by adjusting range end with value stored in
-> +		 * VMD_BUSRANGE0 register.
-> +		 */
-> +		vmd->resources[VMD_RES_CFGBAR].start = VMD_BUS_START(bus0_range);
-> +		vmd->resources[VMD_RES_CFGBAR].end = VMD_BUS_END(bus0_range);
-> +
-> +		vmd->resources[VMD_RES_BUS1_CFGBAR] = (struct resource){
-> +			.name = "VMD CFGBAR BUS1",
-> +			.start = VMD_BUS_START(bus1_range),
-> +			.end = VMD_BUS_END(bus1_range),
-> +			.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
-> +			.parent = res,
-> +		};
-> +	}
->  }
->  
->  /*
-> @@ -834,8 +915,9 @@ static void vmd_configure_membar(struct vmd_dev *vmd,
->  		flags &= ~IORESOURCE_MEM_64;
->  
->  	vmd->resources[resource_number] = (struct resource){
-> -		.name = kasprintf(GFP_KERNEL, "VMD MEMBAR%d",
-> -				  membar_number / 2),
-> +		.name = kasprintf(
-> +			GFP_KERNEL, "VMD MEMBAR%d %s", membar_number / 2,
-> +			resource_number > VMD_RES_MBAR_2 ? "BUS1" : ""),
->  		.start = res->start + start_offset,
->  		.end = res->end - end_offset,
->  		.flags = flags,
-> @@ -846,41 +928,80 @@ static void vmd_configure_membar(struct vmd_dev *vmd,
->  static void vmd_configure_membar1_membar2(struct vmd_dev *vmd,
->  					  resource_size_t mbar2_ofs)
->  {
-> -	vmd_configure_membar(vmd, 1, VMD_MEMBAR1, 0, 0);
-> -	vmd_configure_membar(vmd, 2, VMD_MEMBAR2, mbar2_ofs, 0);
-> +	if (vmd->bus1_rootbus) {
-> +		u32 bus1_mbar1_ofs = 0;
-> +		u64 bus1_mbar2_ofs = 0;
-> +		u32 reg;
-> +
-> +		pci_read_config_dword(vmd->dev, VMD_MEMBAR1_OFFSET,
-> +				      &bus1_mbar1_ofs);
-> +
-> +		pci_read_config_dword(vmd->dev, VMD_MEMBAR2_OFFSET1, &reg);
-> +		bus1_mbar2_ofs = reg;
-> +
-> +		pci_read_config_dword(vmd->dev, VMD_MEMBAR2_OFFSET2, &reg);
-> +		bus1_mbar2_ofs |= (u64)reg << 32;
-> +
-> +		/*
-> +		 * Resize BUS MEMBAR1 and MEMBAR2 ranges to make space
-> +		 * for BUS1 owned devices by adjusting range end with values
-> +		 * stored in VMD_MEMBAR1_OFFSET and VMD_MEMBAR2_OFFSET registers
-> +		 */
-> +		vmd_configure_membar(vmd, VMD_RES_MBAR_1, VMD_MEMBAR1, 0,
-> +				     bus1_mbar1_ofs);
-> +		vmd_configure_membar(vmd, VMD_RES_MBAR_2, VMD_MEMBAR2,
-> +				     mbar2_ofs, bus1_mbar2_ofs - mbar2_ofs);
-> +
-> +		vmd_configure_membar(vmd, VMD_RES_BUS1_MBAR_1, VMD_MEMBAR1,
-> +				     bus1_mbar1_ofs, 0);
-> +		vmd_configure_membar(vmd, VMD_RES_BUS1_MBAR_2, VMD_MEMBAR2,
-> +				     mbar2_ofs + bus1_mbar2_ofs, 0);
-> +	} else {
-> +		vmd_configure_membar(vmd, VMD_RES_MBAR_1, VMD_MEMBAR1, 0, 0);
-> +		vmd_configure_membar(vmd, VMD_RES_MBAR_2, VMD_MEMBAR2,
-> +				     mbar2_ofs, 0);
-> +	}
->  }
->  
-> -static int vmd_create_bus(struct vmd_dev *vmd, struct pci_sysdata *sd,
-> -			  resource_size_t *offset)
-> +static int vmd_create_bus(struct vmd_dev *vmd, enum vmd_rootbus bus_number,
-> +			  struct pci_sysdata *sd, resource_size_t *offset)
->  {
-> +	u8 cfgbar = bus_number * 3;
-> +	u8 membar1 = cfgbar + 1;
-> +	u8 membar2 = cfgbar + 2;
-> +	struct pci_bus *vmd_bus;
->  	LIST_HEAD(resources);
->  
-> -	pci_add_resource(&resources, &vmd->resources[VMD_RES_CFGBAR]);
-> -	pci_add_resource_offset(&resources, &vmd->resources[VMD_RES_MBAR_1],
-> +	pci_add_resource(&resources, &vmd->resources[cfgbar]);
-> +	pci_add_resource_offset(&resources, &vmd->resources[membar1],
->  				offset[0]);
-> -	pci_add_resource_offset(&resources, &vmd->resources[VMD_RES_MBAR_2],
-> +	pci_add_resource_offset(&resources, &vmd->resources[membar2],
->  				offset[1]);
->  
-> -	vmd->bus[VMD_BUS_0] = pci_create_root_bus(&vmd->dev->dev,
-> -						  vmd->busn_start[VMD_BUS_0],
-> -						  &vmd_ops, sd, &resources);
-> -	if (!vmd->bus[VMD_BUS_0]) {
-> +	vmd_bus = pci_create_root_bus(&vmd->dev->dev,
-> +				      vmd->busn_start[bus_number], &vmd_ops, sd,
-> +				      &resources);
-> +
-> +	if (!vmd_bus) {
->  		pci_free_resource_list(&resources);
-> -		vmd_remove_irq_domain(vmd);
-> +
-> +		if (bus_number == VMD_PRIMARY_BUS0)
-> +			vmd_remove_irq_domain(vmd);
->  		return -ENODEV;
->  	}
->  
-> -	vmd_copy_host_bridge_flags(
-> -		pci_find_host_bridge(vmd->dev->bus),
-> -		to_pci_host_bridge(vmd->bus[VMD_BUS_0]->bridge));
-> +	vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus),
-> +				   to_pci_host_bridge(vmd_bus->bridge));
->  
->  	vmd_attach_resources(vmd);
->  	if (vmd->irq_domain)
-> -		dev_set_msi_domain(&vmd->bus[VMD_BUS_0]->dev, vmd->irq_domain);
-> +		dev_set_msi_domain(&vmd_bus->dev, vmd->irq_domain);
->  	else
-> -		dev_set_msi_domain(&vmd->bus[VMD_BUS_0]->dev,
-> +		dev_set_msi_domain(&vmd_bus->dev,
->  				   dev_get_msi_domain(&vmd->dev->dev));
->  
-> +	vmd->bus[bus_number] = vmd_bus;
-> +
->  	return 0;
->  }
->  
-> @@ -893,7 +1014,9 @@ static void vmd_bus_enumeration(struct pci_bus *bus, unsigned long features)
->  	vmd_acpi_begin();
->  
->  	pci_scan_child_bus(bus);
-> -	vmd_domain_reset(vmd_from_bus(bus));
-> +
-> +	if (bus->primary == VMD_PRIMARY_BUS0)
-> +		vmd_domain_reset(vmd_from_bus(bus));
->  
->  	/*
->  	 * When Intel VMD is enabled, the OS does not discover the Root Ports
-> @@ -961,7 +1084,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	 * limits the bus range to between 0-127, 128-255, or 224-255
->  	 */
->  	if (features & VMD_FEAT_HAS_BUS_RESTRICTIONS) {
-> -		ret = vmd_get_bus_number_start(vmd);
-> +		ret = vmd_get_bus_number_start(vmd, features);
->  		if (ret)
->  			return ret;
->  	}
-> @@ -1021,7 +1144,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  		vmd_set_msi_remapping(vmd, false);
->  	}
->  
-> -	ret = vmd_create_bus(vmd, sd, offset);
-> +	ret = vmd_create_bus(vmd, VMD_BUS_0, sd, offset);
->  
->  	if (ret) {
->  		pci_err(vmd->dev, "Can't create bus: %d\n", ret);
-> @@ -1034,6 +1157,27 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  
->  	vmd_bus_enumeration(vmd->bus[VMD_BUS_0], features);
->  
-> +	if (vmd->bus1_rootbus) {
-> +		ret = vmd_create_bus(vmd, VMD_BUS_1, sd, offset);
-> +		if (ret) {
-> +			pci_err(vmd->dev, "Can't create BUS1: %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		/*
-> +		 * Primary bus is not set by pci_create_root_bus(), it is
-> +		 * updated here
-> +		 */
-> +		vmd->bus[VMD_BUS_1]->primary = VMD_PRIMARY_BUS1;
-> +
-> +		WARN(sysfs_create_link(&vmd->dev->dev.kobj,
-> +				       &vmd->bus[VMD_BUS_1]->dev.kobj,
-> +				       "domain1"),
-> +		     "Can't create symlink to domain1\n");
-> +
-> +		vmd_bus_enumeration(vmd->bus[VMD_BUS_1], features);
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1113,10 +1257,18 @@ static void vmd_remove(struct pci_dev *dev)
->  	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
->  	pci_remove_root_bus(vmd->bus[VMD_BUS_0]);
->  
-> -	/* CFGBAR is static, does not require releasing memory */
-> +	/* CFGBARs are static, do not require releasing memory */
->  	kfree(vmd->resources[VMD_RES_MBAR_1].name);
->  	kfree(vmd->resources[VMD_RES_MBAR_2].name);
->  
-> +	if (vmd->bus1_rootbus) {
-> +		pci_stop_root_bus(vmd->bus[VMD_BUS_1]);
-> +		sysfs_remove_link(&vmd->dev->dev.kobj, "domain1");
-> +		pci_remove_root_bus(vmd->bus[VMD_BUS_1]);
-> +		kfree(vmd->resources[VMD_RES_BUS1_MBAR_1].name);
-> +		kfree(vmd->resources[VMD_RES_BUS1_MBAR_2].name);
-> +	}
-> +
->  	vmd_cleanup_srcu(vmd);
->  	vmd_detach_resources(vmd);
->  	vmd_remove_irq_domain(vmd);
-> @@ -1202,4 +1354,4 @@ module_pci_driver(vmd_drv);
->  MODULE_AUTHOR("Intel Corporation");
->  MODULE_DESCRIPTION("Volume Management Device driver");
->  MODULE_LICENSE("GPL v2");
-> -MODULE_VERSION("0.6");
-> +MODULE_VERSION("0.7");
-> -- 
-> 2.39.3
-> 
+> You mean by calling pci_free_irq_vectors()? If so, the reason is that if ASPM is
+> unavailable, then the NVMe cannot be put into low power APST state during
+> suspend. So shutting down it is the only sane option to save power, with the
+> cost of increased resume latency. But if ASPM is available, then the driver
+> doesn't shut the NVMe as it relies on APST to keep the NVMe controller/memory in
+> low power mode.
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+Dear Mani,
+
+Thank you for your explanation.
+
+Best regards,
+Hans
 
