@@ -1,163 +1,184 @@
-Return-Path: <linux-pci+bounces-27123-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27124-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34C8EAA8921
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 21:15:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11C19AA8936
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 22:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04902188F417
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 19:16:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 591623AFD26
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 20:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AE514885B;
-	Sun,  4 May 2025 19:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91DF61714C0;
+	Sun,  4 May 2025 20:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="r9X+Ypzt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sGt3+kSI"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZkabI7XM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2044.outbound.protection.outlook.com [40.107.212.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C280137E;
-	Sun,  4 May 2025 19:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746386143; cv=none; b=lvk9LNiTTOTwJq+KxUvV2gCshibwGp9qPoR5S9i1W1upwPBaKD6WGE+tLEXU86YtiURfwNaji6rohH+fYAuDgL9viSQGBRK8QS/0i5TwMAbtO5dLYilY8qWDaittY3KT6WkLibFMc+88E2hOlSHWv4bRxnOsBwjdb/Ll6Unl9Mc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746386143; c=relaxed/simple;
-	bh=wCekXqbY0Akt7yHdTHgLX1PhHKMtiY418Hrw89g0ZRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uyC0cddsMgXkNhVidzD73b+V6DXUGKRcxhrvDyTcb0xtxh1Ll0IsZXQoDmkMOT+BF7Fmp0vv/FIHEObgpuex5WE+mdWF+7fmTQWTmuKxyQjAPgz6SNYs0268IePYD4HXQwiVH61QhNqSaD2ErwOShZ64t5Q4t+5e4Df+yuBAfaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=r9X+Ypzt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sGt3+kSI; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2C43011401BD;
-	Sun,  4 May 2025 15:15:39 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Sun, 04 May 2025 15:15:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1746386139;
-	 x=1746472539; bh=V8ewhzHFrNA1fM3QI109IbJqu79a9n0Vi02n10hE2c4=; b=
-	r9X+Ypztjm7tEy8GKYo4yuE0XlQnD+foU5eK2u1Tk7L4Fro8BLW8GT3bbKtOF/pv
-	cdhmFCbdQtKSgmxAc/IV5PskKuXo8cH6GtkKW7queXEZPlfRIk4Uc1wNG/LN/iZd
-	X/sMb8MSSehF3NHxBCfWtNFCvXK7JxPCkKlU8YFS1x9yhYOo9aJ1Jtd/GpFr4WJ2
-	xao3X0GE+pzfzGVtrjhBnAnmUfI5mV7RqLpfEvJH6l2Hcom1PcyJcxXLX/co9u/I
-	D69CyrnqW0VGNNkW9DhZphvFPgP3KNM2nNiQ8MQf0/lVrnxAKcNp52Ud8CG6Gn50
-	aFyFrQ0HBRPRr+SgYw0ApA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746386139; x=
-	1746472539; bh=V8ewhzHFrNA1fM3QI109IbJqu79a9n0Vi02n10hE2c4=; b=s
-	Gt3+kSIhDrLCI9Aj9/6Op0uC914CcIHiFOLtuRE/xZgSIG6yTtg/fQT2SqU55Zuq
-	1foncjd9jEZuWoHlFbXz7tk7zxm/rTLnbRkJL/DHDf8kVo3lKrmc7opF5l7Y7PMR
-	5WtiS003towd/5sxi0NFQcE3g07nKxYix0k5RAzsnW+oV0kMkskJRIBpPii9NBAU
-	dC30Nm884tIoNV9RCONCscRYNn0+r2ZrmyBFIjeYogsmLnAF7VxUmgbpEq2hrhD5
-	BoIScTf8ExcYsCRI7ScHs38F4QpMjR3bUcroCkvTV9viEbLVaA7R9yeQFEKo/8i2
-	kZvgoLBVD6MA0SEdA092Q==
-X-ME-Sender: <xms:2rwXaDW-mbCeV2hMJBpW5v0NsdASEtajSjz8s9ijSsoI2HvCDVua1A>
-    <xme:2rwXaLm2K-kFLj_vFHbC1Wnc2gSn1dBeNZ7h3dhp_ixpJ6TYv7gXc2tXUNIAH1UVU
-    iRhMt2NZ1DKwCOY3I8>
-X-ME-Received: <xmr:2rwXaPZas2Usrue8B2cKBT-O2n19MUYETMUARUSIOx6qJsbEL1jEO0COPD8U4_i4tLhEWke2O1G5abopD28xO_Je5s4DBY6iMmV4Uqhk-AGhCF6w3PeZw0WqC1hbdhE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeeltddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
-    tdejnecuhfhrohhmpefthigrnhcuofgrthhthhgvfihsuceorhihrghnmhgrthhthhgvfi
-    hssehfrghsthhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephffhieeijeevfffg
-    veelhefhvedutdelkeeuvdelteefveekleekuedtgeehffejnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehrhigrnhhmrghtthhhvgifshesfhgrshhtmhgrihhlrdgtohhmpdhnsggprh
-    gtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghhrvghgkhhh
-    sehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohephhhonhhggihinh
-    hgrdiihhhusehngihprdgtohhmpdhrtghpthhtoheplhdrshhtrggthhesphgvnhhguhht
-    rhhonhhigidruggvpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehrhigrnhhmrghtthhhvgifshesfhgrshhtmhgrihhlrdgtohhmpd
-    hrtghpthhtohepkhifihhltgiihihnshhkiheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrghnihhvrg
-    hnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:2rwXaOUqwuQVWdlnDepOUr5v7KLdDh6UfmRLDCcTBQ-qw3xh3Ztu_w>
-    <xmx:2rwXaNnFlTaeb7D5JdzfXEYNtvrVbjFG2Uy5crM9ZgO8fKWwZDlfVw>
-    <xmx:2rwXaLfPeODiQzUATEddGurQbnzx8oR0TehSD65yI0Hqh0TfddSSGg>
-    <xmx:2rwXaHFsYL9xb0iBy6H301hx00sKPsCuaZ7pAonwFo7dvBgTrivXdw>
-    <xmx:27wXaOUPqkjeol6aw8z__65kyDqIzku16k83wzU5x2CJS_GuAxE8EQM6>
-Feedback-ID: i179149b7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 4 May 2025 15:15:38 -0400 (EDT)
-From: Ryan Matthews <ryanmatthews@fastmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	stable@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Ryan Matthews <ryanmatthews@fastmail.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH 6.6 2/2] PCI: imx6: Skip controller_id generation logic for i.MX7D
-Date: Sun,  4 May 2025 15:13:56 -0400
-Message-ID: <20250504191356.17732-3-ryanmatthews@fastmail.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250504191356.17732-1-ryanmatthews@fastmail.com>
-References: <20250504191356.17732-1-ryanmatthews@fastmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15138494
+	for <linux-pci@vger.kernel.org>; Sun,  4 May 2025 20:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746389820; cv=fail; b=lm5Q1tyu2cH4xR65erGjWBLI504dMep6ngMtppZ3Tpni3EbisKYOEWJSO1JKcGhyd8vywRO8R0rDhUfmTWHh2IJ1NSTxbhgF8GowmDLV3dhJT7zJAomhXlX1XNK80WfFMcA9kBFOk9BZweSd5prwt9ygdBwmQBvO34c3aQ9QLjQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746389820; c=relaxed/simple;
+	bh=TT2r7EeLeQu/jCQVWTmoFAA/rU1zTpt+XPORtdLw8XA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RwFSsvHLoP12ngzxxDVtYOKnYt62sZoVnBxAgpIIDjoEURrccCtlc12z+YKILk67NdADNeXGXY9EBch8FyN741noWU/c1bP026WadRc42fihWLkXpcreaUhb5h92fP6dwjdDR9JuzIHV+45U/qq2ZJptXpWSIVTSV+SEzMjlm2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZkabI7XM; arc=fail smtp.client-ip=40.107.212.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XnKertOM2y0Iw/g7NoYyLwYweuQGvI9eGEKy1e+o8JKmp/M+APN28l7e8pvp8X8KVUXE+H7CPfuOZi1PB/Ht08VMeu0IPLvksQGIcEZlyj8PXiKlyZoupXuN4xGREedzzJvhyJE3mVIttfXiYiwgtpspVuOR/DPQB8GpjQv4tzqU+UnL10q6t7dT3wiQcZJNh2eDXFJI0ShyNahzRJxfCoAn7nYwFjnJiI4/zwGFcnRSS+G92p9N62zDeQ0XHAOzbXiwGxgQsenUnEF6QEy32OoTtldYAWN7KyIsm+WHU4a3Er3pDksb/MUbhLwKoWE4hPWSKjHgu/Mr4qNAbGY4yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WvJ0FWw/KXjDE8k+7yMHm8c68cs2hLwnQ5NJzIuppdQ=;
+ b=fH9oMLkdA8a1LcjPdxfWEHliE3nrryJhPe65kfYZGcPivOJTGValbDP69ovHKgoMmuV7KA0Yk42sUGRx7VUikBipwF23GwlzK+37aRQWYVvF6Wr0OAJVzZn0bX1liydEUYsx9CmRudcd0AVdkpKU4DdYB87e3XWRVwYgKW/8Ajl9+SQjDLSfOvJ9l0jnytpZi3s9V6re64Yeg1Jm52jg1tLXhihNna7xx5EMI/6mGxpHRsIZTnVsnciBrI3YUFIAj9uG1xbzOpBQJYIrF9kYapm27EYYV7EhPZe10caQBXZYm6WAPBgR84DgxiRzZUBiWdQXJS04D+kN1nyyKpAU4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=wunner.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WvJ0FWw/KXjDE8k+7yMHm8c68cs2hLwnQ5NJzIuppdQ=;
+ b=ZkabI7XM8bG467txC+JYm89XVYFB+wjcLMxoCKqjQi/EglPY76IMz/oPDiahzZ4bdMUg8uxpaeoQsKqTeE4XDZuJo9PWwp+l5NIc5Hc0i0vYdQ9/Ho1pMtVQpSkKyJprkj6XGxIl/0X5GE5RX8ngRO3gKMO1RFF9WXzOyZvi/Y7mNdHNn0tOZyh0XdvTkLeMsqMxBonbjgvELSDIpaUOxsUcy8NCggckmxQGMK6jbqFpU1J6f6uOgdLQRVrLx1rTZ4E3SWGDXO+AWjbYzl0FXsPpBVBdiscxoiyJysL4YYPL4xnAbj3Mw0iPAn39z6GoTGR7nkevwAFna7o/kHdwog==
+Received: from BN0PR10CA0009.namprd10.prod.outlook.com (2603:10b6:408:143::6)
+ by CH2PR12MB4117.namprd12.prod.outlook.com (2603:10b6:610:ae::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Sun, 4 May
+ 2025 20:16:54 +0000
+Received: from BN3PEPF0000B06F.namprd21.prod.outlook.com
+ (2603:10b6:408:143:cafe::8e) by BN0PR10CA0009.outlook.office365.com
+ (2603:10b6:408:143::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.27 via Frontend Transport; Sun,
+ 4 May 2025 20:16:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BN3PEPF0000B06F.mail.protection.outlook.com (10.167.243.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.3 via Frontend Transport; Sun, 4 May 2025 20:16:53 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 4 May 2025
+ 13:16:44 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by drhqmail202.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 4 May
+ 2025 13:16:44 -0700
+Received: from [172.27.33.235] (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 4 May
+ 2025 13:16:41 -0700
+Message-ID: <61d92969-2da1-4845-8ca6-0e1e399148f4@nvidia.com>
+Date: Sun, 4 May 2025 23:16:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Fix missing update in pci_slot_unlock() after
+ locking changes
+To: Lukas Wunner <lukas@wunner.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, Keith Busch
+	<kbusch@kernel.org>, <linux-pci@vger.kernel.org>
+References: <1746376292-1827952-1-git-send-email-moshe@nvidia.com>
+ <aBeplBA5FLjjXktu@wunner.de>
+Content-Language: en-US
+From: Moshe Shemesh <moshe@nvidia.com>
+In-Reply-To: <aBeplBA5FLjjXktu@wunner.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06F:EE_|CH2PR12MB4117:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71a4abe3-5a64-4420-0051-08dd8b489c87
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UUpOWjVJOWppN05SM2xiNmhncFNpZkNnZDF3ZmdMSnlaUnI2cE8rWVlOU2Mv?=
+ =?utf-8?B?STI1SWFZWk1DSGtDYVFuS01zRFBRdE5MWUgyVUhLdFBvL3FldGhobWFKSVhn?=
+ =?utf-8?B?QTBjZ3RndUkwZDV1bzdCR1NqV2VQSDB1M3NsU1hhZ05ha3I1SlliNUI1N2c1?=
+ =?utf-8?B?MkVLSTFicXpNcHI4SHQwOHUrNFJ5cVVXUDBnamYvMW5xdkZCeitjRHpoWW1C?=
+ =?utf-8?B?cFh3aG1UY0VFSXJOYVc5c2VUcTFOMS82Skhmd08xb0ljZWx1b3hyTTFKcmhD?=
+ =?utf-8?B?eEc2dVNqUjBGcWdXY2tlcGZqbG50bjJ1T2VwaFZ5S3ZiMTYrMnBpUXYrSVk1?=
+ =?utf-8?B?eTdkb2wyR2lUeW53Y1hzRkNwTWwvM0dLL1lWdlVldTRQN3ZGMGVyZ3lzaklO?=
+ =?utf-8?B?ZnBIcWVDcXJMWXZySFlwVTRCS2tVSXB0U2hubTI2REYvbkNwSm42L0JEc2JR?=
+ =?utf-8?B?K28rTXVwSnJUWmkzUzlGbHFnbnQ1cW00MVhPZ1RtcGdNdWxPNjNmVTB5eGcw?=
+ =?utf-8?B?ZFg4TnFDdHlKT05xT2lHQUxwbWtQWG5jRlNhQ2xqaVNIQjYvSDJMTGx5S01u?=
+ =?utf-8?B?K05DY3VVK0dSL0h5aDNIY1JYUGhsOVRDMTFMWUdxSHBtVCt6dkF3QWdrRTNG?=
+ =?utf-8?B?ckM0RWZ5Ykpmak83SFZqbWcwSVlCZ1ZCWkh2dnVkM2h5STVDQk5tcXE2Y3Vx?=
+ =?utf-8?B?UTM3ZnE4OEU0dDM5d1U5V0FjKzFmMVlZOFdqZ0JrSndVTzFqV0k3WVVkNTJB?=
+ =?utf-8?B?Z1F5T1VZMG9SaEJkSGlKVWc1bnkyUUk2NityQ0FXdGtTSllGYmR5OUZ4THJl?=
+ =?utf-8?B?clBXc1dDYTBWaXdKZkttQ3pPRmQ3eHEva2hRM1lseEtKdzhIK0hrUEpTc200?=
+ =?utf-8?B?dktNV2N0dmliS0w2dHZnQXd4VC9DcDhnNWNFdHYrWWpvWVhrcjN6VFBQazFr?=
+ =?utf-8?B?dmNqMmtUczVOVmh3OEhxSkcvKytvMWhpQjlMWitLWTExRHBGT3Q5bVlzZENv?=
+ =?utf-8?B?aUVDaElxYzVUeTVFYTBVQ1l0Tk1CSlZtcEx5SDIzMC9GQmZkalgyWUk4VWFN?=
+ =?utf-8?B?YW5PdlRYbkFhcFk2OW05NzUyR1VVY2NTR1hTK3lGd01UdUJtdkpJTllWZXlm?=
+ =?utf-8?B?UWJtbGdsN2haWWttb08ySTZUdC9JQW5RTld4M3pvOUFpVHJXaDN4MWhrQkNr?=
+ =?utf-8?B?WHYwR04rSGIvSG9oKys5dkU3eVhhU3djZmdaRzlHK2ttSXNCelZkOUxlYito?=
+ =?utf-8?B?M0R6UVh0bnlMcjExMjl1N2hQWXZkTEJkTGpuM055cXQ5VWttRDNVWnpSSVJ5?=
+ =?utf-8?B?K3hwM050eDdWSXhOSDNPSndiUlB3RXAwYlhDZG91WVpnS3BjYytPUTZnZXIw?=
+ =?utf-8?B?REVyNzk0Vy9wZTg2ZGVqc0dOUGFFZmwwZzVMeXY4RFl6cHRMVzlEN2NsN1ky?=
+ =?utf-8?B?dlBFZEttVVpuN2ZUaUtwZG1LZHhuakZyUGovOFFSdlJSWm4vRVpmRkJLNFk1?=
+ =?utf-8?B?VUVmdlVLeWJGeWtyb2p0UWhMbVpOaE5wVmxpSzFVWW5xLzRGeDQvSHRDcXdF?=
+ =?utf-8?B?TGFCWGFaVUt5VmEyc1Q0R1B0c1R4alB4dk5rUFc2NE1nN1ozK0JvTHppZ3ZS?=
+ =?utf-8?B?c0tnNDlNRVVlZDlEb011ZGkwWGdPQXp2VW40R20zcm1SdUNCRmlpOG8rQ2M4?=
+ =?utf-8?B?MHJ5b25nM0daNitGWEJHNGNoazNCeE03b0h5cCs3YjU3SThRYmUvdFlGL1Zz?=
+ =?utf-8?B?dXUzYVBicTZpSW5aMUk3OUQ0Skwyb0Vvd20yQW9VY2JXeUV3QkVuYmwzSGJD?=
+ =?utf-8?B?RHdONVVCUE5aRWJoNUpTOWI3TW9GVmFwQllqVHI1eS9HazVLRVgzcHBicTBw?=
+ =?utf-8?B?VWJTWHZORVV1alp4UHJpRStpT3UyZnlOQURzWnB0djdEemh5czhXOThGYW95?=
+ =?utf-8?B?cW1XQUovUzNuMHlDN2l3d3V0UFRTZ0czekJqdkQ3dWVWSmJydG9jQmZvQ1BC?=
+ =?utf-8?B?LzN1Skp6L0d0amRMSnJpN2tTUmNCTkNvVmhYRmNKZlpLL3AxQ0Q0N0w4dFRt?=
+ =?utf-8?B?amVCNkVJcnhZdU1LWSt0aHhpczBSYUhmTlJOdz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2025 20:16:53.4581
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71a4abe3-5a64-4420-0051-08dd8b489c87
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B06F.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4117
 
-From: Richard Zhu <hongxing.zhu@nxp.com>
 
-[ Upstream commit f068ffdd034c93f0c768acdc87d4d2d7023c1379 ]
 
-The i.MX7D only has one PCIe controller, so controller_id should always be
-0. The previous code is incorrect although yielding the correct result.
+On 5/4/2025 8:53 PM, Lukas Wunner wrote:
+> 
+> On Sun, May 04, 2025 at 07:31:32PM +0300, Moshe Shemesh wrote:
+>> The cited patch updated pci_slot_lock(), pci_slot_trylock(),
+>> pci_bus_lock(), and pci_bus_trylock() recursive locking, and adjusted
+>> pci_bus_unlock() accordingly. However, it missed updating
+>> pci_slot_unlock(), which may lead to attempting to unlock the
+>> subordinate bridge's device lock twice.
+>>
+>> Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
+>> Signed-off-by: Moshe Shemesh <moshe@nvidia.com>
+> 
+> Ilpo already submitted an identical patch on April 30:
+> 
+> https://lore.kernel.org/r/20250430083526.4276-1-ilpo.jarvinen@linux.intel.com/
 
-Fix by removing "IMX7D" from the switch case branch.
-
-Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
-Link: https://lore.kernel.org/r/20241126075702.4099164-5-hongxing.zhu@nxp.com
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-[Because this switch case does more than just controller_id
- logic, move the "IMX7D" case label instead of removing it entirely.]
-Signed-off-by: Ryan Matthews <ryanmatthews@fastmail.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 20c8f2cba453..cedfbd425863 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1281,10 +1281,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
--	case IMX7D:
- 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
- 			imx6_pcie->controller_id = 1;
--
-+		fallthrough;
-+	case IMX7D:
- 		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
- 									    "pciephy");
- 		if (IS_ERR(imx6_pcie->pciephy_reset)) {
--- 
-2.47.2
-
+I missed it, thanks.
 
