@@ -1,106 +1,75 @@
-Return-Path: <linux-pci+bounces-27117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64025AA875C
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 17:44:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BABC6AA87E5
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 18:16:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BED733AC599
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 15:44:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D52B97AA72D
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 16:15:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3376D1A8F9E;
-	Sun,  4 May 2025 15:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B5D1DDA14;
+	Sun,  4 May 2025 16:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d/ttsc9l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLyGErdI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934691A23B1;
-	Sun,  4 May 2025 15:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BFF1D9A50;
+	Sun,  4 May 2025 16:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746373472; cv=none; b=gU3549DM6fiQgMVHuSLhKr8xgLvkrC8o/jbVVriXD8+d190lkVGRXc8MvH0cageXUPkbB5pxGbcHNqRishfoWCQe86e/NWnjlv0vO906V9Fs0rPaWOGzhvaQ7vDlTlOzeHw9+ippjKQPrL6iTbbJ6BRCQpEdw6BFp1WRxH5wU4I=
+	t=1746375307; cv=none; b=PAM84dKGH13ntOdjIbd+cUbz1+WZbtPq8NfxmWQh5K4JR8JVpR3f2HNHGnwNhsb1xwUzhgXPC5dN7dWRqguo1tA5pIkVrK9SKK79MWg8mH7nXtXiQVfH2mi75Lcx0zBRI9tPCnuh810+sSW1gDf/acBexDO2/Xihe1ZvwyqqbJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746373472; c=relaxed/simple;
-	bh=2XXDdPRHzLVwXzTES3eVASsN/SiaDfbjCVCtAAcX52I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G95pMR0nFQI6GwWqaTjVzkxbS4bsAfam7kkRLx87W0GgpMa6fYnu+EM0zie02GY9V/UFRxwevbrsgJiBN1tkDClu4swayEOFSru5gpj5km+ZtyZyzrY6nMQl0wTfu3LjFCGvIgeJC72yA4WVxPxA4RxB9nBy2cF0y1NzLwOJaRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d/ttsc9l; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=iZJH3
-	2h/nY81Ou36LPNReN8OUgsRTOeKJQp89h9i674=; b=d/ttsc9lYiDA8NMzyl89q
-	ySKoYflxeMqwgisxmNc/BVipBDxkrGD49MIigHPfvkhcYcRqidjIzTlqfziKFDTi
-	hWRKK60ylDV7sFwDoTu42gawnEq5mvCA8pLnGI8DG2bYlJa2wo708vtVp+s2tszI
-	7tfColQKtOGeE6Uoi17mG0=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAXIWtAixdo8td6Eg--.52915S2;
-	Sun, 04 May 2025 23:44:01 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: mahesh@linux.ibm.com,
-	bhelgaas@google.com
-Cc: oohall@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI/AER: Use pci_clear_and_set_config_dword() to simplify mask updates
-Date: Sun,  4 May 2025 23:43:53 +0800
-Message-Id: <20250504154353.180844-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1746375307; c=relaxed/simple;
+	bh=tKJYnlBaANGFuI7HcwwK/OhmNXjmKApd+I7pw+gyVw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LvQqsiV71xyJZbmA/iMFmAfO1eqSdXCT+cvUfH/XtMF3l31Bo5QVvOzeT/ksNixGeGhS81faXU0nOqWFCvtoq42JrRZ4dvrf8fPbYN6ePNR0L3W/ItPOwWwpYVvti6keJEUxQgzniNbrZbB0ff/wvl2Lgpdgu1F0N8byMTYIwHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLyGErdI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D416C4CEE7;
+	Sun,  4 May 2025 16:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746375307;
+	bh=tKJYnlBaANGFuI7HcwwK/OhmNXjmKApd+I7pw+gyVw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dLyGErdI64iZ2qo0TDMyYP6l7LKLLJbCCPc5WJPeTwEE39FUp9SrvyrQgWzJA+oX0
+	 gJPCG2v1hryobjrhnPeHLJ+gmg2IIFcr3IG7FJykAm8LPjQxqkB6Pz5GUrCmi+yvx9
+	 YNt3oIsZhx6piJxkdNh798RYblbGyMKMKpTa7sOa8uVYLwcBvXzavmA0fGUj5rSC8W
+	 M2ZJK8YrNwzI2akrYFr0hlfJXsmNzZkLQZvV5q7bWp1jzMnG9XnZaAPKwCKpOMdFha
+	 K0IKOdzHggl005qU37SX3dsUEERtn/1zxqfzNQ8OX7gEEqVwQtF7nQCYaanNm/iL9Q
+	 chs9iUJ2KSp5Q==
+Date: Sun, 4 May 2025 18:14:55 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Devres optimization with bound devices
+Message-ID: <aBeSf__SNkd7goGv@polis>
+References: <20250428140137.468709-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXIWtAixdo8td6Eg--.52915S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr1fCw1xCr4fGw4UWrWrAFb_yoW8GFyxpF
-	W3AFy5Gr48Jr1YvrWDXayktFn8Gas7t3y8KrW3Gas3ZF43ZFZrtryavr1UJ345tFZ0qr45
-	Xw1rKa18XF45taUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zt-e58UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwVDo2gXf9nrMQAAsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
 
-Replace the manual read-modify-write sequences in
-pci_aer_unmask_internal_errors()with pci_clear_and_set_config_dword().
-This function performs the read/write operations atomically and reduces
-code duplication.
+On Mon, Apr 28, 2025 at 04:00:26PM +0200, Danilo Krummrich wrote:
+> This patch series implements a direct accessor for the data stored within
+> a Devres container for cases where we can prove that we own a reference
+> to a Device<Bound> (i.e. a bound device) of the same device that was used
+> to create the corresponding Devres container.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/pcie/aer.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index a1cf8c7ef628..20d2d7419fa4 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -953,15 +953,12 @@ static bool find_source_device(struct pci_dev *parent,
- static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
--	u32 mask;
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
--	mask &= ~PCI_ERR_UNC_INTN;
--	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-+				       PCI_ERR_UNC_INTN, 0);
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
--	mask &= ~PCI_ERR_COR_INTERNAL;
--	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-+				       PCI_ERR_COR_INTERNAL, 0);
- }
- 
- static bool is_cxl_mem_dev(struct pci_dev *dev)
-
-base-commit: ca91b9500108d4cf083a635c2e11c884d5dd20ea
--- 
-2.25.1
-
+Applied to nova-next, thanks!
 
