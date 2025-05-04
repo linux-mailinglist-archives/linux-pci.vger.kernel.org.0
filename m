@@ -1,91 +1,93 @@
-Return-Path: <linux-pci+bounces-27121-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27122-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FB62AA891D
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 21:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E445DAA891F
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 21:15:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A132A3AA7F1
-	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 19:15:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 421A43AC090
+	for <lists+linux-pci@lfdr.de>; Sun,  4 May 2025 19:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D50261624E5;
-	Sun,  4 May 2025 19:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D3625760;
+	Sun,  4 May 2025 19:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="Kf+SHWhv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o9TZoKMl"
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="k7OaS/2H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HcQD4TKa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1B016DEB1;
-	Sun,  4 May 2025 19:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A9D14885B;
+	Sun,  4 May 2025 19:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746386114; cv=none; b=HrfN3EjXEsmgTGdIiJMW/qRgJXGn+PsGtX5pvwgBYjZccgxs+r0pWWOFD9hI8XV7CvrlPvyZUbnEv8htDXosJLKqV5FsWIj/srt2ItZ6iT4nB6tnYpwNHIz/lu1CCzBEGCWWgcCa+gJuWzi+PzB7SuBcEKs6xaJhhQeV+/EFSLk=
+	t=1746386125; cv=none; b=b8J0j4EOqGz6jN1h8xlomqDEZCF3Ev/Gx8mLRQMKdtSzFs3NEWo6eyl5+rgt4QgmOd9qBRvCK3MsJd4GqknG82uCCfHsgSp/yyjEOy46EdsgZCz+1n8B4uXVpraH+fqo6vLk9UHvryaxquIvNLei+F7RcJG8iaiDa1AqKXX43Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746386114; c=relaxed/simple;
-	bh=40e3EJNEbCr5pCROPNz3tCvrONTu+7+7tBbS/pxcfRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CpzJqZYCucTBzM2yfBYU8xSYlyKdf4sKqLhBff245G5DmN1DT/WDeYsUoB1Jk8bgN54k/L1v92E065/0+JMs3JqTM0EM0BqhcceNNOcso1Py5ShIL4MfbIS8H3CC/wdzLiaVPOBHLrCpgcnFwzEY2ND1OCky3+BJz1olcvXlVeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=Kf+SHWhv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=o9TZoKMl; arc=none smtp.client-ip=202.12.124.150
+	s=arc-20240116; t=1746386125; c=relaxed/simple;
+	bh=/C5bJUymKx813MtjkWgl3uiNYlLR2C4f11J8PGhl+VI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EYAFT6rjtrgyUjqqbnhfnx9uyBTVU5ETK8KVGLslFwVTGz2ZHxzUM+joyKbiR57Gp+TkowJ/OF9CjAeyDUUaau4a01pLzjHlWEKnxJt1hgI/offjpsyxLMQQm0/C397RyjD7eMEArplctR0dOgWh1dHt2yjnU0yrK59hm3542Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=k7OaS/2H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HcQD4TKa; arc=none smtp.client-ip=202.12.124.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
 Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 87BDB11401C9;
-	Sun,  4 May 2025 15:15:10 -0400 (EDT)
+	by mailfhigh.stl.internal (Postfix) with ESMTP id DD8C525401E5;
+	Sun,  4 May 2025 15:15:21 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Sun, 04 May 2025 15:15:10 -0400
+  by phl-compute-01.internal (MEProxy); Sun, 04 May 2025 15:15:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1746386110; x=1746472510; bh=FI
-	vTXFayAfBRloPSAWdyHb9FghKMruymHMlmt53XaHU=; b=Kf+SHWhvV5cbcRJ8Fe
-	Cv1/s03FDk6Z1VPyzvrHT7+9zFBsoTI3IlMsdkFixKRXy6qiBFZBsPrlyiVwAzOZ
-	49I6odfz1J9KUtnpDiCijs6VlGyH7JcRdegLCqaJi9PTnxVw+frigNRRVMwQro6q
-	+dIPJ3mNNfNTgd/7CW2oDjX2Zni6BNbMbjCOWtZJnSJYX5ooEJ2V6KSwXMiZgYFf
-	CVCNLVt0ZeaZXNwMOqeO4Zq2qyFFhI4yfRKE8TkIbTyjFpOsaUN58SWBV1owYlr/
-	x477sfIsEiIpnWR3TP7SeWYJJ789O3aIDDkmzH5QY3Jz3+JEu1iv/M+ytrdPljsv
-	5NpA==
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1746386121; x=
+	1746472521; bh=cJ7KTcTvYGV7WGgAKqJMyoj82lC9hAxixmEHAzO8t2c=; b=k
+	7OaS/2H7KUXnBXt8HkOXh93Vxc3/rLioErDI6mTamzml4sHJeon9X9LJMXdcmURn
+	Bw9Y7XbFaOxuh3GfUx+STFlmTY6bY+FNF4+82zWtY+A4d1Ztm/OGdbh44+kE4un+
+	NDgnaevr5iz86UJmkEZiIhSOrROPqr3XrlwTyZgWLVO7h31kKPSgDRRPxXOMj7PU
+	lXrUIEffbmGtwQhYve7u1UTmK/2xQaReySuwWp8CdVuNZRlg4J7Sjygkfr/50aQg
+	Fjz+ZtxLKFqymHub/2AVwhsr7wDDNHfDBJT9v7WVClpvQ34YAACWz81C/XTZ5Gy+
+	cGvGdP8Kxyyx7J5n7Wn1A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1746386110; x=1746472510; bh=FIvTXFayAfBRloPSAWdyHb9FghKM
-	ruymHMlmt53XaHU=; b=o9TZoKMl5LRCKGwg1d25gRJZew7iuwWinBHbhX7qWb88
-	8hLlIG8EG3blmHk3zgYVf1FrUnUw2Nqllf09gFG21x/lWbsu3/vWCYxdQn/QxmLR
-	OFaa9vU/P/F3hGIuoCukeh8l8HwQgWA36F7FRU013EpEBU9WcLwpY7lE6HtRNi5g
-	7+1maTKXIKYWGvAtXI6hasw2+MbduQAltlJiUYPYSDP9/cv0NM+84X3tbzHO47Tr
-	Rw7zCm0hMl6DdQ01OtQ/BRpdO/AeEvM+L+U743tQTfpVpIpu0BYJNFL42yf0DAJI
-	Ptnew1QAOQ5Z0tGA1SXO4uoHOprUQh1f2DupY4IeqQ==
-X-ME-Sender: <xms:vbwXaEGkTFvh4SKQhXkHdIlAPN6qEjq8qR043rxYn7m_rkDZC_GRSA>
-    <xme:vbwXaNVxFs1UqrroY3eOZZiME4JtkLdhXD3jjLYbXqYobJ3rYT1THkUHulhQ6h9Rg
-    qk3JGf19NvL3cjS-J4>
-X-ME-Received: <xmr:vbwXaOItkBrjghZD4HK_GbxYbH4tfX0V4hxhoqbsipRJNz5onjvuO30IuhdirM2ZUJUQdcitxSyyBa_DGrGyarsX71cdhoGCmI6_7lsX3-r0xBfkJv-LjiUfjVMZo98>
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1746386121; x=1746472521; bh=c
+	J7KTcTvYGV7WGgAKqJMyoj82lC9hAxixmEHAzO8t2c=; b=HcQD4TKaptnwb0B8t
+	prTI6ExpPaHJNWHcBjBraBqPNHYZzOvbuSyO7F5JtiLGLUDXYP/RfqyKnbtfxSpk
+	AeDMl62x2IX7VV8o0QUNkgAPHL9CcBkJHrCCsR1Q0c61IzVkFUacZf5vFLpPzoNn
+	pJ9r8fHCCKpg4mMcS/Dy+v1r8+PF8xsnpHi+WgoeLXmI7MG1dHKiA8rvkL8VdZRr
+	ciFJ4bqzjgyFCjOSImdBgEfKy8dCpJlAv3fA5Wni15lM+RHVmdY5zFsbPjYV5125
+	b/uy9dzZBK8iU1aIXWAgNJBrDzxllK5KVaM7XfPSx7UBEfOi6RNZw0ToBEQR9tud
+	ryMjQ==
+X-ME-Sender: <xms:ybwXaDqyTL_RlQgE07skQ1FmDWk-dhiYZdOY9K-JpJBM6bLnfC0GbQ>
+    <xme:ybwXaNoaNj1ctL-vsGZP-StEj07SIKu-O-t0bftw2NY0Wcyw6Ak8TUgwHOq7-_FvP
+    -cbzsmJ0aJn7wRDwZ8>
+X-ME-Received: <xmr:ybwXaAOjgXDKx-LoPERRD6_XJJbUFTXLPmIVGniaiC_ho-nVr5PeMCsfD-r8tbAfpQpGZd1El_ME5pG2XAHVFKiSxvaaevbWaKycUxS5GIQcpVeoY2YTMBlPNJiNnHQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeeltddvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdej
-    necuhfhrohhmpefthigrnhcuofgrthhthhgvfihsuceorhihrghnmhgrthhthhgvfihsse
-    hfrghsthhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephfefgfefgfelgfethfej
-    gffgkeettdeuhedtkeegtedujeevudffteejvdeguefgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprhihrghnmhgrthhthhgvfihssehfrghs
-    thhmrghilhdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhr
-    tghpthhtohephhhonhhggihinhhgrdiihhhusehngihprdgtohhmpdhrtghpthhtoheplh
-    drshhtrggthhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhtrggslhgv
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhigrnhhmrghtthhhvgifshes
-    fhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:vbwXaGEB2GVgQ03s4gQzBUZ9_RKTkzEBYp894v8XAGwYfsCSdZW0oA>
-    <xmx:vbwXaKWA5Q2pmEcafRQxGnyPAlT_MW3RFrXkZT9dzrUaUVwMS9cVaQ>
-    <xmx:vbwXaJOgTkuxlariw4NInLvNU6o55tw_OBW2IIKpf5ne9L9nUh4wIw>
-    <xmx:vbwXaB0C4KhC8mI1WvdZcudu1H9VbcArfL66UYTkOoncMc-FxSQieA>
-    <xmx:vrwXaCl3qq9pMJLZj0J1Py_NgDh_HAUqWyhsGSjk3_V8Q7iVM1H3TByh>
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
+    tdenucfhrhhomheptfihrghnucforghtthhhvgifshcuoehrhigrnhhmrghtthhhvgifsh
+    esfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpefhuedugfehfeefjedu
+    geeuveelvefggffgffeugeefvdfhjefhleeiueekjedtueenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrhigrnhhmrghtthhhvgifshesfhgr
+    shhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuth
+    dprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdp
+    rhgtphhtthhopehhohhnghigihhnghdriihhuhesnhigphdrtghomhdprhgtphhtthhope
+    hlrdhsthgrtghhsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehsthgrsghl
+    vgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghise
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhihrghnmhgrthhthhgvfihs
+    sehfrghsthhmrghilhdrtghomh
+X-ME-Proxy: <xmx:ybwXaG6GToXBcd_E0BEcC7v8z8Z6ZTR5kclMka_DvlJM9z4VDY0NFA>
+    <xmx:ybwXaC7V4dzsnCRts21wHBVts_pku9PmbMYdsGjdzzO2vCQcQYFibw>
+    <xmx:ybwXaOi0_dwIcmcKZxzc0ixDtodPsGoEdGl1Mfob_6ZS9mDoxzV4zQ>
+    <xmx:ybwXaE4IDHEUML7z7P800o01SyeOMA2MKicwzbQds9loDYt_BvCPRw>
+    <xmx:ybwXaPpnxGG4DXy0lhRLS2mmYzMA9ia6MRnF64IDWgu6vIQgmTJSdLCP>
 Feedback-ID: i179149b7:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 4 May 2025 15:15:09 -0400 (EDT)
+ 4 May 2025 15:15:21 -0400 (EDT)
 From: Ryan Matthews <ryanmatthews@fastmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Richard Zhu <hongxing.zhu@nxp.com>,
@@ -93,49 +95,52 @@ Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	stable@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Ryan Matthews <ryanmatthews@fastmail.com>
-Subject: [PATCH 6.6 0/2] PCI: imx6: Fix i.MX7D controller_id backport regression
-Date: Sun,  4 May 2025 15:13:54 -0400
-Message-ID: <20250504191356.17732-1-ryanmatthews@fastmail.com>
+Subject: [PATCH 6.6 1/2] Revert "PCI: imx6: Skip controller_id generation logic for i.MX7D"
+Date: Sun,  4 May 2025 15:13:55 -0400
+Message-ID: <20250504191356.17732-2-ryanmatthews@fastmail.com>
 X-Mailer: git-send-email 2.45.3
+In-Reply-To: <20250504191356.17732-1-ryanmatthews@fastmail.com>
+References: <20250504191356.17732-1-ryanmatthews@fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+This reverts commit 2a12efc567a270a155e3b886258297abd79cdea0 which is
+commit f068ffdd034c93f0c768acdc87d4d2d7023c1379 upstream.
 
-This fixes an i.Mx 7D SoC PCIe regression caused by a backport mistake.
+This is a backport mistake.
 
-The regression is broken PCIe initialization and for me a boot hang.
+Deleting "IMX7D" here skips more than just controller_id logic. It skips
+reset assignments too, which causes:
 
-I don't know how to organize this. I think a revert and redo best captures
-what's happening.
+ imx6q-pcie 33800000.pcie: PCIe PLL lock timeout
 
-To complicate things, it looks like the redo patch could also be applied to
-5.4, 5.10, 5.15, and 6.1. But those versions don't have the original
-backport commit. Version 6.12 matches master and needs no change.
+In my case, in addition to broken PCIe, kernel boot hangs entirely.
 
-One conflict resolution is needed to apply the redo patch back to versions
-6.1 -> 5.15 -> 5.10. One more resolution to apply back to -> 5.4. Patches
-against those other versions aren't included here.
+This isn't a problem upstream because before this, they moved the rest of
+the code out of the switch case.
 
- -- Ryan
+Signed-off-by: Ryan Matthews <ryanmatthews@fastmail.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Richard Zhu (1):
-  PCI: imx6: Skip controller_id generation logic for i.MX7D
-
-Ryan Matthews (1):
-  Revert "PCI: imx6: Skip controller_id generation logic for i.MX7D"
-
- drivers/pci/controller/dwc/pci-imx6.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-
-base-commit: 814637ca257f4faf57a73fd4e38888cce88b5911
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 822a750b064b..20c8f2cba453 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1281,6 +1281,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	switch (imx6_pcie->drvdata->variant) {
+ 	case IMX8MQ:
+ 	case IMX8MQ_EP:
++	case IMX7D:
+ 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+ 			imx6_pcie->controller_id = 1;
+ 
 -- 
 2.47.2
 
