@@ -1,60 +1,62 @@
-Return-Path: <linux-pci+bounces-27203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFDD9AAA161
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 00:46:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62A60AAA318
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:09:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF10F7A7C57
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 22:45:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65C897B2C61
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:05:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A28D2BD5B4;
-	Mon,  5 May 2025 22:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B27D2EC02B;
+	Mon,  5 May 2025 22:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9Kgy+FM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtcsRP45"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8392BD5AB;
-	Mon,  5 May 2025 22:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E532EC027;
+	Mon,  5 May 2025 22:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483588; cv=none; b=FX4vMbi7AHa9qmz34QnzxdYO/eqoAgZpAyMPleFfEQ4cUzT1V96qHJyqoTAjcWmMB7od0QId+KNgJrUrYEGzi5MmJ8nbpCdFubAhSIwEa9Lpq/pkdI3vBkU5kg+zqLUFQGROUcpRg0nBvzjGRDtOC9JdYl0NfmTNvwu8+9qssRw=
+	t=1746483777; cv=none; b=u1GcKv8j95rPcoNu9ubPxe2Js5bhkatZhSwsnHE6KpKeBW21FlOAVY/ZBx16gi/F6iRIYGPm5juV7fYOk0L/RGb/ZfUQAfmpEW1cz5Jnnt9ANmR/B3I369V5M/W55D5DtW7TMMIxNJn2GQBPXAlznaO2XnywejOqKvi+Qnfk7Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483588; c=relaxed/simple;
-	bh=T/HTdu5aMwCE9xVjkLAR9Aie5d4Wne/Va6+lOdvQZX8=;
+	s=arc-20240116; t=1746483777; c=relaxed/simple;
+	bh=xH85xPGyFvNEPB2DspZSW0SjwYfEHvEu14y6gt6Dme0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d0b4YU5cRtThOG8851e3Pajrc3KRimrqR8VxRCW2RPA2p/FPV+8XIxY500LyJSmdIwBApGglQQarJmy73GKbpzJrzXCZcdsO/zxKD3V1LKgEVdSXvRPd+2/5i+v0i8V0ZQ+ZEd6PPJslm0IGzE3PCKRl6gLsc1bGUSmAOGNGLbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9Kgy+FM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79ED4C4CEEF;
-	Mon,  5 May 2025 22:19:46 +0000 (UTC)
+	 MIME-Version:Content-Type; b=gwnCugBLSZZVVYO8hB3Lf7be5jGoOWvDlYvCdibtQsB0CBrusaJur/qpwi99brOo+Yl3Ni9N9Vv16Qq8n7Krj7rczhLbXcALBGtLyl/LvRl5jDUu3oPwr2BIlXRC9t110iRrO2JWJC+Yf40+x6BcV9eOjA6/w1D5ddN8NLAfjyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtcsRP45; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DB3C4CEE4;
+	Mon,  5 May 2025 22:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483587;
-	bh=T/HTdu5aMwCE9xVjkLAR9Aie5d4Wne/Va6+lOdvQZX8=;
+	s=k20201202; t=1746483776;
+	bh=xH85xPGyFvNEPB2DspZSW0SjwYfEHvEu14y6gt6Dme0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A9Kgy+FMWuxE07KLdDyejyyYQg25NPMoZW/eBMApAgnaAH+7E5YyDyn13/qJvo/bj
-	 sNEhBbNZQr8wvDCwGJ5pQlRzC+vwPTE40IthUeqIIHYMgk+fVZlvJoa77WLQPYDGsD
-	 Q9ueMA5xubcrC1NzblME7AQ5gJQAWSBier76HQDfjri+Cc+PlaRCRRuvha82Ab23Xx
-	 Upb+t5j/RCUQyWUp5ca1Kx7Ycc0v+bFQaoXmXciX+ldl7bgPECk8SNfdCF7wFEO/Nc
-	 Whtv78+DJPHbtWrWIVD/ZnbmkGWTwaaioeH56osiDvf3PRy0X1XN/9ensmtuDjQ0XR
-	 5qo1izdzXoHrA==
+	b=FtcsRP45tA5sebP/9W4bmUetxbYPf1dNimx2QDmE22/h1blTLoUtgGF8X4wk9ASNu
+	 1MWlfzDh2UzfZuuQvJ0almCYU4/603+TtFqFW5/18djk2vT2/xgQFJqYdWHVIctQqE
+	 p6MLPrmUa1Y0tX3MZumUiWnJ4HhYohc97DxXndHfeI8HkAmkg+xByOgrJBo85Z81Sc
+	 pVEX5KWLgLJT54jXHL6thYK3j6/2LnAE91zlJNgLw0Fp/1pfGwYlxrvAIaXDcb00O5
+	 aa2VxapiOUbuy6aYg76A1r14bvmrSWnwrpHE4+7zfIYVjMOLcnyT/giSF6hdP2OryO
+	 T4n7cK+xIPVIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Christian Bruel <christian.bruel@foss.st.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org,
 	kw@linux.com,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	dlemoal@kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 128/642] PCI: dwc: Use resource start as ioremap() input in dw_pcie_pme_turn_off()
-Date: Mon,  5 May 2025 18:05:44 -0400
-Message-Id: <20250505221419.2672473-128-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 213/642] PCI: endpoint: pci-epf-test: Fix double free that causes kernel to oops
+Date: Mon,  5 May 2025 18:07:09 -0400
+Message-Id: <20250505221419.2672473-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -64,47 +66,69 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Frank Li <Frank.Li@nxp.com>
+From: Christian Bruel <christian.bruel@foss.st.com>
 
-[ Upstream commit 8f4a489b370e6612700aa16b9e4373b2d85d7503 ]
+[ Upstream commit 934e9d137d937706004c325fa1474f9e3f1ba10a ]
 
-The msg_res region translates writes into PCIe Message TLPs. Previously we
-mapped this region using atu.cpu_addr, the input address programmed into
-the ATU.
+Fix a kernel oops found while testing the stm32_pcie Endpoint driver
+with handling of PERST# deassertion:
 
-"cpu_addr" is a misnomer because when a bus fabric translates addresses
-between the CPU and the ATU, the ATU input address is different from the
-CPU address.  A future patch will rename "cpu_addr" and correct the value
-to be the ATU input address instead of the CPU physical address.
+During EP initialization, pci_epf_test_alloc_space() allocates all BARs,
+which are further freed if epc_set_bar() fails (for instance, due to no
+free inbound window).
 
-Map the msg_res region before writing to it using the msg_res resource
-start, a CPU physical address.
+However, when pci_epc_set_bar() fails, the error path:
 
-Link: https://lore.kernel.org/r/20250315201548.858189-2-helgaas@kernel.org
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+  pci_epc_set_bar() ->
+    pci_epf_free_space()
+
+does not clear the previous assignment to epf_test->reg[bar].
+
+Then, if the host reboots, the PERST# deassertion restarts the BAR
+allocation sequence with the same allocation failure (no free inbound
+window), creating a double free situation since epf_test->reg[bar] was
+deallocated and is still non-NULL.
+
+Thus, make sure that pci_epf_alloc_space() and pci_epf_free_space()
+invocations are symmetric, and as such, set epf_test->reg[bar] to NULL
+when memory is freed.
+
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+Link: https://lore.kernel.org/r/20250124123043.96112-1-christian.bruel@foss.st.com
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ffaded8f2df7b..ae3fd2a5dbf85 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -908,7 +908,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 2409787cf56d9..bce3ae2c0f652 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -738,6 +738,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 		if (ret) {
+ 			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+ 					   PRIMARY_INTERFACE);
++			epf_test->reg[bar] = NULL;
+ 			dev_err(dev, "Failed to set BAR%d\n", bar);
+ 			if (bar == test_reg_bar)
+ 				return ret;
+@@ -929,6 +930,7 @@ static void pci_epf_test_free_space(struct pci_epf *epf)
  
--	mem = ioremap(atu.cpu_addr, pci->region_align);
-+	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
- 	if (!mem)
- 		return -ENOMEM;
+ 		pci_epf_free_space(epf, epf_test->reg[bar], bar,
+ 				   PRIMARY_INTERFACE);
++		epf_test->reg[bar] = NULL;
+ 	}
+ }
  
 -- 
 2.39.5
