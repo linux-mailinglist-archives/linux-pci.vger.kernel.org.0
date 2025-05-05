@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-27236-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27237-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 513A2AAAD37
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 04:31:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6AF6AAAD3B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 04:31:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 938DA3BCBDC
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 02:21:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C06F3BD3E8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 02:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C73730034E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1FA03CF323;
 	Mon,  5 May 2025 23:28:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHQSb+UR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFpUdF6u"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953493A80FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9772DA0EA;
 	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487042; cv=none; b=t/XpIFQxF7azmnpAA5IihSYJz/PNlrlh4V22h8uiGlhd0SBu9b0E4ivbf2lzXta34E3BrAiCqiGjr4VLj0rFPfCag9M/4zbT+QhObNNbG94rSGzoowdHHmzfwrDtFq33du72Hx4jbFPdkhPe2C4pjpKNAvR2zMihq8YpCkmCtBE=
+	t=1746487042; cv=none; b=j+LMLDmCTY5nU95MdBbo5oKfGtbmK3yqPghx9NE7qdngzW30WNLOdjPHk+3jNt7X5/2MV2Q22aZv3gVWGmAMcR98TMoT02NdJdcrDg615MpdVDnK5GXSCWmghnkOkPe9jRxnMYJMi9//wJ+r5JeJmHrYHjgWVcHF3u9xhVU3LP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746487042; c=relaxed/simple;
-	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dGfHopJNiK7y8vtbuZYugt/+c2GyiJxyl/+GwEEBnqvXlPR4+uosVSlh7HKgELRK8qudqbSsmFIR2PabhXjeyrz/KZqtln4Nd+fR2boP+/+ZYvvrSHFM6m7EQTlf1F9VpLI+VzUEFIORzhQjOOseCijBDsnENcMF0HAkrqTUfOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHQSb+UR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F69CC4CEF2;
+	 In-Reply-To:To:Cc; b=I8hjj6J+taOKrlCPYkR5845rC82QBArdIimfYUJf0uoNw6xhNBqvrtzc7/GXf9XrL7xfW7u+wRPLpGexcn7i6yMXfQMQf6tG5myQFVrNA+M7kS5UWmTwkMDvd9X+4c3G1WXA2+MMGaHdL1T1ni23iciy2N7DIj4CMB3ESOSj6fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFpUdF6u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 71740C4CEE4;
 	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746487041;
-	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oHQSb+UR+on+kuZusS9Yu74PTg3VBf6O9EhkFSwAscwWh/7IvbA4ztA4SH+cmg15t
-	 g8ZLwtjHsHzAuMWSc+jMIjyYKIYyXx95ktNZ0IwM15htJ9gUmIpY8xIdeTqtWbQ+i0
-	 1Rc/GewX1n1w6AAu6zCoWSrjjUhHu4qa3AEWChngqWzhwNrkeB+HLXnY+noq0CrOdG
-	 YIDEVys9BKVuFfWHeUe1MFPUcFmaXf3d/CsgfP3pysh86V0m+WFj7TiwpYMyEwGmeU
-	 dMBbGVNVfOS6siIpmAn3GnQU1aof0MlLCUErNNPNs5bOpyOpreDoVr26Ac8rZVD8/3
-	 MGI5QnhlPnPUg==
+	b=YFpUdF6uvuXHBNQroEBQGOXU42T9Ojja5dNWud17KGZGd70Hnp2+Kl+5j+jWzDkPP
+	 4G0wULQ2KcZ1DVzdk0oIYoihMgoQ/NUQC7OfqSBfVRZMm8eN7rm94aOY+jt74hGQH2
+	 3k4nt07VvGdfdNEIruU0y6hQQRu1HrSCdksbgbWzDcZ5F6G2MsGGZ+yYeXPbJmLeD0
+	 iSQbHYXJs3bqzH3pmcQfMC/+4uZUOCHiOadxEM8sOZ8if6JKYpDo0ES8Y8SzAoCwoZ
+	 L2ftLo8jxpmCDXHH5AL3Fhv2oAYdr6Kkzd2zV17r1uuvbHWTL6s9gjDhHEjQN7ZHXj
+	 qdj9V+OfND9xg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513CBC3ABBF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86DC3ABC2;
 	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 18:17:20 -0500
-Subject: [PATCH v5 1/3] irqdomain: Export irq_domain_free_irqs
+Date: Mon, 05 May 2025 18:17:21 -0500
+Subject: [PATCH v5 2/3] cpuidle: tegra: Export
+ tegra_cpuidle_pcie_irqs_in_use
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pci-tegra-module-v5-1-827aaac998ba@gmail.com>
+Message-Id: <20250505-pci-tegra-module-v5-2-827aaac998ba@gmail.com>
 References: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
 In-Reply-To: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,11 +72,11 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
  Aaron Kling <webgeek1234@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746487040; l=813;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746487040; l=805;
  i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=HMpL5ZC0u0zHUx7X6iaMy1A5L01kC5VZDDTCKB3qS7U=;
- b=LaAbT5EvNzNwAB4BC0Ck5T23zGZj4q9krSlQ7WSRYBQo5Edwt9whPV4JQW2SGuncIi8euA16N
- qsRIrfwehp3AWws1U7UZfrIqd+wtNHfvXlBn2AC/Ug9FpOzwewuTj6U
+ bh=VxJ9HgkNV4IxH20jYpaAA9e5Ei6kk4ytu1PVu0wpNxM=;
+ b=z0W8d1Q64bfmqnl3a4wP5TKAH7EjzkwLbmJxq1UHI5FFF3Kx7RAK2oAK5+8b1qLQQ4rTygQlv
+ XNqsbCcZzfqDKnx2o3KR3tU5gQmKhc8Zoqq3x8faYHwniL8tcdYJ7O4
 X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
  pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
 X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
@@ -85,26 +86,25 @@ Reply-To: webgeek1234@gmail.com
 
 From: Aaron Kling <webgeek1234@gmail.com>
 
-Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
-be built as a module.
+Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
+pci-tegra can be loaded as a module.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- kernel/irq/irqdomain.c | 1 +
+ drivers/cpuidle/cpuidle-tegra.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index ec6d8e72d980f604ded2bfa2143420e0e0095920..36cd79a8a2ce960b07b03c40067343ec8f632452 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1890,6 +1890,7 @@ void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
- 	irq_domain_free_irq_data(virq, nr_irqs);
- 	irq_free_descs(virq, nr_irqs);
+diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
+--- a/drivers/cpuidle/cpuidle-tegra.c
++++ b/drivers/cpuidle/cpuidle-tegra.c
+@@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
+ 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
+ 	tegra_cpuidle_disable_state(TEGRA_CC6);
  }
-+EXPORT_SYMBOL_GPL(irq_domain_free_irqs);
++EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
  
- static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq)
+ static void tegra_cpuidle_setup_tegra114_c7_state(void)
  {
 
 -- 
