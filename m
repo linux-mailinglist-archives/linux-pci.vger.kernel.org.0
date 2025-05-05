@@ -1,63 +1,66 @@
-Return-Path: <linux-pci+bounces-27218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54968AAA9C2
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:21:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30BB7AAAA10
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:28:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2398016C561
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:20:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 094771888479
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:25:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563812D37F9;
-	Mon,  5 May 2025 22:47:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FBF2DA824;
+	Mon,  5 May 2025 22:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udJm84e4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYDHKV1+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FAB2C2FA4;
-	Mon,  5 May 2025 22:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C4435F7DB;
+	Mon,  5 May 2025 22:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485116; cv=none; b=VwHKsAZOXnC7ywwx8eiVieWMn5cOUgStBFFT4Z/pWi2WZTJUCumdmJVYpdtxniy5oXxcx68mM8QjbHIeJ1GmtB6Re5MVgvSGRolJA6yhhuCJoZb2r2Z9lmPTQhg7+/OYw9blydbacXLFhNQroxGRSRttKf7hfNwfYyHDYRWggGo=
+	t=1746485247; cv=none; b=gXL3J/JiWVKtI1WIoJBHLGQwjGx/lp8AuTx+oumr1581S8oFoMnJEso5W9yzJSadT+3CJdGxu4B1jKqa9OGw3kWv8FgPsit7NJsP/+WQY0sui8CEUn/Hqtmdm8EprjdMRwreDgVOp5LnDK8fpngblSEa3mCHAcRDjZH36LRymIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485116; c=relaxed/simple;
-	bh=YjpmIakx+Puf8sOQYZdurC/r+cE9C29XfW9VvJmq6JQ=;
+	s=arc-20240116; t=1746485247; c=relaxed/simple;
+	bh=aSd5hagqSaRt+Za6bQY+Lb0/Aw8Qrfh70/kF32BdePM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W9BW4ae3s36SVtKOvUZgdEmmFTmHk1Wb0OY0cY/VWsVkBf8wTf6tG7WlJlnOjIFBy1uJW5ZYpYyk+ef61WhIdxt5zz8A+R0HsszlNMlQluDmfVWtV0Dhz1HQDCZY5jyvDF9X+TL4fwfSxATroPPh9gqeQERcjXwmhTd50bzR1Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udJm84e4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A37C4CEE4;
-	Mon,  5 May 2025 22:45:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=av43rCSZu9LXZtLRY2/uutf7DsOb+/NgkgchdQSuM7vhMWQ8VpD1DwLEi950BPhlFJdj6zaMC3iwceiGHPUt6RVe1BUgo1h0093z7cCIoxyry2kjHuGhVntjlkN3gILtQoHdzMsaT5y3fiRZcydr/2iBZrTerYuwFl6ZHXGZkHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYDHKV1+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1D3C4CEF4;
+	Mon,  5 May 2025 22:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485115;
-	bh=YjpmIakx+Puf8sOQYZdurC/r+cE9C29XfW9VvJmq6JQ=;
+	s=k20201202; t=1746485246;
+	bh=aSd5hagqSaRt+Za6bQY+Lb0/Aw8Qrfh70/kF32BdePM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=udJm84e4UjERqUkrY0m+2FU/hCqtRBAJHc4WoHBuLoUUH1niiyRNYk+/jDH+aMFYr
-	 T8ae4sFgWLQ/WN89RkpoHJi3uFp6al+lY1S6wRv6+PiPpleUTYtyjwDahSOIWF/gjj
-	 aoE4EHjyWsNFpTVxNZvtx7UrwOQDA67Kp5VCCY11reC+GBGjkogv4YNlxQhQEIw95w
-	 qTsL2CkM3CW/EaF/yKI0WYjTnIO8Oj9laddLbZiLln53tEUI2cCU/P8VTr7WLPTOow
-	 upvpifMaSWynqTPAGg2xetv7kdDoI23BA+nBpfb+wHJcYGmT3Ct95U9PaFkoKiteU4
-	 GppObzK0vlkwA==
+	b=YYDHKV1+iyeW7h5bmUSbBe2x0o7rnFYH45MbfUjocYhOFjYsAOUxEa1Jn6WxnlW3b
+	 75PCcJ1B17ijpbZHQD/ZZ5J6IAaVCJP8T/1MitY6n12Hh1TUklnQjlRp3QGASA6Qq1
+	 i9LcAiuv4DWbZv25EqyP7/Qakt1UMORNyO/TunHFu5xqTffwGTxBI6Y2yJmlpciHRo
+	 gU0wUIpWPLvWufxAJQ9ZCon5NuPFpahkwQ0F2Wx24rAdjlzdlK61fJ1STgYNVxEecQ
+	 M2ZuZP6YAo8jczI2ZPMBhrg6VXVqDP6SpeHwWn0pKOX0of/bwDFXuqwZ/g9B4XH5+h
+	 uCJ8DWd99g2Nw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christian Bruel <christian.bruel@foss.st.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+Cc: Stanimir Varbanov <svarbanov@suse.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
+	jim2101024@gmail.com,
+	nsaenz@kernel.org,
+	lpieralisi@kernel.org,
 	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
 	bhelgaas@google.com,
-	Frank.Li@nxp.com,
-	dlemoal@kernel.org,
-	jiangwang@kylinos.cn,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 169/486] PCI: endpoint: pci-epf-test: Fix double free that causes kernel to oops
-Date: Mon,  5 May 2025 18:34:05 -0400
-Message-Id: <20250505223922.2682012-169-sashal@kernel.org>
+	linux-pci@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 233/486] PCI: brcmstb: Add a softdep to MIP MSI-X driver
+Date: Mon,  5 May 2025 18:35:09 -0400
+Message-Id: <20250505223922.2682012-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -73,64 +76,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Christian Bruel <christian.bruel@foss.st.com>
+From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit 934e9d137d937706004c325fa1474f9e3f1ba10a ]
+[ Upstream commit 2294059118c550464dd8906286324d90c33b152b ]
 
-Fix a kernel oops found while testing the stm32_pcie Endpoint driver
-with handling of PERST# deassertion:
+Then the brcmstb PCIe driver and MIP MSI-X interrupt controller
+drivers are built as modules there could be a race in probing.
 
-During EP initialization, pci_epf_test_alloc_space() allocates all BARs,
-which are further freed if epc_set_bar() fails (for instance, due to no
-free inbound window).
+To avoid this, add a softdep to MIP driver to guarantee that
+MIP driver will be load first.
 
-However, when pci_epc_set_bar() fails, the error path:
-
-  pci_epc_set_bar() ->
-    pci_epf_free_space()
-
-does not clear the previous assignment to epf_test->reg[bar].
-
-Then, if the host reboots, the PERST# deassertion restarts the BAR
-allocation sequence with the same allocation failure (no free inbound
-window), creating a double free situation since epf_test->reg[bar] was
-deallocated and is still non-NULL.
-
-Thus, make sure that pci_epf_alloc_space() and pci_epf_free_space()
-invocations are symmetric, and as such, set epf_test->reg[bar] to NULL
-when memory is freed.
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Link: https://lore.kernel.org/r/20250124123043.96112-1-christian.bruel@foss.st.com
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+Link: https://lore.kernel.org/r/20250224083559.47645-5-svarbanov@suse.de
 [kwilczynski: commit log]
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 14b4c68ab4e1a..21aa3709e2577 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -703,6 +703,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
- 		if (ret) {
- 			pci_epf_free_space(epf, epf_test->reg[bar], bar,
- 					   PRIMARY_INTERFACE);
-+			epf_test->reg[bar] = NULL;
- 			dev_err(dev, "Failed to set BAR%d\n", bar);
- 			if (bar == test_reg_bar)
- 				return ret;
-@@ -878,6 +879,7 @@ static void pci_epf_test_free_space(struct pci_epf *epf)
- 
- 		pci_epf_free_space(epf, epf_test->reg[bar], bar,
- 				   PRIMARY_INTERFACE);
-+		epf_test->reg[bar] = NULL;
- 	}
- }
- 
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 32ffb0c14c3ca..81f085cebf627 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1947,3 +1947,4 @@ module_platform_driver(brcm_pcie_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
+ MODULE_AUTHOR("Broadcom");
++MODULE_SOFTDEP("pre: irq_bcm2712_mip");
 -- 
 2.39.5
 
