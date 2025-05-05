@@ -1,292 +1,267 @@
-Return-Path: <linux-pci+bounces-27198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27199-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6C3BAA9EAD
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 00:01:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACC10AA9F09
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 00:18:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8AD5189BD68
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 22:02:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7C813B8EA8
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 22:18:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8EB626A08C;
-	Mon,  5 May 2025 22:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E567627CCC9;
+	Mon,  5 May 2025 22:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgZd4LJd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttHZe6HJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB2613AF2;
-	Mon,  5 May 2025 22:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B284F27CCC2;
+	Mon,  5 May 2025 22:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746482515; cv=none; b=mLFfjXf08js+fNXBiLmtemau+mJTC91G+di9Lw8lYPGxUNzfUZZ1h2DxPoE/EFBiKCDLC3SeZVejqY437Zf3ucPIhYHfLEi8RWjGoTAqAL9l7dfKK1lT7Euup0QiKIFF824M7CPR2lG0eCA0iMux/iT+X67w5okKrIABMBPbWCY=
+	t=1746483288; cv=none; b=FkA7N95TnQIgdlHxaERpBpHu8Zw1hdW892TxuSE2j3QtvniP0uNMtdazDv1F1XCnlRE/a38eyu3US2TS5U0mwaaOcy1tT240xXi42mta8lE7kyB51i3Yvt6paTyh+CMyAJOa9U1v2e9Ngh45F1pRgKUbvG/FtsQrzm2fUB3MXqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746482515; c=relaxed/simple;
-	bh=55XDFxWGcB1qN4x9HaNj27mOmq2XQiQ5ukihNGYhR0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mHBV55ld95J1THVkWG4S+O6SQiVNMG7lAITknHIFszVgCdJYG0gsjVUUjzIzVtWlGj6yIhjPNox6DtsL3RdQHuvnlCMasJ5x5yN4Tpyko3mQJ6QAxR65oO3Dequ9dG28s3hsCQEH+NZnzv32Laq+5lWvj5lzG0QMCcBb1U/JWJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgZd4LJd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8DAC4CEE4;
-	Mon,  5 May 2025 22:01:54 +0000 (UTC)
+	s=arc-20240116; t=1746483288; c=relaxed/simple;
+	bh=B3IV8SySonOl1LXlQqByKfWy8EfZB/ZgTO5hbOZv3rs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DRsyKPJcgjOmKYgi/xuOEo299Xtm8EuQN/6vQPyX2oiFkwo5q4Dtyl2UGa6CYBGz0fBCsNaPOKbt5sOxpaAtj5VtHLC+76eLFXvdZGCzYDW9COvDSp+uQB9bRBT+7wGUUXSlVQboWYRkTD7imOgQRMP1aks0KWfAXDnoXKWBHyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttHZe6HJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCAAC4CEED;
+	Mon,  5 May 2025 22:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746482514;
-	bh=55XDFxWGcB1qN4x9HaNj27mOmq2XQiQ5ukihNGYhR0g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hgZd4LJddoPofodkRZPGO0Fsu8+KcluN2IQ8vEt2imAePBGrCLgGaHG6I9Sek3Ys0
-	 4cHEHwboIttCahfukNXC+sZfH8X8EsfIMkp3yVAsH9ZSDo8FfRNfS0gwUk2A4g4Dhu
-	 3JxiJarmSlUBwfPXil1zl0xQrpcLKuK3hSXKXIyecIS6mZ6e1HEsKzmZzXK3NPUazA
-	 xW5ss5TszJER/yTTzIO33XBhqJfuCu24Saiv4BRQX6bXY0q0Vo8VkjtWQcQGw/rqje
-	 9y+8zY8GrkHlJSKER4MPsUdISttlDMLu1eNGk8blOCkbr+q3kqvuMsO7Ao5jNkF6Ai
-	 yuOEKNDlOMNLw==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	s=k20201202; t=1746483288;
+	bh=B3IV8SySonOl1LXlQqByKfWy8EfZB/ZgTO5hbOZv3rs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ttHZe6HJJvD3KK30Dk6n1E4fmZi9kBrXFKdyMTwEzVL7aFzgSyqXNMIbUJR6REp2S
+	 AewbQ8FamcfnFdejG/ucunSkESgpqgcvqiDgB6IwaVAJbHkwX5SzM9DCnK12LWbGZr
+	 7PSrRdZ+N0ItOfltEyiKZ7JOZWphXTqyiYZr9fgy3NfRxICHDROTcEaOUfrkXj2LUT
+	 Zavo4IYpbN722E0SEfP7B6U1gtg0J8Q89EcHlV9LiNpufNBFAFb0DlWnQnYqr46HC7
+	 l9N8Qt2v7WjtnrL+X+WJKkF9OjRnzjlHZs1sthnktBVVLChDmt1/+CPiC1YcE5GFA/
+	 H1FpkDpQkPy6Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yi Liu <yi.l.liu@intel.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
-Date: Mon,  5 May 2025 17:01:37 -0500
-Message-ID: <20250505220139.2202164-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	Kevin Tian <kevin.tian@intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Zhangfei Gao <zhangfei.gao@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Sasha Levin <sashal@kernel.org>,
+	joro@8bytes.org,
+	will@kernel.org,
+	iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 016/642] iommufd: Extend IOMMU_GET_HW_INFO to report PASID capability
+Date: Mon,  5 May 2025 18:03:52 -0400
+Message-Id: <20250505221419.2672473-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-Convert the v3,v360epc-pci binding to DT schema format.
+From: Yi Liu <yi.l.liu@intel.com>
 
-Add "clocks" which was not documented and is required. Drop "syscon"
-which was documented, but is not used.
+[ Upstream commit 803f97298e7de9242eb677a1351dcafbbcc9117e ]
 
-Drop the "v3,v360epc-pci" compatible by itself as this device is only
-used on the Arm Integrator/AP and not likely going to be used anywhere
-else at this point.
+PASID usage requires PASID support in both device and IOMMU. Since the
+iommu drivers always enable the PASID capability for the device if it
+is supported, this extends the IOMMU_GET_HW_INFO to report the PASID
+capability to userspace. Also, enhances the selftest accordingly.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Link: https://patch.msgid.link/r/20250321180143.8468-5-yi.l.liu@intel.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org> #aarch64 platform
+Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v2:
-- Update MAINTAINERS
----
- .../bindings/pci/v3,v360epc-pci.yaml          | 100 ++++++++++++++++++
- .../bindings/pci/v3-v360epc-pci.txt           |  76 -------------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 101 insertions(+), 77 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+ drivers/iommu/iommufd/device.c | 34 +++++++++++++++++++++++++++++++++-
+ drivers/pci/ats.c              | 33 +++++++++++++++++++++++++++++++++
+ include/linux/pci-ats.h        |  3 +++
+ include/uapi/linux/iommufd.h   | 14 +++++++++++++-
+ 4 files changed, 82 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml b/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
-new file mode 100644
-index 000000000000..38cac88f17bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/v3,v360epc-pci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: V3 Semiconductor V360 EPC PCI bridge
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description:
-+  This bridge is found in the ARM Integrator/AP (Application Platform)
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: arm,integrator-ap-pci
-+      - const: v3,v360epc-pci
-+
-+  reg:
-+    items:
-+      - description: V3 host bridge controller
-+      - description: Configuration space
-+
-+  clocks:
-+    maxItems: 1
-+
-+  dma-ranges:
-+    maxItems: 2
-+    description:
-+      The inbound ranges must be aligned to a 1MB boundary, and may be 1MB, 2MB,
-+      4MB, 8MB, 16MB, 32MB, 64MB, 128MB, 256MB, 512MB, 1GB or 2GB in size. The
-+      memory should be marked as pre-fetchable.
-+
-+  interrupts:
-+    description: Bus Error IRQ
-+    maxItems: 1
-+
-+  ranges:
-+    description:
-+      The non-prefetchable and prefetchable memory windows must each be exactly
-+      256MB (0x10000000) in size. The prefetchable memory window must be
-+      immediately adjacent to the non-prefetchable memory window.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - dma-ranges
-+  - "#interrupt-cells"
-+  - interrupt-map
-+  - interrupt-map-mask
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pci@62000000 {
-+        compatible = "arm,integrator-ap-pci", "v3,v360epc-pci";
-+        #interrupt-cells = <1>;
-+        #size-cells = <2>;
-+        #address-cells = <3>;
-+        reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
-+        device_type = "pci";
-+        interrupt-parent = <&pic>;
-+        interrupts = <17>; /* Bus error IRQ */
-+        clocks = <&pciclk>;
-+        ranges = <0x01000000 0 0x00000000 0x60000000 0 0x01000000>,     /* 16 MiB @ LB 60000000 */
-+                 <0x02000000 0 0x40000000 0x40000000 0 0x10000000>,     /* 256 MiB @ LB 40000000 1:1 */
-+                 <0x42000000 0 0x50000000 0x50000000 0 0x10000000>;     /* 256 MiB @ LB 50000000 1:1 */
-+        dma-ranges = <0x02000000 0 0x20000000 0x20000000 0 0x20000000>, /* EBI: 512 MB @ LB 20000000 1:1 */
-+                     <0x02000000 0 0x80000000 0x80000000 0 0x40000000>; /* CM alias: 1GB @ LB 80000000 */
-+        interrupt-map-mask = <0xf800 0 0 0x7>;
-+        interrupt-map =
-+            /* IDSEL 9 */
-+            <0x4800 0 0 1 &pic 13>, /* INT A on slot 9 is irq 13 */
-+            <0x4800 0 0 2 &pic 14>, /* INT B on slot 9 is irq 14 */
-+            <0x4800 0 0 3 &pic 15>, /* INT C on slot 9 is irq 15 */
-+            <0x4800 0 0 4 &pic 16>, /* INT D on slot 9 is irq 16 */
-+            /* IDSEL 10 */
-+            <0x5000 0 0 1 &pic 14>, /* INT A on slot 10 is irq 14 */
-+            <0x5000 0 0 2 &pic 15>, /* INT B on slot 10 is irq 15 */
-+            <0x5000 0 0 3 &pic 16>, /* INT C on slot 10 is irq 16 */
-+            <0x5000 0 0 4 &pic 13>, /* INT D on slot 10 is irq 13 */
-+            /* IDSEL 11 */
-+            <0x5800 0 0 1 &pic 15>, /* INT A on slot 11 is irq 15 */
-+            <0x5800 0 0 2 &pic 16>, /* INT B on slot 11 is irq 16 */
-+            <0x5800 0 0 3 &pic 13>, /* INT C on slot 11 is irq 13 */
-+            <0x5800 0 0 4 &pic 14>, /* INT D on slot 11 is irq 14 */
-+            /* IDSEL 12 */
-+            <0x6000 0 0 1 &pic 16>, /* INT A on slot 12 is irq 16 */
-+            <0x6000 0 0 2 &pic 13>, /* INT B on slot 12 is irq 13 */
-+            <0x6000 0 0 3 &pic 14>, /* INT C on slot 12 is irq 14 */
-+            <0x6000 0 0 4 &pic 15>; /* INT D on slot 12 is irq 15 */
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
-deleted file mode 100644
-index 11063293f761..000000000000
---- a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
-+++ /dev/null
-@@ -1,76 +0,0 @@
--V3 Semiconductor V360 EPC PCI bridge
--
--This bridge is found in the ARM Integrator/AP (Application Platform)
--
--Required properties:
--- compatible: should be one of:
--  "v3,v360epc-pci"
--  "arm,integrator-ap-pci", "v3,v360epc-pci"
--- reg: should contain two register areas:
--  first the base address of the V3 host bridge controller, 64KB
--  second the configuration area register space, 16MB
--- interrupts: should contain a reference to the V3 error interrupt
--  as routed on the system.
--- bus-range: see pci.txt
--- ranges: this follows the standard PCI bindings in the IEEE Std
--  1275-1994 (see pci.txt) with the following restriction:
--  - The non-prefetchable and prefetchable memory windows must
--    each be exactly 256MB (0x10000000) in size.
--  - The prefetchable memory window must be immediately adjacent
--    to the non-prefetcable memory window
--- dma-ranges: three ranges for the inbound memory region. The ranges must
--  be aligned to a 1MB boundary, and may be 1MB, 2MB, 4MB, 8MB, 16MB, 32MB,
--  64MB, 128MB, 256MB, 512MB, 1GB or 2GB in size. The memory should be marked
--  as pre-fetchable. Two ranges are supported by the hardware.
--
--Integrator-specific required properties:
--- syscon: should contain a link to the syscon device node, since
--  on the Integrator, some registers in the syscon are required to
--  operate the V3 host bridge.
--
--Example:
--
--pci: pciv3@62000000 {
--	compatible = "arm,integrator-ap-pci", "v3,v360epc-pci";
--	#interrupt-cells = <1>;
--	#size-cells = <2>;
--	#address-cells = <3>;
--	reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
--	interrupt-parent = <&pic>;
--	interrupts = <17>; /* Bus error IRQ */
--	clocks = <&pciclk>;
--	bus-range = <0x00 0xff>;
--	ranges = 0x01000000 0 0x00000000 /* I/O space @00000000 */
--		0x60000000 0 0x01000000 /* 16 MiB @ LB 60000000 */
--		0x02000000 0 0x40000000 /* non-prefectable memory @40000000 */
--		0x40000000 0 0x10000000 /* 256 MiB @ LB 40000000 1:1 */
--		0x42000000 0 0x50000000 /* prefetchable memory @50000000 */
--		0x50000000 0 0x10000000>; /* 256 MiB @ LB 50000000 1:1 */
--	dma-ranges = <0x02000000 0 0x20000000 /* EBI memory space */
--		0x20000000 0 0x20000000 /* 512 MB @ LB 20000000 1:1 */
--		0x02000000 0 0x80000000 /* Core module alias memory */
--		0x80000000 0 0x40000000>; /* 1GB @ LB 80000000 */
--	interrupt-map-mask = <0xf800 0 0 0x7>;
--	interrupt-map = <
--	/* IDSEL 9 */
--	0x4800 0 0 1 &pic 13 /* INT A on slot 9 is irq 13 */
--	0x4800 0 0 2 &pic 14 /* INT B on slot 9 is irq 14 */
--	0x4800 0 0 3 &pic 15 /* INT C on slot 9 is irq 15 */
--	0x4800 0 0 4 &pic 16 /* INT D on slot 9 is irq 16 */
--	/* IDSEL 10 */
--	0x5000 0 0 1 &pic 14 /* INT A on slot 10 is irq 14 */
--	0x5000 0 0 2 &pic 15 /* INT B on slot 10 is irq 15 */
--	0x5000 0 0 3 &pic 16 /* INT C on slot 10 is irq 16 */
--	0x5000 0 0 4 &pic 13 /* INT D on slot 10 is irq 13 */
--	/* IDSEL 11 */
--	0x5800 0 0 1 &pic 15 /* INT A on slot 11 is irq 15 */
--	0x5800 0 0 2 &pic 16 /* INT B on slot 11 is irq 16 */
--	0x5800 0 0 3 &pic 13 /* INT C on slot 11 is irq 13 */
--	0x5800 0 0 4 &pic 14 /* INT D on slot 11 is irq 14 */
--	/* IDSEL 12 */
--	0x6000 0 0 1 &pic 16 /* INT A on slot 12 is irq 16 */
--	0x6000 0 0 2 &pic 13 /* INT B on slot 12 is irq 13 */
--	0x6000 0 0 3 &pic 14 /* INT C on slot 12 is irq 14 */
--	0x6000 0 0 4 &pic 15 /* INT D on slot 12 is irq 15 */
--	>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 63e804277519..e4a753c5b671 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18569,7 +18569,7 @@ PCI DRIVER FOR V3 SEMICONDUCTOR V360EPC
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
-+F:	Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
- F:	drivers/pci/controller/pci-v3-semi.c
+diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+index 3c7800d4ab622..66a6b7466820d 100644
+--- a/drivers/iommu/iommufd/device.c
++++ b/drivers/iommu/iommufd/device.c
+@@ -3,6 +3,7 @@
+  */
+ #include <linux/iommu.h>
+ #include <linux/iommufd.h>
++#include <linux/pci-ats.h>
+ #include <linux/slab.h>
+ #include <uapi/linux/iommufd.h>
  
- PCI DRIVER FOR XILINX VERSAL CPM
+@@ -1304,7 +1305,8 @@ int iommufd_get_hw_info(struct iommufd_ucmd *ucmd)
+ 	void *data;
+ 	int rc;
+ 
+-	if (cmd->flags || cmd->__reserved)
++	if (cmd->flags || cmd->__reserved[0] || cmd->__reserved[1] ||
++	    cmd->__reserved[2])
+ 		return -EOPNOTSUPP;
+ 
+ 	idev = iommufd_get_device(ucmd, cmd->dev_id);
+@@ -1361,6 +1363,36 @@ int iommufd_get_hw_info(struct iommufd_ucmd *ucmd)
+ 	if (device_iommu_capable(idev->dev, IOMMU_CAP_DIRTY_TRACKING))
+ 		cmd->out_capabilities |= IOMMU_HW_CAP_DIRTY_TRACKING;
+ 
++	cmd->out_max_pasid_log2 = 0;
++	/*
++	 * Currently, all iommu drivers enable PASID in the probe_device()
++	 * op if iommu and device supports it. So the max_pasids stored in
++	 * dev->iommu indicates both PASID support and enable status. A
++	 * non-zero dev->iommu->max_pasids means PASID is supported and
++	 * enabled. The iommufd only reports PASID capability to userspace
++	 * if it's enabled.
++	 */
++	if (idev->dev->iommu->max_pasids) {
++		cmd->out_max_pasid_log2 = ilog2(idev->dev->iommu->max_pasids);
++
++		if (dev_is_pci(idev->dev)) {
++			struct pci_dev *pdev = to_pci_dev(idev->dev);
++			int ctrl;
++
++			ctrl = pci_pasid_status(pdev);
++
++			WARN_ON_ONCE(ctrl < 0 ||
++				     !(ctrl & PCI_PASID_CTRL_ENABLE));
++
++			if (ctrl & PCI_PASID_CTRL_EXEC)
++				cmd->out_capabilities |=
++						IOMMU_HW_CAP_PCI_PASID_EXEC;
++			if (ctrl & PCI_PASID_CTRL_PRIV)
++				cmd->out_capabilities |=
++						IOMMU_HW_CAP_PCI_PASID_PRIV;
++		}
++	}
++
+ 	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
+ out_free:
+ 	kfree(data);
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index c6b266c772c81..ec6c8dbdc5e9c 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -538,4 +538,37 @@ int pci_max_pasids(struct pci_dev *pdev)
+ 	return (1 << FIELD_GET(PCI_PASID_CAP_WIDTH, supported));
+ }
+ EXPORT_SYMBOL_GPL(pci_max_pasids);
++
++/**
++ * pci_pasid_status - Check the PASID status
++ * @pdev: PCI device structure
++ *
++ * Returns a negative value when no PASID capability is present.
++ * Otherwise the value of the control register is returned.
++ * Status reported are:
++ *
++ * PCI_PASID_CTRL_ENABLE - PASID enabled
++ * PCI_PASID_CTRL_EXEC - Execute permission enabled
++ * PCI_PASID_CTRL_PRIV - Privileged mode enabled
++ */
++int pci_pasid_status(struct pci_dev *pdev)
++{
++	int pasid;
++	u16 ctrl;
++
++	if (pdev->is_virtfn)
++		pdev = pci_physfn(pdev);
++
++	pasid = pdev->pasid_cap;
++	if (!pasid)
++		return -EINVAL;
++
++	pci_read_config_word(pdev, pasid + PCI_PASID_CTRL, &ctrl);
++
++	ctrl &= PCI_PASID_CTRL_ENABLE | PCI_PASID_CTRL_EXEC |
++		PCI_PASID_CTRL_PRIV;
++
++	return ctrl;
++}
++EXPORT_SYMBOL_GPL(pci_pasid_status);
+ #endif /* CONFIG_PCI_PASID */
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index 0e8b74e63767a..75c6c86cf09dc 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -42,6 +42,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features);
+ void pci_disable_pasid(struct pci_dev *pdev);
+ int pci_pasid_features(struct pci_dev *pdev);
+ int pci_max_pasids(struct pci_dev *pdev);
++int pci_pasid_status(struct pci_dev *pdev);
+ #else /* CONFIG_PCI_PASID */
+ static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
+ { return -EINVAL; }
+@@ -50,6 +51,8 @@ static inline int pci_pasid_features(struct pci_dev *pdev)
+ { return -EINVAL; }
+ static inline int pci_max_pasids(struct pci_dev *pdev)
+ { return -EINVAL; }
++static inline int pci_pasid_status(struct pci_dev *pdev)
++{ return -EINVAL; }
+ #endif /* CONFIG_PCI_PASID */
+ 
+ #endif /* LINUX_PCI_ATS_H */
+diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+index 78747b24bd0fb..9495604e40b06 100644
+--- a/include/uapi/linux/iommufd.h
++++ b/include/uapi/linux/iommufd.h
+@@ -608,9 +608,17 @@ enum iommu_hw_info_type {
+  *                                   IOMMU_HWPT_GET_DIRTY_BITMAP
+  *                                   IOMMU_HWPT_SET_DIRTY_TRACKING
+  *
++ * @IOMMU_HW_CAP_PCI_PASID_EXEC: Execute Permission Supported, user ignores it
++ *                               when the struct
++ *                               iommu_hw_info::out_max_pasid_log2 is zero.
++ * @IOMMU_HW_CAP_PCI_PASID_PRIV: Privileged Mode Supported, user ignores it
++ *                               when the struct
++ *                               iommu_hw_info::out_max_pasid_log2 is zero.
+  */
+ enum iommufd_hw_capabilities {
+ 	IOMMU_HW_CAP_DIRTY_TRACKING = 1 << 0,
++	IOMMU_HW_CAP_PCI_PASID_EXEC = 1 << 1,
++	IOMMU_HW_CAP_PCI_PASID_PRIV = 1 << 2,
+ };
+ 
+ /**
+@@ -626,6 +634,9 @@ enum iommufd_hw_capabilities {
+  *                 iommu_hw_info_type.
+  * @out_capabilities: Output the generic iommu capability info type as defined
+  *                    in the enum iommu_hw_capabilities.
++ * @out_max_pasid_log2: Output the width of PASIDs. 0 means no PASID support.
++ *                      PCI devices turn to out_capabilities to check if the
++ *                      specific capabilities is supported or not.
+  * @__reserved: Must be 0
+  *
+  * Query an iommu type specific hardware information data from an iommu behind
+@@ -649,7 +660,8 @@ struct iommu_hw_info {
+ 	__u32 data_len;
+ 	__aligned_u64 data_uptr;
+ 	__u32 out_data_type;
+-	__u32 __reserved;
++	__u8 out_max_pasid_log2;
++	__u8 __reserved[3];
+ 	__aligned_u64 out_capabilities;
+ };
+ #define IOMMU_GET_HW_INFO _IO(IOMMUFD_TYPE, IOMMUFD_CMD_GET_HW_INFO)
 -- 
-2.47.2
+2.39.5
 
 
