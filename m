@@ -1,83 +1,106 @@
-Return-Path: <linux-pci+bounces-27138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15FC9AA8F6D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 11:23:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B393AA8F7C
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 11:27:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F5E17531F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 09:23:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 334461897BCE
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 09:27:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7699B1F5841;
-	Mon,  5 May 2025 09:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030071F8723;
+	Mon,  5 May 2025 09:26:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HmlQMGOs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvX+ZyN0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F751F5834;
-	Mon,  5 May 2025 09:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9491FC7F5;
+	Mon,  5 May 2025 09:26:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437010; cv=none; b=OfdLKsvO1lFZzN8i4gQqBFp23f4AtpTwhPl1e38xvxp7LRfyedaBkI4bLirYtxv/GsIMzzanzDBMJVQ6MLbYnMDs0FSbWHLECa+vx99UsX1g2n2U39BSqPIAvBKrPhrIFybesD0h/EG50Sa4X9drKiiVeLoMbxUg7I4yTKEQHbo=
+	t=1746437180; cv=none; b=hdbj0fnku8iE4bUBfrGQhsetbYI5h6VC4f/v6oaTp3BtnKlNknuG9C9ofaaqln7MttaOfoCoSYJl/cDZacPxA3fPDmna08Nyz9zsZ1DmrJj5usGD+yC1pFOK/lcMtHE3QOT2TwjR5t0qtTuf0WYsUyB6cmNaIpZOLTHSfotGxE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437010; c=relaxed/simple;
-	bh=C99pIPS/Le/Uc5zQTrHdjaFOVpjg2ZkEJmloZkMXtvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/bTDXyFX4b/7yiOwVAzR7nYcoCgHPC+9QFCgl9x7zD+k9uwq6RnVfDZzK7EkwaHwjjSC0aeAGl3WoTKEkLNJg81VHWGjCZNfuKOgK7e3Ba1AhaT69jL2Egi5TmqW/bRbMGM2+Do+Y15ahhEl1wQz3VeXuA+HVrEneEuj54sDF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HmlQMGOs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3ABC4CEE4;
-	Mon,  5 May 2025 09:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746437009;
-	bh=C99pIPS/Le/Uc5zQTrHdjaFOVpjg2ZkEJmloZkMXtvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HmlQMGOskHitUpXLg3pc7uXpmnlQTSlMEfkOnyD+/gghhkuc5IVmW4GmUZ4+AsUWx
-	 xL5lJ87B2bQ/4Dw3hMpluec6UrhMPBHAeBDW0rZv3PTM+QheZvNjA246lcMRwcrETm
-	 q2ZS+1VlRKVuhN/WJ+2PThWQgOZ7jRm2OELWABzg=
-Date: Mon, 5 May 2025 11:23:26 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ryan Matthews <ryanmatthews@fastmail.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>, stable@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 6.6 0/2] PCI: imx6: Fix i.MX7D controller_id backport
- regression
-Message-ID: <2025050512-dice-brick-529d@gregkh>
-References: <20250504191356.17732-1-ryanmatthews@fastmail.com>
+	s=arc-20240116; t=1746437180; c=relaxed/simple;
+	bh=DN3ERg8zsCk+ghA8/wCrbbGaeNolgYO/AVElrgswuPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mWG3v/b9pfyIG2Q4dqrJ1OPInBqfLOtvGllkEH8OsSju2MnqA4q2+wH9bE0+rly/xbXRL+sgETV4Q/s3mPEx1PEcGWoNP14WfF+IMxQsKFGoICQ0q7ZfP0oJWE9rtMU/4bd/cRzGf3WmThgI7q3NLDlrKAJbY8VE81EW2uPOy0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvX+ZyN0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB01C4CEE4;
+	Mon,  5 May 2025 09:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746437180;
+	bh=DN3ERg8zsCk+ghA8/wCrbbGaeNolgYO/AVElrgswuPE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VvX+ZyN0o0c8Rt/vlhx+eqQs7PTPAfcpzfaOC5POHtDY5EQLrSbqNxsM0ISNy/5kt
+	 UpcZCXGg/+SZ1i2OBxDec47MDXsty/6EdmSMt75EskDWSH+T5i0VbDGDlq3Q6bSrgc
+	 c8sH3aMWiO1AVrrZa4dxRHwvYPYWxvpigmh01BRmxtuLPeEqKc/lD4HYpZvjIskyMO
+	 SZu8rXFUgqlVFP8Crq7oG3ykIwWM6VHFnk7NZxa/YjfHRbyx6XNMgtjU8bbwjDYPxw
+	 z/tD+u/m/GdGsmJGz3E201GdNx2IXcBk4BynOmJhCzScLW76LOp+hSt2p0i1tWSB7W
+	 QYbtsITDux3Nw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Niklas Cassel <cassel@kernel.org>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH 0/4] PCI: dwc: Link Up IRQ fixes
+Date: Mon,  5 May 2025 11:26:04 +0200
+Message-ID: <20250505092603.286623-6-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250504191356.17732-1-ryanmatthews@fastmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1002; i=cassel@kernel.org; h=from:subject; bh=DN3ERg8zsCk+ghA8/wCrbbGaeNolgYO/AVElrgswuPE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIkWrRZjAVWLDy3O2UL1886j6ZLzj/Z04VClRySY/yqN 8U0BJp0lLIwiHExyIopsvj+cNlf3O0+5bjiHRuYOaxMIEMYuDgFYCJO0gz/Y74oSLR29a45kpQ/ re58xCPP95lhS2esK4vZcspS/mFEF8P/qqaA0p92906vXHWUzbF4y//g6bPfhlmsnHbY8fO9Fau mMQMA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 04, 2025 at 03:13:54PM -0400, Ryan Matthews wrote:
-> Hello,
-> 
-> This fixes an i.Mx 7D SoC PCIe regression caused by a backport mistake.
-> 
-> The regression is broken PCIe initialization and for me a boot hang.
-> 
-> I don't know how to organize this. I think a revert and redo best captures
-> what's happening.
-> 
-> To complicate things, it looks like the redo patch could also be applied to
-> 5.4, 5.10, 5.15, and 6.1. But those versions don't have the original
-> backport commit. Version 6.12 matches master and needs no change.
-> 
-> One conflict resolution is needed to apply the redo patch back to versions
-> 6.1 -> 5.15 -> 5.10. One more resolution to apply back to -> 5.4. Patches
-> against those other versions aren't included here.
+Hello there,
 
-If you want to submit patches for those branches, I'll gladly take them,
-thanks!
+Commit 8d3bf19f1b58 ("PCI: dwc: Don't wait for link up if driver can detect
+Link Up event") added support for DWC to not wait for link up before
+enumerating the bus. However, we cannot simply enumerate the bus after
+receiving a Link Up IRQ, we still need to wait PCIE_T_RRS_READY_MS time
+to allow a device to become ready after deasserting PERST. To avoid
+bringing back an conditional delay during probe, perform the wait in the
+threaded IRQ handler instead.
 
-greg k-h
+Please review.
+
+
+Kind regards,
+Niklas
+
+
+Niklas Cassel (4):
+  PCI: dw-rockchip: Do not enumerate bus before endpoint devices are
+    ready
+  PCI: qcom: Do not enumerate bus before endpoint devices are ready
+  PCI: dw-rockchip: Replace PERST sleep time with proper macro
+  PCI: qcom: Replace PERST sleep time with proper macro
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 3 ++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.49.0
+
 
