@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-27205-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27206-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 081B3AAA306
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:08:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0779EAAA2FB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:07:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE3BC3A5C14
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:07:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EDE3463A0F
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F4C02820BB;
-	Mon,  5 May 2025 22:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6142E2EC885;
+	Mon,  5 May 2025 22:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeSEtR51"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kumBR75k"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535E42820AA;
-	Mon,  5 May 2025 22:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391F2EC87E;
+	Mon,  5 May 2025 22:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483778; cv=none; b=rwxif/SehyrDbuIoeA0Xo1to7flLtBAagAK91cs8173JRm9XjBUJN4EneNzeuouQVPUyHAb7S+VemCxadgSpdDMW2RCPOXwguMFsPKP+Q+1S2+sLbcIxztVFVyEzmvOTtrHbmtj7Npyhnbx4ny8YDfZvrkZ3F2tPzjOvBQ6TO/4=
+	t=1746483780; cv=none; b=t7bFxjdm4IG6WeiaU8HYmuI3kxLHu0vvOUFUeHBVt6YMPzriJzRPU6HVM4zIEVjSndSzMhElf/eDjSQSVvc+v12l9sdIVKYQrssCiNicC8zhhfJCXaLp7Hqawl1hgfz7DgRJHkFUlGhXiN8KYGAjybJ4L3k4NJA6sZmLd355DV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483778; c=relaxed/simple;
-	bh=MxQF19+oKD8EyuR5LWtAXyY63Cq3zJVXy7arri/hE2k=;
+	s=arc-20240116; t=1746483780; c=relaxed/simple;
+	bh=/JP9CkKr1hl7Gb6uLBdRjMIuo5kAkP1G4k49v66SvGI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vEMia0zj4rHOeLiAKXJt9YISUDwVTu6pFsIA5deRrSf9d+bTc1DlanwNbqdPLAUYqeQLVfOosPtVMSPDbdlf8AoINJ1/uo7sd5+6w/qJoC44RreGKp42+2Z4XKjNdB8EXF+xIC8pikdT2ZInaoGRJ6REPfvAQaQAl4XRSy3a4/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeSEtR51; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CB4C4CEE4;
-	Mon,  5 May 2025 22:22:57 +0000 (UTC)
+	 MIME-Version:Content-Type; b=TpVgoY//tdkB+AoFixBPfRHRAno2n5XNy5PlmdWl4gCAGUdK0+xU5p5kIjz0SVEraUHjxoG3trOfsvmVObt4qH5qJwvdYQ9cJGwm+dzqCKdtnzuTIEkOvbbHPa1rIzH2pdbPam7JHqH3hz6p2peL+IES6ue6PBIDfMDg7ThJwR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kumBR75k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D3CC4CEE4;
+	Mon,  5 May 2025 22:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483778;
-	bh=MxQF19+oKD8EyuR5LWtAXyY63Cq3zJVXy7arri/hE2k=;
+	s=k20201202; t=1746483779;
+	bh=/JP9CkKr1hl7Gb6uLBdRjMIuo5kAkP1G4k49v66SvGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NeSEtR51upf1kf/UAEI1sSsPDHgXUVd13/kW0+c3vrIbIuqi/UbHo15UUdJDIKYp8
-	 HskUrJbbc5P3do5lpNO41hjK7DJP4Jq4greisu7vcyHrVj7fH+H9byHn35MN55haaL
-	 w5fGiNx11TeIdwetkimkKEIyYjUjfiCzGLfi3Rl4LzxrdpCtuk738WwJf66DVXGfs2
-	 gmoawrVi/b1s/CouTJLkzjeH4u929DJjgZcJLjXDrrufm+Q57Hqk5/Dxc//Mx0RN1B
-	 LCdYrpN0vfvis+vYzEdYMGfsyPPMeCrHG6oZ/U0FjV8Si1dEtGQBxyF8TH/zSSU/2Z
-	 X7eTf8qvqnc6A==
+	b=kumBR75kc3/jHWXDRycBwlOiyoHeGMbdJEJNVs7CuJMO2Fx8WFkG0cA2ogTknMcI8
+	 GkOZSr7dsBYMlA5tKV7jmt/V+8AK47J2XF8szmD2GTvmIwND1ZAGLvWoaFV3wHNrZm
+	 mvAD30coL3bXP/qIpdhlM9GgYtAU+PLKLlzGqygVhqZWfrcfTYeQxhfELD49wOquVF
+	 F6lrjM+W8ppD1k/lJN8IL2xekTvjRhyK0lt2kGNuqTSy1i3K5Hce+pclxXvgNB289M
+	 SZTVpjWp3ofgdI3icj3NdIMNKu3uYOfnbg0wQtQFIEkXJYk7LUfJXot32WaLd3IXEv
+	 JYryeM/8Vbddg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -49,11 +49,12 @@ Cc: Niklas Cassel <cassel@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	kw@linux.com,
-	gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 214/642] misc: pci_endpoint_test: Give disabled BARs a distinct error code
-Date: Mon,  5 May 2025 18:07:10 -0400
-Message-Id: <20250505221419.2672473-214-sashal@kernel.org>
+	shuah@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 215/642] selftests: pci_endpoint: Skip disabled BARs
+Date: Mon,  5 May 2025 18:07:11 -0400
+Message-Id: <20250505221419.2672473-215-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -71,58 +72,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Niklas Cassel <cassel@kernel.org>
 
-[ Upstream commit 7e80bbef1d697dbce7a39cfad0df770880fe3f29 ]
+[ Upstream commit af1451b6738ec7cf91f2914f53845424959ec4ee ]
 
-The current code returns -ENOMEM if test->bar[barno] is NULL.
+Currently BARs that have been disabled by the endpoint controller driver
+will result in a test FAIL.
 
-There can be two reasons why test->bar[barno] is NULL:
+Returning FAIL for a BAR that is disabled seems overly pessimistic.
 
-  1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
-  2) The BAR was skipped, because it is disabled by the endpoint.
+There are EPC that disables one or more BARs intentionally.
 
-Many PCI endpoint controller drivers will disable all BARs in their
-init function. A disabled BAR will have a size of 0.
+One reason for this is that there are certain EPCs that are hardwired to
+expose internal PCIe controller registers over a certain BAR, so the EPC
+driver disables such a BAR, such that the host will not overwrite random
+registers during testing.
 
-A PCI endpoint function driver will be able to enable any BAR that
-is not marked as BAR_RESERVED (which means that the BAR should not
-be touched by the EPF driver).
+Such a BAR will be disabled by the EPC driver's init function, and the
+BAR will be marked as BAR_RESERVED, such that it will be unavailable to
+endpoint function drivers.
 
-Thus, perform check if the size is 0, before checking if
-test->bar[barno] is NULL, such that we can return different errors.
-
-This will allow the selftests to return SKIP instead of FAIL for
-disabled BARs.
+Let's return FAIL only for BARs that are actually enabled and failed the
+test, and let's return skip for BARs that are not even enabled.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20250123120147.3603409-3-cassel@kernel.org
+Link: https://lore.kernel.org/r/20250123120147.3603409-4-cassel@kernel.org
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-[kwilczynski: commit log]
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/testing/selftests/pci_endpoint/pci_endpoint_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 4c0f37ad0281b..8a7e860c06812 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -295,11 +295,13 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 	struct pci_dev *pdev = test->pdev;
- 	int buf_size;
+diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+index c267b822c1081..576c590b277b1 100644
+--- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
++++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+@@ -65,6 +65,8 @@ TEST_F(pci_ep_bar, BAR_TEST)
+ 	int ret;
  
-+	bar_size = pci_resource_len(pdev, barno);
-+	if (!bar_size)
-+		return -ENODATA;
-+
- 	if (!test->bar[barno])
- 		return -ENOMEM;
- 
--	bar_size = pci_resource_len(pdev, barno);
--
- 	if (barno == test->test_reg_bar)
- 		bar_size = 0x4;
+ 	pci_ep_ioctl(PCITEST_BAR, variant->barno);
++	if (ret == -ENODATA)
++		SKIP(return, "BAR is disabled");
+ 	EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", variant->barno);
+ }
  
 -- 
 2.39.5
