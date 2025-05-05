@@ -1,130 +1,116 @@
-Return-Path: <linux-pci+bounces-27166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80A28AA96E5
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:05:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9B4AAA96E8
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:05:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F205167EDA
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 15:05:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E4DE3A7BA4
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 15:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D603325C70B;
-	Mon,  5 May 2025 15:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C267025D91E;
+	Mon,  5 May 2025 15:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOHEVnfE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBSqCk/x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B32D24E4AA;
-	Mon,  5 May 2025 15:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869FD25D1F5;
+	Mon,  5 May 2025 15:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457516; cv=none; b=UJeUZfTKwnp3YIhjbtd50piOgAU898gzoFZBWwN5Zt0P4bub/Qbuutb8KOCSnekvhOplGV1luA3oGaxQA507Ef5BLXB7nDy3zFjW0OYm43M5iCavnczYoTuAiacP2StIx9ES2jVkChAd4ABJ5mPWcwF81u5Cqm4blE/k0z4GKig=
+	t=1746457519; cv=none; b=fjPw9KNB6DpUelc2eekQyoE7rOmOa+PFqnv1936hZEi17naq0/O5ZubgCmPjn6A85pQf6STNJGMfMfHfkDj8QbVMRbmqFdM2aIC5Kqe/o++OC4J1uHjrBqkrMrRsfUJYM55pQfMtAR7eu76VVu6/mVCoLq4/PGwuF6qVVcQXNrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457516; c=relaxed/simple;
-	bh=5r5Ft/C84qteRJtIQxi4mDS5zxg0pnHRDS6lzVg5xpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QqVJBMgXrKLgw9ptmliLQ2PpcOqQYoNVztFh1WgnaYkfvkQGCG1NKq++Fl0bJami6wU1etV6mM71r+W9Mj9Fl65EX5xFt0a8hxckAWnippksVgXmSkcdDg1SGM/UiJOGjA545iEaXO4U3pWuZyNY5sgeKgn3gwVfaDtj6f12PKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOHEVnfE; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746457515; x=1777993515;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5r5Ft/C84qteRJtIQxi4mDS5zxg0pnHRDS6lzVg5xpw=;
-  b=JOHEVnfExOEc9yNUcqEOrDm1xn7CvMTk4xmiI0hFdAWkNDjD+t3pwlAh
-   KFZ91OrUCSjA3J/+4RJNBYxD1pKjaYKFXxnQ4+X2KHi0gIwrLovg7YehQ
-   LizU8Yqs/3rhWPXvuwN6osR/n4DuW1Syj4E9W9F2ahYniKLNsUiiiiGPI
-   BGTMnUFGhkHuzTr2jBul/Bs5b6IUL4VUC3LAgAkHYfWqSv1V3IkBsYN/r
-   aYOdfrmZbv3DhvgE9O4JmgVgrRsj0Iy8p+yWAXzwyAjR2CyyKiurQZFvG
-   PsbCngfi60WOykW/VyTLJJvzrG1ktwtboZuW3t0SHA66L50VGLFxVeP9f
-   g==;
-X-CSE-ConnectionGUID: s+n3FSa5QYu3KDHLI3bN5Q==
-X-CSE-MsgGUID: 9CajUO9lRCWo3QukKZD9bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="47333042"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="47333042"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:05:04 -0700
-X-CSE-ConnectionGUID: 7iQvoTw9QJaUQk0dLNvmzw==
-X-CSE-MsgGUID: Alh6lKy+RyWqXWE7NyIKBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="135255177"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.111.34]) ([10.125.111.34])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:05:03 -0700
-Message-ID: <1f315645-4afd-49f1-b259-bac8911dd67a@intel.com>
-Date: Mon, 5 May 2025 08:05:02 -0700
+	s=arc-20240116; t=1746457519; c=relaxed/simple;
+	bh=tVwY1GhHmqP4tNt6PF7NZ89nMFSpxg7uRS+j8Qo6g3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVnKoSZ4BP//ELveHHVzoAfQwcLXVmsaWre3hvzcF1wI6uCmBQA1CYIlmbEFTAXePVJQwKw+EKVwADfsQJhzGe/PiHyTNPg1ui9AnDNlreU+soTJcfTX6V89eAnC1ha2yr6yTeHh9sb3/5iiEIYzswTsobOJ7vKbeYe9IEwRhFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBSqCk/x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F76CC4CEE4;
+	Mon,  5 May 2025 15:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746457518;
+	bh=tVwY1GhHmqP4tNt6PF7NZ89nMFSpxg7uRS+j8Qo6g3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GBSqCk/xbHGCM6+NNMlpLQtOhHa+ERjy2QkOGRQzAhDpyDdOUa/ne7UZQ4uiH2bGy
+	 utwN7dvaElYocZWWZ8zV+ilIOEUxgzRxIYWDmAyZwGFBzppVTztXR2ITc7/LUHeVaD
+	 l8t58dkIeX9CikCl4ZG3QKczALeaRoEermE6CuDbOzrQ4HKmDj1iZ0sm/egm+N6XFR
+	 2ZagUpMpX52vB/uJ/qVM5cSMENXexwQ60phGkPFo5OGKJ3RyTCmFWi3RjWqZ94j+u1
+	 8s48ANOuF7cnPTaPjlyFVTKMGhFYvV9JmRJLZ482FwgaxRJO6Qa/cJWEc4cH3jxkQq
+	 TN1/EnXSDIdkg==
+Date: Mon, 5 May 2025 17:05:10 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: manivannan.sadhasivam@linaro.org
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, wilfred.mallawa@wdc.com
+Subject: Re: [PATCH v3 5/5] PCI: qcom: Add support for resetting the slot due
+ to link down event
+Message-ID: <aBjTpglI5_P2Q3Aa@ryzen>
+References: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
+ <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>, Moshe Shemesh <moshe@nvidia.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
- <dan.j.williams@intel.com>, Keith Busch <kbusch@kernel.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
 
+Hello Mani,
 
-
-On 5/5/25 4:54 AM, Ilpo Järvinen wrote:
-> The commit a4e772898f8b ("PCI: Add missing bridge lock to
-> pci_bus_lock()") made the lock function to call depend on
-> dev->subordinate but left pci_slot_unlock() unmodified creating locking
-> asymmetry compared with pci_slot_lock().
-> 
-> Because of the asymmetric lock handling, the same bridge device is
-> unlocked twice. First pci_bus_unlock() unlocks bus->self and then
-> pci_slot_unlock() will unconditionally unlock the same bridge device.
-> 
-> Move pci_dev_unlock() inside an else branch to match the logic in
-> pci_slot_lock().
-> 
-> Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: <stable@vger.kernel.org>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> 
-> v2:
-> - Improve changelog (Lukas)
-> - Added Cc stable
-> 
->  drivers/pci/pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24..26507aa906d7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5542,7 +5542,8 @@ static void pci_slot_unlock(struct pci_slot *slot)
->  			continue;
->  		if (dev->subordinate)
->  			pci_bus_unlock(dev->subordinate);
-> -		pci_dev_unlock(dev);
-> +		else
-> +			pci_dev_unlock(dev);
->  	}
->  }
+On Thu, Apr 17, 2025 at 10:46:31PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> @@ -1571,6 +1652,9 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+>  		pci_unlock_rescan_remove();
 >  
-> 
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+>  		qcom_pcie_icc_opp_update(pcie);
+> +	} else if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+> +		dev_dbg(dev, "Received Link down event\n");
+> +		pci_host_handle_link_down(pp->bridge);
+>  	} else {
+>  		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
+>  			      status);
 
+From debugging an unrelated problem, I noticed that dw-rockchip can
+sometimes have both "link up" bit and "hot reset or link down" bit set
+at the same time, when reading the status register.
+
+Perhaps the link went down very quickly and then was established again
+by the time the threaded IRQ handler gets to run.
+
+Your code seems to do an if + else if.
+
+Without knowing how the events work for your platforms, I would guess
+that it should also be possible to have multiple events set.
+
+
+In you code, if both LINK UP and hot reset/link down are set,
+I would assume that you driver will not do the right thing.
+
+Perhaps you want to swap the order? So that link down is handled first,
+and then link up is handled. (If you convert to "if + if "instead of
+"if + else if" that is.)
+
+
+Kind regards,
+Niklas
 
