@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-27180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 755C3AA9A91
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 19:31:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 392AEAA9A92
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 19:31:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA0C43A5CD7
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:30:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78F2B3A9C22
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:31:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9D426C390;
-	Mon,  5 May 2025 17:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9300526D4C8;
+	Mon,  5 May 2025 17:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnVW0EaO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu+4aZca"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE4126B978
-	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 17:31:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E87D26D4C3
+	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 17:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746466270; cv=none; b=ufbCunIyx3aEgAOEjo+OP5s8MkPbCM/V0C49Z5zjCFR7aebwaRqcabm/8NDGbtUVULz7qzTw1uaczYsfCz049ZfZ0VRiBQhSR6wDOZTbCKG/1pTW2lCEtBBpLG6zhbK7qCKTP1ZSXhrxsmCnDuYtPkGUhuN1RkPFNqUSPHm4pcg=
+	t=1746466272; cv=none; b=ZGqin4bmegjTrUzzXgjPjYKjMHIeyZqcpwtCFle/s14CxKdlT5osfV4nszOiX9gZ5tHV6ylZvUzoioNttUkRkPGvczTrS4egBsFNRKJ3TCfzmdQ0yQSpAt+BgzMCToOcxSvT/zIEp8xvG9NdXrBG6BXJ7Cxtt31Afutjhz1SY5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746466270; c=relaxed/simple;
-	bh=mUop/LB2PyEZxafvDtzmC6J52m3TFkDR8pVKOV0YheE=;
+	s=arc-20240116; t=1746466272; c=relaxed/simple;
+	bh=zi41LVtYl/FGXAoXJPYC/8qIhjG0UClIdjZnL2Ga1wc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=T5htMsCuwhWW0xV3eYtw78TRl1o2HWKXp8Bfa2ZvzqPkPjPNhcWSmhWPGTuLaDMLzCiKlt5/Zd6HWCC8XFiwmPry4vaWnkkhqyywYnLNpxlqd5Dwu0dxcKetlPS+1ECdKttgpUCUwOrD8YB2jZ9i2/EZsHXm9XZV7j4chXdnioc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnVW0EaO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4196DC4CEEF;
-	Mon,  5 May 2025 17:31:09 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Bc9vK4BvgvLEoXNjONaQOJoRVIBNMWvo1dllh8Pw8ObHNtSXMgrUlYqsPm7zIZKL3uXSCBh35kc6QnoJp+nQx785mbmNAaYrNc/U1AAphXUaTAjSnYrU7HLjcaWNOOpozt8abEeP2QfafqWjXnRYxDlOHdPReMn9SDWyIZdG3ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu+4aZca; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4652C4CEE4;
+	Mon,  5 May 2025 17:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746466269;
-	bh=mUop/LB2PyEZxafvDtzmC6J52m3TFkDR8pVKOV0YheE=;
+	s=k20201202; t=1746466271;
+	bh=zi41LVtYl/FGXAoXJPYC/8qIhjG0UClIdjZnL2Ga1wc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GnVW0EaOxB3kCS6GyN+V2URPftjGt89mGxP8R+X72q0UEaOOkwMEi7e2M/RKU7zWJ
-	 QrhfKbvJQtsWhUVmaz1V3lJO9XDj9yiRAwq3VQutejNtMhP77MDSVpUlLprUeOwB5O
-	 fGIiE/7rgCemrCAaKMlETBUQAPgnP3mjSNdAuw6iVt1/1MSBiW7RR5VyuEW6Yoilq4
-	 oc/ox3jZLDZYJS9/AgGuzE+bmZAXKdFYmnmGR2GceF+qHuT9LfZlfqprsTh3sT4e0Y
-	 EGM0AchSfUE3orbAi90SH08BiVW5j/1kdIg9LUwAPPRptaL0uE3J6VSGY951ygg1Ih
-	 WK0fpBvzywhGQ==
-Date: Mon, 5 May 2025 12:31:07 -0500
+	b=cu+4aZcao5H5JiwMrGxJEn1sJ3vuNC2radPmXw+FagY1dfWrIVLf6yAvaGoEGmXsH
+	 7M9Lqf3qymrCwboqGLhc8QNv+EnR7cqamq+Vo6a8OCH839CUu+JsHavErRyYN2k0kJ
+	 x2Hnkd9C77Ahkt3p4pHtjkgwV9Rp6v11fCQSkOkkxRspamo6nJhvOLN+4OQkImgcJw
+	 lvwYpuo0m1ckNAhsb74LnP4Qt63bwQfksmSwUU3zfYhqTCU9uPq/yQwqsQFpkxT9sW
+	 M/NhuhbR+5MsI8c6Nc7sthUfxDH3Cbxa9lxCc09cf9iLcHIEdEjF5pt3Kuz6tZXlmC
+	 AJG8Gj3t+pNTA==
+Date: Mon, 5 May 2025 12:31:10 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Szymon Durawa <szymon.durawa@linux.intel.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
@@ -49,8 +49,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
 	Nirmal Patel <nirmal.patel@linux.intel.com>,
 	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Subject: Re: [PATCH v3 7/8] PCI: vmd: Add support for second rootbus under VMD
-Message-ID: <20250505173107.GA983255@bhelgaas>
+Subject: Re: [PATCH v3 8/8] PCI: vmd: Add workaround for bus number hardwired
+ to fixed non-zero value
+Message-ID: <20250505173110.GA949447@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,78 +60,115 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241122085215.424736-8-szymon.durawa@linux.intel.com>
+In-Reply-To: <20241122085215.424736-9-szymon.durawa@linux.intel.com>
 
-On Fri, Nov 22, 2024 at 09:52:14AM +0100, Szymon Durawa wrote:
-> Starting from Intel Arrow Lake VMD enhancement introduces second rootbus
-> support with fixed root bus number (0x80). It means that all 3 MMIO BARs
-> exposed by VMD are shared now between both buses (current BUS0 and
-> new BUS1).
+On Fri, Nov 22, 2024 at 09:52:15AM +0100, Szymon Durawa wrote:
+> VMD BUS1 rootbus primary number is 0x80 and pci_scan_bridge_extend()
+> detects that primary bus number doesn't match the bus it's sitting on.
+> As a result primary  rootbus number is deconfigured in the first pass
+> of pci_scan_bridge() to be re-assigned to 0x0 in the second pass.
+
+Every bus has a bus number, but when we're talking about the bus
+itself, there's only one bus number, so it is not a *primary* number.
+
+"Primary" and "secondary" only apply in the context of a bridge
+because it's connected to two buses and we need to distinguish them.
+
+A root bus is created by a host bridge (in this case, a VMD bridge),
+and the root bus number is determined by the host bridge.  It sounds
+like the bus number of the VMD BUS1 root bus is fixed in hardware to
+0x80.
+
+I think what you mean is something like:
+
+  The VMD BUS1 root bus number is fixed in hardware to 0x80, but after
+  reset, the default Primary Bus Number of Root Ports on BUS1 is 0x00.
+
+"Primary bus number doesn't match the bus it's sitting on" is a
+bit ambiguous because a bus is not a device and a bus does not "sit on
+a bus."  A Root Port *does* sit on a bus.
+
+The struct pci_bus.primary member is misleading and probably
+contributes to confusion here.
+
+s/rootbus/root bus/ throughout
+s/rootport/root port/ throughout
+
+s/primary  /primary / (spurious double space)
+
+> To avoid bus number reconfiguration, BUS1 number has to be the same
+> as BUS1 primary number.
 > 
-> Add new BUS1 enumeration and divide MMIO space to be shared between
-> both rootbuses. Due to enumeration issues with rootbus hardwired to a
-> fixed non-zero value, this patch will work with a workaround proposed
-> in next patch. Without workaround user won't see attached devices for BUS1
-> rootbus.
-
-s/rootbus/root bus/
-
 > Suggested-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 > Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 > Signed-off-by: Szymon Durawa <szymon.durawa@linux.intel.com>
 > ---
->  drivers/pci/controller/vmd.c | 208 ++++++++++++++++++++++++++++++-----
->  1 file changed, 180 insertions(+), 28 deletions(-)
+>  drivers/pci/controller/vmd.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 6d8397b5ebee..6cd14c28fd4e 100755
+> index 6cd14c28fd4e..3b74cb8dd023 100755
 > --- a/drivers/pci/controller/vmd.c
 > +++ b/drivers/pci/controller/vmd.c
-> @@ -26,6 +26,7 @@
->  #define VMD_RESTRICT_0_BUS_START 0
->  #define VMD_RESTRICT_1_BUS_START 128
->  #define VMD_RESTRICT_2_BUS_START 224
-> +#define VMD_RESTRICT_3_BUS_START 225
+> @@ -421,8 +421,22 @@ static void vmd_remove_irq_domain(struct vmd_dev *vmd)
+>  static void __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+>  				  unsigned int devfn, int reg, int len)
+>  {
+> -	unsigned int busnr_ecam = bus->number - vmd->busn_start[VMD_BUS_0];
+> -	u32 offset = PCIE_ECAM_OFFSET(busnr_ecam, devfn, reg);
+> +	unsigned char bus_number;
+> +	unsigned int busnr_ecam;
+> +	u32 offset;
+> +
+> +	/*
+> +	 * VMD workaraund: for BUS1, bus->number is set to VMD_PRIMARY_BUS1
+> +	 * (see comment under vmd_create_bus() for BUS1) but original value
+> +	 * is 225 which is stored in vmd->busn_start[VMD_BUS_1].
 
-You're just following the pattern here, which makes sense.  But these
-are apparently bus numbers, which are typically written in hex, so it
-would be nice to convert them all so we don't have to convert.
+s/workaraund/workaround/
 
->  #define PCI_REG_VMCAP		0x40
->  #define BUS_RESTRICT_CAP(vmcap)	(vmcap & 0x1)
-> @@ -38,15 +39,33 @@
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
+There is no comment in vmd_create_bus().
+
+Another case of bus numbers in decimal (225,
+VMD_RESTRICT_3_BUS_START), but we're comparing with VMD_PRIMARY_BUS1
+(0x80).  Needlessly confusing.
+
+> +	if (vmd->bus1_rootbus && bus->number == VMD_PRIMARY_BUS1)
+> +		bus_number = vmd->busn_start[VMD_BUS_1];
+> +	else
+> +		bus_number = bus->number;
+> +
+> +	busnr_ecam = bus_number - vmd->busn_start[VMD_BUS_0];
+> +	offset = PCIE_ECAM_OFFSET(busnr_ecam, devfn, reg);
 >  
-> +#define VMD_PRIMARY_BUS0 0x00
-> +#define VMD_PRIMARY_BUS1 0x80
+>  	if (offset + len >= resource_size(&vmd->dev->resource[VMD_CFGBAR]))
+>  		return NULL;
+> @@ -1170,6 +1184,18 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  		 */
+>  		vmd->bus[VMD_BUS_1]->primary = VMD_PRIMARY_BUS1;
+>  
+> +		/*
+> +		 * This is a workaround for pci_scan_bridge_extend() code.
+> +		 * It detects that non-zero (0x80) primary bus number doesn't
+> +		 * match the bus it's sitting on. As a result rootbus number is
+> +		 * deconfigured in the first pass of pci_scan_bridge() to be
+> +		 * re-assigned to 0x0 in the second pass.
+> +		 * Update vmd->bus[VMD_BUS_1]->number and
+> +		 * vmd->bus[VMD_BUS_1]->primary to the same value, which
+> +		 * bypasses bus number reconfiguration.
 
-The above are bus numbers; the below are register offsets.  Would be
-nice to separate them with a blank line since they are semantically
-different.
+If you can include dmesg snippets in the commit log showing how
+pci_scan_bridge_extend() and pci_scan_bridge() deal with this, I think
+it will help understand this.  There might be some improvement we can
+make in pci_scan_bridge_extend() (someday, not today).
 
-I don't understand the difference between VMD_RESTRICT_3_BUS_START and
-VMD_PRIMARY_BUS1.  Maybe one is the default Primary Bus Number of the
-Root Ports after a reset?
-
-> +#define VMD_BUSRANGE0 0xc8
-> +#define VMD_BUSRANGE1 0xcc
-> +#define VMD_MEMBAR1_OFFSET 0xd0
-> +#define VMD_MEMBAR2_OFFSET1 0xd8
-> +#define VMD_MEMBAR2_OFFSET2 0xdc
-> +#define VMD_BUS_END(busr) ((busr >> 8) & 0xff)
-> +#define VMD_BUS_START(busr) (busr & 0x00ff)
-
-Would be nice if VMD_BUS_END/VMD_BUS_START were defined with
-GENMASK(); then we could use FIELD_GET() below to extract them.
-
-Nit: indent these bus numbers and offsets so the values line up like
-the other #defines.
-
-> +	 * Starting from Intel Arrow Lake, VMD devices have their VMD rootports
-> +	 * connected to additional BUS1 rootport.
-
-This doesn't quite make sense.  Root Ports can't be connected to
-another Root Port.  I think you mean "Root Ports on the additional
-root bus".
+> +		 */
+> +		vmd->bus[VMD_BUS_1]->number = VMD_PRIMARY_BUS1;
+> +
+>  		WARN(sysfs_create_link(&vmd->dev->dev.kobj,
+>  				       &vmd->bus[VMD_BUS_1]->dev.kobj,
+>  				       "domain1"),
+> -- 
+> 2.39.3
+> 
 
