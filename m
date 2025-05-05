@@ -1,112 +1,109 @@
-Return-Path: <linux-pci+bounces-27217-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B46AAAA933
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:09:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F7EAAA665
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 02:12:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14C3316D8E3
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:09:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0E4B3B28F4
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 00:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D6B359DF7;
-	Mon,  5 May 2025 22:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CBD322AB4;
+	Mon,  5 May 2025 22:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8aZJDJv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNbJQ11E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f+q9z70S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF3B359DE4;
-	Mon,  5 May 2025 22:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA3B322A90;
+	Mon,  5 May 2025 22:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484970; cv=none; b=p/VDLkXbD9Z1+vJ49Y3K08rEG7/4rjLE2ApBXh+E2WdC6Rc293KCeu8MgphgUVX3Qzoc5bPoZcgGj/O3ky2AIA7iW5osZMCHcU5miRH7I5/6MQE3rAsbJ50OFSbGfLkR8/tUZG6hB3nuWBB88bFTNH1UTYyoMLdX+qGaQ1CrTHo=
+	t=1746484416; cv=none; b=aTOJVV3ws5dd+jVSuuHJR/ngkA4WR9NavmtGtdcwKYqUUJlsoLcGk/em0qqFED/8z+X/o55QdNsuLZBBRWeXzXdi29sObLT3v42cbGqUMXKyH0NNP56rPd1rUMkse394vJRA7+pQPJ6yqvz5feG6JiVa0MDYGtBBC8Hjme9ULT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484970; c=relaxed/simple;
-	bh=WjO+egmhL/vXMYc7GhB8oOhdYaKPrwDEGtWK5+ykUtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NtIiEiTJ5VUHm5k1WiZU/r0j6SXEEV6M2Gbztq39LpANRZ8soN7Hsxra0XQN2quvjDJ0jamSbtemqCMUqAa/LPaQMe0n/LcyuWLj3J+978wYZmi9ft6F9WrEUotHjfLlrPGfgIOsSX+wBlTegG3rz/df3nMddgI1wgzL68A6jxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8aZJDJv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FC1C4CEE4;
-	Mon,  5 May 2025 22:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484969;
-	bh=WjO+egmhL/vXMYc7GhB8oOhdYaKPrwDEGtWK5+ykUtk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J8aZJDJvu2DZQQt0JDgA7zN8kSJLwbkd+dSMcQBsEq3/QVF9lNiPqrzWv3iknBRT7
-	 iAeoeNIZVccs/B3D4h8zE+RKBMFZhXR6v14VmqOSu3Znnbqd5/XvI5rBqQnBa6mV+h
-	 TJL8uvq8ZZ79nmSfHRCorL2UYjloerUJJVpavVytbjTAmQbYhHnjaJqkaWrV5ZP6hB
-	 23uyA+VzPeruznH7Qbbw8K/ZiVznfi5GwSlDajmY8WSMQtw6elF3tIXICJcXPQH/u0
-	 ieAOW4/gjSPMzpthkqzt62lOvxV4DIr0712LMbbtNCbH47aU/hbqNjmuPCxtI4Lk4w
-	 JvT3Rrx+M/O6g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 101/486] PCI: dwc: Use resource start as ioremap() input in dw_pcie_pme_turn_off()
-Date: Mon,  5 May 2025 18:32:57 -0400
-Message-Id: <20250505223922.2682012-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+	s=arc-20240116; t=1746484416; c=relaxed/simple;
+	bh=HatdA9k8dTOZzoALiSAOatm15PguKG74mPF5yaTmjXw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=U0qO5mjDr1ymM6fSu9543fhK0DnvIDuYpO+O5xKq7kb7Hoejp6Oy05BnV2yTQmkp+z21aQ8T9xu+7kMUkVW8uEVRUtz1WUnm6U7aZi1/+PuFVIJ0ZenLObGx/7X9+2PNLcLNkOLXmZ34Xr/tSaKgOmhzCrVGJQUc/tP8Sr/VMnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YNbJQ11E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f+q9z70S; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746484411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ar+nYY6YvS1JDsf3WZ/fGQw2E8KQPNJ8g1OwVIgR+aM=;
+	b=YNbJQ11E0VmO8C+gqyhlukX676Aov3AgM0pJVFAc4FJgNaleYvU1mCt+jSrgTy00xjZdcY
+	lw5g1mEGYYy2t9gmxGgFkVEo5Xn9LxICd16cbLXdLhaH+lo5UkL7bt28USzil0HKrq15fy
+	zW8p3peJv8DIfogSabh+6tPhKL76cJj2HgNcuMVpP1yL9LQyOUKglw3H7FKhsJTSP9E8l9
+	sN2XkT9RQb5nl4RDyj3Z3u23EuIxjuQfrGqKC6+T0KUkFhQJJN4y4Nub4mO3SUdCRrLJYs
+	qK9CQ+vVfaZ9RSzBw8uYllWzYms2soUc2mGoN5DWyToCHSXwaCnnyaoZ2sMnlA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746484411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ar+nYY6YvS1JDsf3WZ/fGQw2E8KQPNJ8g1OwVIgR+aM=;
+	b=f+q9z70Smk3vOT60407tVIz6Ss+kDH8S/UNUpUYoaE8+VjeoW6/KIMuK5eDqOnEyyebr9T
+	HeK2bY8XrvJ2t6Bg==
+To: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy?=
+ =?utf-8?Q?=C5=84ski?=
+ <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
+ <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, Aaron Kling
+ <webgeek1234@gmail.com>
+Subject: Re: [PATCH v4 1/4] irqdomain: Export irq_domain_free_irqs
+In-Reply-To: <20250505-pci-tegra-module-v4-1-088b552c4b1a@gmail.com>
+References: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
+ <20250505-pci-tegra-module-v4-1-088b552c4b1a@gmail.com>
+Date: Tue, 06 May 2025 00:33:30 +0200
+Message-ID: <87o6w6ofgl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Frank Li <Frank.Li@nxp.com>
+On Mon, May 05 2025 at 09:58, Aaron Kling via wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> Add export for irq_domain_free_irqs() so that drivers like pci-tegra can
+> be loaded as a module.
+>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 8f4a489b370e6612700aa16b9e4373b2d85d7503 ]
+Seriously?
 
-The msg_res region translates writes into PCIe Message TLPs. Previously we
-mapped this region using atu.cpu_addr, the input address programmed into
-the ATU.
+Did you actually sit down for a couple of seconds to read and understand what I
+asked you to do in that initial review and then again:
 
-"cpu_addr" is a misnomer because when a bus fabric translates addresses
-between the CPU and the ATU, the ATU input address is different from the
-CPU address.  A future patch will rename "cpu_addr" and correct the value
-to be the ATU input address instead of the CPU physical address.
+    https://lore.kernel.org/all/877c33qxss.ffs@tglx
 
-Map the msg_res region before writing to it using the msg_res resource
-start, a CPU physical address.
+I appreciate your dedication to get this sorted, but please take your
+time to read more than just the _two_ lines which you think to be
+relevant.
 
-Link: https://lore.kernel.org/r/20250315201548.858189-2-helgaas@kernel.org
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please don't come back and waste your breath on telling me you are so
+sorry as last time:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 120e2aca5164a..d428457d9c432 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -902,7 +902,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	if (ret)
- 		return ret;
- 
--	mem = ioremap(atu.cpu_addr, pci->region_align);
-+	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
- 	if (!mem)
- 		return -ENOMEM;
- 
--- 
-2.39.5
+    https://lore.kernel.org/all/CALHNRZ_ctL1fJGO5752B6XEEXHwRe-a-Ofv+_=qtdq1WWXLLjw@mail.gmail.com
 
+Just get your act together and do it right.
+
+Thanks,
+
+        tglx
 
