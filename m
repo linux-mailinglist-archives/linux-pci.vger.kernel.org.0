@@ -1,61 +1,67 @@
-Return-Path: <linux-pci+bounces-27224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13431AAAAA4
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:41:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E737AAAAF3
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:47:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62D219A2416
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:36:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61E7C188D0C6
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:45:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BE62E61EF;
-	Mon,  5 May 2025 23:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C8B2F15F3;
+	Mon,  5 May 2025 23:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1kXA2W+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dX9OEldP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F2A36EF26;
-	Mon,  5 May 2025 22:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA7738B4C3;
+	Mon,  5 May 2025 23:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485861; cv=none; b=oalPIUCPM8eBVLp0ugl3oLIdZf4tvbcMhs9Li2uDZvc2CTj9JKGosUf+kd2aa5N7WmPK1UHFWBdd5sxWEkEQHZ2sj5gNgfZU+PUzVStAf/tEjJhrU2IfF3+Tv3BymKB0nJWLr0yIQUKkSoXZvFShU2w7upOFeWNWlAGszOSg5jI=
+	t=1746486074; cv=none; b=imGinKyAofqN4FhFjb2gGnb73TaAbjnydqLNTC3z6Xdc+W++up5ExJ+TiQubjMmZkRWPe01br/3P30HmInRx0M6wxPGf/Jjo/bBWgxpGoLEdXyhKhgkeumYssOzlDTIfYeLwSEZwwnI9IewvH2hzT8K5SJ3SV/TiMfEd7NXFjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485861; c=relaxed/simple;
-	bh=n/xcGtcActF4OHLhnY34V8NfaTeXOL8f7VrAboRer90=;
+	s=arc-20240116; t=1746486074; c=relaxed/simple;
+	bh=Tg0oO72UEuWrNhyBlLj2lqOxWmKsDt6D3xHET3569wM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1hcuIooUjeHy7b9AXaA/u6uP7qhbMofRKlmzgC637Jz5MEJ6PmzgTQ+1HJS4Te5WNHB/qUNLVnwl6wHdnV957g14THYPVnzKP10dSAEgTBxQQYnXofJI+F3HSgNMCJQvHOINVX1P/dPtgP/hv2kxulFw+FZvC/Ke2zOqFjH3cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1kXA2W+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD80EC4CEF2;
-	Mon,  5 May 2025 22:57:39 +0000 (UTC)
+	 MIME-Version:Content-Type; b=UihwjR1oE3GtCmg61eziXKeFjvImveoCxKSotsuQUF9S9DV+LmFnG3qh7++430b/pn/pLzkitfWjFTSgZ7tjPodl6WD8uHCyXb5/xVz2u/AlswSRDAMgQ6hemqlzk26TjKJxi3Em+qx4IKvaU94nURS5zELOfcs+R00ddcyA7dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dX9OEldP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5937C4CEEE;
+	Mon,  5 May 2025 23:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485860;
-	bh=n/xcGtcActF4OHLhnY34V8NfaTeXOL8f7VrAboRer90=;
+	s=k20201202; t=1746486072;
+	bh=Tg0oO72UEuWrNhyBlLj2lqOxWmKsDt6D3xHET3569wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J1kXA2W+XsRQcPMlD/RON+IQUdniS/IUIDrOwIC3ppMEymYINaOYYqiXkQfw0koTL
-	 mprHNpXHfAtS5bNKuXANb7pVQYCgU4av9pPqtLLbE5uFPyJFb1/7L/uV2O+fpyor3e
-	 ZdTF+GnP4GIl9mXZUTkEyWmuAW9N+Luj2eFgVCuX7HCfWBbX1YqF+ogiIAd+m6THie
-	 xEym3dlZIM9A5eJiZbnbfQxc3lXH7izVr7t/Am8dhvnU1c4G+7jW5l+0bykQtQiEsb
-	 vO52FKOnggh4a/TXgdAbLtPVR+efcmF1WxAHjMS2HPweP0Kki51hhmf8f00n07hmlX
-	 m7SKz4yQFddBg==
+	b=dX9OEldPO4FHfk4M8pcYJDKhtchTVfvuOH0Mc2cwhCUFe1kYjsbX23bMJ5PHtdtAa
+	 FvtJotMG21qkv4VkWJ4UrrN4/FL4AayywWo5M6Ocax1MUiR03CrR3URxBGXGGTsN3b
+	 OZvgqjRNakeiSPZM4UL/t+Y9DTDz9JfZvpb0OlT4pnn6m2BPKVh0s5k6lalZMsV6m5
+	 4hH7vXsRQq8Mmr3WvkMfmCSj4Np6AnB2f3k4fwMk8cGtabDIGyVxv1fjDUDDIppubc
+	 6KtuLFMEs1SWjzo5SltpUCLjd2qw48skbYU8Q1+G68t6bauEaIyU/k6DPvoRnjoLmz
+	 CN9qRFG5ehY2Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Roger Pau Monne <roger.pau@citrix.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Stanimir Varbanov <svarbanov@suse.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	nirmal.patel@linux.intel.com,
+	jim2101024@gmail.com,
+	nsaenz@kernel.org,
 	lpieralisi@kernel.org,
 	kw@linux.com,
 	manivannan.sadhasivam@linaro.org,
+	bhelgaas@google.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 034/294] PCI: vmd: Disable MSI remapping bypass under Xen
-Date: Mon,  5 May 2025 18:52:14 -0400
-Message-Id: <20250505225634.2688578-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 140/294] PCI: brcmstb: Expand inbound window size up to 64GB
+Date: Mon,  5 May 2025 18:54:00 -0400
+Message-Id: <20250505225634.2688578-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -71,73 +77,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit 6c4d5aadf5df31ea0ac025980670eee9beaf466b ]
+[ Upstream commit 25a98c727015638baffcfa236e3f37b70cedcf87 ]
 
-MSI remapping bypass (directly configuring MSI entries for devices on the
-VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
-and hence cannot configure the entries using the pIRQ interface in the PV
-case, and in the PVH case traps won't be setup for MSI entries for such
-devices.
+The BCM2712 memory map can support up to 64GB of system memory, thus
+expand the inbound window size in calculation helper function.
 
-Until Xen is aware of devices in the VMD bus prevent the
-VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
-any kind of Xen guest.
+The change is safe for the currently supported SoCs that have smaller
+inbound window sizes.
 
-The MSI remapping bypass is an optional feature of VMD bridges, and hence
-when running under Xen it will be masked and devices will be forced to
-redirect its interrupts from the VMD bridge.  That mode of operation must
-always be supported by VMD bridges and works when Xen is not aware of
-devices behind the VMD bridge.
-
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <20250219092059.90850-3-roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+Link: https://lore.kernel.org/r/20250224083559.47645-7-svarbanov@suse.de
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index dfa222e02c4da..ad82feff0405e 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -17,6 +17,8 @@
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
- 
-+#include <xen/xen.h>
-+
- #include <asm/irqdomain.h>
- 
- #define VMD_CFGBAR	0
-@@ -981,6 +983,24 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	struct vmd_dev *vmd;
- 	int err;
- 
-+	if (xen_domain()) {
-+		/*
-+		 * Xen doesn't have knowledge about devices in the VMD bus
-+		 * because the config space of devices behind the VMD bridge is
-+		 * not known to Xen, and hence Xen cannot discover or configure
-+		 * them in any way.
-+		 *
-+		 * Bypass of MSI remapping won't work in that case as direct
-+		 * write by Linux to the MSI entries won't result in functional
-+		 * interrupts, as Xen is the entity that manages the host
-+		 * interrupt controller and must configure interrupts.  However
-+		 * multiplexing of interrupts by the VMD bridge will work under
-+		 * Xen, so force the usage of that mode which must always be
-+		 * supported by VMD bridges.
-+		 */
-+		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-+	}
-+
- 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
- 		return -ENOMEM;
- 
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 940af934ce1bb..8b88e30db7447 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -284,8 +284,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
+ 	if (log2_in >= 12 && log2_in <= 15)
+ 		/* Covers 4KB to 32KB (inclusive) */
+ 		return (log2_in - 12) + 0x1c;
+-	else if (log2_in >= 16 && log2_in <= 35)
+-		/* Covers 64KB to 32GB, (inclusive) */
++	else if (log2_in >= 16 && log2_in <= 36)
++		/* Covers 64KB to 64GB, (inclusive) */
+ 		return log2_in - 15;
+ 	/* Something is awry so disable */
+ 	return 0;
 -- 
 2.39.5
 
