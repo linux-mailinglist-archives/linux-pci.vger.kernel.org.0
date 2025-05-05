@@ -1,164 +1,144 @@
-Return-Path: <linux-pci+bounces-27228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27232-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09281AAAF64
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 05:16:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99212AAAF8D
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 05:19:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CA7C3AB2DC
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:10:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0F961B60879
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93133B358F;
-	Mon,  5 May 2025 23:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D771A39B086;
+	Mon,  5 May 2025 23:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLb11n0X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlMwuk99"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9766F396ED6
-	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 23:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCDD39B094;
+	Mon,  5 May 2025 23:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486395; cv=none; b=dESOXoYatd5wF51LZSBo+VHDoUFyDpbECM0QmOZsO4/355jPaaDFLX8IUGyTCPF39TbQpkC0xyxJ+e6NGIhcAT1PXiNs+HfpmO4hl0PPLq2agMcsuoydrqwamdSqvRdsxL0d0qC4hmOTE5/03hbXHoSxNjQ1wSsdir/vUGkiGf8=
+	t=1746486841; cv=none; b=OICDGC3zOuTP8T/0ixq6rq6CRJN1FdA7z/J7fpdR4lUtwlXAdrupiVp57eGICa4Yg3sWjrTuJU0/SR5dZpwb/HzAjZEipfOW13iBJLIj3WPqcfllzinIxqf5/GLA9KH7R7+s7IstGQkKYu7j/2LmIbxoN+0CXPOpbmwc6l5qpk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486395; c=relaxed/simple;
-	bh=+ng9IX5PYlTkr54csTUOeVzsQtO8Dt8p+/RHtisF7xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G+wz6znQ6Bo6fldygWAyMmhfR1dUpTiv081HaWu5YPVwvSrGRbdq6XKDoOp3kkZoRa0EGZbabfHH2h4rI+nKvd47Z8rBNWIFHlfoo4esbHp4ey1klVxBl6sBRG8XwhOU7zBddxXmgKLcZLDioKogxNew2fNb7MMgsS9jaivNUWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLb11n0X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61094C4CEED;
-	Mon,  5 May 2025 23:06:34 +0000 (UTC)
+	s=arc-20240116; t=1746486841; c=relaxed/simple;
+	bh=HpZr03ZK+mWbRFtD6vZYnWg22vjep0hu7tYqZkBnJms=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aJzZrC/mDScU0RMOm1ruCuAOLlquoKEFqFKBEW1UPV+pcxYLelvi6CsmUw5oQV6q7p3j2ackinVf4VnMY2K6lAoyuOB9bntaHXJO66V/v0KEV/v1IPY0mEfQ+510aLsQhrXWDqqqnDPFNpp3Xr9jCrqUSgI/k/fUAxvB6AF7/ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlMwuk99; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBF3C4CEEE;
+	Mon,  5 May 2025 23:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486394;
-	bh=+ng9IX5PYlTkr54csTUOeVzsQtO8Dt8p+/RHtisF7xk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rLb11n0XTrGYcIEfiRAkY6OFLnTohFdA3yK73ccWKsIdcSd/dUb1O50XPVHckd64d
-	 cEiX/hHeI0P+FXBVK/KIMmMoUNR+59iruHvBfN4jnV9JakrvaKD7berContfufhSuz
-	 YvYe4G7R8eeztOZMFpZtqPqwbAL47D28HdgmvQFwdTzo94S5SVfXIhwErd3FVl9V9d
-	 ZbK6TpoGy/987zwCC31tXR6K9dlGUMlPdxPIf8mafzsccUM+91MprGwL7uqwJOVIqE
-	 h/Xrzyu0pKrDucNnQl9IES+11q2HWeQHXbMzQdTV5D2Lo5bAQvjVb4UlkcCiOhnkci
-	 4Dc1ZLvO6g29w==
-Date: Mon, 5 May 2025 18:06:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com,
-	rafael.j.wysocki@intel.com, huang.ying.caritas@gmail.com,
-	stern@rowland.harvard.edu, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Explicitly put devices into D0 when initializing
-Message-ID: <20250505230632.GA1007257@bhelgaas>
+	s=k20201202; t=1746486840;
+	bh=HpZr03ZK+mWbRFtD6vZYnWg22vjep0hu7tYqZkBnJms=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZlMwuk99rjsIQ0EkW0zdyeI5gSPB41eBbxJ/ObzeGJU8p9uAeEVlgRQp77INmVj+y
+	 g6egPZlKM7WNKdl+spanSug1uWN+warCLyfdV/2wPNWnkEUJDWySSFAt4bfmaISknf
+	 nXLWJpYwi5RZ7prJ8cpS3z9i0jN9nhmaWRMQP993GElMj7YqsDVeGcACnXbmXjo+c3
+	 dTH8sz/c69gi7fTgCvF53MKnTowUNL7rJbN3s19Hm9Gs6z+TmJsLZymOauDhWrIkcg
+	 n2WHZU3MuQTJ+SBYCDpO/Ini0g5vzxkb9xJA4nfhats/HkfSVIoJZ0o9HialEjCBRZ
+	 /6CJaHp8GhCbw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Roger Pau Monne <roger.pau@citrix.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	nirmal.patel@linux.intel.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 018/153] PCI: vmd: Disable MSI remapping bypass under Xen
+Date: Mon,  5 May 2025 19:11:05 -0400
+Message-Id: <20250505231320.2695319-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
+References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424043232.1848107-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.181
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 11:31:32PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> AMD BIOS team has root caused an issue that NVME storage failed to come
-> back from suspend to a lack of a call to _REG when NVME device was probed.
-> 
-> commit 112a7f9c8edbf ("PCI/ACPI: Call _REG when transitioning D-states")
-> added support for calling _REG when transitioning D-states, but this only
-> works if the device actually "transitions" D-states.
-> 
-> commit 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI
-> devices") added support for runtime PM on PCI devices, but never actually
-> 'explicitly' sets the device to D0.
-> 
-> To make sure that devices are in D0 and that platform methods such as
-> _REG are called, explicitly set all devices into D0 during initialization.
-> 
-> Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-Applied to pci/pm for v6.16, thanks!
+[ Upstream commit 6c4d5aadf5df31ea0ac025980670eee9beaf466b ]
 
-> ---
-> v2:
->  * Move runtime PM calls after setting to D0
->  * Use pci_pm_power_up_and_verify_state()
-> ---
->  drivers/pci/pci-driver.c |  6 ------
->  drivers/pci/pci.c        | 13 ++++++++++---
->  drivers/pci/pci.h        |  1 +
->  3 files changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index c8bd71a739f72..082918ce03d8a 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -555,12 +555,6 @@ static void pci_pm_default_resume(struct pci_dev *pci_dev)
->  	pci_enable_wake(pci_dev, PCI_D0, false);
->  }
->  
-> -static void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
-> -{
-> -	pci_power_up(pci_dev);
-> -	pci_update_current_state(pci_dev, PCI_D0);
-> -}
-> -
->  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
->  {
->  	pci_pm_power_up_and_verify_state(pci_dev);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0cec..8d125998b30b7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3192,6 +3192,12 @@ void pci_d3cold_disable(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_d3cold_disable);
->  
-> +void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
-> +{
-> +	pci_power_up(pci_dev);
-> +	pci_update_current_state(pci_dev, PCI_D0);
-> +}
-> +
->  /**
->   * pci_pm_init - Initialize PM functions of given PCI device
->   * @dev: PCI device to handle.
-> @@ -3202,9 +3208,6 @@ void pci_pm_init(struct pci_dev *dev)
->  	u16 status;
->  	u16 pmc;
->  
-> -	pm_runtime_forbid(&dev->dev);
-> -	pm_runtime_set_active(&dev->dev);
-> -	pm_runtime_enable(&dev->dev);
->  	device_enable_async_suspend(&dev->dev);
->  	dev->wakeup_prepared = false;
->  
-> @@ -3266,6 +3269,10 @@ void pci_pm_init(struct pci_dev *dev)
->  	pci_read_config_word(dev, PCI_STATUS, &status);
->  	if (status & PCI_STATUS_IMM_READY)
->  		dev->imm_ready = 1;
-> +	pci_pm_power_up_and_verify_state(dev);
-> +	pm_runtime_forbid(&dev->dev);
-> +	pm_runtime_set_active(&dev->dev);
-> +	pm_runtime_enable(&dev->dev);
->  }
->  
->  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b81e99cd4b62a..49165b739138b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -148,6 +148,7 @@ void pci_dev_adjust_pme(struct pci_dev *dev);
->  void pci_dev_complete_resume(struct pci_dev *pci_dev);
->  void pci_config_pm_runtime_get(struct pci_dev *dev);
->  void pci_config_pm_runtime_put(struct pci_dev *dev);
-> +void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev);
->  void pci_pm_init(struct pci_dev *dev);
->  void pci_ea_init(struct pci_dev *dev);
->  void pci_msi_init(struct pci_dev *dev);
-> -- 
-> 2.43.0
-> 
+MSI remapping bypass (directly configuring MSI entries for devices on the
+VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
+and hence cannot configure the entries using the pIRQ interface in the PV
+case, and in the PVH case traps won't be setup for MSI entries for such
+devices.
+
+Until Xen is aware of devices in the VMD bus prevent the
+VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
+any kind of Xen guest.
+
+The MSI remapping bypass is an optional feature of VMD bridges, and hence
+when running under Xen it will be masked and devices will be forced to
+redirect its interrupts from the VMD bridge.  That mode of operation must
+always be supported by VMD bridges and works when Xen is not aware of
+devices behind the VMD bridge.
+
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Message-ID: <20250219092059.90850-3-roger.pau@citrix.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/vmd.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 1195c570599c0..846590706a384 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -17,6 +17,8 @@
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ 
++#include <xen/xen.h>
++
+ #include <asm/irqdomain.h>
+ #include <asm/device.h>
+ #include <asm/msi.h>
+@@ -826,6 +828,24 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	struct vmd_dev *vmd;
+ 	int err;
+ 
++	if (xen_domain()) {
++		/*
++		 * Xen doesn't have knowledge about devices in the VMD bus
++		 * because the config space of devices behind the VMD bridge is
++		 * not known to Xen, and hence Xen cannot discover or configure
++		 * them in any way.
++		 *
++		 * Bypass of MSI remapping won't work in that case as direct
++		 * write by Linux to the MSI entries won't result in functional
++		 * interrupts, as Xen is the entity that manages the host
++		 * interrupt controller and must configure interrupts.  However
++		 * multiplexing of interrupts by the VMD bridge will work under
++		 * Xen, so force the usage of that mode which must always be
++		 * supported by VMD bridges.
++		 */
++		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
++	}
++
+ 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+ 		return -ENOMEM;
+ 
+-- 
+2.39.5
+
 
