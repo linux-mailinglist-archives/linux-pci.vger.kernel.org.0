@@ -1,62 +1,59 @@
-Return-Path: <linux-pci+bounces-27204-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27205-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62A60AAA318
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:09:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 081B3AAA306
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65C897B2C61
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:05:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE3BC3A5C14
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:07:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B27D2EC02B;
-	Mon,  5 May 2025 22:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F4C02820BB;
+	Mon,  5 May 2025 22:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtcsRP45"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeSEtR51"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E532EC027;
-	Mon,  5 May 2025 22:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535E42820AA;
+	Mon,  5 May 2025 22:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483777; cv=none; b=u1GcKv8j95rPcoNu9ubPxe2Js5bhkatZhSwsnHE6KpKeBW21FlOAVY/ZBx16gi/F6iRIYGPm5juV7fYOk0L/RGb/ZfUQAfmpEW1cz5Jnnt9ANmR/B3I369V5M/W55D5DtW7TMMIxNJn2GQBPXAlznaO2XnywejOqKvi+Qnfk7Eg=
+	t=1746483778; cv=none; b=rwxif/SehyrDbuIoeA0Xo1to7flLtBAagAK91cs8173JRm9XjBUJN4EneNzeuouQVPUyHAb7S+VemCxadgSpdDMW2RCPOXwguMFsPKP+Q+1S2+sLbcIxztVFVyEzmvOTtrHbmtj7Npyhnbx4ny8YDfZvrkZ3F2tPzjOvBQ6TO/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483777; c=relaxed/simple;
-	bh=xH85xPGyFvNEPB2DspZSW0SjwYfEHvEu14y6gt6Dme0=;
+	s=arc-20240116; t=1746483778; c=relaxed/simple;
+	bh=MxQF19+oKD8EyuR5LWtAXyY63Cq3zJVXy7arri/hE2k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gwnCugBLSZZVVYO8hB3Lf7be5jGoOWvDlYvCdibtQsB0CBrusaJur/qpwi99brOo+Yl3Ni9N9Vv16Qq8n7Krj7rczhLbXcALBGtLyl/LvRl5jDUu3oPwr2BIlXRC9t110iRrO2JWJC+Yf40+x6BcV9eOjA6/w1D5ddN8NLAfjyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtcsRP45; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DB3C4CEE4;
-	Mon,  5 May 2025 22:22:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=vEMia0zj4rHOeLiAKXJt9YISUDwVTu6pFsIA5deRrSf9d+bTc1DlanwNbqdPLAUYqeQLVfOosPtVMSPDbdlf8AoINJ1/uo7sd5+6w/qJoC44RreGKp42+2Z4XKjNdB8EXF+xIC8pikdT2ZInaoGRJ6REPfvAQaQAl4XRSy3a4/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeSEtR51; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CB4C4CEE4;
+	Mon,  5 May 2025 22:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483776;
-	bh=xH85xPGyFvNEPB2DspZSW0SjwYfEHvEu14y6gt6Dme0=;
+	s=k20201202; t=1746483778;
+	bh=MxQF19+oKD8EyuR5LWtAXyY63Cq3zJVXy7arri/hE2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FtcsRP45tA5sebP/9W4bmUetxbYPf1dNimx2QDmE22/h1blTLoUtgGF8X4wk9ASNu
-	 1MWlfzDh2UzfZuuQvJ0almCYU4/603+TtFqFW5/18djk2vT2/xgQFJqYdWHVIctQqE
-	 p6MLPrmUa1Y0tX3MZumUiWnJ4HhYohc97DxXndHfeI8HkAmkg+xByOgrJBo85Z81Sc
-	 pVEX5KWLgLJT54jXHL6thYK3j6/2LnAE91zlJNgLw0Fp/1pfGwYlxrvAIaXDcb00O5
-	 aa2VxapiOUbuy6aYg76A1r14bvmrSWnwrpHE4+7zfIYVjMOLcnyT/giSF6hdP2OryO
-	 T4n7cK+xIPVIQ==
+	b=NeSEtR51upf1kf/UAEI1sSsPDHgXUVd13/kW0+c3vrIbIuqi/UbHo15UUdJDIKYp8
+	 HskUrJbbc5P3do5lpNO41hjK7DJP4Jq4greisu7vcyHrVj7fH+H9byHn35MN55haaL
+	 w5fGiNx11TeIdwetkimkKEIyYjUjfiCzGLfi3Rl4LzxrdpCtuk738WwJf66DVXGfs2
+	 gmoawrVi/b1s/CouTJLkzjeH4u929DJjgZcJLjXDrrufm+Q57Hqk5/Dxc//Mx0RN1B
+	 LCdYrpN0vfvis+vYzEdYMGfsyPPMeCrHG6oZ/U0FjV8Si1dEtGQBxyF8TH/zSSU/2Z
+	 X7eTf8qvqnc6A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christian Bruel <christian.bruel@foss.st.com>,
-	Niklas Cassel <cassel@kernel.org>,
+Cc: Niklas Cassel <cassel@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	kw@linux.com,
-	bhelgaas@google.com,
-	Frank.Li@nxp.com,
-	dlemoal@kernel.org,
+	gregkh@linuxfoundation.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 213/642] PCI: endpoint: pci-epf-test: Fix double free that causes kernel to oops
-Date: Mon,  5 May 2025 18:07:09 -0400
-Message-Id: <20250505221419.2672473-213-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 214/642] misc: pci_endpoint_test: Give disabled BARs a distinct error code
+Date: Mon,  5 May 2025 18:07:10 -0400
+Message-Id: <20250505221419.2672473-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -72,63 +69,60 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Christian Bruel <christian.bruel@foss.st.com>
+From: Niklas Cassel <cassel@kernel.org>
 
-[ Upstream commit 934e9d137d937706004c325fa1474f9e3f1ba10a ]
+[ Upstream commit 7e80bbef1d697dbce7a39cfad0df770880fe3f29 ]
 
-Fix a kernel oops found while testing the stm32_pcie Endpoint driver
-with handling of PERST# deassertion:
+The current code returns -ENOMEM if test->bar[barno] is NULL.
 
-During EP initialization, pci_epf_test_alloc_space() allocates all BARs,
-which are further freed if epc_set_bar() fails (for instance, due to no
-free inbound window).
+There can be two reasons why test->bar[barno] is NULL:
 
-However, when pci_epc_set_bar() fails, the error path:
+  1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
+  2) The BAR was skipped, because it is disabled by the endpoint.
 
-  pci_epc_set_bar() ->
-    pci_epf_free_space()
+Many PCI endpoint controller drivers will disable all BARs in their
+init function. A disabled BAR will have a size of 0.
 
-does not clear the previous assignment to epf_test->reg[bar].
+A PCI endpoint function driver will be able to enable any BAR that
+is not marked as BAR_RESERVED (which means that the BAR should not
+be touched by the EPF driver).
 
-Then, if the host reboots, the PERST# deassertion restarts the BAR
-allocation sequence with the same allocation failure (no free inbound
-window), creating a double free situation since epf_test->reg[bar] was
-deallocated and is still non-NULL.
+Thus, perform check if the size is 0, before checking if
+test->bar[barno] is NULL, such that we can return different errors.
 
-Thus, make sure that pci_epf_alloc_space() and pci_epf_free_space()
-invocations are symmetric, and as such, set epf_test->reg[bar] to NULL
-when memory is freed.
+This will allow the selftests to return SKIP instead of FAIL for
+disabled BARs.
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Link: https://lore.kernel.org/r/20250124123043.96112-1-christian.bruel@foss.st.com
+Link: https://lore.kernel.org/r/20250123120147.3603409-3-cassel@kernel.org
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 [kwilczynski: commit log]
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 2409787cf56d9..bce3ae2c0f652 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -738,6 +738,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
- 		if (ret) {
- 			pci_epf_free_space(epf, epf_test->reg[bar], bar,
- 					   PRIMARY_INTERFACE);
-+			epf_test->reg[bar] = NULL;
- 			dev_err(dev, "Failed to set BAR%d\n", bar);
- 			if (bar == test_reg_bar)
- 				return ret;
-@@ -929,6 +930,7 @@ static void pci_epf_test_free_space(struct pci_epf *epf)
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 4c0f37ad0281b..8a7e860c06812 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -295,11 +295,13 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+ 	struct pci_dev *pdev = test->pdev;
+ 	int buf_size;
  
- 		pci_epf_free_space(epf, epf_test->reg[bar], bar,
- 				   PRIMARY_INTERFACE);
-+		epf_test->reg[bar] = NULL;
- 	}
- }
++	bar_size = pci_resource_len(pdev, barno);
++	if (!bar_size)
++		return -ENODATA;
++
+ 	if (!test->bar[barno])
+ 		return -ENOMEM;
+ 
+-	bar_size = pci_resource_len(pdev, barno);
+-
+ 	if (barno == test->test_reg_bar)
+ 		bar_size = 0x4;
  
 -- 
 2.39.5
