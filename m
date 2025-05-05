@@ -1,109 +1,111 @@
-Return-Path: <linux-pci+bounces-27241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D415EAAB043
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 05:34:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E3B4AAB2C7
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 06:29:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 741023A7056
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 03:30:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B743B188C232
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 04:27:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E653ED7C9;
-	Mon,  5 May 2025 23:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2620A36D439;
+	Tue,  6 May 2025 00:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4/cGwbW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlaStX4p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64763B2F74;
-	Mon,  5 May 2025 23:20:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDAB2D9DA4;
+	Mon,  5 May 2025 22:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487252; cv=none; b=PgRKK22XDl5mBM4WEpmbf+AhW02JivUeRBPsJIPii1h/m+pFw0mTvYbdrvVaA/y7+X7YlRruXNWiE/mOK3f1o0tEdWsfg7sxyoogU9uVhm6tJaM0Ryt17t3nz5U+/8AgUos8/lgbpuXZU1sHpaGJ5DxJBgMH4jULvxi+4gEjKoM=
+	t=1746485855; cv=none; b=kXl+Kc3KCZ4RU2GJgSB15yS52leL9DhO2/5qg5GK3wXdVAJv7wjh4iMOdFIvqRwBS8PGfEpZIVkuNW6/vhIRLSol6PmDoY222n7Eh8dmiIDQ6CAoMEtIfVEZI2GkPie37lOfKKmjFmGpZflp8o4gkIjPIaNBnjIJ4ssw21nrcjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487252; c=relaxed/simple;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
+	s=arc-20240116; t=1746485855; c=relaxed/simple;
+	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CuuW5RPG8lMRter5urHDV/+LJB9qWvZxnioXHIkkacuiclhe02fgr9dX6nMiosb9b/sUkmmZ1HtNieCLRD0xMxjZT1rFqXDS7S6b153OFtQK+BfcmsXx7VKtJ4u9QllmZ112DgeXFojz6PUfy/uxuddG7FTnuE1pKjXUv8Y8VGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4/cGwbW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D92C4CEE4;
-	Mon,  5 May 2025 23:20:49 +0000 (UTC)
+	 MIME-Version; b=YqMzw6VU4nQQfMXwBgKItwFDgeEBhCGHT6uirPie2pSIeddezBbgx5Z/6xGepJQYOl17B/dbbahwpdmGjN1cmvCtCWVX55C8He4mqKmWWJbgfxHdjAohTfqnjmkVMKakSpyziLaMl+oIE2Fw1E51plqL+EoI2p+HJpR50XqO2p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlaStX4p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186FCC4CEEE;
+	Mon,  5 May 2025 22:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487251;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
+	s=k20201202; t=1746485855;
+	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e4/cGwbWwPmrVSfFh+VU+OfPNSV7/5pRE4ROkuQ7p7QNNZg7IMhY+3AbbL+dYbT0Y
-	 gNdeAMcEqE86ENW3GMDvMNjRTT72U1QFylsjDOxjTLTMiAQMA0pLIN/4tJWdfDCjdt
-	 /qdELomT0WhmDxeW0JkSywqD83g/1XHpNCHlNQg6/Unx/kfagiFxh0U8pJ5nXYo4vM
-	 ZuDcqsWrrXTHFGYZjxhggj+lIR+ldFQol5/L+V7bOHcTsb60M5aM9KzWdILfHnsOA2
-	 IGLgWhtL4agFqil4x7RcDVEOiiBeVeCp6CZZae1KeeSHhgpakrcrzgYX+Pg9YdVbB4
-	 xIknX9uSR40EA==
+	b=jlaStX4pzLwK20c4jdajXDiGCl7tBMBSxvU0gtZPTwyvnWRA2HWTCLp2uD5UmLOq+
+	 IlCLDETIbf44tCuOuQ4vuZl6C1eBj5LJRU9ckMQmpfQe55tNLR/Bd3KKzqto/RtgTW
+	 ZLm1XPj8fGgCXlZQKFuNZXux0xJ/qKvsqW0uKFtT61ZBNnM61g52/Ag9+0QaDhHZDN
+	 sLEeHjTHs6mnNuGB7yY6jbUsjXe2pHw2yiusKnSefw8OEtotqXSrnhKw0Vh9eq8gFF
+	 Y6gUIPKSDLMwh4sED50KrtIDaxuvhCUrprBh0LdyrNJIjKm/uDhAG81cQqga5tU3GH
+	 K7a1Rmn1VdS+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+Cc: Frank Li <Frank.Li@nxp.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Xiaochun Lee <lixc17@lenovo.com>,
 	Sasha Levin <sashal@kernel.org>,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 080/114] PCI: Fix old_size lower bound in calculate_iosize() too
-Date: Mon,  5 May 2025 19:17:43 -0400
-Message-Id: <20250505231817.2697367-80-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 031/294] PCI: dwc: ep: Ensure proper iteration over outbound map windows
+Date: Mon,  5 May 2025 18:52:11 -0400
+Message-Id: <20250505225634.2688578-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
-References: <20250505231817.2697367-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.237
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Frank Li <Frank.Li@nxp.com>
 
-[ Upstream commit ff61f380de5652e723168341480cc7adf1dd6213 ]
+[ Upstream commit f3e1dccba0a0833fc9a05fb838ebeb6ea4ca0e1a ]
 
-Commit 903534fa7d30 ("PCI: Fix resource double counting on remove &
-rescan") fixed double counting of mem resources because of old_size being
-applied too early.
+Most systems' PCIe outbound map windows have non-zero physical addresses,
+but the possibility of encountering zero increased after following commit
+("PCI: dwc: Use parent_bus_offset").
 
-Fix a similar counting bug on the io resource side.
+'ep->outbound_addr[n]', representing 'parent_bus_address', might be 0 on
+some hardware, which trims high address bits through bus fabric before
+sending to the PCIe controller.
 
-Link: https://lore.kernel.org/r/20241216175632.4175-6-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Replace the iteration logic with 'for_each_set_bit()' to ensure only
+allocated map windows are iterated when determining the ATU index from a
+given address.
+
+Link: https://lore.kernel.org/r/20250315201548.858189-12-helgaas@kernel.org
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiaochun Lee <lixc17@lenovo.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-bus.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index a159bfdfa2512..04c3ae8efc0f8 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -806,11 +806,9 @@ static resource_size_t calculate_iosize(resource_size_t size,
- 	size = (size & 0xff) + ((size & ~0xffUL) << 2);
- #endif
- 	size = size + size1;
--	if (size < old_size)
--		size = old_size;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index f2e5feba55267..26ad643fb4248 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -281,7 +281,7 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
+ 	u32 index;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
  
--	size = ALIGN(max(size, add_size) + children_add_size, align);
--	return size;
-+	size = max(size, add_size) + children_add_size;
-+	return ALIGN(max(size, old_size), align);
- }
- 
- static resource_size_t calculate_memsize(resource_size_t size,
+-	for (index = 0; index < pci->num_ob_windows; index++) {
++	for_each_set_bit(index, ep->ob_window_map, pci->num_ob_windows) {
+ 		if (ep->outbound_addr[index] != addr)
+ 			continue;
+ 		*atu_index = index;
 -- 
 2.39.5
 
