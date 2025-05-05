@@ -1,156 +1,118 @@
-Return-Path: <linux-pci+bounces-27159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CBBDAA95C4
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 16:26:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8393AA969B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 16:57:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C40217A6DC
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 14:26:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C68B6189E04D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 14:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39CD125C803;
-	Mon,  5 May 2025 14:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670FE266F04;
+	Mon,  5 May 2025 14:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqOJlwZF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqCVN/gC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9013D25E456
-	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 14:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5F625DAF7;
+	Mon,  5 May 2025 14:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455105; cv=none; b=VDrpXm7azD6nMsg7iQKolTupYM4oGM4drGtDdPyUf7LC8hps3pg97T0YZIokgshEZg6WJK4R9an1+7juJtvGD6Z5vIhiKEhT4hr3T6k5Pzb11jjkQatNssgTwveuIgmnqVYAckZAxcKapSVlomZ9cecSm+JpnJNxwqaGUugC9ZU=
+	t=1746456574; cv=none; b=jl/GbSFf+ZC+2KFxWjMP5iVzWXtNd0YO2VWG9ZFdzUUKw3OMIwYdTmJUDy6abnIjo/vQKr9+FJv/g5wZ7A93Np9if9rEFUVwLAPLvYkBCeGs5jUkEU7VCTsKSejhZttia+o3ibUg86MtMtWCy1ETy4Z2J226r1B1zxK3B3DmM7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455105; c=relaxed/simple;
-	bh=t1yw/3IQY04ascExMYNkywVMbYb9sD04RFjXDUub5p0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sB+Svqzls7MRXphHRQMU1iJMhzn9yFSnjIY9DZp8k+H9I21j2ifBhiIyP71d6u/shiyo8W8GZRbPsntyKGYs6fi7dxkKsXJNws2uLDPTaLn7TajRM0CEFszuleSPhWAghPQWWRnjZqHIq3ck5zlAZp7i9YRD4ykCE8I3NfgN1Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lqOJlwZF; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-224171d6826so65639995ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 05 May 2025 07:25:03 -0700 (PDT)
+	s=arc-20240116; t=1746456574; c=relaxed/simple;
+	bh=LJjgk1ByHDk3YIGGFpQ4kDf+gqIVdRbQZOZxTDiZ9P8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nW27aJ5lld9Pb+ySkZrI6Zqwalk/rI2YtVZNoub8tLklinuBEzgZU0c2otVdk6XVQYixHgkwTlEMaLDfoEnPE21C3Gtoa/GvQ1WVCyt28flcgTywNNkzjir52xLb9xnnA/4Z+vfLqyzBU+Au6zhkqp7dB+2Qf7mISfBbh4CSFHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqCVN/gC; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-549b159c84cso4958030e87.3;
+        Mon, 05 May 2025 07:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746455103; x=1747059903; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KJu9k3uxYD0x67A2WlM7JrSR4XKb1B7H+/wMYgcPKG4=;
-        b=lqOJlwZFB4pyJdaENDCtdFBlPFUBhccAA5O3mEykyE+6exnXMm9nsy8zGhjsZeksDX
-         mYZwk2zMLwSydKEM2koeXulFFpwW7Dp88UmfB9cqU8fruhDtURG5ayLBvtWN6FK/H+s5
-         mvZBuwkADtTJEtgLrsMfrDP/3dUleV6SzAQsy3br9mL8Fr++AZMqrFvVTm4Wfk4Pcd8X
-         Qv2oTVsdxEjj1odzrqZ8Oqov9M4mC8VoyVjh7IdI/4g3FXo9e4MDgRrHYZjDUHPsF5FT
-         YtB5KMO9WKgv0YoIWf2AA26ppXHB3qXL14/S+o/mauBPvD+g4tj5eRfJuWp6labvP0M0
-         MREw==
+        d=gmail.com; s=20230601; t=1746456570; x=1747061370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gWghhPwRQnyBjM4WKGjObPR/MsMSgq7gL+g14y5zD+w=;
+        b=WqCVN/gCOqu6z3E9HZu6xQUgjlsEAHO2CCwLwqwuizOlXfPbrt3EC0t3672gcrfeEJ
+         xRiYZMdiGPlBOHQdstweHp5XKQ6AGFo7RpCXHKvjoSfZAw00Gwbwd3S8UAPonH/RnHoP
+         NSX7+i6rtYu62J2pBxQqV/dVkV74HL/RdRU5ff3CnivuhTDe7PwyHiclzLjdvRGb9oRB
+         Y1iw+Aul0r8/i5dGqz90wF1BBaxJ+H+jqmd4mrO3qyx5oLEdVZPbV1pMQFoGZsCQLb5X
+         46Ol0ywQyDSWlhnJiUcM9pTEg7ZpHpOWV508GKxS3kebZGtS92cCGPxHcyOnpQrHViLg
+         FGHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746455103; x=1747059903;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746456570; x=1747061370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KJu9k3uxYD0x67A2WlM7JrSR4XKb1B7H+/wMYgcPKG4=;
-        b=fwvImPK3tHCsGK0xV/Ie1x3CYd/fkAMrtH+Ez0xVXhq4IOB9eb8/b8UmHUKgXXU5L5
-         qS7pBkT0qfIFDsp3BTdo7oqWDNbXU9/yr5gnL3HygdvYxgAh+n8cRgXST38b5HmvuYGd
-         jfipdpE6GFXarsMtMGCZCuwhAEL2Bnu8sc0bUDQgTtT7xdDlGGubTOSL8fCx6k8xalFn
-         bG3TZFag3lhIpMFp+z7SqNo48DLmAkcQTRcwD4Nz+er2JpuDBSfQxWRWuzftMmoUgxR5
-         l1IdbnHyqT/ABLfkai/TSTuYHwjj5pwkyTHu6jxHJEpTnrSVgvqn6BRBhgwnK7Nbf4hC
-         8gWQ==
-X-Gm-Message-State: AOJu0YxDW0frir/JJt5+aSe27RfCOmuTa/cZELIb568upYIxLBdqIUfs
-	1FUQlBRcO7JTHo8bXVG7Vq3ebR0Dp47jwXO8YxPbxITkpfG3/CCNuIaZivXTeA==
-X-Gm-Gg: ASbGncvnpfeA1ua01yH1WvCTvJEaNi//0l/WeZPefirxiHQRPkN8im0zUbpn01/33gc
-	3qhpOlw35JEFVXbb6mrZYspFKSMWqqBJX7n9+J1slVbqospM5WU3JZG9w9eP+d44STlcdo5OWo3
-	xiicUqTrsa4YLB7wAyiVFF2ZwaJklz+GpnxqMWOJIlyqGHD2OGS9VY6fqCbYeGxAr85kU1zY5bf
-	d6zPiaEWciWgg6c3RERLNs8+naqRrgvkRGDf7iZTkT7NJbxnZiuc2FKxJNh5rTwlaEkzOYGtk2L
-	npQ9qZu62H3ZEjcgyN+lRuQxWhkebaNFefs90dpbQ5XszQTWTB/d6A2j1DXZoZRG9Q==
-X-Google-Smtp-Source: AGHT+IHi6sUziup5Imivht3p4tfdKqc+3GPIBmuTJE3Jz7QA5nq01wCiYdj4NgLJULo/fXuYkwcppA==
-X-Received: by 2002:a17:903:1107:b0:223:f928:4553 with SMTP id d9443c01a7336-22e1eaa6e3cmr115148915ad.44.1746455102947;
-        Mon, 05 May 2025 07:25:02 -0700 (PDT)
-Received: from [127.0.1.1] ([120.60.48.235])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522ef9bsm55387685ad.217.2025.05.05.07.25.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 07:25:02 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Mon, 05 May 2025 19:54:42 +0530
-Subject: [PATCH v4 4/4] PCI: qcom-ep: Mask PTM_UPDATING interrupt
+        bh=gWghhPwRQnyBjM4WKGjObPR/MsMSgq7gL+g14y5zD+w=;
+        b=s9y4sXvlNiUX0ucq+kI87T4GDg21u62gGe3uQD8ZQv5WyD6nVmASpaF+Vd02My7J8e
+         ul0OG4+OF6SNdXgvY5fYunZW4zlbkovIXFABFcrCHIphSCGZToHRUUCK953mV8f03YnJ
+         QJu54uAFoS6v1nkxpe1oYOZtkYDFxFEiXR+FRiHX1SjQ3O3rm3ZnON3bssAmbEMypSdC
+         XXEKdb6GSPLjj14+3xdSrgDYZrmb9UKv0RTLpztjr0n76LjqWdHa3x70sodenlwh/hdl
+         PxClk7m+LIjRH4EC7VDLDXP0aLe4ZbHscnkbM3ZbGKMUeLcc4blPUPJvQzPImmvxUbti
+         7CIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPtts+JuXW6/lr9phD3swfPQKWjX5HRuEXoC1c6W13mBRVptBDYeU83hUnFKYzBzuaP+I7UX+Civ58@vger.kernel.org, AJvYcCUbQYdZ22u1gooz23hhXsM+EInmrsrp3l2YUJwqpaBqq+TpK5sD01PUODogpitfYT5MCZEIdpBQcOhyLI0=@vger.kernel.org, AJvYcCVaS9PMK5n9ar5mdlY+S3qWV9q7FKsOe6QUr7y6cpTWGZdScwh+C4xEfD+Rzk4i+fdLOb8Fp0ggr4Ezng0=@vger.kernel.org, AJvYcCWO/fTTKMg7FmxJ7ugTRQp2/OOJ1ZrQftwrZNgTqAj7BZ9AtI0c3VEjj0Tgnep7uLGZiCaKc+7HmXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuJhHxIajyGydYgNR9X6c0B9g4sj6U/cYbbt0rPuBuT8nlScrS
+	KsDT/yT8riFQCCXbgVlxCfX0RL5dvHFswyU8sg68aAQIR7p3XnXrrrqS0Fqk3G87zGTJ4AOgNxa
+	gVPNwYsH/WTxo+JSmFXjZOYeM8TI=
+X-Gm-Gg: ASbGncuFh7Pa5LF/U5Rfh/gGMRmxEEsoy/BkF3iS3iElb4pU0ofhsoORBpnWCO8yDXY
+	KlmaWunJq8CnoPC43N3E2iIVuYhbgcVb3fmL3U56t1cWTAu7MLi+UVEjSbYp9P/Fo+ME4H91wyv
+	91U+IaKkE+T2Zgnt/KH9bktA==
+X-Google-Smtp-Source: AGHT+IEgAt9FbQ8bV5flz7Ihpl/0mM8m1B6xfuh4imni31bOSXReD6mr2ZGM91dyNgPK44dVEOZubQ9FH5vIvJsQ+Bg=
+X-Received: by 2002:a05:6512:3b9f:b0:549:903a:1bf with SMTP id
+ 2adb3069b0e04-54fa4f96b5bmr1878098e87.48.1746456569476; Mon, 05 May 2025
+ 07:49:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pcie-ptm-v4-4-02d26d51400b@linaro.org>
-References: <20250505-pcie-ptm-v4-0-02d26d51400b@linaro.org>
-In-Reply-To: <20250505-pcie-ptm-v4-0-02d26d51400b@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1764;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=t1yw/3IQY04ascExMYNkywVMbYb9sD04RFjXDUub5p0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBoGMov0gqEE7Kdc466OsqO1FiN0DTGyfPvqdn2m
- eVdjnTOicSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaBjKLwAKCRBVnxHm/pHO
- 9dpkB/wKb8ndaeMSQkmTCkcOVpoz3jJsGF8LuXs4yeyrPnDlww16eE499nmvu+4SiBNyL4SHr3j
- VMfK69x/QiEpne1DT1W9KjiPfN8Deb5gYYv9LFwhvrNwjkAr1nyv8HHHfTxsjfZ/7te0ernpcJb
- EuVh+5I/BreM1zaKazDTyLOPanx6E7qmZsdPgwoPiS/QBz5MunEzHhXP/N6NWhnI6V4lf5nsXHY
- ouqr6m+5m3JG9DPu54V2T/YwA5TP2c+X+dhd3xK7JNoqACJD5fwjFsFmT2wAiPwHJQfKiun2+7K
- mgldjpP1un+ujJTjpZjs0Pcj93z/jG6UaHvsNberfdccks45
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+References: <20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com>
+ <20250502-pci-tegra-module-v3-1-556a49732d70@gmail.com> <87tt5znqrj.ffs@tglx>
+In-Reply-To: <87tt5znqrj.ffs@tglx>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 5 May 2025 09:49:16 -0500
+X-Gm-Features: ATxdqUHyohcc7LbeWorAjva_83S_kXGUOo2fo1bPnsNYPXfQukKYy0nLKhMjXH4
+Message-ID: <CALHNRZ_ctL1fJGO5752B6XEEXHwRe-a-Ofv+_=qtdq1WWXLLjw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] irqdomain: Export irq_domain_free_irqs
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When PTM is enabled, PTM_UPDATING interrupt will be fired for each PTM
-context update, which will be once every 10ms in the case of auto context
-update. Since the interrupt is not strictly needed for making use of PTM,
-mask it to avoid the overhead of processing it.
+On Mon, May 5, 2025 at 8:14=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> On Fri, May 02 2025 at 14:00, Aaron Kling via wrote:
+>
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > Add export for irq_domain_free_irqs() so that we can allow drivers like
+> > the pci-tegra driver to be loadable as a module.
+> >
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+>
+>   https://lore.kernel.org/all/877c33qxss.ffs@tglx
+>
+> Is it that hard to address review comments?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Sorry, this review comment completely slipped my mind when I went to
+work on the others for this series. Will fix.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 46b1c6d19974a5161c8567ece85750c7b0a270b4..9270429501ae1fbff7ece155af7c735216b61e1d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -60,6 +60,7 @@
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_CFG			0x2c00
- #define PARF_INT_ALL_5_MASK			0x2dcc
-+#define PARF_INT_ALL_3_MASK			0x2e18
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_DOWN			BIT(1)
-@@ -132,6 +133,9 @@
- /* PARF_INT_ALL_5_MASK fields */
- #define PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR	BIT(0)
- 
-+/* PARF_INT_ALL_3_MASK fields */
-+#define PARF_INT_ALL_3_PTM_UPDATING		BIT(4)
-+
- /* ELBI registers */
- #define ELBI_SYS_STTS				0x08
- #define ELBI_CS2_ENABLE				0xa4
-@@ -497,6 +501,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_5_MASK);
- 	}
- 
-+	val = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+	val &= ~PARF_INT_ALL_3_PTM_UPDATING;
-+	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+
- 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to complete initialization: %d\n", ret);
-
--- 
-2.43.0
-
+Sincerely,
+Aaron Kling
 
