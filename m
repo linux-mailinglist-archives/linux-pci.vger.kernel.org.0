@@ -1,135 +1,81 @@
-Return-Path: <linux-pci+bounces-27150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94165AA931B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 14:29:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92494AA93FF
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 15:08:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BC227A5441
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 12:28:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B5DA1887635
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 13:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7064C24BBF0;
-	Mon,  5 May 2025 12:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="d5rF7RkT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B37C2561A3;
+	Mon,  5 May 2025 13:07:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C8724A066
-	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 12:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3801F417E;
+	Mon,  5 May 2025 13:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448147; cv=none; b=erg9L929XS9xjP7Hh27V7mOcOZU7cjB0CSD14rpqd6P1/FVcjsecr4uSNrwrEANJDjrT41rj635i61H7HZLB3szoC7gHMum9iUwCbFINbxkv9aOihA6nT+avUIwt2LePIxguM/2fCAkpsobDzQniscPrULhWbmU+q99S8RplHrg=
+	t=1746450472; cv=none; b=qU8+pdPIsRfGtvSAerSajzZXZgvcR+DQVKH0t3nuig9jl6ml8tQ24tlyvC2658BW82oNZl24oe9TgWDsd+IyDu6VDCd85mBvXeA9PjQEcRRuRB+Gt6B0iS6XwBFgMgsKCKYr8empJVwqYvZWrjnVxqyocwRqYcGoPdOCz+BESCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448147; c=relaxed/simple;
-	bh=8st2WkhNjYa0sS1ZjGydQ5cI8qeMQD3qVytw+PewtLU=;
+	s=arc-20240116; t=1746450472; c=relaxed/simple;
+	bh=0R116YkxYZ8fDGIY+zNpy7zIJt7PwPrBLh/F+DkYU4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7eFdgEgaO3UPveEzFordoz4sC9wciBOSkPPbMG+RULcSF9DhVLltE08bNOaS5ir2Q+maoClJgS7coFT3vjfEB5D2e961CEKQPn4W+eKhmovV/8E88h/J1j8sHeppoi5k4KQPmPB9ZVle+aHwEHDuY5xHODIeuM0+dqF5aA0hlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=d5rF7RkT; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8f254b875so47725126d6.1
-        for <linux-pci@vger.kernel.org>; Mon, 05 May 2025 05:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1746448144; x=1747052944; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mfu+tu5hpHDhrhemjgH6VucLj0HupA6g7txg5hR1fns=;
-        b=d5rF7RkTmsJIBWsVD7r8ZkiItKXsgG/IbfI1O5P30GgnZ18NuAXa9eP3PofKtR4MG0
-         K3hKiOCDSlt1JiNQdhav+XFXb3Uu6gZqSHBorp5ZpiG1Hm/lph0vpRPQ0MP2poUZKyCZ
-         gLaF+DKDt6doc4D+XMMDB+puE8X1g0e1seAAPnKRXk6pn30VYcTdFZ2Vv58Th9J4lcvu
-         QFpQupl7AMl5vIx0jZlhfvDVfNplt3sa/ll0jeXRRN/jOxqPVOuRRbGLzME9SNr0s1jh
-         r80iCVsOAcD5bTSFn1dsarpkJqTWD7NBAJ+kwQbClpuV4o31q9LP5LPBTWmmjxrOJai7
-         Nf/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746448144; x=1747052944;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mfu+tu5hpHDhrhemjgH6VucLj0HupA6g7txg5hR1fns=;
-        b=DQ/3A2BsZK+nhTEGqOUTCNDa7bSZ87sAeTGsDHppV8f/21i44rC1/TKUZ0No3y97W7
-         FQB/jMD6AkmmxTT3FmEDhMU+dBN9RwyhFJ//SPFo3j0u2aiNqHC1jl++r4TvFK3mbiDo
-         PDqKrFgF5PSq6nWTiWAx14EMDMqo8ndxz89ZCNIDOlFTQmZYQ/pCkI+bgdl/NXy30K8s
-         wc7E10G8rypVGEefiaYIFgzNBscQX25KLtRGHY5sxI6oNvyyTV5Q5hMu4P5OuM3AtnUp
-         6WuZNPPnGuuTq+jCa2RLRUEJTTfu2U2UErLv3ajxDcFidFyyZ4DPOmsL1vKPL/5bP7o9
-         DV4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU4+lp+y9anu5IJZsYcRFtAOmNywjBugXn5mcuxyK8xuI4ffIAIFVqzMLv1Ysuq6BPBEJHQYwmJnH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhqpsL5pQM3KRZeP79GGGdcwfZgUFjPoKSYrzToFujUYkTECEH
-	bu8viUb1yuFeWied+1WwiDD72zbTwszlLM5G14wfdy06fV6N8DJsBHv9QUTQB0c=
-X-Gm-Gg: ASbGnctxz1t4JbKfDlkxbEpcDXPivjj/hiiMZEDG2p6bR/OgtCtz5+Wa8V9zmiyZEcI
-	9pKMx1IDipNDukT/0fcVCk10/ZWQ/9U3C+vzRqKlSyIqKz83NHfeU4Wucm4LSwUVIqjq9JUnPND
-	kxX0xIB0mqOih0N7deBSgfOYGR0XHZjHmC1dAkfg8ocmIyrajfqsigGb+aeMMr3OUVs22u6J+q8
-	vdYzcQIHUa0NrH/u/3/wYR4w/Dt2gkTr2rPrHupAIDx2gP8xP8eYdkeogbyBGUyr8VdUePDeeDY
-	2zrhc0wkbfVUKA9RvFUFT5+afVBLY5ZYZnYqggIYQNqsw4R5V0R64RMcoeBPs34XgfeN7zPrBTq
-	2Yyesh79ueJS2tKv2Olw=
-X-Google-Smtp-Source: AGHT+IHrrCkbPkXSi1eXZMzeybSC5P++W/lKXALdeEOdhNPGMmZG6yFN5oZZyeIbSctGCJtNUEnJAg==
-X-Received: by 2002:a05:6214:b69:b0:6d8:99cf:d2db with SMTP id 6a1803df08f44-6f523852b68mr146814446d6.38.1746448144313;
-        Mon, 05 May 2025 05:29:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c3887sm54983076d6.38.2025.05.05.05.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 05:29:03 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uBuwQ-0000000GxAs-3q1W;
-	Mon, 05 May 2025 09:29:02 -0300
-Date: Mon, 5 May 2025 09:29:02 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+VUh4HyLeCSR69T/G4FfSQeoIQ0rOB2bbOIsxibRJaAM2paTVKPF5yUHcXQz1bb188BsBCCgmWqblXNZbyxOF7YGfXaIUNYWaO20m45q9B5NmNrnvmr1vzsRzGKy5qRhRSWZRfGyxjS46LScRTB33zTw8mgsFAoDL6yXBFNnY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A3A472C051CF;
+	Mon,  5 May 2025 14:57:32 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 08C5B149282; Mon,  5 May 2025 14:57:49 +0200 (CEST)
+Date: Mon, 5 May 2025 14:57:49 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Moshe Shemesh <moshe@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v11 0/9] Provide a new two step DMA mapping API
-Message-ID: <20250505122902.GF2260621@ziepe.ca>
-References: <cover.1746424934.git.leon@kernel.org>
+	Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
+Message-ID: <aBi1zYVNQ5qHbC4f@wunner.de>
+References: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cover.1746424934.git.leon@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
 
-On Mon, May 05, 2025 at 10:01:37AM +0300, Leon Romanovsky wrote:
-> Hi Marek,
+On Mon, May 05, 2025 at 02:54:12PM +0300, Ilpo Järvinen wrote:
+> The commit a4e772898f8b ("PCI: Add missing bridge lock to
+> pci_bus_lock()") made the lock function to call depend on
+> dev->subordinate but left pci_slot_unlock() unmodified creating locking
+> asymmetry compared with pci_slot_lock().
 > 
-> These are the DMA/IOMMU patches only, which have not seen functional
-> changes for a while.  They are tested and reviewed and ready to merge.
+> Because of the asymmetric lock handling, the same bridge device is
+> unlocked twice. First pci_bus_unlock() unlocks bus->self and then
+> pci_slot_unlock() will unconditionally unlock the same bridge device.
 > 
-> We will work with relevant subsystems to merge rest of the conversion
-> patches. At least some of them will be done in next cycle to reduce
-> merge conflicts.
+> Move pci_dev_unlock() inside an else branch to match the logic in
+> pci_slot_lock().
+> 
+> Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: <stable@vger.kernel.org>
 
-Please lets have this on a branch so I can do the rdma parts this
-cycle.
-
-Thanks,
-Jason
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
