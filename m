@@ -1,52 +1,51 @@
-Return-Path: <linux-pci+bounces-27207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27208-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5FADAAA438
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:25:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3097EAAA445
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 01:26:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1AAB164CBC
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:25:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 493FC1A87754
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 23:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDFA2FD1D0;
-	Mon,  5 May 2025 22:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 938C52882C2;
+	Mon,  5 May 2025 22:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpY09A6i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx0qi3MK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0882FD1CA;
-	Mon,  5 May 2025 22:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3932882C0;
+	Mon,  5 May 2025 22:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483962; cv=none; b=WHPur/9NNniHPD1QBq0bhYDtyzaZtJ80RMLcDW8XxhCTKGZDtBBju0DhoP6/LQiTBLJES+K6P5T9Yw2i25JIgezmbXng/m9kz731r4xxZxPPdtikHvwDBVTO/bsUqdVBVgF+MNoRQX9DETosK8qIbOpuYroi0xfzFUQJ3EXWoF8=
+	t=1746483964; cv=none; b=EqM59gtvPZBhU80SfDktNL6tv3fI/x422wjdQ1w3O1Af4BdKeg1TJhBvVYKa2OxLiA6FlhR3P/acUDnAJ/iY8F2jZuz9uugyCmYZIAbphsxqsYpSRlNPlzVPu3+DuLl9AQ/E7v9hosgDF3qj4349rRcK/w1CSQ2sKgBNBeZxzrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483962; c=relaxed/simple;
-	bh=adLqJa5PTFXcFavZjhDXUWvT+RzBLTsTymTobjLKO2I=;
+	s=arc-20240116; t=1746483964; c=relaxed/simple;
+	bh=oWo5y1RaFIe1LD0KY9udUqxhUFVnrrcknEQyAbOi8pE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o2uvIlyXhGy7oQqhAPs7r1g9ND3/V/Pre/uv5ngABYtdrYhfe0Xylw/hOvuMQ+uDUDW2CCpaALKpl2aBlkYI3IPzpbj10/i6JdDX+VPwr9KcrvO10bffEiXkQO54GXSqLjA/D+ggPhILEWUN5HxpHNGd2aMtwlXp105pncn7pNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpY09A6i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6EAC4CEE4;
-	Mon,  5 May 2025 22:26:00 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Exbkn9/pVyqSthm7uWvdIaImBYNVL8Ve/YTB6D39GBUPcGYV8P+5yWnUAwH2nIFVjQHlArgU5ewBjMw21FWWD1qo79JOIgKTE0aasoNRiBKqc5Bl4ldntOYAXLpKjw8L19056YbCUs2MiS4IXukBfhUInNYXXyUMSnxt0m87GKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kx0qi3MK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A493AC4CEEE;
+	Mon,  5 May 2025 22:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483962;
-	bh=adLqJa5PTFXcFavZjhDXUWvT+RzBLTsTymTobjLKO2I=;
+	s=k20201202; t=1746483964;
+	bh=oWo5y1RaFIe1LD0KY9udUqxhUFVnrrcknEQyAbOi8pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HpY09A6i6+0Kj88buMX7p1nbshO22lIAnN3Sx2ms9+1JJT1pNH+R3/L2VQDTco5Yh
-	 Py8pbk9O0SaRfmqPq6ru6PTbvUCy+tkFsMX16WkwghuQ/X5+zTnTnUtvWKlGfSznhn
-	 0TpZ4uHfx+eA2EvpxqePyHg4HL/QPhYCPgfTvlWX/mT4aIiOF/OW87ldYVJe1RrLx7
-	 sScM5FwnHtQFpiOfffJjN/8QrV//F82gNSSyZAgi1Qj4J1trjXV6fVoQiVookXQldT
-	 590C3YRuzO6zGGPeDWYTfDTkuVeTAxy5E8HDbMF7gs36n6APoJ5aaMDpScjWMEsekE
-	 7xZETsTHXdAHQ==
+	b=Kx0qi3MKKGU02G4NZKnD83DCbGCWByvNO73B85uJMUmJCAhbo14+LYnQfF8FHPxo1
+	 kL6E4xBLzDXosf5LeVlsxjZQLyr1oQkpMbUbItKiJsOfkn56sHgCwm+E6fbMr/1Th2
+	 YYCo9emnnQX+xzwWBj40FlEPe4GsM1f0BUZslOYZtb/2AerPZxbci6gZeqGucwJ/kl
+	 JNXfrx9hvhfeBncpopvmXlOaaus3bBo1nZSj8a8Wr62dL2d98J1yZoLQVpQzdArk8d
+	 kwVcSh7lu2JKKhPZEhWa08FWQnSR386FaFg/GOdOLyG34IOc9EHHUDrrWOcGE4wWNx
+	 S7sL69sKXyK6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Stanimir Varbanov <svarbanov@suse.de>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
 	"Ivan T . Ivanov" <iivanov@suse.de>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
@@ -59,9 +58,9 @@ Cc: Stanimir Varbanov <svarbanov@suse.de>,
 	linux-pci@vger.kernel.org,
 	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 293/642] PCI: brcmstb: Expand inbound window size up to 64GB
-Date: Mon,  5 May 2025 18:08:29 -0400
-Message-Id: <20250505221419.2672473-293-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 294/642] PCI: brcmstb: Add a softdep to MIP MSI-X driver
+Date: Mon,  5 May 2025 18:08:30 -0400
+Message-Id: <20250505221419.2672473-294-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -79,41 +78,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit 25a98c727015638baffcfa236e3f37b70cedcf87 ]
+[ Upstream commit 2294059118c550464dd8906286324d90c33b152b ]
 
-The BCM2712 memory map can support up to 64GB of system memory, thus
-expand the inbound window size in calculation helper function.
+Then the brcmstb PCIe driver and MIP MSI-X interrupt controller
+drivers are built as modules there could be a race in probing.
 
-The change is safe for the currently supported SoCs that have smaller
-inbound window sizes.
+To avoid this, add a softdep to MIP driver to guarantee that
+MIP driver will be load first.
 
 Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
 Tested-by: Ivan T. Ivanov <iivanov@suse.de>
-Link: https://lore.kernel.org/r/20250224083559.47645-7-svarbanov@suse.de
+Link: https://lore.kernel.org/r/20250224083559.47645-5-svarbanov@suse.de
 [kwilczynski: commit log]
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 1a3bdc01b0747..ff217a0b80ad3 100644
+index ff217a0b80ad3..bae226c779a50 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -309,8 +309,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
- 	if (log2_in >= 12 && log2_in <= 15)
- 		/* Covers 4KB to 32KB (inclusive) */
- 		return (log2_in - 12) + 0x1c;
--	else if (log2_in >= 16 && log2_in <= 35)
--		/* Covers 64KB to 32GB, (inclusive) */
-+	else if (log2_in >= 16 && log2_in <= 36)
-+		/* Covers 64KB to 64GB, (inclusive) */
- 		return log2_in - 15;
- 	/* Something is awry so disable */
- 	return 0;
+@@ -1947,3 +1947,4 @@ module_platform_driver(brcm_pcie_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
+ MODULE_AUTHOR("Broadcom");
++MODULE_SOFTDEP("pre: irq_bcm2712_mip");
 -- 
 2.39.5
 
