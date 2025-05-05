@@ -1,60 +1,66 @@
-Return-Path: <linux-pci+bounces-27243-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27244-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E3B4AAB2C7
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 06:29:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A8C6AAB31D
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 06:38:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B743B188C232
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 04:27:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6EF217DB52
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 04:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2620A36D439;
-	Tue,  6 May 2025 00:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C93AA218ACA;
+	Tue,  6 May 2025 00:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlaStX4p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmSqBLW2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDAB2D9DA4;
-	Mon,  5 May 2025 22:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958F338B4CA;
+	Mon,  5 May 2025 23:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485855; cv=none; b=kXl+Kc3KCZ4RU2GJgSB15yS52leL9DhO2/5qg5GK3wXdVAJv7wjh4iMOdFIvqRwBS8PGfEpZIVkuNW6/vhIRLSol6PmDoY222n7Eh8dmiIDQ6CAoMEtIfVEZI2GkPie37lOfKKmjFmGpZflp8o4gkIjPIaNBnjIJ4ssw21nrcjg=
+	t=1746486074; cv=none; b=qlw5XHfsxsUIIwBjh8sj/IuZSuI+pHb5621sV6XnovY1x7GYPMW8aOkqHH/qK2jZm9ChEqRNNx7ddEKNFRgJc6XGWi7KT1gKpeorPAJqvsN5Bdyy8aNeCIaYrulz6RD5H2NJK1eSglvP1mqct/1aHcAM45r1xhhJLcNvGAoQprA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485855; c=relaxed/simple;
-	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
+	s=arc-20240116; t=1746486074; c=relaxed/simple;
+	bh=8Nhg1ffeN3yPY9Tc4uln2i2CXIJkjjf8aWFSD20mPIU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YqMzw6VU4nQQfMXwBgKItwFDgeEBhCGHT6uirPie2pSIeddezBbgx5Z/6xGepJQYOl17B/dbbahwpdmGjN1cmvCtCWVX55C8He4mqKmWWJbgfxHdjAohTfqnjmkVMKakSpyziLaMl+oIE2Fw1E51plqL+EoI2p+HJpR50XqO2p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlaStX4p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186FCC4CEEE;
-	Mon,  5 May 2025 22:57:34 +0000 (UTC)
+	 MIME-Version:Content-Type; b=UYMHa475Sha466j64uojtcY5yCFz6YWMdPi6EnzqWWyYbe0wgH49S+addqB/hTxI75wmRq6Oi8N+2PMjEvqpiTZMjqEZJgVXCDbyF5oYbHYZ8RkhziqmeaGnMbciD7SF4lWFMWQ1T0Ji1Gqw9cijpr9gcOZ7uDIzGAd2rN8zAzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmSqBLW2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F85C4CEEF;
+	Mon,  5 May 2025 23:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485855;
-	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
+	s=k20201202; t=1746486074;
+	bh=8Nhg1ffeN3yPY9Tc4uln2i2CXIJkjjf8aWFSD20mPIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jlaStX4pzLwK20c4jdajXDiGCl7tBMBSxvU0gtZPTwyvnWRA2HWTCLp2uD5UmLOq+
-	 IlCLDETIbf44tCuOuQ4vuZl6C1eBj5LJRU9ckMQmpfQe55tNLR/Bd3KKzqto/RtgTW
-	 ZLm1XPj8fGgCXlZQKFuNZXux0xJ/qKvsqW0uKFtT61ZBNnM61g52/Ag9+0QaDhHZDN
-	 sLEeHjTHs6mnNuGB7yY6jbUsjXe2pHw2yiusKnSefw8OEtotqXSrnhKw0Vh9eq8gFF
-	 Y6gUIPKSDLMwh4sED50KrtIDaxuvhCUrprBh0LdyrNJIjKm/uDhAG81cQqga5tU3GH
-	 K7a1Rmn1VdS+A==
+	b=WmSqBLW2BfqOUuGsjf2JSiTho+CcjRKDcydzJgf0oaa6K4GGIxfTFPx6Pcc19WzWH
+	 Zv6430xeWeFfVgX+o6WJROteM56KTaEu9szCBHJcNfrDxHHufzzfCFBsRMSxiFZ6hw
+	 0plJ0rRp4V9WjQdqQxhJwEbQF0g1Nl9LRxBvdkmq3Pa+tWjJIKLWTVFv+g4MjkZ3FH
+	 m0TZsfajKdTH1d+u5W9wJn5eczN/igimJJfgo8+c+77kolNgR183iHITIVEmb4gwwu
+	 yAad78+L/9bX7BFSLTHYN00iladRQto0mRJ+5iSHzpZkJ5D3ZZF5tFI7JKuKx6qyEo
+	 LHOrmKivVm6kg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Stanimir Varbanov <svarbanov@suse.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
+	jim2101024@gmail.com,
+	nsaenz@kernel.org,
 	lpieralisi@kernel.org,
 	kw@linux.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 031/294] PCI: dwc: ep: Ensure proper iteration over outbound map windows
-Date: Mon,  5 May 2025 18:52:11 -0400
-Message-Id: <20250505225634.2688578-31-sashal@kernel.org>
+	manivannan.sadhasivam@linaro.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 141/294] PCI: brcmstb: Add a softdep to MIP MSI-X driver
+Date: Mon,  5 May 2025 18:54:01 -0400
+Message-Id: <20250505225634.2688578-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -64,48 +70,42 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Frank Li <Frank.Li@nxp.com>
+From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit f3e1dccba0a0833fc9a05fb838ebeb6ea4ca0e1a ]
+[ Upstream commit 2294059118c550464dd8906286324d90c33b152b ]
 
-Most systems' PCIe outbound map windows have non-zero physical addresses,
-but the possibility of encountering zero increased after following commit
-("PCI: dwc: Use parent_bus_offset").
+Then the brcmstb PCIe driver and MIP MSI-X interrupt controller
+drivers are built as modules there could be a race in probing.
 
-'ep->outbound_addr[n]', representing 'parent_bus_address', might be 0 on
-some hardware, which trims high address bits through bus fabric before
-sending to the PCIe controller.
+To avoid this, add a softdep to MIP driver to guarantee that
+MIP driver will be load first.
 
-Replace the iteration logic with 'for_each_set_bit()' to ensure only
-allocated map windows are iterated when determining the ATU index from a
-given address.
-
-Link: https://lore.kernel.org/r/20250315201548.858189-12-helgaas@kernel.org
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+Link: https://lore.kernel.org/r/20250224083559.47645-5-svarbanov@suse.de
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f2e5feba55267..26ad643fb4248 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -281,7 +281,7 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
- 	u32 index;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	for (index = 0; index < pci->num_ob_windows; index++) {
-+	for_each_set_bit(index, ep->ob_window_map, pci->num_ob_windows) {
- 		if (ep->outbound_addr[index] != addr)
- 			continue;
- 		*atu_index = index;
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 8b88e30db7447..9bcf4c68058eb 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1632,3 +1632,4 @@ module_platform_driver(brcm_pcie_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
+ MODULE_AUTHOR("Broadcom");
++MODULE_SOFTDEP("pre: irq_bcm2712_mip");
 -- 
 2.39.5
 
