@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-27174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27170-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C8DCAA9943
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 18:39:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E331AA993A
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 18:38:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A9141884B50
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 16:36:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FD2F3BD806
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 16:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1F5F77111;
-	Mon,  5 May 2025 16:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECA9268684;
+	Mon,  5 May 2025 16:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pNIhhw9Q"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TAXmGWzQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3C626C3B2;
-	Mon,  5 May 2025 16:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5CE26B2C8;
+	Mon,  5 May 2025 16:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462909; cv=none; b=qqwzczuIRROa/5nua6D49Ajl8/xg2tCTMqwyyMNxAbp6RKayJwq3PmpNGNVUH+7nMtWNyQadnkxl3aTez7IxaQIL9YaNyMBpGf5GQRXWFitt1hR1xcS/M8Ov+PxnWp9cbd/oNmd5uTMK82fcZJ4GmmgrwbZyPblwOHJfX/ZrUPU=
+	t=1746462898; cv=none; b=qjtlBc4MHs8feyc+9oSs0nwluJmTOprzw/ONzs3dDJljSgLzKqe63UhkBjQC2oEwN+VVCCIcIJp8VSsOqsQhQNbjjvhPXJ6c19pxmTMKVStPHRxlMBzETCJ8FaEf/rum8B1ZhT/MWW6l+QfK+SzA+05U4jwTqI4QN/qTCaaip9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462909; c=relaxed/simple;
-	bh=ngbHOETLVG9cWTJhT5BSru7xH+CdbBGKlB3/+1DsWqg=;
+	s=arc-20240116; t=1746462898; c=relaxed/simple;
+	bh=TDSdxWRzVL3EAEkfKtH0hU2ro1FZ98QdYMon1zNugjY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q1GRCCreddh4sucq6F5pJufTdCGWTqbJN2YG5unVT3P2b2y/ilbAJB3RX3qLNbG3ivUdzDVdvQ9fEHm1p64k8iDztEAooSjdtL+fz2KzBsD3ldrUfpHHx7SHFnDmhM2QMvN4mMSxWuD3Wi+AFVxw+aR6ihEPxnTqfyc+Jsz6aeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pNIhhw9Q; arc=none smtp.client-ip=117.135.210.2
+	 MIME-Version; b=Hx9FlXl5q28GHrd8CIHO634138JCq4iDBjV3q82lZ7a8enC5Z2qm0Q69bxT6uKH0qPhTQtZG7N1VZKW7IWu09izdCzfHbLrpBl329HAmWNCjL5lA67DVkeI+1SJXXc2jOHm2nGwG7S1N16oK60EM+9uytLfbc+jrXha2Hmu1Ix8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TAXmGWzQ; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=JF8kM
-	Xkeg981ItdpJyZMD6/FpfMNcAlvk5L8cK//WKI=; b=pNIhhw9QY9lAiapb3GPOK
-	sxlMVn2+AqwxbOCU309KAkffpLOjQ6X65PnbEepozRT64iq2/Ts5KxUhO72gUZ4Q
-	BaS2GnaYLPELXKQzGYhyd7/414tYhpfciUeImhO1Qpt58U9/rczY8gapD6CvvJqj
-	48Vylw+IUXVDw3cAHc/ryA=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=p7qKF
+	3tUQSId+5j0TA3YQ1zlCcvIy9JeUWpUNfkjAIU=; b=TAXmGWzQO0FQEEtpnh/KI
+	4ZR/4VJKkC0OfMFbbHxpJanghQoa3P2H6flt6EYBbnN0WOI45fsQE/CV8TSBYbZo
+	y5R2o/fW2Sn7/dqrBGXAT5AtDwMOPMVNVHDOIcDMkQs6cxTF4WzUb1aUpVKU8g2v
+	FQ9TLOUfeV77thS/7rrZYU=
 Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDn+lmO6BhoumvGBw--.3540S3;
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDn+lmO6BhoumvGBw--.3540S4;
 	Tue, 06 May 2025 00:34:24 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
@@ -50,9 +50,9 @@ Cc: cassel@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v11 1/6] PCI: Introduce generic bus config read helper function
-Date: Tue,  6 May 2025 00:34:15 +0800
-Message-Id: <20250505163420.198012-2-18255117159@163.com>
+Subject: [PATCH v11 2/6] PCI: Clean up __pci_find_next_cap_ttl() readability
+Date: Tue,  6 May 2025 00:34:16 +0800
+Message-Id: <20250505163420.198012-3-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250505163420.198012-1-18255117159@163.com>
 References: <20250505163420.198012-1-18255117159@163.com>
@@ -63,79 +63,85 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDn+lmO6BhoumvGBw--.3540S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uF18WF13CFW8ZFyfAF4rAFb_yoW8tFyUpF
-	W5AF1fAr48JFy5JFs5Zay8GFy5GF97tFWUGrWxJ3sxZF13CayUAasxKa45Xr12gr4DZr18
-	Z395GFyUC3WDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEf-BJUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhpEo2gY51gYzgAAse
+X-CM-TRANSID:PigvCgDn+lmO6BhoumvGBw--.3540S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFyUuF4Uur15Ar17AFW5Wrg_yoW8uw1DpF
+	98Ca47Ar48JF47Cws29ayjyr13Xa4qkrW8G3yagwn8uFy2yF10qwsIkFy3tF17JrZ293W5
+	XrWqv395WF90yaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pix9N3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx1Eo2gY3b-03AAAsb
 
-The primary PCI config space accessors are tied to the size of the read
-(byte/word/dword). Upcoming refactoring of PCI capability discovery logic
-requires passing a config accessor function that must be able to perform
-read with different sizes.
+Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+- Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+- Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+- Extract PCI capability fields via FIELD_GET() with standardized masks.
+- Add necessary headers (linux/align.h).
 
-Add any size config space read accessor pci_bus_read_config() to allow
-giving it as the config space accessor to the upcoming PCI capability
-discovery macro.
-
-Reconstructs the PCI function discovery logic to prepare for unified
-configuration of access modes. No function changes are intended.
+The changes are purely non-functional cleanups, ensuring behavior remains
+identical to the original implementation.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
-Changes since v9 ~ v10:
+Changes since v10:
+- Remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+
+Changes since v9:
 - None
 
 Changes since v8:
-- The new split is patch 1/6.
-- The patch commit message were modified.
+- Split into patch 1/6, patch 2/6.
+- The
 ---
- drivers/pci/access.c | 17 +++++++++++++++++
- drivers/pci/pci.h    |  2 ++
- 2 files changed, 19 insertions(+)
+ drivers/pci/pci.c             | 9 +++++----
+ include/uapi/linux/pci_regs.h | 2 ++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index b123da16b63b..603332658ab3 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
- EXPORT_SYMBOL(pci_bus_write_config_word);
- EXPORT_SYMBOL(pci_bus_write_config_dword);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e77d5b53c0ce..27d2adb18a30 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -9,6 +9,7 @@
+  */
  
-+int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
-+			u32 *val)
-+{
-+	struct pci_bus *bus = priv;
-+	int ret;
-+
-+	if (size == 1)
-+		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
-+	else if (size == 2)
-+		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
-+	else
-+		ret = pci_bus_read_config_dword(bus, devfn, where, val);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pci_bus_read_config);
-+
- int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
- 			    int where, int size, u32 *val)
- {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index b81e99cd4b62..5e1477d6e254 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -88,6 +88,8 @@ extern bool pci_early_dump;
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
- bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
- bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-+int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
-+			u32 *val);
+ #include <linux/acpi.h>
++#include <linux/align.h>
+ #include <linux/kernel.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+@@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+ 	pci_bus_read_config_byte(bus, devfn, pos, &pos);
  
- /* Functions internal to the PCI core code */
+ 	while ((*ttl)--) {
+-		if (pos < 0x40)
++		if (pos < PCI_STD_HEADER_SIZEOF)
+ 			break;
+-		pos &= ~3;
++		pos = ALIGN_DOWN(pos, 4);
+ 		pci_bus_read_config_word(bus, devfn, pos, &ent);
  
+-		id = ent & 0xff;
++		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+ 		if (id == 0xff)
+ 			break;
+ 		if (id == cap)
+ 			return pos;
+-		pos = (ent >> 8);
++		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+ 	}
+ 	return 0;
+ }
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index ba326710f9c8..35051f9ac16a 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -206,6 +206,8 @@
+ /* 0x48-0x7f reserved */
+ 
+ /* Capability lists */
++#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
++#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
+ 
+ #define PCI_CAP_LIST_ID		0	/* Capability ID */
+ #define  PCI_CAP_ID_PM		0x01	/* Power Management */
 -- 
 2.25.1
 
