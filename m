@@ -1,140 +1,136 @@
-Return-Path: <linux-pci+bounces-27179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE767AA99E3
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 18:59:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 755C3AA9A91
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 19:31:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2FB7188DB1A
-	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:00:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA0C43A5CD7
+	for <lists+linux-pci@lfdr.de>; Mon,  5 May 2025 17:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77AB5264FB1;
-	Mon,  5 May 2025 16:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9D426C390;
+	Mon,  5 May 2025 17:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUyyrIli"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnVW0EaO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B701D63C7;
-	Mon,  5 May 2025 16:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE4126B978
+	for <linux-pci@vger.kernel.org>; Mon,  5 May 2025 17:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464386; cv=none; b=UcS39uEW5Nas9yqlm/42BN4u5aM4Q1N2jDKByvhmugnQpq7bfTCPw+qnmlIcZ8vMNs46RMxT41IHjJSyy/1V74wkBEN5VhkKh35o5ALRs2ntUI20I3ZitX3ftam3oJVmrXVHj3l10m4GbTjVwVMOp+pS53lcQBhf9wKZEldX9Y0=
+	t=1746466270; cv=none; b=ufbCunIyx3aEgAOEjo+OP5s8MkPbCM/V0C49Z5zjCFR7aebwaRqcabm/8NDGbtUVULz7qzTw1uaczYsfCz049ZfZ0VRiBQhSR6wDOZTbCKG/1pTW2lCEtBBpLG6zhbK7qCKTP1ZSXhrxsmCnDuYtPkGUhuN1RkPFNqUSPHm4pcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464386; c=relaxed/simple;
-	bh=lxjsFL+wMV496UmAwohSTtTLjrO4J7BZiWm7K8VT3/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uRKFcM8IYUXGZz3Tjrpm+mG4JFBazoNEOYY5kaNqFSQ4KEj5jhWUVSDkOhQFZJIOWkSXN2n4PztP84bDAVulX3kAhuDt3buy9SVVnphgQM7OGMNZcd56UTj0wGorrXTf+Mpote1hV8C9SQDbpTq5LL6hMwOlGYiMzIydOLa84IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUyyrIli; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e816aeca6so5926412e87.2;
-        Mon, 05 May 2025 09:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746464383; x=1747069183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxjsFL+wMV496UmAwohSTtTLjrO4J7BZiWm7K8VT3/I=;
-        b=IUyyrIli1jkPpPGGAKqRY9BlK3NcZZNWIkFoKefKS2D+HE5uMMoYNkAn+Ko8uUqihL
-         Rkqf8n1Df26p8/oLMIBWKBBapC+bUp7PxelRdtEzkxotzVpa5RWh5ypHeZxt2dLdkr23
-         PvpF4/NUGN/4jvEKJknb5olsQzBPXFjbBLTD998SbIc6pB6nmpclXNjcn73+sU/eA24C
-         pX0xV15uF8JaMU/oCsV5eYDB6wY3r7qPm0REHMHVZAZahPzLe6Nl17WSpPmxbiJJISAl
-         xMPOo6qmzlnb6mjPyymNwMiwzG73GUyIPQAy+FyJQIkIxIZ67WCref+f3fVprdbTzv/L
-         dQcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746464383; x=1747069183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lxjsFL+wMV496UmAwohSTtTLjrO4J7BZiWm7K8VT3/I=;
-        b=uykHa0OLra/Vx/NykMKrn4lwAlSVbjkmeHHapJGeH1zFmQSOHqZlwyxvtrUVZi3tt4
-         fyofqf2Yj3PKVdBuZZrCJLQL0a90fdQJ2OIPnGab5IYOnXjcqYH6Sjoh6pYek2IEklZu
-         TpYPGUatjFrSy8iuUnOdo6ZfIIY1OVpwYrLGqAKuMS9dJ1M2imNe24HlxCR9Xno4vD7n
-         9992kR3MQwB90j6r5lMHzSet2NwskMmQOrLRIaA+1oi/pR3milgG4tFmnQBoGK+Dui2R
-         4QSoxAEsxgaup0idvbtV9gNDiU90GBq6WYKRU4pEJPSTkKlZniCLxPm0tX8ctrfr4xWi
-         R6SA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTSGe/dxYTBhIEqkIzgJ74KWkl1tygD2mLsi4CGCA5SOfNAUUPfn9zzfVqp5XQNDMskVGhxMxLUdzhdwY=@vger.kernel.org, AJvYcCUtbVX7tY7krnNnKTcqMtm2F2tpmTiClVhJZ9aZOox7icEERmBNgBGmty4RV903WSAiNVwivIdLGA8=@vger.kernel.org, AJvYcCVLIGYOV0wGtNJHEjqjoyueDdyWMcI+GOXvyN4NghHUAIBbd86Xb+BO6lDxurJgmnnqqHbfFFd/TRIBnh4=@vger.kernel.org, AJvYcCXJZnerSFJigcD5SHCYY2j6ZZ6sC9ax/uR5sEqG4j41pxt0CGJi+p50T5b/jJOOeUlmnP0Gvy1YMZoN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0vEzjSafu7c6pnNJxQF4bTvSCEtDbUYNKXWk060equ36F3eAw
-	P2UeBqCwUhPHy8gZmCuq6v6gn9RLp+e16AWluBAtnBnLSbFaMVh+earyBg8yGMLZgRxlWxSwcd1
-	EP6HBb39GiMI1xw8YUbQErcQMKJA=
-X-Gm-Gg: ASbGnctdpwUbUF9BjO61W/3ibzN8UH0Oxfytg4OrVfIVvF06kR87G3kQ6aGqIKgGE+v
-	36Wkbe+rZch4QfgfHZdYSO5Abz/uH7/eSZL6ZFtVRzHH0tquc2UapKPy0a4I2UP/31ronLnFeWn
-	0OY+3w9KoRVzIoEUDQY3/U6ZGDgj/uo51VCQu1QU3ISNmZP/T4NeHm0nhW
-X-Google-Smtp-Source: AGHT+IGWfM2phNYFBxfw+WiwtJ4VT74sTH1JYbp4A09ZPJ0thrp7SCQ3SyvfiPXjmaCWTlGYcUcb0PFFmeyTHU635bw=
-X-Received: by 2002:a05:6512:b0b:b0:545:16a5:10f5 with SMTP id
- 2adb3069b0e04-54eb243945amr2462931e87.30.1746464382420; Mon, 05 May 2025
- 09:59:42 -0700 (PDT)
+	s=arc-20240116; t=1746466270; c=relaxed/simple;
+	bh=mUop/LB2PyEZxafvDtzmC6J52m3TFkDR8pVKOV0YheE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=T5htMsCuwhWW0xV3eYtw78TRl1o2HWKXp8Bfa2ZvzqPkPjPNhcWSmhWPGTuLaDMLzCiKlt5/Zd6HWCC8XFiwmPry4vaWnkkhqyywYnLNpxlqd5Dwu0dxcKetlPS+1ECdKttgpUCUwOrD8YB2jZ9i2/EZsHXm9XZV7j4chXdnioc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnVW0EaO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4196DC4CEEF;
+	Mon,  5 May 2025 17:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746466269;
+	bh=mUop/LB2PyEZxafvDtzmC6J52m3TFkDR8pVKOV0YheE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GnVW0EaOxB3kCS6GyN+V2URPftjGt89mGxP8R+X72q0UEaOOkwMEi7e2M/RKU7zWJ
+	 QrhfKbvJQtsWhUVmaz1V3lJO9XDj9yiRAwq3VQutejNtMhP77MDSVpUlLprUeOwB5O
+	 fGIiE/7rgCemrCAaKMlETBUQAPgnP3mjSNdAuw6iVt1/1MSBiW7RR5VyuEW6Yoilq4
+	 oc/ox3jZLDZYJS9/AgGuzE+bmZAXKdFYmnmGR2GceF+qHuT9LfZlfqprsTh3sT4e0Y
+	 EGM0AchSfUE3orbAi90SH08BiVW5j/1kdIg9LUwAPPRptaL0uE3J6VSGY951ygg1Ih
+	 WK0fpBvzywhGQ==
+Date: Mon, 5 May 2025 12:31:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Szymon Durawa <szymon.durawa@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Subject: Re: [PATCH v3 7/8] PCI: vmd: Add support for second rootbus under VMD
+Message-ID: <20250505173107.GA983255@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
- <20250505-pci-tegra-module-v4-4-088b552c4b1a@gmail.com> <idddypjxxtiie3tllfk47krcydlno4lnhbkik4wakekcyu7c2d@iurtu6bjzeey>
- <CALHNRZ88VaS6zmmnkQg_WrBVPjMT4e2uPUPEQUj8ARL1TieZPg@mail.gmail.com> <gxbuvopbhum3v622gf4olzfspgihxt3dm4z3rsj4gquaabt2c4@peemxrxshjuu>
-In-Reply-To: <gxbuvopbhum3v622gf4olzfspgihxt3dm4z3rsj4gquaabt2c4@peemxrxshjuu>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 5 May 2025 11:59:27 -0500
-X-Gm-Features: ATxdqUHlF-KwEnhKKwshWxs2CcgMthGV7BB1qKE9YC7P7Z8WKl37pcpWArjpasQ
-Message-ID: <CALHNRZ9DHApwS_W22aD0uOFJKBk8WkucFo04_vjLRpnRjP4WCg@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] PCI: tegra: Drop unused remove callback
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241122085215.424736-8-szymon.durawa@linux.intel.com>
 
-On Mon, May 5, 2025 at 11:48=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Mon, May 05, 2025 at 11:43:26AM -0500, Aaron Kling wrote:
-> > On Mon, May 5, 2025 at 11:32=E2=80=AFAM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > On Mon, May 05, 2025 at 09:59:01AM -0500, Aaron Kling via B4 Relay wr=
-ote:
-> > > > From: Aaron Kling <webgeek1234@gmail.com>
-> > > >
-> > > > Debugfs cleanup is moved to a new shutdown callback to ensure the
-> > > > debugfs nodes are properly cleaned up on shutdown and reboot.
-> > > >
-> > >
-> > > Both are separate changes. You should remove the .remove() callback i=
-n the
-> > > previous patch itself and add .shutdown() callback in this patch.
-> > >
-> > > And the shutdown callback should quiesce the device by putting it in =
-L2/L3 state
-> > > and turn off the supplies. It is not intended to perform resource cle=
-anup.
-> >
-> > Then where would resource cleanup go?
-> >
->
-> .remove(), but it is not useful here since the driver is not getting remo=
-ved.
+On Fri, Nov 22, 2024 at 09:52:14AM +0100, Szymon Durawa wrote:
+> Starting from Intel Arrow Lake VMD enhancement introduces second rootbus
+> support with fixed root bus number (0x80). It means that all 3 MMIO BARs
+> exposed by VMD are shared now between both buses (current BUS0 and
+> new BUS1).
+> 
+> Add new BUS1 enumeration and divide MMIO space to be shared between
+> both rootbuses. Due to enumeration issues with rootbus hardwired to a
+> fixed non-zero value, this patch will work with a workaround proposed
+> in next patch. Without workaround user won't see attached devices for BUS1
+> rootbus.
 
-I may be misunderstanding how stuff works, but don't those resources
-still need cleaned up on shutdown/reboot even if the driver can't be
-unloaded? I recall seeing shutdown errors in the past when higher
-level debugfs nodes tried to clean themselves up, but bad drivers had
-left their nodes behind.
+s/rootbus/root bus/
 
-In any case, do you want me to just not add .shutdown() at all, or try
-to set the proper power state? Prior to the half-baked attempt to make
-this driver a loadable module several years ago, there was no such
-cleanup.
+> Suggested-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+> Signed-off-by: Szymon Durawa <szymon.durawa@linux.intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 208 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 180 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 6d8397b5ebee..6cd14c28fd4e 100755
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -26,6 +26,7 @@
+>  #define VMD_RESTRICT_0_BUS_START 0
+>  #define VMD_RESTRICT_1_BUS_START 128
+>  #define VMD_RESTRICT_2_BUS_START 224
+> +#define VMD_RESTRICT_3_BUS_START 225
 
-Sincerely,
-Aaron Kling
+You're just following the pattern here, which makes sense.  But these
+are apparently bus numbers, which are typically written in hex, so it
+would be nice to convert them all so we don't have to convert.
+
+>  #define PCI_REG_VMCAP		0x40
+>  #define BUS_RESTRICT_CAP(vmcap)	(vmcap & 0x1)
+> @@ -38,15 +39,33 @@
+>  #define MB2_SHADOW_OFFSET	0x2000
+>  #define MB2_SHADOW_SIZE		16
+>  
+> +#define VMD_PRIMARY_BUS0 0x00
+> +#define VMD_PRIMARY_BUS1 0x80
+
+The above are bus numbers; the below are register offsets.  Would be
+nice to separate them with a blank line since they are semantically
+different.
+
+I don't understand the difference between VMD_RESTRICT_3_BUS_START and
+VMD_PRIMARY_BUS1.  Maybe one is the default Primary Bus Number of the
+Root Ports after a reset?
+
+> +#define VMD_BUSRANGE0 0xc8
+> +#define VMD_BUSRANGE1 0xcc
+> +#define VMD_MEMBAR1_OFFSET 0xd0
+> +#define VMD_MEMBAR2_OFFSET1 0xd8
+> +#define VMD_MEMBAR2_OFFSET2 0xdc
+> +#define VMD_BUS_END(busr) ((busr >> 8) & 0xff)
+> +#define VMD_BUS_START(busr) (busr & 0x00ff)
+
+Would be nice if VMD_BUS_END/VMD_BUS_START were defined with
+GENMASK(); then we could use FIELD_GET() below to extract them.
+
+Nit: indent these bus numbers and offsets so the values line up like
+the other #defines.
+
+> +	 * Starting from Intel Arrow Lake, VMD devices have their VMD rootports
+> +	 * connected to additional BUS1 rootport.
+
+This doesn't quite make sense.  Root Ports can't be connected to
+another Root Port.  I think you mean "Root Ports on the additional
+root bus".
 
