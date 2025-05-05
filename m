@@ -1,110 +1,92 @@
-Return-Path: <linux-pci+bounces-27249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 667B5AAB7B5
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 08:16:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 227EEAAB7DA
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 08:20:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E63A1C20B38
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 06:10:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E002B177A22
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 06:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086513A786B;
-	Tue,  6 May 2025 00:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6514298CDC;
+	Tue,  6 May 2025 01:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hijo+N4W"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hSyAR+g6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341C328469A;
-	Mon,  5 May 2025 23:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C120528D8C4;
+	Mon,  5 May 2025 23:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487015; cv=none; b=OVypa9YT5b60c9ja0n02ech0NixkrJ/uqJJl8LxUt+h8SQl3MdAfZsWY8hYRMH6Vvku6rMJ3kzx1o7zHHDwaHk4+TXZrYOo1NM3V7Xg8f+Or1Ed/1ZMi0FTVbOAODGbJaCwofYkQry1NLGBrsvvy3pIUUl1UyIureQvDQLjLk8U=
+	t=1746488025; cv=none; b=UddKlr9bPx1mi7rrmjK6OxKhtOtZvxY4mCq8VLGXvKJzvwUvCl06rL3SiGbbbHtMAG5SDqibJh88eRjrNc54XWJUEvX0eWnJyLoYl01aqSZL9IyvZJgRkLm2/YLzVVIfsa0TNJpD92wKMwr6qbFVZmInHQ5vE7L2VTnYWz+A/EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487015; c=relaxed/simple;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ABMDNC3VuTodpIWWcTeJmT+XS10gxzHLJpSQL93NbX5REXC9gVk+zaoD2CtjX7S9Y1Xpq/GdIVRgq0tI3fpDwU0iYRxsKDzVWL81L4D60Mfq7N3N41TrmdiRX3bYwv/nIupOrdJEsG4P9n8JhtZ7NZydbgqcgHWM9jnYeXewl14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hijo+N4W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD794C4CEEF;
-	Mon,  5 May 2025 23:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487014;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hijo+N4WP7o7uVFa6Zjgjqizh7luTpxPVRKCwHmTCJIOje3oYcwaGPvHYSJ71JoAM
-	 YQAznE4SeVoqbZr4P5oIBjZdmztzTFTVZfiLV/I9mEUWQlqvHh0k2x2yNoP2Ip+xwz
-	 l0o5DOTRhtd5cT5uwRyBPkhg6jQY1BoHjTp84EnwCLxmujoe+tesHqQPCTQ0NlQ/c/
-	 GQA1kS3PfBZiWB6OaQoNCkMC+kdtT+3NpUwH0uHk03F2FSztFsQ5epXX/ghoX5z+tu
-	 bsEOzu5PEFh9Xu1a2x9aZMyJjFZfh6vflpmaA4cITDMVkyapbNdJMWwDwob5TBK+f3
-	 BORqHawXuWiMg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Xiaochun Lee <lixc17@lenovo.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 108/153] PCI: Fix old_size lower bound in calculate_iosize() too
-Date: Mon,  5 May 2025 19:12:35 -0400
-Message-Id: <20250505231320.2695319-108-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+	s=arc-20240116; t=1746488025; c=relaxed/simple;
+	bh=WKuU6D637T2dkhpGjtXl020F2GzW4nCjRe2GvoQvLTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OnDWzp3J6o8Os1wWbTJqIturgNg2U4alK1z8fWZhCwO+J5KVxPSOeA5QDE5dix1giR/t0Ek6Se8GPNcUmvWGII4s/aihb2SxwjwYBvT3vuNA8khdXnNiCtadzg1UCtCjFO4km1sWN39yOKpKy54nhYJCgnD68XIYZClY14V4ALs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hSyAR+g6; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=4iLctDif0AceRqQI03x1YLY/szLkNdkPahqj14SIziU=; b=hSyAR+g6G5cSZIhXSpWzfgyBIi
+	YdtMvF5uEwESmaxpIqOqVaqEkTXtgiPAVTswewHfZ3zH0x1RhGqjsaFNb//2dKwXWztnnlYFemguA
+	mmIFcGJZUmeNtBjjd4JLhk/b8bjpoVuFOu2R8rs1L0RLNVbjIPxGAmiUUv7HjDlDN0V/LUH/35sq2
+	9NY2am0eKOO2K+c6KV+8eZyxr/D16NXWudAHMoGZ0rWMSH8izeWDlf1W/QSjzBms2al3/2cK2c5b+
+	EYes1wSiJ68zCQyXIT4YIFU55ft+l8uuBEiP2smuWQr7LGYF6bGCFVkjSfYjTC43jZsVL2wSb1JG6
+	i5rOg7Aw==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uC5Hw-0000000FZLH-2gQe;
+	Mon, 05 May 2025 23:33:33 +0000
+Message-ID: <0ab5fe5d-feda-4a3a-8803-92eb4e52e3b4@infradead.org>
+Date: Mon, 5 May 2025 16:31:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for May 5 (drivers/pci/pcie/bwctrl.c)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-pci@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+References: <20250505184148.210cf0aa@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250505184148.210cf0aa@canb.auug.org.au>
 Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit ff61f380de5652e723168341480cc7adf1dd6213 ]
 
-Commit 903534fa7d30 ("PCI: Fix resource double counting on remove &
-rescan") fixed double counting of mem resources because of old_size being
-applied too early.
+On 5/5/25 1:41 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20250502:
+> 
 
-Fix a similar counting bug on the io resource side.
+on x86_64:
 
-Link: https://lore.kernel.org/r/20241216175632.4175-6-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiaochun Lee <lixc17@lenovo.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/setup-bus.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+drivers/pci/pcie/bwctrl.c:56:22: warning: 'pcie_bwctrl_lbms_rwsem' defined but not used [-Wunused-variable]
+   56 | static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+      |                      ^~~~~~~~~~~~~~~~~~~~~~
+include/linux/rwsem.h:153:29: note: in definition of macro 'DECLARE_RWSEM'
+  153 |         struct rw_semaphore lockname = __RWSEM_INITIALIZER(lockname)
+      |                             ^~~~~~~~
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index a159bfdfa2512..04c3ae8efc0f8 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -806,11 +806,9 @@ static resource_size_t calculate_iosize(resource_size_t size,
- 	size = (size & 0xff) + ((size & ~0xffUL) << 2);
- #endif
- 	size = size + size1;
--	if (size < old_size)
--		size = old_size;
- 
--	size = ALIGN(max(size, add_size) + children_add_size, align);
--	return size;
-+	size = max(size, add_size) + children_add_size;
-+	return ALIGN(max(size, old_size), align);
- }
- 
- static resource_size_t calculate_memsize(resource_size_t size,
+
+
 -- 
-2.39.5
+~Randy
 
 
