@@ -1,163 +1,159 @@
-Return-Path: <linux-pci+bounces-27287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27288-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE315AACBCB
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 19:03:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1933DAACC43
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 19:33:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D6BB164DBB
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 17:03:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 298E91C40406
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 17:33:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F112D252282;
-	Tue,  6 May 2025 17:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A88171A1;
+	Tue,  6 May 2025 17:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eetZRf5H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F30280003;
-	Tue,  6 May 2025 17:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F113B665
+	for <linux-pci@vger.kernel.org>; Tue,  6 May 2025 17:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550987; cv=none; b=agoIJe70KINe4oKv3zpL17H5s0Mmu41TeQedRyutdaSVC6el9U0Az1tpUqqzR4TOndZgnLjfI/e8y1334qSu5a9c1UEuWhdoqL5W8iCNaNFNxgeRskf0IEWIa1QrdG3lDHgvtRhXFlX3EN64W/2gJtqyBR84DEjP9q6aUuQYZ8k=
+	t=1746552769; cv=none; b=QWboHjJw37bFM4nm3yGQuuzklWLMW0LDWeUuHQPqC5vTsgxLIciP7oPuowLyW1UW1os5c0ch1J3/nt9O0WTb69/wNJamvI62yOJFruh+7SVIe1cpDvqIcp97Z25JpHbZpcjJxQKbKkf9UT9iqBCmXfuRxn1AlvyMcA6BGrydILs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550987; c=relaxed/simple;
-	bh=0WOaw5RZ043+rJnJTVHll4zM5aaNrrkCl4+hWKBWnZA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fJFEPP/u5m8aie1rdn4dqnsHOCIlk3lDMCrMxFRvms9/5quFgCX8e4BMCpyZM5b4EORFYxFN108m3e9M2l/XxjTSsuvvnuMfo+JSQkMkVlJZtKqLv5c1SkpbbUVNJLUga6sTH/p6d0Ft745rfdAIFoyqpeg0CAyDHPrOQZso4J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsPm619ypz6L52x;
-	Wed,  7 May 2025 01:00:38 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D90C1402ED;
-	Wed,  7 May 2025 01:03:02 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
- 2025 19:03:01 +0200
-Date: Tue, 6 May 2025 18:03:00 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
-	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
-	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
-	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
-	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
-	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
- Hart" <darren@os.amperecomputing.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-Message-ID: <20250506180300.00006527@huawei.com>
-In-Reply-To: <1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
-References: <20250424172809.GA492728@bhelgaas>
-	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
-	<20250425141401.0000067b@huawei.com>
-	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
-	<20250429165410.00002c86@huawei.com>
-	<1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746552769; c=relaxed/simple;
+	bh=sgoCOCUhMuIf5IyWaEbaE7f2NrBH90vdbq25aHPBvLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YTDfo7ZneMEu1H/ZcynNoPT/e88XwK+YssCGzqFWaR9AbG0PmSNQ9C/7tBDxiCbjhoMZ1k1wPR+NH1P0OEhRFrSa1NRCXRWAxIbSXSw+YZltO0epziQZ3J8oM3yMWbmltWr6uzWhAQzGdda/7n5hABxR+Q/+OcPPmWDOUBTZuXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eetZRf5H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E5CC4CEE4;
+	Tue,  6 May 2025 17:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746552769;
+	bh=sgoCOCUhMuIf5IyWaEbaE7f2NrBH90vdbq25aHPBvLk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eetZRf5HDWOxt3nNYmq5fgYPE+OuNrW0g/CzGeRE4/I8UgE2atVes6GMsch9d2LqN
+	 NtUIsnTS1sB3Y3F9xWxhk/0RUMGxnZJfCEWx4AkoF2AyqfIMJejfu82uNlxaxuuqZa
+	 yHl5noRRarfzq/7PN94IWStgiEvWiTcaqHxEeACaMH6+zkrmrBtk7+/8qQcOON/P7/
+	 JtIZyilZg7QXIzFVfR3OZLsbvnyPq7wjU+fIx1l2ph1BiekHSjl31vqD6WCo4VvOKZ
+	 UDBK5TyAmv7KMh/VTEcn07ZwhVCFRYtzfrYJCe38rgX46q58EeHDgdfiHg6dP4wDvl
+	 CJUCyomL2TXQw==
+Message-ID: <68fdf9e1-8f27-46a6-a8a2-11ffb84726c9@kernel.org>
+Date: Tue, 6 May 2025 12:32:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI/PM: Put devices to low power state on shutdown
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: bhelgaas@google.com, AceLan Kao <acelan.kao@canonical.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Denis Benato <benato.denis96@gmail.com>, =?UTF-8?Q?Merthan_Karaka=C5=9F?=
+ <m3rthn.k@gmail.com>, linux-pci@vger.kernel.org
+References: <20250506041934.1409302-1-superm1@kernel.org>
+ <CAJZ5v0jXYgLsMHyD7EQwAf47=HnU7MCpC7+Th7nnonqV-q2qJQ@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAJZ5v0jXYgLsMHyD7EQwAf47=HnU7MCpC7+Th7nnonqV-q2qJQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 5 May 2025 11:58:25 +0200
-Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
-
-> On 29/04/2025 17:54, Jonathan Cameron wrote:
-> > On Fri, 25 Apr 2025 16:12:26 +0200
-> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
-> >>
-> >> OK, that means even if we manage to inject a PCIe error, AER wouldn't be
-> >> able to look up the Source ID and other values it needs to report an
-> >> error, which is not quite the solution I was looking for.  
-> > 
-> > Isn't the source ID in the CPER record? (Device ID field) or do
-> > you mean something else?  
+On 5/6/2025 10:50 AM, Rafael J. Wysocki wrote:
+> On Tue, May 6, 2025 at 6:19 AM Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> From: Kai-Heng Feng <kaihengf@nvidia.com>
+>>
+>> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
+>> connected.
+>>
+>> The following error message can be found during shutdown:
+>> pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
+>> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+>> pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
+>> pcieport 0000:09:04.0:    [ 7] BadDLLP
+>>
+>> Calling aer_remove() during shutdown can quiesce the error message,
+>> however the spurious wakeup still happens.
+>>
+>> The issue won't happen if the device is in D3 before system shutdown, so
+>> putting device to low power state before shutdown to solve the issue.
+>>
+>> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+>> compatible with the current Power Resource states. In other words, all
+>> devices are in the D3 state when the system state is S4."
+>>
+>> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+>> state is similar to the S4 state except that OSPM does not save any
+>> context." so it's safe to assume devices should be at D3 for S5.
 > 
-> Ah, sorry, I got confused on the way. I meant that even if we have the 
-> Device ID in CPER set, the specific device has no data in aer_regs if we 
-> inject an error using the GHES error injection script. We probably would 
-> end up with !info->status in aer_print_error(), thus printing only a 
-> line about "Inaccessible" agent and return early.
+> That's fine as long as you assume that ->shutdown() is only used for
+> implementing ACPI S5, but it is not.
 
-If you were feeling creative with scripts you might be able to make this
-work today...  Qemu does allow native aer injection via pcie_aer_inject_error
-which will fill in the stuff in the device and 'try' to trigger an interrupt.
-That last bit will fail (I think) if we are doing fw first handling.
-(you might need to just prevent the interrupt generation in a similar fashion
-to this code did here:
+I suppose you're meaning things like:
 
-https://gitlab.com/jic23/qemu/-/commit/ce801e4d5b5cc5417cc7c7e5ecdaaa2ca5d6efe3#8eeec1fb38fa7149cc37b7a56dc193d69281ee96_704_708
+kernel_restart_prepare()
+->device_shutdown()
+->->each device's shutdown() CB
+->->each driver's shutdown() CB
 
-At that point if you were to inject GHES error using Mauro's stuff it will work
-and find that pre injected hardware info.
-
-If not we need a refresh of that patch to hook up record generation with
-Mauro's new handling. That's what I plan to get to but will be a while yet.
-
-J
-
-
-
-> 
-> >>> The aim is specifically to allow exercising FW first error handling
-> >>> paths because it's a pain to get real systems that have firmware to inject
-> >>> the full range of what the kernel etc need to handle.  
-> >>
-> >> Does this include PCIe errors? If so, that probably doesn't make sense
-> >> to try to test my patch on an actual system?  
-> > 
-> > Ideally test it on a real system as well, but indeed the intent is to
-> > allow testing of PCI errors on emulation.  
-> 
-> I understand. Do you have pointers on how to inject it on a real system? 
-> All info I could find about FW error injection pointed to the qemu 
-> scripts I mentioned.
-
-Sorry no.  It maybe system specific and disabled on production bios.
+Is there somewhere "better" to do this so it's truly only tied to S5?
 
 > 
-> >>> x86 support for emulated injection is a work in progress (more of a mess wrt
-> >>> to the different ways the event signaling is handled than it is on arm64).
-> >>>
-> >>> I did have an earlier version of that work wired up to the same
-> >>> hooks as the native CXL error injection but I dropped it from my QEMU
-> >>> CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
-> >>> revising the infrastructure.  I'll bring it back when I get time.  
-> >>
-> >> I understand, I saw some of your series while looking for ways to test
-> >> my patch. Thank you very much for your work. As you can see, there are
-> >> people actually looking forward to it :)  
-> > 
-> > Great!  I'll try and get back to wiring it all up again sometime soon.  
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
+>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Tested-by: Denis Benato <benato.denis96@gmail.com>
+>> Tested-by: Merthan Karakaş <m3rthn.k@gmail.com>
+>> Link: https://lore.kernel.org/r/20241208074147.22945-1-kaihengf@nvidia.com
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v3:
+>>   * Pick up tags
+>>   * V2 was waiting for Rafael to review, rebase on pci/next and resend.
 > 
-> Awesome, thanks.
+> Is this change going to break kexec?
+
+There is an explicit check in the below code for kexec_in_progress, so 
+my expectation was that kexec kept working.  I didn't explicitly test 
+this myself when I tested KH's change before sending it again.
+
+KH, Did you double check that on your side?
+
 > 
-> Bjorn, is this patch blocking the ratelimiting series? Would it be 
-> acceptable to use public logs in the commit message? I'm asking because 
-> it looks like there's no easy way to trigger the GHES path, or it would 
-> take some time, further delaying the ratelimiting work.
-> 
-> All the best,
-> Karolina
-> 
-> > 
-> > Jonathan
-> >   
-> 
+>> ---
+>>   drivers/pci/pci-driver.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>> index 0c5bdb8c2c07b..5bbe8af996390 100644
+>> --- a/drivers/pci/pci-driver.c
+>> +++ b/drivers/pci/pci-driver.c
+>> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
+>>          if (drv && drv->shutdown)
+>>                  drv->shutdown(pci_dev);
+>>
+>> +       /*
+>> +        * If driver already changed device's power state, it can mean the
+>> +        * wakeup setting is in place, or a workaround is used. Hence keep it
+>> +        * as is.
+>> +        */
+>> +       if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
+>> +               pci_prepare_to_sleep(pci_dev);
+>> +
+>>          /*
+>>           * If this is a kexec reboot, turn off Bus Master bit on the
+>>           * device to tell it to not continue to do DMA. Don't touch
+>> --
 
 
