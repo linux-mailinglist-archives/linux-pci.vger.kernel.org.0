@@ -1,181 +1,231 @@
-Return-Path: <linux-pci+bounces-27298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B733AACEEA
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 22:48:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4509DAAD069
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 23:56:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 372C61C200FD
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 20:48:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C94B63BCF3B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 21:52:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 638F11BD9C9;
-	Tue,  6 May 2025 20:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7D2D21885A;
+	Tue,  6 May 2025 21:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gBDh+uwv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K81+nF7c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED1198823
-	for <linux-pci@vger.kernel.org>; Tue,  6 May 2025 20:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A4B2153DA
+	for <linux-pci@vger.kernel.org>; Tue,  6 May 2025 21:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746564465; cv=none; b=Q+rcbo1l8A9BRKjb1v7uk2Nvy6oaLW7xKDqZVays3pn7ld9a0i5MW4Ily46J2cM4DzkYEvn1nroK1IskHlxz7IP2UeQ3l7uSodIbsdJBKoOre0uxXJKgjxYxLOppkeAmy2pGgE4p87RpX/KokaKHDaRDaITsyG/FIrethsWVlWM=
+	t=1746568307; cv=none; b=t8YqOleKTZXywM594qluoPD/sSHhTQlw2cnAyiZrBfbTepV8a9DDV/w+AHH088VVjaLnYd3OXFAYQWD+gC7GxHcGA6OPKbU/EOM5+XEFMpwPo2oe3irCk6Ljdrc0g/VaxiSptqq4urANLkmqNzTrGatZSZ0ARW5WHd0uptWJ5AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746564465; c=relaxed/simple;
-	bh=HoSPNJpzAj/UHgTcCm+14l6OqVn0UOHxo2Yn1NKbwwc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkdbSQNeyCqNHyPbd+g4Y3tCbc/E7FafQgqWU0DhpcDejNuiYfG1whH1GXy7Pk24qAVLqTRFzr0iCENkfTvpfTFzLPPkua9Pr5lvBtS2GFE95T2QNDu3i3e1O2cOa0UGlBgWKPH7RI3XrX6yU52uualW/fPUJSColWWqiMUhpAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gBDh+uwv; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso541161a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 May 2025 13:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746564459; x=1747169259; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pi47gK8MYhyGIqIdKO9+ShtObSRr4S3t2PvkIQxuaXA=;
-        b=gBDh+uwvqOEb3fLM4eNviuqwt3dZpUuSnrvnEac6apQCsRqOMi0E89SJlebAeuGJlu
-         29jc5MflQOtiZdAlaW7UueewAZmgrE7KnNq3XfTDdFzT3YWTZmNXIUKCYiuWnULLyGal
-         HOPF+AUrGqI0fCB5N+IkmdMarL8VDvUzvvvTcTaRcoK//+MtWrgjrxAI7Qv4u3atBkOf
-         L5SYGvvF2J1mNeaNHcivYH2+j+AS2Gk2KTJEUPV/l7xQuQcQmwyQ87PtJPmRQHNOfv8t
-         H8FGhg7pxvHH1k/TkfPJAiv/OHRQqJTTOqVhL9XwbUWPx+dTUKJYNLazYYmAXYEp3B4Y
-         GCoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746564459; x=1747169259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pi47gK8MYhyGIqIdKO9+ShtObSRr4S3t2PvkIQxuaXA=;
-        b=s8ew15myBIZ2a9C//f+YREMDHj6Wiaw63G47G69vi2Gn/NHXpIWnXVOidUVip8nGZY
-         2zE0XfPbCsfwJOQoZzLZztNZ8CZdF0+baepxY7osXEHLgOAqONIry5fmtTS6r8eqFRzK
-         7k06t+gR8cItNvNyh2jeX9I6B5T5hpPYdM+MW00ofFe4E/D4pbK8ucoDiNtNWsFOybmB
-         dqb0WnJdosUbBOthpLnE2+7Jl1VP13X8W0Pjbequ5rSaxlXOk2fekhm0nsKq6ms0q2UB
-         jO+21ERGPrS2TozKjUxOQfd86erhs5OBadGYO4KrL6zgvi8YwBrdB6CikeA7cyMP62kh
-         ffzA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/CDUDmjMOAJ8t1LZ+vPSsQTNPGIKwQill1TYcXYxY73yQ+kOJp88OeDnvlj/8SpdZ0J7FnQV9ERA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXq7+1ztnwd06J2ys/Z/433Nyd9aTPva/zh4pmfyXsrCvkcGVs
-	5vV80LXB6hy3UoR8PdLjS1KO+ccg8sdgo2gcjGBB6VJl2yorkd7bEcE2tE6enNE=
-X-Gm-Gg: ASbGncuknHOdwqHZMRKbrFa+I1GG7ME1XMr48l4AOm0ev9cFsnUs70geUcnpBdvYU1c
-	HdMGy+0sd6tHWV/gvd3V2oDL6frknKX5AietOaqnPK2/nGYVT6OVBkhHPiFkGos/FK80U6rDO2G
-	ZTt63KXjRxD+2/38b21xhjHRJoZTQZ44sjk3ojHH50pJI2nQGdv1g1DddomnIKRK60V0eD+wpgH
-	+cXBTrmLK6RdkzLBv13mFnmduU/KTjKDem4eifxkXb1Mk5VSdcisYSnQycbpmEWyD7r7vT6SOq/
-	M4e+vVe4YWUc+QqXyM+XQ7eaRDAdSkT2ObB5xluFXRddpgJxby09bhtPx7v3oRWdczAW8N4=
-X-Google-Smtp-Source: AGHT+IGdejKWhHgobANcBR0HkA6BZ7303l9tnuRyiuAvIspM7E6yB+9PaEvl5m9+eOZo13IwvIZIoA==
-X-Received: by 2002:a17:907:6d23:b0:ac7:3929:25fa with SMTP id a640c23a62f3a-ad1e79a28bamr109364566b.30.1746564459254;
-        Tue, 06 May 2025 13:47:39 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540d5bsm770703266b.176.2025.05.06.13.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 13:47:38 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 6 May 2025 22:49:07 +0200
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
- for RP1 chipset on Rpi5
-Message-ID: <aBp1wye0L7swfe1H@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1746568307; c=relaxed/simple;
+	bh=Tu6OY0COwpJ/B107l5phrJHddSlA7r/Gra+adhvlXXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SgC15ThpLk8neXyYFIEt4ufVv3Dc8tL3RpHze7cQHOMwfhRJ+KkCmDsWgOKLfVQSSfIrBXBQfUtURNmUDXaJ1PXwq39yq8WLJPDPIWS3RWKOvRPKlxWP65AzupOrAfHRhKJj/0XxBKrLCORwxzYFTDjXH7tXgRKbdsDKDUwqFjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K81+nF7c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383D9C4CEE4;
+	Tue,  6 May 2025 21:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746568307;
+	bh=Tu6OY0COwpJ/B107l5phrJHddSlA7r/Gra+adhvlXXs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K81+nF7cQmPxfwl7EXyXrwRvTL+chvLptfiq6JVwv3/KlajtS2oASzzaURp/Jm6xg
+	 Gk4xlsjHgmZOkmPZJBeICCJFhMTXrytgzvxbv+MHXpR1J2glOZDSEiLYmvSr0HqSKm
+	 kVrnuf1+hIVXfO2jRVRq33srpy7ttPt7ieoHas+iUey9aRKJF6JztNM6SwJKufeHRx
+	 kM+2o8EpmDj7qCy2i4+jGpgt8SBEjhpxo2FaAJ5B5R2I/k9YS/n3wq1cm0PS6475tQ
+	 /ovsGMCVHuVKebgLGQHFrxywk523HzBurLanfiJ6ET4I/f44sIPpq5m874tG1saA9x
+	 bMbd7NpKZ0wDw==
+Message-ID: <ca936e18-619c-4faf-93ed-cafbe86f70bf@kernel.org>
+Date: Tue, 6 May 2025 16:51:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI/PM: Put devices to low power state on shutdown
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Kai-Heng Feng <kaihengf@nvidia.com>, bhelgaas@google.com,
+ AceLan Kao <acelan.kao@canonical.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Denis Benato <benato.denis96@gmail.com>, =?UTF-8?Q?Merthan_Karaka=C5=9F?=
+ <m3rthn.k@gmail.com>, linux-pci@vger.kernel.org
+References: <20250506041934.1409302-1-superm1@kernel.org>
+ <CAJZ5v0jXYgLsMHyD7EQwAf47=HnU7MCpC7+Th7nnonqV-q2qJQ@mail.gmail.com>
+ <68fdf9e1-8f27-46a6-a8a2-11ffb84726c9@kernel.org>
+ <CAJZ5v0g8uYM2RE+VteviK_1zCxk-rRV=JQMcnF4Gvr6frEn4iA@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAJZ5v0g8uYM2RE+VteviK_1zCxk-rRV=JQMcnF4Gvr6frEn4iA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Florian,
-
-On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
-> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-> Add clk_rp1_xosc node to provide that.
+On 5/6/2025 2:30 PM, Rafael J. Wysocki wrote:
+> On Tue, May 6, 2025 at 7:32 PM Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> On 5/6/2025 10:50 AM, Rafael J. Wysocki wrote:
+>>> On Tue, May 6, 2025 at 6:19 AM Mario Limonciello <superm1@kernel.org> wrote:
+>>>>
+>>>> From: Kai-Heng Feng <kaihengf@nvidia.com>
+>>>>
+>>>> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
+>>>> connected.
+>>>>
+>>>> The following error message can be found during shutdown:
+>>>> pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
+>>>> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+>>>> pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
+>>>> pcieport 0000:09:04.0:    [ 7] BadDLLP
+>>>>
+>>>> Calling aer_remove() during shutdown can quiesce the error message,
+>>>> however the spurious wakeup still happens.
+>>>>
+>>>> The issue won't happen if the device is in D3 before system shutdown, so
+>>>> putting device to low power state before shutdown to solve the issue.
+>>>>
+>>>> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+>>>> compatible with the current Power Resource states. In other words, all
+>>>> devices are in the D3 state when the system state is S4."
+>>>>
+>>>> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+>>>> state is similar to the S4 state except that OSPM does not save any
+>>>> context." so it's safe to assume devices should be at D3 for S5.
+>>>
+>>> That's fine as long as you assume that ->shutdown() is only used for
+>>> implementing ACPI S5, but it is not.
+>>
+>> I suppose you're meaning things like:
+>>
+>> kernel_restart_prepare()
+>> ->device_shutdown()
+>> ->->each device's shutdown() CB
+>> ->->each driver's shutdown() CB
+>>
+>> Is there somewhere "better" to do this so it's truly only tied to S5?
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-
-A gentle reminder for patches 8 through 12 of this series, which I guess
-would ideally be taken by you. Since the merge window is approaching, do
-you think it's feasible to iterate a second pull request to Arnd with my
-patches too?
-
-With respect to your devicetree/next branch, my patches have the following
-conflicts:
-
-PATCH 9:
-- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts: &pcie1 and &pcie2
-  reference at the end, my patch was rebased on linux-next which has them
-  while your devicetree branch has not. This is trivial to fix too.
-
-PATCH 9 and 10:
-- arch/arm64/boot/dts/broadcom/Makefile on your branch has a line recently
-  added by Stefan's latest patch for RPi2. The fix is trivial.
-
-PATCH 11 and 12:
-- arch/arm64/configs/defconfig: just a couple of fuzz lines.
-
-Please let me know if I should resend those patches adjusted for your tree.
-
-Many thanks,
-Andrea
-
-
-> ---
->  arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
+> On systems that use ACPI reboot is also a flavor of S5, but what about
+> systems that have PCI, but don't use ACPI?
 > 
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> index 34470e3d7171..6ea3c102e0d6 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> @@ -16,6 +16,13 @@ chosen: chosen {
->  		stdout-path = "serial10:115200n8";
->  	};
->  
-> +	clk_rp1_xosc: clock-50000000 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "rp1-xosc";
-> +		clock-frequency = <50000000>;
-> +	};
-> +
->  	/* Will be filled by the bootloader */
->  	memory@0 {
->  		device_type = "memory";
-> -- 
-> 2.35.3
+> The change you are proposing is going to affect more systems than just
+> the ones having the problem described in the patch changelog, so it is
+> kind of risky and breaking reboot is a big deal.
+
+How would you feel about if instead this was using one of the power off 
+notifiers?  That could narrow this down to only being applied on ACPI 
+systems.
+
+Something like this (not yet tested):
+
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index af370628e5839..df83aed7d474c 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -10,6 +10,7 @@
+  #include <linux/delay.h>
+  #include <linux/init.h>
+  #include <linux/irqdomain.h>
++#include <linux/kexec.h>
+  #include <linux/pci.h>
+  #include <linux/msi.h>
+  #include <linux/pci_hotplug.h>
+@@ -18,6 +19,7 @@
+  #include <linux/pci-ecam.h>
+  #include <linux/pm_runtime.h>
+  #include <linux/pm_qos.h>
++#include <linux/reboot.h>
+  #include <linux/rwsem.h>
+  #include "pci.h"
+
+@@ -1438,6 +1440,16 @@ static void pci_acpi_set_external_facing(struct 
+pci_dev *dev)
+                 dev->external_facing = 1;
+  }
+
++static int pci_acpi_power_off(struct sys_off_data *data)
++{
++       struct pci_dev *pci_dev = to_pci_dev(data->dev);
++
++       if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
++               pci_prepare_to_sleep(pci_dev);
++
++       return NOTIFY_DONE;
++}
++
+  void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
+  {
+         struct pci_dev *pci_dev = to_pci_dev(dev);
+@@ -1465,6 +1477,11 @@ void pci_acpi_setup(struct device *dev, struct 
+acpi_device *adev)
+
+         if (pci_is_bridge(pci_dev))
+                 acpi_dev_power_up_children_with_adr(adev);
++
++       devm_register_sys_off_handler(dev, SYS_OFF_MODE_POWER_OFF_PREPARE,
++                                     SYS_OFF_PRIO_DEFAULT,
++                                     &pci_acpi_power_off, NULL);
++
+  }
+
+  void pci_acpi_cleanup(struct device *dev, struct acpi_device *adev)
+
 > 
+>>>
+>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
+>>>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+>>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>> Tested-by: Denis Benato <benato.denis96@gmail.com>
+>>>> Tested-by: Merthan Karakaş <m3rthn.k@gmail.com>
+>>>> Link: https://lore.kernel.org/r/20241208074147.22945-1-kaihengf@nvidia.com
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>> v3:
+>>>>    * Pick up tags
+>>>>    * V2 was waiting for Rafael to review, rebase on pci/next and resend.
+>>>
+>>> Is this change going to break kexec?
+>>
+>> There is an explicit check in the below code for kexec_in_progress, so
+>> my expectation was that kexec kept working.  I didn't explicitly test
+>> this myself when I tested KH's change before sending it again.
+>>
+>> KH, Did you double check that on your side?
+>>
+>>>
+>>>> ---
+>>>>    drivers/pci/pci-driver.c | 8 ++++++++
+>>>>    1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>>> index 0c5bdb8c2c07b..5bbe8af996390 100644
+>>>> --- a/drivers/pci/pci-driver.c
+>>>> +++ b/drivers/pci/pci-driver.c
+>>>> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
+>>>>           if (drv && drv->shutdown)
+>>>>                   drv->shutdown(pci_dev);
+>>>>
+>>>> +       /*
+>>>> +        * If driver already changed device's power state, it can mean the
+>>>> +        * wakeup setting is in place, or a workaround is used. Hence keep it
+>>>> +        * as is.
+>>>> +        */
+>>>> +       if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
+>>>> +               pci_prepare_to_sleep(pci_dev);
+>>>> +
+>>>>           /*
+>>>>            * If this is a kexec reboot, turn off Bus Master bit on the
+>>>>            * device to tell it to not continue to do DMA. Don't touch
+>>>> --
+>>
+
 
