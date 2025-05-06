@@ -1,258 +1,163 @@
-Return-Path: <linux-pci+bounces-27286-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27287-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36130AACA20
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 17:54:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE315AACBCB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 19:03:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D04C04625E9
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 15:54:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D6BB164DBB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 17:03:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817E12820DC;
-	Tue,  6 May 2025 15:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkBfG8lt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F112D252282;
+	Tue,  6 May 2025 17:03:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8392F281508;
-	Tue,  6 May 2025 15:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F30280003;
+	Tue,  6 May 2025 17:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546844; cv=none; b=n1I2eNgj7yrzvJPW/1EU2qzItxMQeAf3RaXUzTWxjbUYuza7ALkYaIUYp71x2v6pv3WuTD+d3ppWgwI8GzhSHMaJg/gAphbIlroA52uP3Pz/9RfYOf2+f4ZQfXJgRBz0hbsRh7xB4YY/LpChPbkGNPIesYYW1fVZ7Jdzh7p+x7A=
+	t=1746550987; cv=none; b=agoIJe70KINe4oKv3zpL17H5s0Mmu41TeQedRyutdaSVC6el9U0Az1tpUqqzR4TOndZgnLjfI/e8y1334qSu5a9c1UEuWhdoqL5W8iCNaNFNxgeRskf0IEWIa1QrdG3lDHgvtRhXFlX3EN64W/2gJtqyBR84DEjP9q6aUuQYZ8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546844; c=relaxed/simple;
-	bh=mHMZw/O+jl2IvaiNauy7qpYG1fm2THzjWXfjMNV2hyM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=p6+wamrpgYR/DgubEtVBzKfOya1NmX09EnhKtaO6UMZmlgVlZQR51P50l5TlZ99/ih+wmXqIaeycyLTW0zPdUeVEguS5PBZul/SGcsPFEXT7pwDHPe9qUHXDcScy8vwiu3769D73d2UgGWJXGw7gUG1QmZ9Vxvgw9iW0Vd5Vq74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkBfG8lt; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746546843; x=1778082843;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=mHMZw/O+jl2IvaiNauy7qpYG1fm2THzjWXfjMNV2hyM=;
-  b=lkBfG8ltfNP1F9YYHv005MCNxfcxMh0WhfdVTAm3enAaE6HDmq8BeSTJ
-   k23e7DVSEbZ7if5KKOpeBGzTzfpmPcfs2Iru2vROWIL6spgqAtKPNlAj/
-   gjlPRNVQw6UToRYhYUIYyGL+ngCjNq4Cmj54foJ02RBzNH+Txrc4Mg9sY
-   1gsiJyUnuSEIF7RbmUTJl9pRKTjigBapFlMmH+VODAnslwfpXCojlkydr
-   GgQCig8WDFAs1mG9og5htXFAUakvNLwhu3S9PwaqXnPyi5Sm14KeYH5hH
-   3a4GFnklt8kmzydJY1WNzWdxGrkg6q5k5Sh68ijAXze6pwUnalbnT6LRA
-   g==;
-X-CSE-ConnectionGUID: adKhvYBBRfO6JXl0N0M4TQ==
-X-CSE-MsgGUID: EwJQcO6FTJ6zobiXYHi7tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48352903"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="48352903"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 08:54:02 -0700
-X-CSE-ConnectionGUID: ncB1lcP8Ti+6wfOs0NwzPw==
-X-CSE-MsgGUID: wCkeDJrBSb22w/+wG3Ogsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="135629428"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.207])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 08:53:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 May 2025 18:53:56 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
-Message-ID: <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+	s=arc-20240116; t=1746550987; c=relaxed/simple;
+	bh=0WOaw5RZ043+rJnJTVHll4zM5aaNrrkCl4+hWKBWnZA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fJFEPP/u5m8aie1rdn4dqnsHOCIlk3lDMCrMxFRvms9/5quFgCX8e4BMCpyZM5b4EORFYxFN108m3e9M2l/XxjTSsuvvnuMfo+JSQkMkVlJZtKqLv5c1SkpbbUVNJLUga6sTH/p6d0Ft745rfdAIFoyqpeg0CAyDHPrOQZso4J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsPm619ypz6L52x;
+	Wed,  7 May 2025 01:00:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D90C1402ED;
+	Wed,  7 May 2025 01:03:02 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
+ 2025 19:03:01 +0200
+Date: Tue, 6 May 2025 18:03:00 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
+	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
+	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
+	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
+	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
+	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
+ Hart" <darren@os.amperecomputing.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
+ reporting paths
+Message-ID: <20250506180300.00006527@huawei.com>
+In-Reply-To: <1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
+References: <20250424172809.GA492728@bhelgaas>
+	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
+	<20250425141401.0000067b@huawei.com>
+	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
+	<20250429165410.00002c86@huawei.com>
+	<1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-165939206-1746545902=:26159"
-Content-ID: <7fab6f6c-810c-1b11-3431-78e8200c6da7@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 5 May 2025 11:58:25 +0200
+Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
 
---8323328-165939206-1746545902=:26159
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <9b0130d7-9e96-e8ad-50ee-c1d1edf6f76c@linux.intel.com>
+> On 29/04/2025 17:54, Jonathan Cameron wrote:
+> > On Fri, 25 Apr 2025 16:12:26 +0200
+> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
+> >>
+> >> OK, that means even if we manage to inject a PCIe error, AER wouldn't be
+> >> able to look up the Source ID and other values it needs to report an
+> >> error, which is not quite the solution I was looking for.  
+> > 
+> > Isn't the source ID in the CPER record? (Device ID field) or do
+> > you mean something else?  
+> 
+> Ah, sorry, I got confused on the way. I meant that even if we have the 
+> Device ID in CPER set, the specific device has no data in aer_regs if we 
+> inject an error using the GHES error injection script. We probably would 
+> end up with !info->status in aer_print_error(), thus printing only a 
+> line about "Inaccessible" agent and return early.
 
-On Tue, 6 May 2025, Tudor Ambarus wrote:
+If you were feeling creative with scripts you might be able to make this
+work today...  Qemu does allow native aer injection via pcie_aer_inject_error
+which will fill in the stuff in the device and 'try' to trigger an interrupt.
+That last bit will fail (I think) if we are doing fw first handling.
+(you might need to just prevent the interrupt generation in a similar fashion
+to this code did here:
 
-> Hi!
->=20
-> On 12/16/24 5:56 PM, Ilpo J=E4rvinen wrote:
-> > Resetting resource is problematic as it prevent attempting to allocate
-> > the resource later, unless something in between restores the resource.
-> > Similarly, if fail_head does not contain all resources that were reset,
-> > those resource cannot be restored later.
-> >=20
-> > The entire reset/restore cycle adds complexity and leaving resources
-> > into reseted state causes issues to other code such as for checks done
-> > in pci_enable_resources(). Take a small step towards not resetting
-> > resources by delaying reset until the end of resource assignment and
-> > build failure list (fail_head) in sync with the reset to avoid leaving
-> > behind resources that cannot be restored (for the case where the caller
-> > provides fail_head in the first place to allow restore somewhere in the
-> > callchain, as is not all callers pass non-NULL fail_head).
-> >=20
-> > The Expansion ROM check is temporarily left in place while building the
-> > failure list until the upcoming change which reworks optional resource
-> > handling.
-> >=20
-> > Ideally, whole resource reset could be removed but doing that in a big
-> > step would make the impact non-tractable due to complexity of all
-> > related code.
-> >=20
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> I'm hitting the BUG_ON(!list_empty(&add_list)); in
-> pci_assign_unassigned_bus_resources() [1] with 6.15-rc5 and the the
-> pixel6 downstream pcie driver.
->=20
-> I saw the thread where "a34d74877c66 PCI: Restore assigned resources
-> fully after release" fixes things for some other cases, but it's not the
-> case here.
->=20
-> Reverting the following patches fixes the problem:
-> a34d74877c66 PCI: Restore assigned resources fully after release
-> 2499f5348431 PCI: Rework optional resource handling
-> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
+https://gitlab.com/jic23/qemu/-/commit/ce801e4d5b5cc5417cc7c7e5ecdaaa2ca5d6efe3#8eeec1fb38fa7149cc37b7a56dc193d69281ee96_704_708
 
-So it's confirmed that you needed to revert also this last commit=20
-96336ec70264, not just the rework change?
+At that point if you were to inject GHES error using Mauro's stuff it will work
+and find that pre injected hardware info.
 
-> In the working case the add_list list is empty throughout the entire
-> body of pci_assign_unassigned_bus_resources().
->=20
-> In the failing case __pci_bus_size_bridges() leaves the add_list not
-> empty and __pci_bus_assign_resources() does not consume the list, thus
-> the BUG_ON. The failing case contains an extra print that's not shown
-> when reverting the blamed commits:
-> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
-> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->=20
-> I've added some prints trying to describe the code path, see
-> https://paste.ofcode.org/Aeu2YBpLztc49ZDw3uUJmd#
->=20
-> Failing case:
-> [   13.944231][ T1101] pci 0000:01:00.0: [144d:a5a5] type 00 class
-> 0x000000 PCIe Endpoint
-> [   13.944412][ T1101] pci 0000:01:00.0: BAR 0 [mem
-> 0x00000000-0x000fffff 64bit]
-> [   13.944532][ T1101] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
-> pref]
-> [   13.944649][ T1101] pci 0000:01:00.0: enabling Extended Tags
-> [   13.944844][ T1101] pci 0000:01:00.0: PME# supported from D0 D3hot D3c=
-old
-> [   13.945015][ T1101] pci 0000:01:00.0: 15.752 Gb/s available PCIe
-> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
-> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-> [   13.950616][ T1101] __pci_bus_size_bridges: before pbus_size_mem.
-> list empty? 1
-> [   13.950784][ T1101] pbus_size_mem: 2. list empty? 1
-> [   13.950886][ T1101] pbus_size_mem: 1 list empty? 0
-> [   13.950982][ T1101] pbus_size_mem: 3. list empty? 0
-> [   13.951082][ T1101] pbus_size_mem: 4. list empty? 0
-> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
-> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-> [   13.951448][ T1101] __pci_bus_size_bridges: after pbus_size_mem. list
-> empty? 0
-> [   13.951643][ T1101] pci_assign_unassigned_bus_resources: before
-> __pci_bus_assign_resources -> list empty? 0
-> [   13.951924][ T1101] pcieport 0000:00:00.0: bridge window [mem
-> 0x40000000-0x401fffff]: assigned
-> [   13.952248][ T1101] pci_assign_unassigned_bus_resources: after
-> __pci_bus_assign_resources -> list empty? 0
-> [   13.952634][ T1101] ------------[ cut here ]------------
-> [   13.952818][ T1101] kernel BUG at drivers/pci/setup-bus.c:2514!
-> [   13.953045][ T1101] Internal error: Oops - BUG: 00000000f2000800 [#1]
->  SMP
-> ...
-> [   13.976086][ T1101] Call trace:
-> [   13.976206][ T1101]  pci_assign_unassigned_bus_resources+0x110/0x114 (=
-P)
-> [   13.976462][ T1101]  pci_rescan_bus+0x28/0x48
-> [   13.976628][ T1101]  exynos_pcie_rc_poweron
->=20
-> Working case:
-> [   13.786961][ T1120] pci 0000:01:00.0: [144d:a5a5] type 00 class
-> 0x000000 PCIe Endpoint
-> [   13.787136][ T1120] pci 0000:01:00.0: BAR 0 [mem
-> 0x00000000-0x000fffff 64bit]
-> [   13.787280][ T1120] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
-> pref]
-> [   13.787541][ T1120] pci 0000:01:00.0: enabling Extended Tags
-> [   13.787808][ T1120] pci 0000:01:00.0: PME# supported from D0 D3hot D3c=
-old
-> [   13.787988][ T1120] pci 0000:01:00.0: 15.752 Gb/s available PCIe
-> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
-> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-> [   13.795279][ T1120] __pci_bus_size_bridges: before pbus_size_mem.
-> list empty? 1
-> [   13.795408][ T1120] pbus_size_mem: 2. list empty? 1
-> [   13.795495][ T1120] pbus_size_mem: 2. list empty? 1
-> [   13.795577][ T1120] __pci_bus_size_bridges: after pbus_size_mem. list
-> empty? 1
-> [   13.795692][ T1120] pci_assign_unassigned_bus_resources: before
-> __pci_bus_assign_resources -> list empty? 1
-> [   13.795849][ T1120] pcieport 0000:00:00.0: bridge window [mem
-> 0x40000000-0x401fffff]: assigned
-> [   13.796072][ T1120] pci_assign_unassigned_bus_resources: after
-> __pci_bus_assign_resources -> list empty? 1
-> [   13.796662][ T1120] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
-> up, yet(s5100_pdev is NULL)
-> [   13.796666][ T1120] cpif: register_pcie: s51xx_pcie_init start
->=20
->=20
-> Any hints are welcomed. Thanks,
-> ta
+If not we need a refresh of that patch to hook up record generation with
+Mauro's new handling. That's what I plan to get to but will be a while yet.
 
-Hi and thanks for the report.
-
-The interesting part occurs inside reassign_resources_sorted() where most=
-=20
-items are eliminated from realloc_head by the list_del().
-
-My guess is that somehow, the change in 96336ec70264 from !res->flags
-to the more complicated check somehow causes this. If the new check=20
-doesn't match and subsequently, no match is found from the head list, the=
-=20
-loop will do continue and not remove the entry from realloc_head.
-
-But it's hard to confirm without knowing what that resources realloc_head=
-=20
-contains. Perhaps if you print the resources that are processed around=20
-that part of the code in reassign_resources_sorted(), comparing the log=20
-from the reverted code with the non-working case might help to understand=
-=20
-what is different there and why. To understand better what is in the head=
-=20
-list, it would be also useful to know from which device the resources were=
-=20
-added into the head list in pdev_sort_resources().
+J
 
 
-In any case, that BUG_ON() seems a bit drastic action for what might be=20
-just a single resource allocation failure so it should be downgraded to:
 
-if (WARN_ON(!list_empty(&add_list))
-=09free_list(&add_list);
-=09
-=2E.. or WARN_ON_ONCE().
+> 
+> >>> The aim is specifically to allow exercising FW first error handling
+> >>> paths because it's a pain to get real systems that have firmware to inject
+> >>> the full range of what the kernel etc need to handle.  
+> >>
+> >> Does this include PCIe errors? If so, that probably doesn't make sense
+> >> to try to test my patch on an actual system?  
+> > 
+> > Ideally test it on a real system as well, but indeed the intent is to
+> > allow testing of PCI errors on emulation.  
+> 
+> I understand. Do you have pointers on how to inject it on a real system? 
+> All info I could find about FW error injection pointed to the qemu 
+> scripts I mentioned.
 
---=20
- i.
---8323328-165939206-1746545902=:26159--
+Sorry no.  It maybe system specific and disabled on production bios.
+
+> 
+> >>> x86 support for emulated injection is a work in progress (more of a mess wrt
+> >>> to the different ways the event signaling is handled than it is on arm64).
+> >>>
+> >>> I did have an earlier version of that work wired up to the same
+> >>> hooks as the native CXL error injection but I dropped it from my QEMU
+> >>> CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
+> >>> revising the infrastructure.  I'll bring it back when I get time.  
+> >>
+> >> I understand, I saw some of your series while looking for ways to test
+> >> my patch. Thank you very much for your work. As you can see, there are
+> >> people actually looking forward to it :)  
+> > 
+> > Great!  I'll try and get back to wiring it all up again sometime soon.  
+> 
+> Awesome, thanks.
+> 
+> Bjorn, is this patch blocking the ratelimiting series? Would it be 
+> acceptable to use public logs in the commit message? I'm asking because 
+> it looks like there's no easy way to trigger the GHES path, or it would 
+> take some time, further delaying the ratelimiting work.
+> 
+> All the best,
+> Karolina
+> 
+> > 
+> > Jonathan
+> >   
+> 
+
 
