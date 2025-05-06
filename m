@@ -1,84 +1,97 @@
-Return-Path: <linux-pci+bounces-27265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27264-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA8A6AABC32
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:58:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5087AAABCB0
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 10:11:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 433EC5056B5
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:58:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 602E85A17FA
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9074A1EDA23;
-	Tue,  6 May 2025 07:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA8572638;
+	Tue,  6 May 2025 07:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WR8OVbB9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="unk+dOg+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORtYcfgG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEC61FCCF8;
-	Tue,  6 May 2025 07:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C1272637;
+	Tue,  6 May 2025 07:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517355; cv=none; b=UQAgWuo4F+ocC0DPen67AX62Sd6srqfo8tqrZDrZa1W7EYDPCv7gQzFsMz2cgNmW8ZOxgUITniX/FVGo754hLigd3rTrnChtqzPN90g9UEQPJOQbuFMSQIH69vuSSRXsSBzeUY74Ri/WX29THssbxYE4gfCGWN/aPwfGUm7FZf0=
+	t=1746517200; cv=none; b=EK9d48H+f98uXwuK2znl7q8qzL7bD6FR/PJioi4Qqf9BGh7fBX+QItawOXfEM5ym/EQFgE+atpR5fVRLLxQRxY2EYXe9hty5k2AZ9GhPi/5FkXRT76S6yXKmZwYIIM+A6npctG1IDZR3PgrQMh5OYDqp4yxJi8ri5UrWwDkRBwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517355; c=relaxed/simple;
-	bh=mO+m+JaxLYq+BevXI0NK5P8AwDclsuWZdZ7YIumHxgU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=logtTikKZZv8ilEZOCygYuzVE7UB1w4GJNOzFLPWhYMwJqzAQBSp8va1PnF+Nj3ccreR1/UFfxAi3DyPjBJI0PVKETCUd9BVRauEZIabPM7lGMwlKOYdUU4/spyTSDzVpt/P+AB1UA1C1w4Aak7YMNBbTjDUhlBDf1tpcIxfT2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WR8OVbB9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=unk+dOg+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746517352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mO+m+JaxLYq+BevXI0NK5P8AwDclsuWZdZ7YIumHxgU=;
-	b=WR8OVbB98rI62CJm0F0v0JgI2akbIkGT2OsobsosytZFD3JYGrWAL1v554FJkEAq7n+kSu
-	3tyMaHgcVBgQzzoHiHMaEI/DBmoXo8hulJavFf/XuDFVa/lsHVbdFyprVFa6d8NOCyBAyr
-	whlLIMrHobOJTJMHQYei0bjI3ATdosFgCFey4FlRLTm6xkGHFi5ahlkB9OK8Nz1qc3Icwd
-	b12mrbiB1NC80481lq5IxCqEUrU34cneTKG9iUJlqLhjGfhEWWToAf9f2BXKrSATa7pbF+
-	/lOQRvzVou/GAcx5mGGEcaMLbBbq9YWrfbPE3Bn1dqhdFXpYdVoxMcu8pfsAwg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746517352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mO+m+JaxLYq+BevXI0NK5P8AwDclsuWZdZ7YIumHxgU=;
-	b=unk+dOg+tXXJAMCzqGPhFJ3n4qZK94I3OgBtOvSILG+8LyTBnlfv1XldvMUpEb/ePs4PLM
-	B3TukPbHTzBzbsAw==
-To: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy?=
- =?utf-8?Q?=C5=84ski?=
- <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
- <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
- Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, Aaron Kling
- <webgeek1234@gmail.com>
-Subject: Re: [PATCH v5 0/3] PCI: tegra: Allow building as a module
-In-Reply-To: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
-References: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
-Date: Tue, 06 May 2025 09:42:31 +0200
-Message-ID: <87ikmenq1k.ffs@tglx>
+	s=arc-20240116; t=1746517200; c=relaxed/simple;
+	bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oXBDhwdOpk8pJZZUOJKWbfO8jtSFl8kHuInWmrQbid7rmiiwofJmAgsWWHQL60TrxZo9PvqguNIkPvQtlLWEp5IDCRAYT7+Cjkapdt+21cv5KuUCRLCF1xHEPzfZP2godqwFXf4tf5Z+h6LEMmoy8SuBlIIPmpbdoK8+L9vzhL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORtYcfgG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EB4C4CEE4;
+	Tue,  6 May 2025 07:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746517200;
+	bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ORtYcfgGYTZGn6p83DHwBgXNrpNQk4f8CgPSNJYfF2fAkWhD4MSzEVlRSyPEoxO8y
+	 evdaYl1MvivN+dcfLkrvDe5iD8elHpUaRYWa0eOP+Psu0aFXOXfSxCnU6DODhxlMQd
+	 4laVsr4+WfY2PnytmfjsCrSq236Kg4ByWNLHPx9KLmC7eARuavfaQ6icStkuI2N/w4
+	 eU1f4XQvBOZ7omzpPZchAnTNP6iKGo1FEQBaEahAZDnpI31bazRfc/ws41nNPP8okw
+	 nZXBJjCpK87+3PxSbPOwSifp4mOABYv36tanhmHQlWW3cPeOoMkBocKcDNtrw+vYCT
+	 rpY4H7JJfWEnw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 4/4] PCI: qcom: Replace PERST sleep time with proper macro
+Date: Tue,  6 May 2025 09:39:39 +0200
+Message-ID: <20250506073934.433176-10-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506073934.433176-6-cassel@kernel.org>
+References: <20250506073934.433176-6-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Developer-Signature: v=1; a=openpgp-sha256; l=847; i=cassel@kernel.org; h=from:subject; bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIk9+wxX3jdfJpAn9gxhSVlt8/ccHoWfWrDObkss9ssW 9fqtGnN6ihlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBE2v4zMnyyXhm4cFGixL1f ZdbW006ErG+7uc9vVfq7TQrfqhcp/9vMyDD309udgjKftA9JP5Q1bF6sc5UpozPxdcwSRcHXy70 97vABAA==
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05 2025 at 18:17, Aaron Kling via wrote:
-> - Copy commit message exactly word for word on patch 1, as required by reviewer
+Replace the PERST sleep time with the proper macro (PCIE_T_PVPERL_MS).
+No functional change.
 
-That's not what I asked for at all. I asked you to read _ALL_ feedback I
-gave you. I give up now.
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 01a60d1f372a..fa689e29145f 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -289,7 +289,7 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+ {
+ 	/* Ensure that PERST has been asserted for at least 100 ms */
+-	msleep(100);
++	msleep(PCIE_T_PVPERL_MS);
+ 	gpiod_set_value_cansleep(pcie->reset, 0);
+ 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+ }
+-- 
+2.49.0
+
 
