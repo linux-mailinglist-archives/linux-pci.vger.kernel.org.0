@@ -1,107 +1,101 @@
-Return-Path: <linux-pci+bounces-27269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68483AABECE
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 11:15:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE7C0AAC069
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 11:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A4E21C25969
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:14:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE02B1C0361E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 295FB2798E2;
-	Tue,  6 May 2025 09:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6816926E16F;
+	Tue,  6 May 2025 09:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="H8vvkX2G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ee6RV+bT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F799264A73;
-	Tue,  6 May 2025 09:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437A726D4D3
+	for <linux-pci@vger.kernel.org>; Tue,  6 May 2025 09:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522505; cv=none; b=enhsLX+Nkej7BL0QMR1GQWErUXowsoLemtgrMcWiKQmjB90FgnLMP0AiAg/Di+wb6Cu7gE8j06Iynh7TRyXbZVALFleDgccyOPgeG6CbJdFKPknzzDDdTaxSQjufeSO/Uip0GlgpEmspa9BD0UOcJKpkPWcCFXnaBZtts2QnpYo=
+	t=1746525124; cv=none; b=lVRtAKwtT15YwoCpvakj83ReL4REYjwziFH2LAcEgm5gqs2DxU+f42kbTvzMlRm7pNe/tyi1rgS8hbAGzpP25c4C/pHaU0ERRggKElZtkpBuf70n3xOzV6D2vJ5kmH2n/bpV9jD0lZ7UK1DBg7fOkzb2luZfxLCC/1GqWFDvpcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522505; c=relaxed/simple;
-	bh=S1K4Z5883u+owLpW7MmSrX1qkgnjja7k3b+3zeq+uPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BYeb1rXy0izMjeTl7PJQ/7n8EWyN6C9hWZb0DuM56SDyB4y5ZDRP9fQ8K8TLBa/YZ2AP0iURGB3uWi97boe35y8euPnyAz5TIRHSjYNOSaUZDd570J9n5G7rRbHKSrwBdgNdJ3VtzyVwXigUA0Bf0O/JWIPXxDJ/mH/9lI4dTpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=H8vvkX2G; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=ZN2hIZjStH5WIJVQEoZIXJHxRyKeJAZXECGdhzrLzMw=;
-	b=H8vvkX2Gg33L3BwiGqWigsO24QiUA6cs5eD/HdifQz/2AzjCp38QvogdPsJDYz
-	vbQGAjwVoLx+g88uWgzxrATGQc9eQkc0tXrYXHS2XW46M8yD9EigiIhf2PWMSBjD
-	+IxzCqGWNEJ4aJiIJOl30KTbW0msZV89LMHwSSB1JqQDk=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnPyVN0RloeqVnEw--.51589S2;
-	Tue, 06 May 2025 17:07:30 +0800 (CST)
-Message-ID: <08073fba-b46f-45f1-9859-04c5ffa65994@163.com>
-Date: Tue, 6 May 2025 17:07:25 +0800
+	s=arc-20240116; t=1746525124; c=relaxed/simple;
+	bh=aPfN4LIF+p/6z7TUd1T56abbvQp5kZWX3Zsp7fvTMmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tldMDQ9IWig1enc82wa47Mv+nMz+zPsSVP79MgwF/TXyfWreCsxgojjaCNXkmvaGSeyxi0m7PccOm98U978wN4u3h/fnjDh8LEyNNDuaMehkuiC/0GOcvfzdOMS8iFNs9Gvv7MbcI1gEmLo8haJYZL5XMQxZvrTacVzQeWv+XxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee6RV+bT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD63C4CEE4;
+	Tue,  6 May 2025 09:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746525123;
+	bh=aPfN4LIF+p/6z7TUd1T56abbvQp5kZWX3Zsp7fvTMmA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ee6RV+bTQcYy/nuoYEu+AfTgsYeSkG4539Mciuojq3zvQerAJZ/0CBwRJzGCUyjQS
+	 vfYbbqh2PBh79e7f42JbfrZIr6PjBF1GNrMCzFFwbKtXvhLiCAAc4WiI3hRUmKrU1T
+	 uiNlPgwLR9/4nUHNdTQdupaBeax9rt0hp0elANB+j/qu2vEiH5sbSI64y2zWDvXJVS
+	 CbEXV9D67MDz5C6ghHEx8wL413yneoIcSG1SNUZjmRiCTirZYadFozI+oGLHeFwswg
+	 ovMChuOuBAVH3HSjQhcKnSNhqWAQyplTGo5hV12Tc2iyg5l7ZzWF7a44WewWTHwHxM
+	 ZbZtllX2CnA3g==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>
+Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: dwc: ep: Fix errno typo
+Date: Tue,  6 May 2025 11:51:39 +0200
+Message-ID: <20250506095138.482485-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] PCI: qcom: Replace PERST sleep time with proper
- macro
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
- Damien Le Moal <dlemoal@kernel.org>, Laszlo Fiat <laszlo.fiat@proton.me>,
- linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250506073934.433176-6-cassel@kernel.org>
- <20250506073934.433176-10-cassel@kernel.org>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250506073934.433176-10-cassel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnPyVN0RloeqVnEw--.51589S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKF1rWw4kAw45XrW8Gw4Durg_yoWDWFbE9r
-	Z5WrWxurs8GryS9r12ka1fZr9aya47Xrn7CayFvF17AasxJr1UXrykZrZ8Xa98WF43JFZ5
-	t3s0vF4rCFyxGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjldgtUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw9Fo2gZz-g0TAAAsY
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1222; i=cassel@kernel.org; h=from:subject; bh=aPfN4LIF+p/6z7TUd1T56abbvQp5kZWX3Zsp7fvTMmA=; b=kA0DAAoWyWQxo5nGTXIByyZiAGgZ26rIBpCuPgmbP0gWuR9hqgwCuA1MbAJVmAmTQcfMsqfQU Yh1BAAWCgAdFiEETfhEv3OLR5THIdw8yWQxo5nGTXIFAmgZ26oACgkQyWQxo5nGTXJH8gEA8aI4 c/EuMwaC8/BkVmeTlmYRIdVxWjH/C2FzddYD1+EBAO3Z++K0MsBYrFrjoeBJS22hXsAhzWJUIur Gio2NhHgN
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
+Fix errno typo in kernel-doc comments.
 
+Fixes: 7cbebc86c72a ("PCI: dwc: ep: Add Kernel-doc comments for APIs")
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 2025/5/6 15:39, Niklas Cassel wrote:
-> Replace the PERST sleep time with the proper macro (PCIE_T_PVPERL_MS).
-> No functional change.
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->   drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 01a60d1f372a..fa689e29145f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -289,7 +289,7 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
->   static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
->   {
->   	/* Ensure that PERST has been asserted for at least 100 ms */
-> -	msleep(100);
-> +	msleep(PCIE_T_PVPERL_MS);
->   	gpiod_set_value_cansleep(pcie->reset, 0);
->   	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
->   }
-
-
-Reviewed-by: Hans Zhang <18255117159@163.com>
-
-Best regards,
-Hans
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..d12fa7c74bb1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -671,7 +671,7 @@ static const struct pci_epc_ops epc_ops = {
+  * @ep: DWC EP device
+  * @func_no: Function number of the endpoint
+  *
+- * Return: 0 if success, errono otherwise.
++ * Return: 0 if success, errno otherwise.
+  */
+ int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+ {
+@@ -690,7 +690,7 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
+  * @func_no: Function number of the endpoint
+  * @interrupt_num: Interrupt number to be raised
+  *
+- * Return: 0 if success, errono otherwise.
++ * Return: 0 if success, errno otherwise.
+  */
+ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num)
+-- 
+2.49.0
 
 
