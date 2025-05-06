@@ -1,97 +1,90 @@
-Return-Path: <linux-pci+bounces-27264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5087AAABCB0
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 10:11:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D24FAABC95
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 10:07:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 602E85A17FA
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:57:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4449A504E96
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 08:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA8572638;
-	Tue,  6 May 2025 07:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORtYcfgG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68513227EA1;
+	Tue,  6 May 2025 08:07:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C1272637;
-	Tue,  6 May 2025 07:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B378422A1D4;
+	Tue,  6 May 2025 08:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517200; cv=none; b=EK9d48H+f98uXwuK2znl7q8qzL7bD6FR/PJioi4Qqf9BGh7fBX+QItawOXfEM5ym/EQFgE+atpR5fVRLLxQRxY2EYXe9hty5k2AZ9GhPi/5FkXRT76S6yXKmZwYIIM+A6npctG1IDZR3PgrQMh5OYDqp4yxJi8ri5UrWwDkRBwQ=
+	t=1746518826; cv=none; b=YFyW0jtTylYKXxqLbsgFiTXDrmcHRjDo3MINyeCVlLXj3XDCgcvGlqW4ikSIXFV1KQLDowdaPoBYhB5t2LCes3gMjEe13i1KgImsf5zq8PxRvDNNiYtFmEmjGNibx1L6cD6ycZXdcsuhaoRmZ2Xro/c5OdywggijeslTk2/0JEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517200; c=relaxed/simple;
-	bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oXBDhwdOpk8pJZZUOJKWbfO8jtSFl8kHuInWmrQbid7rmiiwofJmAgsWWHQL60TrxZo9PvqguNIkPvQtlLWEp5IDCRAYT7+Cjkapdt+21cv5KuUCRLCF1xHEPzfZP2godqwFXf4tf5Z+h6LEMmoy8SuBlIIPmpbdoK8+L9vzhL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORtYcfgG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EB4C4CEE4;
-	Tue,  6 May 2025 07:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746517200;
-	bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ORtYcfgGYTZGn6p83DHwBgXNrpNQk4f8CgPSNJYfF2fAkWhD4MSzEVlRSyPEoxO8y
-	 evdaYl1MvivN+dcfLkrvDe5iD8elHpUaRYWa0eOP+Psu0aFXOXfSxCnU6DODhxlMQd
-	 4laVsr4+WfY2PnytmfjsCrSq236Kg4ByWNLHPx9KLmC7eARuavfaQ6icStkuI2N/w4
-	 eU1f4XQvBOZ7omzpPZchAnTNP6iKGo1FEQBaEahAZDnpI31bazRfc/ws41nNPP8okw
-	 nZXBJjCpK87+3PxSbPOwSifp4mOABYv36tanhmHQlWW3cPeOoMkBocKcDNtrw+vYCT
-	 rpY4H7JJfWEnw==
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hans Zhang <18255117159@163.com>,
-	Laszlo Fiat <laszlo.fiat@proton.me>,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 4/4] PCI: qcom: Replace PERST sleep time with proper macro
-Date: Tue,  6 May 2025 09:39:39 +0200
-Message-ID: <20250506073934.433176-10-cassel@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506073934.433176-6-cassel@kernel.org>
-References: <20250506073934.433176-6-cassel@kernel.org>
+	s=arc-20240116; t=1746518826; c=relaxed/simple;
+	bh=ctqEI29Ajb0YxefQ/2ghw4IH1R7Rowb1zE0UcrgYyP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AXiBJ8o88GuF7KK9/o2b4rjz9a462SnXPAElorOtl8j7JNRfY+QMMSyTJvI4YlW2OWHeggDGHyv0Sz5jVHMPYPV0M3LoPXJlseE1LtJJn1YD/GXc1rMU6MQOCjvjkrQrC5+aUyISC6dK0HWuGtan2yZ5UFIhffD5j6XChdU+N2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A004B2C000AD;
+	Tue,  6 May 2025 10:06:42 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 620E44183C; Tue,  6 May 2025 10:06:59 +0200 (CEST)
+Date: Tue, 6 May 2025 10:06:59 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, bhelgaas@google.com,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 382/642] PCI/pwrctrl: Move
+ pci_pwrctrl_unregister() to pci_destroy_dev()
+Message-ID: <aBnDI_40fX7SM4tp@wunner.de>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-382-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=847; i=cassel@kernel.org; h=from:subject; bh=aDBAcDbQGOt5Xv5cthyXK3A/bSsdny7PtcfYNAzg71I=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIk9+wxX3jdfJpAn9gxhSVlt8/ccHoWfWrDObkss9ssW 9fqtGnN6ihlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBE2v4zMnyyXhm4cFGixL1f ZdbW006ErG+7uc9vVfq7TQrfqhcp/9vMyDD309udgjKftA9JP5Q1bF6sc5UpozPxdcwSRcHXy70 97vABAA==
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505221419.2672473-382-sashal@kernel.org>
 
-Replace the PERST sleep time with the proper macro (PCIE_T_PVPERL_MS).
-No functional change.
+On Mon, May 05, 2025 at 06:09:58PM -0400, Sasha Levin wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> [ Upstream commit 2d923930f2e3fe1ecf060169f57980da819a191f ]
+> 
+> The PCI core will try to access the devices even after pci_stop_dev()
+> for things like Data Object Exchange (DOE), ASPM, etc.
+> 
+> So, move pci_pwrctrl_unregister() to the near end of pci_destroy_dev()
+> to make sure that the devices are powered down only after the PCI core
+> is done with them.
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The above was patch [2/5] in this series:
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 01a60d1f372a..fa689e29145f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -289,7 +289,7 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
- static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- {
- 	/* Ensure that PERST has been asserted for at least 100 ms */
--	msleep(100);
-+	msleep(PCIE_T_PVPERL_MS);
- 	gpiod_set_value_cansleep(pcie->reset, 0);
- 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
--- 
-2.49.0
+https://lore.kernel.org/r/20250116-pci-pwrctrl-slot-v3-0-827473c8fbf4@linaro.org/
 
+... so I think the preceding patch [1/5] is a prerequisite and would
+need to be cherry-picked as well.  Upstream commit id is:
+957f40d039a98d630146f74f94b3f60a40a449e4
+
+That said, I'm not sure this is really a fix that merits backporting
+to stable.  Mani may have more comments whether it makes sense.
+
+Thanks,
+
+Lukas
 
