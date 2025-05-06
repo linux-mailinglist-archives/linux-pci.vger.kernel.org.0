@@ -1,275 +1,182 @@
-Return-Path: <linux-pci+bounces-27272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69328AAC094
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 11:58:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2D6AAC0FB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 12:11:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 525F21C24196
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:58:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A19F1C26EC6
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 10:11:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171B226771B;
-	Tue,  6 May 2025 09:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0927F2750EB;
+	Tue,  6 May 2025 10:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lovfbexx"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Hj8ZNgiB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B0C19F115;
-	Tue,  6 May 2025 09:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525519; cv=fail; b=pKbos3ESJDRLagtP9evI52AZWAIvB1kN1weEZWoCS5DHDfHNbrePUsKFE0EOMhRHeWxbRWbkX8x/dYKHw6YTNjc0QMpozbGkXrGw/k1ReGV5xqRIOv/r21jLGRYmtaFL0R/zKhEO9XLWZkMcIXIxFto6QkfW0wAukufIl6zdcLg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525519; c=relaxed/simple;
-	bh=dAWnnOcT7rdzwfykgWaeAvuxU8ggybnunRVR0YVRqas=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nMNSArV2t7isN2gm5eg0jQ2ZkOn9RVmoZk5mEesLm/lyNgVRRVogYi6+bKD7gqS9GnguaXYVbJJOfk4ftP3ENQGbxHMYDA9nUS3xmGh7JFmu4GrLhBpAhhHpO2kejeYTQDm1qw3vKREvVNrl6YlPfKIImZouZJQdoRGuGdU9r9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lovfbexx; arc=fail smtp.client-ip=40.107.237.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nJ2XF4Qln0WWfJdzCEl3klLrB5mAAtbpvpK77UA0waCaJNUmeNjCuT5hhBmPo/43OtAcuSWAsySMIHgT6Kpg5Fns4thyZYPtQ6DVlh3o7PEU//OU69hRDFMEnnPHiJjyfYEtzPbL9W6YH0nOlNH0wzFhFFpy2UvCKeN1k1Zsde2X7hgwIbGtfAVv9NXkRdocT5FWneqeF1llKm9xOGiWr0gSPX1JZlqwpv/yd0pcpxNl/1JFU6SngOLCFKO2R1adJ/BHan9tIIcPe2kVmvfe0y8AgOw3NGEQStAKX+yedOzd5hFjSJ755MYvJhMQOjinhtN9Hlkc/WIJm+v6+HbcLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bk5G2tkGiDoRaf/jv6zdwvDStjZkwTm3MCGE97BL7Bs=;
- b=zQk7bORcF75yAMLL5aPLYjEKaffzFlq8zN46oqUC57yrsnP3nX9Hz39yJ3wZEcACdp4kqUsYCaZ1jDrfvafLZZl1EoVA8WcAz0ANT2dCQrV+ZAOlcr5meJO1xtvqWoUxu+2JaryQtxSGHOG2EEwwWni8TDFMSdKYm1gxJ8qBo72klG/X20oXBWx4wLYotPtoYmby4UYand1N40xugcw5p7A/FaJu/aUmA/Wav51QX34Kuyi6Jtzk7OOsk6La2tLV3BWN47UsY7ZmvdUiIyjKk4pWHQsOfFNiawqP7ALQpn2LwTemzTRsdyyc0PCTaM3p8BDqmo/WEI0uo4VGQcs1JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bk5G2tkGiDoRaf/jv6zdwvDStjZkwTm3MCGE97BL7Bs=;
- b=lovfbexxbDIH5Jn0GyrdMCfPc2hdxHBUhhNRSdQe5R/aIkYOLxHKlnAX2dIDDJ9z7izcVCk9YjxvIIUQXOUVoycLPn040IlpFcoUiK1dksuWB3TCfL/amzeXnVVbzbM3dmxf/H+gwevdfx8pQBMtwAglqJleidaPQblyepSNvkc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- BL3PR12MB6570.namprd12.prod.outlook.com (2603:10b6:208:38d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Tue, 6 May
- 2025 09:58:34 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8699.019; Tue, 6 May 2025
- 09:58:33 +0000
-Message-ID: <2915026c-698f-425a-9999-c903f4057bb1@amd.com>
-Date: Tue, 6 May 2025 15:28:24 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 rc] iommu: Skip PASID validation for devices without
- PASID capability
-To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
- yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
-References: <20250505211524.1001511-1-tdave@nvidia.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <20250505211524.1001511-1-tdave@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0189.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::11) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6684817B4EC
+	for <linux-pci@vger.kernel.org>; Tue,  6 May 2025 10:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746526279; cv=none; b=CuMGlHzcIRc23Sa/t0DDHgmDHzGmHKBTNhjXUeSRKMmsKknfdhjeICqlgwDJ1PP9LlHrDX9RYoL2yGYCdCA9Jb+hkfmk6JXFl4haSehemtjn+UnV1vu3C5MY+PjhRQL/6V0QgkYBsnocCd7LwwMCw8U2heqAZu2UD041h9KLTJM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746526279; c=relaxed/simple;
+	bh=s4kCWQW0ZTSUK3D9Sel80Aj9ycpFDOTL8zaBmcgdIy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V4uSXl9NTtM6F4PhH00QLcdaMDPgEYq2o+OZo7ugunZdKS90fVw3dCNq71bd6bS7B2331pxMcX0/9CloabM85tA5ZdIc5y6T/sC8em2h4RKo8v5e34NEFCZSt44HK6WjDLJogTstE/dwdLSJaK9vYIAMLz9sFFNA9nJnqtP4iK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Hj8ZNgiB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5468jvrS014073
+	for <linux-pci@vger.kernel.org>; Tue, 6 May 2025 10:11:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	R357w52RG43euLotJZLwo3ITJzb0YVqeRsR7WnNZQZA=; b=Hj8ZNgiBzlrftr5B
+	F+oKgx4tCDOcM1tQqPIvZHCiqEr15MbOTxiwMhHU82RWMNigam7Teb40Eu2D/asU
+	PKPDwUmjbqAoFMZo0rD4VLv/3iFyruY5KtalAqf3r7S7w5IwRF2Jvh2aemELD2ib
+	3KOCuuER0o6U6reqHQo6PkohBdQEbNCg8znnLWCPEJF/Fgsf1d0GWY84zdpYvfyJ
+	YIdu0moxqFuh1W1jq9f0RfGZj/Yczb4xc7mCSo62iDen3d6dVBlfAZ2rpoJN88Va
+	LPqTCk0Qf3+ppW/iNn2gQIWvSG0uvwAiJBlFL5rviN+cOcsijOEWGKdZd3M6nOW0
+	7Xnzhg==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u41uwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 06 May 2025 10:11:15 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e40e747a3so3664655ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 May 2025 03:11:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746526274; x=1747131074;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R357w52RG43euLotJZLwo3ITJzb0YVqeRsR7WnNZQZA=;
+        b=PlpajkoRhJqoOaykPvvUIlCiYy+5tGA9ZBD0vQ+9ofXI6T65DbQRrEIk4vTCqr0u+g
+         bc5NdQnrpCIPaq93C2hCy5CKTq77OtWNeNIDg+vpt6AHUWin18HbATx5end/tNipfo/X
+         vR7ZHngGJAhKtiLKYBIfP28+JQ7tnquUuK2yyrd8OEsncRB1HRDOHu0dMgdqrXAdXeUt
+         CXMv8R7gesvbBwH33mLDav+H56s+XGipcMRYy70asSG3mFB5OQeQH3Ggfw8BFJQ360+f
+         kW0GZxkmshNFC9xZaDO9gcE/S3wbR2NUVyiCs2/hvO2rFqkkXUiaZtbrLvyBDcLzD4r6
+         bwWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwTQUsV21fsq2FB9NwdgUIdGAi6pZRRme+1ZKYSKccH4ITY9aO8ezG/Q++pdqpAOa3tPj3CmjWDM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8oS2WsL6REABKXVGvXY2pHtY90Ezzv1rhDn5hAVheyHrm1sJt
+	AhWfuQeuk4n5ETuQGKvjmEDK8EytaTi7WAI00f69p3kbLiw+EFqYWfd+5VKyqOl4H7l5oQ4L/m7
+	Ae+w6kwX1KmA0+L05VuznyvptDWnB1wsvyvmadNqJo24QG9O56rvp3YbFjQ8=
+X-Gm-Gg: ASbGncuw26GlJNJe6tWoCbZ5GNw+frPmjdla9E4gCNOUxSQALNb7mnj3r8hGGrOHqGs
+	NUaUBxEM5dn5h6Oizb9cjhOJxflHUgIY70dDajVR2RW+8C73t/oWClTg4tDhEJLoFnbZVr0jw9g
+	4n84qPZLWEaK/HSmvxo7qU61ZZyvWOuL2bpq8tZ0wHqfystK9bZRlOT5NdzBkdTpbDWDu0xw4E3
+	Zy7nTUlC/7DD0cC8dfodkhVRGUFiiirqI5T8a0gbqajMFZWfAKSPWy9yxu+VNNn6K8aBCgTO4oZ
+	Mro4fD3tJlMekaexJ7FiXOquNLeTdkoGOAyfqTmmrg==
+X-Received: by 2002:a17:902:f682:b0:216:410d:4c53 with SMTP id d9443c01a7336-22e1036be29mr230061325ad.41.1746526274370;
+        Tue, 06 May 2025 03:11:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8U/guIu0vbzSPfeTmdl89koUVyuEsL/oTZLqYtIdxTjXuLx/PmEC/GmoUm6x6tbynQ691+Q==
+X-Received: by 2002:a17:902:f682:b0:216:410d:4c53 with SMTP id d9443c01a7336-22e1036be29mr230061015ad.41.1746526273933;
+        Tue, 06 May 2025 03:11:13 -0700 (PDT)
+Received: from [10.218.37.122] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3484bc23sm13457073a91.43.2025.05.06.03.11.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 03:11:13 -0700 (PDT)
+Message-ID: <99da4243-3e55-3aa0-5657-5a5d2a4415cd@oss.qualcomm.com>
+Date: Tue, 6 May 2025 15:41:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|BL3PR12MB6570:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7576b419-fdd7-45ac-5044-08dd8c848ff2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Skg4MXRJa2d3WXRIbk5NNkFIbUs4a3JNSjBqeUI4S1B4cTZkM01aTVVQb0hs?=
- =?utf-8?B?czIxeDN5NUpRdENvczZWaHpyV3JsL2VCWlV5ZnYvVUpoTWZhS0swOU1OaDd6?=
- =?utf-8?B?U2ZHdCt4eFlVRjJPNXc2dlVZK1RmTTROU3dDWW16SzlJaHZQUEJ6QlZMM0JD?=
- =?utf-8?B?c0NUMHRPelRwZEZBVkM3Szl2eHo5b3FKbGRjR2k5eGNreGdjTEMwQ3Q0bDNa?=
- =?utf-8?B?NFJ4UjBwWnpvZGZyTW00MHBQZnErRDBOTEpyVmdDeVZ4TkdlU1ZZYk9LeW0x?=
- =?utf-8?B?Q2Z5S2dxTlNxMldyRFJvZUtKWG81U1lnZnBjbTdmMGFwYlFkTm53a2xoeHBZ?=
- =?utf-8?B?dDdMUm9vdUZ5TGt0VDBpbi80MmkrLy82WFN1ZGlOYTZwR2FYaDhCQW1VdDhp?=
- =?utf-8?B?UzRIWWxHeXBSMTJjSDAvTG4xdjdhNHQvNm1IVWRlY3hsUFRkVkJiYTg0bDAx?=
- =?utf-8?B?SXducVFGOU5uUEhmT05YaXg2a2dBZi9VMC8yS21LUDFpZlBGMG9veGhxOUxW?=
- =?utf-8?B?OEpxUm5lUnNCZG4wTFdPV3o5NXpOQkNEaUNyamZtNkRjZXU4TnBDdUtpRXo1?=
- =?utf-8?B?Ym1md1JUWjJCQ3dDY1NNZklNU1hCTmVkSDhUdHlMVGlRbk9Gc25McW1IRmtI?=
- =?utf-8?B?dDl4SVFBOTU3U3VDWThLUWRxN0Y3QmJlblpvNm85Vm0zZjNoTkZIdW02blVU?=
- =?utf-8?B?OXNVSW9GZWJjQXlWWkVpNTdEei8rekY2UVluaUdqOTJaK1U2U1NqRGJpYmJN?=
- =?utf-8?B?WjdMendWejNHamxBRTZSNHJ5dy9QYWFWaWRxS0lsL3hvM1pSRFYxTHp6cnRB?=
- =?utf-8?B?b2lXOHdJd211SWgyOUFycC9mcGh1U2RDcnpKQm5NL2dzV3dZM0J4d0JSdmo4?=
- =?utf-8?B?T0hkQ3o1VG96NUZRa1V5TWl3VURpQkJoYzZGZ25WdzRydElCcVh3cnhPOUov?=
- =?utf-8?B?dWVXSlVLL0JRZTN4aXdoaVdxVk9QSFY0U1F4UFBTaEJzSTJ3WmhuUUZaNTda?=
- =?utf-8?B?TUY3SW5PWU1CcXMxYzJvN3QzZzZCTTFTcmhDZHdUbHV0VDY2OUw0YXlhOWNu?=
- =?utf-8?B?amZjaDJZSjloaGNzR2pwREQ4dUQyTWY1U2xNc0JESlRQNnNFbDc4OXZaejg2?=
- =?utf-8?B?TjJWaGdnaE53MDRLdmJpZzBxbis4OEJjVXZzU3pJSzNtWllqQzJHSU5xajdE?=
- =?utf-8?B?allTeXRnbWw4eWcvWU5ySFNrY3lndUFFZFQ0UTZhS1pMUW84eWdLUXpNOTdS?=
- =?utf-8?B?Z0hZYVczT21uVzRJa1V6MEFEMGNjTWJmZVpUNURrSFNVVUlxeXBFK09sQitS?=
- =?utf-8?B?Vlhqd0VxWTlmWHRlOTVPOUp3bndEbVlyaVJZUjAzU0hnUWw3cFlGN2oyMEpR?=
- =?utf-8?B?Y2NDRW43MWZSY2JzTmhVZ3BSU1VKazFSYkVCc2VRejRnL3N5TXFZc2dyaVRZ?=
- =?utf-8?B?UUtTWjdUbndnUGp5NDkwdStBOGJ3YWFGeG8rZ25EQkVkbDRLV2hPbFBwZkFP?=
- =?utf-8?B?a3RRSXhBd2tQbzhLS2JHT0ozNENSV1FxOHFEeDh6bC80enVJbnNDaldwVFNX?=
- =?utf-8?B?U3E2V3J4cGc2QW1ONFdJM0FMQ1ZZdHlOK2YvUXlZWUVLdlY1dVFnTytQdjU3?=
- =?utf-8?B?VU1QWTZkVFphMHduNktENW1wV3pxL3o3K3VtQzFCMFJmWnRoVFhhbkhHa2RG?=
- =?utf-8?B?OFBPK2RNdndpR2plWXh5Y3lKd28wakhMS3dFOUxNblNtMXBwcytVZlUyOG0w?=
- =?utf-8?B?RHdqR20xajA5OGExbzRPcVlFbmV6SDllbk54MXBuWUVUa1NwZyttTnh1U21J?=
- =?utf-8?B?RFI4a3dtVVFrWlNxS21iU0UrVjlxakl2RUVIUFEzcm1uZnBUOHpHK1Mwalh5?=
- =?utf-8?B?cURDdDJQbktpdzZqVzZZUktHZWc0YTZWbjF6NWo3U21lYXQwRzZoTFpONk5y?=
- =?utf-8?Q?+8vvRAwU2wk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N0wrdlY4MDZJTldSdFBxZjI4M0FqVWdqYk0rTWlqM2x1VTNqT0l6bUJOVjU5?=
- =?utf-8?B?dFI4Y3AxOGVHMTlrOTlpRC9BNUdFeWVONGFUaGRsY3owQUZER1h4K0lVVmJt?=
- =?utf-8?B?K24ra0tKNU1hYzVQejMxeWF1bEtoc0puaXVNRzhtMFV2NjlCaCtnZWkzSU9r?=
- =?utf-8?B?YkFJK1cybUVub2E2SWZ3OUVOSEluN2lIb0lyMU1tZDl0RW1vRlROQzVrSWsy?=
- =?utf-8?B?ejhEZDdyUzF3R2p6TzBkd09EZ1QyMXRIOXo1MFJJeE9YZ2o4K0s1MjZxSUh4?=
- =?utf-8?B?VkR6eDY2OGM5b3J3TStCZDFGbEwrUk5sc1AzWHhiNjJLRDhIVWowbGloaVA3?=
- =?utf-8?B?SFlYL3hVWUtSbXg2dWZsSDRpdTdURFhRYlExTXd6cVYvVFY5S0pZcUlXcS9j?=
- =?utf-8?B?bEtTdjZDWDNHc2hGS2p0enFZQVh1eHpaV3ZrUTdiakZXV0NBL2paRndFV0Zy?=
- =?utf-8?B?cUtjQ0FjOStodWF2Q2lWc0dQUTdzdDZ5MkFKRHMrSTNCMmVaWmJqMURqS1dr?=
- =?utf-8?B?ZjNDZTNxdHl4dmUwUENKdlRiM3BqcDNOOUk2OEpUaWxacnRwY1dGdjQ3S0VQ?=
- =?utf-8?B?ZnA3cC9wSUFFUCtwYzNicFJWeFlCT0dyVXZTcHNPM2xYSXpCc2FXaEYrNXpV?=
- =?utf-8?B?K3JidlNKNHlmT1lmMFFIN01RR0I5bzNEbTUwNEZud3dVMm5ZODB5UDJUaEJG?=
- =?utf-8?B?Ynh4MzJMTWVEa3gveXFsMXRPSnI1ZGltRmZ6UmVDN2h1U3g3N2lKaDBRbXRL?=
- =?utf-8?B?SFZTLzMzR0tic0JOTUFHVUxBQllMS0FTaUlzdHphdmtmdm9GNmpYbmRHYzc4?=
- =?utf-8?B?VXhrUDFYMXUzTUEzVTFtYWhvZUlzSm9vM01tYjBscElYUmZTSjhyRXRYdTJh?=
- =?utf-8?B?M1dTNVFRTmZYblRoZ1BCWU9QQWxkK1F4UXU0UjgvbkRQdU92cUJ6cFZRTERu?=
- =?utf-8?B?Y0g4TFJCd28xMXZHdnhGUVhNa1owYlNpMm4zM1NqVFNvMXlRSVExQnprMWdh?=
- =?utf-8?B?dG83YWlRbWNZNWRUVGlvdnp3bUZMMEJiYWd1YjBpbzJaYnhYQk9Sc2o0aElO?=
- =?utf-8?B?ajl5NGdLRk41bi9zNXdQZnJRQS84ZTRuSGxJd0JucnRzenhiTUlwWXVPYmVm?=
- =?utf-8?B?RzY2bkcyRzhNMVJVUGtvQ3kvVUtQOGpodDJ5Z2lURUxkZGlGODJWY01tMnhj?=
- =?utf-8?B?TTlRbVVGSWVyVWlsVTc5czFLZzNOOHVXSzlzQTBzZERXREV1RnBXMVhVTHda?=
- =?utf-8?B?VWIzWVp5aGFVejNRZVQ2NlJoZzNXK0ZhQTY1enUyRXk4RFpFajNNMlU3Ykd3?=
- =?utf-8?B?MVBha3l1QkRyL0F6SnFXMGl4MXRqbEdJb0lLdmhva1RaN3R3RWJadnZJQ1l5?=
- =?utf-8?B?QlUzWEY2SzVuQkxvYWpIS0JXZXBMS1p1TkpZcHBRL2hLTjBrSFVISXEzc1pq?=
- =?utf-8?B?ZEtDcFhVQ1Q2dEpLdzRIbTRhZ0FuVXBHc2ZDakR0VGROeTJDS1pPTDBhUGlz?=
- =?utf-8?B?T29XSXVVL2ExZlZhcFo5dE41NGNncWE0VVp4elJzNDRLVEpkN25MWnZyR0ZK?=
- =?utf-8?B?cVdyNnpJK05HczlhMnlINFRkODZrWHNJUWZ2RnN5U2lOZW04b25UWHMvWUZu?=
- =?utf-8?B?VzJzbnNqSDYxMVh4VHpLbHBmYUR0czZybTZhYWV3ZklTQUp2aUF3NTY2bzNZ?=
- =?utf-8?B?NCtQTlVtSkxLSWo2cFZoWFE0b0puZ1hoOWNTZDBOdGRNcHFFdG9WeG5HVlFT?=
- =?utf-8?B?NFNzVTQvclBvMUkyL1dxNHA0SzV4Sk5LeEpHdmRrZmJPTXlON2VidzlNUE9F?=
- =?utf-8?B?NStqYTlVdm8yV2RQSkhqMG9GS00zajh0VC9GUG9xTHRMMlZBSTZEVDhFdW91?=
- =?utf-8?B?ZUdmVXBGdjY3Y3lOK2VkcjlRL3lueTNPbS96TkR2d1VGejFMY3VCR2w3QTI2?=
- =?utf-8?B?T254Z0Raakp1SVVTY2xMVU83dXZVd09VWWlzdHU2c0Rzd2lDejFLUHk0VEdi?=
- =?utf-8?B?dWpMNnRtUEh0Y1p0S0xQVEtJRmFHSE1xMnh1dGNLRllaV3FjMEh4UTlrdzhK?=
- =?utf-8?B?dmVNb0plL0hJUkJ2Unl3Z1VYYi93aS9CVDFwZ0hRRnZ6b29YMHI3T1Z1cits?=
- =?utf-8?Q?YLFnxYLZq6WzQ4jNJvagjIoCY?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7576b419-fdd7-45ac-5044-08dd8c848ff2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:58:33.8361
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oWsV6rH9NiE/EIPknUKuvpssWb95FzFBb5vW5kWN97ZRRoDdk2EFA1hSEOvuqwR8y+Rx0SWQzS45D2dno3yPUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6570
-
-On 5/6/2025 2:45 AM, Tushar Dave wrote:
-> Generally PASID support requires ACS settings that usually create
-> single device groups, but there are some niche cases where we can get
-> multi-device groups and still have working PASID support. The primary
-> issue is that PCI switches are not required to treat PASID tagged TLPs
-> specially so appropriate ACS settings are required to route all TLPs to
-> the host bridge if PASID is going to work properly.
-> 
-> pci_enable_pasid() does check that each device that will use PASID has
-> the proper ACS settings to achieve this routing.
-> 
-> However, no-PASID devices can be combined with PASID capable devices
-> within the same topology using non-uniform ACS settings. In this case
-> the no-PASID devices may not have strict route to host ACS flags and
-> end up being grouped with the PASID devices.
-> 
-> This configuration fails to allow use of the PASID within the iommu
-> core code which wrongly checks if the no-PASID device supports PASID.
-> 
-> Fix this by ignoring no-PASID devices during the PASID validation. They
-> will never issue a PASID TLP anyhow so they can be ignored.
-> 
-> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tushar Dave <tdave@nvidia.com>
-
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
-
--Vasant
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 2/4] PCI: qcom: Do not enumerate bus before endpoint
+ devices are ready
+Content-Language: en-US
+To: Niklas Cassel <cassel@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>,
+        Laszlo Fiat <laszlo.fiat@proton.me>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kwilczynski@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250506073934.433176-6-cassel@kernel.org>
+ <20250506073934.433176-8-cassel@kernel.org>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20250506073934.433176-8-cassel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=6819e043 cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=S-OeyO6ZCgE5XVXCpeMA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: D_WQfTL1nlddQPud_fYVaF_Ft-lE8_sM
+X-Proofpoint-ORIG-GUID: D_WQfTL1nlddQPud_fYVaF_Ft-lE8_sM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA5NyBTYWx0ZWRfX3VLVM8SZ4bKj
+ Jjg7neX0ZxWCqsm605RgrPNiDSa2o79B6ajTCcjvDM2QvC7s4VYb8oUwesk0GNZca77vH0qE54Z
+ HSqIZC8kkDO1kxv5I2Plk8lYHXetrPuLs1mZJLRzzEtVZ9rB9wIAVamHksIW5OUk9GKI87wgEPA
+ FnsBVXf9U453nTpVbOmrMfjg/MhmYu1GXCo00oH7atE2EH+nwtg9wQBvgOOBT5Otr7B+JmZ+2U8
+ hPP47nhFvnePnGRP8SSDhkFgCAxgXck2oTLrjwR6iGr36NHIGRsGDEemhEfezDmM/Z6soPnGttE
+ QaQ+zzgIqiPWZ4IdDr9DAEJSla3y/jP3d/YXQUouTmJ1jFRfPohTdPgdpJE7JaGCWPD+gfEsujW
+ ZIVBrujvVCQ+AM+wnz4KPvzQmaTnAAthyHgDmNTpMbwTpza+9ZIHujq20FMWEufp3oPP4iyU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_04,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060097
 
 
+
+On 5/6/2025 1:09 PM, Niklas Cassel wrote:
+> Commit 36971d6c5a9a ("PCI: qcom: Don't wait for link if we can detect Link
+> Up") changed so that we no longer call dw_pcie_wait_for_link(), and instead
+> enumerate the bus when receiving a Link Up IRQ.
+> 
+> Before 36971d6c5a9a, we called dw_pcie_wait_for_link(), and in the first
+> iteration of the loop, the link will never be up (because the link was just
+> started), dw_pcie_wait_for_link() will then sleep for LINK_WAIT_SLEEP_MS
+> (90 ms), before trying again.
+> 
+> This means that even if a driver was missing a msleep(PCIE_T_RRS_READY_MS)
+> (100 ms), because of the call to dw_pcie_wait_for_link(), enumerating the
+> bus would essentially be delayed by that time anyway (because of the sleep
+> LINK_WAIT_SLEEP_MS (90 ms)).
+> 
+> While we could add the msleep(PCIE_T_RRS_READY_MS) after deasserting PERST
+> (qcom already has an unconditional 1 ms sleep after deasserting PERST),
+> that would essentially bring back an unconditional delay during probe (the
+> whole reason to use a Link Up IRQ was to avoid an unconditional delay
+> during probe).
+> 
+> Thus, add the msleep(PCIE_T_RRS_READY_MS) before enumerating the bus in the
+> IRQ handler. This way, for qcom SoCs that has a link up IRQ, we will not
+> have a 100 ms unconditional delay during boot for unpopulated PCIe slots.
+> 
+> Fixes: 36971d6c5a9a ("PCI: qcom: Don't wait for link if we can detect Link Up")
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
+>   drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> changes in v3:
-> - addressed review comment from Vasant.
-> 
->  drivers/iommu/iommu.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 60aed01e54f2..636fc68a8ec0 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -3329,10 +3329,12 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
->  	int ret;
->  
->  	for_each_group_device(group, device) {
-> -		ret = domain->ops->set_dev_pasid(domain, device->dev,
-> -						 pasid, NULL);
-> -		if (ret)
-> -			goto err_revert;
-> +		if (device->dev->iommu->max_pasids > 0) {
-> +			ret = domain->ops->set_dev_pasid(domain, device->dev,
-> +							 pasid, NULL);
-> +			if (ret)
-> +				goto err_revert;
-> +		}
->  	}
->  
->  	return 0;
-> @@ -3342,7 +3344,8 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
->  	for_each_group_device(group, device) {
->  		if (device == last_gdev)
->  			break;
-> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
-> +		if (device->dev->iommu->max_pasids > 0)
-> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
->  	}
->  	return ret;
->  }
-> @@ -3353,8 +3356,10 @@ static void __iommu_remove_group_pasid(struct iommu_group *group,
->  {
->  	struct group_device *device;
->  
-> -	for_each_group_device(group, device)
-> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
-> +	for_each_group_device(group, device) {
-> +		if (device->dev->iommu->max_pasids > 0)
-> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
-> +	}
->  }
->  
->  /*
-> @@ -3391,7 +3396,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->  
->  	mutex_lock(&group->mutex);
->  	for_each_group_device(group, device) {
-> -		if (pasid >= device->dev->iommu->max_pasids) {
-> +		/*
-> +		 * Skip PASID validation for devices without PASID support
-> +		 * (max_pasids = 0). These devices cannot issue transactions
-> +		 * with PASID, so they don't affect group's PASID usage.
-> +		 */
-> +		if ((device->dev->iommu->max_pasids > 0) &&
-> +		    (pasid >= device->dev->iommu->max_pasids)) {
->  			ret = -EINVAL;
->  			goto out_unlock;
->  		}
-
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index dc98ae63362d..01a60d1f372a 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1565,6 +1565,7 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+>   
+>   	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+>   		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> +		msleep(PCIE_T_RRS_READY_MS);
+>   		/* Rescan the bus to enumerate endpoint devices */
+>   		pci_lock_rescan_remove();
+>   		pci_rescan_bus(pp->bridge->bus);
 
