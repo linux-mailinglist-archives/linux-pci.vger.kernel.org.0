@@ -1,165 +1,132 @@
-Return-Path: <linux-pci+bounces-27258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA819AABB0B
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:33:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F1EAAABB8A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:43:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2CC950192F
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:30:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDB3F1C434E6
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:38:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66043296FC0;
-	Tue,  6 May 2025 05:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31DE9233D64;
+	Tue,  6 May 2025 06:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="fcYnrrD5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i3ZbgFFb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIRkTWuY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48065296D38;
-	Tue,  6 May 2025 05:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E161F6FC5;
+	Tue,  6 May 2025 06:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746510264; cv=none; b=BvLURyKuPYHoqTnZCq9kJoUamoaJ3gwvfG1E1Ez9ALtskg3lndjuynwDPzzh43ghfyJUw1YB7c9xA5kl4aS6znyXYVoSUmQKMNmjLkZlWo8SFY1iPVtMqyEHff+zFbruWLAPIKh3KVFOoZ+d9mlsMMbxujItGSj0DUwZWeXHK1c=
+	t=1746512400; cv=none; b=U8qldhBDD/x4a3GxK+Mm2nNIV+VyqG3tif8llBz8Cop5vPY/m/LyUR79vRgwe9Bp2QOcEexNWyNshCX7K8X9BIBzAkZAfayKRGSjKXapMgK4AffoiXQBkpAbJrW57GAHjE4/N2bP174DFWDkwn5YsP8m1Ppj39af0UwBbaw9V3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746510264; c=relaxed/simple;
-	bh=d0I5KRmaORUOIir0Bgzzoebklxsq3c6+LDEGa9FxNWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mrIpTzNHBVkJQCP3lekSK+HD3kCZ4FPaWxPAKdKwdXPIEaPtI50tps84OxRJDikZwwv47ex8OSoM/I2dq54eh9j4TGIGnx+ti7W4+1TpF+HZ8/MYmajqILw/G7ElPXEBcYZ4hjypHRcnfRVZV2i6hhhAoi5P8gKXeb3gM6YHJYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=fcYnrrD5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i3ZbgFFb; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0682325401F1;
-	Tue,  6 May 2025 01:44:21 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Tue, 06 May 2025 01:44:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1746510260;
-	 x=1746596660; bh=Fanrrjrhf5q3I2hQvI1PLFZkTUJuSGR3rIM+6zfely0=; b=
-	fcYnrrD5ubrbuF+2bZD23uKUgQJ2nDtLw1dkFfyJSuLBHWH1XaMKSopeF8rYPer7
-	CySY1eV019wIVanYBLU+2suRfmsSUe2TDzou3medXPLhxXnC0v0a2ayz/8PSC/f/
-	KdzDvN0pocwH2O1Y68O/lYtxm61436Pkf+Zf+3jwel8pZvExjSJOHJEPuFTL/3TA
-	z8uTIMAvcwMRBgc4Fj0iz8g+p2EqYyhRHyHZFsE+aQdiPbsp0RYKxeesq8/N/3QN
-	0ptirqZ08QofO78/VHHLR7H8ufvH3JNi/Fb3RAoKx7CofJpMt/HcUlD4mFsxLCKJ
-	3pqF6PZb3fzoZuYH2a3LMA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746510260; x=
-	1746596660; bh=Fanrrjrhf5q3I2hQvI1PLFZkTUJuSGR3rIM+6zfely0=; b=i
-	3ZbgFFbD6XdT98vB38QErPrjMohDDJVqnpW5VjBmHCalwWGaO14LPwSdyn0bKjdf
-	zHEGtEDtIDbkR7u9WwyO/6m/4QN/xzIk5tyohFk5R4JVYe0EmcuFq9+e9ss5eFu+
-	IAb0Lxo8mPEY8TFthZrWsARU+1x4DHeFPyTXUH1K0AUXtU1g8hMyYpP9KNpyftjG
-	VcL+jIJA+AXy5a2VBdPbyk3WWt0h/AQ1ZtlE9hExIT7eaqLcHvCFoseIznk5I7vt
-	6plDsE1QdGPIg54/SdfaymCOTkafztcSGDWfuoxBxurXxAQna1150vW/g22iP4Dn
-	LZIiL69VA7EexMiBLuj6Q==
-X-ME-Sender: <xms:tKEZaGPIj0jn-rwcgVgO01g6h-MI9vJT8YV0FCtitDQkZLZMHN4LvQ>
-    <xme:tKEZaE9ge_AbxJoGzqTnsTF94QcG-7adAg0k444C0oDJoHPQ7Z-n3HXqu8tXbl1dE
-    qTf94rcj8VoSz6ixSw>
-X-ME-Received: <xmr:tKEZaNRTQ39EgVlWqkZ4r3NFl_PnAW5w1B009-Y1Zto3NYt5pTNKFeja9Kex_xehwyogmk-GIaBD6yp1RuZdYnMMve5R2Zk06oYO2PjMfPw5CROLGTYgjXYdzdefZ8c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeefudejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
-    tdejnecuhfhrohhmpefthigrnhcuofgrthhthhgvfihsuceorhihrghnmhgrthhthhgvfi
-    hssehfrghsthhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephffhieeijeevfffg
-    veelhefhvedutdelkeeuvdelteefveekleekuedtgeehffejnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehrhigrnhhmrghtthhhvgifshesfhgrshhtmhgrihhlrdgtohhmpdhnsggprh
-    gtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghhrvghgkhhh
-    sehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohephhhonhhggihinh
-    hgrdiihhhusehngihprdgtohhmpdhrtghpthhtoheplhdrshhtrggthhesphgvnhhguhht
-    rhhonhhigidruggvpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehrhigrnhhmrghtthhhvgifshesfhgrshhtmhgrihhlrdgtohhmpd
-    hrtghpthhtohepkhifihhltgiihihnshhkiheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrghnihhvrg
-    hnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:tKEZaGuVThH8Rpd9BZA3ZDKDtWvhN0cAmmgzq-KhUVy-4r6RZ_atRw>
-    <xmx:tKEZaOeEm73xzJv61DMfXT96LGODM3pd_hchf34zArLTUGihzDmgYA>
-    <xmx:tKEZaK28ecz_vcwttsZ3mxkMMwZNAVck_9ZtXHlZhHL0EjtcFPmMvg>
-    <xmx:tKEZaC9Vcte7ZH2lxTnouUNIWzIeEGBIH6BcPezrF3uOOgm7wClMtQ>
-    <xmx:tKEZaMPr14w1iMVibW1cq8E6CcBzWUPOCZx-g_m2F0er3DadbS1F1mIn>
-Feedback-ID: i179149b7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 May 2025 01:44:20 -0400 (EDT)
-From: Ryan Matthews <ryanmatthews@fastmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	stable@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Ryan Matthews <ryanmatthews@fastmail.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH 5.4 1/1] PCI: imx6: Skip controller_id generation logic for i.MX7D
-Date: Tue,  6 May 2025 01:44:06 -0400
-Message-ID: <20250506054406.4961-2-ryanmatthews@fastmail.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250506054406.4961-1-ryanmatthews@fastmail.com>
-References: <2025050512-dice-brick-529d@gregkh>
- <20250506054406.4961-1-ryanmatthews@fastmail.com>
+	s=arc-20240116; t=1746512400; c=relaxed/simple;
+	bh=IaknPFqcP0N7YD+hkdGoIITlQSTa3FqWiaGwJ4M7xOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q62u78yke+Jb7HoPIJT9y/SetEu0tjcjfqjhgFstE6Ie3LoxSRytYFTSGdjA+2dSqhyOFdI2kpPhKflb+AfyTl2J03ucem5EtMEfoYIe1kvP1ZKLStyycn/lSUS10JeQQaWH8n1iNxNggotXV511797AFYw+KHO4DOC3f75XzHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIRkTWuY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE70C4CEEB;
+	Tue,  6 May 2025 06:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746512399;
+	bh=IaknPFqcP0N7YD+hkdGoIITlQSTa3FqWiaGwJ4M7xOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZIRkTWuYiswfaOZhaA9mMbfIsTR/ZTklZu2Oe44c9xSTzghAJERx/3W0TESSm787U
+	 CLR3YOKZjtiYprxUIhVt6kY7tF0oYRoYxYxEpdimHmXA+u4dadKipt6WARl1mkRAU9
+	 DYMKW2mOUDdVzhaqf4Wxjsbw0BSWwQ66y/4ruC2EQ9FcSOQ6GdVOrAsYjqHoIEiGnQ
+	 rtslXz2wkE5IQdgaxJYYNss6cFHmKoW2P6+1getUhQIgG1bZT6T7bDzYUHGdGuJQJW
+	 R2M8i144n5z2YDH+umSx8sNUXhYwLbUKuUn2WZam2i7g8mOIGx5KAiU/OrXh/rGPk4
+	 3T3KMLHJBsjfQ==
+Date: Tue, 6 May 2025 06:19:57 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	catalin.marinas@arm.com, conor+dt@kernel.org,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com,
+	krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
+	lenb@kernel.org, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+	maz@kernel.org, mingo@redhat.com, oliver.upton@linux.dev,
+	rafael@kernel.org, robh@kernel.org, ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de,
+	wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
+	bperkins@microsoft.com, sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v9 00/11] arm64: hyperv: Support Virtual
+ Trust Level Boot
+Message-ID: <aBmqDU_UjxIAx2lP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250428210742.435282-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428210742.435282-1-romank@linux.microsoft.com>
 
-From: Richard Zhu <hongxing.zhu@nxp.com>
+On Mon, Apr 28, 2025 at 02:07:31PM -0700, Roman Kisel wrote:
+> This patch set allows the Hyper-V code to boot on ARM64 inside a Virtual Trust
+> Level. These levels are a part of the Virtual Secure Mode documented in the
+> Top-Level Functional Specification available at
+> https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm.
+> 
+> The OpenHCL paravisor https://github.com/microsoft/openvmm/tree/main/openhcl
+> can serve as a practical application of these patches on ARM64.
+> 
+> For validation, I built kernels for the {x86_64, ARM64} x {VTL0, VTL2} set with
+> a small initrd embedded into the kernel and booted VMs managed by Hyper-V and
+> OpenVMM off of that.
+> 
+> Starting from V5, the patch series includes a non-functional change to KVM on
+> arm64 which I tested as well.
+> 
+> I've kept the Acked-by tags given by Arnd and Bjorn. These patches (1 and 11)
+> have changed very slightly since then (V5 and V6), no functional changes:
+> in patch 1, removed macro's in favour of functions as Marc suggested to get rid
+> of "sparse" warnings, and in patch 11, fixed building as a module. Please let me
+> know if I should have not kept the tags.
+> 
+[...]
+> Roman Kisel (11):
+>   arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
 
-[ Upstream commit f068ffdd034c93f0c768acdc87d4d2d7023c1379 ]
+I notice there were review comments from multiple people on this patch.
+To the best of my knowledge, those comments have been addressed in this
+version, but I only had a cursory look and am by no means an expert on
+ARM64.
 
-The i.MX7D only has one PCIe controller, so controller_id should always be
-0. The previous code is incorrect although yielding the correct result.
+My assumption is Arnd's review is good enough for this patch to get
+merged.
 
-Fix by removing "IMX7D" from the switch case branch.
+With that assumption, I have applied this whole series to hyperv-next.
 
-Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
-Link: https://lore.kernel.org/r/20241126075702.4099164-5-hongxing.zhu@nxp.com
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-[Because this switch case does more than just controller_id
- logic, move the "IMX7D" case label instead of removing it entirely.]
-Signed-off-by: Ryan Matthews <ryanmatthews@fastmail.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ARM64 maintainers, please let me know if you have an objection -- I can
+drop the series and let Roman address further comments.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 30c259f63239..86cdd27cdd3b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1112,11 +1112,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			dev_err(dev, "pcie_aux clock source missing or invalid\n");
- 			return PTR_ERR(imx6_pcie->pcie_aux);
- 		}
--		/* fall through */
--	case IMX7D:
- 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
- 			imx6_pcie->controller_id = 1;
--
-+		/* fall through */
-+	case IMX7D:
- 		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
- 									    "pciephy");
- 		if (IS_ERR(imx6_pcie->pciephy_reset)) {
--- 
-2.47.2
+Thanks,
+Wei.
+
+>   arm64: hyperv: Use SMCCC to detect hypervisor presence
+>   Drivers: hv: Enable VTL mode for arm64
+>   Drivers: hv: Provide arch-neutral implementation of get_vtl()
+>   arm64: hyperv: Initialize the Virtual Trust Level field
+>   arm64, x86: hyperv: Report the VTL the system boots in
+>   dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence
+>     properties
+>   Drivers: hv: vmbus: Get the IRQ number from DeviceTree
+>   Drivers: hv: vmbus: Introduce hv_get_vmbus_root_device()
+>   ACPI: irq: Introduce acpi_get_gsi_dispatcher()
+>   PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
 
 
