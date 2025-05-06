@@ -1,106 +1,128 @@
-Return-Path: <linux-pci+bounces-27275-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27276-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44333AAC285
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 13:26:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F453AAC2A7
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 13:31:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C2951C21896
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 11:27:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A55B63BA344
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 11:30:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A622227AC29;
-	Tue,  6 May 2025 11:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F58D27C16A;
+	Tue,  6 May 2025 11:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvyW678R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HO0DF0TS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F5E27A457;
-	Tue,  6 May 2025 11:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E68278742;
+	Tue,  6 May 2025 11:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530758; cv=none; b=gcQo0d7cEV44cC23fxapHW/1fUI+fdOliW0cFUXJJKZCPUOMOQN+fceeTbRXO9WYE/TF9rblWJwCY7acAkrKT6qr3T+07o0PtCsYQz8FAICJPouCHOnS8FQLB1o58karSMKzdQyYTjDi6Frwm7Po/Mt+nPzcf4bXacrpaFW0qco=
+	t=1746530975; cv=none; b=NZKQVeo7iaP9+EWemRhpvoxwstcSRKO3YhC/b6h7vyAzPv5IG30fsTlmCxVFO7oqTY1jbgQTkhKzY7ZjZIbieYa1LOkfS/0YNoGpdo7e80HhyAmV575FXdY1p8ENCpbih/zzuaEta+45bGlQnxPD/xWqd91sIe+4BgNX1R+wBk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530758; c=relaxed/simple;
-	bh=XgTcwR/r+H6X7/Vl3b1xNmXP3hP0XvRCLfIkPJ8BL94=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=V2PbV9dcFh5i7vrxaQ0lhjYA4C2Pr1/tRV+koooR+fMsGSu1m0klarPV5DrOoo9t1EkGtmWVEzgav4pwo6FXG5BB1e5laX+2EEsQtgazey1dJgXB6rc6D9PpkPkDpTJz1f28jRXOh0if54Jm2zgwGTxSDTJCFdzx8gFCvT1wtR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvyW678R; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746530758; x=1778066758;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=XgTcwR/r+H6X7/Vl3b1xNmXP3hP0XvRCLfIkPJ8BL94=;
-  b=VvyW678RCMmcVy+g9N6ul4LaULTWoBpIAYk4/jPaynTVJFwUNFl/TDWz
-   Ghku7z8pqKDkueLDRhQ9m8zundcsxv4bGDtYIQESdxGm3I+kuJesv7LvH
-   7skrcZJ4fT4X5RZJMSryz+gbaw4SPaSUHyc0eoT2POVe4Z3EERuOEuwWM
-   AW6O3YAB55gDshgM3JSHPltG2H+GPy+E3SvRkkS/WsfJo+GUn3eZqcApz
-   xOEKCuBZjFFfg16L+NUlzEVpduzKj5ejiJ3ryceGC53tPPe6t62gK6N1R
-   wD1nRxxvv0nUsobKaXZz/kuIwo0gEjRjMtU7RVPX8wentZTpT7Q8LqZvU
-   A==;
-X-CSE-ConnectionGUID: UeJShn9IScWbG/+GOIq+sw==
-X-CSE-MsgGUID: Ek9DgO0JQ165FY0VVIjEKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48100769"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="48100769"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 04:25:57 -0700
-X-CSE-ConnectionGUID: qzo0UWuWQwK0jmC1MsNUog==
-X-CSE-MsgGUID: 7/ub2ltuQVaMlzkbDRaidA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="135973628"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.207])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 04:25:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 May 2025 14:25:51 +0300 (EEST)
-To: Randy Dunlap <rdunlap@infradead.org>
-cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
-    Linux Next Mailing List <linux-next@vger.kernel.org>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: linux-next: Tree for May 5 (drivers/pci/pcie/bwctrl.c)
-In-Reply-To: <0ab5fe5d-feda-4a3a-8803-92eb4e52e3b4@infradead.org>
-Message-ID: <cbd7bfaf-613e-631b-db39-b63864049f4b@linux.intel.com>
-References: <20250505184148.210cf0aa@canb.auug.org.au> <0ab5fe5d-feda-4a3a-8803-92eb4e52e3b4@infradead.org>
+	s=arc-20240116; t=1746530975; c=relaxed/simple;
+	bh=J2XT4AUKONpaTXWQDPzjZYfmF/odE31sTcUZ9Rj62HU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mlpF/ckKVCAQLEoyuyJqyohZQDtOjEmE3wca9aiZ4vBKYG5UIy3AelxnXb+dj6kYiIIsWgFnYe6V2dGunvQSDity5RJkXDn8Yy66aZkSxR/IQAmL7wLafdo+opMpS6OldsGLtViQfvQVaFFlphxYjmzWj5VJ84kQRLIJF3sz+2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HO0DF0TS; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1746530957; x=1746790157;
+	bh=J2XT4AUKONpaTXWQDPzjZYfmF/odE31sTcUZ9Rj62HU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=HO0DF0TSGjKYgVq+u1Y+M6W14ultpXfkvDmlxQFKVYiMD5v+HTSs3TCP6fnik3/p0
+	 tjL82DqE2XAwu3wa7Kb/9ggXFr57EhXKyNqFVvXjtQ3lUnAKu2HmEMFs2AMp4p5BT9
+	 j3wkssJExd6IGnC8S8PxcHALQHXilbGMfBx15cXk1XJi+cAjeKxyWBJztw1PSJbb/3
+	 4hAQ5g1o8GZKnriSpYY1bGrFOsQALAPQwCj+cY4q9G9i3oT9HMoXdv/3md28jrnJSV
+	 gNHNou5ZOMhqPMXtHiJk6JLSgjvZw+HTAo7FfObX1bCC2g0rdWYl9jyZouDb8vXAwO
+	 7OTA+fFf+t72A==
+Date: Tue, 06 May 2025 11:29:14 +0000
+To: Niklas Cassel <cassel@kernel.org>
+From: Laszlo Fiat <laszlo.fiat@proton.me>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Krishna chaitanya chundru <quic_krichai@quicinc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] PCI: qcom: Do not enumerate bus before endpoint devices are ready
+Message-ID: <4r2xPb3Ic9SP9d4CU7Ru6X1mMXGXJIvC1NYBDwmEqGpMpul-Hgx1tG5ERjyHncqvZ42Ys_x16ut7PGPmtPQCJKbQRyYbNAY7tEpUY-_8Dks=@proton.me>
+In-Reply-To: <20250506073934.433176-8-cassel@kernel.org>
+References: <20250506073934.433176-6-cassel@kernel.org> <20250506073934.433176-8-cassel@kernel.org>
+Feedback-ID: 130963441:user:proton
+X-Pm-Message-ID: 6916607993085f1c4cfc8ca8f11722f473805ac8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 5 May 2025, Randy Dunlap wrote:
 
-> 
-> 
-> On 5/5/25 1:41 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20250502:
-> > 
-> 
-> on x86_64:
-> 
-> drivers/pci/pcie/bwctrl.c:56:22: warning: 'pcie_bwctrl_lbms_rwsem' defined but not used [-Wunused-variable]
->    56 | static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
->       |                      ^~~~~~~~~~~~~~~~~~~~~~
-> include/linux/rwsem.h:153:29: note: in definition of macro 'DECLARE_RWSEM'
->   153 |         struct rw_semaphore lockname = __RWSEM_INITIALIZER(lockname)
->       |                             ^~~~~~~~
+On Tuesday, May 6th, 2025 at 9:39 AM, Niklas Cassel <cassel@kernel.org> wro=
+te:
 
-Thank for the heads up, I don't know what I was thinking. I remove all 
-code related to that rwsem but forgot to remove the rwsem itself. I'll 
-send a patch once our build tester has had the opportunity to check it.
+> Commit 36971d6c5a9a ("PCI: qcom: Don't wait for link if we can detect Lin=
+k
+> Up") changed so that we no longer call dw_pcie_wait_for_link(), and inste=
+ad
+> enumerate the bus when receiving a Link Up IRQ.
+>=20
+> Before 36971d6c5a9a, we called dw_pcie_wait_for_link(), and in the first
+> iteration of the loop, the link will never be up (because the link was ju=
+st
+> started), dw_pcie_wait_for_link() will then sleep for LINK_WAIT_SLEEP_MS
+> (90 ms), before trying again.
+>=20
+> This means that even if a driver was missing a msleep(PCIE_T_RRS_READY_MS=
+)
+> (100 ms), because of the call to dw_pcie_wait_for_link(), enumerating the
+> bus would essentially be delayed by that time anyway (because of the slee=
+p
+> LINK_WAIT_SLEEP_MS (90 ms)).
+>=20
+> While we could add the msleep(PCIE_T_RRS_READY_MS) after deasserting PERS=
+T
+> (qcom already has an unconditional 1 ms sleep after deasserting PERST),
+> that would essentially bring back an unconditional delay during probe (th=
+e
+> whole reason to use a Link Up IRQ was to avoid an unconditional delay
+> during probe).
+>=20
+> Thus, add the msleep(PCIE_T_RRS_READY_MS) before enumerating the bus in t=
+he
+> IRQ handler. This way, for qcom SoCs that has a link up IRQ, we will not
+> have a 100 ms unconditional delay during boot for unpopulated PCIe slots.
+>=20
+> Fixes: 36971d6c5a9a ("PCI: qcom: Don't wait for link if we can detect Lin=
+k Up")
+> Signed-off-by: Niklas Cassel cassel@kernel.org
+>=20
+> ---
+> drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/control=
+ler/dwc/pcie-qcom.c
+> index dc98ae63362d..01a60d1f372a 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1565,6 +1565,7 @@ static irqreturn_t qcom_pcie_global_irq_thread(int =
+irq, void data)
+>=20
+> if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+> dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> + msleep(PCIE_T_RRS_READY_MS);
+> / Rescan the bus to enumerate endpoint devices */
+> pci_lock_rescan_remove();
+> pci_rescan_bus(pp->bridge->bus);
+>=20
+> --
+> 2.49.0
 
--- 
- i.
-
+Tested-by: Laszlo Fiat <laszlo.fiat@proton.me>
 
