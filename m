@@ -1,132 +1,110 @@
-Return-Path: <linux-pci+bounces-27259-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27260-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F1EAAABB8A
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 09:43:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C97CAABC59
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 10:02:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDB3F1C434E6
-	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:38:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A5D618979CC
+	for <lists+linux-pci@lfdr.de>; Tue,  6 May 2025 07:57:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31DE9233D64;
-	Tue,  6 May 2025 06:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D387719D898;
+	Tue,  6 May 2025 07:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIRkTWuY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhP+SbQS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E161F6FC5;
-	Tue,  6 May 2025 06:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC4972617;
+	Tue,  6 May 2025 07:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512400; cv=none; b=U8qldhBDD/x4a3GxK+Mm2nNIV+VyqG3tif8llBz8Cop5vPY/m/LyUR79vRgwe9Bp2QOcEexNWyNshCX7K8X9BIBzAkZAfayKRGSjKXapMgK4AffoiXQBkpAbJrW57GAHjE4/N2bP174DFWDkwn5YsP8m1Ppj39af0UwBbaw9V3o=
+	t=1746517187; cv=none; b=buAn44phSgBnDiNdX5K+UNVzgrJD7qjO+vXX6tWhD2k0MQhmTCeUxAeszpd0IY9t7hFuqibAdAaF75IPZUu+XmywgpqA9QWCNyDS9fY6OxZCSVAw8nTcwUB1mrXC6Gc1xKO86igAOmehBCo7m4nwxc9gkxdFoj0oqN8UWhqpmM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512400; c=relaxed/simple;
-	bh=IaknPFqcP0N7YD+hkdGoIITlQSTa3FqWiaGwJ4M7xOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q62u78yke+Jb7HoPIJT9y/SetEu0tjcjfqjhgFstE6Ie3LoxSRytYFTSGdjA+2dSqhyOFdI2kpPhKflb+AfyTl2J03ucem5EtMEfoYIe1kvP1ZKLStyycn/lSUS10JeQQaWH8n1iNxNggotXV511797AFYw+KHO4DOC3f75XzHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIRkTWuY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE70C4CEEB;
-	Tue,  6 May 2025 06:19:58 +0000 (UTC)
+	s=arc-20240116; t=1746517187; c=relaxed/simple;
+	bh=6TO1Noew8Rmq68imwQlh7EbC0TUncfmpyl6I2bKeN58=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FKbNiwussYw/sJuNKm+PRdyYSCjABueFNyg20UVBTPhZK8DwSn1c4GPTJSzikr+GiiC3Cthqal2utC4GZQLTkS6rARpATDWlSrkEKXB+uT2tDZnR09glKREbsqTFpBll6ya5r9JG/mpbd76LWAS1oCfLbsFay4IyANL3sMkb43k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhP+SbQS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC72FC4CEE4;
+	Tue,  6 May 2025 07:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746512399;
-	bh=IaknPFqcP0N7YD+hkdGoIITlQSTa3FqWiaGwJ4M7xOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZIRkTWuYiswfaOZhaA9mMbfIsTR/ZTklZu2Oe44c9xSTzghAJERx/3W0TESSm787U
-	 CLR3YOKZjtiYprxUIhVt6kY7tF0oYRoYxYxEpdimHmXA+u4dadKipt6WARl1mkRAU9
-	 DYMKW2mOUDdVzhaqf4Wxjsbw0BSWwQ66y/4ruC2EQ9FcSOQ6GdVOrAsYjqHoIEiGnQ
-	 rtslXz2wkE5IQdgaxJYYNss6cFHmKoW2P6+1getUhQIgG1bZT6T7bDzYUHGdGuJQJW
-	 R2M8i144n5z2YDH+umSx8sNUXhYwLbUKuUn2WZam2i7g8mOIGx5KAiU/OrXh/rGPk4
-	 3T3KMLHJBsjfQ==
-Date: Tue, 6 May 2025 06:19:57 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	catalin.marinas@arm.com, conor+dt@kernel.org,
-	dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com,
-	krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
-	lenb@kernel.org, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
-	maz@kernel.org, mingo@redhat.com, oliver.upton@linux.dev,
-	rafael@kernel.org, robh@kernel.org, ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de,
-	wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v9 00/11] arm64: hyperv: Support Virtual
- Trust Level Boot
-Message-ID: <aBmqDU_UjxIAx2lP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250428210742.435282-1-romank@linux.microsoft.com>
+	s=k20201202; t=1746517187;
+	bh=6TO1Noew8Rmq68imwQlh7EbC0TUncfmpyl6I2bKeN58=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JhP+SbQS09oMuqBK/ge4+Dtfkcli4nE+FZi/DJzIVogt1qmZkjF48k/6ArdpNBpF7
+	 fFpvn2BM8nxjsNuRjWn/Oy4ES9XfnzeRFmso7qlS6CuJ+wGDm7JcMBKQ+EFTj8nJ8Y
+	 frQmn8JaoxioWRf0W4akI4K2ZfF18ktCkJClGOxDjmAa0isSVr3cddW+2WMRvnVTNm
+	 MoJckLJLERjy1VU8e8RRb4bJekKkX/5kY/ZEjIrHuo3A08eeqpmT+42310hMt657GZ
+	 ssitxgJA98PnbT92FxWQWdB9cq9QMUcl8i6mUWYCMrc62BkPbmHR2mYQ5kSYO8QTdG
+	 BEq/LbIifYFQw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Niklas Cassel <cassel@kernel.org>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 0/4] PCI: dwc: Link Up IRQ fixes
+Date: Tue,  6 May 2025 09:39:35 +0200
+Message-ID: <20250506073934.433176-6-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428210742.435282-1-romank@linux.microsoft.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1085; i=cassel@kernel.org; h=from:subject; bh=6TO1Noew8Rmq68imwQlh7EbC0TUncfmpyl6I2bKeN58=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIk92wLWrd5lVmczqKAgpU7yzdY7pzss2OB3T/mIBs2t ajntpskO0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjCRp6aMDLvfL2tZ6iK56ULL O7UPdmfNE3btEPNWlTzPel9f0u1N6gGGv9KrbBesdFxjtkX1+JnUjDN/rkreCJjvVMrdING/cyF bDisA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 02:07:31PM -0700, Roman Kisel wrote:
-> This patch set allows the Hyper-V code to boot on ARM64 inside a Virtual Trust
-> Level. These levels are a part of the Virtual Secure Mode documented in the
-> Top-Level Functional Specification available at
-> https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm.
-> 
-> The OpenHCL paravisor https://github.com/microsoft/openvmm/tree/main/openhcl
-> can serve as a practical application of these patches on ARM64.
-> 
-> For validation, I built kernels for the {x86_64, ARM64} x {VTL0, VTL2} set with
-> a small initrd embedded into the kernel and booted VMs managed by Hyper-V and
-> OpenVMM off of that.
-> 
-> Starting from V5, the patch series includes a non-functional change to KVM on
-> arm64 which I tested as well.
-> 
-> I've kept the Acked-by tags given by Arnd and Bjorn. These patches (1 and 11)
-> have changed very slightly since then (V5 and V6), no functional changes:
-> in patch 1, removed macro's in favour of functions as Marc suggested to get rid
-> of "sparse" warnings, and in patch 11, fixed building as a module. Please let me
-> know if I should have not kept the tags.
-> 
-[...]
-> Roman Kisel (11):
->   arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
+Hello there,
 
-I notice there were review comments from multiple people on this patch.
-To the best of my knowledge, those comments have been addressed in this
-version, but I only had a cursory look and am by no means an expert on
-ARM64.
+Commit 8d3bf19f1b58 ("PCI: dwc: Don't wait for link up if driver can detect
+Link Up event") added support for DWC to not wait for link up before
+enumerating the bus. However, we cannot simply enumerate the bus after
+receiving a Link Up IRQ, we still need to wait PCIE_T_RRS_READY_MS time
+to allow a device to become ready after deasserting PERST. To avoid
+bringing back an conditional delay during probe, perform the wait in the
+threaded IRQ handler instead.
 
-My assumption is Arnd's review is good enough for this patch to get
-merged.
+Please review.
 
-With that assumption, I have applied this whole series to hyperv-next.
 
-ARM64 maintainers, please let me know if you have an objection -- I can
-drop the series and let Roman address further comments.
+Kind regards,
+Niklas
 
-Thanks,
-Wei.
 
->   arm64: hyperv: Use SMCCC to detect hypervisor presence
->   Drivers: hv: Enable VTL mode for arm64
->   Drivers: hv: Provide arch-neutral implementation of get_vtl()
->   arm64: hyperv: Initialize the Virtual Trust Level field
->   arm64, x86: hyperv: Report the VTL the system boots in
->   dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence
->     properties
->   Drivers: hv: vmbus: Get the IRQ number from DeviceTree
->   Drivers: hv: vmbus: Introduce hv_get_vmbus_root_device()
->   ACPI: irq: Introduce acpi_get_gsi_dispatcher()
->   PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
+Changes since v1:
+-Added missing include pci.h that was lost during rebase.
+
+
+Niklas Cassel (4):
+  PCI: dw-rockchip: Do not enumerate bus before endpoint devices are
+    ready
+  PCI: qcom: Do not enumerate bus before endpoint devices are ready
+  PCI: dw-rockchip: Replace PERST sleep time with proper macro
+  PCI: qcom: Replace PERST sleep time with proper macro
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 4 +++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+-- 
+2.49.0
 
 
