@@ -1,121 +1,111 @@
-Return-Path: <linux-pci+bounces-27401-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27402-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 149E1AAEEB4
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 00:24:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B30AAEF4B
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 01:29:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 126D7986480
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 22:24:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 945DF9815F9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 23:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3462929114F;
-	Wed,  7 May 2025 22:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA0828E59F;
+	Wed,  7 May 2025 23:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="H3AhQNzf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nSc9E0IF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF07290DA4;
-	Wed,  7 May 2025 22:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618754B1E7F
+	for <linux-pci@vger.kernel.org>; Wed,  7 May 2025 23:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746656661; cv=none; b=il771HPd3xstg3MlZHOVB9S0LnGntdpA8zhYLpWdjcOduQLDSUi66Ii7/vrJiL2T0sJX9v5YF8vEw/qJredljO0qsWoYwrwRM5mGqEhKHCgVGGe8a1n1kl+6gBU+8G0X/n9f5ryO2641dB+HJYmzudxv6zElzebMT+PS/GC8AIM=
+	t=1746660574; cv=none; b=jIwxm5lalcVxN++ONc7+vDXGt5qiEScm6BR4DxBj33cBqDzhKVsCuEmnZ56yyxlELpaapFJ7q6WRKmbu0prY1Afm4QAinjW5L2M9Zz2bN/x3G8pV6SmjKED3QS4H0G4PGTbNKMP6Q3PBzSpuSV0CQqLUXMQTvvLMvkHbTGLAVYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746656661; c=relaxed/simple;
-	bh=AzuzgfE6GFKxTRRxcmQmVIVwtjphxNohFQ1mkjj32Gs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gS/FwG0VxdZkL1MG94ysJ+xODHnHe7ETZCYV8mD7/ytD2yF7snK/4AuJ0K4bMhHR7etar/4UOYwo/mJq0QpGzdsoIbGMOMRaONp306SJJBMgzj3XrqPgpWOrHFPYCLLPCIrHLwPPDvqxzeFMbs/qI/KZAdOM//SYh4JEQeJwCEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=H3AhQNzf; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=PzMdG6ucufIYiDDg070rOIAisSRRkIriDyNiBBXVH3U=; b=H3AhQNzfKur7H3echOL82K5wSj
-	UWauEM7K0xtUngTkTiumFckVqkxTSQmxx04ybKUuXMGDwQxdg9v4LTVktEbeK1wYbAEG7wA2phbCJ
-	WOEUl0ZmHpOetacgwgUET9KPOR85GwrqWO+zoimHuICTlzt/azYqhg8fHIiVUKBeUXS8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uCnBL-00BwDo-6P; Thu, 08 May 2025 00:24:03 +0200
-Date: Thu, 8 May 2025 00:24:03 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific data
-Message-ID: <8b97e095-dbed-438c-9c6d-d3c2c5929fc0@lunn.ch>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-24-herve.codina@bootlin.com>
+	s=arc-20240116; t=1746660574; c=relaxed/simple;
+	bh=cA3nZ+47Np47/k2SgDsvbWMsfWOH1A6Ausk1woOuJlw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qDntXKnUlnh1iRRs4oDnh30/tkAZ2iEZvrhBXGQjM8/w68e77gdrBZd5RRrzm9CPTfW0EzgBKfRRIbb6MF1gda6aA0QaCG4ikNau3sNunsbjZg6GQPHlv7c0Hywkj7og/i/YSiRBxlGIepVy3ILH/+QiVX1cE+2u00H0CfVi3Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ammarq.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nSc9E0IF; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ammarq.bounces.google.com
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74089884644so410399b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 07 May 2025 16:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746660573; x=1747265373; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g4vZXdmlr0Ib3hABccKLLz+7+GjpdBalfaH2InUcmWA=;
+        b=nSc9E0IFu2QYeYCPmh6xkKv9g78oDQoUf4TTBO9L1zExsmmAhHg+kqWJnKhShktCrd
+         8ufaA4pDrnmB/nf/laTKzmSGsFVhuJ7pe8fftx7iu1+YuBVz5Xqi4i3mi5YpovwDldvN
+         iU89OA4Hqm+9+ciJqumxGNLa7vwILLJE3coHA4iWC2GXGACa9Ml1AOyZiPlowUirHJ9N
+         Wy95SfbUVi0ADDwVyEGmfPzI1pOW14ub0Ct81kSyomq3rJ8l+as4yWcD6Bn+dbdjBXJl
+         EHDj8J2wMFsyN2sNDWkbCaPBMlUB/bNOEqgT3wtLS5Qq6wJP8G5+aCIFAGhrZZZLTh35
+         rm8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746660573; x=1747265373;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g4vZXdmlr0Ib3hABccKLLz+7+GjpdBalfaH2InUcmWA=;
+        b=wNPLoNzGsh9SbXrCxSbQj3//DnPsu9ZCMGgFLViLx8Y/Z5KcvQL2AVgtQ6OtAb+i8L
+         E+FGi3uEZ1S3pSaUmuBOG6tfBX/y5nXQsVx70VfFJRB5fN2bax/Oe2qXJi5go9tLGv7A
+         staG+V0ImNv+njPeX2EXzuiKmA+wA6xsfSRF1ZLyOHz5VhozhejWKTcgyesIjTdFN6ne
+         YiIRDYS/MtWvtUtzSUmUs6f0YZ5/q7SM/JsQ4nSp1LWxBVomqBkmYZmMxnGrdpyfEzKr
+         n2VFbTGcME4drwaPofLf0fwNV8Ab1ObDvvfQgzf33iJuaH3jBXjblG3UyRR6tzjdnKKb
+         NKuA==
+X-Gm-Message-State: AOJu0Yw6gVs+Cs8hsUMRB55baIi+CGG2kx3D5O8HWGxgrT4EpsOrAhuu
+	u9eRcm9tNT6X9VryN4kkIPapjBrbnxx10pz/X2LNTAZBdtXWbaXtsmjrPWkAN2en5eIvadadHFv
+	TLQ==
+X-Google-Smtp-Source: AGHT+IHHAYzNaFA/bcGy/j5LLehiRiaIWZ/+FhNrGNe7rHwAPk8GvTUcemAtW3iw6AAELIGDuhFfIh+cIwU=
+X-Received: from pfie11.prod.google.com ([2002:a62:ee0b:0:b0:73e:665:360])
+ (user=ammarq job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3305:b0:736:5725:59b4
+ with SMTP id d2e1a72fcca58-7409cedc6dbmr8091350b3a.3.1746660572653; Wed, 07
+ May 2025 16:29:32 -0700 (PDT)
+Date: Wed,  7 May 2025 23:29:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-24-herve.codina@bootlin.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
+Message-ID: <20250507232919.801801-1-ammarq@google.com>
+Subject: [PATCH] PCI: Reduce verbosity of device enable messages
+From: Ammar Qadri <ammarq@google.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ammar Qadri <ammarq@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
-> Only one device-tree overlay (lan966x_evb_lan9662_nic.dtbo) is handled
-> and this overlay is directly referenced in lan966x_pci_load_overlay().
-> 
-> This avoid to use the code for an other board.
-> 
-> In order to be more generic and to allow support for other boards (PCI
-> Vendor/Device IDs), introduce the lan966x_pci_info structure and attach
-> it to PCI Vendor/Device IDs handled by the driver.
-> 
-> This structure contains information related to the PCI board such as
-> information related to the dtbo describing the board we have to load.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Excessive logging of PCIe device enable operations can create significant
+noise in system logs, especially in environments with a high number of
+such devices, especially VFs.
 
-How big is the dtbo ?
+High-rate logging can cause log files to rotate too quickly, losing
+valuable information from other system components.This commit addresses
+this issue by downgrading the logging level of "enabling device" messages
+from `info` to `dbg`.
 
-This is going in the right direction. I'm just wondering if each dtbo
-should be wrapped in its own very slim PCI driver, which simply
-registers its lan966x_pci_info structure to a core driver. Only the
-needed dtbo will then be loaded into memory as a module, not them all.
+Signed-off-by: Ammar Qadri <ammarq@google.com>
+---
+ drivers/pci/setup-res.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Pretty much all the pieces are here, so it can be done later.
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index c6657cdd06f67..be669ff6ca240 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -516,7 +516,7 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
+ 	}
+ 
+ 	if (cmd != old_cmd) {
+-		pci_info(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
++		pci_dbg(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
+ 		pci_write_config_word(dev, PCI_COMMAND, cmd);
+ 	}
+ 	return 0;
+-- 
+2.49.0.987.g0cc8ee98dc-goog
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
 
