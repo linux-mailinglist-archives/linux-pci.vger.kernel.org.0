@@ -1,98 +1,141 @@
-Return-Path: <linux-pci+bounces-27378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEFCEAAE3C9
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 17:03:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E70C2AAE3D8
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 17:06:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F7FE987E0B
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 15:03:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A93E9985392
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 15:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F3A28A1E6;
-	Wed,  7 May 2025 15:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5BF428A1C9;
+	Wed,  7 May 2025 15:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bLRmj+zU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VL09x8MT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hi5qpeWu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB6D433D9;
-	Wed,  7 May 2025 15:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0785280325;
+	Wed,  7 May 2025 15:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630205; cv=none; b=C2FtHtTFRjLonM/HaMB85zQNgdIPGPTNVitHc0eAM3UnxK07DiUsJegMlXELX2DW1TPMgIiRYdBv4kjv/T3qlJI4P3VEwJE+V00ysPQpasITtAoQ6VEuQS2+KTBGuCpCiXbzbn6Bl7vyGPrYe62M+uqtM1KgCKm6ODwYB3RzygU=
+	t=1746630379; cv=none; b=WxevQmuip5KvWgF2QkHpzsyWhLpt+6CTSPPxhY2XcaftVhv/1Zums915Mn120x1Y25cN9ZIpLk9IH2lyYmwX+lFSacY7wma0pCApiSc2uNrqRHiy9KG5kXE7c1Lim2zdahSbVr9cVIo31vDgqA8SUHUwlgEo88h9iPu8Msb4BIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630205; c=relaxed/simple;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AyvgPe+4Y25fCHYcNw2perFnDaxzQW94tPWAAge1H3EiyJ4N6kTTobVXazcIR4fI9Pqyvb/PJmWUlAWwcHyRrhUc5l4PSqDTc0Eo50t62clX6+1V1bTqyoyxIoRpoVlSBYefPuxyAmX/ESwwD7e26w1QcIKlKRTaHNkPIXd2FtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bLRmj+zU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VL09x8MT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746630201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	b=bLRmj+zUZntLyvQFMmKu0xbGmpTv8TCeHzGUjOiqfU3GRjgMHMwROeus+qjM6exXcSf9tA
-	odzG/WvwRfHj3mP/2S1UrxTNr6VXnxilsxIrGhcVyXqV2ZQp9ekT95592eZCBquktC+zTw
-	KAi3JKfng/myFWcbLCd8JTlV0Yyqz51aegALDoGQoFdoAMXu0N76yVdUsoczP7oRSlP5Kx
-	fMKE1DCVcdAQ0ikDmk3JVMfelrFARUnTgybwj9XMZDLB69io6LLTN6vlCTx5Ok30bl1YQi
-	Zrg0I+S8jbdJFqUxKNCFH+Wge89qiYqg4oRUBXroorLa5xD/ccgpRSoWQd5+5w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746630201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	b=VL09x8MT8p3aOzBp9Ybavyc/IFho5MstQvQR/Lq6igZtH/K5HdZHOKFW9+mIyFQ3PVMlEv
-	VIMnwVcLpyyIDGBw==
-To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel
- <apatel@ventanamicro.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan
- <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach
- <l.stach@pengutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob
- Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
- imx@lists.linux.dev, devicetree@vger.kernel.org, Frank Li
- <Frank.Li@nxp.com>
-Subject: Re: [PATCH v18 08/15] PCI: endpoint: pci-ep-msi: Add MSI
- address/data pair mutable check
-In-Reply-To: <20250414-ep-msi-v18-8-f69b49917464@nxp.com>
-References: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
- <20250414-ep-msi-v18-8-f69b49917464@nxp.com>
-Date: Wed, 07 May 2025 17:03:21 +0200
-Message-ID: <871pt0mpja.ffs@tglx>
+	s=arc-20240116; t=1746630379; c=relaxed/simple;
+	bh=Y/WUVh0ev6M+r+m9bgj7h8JDEj1XP6+S3ee84YZotzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TzXdLFlZRumFwsb676Dql+0qKlrVFkSwQRcPn20p9056rFCCKdnBil1DEBVzz5Qt7H16aXoWJhUaVe9PBn65wJMn+1CNZe+LcOs9dX7y6WCDYgiAiHqY+TL7RhJOSzFC7xTsbElTxSKAKfMRyzsoQEVyMa8WSB9QiYy1fmqT9xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hi5qpeWu; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746630378; x=1778166378;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y/WUVh0ev6M+r+m9bgj7h8JDEj1XP6+S3ee84YZotzA=;
+  b=Hi5qpeWuqGVwCfebbZfd+jIULw1Al/Q0injcLNVQrC5XJb4dSjwyee04
+   MIyAqnBYeOIDNUFqYpAcrUAL27Ti1AtBfEd1Waj5qwCBE7iZ6fDaEjh4S
+   IvRNCM6Ezf//zmV5ujy2ncClCNt6/ZngFcY0M/EBDYnFKdqaH2u+hCQPv
+   1BYC02Gy6iEXEkBxFkBjw6xCftTHo8yFFHs56YSecOlkRCPbK5rlZTr+S
+   m4vDjDp4ZmAP2aXL0gvdm1fm3evZC8k4vIM3XgJ7/TEScuyJb79TLoc+n
+   WIvaFDmVni6qvKn+PLxv3gyEGzQgN9uludtATJ1Anpeac2fQDeBl+NgFQ
+   g==;
+X-CSE-ConnectionGUID: BoVPYeN9QryGnx/F72B3MQ==
+X-CSE-MsgGUID: YTKdKMdhR96JO91JgiPoRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52183812"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52183812"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:06:16 -0700
+X-CSE-ConnectionGUID: Z/H6YXNKTMeyF9mW6VqssQ==
+X-CSE-MsgGUID: d/50a7xkRzuk5pzTD8W5Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136502215"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:06:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uCgLS-00000003lQ1-4BdZ;
+	Wed, 07 May 2025 18:06:03 +0300
+Date: Wed, 7 May 2025 18:06:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 08/26] pinctrl: cs42l43: Use fw_devlink_set_device()
+Message-ID: <aBt22olAebSy8Xx3@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-9-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507071315.394857-9-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14 2025 at 14:31, Frank Li wrote:
-> Some MSI controller change address/data pair when irq_set_affinity().
-> Current PCI endpoint can't support this type MSI controller. So add flag
-> MSI_FLAG_MUTABLE in include/linux/msi.h and check it when allocate
-> doorbell.
+On Wed, May 07, 2025 at 09:12:50AM +0200, Herve Codina wrote:
+> The code set directly fwnode->dev field.
+> 
+> Use the dedicated fw_devlink_set_device() helper to perform this
+> operation.
 
-This changelog has no relation to the patch.
+...
+
+>  		fwnode = fwnode_get_named_child_node(fwnode, "pinctrl");
+>  
+
+>  		if (fwnode && !fwnode->dev)
+
+Why do we bother checking the fwnode->dev here?
+Just wondering... Hopefully the original author of the code can explain what is
+going on here.
+
+> -			fwnode->dev = priv->dev;
+> +			fw_devlink_set_device(fwnode, priv->dev);
+>  	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
