@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-27399-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27400-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2374AAEE93
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 00:14:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D821AAEE98
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 00:15:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47ABC3A5E5D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 22:14:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76CF1501D0C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 22:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98665290DA2;
-	Wed,  7 May 2025 22:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919C929114A;
+	Wed,  7 May 2025 22:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="si0idtTN"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="U/Toc8P1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59290242928;
-	Wed,  7 May 2025 22:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A946290DAD;
+	Wed,  7 May 2025 22:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746656084; cv=none; b=WfgaLYIvwvqrFqvm1JuAxbjOaeHSJtEORZAEs7AaeniofzD9pjF3ddZwfvYQwLUHV/fI5cZ2pTdDM6rpcpZv3r9PugfH4z0zvUHyRBa/0Jeu4DSi+85ATvRzF2+1xg8RoLzEOKSDmS0+r6r2EDgBxqqURnZSWdkYUjBCGRROHhs=
+	t=1746656112; cv=none; b=FReJGvYOEtg0N/YfTNx1rhiZsGjy/qYanzxEVBNe7A/KMuWQnG0xz4d+vHWA6BcuiwQZEkhIvtA5ZIGncFlCdPc0sdF5huj5u5xDeAha6tLSEv+/INuaX3u1fkWSD1dcj6Acqs2OfReubHRPsVSAl0F69ivuv88+1RFJLTNbOjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746656084; c=relaxed/simple;
-	bh=dP1z7M47j4PZpEMumZ+QSsZvk9KzxMc0x7CrV24AZHE=;
+	s=arc-20240116; t=1746656112; c=relaxed/simple;
+	bh=qGouDji2QH0Uc7Ws9dxYQpLQ7LU1sAfC1XRs3EeIi7o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bZGaBaOzG/601iosWf3QNQVol+0Xr9kyrgb6AlSbgYP02nyLYFKbYHjaxxFgdD5LYeG2+l+uMlGHDvYRBAYIKX1mcP7By64dX71+xE3l7CixLRxNRFqVaORBIoX1lELc8pAiAVqq2OAcj0DmNxAOo6i8NfVfOhpfc/y+dyHB4+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=si0idtTN; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=BHUXfIHthmEBFIBBHSPWYh3l9bKOTjSu+AGo8/+Nytgqj6YxsThnELxd2Exyl45w1kS5nIqnSyimCfq08qJogK/pgOOwgtZfzk6xLykFgDt93777F1UUyvrqha2J/qesrfPwXAX1ec9I4cwGeBSARIQzM3Xb0kzql4POnH3HPc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=U/Toc8P1; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -36,13 +36,13 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QSB///5JCKK7/bkloOaaZL68imP0TbqjyJok4xYN/JE=; b=si0idtTNRfYOtIz1mEtv6mijPs
-	sRVeZ9aoK8fQbQS1F3VzoBvYGbhk3NOXlqmUq90rnRtFjJnoxY6Zs415C146bAojm2iBU9Z2o3k93
-	fOOKaG6M2UETwcTqm+lSM2SsJyiat11O6aVySDfr0VofmUeMZ5MM8EG2eI6QNmA41/gM=;
+	bh=CPkQ9CydGnG5tF/EHT21gmnn1PO6zhIZzOrZPNx4PgA=; b=U/Toc8P1QESr/ikkBlUdgnkPeZ
+	wtmk8RevqEbmM0rvr1ojqNGeRhJe76CZ7XVDMiDnBlPvJTpsGybkWEQPVN4jDWkTmMPCzd2Kg2zVe
+	DRcNXD0c3AlEyc50C97JLBRg6L0r/ubgs5FUC4kGnUvDYE7ZMVesEit9HWwG5OgMYRGg=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1uCn1x-00Bw9R-Dz; Thu, 08 May 2025 00:14:21 +0200
-Date: Thu, 8 May 2025 00:14:21 +0200
+	id 1uCn2W-00BwA0-Op; Thu, 08 May 2025 00:14:56 +0200
+Date: Thu, 8 May 2025 00:14:56 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Herve Codina <herve.codina@bootlin.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -77,10 +77,11 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 21/26] misc: lan966x_pci: Split dtso in dtsi/dtso
-Message-ID: <11b7fd86-99b9-4dbe-997d-8aa948f1f4c0@lunn.ch>
+Subject: Re: [PATCH v2 22/26] misc: lan966x_pci: Rename lan966x_pci.dtso to
+ lan966x_evb_lan9662_nic.dtso
+Message-ID: <0c3028dd-8c98-4816-bb52-7383391e5a94@lunn.ch>
 References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-22-herve.codina@bootlin.com>
+ <20250507071315.394857-23-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,20 +90,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-22-herve.codina@bootlin.com>
+In-Reply-To: <20250507071315.394857-23-herve.codina@bootlin.com>
 
-On Wed, May 07, 2025 at 09:13:03AM +0200, Herve Codina wrote:
-> The lan966x_pci.dtso file contains descriptions related to both the
-> LAN966x PCI device chip and the LAN966x PCI device board where the chip
-> is soldered.
+On Wed, May 07, 2025 at 09:13:04AM +0200, Herve Codina wrote:
+> The lan966x_pci.dtso describes the Microchip EVB-LAN9662-NIC board [0]
 > 
-> Split the file in order to have:
->   - lan966x_pci.dtsi
->     The description related to the PCI chip.
+> This PCI board embeds a LAN9962 PCI device chip, part of the LAN966x
+> family.
 > 
->   - lan966x_pci.dtso
->     The description of the PCI board.
+> Rename the lan966x_pci.dtso accordingly.
 > 
+> Link: https://www.microchip.com/en-us/development-tool/EV53U25A [0]
 > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
