@@ -1,150 +1,141 @@
-Return-Path: <linux-pci+bounces-27351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27352-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC04BAAD7AB
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 09:21:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F0D9AAD7D6
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 09:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D61F1C07C81
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 07:21:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFADC98831D
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 07:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C1E622F77A;
-	Wed,  7 May 2025 07:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C8421CC51;
+	Wed,  7 May 2025 07:19:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AgBqcVK4"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aXbIy/PB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C960021E08A;
-	Wed,  7 May 2025 07:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F522153F1;
+	Wed,  7 May 2025 07:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602064; cv=none; b=BRnep5CzghDo4kLlQTtOIrZGBKFMlK61AOo16rndx2yRdkW+nxVC4UhUG0nkdUkkMXukipaRwjjpIVyy4YXpWBD6u3fphGHOKMla0bY2Id/7muyAghl1F65zkYDSNj4QsDyME2nCrqZlhvHGC5kRS6J3csPas8Gj78kDB0X5hsk=
+	t=1746602384; cv=none; b=tWKKtBObQDGHUkLQts2H5v0ugg1xR6d+y4rBZ3GA7GUOdxNQKQTWvrPx1gP1/BraZ4P1lJbN0mpaUlNzmyxvbKcjDVw79Muu3dGCrg/aM7RiMPn89ngLRaNsLG/XE4i46jc+HQCWDprDvfWYFKWp4MOUywU3jm/hywK+E1wp1h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602064; c=relaxed/simple;
-	bh=m32P3P8yoZbO34TYyCfuEwWM7GITyrnS/+rupX3o64s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=thWqbL56GPd77R2Mt9edfaoRgwmfwTW0c2WuBK10OuPv/efCEuNi9no2jnNIOSxM9rl46Yjvnq9C4UC7yaDhRjuNbyj6KAEvp7AhSe+EEmOxreDOFCc73+EN5z5/kaTwC3GKS91T4/IqzuFYkbbozAY8F76doKU/jyDx8EmxA9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AgBqcVK4; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id AC31B43B5C;
-	Wed,  7 May 2025 07:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746602060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rUuEp6/RXwwfhHO1bxz8fNlN6MHr1GgMNOFNkceKlJg=;
-	b=AgBqcVK4n2af9AD6jUKIkuhdfDbPlWNhVDwp+Ify0ney9hSd62OKBbKajq9Zymbr2m7Qog
-	eVfi0klq+of6fc9G1QQ6PVt6cdmdlIM165NOD8EyUpo3wVg/XV18S564KA2wMTHgy2EH3J
-	JhiCtANS8kc9oUm979A3Vp8VwhonNDnCqXEIcgVHAtb9y09Hq0V/6GsOHXsFPqT3W/U6Aw
-	qGI0PL3B+ejaOUlo1G3CVZ2fjGO8eHLBV9rVV0iYH56FfuOzRQMvHj8nofgUbFjJx+FD2L
-	Se/6hrje/GIZpj+g7UUUrmHpCUshS4pAjYoldLSDWsSQ+OsogW+ucb+GcbuDQA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 26/26] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Wed,  7 May 2025 09:13:08 +0200
-Message-ID: <20250507071315.394857-27-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507071315.394857-1-herve.codina@bootlin.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1746602384; c=relaxed/simple;
+	bh=ftVCNcHtgCKch/G4YULYoyI3e0eUbqM9nbZeswfJKCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bSW3LIaCoae/7bSF+xm51SQVCI+E2RgWSUcZdB7Y+xtOgdRQ9930DXQiuhSCHfo8Xjm6H3yu9jDZbcYghSjDRBkgjPNhaeOlh7Jf2OA33zYV5bWgqJGtV5fX7DyHhEb073ijtRgGTxlvZFOsrxNuYa95FD7igIPpv9nWJelARZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aXbIy/PB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471Grwg018997;
+	Wed, 7 May 2025 07:19:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GSak/6RCspJolLSOvtTAIV6025PG+X7hMUnK6M4R8yU=; b=aXbIy/PBePDmAHIw
+	UB1H7JwheZxWXsE0Yrd+71lRdtKYEzR+/IkiRPcLlP+td23pLdIo0xipsSpDHTzc
+	0oCrlauJtBP0tXDZxj117zzv8EAsMJmf6yqnrL86t1dCTxR32Owt8e0bV9B0clsI
+	TP+K+2wLBzpRFfEanmcBSx4mY/Wu06Id7GkOGcpqB/4J+xUd7WG641wqXPXNFGor
+	P4ACZGVGK7l7s+H8mQ2E0YtgCE37eCEmrvAQDVCMZiuzyBkkbCDzWMoS9ezpITTV
+	eJIR1ttRfYNyPpfTOOEu3EKkEvEroztUx391SMxdN4QZeQqQ364fimr8is6jZXxU
+	lA00lQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5wg4q03-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 07:19:33 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5477JQi8024774
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 07:19:31 GMT
+Received: from [10.253.13.113] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
+ 00:19:19 -0700
+Message-ID: <43e6fc1a-95ac-4eec-9776-fc39ae91a4a8@quicinc.com>
+Date: Wed, 7 May 2025 15:18:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for sa8775p
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
+ <20250507031019.4080541-2-quic_ziyuzhan@quicinc.com>
+ <20250507-obedient-copperhead-from-arcadia-4b052e@kuoka>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250507-obedient-copperhead-from-arcadia-4b052e@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeivdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheffiefgjeeuleeuueffleeufefglefhjefhheeigedukeetieeltddthfffkeffnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudeknecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedvpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsr
- dhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 2mrKWO7swPWHAhCxNNPTrB6Dtsd2weKv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NyBTYWx0ZWRfX3ZLKUTs7ko7+
+ /Phgy2NPzkHBR3VLvbslWf7afnqIiQNxoYC9swS+2jkDY8H2NQYRcgJak+oelcyXYatn9r5PxR5
+ xOtE87yL5vUJCLqwa+QX8x1Hsv8mKqzVYLF7s8oyNaEY0VEf1pbSXYxahDR6wg+UsxUDjUs+pLf
+ VI2o+mKAKRaPDXwIRfO3LWFvUK+RDY0L/QrH45Cui7oEIR/eM7Me935LRCmtfxCs7XjeGZbG6tD
+ wCFwSR48lmua0UHYbiwQYEM0zoc8zBDKO/Ptv+lDAeBpEcsxJT8d7lDQm/ya/qPjAe/b9M/X/Cf
+ ldcnT7Turx1fLGguVdROzQ3iRMF2rQ7w6y0EQpeJaqtONlNSG1xKgG+sgek6yJSAItOMz/NfZHV
+ 439BxMdutaRvYIceZZfYxILVUS+Le8WlMgywO6UYAWH6sngWLVxxWwzNuXLOfDkUI7k38RIQ
+X-Authority-Analysis: v=2.4 cv=dPemmPZb c=1 sm=1 tr=0 ts=681b0985 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=9Ld5B2VTqtJkQkrtWcQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 2mrKWO7swPWHAhCxNNPTrB6Dtsd2weKv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070067
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+Hi Krzysztof
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+In the first place I upstreamed the dt-bindings for QCS8300 PCIe PHY, I 
+did the checking for both DTBs and yaml. The dt-binding patch got 
+applied but gcc_aux_clk is recommended to be removed from PCIe PHY 
+device tree node, so I need to update the bindings, number of clocks 
+required by the PHY is changed to 6 from 7. BRs Ziyue
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
-
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 469044b2256b..93f7b2e92e60 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -624,13 +624,18 @@ config MCHP_LAN966X_PCI
- 	  Even if this driver does not depend on those other drivers, in order
- 	  to have a fully functional board, the following drivers are needed:
- 	    - fixed-clock (COMMON_CLK)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
- 	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-oic (LAN966X_OIC)
- 	    - lan966x-pinctrl (PINCTRL_OCELOT)
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-switch (LAN966X_SWITCH)
- 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sfp (SFP)
- 
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
--- 
-2.49.0
-
+在 5/7/2025 1:09 PM, Krzysztof Kozlowski 写道:
+> On Wed, May 07, 2025 at 11:10:14AM GMT, Ziyue Zhang wrote:
+>> qcs8300 pcie1 phy use the same clocks as sa8775p, in the review comments
+>> of qcs8300 patches, gcc aux clock should be removed and replace it with
+>> phy_aux clock.So move "qcom,sa8775p-qmp-gen4x4-pcie-phy" compatible from
+>> 7 clocks' list to 6 clocks' list to solve the dtb check error.
+>>
+>> qcs8300 pcie phy only use 6 clocks, so move qcs8300 gen4x2 pcie phy
+>> compatible from 7 clocks' list to 6 clocks' list.
+> I don't understand any of this. You just submitted the bindings not so
+> far ago. Does this mean they were never tested?
+>
+> What does it mean that gcc aux clock should be removed in the review
+> comments?
+>
+> Best regards,
+> Krzysztof
+>
 
