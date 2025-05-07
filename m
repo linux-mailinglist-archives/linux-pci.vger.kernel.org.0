@@ -1,201 +1,136 @@
-Return-Path: <linux-pci+bounces-27369-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27370-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 078CEAADD04
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 13:11:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7011EAADD4E
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 13:28:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12F0B188FA71
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 11:11:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C984D506AA7
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 11:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 804C1215F49;
-	Wed,  7 May 2025 11:11:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A2622B59A;
+	Wed,  7 May 2025 11:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KutWJ/g1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9g7Uo3K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA01215F58;
-	Wed,  7 May 2025 11:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E52189B8C;
+	Wed,  7 May 2025 11:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616279; cv=none; b=d/ZUi4DWCm1BEmlIRhuzRcNtiEBeYgg3fqFMYe/+/UTWOlz7V9eqrVzcyAgz2ssQCwrP469Qa16mtEGnqjZ6eQa+AwkfLp10iXP3NTXcEh8lY4npHhrabIwT32epbflk1i1pGjaH7O5IrQn/yodf97AD6a7+xOMw1wIWf6n0RGU=
+	t=1746617287; cv=none; b=Kj7a+OQe8IHutWnqTN6NnxZxU37YhrmfKUNy4LB5qpBiCyyOvhbBYnZ43pIiZ0rbrNuv12J/7KYNubqGXSCeMQjzA761LfZ6DSyzbWiKbI6XMQIbDhbGFRRWsNFIw5i6NLrC7Muzxi5Yj4bovBxlE8umz1FplcZgg0xXHEbCGYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616279; c=relaxed/simple;
-	bh=ZntyQpw2zi5iOaOV9k2HOzNU8KHguQzDjhm53vtJw5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P26zHFgK05nn/dCr3A02YWv4LMadZQrvNDOUFsBv8z3H8+gjukaxH+wdqiIqVH0h3OH8qAOR0hSbrXQtIRyk1vClX9EvSDeDUCIa9JQkNG6t5KFNAnnVQCAT8E/b4YIGZTw2AZ03mnU7diGMLUko+NPsdgTa2cpzkRvedgGyT2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KutWJ/g1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547A8WUS009115;
-	Wed, 7 May 2025 11:10:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uA25O6r9wDpkNxGF6Ry+LoJMfYqYXfcqAr/9W7fDnIw=; b=KutWJ/g1BpPBlKHq
-	KSbVyDM0pWsutBvxtipM9QV63jddzbuSK0SChD0LtY2Q+9qyR/RHuGknIoG/K9lF
-	n0zM2b9MKEqFiE9ySEXmPpvSGuC7Xfl/kWelt2Id7emxd2wzKT03aCpgUsTbSCew
-	PYkC7cYgjLVxR1FBCj8m6Ii7hECf0Fi8VZ/O1zGDKifgXfC86S8zN2EF3qEtM1/0
-	JAEGEmV5S0iSN9YHWQF1I4sxGjyMpiJcEElYN3QnI6tTZ7BfEFgZwakWY42YOuQH
-	dTHLqrzMasmDqzWDLh3orvqbGhi05dl756vgeZsDWBfiSC24AvT+qeoHi6/INBzT
-	MsNBVQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46g5gh85cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 11:10:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 547BAsIu003195
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 11:10:54 GMT
-Received: from [10.216.37.183] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 04:10:48 -0700
-Message-ID: <1a83e239-7cd7-4230-7117-54c9d97f1ed3@quicinc.com>
-Date: Wed, 7 May 2025 16:40:45 +0530
+	s=arc-20240116; t=1746617287; c=relaxed/simple;
+	bh=+myiwgE5IaBaXJzmpEL8CqSZA8uzkotePvS5m/azOWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AehfhQnq9nCydWCalbTeJqsmBRIe3XsRafo2MwCcUdLo+tvQLWt8rmgVIAhPhBE9EV+DrHYownjKwZ1how4HI21ytunbqZLfzilC4AI0Eo8VNcX8GKWGzjmn4kVJNibjvfRMcsw/dCoJliPK2ViAaW8+f3C5XjFKJpEnT8oqLjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9g7Uo3K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16050C4CEE7;
+	Wed,  7 May 2025 11:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746617286;
+	bh=+myiwgE5IaBaXJzmpEL8CqSZA8uzkotePvS5m/azOWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H9g7Uo3KF3gdhcH2ZEMV9V3wNqXA8tWVr4h+XSChpAk8ADpc3AiALZ4luZs+qiP11
+	 Z/MMgQA+W8firplqY6wsfvaRlyKDnu2GwFBPbbSs260wPnfiIZNYS/X+7RgVASh77m
+	 RpC/hLSnA/nsP75LVgIyB2iQqMj3uUQrguNMZM870ct6AHpi0KrvjkwwfISkMW7V3a
+	 YOPAoo049AzlkO+K5zbADyxXnj6XpUO50IDuoOngkJTqfSy9VuxxdFuvsHaky5egwP
+	 KzvfbiAMDQAUjIzdffkOIksa2UyWdR9eJyQ0Y56Uy3z2fvqMFG3OeJNxR8UwUZLFBh
+	 Co6k62Ve2SILg==
+Date: Wed, 7 May 2025 20:28:03 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 01/26] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <aBtDw-qXUCH9U-7l@finisterre.sirena.org.uk>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the
- parent
-Content-Language: en-US
-To: Tsai Sung-Fu <danielsftsai@google.com>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Andrew Chant <achant@google.com>,
-        Brian Norris
-	<briannorris@google.com>,
-        Sajid Dalvi <sdalvi@google.com>, Mark Cheng
-	<markcheng@google.com>,
-        Ben Cheng <bccheng@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-References: <20250303070501.2740392-1-danielsftsai@google.com>
- <87a5a2cwer.ffs@tglx>
- <CAK7fddD4Y5CJ3hKQvppGB2Bof4ibYDX4mBK3N1y8qt-NVoBb7w@mail.gmail.com>
- <87eczd6scg.ffs@tglx>
- <CAK7fddAqDPw1CuvBDUsQApbs1ZSE_ruyTAdsp+c4116C0ZjvVw@mail.gmail.com>
- <878qpi61sk.ffs@tglx>
- <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
- <878qpg4o4t.ffs@tglx>
- <CAK7fddBSJk61h2t73Ly9gxNX22cGAF46kAP+A2T5BU8VKENceQ@mail.gmail.com>
- <874izz1x42.ffs@tglx>
- <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
-X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=681b3fbf cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=AMFphiw-AAAA:8
- a=wQ3t4f8JpbTjhMOd9qAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=2bb41rcl4DbygUh6CoKr:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEwNCBTYWx0ZWRfX96SS2ppmYpc4
- rIiDV1wvb4eWN26/6GbfAgsuEShLxXAixEgMuPb7vIS6Qu10+RCcpn0+DqgeF4PNqvBPUdc4D9/
- ZnjT6TUlnxV86sT2FXTH7aOK7kfxtJ8aTCcFpdSsa6uc2JMYue+UZ4N9y8ZvpdEGqiqLZPKkYiM
- We1BJgDOU9iIvShTLENpIwDTkLtPN3CZ3ORcDucOy9XeL1BGMj64JuN+qt3UQK95DKhejdhBb40
- EetCzJ4p4cpkwgIuhEeS5iSvcnWxwUD8hBRFe/0jUQOZiCbvIZm9YGRxjeiC8C01k1WqHyqD/aH
- TByaV34utTNP/lCKEECgDSqfm5sVlngLgeGrjuWO6t1MbTX6mgdTiLINhv6igQ2jn84DnRvZhqq
- Awk7BOSNCNBG7DeE8F+JKKTrWgEhhWFr62udUs0zh60txZxGGH66CjkP04cUNJkuYViGRpkj
-X-Proofpoint-ORIG-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070104
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oe+RepqPNVL4+bmX"
+Content-Disposition: inline
+In-Reply-To: <20250507071315.394857-2-herve.codina@bootlin.com>
+X-Cookie: Well begun is half done.
 
 
+--oe+RepqPNVL4+bmX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/25/2025 12:08 PM, Tsai Sung-Fu wrote:
-> On Tue, Mar 11, 2025 at 10:05 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> On Tue, Mar 11 2025 at 17:52, Tsai Sung-Fu wrote:
->>
->> Please do not top-post and trim your replies.
->>
->>> Running some basic tests with this patch (
->>> https://tglx.de/~tglx/patches.tar ) applied on my device, at first
->>> glance, the affinity feature is working.
->>>
->>> I didn't run stress test to test the stability, and the Kernel version
->>> we used is a bit old, so I only applied change in this 2 patches
->>
->> I don't care about old kernels and what you can apply or not. Kernel
->> development happens against upstream and not against randomly chosen
->> private kernel versions.
->>
->>> And adding if check on irq_chip_redirect_set_affinity() and
->>> irq_set_redirect_target() to avoid cpumask_first() return nr_cpu_ids
->>
->> I assume you know how diff works.
->>
->>> May I ask, would this patch be officially added to the 6.14 kernel ?
->>
->> You may ask. But you should know the answer already, no?
->>
->> The merge window for 6.14 closed on February 2nd with the release of
->> 6.14-rc1. Anything which goes into Linus tree between rc1 and the final
->> release is fixes only.
->>
->> This is new infrastructure, which has neither been posted nor reviewed
->> nor properly tested. There are also no numbers about the overhead and
->> no analysis whether that overhead causes regressions on existing setups.
->>
->> These changes want to be:
->>
->>     1) Put into a series with proper change logs
->>
->>     2) Posted on the relevant mailing list
->>
->>     3) Tested and proper numbers provided
->>
->> So they are not even close to be ready for the 6.15 merge window, simply
->> because the irq tree is going to freeze at 6.14-rc7, i.e. by the end of
->> this week.
->>
->> I'm not planning to work on them. Feel free to take the PoC patches,
->> polish them up and post them according to the documented process.
->>
-> I really appreciate the patches from you, I am quite new to the
-> upstream and IRQ framework. So would you help to share
-> some experiences on how this kind of new infrastructure of IRQ
-> framework should be tested if you don't mind ?
-QCOM is also interested in this feature, if you need any help
-we can support it. Please let us know the status of this
-patch to take it forward.
+On Wed, May 07, 2025 at 09:12:43AM +0200, Herve Codina wrote:
+> From: Saravana Kannan <saravanak@google.com>
+>=20
+> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
 
-- Krishna Chaitanya.
->> Thanks,
->>
->>          tglx
-> 
-> Thanks
-> 
+> While the commit fixed fw_devlink overlay handling for one case, it
+> broke it for another case. So revert it and redo the fix in a separate
+> patch.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+--oe+RepqPNVL4+bmX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgbQ8MACgkQJNaLcl1U
+h9A3/wf8D6c+36MLT2mhvh2zxesAYWfdL1e5vpcKQk0H/bkk+8KQLEBRl9w9syn2
+MFtk87xXOIdfli0pvEnP2cUrCHKDrD2ehLcNFcur8Vq6IOjjX2Gs3Iboe5CfqnoS
+tPRSxFS31DY3g7DhUGmQ7fUUlPYGwpYIK1QgXrfiR+uhEbooIq6yN1/hcKL2rFS4
+Y21v0te/hUxHTpeTMlcOkXqqu/1UExRszOly4m0YB9mZoswASG024vcrx4paZFjF
+sJ6hXYEyI/PDpMSVthVLe0jK7jyBsiVGSSVDRcimNQj6nAokmye1VeKejWhV3Flv
+7epg7YG5YuZjEXoQ3CaQaDdESm7PnA==
+=5SSZ
+-----END PGP SIGNATURE-----
+
+--oe+RepqPNVL4+bmX--
 
