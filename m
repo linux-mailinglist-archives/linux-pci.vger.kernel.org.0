@@ -1,141 +1,158 @@
-Return-Path: <linux-pci+bounces-27352-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27353-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F0D9AAD7D6
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 09:25:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBED4AAD819
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 09:31:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFADC98831D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 07:22:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B25AE1C217E4
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 07:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C8421CC51;
-	Wed,  7 May 2025 07:19:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A825210F49;
+	Wed,  7 May 2025 07:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aXbIy/PB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhpvkesZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F522153F1;
-	Wed,  7 May 2025 07:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2221AAA1E;
+	Wed,  7 May 2025 07:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602384; cv=none; b=tWKKtBObQDGHUkLQts2H5v0ugg1xR6d+y4rBZ3GA7GUOdxNQKQTWvrPx1gP1/BraZ4P1lJbN0mpaUlNzmyxvbKcjDVw79Muu3dGCrg/aM7RiMPn89ngLRaNsLG/XE4i46jc+HQCWDprDvfWYFKWp4MOUywU3jm/hywK+E1wp1h8=
+	t=1746603046; cv=none; b=ewfZSJPAo4hOJPnOYMIgIaiXHKOxLKm8uox8EbhJm3T2CKTy8NBaD11DPZ9HYVZPZfmgZY5xt0TXi6kgDJ7BZguXt571wCbAWs6NQ2UWhVDjQ9XHuk2kW0tFFFe4KBUA/e5nTTSpHVcpydVMujRffHHwsatFhD0my2VaqXnCCAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602384; c=relaxed/simple;
-	bh=ftVCNcHtgCKch/G4YULYoyI3e0eUbqM9nbZeswfJKCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bSW3LIaCoae/7bSF+xm51SQVCI+E2RgWSUcZdB7Y+xtOgdRQ9930DXQiuhSCHfo8Xjm6H3yu9jDZbcYghSjDRBkgjPNhaeOlh7Jf2OA33zYV5bWgqJGtV5fX7DyHhEb073ijtRgGTxlvZFOsrxNuYa95FD7igIPpv9nWJelARZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aXbIy/PB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471Grwg018997;
-	Wed, 7 May 2025 07:19:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GSak/6RCspJolLSOvtTAIV6025PG+X7hMUnK6M4R8yU=; b=aXbIy/PBePDmAHIw
-	UB1H7JwheZxWXsE0Yrd+71lRdtKYEzR+/IkiRPcLlP+td23pLdIo0xipsSpDHTzc
-	0oCrlauJtBP0tXDZxj117zzv8EAsMJmf6yqnrL86t1dCTxR32Owt8e0bV9B0clsI
-	TP+K+2wLBzpRFfEanmcBSx4mY/Wu06Id7GkOGcpqB/4J+xUd7WG641wqXPXNFGor
-	P4ACZGVGK7l7s+H8mQ2E0YtgCE37eCEmrvAQDVCMZiuzyBkkbCDzWMoS9ezpITTV
-	eJIR1ttRfYNyPpfTOOEu3EKkEvEroztUx391SMxdN4QZeQqQ364fimr8is6jZXxU
-	lA00lQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5wg4q03-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 07:19:33 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5477JQi8024774
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 07:19:31 GMT
-Received: from [10.253.13.113] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 00:19:19 -0700
-Message-ID: <43e6fc1a-95ac-4eec-9776-fc39ae91a4a8@quicinc.com>
-Date: Wed, 7 May 2025 15:18:59 +0800
+	s=arc-20240116; t=1746603046; c=relaxed/simple;
+	bh=g0KwV/pWy+pAGLq2jYuL29tXeU4ihkdHCDpSSq7p5pQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hqzuQQXnuBGYaNtQnKFjhbFFANSAbN+JgUw7a0sNycuv7wKEed+Qs/E6zhm+dyY5iix/kobk6iTzxzkm3/J8LMG95oLjnuOEZ1UAq0zKK03IkkPEi2ds3H7hM+ynNFHRuUPBdFcde1xm8cEdqVDY1gHlve37U1iminuGsqdMhpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GhpvkesZ; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so8497583a91.3;
+        Wed, 07 May 2025 00:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746603045; x=1747207845; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=45YXqoIzi1w++Q2O5y79Hf5M5Kio30STB3Cii8vACyk=;
+        b=GhpvkesZSkzVcEfa2ZdoivWgVoAAXEZcGFPtFBIBxzFygHG261quK9rlYF3X5HJq8O
+         fND11TmBHwltChuL3tnMGNr9CkyaMqYGPJfV96GYkHKkkGGhaUWV1OnVP7v4LMtC99yQ
+         mDeg9ljfOj+HxlFvSw33bIAHkHeG9/LVQ08WwcYPW5m52JyEeXwt2CFM/aT4foD2KoeZ
+         emNUL6rP7RPwRGWRRXoAlUqaHkl1H1FCmcjDXMAcgG3oc0K1KPHqhTzix74VMuPxrvVl
+         MpaaQ8Sr10vyZ84fRM+EtMibX3MS4rWAlZae8f4l8gZ++zteu17tvq6xa8roxhDEvqgw
+         klHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746603045; x=1747207845;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=45YXqoIzi1w++Q2O5y79Hf5M5Kio30STB3Cii8vACyk=;
+        b=fK6bKAfqTgjZUJLFG82ZatFJn2526yG65zgLLjJMMAH0p+gYX/UZ1my9hkJtjkyNV/
+         pfXX16Q05NW9TZc/MSy8ISB/sYXsJaweQ2G6sYe5WNKJSBoOPvp5kANn4nRf095ZC2m+
+         5lKWGr+989EUw/nmpc3tmk7dUCuI4iT4FTYLyyHs1QNRyb08GdUFnfgR1O8mwMxl+U6r
+         Ftt1hp6utdNdtA0lcCN5QFFY76QeU0HIrgXPGfdJzqLQ9f0WuKCNpDCM6S4FAMBvr9QZ
+         zZb3PGh3B+BA7eisGtZ1Uic3TMPGV51YM05ZhDysxbu7kcy42EMv41hAVsAQ8VKrjqJj
+         83RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxC8dQEnGSNS5jBksuyFAfodIcYEZrDLwCYz8Xl4lqw139J83wGRfM7UbN1714ibJZJPfNpZu1QL0RyVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwktU64pVmG4gFRO6jPooE0AnZ48DN/cZQxCWRubBQUGd4s+LpF
+	vXSX2dFGWVIG7wfyC5geUDcVF/VciYm70T5My5aNfWTFKownKEMt
+X-Gm-Gg: ASbGncsNU5jIe6NzJvPX1+o0RWdOAGooENhtg60/+Ya4iKQzgDYqTSnZTJnp/cqu/YJ
+	dg+QRYn0yPMKZw3e0WpiV/lLzdCROn6lo+NQv0nrEVUp73zLWEQLz2DM1zwGnww/n10BLtpHCvo
+	l+azqZOf56UfjvXgu4SJtouslgq+kvnYCx2g66SQc/9wG47ACVUF7lwvu8yHbt2n5FsfigsV0Iu
+	0+5r5pZayj4kIhmTyf35AiwuSBaeLShgtV2A2ChUgOeiSRbrnAYcyycqU+wVr66RLZr7QOK6poR
+	WYp/0Xmq9egEhFmWynir6PRZ/vrkhlRA9HVUHZRqGRYICKwRlZH8Qk1ucjmSeLmlBtoqflyy+/e
+	VnyQ=
+X-Google-Smtp-Source: AGHT+IGkOZRg1k8cBRnNPvzy5uu4SPdIidCH8UZWqP/FUl/UlE/rzSQlMDHEU0AyDAORwI2+wmY+xg==
+X-Received: by 2002:a17:90b:394f:b0:2ff:6ac2:c5a5 with SMTP id 98e67ed59e1d1-30aac2291aemr3563760a91.26.1746603044604;
+        Wed, 07 May 2025 00:30:44 -0700 (PDT)
+Received: from localhost.localdomain ([14.116.239.37])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e4534d712sm25748555ad.193.2025.05.07.00.30.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 00:30:44 -0700 (PDT)
+From: Zijiang Huang <huangzjsmile@gmail.com>
+X-Google-Original-From: Zijiang Huang <kerayhuang@tencent.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zijiang Huang <kerayhuang@tencent.com>,
+	Hao Peng <flyingpeng@tencent.com>
+Subject: [PATCH] PCI: Using lockless config space accessors based on Kconfig option
+Date: Wed,  7 May 2025 15:30:28 +0800
+Message-ID: <20250507073028.2071852-1-kerayhuang@tencent.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Update pcie phy bindings for sa8775p
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
-        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
-References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
- <20250507031019.4080541-2-quic_ziyuzhan@quicinc.com>
- <20250507-obedient-copperhead-from-arcadia-4b052e@kuoka>
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <20250507-obedient-copperhead-from-arcadia-4b052e@kuoka>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2mrKWO7swPWHAhCxNNPTrB6Dtsd2weKv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NyBTYWx0ZWRfX3ZLKUTs7ko7+
- /Phgy2NPzkHBR3VLvbslWf7afnqIiQNxoYC9swS+2jkDY8H2NQYRcgJak+oelcyXYatn9r5PxR5
- xOtE87yL5vUJCLqwa+QX8x1Hsv8mKqzVYLF7s8oyNaEY0VEf1pbSXYxahDR6wg+UsxUDjUs+pLf
- VI2o+mKAKRaPDXwIRfO3LWFvUK+RDY0L/QrH45Cui7oEIR/eM7Me935LRCmtfxCs7XjeGZbG6tD
- wCFwSR48lmua0UHYbiwQYEM0zoc8zBDKO/Ptv+lDAeBpEcsxJT8d7lDQm/ya/qPjAe/b9M/X/Cf
- ldcnT7Turx1fLGguVdROzQ3iRMF2rQ7w6y0EQpeJaqtONlNSG1xKgG+sgek6yJSAItOMz/NfZHV
- 439BxMdutaRvYIceZZfYxILVUS+Le8WlMgywO6UYAWH6sngWLVxxWwzNuXLOfDkUI7k38RIQ
-X-Authority-Analysis: v=2.4 cv=dPemmPZb c=1 sm=1 tr=0 ts=681b0985 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=9Ld5B2VTqtJkQkrtWcQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 2mrKWO7swPWHAhCxNNPTrB6Dtsd2weKv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
- mlxscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070067
 
-Hi Krzysztof
+The generic PCI configuration space accessors are globally serialized via
+pci_lock. On larger systems this causes massive lock contention when the
+configuration space has to be accessed frequently. One such access pattern
+is the Intel Uncore performance counter unit.
 
-In the first place I upstreamed the dt-bindings for QCS8300 PCIe PHY, I 
-did the checking for both DTBs and yaml. The dt-binding patch got 
-applied but gcc_aux_clk is recommended to be removed from PCIe PHY 
-device tree node, so I need to update the bindings, number of clocks 
-required by the PHY is changed to 6 from 7. BRs Ziyue
+All x86 PCI configuration space accessors have either their own
+serialization or can operate completely lockless, So Disable the global
+lock in the generic PCI configuration space accessors
 
-在 5/7/2025 1:09 PM, Krzysztof Kozlowski 写道:
-> On Wed, May 07, 2025 at 11:10:14AM GMT, Ziyue Zhang wrote:
->> qcs8300 pcie1 phy use the same clocks as sa8775p, in the review comments
->> of qcs8300 patches, gcc aux clock should be removed and replace it with
->> phy_aux clock.So move "qcom,sa8775p-qmp-gen4x4-pcie-phy" compatible from
->> 7 clocks' list to 6 clocks' list to solve the dtb check error.
->>
->> qcs8300 pcie phy only use 6 clocks, so move qcs8300 gen4x2 pcie phy
->> compatible from 7 clocks' list to 6 clocks' list.
-> I don't understand any of this. You just submitted the bindings not so
-> far ago. Does this mean they were never tested?
->
-> What does it mean that gcc aux clock should be removed in the review
-> comments?
->
-> Best regards,
-> Krzysztof
->
+Signed-off-by: Zijiang Huang <kerayhuang@tencent.com>
+Reviewed-by: Hao Peng <flyingpeng@tencent.com>
+---
+ drivers/pci/access.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 3c230ca3d..5200f7bbc 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -216,20 +216,21 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+ }
+ 
+ /* Returns 0 on success, negative values indicate error. */
+-#define PCI_USER_READ_CONFIG(size, type)					\
++#define PCI_USER_READ_CONFIG(size, type)				\
+ int pci_user_read_config_##size						\
+ 	(struct pci_dev *dev, int pos, type *val)			\
+ {									\
+ 	int ret = PCIBIOS_SUCCESSFUL;					\
+ 	u32 data = -1;							\
++	unsigned long flags;						\
+ 	if (PCI_##size##_BAD)						\
+ 		return -EINVAL;						\
+-	raw_spin_lock_irq(&pci_lock);				\
++	pci_lock_config(flags);						\
+ 	if (unlikely(dev->block_cfg_access))				\
+ 		pci_wait_cfg(dev);					\
+ 	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
+ 					pos, sizeof(type), &data);	\
+-	raw_spin_unlock_irq(&pci_lock);				\
++	pci_unlock_config(flags);					\
+ 	if (ret)							\
+ 		PCI_SET_ERROR_RESPONSE(val);				\
+ 	else								\
+@@ -244,14 +245,15 @@ int pci_user_write_config_##size					\
+ 	(struct pci_dev *dev, int pos, type val)			\
+ {									\
+ 	int ret = PCIBIOS_SUCCESSFUL;					\
++	unsigned long flags;						\
+ 	if (PCI_##size##_BAD)						\
+ 		return -EINVAL;						\
+-	raw_spin_lock_irq(&pci_lock);				\
++	pci_lock_config(flags);						\
+ 	if (unlikely(dev->block_cfg_access))				\
+ 		pci_wait_cfg(dev);					\
+ 	ret = dev->bus->ops->write(dev->bus, dev->devfn,		\
+ 					pos, sizeof(type), val);	\
+-	raw_spin_unlock_irq(&pci_lock);				\
++	pci_unlock_config(flags);					\
+ 	return pcibios_err_to_errno(ret);				\
+ }									\
+ EXPORT_SYMBOL_GPL(pci_user_write_config_##size);
+-- 
+2.43.5
+
 
