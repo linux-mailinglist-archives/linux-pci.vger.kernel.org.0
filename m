@@ -1,68 +1,82 @@
-Return-Path: <linux-pci+bounces-27305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27308-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9279AAD28D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 03:16:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D19ECAAD3BF
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 05:10:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBD381C00D59
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 01:16:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 361BC466CC3
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 03:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3EC78F5D;
-	Wed,  7 May 2025 01:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167991C1F0D;
+	Wed,  7 May 2025 03:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UjPwzL2e"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bNSqcUdw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out199-4.us.a.mail.aliyun.com (out199-4.us.a.mail.aliyun.com [47.90.199.4])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A0CF4E2;
-	Wed,  7 May 2025 01:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E01C149C64;
+	Wed,  7 May 2025 03:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746580577; cv=none; b=GoEt/44dVKoEVSCSJ0ELjiRF6i9FWVt6Uzse4gDJL8AgvZ7vgQGqlR0tagwc7CIEjh/6x5Jfnvo1vdogWuIoU7PJO7C4XnNJgQ/eu/6VwttW2gt44OjkGXhW5U825gvFXg89B5HLRIktKF/Ijaxm2+yrJMRNjrrT3BSO2lTpEyU=
+	t=1746587440; cv=none; b=uAdg1vs1lU47N4WtSP8xBVM8LjvtxNt6VWwX99HKMqKcjFoG7zsjqfodJq2VdzA/tBpTlA0u6csT+YfHMAqsBXRBkeWA/8oEMZJjUqxGu8Eem6n9JqTK11bGoLsg7uGf5nREKuLrfB7is0UKWEqnXA6zxFYngU/zupTC+BYdknM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746580577; c=relaxed/simple;
-	bh=4Y/wfHCD/JmJfE1SBEtkQtHX5ZUN0fh0CH1uktm6L4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o5Gu46vtGRB7AUZ0ag2jd5MI8mci85cXrJE5uW59a77zbAWYFkOdnEjCWLh3Xmf2uJuDDOc4tl7+FxXoH48269/Wg0N0BkyXvpB7nR9Upd/JmhGTr3s3I89wXKHMnEOzbCDRtKKSVgVfz+la7ifXp74NmaRwnPt5EZr6ZkiwmKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UjPwzL2e; arc=none smtp.client-ip=47.90.199.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746580551; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=BhkBg8BHNtFzJ9+ijMhzKHUaq64bGU+JAPv//d4vJvM=;
-	b=UjPwzL2exoui+xntVmaD82fl9MKZRNmHOtzVksh1TLNxVdxY4N84oZHz2hT8Rcez93C/JymMNeKTIPnURCMQu6cqg9V+40KUnFtUR+O+ULUnuexQlxq3ElaLqPb/fVPnRMOtrk9nQRSiF9EOzsZkSfMx20zkrFc7Usfp5opzjII=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WZh9L8X_1746580536 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 09:15:49 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
-Date: Wed,  7 May 2025 09:15:35 +0800
-Message-ID: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1746587440; c=relaxed/simple;
+	bh=DWEmIOytz3yC00TLxNrVLLYTKH/K0CAb+J1GNPxT0fI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AMmtNc5BLWbBYg43YtihyxoG849ISjk4rJQrAPoWRv0tdQ4ALN5Kg3zhi60VuFGQN+m4H1qVaSeP4dXhrDjRoiEVc5YtUytWcS+5QaQu+596xy9TXqZ/KwEP8CQoB0Ro1IF0Lk6oFKx/6XIJiNMGAqxpA+W6MbXuos3y6Gy4g9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bNSqcUdw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471GsHT021933;
+	Wed, 7 May 2025 03:10:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=vCgZmuG7SF+Td0O33w0zlWSZ0RlRkj6sKgR
+	rerRaWIQ=; b=bNSqcUdwreFY2FUiauMB2OJGw3cml/FvD92LrBKyVP2Cc2Eow56
+	9q9w2V95ZVJBr5AyNV08urvRslBEmSNFDEzfsPPVHBus7s4VLZJCKrvuZBQpNWsF
+	APzzZuAo5puAI5iZk8apiAl1gULo91jDgC1L49oZokDWQNh0qDAQOF0HU8Q2uQeY
+	mZ3SutIZp64hE3Lex902R6SyMm181JFW+Oue5iz0pFIGtFPIlSoRok0EAjgsyva8
+	GxTOabpkRipXkaCw4ncIVF0ZVAJWhpDj/1VWHwE3Pw8ZvC8Qb0RK3ea4m+3UBc+8
+	TfixBdXTnSvRyXXyt4ke+CrkcsX9+XZPrqQ==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5uuv9w3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 03:10:25 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5473ANlT005958;
+	Wed, 7 May 2025 03:10:23 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7m5ysb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 03:10:23 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5473ANYP005884;
+	Wed, 7 May 2025 03:10:23 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5473AMGX005700
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 03:10:23 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 614212F3B; Wed,  7 May 2025 11:10:21 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, dmitry.baryshkov@linaro.org,
+        neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, andersson@kernel.org, konradybcio@kernel.org
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, quic_qianyu@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v5 0/6] pci: qcom: Add QCS8300 PCIe support
+Date: Wed,  7 May 2025 11:10:13 +0800
+Message-Id: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,213 +84,94 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=L9cdQ/T8 c=1 sm=1 tr=0 ts=681acf22 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
+ a=QyXUC8HyAAAA:8 a=NVt-qORIiALRBcsd3-8A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: GLqQMwSefUQvGc1dYT0vr3IILhZmMYaJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAyNyBTYWx0ZWRfX/ztqb3d67J/I
+ oeCPFdwfxgJrLdXanmMWby+nUDpzbbE2yFEOD8/I4iCl3R9iFRSsV9J+ojtxZsdSG6cZh8l8m1w
+ K4Lh2IhMqO/m8avANnYsH12q5A9Qsw8ppMsOaKDklMHjKW2NzefowAzyYhMIy/+L6/nMqUFokJV
+ NAQ60RrYNbuDpLaTO9pjqikwpMAVO2/Xj4fSIPXuUg+1ECF/1hxnnOgRrmcOteEJFPMa01UyRbM
+ v3Evgvdyxwk0Pl+tyyjAxGDiZhrDONNg95F12Upz8du17cwM8Hc6A8l4825h1d9ndnXRJuwK4Qo
+ k7y60D/RRueZAzcC+6eRKjOhAsE/a0JqWmOKGLSjrT/9E8VrQD8SPjLx0bXFv8r+FxmedbIUCPb
+ cQKL9xMdTNhzbKLk/fX3vXzufPTud3zsY77NNBxVSl1iyoYSeA4fWz2U7xT64J/sywps8jl6
+X-Proofpoint-ORIG-GUID: GLqQMwSefUQvGc1dYT0vr3IILhZmMYaJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxlogscore=800 spamscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 priorityscore=1501 clxscore=1011 bulkscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070027
 
-Hotplug events are critical indicators for analyzing hardware health,
-particularly in AI supercomputers where surprise link downs can
-significantly impact system performance and reliability.
+This series adds document, phy, configs support for PCIe in QCS8300.
+The series depend on the following devicetree.
 
-To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-tracepoint for hotplug event to help healthy check, and generate
-tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
-include/uapi/linux/pci.h so applications like rasdaemon can register
-tracepoint event handlers for it.
+This series depends on PCIe SMMU for QCS8300:
+https://lore.kernel.org/all/dc535643-235d-46e9-b241-7d7b0e75e6ac@oss.qualcomm.com/
 
-The output like below:
+Have follwing changes:
+	- Add dedicated schema for the PCIe controllers found on QCS8300.
+	- Add compatible for qcs8300 platform.
+	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
 
-$ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-$ cat /sys/kernel/debug/tracing/trace_pipe
-    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
-
-    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
-
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 ---
-changes since v6:
-- move defination of tracepoint enum back to trace.h. Otherwise, it will
-  cause a build error when CONFIG_UAPI_HEADER_TEST=y. The problem is that
-  the PCI_HOTPLUG_EVENT macro needs to include "linux/tracepoint.h" but it
-  is not allowed in userspace.
-- No code changes compared to v5.
+Changes in v5:
+- Add QCOM PCIe controller version in commit msg (Mani)
+- Modify platform dts change subject (Dmitry)
+- Update bindings to fix the dtb check errors.
+- Remove qcs8300 compatible in driver, do not need it (Dmitry)
+- Fixed compile error found by kernel test robot
+- Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
 
-change since v5: 
-- move define of enum to include/uapi/linux/pci.h
-- link: https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/
+Changes in v4:
+- Add received tag
+- Fixed compile error found by kernel test robot
+- Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
 
-v5:
-- link: https://patchwork.kernel.org/project/linux-pci/patch/20250109025543.56830-1-xueshuai@linux.alibaba.com/
+Changes in v3:
+- Add received tag(Rob & Dmitry)
+- Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+- remove pcieprot0 node(Konrad & Mani)
+- Fix format comments(Konrad)
+- Update base-commit to tag: next-20241213(Bjorn)
+- Corrected of_device_id.data from 1.9.0 to 1.34.0.
+- Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
 
----
- drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
- drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
- include/uapi/linux/pci.h          |  7 ++++
- 3 files changed, 102 insertions(+), 6 deletions(-)
- create mode 100644 drivers/pci/hotplug/trace.h
+Changes in v2:
+- Fix some format comments and match the style in x1e80100(Konrad)
+- Add global interrupt for PCIe0 and PCIe1(Konrad)
+- split the soc dtsi and the platform dts into two changes(Konrad)
+- Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index d603a7aa7483..f9beb4d3a9b8 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -23,6 +23,9 @@
- #include "../pci.h"
- #include "pciehp.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- /* The following routines constitute the bulk of the
-    hotplug controller logic
-  */
-@@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (events & PCI_EXP_SLTSTA_DLLSC)
-+		if (events & PCI_EXP_SLTSTA_DLLSC) {
- 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
- 				  slot_name(ctrl));
--		if (events & PCI_EXP_SLTSTA_PDC)
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_DOWN);
-+		}
-+		if (events & PCI_EXP_SLTSTA_PDC) {
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
-+		}
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 					      INDICATOR_NOOP);
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
- 		}
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
-@@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (present)
-+		if (present) {
- 			ctrl_info(ctrl, "Slot(%s): Card present\n",
- 				  slot_name(ctrl));
--		if (link_active)
--			ctrl_info(ctrl, "Slot(%s): Link Up\n",
--				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_PRESENT);
-+		}
-+		if (link_active) {
-+			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_UP);
-+		}
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
-diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-new file mode 100644
-index 000000000000..5b60cd7bcffb
---- /dev/null
-+++ b/drivers/pci/hotplug/trace.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HW_EVENT_PCI_HP_H
-+
-+#include <linux/tracepoint.h>
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pci
-+
-+#define PCI_HOTPLUG_EVENT					\
-+	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-+	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-+	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-+
-+/* Enums require being exported to userspace, for user tool parsing */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+PCI_HOTPLUG_EVENT
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings
-+ * that will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	{a, b},
-+#define EMe(a, b)	{a, b}
-+
-+TRACE_EVENT(pci_hp_event,
-+
-+	TP_PROTO(const char *port_name,
-+		 const char *slot,
-+		 const int event),
-+
-+	TP_ARGS(port_name, slot, event),
-+
-+	TP_STRUCT__entry(
-+		__string(	port_name,	port_name	)
-+		__string(	slot,		slot		)
-+		__field(	int,		event	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(port_name);
-+		__assign_str(slot);
-+		__entry->event = event;
-+	),
-+
-+	TP_printk("%s slot:%s, event:%s\n",
-+		__get_str(port_name),
-+		__get_str(slot),
-+		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-+	)
-+);
-+
-+#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-index a769eefc5139..4f150028965d 100644
---- a/include/uapi/linux/pci.h
-+++ b/include/uapi/linux/pci.h
-@@ -39,4 +39,11 @@
- #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
- #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
- 
-+enum pci_hotplug_event {
-+	PCI_HOTPLUG_LINK_UP,
-+	PCI_HOTPLUG_LINK_DOWN,
-+	PCI_HOTPLUG_CARD_PRESENT,
-+	PCI_HOTPLUG_CARD_NOT_PRESENT,
-+};
-+
- #endif /* _UAPILINUX_PCI_H */
+Ziyue Zhang (6):
+  dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+    for sa8775p
+  dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
+  arm64: dts: qcom: qcs8300: enable pcie0
+  arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+  arm64: dts: qcom: qcs8300: enable pcie1
+  arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+
+ .../bindings/pci/qcom,pcie-sa8775p.yaml       |  26 +-
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   4 +-
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 297 +++++++++++++++++-
+ 4 files changed, 396 insertions(+), 11 deletions(-)
+
+
+base-commit: a269b93a67d815c8215fbfadeb857ae5d5f519d3
 -- 
-2.39.3
+2.34.1
 
 
