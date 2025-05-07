@@ -1,227 +1,181 @@
-Return-Path: <linux-pci+bounces-27389-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27390-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73C91AAE6A9
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 18:29:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80AD7AAE6D2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 18:36:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08F1C4E5109
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 16:29:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E70B85214B9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 16:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D490E28AAE0;
-	Wed,  7 May 2025 16:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B78A828BA97;
+	Wed,  7 May 2025 16:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEU8Fffk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4xVl3aS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD84201266;
-	Wed,  7 May 2025 16:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BED428BA82;
+	Wed,  7 May 2025 16:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635364; cv=none; b=UeMqpmbTzOl/S8ZmgGHQXPi7YoKE/yo/pj16bYhZSumwVda9Kko5c6aBplgz0LXM5akZ6hVn5jyvYi8mYkDT2EorSypjwiIv7NdmF9omjq4KkXIliErkaOwaC7sh2SKuih9lJw/ZW25bHokmyi8BTaawZEBI9IVHJT9HMSt+L0c=
+	t=1746635784; cv=none; b=dWTZJP/t5z/BOf19xmjo7ZxzhaKpOIqhorig7shEMWR+DczbPbflmlG34BcgGjvIdV9uRtHUKxuZPC6d1Y1VjkNhlKJn0Hxn6bxmE28d6V4IA85DCowUgRkeTLZnqgMGt2uufGRI2R2ilZDaqoWngagxWfBxs9Im0NwN57h29fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635364; c=relaxed/simple;
-	bh=LjPYYfMdxis7ITOMKVHr/CAOCVAW0IbwVEhXnZ55sxo=;
+	s=arc-20240116; t=1746635784; c=relaxed/simple;
+	bh=cjO4ygzINjwIC1ncU+oe4aI5LkAeIM5Tar8FVF/MIo8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aiCkSymYBwhEpBRdf16jS2CuWuJxfLBU4nTniqmkTJa8W4h5hUkZY8lXdwetz9YRQFl9sPiK53RjBnk/QPRg/bs7dNKVMaDe86nLw7gF30XPdxXX7vjRowxH/M6sbFu3NCJPNklEmCZ4BUzgVnIeEKhPrSM2Hxrp6cTqhED5ZCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEU8Fffk; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746635363; x=1778171363;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LjPYYfMdxis7ITOMKVHr/CAOCVAW0IbwVEhXnZ55sxo=;
-  b=gEU8FffkmbhHbSNC5TcWOrtyETQHVIzGyNrkiJwr5CTFH9ASAHEPMckD
-   cSDvJJL3H0sy6REDaoP1dT21KyUaOlrV1feQ1YtlfOI+r4x0Q1HtpesGo
-   e5HdZPrnIQZ7lvoDauDEYYC7VpqWv+YX5e1kn9zDp9A7WLrpAJ1muIV5u
-   T6xZjCBks4bq870OZ/1AN72LAm0nctVhnMXvpzIxjGSy5dikg/F9+uASf
-   H1L0l4XsDXDU9rfCRUhI5r8n2zLmrBnj83fCBg99T9FCDkiPY23/JB5o5
-   WetBkqCacPHyuZ/cVqFGbcBpZUyrBF4TlAXlymkumYqGY/cQZkqUqlDK2
-   A==;
-X-CSE-ConnectionGUID: 7PHRl6zrRW6VOl20qfxf1A==
-X-CSE-MsgGUID: uTFjb2zaTAyKoF4cJDaQFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48536568"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48536568"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:29:22 -0700
-X-CSE-ConnectionGUID: /qLkKdV/RSK4Bax55Pv+ug==
-X-CSE-MsgGUID: q2i/ICsATHi57GGk/T2P3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="141201293"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 07 May 2025 09:29:16 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uChdx-0008AL-1P;
-	Wed, 07 May 2025 16:29:13 +0000
-Date: Thu, 8 May 2025 00:28:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Message-ID: <202505080049.7AvfzOGc-lkp@intel.com>
-References: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIuor3st3po05pquCMC7EtSpuGpZ6OAR/oq0sGPP4Wu/zuwu5s2c0Xsg3Jj9E/8WEVu8yzyO2J+9bJolYThUf20su6P11jl0ag1s4EvRdu05IAeCT8fMPF7blMIn+k0NbLgbEl9s8aU9Zh7r2LXB4eY0QdM0v/Somh594MtA6cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4xVl3aS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5089C4CEE2;
+	Wed,  7 May 2025 16:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746635784;
+	bh=cjO4ygzINjwIC1ncU+oe4aI5LkAeIM5Tar8FVF/MIo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W4xVl3aSH4fNvgokVYKqSMtjFz8SUI1ZllOCWtTjUmLBm+mzmmK79sTUQgS/Z7/8h
+	 vUR24xkBtrdqW6gDOYL/p/7PhStwZupg3enNxZoAiEfJ5rrfJHqKjElqf1+gxfbxOC
+	 sklrsBJ7ynRb7IfS6eHq0aWNLlqY1MiE4ngk6mhc8wBhQUVbhihA7ZiMdIqKl7lbbE
+	 jnhNQvqZJrEqEdsTzAzoTgKh+HWWiWn65umxq8q4ezBMENpkAyX5bx0vAAP3LT/W1c
+	 YXGglVvg3MoiU+ZDLlk+bOZXdsT+CLuWhLATlFRubj/lFyAqFngYhVzmu+7i06CAO/
+	 lSfNYb9vACEQA==
+Received: by pali.im (Postfix)
+	id 8C20E5F1; Wed,  7 May 2025 18:36:20 +0200 (CEST)
+Date: Wed, 7 May 2025 18:36:20 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org,
+	yue.wang@Amlogic.com, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <20250507163620.53v5djmhj3ywrge2@pali>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+User-Agent: NeoMutt/20180716
 
-Hi Shradha,
+On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
+> On 2025/5/7 23:03, Hans Zhang wrote:
+> > On 2025/5/7 01:41, Pali Rohár wrote:
+> > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+> > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
+> > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+> > > > core negotiations.
+> > > > 
+> > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+> > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+> > > > during device initialization, leveraging root port configurations and
+> > > > device-specific capabilities.
+> > > > 
+> > > > Aligning Aardvark with the unified MPS framework ensures consistency,
+> > > > avoids artificial constraints, and allows the hardware to operate at
+> > > > its maximum supported payload size while adhering to PCIe
+> > > > specifications.
+> > > > 
+> > > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > > ---
+> > > >   drivers/pci/controller/pci-aardvark.c | 2 --
+> > > >   1 file changed, 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > index a29796cce420..d8852892994a 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
+> > > > advk_pcie *pcie)
+> > > >       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > >       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+> > > >       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+> > > > -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> > > >       reg &= ~PCI_EXP_DEVCTL_READRQ;
+> > > > -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+> > > >       reg |= PCI_EXP_DEVCTL_READRQ_512B;
+> > > >       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > -- 
+> > > > 2.25.1
+> > > > 
+> > > 
+> > > Please do not remove this code. It is required part of the
+> > > initialization of the aardvark PCI controller at the specific phase,
+> > > as defined in the Armada 3700 Functional Specification.
+> > > 
+> > > There were reported more issues with those Armada PCIe controllers for
+> > > which were already sent patches to mailing list in last 5 years. But
+> > > unfortunately not all fixes were taken / applied yet.
+> > 
+> > Hi Pali,
+> > 
+> > I replied to you in version v2.
+> > 
+> > Is the maximum MPS supported by Armada 3700 512 bytes?
 
-kernel test robot noticed the following build warnings:
+IIRC yes, 512-byte mode is supported. And I think in past I was testing
+some PCIe endpoint card which required 512-byte long payload and did not
+worked in 256-byte long mode (not sure if the card was not able to split
+transaction or something other was broken, it is quite longer time).
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.15-rc5 next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > What are the default values of DevCap.MPS and DevCtl.MPS?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Gupta/PCI-hv-enable-pci_hyperv-to-allow-dynamic-vector-allocation/20250416-233828
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/1744817781-3243-1-git-send-email-shradhagupta%40linux.microsoft.com
-patch subject: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector dynamically
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250508/202505080049.7AvfzOGc-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505080049.7AvfzOGc-lkp@intel.com/reproduce)
+Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
+type?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505080049.7AvfzOGc-lkp@intel.com/
+Aardvark controller does not have the real HW PCI-to-PCI bridge device.
+There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
+create fake kernel PCI device in the hierarchy to make kernel and
+userspace happy. Yes, this is deviation from the PCIe standard but well,
+buggy HW is also HW.
 
-All warnings (new ones prefixed by >>):
+And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
 
->> drivers/net/ethernet/microsoft/mana/gdma_main.c:500:2: warning: variable 'gic' is used uninitialized whenever 'for' loop exits because its condition is false [-Wsometimes-uninitialized]
-     500 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:510:7: note: uninitialized use occurs here
-     510 |         if (!gic)
-         |              ^~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:500:2: note: remove the condition if it is always true
-     500 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:475:30: note: initialize the variable 'gic' to silence this warning
-     475 |         struct gdma_irq_context *gic;
-         |                                     ^
-         |                                      = NULL
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:541:2: warning: variable 'gic' is used uninitialized whenever 'for' loop exits because its condition is false [-Wsometimes-uninitialized]
-     541 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:551:7: note: uninitialized use occurs here
-     551 |         if (!gic)
-         |              ^~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:541:2: note: remove the condition if it is always true
-     541 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:523:30: note: initialize the variable 'gic' to silence this warning
-     523 |         struct gdma_irq_context *gic;
-         |                                     ^
-         |                                      = NULL
-   2 warnings generated.
+> > Because the default value of DevCtl.MPS is not 512 bytes, it needs to be
+> > configured here, right?
+> > 
+> > If it's my guess, RK3588 also has the same requirements as you, just
+> > like the first patch I submitted.
+> > 
+> > Please take a look at the communication history:
+> > https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+> And this:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-2-18255117159@163.com/
 
+These changes are referring the to root ports PCI devices, which are not
+applicable for aardvark PCIe controller.
 
-vim +500 drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > 
+> > Please test it using patch 1/3 of this series. If there are any
+> > problems, please let me know.
+> > 
+> > 
+> > Best regards,
+> > Hans
+> 
 
-   470	
-   471	static int mana_gd_register_irq(struct gdma_queue *queue,
-   472					const struct gdma_queue_spec *spec)
-   473	{
-   474		struct gdma_dev *gd = queue->gdma_dev;
-   475		struct gdma_irq_context *gic;
-   476		struct gdma_context *gc;
-   477		unsigned int msi_index;
-   478		struct list_head *pos;
-   479		unsigned long flags, flag_irq;
-   480		struct device *dev;
-   481		int err = 0, count;
-   482	
-   483		gc = gd->gdma_context;
-   484		dev = gc->dev;
-   485		msi_index = spec->eq.msix_index;
-   486	
-   487		if (msi_index >= gc->num_msix_usable) {
-   488			err = -ENOSPC;
-   489			dev_err(dev, "Register IRQ err:%d, msi:%u nMSI:%u",
-   490				err, msi_index, gc->num_msix_usable);
-   491	
-   492			return err;
-   493		}
-   494	
-   495		queue->eq.msix_index = msi_index;
-   496	
-   497		/* get the msi_index value from the list*/
-   498		count = 0;
-   499		spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
- > 500		list_for_each(pos, &gc->irq_contexts) {
-   501			if (count == msi_index) {
-   502				gic = list_entry(pos, struct gdma_irq_context, gic_list);
-   503				break;
-   504			}
-   505	
-   506			count++;
-   507		}
-   508		spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-   509	
-   510		if (!gic)
-   511			return -1;
-   512	
-   513		spin_lock_irqsave(&gic->lock, flags);
-   514		list_add_rcu(&queue->entry, &gic->eq_list);
-   515		spin_unlock_irqrestore(&gic->lock, flags);
-   516	
-   517		return 0;
-   518	}
-   519	
+Sorry, but I stopped doing any testing of the aardvark driver with the
+mainline kernel after PCI maintainers stopped taking fixes for the
+driver and stopped responding.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I'm not going to debug same issues again, which I have analyzed,
+prepared fixes, sent patches and see no progress there.
+
+Seems that there is a status quo, and I'm not going to change it.
 
