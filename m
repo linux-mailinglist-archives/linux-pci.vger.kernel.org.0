@@ -1,160 +1,164 @@
-Return-Path: <linux-pci+bounces-27374-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27375-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B07BBAAE2B4
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 16:25:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B96AAAE323
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 16:37:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C82C898773C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 14:18:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 939D63B6E90
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 14:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF0A288C31;
-	Wed,  7 May 2025 14:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 282A11FF601;
+	Wed,  7 May 2025 14:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RW72+a1q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcHGpg30"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D011928A1DC
-	for <linux-pci@vger.kernel.org>; Wed,  7 May 2025 14:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8164114A639
+	for <linux-pci@vger.kernel.org>; Wed,  7 May 2025 14:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627122; cv=none; b=gL3Ml/YiGKvBlB/Kcx1e+ao6RobxgRYJvWKQYqXxb7wcrkMX1qr0oHhkeh04odhaZWnCH28tTbN/JmYfD0thsVt3+0l6rxK4f6kLq62BhuKp/Zxe3oZcpAJsx4O9tEAlBGz/xsuf0nzf5dbZDIlaWUYT9ytPsh39KHctGZGETgM=
+	t=1746628285; cv=none; b=HZAu6SABkReb4VgCXioH2eLLsjPut2ug++vZfCdoUQNl3YoDZ5TkNotiiCcJPtax1OiV0AgD3nhThATxOmWFjQE+Qo6GYTJzxjUwz4oda4DJJh90YWip0Ad81U3+7oy2xYsyoev8h4DJvuxsb4l1X6YekklSsLCRKD7bdavPAsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627122; c=relaxed/simple;
-	bh=WyCz/ArAVmQO+g1cZbQC9HYihMwNLT5tXWBdJxpyI3o=;
-	h=From:Date:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vGMcdiY3syRMJzIpEOsvZy/OfVj/yOvQfu0ivE99SwwRBwSQ8XRmSJA+Slnb2zFvSzhkZRd9ja7a214RL1jleFyCfk2jTcMUg/julp66ctjQT5P2m3QCJln03NReUlEE6Wa0a9LMBxacBJYSZD1vunKkqxlr0d7tEb7sULDjW6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RW72+a1q; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so1755937a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 07 May 2025 07:11:58 -0700 (PDT)
+	s=arc-20240116; t=1746628285; c=relaxed/simple;
+	bh=lj634mF8KDjE41oIDTZif1dAkUdEXDLEEq0GQoBOb3U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=uLDJ465D4hRlPXr+Jmv7by4xG6HPQmEnPxsLc8QLae4lq8xV2RJfmj11Kr2jy9fmx6UTarJHeLMqSULg/rsrCUGDUvG8oqAUJC0OK4BS1R6EWASxKkn9UL1RyYBS6te6rNhPPHmLxH+4JbUpStfj6TmYWP0j0NrbU5VVd6D8uEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcHGpg30; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6064d4c14ebso1681345eaf.2
+        for <linux-pci@vger.kernel.org>; Wed, 07 May 2025 07:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746627117; x=1747231917; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xp53MoIMHo7AsEpO8Qe4lYIdt8fxx6H0xofmt5rFOgc=;
-        b=RW72+a1qzFrEk8+0g5TjeMhM3Seef2Ya9K9OUP1ZZ0+9GQUAM6+XEp3Lry/LNcW1la
-         tL2hdZ5FcbCJlJ6OIdHxsXbVs3RcJI5IKfLczh+qAEOfivvlCl5iFIAJTU0t6vxp8Oz6
-         /ywZV3oxlC/LPAQP3cSkJkdrEy/qIeW/ESNhnfNnxv71sHdR3cNZ5cIFwLZ9bXuBMGLZ
-         5LwjGDLUIbwQSrnfprunfLqdRiDCWUil/m74yw+WGTHD0GUa4Ht0qIsPB/NUL9BFMIH+
-         cFIW/+KXbYJoK4LU98SrKGAsJsuMI70r3ps2K7y4LHIwyqTXX0OWEQiB1v6WRgEHo6c1
-         mdbQ==
+        d=gmail.com; s=20230601; t=1746628281; x=1747233081; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lj634mF8KDjE41oIDTZif1dAkUdEXDLEEq0GQoBOb3U=;
+        b=JcHGpg30DUTpJ+OLGa3XcaLxsiMV282nndq+eVDucC9P5CND49qZXgBNq6hlabICtS
+         6212rYATCy4M0/JGG8l08Tsdxwc4vXRUvRqB7hEpwdmEXiiKaSLf72jYBXCsC6Y6XlFV
+         H8s5bAwM3OfH50Tyq9XM6Pj1oiuxta/9KUQx0urhEXLqZAEOLiR3NEgP84flClK9oOzU
+         VgBhVXI6tHlwRyrKpRE1icRzbTMiYPBXuQ8TvNcPJKwnY/dNSvyFsrbnYwBW6T478d1H
+         lAY/lSXLVGnrrhEEGWoCd1nVpcaOf4yoJceDs4qbOXhoyNMj8RGYsFbX2oWhSmEwZLTb
+         ir4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746627117; x=1747231917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xp53MoIMHo7AsEpO8Qe4lYIdt8fxx6H0xofmt5rFOgc=;
-        b=BCuKkIe7SnrP79oKX0eZc+K/tngr+sZPagfgsy42OEdZ2bIk+z4dP3WpX3kAVAG45p
-         8rQDhmU6OO2YuhdWbQEYQWvF0ZJw5L8kXg3dY+vPDvxHQLOR7alf5Kgyun3HO09VQzAs
-         7FiyEBNib6OqmGhd9UNU9u/IqeAgPvpYuDoSUtxMzwokmyeqAODoq3fS+JsCb3D4ALxX
-         QHWj4U8iAhLJfrOAue8elnOFxFkE67bQbzJLfsWuFJ7kxTGjAwaCvqCikEuPfRin3YlZ
-         uatzmXT9XEyS9Cnv+XzxqRkhvok2KNIOuzVRbMhQJEJe6HK5n1Or0zviL/BDYw40jBNQ
-         HvnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpjX3NbFjiGrLhsQdDwCWv4H4RALVY7AwISe8QC1qFO8MQ8Fxqb6pcSWyQmbK6nq90wk6mMoXjBj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxALxYAsmF3DZA6cDivgrXJW4+XKLGwcm6tWkYEIAPqy/2WyJkU
-	Aa5nLXiY2VUEsljuGvHEoBiNYnC11y1V+AkimhGEJubcyDNBvUJo/h4mCaMVF18=
-X-Gm-Gg: ASbGncu0HC+YaDJfE8zKgRJuBeYgpJn3s7TDBWE0UJeVuDUbPXnwJ1tLoskOOrOzpSy
-	2Sx6IyAWj5bYvhZFuqJ/Ig2hsVTLFY6sbkvUk7TyUZe6vaVf+3oTRbt4byntxomlbicqxZAJF3e
-	YDp55GWPgbfilZbn1cHgLGL0/huTkyAJayHydRionjARdFaD1nrzxF845SuLkrMaRuxSwIX907/
-	B2bmIkwWb9M8ogA1ajPHm4zxsEJyVGpIJa/q5gM+f7D2F9FYcwFxnc9QvZgGPegjejoq9lQyNHn
-	6ZoSR8jCwlzXqWc7D8OziiZXquEzmsMw1zAB6RSd8XpduLWHSgewng6g7UTFwFAid7iKjA08tLg
-	mlBgqGA==
-X-Google-Smtp-Source: AGHT+IEAIOFFJLOZCm96czkAy45BL7wcAh0Bc4vKalFIoRDdZw1taF3C6vTBolVNjObPDoUwRAM9aw==
-X-Received: by 2002:a05:6402:5c9:b0:5e7:8501:8c86 with SMTP id 4fb4d7f45d1cf-5fbe9f46ef0mr2916040a12.22.1746627117121;
-        Wed, 07 May 2025 07:11:57 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fbf761f95esm806596a12.63.2025.05.07.07.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 07:11:56 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 7 May 2025 16:13:24 +0200
-To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
- for RP1 chipset on Rpi5
-Message-ID: <aBtqhCc-huQ8GzyK@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
- <aBp1wye0L7swfe1H@apocalypse>
- <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+        d=1e100.net; s=20230601; t=1746628281; x=1747233081;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lj634mF8KDjE41oIDTZif1dAkUdEXDLEEq0GQoBOb3U=;
+        b=Tq3Z2LrxN/y26Iyb6ZYMoPcEiIuXmM2UBZA58viIspeVwY/zK7pxbvdgCIP7HmPX2V
+         zwcVlPDHj1SA4C/tEFle1gvaf5bukWADgw4juekjXUhlNw0dcmxmjAUapLZmPSHm1Eho
+         DeNzh0jViOZKUPAMivis9Vv+i442HFl2FT9icYw1fzL5PL40qECzxnYF2gvcQynYaz68
+         eblL03dAFAPrarVEHrejKvCpr+Z+YKn6Hg3pnmgBMOqLX+M8pc1440ozfWziGGkZ86wu
+         LZVwgeDD8AyWhqf0dt4gBVZIUHg/hBXIIxwgm4hZPzM2e8WO4qBy6HcQYTUdLMD/Hxmx
+         6iPg==
+X-Gm-Message-State: AOJu0YzlY8LvJ+seXXOpbW03ddULSNe+oPmpy9f0algXKNvdV1ywV+hD
+	lMdJlokF9KCS1lj412G4Q1gt7VHePrZnpYPPm+Cw+0jfbOeUTpQC0ce8gCKK1GtWbi5FY1qlcVz
+	xQz98WolqOBPVMlYGIb6GqlKpOcL8gT/Q
+X-Gm-Gg: ASbGncsPIz8NTqHVhbszq5OwzO8qP23Mxw2AMBWwbADjGVsgFvqwv+lb0Bsa8zS00XL
+	2NeDke6/Y0C3DYXP2D3rCSr9ucO7DCgaUBQyub8E3XNscc2KEghIEi+n42YJihiW8TwjApTO1Hc
+	Ze7hJRCidq11a+nwRk5+S7cfcI
+X-Google-Smtp-Source: AGHT+IFxkf5JVY533ilFezKjr/N0JZsHPwDFoKg8nlyDY2wgx/snBsk8zMi6HRBCyvFz7cMo/kMLx0Fo4+Uo94yX8gY=
+X-Received: by 2002:a05:6820:1a05:b0:606:8671:1b28 with SMTP id
+ 006d021491bc7-60828d190bbmr2257727eaf.4.1746628281004; Wed, 07 May 2025
+ 07:31:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+From: Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
+Date: Wed, 7 May 2025 20:01:09 +0530
+X-Gm-Features: ATxdqUHVs-ixMiZ8mlgry0llvkM1Oq3SKCg1I92tQTtpZf9bgIkcnIhqMM_eS-Q
+Message-ID: <CAPY=qRSvmP=rRki+Q+AV3O3sSNO6-ezCeGr-HBjHhFSS-JYc7A@mail.gmail.com>
+Subject: PCIe: Unexpected .remove() and .probe() Callback Invocation Without
+ Device Removal
+To: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Florian
+Hi All,
 
-On 09:32 Wed 07 May     , Florian Fainelli wrote:
-> 
-> 
-> On 5/6/2025 10:49 PM, Andrea della Porta wrote:
-> > Hi Florian,
-> > 
-> > On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
-> > > The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-> > > Add clk_rp1_xosc node to provide that.
-> > > 
-> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> > 
-> > A gentle reminder for patches 8 through 12 of this series, which I guess
-> > would ideally be taken by you. Since the merge window is approaching, do
-> > you think it's feasible to iterate a second pull request to Arnd with my
-> > patches too?
-> > 
-> > With respect to your devicetree/next branch, my patches have the following
-> > conflicts:
-> > 
-> > PATCH 9:
-> > - arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts: &pcie1 and &pcie2
-> >    reference at the end, my patch was rebased on linux-next which has them
-> >    while your devicetree branch has not. This is trivial to fix too.
-> > 
-> > PATCH 9 and 10:
-> > - arch/arm64/boot/dts/broadcom/Makefile on your branch has a line recently
-> >    added by Stefan's latest patch for RPi2. The fix is trivial.
-> > 
-> > PATCH 11 and 12:
-> > - arch/arm64/configs/defconfig: just a couple of fuzz lines.
-> > 
-> > Please let me know if I should resend those patches adjusted for your tree.
-> 
-> Yes please resend them today or tomorrow so I can send them the following
-> day. Thanks
+I=E2=80=99m reaching out for some guidance on a behavior we're observing wi=
+th
+a Xilinx FPGA based PCIe device on our test systems. This device uses
+an out-of-tree driver.
 
-Sorry, what's the best wasy to provide the updated patch 8 to 12 to you? 
+We are seeing that, without any actual physical or hotplug
+removal/reinsertion of the PCIe device, the kernel invokes the
+pci_driver's .remove() callback followed shortly by the .probe()
+callback. This appears to be an unexpected re-enumeration or reset of
+the PCIe device.
 
-1) Resend the entire patchset (V10) with relevant patches updated
-2) Send only updated patches 8 through 12 (maybe as an entirely new patchset with
-   only those specific patches)
-3) Asking you to pull teh relevant commit from my own git repo
+Below is a snippet of the relevant kernel log captured during one such even=
+t.
 
-Many thanks,
-Andrea
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.847385] XILINX_FPGA PCI
+0000:01:00.0: PME# disabled
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.847410] XILINX_FPGA PCI:
+XILINX_FPGA_pci_remove
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.848110] pci 0000:01:00.0:
+EDR: Notify handler removed
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.848240] pci 0000:01:00.0:
+device released
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.876157] pci_bus 0000:00:
+scanning bus
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.876419] pcieport
+0000:00:1c.0: scanning [bus 01-01] behind bridge, pass 0
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.876445] pci_bus 0000:01:
+scanning bus
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.876594] pci 0000:01:00.0:
+[1556:5555] type 00 class 0x050000
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.876678] pci 0000:01:00.0:
+reg 0x10: [mem 0xd0400000-0xd07fffff]
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877426] pci 0000:01:00.0:
+EDR: Notify handler installed
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877850] pci_bus 0000:01:
+bus scan returning with max=3D01
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877872] pcieport
+0000:00:1c.2: scanning [bus 02-02] behind bridge, pass 0
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877898] pci_bus 0000:02:
+scanning bus
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877915] pci_bus 0000:02:
+bus scan returning with max=3D02
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877932] pcieport
+0000:00:1c.3: scanning [bus 03-03] behind bridge, pass 0
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877956] pci_bus 0000:03:
+scanning bus
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877965] pci_bus 0000:03:
+bus scan returning with max=3D03
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.877982] pcieport
+0000:00:1c.0: scanning [bus 01-01] behind bridge, pass 1
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.878013] pcieport
+0000:00:1c.2: scanning [bus 02-02] behind bridge, pass 1
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.878043] pcieport
+0000:00:1c.3: scanning [bus 03-03] behind bridge, pass 1
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.878066] pci_bus 0000:00:
+bus scan returning with max=3D03
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.878094] pci 0000:01:00.0:
+BAR 0: assigned [mem 0xd0400000-0xd07fffff]
+Apr 30 20:01:05 xilinxtest1 kernel: [6612195.878204] XILINX_FPGA PCI
+0000:01:00.0: runtime IRQ mapping not provided by arch
 
 
-> -- 
-> Florian
-> 
+Our Questions:
+
+What could trigger such a PCIe device re-enumeration without a physical eve=
+nt?
+
+Are there any known kernel or platform-level triggers that might cause this=
+?
+
+Any debug hooks or sysfs entries we should monitor or enable to catch
+the root cause?
+
+Any guidance, insights, or debugging suggestions would be greatly appreciat=
+ed.
+
+
+Thanks,
 
