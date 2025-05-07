@@ -1,97 +1,166 @@
-Return-Path: <linux-pci+bounces-27387-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27388-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E06E5AAE52C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 17:44:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52CB5AAE6A2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 18:28:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C554C1C43156
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 15:44:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC0E7172C10
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 16:28:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C3C28B3FB;
-	Wed,  7 May 2025 15:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmlLLJwN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D719A28B7CC;
+	Wed,  7 May 2025 16:28:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87FF19CD07;
-	Wed,  7 May 2025 15:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5998E4B1E4B;
+	Wed,  7 May 2025 16:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632594; cv=none; b=tRK5IrZVFQ7YyKPEo1r5jjgjQ0XPfT2G+WimPIAcQxi6dhWj3Pm9cSAaR5Pfm7g//r0K7EVgpg1fwK4DViXtO69ije4FnbL02FfToYnUiLdFb9+WvorKALa6Ac7muG/ils19YKdmWo9hB9N3AP5idfzuZYRnZwYDnYPS0wAiAoI=
+	t=1746635303; cv=none; b=a7sR0MsWgow1thG8+Ta5YvkilTb/5H0GueIwjm+AEV2pagruX1nOcIszqDOSLDWMeEbBBdIqU5mwhv3dDsIdPVb11UVjCdIt7ZGo8VmgXt+H3IFdJbcLNbOmgsIufGZE/3GvM9PqnP211Qa1PDzTN6ApNw708yE0+3onttQn4ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632594; c=relaxed/simple;
-	bh=rR8OrlMotJbouypp9SJ0FCBRopfgKKhZwEBcrprcrEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T8DO1Mk+KUIrcDYD97gLAzEDpiIJvVAIpXehudiRIEdrmTDUNBCr456289dDqvQVdN6c1OM5xB7z3Sai8F5JfUAtRbAnct1q+n6QQPH+fP29vy+vEzpARn4nUEboD39N/bGbp82hRKM+Fw0DQWXoeh8ywdu7GMB+DPUX1NuSCtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmlLLJwN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B21C4CEE9;
-	Wed,  7 May 2025 15:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746632594;
-	bh=rR8OrlMotJbouypp9SJ0FCBRopfgKKhZwEBcrprcrEY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bmlLLJwNr9g5MlYlkFqvj8tih9yIRfiOgZJl+1zp2G1/ZlaA5+X7IEG+J+20mK5j0
-	 vl6J8dMwVuuEb+9Ahe3OYYpNeE2HV7l02d6bx2Y+l1Q3oE1VFK3EBKGG16vjkPdReu
-	 e2cfae2uDEKXv1E1rJLy/DSiQ+cINJA5f2MOGIZmyF2R9UqaXzQnt5t/TItd4lGmfN
-	 8RHtUayJmuL00E7ZY6d4oJYiqyUghD7CPxXN8LleJpp4BDlJRofRtoCYHy8oF9XEnM
-	 VPCZFMQ5nqGe4L1EvoXqWLdHfel27GYr7v6k8r5KZymcBiF+k3vDWzJc0Bha1Xpn6W
-	 171p8kBGSVIWg==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joyce Ooi <joyce.ooi@intel.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] dt-bindings: Move altr,msi-controller to interrupt-controller directory
-Date: Wed,  7 May 2025 10:42:53 -0500
-Message-ID: <20250507154253.1593870-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1746635303; c=relaxed/simple;
+	bh=BpD9FuhmPW6xsUA5blbXqYxPubWoNLv1alehOh2bprU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AaP6KTf8xrxJGU5twrWCfmyaoq5roDi7yjrM9HkA5zZIXlylFvLUhBW1ORiE4Wp/qJkX++8lk8hghZNlL/gRqRKkQEhuTh1/iY061DEou9iy4wh7AMY6eDNZp5NRVoH1LyDMxawVsnJG+nqBOyBY2AJsK5Xpbvim82ptJTsLhqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zt0v80KM6z6M4f1;
+	Thu,  8 May 2025 00:23:48 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4E1971402A5;
+	Thu,  8 May 2025 00:28:19 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 7 May 2025 18:28:19 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 7 May 2025 18:28:19 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, Terry Bowman
+	<terry.bowman@amd.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, "oohall@gmail.com"
+	<oohall@gmail.com>, "Benjamin.Cheatham@amd.com" <Benjamin.Cheatham@amd.com>,
+	"rrichter@amd.com" <rrichter@amd.com>, "nathan.fontenot@amd.com"
+	<nathan.fontenot@amd.com>, "Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "lukas@wunner.de"
+	<lukas@wunner.de>, "ming.li@zohomail.com" <ming.li@zohomail.com>,
+	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>
+Subject: RE: [PATCH v8 11/16] cxl/pci: Unifi CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Topic: [PATCH v8 11/16] cxl/pci: Unifi CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Index: AQHbnruCvt+7t4Pcrkejo0BVy/biabOxfwcAgBYbz1A=
+Date: Wed, 7 May 2025 16:28:19 +0000
+Message-ID: <c21ab32695484da996df84988dddbd0d@huawei.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-12-terry.bowman@amd.com>
+ <20250423174442.000039b0@huawei.com>
+In-Reply-To: <20250423174442.000039b0@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-While altr,msi-controller is used with PCI, it is not a PCI host bridge
-and is just an MSI provider. Move it with other MSI providers in the
-'interrupt-controller' directory.
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 23 April 2025 17:45
+>To: Terry Bowman <terry.bowman@amd.com>
+>Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>pci@vger.kernel.org; nifan.cxl@gmail.com; dave@stgolabs.net;
+>dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
+;
+>dan.j.williams@intel.com; bhelgaas@google.com; mahesh@linux.ibm.com;
+>ira.weiny@intel.com; oohall@gmail.com; Benjamin.Cheatham@amd.com;
+>rrichter@amd.com; nathan.fontenot@amd.com;
+>Smita.KoralahalliChannabasappa@amd.com; lukas@wunner.de;
+>ming.li@zohomail.com; PradeepVineshReddy.Kodamati@amd.com; Shiju Jose
+><shiju.jose@huawei.com>
+>Subject: Re: [PATCH v8 11/16] cxl/pci: Unifi CXL trace logging for CXL End=
+points
+>and CXL Ports
+>
+>On Wed, 26 Mar 2025 20:47:12 -0500
+>Terry Bowman <terry.bowman@amd.com> wrote:
+>
+>Unify.
+>
+>
+>> CXL currently has separate trace routines for CXL Port errors and CXL
+>> Endpoint errors. This is inconvnenient for the user because they must
+>> enable 2 sets of trace routines. Make updates to the trace logging
+>> such that a single trace routine logs both CXL Endpoint and CXL Port
+>> protocol errors.
+>>
+>> Also, CXL RAS errors are currently logged using the associated CXL
+>> port's name returned from devname(). They are typically named with
+>> 'port1', 'port2', etc. to indicate the hierarchial location in the CXL t=
+opology.
+>> But, this doesn't clearly indicate the CXL card or slot reporting the
+>> error.
+>>
+>> Update the logging to also log the corresponding PCIe devname. This
+>> will give a PCIe SBDF or ACPI object name (in case of CXL HB). This
+>> will provide details helping users understand which physical slot and
+>> card has the error.
+>>
+>> Below is example output after making these changes.
+>>
+>> Correctable error example output:
+>> cxl_port_aer_correctable_error: device=3Dport1 (0000:0c:00.0) parent=3Dr=
+oot0
+>(pci0000:0c) status=3D'Received Error From Physical Layer'
+>>
+>> Uncorrectable error example output:
+>> cxl_port_aer_uncorrectable_error: device=3Dport1 (0000:0c:00.0) parent=
+=3Droot0
+>(pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memor=
+y
+>Byte Enable Parity Error'
+>
+>I'm not sure the pcie parent is adding much... Why bother with that?
+>
+>Shiju, is this going to affect rasdaemon handling?
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../{pci => interrupt-controller}/altr,msi-controller.yaml      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/{pci => interrupt-controller}/altr,msi-controller.yaml (94%)
+Hi Jonathan,
 
-diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-similarity index 94%
-rename from Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-rename to Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-index 98814862d006..d046954b8a27 100644
---- a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-@@ -2,7 +2,7 @@
- # Copyright (C) 2015, 2024, Intel Corporation
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
-+$id: http://devicetree.org/schemas/interrupt-controller/altr,msi-controller.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Altera PCIe MSI controller
--- 
-2.47.2
+Yes. Renaming the existing fields in the trace events will result failure
+while parsing the fields in the rasdaemon.
+
+>
+>I'd assume we can't just rename fields in the tracepoints and combining th=
+em
+>will also presumably make a mess?
+>
+>Jonathan
+>
+[...]
+>>
+
+Thanks,
+Shiju
 
 
