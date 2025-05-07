@@ -1,141 +1,156 @@
-Return-Path: <linux-pci+bounces-27380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E70C2AAE3D8
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 17:06:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CD6EAAE3E8
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 17:08:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A93E9985392
-	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 15:06:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63BA41C037BA
+	for <lists+linux-pci@lfdr.de>; Wed,  7 May 2025 15:08:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5BF428A1C9;
-	Wed,  7 May 2025 15:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A555D14A639;
+	Wed,  7 May 2025 15:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hi5qpeWu"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iZbyWhy0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0785280325;
-	Wed,  7 May 2025 15:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E45145B16;
+	Wed,  7 May 2025 15:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630379; cv=none; b=WxevQmuip5KvWgF2QkHpzsyWhLpt+6CTSPPxhY2XcaftVhv/1Zums915Mn120x1Y25cN9ZIpLk9IH2lyYmwX+lFSacY7wma0pCApiSc2uNrqRHiy9KG5kXE7c1Lim2zdahSbVr9cVIo31vDgqA8SUHUwlgEo88h9iPu8Msb4BIU=
+	t=1746630503; cv=none; b=AGhz6JL5R97uiJFPukLS2407T/zcMMWwVwsY2ENXdcJfwvZnMQGF+0XDMLDJ4FTXelysMu0puqMh9Ue9dM7SqQLmq/Jc96S42hUlG1VgOlFIbO6FuIWZ+LqI0vsrGjl+cVAQLjHY5Ly8AcjJ02ehvmZoHOrpEAr5Y13P+SNKvwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630379; c=relaxed/simple;
-	bh=Y/WUVh0ev6M+r+m9bgj7h8JDEj1XP6+S3ee84YZotzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TzXdLFlZRumFwsb676Dql+0qKlrVFkSwQRcPn20p9056rFCCKdnBil1DEBVzz5Qt7H16aXoWJhUaVe9PBn65wJMn+1CNZe+LcOs9dX7y6WCDYgiAiHqY+TL7RhJOSzFC7xTsbElTxSKAKfMRyzsoQEVyMa8WSB9QiYy1fmqT9xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hi5qpeWu; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746630378; x=1778166378;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y/WUVh0ev6M+r+m9bgj7h8JDEj1XP6+S3ee84YZotzA=;
-  b=Hi5qpeWuqGVwCfebbZfd+jIULw1Al/Q0injcLNVQrC5XJb4dSjwyee04
-   MIyAqnBYeOIDNUFqYpAcrUAL27Ti1AtBfEd1Waj5qwCBE7iZ6fDaEjh4S
-   IvRNCM6Ezf//zmV5ujy2ncClCNt6/ZngFcY0M/EBDYnFKdqaH2u+hCQPv
-   1BYC02Gy6iEXEkBxFkBjw6xCftTHo8yFFHs56YSecOlkRCPbK5rlZTr+S
-   m4vDjDp4ZmAP2aXL0gvdm1fm3evZC8k4vIM3XgJ7/TEScuyJb79TLoc+n
-   WIvaFDmVni6qvKn+PLxv3gyEGzQgN9uludtATJ1Anpeac2fQDeBl+NgFQ
-   g==;
-X-CSE-ConnectionGUID: BoVPYeN9QryGnx/F72B3MQ==
-X-CSE-MsgGUID: YTKdKMdhR96JO91JgiPoRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52183812"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="52183812"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:06:16 -0700
-X-CSE-ConnectionGUID: Z/H6YXNKTMeyF9mW6VqssQ==
-X-CSE-MsgGUID: d/50a7xkRzuk5pzTD8W5Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="136502215"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:06:08 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uCgLS-00000003lQ1-4BdZ;
-	Wed, 07 May 2025 18:06:03 +0300
-Date: Wed, 7 May 2025 18:06:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 08/26] pinctrl: cs42l43: Use fw_devlink_set_device()
-Message-ID: <aBt22olAebSy8Xx3@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-9-herve.codina@bootlin.com>
+	s=arc-20240116; t=1746630503; c=relaxed/simple;
+	bh=/NP8NIpxXJrdui+MUQVIE2toGmOABlmT8JV0+yPW2TU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IgcgpGIaubqJyAgRKR5qgOvFgrIISowq/ep3GCgMFEH8tD0Rdz2PZpmCTuSr949+/L0CNQLxYDR0D3FSb5VJj18AqMiqfeCd6A8Ohe9a0ePQnTM2h0dhlJGM3VNXg4aOdKArogaiTGMT+1lZzB33sQ9bCcniV0Y/zZ1KiOGIw5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iZbyWhy0; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=Aak4bhl7i7wNtq2KK490ptM/CCcwRR/GDiQ+3JaJM8M=;
+	b=iZbyWhy0qCtoFQqwnzANJzhS41G7lBZ5OIu7giRsfv1/lfwgSi+kogsMPKGqIb
+	zwUNGs4RUA+qijCGO+txyFwzDZ2kF+N2oP51+PWl7EwSVAyUYQZAtgO+546rhhnP
+	sp0M+yLFIqxzMr7/JAu+5zujfjYUUBX0qS4X/41Mjs9L4=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCXGekLdxto_mATFA--.15890S2;
+	Wed, 07 May 2025 23:06:52 +0800 (CST)
+Message-ID: <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+Date: Wed, 7 May 2025 23:06:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-9-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+From: Hans Zhang <18255117159@163.com>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, yue.wang@Amlogic.com,
+ neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+Content-Language: en-US
+In-Reply-To: <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCXGekLdxto_mATFA--.15890S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJw1DZw1xCw45tw43Cw43Awb_yoW5Ary8pF
+	W3XF4rAFWaqr15C3W7Xa1vgryYgasFkFy5W398G343AF9Igw1UGFy2kF4rua47Jr4IkF4j
+	vry3t3ySv3WYyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBSoXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx9Go2gbdD5DvQABsz
 
-On Wed, May 07, 2025 at 09:12:50AM +0200, Herve Codina wrote:
-> The code set directly fwnode->dev field.
+
+
+On 2025/5/7 23:03, Hans Zhang wrote:
 > 
-> Use the dedicated fw_devlink_set_device() helper to perform this
-> operation.
+> 
+> On 2025/5/7 01:41, Pali Rohár wrote:
+>> On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+>>> The Aardvark PCIe controller enforces a fixed 512B payload size via
+>>> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+>>> core negotiations.
+>>>
+>>> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+>>> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+>>> during device initialization, leveraging root port configurations and
+>>> device-specific capabilities.
+>>>
+>>> Aligning Aardvark with the unified MPS framework ensures consistency,
+>>> avoids artificial constraints, and allows the hardware to operate at
+>>> its maximum supported payload size while adhering to PCIe 
+>>> specifications.
+>>>
+>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>> ---
+>>>   drivers/pci/controller/pci-aardvark.c | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/pci-aardvark.c 
+>>> b/drivers/pci/controller/pci-aardvark.c
+>>> index a29796cce420..d8852892994a 100644
+>>> --- a/drivers/pci/controller/pci-aardvark.c
+>>> +++ b/drivers/pci/controller/pci-aardvark.c
+>>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct advk_pcie 
+>>> *pcie)
+>>>       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>>       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+>>>       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+>>> -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>>>       reg &= ~PCI_EXP_DEVCTL_READRQ;
+>>> -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+>>>       reg |= PCI_EXP_DEVCTL_READRQ_512B;
+>>>       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>> -- 
+>>> 2.25.1
+>>>
+>>
+>> Please do not remove this code. It is required part of the
+>> initialization of the aardvark PCI controller at the specific phase,
+>> as defined in the Armada 3700 Functional Specification.
+>>
+>> There were reported more issues with those Armada PCIe controllers for
+>> which were already sent patches to mailing list in last 5 years. But
+>> unfortunately not all fixes were taken / applied yet.
+> 
+> Hi Pali,
+> 
+> I replied to you in version v2.
+> 
+> Is the maximum MPS supported by Armada 3700 512 bytes? What are the 
+> default values of DevCap.MPS and DevCtl.MPS?
+> 
+> Because the default value of DevCtl.MPS is not 512 bytes, it needs to be 
+> configured here, right?
+> 
+> If it's my guess, RK3588 also has the same requirements as you, just 
+> like the first patch I submitted.
+> 
+> Please take a look at the communication history:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+And this:
+https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-2-18255117159@163.com/
 
-...
-
->  		fwnode = fwnode_get_named_child_node(fwnode, "pinctrl");
->  
-
->  		if (fwnode && !fwnode->dev)
-
-Why do we bother checking the fwnode->dev here?
-Just wondering... Hopefully the original author of the code can explain what is
-going on here.
-
-> -			fwnode->dev = priv->dev;
-> +			fw_devlink_set_device(fwnode, priv->dev);
->  	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> Please test it using patch 1/3 of this series. If there are any 
+> problems, please let me know.
+> 
+> 
+> Best regards,
+> Hans
 
 
