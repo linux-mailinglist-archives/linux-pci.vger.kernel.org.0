@@ -1,99 +1,97 @@
-Return-Path: <linux-pci+bounces-27441-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27442-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8891AAFB29
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 15:21:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43A70AAFB35
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 15:22:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C0FE1BC6E24
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:21:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 255CA7A2BC2
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400D27F477;
-	Thu,  8 May 2025 13:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A7D19D087;
+	Thu,  8 May 2025 13:22:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744EE450FE;
-	Thu,  8 May 2025 13:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F033317BA5;
+	Thu,  8 May 2025 13:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710463; cv=none; b=IaSSZdJRF0USCksErNd8ibJhAeDUtUu8Sv+KDpuRZPIXY069Ze+28iTADgvr1vs5rer9JH6eEiKacrgcd1OqR4so8c7k/XbDqHS19NacTYKQ86vYjjyxvgDT65Z0cItNHoKrjV/v7pffeHOyanJxVDqSVqIfpynvCLH+qzXAJzs=
+	t=1746710560; cv=none; b=GJxJhUWHJAc97EDi/8WX087bZJ9WWLMdO1w8brkwcyD3iX2yBFUx+Lkxyvkw/bAXyK/8fkRGPBUpVT137C9jXlHVRX3B7YQ505JD7B7JWANXrzAOVYX6EXJS4jLXTXePS7ElJw3Eya7clHcAFF7CIWDEmR2EOdyPUoyBIqQ2X6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710463; c=relaxed/simple;
-	bh=b5U0jdehZzjyw4oH4Xog0i0xxIDE6KzH2wpCe0BbjOA=;
+	s=arc-20240116; t=1746710560; c=relaxed/simple;
+	bh=q6v3wv2CDrIH1LrNbNW1bP/KarqhU7EJLpdk97Qi7wE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jS5/KYcWlrzTtJT11fliMKWTDAu9OqNOvVu1rH3riC5516xfdn4VZDm2AhFy1RlcxIAMhRRGxYLG8AZbA8/lWBiuXWS/fGDch89kxWSohkjPmYJdHRjVZq4fMJ5OW1g01CRegrrM9M3oAkQs5dEBRDF/KoIpNpLUrZwBm1bOuug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=poSfxRN4u/uy8sqBAvweZXWFLba3u7x8LiPHS8OtCA7uIqHYb3qrW0Mq9dm225plShL0cQ28XMGLhIs7crn4wk+uq2vZYcJTBlTY4mff75+MfW7VXg2qPOqXFTRfFPGdoOBRFOHCZhwFXW+hmU8OrquAU6Wj4QGq75mjIO7pTtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c3e7b390so922277b3a.2;
-        Thu, 08 May 2025 06:21:01 -0700 (PDT)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so605205a12.3;
+        Thu, 08 May 2025 06:22:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710460; x=1747315260;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AHunf5/QTJWew5e3tkDgi4bNl0uijCDmlABB1Q9DUy0=;
-        b=JPGGLua567RA0T4clJ4ZT6KtMaKTwyxv3uHa76xf4dHlY5OGNvVDTjgCpa54AsYnYT
-         R0WtHe84/Fm3mLfS/MUJYw39Rh4o4AbTnYW64U1Ds4GkOt4Xr7bBO1Jk4I7pezeGOQy8
-         KP7WcsJ5QS5go/G/5r5hGFqEk+pbnUMf0Nee6KztzZzIRaLddVbY4DuAv4+T/GnYY2Mo
-         430HFWCcmLsjh62trV4sALNLV3g/nn1p0dYPAfXZiO08dqLVM5BfoSAbV0s4jynLe5O5
-         yaoTmtA/Fw7QL4QxqcOLT1Kzkd0yRwlHuQFk+Q2FF6g4s2a0yhCbQm+x/fB905D36iIy
-         s7Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCW+388DMYyfrKZmj1nC3mTPoPOd9fH6ib4qKjdKGOvVcWRTtoacpenagYOz2v/PD2ycWWWjwKxDOTGM@vger.kernel.org, AJvYcCWNkiWwqmjvUnHROF7quGjEQXnat8MLZRO8d4u78TCVQrBxM5lfZCqOxhytQx37+h3IGCxZuFUeg82KJE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeV/FmNbaxy2XyMaMjRcoiBzVbmn+E7/01a6wqmNx8GuIvAlfr
-	l79NvicM2J4YEom5IX2J9SkOyHmXup19SgRucbQs0wKk+HCHyKSZ
-X-Gm-Gg: ASbGncvueVns4jUdMl8Ak9y5HSna4mgK46gBRskTLV3SwN4o960t+9jUJB+yYAmChfU
-	FMAPSBdAuEA/UTjmesDPh+DrcV7hbjaQz5VjT6skzfRmVUhuIeGfz4ZlvL2tuOPu/h47lUtn0NB
-	Rji1RG4IBJcK/1m34xFGvixlhj+Bzo80ZuSo7f3Ch+2eH0/sHQ49H5rPmC3TvddorJ3lPe5xk8Q
-	f2SQR4ZTD+RNvUDLXVEAvi1xEb48+4ezEBgv1tMQfRfIxIYew3eW5wYrjR3NdHf/6l7jlqal6/N
-	2+KXNcS/QAsLeBY7qiClfDSpBVmOOoxCV/+n4kL5oaprnQaVwv1z8qDhEVYWpSfQflApQfQhj4U
+        d=1e100.net; s=20230601; t=1746710558; x=1747315358;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3O6QW65hEVybU4HTPkPJYU+R7ruCJ42xt8K+t51LGkg=;
+        b=i5qySHlTWkZDJtkdc7P+ZgcI3WBCn1OpSPp5PYuYq2p5Cqw2ATy+K5VvpU0+MItpz5
+         f1LDWDcXSOm0GuTgOt9TlUnbd773nSQiuHbiIwtoYygF78jWTZR27NkhyyZtKt27gZfy
+         teHFH5V5chvu+vjObv9Aa/S23cci+FIIMSdgSg+yuO3SSml5moVIlz8365cvAl5oM7qK
+         uyOCih3mn3Z//vmIoS9uSpLAe6RYVeHs5CMaU51PFq7N42uesaf4DGZNVSTkFo7QBrtS
+         +/4CMb9/qjmonHrYgzJUnQIzp8sYatDOr+EA+ayxndOqVzNu16+5NPhNo14ga0WZlwKs
+         vZTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxyO0Vss7puWzwotMhn2eMf4kHJudJs/OhcQvTMQERQ3AVJyPga6z/ybZ0fsEifd/ZasS1M6uT4y4y@vger.kernel.org, AJvYcCXE6HRF6zo5GWgMpmosizleIsQTUkrTJxkZsBGFJ+2XSDlNR0+ceAMT1VCHj4/B7un9EqExrExGGAXlkPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJQRN15eVEqJ/H0tcDej1lrzffgQY2CW/0/kBj4aHQz82O/tUC
+	5haTssZ8rVTq8u3mHN2/y08cPb3mZ6ASbf/WGzqZLBNP7msRblHn
+X-Gm-Gg: ASbGncvJ92d/E/nxXIp36ESS2I+5S3BiXdWq2DrqJi3PDWJ88vpJHhPgPue7nSXYPAr
+	X6Sbocu/YtP+eC55uIdt64KdumpjX8axjynPy2L4LC/EUwmVrZwtwpRaZdr0w8AyXnDqsxalQU3
+	x80kNgC69UTSPKcH8xZIBXtP8EzoDN8n5zE3aDlenHHDbxJzdVY6rwhPHXyEHuRrsWhZrom5QcG
+	SAe6wZNXn5FzkpDNYhKiYPptZvA/hXGcAMoV/xy5vIFzOsuAMguKksmCUuEXSt3YmbAstWHx9pp
+	8quOnOP6KNRWP9S9jPMU2Laiu5sUfNgIH9AHybg7OjcdigycMyxIiefQIAP19y3QNW8yn5vOACo
 	=
-X-Google-Smtp-Source: AGHT+IHA1WtuQA1TLHx4EzuVY0FM9Azk2vtubiVKpuEkCb5BJpliP3/GJfhlO4nOkeFq6hHgVxVrow==
-X-Received: by 2002:a05:6a00:4acb:b0:739:50c0:b3fe with SMTP id d2e1a72fcca58-740a99aa622mr5064364b3a.8.1746710460570;
-        Thu, 08 May 2025 06:21:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvkK35BjLOowcxL9xTZop9MziWe5tFjZ+j9y8giZnaraoBWrpSDPE7TcvXZ/rDNEHnGivYaA==
+X-Received: by 2002:a05:6a20:2d27:b0:1f5:8179:4f43 with SMTP id adf61e73a8af0-2148c0f38f0mr10265113637.23.1746710558200;
+        Thu, 08 May 2025 06:22:38 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058dbbe25sm13685875b3a.59.2025.05.08.06.20.59
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058d7a397sm13182346b3a.28.2025.05.08.06.22.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:21:00 -0700 (PDT)
-Date: Thu, 8 May 2025 22:20:58 +0900
+        Thu, 08 May 2025 06:22:37 -0700 (PDT)
+Date: Thu, 8 May 2025 22:22:36 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, cassel@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Niklas Cassel <cassel@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, treding@nvidia.com,
+	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
+	sagar.tv@gmail.com
 Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <20250508132058.GA2764898@rocinante>
+Message-ID: <20250508132236.GB2764898@rocinante>
 References: <20250417074607.2281010-1-vidyas@nvidia.com>
  <20250508051922.4134041-1-vidyas@nvidia.com>
+ <aByg1GUBno3Gzf4w@ryzen>
+ <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508051922.4134041-1-vidyas@nvidia.com>
+In-Reply-To: <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
 
 Hello,
 
-> Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> check for the Tegra194 PCIe controller, allowing it to be built on
-> Tegra platforms beyond Tegra194. Additionally, ensure compatibility
-> by requiring ARM64 or COMPILE_TEST.
+[...]
+> Alternatively, since these are only platform-related Kconfig changes, I
+> could pick this up into the Tegra tree if I get Acked-bys from both
+> subsystems.
 
-Looks good!  With that,
-
-Acked-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-
-Thank you!
+No objections!  Go ahead, and thank you! :)
 
 	Krzysztof
 
