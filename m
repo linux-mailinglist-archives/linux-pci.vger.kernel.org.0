@@ -1,97 +1,155 @@
-Return-Path: <linux-pci+bounces-27442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43A70AAFB35
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 15:22:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1133AAFCDF
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 16:26:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 255CA7A2BC2
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:21:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A8E61BA36E4
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 14:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A7D19D087;
-	Thu,  8 May 2025 13:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D82826E16A;
+	Thu,  8 May 2025 14:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Dgh/ElC+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F033317BA5;
-	Thu,  8 May 2025 13:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6540C252911
+	for <linux-pci@vger.kernel.org>; Thu,  8 May 2025 14:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710560; cv=none; b=GJxJhUWHJAc97EDi/8WX087bZJ9WWLMdO1w8brkwcyD3iX2yBFUx+Lkxyvkw/bAXyK/8fkRGPBUpVT137C9jXlHVRX3B7YQ505JD7B7JWANXrzAOVYX6EXJS4jLXTXePS7ElJw3Eya7clHcAFF7CIWDEmR2EOdyPUoyBIqQ2X6M=
+	t=1746714380; cv=none; b=uE2Lqqi+uQbm6n9pUGxtxqNcdjf7oT6YWxGRFBjjaTE2cC9PFiZOXw87VM7BPX94uRNkSuouf5njGuIntRBOL3Id3wNwvdPRNFAYoOVSn70qx7AIsXfthBl7HUWT/JVF/Kg6nhr4Ez+QjbDGd02ceKmJVJ/WDZSrmgmA8fJxnbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710560; c=relaxed/simple;
-	bh=q6v3wv2CDrIH1LrNbNW1bP/KarqhU7EJLpdk97Qi7wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poSfxRN4u/uy8sqBAvweZXWFLba3u7x8LiPHS8OtCA7uIqHYb3qrW0Mq9dm225plShL0cQ28XMGLhIs7crn4wk+uq2vZYcJTBlTY4mff75+MfW7VXg2qPOqXFTRfFPGdoOBRFOHCZhwFXW+hmU8OrquAU6Wj4QGq75mjIO7pTtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so605205a12.3;
-        Thu, 08 May 2025 06:22:38 -0700 (PDT)
+	s=arc-20240116; t=1746714380; c=relaxed/simple;
+	bh=uJm2d/sYysk/ox5eXeJvGB2Ff2/lvKGPfhJiU6lhUCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HWDKsKLj+dS2XPAC5W2L7VFvAFyP5wvK/F9f+18Sp7++cOXTLnkHa0Et4ZsXZ+5D5zBJwddlj3sSHZyPFID7tFnhcFP4uKqX6uaYU6/Nk4Riuk8kSvufT+cvcGnaTSp0m0tGR4gUTX8Zt7HGBzYc50zCffnoyrVv6g4XwbOphcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Dgh/ElC+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DSpev016663
+	for <linux-pci@vger.kernel.org>; Thu, 8 May 2025 14:26:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UXdlLGg1lnlu/LLea5+Zsq6a/vEhr+UdYLuwJ2Yk5Do=; b=Dgh/ElC+I0tBaC7m
+	SxP/yOcwwBFJf5x6/b+2PcyAUWxy0V2vhQ+n2cm5EsGxCNrpa/+TRp3viakckvoJ
+	MkM0d8/raFtVZZWo3DqNqk1bAXGYdi+Kg2/wnHCI5LJNIoyaN75xQavoeF8SOsyH
+	FHXQ0CfiCH4Y7l8hxWQPVh8ivM1OtCDGvnK3u7TVkWseJH7cJIPNmLYLxLNuonqH
+	mmU4WWsT+G8kcF85M2vXxrynXTzr9vnRYIFkezWWV872hX0GZei1HdOY6P1kRkhH
+	AcN1q/hecHZCpmlZFQ/bG7+Qtqu1ReIOlzuNdvwwZ43i1n+K70N/ehhzk9EgZWVB
+	DJKbtQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8sjuj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 08 May 2025 14:26:18 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54be4b03aso22133685a.3
+        for <linux-pci@vger.kernel.org>; Thu, 08 May 2025 07:26:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710558; x=1747315358;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3O6QW65hEVybU4HTPkPJYU+R7ruCJ42xt8K+t51LGkg=;
-        b=i5qySHlTWkZDJtkdc7P+ZgcI3WBCn1OpSPp5PYuYq2p5Cqw2ATy+K5VvpU0+MItpz5
-         f1LDWDcXSOm0GuTgOt9TlUnbd773nSQiuHbiIwtoYygF78jWTZR27NkhyyZtKt27gZfy
-         teHFH5V5chvu+vjObv9Aa/S23cci+FIIMSdgSg+yuO3SSml5moVIlz8365cvAl5oM7qK
-         uyOCih3mn3Z//vmIoS9uSpLAe6RYVeHs5CMaU51PFq7N42uesaf4DGZNVSTkFo7QBrtS
-         +/4CMb9/qjmonHrYgzJUnQIzp8sYatDOr+EA+ayxndOqVzNu16+5NPhNo14ga0WZlwKs
-         vZTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxyO0Vss7puWzwotMhn2eMf4kHJudJs/OhcQvTMQERQ3AVJyPga6z/ybZ0fsEifd/ZasS1M6uT4y4y@vger.kernel.org, AJvYcCXE6HRF6zo5GWgMpmosizleIsQTUkrTJxkZsBGFJ+2XSDlNR0+ceAMT1VCHj4/B7un9EqExrExGGAXlkPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJQRN15eVEqJ/H0tcDej1lrzffgQY2CW/0/kBj4aHQz82O/tUC
-	5haTssZ8rVTq8u3mHN2/y08cPb3mZ6ASbf/WGzqZLBNP7msRblHn
-X-Gm-Gg: ASbGncvJ92d/E/nxXIp36ESS2I+5S3BiXdWq2DrqJi3PDWJ88vpJHhPgPue7nSXYPAr
-	X6Sbocu/YtP+eC55uIdt64KdumpjX8axjynPy2L4LC/EUwmVrZwtwpRaZdr0w8AyXnDqsxalQU3
-	x80kNgC69UTSPKcH8xZIBXtP8EzoDN8n5zE3aDlenHHDbxJzdVY6rwhPHXyEHuRrsWhZrom5QcG
-	SAe6wZNXn5FzkpDNYhKiYPptZvA/hXGcAMoV/xy5vIFzOsuAMguKksmCUuEXSt3YmbAstWHx9pp
-	8quOnOP6KNRWP9S9jPMU2Laiu5sUfNgIH9AHybg7OjcdigycMyxIiefQIAP19y3QNW8yn5vOACo
-	=
-X-Google-Smtp-Source: AGHT+IHvkK35BjLOowcxL9xTZop9MziWe5tFjZ+j9y8giZnaraoBWrpSDPE7TcvXZ/rDNEHnGivYaA==
-X-Received: by 2002:a05:6a20:2d27:b0:1f5:8179:4f43 with SMTP id adf61e73a8af0-2148c0f38f0mr10265113637.23.1746710558200;
-        Thu, 08 May 2025 06:22:38 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058d7a397sm13182346b3a.28.2025.05.08.06.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:22:37 -0700 (PDT)
-Date: Thu, 8 May 2025 22:22:36 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Niklas Cassel <cassel@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <20250508132236.GB2764898@rocinante>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <20250508051922.4134041-1-vidyas@nvidia.com>
- <aByg1GUBno3Gzf4w@ryzen>
- <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
+        d=1e100.net; s=20230601; t=1746714377; x=1747319177;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UXdlLGg1lnlu/LLea5+Zsq6a/vEhr+UdYLuwJ2Yk5Do=;
+        b=TkKkwsjykdQ77Cxa87pu0/rGKu6lqIBk9jvl2hOrf3d+/V5mPjZRpTHEkU4L/Y9Lgb
+         Fuo/9O187zSuofe4Zz/s0nEnBhFS3nNGqKb/6dhX4YEK+iK2xfTIwp7nMD2jogX62ocv
+         isN0Wi6H0H4rH2BWlY+gdKM1i1+xNvDm7hitIlxdRdAaIEhXiiRXasi5wVJgu8QveYBm
+         DfqRbFzYE1eJ+gfNcqnhFp4iJ4SKQur+cBDNvfP19zhS0Vw1QFqN46SHEHqrjYv+zNr7
+         2leLY5egbrIZiW8SBUeZuKmXQ96IOj/vf0NgexNBFYH1oCUONlK+c56yyzMQWHotRZ6e
+         os8w==
+X-Forwarded-Encrypted: i=1; AJvYcCU7jEAtSBkwCDUTQkFRYSCl6UF5KEGDM+xb/X6oTcOn8VcbYZ7PRwDvL5PjJX9B+PhYXw4GBm5Qpuw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXgdC8KqO0yOrN9n3ylwdMr9ptRITLY8/EC+gSDEMS7hbYj1mk
+	cDyxSzUU9ncgzVdNG16yXBKgnQxs8Iaa9w0vgVd3Fe8f7HBW9PwkmUw28hiVh9OfMByu/XzVZYL
+	oXH2VGbkS+hm70GO1P5+qUpqCrJwk8+m9yEuq2OwWV2AbBIN6cPBAj1rWkQo=
+X-Gm-Gg: ASbGncsdU1SCz6/E5jjdsEDElm1ItXoQN4FUdXUS+TIpV1YO7xtrv9zXpLz4j+/JLeM
+	LVvL8F8Xpt9Nr/sb/hM1BROeIrH+aAoduyRY5mPzhD9xdXY9ZTNLiJEqAqqUM3yqucV/oTz5PzI
+	gekG68sLDUipCI0yPEN0oMpLX5ov6Nly2m983abRdBijQdUBh9UkzNly5CyvZZU+f+jNcF8xcX+
+	arRq2CbmUnvTfwGHMHxW4I42ynjeVS6MZZxaBoxKDhR1s5jgFWiV0Wao7OatZKugpbNAuwfHseH
+	rErkECSbGvgXxuy1WhRFClp6Dj1kGAO1gI1lTXkxBgWYKYgfLor1c4ldXR5WE5ANiKQ=
+X-Received: by 2002:a05:620a:319a:b0:7c3:c340:70bf with SMTP id af79cd13be357-7caf7420db2mr384145885a.14.1746714377146;
+        Thu, 08 May 2025 07:26:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBmwqtRAYRbfqe3Sg4B1w/JN84aZ1KCtI2s+2ewc9k1uRUwUorYOTTAwQlq/ZNkjmJHGD2LQ==
+X-Received: by 2002:a05:620a:319a:b0:7c3:c340:70bf with SMTP id af79cd13be357-7caf7420db2mr384143785a.14.1746714376822;
+        Thu, 08 May 2025 07:26:16 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fb9c00ddd8sm4639625a12.58.2025.05.08.07.26.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 07:26:16 -0700 (PDT)
+Message-ID: <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
+Date: Thu, 8 May 2025 16:26:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+To: Rob Herring <robh@kernel.org>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+ <20250423153747.GA563929-robh@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250423153747.GA563929-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: -6HAlQ5efgJuSY-eyi3xz_BJ68Fxq76M
+X-Proofpoint-ORIG-GUID: -6HAlQ5efgJuSY-eyi3xz_BJ68Fxq76M
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyMyBTYWx0ZWRfXw11Jw+d0erkO
+ Dix3aRhdbGdsZhSAgQwU8KNyIA7CI9nG36T7WN6ec5wN4era/8NYQeH8vDViVjePi7x22ueHE4u
+ oirAxhW4NqpAMVnfvwdwEWenYKIcgk+2uYjGzwMKqxCyfiB7FlNsKSRClPzumhkHsboj6UTmEtM
+ VFuRFQcdMfuU1O0bbWqUQMrFFWYxJg+O5B2HQpX/ksonfeqHVzUzBtw13ipbFrakGvmtSF9VEYp
+ bVzn/neKr/ueNF7dJMGqQ2LqSsfvKxGR5rqTlTRsPnibKh4XoKaGnkR13uqnhGCgAyiuuAOjH6C
+ Q6Ja5YyNJ+uwxRxSwzaBGkORHMtXDc7uwPrD8as1OTtLVzVgGu8JMVhH70j3Qv/s7F1CgM/MMG8
+ mORzt4oB53Z0iLCjdubQgJ+cUKvGsCyiZfZXV3o859TqyTWbEQVChsjMVOXrRn5RVEI9fXzz
+X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681cbf0a cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EtpzxOmWCkDpKJZIM9sA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080123
 
-Hello,
+On 4/23/25 5:37 PM, Rob Herring wrote:
+> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+>> There are many places we agreed to move the wake and perst gpio's
+>> and phy etc to the pcie root port node instead of bridge node[1].
+>>
+>> So move the phy, phy-names, wake-gpio's in the root port.
+>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+>> start using that property instead of perst-gpio.
+> 
+> Moving the properties will break existing kernels. If that doesn't 
+> matter for these platforms, say so in the commit msg.
 
-[...]
-> Alternatively, since these are only platform-related Kconfig changes, I
-> could pick this up into the Tegra tree if I get Acked-bys from both
-> subsystems.
+I don't think we generally guarantee *forward* dt compatibility though, no?
 
-No objections!  Go ahead, and thank you! :)
-
-	Krzysztof
+Konrad
 
