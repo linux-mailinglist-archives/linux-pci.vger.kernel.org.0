@@ -1,116 +1,105 @@
-Return-Path: <linux-pci+bounces-27437-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27438-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADE7CAAF8FE
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:47:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56BCFAAF92D
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:54:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0004C1C06BC2
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:48:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CB091C20076
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:54:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28A4F223335;
-	Thu,  8 May 2025 11:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A540221FD6;
+	Thu,  8 May 2025 11:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3RM5ALr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6099F35957;
-	Thu,  8 May 2025 11:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD2720B20A;
+	Thu,  8 May 2025 11:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746704868; cv=none; b=fDvpRdrvyn0V/u8bgEtB7cUOzzhMSbFdL4N/vdAPBL9s93j/jCTZ+lg7TWXxDm9y7BPSWOuagrFjA5uUHixKbJ9EwY7JHyCCNqQ7uGDOaMgzo73TItM/LciFd/EJGVC0+a648PoTxeRm/A5Rn5KIejqilra9E86CXGXSMwF3cqs=
+	t=1746705240; cv=none; b=dEF2/1mVMpsuLWLDypFLl3bI/7VYBK7V+v+vutnnJbLcxFApumBuiPGmfAq+PKIe2TkVaDex6ra/3/J1b6a3XPrcsCqw5XlnBDtwUt1ZemQI1uWRqJmX87LZefU/VUWgCAK57kDHIh0C6xkkHUqK11FJsVUH0Rb5Lv8GnwWTAJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746704868; c=relaxed/simple;
-	bh=wY2rXlF9lNnn5R10zAhDvzddR0b8o48odmpoov1tV7A=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CBQRkGaEdl95YU9iIk04EqWnFgIgugW+DfHo4KQaZ3bo2/xSOsV6r2ryyrndRymbT2wCsHcakMz2DeG8AMwjZdZKrj4G744GFc4MvuNSKxGA+aXAGKKiDZfwHmad0vggMDNDYkQ4w7a8t1b57w7L+CbwV+ob/dvYaQycWKH2zbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZtVg63KzCz6L5VR;
-	Thu,  8 May 2025 19:45:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 95D9C140121;
-	Thu,  8 May 2025 19:47:36 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 8 May
- 2025 13:47:34 +0200
-Date: Thu, 8 May 2025 12:47:33 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
-	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
-	<wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, "Derek
- Kiernan" <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd
- Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, "Saravana Kannan"
-	<saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, "Mark Brown"
-	<broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
-	<djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>, <linux-kernel@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-acpi@vger.kernel.org>, Allan Nielsen
-	<allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli
-	<luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	<linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 09/26] cxl/test: Use device_set_node()
-Message-ID: <20250508124733.00001208@huawei.com>
-In-Reply-To: <aBt38JR-YGD5nnC4@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-10-herve.codina@bootlin.com>
-	<aBt38JR-YGD5nnC4@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746705240; c=relaxed/simple;
+	bh=ATEwHpgNA6jqamANm5hBaVYVO/dqwcBSYhIXw4FvfOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=imBUZVDtJPfY4a5F4VWEydN5lKlLWxG6aV8d2qZNBMkmofzP7ofdf/5WuXumwsru8F4Qu/vHSDiRAmdOL63VP+ybMNmtkMqon+/klIhvDG/8z1980nlgzM4786jXS6GVHV5U7n5GSBJeNGbgl66kjd102Ty4fcS5fvdycP3PFz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3RM5ALr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59FAC4CEE7;
+	Thu,  8 May 2025 11:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746705239;
+	bh=ATEwHpgNA6jqamANm5hBaVYVO/dqwcBSYhIXw4FvfOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u3RM5ALrqSnfQa5HbX8moNUhsGOjpcfcy5lA4yc+FmPmsGqzLmElL/eAXgP9r3k4z
+	 Rubst2i6+x9slEhbAguGyXaZli1sn8YNW9zPw/tkLfr0VxTPxXrs0xw5aVF4MuYEU5
+	 8G+QnU8r6onc00RyOW9QjHHiFEixVWTv1v6mq7xZ5ebwt1wKaKrtGNQLCvNYAc46GM
+	 1zq5g44NCqS0dgYhh/RiFgTRvIusk2uUIu0bQQ+x+2s76kyWmK5lP8frGn1KXt+kCA
+	 MB97EmoRnKLis9eJd4gykwNx9AIuZNcMEBnm/HnLDZW+7EHGFsCIMgd1F6A2NNxKLD
+	 ZBirUqSL+XuXg==
+Date: Thu, 8 May 2025 13:53:53 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+	neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+	khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <aBybUYYhrmlOeLAj@ryzen>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
+ <b364eed2-047d-4c74-9f30-45291305bc4b@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b364eed2-047d-4c74-9f30-45291305bc4b@163.com>
 
-On Wed, 7 May 2025 18:10:40 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Hello Hans,
 
-> On Wed, May 07, 2025 at 09:12:51AM +0200, Herve Codina wrote:
-> > The code set directly dev->fwnode.
+On Thu, May 08, 2025 at 12:47:12AM +0800, Hans Zhang wrote:
+> On 2025/5/8 00:36, Pali Rohár wrote:
 > > 
-> > Use the dedicated helper to perform this operation.  
+> > Sorry, but I stopped doing any testing of the aardvark driver with the
+> > mainline kernel after PCI maintainers stopped taking fixes for the
+> > driver and stopped responding.
+> > 
+> > I'm not going to debug same issues again, which I have analyzed,
+> > prepared fixes, sent patches and see no progress there.
+> > 
+> > Seems that there is a status quo, and I'm not going to change it.
 > 
-> ...
+> Dear Niklas,
 > 
-> > @@ -1046,7 +1046,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
-> >  {
-> >  	device_initialize(&adev->dev);
-> >  	fwnode_init(&adev->fwnode, NULL);
-> > -	dev->fwnode = &adev->fwnode;
-> > +	device_set_node(dev, &adev->fwnode);
-> >  	adev->fwnode.dev = dev;
-> >  }  
-> 
-> This code is questionable to begin with. Can the original author explain what
-> is the motivation behind this as the only callers of fwnode_init() are deep
-> core pieces _and_ this only module. Why?!
-> 
+> Do you have any opinion on Pali's reply? Should patch 3/3 be discarded?
 
-More likely to happen if CXL folk are +CC.  Added.
+While I do have an opinion, I'm not going to share it on a public mailing
+list :)
 
-Dan, maybe one for you?
+With regards to your patch 3/3, I think that your patch looks fine, but if
+the driver maintainer does not want the cleanup for >reasons*, that is totally
+fine with me. However, I'm not a PCI maintainer, so my opinion does not really
+matter. It's the PCI maintainers that decide.
+
+
+Kind regards,
+Niklas
 
