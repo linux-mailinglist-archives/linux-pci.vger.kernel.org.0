@@ -1,110 +1,117 @@
-Return-Path: <linux-pci+bounces-27449-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27450-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27098AAFEF7
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 17:20:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 886BDAB0002
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 18:14:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C940916458C
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 15:19:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23C00189ECD6
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 16:14:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CCF1279789;
-	Thu,  8 May 2025 15:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 161FE27AC43;
+	Thu,  8 May 2025 16:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kI9z3Qbv"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nO8XRuLa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14826279780;
-	Thu,  8 May 2025 15:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C1D27E7EF;
+	Thu,  8 May 2025 16:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717287; cv=none; b=exBm1mXlBOymB3lWUmvbCjz5SkLOBdtc1Wrzc+JVVw8qAMZXYKDhq0hiIXzufWzihWsQr3texbcycIVpyFNpKE9UOEWQcdAvDpfseIzrc5zagQlkHjX5yE3E1Eg5L1hDZstsnuD2vz+hW7rHFcO0eyKIKuaAM+aRcEZkuoU+RTU=
+	t=1746720864; cv=none; b=E+DYO1z+Kdlr0HspiRtgLZTGd154bdbuoVHbHieXcEovpodIMbMsdZ/gxIJ6GmFqUA5YtJWjZ0/UO/mhYhblTto/eJJZp/js4jHqyL9Lx60CfXEtQUz34Tvta/haSbCmsW2Sis2Vxw5cs9Ex8rzfTiDvaR3HEYGhBuiCTGlB7FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717287; c=relaxed/simple;
-	bh=5GbhSPNq/qJPJlLzO0yWtxUcuqFGx1Ov0ZOnA/53Rfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=isLSIryc8PhaJy8FiLWR/KEp60MEsmNvBTldthKQFqanzqm2u5jblVlfo6lxz8XJxLVhUXANUmT277skwsZMrSmgJjycmrQPHSeSPF4a5UOHXVl3TxmQSk28gMoy+rELfXSIL3W1sqnDaZFNfRfc7/+ov8CXIOepZodLXJ1wt4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kI9z3Qbv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E94BC4CEF5;
-	Thu,  8 May 2025 15:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746717286;
-	bh=5GbhSPNq/qJPJlLzO0yWtxUcuqFGx1Ov0ZOnA/53Rfo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=kI9z3Qbvw98g27dsgFOK3zQX3gzGczplOYI1Ierb67F5F6UeQph6Elsb7ESCm8HzR
-	 brTqBV7vHG6NSP6JZGlAODmIsd4P8i+dAC71GcMJUV+LkAbchg26B0wD5l744AeA0A
-	 aqY/TEApooaosdJV4/gu6TVK1KP3KrPHiKYbL3hCKeyRIVVkXmVmy5XJzNZLlRx27b
-	 mNthc/t2+y2meJdgLRciCh9qag/Wc+i5N6VP3w5s8/siCAVcz8nzsV4nUGaMp/zl7q
-	 BDlG67xPIzfMx2OQK4Mc/TmPICMsydZu4xgkgdqPxbaGNTlq87DG2tGFd0DqhkC0Do
-	 nlL88d+4BwapA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3BC91CE076F; Thu,  8 May 2025 08:14:46 -0700 (PDT)
-Date: Thu, 8 May 2025 08:14:46 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Message-ID: <35df30c5-5066-4933-b414-1f6c918a20e3@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1746720864; c=relaxed/simple;
+	bh=hX5iMWpZ9yceRFUoRBf9NqUVir64zEn65k32D5jq2AQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tXzo/TywFNsYdA3pfIaAvREzeLaHViUQPzjY98EVJr9eHPYKGb80SfoyOOvNiqdd+7yIpF/+CHjZbe8Xj6EPIb5mzctvegzaxBmCTBcOm67W1GSKd+5Y4/3HmPwNqktkQav8ZB6Sf79wnQ5jddekDF72Zft0NSkL6UB93t5T+90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nO8XRuLa; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=81aBPS6yBfZnl27zRH7ZXiOuAu20NzRTJepaZfWeHBs=;
+	b=nO8XRuLaqeMEuHMiGg9pJfKjkfKjM+1nBX1d2T192PZgLu6UTTHVGO6dXzLDW0
+	cf/AsM6lG5pEV67BuhdNNSy0k9bRt19USAk9majVuVTNoA4jdIixL8ThyfVnZqF0
+	HUDD0DJf8rE0C9zNyn9/2YPnlyot7ejFIaDGGmtjL04wY=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAXJmHo1xxoaC4OAA--.307S2;
+	Fri, 09 May 2025 00:12:25 +0800 (CST)
+Message-ID: <25c89e3c-9625-49ac-b816-945ab9145f87@163.com>
+Date: Fri, 9 May 2025 00:12:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+To: Niklas Cassel <cassel@kernel.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, lpieralisi@kernel.org,
+ kw@linux.com, bhelgaas@google.com, heiko@sntech.de,
+ manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+ neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
+ <b364eed2-047d-4c74-9f30-45291305bc4b@163.com> <aBybUYYhrmlOeLAj@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aBybUYYhrmlOeLAj@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+X-CM-TRANSID:_____wAXJmHo1xxoaC4OAA--.307S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Jr18XF48WF4Uur1kXF1xAFb_yoWkCrbE9r
+	9IkrWxC3WUGan7Crs7Krn3ArWqqayDZ345W34Fy3y3A3s8ArW5uFs0k3ZaqF1rtay3KF4q
+	kryYvF1jkrW29jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbku45UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwpGo2gbipOKhwACsF
 
-On Thu, May 08, 2025 at 12:00:36PM +0300, Ilpo Järvinen wrote:
-> The commit 0238f352a63a ("PCI/bwctrl: Replace lbms_count with
-> PCI_LINK_LBMS_SEEN flag") remove all code related to
-> pcie_bwctrl_lbms_rwsem but forgot to remove the rwsem itself.
-> Remove it and the associated info from the comment now.
-> 
-> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag")
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-> ---
+On 2025/5/8 19:53, Niklas Cassel wrote:
+> Hello Hans,
 > 
-> Bjorn, this should be folded into the original commit I think.
+> On Thu, May 08, 2025 at 12:47:12AM +0800, Hans Zhang wrote:
+>> On 2025/5/8 00:36, Pali RohÃ¡r wrote:
+>>>
+>>> Sorry, but I stopped doing any testing of the aardvark driver with the
+>>> mainline kernel after PCI maintainers stopped taking fixes for the
+>>> driver and stopped responding.
+>>>
+>>> I'm not going to debug same issues again, which I have analyzed,
+>>> prepared fixes, sent patches and see no progress there.
+>>>
+>>> Seems that there is a status quo, and I'm not going to change it.
+>>
+>> Dear Niklas,
+>>
+>> Do you have any opinion on Pali's reply? Should patch 3/3 be discarded?
 > 
->  drivers/pci/pcie/bwctrl.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
+> While I do have an opinion, I'm not going to share it on a public mailing
+> list :)
 > 
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index fdafa20e4587..f31fbbd51490 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -45,15 +45,7 @@ struct pcie_bwctrl_data {
->  	struct thermal_cooling_device *cdev;
->  };
->  
-> -/*
-> - * Prevent port removal during LBMS count accessors and Link Speed changes.
-> - *
-> - * These have to be differentiated because pcie_bwctrl_change_speed() calls
-> - * pcie_retrain_link() which uses LBMS count reset accessor on success
-> - * (using just one rwsem triggers "possible recursive locking detected"
-> - * warning).
-> - */
-> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
-> +/* Prevent port removal during Link Speed changes. */
->  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
->  
->  static bool pcie_valid_speed(enum pci_bus_speed speed)
+> With regards to your patch 3/3, I think that your patch looks fine, but if
+> the driver maintainer does not want the cleanup for >reasons*, that is totally
+> fine with me. However, I'm not a PCI maintainer, so my opinion does not really
+> matter. It's the PCI maintainers that decide.
 > 
-> base-commit: 0238f352a63a075ac1f35ea565b5bec3057ec8bd
-> -- 
-> 2.39.5
-> 
+
+Dear Niklas,
+
+Thank you very much for your reply. Let's wait for the decision of the 
+PCI maintainer on this series of patches.
+
+Best regards,
+Hans
+
 
