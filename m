@@ -1,165 +1,121 @@
-Return-Path: <linux-pci+bounces-27466-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27467-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECDFBAB0559
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 23:27:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0250CAB05F8
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 00:32:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6010A522633
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 21:27:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 767A11722E1
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 22:32:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA4C221555;
-	Thu,  8 May 2025 21:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE87420E700;
+	Thu,  8 May 2025 22:32:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aQUaSnwq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSlFTtM+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBF7221267
-	for <linux-pci@vger.kernel.org>; Thu,  8 May 2025 21:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8AF8F6F;
+	Thu,  8 May 2025 22:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746739645; cv=none; b=EistTZbSQ3wQszHp5e+oLMwV7QZDP7qERdVq/pYv7ZvvmH4/wuQVCB7NUC1S1QBbAYE6ylkIl595GYIWAxBrFw9LRRBT9s7DS0xRUvKQKrAgcMMY+Pv+u7boz8dYuJkbREDnhV1dZZdUNeXZj7o9A2ntgHOs/2deZlzKs32p4gs=
+	t=1746743548; cv=none; b=qbLwnmqQuZtPm+/OEx2Sl6TU8RHOkanmS+4t7E/srtbH8u+UtcLnmY7ElD3aWaFda8gJSIuEWrU5Hhg5GNY1yC0Wjmsc5ykb8B1XB7Sz7+6rC64XtQSJ5m4qHhPjKEE51gLy/HSSWE6CyndzrKAAdCYN8Q9bhowP+cZXCqTRvw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746739645; c=relaxed/simple;
-	bh=fCzAeA+bsdzOPRTHwXZH+gYz6BbrIA210lvJ88aZzEk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dVLoGt0lH1qpCWEHT7Q6eAgoB13nQsAOqDPk86/kOexbqaLORxBzU7AleIT6JjBbysziYPq69cs2jHJIyOtsscIEpUQ7OSd9ue7oCboW7a5kLgCtsV+udXGDNzY2Tz4vbrgkrLTrLwo749RvY17HJMax2SqbvNIXHSUzeiQFkDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aQUaSnwq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac345bd8e13so201650566b.0
-        for <linux-pci@vger.kernel.org>; Thu, 08 May 2025 14:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746739641; x=1747344441; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RsP3zSsWFA5v6LbTV5x///CFgvw9t5S4qJvm6DV5CyA=;
-        b=aQUaSnwq9CZ+ghu5lwdeZf3CVaUza4v3M66f/vZsmQa2M4eBHo78p2Jf3eswNRTbYk
-         LO229eIjv6aeOXdg+wor6Ma7aiBPLMTYki2Z8gqg1cWK4WHZH6HOAhb8C8LVWDwi1qkh
-         x4ALBKyO0iGrgQtFDzHZ5tDZYOHxTFRgAwuBnsRTSAuOIf4XQ1qF47P+Y32ZFY0j4vWs
-         9WRJGmUKMG8udAvmbA2jd/+d8nQe0sW46lMGiv1KkmYvey8HOvTri/wvlqJhG20noN91
-         P26uEVOWal5F6SzgCyetReQCISBrvoYKFTznR+Y1qV7JNn9VTwEC7hqJpi01q/NedTTI
-         XSgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746739641; x=1747344441;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RsP3zSsWFA5v6LbTV5x///CFgvw9t5S4qJvm6DV5CyA=;
-        b=HdwVQJExKzzZWBZ3O1W7r16DP4D0S2m/yBShHGELUBbiqapaDDUdXKn6MvbCiwvt+1
-         6hWTxKfP0PZVWfR84Va3RAfTMLdzRu9Vcpm5QRFG8geagCxEXZMhDUH5VRHXiN8+ZkbY
-         Mkf6AWTm6XVMic5HPxXG0rBvyFmar/EHQQsAlmJgPQpsmvYXgZnaBUBfNv5HqCaVB5O/
-         kPTisStr5kqiaaC99L2wi0C2x6D6A1/hmiOBqSW7dtYNvqdARcjTOQkDbY9m8J+R+8/R
-         Fb6CTHoSgLfM0vFBpUmlkv5S4FblKplz1J4RRpdCWMLQdBW/niTxiXxoK9XrYRLyVNYG
-         mNyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYW4vLuK0LQZQU3T+wau18udPhruH5gXyiJxSdMUReCIGasmWDcBpKrwzaj4pUnr3JqdrWtn7kk5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys6GYYMP3X5f6ladQIBku0tw1t9yuAfF0zlEkOseqJ1IpkJFm3
-	6HMjQEC/WKils8cpDtoozGciFgm32CKtQkPRzB/Gzeodj4L46vd2fZgWZg0hjiw=
-X-Gm-Gg: ASbGncsCERSaWwofzu5DXvsoRkbZO2jHMvzKaZq6su4aPR2qu3przdrVEAo2fcz0UfD
-	wARZIS5J0Ea6e7D/gADn/7sIcZcQqy1L6SIyCPcL5KbGjKCvby1SwSbjIvdfttbHoCUl4DXGgKX
-	5qBbbAsyNjCnxb3qI8Am9OJuC4NTtCYsuIshjgseNP9a/PtoxAI/7YTjlH1BkKG3L7C4p2+8hbz
-	upnxsbAu693ynEWrJyL5jPQfHOD5do5ALs9VOf+83hBQ2OYoWQMCtSRClXwxQhhEHR5Gaus98/J
-	DCEQCyY2xxmaggMO4DYuWJBpv13SR6bybY/QE9rL2mr1yIWcwD8JsC5iI03Zyq7HxLP3Ay8=
-X-Google-Smtp-Source: AGHT+IGwowNKNf6YdL0s+pZvYQ6xsCLedq0Pezu/34sukHINlGhsBSD9rVYZ5MZsMsdJMGy3cL3uig==
-X-Received: by 2002:a17:907:1b05:b0:ac3:3e40:e183 with SMTP id a640c23a62f3a-ad218e48fe4mr115728366b.3.1746739640793;
-        Thu, 08 May 2025 14:27:20 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192d4a1dsm46249766b.17.2025.05.08.14.27.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:27:20 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 8 May 2025 23:28:48 +0200
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Phi l Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kernel-list@raspberrypi.com, linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v9 -next 04/12] clk: rp1: Add support for clocks provided
- by RP1
-Message-ID: <aB0iEHqYmNxXQd8c@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <e8a9c2cd6b4b2af8038048cda179ebbf70891ba7.1745347417.git.andrea.porta@suse.com>
- <a61159b7b34c29323cdc428bb34acfa1@kernel.org>
+	s=arc-20240116; t=1746743548; c=relaxed/simple;
+	bh=LN9H+wRwP3Oc6QAiNWdj+F+8WkxOXU1ZzLvlexhRPLs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PhhEVVELbQtGu2pInn+2d2Je37M6o+rtXqMQuRR1j0epZUrmXChqWf4a/lbFAbSQqQsyLQVoUsq9tVWjjFjNkwbggiB0SdiNLgWCxGxf8qJHZSPXHeGqlPPyokE1cd214x8tSrJP2+A0zAX2meivtmRWPIvbGAbpZDmtSKwgNIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSlFTtM+; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746743547; x=1778279547;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=LN9H+wRwP3Oc6QAiNWdj+F+8WkxOXU1ZzLvlexhRPLs=;
+  b=NSlFTtM+pGLrVe3HsTcU+GspL8A6YHiIHlLj/TH6EZEnTo9PoTB8Pe0A
+   O/wD4kgLW5u/8Ij33X6k/clXts9f0ag7ZeWoTvB1DnkMk6p7l9G4F4V7O
+   gncKk11qGD+cSiAkrud789dAgXwmxT/Al/D381p7GhT22zKpr0IbMFZtY
+   EuEl9iiJsz3Jf5L4Nk/DFYvK9IOvPHiH5rm/DKJz7GgNwq5eEUP5stgya
+   NIUbHY4+d0lkGBEWBE8zBiBtGQ9a/06P7Xripvvgh929k0M1rTCAI82Vs
+   3llheYVSgY12pKOlQBuk+gXas3S06QT4hQyfXdE2MUqRawT1ByT6/P3FS
+   A==;
+X-CSE-ConnectionGUID: Hm3cn4ysS5i9pTjQh+Ay9Q==
+X-CSE-MsgGUID: 8COFjpLQS4+gGcWZFgK1qw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59953211"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="59953211"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:32:26 -0700
+X-CSE-ConnectionGUID: mEEQIAKWSwyhic4DI5aBoQ==
+X-CSE-MsgGUID: M+Se2rK5TliUbPOIBXV3Yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="141539203"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:32:26 -0700
+Date: Thu, 8 May 2025 15:32:25 -0700 (PDT)
+From: matthew.gerlach@linux.intel.com
+To: "Rob Herring (Arm)" <robh@kernel.org>
+cc: Thomas Gleixner <tglx@linutronix.de>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
+    devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+    matthew.gerlach@altera.com
+Subject: Re: [PATCH] dt-bindings: Move altr,msi-controller to interrupt-controller
+ directory
+In-Reply-To: <20250507154253.1593870-1-robh@kernel.org>
+Message-ID: <54171dee-9985-536d-f7a6-b2a4af1ed9bd@linux.intel.com>
+References: <20250507154253.1593870-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a61159b7b34c29323cdc428bb34acfa1@kernel.org>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Stephen,
 
-On 13:01 Wed 07 May     , Stephen Boyd wrote:
-> Quoting Andrea della Porta (2025-04-22 11:53:13)
-> > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-> > new file mode 100644
 
-...
+On Wed, 7 May 2025, Rob Herring (Arm) wrote:
 
-> > +
-> > +       /* There must be a gap for the AUX selector */
-> > +       if (WARN_ON_ONCE(clock_data->num_std_parents > AUX_SEL &&
-> > +                        desc->hw.init->parent_data[AUX_SEL].index != -1))
-> 
-> Why is there a gap? Can't the parents that the clk framework sees be
-> 
-> 	[0, num_std_parents) + [num_std_parents, num_aux_parents + num_std_parents)
-> 
-> without an empty parent in the middle?
-> 
-
-The pos 1 in the parent index array is used to select one of the AUX clocks. 
-Besides this, the index maps directly to the value that should be written in hw,
-avoiding remapping. It's possible to use a numbering scheme like the one you
-proposed, but in this case we need to complicate the code adding the renumbering
-where the index is written in hw.
-
-...
-
-> > +
-> > +static const struct clk_parent_data clk_sys_parents[] = {
-> > +       { .index = 0 },
-> > +       { .index = -1 },
-> 
-> Why is there a gap here?
+> While altr,msi-controller is used with PCI, it is not a PCI host bridge
+> and is just an MSI provider. Move it with other MSI providers in the
+> 'interrupt-controller' directory.
 >
-
-Same answer as above.
-
-Many thanks,
-Andrea 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+> .../{pci => interrupt-controller}/altr,msi-controller.yaml      | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> rename Documentation/devicetree/bindings/{pci => interrupt-controller}/altr,msi-controller.yaml (94%)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
+> similarity index 94%
+> rename from Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+> rename to Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
+> index 98814862d006..d046954b8a27 100644
+> --- a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
+> @@ -2,7 +2,7 @@
+> # Copyright (C) 2015, 2024, Intel Corporation
+> %YAML 1.2
+> ---
+> -$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
+> +$id: http://devicetree.org/schemas/interrupt-controller/altr,msi-controller.yaml#
+> $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+> title: Altera PCIe MSI controller
+> -- 
+> 2.47.2
+>
+>
 
