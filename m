@@ -1,132 +1,130 @@
-Return-Path: <linux-pci+bounces-27435-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27436-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 335AFAAF657
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:08:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CB4CAAF8B4
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 13:27:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D2361BC7FE3
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 09:09:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 862797B6B63
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:25:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3B0C23E329;
-	Thu,  8 May 2025 09:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A92221FA5;
+	Thu,  8 May 2025 11:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P1AzCW+u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyXWj40o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C7EAF6;
-	Thu,  8 May 2025 09:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DE022154A;
+	Thu,  8 May 2025 11:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695333; cv=none; b=nMlRoYAGFU3U4sFtEQ8Ek52epwV9W/ccPnyWSduAacz7lCtq5brmk7aGi1MUC+01r+o+uNuxcAy+CKg0k8F2sRIFOpEoKSwciYucekanbVQSc1ROjTUmaf9dIqdW2/bxZZmlyrn/4V+SlGxtF98R4lCoG5irRRu5OXLSZ1W1fhM=
+	t=1746703617; cv=none; b=TJOeO8pEabWR33S5osvaIZ7HYWLveCnhygPz0aBPkYpXiXOfM0JxoG91EzJ0zIJPJ9D5e2BCw+2sZw60babFUs65zc9EbHWnpthDIxYzPaGVGTNA+L9IC7Ke6fOJYpojxp2JxQYlvzCVF3hjFMusvx8JuQE6bz3xLFYZTABy3hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695333; c=relaxed/simple;
-	bh=8SkZUgZyYvBe6FFYuWQO+cRb9j2orVXbhXcmpKeqvUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQ1SpRo/RrIVtgrDXpmv0L1/1fISzDyOfzEZteGLg0tM5e+8wtDcCgLlMha/BQK465sdtW596D277HMgbo+euaFb94AF9H5Z1b/mbGxz+5MoN67F6dFZNZ2vAJPQ9NkkJWkHB90mPBbyvOWHNo97NOKHcucVH3FgDr1/L/zQVoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P1AzCW+u; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746695327;
-	bh=id4tiKZeuAnKN2fZO6welXUYOflEk+8g59ZcxNs4qH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P1AzCW+u4qMYXiIX5/BSQNbnUd39IPimyLd2ADJx/I5yqQIj7pIyQMUb4wRSgSLPz
-	 VSNfFer0Q7SoWRzQ9ZF/Q0NcWwf1zdhz5q1uIv65m0knDjVPD0YI0atE4+wqjPJ92j
-	 F2TJAePl9VPhw2H6/tPpOhIlOX8dKNrFnLUsirQ+9/Eoqg+ZmJdg4yG7ZAWKwrzR3P
-	 MH5Kkd/JJTU6ZduOcTvmmhcZSahBE55wTBb5GQ0qw7L2LdM0Q3OIsysH7B/GWAzq2T
-	 vSsiC2jmDbaNeaOxLHVvhd8/ivd+KHHu+2KrXmlP3F/S4jNwygF1mFITVhynGo8VuZ
-	 ca75gcqzuS++w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtRBk5lbmz4x21;
-	Thu,  8 May 2025 19:08:46 +1000 (AEST)
-Date: Thu, 8 May 2025 19:08:45 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, kernel-team@meta.com,
- linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
-Message-ID: <20250508190845.4cae8b62@canb.auug.org.au>
-In-Reply-To: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
-References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+	s=arc-20240116; t=1746703617; c=relaxed/simple;
+	bh=UwqdZjavUhNfdPs8P/IRq9MCV1ehSBWln2HaUUuXZ6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=odEZ1OJhZxB4V9AG72RD/sKhV3+y8B6zRzGVFfi2+TXgj9Ucyz6kfm94gj2zPPECSLht2tikQ3NJv7K3N8D1hwBYrYjoLJ03ziTRGQ02wSh7aNKq5znQ9Efu5o/MvSd+pPJAqVqoH1HW59fG5LlEsLwy4ORrZSF2kw6GY4/uRAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QyXWj40o; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso7634751fa.0;
+        Thu, 08 May 2025 04:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746703614; x=1747308414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UwqdZjavUhNfdPs8P/IRq9MCV1ehSBWln2HaUUuXZ6A=;
+        b=QyXWj40oehcBxrB6m9lBR2349UIrkWTWoWBMM4IpmENxk8r6tcPUj7ufAfkd9RyRvZ
+         phvHloqHdqI8VK93XxPcl6tActizIBIJ3fINFAOqvYxz41igMaUwJAQP6BnBz3DL0nYY
+         m0cDEwFwMllo++H1WmHcUrnv3kJTkxmGzliFRX4j8+Dc5c5eYJApeWXAXxP4PeQRrB/J
+         Xn/soRaiQSo+IwdsGOJfPmGt1wH3bIlZt8W9K4s8WlcVtldCNvMPTdllZFAH3MpMVv/B
+         i6v4IQE+1d2X8Q04gd3UkuQ0KVC+gNzw5lh0TAtAx5yAJi3Zw0PljLj938VGdQEeb9tl
+         FQag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746703614; x=1747308414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UwqdZjavUhNfdPs8P/IRq9MCV1ehSBWln2HaUUuXZ6A=;
+        b=vFgp+CTvZ9u5wJvj5Fi7/v9pqkGPC1Xo+hzN+sHQdXnLVMeUbf358gvpdYcMo77dtM
+         YzxDYpbIhD24xSa+5pxwvMQcisl3nKukg1tSLcN2jF8sMqmm4zc4K0pjfrRxeupXCO6y
+         KIXZfsxdlz/AQW689ej1QfZoKj0D7F9RWqK6LXDTwAAtai43euJyH30ncWI/Xcxd2Zqu
+         lxRdnhPkvx3ALBru1tOSZwCtAMivH+QuLSHPSBgoE4lt99565rElLFktaV1SZzfAMIWX
+         1oR3m9skQmknxQB6Sr4NDQplFqD9NTQB3bxcUXSL2M+1gZrCkTnVxbCLQNpC9+66EYOI
+         xFWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbxNVZluDQfbm93jcKfD2qHLaULmYtTlEhGP+3zqg8tBRudtuYkGa92Ox5KuVZA3pqLAcYp7cNCnA=@vger.kernel.org, AJvYcCW5/WR5gVKQsnNJJteW5Co4n4nhIzMayHiFzCgotP2JTCy+dzBcS5k8KMjInPJMn+CYwkhr6OMIwVcokr0=@vger.kernel.org, AJvYcCWzRYiq3KOpAbxB4G0Q5htdvrTpSkx489Akl2Ujy/hdyUFaw/TxvCd2SZlQovDZQn2xU4pDk9zmEleUTAg=@vger.kernel.org, AJvYcCXKSK7KwGW/eqoVdh7FIuhamWqBFZaPxtA2Rd7bmfnLiCO1EDiSH9DOqfjE6ZkMm6yNtp33g+Mm2xP6@vger.kernel.org
+X-Gm-Message-State: AOJu0YychMfHktFde8Ma4RGYeyRsblUj5AqdDpLH/NPODLQxQRRu0Y7w
+	F4WBN9MWj8I/IwxPkrO8c+jy75qbTk733xG2FMFGgYQilKkLTsLRCLolTz57yruRmnSDro3FUq8
+	/D7VtNmodKbT2AW90Rbrn0vpe7YA=
+X-Gm-Gg: ASbGncvX2MRxX6P2eLRgOJA2STe1cES55c7iSWSVDCGdjU4rCEBRdvmd2k3ZX3+o/Ag
+	aLEYJFD8XDSMegdpd2S6DlZ5krQxNl7hvQDVial0mvq8zifKdtP972QZEc79bqs+vnn5ASFYz39
+	yq/mVZ2k5FnEZQRPlsSRcpBRs=
+X-Google-Smtp-Source: AGHT+IEd3RTS5tFkCDfVtx+pBxGffB6x8KVD5klUtDaAhuxiIEXoPS9/TVA+TqNUh4Sdl/LHg54A08o0LN2KL3ISF0w=
+X-Received: by 2002:a05:651c:150d:b0:30b:9813:b010 with SMTP id
+ 38308e7fff4ca-326ad32331fmr27545361fa.31.1746703613470; Thu, 08 May 2025
+ 04:26:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1f9.u.3IHguvBWiXX3dmh2T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/1f9.u.3IHguvBWiXX3dmh2T
-Content-Type: text/plain; charset=UTF-8
+References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
+ <20250507-pci-tegra-module-v6-3-5fe363eaa302@gmail.com> <w2ertcizgmtu27kcike3lpw5dvhvqi2b4c6amqzwdfs2xtebfy@itrpen3oblhs>
+In-Reply-To: <w2ertcizgmtu27kcike3lpw5dvhvqi2b4c6amqzwdfs2xtebfy@itrpen3oblhs>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Thu, 8 May 2025 06:26:39 -0500
+X-Gm-Features: ATxdqUFB97ndpbhzQ5rwxdLhAukeBPDgXsdzB0UK835iwPge0aY5C8MO-nVf2I8
+Message-ID: <CALHNRZ8899t0BYMgn1a3iDKz_J9z_Wv_XYM2d8Y4AoiXPZaFjA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] PCI: tegra: Allow building as a module
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
-
-On Wed, 7 May 2025 15:04:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> w=
-rote:
+On Thu, May 8, 2025 at 3:40=E2=80=AFAM Thierry Reding <thierry.reding@gmail=
+.com> wrote:
 >
-> PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
->=20
-> Builds with CONFIG_PREEMPT_RT=3Dy get the following build error:
->=20
-> drivers/pci/pcie/bwctrl.c:56:22: error: =E2=80=98pcie_bwctrl_lbms_rwsem=
-=E2=80=99 defined but not used [-Werror=3Dunused-variable]
->=20
-> Therefore, remove this unused variable.  Perhaps this should be folded
-> into the commit shown below.
->=20
-> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_S=
-EEN flag")
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: <linux-pci@vger.kernel.org>
->=20
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index fdafa20e4587d..841ab8725aff7 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
->   * (using just one rwsem triggers "possible recursive locking detected"
->   * warning).
->   */
-> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
->  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
-> =20
->  static bool pcie_valid_speed(enum pci_bus_speed speed)
+> On Wed, May 07, 2025 at 10:25:54PM -0500, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > This changes the module macro back to builtin, which does not define an
+> > exit function. This will prevent the module from being unloaded. There
+> > are concerns with modules not cleaning up IRQs on unload, thus this
+> > needs specifically disallowed. The remove callback is also dropped as i=
+t
+> > is unused.
+>
+> What exactly are these concerns? I haven't done this lately, but I'm
+> pretty sure that unbinding the PCI controller is something that I
+> extensively tested back when this code was introduced. PCI is designed
+> to be hot-pluggable, so there shouldn't be a need to prevent unloading
+> of the controller.
+>
+> Rather than just forcing this to be always there, can we not fix any
+> issues and keep this unloadable?
 
-I added that to linux-next today and will remove it when it is no
-longer needed.
+For the short version, see this part of the conversation on v1 [0].
+For the long version, read comments on all revisions. Basically, I
+originally submitted this as unloadable, but got told that due to
+generic concerns that affect all pci drivers, including ones already
+modules and unloadable, making this one a module would be blocked if
+it was unloadable. Which leads us to this revision of the series.
 
---=20
-Cheers,
-Stephen Rothwell
+Sincerely,
+Aaron
 
---Sig_/1f9.u.3IHguvBWiXX3dmh2T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcdJ0ACgkQAVBC80lX
-0GwJcQf8CE7RayjNx5JFc7duQEtmFdNwWH6ceqhtR7LbFMfp9hC0R1tw5auPKrfW
-rUzR0iZiLbfhOhnPg/oL8jiNLDAqU8ueMLYqW9qVzkgtOa2LN9aFvGxIoJhKxY/6
-Gpnyt6oqGJVLBxqMPHYwtDRNWHpEmp63Wr3EkxG3JJk0X8EK+eFhGs8Na9gM/bi1
-tHmusQAlIBpPngj7hMX55E9lz0m8/PSIAAFNJiyOCwaOv16dLe7zpDlkBt5MHYxe
-SN7zYr7EIBvvDL2DURFB1dPb4kpzCAUyq9bqzHV5eTDkquD9npoSlf2iiuVif8jD
-OM1Yah10nyEDCRjgx81qDiMqim/MkA==
-=4Bpa
------END PGP SIGNATURE-----
-
---Sig_/1f9.u.3IHguvBWiXX3dmh2T--
+[0] https://lore.kernel.org/all/4u4h27w77sdjvy43b3yonidhfjuvljylms3qxqfaqwy=
+w3v32qo@kzgrrenxr6yz/
 
