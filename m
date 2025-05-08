@@ -1,120 +1,132 @@
-Return-Path: <linux-pci+bounces-27434-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27435-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D9DDAAF635
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:00:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 335AFAAF657
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 11:08:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFBA44C7FB9
-	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 09:00:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D2361BC7FE3
+	for <lists+linux-pci@lfdr.de>; Thu,  8 May 2025 09:09:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8361F2557C;
-	Thu,  8 May 2025 09:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3B0C23E329;
+	Thu,  8 May 2025 09:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TzWPUT+/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P1AzCW+u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F85239E95;
-	Thu,  8 May 2025 09:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C7EAF6;
+	Thu,  8 May 2025 09:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694848; cv=none; b=Oi6BTNs9buxaBGyi+me/cd4Xt6j7C6GJ5HFkZ/L/MaDUkV3sgqFzqdL154Nd7MnlrXWIpfl5ENqTbDAwmHzLCPCtWmcSDxOclapvhf7dIV16KwTWCU/8shrY0AUhJZheVtEUiFB0BNICav//PncMy4CPZet+McTUFMKXIy44FYc=
+	t=1746695333; cv=none; b=nMlRoYAGFU3U4sFtEQ8Ek52epwV9W/ccPnyWSduAacz7lCtq5brmk7aGi1MUC+01r+o+uNuxcAy+CKg0k8F2sRIFOpEoKSwciYucekanbVQSc1ROjTUmaf9dIqdW2/bxZZmlyrn/4V+SlGxtF98R4lCoG5irRRu5OXLSZ1W1fhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694848; c=relaxed/simple;
-	bh=lEDijyfpdRoWD6IXmI7dcnIiixR/KwmyqteLdtZJMmg=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=izPOAUUm9BXk7cNIcyTnFw1ROzrzQfc7Jdpy4GGI8uo2jD8ozcxg8/BYjk9W3mWTIfCFITD2CTveQ/V8mV4WHJ5ZbDyJYdfbxoEVUpaMUR2U1XBRbgfsh6qSrv2oNEqgCJuhaeMcK5oWGiLL0y+SrodfHAXH8sGJqQKyPnwgJyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TzWPUT+/; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746694847; x=1778230847;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lEDijyfpdRoWD6IXmI7dcnIiixR/KwmyqteLdtZJMmg=;
-  b=TzWPUT+/NaE2pmt6NYi1eVEq4F2vMH3fNP+MaQYUsPYqFw1UVUVpvWeV
-   b9zuwzAa3pD+py2Y3UjJDGT2q6OirV5/YOy4eycvPw93nj1Wc3GkkteNe
-   4EoWD5k/gkWBOcMNVtY/BXKpGiElWn9i64gsM2xB/Cg0CFk3CYa5CbHhR
-   u33ENBBOLDVaHWOZQLgL4RaJHXxyMRHUUYi8XANv4VnFd9Bp+3qefwdgA
-   re4lGWlJzVA469mOx5VAH5QqxPYlju1hv2Cl2aUkOuektWmDWdxv5arbR
-   9kJ5vCpqCnJQ51fOzD4UJOWd6uIVEPTN8XN72Q8w55kbqvE9ZJiGuqyMj
-   g==;
-X-CSE-ConnectionGUID: oFkv6Q1zS0+I3Pq9LmXIgQ==
-X-CSE-MsgGUID: 2eYfjbZXSRCJTs8sh5/JOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52118542"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="52118542"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 02:00:47 -0700
-X-CSE-ConnectionGUID: HH1a30xbQEe3a7iHL6TnDA==
-X-CSE-MsgGUID: Dnh+Yw5LQO2XRvJRXq7amw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="136243871"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 02:00:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "Paul E . McKenney" <paulmck@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Date: Thu,  8 May 2025 12:00:36 +0300
-Message-Id: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1746695333; c=relaxed/simple;
+	bh=8SkZUgZyYvBe6FFYuWQO+cRb9j2orVXbhXcmpKeqvUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQ1SpRo/RrIVtgrDXpmv0L1/1fISzDyOfzEZteGLg0tM5e+8wtDcCgLlMha/BQK465sdtW596D277HMgbo+euaFb94AF9H5Z1b/mbGxz+5MoN67F6dFZNZ2vAJPQ9NkkJWkHB90mPBbyvOWHNo97NOKHcucVH3FgDr1/L/zQVoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P1AzCW+u; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746695327;
+	bh=id4tiKZeuAnKN2fZO6welXUYOflEk+8g59ZcxNs4qH0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P1AzCW+u4qMYXiIX5/BSQNbnUd39IPimyLd2ADJx/I5yqQIj7pIyQMUb4wRSgSLPz
+	 VSNfFer0Q7SoWRzQ9ZF/Q0NcWwf1zdhz5q1uIv65m0knDjVPD0YI0atE4+wqjPJ92j
+	 F2TJAePl9VPhw2H6/tPpOhIlOX8dKNrFnLUsirQ+9/Eoqg+ZmJdg4yG7ZAWKwrzR3P
+	 MH5Kkd/JJTU6ZduOcTvmmhcZSahBE55wTBb5GQ0qw7L2LdM0Q3OIsysH7B/GWAzq2T
+	 vSsiC2jmDbaNeaOxLHVvhd8/ivd+KHHu+2KrXmlP3F/S4jNwygF1mFITVhynGo8VuZ
+	 ca75gcqzuS++w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtRBk5lbmz4x21;
+	Thu,  8 May 2025 19:08:46 +1000 (AEST)
+Date: Thu, 8 May 2025 19:08:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, kernel-team@meta.com,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+Message-ID: <20250508190845.4cae8b62@canb.auug.org.au>
+In-Reply-To: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/1f9.u.3IHguvBWiXX3dmh2T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-The commit 0238f352a63a ("PCI/bwctrl: Replace lbms_count with
-PCI_LINK_LBMS_SEEN flag") remove all code related to
-pcie_bwctrl_lbms_rwsem but forgot to remove the rwsem itself.
-Remove it and the associated info from the comment now.
+Hi Paul,
 
-Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+On Wed, 7 May 2025 15:04:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> w=
+rote:
+>
+> PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+>=20
+> Builds with CONFIG_PREEMPT_RT=3Dy get the following build error:
+>=20
+> drivers/pci/pcie/bwctrl.c:56:22: error: =E2=80=98pcie_bwctrl_lbms_rwsem=
+=E2=80=99 defined but not used [-Werror=3Dunused-variable]
+>=20
+> Therefore, remove this unused variable.  Perhaps this should be folded
+> into the commit shown below.
+>=20
+> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_S=
+EEN flag")
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <linux-pci@vger.kernel.org>
+>=20
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index fdafa20e4587d..841ab8725aff7 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
+>   * (using just one rwsem triggers "possible recursive locking detected"
+>   * warning).
+>   */
+> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+>  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
+> =20
+>  static bool pcie_valid_speed(enum pci_bus_speed speed)
 
-Bjorn, this should be folded into the original commit I think.
+I added that to linux-next today and will remove it when it is no
+longer needed.
 
- drivers/pci/pcie/bwctrl.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index fdafa20e4587..f31fbbd51490 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -45,15 +45,7 @@ struct pcie_bwctrl_data {
- 	struct thermal_cooling_device *cdev;
- };
- 
--/*
-- * Prevent port removal during LBMS count accessors and Link Speed changes.
-- *
-- * These have to be differentiated because pcie_bwctrl_change_speed() calls
-- * pcie_retrain_link() which uses LBMS count reset accessor on success
-- * (using just one rwsem triggers "possible recursive locking detected"
-- * warning).
-- */
--static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
-+/* Prevent port removal during Link Speed changes. */
- static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
- 
- static bool pcie_valid_speed(enum pci_bus_speed speed)
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-base-commit: 0238f352a63a075ac1f35ea565b5bec3057ec8bd
--- 
-2.39.5
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcdJ0ACgkQAVBC80lX
+0GwJcQf8CE7RayjNx5JFc7duQEtmFdNwWH6ceqhtR7LbFMfp9hC0R1tw5auPKrfW
+rUzR0iZiLbfhOhnPg/oL8jiNLDAqU8ueMLYqW9qVzkgtOa2LN9aFvGxIoJhKxY/6
+Gpnyt6oqGJVLBxqMPHYwtDRNWHpEmp63Wr3EkxG3JJk0X8EK+eFhGs8Na9gM/bi1
+tHmusQAlIBpPngj7hMX55E9lz0m8/PSIAAFNJiyOCwaOv16dLe7zpDlkBt5MHYxe
+SN7zYr7EIBvvDL2DURFB1dPb4kpzCAUyq9bqzHV5eTDkquD9npoSlf2iiuVif8jD
+OM1Yah10nyEDCRjgx81qDiMqim/MkA==
+=4Bpa
+-----END PGP SIGNATURE-----
+
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T--
 
