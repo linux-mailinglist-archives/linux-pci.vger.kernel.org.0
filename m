@@ -1,97 +1,171 @@
-Return-Path: <linux-pci+bounces-27506-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27507-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D2AAB143F
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 15:02:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E28C4AB144B
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 15:04:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 924513A8D2E
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 13:01:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54AF04C6531
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 13:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAC4828EA40;
-	Fri,  9 May 2025 13:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FA51291176;
+	Fri,  9 May 2025 13:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hc0YNYDd"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="FuouKjOx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEBA28D8FD;
-	Fri,  9 May 2025 13:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E9015E96;
+	Fri,  9 May 2025 13:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795670; cv=none; b=S5V4iprUtq8x9PJIW3NqasL9Twtujotty8s6UoU/27nuyIilxkN06uPW7RunWV9RjQQG08V6s+HGPuFsXibeR4GsnAuJ0+wgpP3x7vmPhWiy1350389H5V1gxIlmKex5OWPLLoCBhHwLZfMGphrwb1LQ4pga7HQ9vIOIbWk6yCs=
+	t=1746795854; cv=none; b=ZysvIzWY3cSBIhgaRdF1m3cfjMX6mXwlHzaj6ndLqX1XnUjbUCCk1MEF2OiUmqhND1AbbVrNgTysT0DMBpX0unxtpWaTKS4cAZmoEDqp+mux9wa+k5zU0jwiNHSkZucsVsMAmpA6YZo301L7OtE5H0rJ6qDUfDNq3fcY1XI1q9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795670; c=relaxed/simple;
-	bh=9MZHj+GCA6WVB4FMrptSj25S8jGsj6thQNlGMW0sbAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VvMOVsll/TGNVbgSPLx0OLLe4KoLOQ6r1NknCPMiQBSlzypopdwnCO7hNTPNeTmAn0y74gM/7YeRt6HeS7cLExck4PXf5yjtSFMoUpX4c+e1GJGW7F2TLZ1N1WHuDfqhm3VDsCucpow4bbFvdpbxXL2ndykd7VjyXD9HQNbXat0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hc0YNYDd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17993C4CEF2;
-	Fri,  9 May 2025 13:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746795669;
-	bh=9MZHj+GCA6WVB4FMrptSj25S8jGsj6thQNlGMW0sbAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hc0YNYDdQxYj+hGWtJuWaFjmmumS2+YfNwPs0H+/caivA9zWJrCknFwa2UjtG+b0Z
-	 f1MsNn1WrEZwNv76YzlYSkiY27TZNTRfm0KE94QRh5UCsHADIrVawAelQYKDyUlzIq
-	 JLJYwL5jjomH09DlXd3GM+zVbaV/ZrZQwfdxKWhsrpsb+/r/8w4BSghc74FOOMbzO6
-	 L+aH2wFboVFc45Gazhp/Qdc+VAUHWZ8nWx18ZNfwHfY2jkbsUF/N6Ef6eTjvcbtp7p
-	 eCSj1fFF0MiEovmWIfm6ulfJrjwwF+6fteyY55aHjJR3oipX6ykcgxvJqdRF19EbLx
-	 V46RSjf1E4x8Q==
-Date: Fri, 9 May 2025 15:01:03 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alistair Francis <alistair@alistair23.me>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [PATCH v3] PCI: dw-rockchip: Add support for slot reset on link
- down event
-Message-ID: <aB38j9p9nyrpL7HI@ryzen>
-References: <20250509-b4-pci_dwc_reset_support-v3-1-37e96b4692e7@wdc.com>
+	s=arc-20240116; t=1746795854; c=relaxed/simple;
+	bh=nnWev/U6mk3QsQ2rja9jL5cKPG13InXpkNQFhMAK3iE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e4mmivIoXpuRH0A14d+bYCibHwpQ0RniDQOq/+LCIORZWF3sAS7Ee2z5qHMxp2SOtMgntRrIpL4k83WytECvm1vSPBUcyD3nU7UPBNG7wNs8YiK6KIrLAruyvL+aZy9iyKgdqVKMj3hZcQf+1vd7EjGRXoBL6ptvMctNJWIv6mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=FuouKjOx; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 69C06666CB4;
+	Fri,  9 May 2025 15:04:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1746795843;
+	bh=nnWev/U6mk3QsQ2rja9jL5cKPG13InXpkNQFhMAK3iE=;
+	h=From:Subject:Date;
+	b=FuouKjOxm3JvSM8LnUfSs8dI44/XTTirlRNwQoSkt3RjKp+01YCUvTrtXg3C44OGb
+	 2WZcZ1CinJ1U/vvo1uTjEJRfnzH7LuXx8bd1bSYxqpAm87uhDv/AkbNxn6PE478CwM
+	 kXUvGR8XaCSzCB3/TQ9FC/2QcRvYxO1DeBIPH1cQ0v4UWz0XONONQrZZ2n2IW+xFoV
+	 wI0DLsMKoTgNV8K4gmBbi9e1kF3eP3EvlunvZxoXjqX10w8nDXQHqnN+uP0eAxsqtZ
+	 iFC3UBEwjAorh5nJ38TLz+Zec1AbUJWjhhHEhmCPIQCy9Ryaq2nzXWE6xGYaTUar7x
+	 KGTHzOe5oWXEw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+ x86 Maintainers <x86@kernel.org>, intel-xe@lists.freedesktop.org,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH v1 2/3] PM: sleep: Introduce pm_suspend_in_progress()
+Date: Fri, 09 May 2025 15:02:27 +0200
+Message-ID: <2020901.PYKUYFuaPT@rjwysocki.net>
+In-Reply-To: <5903743.DvuYhMxLoT@rjwysocki.net>
+References: <5903743.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-b4-pci_dwc_reset_support-v3-1-37e96b4692e7@wdc.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvieelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppedvudejrdduudegrdefgedrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddujedruddugedrfeegrdduledphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=10 Fuz1=10 Fuz2=10
 
-On Fri, May 09, 2025 at 12:30:12PM +1000, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> 
-> The PCIe link may go down in cases like firmware crashes or unstable
-> connections. When this occurs, the PCIe slot must be reset to restore
-> functionality. However, the current driver lacks link down handling,
-> forcing users to reboot the system to recover.
-> 
-> This patch implements the `reset_slot` callback for link down handling
-> for DWC PCIe host controller. In which, the RC is reset, reconfigured
-> and link training initiated to recover from the link down event.
-> 
-> This patch by extension fixes issues with sysfs initiated bus resets.
-> In that, currently, when a sysfs initiated bus reset is issued, the
-> endpoint device is non-functional after (may link up with downgraded link
-> status). With this patch adding support for link down recovery, a sysfs
-> initiated bus reset works as intended. Testing conducted on a ROCK5B board
-> with an M.2 NVMe drive.
-> 
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> ---
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Looks good to me:
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Introduce pm_suspend_in_progress() to be used for checking if a system-
+wide suspend or resume transition is in progress, instead of comparing
+pm_suspend_target_state directly to PM_SUSPEND_ON, and use it where
+applicable.
+
+No intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+The only change in this patch that depends in the [1/3] is in
+kernel/power/main.c and it is not relevant for PCI/x86 and xe.
+
+---
+ arch/x86/pci/fixup.c        |    4 ++--
+ drivers/base/power/wakeup.c |    2 +-
+ drivers/gpu/drm/xe/xe_pm.c  |    2 +-
+ include/linux/suspend.h     |    5 +++++
+ kernel/power/main.c         |    4 ++--
+ 5 files changed, 11 insertions(+), 6 deletions(-)
+
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -970,13 +970,13 @@
+ 	struct pci_dev *rp;
+ 
+ 	/*
+-	 * PM_SUSPEND_ON means we're doing runtime suspend, which means
++	 * If system suspend is not in progress, we're doing runtime suspend, so
+ 	 * amd-pmc will not be involved so PMEs during D3 work as advertised.
+ 	 *
+ 	 * The PMEs *do* work if amd-pmc doesn't put the SoC in the hardware
+ 	 * sleep state, but we assume amd-pmc is always present.
+ 	 */
+-	if (pm_suspend_target_state == PM_SUSPEND_ON)
++	if (!pm_suspend_in_progress())
+ 		return;
+ 
+ 	rp = pcie_find_root_port(dev);
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -337,7 +337,7 @@
+ 	if (!dev || !dev->power.can_wakeup)
+ 		return -EINVAL;
+ 
+-	if (pm_suspend_target_state != PM_SUSPEND_ON)
++	if (pm_suspend_in_progress())
+ 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
+ 
+ 	ws = wakeup_source_register(dev, dev_name(dev));
+--- a/drivers/gpu/drm/xe/xe_pm.c
++++ b/drivers/gpu/drm/xe/xe_pm.c
+@@ -641,7 +641,7 @@
+ 
+ 	return dev->power.runtime_status == RPM_SUSPENDING ||
+ 		dev->power.runtime_status == RPM_RESUMING ||
+-		pm_suspend_target_state != PM_SUSPEND_ON;
++		pm_suspend_in_progress();
+ #else
+ 	return false;
+ #endif
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -298,6 +298,11 @@
+ static inline void s2idle_wake(void) {}
+ #endif /* !CONFIG_SUSPEND */
+ 
++static inline bool pm_suspend_in_progress(void)
++{
++	return pm_suspend_target_state != PM_SUSPEND_ON;
++}
++
+ /* struct pbe is used for creating lists of pages that should be restored
+  * atomically during the resume from disk, because the page frames they have
+  * occupied before the suspend are in use.
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -613,8 +613,8 @@
+ 
+ bool pm_debug_messages_should_print(void)
+ {
+-	return pm_debug_messages_on && (hibernation_in_progress() ||
+-		pm_suspend_target_state != PM_SUSPEND_ON);
++	return pm_debug_messages_on && (pm_suspend_in_progress() ||
++		hibernation_in_progress());
+ }
+ EXPORT_SYMBOL_GPL(pm_debug_messages_should_print);
+ 
+
+
+
 
