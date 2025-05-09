@@ -1,177 +1,131 @@
-Return-Path: <linux-pci+bounces-27504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABEC1AB132E
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 14:20:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C28CAB13CA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 14:50:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 132DF1BA620C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 12:20:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5390C3A9931
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 12:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700DD274642;
-	Fri,  9 May 2025 12:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E533128FFC9;
+	Fri,  9 May 2025 12:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WE6X6Oe6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XKPz6Mj1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D2321CC43;
-	Fri,  9 May 2025 12:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA56139B;
+	Fri,  9 May 2025 12:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793236; cv=none; b=IYjPzHr1ZkYnf/ArX8JJvLEDmZtaIeYXV8wgL2d0jUSs9P94pBzEK0cTWSbBxdC8O3Pv3+C5EEY8y5JiMrTJJwHTjkbnWadrShyqU07tVHZdUwg+FHbFpov/UMGb2LesdMcaBBsk4N6A27dcBboYtJabyM8N1chg9mXN0EXZowI=
+	t=1746795018; cv=none; b=jwDFJq8u9I4pEos8bri2klLl7U3oOBmnv/hn2xqx/jLf9P+mVponYhBOQlJe1CrjF0QFVnJiFcY3YjVg3FEq3SlPUWENuI0n0XruEA5hkpM+4vYUw8nz8uVCxVUQ9WusPoI+qxVVib1nOgrfoerve1ug8+9RBoG3r3sEGsRjVE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746793236; c=relaxed/simple;
-	bh=Ax9T6UkoX56Blctsz+lrpfAmrwAvmcSV3HKk+zSsLyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ByPArgAzx3AazzHdfXXjc9DyulgcWPzWr4lAiyuqBHVdY5JPCE17z+qsN5tYgkwJteiqVdXvUj0axGns5jKxiymWa1Axn/IlkVMnau0CKNmmLXRc0ym5yEOfbPpK1syE5Gso0hTv5Z2YvvbNXAf669bmpZnxTbBccBMDt+aWW4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WE6X6Oe6; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=9Szx3j0XFQEI/UBZs807hBKYHQ3bAc/qN60fFOlHrtI=;
-	b=WE6X6Oe68i2pgvx5xNscRvtTNl3LlOetrwoJA5hDiunh5b9eEwaidFRfleV8n5
-	v+bysff+v0rPSbJOT1Hby7e3FKVCp67ea45gyvg7e2SS/6cmVlmS44czvB2v+aia
-	fsKZBlcG59+ToQhiA3BZFRmj7Ad0b8FgffcspENpFqbac=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3_5EM7x1oPsfZAA--.35294S2;
-	Fri, 09 May 2025 20:03:27 +0800 (CST)
-Message-ID: <78abe899-e529-49e8-9a16-a2657db666e4@163.com>
-Date: Fri, 9 May 2025 20:03:24 +0800
+	s=arc-20240116; t=1746795018; c=relaxed/simple;
+	bh=fnDyeYcUpoqrbSOCi2sjTmd6cIjqVA+Zh5TB8SQPjQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kg4nKiS1kVPpcSkD+EXJJoasNs3SjnXpQksGla7MF0fyAPwk6aQRcdvOExPIdK5bSVHEP5QeBg9V3C3L2BqzRo3q8BA2agPJVthzBW2xA2hJgnF2ZzCQzjm8avzbDjH8oOB+8mKURJmarjx96VmQTjElecuaEo8f5rjxn8xAXEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XKPz6Mj1; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746795017; x=1778331017;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fnDyeYcUpoqrbSOCi2sjTmd6cIjqVA+Zh5TB8SQPjQI=;
+  b=XKPz6Mj1fjIPZ79M+EZzMTZLpyY/EM34tbmcjTRjLaRHLSB1SpjNf+yI
+   MbRUbix1IwUci25QhU5DnTk6E2sp2YoSed2hG6ym/oqoP6YVHfO4K6YBC
+   7Y+XUa9jsW/822EyxkkSIajMTI2YdTq4LcELzj6Bp7aC9cn+/8uVVE1bS
+   u8YZSidvj3LSFYcyvqoMu2Hgrq3uJcC8wzHrRjU7Lur/2oQYFb2zpG7t+
+   KzJnjtY2JV7FT5s27XclcUgUPysVYUOE9eM2TnXYVIURwUyVqevd19lFo
+   83z/953RBBe4w1DmNIdhhX3kceo8UIB21MHlOF+6wsuhFXE3i0LPkB4CF
+   w==;
+X-CSE-ConnectionGUID: M93uQD7lSwWeRrJKp22bPw==
+X-CSE-MsgGUID: t79fLzXPQ2GoELf4JmYkAA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52273402"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="52273402"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 05:50:17 -0700
+X-CSE-ConnectionGUID: MvJmEGOHRk+FrunGlOFqxg==
+X-CSE-MsgGUID: knNqLrorTzWFiC1IS8AnwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="136631082"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 09 May 2025 05:50:13 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDNB4-000C5f-2p;
+	Fri, 09 May 2025 12:50:10 +0000
+Date: Fri, 9 May 2025 20:49:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com, kw@linux.com
+Cc: oe-kbuild-all@lists.linux.dev, cassel@kernel.org, robh@kernel.org,
+	jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
+Subject: Re: [PATCH v11 4/6] PCI: dwc: Use common PCI host bridge APIs for
+ finding the capabilities
+Message-ID: <202505092036.Sw8SstSY-lkp@intel.com>
+References: <20250505163420.198012-5-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org,
- robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com,
- jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-4-18255117159@163.com>
- <20250506174110.63ayeqc4scmwjj6e@pali>
- <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
- <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
- <20250507163620.53v5djmhj3ywrge2@pali>
- <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3_5EM7x1oPsfZAA--.35294S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrW8WFWktr1rAF45Kw13twb_yoWrWFykpF
-	y3XF1FyFs8Jr13CFnFqa1kKry3tasrKryrXrn8Gry3AF9IqryUGFy2yr4rua47Xr1xCF1j
-	yr1YqrWSvF1Yy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07URc_hUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwdIo2gd5xbcqQAAsG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505163420.198012-5-18255117159@163.com>
+
+Hi Hans,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on ca91b9500108d4cf083a635c2e11c884d5dd20ea]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-bus-config-read-helper-function/20250506-004221
+base:   ca91b9500108d4cf083a635c2e11c884d5dd20ea
+patch link:    https://lore.kernel.org/r/20250505163420.198012-5-18255117159%40163.com
+patch subject: [PATCH v11 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+config: parisc-randconfig-r063-20250509 (https://download.01.org/0day-ci/archive/20250509/202505092036.Sw8SstSY-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505092036.Sw8SstSY-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505092036.Sw8SstSY-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In function 'dw_pcie_read_cfg',
+       inlined from 'dw_pcie_find_capability' at drivers/pci/controller/dwc/pcie-designware.c:219:9:
+>> drivers/pci/controller/dwc/pcie-designware.c:212:14: warning: write of 32-bit data outside the bound of destination object, data truncated into 8-bit [-Wextra]
+     212 |         *val = dw_pcie_read_dbi(pci, where, size);
+         |         ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+vim +212 drivers/pci/controller/dwc/pcie-designware.c
 
-On 2025/5/9 15:08, Manivannan Sadhasivam wrote:
-> On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
->> On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
->>> On 2025/5/7 23:03, Hans Zhang wrote:
->>>> On 2025/5/7 01:41, Pali Rohár wrote:
->>>>> On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
->>>>>> The Aardvark PCIe controller enforces a fixed 512B payload size via
->>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
->>>>>> core negotiations.
->>>>>>
->>>>>> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
->>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
->>>>>> during device initialization, leveraging root port configurations and
->>>>>> device-specific capabilities.
->>>>>>
->>>>>> Aligning Aardvark with the unified MPS framework ensures consistency,
->>>>>> avoids artificial constraints, and allows the hardware to operate at
->>>>>> its maximum supported payload size while adhering to PCIe
->>>>>> specifications.
->>>>>>
->>>>>> Signed-off-by: Hans Zhang <18255117159@163.com>
->>>>>> ---
->>>>>>    drivers/pci/controller/pci-aardvark.c | 2 --
->>>>>>    1 file changed, 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/controller/pci-aardvark.c
->>>>>> b/drivers/pci/controller/pci-aardvark.c
->>>>>> index a29796cce420..d8852892994a 100644
->>>>>> --- a/drivers/pci/controller/pci-aardvark.c
->>>>>> +++ b/drivers/pci/controller/pci-aardvark.c
->>>>>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
->>>>>> advk_pcie *pcie)
->>>>>>        reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->>>>>>        reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
->>>>>>        reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
->>>>>> -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
->>>>>>        reg &= ~PCI_EXP_DEVCTL_READRQ;
->>>>>> -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
->>>>>>        reg |= PCI_EXP_DEVCTL_READRQ_512B;
->>>>>>        advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->>>>>> -- 
->>>>>> 2.25.1
->>>>>>
->>>>>
->>>>> Please do not remove this code. It is required part of the
->>>>> initialization of the aardvark PCI controller at the specific phase,
->>>>> as defined in the Armada 3700 Functional Specification.
->>>>>
->>>>> There were reported more issues with those Armada PCIe controllers for
->>>>> which were already sent patches to mailing list in last 5 years. But
->>>>> unfortunately not all fixes were taken / applied yet.
->>>>
->>>> Hi Pali,
->>>>
->>>> I replied to you in version v2.
->>>>
->>>> Is the maximum MPS supported by Armada 3700 512 bytes?
->>
->> IIRC yes, 512-byte mode is supported. And I think in past I was testing
->> some PCIe endpoint card which required 512-byte long payload and did not
->> worked in 256-byte long mode (not sure if the card was not able to split
->> transaction or something other was broken, it is quite longer time).
->>
->>>> What are the default values of DevCap.MPS and DevCtl.MPS?
->>
->> Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
->> type?
->>
->> Aardvark controller does not have the real HW PCI-to-PCI bridge device.
->> There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
->> create fake kernel PCI device in the hierarchy to make kernel and
->> userspace happy. Yes, this is deviation from the PCIe standard but well,
->> buggy HW is also HW.
->>
->> And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
->>
-> 
-> Oh. Then this patch is not going to change the MPS setting of the root bus. But
-> that also means that there is a deviation in what the PCI core expects for a
-> root port and what is actually programmed in the hw.
-> 
-> Even in this MPS case, if the PCI core decides to scale down the MPS value of
-> the root port, then it won't be changed in the hw and the hw will continue to
-> work with 512B? Shouldn't the controller driver change the hw values based on
-> the values programmed by PCI core of the emul bridge?
-> 
-> But until that is fixed, this patch should be dropped.
-> 
+   207	
+   208	static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
+   209	{
+   210		struct dw_pcie *pci = priv;
+   211	
+ > 212		*val = dw_pcie_read_dbi(pci, where, size);
+   213	
+   214		return PCIBIOS_SUCCESSFUL;
+   215	}
+   216	
 
-Dear Mani,
-
-I will drop this patch in the next version.
-
-Best regards,
-Hans
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
