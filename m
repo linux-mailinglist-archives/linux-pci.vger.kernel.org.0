@@ -1,195 +1,303 @@
-Return-Path: <linux-pci+bounces-27493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D3B7AB0B41
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 09:10:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF050AB0C77
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 09:59:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17162520412
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 07:09:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5F253BB7D0
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 07:59:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1192701B5;
-	Fri,  9 May 2025 07:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D4926A1DA;
+	Fri,  9 May 2025 07:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBmFxLYS"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kFp8gQ8y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F411270ECD
-	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 07:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED0046B5
+	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 07:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746774534; cv=none; b=J/hGoeAan9xcpe0saZEHrENpnJMB4ZaY6ZEZhG3KOrHlfLGUK25yG3kl5EVvLQuoQRG1G0oGDQ5u7PpXy41VCZ1aj8x+XRhic3+vqPjcxej1VwNRa6gyS1SvFKGCsoTVH3SQRO72k9uvkwWmYd4wXggEdslCYplTe7snZtPdGE0=
+	t=1746777572; cv=none; b=pBIpxHvdnk6oPZB37TyyHsWLfA40cbK13owL1kE7x0Ufjvp4AsoMoL2JB/s4HTOf6jitZ2+fUBxTzsMI6oYp4NcZlLrr1XLJJeiTluCk+9RAhc6CjpUhhr3VIEALwg8IMyD9PXawKv7BUrBcUaH8yPhq0fUUP2txootPP+Nmk0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746774534; c=relaxed/simple;
-	bh=oZnnaQahcN2zA4vvZs+wzg11udFQZV8cb83SiP8IQXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppSFXT+xqD99mF42Jj76gMAsvOwe8F5HKtOGS1S1HaF/7g9IBeI2UL8jXczlxy1zKazkWoOqHYZmaIIcu4lTzWzPDGW9nJc0xmv+cgiSsCWND3um7XDL5TIDFXoLPRtuvJ9ezdaUVHtW3qLhRXr/Wy57EN++pZFwECdapXyx5B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GBmFxLYS; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so20098815e9.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 00:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746774530; x=1747379330; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=77qkoKjDKq6SXETuhF5rMrUj8XsUUdj7U8eiTVCOHj0=;
-        b=GBmFxLYSjCjfIfMTnXY09zej7BMiTYFQvhkBiY96e9Mb/6Qw2KfokBCwzvM0hb+CyX
-         iLKfBMfxmdD8yYkIUGmBXKvTspn9YjEYzwvbPdmlHYEvfzzmFicQvnHU/+AgOpYi00G1
-         SyY/66gpbyZ+L5B8NlStieSur/Thyn8IxZIl1R3V8bWYAU9BJUi3TYFZFdDp0DfzNdDc
-         cC6ulrBISaNuBmBcVlkoDaTrxvwrKCbUF3uEleGNTIziez5fzemlETeSDIpYl2Zo0Q5j
-         GrC2PTRt7gJftxSLw4RqJ1dJamPey3c1r4dnfGYrtYMhOoeaJ31WhJtB1lrRfKJpTQeF
-         ee3w==
+	s=arc-20240116; t=1746777572; c=relaxed/simple;
+	bh=dtYlNuz9bYsbK1kUI+BHu2/Ma6v0vUgex7AyCmr0Ju4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b7aSTlQFcILSxM4OVRfles9z4T+7lmKZgUaQN2pseKAgQT8b/aUA6c3VV5iHK8Hn3yDHne4l21Gtfum3blY8RmTA9+4UbQJlaz6U1LA5eIoDnuoYXBevEOfPLZcjcr83DwEYqsHN50c0199G4xNeyQDf+7s9S9IKzYVeTSvmwsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kFp8gQ8y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5493Xwxc031067
+	for <linux-pci@vger.kernel.org>; Fri, 9 May 2025 07:59:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OCrKRQxy8YR3luuA5bA8ec5wbTqiTzkXKtXRBEV+qW8=; b=kFp8gQ8yJRDSeqxE
+	Rzq9i9n5mXHYMvQa82NyTCg3Hl2XnmSJOkHmw3+QEwa2GfV2NnFJ0mJst1ZjVRlu
+	1dAdf7n9lsmS9/zktfcGGGJTPVgMre2jonzSbeaP6mhQKhJEKTAJAhin+0k2JCVI
+	IGOBpD8ZNXp481yyY/WXZFr9sXvGzVaarfW+KeOc8hJ0+ke66CHXd2W1WCxfacz6
+	4LuQdAMw0ZbdVoZGOv8qJKhWFHpB/vewzvyCTh4E5D1cyR4O1c05nuGGvkABf4gD
+	jd/KcDuNUhYJavJYcgJLZZ3XlE361rU7YIUCHrqREs1cJe2LLFYd0l/hbANrkVIw
+	biqJUw==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpgktt4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 07:59:29 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-30c50f130d9so195943a91.1
+        for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 00:59:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746774530; x=1747379330;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1746777568; x=1747382368;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=77qkoKjDKq6SXETuhF5rMrUj8XsUUdj7U8eiTVCOHj0=;
-        b=Vd3WtZ+ndYHGVDvtmKas2V+oaTTmnZjfRqOHSaQMKYEDtG8l9qdZikC4BtwOVr+clq
-         Sj1NhqkCQsxNuYpFOMMf65GQMPirDlEguFXzYJfOFTeV8/nocCit5LAjm+rESX3tHZ2+
-         OgiLaA9fbniFBwRgJm185F2gp0y4kDXzgZaXI3RcsA4rZuy0/XqF6g51RS3MuMcAo5TC
-         CRJQz9TNZLVTxbLMD2Teqf/yle3EqIIB85Ah6EBviy/MR/+JWRxEVw4guwUTN5r/8001
-         tMfaXEhm1/SLBOvOUNuAY8wZHM9IB0Qgd57M8lBSbhWK3/eN4LFO1UpmH1lk4AfPpNpR
-         cSHg==
-X-Forwarded-Encrypted: i=1; AJvYcCU337VZFWykTnyt8amW56Zu982WfjGYOv9BYV61/vWfWobZK9lrZPltVbBfJrxhoVzW/YqYxzuuo/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ4K5hy9svEgRQdFk01VhcLCd0EXEVqBZwnR14bvwhK9+S2Qlk
-	OXMet7yA6hXaJXKq9L4Cqkkjip1W6zDMw721vp2pWbSTeR4CQD0mOOUy0VOdLw==
-X-Gm-Gg: ASbGncvX+bFed2O7ytPPu5llO0mIm1iTK832lkUDJsFERJpkDOQhrezw8zaWWd5xaiZ
-	VQ5fO/L4NtwlfnxuqS2l9gI+Z+vVIMHoT/0haAl0aaQx+v/+aEZ3GNAQvdwXrpwy03dhDzwIoZE
-	oBWt276J1Bq0OSxnacdeXcLSzJZBDylKRYVoiDYf3bAXvznRcz3/3RPxNWwse0hyE2eOALcS5uE
-	Otc5rEcTiDbOMRobXyi4gW8ggoipoLaMZq+6m6vDIyKphBTqFoJ94qD/Vxt3R7JXmNBW8zp+iI7
-	JwQjV7AResM+VsHhVobfcsbxCI+Tu9JMa7Gdpi3Z0C0PrN+BcYxARg68yWxoWeEzKdoSfsLX3Eb
-	HxjUZhnlD3f27ad98iImyFnY=
-X-Google-Smtp-Source: AGHT+IHR5+ZqZWgRoRLa1o1Gg2Cvw+npoLGEsXcz8CnQxm7QZTBi9ul3cXloYS+TYHobQ2CzSJpuaQ==
-X-Received: by 2002:a5d:5f51:0:b0:3a1:f563:f84e with SMTP id ffacd0b85a97d-3a1f6a4370emr1630423f8f.16.1746774530584;
-        Fri, 09 May 2025 00:08:50 -0700 (PDT)
-Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde1asm2305688f8f.8.2025.05.09.00.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:08:49 -0700 (PDT)
-Date: Fri, 9 May 2025 12:38:48 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com, 
-	bhelgaas@google.com, heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org, 
-	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
-	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
-Message-ID: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-4-18255117159@163.com>
- <20250506174110.63ayeqc4scmwjj6e@pali>
- <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
- <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
- <20250507163620.53v5djmhj3ywrge2@pali>
+        bh=OCrKRQxy8YR3luuA5bA8ec5wbTqiTzkXKtXRBEV+qW8=;
+        b=KMxRYoxI9QmuolDMefcFPmlNivdjHitJHwvNkCIv/TeOL55DoUtisCQPN7snTK/hDz
+         ckxbckXdXhfXLbnGypoWOQKmDQ45PIzUufiLjyF57EYesKWbkWjF1Ta+EoLgtoHHvjg+
+         uZNTcRw2Xe2I+DSXJMWrUV599VwokBtKdkaZ5psLgH0lSBXO50YDDH+tX4aui30xcJMC
+         +wYwUilggoubs4PRr+RxsoqvU8ZmiiXksR5KK7NvERIJ7Kfz+PUMGPNMsg+A8eAGt7jX
+         Z8YKKAPk3NTUbOuYpQwLexa3fLRoZdAieRsQUMfJYTFLM30p200d1dZY+WphfWZ9SEae
+         qgIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfvKcDVlmlTq1S77jjvh9QrqQmJvdCsBdlpFi5DCjkbk1N80aOnW4jty91wPkVGYEev7gL5rni8oY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywL4fmcXzj1xbxfpEgFGsEpkfIp6fMRGeXII7YHS2ogmoFBEpe
+	2hdQQ0U7a9n5AnCCJlWsZWZNk2ly38S1Xkf1coIZ3SrcAo5WXtT2v62AxtVfOGnL6pEojwEBCPn
+	/joBD+bmVCC1GOLa/08Y4YgF69h37YsKtYg46jlvck+OQYxNKkMdRMdZfRz4=
+X-Gm-Gg: ASbGncstqhRMek9NAc2DeQw/i6YRUzeDOjIHE83bWAUPwBmXtLIV1MaY+K+kHg9fXwo
+	bb+AJSyGq/6FJMf8lzCUt1cBJ+pn5YQfVrfBV3i2/pPnQVxYv8EJAfMMFJXfOez47Z64QtjjFZg
+	h+yOQ9LayjFpBMB9SMLLv7nPZ26MyFwVISGdwu8cogDas+I1Y4fVPtzcvOV3Jy1xYi9pzHiO+vH
+	Inp4UP6ZGr2cnRXLfku34+45W+oSqvMEtV9FAE2r6PeOdpkvcNCC4Vh4mn873WU8JrKqFnqoWBZ
+	YerpBim7/AP9LFHtbzTyA/IyuiOIvX0UpEIf69dX5g==
+X-Received: by 2002:a17:90b:3d8b:b0:30a:214e:befc with SMTP id 98e67ed59e1d1-30c3d6441e9mr4228042a91.27.1746777567933;
+        Fri, 09 May 2025 00:59:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEM8flrCm/0zbyLoPgSTE1E9aY4pS1aZWZQVppKskWIFXLnJqaXfJUIpOvOGeAJF3WhJuq8uw==
+X-Received: by 2002:a17:90b:3d8b:b0:30a:214e:befc with SMTP id 98e67ed59e1d1-30c3d6441e9mr4228005a91.27.1746777567437;
+        Fri, 09 May 2025 00:59:27 -0700 (PDT)
+Received: from [10.92.214.105] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39dd4334sm1274867a91.13.2025.05.09.00.59.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 00:59:27 -0700 (PDT)
+Message-ID: <a8e58612-c6f5-8b61-af35-2c2897ad7827@oss.qualcomm.com>
+Date: Fri, 9 May 2025 13:29:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250507163620.53v5djmhj3ywrge2@pali>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 2/2] PCI: Add support for PCIe wake interrupt
+Content-Language: en-US
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm-msm@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, cros-qcom-dts-watchers@chromium.org,
+        Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+References: <20250419-wake_irq_support-v2-0-06baed9a87a1@oss.qualcomm.com>
+ <20250419-wake_irq_support-v2-2-06baed9a87a1@oss.qualcomm.com>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20250419-wake_irq_support-v2-2-06baed9a87a1@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=Ao/u3P9P c=1 sm=1 tr=0 ts=681db5e1 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=UypG6ifEkSd7053-VuIA:9
+ a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA3NiBTYWx0ZWRfX7rEY80T4KGsa
+ yEzmtvSnacFke93tKPly2mhoXXcMrVcF1ofIEACb+uCTljFpZ4ApMilLhTx9IC1E68qYZpBt6mR
+ 1BPgCLCPJFrC4ulDeOeQ7FEB72x85u4w9Fqk8UlPPJJaiVpvf+ubWf/UsaCKVGoELKnq2rkPpBa
+ 3lXu/+Pos6InIs/mYD9umFku7px6RTfwY9NCKIDaSNKG21F9tKHf1VD1axWHZr8E8NLV+Z3qKXC
+ iP3RWGHkCsyOAvN+KVUTod5zqGfb8Ksn6miEvwHAGO3lNWBIyA1NHthbPX1IIEjFQEtR54BA3Zy
+ kt2xKCamIKRreFyJYYjFXQPwmb4ePmlwHZkScQ2idhLNOuLQm5+FUBgxbxZJM96Lp8sRYJ1k0We
+ OyvvQthatfU5OgmqpJz9wnQ1rKmuZK90GXhP0OEhBPPV2Vn43MHYoE1jAuOVmbPdRdBq+id4
+X-Proofpoint-GUID: z1wn4K06PFoTXZyjY6lqMrDNRVzCQblu
+X-Proofpoint-ORIG-GUID: z1wn4K06PFoTXZyjY6lqMrDNRVzCQblu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090076
 
-On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
-> On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
-> > On 2025/5/7 23:03, Hans Zhang wrote:
-> > > On 2025/5/7 01:41, Pali Rohár wrote:
-> > > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
-> > > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
-> > > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
-> > > > > core negotiations.
-> > > > > 
-> > > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
-> > > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
-> > > > > during device initialization, leveraging root port configurations and
-> > > > > device-specific capabilities.
-> > > > > 
-> > > > > Aligning Aardvark with the unified MPS framework ensures consistency,
-> > > > > avoids artificial constraints, and allows the hardware to operate at
-> > > > > its maximum supported payload size while adhering to PCIe
-> > > > > specifications.
-> > > > > 
-> > > > > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > > > > ---
-> > > > >   drivers/pci/controller/pci-aardvark.c | 2 --
-> > > > >   1 file changed, 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
-> > > > > b/drivers/pci/controller/pci-aardvark.c
-> > > > > index a29796cce420..d8852892994a 100644
-> > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
-> > > > > advk_pcie *pcie)
-> > > > >       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> > > > >       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
-> > > > >       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
-> > > > > -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > > > >       reg &= ~PCI_EXP_DEVCTL_READRQ;
-> > > > > -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
-> > > > >       reg |= PCI_EXP_DEVCTL_READRQ_512B;
-> > > > >       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> > > > > -- 
-> > > > > 2.25.1
-> > > > > 
-> > > > 
-> > > > Please do not remove this code. It is required part of the
-> > > > initialization of the aardvark PCI controller at the specific phase,
-> > > > as defined in the Armada 3700 Functional Specification.
-> > > > 
-> > > > There were reported more issues with those Armada PCIe controllers for
-> > > > which were already sent patches to mailing list in last 5 years. But
-> > > > unfortunately not all fixes were taken / applied yet.
-> > > 
-> > > Hi Pali,
-> > > 
-> > > I replied to you in version v2.
-> > > 
-> > > Is the maximum MPS supported by Armada 3700 512 bytes?
-> 
-> IIRC yes, 512-byte mode is supported. And I think in past I was testing
-> some PCIe endpoint card which required 512-byte long payload and did not
-> worked in 256-byte long mode (not sure if the card was not able to split
-> transaction or something other was broken, it is quite longer time).
-> 
-> > > What are the default values of DevCap.MPS and DevCtl.MPS?
-> 
-> Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
-> type?
-> 
-> Aardvark controller does not have the real HW PCI-to-PCI bridge device.
-> There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
-> create fake kernel PCI device in the hierarchy to make kernel and
-> userspace happy. Yes, this is deviation from the PCIe standard but well,
-> buggy HW is also HW.
-> 
-> And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
-> 
+A Gentle remainder.
 
-Oh. Then this patch is not going to change the MPS setting of the root bus. But
-that also means that there is a deviation in what the PCI core expects for a
-root port and what is actually programmed in the hw.
+- Krishna Chaitanya.
 
-Even in this MPS case, if the PCI core decides to scale down the MPS value of
-the root port, then it won't be changed in the hw and the hw will continue to
-work with 512B? Shouldn't the controller driver change the hw values based on
-the values programmed by PCI core of the emul bridge?
-
-But until that is fixed, this patch should be dropped.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+On 4/19/2025 11:13 AM, Krishna Chaitanya Chundru wrote:
+> PCIe wake interrupt is needed for bringing back PCIe device state
+> from D3cold to D0.
+> 
+> Implement new functions, of_pci_setup_wake_irq() and
+> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
+> using the Device Tree.
+> 
+>  From the port bus driver call these functions to enable wake support
+> for bridges.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>   drivers/pci/of.c           | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+>   drivers/pci/pci.h          |  6 +++++
+>   drivers/pci/pcie/portdrv.c | 12 +++++++++-
+>   3 files changed, 77 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ab7a8252bf4137a17971c3eb8ab70ce78ca70969..13623797c88a03dfb9d9079518d87a5e1e68df38 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -7,6 +7,7 @@
+>   #define pr_fmt(fmt)	"PCI: OF: " fmt
+>   
+>   #include <linux/cleanup.h>
+> +#include <linux/gpio/consumer.h>
+>   #include <linux/irqdomain.h>
+>   #include <linux/kernel.h>
+>   #include <linux/pci.h>
+> @@ -15,6 +16,7 @@
+>   #include <linux/of_address.h>
+>   #include <linux/of_pci.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+>   #include "pci.h"
+>   
+>   #ifdef CONFIG_PCI
+> @@ -966,3 +968,61 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>   	return slot_power_limit_mw;
+>   }
+>   EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> +
+> +/**
+> + * of_pci_setup_wake_irq - Set up wake interrupt for PCI device
+> + * @pdev: The PCI device structure
+> + *
+> + * This function sets up the wake interrupt for a PCI device by getting the
+> + * corresponding GPIO pin from the device tree, and configuring it as a
+> + * dedicated wake interrupt.
+> + *
+> + * Return: 0 if the wake gpio is not available or successfully parsed else
+> + * errno otherwise.
+> + */
+> +int of_pci_setup_wake_irq(struct pci_dev *pdev)
+> +{
+> +	struct gpio_desc *wake;
+> +	struct device_node *dn;
+> +	int ret, wake_irq;
+> +
+> +	dn = pci_device_to_OF_node(pdev);
+> +	if (!dn)
+> +		return 0;
+> +
+> +	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
+> +				     "wake", GPIOD_IN, NULL);
+> +	if (IS_ERR(wake)) {
+> +		dev_warn(&pdev->dev, "Cannot get wake GPIO\n");
+> +		return 0;
+> +	}
+> +
+> +	wake_irq = gpiod_to_irq(wake);
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+> +	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
+> +		device_init_wakeup(&pdev->dev, false);
+> +		return ret;
+> +	}
+> +	irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_setup_wake_irq);
+> +
+> +/**
+> + * of_pci_teardown_wake_irq - Teardown wake interrupt setup for PCI device
+> + *
+> + * @pdev: The PCI device structure
+> + *
+> + * This function tears down the wake interrupt setup for a PCI device,
+> + * clearing the dedicated wake interrupt and disabling device wake-up.
+> + */
+> +void of_pci_teardown_wake_irq(struct pci_dev *pdev)
+> +{
+> +	dev_pm_clear_wake_irq(&pdev->dev);
+> +	device_init_wakeup(&pdev->dev, false);
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_teardown_wake_irq);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62a3022c8b07a09f212f6888674487..b2f65289f4156fa1851c2d2f20c4ca948f36258f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -888,6 +888,9 @@ void pci_release_of_node(struct pci_dev *dev);
+>   void pci_set_bus_of_node(struct pci_bus *bus);
+>   void pci_release_bus_of_node(struct pci_bus *bus);
+>   
+> +int of_pci_setup_wake_irq(struct pci_dev *pdev);
+> +void of_pci_teardown_wake_irq(struct pci_dev *pdev);
+> +
+>   int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
+>   bool of_pci_supply_present(struct device_node *np);
+>   
+> @@ -931,6 +934,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+>   	return 0;
+>   }
+>   
+> +static int of_pci_setup_wake_irq(struct pci_dev *pdev) { return 0; }
+> +static void of_pci_teardown_wake_irq(struct pci_dev *pdev) { }
+> +
+>   static inline bool of_pci_supply_present(struct device_node *np)
+>   {
+>   	return false;
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index e8318fd5f6ed537a1b236a3a0f054161d5710abd..33220ecf821c348d49782855eb5aa3f2fe5c335e 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -694,12 +694,18 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>   	     (type != PCI_EXP_TYPE_RC_EC)))
+>   		return -ENODEV;
+>   
+> +	status = of_pci_setup_wake_irq(dev);
+> +	if (status)
+> +		return status;
+> +
+>   	if (type == PCI_EXP_TYPE_RC_EC)
+>   		pcie_link_rcec(dev);
+>   
+>   	status = pcie_port_device_register(dev);
+> -	if (status)
+> +	if (status) {
+> +		of_pci_teardown_wake_irq(dev);
+>   		return status;
+> +	}
+>   
+>   	pci_save_state(dev);
+>   
+> @@ -732,6 +738,8 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>   
+>   	pcie_port_device_remove(dev);
+>   
+> +	of_pci_teardown_wake_irq(dev);
+> +
+>   	pci_disable_device(dev);
+>   }
+>   
+> @@ -744,6 +752,8 @@ static void pcie_portdrv_shutdown(struct pci_dev *dev)
+>   	}
+>   
+>   	pcie_port_device_remove(dev);
+> +
+> +	of_pci_teardown_wake_irq(dev);
+>   }
+>   
+>   static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+> 
 
