@@ -1,154 +1,103 @@
-Return-Path: <linux-pci+bounces-27521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67C59AB1C2D
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 20:18:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92A1EAB1C9F
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 20:48:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFDA717555C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 18:18:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 949857ABF25
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 18:47:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC6C239E9D;
-	Fri,  9 May 2025 18:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F2F323F403;
+	Fri,  9 May 2025 18:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGEunP5W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWlpSlQD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B9323717F;
-	Fri,  9 May 2025 18:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2181222CBF6;
+	Fri,  9 May 2025 18:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746814709; cv=none; b=Yk4nLbQrJx+YxRYk0m8+o/mYq5Ns4G+brW3xpwpoyM0Q8kZHnnb2c/frSscotYMz82d19N8z/qvYdhU11LYL9YDfbGfyH5d+DYxmaRFx6oB79D76YWa5ZP2oDRXivFgdlndJ+nCiUC803u5pm8jWVq3p4HLg9oIlDfGuQu0I07U=
+	t=1746816521; cv=none; b=RtGFKEoJnd2xR5WWnvmmsOX9PTY6wWmUcOYv+k6d/d2dksQ79vTnZJ4ra4zsk8MmJJHSM1HJutWU/8mq8hEukXHcuD0E9EYSLUfEGQ508znwfcWzFxA3729YIAjUEVQiYrL2RPZeZgdg2Kw9Rh2uasd/UNEI3632m94jX4jbivQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746814709; c=relaxed/simple;
-	bh=QgkMIQSFhwC8cFW+87HfiPAgAAhFZlcFwtyVE28nzu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFgurCINyGrNJV44216W6fBnPGmSz0fJs8aTB+UmR2CNtWRGLV3Pb0lFVP9SmIk3b9koyff3Rd+4blAB+Rn1AgDkUYdFmWuNRb2RcXZmwlXMvJHD7gz0CW5auLu72hLanNQOvuXLkTXnp3UsSZZKx23QVDsnSNTzUVmBEzgRkoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGEunP5W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3CE8C4CEE4;
-	Fri,  9 May 2025 18:18:28 +0000 (UTC)
+	s=arc-20240116; t=1746816521; c=relaxed/simple;
+	bh=My1+3MQih7+ZGs+koEY7B2zh1yjPSCZ9rBsJe5PRIIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HMdKhu6gzfJZ/Bh8OGWYBJXamQBQRkRFlyK35IeeEcBKYowFWAedAKl1fEo7O4nvYSv9iHd6YIpUw1TMs7ZI5cG5tqDrKXMKUsywo/bRL4XyrHqg2gmMD1aTDwrbNyJ5YfkybNrZIpb7f1PqcADKZ/4iqfDYo8XQjBvVbjyx86Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWlpSlQD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D950C4CEE4;
+	Fri,  9 May 2025 18:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746814709;
-	bh=QgkMIQSFhwC8cFW+87HfiPAgAAhFZlcFwtyVE28nzu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGEunP5WIUZOiPSGqkzo+8zOFj6OlxwdggXSHKnz/xHdO8Ed9TUIm0LSFufUCHfN+
-	 4ZpUAhcYmvisVBS+lzP8dw2e7lrecWsCof5NA6oCJrI9PuYpZmjrgMX4Ebtsz6r7+v
-	 g3I8TXqOKjlrzkr+f5olUgPVg0UQx8PT6Yxx/cMT6gfRUJSxZvb2bvzRvGFvBMMbJu
-	 5GpbiQScIuigladtokH6XQZErIkzd3xGqHw/9VMp9GcMtiRuxhg5Il3QTPqjxITXhT
-	 zP3purUq+Mabv+4pV+4pAaiC5ni3jyk9qwkrzM7c99IP2SbTBLRURm3KsYVE6uIlau
-	 V0+9e1DVi3k4Q==
-Date: Fri, 9 May 2025 13:18:27 -0500
-From: Rob Herring <robh@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
-	dlemoal@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: pci-ep: Add ref-clk-mode
-Message-ID: <20250509181827.GA3879057-robh@kernel.org>
-References: <20250425092012.95418-2-cassel@kernel.org>
- <7xtp5i3jhntfev35uotcunur3qvcgq4vmcnkjde5eivajdbiqt@n2wsivrsr2dk>
- <aBHOaJFgZiOfTrrT@ryzen>
- <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
+	s=k20201202; t=1746816520;
+	bh=My1+3MQih7+ZGs+koEY7B2zh1yjPSCZ9rBsJe5PRIIQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uWlpSlQDvXdtvrGbuhSNYL7jBwpKW334EuH5bySmAq8bVBJTxhwubEU1o0Ys3zqOf
+	 by2synHLNe8b8FO6fOf2oA6VKjpQwBqp43e3SEhUTKZAmkHdDbHU+7GGvpbebdrqeO
+	 UUG1eTolTMUAtDcK1+WouZrzyh7hb9tngvqPKCoCeodWMKU6Yk46a1AX3Uh9T5IftT
+	 vsqcxD3iBNVSJUoXw2V9Xz3Cfik8cKU/ufRrWABA6SPpa7Wf23vs5xQY8YgAqxJ3Gv
+	 EhbFuYFX2Vy0cmfJyenylwmT81Mk4+7tBgZ18CxHeW7t6iwCP7nrchgXXtc5BvFBnQ
+	 ZucIbswQorUDQ==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-604ad0347f5so617445eaf.2;
+        Fri, 09 May 2025 11:48:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4Hpgt8LNx9xs1+hTlgfUdH/w04ahJ+i+wlI0RIR+6bnqMkVcUlxLxMmA13tuhLBQPF9Aew6iFmBSo@vger.kernel.org, AJvYcCWnLuneq8nx/ql1MNA3lgRpjTHL7A+gGht2AZs9doTR4XGzEgVW8ahORzKvr+ctfAKRLhMiLnv/ZgFg@vger.kernel.org, AJvYcCXmKo5eSQEICMZ2YCL5u4M77e4wHSYpt7HXN0hDTCRhbVMufYpQQay9/269Xx+bS2/vQoT23egVoNHvtbpF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDiIJ+JnbFVi/xPWXpLzYPAurTJFiQRp/nwcqmfE5NSSy2FZQ4
+	2sWiSXb0+OfI3SCQO1oU3Qq0PUJMnn6mza72EiOPAVeqqCM/T8TOagGEu+qCw/n257jZcCBkpER
+	zFozeHd2ot0yd8VxLH4O2O37GkaE=
+X-Google-Smtp-Source: AGHT+IEFE8/BnJZlxUAgWsL1amhNwc7r5riPys75kcshhW3sZ05Bo9lzZ6yPYfueEH7ZKd0hIVMQrBznvLXd2XsSH8c=
+X-Received: by 2002:a05:6870:a48b:b0:2d5:230f:b34d with SMTP id
+ 586e51a60fabf-2dba41fe6e7mr2783019fac.1.1746816519829; Fri, 09 May 2025
+ 11:48:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
+References: <7ae7866ab8b897253703ecee44c688b6832d49a3.1745552799.git.xiaopei01@kylinos.cn>
+In-Reply-To: <7ae7866ab8b897253703ecee44c688b6832d49a3.1745552799.git.xiaopei01@kylinos.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 9 May 2025 20:48:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iqu82HP4bd0Ne2AkjSt6_EDa43Qt5jAWhAGHcdq5ePUw@mail.gmail.com>
+X-Gm-Features: ATxdqUFbxBo0M0IYDtlWkZecAYcoPXiPlDtjaPpY-AvEt_JIptg9XIk2TngiCbY
+Message-ID: <CAJZ5v0iqu82HP4bd0Ne2AkjSt6_EDa43Qt5jAWhAGHcdq5ePUw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: pci_root: Constify fwnode_handle in acpi_pci_root_remap_iospace
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 01:23:03PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Apr 30, 2025 at 09:16:56AM +0200, Niklas Cassel wrote:
-> > Hello Mani,
-> > 
-> > On Wed, Apr 30, 2025 at 12:35:18PM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Apr 25, 2025 at 11:20:12AM +0200, Niklas Cassel wrote:
-> > > > While some boards designs support multiple reference clocking schemes
-> > > > (e.g. Common Clock and SRNS), and can choose the clocking scheme using
-> > > > e.g. a DIP switch, most boards designs only support a single clocking
-> > > > scheme (even if the SoC might support multiple clocking schemes).
-> > > > 
-> > > > This property is needed such that the PCI controller driver, in endpoint
-> > > > mode, can set the proper bits, e.g. the Common Clock Configuration bit and
-> > > > the SRIS Clocking bit, in the PCIe Link Control Register (Offset 10h).
-> > > > (Sometimes, there are also specific bits that needs to be set in the PHY.)
-> > > > 
-> > > 
-> > > Thanks for adding the property. I did plan to submit something similar to allow
-> > > Qcom PCIe EP controllers to run in SRIS mode.
-> > > 
-> > > > Some device tree bindings have already implemented vendor specific
-> > > > properties to handle this, e.g. "nvidia,enable-ext-refclk" (Common Clock)
-> > > > and "nvidia,enable-srns" (SRNS). However, since this property is common
-> > > > for all PCI controllers running in endpoint mode, this really ought to be
-> > > > a property in the common pcie-ep.yaml device tree binding.
-> > > > 
-> > > 
-> > > We should also mark the nvidia specific properties deprecated and use this one.
-> > > But that's for another follow up series.
-> > > 
-> > > > Add a new ref-clk-mode property that describes the reference clocking
-> > > > scheme used by the endpoint. (We do not add a common-clk-ssc option, since
-> > > > we cannot know/control if the common clock provided by the host uses SSC.)
-> > > > 
-> > > > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pci/pci-ep.yaml | 9 +++++++++
-> > > >  1 file changed, 9 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-> > > > index f75000e3093d..206c1dc2ab82 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-> > > > @@ -42,6 +42,15 @@ properties:
-> > > >      default: 1
-> > > >      maximum: 16
-> > > >  
-> > > > +  ref-clk-mode:
-> > > 
-> > > How about 'refclk-mode' instead of 'ref-clk-mode'? 'refclk' is the most widely
-> > > used terminology in the bindings.
-> > 
-> > I does seem that way.
-> > Will use your suggestion in V2.
-> > 
-> > 
-> > > 
-> > > > +    description: Reference clocking architechture
-> > > > +    enum:
-> > > > +      - common-clk        # Common Reference Clock (provided by RC side)
-> > > 
-> > > Can we use 'common-clk-host' so that it is explicit that the clock is coming
-> > > from the host side?
-> > 
-> > Sure.
-> > 
-> > I take it that you prefer 'common-clk-host' over 'common-clk-rc' ?
-> > 
-> 
-> That's what I intended previously, but thinking more, I feel that we should
-> stick to '-rc'i, as that's what the PCIe spec uses.
+On Fri, Apr 25, 2025 at 5:48=E2=80=AFAM Pei Xiao <xiaopei01@kylinos.cn> wro=
+te:
+>
+> The fwnode_handle passed into pci_register_io_range is not modified,
+> so make it const.
+>
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
+>  drivers/acpi/pci_root.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d0b6a024daae..74ade4160314 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -858,7 +858,7 @@ static void acpi_pci_root_validate_resources(struct d=
+evice *dev,
+>         }
+>  }
+>
+> -static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
+> +static void acpi_pci_root_remap_iospace(const struct fwnode_handle *fwno=
+de,
+>                         struct resource_entry *entry)
+>  {
+>  #ifdef PCI_IOBASE
+> --
 
-Couldn't this apply to any link, not just a RC? Is there PCIe 
-terminology for upstream and downstream ends of a link?
-
-The 'common-clk' part seems redundant to me with '-rc' or whatever we 
-end up with added.
-
-Finally, this[1] seems related. Figure out a common solution.
-
-Rob
-
-[1] https://lore.kernel.org/all/20250406144822.21784-2-marek.vasut+renesas@mailbox.org
+Applied as 6.16 material, thanks!
 
