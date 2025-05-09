@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-27480-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27481-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31A89AB08B5
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 05:17:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8385FAB08B8
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 05:18:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D6784C6442
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 03:17:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E58774C3E67
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 03:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1300423A99D;
-	Fri,  9 May 2025 03:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F126D244672;
+	Fri,  9 May 2025 03:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDhVI6L8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLknOyYy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9341E1DE8;
-	Fri,  9 May 2025 03:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEB524466B;
+	Fri,  9 May 2025 03:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746760607; cv=none; b=O0F05jNUSKZVcnlaOkrZVmSIfNvCAAbNS4aCihDGKBoIw7SU5R3C8OXuNPoDDdMKIUbF5qhQTjWERuBeAXXSbFeKAbJnkEo0tdh4pdmemrCb3cjfT09OlvMm6Uvfz179wkxBvRw7QpeQ5BHyMvp6zS4/c+9tndAGe7/jbtFdr3g=
+	t=1746760611; cv=none; b=oI3YsBytbyevaE7VA0g/7b/S7EPHWpVxZFPQgcO1vetYPyL1rs6K5wLGUwyBCq76AII8AT3okUcgb1PNreEg/R8pT+d+PlviQdpTUZEwUYi3bcxdyGUaToc75rjVheT5MwnL/ZbKkYuZG3xrX7PODbmUrHivK5Z/7UmUnHWq3r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746760607; c=relaxed/simple;
-	bh=5NusMEIBNJoOBsG9vJkAZLaj6705hfOlvFPszf7vOmw=;
+	s=arc-20240116; t=1746760611; c=relaxed/simple;
+	bh=o4AcQyGp5L/I+jB6OWdk8yCIGZDZ8lPUVOmSTSO+ras=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y20BN1oBuMCPief94pbPeRT2ay9AF6DlgtYGUSDZg7N/7SiCQQSv3VmPlArErayEZDn2vYejcuNWbJrdLlFRiwgjRDWFnvMl6nRoKEbFBA0d199Anklg8xApCfA/YPhu0t3gt9Yj5FPrZY6/nInpdOz+YZAe50hJD5UQUFKH9Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDhVI6L8; arc=none smtp.client-ip=209.85.161.54
+	 MIME-Version; b=CYUFxxHj2xI47oeJCJDsOHXfRXjniGeswVv2IgiDlnLUqCFo84BznVvo9cotal6pudlMFnp+9jmpuY6ESwJVhpfg4AyqMtqcP34be1ZiUCBzVwPIClHJqd3CH4IUNWotrz0KJyWEVEI5A1H1tQfWo6Ow3x0xiG6e2qoBFLSVxy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gLknOyYy; arc=none smtp.client-ip=209.85.161.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6060200710bso835877eaf.3;
-        Thu, 08 May 2025 20:16:45 -0700 (PDT)
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-605fda00c30so729573eaf.1;
+        Thu, 08 May 2025 20:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746760604; x=1747365404; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746760609; x=1747365409; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DJ+SSE57+NVD+voAZIpxys9eSbuHtPfvcAY3huVe52E=;
-        b=UDhVI6L8pP0Qu+BwC5sK997whar4KVgqQKz3qRl0EAj30xgL9iexQbiSAi4ylHw5CU
-         9R+CClx3kKwtEOWwW/yi+lipg18+/fRgn/TfdRGEA4/qAgnncHVN0+49N2Y1z6VapY9K
-         dQrFvDfAifo75P3JuZJibijE27ZXadMKmwGiuo7PsCrDz+EMifYNysYnn9MyOAw04Z3y
-         f86PIKa/iD5F0PBLTheFIpxqD8u/Mp2V4ltzVh042y7tCTHjhiBHgo0Ce5QhXHzOAsYn
-         vq5UO5yGIuUAqwc7mJhBNzbclbcBlX8wgm5voUiZ8MYbby0U+rarL0La88jFCvUb7IX3
-         sgbA==
+        bh=FbkkJzcTB85B47ipbpD9VdSKYv1GM7nCZHJmyoTnoXo=;
+        b=gLknOyYy8O4YcrdBkydskPx0WcqrXBEuFx5VtxPzvEPNbBp5gD8eAK+d7YB47itf/q
+         1ns/iyMEM6uh4GgBPFEUUg11VrY8UbbECCdFxLqTiPZT/ocO2mptLLvXmb4wQGE8dns+
+         /bo2nAJHRbEU3NFkv520CsFxKp+K/YDSjG1V+K10B9PSHQDoFOuqIeRhIJOv48vxdnYn
+         n9YHPMnbsJgT1Kum6YVIAiHN5rvyIPRhGpjJ8eeSSwb8QHEmgWH8VNY7ODoBlPFXlWga
+         0tviLTtTQvpjB/AI6LmTr/ITy5GCQa8SvFCoTJeJySUz4jkk3ZxWA8iHNhHvKKB/hZen
+         r+4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746760604; x=1747365404;
+        d=1e100.net; s=20230601; t=1746760609; x=1747365409;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DJ+SSE57+NVD+voAZIpxys9eSbuHtPfvcAY3huVe52E=;
-        b=vM0bLWModzt1QhM6pgDkH+SxWhb9cQT4lTQpmg1ydu8z6pVcKEXuHlrDQZXUFQzW2p
-         bRFRA/kYdhYAHj3/UXjfWksT/nm3ykjp5g9x3s4sO8Bxg2yjwxcpRGBYS3mOYzVHKxqL
-         vxVsNNewcoVAceCrfTW3K29YO3LaKRKAYQdbg2i0bIc9ZZaXinpbwikdyhtVgI4A/QLo
-         T2l/rXMVWNIArvXFnm8JN8+hZBucTkvvqIR/DVkqLpQdz35jk3ttDrwpAxCPVJEhZ9Lg
-         oQIZ9uPnCNarXHA1b9zfKWGTtZtc0k9WtPmXJ/2DhI1R3plD2b981k32T7Xh0jhwqN+w
-         2F1g==
-X-Forwarded-Encrypted: i=1; AJvYcCV/Wth9P4E0mudWC0PNyTIBYektSrvHRpaddfzhnsqCWpcCGX27n+F5TqtqQ7LXJUJwu5QngvuzBN0eFPk=@vger.kernel.org, AJvYcCXUdXlZ7+/xvjxgLgD3P8/KIRbswGHIGWErq1qJ/kloqzUSBsYvd6HWdscaYNW197auZrdr/Ixgw9/N@vger.kernel.org, AJvYcCXpI0qbd1CY4REF90BWUbgNPrqJEechaP1j/T5VwGTuB1NQWJvBKyyaLL0f8ZRwISppmV5Me709LXvZo6kPCY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5dGjfKZnblBnVTdPeoYY5WgDiP1F6sDs8LecwIvnYkpfGYgbX
-	sgS0IzlzIfsONIrm+r8TGmeOgX+xAF66zA2Lp8YvF0Y9twxGV41wyKxvPFap
-X-Gm-Gg: ASbGnct8NAsL7tSsGnD4F1hpZ59pWJSkN7XvgZBIEo4oQ9iW/xWUCggRkV4k1YO6p1f
-	5S+1aOX6mT1zoF5DomNwNDVOnjbD/zpYEO+FUWT0QZRvm1xvs/yb+2jVg+gA7KlKZbNDMstwzUQ
-	qutmFqwZw07XG+Jco85Zt8FSWb4tcKuzOzH2BzYBG3qKm/E+JWlJ+QvPL88cuf8F7Q9Q29xYhpV
-	eqsgddAKL+dnlKqLAGpCFZIJpolCadxKUgLS8chQk8s5mEh/3qHGar9+q7X+7LIKF01XtzAgs3N
-	7pQLjLoZk60R9URElyBYFs64yrsXowGWQ55DThEYgC0NJNuTLxhKYa0Yex9ujfdPkIfZFfRSbdg
-	KwblPCMK5XcJd
-X-Google-Smtp-Source: AGHT+IGpMx7dY3dkHvqr4awICZ7vr0q2bv50WztDT96Nqcfn11nY3aHVKib+jqiYd+/U5X2LVifHrA==
-X-Received: by 2002:a4a:ec44:0:b0:606:293f:f37e with SMTP id 006d021491bc7-6084c0ff314mr1382389eaf.6.1746760604235;
-        Thu, 08 May 2025 20:16:44 -0700 (PDT)
+        bh=FbkkJzcTB85B47ipbpD9VdSKYv1GM7nCZHJmyoTnoXo=;
+        b=HdCs+OeV2fYoqGOGeps7PORoyGoZ2hLcm3MW4ZOTubOrVvfuJ0hxyUmetP4knlpO0A
+         VSAtliiPxaH/owsV66nSrdjPGI2AhN9bUTnVqGp+9sST0KiJUGL0edHvqs0alsJ+2NSk
+         VEvnLQfEbz8hEt+Y3v+OLgvnyYjrXXixP/vNBYOaum713GW4lVxv6eXyS7i567F/w6ru
+         GoftzIQ7GutVdTWOiI14MUn/pEpj7+Rzifhk3ZXIolXTb1gvmwX3qcPyJT1hjm/uTirx
+         /JsbMYV2dYGDZzyCg0fFMvcQLkHejLgkezvZlBwZa7eLIxC/h3RLEXH2T9s0OjkAYTO3
+         oiAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3bsv8qQsFo/Z0KgEcH3MwTIjndgSaEna1TacKxfLz0gLcgepXc2LkuqMgovEZsgKuj8JGiPQJ/bbHeosTVNY=@vger.kernel.org, AJvYcCUVN4izGcnmXB/1MD4bxkkrdcLb+Jdea465TX6wU6EwxdbsPjm6PrmEESuFYP4lI+ZEbS/ld3F56WkN97g=@vger.kernel.org, AJvYcCVfAvHqYm2ZHSWOxLdVe9BF1k4oluhYh2YISfh38vHt6TXH/L5csKJalxARGCadRpD3ZwXciWTdQP+X@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvlsMUAs320ISA6MF9eCTu+bTd2WdT/Ipje2gDWheL+zd2KFWC
+	/qm82y2JcuGLaZuGhidVFEXcUDlaOQLqWdsZkFgOPo7Q/laN2flX
+X-Gm-Gg: ASbGncsG9iaPxwD5wt36ma7syZQq00lAmy499TINkNiwFU6BPVklvcqVSpq/4miVU6/
+	cWZZFQkRanQ2nR/jjBqJHMTAcjHFr4JdjJM+/LToXkFg3v9/T/XhvSF0Cx1jHC5GcPDbIUbfeyK
+	saZoRoCXRKkGIwQ72GOXaQ6H641Gbdw84is0Lx5WkUbZosZ9CbpBevjknX3keZuu1MeRiBkAlGj
+	o25X9RUyGScXRqJ9OmgTRYPs0sC2VNJFdlF5Td1KvSntmyo1r6xlJ/ovf7FZ56UpgqOOfFzqF2P
+	GhFQNOaHV+fN1eR/VxVO5LilmENeUC8BTP2xKoc5sgxk8UeKDWMXCVmlvhYmxtg49/Bhz047b0Y
+	b6pVbop+dKjnw
+X-Google-Smtp-Source: AGHT+IGNqzdeadesIZwP1nYllqucukQIsSdIN+MQ3j6qsOcvk9hRsdNngAFQNCc+hQwb1HZg7HwUpQ==
+X-Received: by 2002:a05:6820:983:b0:604:ae66:1e9b with SMTP id 006d021491bc7-6084c118041mr1122514eaf.8.1746760609172;
+        Thu, 08 May 2025 20:16:49 -0700 (PDT)
 Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-60842b096desm303745eaf.30.2025.05.08.20.16.39
+        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-60842b096desm303745eaf.30.2025.05.08.20.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 20:16:43 -0700 (PDT)
+        Thu, 08 May 2025 20:16:48 -0700 (PDT)
 From: Andrew Ballance <andrewjballance@gmail.com>
 To: dakr@kernel.org,
 	airlied@gmail.com,
@@ -103,9 +103,9 @@ Cc: nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 06/11] io: move PIO_OFFSET to linux/io.h
-Date: Thu,  8 May 2025 22:15:19 -0500
-Message-ID: <20250509031524.2604087-7-andrewjballance@gmail.com>
+Subject: [PATCH 07/11] rust: io: add from_raw_cookie functions
+Date: Thu,  8 May 2025 22:15:20 -0500
+Message-ID: <20250509031524.2604087-8-andrewjballance@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509031524.2604087-1-andrewjballance@gmail.com>
 References: <20250509031524.2604087-1-andrewjballance@gmail.com>
@@ -117,68 +117,166 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Fiona Behrens <me@kloenk.dev>
+adds a `from_raw_cookie` function to the IoAccess trait.
 
-Move the non arch specific PIO size to linux/io.h.
+`from_raw_cookie` attempts to convert a iomem address that can be
+accessed by the ioread/iowrite family of C functions into either
+a `Io`, `PortIo` or `MMIo`.
 
-This allows rust to access `PIO_OFFSET`, `PIO_MASK` and
-`PIO_RESERVED`. This is required to implement `IO_COND` in rust.
+This is done so that devices that know what type of Io they are at
+compile time can give a hint about their type.
 
-Signed-off-by: Fiona Behrens <me@kloenk.dev>
+Suggested-by: Danilo Krummrich <dakr@kernel.org>
 Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
 ---
- include/linux/io.h | 13 +++++++++++++
- lib/iomap.c        | 13 -------------
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ rust/kernel/io.rs | 104 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
 
-diff --git a/include/linux/io.h b/include/linux/io.h
-index 6a6bc4d46d0a..df032061544a 100644
---- a/include/linux/io.h
-+++ b/include/linux/io.h
-@@ -12,6 +12,19 @@
- #include <asm/io.h>
- #include <asm/page.h>
+diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+index 3d8b6e731ce7..30892f2909a6 100644
+--- a/rust/kernel/io.rs
++++ b/rust/kernel/io.rs
+@@ -6,6 +6,62 @@
  
-+#ifndef HAVE_ARCH_PIO_SIZE
-+/*
-+ * We encode the physical PIO addresses (0-0xffff) into the
-+ * pointer by offsetting them with a constant (0x10000) and
-+ * assuming that all the low addresses are always PIO. That means
-+ * we can do some sanity checks on the low bits, and don't
-+ * need to just take things for granted.
-+ */
-+#define PIO_OFFSET	0x10000UL
-+#define PIO_MASK	0x0ffffUL
-+#define PIO_RESERVED	0x40000UL
-+#endif
+ use crate::error::{code::EINVAL, Result};
+ use crate::{bindings, build_assert};
++use io_backend::*;
 +
- struct device;
++/// `io_backend` is private and implements the config specific logic for
++/// `IoAccess::from_raw_cookie`.
++#[cfg(CONFIG_GENERIC_IOMAP)]
++mod io_backend {
++    // if generic_iomap is enabled copy the logic from IO_COND in `lib/iomap.c`
++
++    #[inline]
++    pub(super) fn is_mmio(addr: usize) -> bool {
++        addr >= bindings::PIO_RESERVED as usize
++    }
++
++    #[inline]
++    pub(super) fn is_portio(addr: usize) -> bool {
++        !is_mmio(addr) && addr > bindings::PIO_OFFSET as usize
++    }
++
++    #[inline]
++    pub(super) fn cookie_to_pio(addr: usize) -> usize {
++        addr & bindings::PIO_MASK as usize
++    }
++
++    #[inline]
++    pub(super) fn cookie_to_mmio(cookie: usize) -> usize {
++        cookie
++    }
++}
++#[cfg(not(CONFIG_GENERIC_IOMAP))]
++mod io_backend {
++    // for everyone who does not use generic iomap
++    // except for alpha and parisc, neither of which has a rust compiler,
++    // ioread/iowrite is defined in `include/asm-generic/io.h`.
++    //
++    // for these ioread/iowrite, maps to read/write.
++    // so allow any io to be converted  because they use the same backend
++    #[inline]
++    pub(super) fn is_mmio(_addr: usize) -> bool {
++        true
++    }
++
++    #[inline]
++    pub(super) fn is_portio(_addr: usize) -> bool {
++        false
++    }
++
++    #[inline]
++    pub(super) fn cookie_to_pio(cookie: usize) -> usize {
++        cookie
++    }
++
++    #[inline]
++    pub(super) fn cookie_to_mmio(cookie: usize) -> usize {
++        cookie
++    }
++}
  
- #ifndef __iowrite32_copy
-diff --git a/lib/iomap.c b/lib/iomap.c
-index a65717cd86f7..e13cfe77c32f 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -24,19 +24,6 @@
-  * implementation and should do their own copy.
-  */
+ /// Private macro to define the [`IoAccess`] functions.
+ macro_rules! define_io_access_function {
+@@ -160,8 +216,18 @@ pub unsafe trait IoAccess<const SIZE: usize = 0> {
+     fn maxsize(&self) -> usize;
  
--#ifndef HAVE_ARCH_PIO_SIZE
--/*
-- * We encode the physical PIO addresses (0-0xffff) into the
-- * pointer by offsetting them with a constant (0x10000) and
-- * assuming that all the low addresses are always PIO. That means
-- * we can do some sanity checks on the low bits, and don't
-- * need to just take things for granted.
-- */
--#define PIO_OFFSET	0x10000UL
--#define PIO_MASK	0x0ffffUL
--#define PIO_RESERVED	0x40000UL
--#endif
--
- static void bad_io_access(unsigned long port, const char *access)
- {
- 	static int count = 10;
+     /// Returns the base address of the accessed IO area.
++    /// if `self` was created by ['from_raw_cookie'], `addr` might not be equal to the original
++    /// address.
+     fn addr(&self) -> usize;
+ 
++    /// Attempts to create a `Self` from a [`IoRaw`].
++    ///
++    /// # Safety
++    /// `raw` should be a io cookie that can be accessed by the C `ioread`/`iowrite` functions
++    unsafe fn from_raw_cookie(raw: IoRaw<SIZE>) -> Result<Self>
++    where
++        Self: Sized;
++
+     define_io_access_function!(@read
+         read8_unchecked, read8, try_read8, u8;
+         read16_unchecked, read16, try_read16, u16;
+@@ -367,6 +433,19 @@ fn addr(&self) -> usize {
+         self.0.addr()
+     }
+ 
++    unsafe fn from_raw_cookie(mut raw: IoRaw<SIZE>) -> Result<Self>
++    where
++        Self: Sized,
++    {
++        if is_mmio(raw.addr()) {
++            // INVARIANT: `addr` is decoded so it should be ok to access with read/write
++            raw.addr = cookie_to_mmio(raw.addr());
++            Ok(Self(raw))
++        } else {
++            Err(EINVAL)
++        }
++    }
++
+     impl_accessor_fn!(
+         read8_unchecked, readb, write8_unchecked, writeb, u8;
+         read16_unchecked, readw, write16_unchecked, writew, u16;
+@@ -476,6 +555,19 @@ fn addr(&self) -> usize {
+         self.0.addr()
+     }
+ 
++    unsafe fn from_raw_cookie(mut raw: IoRaw<SIZE>) -> Result<Self>
++    where
++        Self: Sized,
++    {
++        if is_portio(raw.addr()) {
++            // INVARIANT: `addr` is decoded so it should be ok to access with in/out
++            raw.addr = cookie_to_pio(raw.addr());
++            Ok(Self(raw))
++        } else {
++            Err(EINVAL)
++        }
++    }
++
+     #[rustfmt::skip]
+     impl_accessor_fn!(
+         read8_unchecked, inb, write8_unchecked, outb, u8;
+@@ -563,6 +655,18 @@ fn maxsize(&self) -> usize {
+         self.0.maxsize()
+     }
+ 
++    unsafe fn from_raw_cookie(raw: IoRaw<SIZE>) -> Result<Self>
++    where
++        Self: Sized,
++    {
++        if is_mmio(raw.addr()) || is_portio(raw.addr()) {
++            // INVARIANT: `addr` is not touched so it should be able to be read with ioread/iowrite
++            Ok(Self(raw))
++        } else {
++            Err(EINVAL)
++        }
++    }
++
+     impl_accessor_fn!(
+         read8_unchecked, ioread8, write8_unchecked, iowrite8, u8;
+         read16_unchecked, ioread16, write16_unchecked, iowrite16, u16;
 -- 
 2.49.0
 
