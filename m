@@ -1,159 +1,127 @@
-Return-Path: <linux-pci+bounces-27501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ABC7AB11C6
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 13:11:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24844AB1245
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 13:35:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 075183B4873
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 11:10:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A63A508202
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 11:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4132928F942;
-	Fri,  9 May 2025 11:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5DC221D94;
+	Fri,  9 May 2025 11:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UIgRaLKY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBED274FE5
-	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 11:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA59A1FDE19;
+	Fri,  9 May 2025 11:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746789025; cv=none; b=kQqqEdChxevxB7GJPJmUuFAkHVffnoNcqeMhySNxkZNuCuG5h3zerXtHF1lYMZmPZr9An8xu85F5VyE0HwzfnTGBfHENoIyOF3/jom9sTqbh3rc3wHisYhq+XwcAOBM50Jqg2RhnKxZguSfm7LMz2rspUFqURUazv7ZKOq9xXqc=
+	t=1746790525; cv=none; b=kNpCw+zMP4fSHcVW6GB5dZuaadUZ3gaalf/HHBH3TFIi1+GZvwTZ6D6kzwl0yPmy8bucbKLiAk8FCtOkRqz30AOSHFW41BGl1uGz7KmxuM9W9ThnsjOSVkO4o7X+48f1Ea8m9CskzJpGB+nve+69XnRPqKPdi2xNl5BWxwP5Mcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746789025; c=relaxed/simple;
-	bh=g0KgczyW2X2V0q0zRlKqpqDPt/VrfeQIylxugulKuP0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E+3VFd0m5P7F9TdmpeBJaPWNnGZcOJqq1NGSvGcZRIzUW+pCKPnG5qHoJyguNjV1Yujf06jEBRIJZpyt0pqxFYYatw7fPwdZAmJQBA5EvCmDKVJnXnWAC3eV/K7SY9mOuqEpZLzXuZes8xLCiIz42p8xYQ6jvYRCrfoawQ1/uok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uDLKA-0002Si-2x; Fri, 09 May 2025 12:51:26 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uDLK8-001sIP-2c;
-	Fri, 09 May 2025 12:51:24 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uDLK8-0006Lv-2I;
-	Fri, 09 May 2025 12:51:24 +0200
-Message-ID: <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
-Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Claudiu <claudiu.beznea@tuxon.dev>, bhelgaas@google.com, 
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be,  magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org,  saravanak@google.com
-Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Claudiu
- Beznea <claudiu.beznea.uj@bp.renesas.com>
-Date: Fri, 09 May 2025 12:51:24 +0200
-In-Reply-To: <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
-References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
-	 <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746790525; c=relaxed/simple;
+	bh=8KIHf9OmLLgE+hOeF978U0+HWSf5VFUlCD/UL8AeEME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ooknfEWbDTg9U2Dwrwtr01Jisa4jkVPWXkkdTeXtL77SzFFpHUdls8+7jso2EQeYLEpsmMx+afPgPa4/WNZFVvzBlqmr16acMXXU3YEQYCa2vWDgJMhNwO5S5iL6Vj0CX2vr13xSWa4IOuTi9gE9urGCM7HgRobcyOW8Tx0Ri3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UIgRaLKY; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746790524; x=1778326524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8KIHf9OmLLgE+hOeF978U0+HWSf5VFUlCD/UL8AeEME=;
+  b=UIgRaLKYjlEXHY4jphyIO/xw+DPgP0+hbxEzPazGV9aqxqzC15MPMdIQ
+   QHrnDQjyPs+Q+1JPzDXi1uCBe0BOZkHrwfwcIWF3yxv8tBnJn5+pvdEh0
+   WUzGaW8ii42VYL91sDc9yjwE99xUoBMxi4c+EHjmaWmLIHsNyc6HiIewz
+   6h60AtJzwV26VwR/yiVTAF3i9NSv2K3Faqz7HKxCUJnrM4dH+dJSdzvbs
+   An0nK/XGOt9dcYuf14aDA4nSefXC6vgzWVURjeE9i3YPMRenyiJDZijaA
+   RvUp4cZ1TFfIiKlluuTvcKumxVTmo3Mxa1vXZpzaZN9q0pj7Kqoq5bifA
+   Q==;
+X-CSE-ConnectionGUID: uavRL3aaS1yRHq9TDUFQYw==
+X-CSE-MsgGUID: kJio2pVPRx6vWt3tD9EBnw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="60018331"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="60018331"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:35:23 -0700
+X-CSE-ConnectionGUID: dnI/PA9fR7C/uvI0OgZHvg==
+X-CSE-MsgGUID: rir706HgTC2/66cqhrngjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="173761276"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:35:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uDM0X-000000004rY-0p0E;
+	Fri, 09 May 2025 14:35:13 +0300
+Date: Fri, 9 May 2025 14:35:12 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andrew Ballance <andrewjballance@gmail.com>
+Cc: dakr@kernel.org, airlied@gmail.com, simona@ffwll.ch,
+	akpm@linux-foundation.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, gregkh@linuxfoundation.org, rafael@kernel.org,
+	bhelgaas@google.com, kwilczynski@kernel.org, raag.jadav@intel.com,
+	arnd@arndb.de, me@kloenk.dev, fujita.tomonori@gmail.com,
+	daniel.almeida@collabora.com, nouveau@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 06/11] io: move PIO_OFFSET to linux/io.h
+Message-ID: <aB3ocO8xh5GugfDD@smile.fi.intel.com>
+References: <20250509031524.2604087-1-andrewjballance@gmail.com>
+ <20250509031524.2604087-7-andrewjballance@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509031524.2604087-7-andrewjballance@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Claudiu,
+On Thu, May 08, 2025 at 10:15:19PM -0500, Andrew Ballance wrote:
+> From: Fiona Behrens <me@kloenk.dev>
+> 
+> Move the non arch specific PIO size to linux/io.h.
+> 
+> This allows rust to access `PIO_OFFSET`, `PIO_MASK` and
+> `PIO_RESERVED`. This is required to implement `IO_COND` in rust.
 
-On Mi, 2025-04-30 at 13:32 +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->=20
-> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> only as a root complex, with a single-lane (x1) configuration. The
-> controller includes Type 1 configuration registers, as well as IP
-> specific registers (called AXI registers) required for various adjustment=
-s.
->=20
-> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
-> but have both Root Complex and Endpoint capabilities. As a result, the PC=
-Ie
-> host driver can be reused for these variants with minimal adjustments.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->  MAINTAINERS                              |    8 +
->  drivers/pci/controller/Kconfig           |    7 +
->  drivers/pci/controller/Makefile          |    1 +
->  drivers/pci/controller/pcie-rzg3s-host.c | 1561 ++++++++++++++++++++++
->  4 files changed, 1577 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
->=20
-[...]
-> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/contr=
-oller/pcie-rzg3s-host.c
-> new file mode 100644
-> index 000000000000..c3bce0acd57e
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
-> @@ -0,0 +1,1561 @@
-[...]
-> +static int rzg3s_pcie_resets_bulk_set(int (*action)(int num, struct rese=
-t_control_bulk_data *rstcs),
-> +				      struct reset_control **resets, u8 num_resets)
-> +{
-> +	struct reset_control_bulk_data *data __free(kfree) =3D
-> +		kcalloc(num_resets, sizeof(*data), GFP_KERNEL);
-> +
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	for (u8 i =3D 0; i < num_resets; i++)
-> +		data[i].rstc =3D resets[i];
-> +
-> +	return action(num_resets, data);
-> +}
+...
 
-What is the purpose of this? Can't you just store struct
-reset_control_bulk_data in struct rzg3s_pcie_host and call
-reset_control_bulk_assert/deassert() directly?
+> +/*
+> + * We encode the physical PIO addresses (0-0xffff) into the
 
-> +static int
-> +rzg3s_pcie_resets_init(struct device *dev, struct reset_control ***reset=
-s,
-> +		       struct reset_control *(*action)(struct device *dev, const char =
-*id),
-> +		       const char * const *reset_names, u8 num_resets)
-> +{
-> +	*resets =3D devm_kcalloc(dev, num_resets, sizeof(struct reset_control *=
-), GFP_KERNEL);
-> +	if (!*resets)
-> +		return -ENOMEM;
-> +
-> +	for (u8 i =3D 0; i < num_resets; i++) {
-> +		(*resets)[i] =3D action(dev, reset_names[i]);
-> +		if (IS_ERR((*resets)[i]))
-> +			return PTR_ERR((*resets)[i]);
-> +	}
-> +
-> +	return 0;
-> +}
+I know this is the original text, but we have a chance to improve it a bit by
+saying range more explicitly:
 
-Why not use devm_reset_control_bulk_get_exclusive() directly?
+ * We encode the physical PIO addresses (0x0000-0xffff) into the
+
+> + * pointer by offsetting them with a constant (0x10000) and
+> + * assuming that all the low addresses are always PIO. That means
+> + * we can do some sanity checks on the low bits, and don't
+> + * need to just take things for granted.
+> + */
+> +#define PIO_OFFSET	0x10000UL
+> +#define PIO_MASK	0x0ffffUL
+> +#define PIO_RESERVED	0x40000UL
+> +#endif
 
 
-regards
-Philipp
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
