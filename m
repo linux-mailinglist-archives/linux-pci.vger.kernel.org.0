@@ -1,143 +1,128 @@
-Return-Path: <linux-pci+bounces-27491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA43BAB0A4C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 08:11:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4529CAB0AEA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 08:51:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CEF91BC407E
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 06:11:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90B344A432B
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 06:51:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32005269D16;
-	Fri,  9 May 2025 06:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1ED726F453;
+	Fri,  9 May 2025 06:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsLS+Tml"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLhl8vlt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B75266599;
-	Fri,  9 May 2025 06:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C03226A1C9
+	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 06:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746771069; cv=none; b=cFRjYRWJyxx2ZmiLWDG6Ws4AXwC9sdQfrKqDdp/WPsDaHfOjPF7ngGzp1/9opF6swINnUYfpyXYi/38/wZsjakh+G8L18bSoaIJYdVsCO++JU40kO+5l3O9f27+yzFyU++LezZ68/Ckwm5EikT4VmOhp0o4/UGgI0zLg8xCVthg=
+	t=1746773472; cv=none; b=FS+Pmye13SIjvb2RB0u7pHZ6M8ScGEWfzb1qO6XDAyfqtVgsXCf/FeG08XDCe9nSQGsK+UAuAgUHbqY3gbfat/lR+EmAZFqu6pWmRqlw/n4wa/W5B5mcLM4uMeuhFTrOVjTgr2Ozr5qpEhXM3hitvnWys7xBM/My8eyoF3zVQSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746771069; c=relaxed/simple;
-	bh=9jqZE21+WSs8HvXVZ2Nk/t/5qvfZGOiRoifSYIH6bYI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OiI8KEpQiXTWbXdAW1QN8mKa9RZKKNsVPF12Bz1APbHukByIu31f6KPWQl3NcdliOjzS0XKOwhWSJHIBaJhH+lBDWsCqn+TWTaRS6uy093sb2+wEnpqgB1Vb1g+7fdCB/LA52gHwZoO9qKsqqi55SdK/AL5XDWh6G+NEkyc6Eeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsLS+Tml; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5fbf52aad74so4391108a12.1;
-        Thu, 08 May 2025 23:11:07 -0700 (PDT)
+	s=arc-20240116; t=1746773472; c=relaxed/simple;
+	bh=wiDZ4xkPtV9BOe7ADj1LbvuGPB4FiUezAyGN2IFKEzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffllgBZmWHzacPVscGW5bJFQ+zQ4SkpRxi6T9Jy89i9UlRciQeo8T8TI3ATtwk1fjbEmcxJkWWduAegndfoIhVrdbgDHvyqYs+vG0WIkYYDYRXaMEC/AAydT3uGXMCNgIDAwdnbz51AYlsL9n/W4Wk22B/KGXGrudG5zmcEdAj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZLhl8vlt; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a1fb18420aso22603f8f.1
+        for <linux-pci@vger.kernel.org>; Thu, 08 May 2025 23:51:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746771065; x=1747375865; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tT4nmiF3B+9Zf02ngFo5qPxLiB0Cnk6TGo7gdbEV7tc=;
-        b=gsLS+Tml+tSuCMvLdmXt0QcYU9GuCMEmHjxHsBSvwRjhOAUwxAejbdvk0LvnXtw8RC
-         PWv/M1YgAcUR8yl29y5WXTaXltx/T0DIjfIXErU5gjpsJ8aF5rB+obuLAAodTmaVQaRK
-         V9kyc+jr4ap8rCkEDxMnugW+TXWtbf7ZKnbUW73ixNB9MDwf0doBkghhaKMjxBDkbGK+
-         9gA+qj4/DWf0aR90rmPUUnvEsw84sysG7IsyvUKx44WWPfrSegUCmnzxSoF+mH6kv8Ek
-         Ju+Kbr70AF0iW1oJZBR+ABFrA8uSYTapHc5ZmQJa8f17PQlT52YzjoMZFrtOybASKFeS
-         x1tA==
+        d=linaro.org; s=google; t=1746773468; x=1747378268; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
+        b=ZLhl8vltiQyAai1i+3Sn+H0oJQzhx2abSENViGQGEi/dQOBeBEIWkVmHyDe56CHdLt
+         xDKK0g6GDHValO90OKLmhKsHxBC+IQkjHp1xhb8B67gRrfG//1E2UEPij8Lfzkl+ZSmd
+         Ctx4cYNfzv3iaukeZn0YbhpJtLdreKmT2xXwozoLqNnEtS8QL108OPMuH7c+UGaXBK85
+         qeEOFyq2mdQMZEZ4Mv6ZefuHOZtS9d0XdK9YsL9cpJjjxqloitR4iVeGiSavGywOx2TP
+         DqwfefGijEOyPKlA/cjFEaNRW6SAkoeMHd5uup1+sfQ5BP6Av/+V7me1cfS0RnJ+i3nr
+         2tnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746771065; x=1747375865;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746773468; x=1747378268;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tT4nmiF3B+9Zf02ngFo5qPxLiB0Cnk6TGo7gdbEV7tc=;
-        b=swc64QgzvWYglM3EcabZt2gwCuHdptThIreMH63izVATzNVR939i54sJ1NYIgo2Jxn
-         Nf4Slg5j+hKaDegURl3GlCdpKQazz5T1bZJdIACdaUcmB43j4muT9SXCLPGZLpDvB7qJ
-         QcrTL0+H7o2onFSn4nSRjzh66DSqZ7gEg0CHPtSThc5RnRZptNP/ZL8vQQkVBIOSOheF
-         mfdAGSr0gwxheWgAWUMkE1ghXmdFowOfulOjHo1n7zCJK01Z87FRqSCQpr5v79H/i+6+
-         9UvU2T5apJQ10YsHy9lG87renU0Dn8OoMev7uUBpHD7pmYY8lKdm/YOtQWz0t5iHBqMl
-         eY+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUagtM27LaJOwJHh+ho9xptMSVmU7V3z0KcV4WkcUSzfBJHl6XmQbFt+1OTq4m8tEE62hbyP8mVH/cBYhFU@vger.kernel.org, AJvYcCVB0rdGr32B1bv3HDzc1yqVo24RdHLHtei+sTst1W1eYdAmrw+cj8tHxL8JlnVQQEBrwX2dG4D98dUd@vger.kernel.org, AJvYcCVLG5rPAeR4aiW/jhVrDikqxCT7WvD+WoIjpRKWgIt62KkEMI19Nf/zwJRhuLN79Qo0IdZnWrOJPBT8KpPp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwt5nwlhhGJNeNHTv8HA3f09BvCKLU1kMvHq8F3Y7i5exmR+B7
-	Is27MYYUoxsX2IojC3RFCaLocDUob7lAyotm9900U8YPBP0hcZwd
-X-Gm-Gg: ASbGncsUQCxePfU+mqhGBxApW5SCJdE8rTPyojlhp1YfJJa+XgF4HhAJNkxwM794678
-	PhK0jz3+mK5N2D5PBLHdKuq3MIgJ1TYDPm5Sov479dLQgch0MEcB+saLbrEBBXGPcBbnrMdxGdr
-	RaiH4OiUEtiSKkJxebpkL2Ng6717iH0PfLkieqtI+AYXBIzTXdtyoOasPiqn1JcaYksgkMJLVu0
-	zoKNqCKEaFggnDRJ0zWD2OHsZme4KGid44ARbIYRVmMuLM/+SNvHbhs6yIQ6SJ6a026IVoHXfwl
-	wdmqQ8cwv3gz7xGP7864az3SAuBm+cg5um4bPR8qX6JRAu8Sib3xzS0zIMzyyjgT4hMa+uHauRt
-	Cryc28WRLmqD1hW/xe/YBEFuoK65cd9kb17aNUwbz2B4GMIeH/I4=
-X-Google-Smtp-Source: AGHT+IHV7Lb+Jz2vAFwguRkPg3xEv8RK1gYxrdSEajyR1uZCyO5I90pymBqse+1L9ASZRUyJgq24dg==
-X-Received: by 2002:a17:906:6a22:b0:ad2:cce:8d5e with SMTP id a640c23a62f3a-ad21b16d4d8mr201457766b.7.1746771065029;
-        Thu, 08 May 2025 23:11:05 -0700 (PDT)
-Received: from [26.26.26.1] (ec2-3-69-236-239.eu-central-1.compute.amazonaws.com. [3.69.236.239])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219343c81sm101663266b.58.2025.05.08.23.11.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 23:11:04 -0700 (PDT)
-Message-ID: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
-Date: Fri, 9 May 2025 14:11:00 +0800
+        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
+        b=FEXteAlgqDaxVqGtNoH2Q6f7iZYpAts2dDr3snXXbuDcF3KzzvZD3TmEmMG5Z1lxSN
+         aaBAIUIekPWL9dBrc9HH5oiQiMplaD+gLVg1quSzmaqMtyFb4w4ZDCLLg5qd7YpHa+k8
+         Zqhw8ijWx6Ha++2U9rL86U4EoGL8tunUcR4Af2q9hmTttGBW0GfdLUNeWx3NEQsI4+Fo
+         g9vjCpfzk1pH/SiOawhJeQ/3STM+s4GgGpE+gBQN2gAdM27kwkoQPeEYYX1nIpf0iTfj
+         fcfsIoOjOzY9Bujc9I/EQj8Emh9fCYUyckdaJiMnRKiJ5vNqn52ZC1nwwp/BkRM9SCEt
+         ovGA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3Xgk+1W2GhgKDMW+avsXMjuApSv/IsCzRyaoIlLFRIxJgAF3Bk5RhyC1TC3t9iU8fEU3JdCNlMW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUzjOxIMih5xsPf0K7DRFoXMWKzSUADQn27mpN6TbDZyWRr2XP
+	hed7sdhxSb6+pS5hRt6+0pGrhjDwZvATsb5z7CmJc1UPxOOzBBFDnWr5bHSMXg==
+X-Gm-Gg: ASbGnctw3I7AtSxMMPCJfhBtAe9obEbi0YhfpTSMt7BUJ5ICF2sZv+fSeHkYfWlaIW1
+	pIPbJWbBuD8ps/Jf+JbYVN8/lycO01U4THh6kD6GrH2cWSKkIPFYw8BBz4NHOQQmq1o4JO+rlLp
+	c27lM1uW+tVhRZk9iObaTZfeOM9snN2831OVKu1iy93G4SWfRM67ATorzOv/6uNBkE4oohmFtPE
+	KfnsOMg7/klPh9CrIVPTeSss5+ggdxKY2lFGZqvgaZct8Y7w1CXvJGvsBl9KO3Pw6Ce1TnbpHAY
+	LlcT/cC4AvEMCMGYcS/BuR785Kvt1+W/EDE7E6idIOX4/lB/jnQJtDV2mZUvFfslMhCWPG1TBkE
+	Oi3ZoRB2sqOmPx5rp6GjvHtw=
+X-Google-Smtp-Source: AGHT+IEBZ+xyU+mtZq/TJ5fu+6WMLt3/ZEPH5kI6vP9q6SNWA2Tnohwr4qj0xsEIdaPCJ/e8n6vxRA==
+X-Received: by 2002:a05:6000:178e:b0:391:4889:5045 with SMTP id ffacd0b85a97d-3a1f649be24mr1423812f8f.36.1746773468403;
+        Thu, 08 May 2025 23:51:08 -0700 (PDT)
+Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5e1sm2214791f8f.89.2025.05.08.23.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 23:51:07 -0700 (PDT)
+Date: Fri, 9 May 2025 12:21:07 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ethan Zhao <etzhao1900@gmail.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
+ panic
+Message-ID: <34nnkgbfkccvxiksjb5qaojppcvnkq4l7rchllsppy7cl4fics@4mwtb3rhko5n>
+References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
+ <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
+ <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
- panic
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
- Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>,
- Conor Dooley <conor.dooley@microchip.com>,
- Daire McNamara <daire.mcnamara@microchip.com>
-Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
-Content-Language: en-US
-From: Ethan Zhao <etzhao1900@gmail.com>
-In-Reply-To: <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
 
-
-
-On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
-> A PCI device is just another peripheral in a system. So failure to
-> recover it, must not result in a kernel panic. So remove the TODO which
-> is quite misleading.
+On Fri, May 09, 2025 at 02:11:00PM +0800, Ethan Zhao wrote:
 > 
-Could you explain what the result would be if A PCI device failed to
-recovery from FATAL/NON_FATAL aer error or DPC event ? what else
-better choice we have as next step ? or just saying "failed" then
-go ahead ?
-
-Thanks,
-Ethan
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   drivers/pci/pcie/err.c | 1 -
->   1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffcc94e15ba6e89f649c6f84bfdf0d5..de6381c690f5c21f00021cdc7bde8d93a5c7db52 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -271,7 +271,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   
->   	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
->   
-> -	/* TODO: Should kernel panic here? */
->   	pci_info(bridge, "device recovery failed\n");
->   
->   	return status;
+> On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
+> > A PCI device is just another peripheral in a system. So failure to
+> > recover it, must not result in a kernel panic. So remove the TODO which
+> > is quite misleading.
+> > 
+> Could you explain what the result would be if A PCI device failed to
+> recovery from FATAL/NON_FATAL aer error or DPC event ? what else
+> better choice we have as next step ? or just saying "failed" then
+> go ahead ?
 > 
 
+If the recovery is not possible (with device,bus,host reset), then there is
+nothing could be done.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
