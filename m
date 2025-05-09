@@ -1,78 +1,45 @@
-Return-Path: <linux-pci+bounces-27503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C33A6AB1264
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 13:41:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABEC1AB132E
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 14:20:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31DE61724F7
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 11:41:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 132DF1BA620C
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 12:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D202028C2BE;
-	Fri,  9 May 2025 11:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700DD274642;
+	Fri,  9 May 2025 12:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ayri1AN/"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WE6X6Oe6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E934F7E1
-	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 11:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D2321CC43;
+	Fri,  9 May 2025 12:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746790911; cv=none; b=ZWsGmLZjyhQea73iVNHI1LrNBqX67KGfLGFJApDFyA9FVuYPKqlaCd2m5FH9ZnIoQV8LU8A629avuMjy5dbT63/d3hvB4G0foqKukXVOzZF+VMsV3cXH+OYyx1Gz5poU6eX4YREb8U0Gp1pEaeQeUDq1ApqaDeze4vyhvxOmZiE=
+	t=1746793236; cv=none; b=IYjPzHr1ZkYnf/ArX8JJvLEDmZtaIeYXV8wgL2d0jUSs9P94pBzEK0cTWSbBxdC8O3Pv3+C5EEY8y5JiMrTJJwHTjkbnWadrShyqU07tVHZdUwg+FHbFpov/UMGb2LesdMcaBBsk4N6A27dcBboYtJabyM8N1chg9mXN0EXZowI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746790911; c=relaxed/simple;
-	bh=21R4CdsJlxo6ZIUB4aWnLHQhzIqhbI+E6wdmGGSh4zs=;
+	s=arc-20240116; t=1746793236; c=relaxed/simple;
+	bh=Ax9T6UkoX56Blctsz+lrpfAmrwAvmcSV3HKk+zSsLyk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQKSPA5VAhRYaQrcBHw9lKg42nOnRLsdqpUGOB6iBpIUFwBJbLZVOvRyNWkcgB7dBIylBcYjyGCHHTwPxjLva3UjDSpLv1FEsoTXayJI9g8Hdww3Iwi8uWOCRX+c3+PYPBIF8SCl+nEzKC+MlUJaW6Np4whZ9zXufpRjiorp95c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ayri1AN/; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad216a5a59cso136375566b.3
-        for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 04:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1746790907; x=1747395707; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
-        b=ayri1AN/SeBgJ2RHWOluJm//i1J26QV+grwv7cw760nXkqFlLPeqM3zfaIicoUnJQV
-         nR0ZkT2odUUfKWb61TYl5guqeewzxnJ9UpeOyzbuCRZq3DJltHrP/pBowx17XdQZ/+TM
-         bAYDL0AILCtYvyS+Hmq1aBlwNDmX5EknHeVUbG7SFjK6fDzCpNjhg4YxMlpkFfK7intx
-         5D9LEFukgf9Stu+h2kwp8wr9NIWnCYb4SyCCYZyvegjMqOGFnf/jHJ0+ghsaKYwkmoO/
-         rXLA0I5xGaS+lf9mnzuuHTw4q5BlxuBV4kJ/9/tMjl8hNqgZLskHGWJ2fKi0YE8s5yKI
-         tvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746790907; x=1747395707;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
-        b=KRLVwTjQyyHLaqB1nUyXnQhOwaDk7tpHsYEreI3D4hI+ul42LH2k6De787kFPULew7
-         khqOQ3PiSLZ9zVsWZvliyq+c8wJZD/zyqUjgcEhc8dPn0ZvqyI4uGHfmiAAHwAWXCbqZ
-         LalIETSIUTvqTpRz0yR+Z2hTRteDAKAnU4TrxSWenxnl9B7lltba+JnCKHWaAhp2rmXh
-         cUFGuEWsDAGUZsPU70m5EzKcCF7ig8maelWUzVboL77F0BafWazkzGYuUzch9Se2L9Zq
-         M9h+vj4N81Ev2DQn7lIQzDxbMUtL7FLPykzwCyK3v+SxIY/Y/YbVAyS6dTNj42fDUWww
-         uBqw==
-X-Gm-Message-State: AOJu0YzgF3HFFCjurhmanRxe+aMNSFmnV31q2tBDHBrGVwn1vy6alPfV
-	FuKIyJiCymPbcYXqr1Sy5gtJFaov4Ti1DguogI6Uq1Bs6dDajSpNvBga/BAxG7Y=
-X-Gm-Gg: ASbGncsk+plGeooQ4Wgpb1tQ21dOkuKj5G4IIMO79aPB/Zzxzb19BtNh6jaVYlu+ko1
-	WSBtQKyfauyh/Y0b/bJXzCrJKWRSkLbTNcVxmNBKeqlrTf8m9QWoew6zA69mHloSkeJI7uJF465
-	BqD4uGCJ14cXfxeCaHGQ2FuRaalu4FmsEKxFwXYwcLd6x9c5vgWaSNhj5A/5pZfH3rLsT/sSKQH
-	IDJ7s6PJmr3f9DGmil3/1U5MajulnHsT8VomZkLpAYr6EShptwXDzgXTCmLr9caNA8lHLmgaAxQ
-	QFM5Xqyvu+VQt4Af3pilSx0tlcHxEEAjxBcZvUBIan+pcWMB
-X-Google-Smtp-Source: AGHT+IG2j0Pea0l+03cwVMYbfwrcANbL1huFvD6sD/j4JhDPCTCSj3oUMBeHqG1csVa7s5Hq/oxNxw==
-X-Received: by 2002:a17:907:1907:b0:ac2:cae8:e153 with SMTP id a640c23a62f3a-ad218ea823fmr310536466b.4.1746790907122;
-        Fri, 09 May 2025 04:41:47 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd2a8sm138611966b.145.2025.05.09.04.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 04:41:46 -0700 (PDT)
-Message-ID: <b4771b63-3198-47c8-a83d-5133ba80d39b@tuxon.dev>
-Date: Fri, 9 May 2025 14:41:44 +0300
+	 In-Reply-To:Content-Type; b=ByPArgAzx3AazzHdfXXjc9DyulgcWPzWr4lAiyuqBHVdY5JPCE17z+qsN5tYgkwJteiqVdXvUj0axGns5jKxiymWa1Axn/IlkVMnau0CKNmmLXRc0ym5yEOfbPpK1syE5Gso0hTv5Z2YvvbNXAf669bmpZnxTbBccBMDt+aWW4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WE6X6Oe6; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=9Szx3j0XFQEI/UBZs807hBKYHQ3bAc/qN60fFOlHrtI=;
+	b=WE6X6Oe68i2pgvx5xNscRvtTNl3LlOetrwoJA5hDiunh5b9eEwaidFRfleV8n5
+	v+bysff+v0rPSbJOT1Hby7e3FKVCp67ea45gyvg7e2SS/6cmVlmS44czvB2v+aia
+	fsKZBlcG59+ToQhiA3BZFRmj7Ad0b8FgffcspENpFqbac=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3_5EM7x1oPsfZAA--.35294S2;
+	Fri, 09 May 2025 20:03:27 +0800 (CST)
+Message-ID: <78abe899-e529-49e8-9a16-a2657db666e4@163.com>
+Date: Fri, 9 May 2025 20:03:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,129 +47,131 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Philipp Zabel <p.zabel@pengutronix.de>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, saravanak@google.com
-Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
- <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
- <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org,
+ robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com,
+ jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
+ <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
 Content-Language: en-US
-In-Reply-To: <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3_5EM7x1oPsfZAA--.35294S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCrW8WFWktr1rAF45Kw13twb_yoWrWFykpF
+	y3XF1FyFs8Jr13CFnFqa1kKry3tasrKryrXrn8Gry3AF9IqryUGFy2yr4rua47Xr1xCF1j
+	yr1YqrWSvF1Yy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07URc_hUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwdIo2gd5xbcqQAAsG
 
-Hi, Philipp,
 
-On 09.05.2025 13:51, Philipp Zabel wrote:
-> Hi Claudiu,
-> 
-> On Mi, 2025-04-30 at 13:32 +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+On 2025/5/9 15:08, Manivannan Sadhasivam wrote:
+> On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
+>> On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
+>>> On 2025/5/7 23:03, Hans Zhang wrote:
+>>>> On 2025/5/7 01:41, Pali Rohár wrote:
+>>>>> On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+>>>>>> The Aardvark PCIe controller enforces a fixed 512B payload size via
+>>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+>>>>>> core negotiations.
+>>>>>>
+>>>>>> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+>>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+>>>>>> during device initialization, leveraging root port configurations and
+>>>>>> device-specific capabilities.
+>>>>>>
+>>>>>> Aligning Aardvark with the unified MPS framework ensures consistency,
+>>>>>> avoids artificial constraints, and allows the hardware to operate at
+>>>>>> its maximum supported payload size while adhering to PCIe
+>>>>>> specifications.
+>>>>>>
+>>>>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>>>>> ---
+>>>>>>    drivers/pci/controller/pci-aardvark.c | 2 --
+>>>>>>    1 file changed, 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/pci-aardvark.c
+>>>>>> b/drivers/pci/controller/pci-aardvark.c
+>>>>>> index a29796cce420..d8852892994a 100644
+>>>>>> --- a/drivers/pci/controller/pci-aardvark.c
+>>>>>> +++ b/drivers/pci/controller/pci-aardvark.c
+>>>>>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
+>>>>>> advk_pcie *pcie)
+>>>>>>        reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>>>>>        reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+>>>>>>        reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+>>>>>> -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>>>>>>        reg &= ~PCI_EXP_DEVCTL_READRQ;
+>>>>>> -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+>>>>>>        reg |= PCI_EXP_DEVCTL_READRQ_512B;
+>>>>>>        advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>>>>> -- 
+>>>>>> 2.25.1
+>>>>>>
+>>>>>
+>>>>> Please do not remove this code. It is required part of the
+>>>>> initialization of the aardvark PCI controller at the specific phase,
+>>>>> as defined in the Armada 3700 Functional Specification.
+>>>>>
+>>>>> There were reported more issues with those Armada PCIe controllers for
+>>>>> which were already sent patches to mailing list in last 5 years. But
+>>>>> unfortunately not all fixes were taken / applied yet.
+>>>>
+>>>> Hi Pali,
+>>>>
+>>>> I replied to you in version v2.
+>>>>
+>>>> Is the maximum MPS supported by Armada 3700 512 bytes?
 >>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
+>> IIRC yes, 512-byte mode is supported. And I think in past I was testing
+>> some PCIe endpoint card which required 512-byte long payload and did not
+>> worked in 256-byte long mode (not sure if the card was not able to split
+>> transaction or something other was broken, it is quite longer time).
 >>
->> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
->> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
->> host driver can be reused for these variants with minimal adjustments.
+>>>> What are the default values of DevCap.MPS and DevCtl.MPS?
 >>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> ---
->>  MAINTAINERS                              |    8 +
->>  drivers/pci/controller/Kconfig           |    7 +
->>  drivers/pci/controller/Makefile          |    1 +
->>  drivers/pci/controller/pcie-rzg3s-host.c | 1561 ++++++++++++++++++++++
->>  4 files changed, 1577 insertions(+)
->>  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
+>> Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
+>> type?
 >>
-> [...]
->> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
->> new file mode 100644
->> index 000000000000..c3bce0acd57e
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
->> @@ -0,0 +1,1561 @@
-> [...]
->> +static int rzg3s_pcie_resets_bulk_set(int (*action)(int num, struct reset_control_bulk_data *rstcs),
->> +				      struct reset_control **resets, u8 num_resets)
->> +{
->> +	struct reset_control_bulk_data *data __free(kfree) =
->> +		kcalloc(num_resets, sizeof(*data), GFP_KERNEL);
->> +
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	for (u8 i = 0; i < num_resets; i++)
->> +		data[i].rstc = resets[i];
->> +
->> +	return action(num_resets, data);
->> +}
+>> Aardvark controller does not have the real HW PCI-to-PCI bridge device.
+>> There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
+>> create fake kernel PCI device in the hierarchy to make kernel and
+>> userspace happy. Yes, this is deviation from the PCIe standard but well,
+>> buggy HW is also HW.
+>>
+>> And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
+>>
 > 
-> What is the purpose of this? Can't you just store struct
-> reset_control_bulk_data in struct rzg3s_pcie_host and call
-> reset_control_bulk_assert/deassert() directly?
-
-Yes, I can. I was trying to avoid storing also the reset_control_bulk_data
-in struct rzg3s_pcie_host since all that is needed can be retrieved from
-the already parsed in probe cfg_resets and power_resets.
-
+> Oh. Then this patch is not going to change the MPS setting of the root bus. But
+> that also means that there is a deviation in what the PCI core expects for a
+> root port and what is actually programmed in the hw.
 > 
->> +static int
->> +rzg3s_pcie_resets_init(struct device *dev, struct reset_control ***resets,
->> +		       struct reset_control *(*action)(struct device *dev, const char *id),
->> +		       const char * const *reset_names, u8 num_resets)
->> +{
->> +	*resets = devm_kcalloc(dev, num_resets, sizeof(struct reset_control *), GFP_KERNEL);
->> +	if (!*resets)
->> +		return -ENOMEM;
->> +
->> +	for (u8 i = 0; i < num_resets; i++) {
->> +		(*resets)[i] = action(dev, reset_names[i]);
->> +		if (IS_ERR((*resets)[i]))
->> +			return PTR_ERR((*resets)[i]);
->> +	}
->> +
->> +	return 0;
->> +}
+> Even in this MPS case, if the PCI core decides to scale down the MPS value of
+> the root port, then it won't be changed in the hw and the hw will continue to
+> work with 512B? Shouldn't the controller driver change the hw values based on
+> the values programmed by PCI core of the emul bridge?
 > 
-> Why not use devm_reset_control_bulk_get_exclusive() directly?
+> But until that is fixed, this patch should be dropped.
+> 
 
-I wasn't able to find a bulk_get_exclusive_deasserted() kind of API.
+Dear Mani,
 
-This IP needs particular sequence for configuration. First, after power on,
-the following resets need to be de-asserted:
+I will drop this patch in the next version.
 
-	const char * const power_resets[] = {
-		"aresetn", "rst_cfg_b", "rst_load_b",
-	};
+Best regards,
+Hans
 
-then, after proper values are written into the configuration registers, the
-rest of the resets need to be de-asserted:
-
-	const char * const cfg_resets[] = {
-		"rst_b", "rst_ps_b", "rst_gp_b", "rst_rsm_b",
-	};
-
-So I was trying to get and de-assert the power_resets in probe and just get
-the cfg_resets in the 1st step of the initialization, and later to
-de-assert the cfg_resets as well.
-
-Now, after you pointed it out, maybe you are proposing to just
-get_exclusive everything in one shot and then to de-assert what is needed
-at proper moments with generic reset control APIs?
-
-Thank you for your review,
-Claudiu
 
