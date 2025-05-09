@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-27483-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27484-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9C81AB08BF
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 05:19:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF8D6AB08C1
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 05:19:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80B6A1C212A5
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 03:18:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F90F1C204DA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 03:19:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5640D241116;
-	Fri,  9 May 2025 03:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5E023F434;
+	Fri,  9 May 2025 03:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+JETfwa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajoUsxrP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07BA2459CF;
-	Fri,  9 May 2025 03:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04D624167A;
+	Fri,  9 May 2025 03:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746760623; cv=none; b=iZJcc9FZVG+GwEx5h1ZFQ+6Io6QX0P73e7zpPeSnFB006RbKPO+YbbBTPM7n9v6NtGbtGE8h6EOrY2hedJ30ooaTQGvO2bihUc/rcCDboF7uPfqzLgdzqdRz6LVT8z/lEa0P5RYesAbXqCt5Wxx/3wnNss3kWi7gVaZKW/ciL1c=
+	t=1746760628; cv=none; b=O3i6551TGfgzxoJ6NHgZ0WutntJOlUG6iElM/GXxtMj8mUHKt/gsdmhXY/37fxIhJdarw5zeJoxC5MwtiRxHqzlU8H0nll3lBpwTteIhCqv7D12VjloW8GdxWpX3QUnkKCYIibvuXvQU9AleFvCopQncnyPM/q9HcQhoa/x/lP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746760623; c=relaxed/simple;
-	bh=oU0t3/ogKLzH06pwPNF/J70MAEAOhQFXgT5neGWG3cU=;
+	s=arc-20240116; t=1746760628; c=relaxed/simple;
+	bh=trFt74+3gg1ftMy1tXtRkrm0JO0Uv1lk6B3Xa/KkMHg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aG6f7gyQmVWG6+SsymRHii9oY7eku6aljAdpyxHXJkpJAsWZ8zIT3apSBkfUDFzF2kuZTtw8gRxnjHop9TscIX5OlpY/mtFaDC3JHepgoLu5/z+OgoNpOIK0AHujGiBEcA2hlebsE14XrjmelaJFNqP+A4QAuzs8WW2/UIAOHJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A+JETfwa; arc=none smtp.client-ip=209.85.210.49
+	 MIME-Version; b=dJQuBYQ3TWkJnzuUjBW+ebWsnYS/VrBXZxTTJXgFFCHDFV8+VWPrENveAk4xZhSlvD6nCcFNma6C6gBgoYTiN74a4bJJrggsINTIH7+0wOX9UmwJ9zNhBdHM3xZyZDoZ3HLF7lMw1kB4xjyYxieshnoaHAnueKtAOtUm+rJF3Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajoUsxrP; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c09f8369cso620267a34.3;
-        Thu, 08 May 2025 20:17:01 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-401be80368fso600625b6e.1;
+        Thu, 08 May 2025 20:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746760621; x=1747365421; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746760626; x=1747365426; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hoqckDBCEduuhxuaJVPjKVAng30GrSpmzU1JLtBRF8I=;
-        b=A+JETfwasbfpiJ1EOP3VkRXX6X0He9SIySEbRieJnRna+cbc7lplYW4cCe1ljaielT
-         MpK4O11f/kPXHWk/EiWYlxVKlQTHPciswgUFs7LoT7fTLpn8eyikFutPA9MubWcq9xHU
-         unClguhPrJ3Ne4cJZKo5fONn0FkM2xlhX6NJV4VfuTWeCdX/1szexwQbibZFrzMK7/8S
-         h9ppblQvJ0vRcpilqLz/lnD2EpsT1Ek9MBeR8BDOdVFCwuTHXVNZO12Wl5c8aa8Wf+5S
-         kzC+BnGwdyWEx7Yeq2LamLDUEKCSmLreOk+lwtrl49o4C5P2dS3A1IW+5Vyu7a92ppZt
-         L6xg==
+        bh=XgqV+bJH9bwGqYSCW6zT8FRineTcAn4X+KFdTGVLZEw=;
+        b=ajoUsxrPkbTVpPW6SvsFDAaauwxtPTvK0czWs0F5C9IRsZSgiFpJmkCQWsRHUKW4Qp
+         PfRo/C7EQy80II2SL76om6sB1zanVsiXg7UP+zRdU/4EnMABu9mc162b4+I5e3y/zMQr
+         ttQ/HBIFIOJzfqsNQT+Zn/NF/1FzP+tK9MJ2R7g0UQrM3k8tcQ2SBqJo/t4iRUq/W6zs
+         UlOQDBeevigFtInDgnyKutvkLP9v6PxxC5lnlF0U/Jahkw+YBAd0Tmi0EAVCqWzm2PCe
+         dWKQMDkOqDDB177EY46TympruALonMxWAszDye+24wlFU4I6jM6YioN4qXNtcGt80DE1
+         MeYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746760621; x=1747365421;
+        d=1e100.net; s=20230601; t=1746760626; x=1747365426;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hoqckDBCEduuhxuaJVPjKVAng30GrSpmzU1JLtBRF8I=;
-        b=eW8yMJiZu7nuVHCCB93MwO0deKn7iCKf6e+yXb4FL8okt5uONiT5eUMzW4LzrA0IsD
-         zz+Aak9XMmVGPapSbzUaHEA9xuhs/qWXuOnojedCJYRELXTOG+NMk9mBj4Zfd+qzS7gl
-         eW9TKAHb50jIDpbvoca9Ke/tRll+nFDTGGRcVn8r2Bozt11Fopxig1yfmmJ5DeoqmZlS
-         UeUPl+UyXh6jRtz6hxD9E69JUIBEdlo7G6zBDclt62OBxSvgcEQiKhNy8dnGYJKLvk25
-         K1wZVgsmnV8SA+rFuS3OAeukkJjPHe0pQa4+gZpxUfhjDmz7bEBihv+P9dlhmZxBXPsB
-         KxRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFTIMW0NAW3BV2a3ajflwazVUU4nvSByywtZdjWBeYt9a0FSmiYirTfE1e5rRUGM/XeQZL1VnktGfR@vger.kernel.org, AJvYcCVF65wIHswt9c7yZsxQPq8x9nmQBfOFAP3nk4aFBYSCUUZhESLjny9DM9HmgmVaxYIupfk4fwvLLKulIIL7mgc=@vger.kernel.org, AJvYcCWPdTNGuyOjTQxW5H4EJm5TYifmgMH1vlfnpvXQdI5qvl3E3hTRE5PBLTJJcgyjYRrU0Iw2cnG0MBMCsxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydFmGVuLMzfFuq6XxYTmtxDBiVXX0uPcZCK3Cao0xN4xttae+t
-	Te7YYHNbFIjxSZ8nQuJjOeGpyHayLkSaC1qQOnRB2mapTcfJu1r4
-X-Gm-Gg: ASbGncuYBm/IH8bjI0uHoFYZn9/JcEOSDtd2hPwgMBiRebo15OlZKEy91Eaf6qFNM0b
-	XUNNF97FCLxbDYZXYzZ9WHuviVsfBhG0nZRWz+7uBs5C6P/vQUHUbWlKSoqIxYoTUnJqzrow4bV
-	036tsa6yOVCH28O0WT7+INq4KWE1pVU575DiOVHIpv7+wkU1kVqNt2rTKgaMG/KnZfsr7dUe7rW
-	pgbOFx148+eYc2yXscqiTvDWexVP83Fq8BDVoWDLFH5WAMzKM0ezFRrXefdGnzrX1ena5fZi/Iw
-	rTZaBoWjc6Hq5/N9b0OPBd9f5pmiylrywJnZ+JK7SFOlEIwF8tlx5qBSuH35aacCd9xVu29Xy1n
-	zMhBoi5rD3gzO
-X-Google-Smtp-Source: AGHT+IFJactH9R43mBMIGMb7nbzPeCuDDlGMTikD03Mao0oUkKw8j52bGTKF3TXqX8VwPN7rT3jqPA==
-X-Received: by 2002:a05:6820:1a0b:b0:604:4846:78a with SMTP id 006d021491bc7-6083ff0ff81mr1538256eaf.2.1746760620739;
-        Thu, 08 May 2025 20:17:00 -0700 (PDT)
+        bh=XgqV+bJH9bwGqYSCW6zT8FRineTcAn4X+KFdTGVLZEw=;
+        b=hm19ImUapJWyqV/zCF7tcGAB3kKxxaXduzx2Fva1vTskALf4a+S6QCRZOTXIjx+jNo
+         Y9uF2PyOt2ii+Tls2GObIwySBK3EmsdIpThAZYXTAdd4sXD+u5IaDT0fjfwkSOoR4ArN
+         N+jgXZ0oY+f+2yf7aRw0yzPkOujppxqUwNNZk/uu/SUli6RBpanyXB15b0WbNOrDQnNZ
+         BXR9OTOdoO01+6WQBD8ipeZh/8n7IpxpW8xtHLm5ZnWu1tlwhX9b/JRnFUi6jc+R+sxr
+         J32/Up7PkxohfVF5NZM8UniWNX3G8L5vIfLfIWsIkGNpJUBxn18ARgteEraPvDHe7rnO
+         yU5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUB2Ux10eEHG6q829AH8gy+PqpkFJDNsCnPfj72Rbi9kuZaC3SxVJBrJBbmcVpDDdrgb8mRta99z9DQY14mBZ4=@vger.kernel.org, AJvYcCUPD4w3QDHYPl7iZ0oOoChDb5HIpBRLoTdzYysjn6BERXHMIuGUQ8I/AznwcJeLRQLB7pIXptUkSaZkz5M=@vger.kernel.org, AJvYcCUbHT6wn3vLZ7QvnAIqdEdBl3sjhoUbxytF/vRvhuW3PySB/i2aB4nxRbFXUTdUm/82NwUzvGHFxv9B@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpifjSbB4cUv23ha8IXe5jYZZEY6oHCZ7CDUsj12mFr019/po2
+	vUKaCs/pclu/O91+D9tT35GhU2JUNZ1QOKdX9WZPs2Oy82bWUJNc
+X-Gm-Gg: ASbGncs6izQdCxo+hcnV2xZNaQ+1fEcJZVx5R3kjo9FwLIx9UjFqBkBrRH+SGJbXI90
+	F7W4LQ1xsQ00Y306qtLyM+Kq32TJZhKhZgl3TYxt10Dt94DWb+PTLB1woVLZLH8eLlXipH18pGI
+	DrksnBxIhZPwmtXWq0NvOefXysWcky664Cj4VHrWRITSrHOwxgzoP1hYixXYxNubszEggbnFbXk
+	t4OnSrQ3/ef1MMb3rWvq11dehgkvxDYRYeJGXfNbGTX5cjpjjNMnEKH35WskTYIODN4HGGI0myi
+	U+A1/UtuF+j5dcZvRMNl82B0qdFFxjXdJc3D1umOUSAtYcUEmIPs6VD25fei/G1DTFBFZWeH+el
+	V8v3gD+xwnyqP
+X-Google-Smtp-Source: AGHT+IFW81DiF+olMWJMKxd0X0Haiy6R6/35pkLPuRc9ZALbjLeamffaAjN2DDY5D6gMNu99B3Hc9A==
+X-Received: by 2002:a05:6820:3082:b0:607:e267:7297 with SMTP id 006d021491bc7-6084c10184amr1043846eaf.5.1746760625781;
+        Thu, 08 May 2025 20:17:05 -0700 (PDT)
 Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-60842b096desm303745eaf.30.2025.05.08.20.16.55
+        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-60842b096desm303745eaf.30.2025.05.08.20.17.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 20:17:00 -0700 (PDT)
+        Thu, 08 May 2025 20:17:05 -0700 (PDT)
 From: Andrew Ballance <andrewjballance@gmail.com>
 To: dakr@kernel.org,
 	airlied@gmail.com,
@@ -103,9 +103,9 @@ Cc: nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 09/11] samples: rust: rust_driver_pci: update to use new bar and io api
-Date: Thu,  8 May 2025 22:15:22 -0500
-Message-ID: <20250509031524.2604087-10-andrewjballance@gmail.com>
+Subject: [PATCH 10/11] gpu: nova-core: update to use the new bar and io api
+Date: Thu,  8 May 2025 22:15:23 -0500
+Message-ID: <20250509031524.2604087-11-andrewjballance@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509031524.2604087-1-andrewjballance@gmail.com>
 References: <20250509031524.2604087-1-andrewjballance@gmail.com>
@@ -117,37 +117,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-update rust_driver_pci.rs to use the new bar and io api.
+updates nova-core to use the new Io and Bar api.
 
 Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
 ---
- samples/rust/rust_driver_pci.rs | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/nova-core/driver.rs | 4 ++--
+ drivers/gpu/nova-core/regs.rs   | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 2bb260aebc9e..b645155142db 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -4,7 +4,9 @@
- //!
- //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
- 
--use kernel::{bindings, c_str, device::Core, devres::Devres, pci, prelude::*, types::ARef};
-+use kernel::{
-+    bindings, c_str, device::Core, devres::Devres, io::IoAccess, pci, prelude::*, types::ARef,
-+};
- 
- struct Regs;
- 
-@@ -16,7 +18,7 @@ impl Regs {
-     const END: usize = 0x10;
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index a08fb6599267..42596ee2e07f 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -11,7 +11,7 @@ pub(crate) struct NovaCore {
  }
  
--type Bar0 = pci::Bar<{ Regs::END }>;
-+type Bar0 = pci::IoBar<{ Regs::END }>;
+ const BAR0_SIZE: usize = 8;
+-pub(crate) type Bar0 = pci::Bar<BAR0_SIZE>;
++pub(crate) type Bar0 = pci::MMIoBar<BAR0_SIZE>;
  
- #[derive(Debug)]
- struct TestIndex(u8);
+ kernel::pci_device_table!(
+     PCI_TABLE,
+@@ -33,7 +33,7 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
+         pdev.enable_device_mem()?;
+         pdev.set_master();
+ 
+-        let bar = pdev.iomap_region_sized::<BAR0_SIZE>(0, c_str!("nova-core/bar0"))?;
++        let bar = pdev.iomap_region_sized_hint::<BAR0_SIZE, _>(0, c_str!("nova-core/bar0"))?;
+ 
+         let this = KBox::pin_init(
+             try_pin_init!(Self {
+diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+index b1a25b86ef17..079c3d275a47 100644
+--- a/drivers/gpu/nova-core/regs.rs
++++ b/drivers/gpu/nova-core/regs.rs
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ use crate::driver::Bar0;
++use kernel::io::IoAccess;
+ 
+ // TODO
+ //
 -- 
 2.49.0
 
