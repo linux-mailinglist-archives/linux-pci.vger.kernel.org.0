@@ -1,98 +1,95 @@
-Return-Path: <linux-pci+bounces-27492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27493-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4529CAB0AEA
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 08:51:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D3B7AB0B41
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 09:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90B344A432B
-	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 06:51:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17162520412
+	for <lists+linux-pci@lfdr.de>; Fri,  9 May 2025 07:09:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1ED726F453;
-	Fri,  9 May 2025 06:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1192701B5;
+	Fri,  9 May 2025 07:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLhl8vlt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBmFxLYS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C03226A1C9
-	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 06:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F411270ECD
+	for <linux-pci@vger.kernel.org>; Fri,  9 May 2025 07:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746773472; cv=none; b=FS+Pmye13SIjvb2RB0u7pHZ6M8ScGEWfzb1qO6XDAyfqtVgsXCf/FeG08XDCe9nSQGsK+UAuAgUHbqY3gbfat/lR+EmAZFqu6pWmRqlw/n4wa/W5B5mcLM4uMeuhFTrOVjTgr2Ozr5qpEhXM3hitvnWys7xBM/My8eyoF3zVQSs=
+	t=1746774534; cv=none; b=J/hGoeAan9xcpe0saZEHrENpnJMB4ZaY6ZEZhG3KOrHlfLGUK25yG3kl5EVvLQuoQRG1G0oGDQ5u7PpXy41VCZ1aj8x+XRhic3+vqPjcxej1VwNRa6gyS1SvFKGCsoTVH3SQRO72k9uvkwWmYd4wXggEdslCYplTe7snZtPdGE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746773472; c=relaxed/simple;
-	bh=wiDZ4xkPtV9BOe7ADj1LbvuGPB4FiUezAyGN2IFKEzU=;
+	s=arc-20240116; t=1746774534; c=relaxed/simple;
+	bh=oZnnaQahcN2zA4vvZs+wzg11udFQZV8cb83SiP8IQXE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ffllgBZmWHzacPVscGW5bJFQ+zQ4SkpRxi6T9Jy89i9UlRciQeo8T8TI3ATtwk1fjbEmcxJkWWduAegndfoIhVrdbgDHvyqYs+vG0WIkYYDYRXaMEC/AAydT3uGXMCNgIDAwdnbz51AYlsL9n/W4Wk22B/KGXGrudG5zmcEdAj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZLhl8vlt; arc=none smtp.client-ip=209.85.221.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppSFXT+xqD99mF42Jj76gMAsvOwe8F5HKtOGS1S1HaF/7g9IBeI2UL8jXczlxy1zKazkWoOqHYZmaIIcu4lTzWzPDGW9nJc0xmv+cgiSsCWND3um7XDL5TIDFXoLPRtuvJ9ezdaUVHtW3qLhRXr/Wy57EN++pZFwECdapXyx5B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GBmFxLYS; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a1fb18420aso22603f8f.1
-        for <linux-pci@vger.kernel.org>; Thu, 08 May 2025 23:51:09 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so20098815e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 00:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746773468; x=1747378268; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746774530; x=1747379330; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
-        b=ZLhl8vltiQyAai1i+3Sn+H0oJQzhx2abSENViGQGEi/dQOBeBEIWkVmHyDe56CHdLt
-         xDKK0g6GDHValO90OKLmhKsHxBC+IQkjHp1xhb8B67gRrfG//1E2UEPij8Lfzkl+ZSmd
-         Ctx4cYNfzv3iaukeZn0YbhpJtLdreKmT2xXwozoLqNnEtS8QL108OPMuH7c+UGaXBK85
-         qeEOFyq2mdQMZEZ4Mv6ZefuHOZtS9d0XdK9YsL9cpJjjxqloitR4iVeGiSavGywOx2TP
-         DqwfefGijEOyPKlA/cjFEaNRW6SAkoeMHd5uup1+sfQ5BP6Av/+V7me1cfS0RnJ+i3nr
-         2tnA==
+        bh=77qkoKjDKq6SXETuhF5rMrUj8XsUUdj7U8eiTVCOHj0=;
+        b=GBmFxLYSjCjfIfMTnXY09zej7BMiTYFQvhkBiY96e9Mb/6Qw2KfokBCwzvM0hb+CyX
+         iLKfBMfxmdD8yYkIUGmBXKvTspn9YjEYzwvbPdmlHYEvfzzmFicQvnHU/+AgOpYi00G1
+         SyY/66gpbyZ+L5B8NlStieSur/Thyn8IxZIl1R3V8bWYAU9BJUi3TYFZFdDp0DfzNdDc
+         cC6ulrBISaNuBmBcVlkoDaTrxvwrKCbUF3uEleGNTIziez5fzemlETeSDIpYl2Zo0Q5j
+         GrC2PTRt7gJftxSLw4RqJ1dJamPey3c1r4dnfGYrtYMhOoeaJ31WhJtB1lrRfKJpTQeF
+         ee3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746773468; x=1747378268;
+        d=1e100.net; s=20230601; t=1746774530; x=1747379330;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
-        b=FEXteAlgqDaxVqGtNoH2Q6f7iZYpAts2dDr3snXXbuDcF3KzzvZD3TmEmMG5Z1lxSN
-         aaBAIUIekPWL9dBrc9HH5oiQiMplaD+gLVg1quSzmaqMtyFb4w4ZDCLLg5qd7YpHa+k8
-         Zqhw8ijWx6Ha++2U9rL86U4EoGL8tunUcR4Af2q9hmTttGBW0GfdLUNeWx3NEQsI4+Fo
-         g9vjCpfzk1pH/SiOawhJeQ/3STM+s4GgGpE+gBQN2gAdM27kwkoQPeEYYX1nIpf0iTfj
-         fcfsIoOjOzY9Bujc9I/EQj8Emh9fCYUyckdaJiMnRKiJ5vNqn52ZC1nwwp/BkRM9SCEt
-         ovGA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3Xgk+1W2GhgKDMW+avsXMjuApSv/IsCzRyaoIlLFRIxJgAF3Bk5RhyC1TC3t9iU8fEU3JdCNlMW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUzjOxIMih5xsPf0K7DRFoXMWKzSUADQn27mpN6TbDZyWRr2XP
-	hed7sdhxSb6+pS5hRt6+0pGrhjDwZvATsb5z7CmJc1UPxOOzBBFDnWr5bHSMXg==
-X-Gm-Gg: ASbGnctw3I7AtSxMMPCJfhBtAe9obEbi0YhfpTSMt7BUJ5ICF2sZv+fSeHkYfWlaIW1
-	pIPbJWbBuD8ps/Jf+JbYVN8/lycO01U4THh6kD6GrH2cWSKkIPFYw8BBz4NHOQQmq1o4JO+rlLp
-	c27lM1uW+tVhRZk9iObaTZfeOM9snN2831OVKu1iy93G4SWfRM67ATorzOv/6uNBkE4oohmFtPE
-	KfnsOMg7/klPh9CrIVPTeSss5+ggdxKY2lFGZqvgaZct8Y7w1CXvJGvsBl9KO3Pw6Ce1TnbpHAY
-	LlcT/cC4AvEMCMGYcS/BuR785Kvt1+W/EDE7E6idIOX4/lB/jnQJtDV2mZUvFfslMhCWPG1TBkE
-	Oi3ZoRB2sqOmPx5rp6GjvHtw=
-X-Google-Smtp-Source: AGHT+IEBZ+xyU+mtZq/TJ5fu+6WMLt3/ZEPH5kI6vP9q6SNWA2Tnohwr4qj0xsEIdaPCJ/e8n6vxRA==
-X-Received: by 2002:a05:6000:178e:b0:391:4889:5045 with SMTP id ffacd0b85a97d-3a1f649be24mr1423812f8f.36.1746773468403;
-        Thu, 08 May 2025 23:51:08 -0700 (PDT)
+        bh=77qkoKjDKq6SXETuhF5rMrUj8XsUUdj7U8eiTVCOHj0=;
+        b=Vd3WtZ+ndYHGVDvtmKas2V+oaTTmnZjfRqOHSaQMKYEDtG8l9qdZikC4BtwOVr+clq
+         Sj1NhqkCQsxNuYpFOMMf65GQMPirDlEguFXzYJfOFTeV8/nocCit5LAjm+rESX3tHZ2+
+         OgiLaA9fbniFBwRgJm185F2gp0y4kDXzgZaXI3RcsA4rZuy0/XqF6g51RS3MuMcAo5TC
+         CRJQz9TNZLVTxbLMD2Teqf/yle3EqIIB85Ah6EBviy/MR/+JWRxEVw4guwUTN5r/8001
+         tMfaXEhm1/SLBOvOUNuAY8wZHM9IB0Qgd57M8lBSbhWK3/eN4LFO1UpmH1lk4AfPpNpR
+         cSHg==
+X-Forwarded-Encrypted: i=1; AJvYcCU337VZFWykTnyt8amW56Zu982WfjGYOv9BYV61/vWfWobZK9lrZPltVbBfJrxhoVzW/YqYxzuuo/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ4K5hy9svEgRQdFk01VhcLCd0EXEVqBZwnR14bvwhK9+S2Qlk
+	OXMet7yA6hXaJXKq9L4Cqkkjip1W6zDMw721vp2pWbSTeR4CQD0mOOUy0VOdLw==
+X-Gm-Gg: ASbGncvX+bFed2O7ytPPu5llO0mIm1iTK832lkUDJsFERJpkDOQhrezw8zaWWd5xaiZ
+	VQ5fO/L4NtwlfnxuqS2l9gI+Z+vVIMHoT/0haAl0aaQx+v/+aEZ3GNAQvdwXrpwy03dhDzwIoZE
+	oBWt276J1Bq0OSxnacdeXcLSzJZBDylKRYVoiDYf3bAXvznRcz3/3RPxNWwse0hyE2eOALcS5uE
+	Otc5rEcTiDbOMRobXyi4gW8ggoipoLaMZq+6m6vDIyKphBTqFoJ94qD/Vxt3R7JXmNBW8zp+iI7
+	JwQjV7AResM+VsHhVobfcsbxCI+Tu9JMa7Gdpi3Z0C0PrN+BcYxARg68yWxoWeEzKdoSfsLX3Eb
+	HxjUZhnlD3f27ad98iImyFnY=
+X-Google-Smtp-Source: AGHT+IHR5+ZqZWgRoRLa1o1Gg2Cvw+npoLGEsXcz8CnQxm7QZTBi9ul3cXloYS+TYHobQ2CzSJpuaQ==
+X-Received: by 2002:a5d:5f51:0:b0:3a1:f563:f84e with SMTP id ffacd0b85a97d-3a1f6a4370emr1630423f8f.16.1746774530584;
+        Fri, 09 May 2025 00:08:50 -0700 (PDT)
 Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5e1sm2214791f8f.89.2025.05.08.23.51.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde1asm2305688f8f.8.2025.05.09.00.08.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 23:51:07 -0700 (PDT)
-Date: Fri, 9 May 2025 12:21:07 +0530
+        Fri, 09 May 2025 00:08:49 -0700 (PDT)
+Date: Fri, 9 May 2025 12:38:48 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ethan Zhao <etzhao1900@gmail.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
- panic
-Message-ID: <34nnkgbfkccvxiksjb5qaojppcvnkq4l7rchllsppy7cl4fics@4mwtb3rhko5n>
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
- <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com, 
+	bhelgaas@google.com, heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org, 
+	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,24 +99,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
+In-Reply-To: <20250507163620.53v5djmhj3ywrge2@pali>
 
-On Fri, May 09, 2025 at 02:11:00PM +0800, Ethan Zhao wrote:
+On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
+> On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
+> > On 2025/5/7 23:03, Hans Zhang wrote:
+> > > On 2025/5/7 01:41, Pali Rohár wrote:
+> > > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+> > > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
+> > > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+> > > > > core negotiations.
+> > > > > 
+> > > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+> > > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+> > > > > during device initialization, leveraging root port configurations and
+> > > > > device-specific capabilities.
+> > > > > 
+> > > > > Aligning Aardvark with the unified MPS framework ensures consistency,
+> > > > > avoids artificial constraints, and allows the hardware to operate at
+> > > > > its maximum supported payload size while adhering to PCIe
+> > > > > specifications.
+> > > > > 
+> > > > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > > > ---
+> > > > >   drivers/pci/controller/pci-aardvark.c | 2 --
+> > > > >   1 file changed, 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > > index a29796cce420..d8852892994a 100644
+> > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
+> > > > > advk_pcie *pcie)
+> > > > >       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > >       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+> > > > >       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+> > > > > -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> > > > >       reg &= ~PCI_EXP_DEVCTL_READRQ;
+> > > > > -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+> > > > >       reg |= PCI_EXP_DEVCTL_READRQ_512B;
+> > > > >       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > > -- 
+> > > > > 2.25.1
+> > > > > 
+> > > > 
+> > > > Please do not remove this code. It is required part of the
+> > > > initialization of the aardvark PCI controller at the specific phase,
+> > > > as defined in the Armada 3700 Functional Specification.
+> > > > 
+> > > > There were reported more issues with those Armada PCIe controllers for
+> > > > which were already sent patches to mailing list in last 5 years. But
+> > > > unfortunately not all fixes were taken / applied yet.
+> > > 
+> > > Hi Pali,
+> > > 
+> > > I replied to you in version v2.
+> > > 
+> > > Is the maximum MPS supported by Armada 3700 512 bytes?
 > 
+> IIRC yes, 512-byte mode is supported. And I think in past I was testing
+> some PCIe endpoint card which required 512-byte long payload and did not
+> worked in 256-byte long mode (not sure if the card was not able to split
+> transaction or something other was broken, it is quite longer time).
 > 
-> On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
-> > A PCI device is just another peripheral in a system. So failure to
-> > recover it, must not result in a kernel panic. So remove the TODO which
-> > is quite misleading.
-> > 
-> Could you explain what the result would be if A PCI device failed to
-> recovery from FATAL/NON_FATAL aer error or DPC event ? what else
-> better choice we have as next step ? or just saying "failed" then
-> go ahead ?
+> > > What are the default values of DevCap.MPS and DevCtl.MPS?
+> 
+> Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
+> type?
+> 
+> Aardvark controller does not have the real HW PCI-to-PCI bridge device.
+> There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
+> create fake kernel PCI device in the hierarchy to make kernel and
+> userspace happy. Yes, this is deviation from the PCIe standard but well,
+> buggy HW is also HW.
+> 
+> And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
 > 
 
-If the recovery is not possible (with device,bus,host reset), then there is
-nothing could be done.
+Oh. Then this patch is not going to change the MPS setting of the root bus. But
+that also means that there is a deviation in what the PCI core expects for a
+root port and what is actually programmed in the hw.
+
+Even in this MPS case, if the PCI core decides to scale down the MPS value of
+the root port, then it won't be changed in the hw and the hw will continue to
+work with 512B? Shouldn't the controller driver change the hw values based on
+the values programmed by PCI core of the emul bridge?
+
+But until that is fixed, this patch should be dropped.
 
 - Mani
 
