@@ -1,65 +1,60 @@
-Return-Path: <linux-pci+bounces-27540-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80283AB2383
-	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 13:04:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEF45AB23A4
+	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 13:43:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85E7B7A784B
-	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 11:03:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13CCF1BC04DA
+	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 11:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4881D5CF2;
-	Sat, 10 May 2025 11:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392F158218;
+	Sat, 10 May 2025 11:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zi9iS54B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJVWhm/B"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C1259C;
-	Sat, 10 May 2025 11:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F157154BE2
+	for <linux-pci@vger.kernel.org>; Sat, 10 May 2025 11:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746875062; cv=none; b=otkS4tZaTjbdp1+DlR/NzOydhwGvMIO1VG2r/+WkYHRYJ0dYqGVZXG63T75DKjUOwW3McaAep9+8/Hz3u+L8l4iD4c95fP/0jCQwWYdksnjhNW4v6XjfdTWC8IurtCT132sO5ZPfMJouwXNzkhr6M7edbrQ54ac3KS/+ln/2Lck=
+	t=1746877425; cv=none; b=YYZZ6GsAttXhGeCpZGwrMGTowSNBlLT+3OTCBY4sKmc0hNag1+bkDhXVKFqMsJ5LTdyEWGgZV2H2jD1O4de+SP7qq8cBK4W581YHyJiz7xj/Zh4Z32zJTeiMGkq7k9+a5CfisrGj6ZRWgUjaLmDKvvGmU0vLAmOWBDxNe5WXZBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746875062; c=relaxed/simple;
-	bh=LnCr8g0K3kFovNAfIBhC2oA0dXw5uMqRwlfONu06Ff4=;
+	s=arc-20240116; t=1746877425; c=relaxed/simple;
+	bh=we1V9c8stSslgF8UCLTv30KHJbMzrgZSYGajfNKd+As=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXxIR3FQQLjwE4uhyJGIu9Vv1m68LfUHadVQby9UfLS82h4wwhHUyUunURqXv6O3kSXMAynwzIrqcIrmWlhd8jsrkQsXdSNZkySiRf48Gf/TfLT0driyAi2ZrhLK1O2bJEDA7B8+uSesMZEZwKuxc5BGTxKdHGcrkRx/0hNjVwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zi9iS54B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEAEC4CEE2;
-	Sat, 10 May 2025 11:04:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jsqMJ2Pw16pV+lGilNK3rTCH+K5umj+tOoiD+KRSMnPftgXN9p0nqvGrq5ioK7tQXFSBJnBJXnoPu7aAAm1GsHQBaYSzkBizM5HSOjVvaicmK6nFBea82ZZVMWzO3mbo3PdqPDtGLzV5erGgkog7dlw5JWY69CMm9WE+yX+A8Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJVWhm/B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B25FC4CEE2;
+	Sat, 10 May 2025 11:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746875061;
-	bh=LnCr8g0K3kFovNAfIBhC2oA0dXw5uMqRwlfONu06Ff4=;
+	s=k20201202; t=1746877424;
+	bh=we1V9c8stSslgF8UCLTv30KHJbMzrgZSYGajfNKd+As=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zi9iS54BLj0T5mXRojSJXhPL94LXj7hCQ+/I1xdk2P4NXw+CAhe/Wf16Tkh+1LeWL
-	 I2HULSYCpdvR9Ec/a/lV0cBaUEv5yPIkIGg7uZQFb10tVi+k0ADJ2bEqFqYy5f0PoT
-	 zOAVMhR0OiHhYFKU5Zd3vh8EVkbxof0lF5yQemN0sDDJ3oXLBPfkIPfr0FVs7JlzTV
-	 0NMNjnIgfiQLgzZLAmdBYuVbxUfywp5GlK1lSGv2mgPNjPMafWt3Z9wAovA4Zax31l
-	 rJIVFoZCkZ/5eXPA2hFuU8UyNNuf07KWWbSU92+AKjxgBLDQ2nIGoKz6Xt9Ujmsui2
-	 ij+0/jcsMlu1Q==
-Date: Sat, 10 May 2025 13:04:16 +0200
+	b=jJVWhm/BIbf2U9m52mELMJ4OhhTtHl9A/4LfrRJW4PpnGQ3Qmwmhncz8gtX8AYiJB
+	 ChI443p2PFvAxn1mvV0F8xjMKNUdWS22AMNwoaBsM8fK+nCV/Lpw01+L8Ra+4pd5Af
+	 yxWuRaWHO5LFXKvykPp3YlyqmWSglobAW1mrAIDQBWsU+QVJKTa1AEDniX1RR2j/vG
+	 kvgAotlkhyUDtKTi1Sz0DfFTnmpxyAxNL8Df75U15uXlyUD4jeRLH1XvhIBIt4i9Ki
+	 SsSapWvYOsaif5WjW94tl+d6reqWE82rWOmfnE6hBrkXAuqtALq15cDIgVrObKf390
+	 u/+rZHJE/ktgw==
+Date: Sat, 10 May 2025 13:43:39 +0200
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh@kernel.org>,
+Cc: Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
-	dlemoal@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: pci-ep: Add ref-clk-mode
-Message-ID: <aB8ysBuQysAR-Zcp@ryzen>
-References: <20250425092012.95418-2-cassel@kernel.org>
- <7xtp5i3jhntfev35uotcunur3qvcgq4vmcnkjde5eivajdbiqt@n2wsivrsr2dk>
- <aBHOaJFgZiOfTrrT@ryzen>
- <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
- <20250509181827.GA3879057-robh@kernel.org>
- <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>, dlemoal@kernel.org,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: dwc: ep: Fix broken set_msix() callback
+Message-ID: <aB8762GD_iI5G5LY@ryzen>
+References: <20250430123158.40535-3-cassel@kernel.org>
+ <tmtm4od4paptgbiodq5cezltsy6njoyeet7mcsq7rq3m7zcz5z@thpqdtzpskgx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,77 +63,117 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
+In-Reply-To: <tmtm4od4paptgbiodq5cezltsy6njoyeet7mcsq7rq3m7zcz5z@thpqdtzpskgx>
 
-On Sat, May 10, 2025 at 01:01:51AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, May 09, 2025 at 01:18:27PM -0500, Rob Herring wrote:
-> > > > > 
-> > > > > > +    description: Reference clocking architechture
-> > > > > > +    enum:
-> > > > > > +      - common-clk        # Common Reference Clock (provided by RC side)
-> > > > > 
-> > > > > Can we use 'common-clk-host' so that it is explicit that the clock is coming
-> > > > > from the host side?
-> > > > 
-> > > > Sure.
-> > > > 
-> > > > I take it that you prefer 'common-clk-host' over 'common-clk-rc' ?
-> > > > 
-> > > 
-> > > That's what I intended previously, but thinking more, I feel that we should
-> > > stick to '-rc'i, as that's what the PCIe spec uses.
+On Sat, May 10, 2025 at 11:27:55AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Apr 30, 2025 at 02:31:59PM +0200, Niklas Cassel wrote:
+> > While the parameter 'interrupts' to the functions pci_epc_set_msi() and
+> > pci_epc_set_msix() represent the actual number of interrupts, and
+> > pci_epc_get_msi() and pci_epc_get_msix() return the actual number of
+> > interrupts.
 > > 
-> > Couldn't this apply to any link, not just a RC? Is there PCIe 
-> > terminology for upstream and downstream ends of a link?
+> > These endpoint library functions just mentioned will however supply
+> > "interrupts - 1" to the EPC callback functions pci_epc_ops->set_msi() and
+> > pci_epc_ops->set_msix(), and likewise add 1 to return value from
+> > pci_epc_ops->get_msi() and pci_epc_ops->get_msix(),
+> 
+> Only {get/set}_msix() callbacks were having this behavior, right?
+
+pci_epc_get_msix() adds 1 to the return of epc->ops->get_msix().
+pci_epc_set_msix() subtracts 1 to the parameter sent to epc->ops->set_msix().
+
+pci_epc_get_msi() does 1 << interrupt from the return of epc->ops->get_msi().
+So a return of 0 from epc->ops->get_msi() will result in pci_epc_get_msi()
+returning 1. A return of 1 from epc->ops->get_msi() will result in
+pci_epc_get_msi() returning 2.
+
+Similar for pci_epc_set_msi(). It will call order_base_2() on the parameter
+before sending it to epc->ops->set_msi().
+
+So pci_epc_get_msi() / pci_epc_set_msi() takes a interrupts parameter
+that actually represents the number of interrupts.
+
+epc->ops->set_msi() / epc->ops->get_msi() takes an interrupts parameter,
+but that value does NOT represent the actual number of interrupts.
+It is instead the value encoded per the Multiple Message Enable (MME)
+field in the "7.7.1.2 Message Control Register for MSI". So it is quite
+confusing that these the parameter for epc->ops->set_msi() /
+epc->ops->get_msi() is also called interrupts. A better parameter name
+would have been "mme".
+
+It is however called 'interrupts' in the pci-epc.h header:
+https://github.com/torvalds/linux/blob/v6.15-rc5/include/linux/pci-epc.h#L102-L103
+
+and in the DWC driver and RCar driver:
+static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no, u8 interrupts)
+static int rcar_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 interrupts)
+
+However, some drivers have seen this weirdness and actually named the parameter
+differently:
+static int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 mmc)
+static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 multi_msg_cap)
+
+TL;DR: all of these callbacks are a mess IMO, not only {get/set}_msix().
+
+I did the smallest fix possible, because doing a cleanup of this will
+require changing all drivers that implement these callbacks, which seems
+different from a fix.
+
+
+> 
+> > even though the
+> > parameter name for the callback function is also named 'interrupts'.
+> > 
+> > While the set_msix() callback function in pcie-designware-ep writes the
+> > Table Size field correctly (N-1), the calculation of the PBA offset
+> > is wrong because it calculates space for (N-1) entries instead of N.
+> > 
+> > This results in e.g. the following error when using QEMU with PCI
+> > passthrough on a device which relies on the PCI endpoint subsystem:
+> > failed to add PCI capability 0x11[0x50]@0xb0: table & pba overlap, or they don't fit in BARs, or don't align
+> > 
+> > Fix the calculation of PBA offset in the MSI-X capability.
 > > 
 > 
-> Usually, the refclk comes from the host machine to the endpoint, but doesn't
-> necessarily from the root complex. Since the refclk source could very well be
-> from the motherboard or the host system PCB, controlled by the host software.
+> Thanks for the fix! We should also fix the API discrepancy w.r.t interrupts as
+> it is causing much of a headache. One more example is the interrupt vector. API
+> expects the vectors to be 1-based, but in reality, vectors start from 0. So the
+> callers of raise_irq() has to increment the vector and the implementation has to
+> decrement it.
 > 
-> > The 'common-clk' part seems redundant to me with '-rc' or whatever we 
-> > end up with added.
-> > 
-> 
-> No. It could be the other way around. We can drop the '-rc' suffix if it seem
-> redundant. Maybe that is a valid argument also since root complex doesn't
-> necessarily provide refclk and the common refclk usually comes from the host.
+> If you want to fix it up too, let me know. Otherwise, I may do it at some point.
 
-When the RC and EP uses a common clock (rather than separate clocks),
-the clock can either be provided by the host side or the EP side.
+As you know, I'm working on adding SRNS/SRIS support for dw-rockchip,
+I might send a cleanup for the Tegra driver too.
 
-The most common by far (if using a common clock) is that it the common
-clock is provided by the host side. That is why my patch just named it
-'common-clk' instead of 'common-clk-host' or 'common-clk-rc'.
+I do not intend to clean up all the drivers.
+I am a bit worried about patches after the cleanup getting backported, which
+will need to be different before and after this cleanup. Perhaps renaming the
+callbacks at the same as the cleanup might be a good idea?
 
-I can use whatever name we agree on. I indend to send out V2 of this
-patch as part of a series that adds SRIS support to the dw-rockchip
-driver, in order to address Krzysztof's comment.
+It should be a simple cleanup though, just do the order_base_2() etc in the
+driver callbacks themselves.
+
+We really should rename the parameter of .set_msi() though, as it is totally
+misleading as of now.
 
 
 > 
-> > Finally, this[1] seems related. Figure out a common solution.
+> > Fixes: 83153d9f36e2 ("PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments")
+> 
+> This doesn't seem like the correct fixes commit.
 
-I don't see the connection.
+It is correct.
 
-https://lore.kernel.org/all/20250406144822.21784-2-marek.vasut+renesas@mailbox.org/
+Commit 83153d9f36e2 ("PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments")
+added the PBA offset to dw_pcie_ep_set_msix().
 
-does specify a reference clock, but that is in a host side DT binding.
+dw_pcie_ep_set_msix() already wrote the interrupts value (zeroes based) to the
+QSIZE register. Commit 83153d9f36e2 added this code:
++       val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
 
-
-This patch adds a refclk-mode property to an endpoint side DT binding.
-
-This property is needed such that the endpoint can configure the bits
-in its own PCIe Link Control Register before starting the link.
-
-Perhaps the host side could also make use of a similar property, but I'm not
-sure, you don't know from the host side which endpoint will be plugged in.
-
-From the EP side, you do know if your SoC only supports common-clock or
-SRNS/SRIS, since that depends on if the board can source the clock from
-the PCIe slot or not (of all the DWC based drivers, only Qcom and Tegra
-can do so, rest uses SRNS/SRIS), so this property definitely makes sense
-in an EP side DT binding.
+So it used a zeroes based value to calculate the size,
+which is obviously wrong.
 
 
 Kind regards,
