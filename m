@@ -1,134 +1,146 @@
-Return-Path: <linux-pci+bounces-27539-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 479F0AB218D
-	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 08:31:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80283AB2383
+	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 13:04:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B3B61882C42
-	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 06:31:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85E7B7A784B
+	for <lists+linux-pci@lfdr.de>; Sat, 10 May 2025 11:03:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DD11DE2A8;
-	Sat, 10 May 2025 06:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4881D5CF2;
+	Sat, 10 May 2025 11:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MVXIBFaN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zi9iS54B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8621CD21C
-	for <linux-pci@vger.kernel.org>; Sat, 10 May 2025 06:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C1259C;
+	Sat, 10 May 2025 11:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746858697; cv=none; b=KWpyjHsa9D9Tu3FldkWnZ3mkS++e1NdtaNHHJQ6hpNJIBnX/ghGzsAAl4FQFKZZkdsnqmWiaCV8+FAwjEpNZzvJf2QT8/hdCcvt1ok8V8Xl6FlLdrrmrvU+b22+IyW4Y3FF2W5DPFD689tix5bJXqgaAozovNGXsvTFfmvUR2u0=
+	t=1746875062; cv=none; b=otkS4tZaTjbdp1+DlR/NzOydhwGvMIO1VG2r/+WkYHRYJ0dYqGVZXG63T75DKjUOwW3McaAep9+8/Hz3u+L8l4iD4c95fP/0jCQwWYdksnjhNW4v6XjfdTWC8IurtCT132sO5ZPfMJouwXNzkhr6M7edbrQ54ac3KS/+ln/2Lck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746858697; c=relaxed/simple;
-	bh=/CUWNCKJLlL2ZUz9MqaxNPY5UPyrCzuEVCDqSKKaiwY=;
+	s=arc-20240116; t=1746875062; c=relaxed/simple;
+	bh=LnCr8g0K3kFovNAfIBhC2oA0dXw5uMqRwlfONu06Ff4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1aSyl9jGEg9bISqhGMNPrUt/O3NfPrSTZE8Q9ExF3HbM6LZ+jVTBAUhKxR11Ed4FfHJ2Nt3fOSur//BSnvvK5qkYzNwJ00L4wE578tElrn9L4dvkV5WKcGX3M+tTbnTIN4Roi+THQv/rDuJB8kaWLyBqeW/LxOQVD9NegIpdtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MVXIBFaN; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a1f9791a4dso705478f8f.0
-        for <linux-pci@vger.kernel.org>; Fri, 09 May 2025 23:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746858694; x=1747463494; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=al12x7untsw9gT40SLDOdxEjze2k19FQIlHKuwT2kqQ=;
-        b=MVXIBFaNTzcJH/anR5qym88MwkABM+Zj7KoL7uATZcH+BcrAecC9frL5VeS0sVdzdi
-         hUJv3H9ojh1IGvebhzIZkbD1w/6ZixvlV4Qdke2ddT52SO8kUrjsCP0L+sbHUuMy8TPq
-         OBLL8tROouoczzulH4wuBAmedzNO3y1XAiQes2ZVN4UmKsvhAns6yiyH9zNA5Y7xWcPy
-         6NHTOR3EB4XXbB4UwUVIrXFzK2zEPnVyWg+8b/S3HHkmOxwDIHsLOIeJcExhv5WjdvEm
-         2RcvTRvBZxupHzftBZLBo2042CXYaCwZXXcKWUj+CSvLlBgMUTBWrKI/zRN15cBJrU01
-         Pl3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746858694; x=1747463494;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=al12x7untsw9gT40SLDOdxEjze2k19FQIlHKuwT2kqQ=;
-        b=emoQycnWqxOiqD670t7NnqoQazm7LWK7RlLsnq3zCm/jVMRidzFyUgH4hBnG81uD6P
-         MHp7RI86kbtoYIctiEFbO2hsm6Ez0cS1G2W2494Jy5FRKE4OwTKf76aaij41+wK19nmM
-         4SROofV4EZdngRGFhTr8HGsBEKxZMLXhRQQTMIkcqgZVolYUaw2vLmgIJ7FfXVoHvteI
-         EVK/Ek2nCfjRogN8u2mucd+GmEXFc6maB2Qk6t9IxXoLqF5otXoOK75Sn9Bh75J7nGA5
-         NvY/59hZM4FVpK4n+hdssJLXq3tLzRi7skH385AmnrkVX+zT+2PEKfh8lvAI38J3zx48
-         Ai8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW6S5MeqH7qPUeLKtxq9rv2+S5SBTcroARLADPUBppAmhtYr87W1oCqLgPs8gaBbNDIDjPN7MMgRDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9xft2Ju1roNxZXHCWYRXd1LyYPE/bjrgbAQpJRVOshbcAwXzj
-	qVBjZ2nOC0r4WNMkDdcSuZvYgeV83/Sxsc+VGX1z3XJVzv1oX+uaSS7P6zB3ow==
-X-Gm-Gg: ASbGncsJUrTIMhWKrOmgyfSULNDNosJ0ASaYaT8S+t9nvkl7NqocRL5iqDiQsgvF7e0
-	tkOQhKeKvVbyh48jK83DESqMc2abt912kGv5I84L/rvlN+UjVq8u/mPUealg5VOGT+uBL0z6Qyb
-	72Oa58Ac8+ZAaR0RfBNLpJRLsrasmHOWg2EwwFHkO2n+danOqVCvqCqzt1lI/Bi61njpkFXSf2o
-	59PMzTqIY23CtwJLDP0uchjtjk+uc10MV0LthhgRwNGkN2dzkudN9PFoGnFxAE7dARdLEIa9ofF
-	nvnnmta5l3THFW2p+aJyBAZYvhJNM0gUqJETltK0wNc13BbRXwOHl+CjNV3/lA7s6v/8/KI+ggt
-	sQghpdy2F8iNogxqdb+1e1FmFsWBqPl2zfw==
-X-Google-Smtp-Source: AGHT+IETPcny+oJkB2S2QRPRO7MBeUeS+pHJgVEZyOPsrPJBO7sk8jq/SJTSNUR5nO2ekoZ3PrRZwg==
-X-Received: by 2002:a05:6000:22ca:b0:391:454:5eb8 with SMTP id ffacd0b85a97d-3a1f64b5c99mr4768988f8f.48.1746858693887;
-        Fri, 09 May 2025 23:31:33 -0700 (PDT)
-Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c583sm5351182f8f.84.2025.05.09.23.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 23:31:33 -0700 (PDT)
-Date: Sat, 10 May 2025 12:01:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 382/642] PCI/pwrctrl: Move
- pci_pwrctrl_unregister() to pci_destroy_dev()
-Message-ID: <tfil3k6pjl5pvyu5hrhnoq7bleripyvdpcimuvjrvswpqrail3@65t65y2owbpw>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-382-sashal@kernel.org>
- <aBnDI_40fX7SM4tp@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXxIR3FQQLjwE4uhyJGIu9Vv1m68LfUHadVQby9UfLS82h4wwhHUyUunURqXv6O3kSXMAynwzIrqcIrmWlhd8jsrkQsXdSNZkySiRf48Gf/TfLT0driyAi2ZrhLK1O2bJEDA7B8+uSesMZEZwKuxc5BGTxKdHGcrkRx/0hNjVwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zi9iS54B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEAEC4CEE2;
+	Sat, 10 May 2025 11:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746875061;
+	bh=LnCr8g0K3kFovNAfIBhC2oA0dXw5uMqRwlfONu06Ff4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zi9iS54BLj0T5mXRojSJXhPL94LXj7hCQ+/I1xdk2P4NXw+CAhe/Wf16Tkh+1LeWL
+	 I2HULSYCpdvR9Ec/a/lV0cBaUEv5yPIkIGg7uZQFb10tVi+k0ADJ2bEqFqYy5f0PoT
+	 zOAVMhR0OiHhYFKU5Zd3vh8EVkbxof0lF5yQemN0sDDJ3oXLBPfkIPfr0FVs7JlzTV
+	 0NMNjnIgfiQLgzZLAmdBYuVbxUfywp5GlK1lSGv2mgPNjPMafWt3Z9wAovA4Zax31l
+	 rJIVFoZCkZ/5eXPA2hFuU8UyNNuf07KWWbSU92+AKjxgBLDQ2nIGoKz6Xt9Ujmsui2
+	 ij+0/jcsMlu1Q==
+Date: Sat, 10 May 2025 13:04:16 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
+	dlemoal@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: pci-ep: Add ref-clk-mode
+Message-ID: <aB8ysBuQysAR-Zcp@ryzen>
+References: <20250425092012.95418-2-cassel@kernel.org>
+ <7xtp5i3jhntfev35uotcunur3qvcgq4vmcnkjde5eivajdbiqt@n2wsivrsr2dk>
+ <aBHOaJFgZiOfTrrT@ryzen>
+ <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
+ <20250509181827.GA3879057-robh@kernel.org>
+ <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBnDI_40fX7SM4tp@wunner.de>
+In-Reply-To: <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
 
-On Tue, May 06, 2025 at 10:06:59AM +0200, Lukas Wunner wrote:
-> On Mon, May 05, 2025 at 06:09:58PM -0400, Sasha Levin wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Sat, May 10, 2025 at 01:01:51AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, May 09, 2025 at 01:18:27PM -0500, Rob Herring wrote:
+> > > > > 
+> > > > > > +    description: Reference clocking architechture
+> > > > > > +    enum:
+> > > > > > +      - common-clk        # Common Reference Clock (provided by RC side)
+> > > > > 
+> > > > > Can we use 'common-clk-host' so that it is explicit that the clock is coming
+> > > > > from the host side?
+> > > > 
+> > > > Sure.
+> > > > 
+> > > > I take it that you prefer 'common-clk-host' over 'common-clk-rc' ?
+> > > > 
+> > > 
+> > > That's what I intended previously, but thinking more, I feel that we should
+> > > stick to '-rc'i, as that's what the PCIe spec uses.
 > > 
-> > [ Upstream commit 2d923930f2e3fe1ecf060169f57980da819a191f ]
+> > Couldn't this apply to any link, not just a RC? Is there PCIe 
+> > terminology for upstream and downstream ends of a link?
 > > 
-> > The PCI core will try to access the devices even after pci_stop_dev()
-> > for things like Data Object Exchange (DOE), ASPM, etc.
+> 
+> Usually, the refclk comes from the host machine to the endpoint, but doesn't
+> necessarily from the root complex. Since the refclk source could very well be
+> from the motherboard or the host system PCB, controlled by the host software.
+> 
+> > The 'common-clk' part seems redundant to me with '-rc' or whatever we 
+> > end up with added.
 > > 
-> > So, move pci_pwrctrl_unregister() to the near end of pci_destroy_dev()
-> > to make sure that the devices are powered down only after the PCI core
-> > is done with them.
 > 
-> The above was patch [2/5] in this series:
+> No. It could be the other way around. We can drop the '-rc' suffix if it seem
+> redundant. Maybe that is a valid argument also since root complex doesn't
+> necessarily provide refclk and the common refclk usually comes from the host.
+
+When the RC and EP uses a common clock (rather than separate clocks),
+the clock can either be provided by the host side or the EP side.
+
+The most common by far (if using a common clock) is that it the common
+clock is provided by the host side. That is why my patch just named it
+'common-clk' instead of 'common-clk-host' or 'common-clk-rc'.
+
+I can use whatever name we agree on. I indend to send out V2 of this
+patch as part of a series that adds SRIS support to the dw-rockchip
+driver, in order to address Krzysztof's comment.
+
+
 > 
-> https://lore.kernel.org/r/20250116-pci-pwrctrl-slot-v3-0-827473c8fbf4@linaro.org/
-> 
-> ... so I think the preceding patch [1/5] is a prerequisite and would
-> need to be cherry-picked as well.  Upstream commit id is:
-> 957f40d039a98d630146f74f94b3f60a40a449e4
-> 
+> > Finally, this[1] seems related. Figure out a common solution.
 
-Yes, thanks for spotting it Lukas, appreciated!
+I don't see the connection.
 
-> That said, I'm not sure this is really a fix that merits backporting
-> to stable.  Mani may have more comments whether it makes sense.
-> 
+https://lore.kernel.org/all/20250406144822.21784-2-marek.vasut+renesas@mailbox.org/
 
-Both this commit and the one corresponding to patch 1/5 are not bug fixes that
-warrants backporting. So please drop this one from the queue.
+does specify a reference clock, but that is in a host side DT binding.
 
-- Mani
 
--- 
-மணிவண்ணன் சதாசிவம்
+This patch adds a refclk-mode property to an endpoint side DT binding.
+
+This property is needed such that the endpoint can configure the bits
+in its own PCIe Link Control Register before starting the link.
+
+Perhaps the host side could also make use of a similar property, but I'm not
+sure, you don't know from the host side which endpoint will be plugged in.
+
+From the EP side, you do know if your SoC only supports common-clock or
+SRNS/SRIS, since that depends on if the board can source the clock from
+the PCIe slot or not (of all the DWC based drivers, only Qcom and Tegra
+can do so, rest uses SRNS/SRIS), so this property definitely makes sense
+in an EP side DT binding.
+
+
+Kind regards,
+Niklas
 
