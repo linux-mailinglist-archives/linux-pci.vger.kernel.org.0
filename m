@@ -1,139 +1,97 @@
-Return-Path: <linux-pci+bounces-27553-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF0D2AB2751
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 10:25:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 284F4AB2756
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 10:34:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D482177F9D
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 08:25:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC1F93BBC52
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 08:34:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4291B042C;
-	Sun, 11 May 2025 08:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRAnEud2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC6B2F2E;
+	Sun, 11 May 2025 08:34:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AFE191F66
-	for <linux-pci@vger.kernel.org>; Sun, 11 May 2025 08:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2CA28FD
+	for <linux-pci@vger.kernel.org>; Sun, 11 May 2025 08:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746951906; cv=none; b=ggbMTKwOUaJRr6O5V675KX89l15JfywNF7uYqyp4jtd4DI/cAXNBihfVqj43bWDaCMAQgOYS55xmHUjf6xx7PUi+rhgi/cJJGop/qefqJ9c3tktQA7+NSK2794kdCkXpI0sv05xzTEPHnnD7lFAcTHmLKjN+nIVWXLMR4W8hsAQ=
+	t=1746952492; cv=none; b=eKWDMeEOltWsE9VdqiyQjS0Pfv2A+vMsEoxk2Qr+Hw4dYkK+va911VcbwqoORR5jXYw5GNqcECB0OuzG/BEAtOQxgC/wHOEn33DVygY4c54llQY0AXh/nNBPc7fDu9cpigUS+uerSOTqDO+X6Yoo1Hkc595sFvjs/z+3mAXU0lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746951906; c=relaxed/simple;
-	bh=axlzh8wdBSnRAj1XihJUWHBLhaR7tOyyavylk1fO3Uw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D65H/3tpgz41G4j12Yn7wmm78BVDAegDqpeDu0MuKgbsNKspXaASYT9Em8LIh/DK6AG74hNiO9ttVeaw6tmnAb2pX4rFndyKSRyAtT/VcIaihN+Lpt7RRxJ4bguFvWPPkCjtZ/ccOmuUsYB+uWr/NIxWp67l4kJvEPLjkQtOQt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FRAnEud2; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so35210535e9.1
-        for <linux-pci@vger.kernel.org>; Sun, 11 May 2025 01:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746951903; x=1747556703; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JGDVeACw/jp0C4k4Wd6moCgif1Pfm842wvA1qG0yCD4=;
-        b=FRAnEud2utrkUbirh9TSp5wX3z0gZ/03sP+PQwaYgJHnjzK6tJfkNH43xZwUN7xNuH
-         6bukQ1Lw+crhXlZQcqRDzhR+1WoPv2gD9SF61oZMCkmELmwLQWGCR2qYz+C+GUzaT86i
-         MBCRVTINCjFZwY5ZSNUAmZpUScykS0NsAKbpMQuYojUubW6n0vTZJkWi0Fc8PiYVd2Yw
-         LDoa+eEWW8ujaXGfChYfLipTCDEeKG7MlNakw9doySGJVljmSJW+wHo3IFv0LacWnoXK
-         PE22Tcc/wywX+znBEpiTuZjrvvaK0V9JADc83R2HgswqLr8OAaITRFeln5g9WRFJWbX/
-         aVmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746951903; x=1747556703;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JGDVeACw/jp0C4k4Wd6moCgif1Pfm842wvA1qG0yCD4=;
-        b=RJRkoE5okAB8OlOIntHIw5seW/o341FqQoRZZPLTjkmqsZSI9LxZ9qpcsykRTYYvAV
-         UpyUoKwhjujXGPH7oGG4NljBwxI6KCSLovp9ZMB+vb8TOutKLX0HIymZx72qIdzlMm1/
-         J6Fhk0b0b/oQ0Uf0AEoV90LmB3WEbZRuNxj0qucvoy48XmghoENLBRyAtlgbR2VQKvPc
-         7aByIzg5NKN0yh/1YWZIJOiYGvZFQYWwh9nQAzjS+PXl1FW57OlsyFiHq1HleoOPepSn
-         26pDBKPV8rV4l52wMgtc6hocyJnCEGkD2oNTWjixnoJYd/aTy2g0QhYX4kxQThBO329X
-         rM+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWT5eOYbpRuzuIbq1W2xeGYVZFqleJRl3locWT4DpKlMUFmt8O4Pgmk5LT6ku/2f40Updb/gKS3zK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvj2DXwZdS/9rIJYRIf1iF+CeQpPdzEPLUbzMOp8YP0s2i+s5u
-	FuNDPQcsQLxWvjgTSunDogm5w3BC53NviU/IIWy/dQXesB452zHRAQ9pr4LYGQ==
-X-Gm-Gg: ASbGncvw1rlTm7Czqjd9SUkesCE1EVPSI3zlCYhTR7YcRdANvbD9Uf8daKZoDnBWvk2
-	jXfPoVtQudjfozsc9EVdLM14ZACLdw09DO84o5wUM+FICzXE0kkP9ztFUrJg/UmcVW4lLnEwl9l
-	zpXapRJGpO6N7oaNSe8qZd68YfajHVFfDr/y1JVydD9I7YGUw7s8WB4Xv9VR3Bd/SGh5pPlKVuH
-	29DhqG9od+nROhZE8rqeLYYroZgZ36e1PMTJvrxvYvzqawhlEg/og5ovrj5AqmhXQCggBR0wtTK
-	Q0yYvoUQRlt5OEgw2arCRo9LicqpYGTIQv4umFKCG1I7ipS3DEKiBTTQN3pg21s=
-X-Google-Smtp-Source: AGHT+IGIgwTqFwghplknMmhn0PhrkMbkYatLkYI+iiXeqPEmbShj2REeefkdrAzhOMUJoVnfgrJgUQ==
-X-Received: by 2002:a05:6000:2902:b0:390:ee01:68fa with SMTP id ffacd0b85a97d-3a1f6444a44mr7489435f8f.24.1746951903183;
-        Sun, 11 May 2025 01:25:03 -0700 (PDT)
-Received: from thinkpad ([130.93.163.156])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec912sm8487327f8f.23.2025.05.11.01.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 01:25:01 -0700 (PDT)
-Date: Sun, 11 May 2025 13:54:59 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Frank Li <Frank.Li@nxp.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, 
-	jdmason@kudzu.us, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v18 00/15] PCI: EP: Add RC-to-EP doorbell with platform
- MSI controller
-Message-ID: <4oyhjtoedh66sdyhebltwskskksy5ask4avvuekoxbckibdxmb@bqwe72b5q4en>
-References: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
- <87y0v7ko8o.ffs@tglx>
+	s=arc-20240116; t=1746952492; c=relaxed/simple;
+	bh=5RH8jIUvJYufCAO8nl2nrvnGKOttx2qTP6W+yEFIklw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SsEzq7Fve5ypEWUiBbEV362PuvXF1kwQ7DcKSwoTYqHxKKRS3OfZuJmDJ2hyehdqRGml+DY0yd0QSuQYqTwmmAoVbXNMLhTB41mNliOLnUSrMZYmP6Hj+x3so0iDu6hMgmn9Bt3Mz/cgtQZTuojLE91bBcpwBudiPgFGxvoUu30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8CxNHAeYSBoEvDeAA--.36385S3;
+	Sun, 11 May 2025 16:34:38 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMCxKcQZYSBoUlbGAA--.49349S2;
+	Sun, 11 May 2025 16:34:37 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>
+Subject: [PATCH V3 0/2] PCI: Fix problems about boot & kexec
+Date: Sun, 11 May 2025 16:34:11 +0800
+Message-ID: <20250511083413.3326421-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87y0v7ko8o.ffs@tglx>
+X-CM-TRANSID:qMiowMCxKcQZYSBoUlbGAA--.49349S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9qb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxC20s026xCaFVCjc4AY6r1j6r4UMxCI
+	bckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+	I_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+	6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8
+	JbIYCTnIWIevJa73UjIFyTuYvjxU2nYFDUUUU
 
-On Thu, May 08, 2025 at 07:26:31PM +0200, Thomas Gleixner wrote:
-> On Mon, Apr 14 2025 at 14:30, Frank Li wrote:
-> > This patches add new API to pci-epf-core, so any EP driver can use it.
-> >       platform-msi: Add msi_remove_device_irq_domain() in platform_device_msi_free_irqs_all()
-> >       irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immutable()
-> >       irqchip/gic-v3-its: Set IRQ_DOMAIN_FLAG_MSI_IMMUTABLE for ITS
-> >       dt-bindings: PCI: pci-ep: Add support for iommu-map and msi-map
-> >       irqchip/gic-v3-its: Add support for device tree msi-map and msi-mask
-> 
-> I applied the interrupt related changes in the tip tree. They are on a
-> seperate rc1 based branch and contain no other changes so that they can
-> be pulled into the PCI tree as prerequisite for the actual endpoint
-> changes. This can be pulled from the following tag:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-platform-msi-05-08-25
-> 
+This series fix two PCI problems about boot & kexec. They are first
+observed on Loongson but not limited on Loongson.
 
-Thanks! I'd like to have a closer look at the endpoint patches and want to try
-them out on some hardware before merging. Unfortunately, this cannot happen for
-the next two weeks as I'll be on vacation.
+V1 -> V2:
+1. Update commit message.
 
-So please take the interrupt changes for the upcoming cycle and we will deal
-with endpoint patches after 6.16-rc1. The major blocker for this series has been
-the interrupt related changes. I'm so glad that it got resolved finally.
+V2 -> V3:
+1. Resend two patches as a series.
 
-Frank, thanks for your persistence!
+Hongchen Zhang & Huacai Chen (2):
+  PCI: Use local_pci_probe() when best selected cpu is offline
+  PCI: Prevent LS7A Bus Master clearing on kexec
 
-- Mani
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/pci/pci-driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+---
+2.27.0
 
--- 
-மணிவண்ணன் சதாசிவம்
 
