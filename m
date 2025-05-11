@@ -1,150 +1,139 @@
-Return-Path: <linux-pci+bounces-27560-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27561-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84654AB2BB4
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 23:52:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5425AB2BF2
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 00:33:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 051ED173001
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 21:52:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25A49175806
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 22:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C4525B697;
-	Sun, 11 May 2025 21:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A91262D0B;
+	Sun, 11 May 2025 22:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ncrT/gZt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H19xtvdw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2CB19307F;
-	Sun, 11 May 2025 21:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E8F64D;
+	Sun, 11 May 2025 22:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747000356; cv=none; b=pceXdQYTlyGo48OMMkU6t+SKvN45WX+4VkjqJXYQkUMQ2yYKW16hPJtlA/IBwFxcPtsKWjW8q0LeOj30iKLkzFCR1OfkRihHH7RISK86URmiPkNo5lfwKmthd+ZhPcp8Btz6WZD2+55r4ocRyHFO/Jvm+vy8+4vEQRJ5ldiBxfU=
+	t=1747002808; cv=none; b=Rw98nVszPCsN3oD8l0iFj+tusq0T4zIhqO81XCrJ/nAoHq3XB1d1e4h6b4xZwL8ROG6qFkwV/idXmWteYp8A4VGJBadNnDXOhvVZBTkt8vzFdLyPb3CUThdeXtXy7bK+chY2R2gp+tGRgXPtr2CiVm6HmiF/k2pO2YqlNw258nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747000356; c=relaxed/simple;
-	bh=eVOfRC71/v0naU88mPmpGGIMHyzVH0LVRTWmB7Cvdx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aAh4hU5LcdAjARlvZjNQCkuo3mkHv+tez42iPMI8ylyrQj9Qf5sj2nGxX00AovnWbwAExton2Fi6Kd90wcTeTGXY9cBFUGxUcKevgCG+96w4c98ESiAHws5SDePxqeKnnRCE6TiZDGGRCsi99NL222qU1j2vCp4WqSi2w92q6fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ncrT/gZt; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747000354; x=1778536354;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eVOfRC71/v0naU88mPmpGGIMHyzVH0LVRTWmB7Cvdx8=;
-  b=ncrT/gZtZMtA+gFsSqq9GA7zVEWMHjJchL22c0aoCFxRf2G75v5nctJI
-   eBj2aPQOEjpvxBQZZxUgyOrumjFdhuvW20htyOPc7Emw7b13w2LcGOOIl
-   /vbBTyBEEbMn0buxjVDH4AqKzHLJgZDPx9Ytu9Eq2f6nm5MY1jKz0F+Y2
-   aspJ+YjbDld17yi5uFz/fmgiaR2JUllRl64LcIIbB34rV6ibX6u+Culuk
-   XQAVUVXsq57pMyyNfj4hamF4O7bysItRaeYzF1zxqRjnwnfhha0j6t1/H
-   KhYd7BF751EQAvBb5fx/9I6gL4mtVO1dzX23IlDF4qhxlSEM/wFOqm8Ac
-   g==;
-X-CSE-ConnectionGUID: WoSREJfRTlqYJI52M7qxXA==
-X-CSE-MsgGUID: jW+Yzt+yT5+eOm18b/dRQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="74181807"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="74181807"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:52:33 -0700
-X-CSE-ConnectionGUID: 22mdZdqxQ9abjmxrBSv0iA==
-X-CSE-MsgGUID: T5wY4l6VSUCR8Y7CbARB4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="136896737"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:52:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH 1/1] PCI: Non-empty add_list/realloc_head does not warrant BUG_ON()
-Date: Mon, 12 May 2025 00:52:23 +0300
-Message-Id: <20250511215223.7131-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1747002808; c=relaxed/simple;
+	bh=tyYEPPNu6sfrAJok3EZ0IVFCHm0s9MKh4uJtJBRQACI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAk8h0ViOh9t7ZYrbtjQJQHO5dkxYlmlv4OGTAdpCAPR3Hin5hkPkOw0Hcs99ErAjveUtsixK63BpwbXybyNwfNi0SZUX4SFwC7gBEPjCAmt2hRONPORKPv541YgOPce+mgUN+SgZ5bxRfpcPBBr+r+27ekeBDPIYGVCfBdoobI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H19xtvdw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1904C4CEE4;
+	Sun, 11 May 2025 22:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747002807;
+	bh=tyYEPPNu6sfrAJok3EZ0IVFCHm0s9MKh4uJtJBRQACI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H19xtvdw0TQcWQvEBfrPgIeKS8/AmsCdm0HbK3E41dS5+kbg8sr5urTCh3SVZEioN
+	 gpRsbfo0G2FS/psALkNgb8CQsFaDtU4Q4pkfi6mAtWaxgyTP7ERgI8D7l6/6SCMaUw
+	 B7VfwXwAZHBSswC/MP7+wLd5mBAjQ17xANGKf6IG1uXuTmka5qxwd9IWxZsw97mXP3
+	 rwo2vJRfkhJ4NMQ2U/I/p546AjGJ6csbjNbENJCNTdfFP40MOwaOjYVcNXDqvZ4mfH
+	 UXUc2ka4QoGWtqYH9gcAzAtK8ZbdIGoeNgbTLh+VTeunkJTD75LO4aGpoK+0vWGzO7
+	 vEkb2lVdFApAg==
+Date: Sun, 11 May 2025 17:33:21 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, dmitry.baryshkov@linaro.org, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org, 
+	lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, konradybcio@kernel.org, 
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, quic_qianyu@quicinc.com, 
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v5 0/6] pci: qcom: Add QCS8300 PCIe support
+Message-ID: <cyapaa36fotqxoyhc554m74uw4nah52j3ymaay24k3bfjd2fgw@o57nbyo3wyaq>
+References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
 
-Resource fitting/assignment code checks if there's a remainder in
-add_list (aka. realloc_head in the inner functions) using BUG_ON().
-This problem typically results in a mere PCI device resource assignment
-failure which does not warrant using BUG_ON(). The machine could well
-come up usable even if this condition occurs because the realloc_head
-relates to resources which are optional anyway.
+On Wed, May 07, 2025 at 11:10:13AM +0800, Ziyue Zhang wrote:
+> This series adds document, phy, configs support for PCIe in QCS8300.
+> The series depend on the following devicetree.
+> 
+> This series depends on PCIe SMMU for QCS8300:
+> https://lore.kernel.org/all/dc535643-235d-46e9-b241-7d7b0e75e6ac@oss.qualcomm.com/
 
-Change BUG_ON() to WARN_ON_ONCE() and free the list if it it's not
-empty.
+I've picked this dependency now, but please in the future include such
+dependent patches into a single series (keep original author and
+signed-off-by, add your signed-off-by last).
 
-Reported-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Link: https://lore.kernel.org/linux-pci/5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org/
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Regards,
+Bjorn
 
-The cause for the regression reported by Tudor is not understood yet,
-but this change seems useful regardless given somebody has now hit one
-of these BUG_ON()s.
-
- drivers/pci/setup-bus.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 54d6f4fa3ce1..a0d815557f5c 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -2298,8 +2298,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 
- 		/* Depth last, allocate resources and update the hardware. */
- 		__pci_bus_assign_resources(bus, add_list, &fail_head);
--		if (add_list)
--			BUG_ON(!list_empty(add_list));
-+		if (WARN_ON_ONCE(add_list && !list_empty(add_list)))
-+			free_list(add_list);
- 		tried_times++;
- 
- 		/* Any device complain? */
-@@ -2361,7 +2361,8 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 		pci_bridge_distribute_available_resources(bridge, &add_list);
- 
- 		__pci_bridge_assign_resources(bridge, &add_list, &fail_head);
--		BUG_ON(!list_empty(&add_list));
-+		if (WARN_ON_ONCE(!list_empty(&add_list)))
-+			free_list(&add_list);
- 		tried_times++;
- 
- 		if (list_empty(&fail_head))
-@@ -2437,7 +2438,8 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
- 
- 	__pci_bus_size_bridges(bridge->subordinate, &added);
- 	__pci_bridge_assign_resources(bridge, &added, &failed);
--	BUG_ON(!list_empty(&added));
-+	if (WARN_ON_ONCE(!list_empty(&added)))
-+		free_list(&added);
- 
- 	if (!list_empty(&failed)) {
- 		ret = -ENOSPC;
-@@ -2493,6 +2495,7 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
- 			__pci_bus_size_bridges(dev->subordinate, &add_list);
- 	up_read(&pci_bus_sem);
- 	__pci_bus_assign_resources(bus, &add_list, NULL);
--	BUG_ON(!list_empty(&add_list));
-+	if (WARN_ON_ONCE(!list_empty(&add_list)))
-+		free_list(&add_list);
- }
- EXPORT_SYMBOL_GPL(pci_assign_unassigned_bus_resources);
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
--- 
-2.39.5
-
+> 
+> Have follwing changes:
+> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
+> 	- Add compatible for qcs8300 platform.
+> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+> Changes in v5:
+> - Add QCOM PCIe controller version in commit msg (Mani)
+> - Modify platform dts change subject (Dmitry)
+> - Update bindings to fix the dtb check errors.
+> - Remove qcs8300 compatible in driver, do not need it (Dmitry)
+> - Fixed compile error found by kernel test robot
+> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v4:
+> - Add received tag
+> - Fixed compile error found by kernel test robot
+> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+> 
+> Changes in v3:
+> - Add received tag(Rob & Dmitry)
+> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+> - remove pcieprot0 node(Konrad & Mani)
+> - Fix format comments(Konrad)
+> - Update base-commit to tag: next-20241213(Bjorn)
+> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
+> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v2:
+> - Fix some format comments and match the style in x1e80100(Konrad)
+> - Add global interrupt for PCIe0 and PCIe1(Konrad)
+> - split the soc dtsi and the platform dts into two changes(Konrad)
+> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+> 
+> Ziyue Zhang (6):
+>   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+>     for sa8775p
+>   dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
+>   arm64: dts: qcom: qcs8300: enable pcie0
+>   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+>   arm64: dts: qcom: qcs8300: enable pcie1
+>   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+> 
+>  .../bindings/pci/qcom,pcie-sa8775p.yaml       |  26 +-
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   4 +-
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 297 +++++++++++++++++-
+>  4 files changed, 396 insertions(+), 11 deletions(-)
+> 
+> 
+> base-commit: a269b93a67d815c8215fbfadeb857ae5d5f519d3
+> -- 
+> 2.34.1
+> 
 
