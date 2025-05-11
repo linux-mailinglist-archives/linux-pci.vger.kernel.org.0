@@ -1,163 +1,111 @@
-Return-Path: <linux-pci+bounces-27557-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27558-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2BF6AB2941
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 16:53:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5C2AAB2A41
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 20:29:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C9DC1712B7
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 14:53:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52B5F3A1F65
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 18:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679801FF603;
-	Sun, 11 May 2025 14:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE90225E478;
+	Sun, 11 May 2025 18:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ot6a00a+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLqoiMip"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAA22907;
-	Sun, 11 May 2025 14:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD543169;
+	Sun, 11 May 2025 18:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746975212; cv=none; b=Y1W8flClrPoYKowwmfpEzzlk4c2ScIlWfONQWKe/OPODUDNUx+DRhjNBE8Hw7Sz0SRYrt6DsqOyztom6lvv3rNVW1jIBifLUsjW8v7b4U8r8HDdqwmx67SYPscWiAxzG4kb6YxePoBe69+wvCQaIawcqnKEJB7fBr9PDueaMcUM=
+	t=1746988174; cv=none; b=fZUelYYcTD90IU7Isz4y3Ya3OC2trtaIe0FZC7ChXMnHlFW03ZrBnxNsjB90utHJr2FV3vnhpYO/S5CWcHLq2dir1FgSmHJG8H7cqxKMglgdIIitdELGUoccxmLKfkpp1OipE+jtciN455rC8xsenUEZbVoQ7NJRcDZFy8F7ukw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746975212; c=relaxed/simple;
-	bh=0NU8uplAjo4GOERxUeXyP2g2dEIPieHAx2aUymbRIeQ=;
+	s=arc-20240116; t=1746988174; c=relaxed/simple;
+	bh=rICF+iiakKUN/IpgaRD2u2wYA00+d5GkGQ6xuLiHXmY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mrl+qORwVXKBXnIGRrTUZZVXSi6kEW6rAXb8J2aqtgkDJ6BapSpCLBEo7HK65Jnq9c/DfRXH42LvHfzImY9zzAfSTvaNBw4X2i7GLrAQ7f1cNnBZa7Yq251vUgy29n/TsJAYvnk2aBKKc2k2pcBsCbPPp7VdmFgtToxwkj1fe6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ot6a00a+; arc=none smtp.client-ip=209.85.208.171
+	 To:Cc:Content-Type; b=jfIJKkhG47g3xNGeF2JwhI+oOt3EC2S9AXVGYBbqaLB1s0olxr8OaWbJtVODyhLLrJ707Db4qT0HMr33ASnrA0oC6CjaWvArTrAcDnwMnu5g/qWXf9UGAi7HwWyDq8lnaZC21IvK+1rIVp3BkHiMPckR6ZARzKjGg1Do67OfNLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLqoiMip; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3105ef2a071so41344091fa.1;
-        Sun, 11 May 2025 07:53:30 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3087a70557bso587295a91.2;
+        Sun, 11 May 2025 11:29:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746975208; x=1747580008; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746988172; x=1747592972; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k+SNn9MtbqikaPdKk5wtAAM3FI1+8eVlKOTCGSspdmU=;
-        b=Ot6a00a+k8qGkVBxmIITktKwfDrx+HtgH3maiX/APHtnEEHx2pyNsVHbeo2giNV0Wx
-         edmn2FFaEt1UvDSL+qRRJJ/8cgbjcRZ3vd91aXyRkS+tN+slgp+54NUh0nnjdHY18dqJ
-         vO4g9FxY0BPhiTWELqWLW9WT60p1rrBwIROHxdui+gHrofpwSoAEQgL+FIhNjm9Af81G
-         8/j8CDIyTuA+LqDHFedKZQYXuInt4Mlzv/qr6lDo2XAWa/+1Knu9mfc4EnWjSrtoUZY6
-         28S2OF7YUqFg/LuYO+Vv40n4rUvv7pS2j6pcvDXYFKx7mlMBsRvLGqJqg8RjUbdGZ37G
-         dl6A==
+        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
+        b=NLqoiMip0N9LOTF1zSvXY6sOEkNSWg16KK63m1+mYLhSEAIF3h4MZ1dv1qcWCk702s
+         RgZ69D//nbtv+2OP9BSC7kSdlqa2p2ivS5Lq3CD9zIage2MPq71EmqSXdgHTGJhHic29
+         Nr9Ds5l5QghgeF0SjiIv1oUH1I8WUkWQsW6RMzWSyIWPdQD0MQGwaC9KxA/O5u1+S/W7
+         FRzXW/pHGWMjwCykVxVpYL3VCS7zX89MqIyk7+JGZgLURYrZlVCSsFCQZ4Lp7uEYWNu0
+         GDwNugTZF3vMplYBFOpHRl+4R4A8T/dDQHhofOJnelT+KSlUVRUk+kMDkMFCaXbBLm2V
+         lxzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746975208; x=1747580008;
+        d=1e100.net; s=20230601; t=1746988172; x=1747592972;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k+SNn9MtbqikaPdKk5wtAAM3FI1+8eVlKOTCGSspdmU=;
-        b=LWYXWUCkyIiYx5PfTH9wz8MoXOtzNyBJB3/dc5gHNSertjEGVlRLEPN5/OWG/mTLxr
-         +m/+LHO3HdTw7V1uL/zKo1/ZuntTDWv1wbpQ3Dosy6BFMXiH7srj8m06fKw9JbinHM7K
-         0O560CaT8rU7jA4SCBN+YXqxcP51s8J2yEp/txDo5qRkaJXM0bMQ5ube4QvIHOwaqJ3o
-         ySVeFZFrOoGTlXt6gNnhVPJF3o0h2DFmk1ez9g0nAAlZZ92P6crIC90nQZysMbzt1exP
-         fCOihJ8UY3GFcTO9ezlg/7MFZb89uxkOwpV+S9KplNbXQkx7eSjeZWBBB4NJxszKoWBT
-         ctng==
-X-Forwarded-Encrypted: i=1; AJvYcCU06QlD/cfml08HP3mx3citftoOsH02D8GAJCxBYNEwO8YCSaEoSdHHh29ZfSYYYS5bpmlefZZX91E=@vger.kernel.org, AJvYcCURcRic6I5sy15Sm4+YhyunWD0gmoK7UcVwBwNiHE4Z+9FgAH0UB4tsB4FNtvnppgEtbeAKHXTi120G@vger.kernel.org, AJvYcCV9H6wwXI6MnQVGSz3sKqW2gJxDOif5nvoENKTsP28ELnzDztFHcn6iOK937FuEdmnTXn0gF8QemBf7e+w=@vger.kernel.org, AJvYcCXJrp0+Xq68VMT/4mlh70Z458+jHp/KVYnCYaq3l1bVXCgpvWVkGRjJWyfGer8sZK0wwx8xblHoF956NNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJc1UObKdvfCsRFcP/SsHu4kWpNxGGkvsVjCia8qocZegz0yfS
-	2rJwPnMwc0ISy6dv0ZtRSDpH+kMLD3VDvOqAJe4djL2xiEsBoZZLFOSMelw6Ngu1rqbIrZQH2to
-	gmA2kpM3h9HCTppi6Tw8htIuyLD8=
-X-Gm-Gg: ASbGncsyUq9EY2mFMFoahNk99svheonUg4B1zpd0IrriGMQbGkPFivPgEzAhc+Ex/6h
-	m2wPFvoloDOdQ9xfGu18ndr2sYqGqjEg7w3VndGj5i9fHJHhItJlyVGv/LPXSncSrERdBuAEbKs
-	ojd0O4Sq5GVCj+hCEaZm9HuodejI8cK/EV
-X-Google-Smtp-Source: AGHT+IEW2M3t9r376LdN00E7nRVrPqLJdblkVY1e1M8Lu+r3rQ6L8tocf5XoHcoGI5voVVL5e9HLMLf0oZGyxIKDbaM=
-X-Received: by 2002:a2e:a541:0:b0:30b:ce0a:3e63 with SMTP id
- 38308e7fff4ca-326c459a4c5mr39892771fa.7.1746975208267; Sun, 11 May 2025
- 07:53:28 -0700 (PDT)
+        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
+        b=rXKH3mOR/UQvSp58WmdK2z5bsEuVkDDQA9F8mF6wz8pe1HTk+nKINKtYRHiNPjCoTE
+         rDMZtYNlO4a3JgW0cvWHMsvERN0uZMuAEN/XyUzYzrbnHwuKNe/ZKOef9oOOw6sYFgft
+         3YAEU/vO9QE1zNoupxW/QcD837Z+0Pfi/tE2kbu4O/H37BaMElGe5C9G1ayawbHYJ1ks
+         uZms0g8Y9nVb9KykVKppojCsUNxeSR0mS3Lqdas9gBt8gASjX9dVFFIXMLKDlUMF2OAW
+         zYcrI6r38MTkPrca1yCwJJjcyJp17lW/8Qu1L24K+oU2PDlYhCy3EUD8AWAP68VEhlUw
+         8sNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnMLMGjq6DcVemAZs0YdG16OCWlzQfSsFneeZTr+MT6DcDmwrawi0t/6K/ImKZ14TNDLYd0Qd+qfVjNY4GeZA=@vger.kernel.org, AJvYcCW020sC6+05BiXMvQvc83Du/DcY+mxjmnMLY8LZskRMB5AMivCRmfH+3uZQG1/D2UcYlF4F5vmXNZndwqc=@vger.kernel.org, AJvYcCX7Iqn4aZT2Ngo06KI/71Yx4R8Ha++80YkaTlCe21bRxoH6tN30t3qk4Fw6QxKLZB9GXFXqcrGdwoi0@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywmsq3aXl4ooyqQVRlxDka8wXcYZd9sOwHdvSG1mqHBVyS21YdC
+	1jBGChZpclWws8ay+f+TMnqkyEBtraVp88imAEK4zPwRgi0tF6shnC6+slgYgyLjeeHT4qTmrEB
+	nCtuPpgc8M509CAXzK++XkyXY/dX0lsZztLo=
+X-Gm-Gg: ASbGncvzb0Zi+0YLN8HXqx+X/0fFMTwNjtxUypslfpRxQEyRP2svDfXT1QcP9dkZcnu
+	nkvC6GPTjZpn9sX3S2BbP5v1yQYsdoemkjSwVQkImJi46n8WIfSMT/M5lQad85AAr/GtkuxW9qj
+	2eP53KuufWEU2wsjyxDXKcJy5lMofq4CLU
+X-Google-Smtp-Source: AGHT+IHWOSR9A/JCAuFZu+UDzjOsvysFAKfQBFPIHSdBGX3X/A9hDX0aKl6lTriTlc2MIvPho/zaV3roTJvmt050Wsg=
+X-Received: by 2002:a17:903:244c:b0:21f:356:758f with SMTP id
+ d9443c01a7336-22fc8b0b6aamr62602245ad.3.1746988172460; Sun, 11 May 2025
+ 11:29:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
- <20250505-pci-tegra-module-v4-4-088b552c4b1a@gmail.com> <idddypjxxtiie3tllfk47krcydlno4lnhbkik4wakekcyu7c2d@iurtu6bjzeey>
- <CALHNRZ88VaS6zmmnkQg_WrBVPjMT4e2uPUPEQUj8ARL1TieZPg@mail.gmail.com>
- <gxbuvopbhum3v622gf4olzfspgihxt3dm4z3rsj4gquaabt2c4@peemxrxshjuu>
- <CALHNRZ9DHApwS_W22aD0uOFJKBk8WkucFo04_vjLRpnRjP4WCg@mail.gmail.com> <nsldcdzdf7xazzm3dlb4jrjkehgt3hjlar7uc62twpkwocrer3@u5kirzyify4n>
-In-Reply-To: <nsldcdzdf7xazzm3dlb4jrjkehgt3hjlar7uc62twpkwocrer3@u5kirzyify4n>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Sun, 11 May 2025 09:53:05 -0500
-X-Gm-Features: AX0GCFuYOPYdeDB4aKbOtH-_GwGqt75BeJmtEnem2ldfw3E7EAu1DKFq3T6g3Yw
-Message-ID: <CALHNRZ84EmZ3reCns9c4s1DavZLYsPvdNtm0wstAiF-CbD=d4w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] PCI: tegra: Drop unused remove callback
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20250428140137.468709-1-dakr@kernel.org> <20250428140137.468709-3-dakr@kernel.org>
+In-Reply-To: <20250428140137.468709-3-dakr@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 11 May 2025 20:29:19 +0200
+X-Gm-Features: AX0GCFtQoKnmnCFXJJmm2XcCSBjKVOOREoms9iBsFozi3_2Nk3F0sPXg7CaXj8o
+Message-ID: <CANiq72=x6a8aAko52=Un2u=1u09+cBF14xH6=DXOD8o+0JH=QA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] rust: devres: implement Devres::access_with()
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, 
+	bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, 
+	ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Christian Schrefl <chrisi.schrefl@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 10, 2025 at 1:24=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Mon, Apr 28, 2025 at 4:01=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> On Mon, May 05, 2025 at 11:59:27AM -0500, Aaron Kling wrote:
-> > On Mon, May 5, 2025 at 11:48=E2=80=AFAM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > On Mon, May 05, 2025 at 11:43:26AM -0500, Aaron Kling wrote:
-> > > > On Mon, May 5, 2025 at 11:32=E2=80=AFAM Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > On Mon, May 05, 2025 at 09:59:01AM -0500, Aaron Kling via B4 Rela=
-y wrote:
-> > > > > > From: Aaron Kling <webgeek1234@gmail.com>
-> > > > > >
-> > > > > > Debugfs cleanup is moved to a new shutdown callback to ensure t=
-he
-> > > > > > debugfs nodes are properly cleaned up on shutdown and reboot.
-> > > > > >
-> > > > >
-> > > > > Both are separate changes. You should remove the .remove() callba=
-ck in the
-> > > > > previous patch itself and add .shutdown() callback in this patch.
-> > > > >
-> > > > > And the shutdown callback should quiesce the device by putting it=
- in L2/L3 state
-> > > > > and turn off the supplies. It is not intended to perform resource=
- cleanup.
-> > > >
-> > > > Then where would resource cleanup go?
-> > > >
-> > >
-> > > .remove(), but it is not useful here since the driver is not getting =
-removed.
-> >
-> > I may be misunderstanding how stuff works, but don't those resources
-> > still need cleaned up on shutdown/reboot even if the driver can't be
-> > unloaded? I recall seeing shutdown errors in the past when higher
-> > level debugfs nodes tried to clean themselves up, but bad drivers had
-> > left their nodes behind.
-> >
->
-> Each callback has its own purpose. The cleanup is only performed by the
-> .remove() callback, but it will only get called when the driver gets remo=
-ved.
->
-> > In any case, do you want me to just not add .shutdown() at all, or try
-> > to set the proper power state? Prior to the half-baked attempt to make
-> > this driver a loadable module several years ago, there was no such
-> > cleanup.
-> >
->
-> As a first step, you can ignore .shutdown() callback and just remove the
-> .remove(). Shutdown callback implementation should follow the steps I men=
-tioned
-> above, so it can be done later.
+> +    /// # use kernel::{device::Core, devres::Devres, pci};
+> +    ///
+> +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x=
+4>>) -> Result<()> {
 
-This has already been done in v6 [0].
+We need to skip this one when `!PCI` -- quick patch at:
+https://lore.kernel.org/rust-for-linux/20250511182533.1016163-1-ojeda@kerne=
+l.org/
 
-Sincerely,
-Aaron
-
-[0]  https://lore.kernel.org/r/20250507-pci-tegra-module-v6-0-5fe363eaa302@=
-gmail.com
+Cheers,
+Miguel
 
