@@ -1,111 +1,166 @@
-Return-Path: <linux-pci+bounces-27558-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27559-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5C2AAB2A41
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 20:29:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B197AB2AE6
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 22:30:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52B5F3A1F65
-	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 18:29:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF77C7A485D
+	for <lists+linux-pci@lfdr.de>; Sun, 11 May 2025 20:29:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE90225E478;
-	Sun, 11 May 2025 18:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD351A304A;
+	Sun, 11 May 2025 20:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLqoiMip"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="e9f0mwSl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD543169;
-	Sun, 11 May 2025 18:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9277419E7D0;
+	Sun, 11 May 2025 20:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746988174; cv=none; b=fZUelYYcTD90IU7Isz4y3Ya3OC2trtaIe0FZC7ChXMnHlFW03ZrBnxNsjB90utHJr2FV3vnhpYO/S5CWcHLq2dir1FgSmHJG8H7cqxKMglgdIIitdELGUoccxmLKfkpp1OipE+jtciN455rC8xsenUEZbVoQ7NJRcDZFy8F7ukw=
+	t=1746995425; cv=none; b=S/Pf++HIYWge0IXqwd1n2F2Ixbe4o64iYwpmicu8Zm84swa0hVLtpMyGkZYubMCa61SOwV3r74HApzfId91itgS5EbyD8sJ8BO6n1ELhU2xBhC2S0Y0XRvety+3pEwANJOSomRUtNwjRJgk1Lhlb+/rH8IKFLIJNJHcxGIgbhV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746988174; c=relaxed/simple;
-	bh=rICF+iiakKUN/IpgaRD2u2wYA00+d5GkGQ6xuLiHXmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jfIJKkhG47g3xNGeF2JwhI+oOt3EC2S9AXVGYBbqaLB1s0olxr8OaWbJtVODyhLLrJ707Db4qT0HMr33ASnrA0oC6CjaWvArTrAcDnwMnu5g/qWXf9UGAi7HwWyDq8lnaZC21IvK+1rIVp3BkHiMPckR6ZARzKjGg1Do67OfNLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLqoiMip; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3087a70557bso587295a91.2;
-        Sun, 11 May 2025 11:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746988172; x=1747592972; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
-        b=NLqoiMip0N9LOTF1zSvXY6sOEkNSWg16KK63m1+mYLhSEAIF3h4MZ1dv1qcWCk702s
-         RgZ69D//nbtv+2OP9BSC7kSdlqa2p2ivS5Lq3CD9zIage2MPq71EmqSXdgHTGJhHic29
-         Nr9Ds5l5QghgeF0SjiIv1oUH1I8WUkWQsW6RMzWSyIWPdQD0MQGwaC9KxA/O5u1+S/W7
-         FRzXW/pHGWMjwCykVxVpYL3VCS7zX89MqIyk7+JGZgLURYrZlVCSsFCQZ4Lp7uEYWNu0
-         GDwNugTZF3vMplYBFOpHRl+4R4A8T/dDQHhofOJnelT+KSlUVRUk+kMDkMFCaXbBLm2V
-         lxzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746988172; x=1747592972;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
-        b=rXKH3mOR/UQvSp58WmdK2z5bsEuVkDDQA9F8mF6wz8pe1HTk+nKINKtYRHiNPjCoTE
-         rDMZtYNlO4a3JgW0cvWHMsvERN0uZMuAEN/XyUzYzrbnHwuKNe/ZKOef9oOOw6sYFgft
-         3YAEU/vO9QE1zNoupxW/QcD837Z+0Pfi/tE2kbu4O/H37BaMElGe5C9G1ayawbHYJ1ks
-         uZms0g8Y9nVb9KykVKppojCsUNxeSR0mS3Lqdas9gBt8gASjX9dVFFIXMLKDlUMF2OAW
-         zYcrI6r38MTkPrca1yCwJJjcyJp17lW/8Qu1L24K+oU2PDlYhCy3EUD8AWAP68VEhlUw
-         8sNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMLMGjq6DcVemAZs0YdG16OCWlzQfSsFneeZTr+MT6DcDmwrawi0t/6K/ImKZ14TNDLYd0Qd+qfVjNY4GeZA=@vger.kernel.org, AJvYcCW020sC6+05BiXMvQvc83Du/DcY+mxjmnMLY8LZskRMB5AMivCRmfH+3uZQG1/D2UcYlF4F5vmXNZndwqc=@vger.kernel.org, AJvYcCX7Iqn4aZT2Ngo06KI/71Yx4R8Ha++80YkaTlCe21bRxoH6tN30t3qk4Fw6QxKLZB9GXFXqcrGdwoi0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmsq3aXl4ooyqQVRlxDka8wXcYZd9sOwHdvSG1mqHBVyS21YdC
-	1jBGChZpclWws8ay+f+TMnqkyEBtraVp88imAEK4zPwRgi0tF6shnC6+slgYgyLjeeHT4qTmrEB
-	nCtuPpgc8M509CAXzK++XkyXY/dX0lsZztLo=
-X-Gm-Gg: ASbGncvzb0Zi+0YLN8HXqx+X/0fFMTwNjtxUypslfpRxQEyRP2svDfXT1QcP9dkZcnu
-	nkvC6GPTjZpn9sX3S2BbP5v1yQYsdoemkjSwVQkImJi46n8WIfSMT/M5lQad85AAr/GtkuxW9qj
-	2eP53KuufWEU2wsjyxDXKcJy5lMofq4CLU
-X-Google-Smtp-Source: AGHT+IHWOSR9A/JCAuFZu+UDzjOsvysFAKfQBFPIHSdBGX3X/A9hDX0aKl6lTriTlc2MIvPho/zaV3roTJvmt050Wsg=
-X-Received: by 2002:a17:903:244c:b0:21f:356:758f with SMTP id
- d9443c01a7336-22fc8b0b6aamr62602245ad.3.1746988172460; Sun, 11 May 2025
- 11:29:32 -0700 (PDT)
+	s=arc-20240116; t=1746995425; c=relaxed/simple;
+	bh=dko0hlc59DADvevFuApFKLXukjCJqFTu+nVdEA3DQMs=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=VkStQhx4+5awKwvITmA4DBEBQimiMQnFzMAJDa0z83SzX+WfyrPm8zJStmUwLKSSoAiEZFj3/oF0/CbDKqS55wvmOKWNJkjb9A+BcF3muKAWh63HgyMNWMMDLkbgIXoLmwoJVo/OVZTo5ZJM9pMuNR9BFFS8xNeTgjn8q6JyzAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=e9f0mwSl; arc=none smtp.client-ip=166.84.1.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
+	(No client certificate requested)
+	by l2mail1.panix.com (Postfix) with ESMTPS id 4ZwYky1lfnzDRm;
+	Sun, 11 May 2025 16:10:34 -0400 (EDT)
+Received: from xps-9320 (ip72-219-82-239.oc.oc.cox.net [72.219.82.239])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4ZwYkp0xm4z1CtP;
+	Sun, 11 May 2025 16:10:26 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1746994227; bh=dko0hlc59DADvevFuApFKLXukjCJqFTu+nVdEA3DQMs=;
+	h=Date:From:Reply-To:To:cc:Subject;
+	b=e9f0mwSlSSg8X8hLPiyAk4BkmVl4ND1Gfzskfblydaf4wDfQ0h9hnPjTVkTfdDyQH
+	 p6Emmc6OaN6TK+4kSAz1s0Dtpc7CWfGBZmYaAc7m/ZRYN+T2ZPrJv2H9wjOtfrrzBQ
+	 UshiE2nePhhEdS3HoMtvJsr9DdVo7fPNuDGnSCR4=
+Date: Sun, 11 May 2025 13:10:24 -0700 (PDT)
+From: "Kenneth R. Crudup" <kenny@panix.com>
+Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
+To: rafael@kernel.org, linux-pm@vger.kernel.org
+cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+    Vidya Sagar <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Andrea Righi <andrea.righi@canonical.com>, 
+    You-Sheng Yang <vicamo.yang@canonical.com>, linux-pci@vger.kernel.org, 
+    "Kenneth R. Crudup" <kenny@panix.com>
+Subject: Raphael, I'd like your help upstreaming this VMD power-saving patch,
+ please
+Message-ID: <0b166ece-eeec-ba5d-2212-50d995611cef@panix.com>
+Errors-To: kenny@panix.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428140137.468709-1-dakr@kernel.org> <20250428140137.468709-3-dakr@kernel.org>
-In-Reply-To: <20250428140137.468709-3-dakr@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 11 May 2025 20:29:19 +0200
-X-Gm-Features: AX0GCFtQoKnmnCFXJJmm2XcCSBjKVOOREoms9iBsFozi3_2Nk3F0sPXg7CaXj8o
-Message-ID: <CANiq72=x6a8aAko52=Un2u=1u09+cBF14xH6=DXOD8o+0JH=QA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] rust: devres: implement Devres::access_with()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, 
-	bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, 
-	ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian Schrefl <chrisi.schrefl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323329-351450562-1746994227=:150664"
 
-On Mon, Apr 28, 2025 at 4:01=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> +    /// # use kernel::{device::Core, devres::Devres, pci};
-> +    ///
-> +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x=
-4>>) -> Result<()> {
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-We need to skip this one when `!PCI` -- quick patch at:
-https://lore.kernel.org/rust-for-linux/20250511182533.1016163-1-ojeda@kerne=
-l.org/
+--8323329-351450562-1746994227=:150664
+Content-Type: text/plain; charset=US-ASCII
 
-Cheers,
-Miguel
+
+Hello Raphael,
+
+For almost two years now, I've been trying to get patches from Ubuntu that
+enable ASPM for devices behind Intel's VMD, necessary to get full lower-power
+states (including very-reduced power usage during s0ix sleep) on my Alderlake
+(et al.) laptop, upstreamed into mainline.
+
+One such thread: https://lore.kernel.org/linux-pm/218aa81f-9c6-5929-578d-8dc15f83dd48@panix.com/
+
+Since the original set of patches on this, most of the work has been pushed
+upstream, with only this last patch required to get fully into the "CPU%LPI"
+and "SYS%LPI" (names according to "turbostat") states.
+
+I'm surprised that with the number of VMD-enabled laptops out there (which I
+had to keep on so I could dual-boot into Win11 (the disk geometry changes if
+I disable it, rendering the Win11 partition useless)), that there haven't been
+many reports of excessive power usage in Linux during sleep; perhaps because
+many installations are running stock Ubuntu kernels (where I assume variants
+of this patch remain) it isn't an issue, but I do believe having this upstreamed
+is still valuable.
+
+I don't have the resources you've got to test this fully for regressions, nor
+the expertise getting a patch into the kernel, so I'd like to again bring this
+up for discussion (hence the phone-book of a CC: here).
+
+If there's anything I can do to help get this done, please let me know.
+
+Thank you,
+
+-Kenneth Crudup
+
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County CA
+--8323329-351450562-1746994227=:150664
+Content-Type: text/x-diff; name=0001-PCI-ASPM-Fixup-ASPM-for-VMD-bridges.patch
+Content-Transfer-Encoding: BASE64
+Content-Description: 
+Content-Disposition: attachment; filename=0001-PCI-ASPM-Fixup-ASPM-for-VMD-bridges.patch
+
+RnJvbSBlZTM2MThhNTk4YTI2MWJiYzhhODc1NTU3ZDQyZDZkYmJiYzRjZGQw
+IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogIktlbm5ldGggUi4g
+Q3J1ZHVwIiA8a2VubnlAcGFuaXguY29tPg0KRGF0ZTogRnJpLCAxMyBEZWMg
+MjAyNCAxNToyODo0MiAtMDgwMA0KU3ViamVjdDogW1BBVENIXSBQQ0kvQVNQ
+TTogRml4dXAgQVNQTSBmb3IgVk1EIGJyaWRnZXMNCg0KRWZmZWN0aXZlbHkg
+YSBzcXVhc2hlZCBjb21taXQgb2Y6DQpVQlVOVFU6IFNBVUNFOiBQQ0kvQVNQ
+TTogRW5hYmxlIEFTUE0gZm9yIGxpbmtzIHVuZGVyIFZNRCBkb21haW4NClVC
+VU5UVTogU0FVQ0U6IFBDSS9BU1BNOiBFbmFibGUgTFRSIGZvciBlbmRwb2lu
+dHMgYmVoaW5kIFZNRA0KVUJVTlRVOiBTQVVDRTogdm1kOiBmaXh1cCBicmlk
+Z2UgQVNQTSBieSBkcml2ZXIgbmFtZSBpbnN0ZWFkDQotLS0NCiBkcml2ZXJz
+L3BjaS9wY2llL2FzcG0uYyB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9h
+c3BtLmMgYi9kcml2ZXJzL3BjaS9wY2llL2FzcG0uYw0KaW5kZXggMjlmY2Iw
+Njg5YTkxLi5mZGMxY2UyNzU1ZmYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Bj
+aS9wY2llL2FzcG0uYw0KKysrIGIvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMN
+CkBAIC03ODgsNiArNzg4LDMxIEBAIHN0YXRpYyB2b2lkIGFzcG1fbDFzc19p
+bml0KHN0cnVjdCBwY2llX2xpbmtfc3RhdGUgKmxpbmspDQogCQlhc3BtX2Nh
+bGNfbDEyX2luZm8obGluaywgcGFyZW50X2wxc3NfY2FwLCBjaGlsZF9sMXNz
+X2NhcCk7DQogfQ0KIA0KKy8qDQorICogQklPUyBtYXkgbm90IGJlIGFibGUg
+dG8gYWNjZXNzIGNvbmZpZyBzcGFjZSBvZiBkZXZpY2VzIHVuZGVyIFZNRCBk
+b21haW4sIHNvDQorICogaXQgcmVsaWVzIG9uIHNvZnR3YXJlIHRvIGVuYWJs
+ZSBBU1BNIGZvciBsaW5rcyB1bmRlciBWTUQuDQorICovDQorc3RhdGljIGJv
+b2wgcGNpX2ZpeHVwX3ZtZF9icmlkZ2VfZW5hYmxlX2FzcG0oc3RydWN0IHBj
+aV9kZXYgKnBkZXYpDQorew0KKyAgICAgICBzdHJ1Y3QgcGNpX2J1cyAqYnVz
+ID0gcGRldi0+YnVzOw0KKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXY7DQor
+ICAgICAgIHN0cnVjdCBwY2lfZHJpdmVyICpwZHJ2Ow0KKw0KKyAgICAgICBp
+ZiAoIXBjaV9pc19yb290X2J1cyhidXMpKQ0KKyAgICAgICAgICAgICAgIHJl
+dHVybiBmYWxzZTsNCisNCisgICAgICAgZGV2ID0gYnVzLT5icmlkZ2UtPnBh
+cmVudDsNCisgICAgICAgaWYgKGRldiA9PSBOVUxMKQ0KKyAgICAgICAgICAg
+ICAgIHJldHVybiBmYWxzZTsNCisNCisgICAgICAgcGRydiA9IHBjaV9kZXZf
+ZHJpdmVyKHRvX3BjaV9kZXYoZGV2KSk7DQorICAgICAgIGlmIChwZHJ2ID09
+IE5VTEwgfHwgc3RyY21wKCJ2bWQiLCBwZHJ2LT5uYW1lKSkNCisgICAgICAg
+ICAgICAgICByZXR1cm4gZmFsc2U7DQorDQorICAgICAgIHBjaV9pbmZvKHBk
+ZXYsICJlbmFibGUgQVNQTSBmb3IgcGNpIGJyaWRnZSBiZWhpbmQgdm1kIik7
+DQorICAgICAgIHJldHVybiB0cnVlOw0KK30NCisNCiBzdGF0aWMgdm9pZCBw
+Y2llX2FzcG1fY2FwX2luaXQoc3RydWN0IHBjaWVfbGlua19zdGF0ZSAqbGlu
+aywgaW50IGJsYWNrbGlzdCkNCiB7DQogCXN0cnVjdCBwY2lfZGV2ICpjaGls
+ZCA9IGxpbmstPmRvd25zdHJlYW0sICpwYXJlbnQgPSBsaW5rLT5wZGV2Ow0K
+QEAgLTg2Niw3ICs4OTEsOCBAQCBzdGF0aWMgdm9pZCBwY2llX2FzcG1fY2Fw
+X2luaXQoc3RydWN0IHBjaWVfbGlua19zdGF0ZSAqbGluaywgaW50IGJsYWNr
+bGlzdCkNCiAJfQ0KIA0KIAkvKiBTYXZlIGRlZmF1bHQgc3RhdGUgKi8NCi0J
+bGluay0+YXNwbV9kZWZhdWx0ID0gbGluay0+YXNwbV9lbmFibGVkOw0KKwls
+aW5rLT5hc3BtX2RlZmF1bHQgPSBwY2lfZml4dXBfdm1kX2JyaWRnZV9lbmFi
+bGVfYXNwbShwYXJlbnQpID8NCisJCVBDSUVfTElOS19TVEFURV9BU1BNX0FM
+TCA6IGxpbmstPmFzcG1fZW5hYmxlZDsNCiANCiAJLyogU2V0dXAgaW5pdGlh
+bCBjYXBhYmxlIHN0YXRlLiBXaWxsIGJlIHVwZGF0ZWQgbGF0ZXIgKi8NCiAJ
+bGluay0+YXNwbV9jYXBhYmxlID0gbGluay0+YXNwbV9zdXBwb3J0Ow0KLS0g
+DQoyLjQ4LjENCg0K
+
+--8323329-351450562-1746994227=:150664--
 
