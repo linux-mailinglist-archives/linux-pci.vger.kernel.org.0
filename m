@@ -1,108 +1,210 @@
-Return-Path: <linux-pci+bounces-27589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C291AB3B8D
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 17:01:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ADA1AB3BB4
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 17:12:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A48C119E210C
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 15:01:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EDC763B3DCE
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 15:11:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A40D235058;
-	Mon, 12 May 2025 15:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3CE7236426;
+	Mon, 12 May 2025 15:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYvK4ft2"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rnuUverq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9A819CC3A;
-	Mon, 12 May 2025 15:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE21EDA11;
+	Mon, 12 May 2025 15:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062063; cv=none; b=FgAwKo0LZE48yYOzbnQZPRaXpC0MC9uGiW9CescIyeykAONI60LzxpMI1fCnTmYyTOjZWnY40K67idstjsB6LYJcPy55/B5h1x9z+ABxQNlEREWsk2BF1Ji2ozbeizYmR4FfFVFhXjgMx163H/z12/yzRntGqRiBIePTKganJHU=
+	t=1747062716; cv=none; b=hfRd0XZUkNMqF2RYlUEv+jruF+GaLM06Pf7o1WfrncOT3IZ1L3YZ8zJNas40cM97z5AZLhxh17ObSiMqE6jfKULyzh0EygigYzGVdbpXFMGB5zOboPzV0xSjJlR6pAhWcxsg6A6aC1I+4QFokrBYQuRfYR2eNneKwCJB+wEpYEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062063; c=relaxed/simple;
-	bh=5C7uw2IAzf+0ahfXX4uyiw4RInjyFvh4Zkir6Ku/wHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fjFS3o2l+weOLkD0UsSJ6QyebVaJyHPqGyIOd5lM72ZZCqltCM0SQcmKIFO6bU3WzUhjoiDJdlkgwj7NeSTrRmJeqdsJhmKikt2X8rdaNra88mKlfDdyrZqO8LE9PKowuUmQV/SbafQElRcTCNYCmvKWizPslpiPW9pQueUtPFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYvK4ft2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786BCC4CEF2;
-	Mon, 12 May 2025 15:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747062062;
-	bh=5C7uw2IAzf+0ahfXX4uyiw4RInjyFvh4Zkir6Ku/wHo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gYvK4ft2GqhQv20+FT1wp5aUuEc6T1B9JqsClPd9XNOJneKgc1yFmDSf23LIZyAbw
-	 2X4Bdb+dAvMrvelWtS4qmVUkXAHIqHrlMo/XelGJmbk/jHgiXfxgve41fE3vHkN3Ie
-	 9PduUHH2Rv1ycZsMB7rLXT5O/SVYAk3ma1/ZqwKBJf8KNKAT1QC5dFEXtjVxRMthtc
-	 U7LV5qSbK1I4eYHvdFqEmvM13kTSuC1xSeabn7mX/J3x7V8VNL6gB0hRRrFZ6HHsbv
-	 8Pgw6s+yK8EOa8ZHIqjVJBMp1ugHny5zvwWfkdnZTpMZeZz83MMdSN6xD03y7iDNiC
-	 bcGm0et8s6h7A==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so10753842a12.0;
-        Mon, 12 May 2025 08:01:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUJ2CLrKB2JKFxQn0pSLET43AxZVFfByUFa8z4/KplHoApxhWYYGU9/uGirYqJ6fCuKc5TFWetVMZ8@vger.kernel.org, AJvYcCW6Rs//ROvR7RWINq/7U8AgpqOEUBzL0ktr9a51QOUdd9ubp84ZHpo2oQnO3yKe79LB31Js/MNqQsZG0Pd8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDn0+mzdye/B4r6xHo3OpCr2+ii17+gF6Ujo9W0sEV5bUXqJE2
-	ojkNPSUeYEtoV/3ZQpxRIdT4EeNtnzS+cRS1FIOKJdU9otDVouRoa4EVVCylTHutj96AIS6aZus
-	VbWLL0sYPznPncBEPize+4HYE8g==
-X-Google-Smtp-Source: AGHT+IFZbfWKF0hU1sr3jQtNq4U5pRwRKJjmtoMDmn21t01KNRswIOplfLvn34abEZt/poBPFf25QG0+oFit4G41q2A=
-X-Received: by 2002:a17:906:f142:b0:ad2:1255:d95a with SMTP id
- a640c23a62f3a-ad21255f466mr1132229266b.30.1747062061044; Mon, 12 May 2025
- 08:01:01 -0700 (PDT)
+	s=arc-20240116; t=1747062716; c=relaxed/simple;
+	bh=oRZq7V38BDPzrnIKHLulsvxYYp+PkT3EdJDnzIgMVNQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=eITQrbsg+hu+Ye3fGniVEu+UENkJRQbL4pSKrc3VO9bIVVSCjIv63hLgCUpVdYRTJ0w41HkspF5E+pTsmXGUlgOJRv46YtRm7P3Y9M1MGAIL/XFbuLtsRc8llxTdDFa5l4e2IdRVGZwY3A7HxFEi5pp4oX9WXfKWJHcHS1+BNh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rnuUverq; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CD4kW1025877;
+	Mon, 12 May 2025 17:11:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	BsohuFHL0A1uGoWvntQ5+Cuy1yzn6J9UrbSwG2edDAA=; b=rnuUverqE269o+TQ
+	pLW8NzKc9m5dDDkRw+fVwCvwLK9Aw4KkSzKfPSEDSpoMdaa6/vDn9pF6CX7Kx4Y6
+	BokEFE2Ycmt6iokXnRg7lvVZ7A0TTIp3A5jbKjI4g6owBUKGynNHyfJMTbseNzGa
+	4YxoABtAZSUNcV1z3r2o5/Z1kjsdluS+oHSrAT5ObUIgr0vk2ipLSYEVvl+Vxewi
+	BZdFVyBwBTGXEIi9+srPgDi7Wa25O/3K+SUilx250eeAP6ROgacOH3eDoxKnKGL7
+	XbKOMz5tqaTVVIpZH3XaGM39OlvUQNj8EExDTEUfW5cf0qjZB2g7mOMslDCtzK80
+	BbR3Hw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46hv7kqvq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 17:11:19 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0094F40045;
+	Mon, 12 May 2025 17:09:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75DB7B20C2D;
+	Mon, 12 May 2025 17:08:25 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 17:08:24 +0200
+Message-ID: <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
+Date: Mon, 12 May 2025 17:08:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509222815.7082-1-james.quinlan@broadcom.com> <20250509222815.7082-2-james.quinlan@broadcom.com>
-In-Reply-To: <20250509222815.7082-2-james.quinlan@broadcom.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 12 May 2025 10:00:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKrbCtiMdxCusBwX8-xewQbi1_X6V8rTN+2vfxh4e=Hjw@mail.gmail.com>
-X-Gm-Features: AX0GCFuumEiFtgCX1SqyapCoe6c8e5kN11_tTXkwoByqbbccTk1WS35qw-28a4Y
-Message-ID: <CAL_JsqKrbCtiMdxCusBwX8-xewQbi1_X6V8rTN+2vfxh4e=Hjw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH v8 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+ <20250423090119.4003700-3-christian.bruel@foss.st.com>
+ <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
+Content-Language: en-US
+In-Reply-To: <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
 
-On Fri, May 9, 2025 at 5:28=E2=80=AFPM Jim Quinlan <james.quinlan@broadcom.=
-com> wrote:
->
-> Add optional num-lanes property Broadcom STB PCIe host controllers.
->
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/D=
-ocumentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 29f0e1eb5096..f31d654ac3a0 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -107,6 +107,8 @@ properties:
->        - const: bridge
->        - const: swinit
->
-> +  num-lanes: true
+Hi Manivannan,
 
-Why do you need this? It is already allowed by the referenced schemas.
-Though maybe you don't support 16 lanes and need to limit this to
-something less? I would also set 'default' if you do that.
+On 4/30/25 09:30, Manivannan Sadhasivam wrote:
+> On Wed, Apr 23, 2025 at 11:01:12AM +0200, Christian Bruel wrote:
+>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+>> controller based on the DesignWare PCIe core.
+>>
+>> Supports MSI via GICv2m, Single Virtual Channel, Single Function
+>>
+>> Supports WAKE# GPIO.
+>>
+> 
+> Mostly looks good. Just a couple of comments below.
+> 
+>> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig      |  12 +
+>>   drivers/pci/controller/dwc/Makefile     |   1 +
+>>   drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-stm32.h |  15 +
+>>   4 files changed, 396 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+>>
+> 
+> [...]
+> 
+>> +static int stm32_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_pcie *stm32_pcie;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
+>> +	if (!stm32_pcie)
+>> +		return -ENOMEM;
+>> +
+>> +	stm32_pcie->pci.dev = dev;
+>> +	stm32_pcie->pci.ops = &dw_pcie_ops;
+>> +	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
+>> +
+>> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
+>> +	if (IS_ERR(stm32_pcie->regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
+>> +				     "No syscfg specified\n");
+>> +
+>> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->clk))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
+>> +				     "Failed to get PCIe clock source\n");
+>> +
+>> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->rst))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
+>> +				     "Failed to get PCIe reset\n");
+>> +
+>> +	ret = stm32_pcie_parse_port(stm32_pcie);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	platform_set_drvdata(pdev, stm32_pcie);
+>> +
+>> +	ret = pm_runtime_set_active(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
+> 
+> Please use dev_err_probe() here and below.
 
-Rob
+OK, will report this in the EP driver also.
+
+> 
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_pm_runtime_enable(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pm_runtime_get_noresume(dev);
+>> +
+> 
+> I know that a lot of the controller drivers do this for no obvious reason. But
+> in this case, I believe you want to enable power domain or genpd before
+> registering the host bridge. Is that right? 
+
+We call pm_runtime_enable() before stm32_add_pcie_port() and 
+dw_pcie_host_init(). This ensures that PCIe is active during the PERST# 
+sequence and before accessing the DWC registers.
+
+ > And the fact that you are not
+> decrementing the runtime usage count means, you want to keep it ON all the time?
+> Beware that your system suspend/resume calls would never get executed.
+
+We do not support PM runtime autosuspend, so we must notify PM runtime 
+that PCIe is always active. Without invoking pm_runtime_get_noresume(), 
+PCIe would mistakenly be marked as suspended.
+The function stm32_pcie_suspend_noirq() is triggered when the system 
+transitions to Stop or Standby power states, (from /sys/power/state)
+
+> 
+> Also in any case, you need to call this before devm_pm_runtime_enable().
+> Otherwise, PM core will suspend the parent and enable it during
+> pm_runtime_get_noresume(), which is redundant.
+
+OK, I will invert the calls.
+
+Thank you
+
+Christian
+
+> 
+> - Mani
+> 
 
