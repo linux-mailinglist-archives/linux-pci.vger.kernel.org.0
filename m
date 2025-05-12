@@ -1,132 +1,161 @@
-Return-Path: <linux-pci+bounces-27566-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27567-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94295AB30AA
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 09:39:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C691AB3152
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 10:16:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A35516744F
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 07:39:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C2AA189B9C3
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 08:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F852561D7;
-	Mon, 12 May 2025 07:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738B7255F21;
+	Mon, 12 May 2025 08:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HlC68Ufk"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PlQimwUY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D7E37DA82;
-	Mon, 12 May 2025 07:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932642AEE1;
+	Mon, 12 May 2025 08:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747035537; cv=none; b=WleEzmAdqW+GXSnvwj82g76pqw73Aj/BLZ+ca5Q2h1TDyIeTHBeu8cPMBX7EUew7OkU7UbKnlI8h1nmH5jBzIm2GSH9vJgqTtddyLERDkEyZe8PqKsFBETOrtBZHssD0cSQzfa18lE/GYSoBR1lB1wKR8Y52KddLEkGZNAHeRRo=
+	t=1747037783; cv=none; b=hu6sLJ4I9VpKzPgo1sP6qIPhyZC6FeuZDqPPqmur7+BaUS+kmkWQLZCudZOOPqq8KZq449yQjSj1Z5lgiI0uWaEjdKtTdtKdZx0K14f9/Y+jpg0XTOlSWwWcE7PLk7SrwFrWV7+JlK3ss4uZkpsIV7P13vx6mmDzc5ZZwV1XbDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747035537; c=relaxed/simple;
-	bh=KNKMctxAxmRTyPlLDhq3kAG6uesIsQg9Qnqn3OmcROA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpU00I1B1lujBYc0SIvrn3QsK4wZpng9Uj9HoUxodZx8d9yNtm9MW3wofEEQy2+5AlSqzBm3NZHKnkTHBfAqoTRzREmmEQghBs6rlMPOcogi3lChr9wb/5YK2QuYEJAAch6eR28G6vQWgNr18MJzvXlD8WPZXwM9nsyqvBN7wJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HlC68Ufk; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D9C09211D8A9; Mon, 12 May 2025 00:38:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9C09211D8A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747035534;
-	bh=iCzTBbpF34iqkrSJNQgb27YnZ03WEMtHWiX6C1C7y7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HlC68UfkHiW5i7tFfqIlUH2OLMYsAlzaWhoQuFG+G//YihxYb786pWYAaLzFsnU+b
-	 Rl2wNOVjtzjrX7ifZDwXSWSGbqhDZOYVCCnY4MNyqRObJ2gbk5MuU0xSRZKpmBhZIx
-	 s45E2Zoc/QNT05qBIQnkWg21hglbabyNeWdMBeYs=
-Date: Mon, 12 May 2025 00:38:54 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v3 2/4] PCI: hv: Allow dynamic MSI-X vector allocation
-Message-ID: <20250512073854.GB23493@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1746785602-4600-1-git-send-email-shradhagupta@linux.microsoft.com>
- <plrpscito5e76t4dvtukgqm724stsfxim3zv3xqwnjewenee53@72dipu3yunlr>
+	s=arc-20240116; t=1747037783; c=relaxed/simple;
+	bh=emBuZer2FeLc8X6hMB1rIrKH91yoxdgCpR/nZiBSk3o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oEdicpFZsTMG8H7tj7xw1huRni4QYPguv5fnKzTLevy4u4seAyLwYDqJEgjrzxQjdkzE2L2RyFIyz8LOcMhkE3dz+5qwxT0uBNuAOxO5mNkZbWVQA95UDvZ3OKFyxFBVIrgF2jN74VyGV59WviytD6Bpz5u12pO+ZteNLF4ixVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PlQimwUY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BMLk7O015839;
+	Mon, 12 May 2025 08:16:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7l2dkG0n9j+CsoG1wnaET0QWA0eavfqlFSf8kRou3tw=; b=PlQimwUY7BKOKoqG
+	y/9yR95dgL0N0aQ8IGR8AhsFfRzA4/ZRD2nowQBYgdgnxFNfh3mdWrUSxooI4Rvr
+	rkkxtUstgdVoS3UjkyaNQZKHitnGaI/OPh/YlQ+II7JTk6YqugyBYt3PiV7LRqq2
+	76WkBTTF+a1m0nHGctJKo48Q9gs3RIlo2XdIQaVe62/W3GFVkMTqQN6CNetKkLOL
+	unTZkdEZJ/rUk4fNRxf8omS26OK/DMmKXMresp2W8M6YdWLsfErOqzpC3953JlDU
+	1JuRofoN6SSIXRJJw+sGZHhspIoFrQdDS+FKSHY1gGF4BgDG9Fp2tc4grhwXirlp
+	RUVE1g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hx4k3p9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 08:16:10 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C8G9nm012278
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 08:16:09 GMT
+Received: from [10.253.34.155] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 12 May
+ 2025 01:16:02 -0700
+Message-ID: <e434124b-6975-4027-bb0d-3840fbd25a15@quicinc.com>
+Date: Mon, 12 May 2025 16:16:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <plrpscito5e76t4dvtukgqm724stsfxim3zv3xqwnjewenee53@72dipu3yunlr>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: PCI: qcom: Document the QCS615 PCIe
+ Controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+ <20250507031559.4085159-3-quic_ziyuzhan@quicinc.com>
+ <20250507-astute-realistic-ferret-bcdfce@kuoka>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250507-astute-realistic-ferret-bcdfce@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ReqQC0tv c=1 sm=1 tr=0 ts=6821ae4a cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=BJE1r2VZsCeTiZ4UBNQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: V5s_apCAjcq1Od78LL7jE0-zWqwPirK2
+X-Proofpoint-ORIG-GUID: V5s_apCAjcq1Od78LL7jE0-zWqwPirK2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA4NiBTYWx0ZWRfX+VftKDg6Txx+
+ R+tRpQqwZCVxaDNwRPrFZU0/+Nzyl0LRPKPjE5KJ8eOI+5WvvzUgxAhDzZ+ZMaHVlWKbd0bdgn+
+ l1pStK923YA+goPIqypVxgvVVA72ave/ojyCdqbbeI3S9cUe77yVA+03Orh69xypywX90IYTbck
+ Wal4d5TjPmibMbhivRUAjpQDczZbgFCT3KfkjXKymwxEYvlDFoL+aErFYY6Lxw+j69FZmOyyLa6
+ RLDYecqGLOBv5OqpxoNN8jfnIqScpfTJWFXkMUK5gQNEvc5DLP2yobd15CaJIxfHryY/IVGcpkE
+ J4G0n5Q+UiLiahDjXe75eImfhJinWRqTaR5DoZjarEBxTd0YvoOsHPwuo7BQVNwzRtLge1woADh
+ Qir0NxU8M8EmkSDilqRhKdvbcLt117fSKuVSQVnaL23NP/3Gf9R3o++Vtgp55Jv+8JJ3Alue
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120086
 
-On Mon, May 12, 2025 at 12:30:04PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, May 09, 2025 at 03:13:22AM -0700, Shradha Gupta wrote:
-> > Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
-> > by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
-> > pci_msix_prepare_desc() to prepare the MSI-X descriptors.
-> > 
-> > Feature support added for both x86 and ARM64
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Changes in v3:
-> >  * Add arm64 support
-> > ---
-> >  Changes in v2:
-> >  * split the patch to keep changes in PCI and pci_hyperv controller
-> >    seperate
-> >  * replace strings "pci vectors" by "MSI-X vectors"
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index ac27bda5ba26..8c8882cb0ad2 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
-> >  	return cfg->vector;
-> >  }
-> >  
-> > -#define hv_msi_prepare		pci_msi_prepare
-> > +#define hv_msi_prepare			pci_msi_prepare
-> > +#define hv_msix_prepare_desc		pci_msix_prepare_desc
-> 
-> Please do not use custom macro unless its defintion changes based on some
-> conditional. In this case, you should use pci_msix_prepare_desc directly for
-> prepare_desc() callback.
-> 
-> - Mani
-> 
-> --
-> ??????????????????????????? ????????????????????????
 
-Thanks for catching this Mani, I agree. I will fix this.
+On 5/7/2025 1:17 PM, Krzysztof Kozlowski wrote:
+> On Wed, May 07, 2025 at 11:15:56AM GMT, Ziyue Zhang wrote:
+>> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>
+>> Add dedicated schema for the PCIe controllers found on QCS615.
+>> Due to qcs615's clock-names do not match any of the existing
+>> dt-bindings, a new compatible for qcs615 is needed.
+> Other bindings for QCS615 were not finished, so I have doubts this is
+> done as well. Send your bindings once you finish them.
+>
+> ...
+>
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,qcs615-pcie
+>> +
+>> +  reg:
+>> +    minItems: 6
+>> +    maxItems: 6
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: parf # Qualcomm specific registers
+>> +      - const: dbi # DesignWare PCIe registers
+>> +      - const: elbi # External local bus interface registers
+>> +      - const: atu # ATU address space
+>> +      - const: config # PCIe configuration space
+>> +      - const: mhi # MHI registers
+>> +
+>> +  clocks:
+>> +    minItems: 5
+> Drop or use correct value - 6. I don't understand why this changed and
+> nothing in changelog explains this.
+>
+> Best regards,
+> Krzysztof
 
-regards,
-Shradha.
+Hi Krzysztof
+
+As discussed in qcs8300, gcc_aux_clk is recommended to be removed from PCIe PHY
+device tree node, so I need to update the bindings.
+
+BRs
+Ziyue
+
 
