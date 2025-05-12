@@ -1,92 +1,154 @@
-Return-Path: <linux-pci+bounces-27583-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60AA4AB3992
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 15:47:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1538EAB39E0
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 15:59:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 055EF1895E18
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 13:48:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29A531893AD6
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 13:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 120B82EB1D;
-	Mon, 12 May 2025 13:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 383691DE891;
+	Mon, 12 May 2025 13:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF1Ro00w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1044A3C;
-	Mon, 12 May 2025 13:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109041DE4E6;
+	Mon, 12 May 2025 13:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057672; cv=none; b=PLQJK4QNLkBdjF2xAliyhi7AjWgO1+nshew7eafxZn3Z7SQAVvpTOW+iMC1CkgRiMhf2tlXtSw5j1WmycJLhUImwriI0saE/mVRPX59GBKYkYVw3x7qgaWmFzG5o5kVzyKYVTKWQx+8owyXDW1ZFR+CZmv3JBqjWC1frRdhGZqk=
+	t=1747058352; cv=none; b=eESiIovnKxXDdpVEPceGoQgryj4XdSXTTYvHKIfH3ByiqcL000ZWcr6ZQwngKdXJMdIyGQd2dvAcFqRh3H8AemiB8dnw9eZ8dddaaQfPXEfcFYR8j0k1TjqFSjKZxmVe5V3nztnPfDm9DbfYAJZcSu09XznNw6pGe9aTgdCBoFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057672; c=relaxed/simple;
-	bh=4IQj9akotNnkDKWZJmNne8ic/Eyi64NRX5JEFL6YdbM=;
+	s=arc-20240116; t=1747058352; c=relaxed/simple;
+	bh=3qQEJIUiN5/1spp7/oWnT/Aquzhhj4IjrdDSjaDXCdk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mp3iwR6/FKrTxqBgfUOEnB+5bhY7eoIuIeJBD+5bjMRPEuim0c2+PtM9s39Shi2jYuJu9/bC6SwwHOKBaY48DZSHAxUyDiCY+Sx3qLyXYSsJEM91uCDdnoTxjqmSpJC7l3Zd4JVt/1S+04pFV+0YXSWhcTTa9WZJnVybMqNrk+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A71E62C0161A;
-	Mon, 12 May 2025 15:47:20 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id F31041F0F21; Mon, 12 May 2025 15:47:40 +0200 (CEST)
-Date: Mon, 12 May 2025 15:47:40 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shawn Anastasio <sanastasio@raptorengineering.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: pciehp: Consolidate code files
-Message-ID: <aCH7_J4GE112pyCc@wunner.de>
-References: <20250512124531.8937-1-ilpo.jarvinen@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHWiLBFStS7y9qRgf70aY+KvenGkwqwf1+kjzM/JnsvoeYyUHljQVda8aKCy/TMSQ/jvfpg+fb+pH+5jKauK6CFldXaToO2FaJKYNkzRlFscPKRb0jqZLgAm1IBZL63mQ2ZLsPo45RyJI+fXH6ZSm/PslPT5o/hGnaFtA+HKnck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF1Ro00w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8F1C4AF0C;
+	Mon, 12 May 2025 13:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747058351;
+	bh=3qQEJIUiN5/1spp7/oWnT/Aquzhhj4IjrdDSjaDXCdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rF1Ro00wlJqFU7hZnRcuMUaDXVzMollDmF9eHqm5TBwoYtCrRCvpV4h9Q9vdr60X7
+	 rbhTlg0cmvy14/sCJ2gnufdUsKrDTkV9F9fEDDlp+fl02Uj2nM85IIC3zJWWIpcuJK
+	 iZaFdRBmbD4sQeZ0mtIiEmUasrLBtD4M1t7NLWEUFJCJCecQZAuhi8KiwahMq8mdo/
+	 0cWRQl8kSIN2yFn3Bl9X78IXLbkaGJfA/06c6Q1cfDU2mMJt3sdzGnyMNrFBnywNQH
+	 Nu6kyZIGAkv6BH2LfN1w8eBHqrM7iVyeNf8Vk1AoMjDfpWpNpfTFmugZjs/vd8ridU
+	 TqTeGGR0qS1dw==
+Date: Mon, 12 May 2025 08:59:09 -0500
+From: Rob Herring <robh@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
+	dlemoal@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: pci-ep: Add ref-clk-mode
+Message-ID: <20250512135909.GA3177343-robh@kernel.org>
+References: <20250425092012.95418-2-cassel@kernel.org>
+ <7xtp5i3jhntfev35uotcunur3qvcgq4vmcnkjde5eivajdbiqt@n2wsivrsr2dk>
+ <aBHOaJFgZiOfTrrT@ryzen>
+ <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
+ <20250509181827.GA3879057-robh@kernel.org>
+ <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
+ <aB8ysBuQysAR-Zcp@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250512124531.8937-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <aB8ysBuQysAR-Zcp@ryzen>
 
-On Mon, May 12, 2025 at 03:45:28PM +0300, Ilpo Järvinen wrote:
-> The code in the pciehp driver is a bit painful to read because of the
-> criss-cross calls that cross file boundaries making the split to
-> multiple files feel quite artificial.
+On Sat, May 10, 2025 at 01:04:16PM +0200, Niklas Cassel wrote:
+> On Sat, May 10, 2025 at 01:01:51AM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, May 09, 2025 at 01:18:27PM -0500, Rob Herring wrote:
+> > > > > > 
+> > > > > > > +    description: Reference clocking architechture
+> > > > > > > +    enum:
+> > > > > > > +      - common-clk        # Common Reference Clock (provided by RC side)
+> > > > > > 
+> > > > > > Can we use 'common-clk-host' so that it is explicit that the clock is coming
+> > > > > > from the host side?
+> > > > > 
+> > > > > Sure.
+> > > > > 
+> > > > > I take it that you prefer 'common-clk-host' over 'common-clk-rc' ?
+> > > > > 
+> > > > 
+> > > > That's what I intended previously, but thinking more, I feel that we should
+> > > > stick to '-rc'i, as that's what the PCIe spec uses.
+> > > 
+> > > Couldn't this apply to any link, not just a RC? Is there PCIe 
+> > > terminology for upstream and downstream ends of a link?
+> > > 
+> > 
+> > Usually, the refclk comes from the host machine to the endpoint, but doesn't
+> > necessarily from the root complex. Since the refclk source could very well be
+> > from the motherboard or the host system PCB, controlled by the host software.
+> > 
+> > > The 'common-clk' part seems redundant to me with '-rc' or whatever we 
+> > > end up with added.
+> > > 
+> > 
+> > No. It could be the other way around. We can drop the '-rc' suffix if it seem
+> > redundant. Maybe that is a valid argument also since root complex doesn't
+> > necessarily provide refclk and the common refclk usually comes from the host.
 > 
-> Consolidate the code into single pciehp.c. The split files are not
-> simply merged as is but the functions are grouped based on
-> functionality and order that avoids most forward declarations.
-[...]
->  drivers/pci/hotplug/Makefile      |    5 -
->  drivers/pci/hotplug/pciehp.c      | 2151 +++++++++++++++++++++++++++++
->  drivers/pci/hotplug/pciehp.h      |  212 ---
->  drivers/pci/hotplug/pciehp_core.c |  383 -----
->  drivers/pci/hotplug/pciehp_ctrl.c |  445 ------
->  drivers/pci/hotplug/pciehp_hpc.c  | 1123 ---------------
->  drivers/pci/hotplug/pciehp_pci.c  |  141 --
->  7 files changed, 2151 insertions(+), 2309 deletions(-)
+> When the RC and EP uses a common clock (rather than separate clocks),
+> the clock can either be provided by the host side or the EP side.
+> 
+> The most common by far (if using a common clock) is that it the common
+> clock is provided by the host side. That is why my patch just named it
+> 'common-clk' instead of 'common-clk-host' or 'common-clk-rc'.
+> 
+> I can use whatever name we agree on. I indend to send out V2 of this
+> patch as part of a series that adds SRIS support to the dw-rockchip
+> driver, in order to address Krzysztof's comment.
+> 
+> 
+> > 
+> > > Finally, this[1] seems related. Figure out a common solution.
+> 
+> I don't see the connection.
+> 
+> https://lore.kernel.org/all/20250406144822.21784-2-marek.vasut+renesas@mailbox.org/
+> 
+> does specify a reference clock, but that is in a host side DT binding.
+> 
+> 
+> This patch adds a refclk-mode property to an endpoint side DT binding.
 
-Ugh, I understand that the current state is suboptimal to grok the code,
-but a single file with 2000+ LoC isn't much better in terms of
-maintainability.  I think partitioning the code into separate files
-does make sense, just the current (historically grown) structure
-can be improved upon.  Let me think what a more logical separation
-might look like...
+If we are dealing with the same property of the link, it doesn't matter 
+which side. What we don't need is 2 different solutions.
 
-Thanks,
+> This property is needed such that the endpoint can configure the bits
+> in its own PCIe Link Control Register before starting the link.
+> 
+> Perhaps the host side could also make use of a similar property, but I'm not
+> sure, you don't know from the host side which endpoint will be plugged in.
+> 
+> >From the EP side, you do know if your SoC only supports common-clock or
+> SRNS/SRIS, since that depends on if the board can source the clock from
+> the PCIe slot or not (of all the DWC based drivers, only Qcom and Tegra
+> can do so, rest uses SRNS/SRIS), so this property definitely makes sense
+> in an EP side DT binding.
 
-Lukas
+I don't understand why we need this in DT in the first place. Seems like 
+needing to specify this breaks discoverability? Perhaps this information 
+is only relevant after initial link is up and the host can read the EP 
+registers?
+
+Rob
 
