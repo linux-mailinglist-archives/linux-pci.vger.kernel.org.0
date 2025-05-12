@@ -1,310 +1,192 @@
-Return-Path: <linux-pci+bounces-27575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 966FEAB3637
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 13:50:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 149A7AB366D
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 13:57:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04BCB189D7C3
-	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 11:50:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E87EF1882659
+	for <lists+linux-pci@lfdr.de>; Mon, 12 May 2025 11:56:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CAA925D548;
-	Mon, 12 May 2025 11:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB934293442;
+	Mon, 12 May 2025 11:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OumfE6uM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKf7XXKy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266F043151;
-	Mon, 12 May 2025 11:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D35265629;
+	Mon, 12 May 2025 11:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050626; cv=none; b=Z9epcWzR0U3b6YYugaVcbI5/a3iO3FqHGqHMt66a+k6j1qnEi+jL/47PUWPXNmhR9RbBkR4WJgn0dAhfU2frCQzSCbxW3tij4fEwvTJjK11kX9Gaqtax8J7suRseVKXZ1QwZ0m+XR/FNFUywe2uWZt3xzX+b5A+nSNx8sVs2Npo=
+	t=1747050981; cv=none; b=PYcaOrKu34lgg9sif7zOXJxLmkC+AudhYxcz21yoicCDmQSljdRpVTcz5RB1qRRAmyFn1iyVF7LEl/LxWtFxKljM7Xc+hohlv7xAXztZigrufoa6jQICm87Zrfga+6Qz+jvxEIAOTTyxq9DiJanHFDpi05iX3Mum1/a3O8sPhjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747050626; c=relaxed/simple;
-	bh=qlsm2lXyI7mGR3rZEp8nzymCQHOGCbhsBqDeR80vvZ4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=izf0QYTkCawGGlbQ55+SbB6wifSvVzA+ogkEcujlyarGkF/9fRHtNKXbp+YtRhE60v/I8H8lOqvTsz1SH+/xpwt9aHVoLC6+M/9HyoImu29qsAqShuq+vIb6Ft05Uc7wE2wdg5rDlH9nABXwaa+UYiDQeMSqnZmPbtFO0JUEhWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OumfE6uM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747050625; x=1778586625;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qlsm2lXyI7mGR3rZEp8nzymCQHOGCbhsBqDeR80vvZ4=;
-  b=OumfE6uMBndui/RGQf9xkTUGZ+Y5I5gJfS7is1fRQS8NoNSQi3wljIQo
-   sCXO9L8QtbiJInIL9jPTOC2Mm79C02EbG65NtF/YBYSA8ke/ZJzKYz3VN
-   s4DQZv/+u2nt6/yJGre1ishFDbSaIGFuHlPk2luIWvLljKUs/FL1E7976
-   vNQXJMJGsDQHIYKiOCc+9Sjisv767bW4Xt8o8/8VYaIlwQ8BwHcZxmUg4
-   VXRxvLas2rxfXb7g5weVFb5xfxOf6KNAkNCwxA1nlI9a9INLLY6mju4Ct
-   8FxKs5mqM3L+KPsYiGj3ttTGyyIUYfkzJHt7nrhMhtB9vgNHlrVBDGoCF
-   w==;
-X-CSE-ConnectionGUID: G82nsaE8TaGNHIqx0iEKJw==
-X-CSE-MsgGUID: NZldsaf3Rp6mcFyBMXkAJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="60245575"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="60245575"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:50:13 -0700
-X-CSE-ConnectionGUID: bScezBlwR/qpq5GXxZqdsg==
-X-CSE-MsgGUID: dBin6FTRSbOl2zKFKNr6Jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="174489726"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:50:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 May 2025 14:50:01 +0300 (EEST)
-To: Shawn Anastasio <sanastasio@raptorengineering.com>
-cc: linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Rob Herring <robh@kernel.o>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    chaitanya chundru <quic_krichai@quicinc.com>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konradybcio@kernel.org>, 
-    cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
-    amitk@kernel.org, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-    jorge.ramirez@oss.qualcomm.com, Dmitry Baryshkov <lumag@kernel.org>, 
-    Timothy Pearson <tpearson@raptorengineering.com>
-Subject: Re: [RESEND PATCH v6] PCI: PCI: Add pcie_link_is_active() to determine
- if the PCIe link is active
-In-Reply-To: <20250509180813.2200312-1-sanastasio@raptorengineering.com>
-Message-ID: <84ce803d-b9b6-0ae7-44fa-c793dca06421@linux.intel.com>
-References: <20250509180813.2200312-1-sanastasio@raptorengineering.com>
+	s=arc-20240116; t=1747050981; c=relaxed/simple;
+	bh=OP26wRID7imVo7J12rxlgz9zyMjobt/1rWh6Hpm9uqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oz+EwjFVZ2xlCvULzynUy1BhU9nSuKyF9Ee6a6foMdAtkkpfl2V0oQ7F1Z1TzBm226olTJ8QWG5dJ39bHP3PLIYYFRfjyHPYo3GmWKwLWHaYvNe6q1nOLXpE4c+6Vcx3RWU4L04wzZ3+9JNaZqCjCqvquAC/GuqsZInDfujiKXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKf7XXKy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3BB1C4CEF1;
+	Mon, 12 May 2025 11:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747050980;
+	bh=OP26wRID7imVo7J12rxlgz9zyMjobt/1rWh6Hpm9uqk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VKf7XXKyJpJhLM038WIdAnO5wVREGY6OMuI4H9Wc1zYvJWzR1kt97dSLt8pjVsC6j
+	 11fjkTFmSfEhvYE0SdfKHJcTyTshHpwfSOZqYQQZaiF1YaVikub8w99sQ3Qweor7Wd
+	 1h+0blQFDMCRynpbU6DNaF4+K7IB+H4nzAjIjubNvwZL+d75VdNRLFwdkvMlpt/C6X
+	 BYNQzbZjhLAniX2A3LHi7ahxyw/gY5aX1me4SNiHwYdieV5+V+rL11beZ3DPMR5tPg
+	 gfMcH5SfqZhHxFBwcFEppQCHi8ksLAoQiDhHLasfUFKZN4rEVRxb3OZTBCMoRY6sxM
+	 z8MUiOne/YR+Q==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d09d495c6cso1297007fac.3;
+        Mon, 12 May 2025 04:56:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWXpy7tvEuZgk5B7KEXnCybuvB5FMq4qoVc15tbvqEUilKYus5galBAtHRAepL9EgwGUQK1PIPiX2Lf@vger.kernel.org, AJvYcCXzciVnI4OgGpiJaisPK34d7fU+2jH1iUJdYh6cqeLpVCBoCwBwV3d4GSwEdKH5ueiDfo4SiXFnGhVD7vU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpA2zZ1bVU0q1LNtwQcGWC9YgnWcoCQJqHyPNqbPadaZDHQRuP
+	y3PfxCo1oVFztllJT7rIhuAuyIXz9SPuymAbZrRzj2kNUE2Ri3Ha2WWqHJCnCp/Z+ij8GmhENMe
+	lpIgSAnyIRyMMI2ZDSOqF4FG9qPs=
+X-Google-Smtp-Source: AGHT+IEgc1cpclFVS0xFmPfpfxKO7eNwHf/74FzkXLvjtGWVCoI5mCd4F1Qf6diExoLwb0LzDJCm0ssPJhXK3COGOVU=
+X-Received: by 2002:a05:6870:2424:b0:29e:671b:6003 with SMTP id
+ 586e51a60fabf-2dba4539eeemr7885724fac.32.1747050980096; Mon, 12 May 2025
+ 04:56:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250504090444.3347952-1-raag.jadav@intel.com>
+In-Reply-To: <20250504090444.3347952-1-raag.jadav@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 12 May 2025 13:56:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hgpq0VmO_rDnEjDQniUiLJP3yo3-Rpy1NNxA_k8VAS2A@mail.gmail.com>
+X-Gm-Features: AX0GCFtPUWD14OGMLgzCm3qM3Ty93hEQvIBQ5Hqi1UOaQYnHDabs5y8Ippsyig4
+Message-ID: <CAJZ5v0hgpq0VmO_rDnEjDQniUiLJP3yo3-Rpy1NNxA_k8VAS2A@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous device
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
+	aravind.iddamsetty@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 9 May 2025, Shawn Anastasio wrote:
-
-In shortlog:
-
-PCI: PCI: ... -> PCI: ...
-
-> From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> 
-> Date: Sat, 12 Apr 2025 07:19:56 +0530
-> 
-> Introduce a common API to check if the PCIe link is active, replacing
-> duplicate code in multiple locations.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+On Sun, May 4, 2025 at 11:06=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> w=
+rote:
+>
+> If error flags are set on an AER capable device, most likely either the
+> device recovery is in progress or has already failed. Neither of the
+> cases are well suited for power state transition of the device, since
+> this can lead to unpredictable consequences like resume failure, or in
+> worst case the device is lost because of it. Leave the device in its
+> existing power state to avoid such issues.
+>
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 > ---
-> (Resent since git-send-email failed to detect the Subject field from the patch
-> file previously -- apologies!)
-> 
-> This is an updated patch pulled from Krishna's v5 series:
-> https://patchwork.kernel.org/project/linux-pci/list/?series=952665
-> 
-> The following changes to Krishna's v5 were made by me:
->   - Revert pcie_link_is_active return type back to int per Lukas' review
->     comments
->   - Handle non-zero error returns at call site of the new function in
->     pci.c/pci_bridge_wait_for_secondary_bus
-> 
->  drivers/pci/hotplug/pciehp.h      |  1 -
->  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
->  drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
->  drivers/pci/pci.c                 | 26 +++++++++++++++++++++---
->  include/linux/pci.h               |  4 ++++
->  5 files changed, 31 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 273dd8c66f4e..acef728530e3 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
->  int pciehp_card_present(struct controller *ctrl);
->  int pciehp_card_present_or_link_active(struct controller *ctrl);
->  int pciehp_check_link_status(struct controller *ctrl);
-> -int pciehp_check_link_active(struct controller *ctrl);
->  void pciehp_release_ctrl(struct controller *ctrl);
-> 
->  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index d603a7aa7483..4bb58ba1c766 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	/* Turn the slot on if it's occupied or link is up */
->  	mutex_lock(&ctrl->state_lock);
->  	present = pciehp_card_present(ctrl);
-> -	link_active = pciehp_check_link_active(ctrl);
-> +	link_active = pcie_link_is_active(ctrl->pcie->port);
->  	if (present <= 0 && link_active <= 0) {
->  		if (ctrl->state == BLINKINGON_STATE) {
->  			ctrl->state = OFF_STATE;
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 8a09fb6083e2..278bc21d531d 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
->  	pcie_do_write_cmd(ctrl, cmd, mask, false);
->  }
-> 
-> -/**
-> - * pciehp_check_link_active() - Is the link active
-> - * @ctrl: PCIe hotplug controller
-> - *
-> - * Check whether the downstream link is currently active. Note it is
-> - * possible that the card is removed immediately after this so the
-> - * caller may need to take it into account.
-> - *
-> - * If the hotplug controller itself is not available anymore returns
-> - * %-ENODEV.
-> - */
-> -int pciehp_check_link_active(struct controller *ctrl)
-> -{
-> -	struct pci_dev *pdev = ctrl_dev(ctrl);
-> -	u16 lnk_status;
-> -	int ret;
-> -
-> -	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> -		return -ENODEV;
-> -
-> -	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> -	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
-> -
-> -	return ret;
-> -}
-> -
->  static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
->  {
->  	u32 l;
-> @@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
->  	if (ret)
->  		return ret;
-> 
-> -	return pciehp_check_link_active(ctrl);
-> +	return pcie_link_is_active(ctrl_dev(ctrl));
->  }
-> 
->  int pciehp_query_power_fault(struct controller *ctrl)
-> @@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
->  	 * Synthesize it to ensure that it is acted on.
->  	 */
->  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
-> -	if (!pciehp_check_link_active(ctrl))
-> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
->  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
->  	up_read(&ctrl->reset_lock);
->  }
-> @@ -884,7 +857,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
->  	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
->  				   PCI_EXP_SLTSTA_DLLSC);
-> 
-> -	if (!pciehp_check_link_active(ctrl))
-> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
->  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
-> 
->  	return 0;
+>
+> v2: Synchronize AER handling with PCI PM (Rafael)
+> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
+>     Elaborate "why" (Bjorn)
+
+I think this is reasonable, so
+
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+(and you might as well CC it to linux-pm@vger.kernel.org>).
+
+Thanks!
+
+>
+> More discussion on [1].
+> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=3D9eRPuW08t-6PwzdyMXsC=
+6FZRKYJtY03Q@mail.gmail.com/
+>
+>  drivers/pci/pci.c      | 12 ++++++++++++
+>  drivers/pci/pcie/aer.c | 11 +++++++++++
+>  include/linux/aer.h    |  2 ++
+>  3 files changed, 25 insertions(+)
+>
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0ce..3bb8354b14bf 100644
+> index 4d7c9f64ea24..25b2df34336c 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -4926,7 +4926,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		return 0;
-> 
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> -		u16 status;
-> 
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
-> @@ -4942,8 +4941,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		if (!dev->link_active_reporting)
->  			return -ENOTTY;
-> 
-> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-> -		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> +		if (pcie_link_is_active(dev) <= 0)
->  			return -ENOTTY;
-> 
->  		return pci_dev_wait(child, reset_type,
-> @@ -6247,6 +6245,28 @@ void pcie_print_link_status(struct pci_dev *dev)
+> @@ -9,6 +9,7 @@
+>   */
+>
+>  #include <linux/acpi.h>
+> +#include <linux/aer.h>
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev =
+*dev, pci_power_t state, bool
+>            || (state =3D=3D PCI_D2 && !dev->d2_support))
+>                 return -EIO;
+>
+> +       /*
+> +        * If error flags are set on an AER capable device, most likely e=
+ither
+> +        * the device recovery is in progress or has already failed. Neit=
+her of
+> +        * the cases are well suited for power state transition of the de=
+vice,
+> +        * since this can lead to unpredictable consequences like resume
+> +        * failure, or in worst case the device is lost because of it. Le=
+ave the
+> +        * device in its existing power state to avoid such issues.
+> +        */
+> +       if (pci_aer_in_progress(dev))
+> +               return -EIO;
+> +
+>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>         if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>                 pci_err(dev, "Unable to change power state from %s to %s,=
+ device inaccessible\n",
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..4040770df4f0 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
 >  }
->  EXPORT_SYMBOL(pcie_print_link_status);
-> 
-> +/**
-> + * pcie_link_is_active() - Checks if the link is active or not
-> + * @pdev: PCI device to query
-> + *
-> + * Check whether the link is active or not.
-> + *
-> + * Return: link state, or -ENODEV if the config read failes.
-
-"link state" is bit vague, it would be better to document the values 
-returned more precisely.
-
-> + */
-> +int pcie_link_is_active(struct pci_dev *pdev)
+>  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
+>
+> +bool pci_aer_in_progress(struct pci_dev *dev)
 > +{
-> +	u16 lnk_status;
-> +	int ret;
+> +       u16 reg16;
 > +
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> +		return -ENODEV;
+> +       if (!pcie_aer_is_native(dev))
+> +               return false;
 > +
-> +	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
-> +	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> +       pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
+> +       return !!(reg16 & PCI_EXP_AER_FLAGS);
 > +}
-> +EXPORT_SYMBOL(pcie_link_is_active);
 > +
->  /**
->   * pci_select_bars - Make BAR mask from the type of resource
->   * @dev: the PCI device for which BAR mask is made
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 51e2bd6405cd..a79a9919320c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
->  			    pci_select_bars(pdev, IORESOURCE_MEM));
->  }
-> 
-> +int pcie_link_is_active(struct pci_dev *dev);
-
-Is this really needed in include/linux/pci.h, isn't drivers/pci/pci.h 
-enough (for pwrctrl in the Krishna's series)?
-
->  #else /* CONFIG_PCI is not enabled */
-> 
->  static inline void pci_set_flags(int flags) { }
-> @@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
 >  {
->  	return -ENOSPC;
+>         int rc;
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 02940be66324..e6a380bb2e68 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -56,12 +56,14 @@ struct aer_capability_regs {
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> +bool pci_aer_in_progress(struct pci_dev *dev);
+>  #else
+>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>         return -EINVAL;
 >  }
-> +
-> +static inline bool pcie_link_is_active(struct pci_dev *dev)
-> +{ return false; }
-
-This fits on one line just fine.
-
--- 
- i.
-
->  #endif /* CONFIG_PCI */
-> 
->  /* Include architecture-dependent settings and functions */
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return fal=
+se; }
+>  #endif
+>
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
 > --
-> 2.30.2
-> 
-> 
+> 2.34.1
+>
 
