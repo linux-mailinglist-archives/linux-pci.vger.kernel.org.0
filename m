@@ -1,128 +1,150 @@
-Return-Path: <linux-pci+bounces-27649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED3A4AB594B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 18:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74730AB5A7F
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 18:46:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41EF73A8192
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:03:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1DAF3BE008
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E3572BE0F0;
-	Tue, 13 May 2025 16:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C968A1DFDB9;
+	Tue, 13 May 2025 16:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufGODcyG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edjxddpo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8C22338
-	for <linux-pci@vger.kernel.org>; Tue, 13 May 2025 16:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953681DDC28;
+	Tue, 13 May 2025 16:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747152240; cv=none; b=uTt00A1yFsr6pvtFzY2apJcJYA1o6MfcjpcOvcQhYwLKUQ9dg4dc865Co49X7Iu1Jc1jd7ooj1DHrs+eay7w7zTdWAuN4n62KmUBSq4BrfzwDAs8pbGXERU8M8ebYVEFGgmS8Cv90uEv98wWjD4FX/TBCv8YlV3lWU51TXhRmSk=
+	t=1747154709; cv=none; b=BLmku2NEL3eK5elc+e5yy7U67WdaXrbkqxGsKQFmPN2EzagJvMw/PEJBA/ejs9ENZ0TyEzMZNH4xRzcu6IJgWi1Xs7JegHTg/0icGxsi0E2DIo9Xd5CXX1xoAGav5U2U7ckeP2T5nfq0soX5r328ngmgGdvpFBXcgYCRwhEcOZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747152240; c=relaxed/simple;
-	bh=bqw6sbaW5RwWVhD4d5QEdbcOsLqCAoBvAKpuJxVk+AQ=;
+	s=arc-20240116; t=1747154709; c=relaxed/simple;
+	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bwqpNyvbk1MHWsAsTe4zqwv4TekHVUkEPwIVKTTLyKMFdHwP5CT5HLB51j/jtq8mX80KLDqXraZXcdCUVEc8ef4lkbUcHIoPz4JGygVAz9tmXVarcIU8bMsF3Pz63pCAugBPNB5tmD4lK/3/FpFi+nD3g/OY5bZEJhSDD+aP6BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ufGODcyG; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso35728325e9.1
-        for <linux-pci@vger.kernel.org>; Tue, 13 May 2025 09:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747152237; x=1747757037; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mPP34a2qPJLJUDs68IjGTEbCLX34B34aXKmwHjCda18=;
-        b=ufGODcyGTXZEZIIaYs71aLTqB2KBtxg7P12vzYHbcw528lARqABpzEddiCxtyzSJsl
-         T3OoYfxLr5vQiIpi3+Gqa3Honuffd6ahYglYQUNOpu8sMZFX8VqnAJymsN5kZlsbnkB+
-         1waQ81ZJz5zv0ZX/jfxFaqVzDkfxhozbfHTcdJ+3g6Jg0BtheJR5ZICu2grWTeQGMz1h
-         iEaIF9engL4b3iIsRn2j/oGXO90HvKgMN9MDKt+NuC3o5bOlhNGFaQ2I+/TwB7ruh2zP
-         GuEGsa2zxzoAnhD67nF/0Cyzq23slPypQ2qi7V0cmSAd5/rCXhMK2hzjlYt64CdcxzGA
-         xPyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747152237; x=1747757037;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mPP34a2qPJLJUDs68IjGTEbCLX34B34aXKmwHjCda18=;
-        b=qvJ5gu+cX6nrVm1/+Ih73Uw62y+pQk3T5IrEa/cMTkKXBBQFSVN3jCIeQsFfUEpwvf
-         zPqqnoVLnxJM5w/AWTrahhBOQhpXESv5Et8R5iUM/7r0Q2JZwVGWPzj5hmBbyryq/Je8
-         D1FKl2EDUlQOZYHaF3U2BxctAXY5D8iCidlC7Wmmcm7rH1i5xQvxkzpKyXf87Nd6lzLm
-         LnUrhV/Wacif6FiBkUuaHJaVc9ws+2gByXqxEbDBeq+swka286hPOazsU/TChD4DWGeX
-         4JO4H2TVd/Wu3DtrKWrYYq+0vtRekPHqf1IQ/uuylkadSgqLROgdKnPMifj8zUcL9R0f
-         HQpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHsOBBICreC96nvpWW65Wwjef3WAc8G13UM8Nqxov6eVovhLpQ3H6tfvp+/HrplTLbKU2VUObKmR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU7fNRI8Paff1CO3Fcy9+S05U75b6h3TfPBamRjpRri26hjv8u
-	kn2zWq6ExtkzOQqp4/1py7+9NTpFnF0oskODKNSxzwPtQpkCKSUyt3lxRgQu4Q==
-X-Gm-Gg: ASbGncvv7XtGNPHUYr2ltmu2m2TspI6KSPvLXS1EncczFLsQegKwapbO2hxW4EA62Ai
-	nO9QXpqVi0kfISlmPgUCT87q6PPLkwLO+A2COZiUAcFYKbXbl6CQH2m5NRrQmASUgprjifQCi64
-	Go0vLqrCk35u2M7V6sAVa7Tbs5xcDAMNAWmIwLtxw8qCvlXdWoPvsttU2luTtFlRcCnVjD4Q8Et
-	eQIpx+mSkQBt4WL7OZCHhcON2nbE+ky0EDTWcPHpFEVNAXFUeP6aaC9QVgQP4lZHlBGPJjnInZD
-	hA9Xhzw8ULdz0atttSOY3VjDEOQ5e8uTW6yN6CnahhIml/KSusJfBpGGKMvcQXqOdBPdF76XcAz
-	1xFQ2mjINKbgwZA==
-X-Google-Smtp-Source: AGHT+IFUs/E8lGN4Y6i35nSeqOc0zjhP+SyJASizXG0DBXcxPw4b86BdcbX5E/ih1Apnan2qlPCivQ==
-X-Received: by 2002:a05:600c:4f54:b0:442:e9eb:1b48 with SMTP id 5b1f17b1804b1-442e9eb1c1emr42627385e9.24.1747152236887;
-        Tue, 13 May 2025 09:03:56 -0700 (PDT)
-Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c09sm175331185e9.7.2025.05.13.09.03.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 09:03:56 -0700 (PDT)
-Date: Tue, 13 May 2025 17:03:54 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Alan Douglas <adouglas@cadence.com>, 
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/6] PCI: endpoint: IRQ callback fixes and cleanups
-Message-ID: <lds72okw4m4novwi2ysaomolph45dzuuyxdcyl6llpruie7a5t@4v6ol6qtu6w3>
-References: <20250513073055.169486-8-cassel@kernel.org>
- <20250513102522.GB2003346@rocinante>
- <aCM7lWQiwJBwamEp@ryzen>
+	 Content-Type:Content-Disposition:In-Reply-To; b=En2S/0MZDO4dn5TGaradHI+iiGt4tkawVJyo3nuzqOViv6FAPEz8hLKbml6WeCdb1b89AuS9e/SR4wBbNV6pXg5Tfr0MXX561BmJTvoMvw3gyaMKiGSYY/mP/SdR7XRV2FBqFFnrRUAzJnlzNQchPkXkMXfW18zuosS6vJajn78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edjxddpo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBC7C4CEE4;
+	Tue, 13 May 2025 16:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747154709;
+	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EdjxddpojJLkHNXEKf4SNDvhSbdPn4MGNdTfRNKe6PNXXYUIC7NTLm2hMYj2Z5/6y
+	 WqQ0FoQDs4UMpOgrmLdwyMvOo2OZRj9u745CBFtKXaXs0TChFW9KqVYNLF36kKc1+k
+	 hHbWGRrx+jQmrPneAzC1aM6/INbcK/X6WPCi9DYpPiy7J5EIYv97PSuCAaFURLMn3W
+	 R/ofKjCnMvgknvFJz7eolbYdlOcEjhry+XCLDGz4z91Rr4y9/vWjnzGoVsfP5x0MIp
+	 ud+NFf8ABf57KuUncbjMiaFV4WqMjKyjjHC0QE8meIYRHM2YfK+ZvcPurMNmbGmAet
+	 xpA7gEp4Lv9VA==
+Date: Tue, 13 May 2025 16:45:07 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH][next] PCI: hv: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aCN3E7pQc5UHJ-4w@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <aAu8qsMQlbgH82iN@kspp>
+ <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCM7lWQiwJBwamEp@ryzen>
+In-Reply-To: <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Tue, May 13, 2025 at 02:31:17PM +0200, Niklas Cassel wrote:
-> On Tue, May 13, 2025 at 07:25:22PM +0900, Krzysztof Wilczyński wrote:
-> > Hello,
-> 
-> Hello
-> 
+On Tue, May 13, 2025 at 02:07:45AM +0000, Michael Kelley wrote:
+> From: Michael Kelley <mhklinux@outlook.com> Sent: Sunday, April 27, 2025 8:22 AM
 > > 
-> > >   PCI: dwc: ep: Fix broken set_msix() callback
-> > >   PCI: cadence-ep: Fix broken set_msix() callback
-> > >   PCI: endpoint: cleanup get_msi() callback
-> > >   PCI: endpoint: cleanup set_msi() callback
-> > >   PCI: endpoint: cleanup get_msix() callback
-> > >   PCI: endpoint: cleanup set_msix() callback
+> > From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, April 25, 2025 9:48
+> > AM
+> > >
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > >
+> > > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
+> > > of a flexible structure where the size of the flexible-array member
+> > > is known at compile-time, and refactor the rest of the code,
+> > > accordingly.
+> > >
+> > > So, with these changes, fix the following warnings:
+> > >
+> > > drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure containing a flexible
+> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > > 
-> > Note that PCI prefers to capitalise first letter of the subject.
+> > I'm supportive of cleaning up these warnings. I've worked with the pci-hyperv.c
+> > code a fair amount over the years, but never had looked closely at the on-stack
+> > structs that are causing the warnings. The current code is a bit unusual and
+> > perhaps unnecessarily obtuse.
+> > 
+> > Rather than the approach you've taken below, I tried removing the flex array
+> > entirely from struct pci_packet. In all cases except one, it was used only to
+> > locate the end of struct pci_packet, which is the beginning of the follow-on
+> > message. Locating that follow-on message can easily be done by just referencing
+> > the "buf" field in the on-stack structs, or as (pkt + 1) in the dynamically allocated
+> > case. In both cases, there's no need for the flex array. In the one exception, a
+> > couple of minor tweaks avoids the need for the flex array as well.
+> > 
+> > So here's an alternate approach to solving the problem. This approach is
+> > 14 insertions and 15 deletions, so it's a lot less change than your approach.
+> > I still don't understand why the on-stack struct are declared as (for example):
+> > 
+> > 	struct {
+> > 		struct pci_packet pkt;
+> > 		char buf[sizeof(struct pci_read_block)];
+> > 	} pkt;
+> > 
+> > instead of just:
+> > 
+> > 	struct {
+> > 		struct pci_packet pkt;
+> > 		struct pci_read_block msg;
+> > 	} pkt;
+> > 
+> > but that's a topic for another time.  Anyway, here's my proposed diff, which I've
+> > compiled and smoke-tested in a VM in the Azure cloud:
+> > 
 > 
-> Do I need to resend or can some of the maintainers fix this up while applying?
+> Gustavo -- Are you waiting for me to submit a patch with my alternate proposal?
+> I had not seen any follow up, so wanted to make sure we have clarity on who
+> has the next action. Thx.
 
-I will fix it up while applying.
+Michael, I prefer your approach. Please send a patch.
 
-- Mani
+Thanks,
+Wei.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> 
+> Michael
 
