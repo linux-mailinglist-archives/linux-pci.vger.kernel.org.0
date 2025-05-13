@@ -1,118 +1,129 @@
-Return-Path: <linux-pci+bounces-27641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63615AB57AE
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:54:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0EB1AB57C5
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:58:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BE9017A657
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 14:54:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF6937B08B3
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 14:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CDB01B4132;
-	Tue, 13 May 2025 14:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="M4t9yiWS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2231C84CE;
+	Tue, 13 May 2025 14:57:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135B11AD3E0;
-	Tue, 13 May 2025 14:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5417578;
+	Tue, 13 May 2025 14:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148068; cv=none; b=Ki1+u1vxnw7waEyl1Yu2r1eqmQYpX1OMBeZGP27eaI4fGY29pFZ9sSDgdLXyr0Veywk52K49ub3mX02nKK8aWR3ao+5IiiXAnikJuRnjcX4+0DUca/zYsf2+IgalO2TPIHVyE40LLLwIGWcW666Ckqa1SfFG91XBWqMTxcY3S3M=
+	t=1747148253; cv=none; b=Y1YQ3wYai4jJpqZhExp+zBqoJX0n+TFeMs/ihzikaa13pwBrzZYLpY1i34BSmLfEdlNdURpGvtdZy0tFVXTZ5KOZkmm0FCc/p1/DkwtunPT5oaARTn42Eg3lJAiNenWUAsOfI2q5cos76hmw+/OS5/5YnJN4xBe10e3vi85uTx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148068; c=relaxed/simple;
-	bh=+ZMC4xvjWCXIHQQmuBli+mqd8+6t/RUnKW6CLhSK6vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jXAFbIwOMLTPnDmK4vuSww6zGhXOvaj3hOG4p2G+GmogbY92u9Q5V4Qbd2Yn2P9xMhJaaRNHRLpdqJ+tOkIu6Aye6h/kcabX9yK9koJzBSjEOuE6EDW+1z9hbEZgs8YGRoWSOsHfN+7jGyBEoKqkS8MCEW+3HUfoc4S/bmgUOuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=M4t9yiWS; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=nXQDzb+tFFVU+4SLdENHkW/1SY6XdLMilSABvcCoeBU=;
-	b=M4t9yiWS6jQq9lz15VN6CVAutd+twdoSe9/gfmvn4tn9O3peNgeaTMQ/EcejzC
-	KEFcIIZ6IYe7GW1kjoyKFkMSD8kwDZqSOPo4tO5tOF4QO+EsyfmPBlZD8DhhkCr9
-	/4j2/u98y0120iF+3FSwZbK/zCM1HUC867PBfoJZz+UA8=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXt+XpXCNoldCmBA--.8342S2;
-	Tue, 13 May 2025 22:53:30 +0800 (CST)
-Message-ID: <ade4c14a-ff20-4001-8eda-75fef15df62c@163.com>
-Date: Tue, 13 May 2025 22:53:29 +0800
+	s=arc-20240116; t=1747148253; c=relaxed/simple;
+	bh=ozJSIVhrsVZSmArvo5SbSNaFcz2ivHX7lRhpN1fzzp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VK1XosP/FhUyn1S4gVf/qdEPO+/IONhuOpE/WPxeGs/URelXyLN4U2sABSCzc0WN4K+7ItOI6nEDTPeq8B6i+K3K1cli8Ch1A8YsPWfQzmOZMGS6SWTFFTrqBc/gGp56Y++cxqg10PDxIZoCSh5yUfNohhQK0K7God9ipUCRXGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74248a3359fso3654082b3a.2;
+        Tue, 13 May 2025 07:57:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747148250; x=1747753050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6KoZB2ihq3FKh16QI7sEuRE5275JyuaBBVfjNn/0xug=;
+        b=mGiT5PXdq1oAq/Sxm8+8wEAkV0gCvK01EIlBI8whfPAvLDjviiG1/CD9q2ctm/1vAH
+         HdTk/iP90t8cxQkwGi4uh3OmDOfY4oXSDM868ilsL4Zmmdl03mXwm6bB8Hs2NJNWbCMN
+         5Eh6ZwhTe/C1xPjqgq27Q9JUOj2ju6ZlEBcxh3eyo8fOhy7f5eCXOw6tZq7NV+DqaERk
+         74sCXa/q4V1OIJGBbxevxb6QpWgnyTdolnaKVA+2HOM3+oPlfcIlIGMLlf4qBItb9D4/
+         ThjDz5WrT0EjwHQMQxYDFoEkJ1i+5x35qdQTHWE6Ag5uAlLQM4xB1I9NR+PqiFR2DSV9
+         4LfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4yGpunYe/BG21Urde44yFlf2OFosXpsieYKojmwgcAdfT/n083vkvtGVSu4RwPPA9yV63mauPDE2DdVc=@vger.kernel.org, AJvYcCWqEl4T0X+vC04A6ujjCZKxG5MaqwwJRbBXHRRkKjYYdZlpJgiqgEJrEbeIt5079feARYnA5Hxl9CXT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIHk3uATqILtZ4ltwYjvAbNHGaStqZ8Yp4GarncWgRHo4q8YfO
+	Xxcq0j2n4JTxDrXYk/aZrZ1jElUV0DmmGprBh9eeY5H+0URUr99i
+X-Gm-Gg: ASbGncvKR2bmFZP5NSDbbneCZygg8Z6CObAr9SUV7FLoKf+TufOr585t+cccx5CFGp5
+	UF+dLAD+kfNio7CgZLZnVLLi7/jrgL1uF53Hef2iYPc7bed7wT61b5MHFuF6TH3nqwRXhmzQisu
+	2JXTHpqnCIQdCzafVNIPbq1W/ecvYiCF3zHJ7JLGkAB85R6oHZUI0HQXYLTvb6Xj/h5kummtFgD
+	Yt/niWsHepvdfAwdMGLLHW/rBfE78HMyeeR2ccGM8eDheHJRLZKEM+vTEfin1UsiXdeT8LIj5e/
+	6CKxNsMZu36WHkVyF4BWHU97FRQ9tRTFuG8BYKcvzH4srZiy5OCWcoZZfkQHgh0oIUFagIF4tu+
+	nm7X2TlY5OQ==
+X-Google-Smtp-Source: AGHT+IFt2WrEJiIvBzwd9L2NKr3vlxlESO+fODgKM7hvHRDVcFkoN9TAMo39vDPjw72Ho2gP9wyO3g==
+X-Received: by 2002:a05:6a00:1d0a:b0:736:a7ec:a366 with SMTP id d2e1a72fcca58-7423be8695fmr21744996b3a.9.1747148250086;
+        Tue, 13 May 2025 07:57:30 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237728345sm8106683b3a.58.2025.05.13.07.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 07:57:29 -0700 (PDT)
+Date: Tue, 13 May 2025 23:57:28 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
+ bool
+Message-ID: <20250513145728.GA3513600@rocinante>
+References: <20250510160710.392122-1-18255117159@163.com>
+ <20250513102115.GA2003346@rocinante>
+ <aCNLl-Kq0DPwm2Iq@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] PCI: Configure root port MPS during host probing
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
- pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250510155607.390687-1-18255117159@163.com>
- <20250510155607.390687-2-18255117159@163.com> <aCL9CStLrGEY2MEH@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aCL9CStLrGEY2MEH@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDXt+XpXCNoldCmBA--.8342S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJF1rtrW7uFW3uw4rAFWkZwb_yoW8ur1Dpa
-	y8Xw4vyFZ7WryfG3WDAa109rWjqas5CF43JrZ8JryqqFn8C3WqqrWYka1Fqas7Grnayw1j
-	vw1jqry8uws0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UpKZXUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhxMo2gjWD+jDQAAsL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCNLl-Kq0DPwm2Iq@ryzen>
 
+Hello,
 
-
-On 2025/5/13 16:04, Niklas Cassel wrote:
-> On Sat, May 10, 2025 at 11:56:06PM +0800, Hans Zhang wrote:
->> Current PCIe initialization logic may leave root ports operating with
->> non-optimal Maximum Payload Size (MPS) settings. While downstream device
->> configuration is handled during bus enumeration, root port MPS values
->> inherited from firmware or hardware defaults might not utilize the full
->> capabilities supported by the controller hardware. This can result is
->> uboptimal data transfer efficiency across the PCIe hierarchy.
->>
->> During host controller probing phase, when PCIe bus tuning is enabled,
->> the implementation now configures root port MPS settings to their
->> hardware-supported maximum values. By iterating through bridge devices
->> under the root bus and identifying PCIe root ports, each port's MPS is
->> set to 128 << pcie_mpss to match the device's maximum supported payload
->> size. The Max Read Request Size (MRRS) is subsequently adjusted through
->> existing companion logic to maintain compatibility with PCIe
->> specifications.
->>
->> Explicit initialization at host probing stage ensures consistent PCIe
->> topology configuration before downstream devices perform their own MPS
->> negotiations. This proactive approach addresses platform-specific
->> requirements where controller drivers depend on properly initialized
->> root port settings, while maintaining backward compatibility through
->> PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
->> utilized without altering existing device negotiation behaviors.
->>
->> Suggested-by: Niklas Cassel <cassel@kernel.org>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
+> > > Changes for RESEND:
+> > > - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Resending a patch is not a place to add new tags.
 > 
-> Looks good to me, but since this I'm the one who suggested this specific
-> implementation, it would be good if someone else could review it as well.
+> While I realize that:
+> https://docs.kernel.org/process/submitting-patches.html#don-t-get-discouraged-or-impatient
 > 
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> states:
+> """
+> "RESEND" only applies to resubmission of a patch or patch series which
+> have not been modified in any way from the previous submission.
+> """
 
-Dear Niklas,
+Yes, I would often take verbiage of this document verbatim, but..
 
-Thank you very much for your review and suggestions. Let's wait for 
-others' opinions.
+> I would assume that this only refers to the commit log and code,
+> and that picking up tags has to be an acceptable exception.
 
-Best regards,
-Hans
+The above comment prompted me to inquire with a more senior maintainers,
+purely as I was curious what the opinions/preferences would be. And, as
+such, the replies I've got were:
 
+  - No, follow the documentation
+  - I don't care, really
+  - It's OK, make sure to pick the tag, if it makes sense
+
+So, wide spectrum of answers.  As such, I take it as, "it's up to the
+maintainer", for lack of less ambiguous answers.
+
+> If I take myself as an example, I would not be happy if I spent time
+> reviewing a large patch series, but because the maintainers somehow
+> missed that series, so the patch author has to RESEND it (without
+> picking up tags), my Reviewed-by tags get lost.
+
+While it's not about making you happy, I agree, that trying to preserve the
+tag might be the correct approach here.  As such, I will adopt this approach,
+whereas with other it might vary.
+
+Thank you!
+
+	Krzysztof
 
