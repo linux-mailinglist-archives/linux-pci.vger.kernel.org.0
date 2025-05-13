@@ -1,104 +1,75 @@
-Return-Path: <linux-pci+bounces-27646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D6E8AB586D
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:23:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 746B5AB5878
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:25:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71DDD19E3FEB
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:20:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82D174A782C
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 894842BE0E1;
-	Tue, 13 May 2025 15:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9E32BE111;
+	Tue, 13 May 2025 15:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjsGTcZC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8vB7xWh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B418E1F;
-	Tue, 13 May 2025 15:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AF72BE110;
+	Tue, 13 May 2025 15:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149371; cv=none; b=c3qeQGEX5O0boOS1n0E4VNXzYN54smMeQIQQSiCL9qVCF80y+4fvToLdXTHWacZP2CfAU9+vm4Nyfd6eHDpsB9hQ4cGK4mQ/c5CNbzaK3c2QM4McsCfY3WOt0r5qQNFdZKLgufiXTIwgIMU9IsElsZVF2Vs/hhJi6MCVf+6cm9g=
+	t=1747149456; cv=none; b=Tdlqcx1vD4W0qaRuTCYdW8ssewqJ6CE17eU9M0ngUj1AEHPNic9m/v3l23pzEixizXMtrDqidhWly7P+RDIh9k4x7fNupLeXr9XKbWkQEjk6euBCyNhdHgwKEL2+OcW+bOLAQLbzVM05pWn8QHViRNxzQ0PGAo9yCRC8weey+FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747149371; c=relaxed/simple;
-	bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
+	s=arc-20240116; t=1747149456; c=relaxed/simple;
+	bh=5dEZPjeFOHBN2WQfltNsxASob8VuvLED4acGGlIaNh0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzBnXBoO8TSf1uAhOH3qHobe22fwoek2soxj8Rr/xudv5mKV8eaXaFAu5SGYUowVvkEhg+YkRFrRBHqvXmFf9U8ASFyizZitTxCwVHNBNumfY9YKR9vFO41Xkr8i+ds6HYqI1L6hkRBVCx9D1cEivyCeG4bfsKwggf5D6qQq5LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjsGTcZC; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-730580b0de8so3918031a34.1;
-        Tue, 13 May 2025 08:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747149369; x=1747754169; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
-        b=TjsGTcZCG8xVHzecc3IhC0N0hWKrd12FzhBu4N7uI7Oyjnz3vdy3hfI6Tmam6eHbTn
-         hRimn/ncGUfz/OL43gghjHooZvWGmtSkyHoErZ6Z5PiZP4IQ5DqtfiPa3G+Iih8t7kGY
-         p4zk0iMFp1kDQU4M5YqrTHgl+JJ2VBkkJ/J18BdGVCB2vyaE4fL9psS1mwj6NVw6LFsp
-         +vkCZkuResQEAGz4YnDY5Xn0l1gdOjHY6V55MBvHIkoclNjL4O7sdyRbg677bOb+N+/p
-         OaGmgDcarhIiCYkj4dj/cfcyTa66XyyPqy+KGzjMkf9PvUuNhrYOMjfW64sJib+7udGV
-         fvzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747149369; x=1747754169;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
-        b=K2+Svxw9AhVSwV3jECbw156pq2IoWF+uaVQmOSirnKIvV3qNYj3ZquKRqv/4+ZTt8+
-         ika1bgypSp28PMhIPB+XqTzbMKpPzaDCbh14uFyY9kbkV66Mp9OyiR4GNz+SIPixiwTS
-         MA0Z9BYouCY0m/6dbFjFxEkSplKzlYjxVLnR4jggxlHqoZV2queGsvWMngooCB57vudd
-         8ed11D/509FOVkwmzUE2rOZUq4wuKw+6EfDchoWw/0kFCGIfYlmgnFGfOVrdJ3jSk+Cp
-         DQ26WYn6st0WKSH6YTLhE/xuaDQQBzBJZwEwPu2q4+Uh+nml6y2s7t8Hejct6Ytqbx/n
-         q2Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3V3f2dGyXbd8J7AeiUmGY02Y9YZ/GEqYFMBy3y/rYgLOma4ZM/O5GE8s96qGHn7mk9j9v9MucyjyN@vger.kernel.org, AJvYcCUimwU2XgGQsZervKcY5E9wfMvczCzE5P0MuI2nDDOqUMXdyIk65zkzca/GlWENGHgBQ0VSJ4PKoGr5m6B+7LU=@vger.kernel.org, AJvYcCV+Ufsu6Bfst/7IlmDJw6x/NmeQX3HQSyJK68ai5nX/SO9ARwwNuFhLdg+HnQNj59X4zjrHtDf7+iKfmng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykwwNkyao4eGYmJ0OMIuosFHkTKBM7mEWlHUQPEqEA6aS4nSg+
-	Jg+u507GMqrR8my7z/clyIS735yt43xNy0O9QfbMEVEBRAopnQxI
-X-Gm-Gg: ASbGncuWSmEj/tOmFBqbUbz3SBZR47igfiFdsoh47S4U73M91Wlpb8pGRiWlMaZrjlE
-	1ktH+nre2EWaF5bYlHIao/R4TmWOBeUqf+TdWpMGxfwsjrYyB4SEv4bP6zadqqbenNW+e180rOX
-	l5xfDMkkeCl3wI4aXQsJqbRqAhv4Du6Mliv0CbBZZ4qLFj0iyFRvySq4yyP9o69lv/MRbcZw7Kp
-	Gzqov7la21gd42HiUNIo57h7MRw7WvS8ZEgKHAg9qDzfcYyCoFRaidMKR+z9oZe7/LBtQxRy5h3
-	V5D18DtChGyzibe7besFAp4VSSbpNZ3pk+bzkEZCWIv8J9FNx1cG2435TZWI9bl807KZi61ovhj
-	u1SgCjyeXDA2G2NqdUkU5TdY00ktV
-X-Google-Smtp-Source: AGHT+IGbr/uZ7r4cS/fBNvQYU2fhVqEpCiBt00je02tqMC1tSmemGmi5CB3JGNk1qdmVKM7wKn0FCw==
-X-Received: by 2002:a05:6871:e086:b0:2c4:1b1c:42c3 with SMTP id 586e51a60fabf-2e005bc46camr2217682fac.9.1747149368576;
-        Tue, 13 May 2025 08:16:08 -0700 (PDT)
-Received: from my-computer (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba0b7f856sm2270445fac.45.2025.05.13.08.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 08:16:08 -0700 (PDT)
-Date: Tue, 13 May 2025 10:15:24 -0500
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Danilo Krummrich <dakr@kernel.org>, Dave Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, bhelgaas@google.com,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, me@kloenk.dev,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	daniel.almeida@collabora.com,
-	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 00/11] rust: add support for Port io
-Message-ID: <aCNiDPgMGZ-tD66n@my-computer>
-References: <20250509031524.2604087-1-andrewjballance@gmail.com>
- <ff526b49-a033-450d-9e48-699187167712@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GOYAJaXAvlLjx5vstvzLBhev5dBvhvSwgXT5juKFAnsH94cbcAfyL0Kq83X/3kjB1PzeI11ABnuWEwtJBxbyp9zvVas+aflwb5je8whP+C0pwrHUR4vTfLWLLhC7C7D+ZZ0bHrJ9KoIC42N0Y9uy5MsS7Oue7QtKR8U3LFMEJNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8vB7xWh; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747149455; x=1778685455;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5dEZPjeFOHBN2WQfltNsxASob8VuvLED4acGGlIaNh0=;
+  b=c8vB7xWhNy3AAkObCukBLzAcYc6ffHhETYkSUmlRIVWsCV7jS9aA3hlS
+   Y1yt1fFKcH2g8sqKy8hhlo9vOxgzhNa6ukIqV9os6EG40kw3NTLTHnzh7
+   yLW6TkEh8yckXqgqf2yEQhZnx+MjR32XTSH2Bov23LA6YYiEYp2GtkGeB
+   tJDPePNBFRmRerRbNSL3yM4ipO8Vho3f24SgFEawqt4eZA9+1KUhn25ll
+   j2AUTjFM6pwK+Lfdx5lekRXwLcl/cUyRGTwlRuGgsIAT+uu6OTauen8bV
+   ZmVMJlEkF/GB9HHjzI40d2ToBOnLclA/sYFkFrQEc4YFIsYfoVz/gCj5/
+   A==;
+X-CSE-ConnectionGUID: AkqlcayKTuCAq1n+bYP3qw==
+X-CSE-MsgGUID: nH29lKd+TS2sThpk+nHcsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48692875"
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="48692875"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:17:33 -0700
+X-CSE-ConnectionGUID: foIf9rVzS2qb614Fx8hxgg==
+X-CSE-MsgGUID: yOkzsa18SK+HOugVHjqNcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="138155411"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:17:31 -0700
+Date: Tue, 13 May 2025 18:17:28 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	aravind.iddamsetty@linux.intel.com
+Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aCNiiHzOksQFrPe1@black.fi.intel.com>
+References: <20250504090444.3347952-1-raag.jadav@intel.com>
+ <aCLNe2wHTiKdE5ZO@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -107,19 +78,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff526b49-a033-450d-9e48-699187167712@app.fastmail.com>
+In-Reply-To: <aCLNe2wHTiKdE5ZO@wunner.de>
 
-On Fri, May 09, 2025 at 07:53:31AM +0200, Arnd Bergmann wrote:
-> Can you describe here why you want to support both "Io" and "PortIo"
-> cases separately? I don't think we need to micro-optimize for
-> legacy ISA devices any more, so I'd hope the "Io" path would be
-> sufficient to cover the common outliers (ata, uart, vga, ipmi, ne2000)
-> that need the iomap indirection and also the legacy devices that only
-> need port I/O (floppy, x86 platform devices, ...).
+On Tue, May 13, 2025 at 06:41:31AM +0200, Lukas Wunner wrote:
+> On Sun, May 04, 2025 at 02:34:44PM +0530, Raag Jadav wrote:
+> > If error flags are set on an AER capable device, most likely either the
+> > device recovery is in progress or has already failed. Neither of the
+> > cases are well suited for power state transition of the device, since
+> > this can lead to unpredictable consequences like resume failure, or in
+> > worst case the device is lost because of it. Leave the device in its
+> > existing power state to avoid such issues.
+> 
+> Have you witnessed this on a particular platform / hardware combination?
+> If so, it would be good to mention it.  If I'd happen to find this
+> commit in the future through "git blame", that's the first question
+> that would come to mind:  How and on what hardware was this actually
+> triggered, how can I reproduce it.
 
-Yeah, we probably don`t need the `PortIo` type and can rely on `Io` for
-port io. I`ll remove it for the v2.
+We have a few issues[1] reported which are similar in nature. But since
+they are not easily reproducible and still under investigation, I'm
+a bit hesitant to explicitly reference it.
 
-Best regards
-Andrew Ballance
+[1] https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/4395
+
+> > +	/*
+> > +	 * If error flags are set on an AER capable device, most likely either
+> > +	 * the device recovery is in progress or has already failed. Neither of
+> > +	 * the cases are well suited for power state transition of the device,
+> > +	 * since this can lead to unpredictable consequences like resume
+> > +	 * failure, or in worst case the device is lost because of it. Leave the
+> > +	 * device in its existing power state to avoid such issues.
+> > +	 */
+> 
+> That's quite verbose and merely a 1:1 repetition of the commit message.
+> I'd recommend a more condensed code comment and anyone interested in
+> further details may look them up in the commit message.
+
+Sure, will update.
+
+Raag
 
