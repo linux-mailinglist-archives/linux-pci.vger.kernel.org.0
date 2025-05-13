@@ -1,98 +1,111 @@
-Return-Path: <linux-pci+bounces-27611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBFEBAB4C77
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 09:08:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5D05AB4CB8
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 09:31:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F3487A27AF
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 07:07:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F27F3A03F3
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 07:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 176711EB1A9;
-	Tue, 13 May 2025 07:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9A52D7BF;
+	Tue, 13 May 2025 07:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="s0M+IzV8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4u91AU2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 002B91EDA2C
-	for <linux-pci@vger.kernel.org>; Tue, 13 May 2025 07:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120119; cv=none; b=uq8EDhJU6d0eVWcbMknNj/3z0JWRLOK+zibWIMGvS4qPIyP3n7Spub1wERWJ9MekqcfXPwl3I9fmoYDHWXFwZyPlyB/5tNAv6FYOMXGAgb/8q/11wWpiR++VKPYwaIf5utrIfleU/urH5VjTa+Zxn+Yqqa894kNHOsMCpE/PFeY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120119; c=relaxed/simple;
-	bh=Loe6TzB5ohL/4Ce5AQmXhlxmASWaIASXEpvdB+/Oxc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tcHzE02YxIvk+bjIWEXGY+cTn5SwC+fHkHEsbE1NR9szN1CqA9bgGHAnGDzZGYhXpoq1L/eXaZ+uZEO2zPAzf8mXHr5B3u4c2XbrHqeTi6ggCxku5rYTs1Y39zos1IvAPX/yHUKSTi496VBCrsS5vkKS7JpwdXRuv0iiYvXF7o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=s0M+IzV8; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 6EFF04AC65;
-	Tue, 13 May 2025 09:08:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1747120110;
-	bh=Loe6TzB5ohL/4Ce5AQmXhlxmASWaIASXEpvdB+/Oxc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s0M+IzV8qkVF4MnnP9DQAOKyytLifVa+gDXnxIVtKoGlOlRx8h7g0SFeKmAWVQbPh
-	 ItmCWFhAytiJbc0zLG8trGAiBdCFP/qtZXOwjpQgH5tDwwAJl0xJUcn7Xj9gNAhxPi
-	 lvKVHwrWgqkefpjte5F8SW3hNR2xKRVUtPOOKN5JKieoIQMlMTOmv1XCmvES6Gav2+
-	 fyYwXQr5zLqq4hevNYYIU8WBtTR8VQvqj7SRKfI7UGVCl1SQRHQ1MEzQfeEgMt2l6X
-	 YgycamEtVMYJ35H1YK52RYXmJ1U4kBn87AmQwASCsEJxGvoVIYzfUie73+hJ5h5Cg8
-	 hJRhnFvLgyWkg==
-Date: Tue, 13 May 2025 09:08:29 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	linux-pci@vger.kernel.org, iommu@lists.linux.dev,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/2] Revert "iommu/amd: Prevent binding other PCI drivers
- to IOMMU PCI devices"
-Message-ID: <aCLv7cN_s1Z4abEl@8bytes.org>
-References: <cover.1745572340.git.lukas@wunner.de>
- <9a3ddff5cc49512044f963ba0904347bd404094d.1745572340.git.lukas@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD583FBA7;
+	Tue, 13 May 2025 07:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747121471; cv=none; b=GDNA0OiUvJxgf8dFOtp986Sn1C693qe7BpHnXWryjg6sjL+jQd1/9Kit4KkiTRhxT3yUPz73+PfhBf6BMemTjrKozXPAOWLMi1m/UfDk7YrPnMUHdxgAJwCo0vaAopHkjbj/dRK/aZHB2DS49O+93t1Va+zoncJjwUitvR/+vb4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747121471; c=relaxed/simple;
+	bh=mhXaZrEiTTFXiKUS/evmkAlm33VGdO8jQP529dU/TcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L7iHCcqfGKyq1vzE/UmpsQBdloxG1tHJOmg8vvEIqLZxuCWK0Nm8Hwfgjp69iv9n85UJLzCKeOJpuYJk+SEJUv2klwOkC6gxdiIqUycWq3ZZv4aU1bOExsbPxERo1+ZWlf3KUNtY/ObnnoWbkmtLg9MiusqAFZAk+4AJ1VUUNi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4u91AU2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6A0C4CEE4;
+	Tue, 13 May 2025 07:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747121470;
+	bh=mhXaZrEiTTFXiKUS/evmkAlm33VGdO8jQP529dU/TcY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X4u91AU2J6XsZ6JBGzmgxBbFV7gICrDqeuWvPYXUE8msg68HR6wlrPE47xgh8Af+n
+	 mDESEXxZw98PYFNgN6FAJ11HWzjjro+gRvnaBKaxeUTiZ9DehzGKWPMPUrqztvjf6E
+	 8Kh8FyvKV8VKb6RkAZPnzI9BJ8kwwDAVB08vGAdYZggjt8/cl0xUdgrZ5+aUsBIqA9
+	 2SB8XyLch8rQMxbL/c1A5zX+c/SaZiqrbO0KMobQtdYujSomr61+zwoqsC/Ss4CFVt
+	 B9wJ6OfZgAUwnhhTmnGedRW2i0Aemuv2mmZRspX61EK0qhYzw0bUO2B8cR+4x+AFq2
+	 2CJdAi10sxaNA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Alan Douglas <adouglas@cadence.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/6] PCI: endpoint: IRQ callback fixes and cleanups
+Date: Tue, 13 May 2025 09:30:55 +0200
+Message-ID: <20250513073055.169486-8-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a3ddff5cc49512044f963ba0904347bd404094d.1745572340.git.lukas@wunner.de>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1128; i=cassel@kernel.org; h=from:subject; bh=mhXaZrEiTTFXiKUS/evmkAlm33VGdO8jQP529dU/TcY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDKUvupfD9gqv7h4wy6jTLsv2isvS16bNP1o34J39dsff zhxK79tY0cpC4MYF4OsmCKL7w+X/cXd7lOOK96xgZnDygQyhIGLUwAmYi7A8N/pZq/8ok1uW8/7 pbmaaj3otZ0z7eLNnRIxK52so3dxiuow/I+2lWFyv/Zfxd2aWauR/fWK1XVp4Y/jd4UXf/gkyLA /iREA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 11:24:21AM +0200, Lukas Wunner wrote:
-> Commit 991de2e59090 ("PCI, x86: Implement pcibios_alloc_irq() and
-> pcibios_free_irq()") changed IRQ handling on PCI driver probing.
-> It inadvertently broke resume from system sleep on AMD platforms:
-> 
->   https://lore.kernel.org/r/20150926164651.GA3640@pd.tnic/
-> 
-> This was fixed by two independent commits:
-> 
-> * 8affb487d4a4 ("x86/PCI: Don't alloc pcibios-irq when MSI is enabled")
-> * cbbc00be2ce3 ("iommu/amd: Prevent binding other PCI drivers to IOMMU
->                  PCI devices")
-> 
-> The breaking change and one of these two fixes were subsequently reverted:
-> 
-> * fe25d078874f ("Revert "x86/PCI: Don't alloc pcibios-irq when MSI is
->                  enabled"")
-> * 6c777e8799a9 ("Revert "PCI, x86: Implement pcibios_alloc_irq() and
->                  pcibios_free_irq()"")
-> 
-> This rendered the second fix unnecessary, so revert it as well.  It used
-> the match_driver flag in struct pci_dev, which is internal to the PCI core
-> and not supposed to be touched by arbitrary drivers.
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Hello all,
 
-Acked-by: Joerg Roedel <jroedel@suse.de>
+The first two patches in this series are IRQ callback fixes that should
+get backported.
+
+The reason why the bugs existed in the first place is because the APIs
+are very confusing. The rest of the patches are cleanups of the APIs.
+These cleanups should not get backported.
+
+
+Changes since v1:
+-Improved commit message of the fix patches.
+-Picked up tags on the fix patches.
+-Added cleanups patches.
+
+
+Niklas Cassel (6):
+  PCI: dwc: ep: Fix broken set_msix() callback
+  PCI: cadence-ep: Fix broken set_msix() callback
+  PCI: endpoint: cleanup get_msi() callback
+  PCI: endpoint: cleanup set_msi() callback
+  PCI: endpoint: cleanup get_msix() callback
+  PCI: endpoint: cleanup set_msix() callback
+
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 10 ++++++----
+ drivers/pci/controller/dwc/pcie-designware-ep.c  |  9 +++++----
+ drivers/pci/controller/pcie-rcar-ep.c            |  5 +++--
+ drivers/pci/controller/pcie-rockchip-ep.c        |  9 +++++----
+ drivers/pci/endpoint/pci-epc-core.c              | 11 +++--------
+ 5 files changed, 22 insertions(+), 22 deletions(-)
+
+-- 
+2.49.0
 
 
