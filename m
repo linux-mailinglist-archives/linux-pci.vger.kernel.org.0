@@ -1,129 +1,227 @@
-Return-Path: <linux-pci+bounces-27642-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27643-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0EB1AB57C5
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:58:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FD1FAB57D4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:01:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF6937B08B3
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 14:56:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9CC1169C54
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:01:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2231C84CE;
-	Tue, 13 May 2025 14:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6061A83E8;
+	Tue, 13 May 2025 15:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AsCqCO8U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5417578;
-	Tue, 13 May 2025 14:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8AF15ECDF;
+	Tue, 13 May 2025 15:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148253; cv=none; b=Y1YQ3wYai4jJpqZhExp+zBqoJX0n+TFeMs/ihzikaa13pwBrzZYLpY1i34BSmLfEdlNdURpGvtdZy0tFVXTZ5KOZkmm0FCc/p1/DkwtunPT5oaARTn42Eg3lJAiNenWUAsOfI2q5cos76hmw+/OS5/5YnJN4xBe10e3vi85uTx8=
+	t=1747148479; cv=none; b=CLizLbBHi3ror4l8PBpLUuF+V3fwiWEXvSocay4B9qQhYsKeOoWAXLwkUmGBY0z3bWRoyWZV7ZAgDo6epTsJBQLZ+TQZfLqCwyBemoXjlWoXSR3Fyv6ok8NmKn4IpuL3N21Vqe8cebig9ZKGU9ZCZaHeP/5xFIZVZjt4SLiHAp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148253; c=relaxed/simple;
-	bh=ozJSIVhrsVZSmArvo5SbSNaFcz2ivHX7lRhpN1fzzp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VK1XosP/FhUyn1S4gVf/qdEPO+/IONhuOpE/WPxeGs/URelXyLN4U2sABSCzc0WN4K+7ItOI6nEDTPeq8B6i+K3K1cli8Ch1A8YsPWfQzmOZMGS6SWTFFTrqBc/gGp56Y++cxqg10PDxIZoCSh5yUfNohhQK0K7God9ipUCRXGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74248a3359fso3654082b3a.2;
-        Tue, 13 May 2025 07:57:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747148250; x=1747753050;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6KoZB2ihq3FKh16QI7sEuRE5275JyuaBBVfjNn/0xug=;
-        b=mGiT5PXdq1oAq/Sxm8+8wEAkV0gCvK01EIlBI8whfPAvLDjviiG1/CD9q2ctm/1vAH
-         HdTk/iP90t8cxQkwGi4uh3OmDOfY4oXSDM868ilsL4Zmmdl03mXwm6bB8Hs2NJNWbCMN
-         5Eh6ZwhTe/C1xPjqgq27Q9JUOj2ju6ZlEBcxh3eyo8fOhy7f5eCXOw6tZq7NV+DqaERk
-         74sCXa/q4V1OIJGBbxevxb6QpWgnyTdolnaKVA+2HOM3+oPlfcIlIGMLlf4qBItb9D4/
-         ThjDz5WrT0EjwHQMQxYDFoEkJ1i+5x35qdQTHWE6Ag5uAlLQM4xB1I9NR+PqiFR2DSV9
-         4LfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4yGpunYe/BG21Urde44yFlf2OFosXpsieYKojmwgcAdfT/n083vkvtGVSu4RwPPA9yV63mauPDE2DdVc=@vger.kernel.org, AJvYcCWqEl4T0X+vC04A6ujjCZKxG5MaqwwJRbBXHRRkKjYYdZlpJgiqgEJrEbeIt5079feARYnA5Hxl9CXT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIHk3uATqILtZ4ltwYjvAbNHGaStqZ8Yp4GarncWgRHo4q8YfO
-	Xxcq0j2n4JTxDrXYk/aZrZ1jElUV0DmmGprBh9eeY5H+0URUr99i
-X-Gm-Gg: ASbGncvKR2bmFZP5NSDbbneCZygg8Z6CObAr9SUV7FLoKf+TufOr585t+cccx5CFGp5
-	UF+dLAD+kfNio7CgZLZnVLLi7/jrgL1uF53Hef2iYPc7bed7wT61b5MHFuF6TH3nqwRXhmzQisu
-	2JXTHpqnCIQdCzafVNIPbq1W/ecvYiCF3zHJ7JLGkAB85R6oHZUI0HQXYLTvb6Xj/h5kummtFgD
-	Yt/niWsHepvdfAwdMGLLHW/rBfE78HMyeeR2ccGM8eDheHJRLZKEM+vTEfin1UsiXdeT8LIj5e/
-	6CKxNsMZu36WHkVyF4BWHU97FRQ9tRTFuG8BYKcvzH4srZiy5OCWcoZZfkQHgh0oIUFagIF4tu+
-	nm7X2TlY5OQ==
-X-Google-Smtp-Source: AGHT+IFt2WrEJiIvBzwd9L2NKr3vlxlESO+fODgKM7hvHRDVcFkoN9TAMo39vDPjw72Ho2gP9wyO3g==
-X-Received: by 2002:a05:6a00:1d0a:b0:736:a7ec:a366 with SMTP id d2e1a72fcca58-7423be8695fmr21744996b3a.9.1747148250086;
-        Tue, 13 May 2025 07:57:30 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237728345sm8106683b3a.58.2025.05.13.07.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:57:29 -0700 (PDT)
-Date: Tue, 13 May 2025 23:57:28 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
- bool
-Message-ID: <20250513145728.GA3513600@rocinante>
-References: <20250510160710.392122-1-18255117159@163.com>
- <20250513102115.GA2003346@rocinante>
- <aCNLl-Kq0DPwm2Iq@ryzen>
+	s=arc-20240116; t=1747148479; c=relaxed/simple;
+	bh=WOCgooOqNHfVitxFGiwPrHiUXsFevFjpNNsnb/a7uXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4WD8W+gadrt1Z4CkI10eHZmjOefLBzkARztOFa7hRq59BbILuxZ5aucPyL81/KpgZd0fr94eWQ65++HBZwEUGflz7V/NkVSFZ8BtoCcx0lEA09G2Z70eL/6nT1/nPyFM+u5wRZdJMnHTOpUV2zqwf1z6kXMJMkd2SUnEGdqUtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AsCqCO8U; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=mE88zcY2X1p4mvw+nTu0FWHvQdAVxVuWNqjWxk7qu9I=;
+	b=AsCqCO8UJkR9X5Ckmm1k+1vNpSX7uQnwpbi/9IgvOJZE5n9bZ/L5IgYffmkDVt
+	YCkvcnDZq9b0G4/3XNnA1R8iuEpItnXEeo/Ikp/n5VgqXenRjLXmnjZ4zmJKsZqk
+	bhD2VKhJb9vqEMVxKpE+8Bh8qMmhiUFCAhqYmPeQCc2II=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBHsFiBXiNovmmgBA--.7222S2;
+	Tue, 13 May 2025 23:00:18 +0800 (CST)
+Message-ID: <3cf413ee-b70f-4bd1-8a43-3e64fdd5bff9@163.com>
+Date: Tue, 13 May 2025 23:00:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCNLl-Kq0DPwm2Iq@ryzen>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] PCI: rockchip-host: Refactor IRQ handling with info
+ arrays
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: shawn.lin@rock-chips.com, lpieralisi@kernel.org, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250509155402.377923-1-18255117159@163.com>
+ <20250509155402.377923-4-18255117159@163.com>
+ <20250513104020.GC2003346@rocinante>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250513104020.GC2003346@rocinante>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHsFiBXiNovmmgBA--.7222S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw1rKr4fAw1DGr1fJFykAFb_yoWxJw4xpw
+	48tFnrAr4UXr1xZ3sIyF98J3WrJrnI9aykCw15G3y7A3Wvvwn0gF1jvF9xGw1IgFWDXw4I
+	9w47WFn7CF4UCFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwRMo2gjWgSfUwAAsp
 
-Hello,
 
-> > > Changes for RESEND:
-> > > - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Resending a patch is not a place to add new tags.
+
+On 2025/5/13 18:40, Krzysztof Wilczyński wrote:
+> Hello,
 > 
-> While I realize that:
-> https://docs.kernel.org/process/submitting-patches.html#don-t-get-discouraged-or-impatient
+> Thank you for the patch and the proposed changes.
 > 
-> states:
-> """
-> "RESEND" only applies to resubmission of a patch or patch series which
-> have not been modified in any way from the previous submission.
-> """
+>> Replace repetitive if-conditions for IRQ status checks with structured
+>> arrays (`pcie_subsys_irq_info` and `pcie_client_irq_info`) and loop-based
+>> logging. This simplifies maintenance and reduces code duplication.
+> [...]
+>> +static const struct rockchip_irq_info pcie_subsys_irq_info[] = {
+>> +	{ PCIE_CORE_INT_PRFPE,
+>> +	  "parity error detected while reading from the PNP receive FIFO RAM" },
+>> +	{ PCIE_CORE_INT_CRFPE,
+>> +	  "parity error detected while reading from the Completion Receive FIFO RAM" },
+>> +	{ PCIE_CORE_INT_RRPE,
+>> +	  "parity error detected while reading from replay buffer RAM" },
+>> +	{ PCIE_CORE_INT_PRFO, "overflow occurred in the PNP receive FIFO" },
+>> +	{ PCIE_CORE_INT_CRFO,
+>> +	  "overflow occurred in the completion receive FIFO" },
+>> +	{ PCIE_CORE_INT_RT, "replay timer timed out" },
+>> +	{ PCIE_CORE_INT_RTR,
+>> +	  "replay timer rolled over after 4 transmissions of the same TLP" },
+>> +	{ PCIE_CORE_INT_PE, "phy error detected on receive side" },
+>> +	{ PCIE_CORE_INT_MTR, "malformed TLP received from the link" },
+>> +	{ PCIE_CORE_INT_UCR, "Unexpected Completion received from the link" },
+>> +	{ PCIE_CORE_INT_FCE,
+>> +	  "an error was observed in the flow control advertisements from the other side" },
+>> +	{ PCIE_CORE_INT_CT, "a request timed out waiting for completion" },
+>> +	{ PCIE_CORE_INT_UTC, "unmapped TC error" },
+>> +	{ PCIE_CORE_INT_MMVC, "MSI mask register changes" },
+>> +};
+>> +
+>> +static const struct rockchip_irq_info pcie_client_irq_info[] = {
+>> +	{ PCIE_CLIENT_INT_LEGACY_DONE, "legacy done" },
+>> +	{ PCIE_CLIENT_INT_MSG, "message done" },
+>> +	{ PCIE_CLIENT_INT_HOT_RST, "hot reset" },
+>> +	{ PCIE_CLIENT_INT_DPA, "dpa" },
+>> +	{ PCIE_CLIENT_INT_FATAL_ERR, "fatal error" },
+>> +	{ PCIE_CLIENT_INT_NFATAL_ERR, "Non fatal error" },
+>> +	{ PCIE_CLIENT_INT_CORR_ERR, "correctable error" },
+>> +	{ PCIE_CLIENT_INT_PHY, "phy" },
+>> +};
+>> +
+>>   static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
+>>   {
+>>   	u32 status;
+>> @@ -411,47 +450,11 @@ static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
+>>   	if (reg & PCIE_CLIENT_INT_LOCAL) {
+>>   		dev_dbg(dev, "local interrupt received\n");
+>>   		sub_reg = rockchip_pcie_read(rockchip, PCIE_CORE_INT_STATUS);
+>> -		if (sub_reg & PCIE_CORE_INT_PRFPE)
+>> -			dev_dbg(dev, "parity error detected while reading from the PNP receive FIFO RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CRFPE)
+>> -			dev_dbg(dev, "parity error detected while reading from the Completion Receive FIFO RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RRPE)
+>> -			dev_dbg(dev, "parity error detected while reading from replay buffer RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_PRFO)
+>> -			dev_dbg(dev, "overflow occurred in the PNP receive FIFO\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CRFO)
+>> -			dev_dbg(dev, "overflow occurred in the completion receive FIFO\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RT)
+>> -			dev_dbg(dev, "replay timer timed out\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RTR)
+>> -			dev_dbg(dev, "replay timer rolled over after 4 transmissions of the same TLP\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_PE)
+>> -			dev_dbg(dev, "phy error detected on receive side\n");
+>>   
+>> -		if (sub_reg & PCIE_CORE_INT_MTR)
+>> -			dev_dbg(dev, "malformed TLP received from the link\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_UCR)
+>> -			dev_dbg(dev, "Unexpected Completion received from the link\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_FCE)
+>> -			dev_dbg(dev, "an error was observed in the flow control advertisements from the other side\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CT)
+>> -			dev_dbg(dev, "a request timed out waiting for completion\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_UTC)
+>> -			dev_dbg(dev, "unmapped TC error\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_MMVC)
+>> -			dev_dbg(dev, "MSI mask register changes\n");
+>> +		for (int i = 0; i < ARRAY_SIZE(pcie_subsys_irq_info); i++) {
+>> +			if (sub_reg & pcie_subsys_irq_info[i].bit)
+>> +				dev_dbg(dev, "%s\n", pcie_subsys_irq_info[i].msg);
+>> +		}
+>>   
+>>   		rockchip_pcie_write(rockchip, sub_reg, PCIE_CORE_INT_STATUS);
+>>   	} else if (reg & PCIE_CLIENT_INT_PHY) {
+>> @@ -473,29 +476,12 @@ static irqreturn_t rockchip_pcie_client_irq_handler(int irq, void *arg)
+>>   	u32 reg;
+>>   
+>>   	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
+>> -	if (reg & PCIE_CLIENT_INT_LEGACY_DONE)
+>> -		dev_dbg(dev, "legacy done interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_MSG)
+>> -		dev_dbg(dev, "message done interrupt received\n");
+>>   
+>> -	if (reg & PCIE_CLIENT_INT_HOT_RST)
+>> -		dev_dbg(dev, "hot reset interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_DPA)
+>> -		dev_dbg(dev, "dpa interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_FATAL_ERR)
+>> -		dev_dbg(dev, "fatal error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_NFATAL_ERR)
+>> -		dev_dbg(dev, "non fatal error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_CORR_ERR)
+>> -		dev_dbg(dev, "correctable error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_PHY)
+>> -		dev_dbg(dev, "phy interrupt received\n");
+>> +	for (int i = 0; i < ARRAY_SIZE(pcie_client_irq_info); i++) {
+>> +		if (reg & pcie_client_irq_info[i].bit)
+>> +			dev_dbg(dev, "%s interrupt received\n",
+>> +				pcie_client_irq_info[i].msg);
+> 
+> Why do you think that this is better?
+> 
+> Other patches in this series seem sensible, but this one does not stands
+> out as something that needs to be changed.
+> 
 
-Yes, I would often take verbiage of this document verbatim, but..
+Dear Krzysztof
 
-> I would assume that this only refers to the commit log and code,
-> and that picking up tags has to be an acceptable exception.
+Thank you very much for your reply.
 
-The above comment prompted me to inquire with a more senior maintainers,
-purely as I was curious what the opinions/preferences would be. And, as
-such, the replies I've got were:
+In the interrupt handling function: rockchip_pcie_subsys_irq_handler, 
+personally, I think the amount of code can be simplified and it looks 
+more concise.
 
-  - No, follow the documentation
-  - I don't care, really
-  - It's OK, make sure to pick the tag, if it makes sense
+There are many repetitive "interrupt received" print messages in the 
+interrupt handling function: rockchip_pcie_client_irq_handler. My 
+original intention was to simplify it.
 
-So, wide spectrum of answers.  As such, I take it as, "it's up to the
-maintainer", for lack of less ambiguous answers.
+If you think it's not necessary, I will drop this patch.
 
-> If I take myself as an example, I would not be happy if I spent time
-> reviewing a large patch series, but because the maintainers somehow
-> missed that series, so the patch author has to RESEND it (without
-> picking up tags), my Reviewed-by tags get lost.
+Best regards,
+Hans
 
-While it's not about making you happy, I agree, that trying to preserve the
-tag might be the correct approach here.  As such, I will adopt this approach,
-whereas with other it might vary.
-
-Thank you!
-
-	Krzysztof
 
