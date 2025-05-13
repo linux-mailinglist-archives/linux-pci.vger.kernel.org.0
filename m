@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-27658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03BBFAB5B3F
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 19:28:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15A71AB5B3D
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 19:28:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EA32467515
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:28:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FEC73BB9EA
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C39382BF97C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C33B52BF979;
 	Tue, 13 May 2025 17:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIl9DgWx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm8fnhbb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FC2BF971;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2762BF970;
 	Tue, 13 May 2025 17:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157311; cv=none; b=nXU4Sdip5rAPArU4SOvoNTFSkpEpk/uLuKndS+HxKSa5Xjzrkrz25k3dbu1FNzeT6bnDAo5BUobMScyclCtaLvkuzN6ePj9CRMdN3Xnd0X2Z5OtrgOQLmOgDQRR/HRZbpw5v/eK8LJkYFsa9Ps5zDtym+UEUT9ANksNApELx0NA=
+	t=1747157311; cv=none; b=McEniaojrY18E0yebVCtCCXBh11fdxYM/z5tTQZWS6JgIbBHtfap0qDr4S9r1pLcsKlZg7sQOdfMwPyVAT3vMT/3qLMzZa6zyhCICHPfINp10Tt2b7CA9qZbZJwQMNcsEMas2V4PCILeLuyxt/vf3w7HyXWbeWz49YgsbvwrebI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747157311; c=relaxed/simple;
-	bh=SMrWTvCzP5hX69d4ob83aacON5i1XY6uV9HAynVUA+k=;
+	bh=5BoSY6I4E3zhXcU/3IAaz838Ni4OzdDS8jPXJzV6qg4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B/0jx4ImdGKDPbU8vbd2mHl129mhsaNpx8aHZBrkgkgz4DgljkUbLSBDPBTlrveGDkJhso4b1ApVBif+//Q7Pq8N/8jCcwN83vAGZ19zFcj79bXE7/gGZ2y2eW4Q6/Q9O6Q52bFQZwD9jr9G9ONpr/KkeIJOwlZYGDUSCtBIy6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIl9DgWx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C839C4CEEF;
+	 MIME-Version; b=KemKTF9qoj5J97HVsx8XQ2Fu94z338ZMwkP+24ZX9l0ioz7RfJfqvC1LeqhVtrXDiNkL0TxjEuSsrKE1YHSHML/sPSBWpxwiUNkKeOoXiOUFKV+z70R4obpOAB5nj0suVa5zIux8c+UmBk9yiAmqQlqD/GGlmvZX35e+ah7GUYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm8fnhbb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A5AC4AF0C;
 	Tue, 13 May 2025 17:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747157311;
-	bh=SMrWTvCzP5hX69d4ob83aacON5i1XY6uV9HAynVUA+k=;
+	bh=5BoSY6I4E3zhXcU/3IAaz838Ni4OzdDS8jPXJzV6qg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FIl9DgWxhqoyx4zy22bwHIu+fyKkwXUPcoD3/ueDPpW02GjXLl+CEnTv+1+Z//W/H
-	 Bz/AzN9C5vRsoJtuxLjB7l1j7WLh/FnAH6yW1fUHEtgWVPIfUY2zL4gDRGe+Un28nR
-	 fSf+ZNzW7nmvoKQMQctJQdkU2RdA9XYWPkhs4WoRHqB2Teyi8onOCkF60q8w06Dnp+
-	 ndXxrlCO8U9TnEVRkJ3EbCQgcKMZY0/iFhC14BNPtBAFrgNW87LMyLN/cEhqW1Qw/c
-	 0LExMNeKr5ku0VsjD01SvNyBIqqOBxZ3F8btDakxJzx6GuHXKjptYYU3KyIghgtCih
-	 7jN0kQEsu+avg==
+	b=Dm8fnhbb1HXn9Xj7HTUoE8BQAcuWlp0sNhyErxY9mHhVVE0lAMWqRBK5LDrxmjB0W
+	 BS5PshtG6OQFNM0XU9LNbzNgGHixp9rMcaBz1q/oJGMJSGReYcm8NwfdtY1/I6M4C7
+	 m+hnhYBkHPddwowLFrZ9QmEsoGOvnPZsTG1FXaVfc4DHU/lC6x5dNiYAWVTvfbk3hw
+	 rILWiC4xmuFJ/brRqRagFPQKNRidwiQITQfBJnwg3Vzvwwf9d3yF8zKNZN0Gd4Gdj8
+	 /StB4Cng0CwOX8TfoNfXeSYyA1ch6cQ0tTg1iWwdj10ajEWztRiu18loLqYfddn4Uv
+	 dXn5Kn/l5w7XQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uEtQa-00EbRz-Vn;
+	id 1uEtQb-00EbRz-7F;
 	Tue, 13 May 2025 18:28:29 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Thierry Reding <thierry.reding@gmail.com>,
 	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v2 5/9] irqchip: Drop MSI_CHIP_FLAG_SET_ACK from unsuspecting MSI drivers
-Date: Tue, 13 May 2025 18:28:15 +0100
-Message-Id: <20250513172819.2216709-6-maz@kernel.org>
+Subject: [PATCH v2 6/9] irqchip/msi-lib: Honour the MSI_FLAG_NO_AFFINITY flag
+Date: Tue, 13 May 2025 18:28:16 +0100
+Message-Id: <20250513172819.2216709-7-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250513172819.2216709-1-maz@kernel.org>
 References: <20250513172819.2216709-1-maz@kernel.org>
@@ -81,87 +81,38 @@ X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradea
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Commit 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default
-irq_eoi()/irq_ack()") added blancket MSI_CHIP_FLAG_SET_ACK flags,
-irrespective of whether the underlying irqchip required it or not.
+Bad MSI implementations multiplex MSIs onto a single downstream
+interrupt, meaning they have no concept of individual affinity.
 
-Drop it from a number of drivers that do not require it.
+The old MSI code did a reasonable job at this by honouring the
+MSI_FLAG_NO_AFFINITY, but the new shiny device MSI code doesn't.
 
-Fixes: 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default irq_eoi()/irq_ack()")
+Teach it about the sad reality of existing hardware.
+
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v2m.c               | 2 +-
- drivers/irqchip/irq-gic-v3-its-msi-parent.c | 2 +-
- drivers/irqchip/irq-gic-v3-mbi.c            | 2 +-
- drivers/irqchip/irq-mvebu-gicp.c            | 2 +-
- drivers/irqchip/irq-mvebu-odmi.c            | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-msi-lib.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index 9050792e3242f..e30463a7bf1ea 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -252,7 +252,7 @@ static void __init gicv2m_teardown(void)
- static struct msi_parent_ops gicv2m_msi_parent_ops = {
- 	.supported_flags	= GICV2M_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= GICV2M_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "GICv2m-",
-diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-index 51cc961bc3181..443e8fcf2fc16 100644
---- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-@@ -211,7 +211,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- const struct msi_parent_ops gic_v3_its_msi_parent_ops = {
- 	.supported_flags	= ITS_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= ITS_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "ITS-",
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index 11fa5df9da8c7..a9142677c810c 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -197,7 +197,7 @@ static bool mbi_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- static const struct msi_parent_ops gic_v3_mbi_msi_parent_ops = {
- 	.supported_flags	= MBI_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= MBI_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "MBI-",
-diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
-index c7c83f8923fcd..68764e7754ba6 100644
---- a/drivers/irqchip/irq-mvebu-gicp.c
-+++ b/drivers/irqchip/irq-mvebu-gicp.c
-@@ -161,7 +161,7 @@ static const struct irq_domain_ops gicp_domain_ops = {
- static const struct msi_parent_ops gicp_msi_parent_ops = {
- 	.supported_flags	= GICP_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= GICP_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token       = DOMAIN_BUS_GENERIC_MSI,
- 	.bus_select_mask	= MATCH_PLATFORM_MSI,
- 	.prefix			= "GICP-",
-diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
-index e6049f647a017..fe99888b8134d 100644
---- a/drivers/irqchip/irq-mvebu-odmi.c
-+++ b/drivers/irqchip/irq-mvebu-odmi.c
-@@ -157,7 +157,7 @@ static const struct irq_domain_ops odmi_domain_ops = {
- static const struct msi_parent_ops odmi_msi_parent_ops = {
- 	.supported_flags	= ODMI_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= ODMI_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
- 	.bus_select_mask	= MATCH_PLATFORM_MSI,
- 	.prefix			= "ODMI-",
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index 2a61c06c4da07..246c30205af40 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -105,8 +105,13 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 	 * MSI message into the hardware which is the whole purpose of the
+ 	 * device MSI domain aside of mask/unmask which is provided e.g. by
+ 	 * PCI/MSI device domains.
++	 *
++	 * The exception to the rule is when the underlying domain
++	 * tells you that affinity is not a thing -- for example when
++	 * everything is muxed behind a single interrupt.
+ 	 */
+-	chip->irq_set_affinity = msi_domain_set_affinity;
++	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
++		chip->irq_set_affinity = msi_domain_set_affinity;
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
 -- 
 2.39.2
 
