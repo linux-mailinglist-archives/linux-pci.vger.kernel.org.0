@@ -1,51 +1,52 @@
-Return-Path: <linux-pci+bounces-27652-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E74C1AB5B38
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 19:28:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9935BAB5B36
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 19:28:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 878A6188A6E7
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:28:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D71D73AD7EC
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:28:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD49F28F514;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1C72BEC26;
 	Tue, 13 May 2025 17:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxmIkhrr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ql/wY9r/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852651E51E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4AA2BE7C5;
 	Tue, 13 May 2025 17:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157310; cv=none; b=WRU8dypOF8ZZu4Wf2NMcy9h/dcRlG9a3uxKsZE+uBPfRW3ssB2rERfBmNoVllaCv+QNRAzC/g+ux+GQbRNalwpDGXyJ0Wwl7Nqf3p+W8lGgYyeg/mYzTpOSmDrUHYImGYc5qFr5VaadUa0Ajp7ep6zpZj/hYwT725lVNSV/9RD0=
+	t=1747157310; cv=none; b=OGCuGL0u0O4xyQxpZobf5dIrvcU8aAaEy0pj+FcDJRvsj3MkJLb590UEVyzZjJx0cj0V09jjPDVm+O+6wCLQMK0cj6Bko0D9EHjUaZ049p6YxJ3cxpAV7pu4ptm7wB5v1CVnXjzcIrHJNRoNVo4r/ok5KZzKPxj7N0m8gqWlTRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747157310; c=relaxed/simple;
-	bh=hzuO87JdBmymswNxonEC6nbrBc0MKykTjXnKUUy51wU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jVCKoKOgigoSWtS3+gwwAQjBYtSjuC5cYqmenAIF0vJ+9uxz7Py/djrthxlZa/aPaELgUV0nMxw1heLaXNCzxx7DmlcU5y37tUxCVrLgAAZiO+VcQ8Cpr2V43U1akKZ/P4x19GyFb8fLA1PmWUrm88KHe6fiLS26yoJeEn1WmbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxmIkhrr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CF0C4CEE4;
-	Tue, 13 May 2025 17:28:29 +0000 (UTC)
+	bh=1rkj+y1q1p0hGIIM2flqfhEStwJJYCpE+rTvcEhYKkI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NbHIV4VczztZUKtxmmWqnqu1kFwOzyY5r81m1PyhzryRzbDsGX0vaaK948cvCYNzp8Ejru6w1B5wEy5g6u+o2EJlR7UkiFQV6IanLL96/v/qiHpdNAPdcm5VqPpzebKKeXtZwFirhaI97Om7WU/nS92XfF6z3WBzHm9Yi1B0uCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ql/wY9r/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C93C4CEEF;
+	Tue, 13 May 2025 17:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747157310;
-	bh=hzuO87JdBmymswNxonEC6nbrBc0MKykTjXnKUUy51wU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CxmIkhrrzIanydOQkOVr339gNDRjirbo0ae6JNHeShS3ieQNlEiqBfbr+dCu3tdGb
-	 35Y5GX9j0yq1T1OUblyUVXZ1X7EOeUGMnpnZ4nEGZ5yp255OqRDivX32045jI/pV8p
-	 ub/0fqDM1MWYYSF7+PfzuPGqxhXlNWkCm3a3XAxzJzlYEUfH9aFnXtWakaVg6r+K5O
-	 d3llmzL43BJsPNNvujxMlVHXwLK/HvlLGUMCMmbR2beSb7VtkhJ7Z6ELSzAZxyp3pS
-	 pBVNxUDZNfTRdSxm3LGg7k904c1w2FeuPpcjEGsxDWxiaJx6ulSEX7P5Oz1QRv7X+c
-	 wdo6CbXjDQxOw==
+	bh=1rkj+y1q1p0hGIIM2flqfhEStwJJYCpE+rTvcEhYKkI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ql/wY9r/tVu6+JSfqR/UAO3OpVkZ5lrATJBcMgQuUEGPnNnzzUjHbjk5tVuHW0x5f
+	 dWTR/MeBVGJ1TDQQW2CwByd4rPGKCXStyZ81vK5wlb7O1Jr6L4XAUODhWlwI6GhQhd
+	 UvZHGu/xnYWBsKTV3va1/6aVAZ101aE0ZCS/zg3qXajIubBfsmSVIyB7zmFyPDS1j3
+	 kJYtzMmvsyx2WnSEBWEAsaGzlBq58/66I0YAdeL6OB4ceJdTwFHr3ePdQOzStuqMgG
+	 A0JgLJ7bHYoKPUTSLKNtqJNPFwkPJCn3OobFEwsRPoSY2RphocXgVd1H+HBrEnXl84
+	 qpZefku+qKP2g==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uEtQZ-00EbRz-Qu;
-	Tue, 13 May 2025 18:28:27 +0100
+	id 1uEtQa-00EbRz-2X;
+	Tue, 13 May 2025 18:28:28 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -62,10 +63,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Thierry Reding <thierry.reding@gmail.com>,
 	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v2 0/9] irqchip: MSI parent cleanup and PCI host driver conversion
-Date: Tue, 13 May 2025 18:28:10 +0100
-Message-Id: <20250513172819.2216709-1-maz@kernel.org>
+Subject: [PATCH v2 1/9] irqchip: Make irq-msi-lib.h globally available
+Date: Tue, 13 May 2025 18:28:11 +0100
+Message-Id: <20250513172819.2216709-2-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250513172819.2216709-1-maz@kernel.org>
+References: <20250513172819.2216709-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,77 +81,255 @@ X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradea
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-This is v2 of a series I posted[1] a few months back before running
-out of time, energy, and interest. I have now reduced it to the stuff
-I actually care about, and got rid of all things non-arm64.
+Move irq-msi-lib.h into include/linux/irqchip, making it available
+to compilation units outside of drivers/irqchip.
 
-I've become annoyed by the couple of machines I have around that
-haven't been converted to the per-device MSI infrastructure.  At the
-same time, I've also moaned at the amount of boilerplate code required
-to make use of this infrastructure.
+This requires some churn in drivers to fetch it from the new location,
+generated using this script:
 
-This series therefore does a number of things:
+	git grep -l -w \"irq-msi-lib.h\" | \
+	xargs sed -i -e 's:"irq-msi-lib.h":\<linux/irqchip/irq-msi-lib.h\>:'
 
-- make irq-msi-lib.h globally available, so that PCI (and other
-  subsystems) may make use of it
-
-- add a new helper (msi_create_parent_irq_domain()) that encapsulates
-  most of the magic required to create an MSI-parent domain
-
-- convert the arm64 I have access to (and *only* that)
-
-- convert the Apple, XGene and Tegra MSI drivers to the MSI-parent
-  infrastructure, which is why I came here the first place.
-
-* From v1 [1]:
-
-  - use irq_domain_info as an the holder of most information required
-    to instantiate the domain. I decided against using a specific
-    structure, because they would mostly have the same fields.
-
-  - added a patch to convert the Tegra driver, which required dealing
-    with the MSI_FLAG_NO_AFFINITY flag
-
-  - got rid of x86 and riscv patches (life is too short).
-
-[1] https://lore.kernel.org/all/20241204124549.607054-1-maz@kernel.org
-
-Marc Zyngier (9):
-  irqchip: Make irq-msi-lib.h globally available
-  genirq/msi: Add helper for creating MSI-parent irq domains
-  irqchip/gic: Convert to msi_create_parent_irq_domain() helper
-  irqchip/mvebu: Convert to msi_create_parent_irq_domain() helper
-  irqchip: Drop MSI_CHIP_FLAG_SET_ACK from unsuspecting MSI drivers
-  irqchip/msi-lib: Honour the MSI_FLAG_NO_AFFINITY flag
-  PCI: apple: Convert to MSI parent infrastructure
-  PCI: xgene: Convert to MSI parent infrastructure
-  PCI: tegra: Convert to MSI parent infrastructure
-
- drivers/irqchip/irq-bcm2712-mip.c             |  2 +-
- drivers/irqchip/irq-gic-v2m.c                 | 16 ++---
- drivers/irqchip/irq-gic-v3-its-msi-parent.c   |  4 +-
- drivers/irqchip/irq-gic-v3-its.c              | 21 +++----
- drivers/irqchip/irq-gic-v3-mbi.c              | 15 ++---
- drivers/irqchip/irq-imx-mu-msi.c              |  2 +-
- drivers/irqchip/irq-loongarch-avec.c          |  2 +-
- drivers/irqchip/irq-loongson-pch-msi.c        |  2 +-
- drivers/irqchip/irq-msi-lib.c                 |  9 ++-
- drivers/irqchip/irq-mvebu-gicp.c              | 18 +++---
- drivers/irqchip/irq-mvebu-icu.c               |  2 +-
- drivers/irqchip/irq-mvebu-odmi.c              | 18 +++---
- drivers/irqchip/irq-mvebu-sei.c               | 18 +++---
- drivers/irqchip/irq-riscv-imsic-platform.c    |  2 +-
- drivers/irqchip/irq-sg2042-msi.c              |  2 +-
- drivers/pci/controller/Kconfig                |  3 +
- drivers/pci/controller/pci-tegra.c            | 60 ++++++------------
- drivers/pci/controller/pci-xgene-msi.c        | 46 +++++---------
- drivers/pci/controller/pcie-apple.c           | 62 +++++++------------
- .../linux}/irqchip/irq-msi-lib.h              |  6 +-
- include/linux/msi.h                           |  4 ++
- kernel/irq/msi.c                              | 26 ++++++++
- 22 files changed, 160 insertions(+), 180 deletions(-)
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-bcm2712-mip.c                | 2 +-
+ drivers/irqchip/irq-gic-v2m.c                    | 2 +-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c      | 2 +-
+ drivers/irqchip/irq-gic-v3-its.c                 | 2 +-
+ drivers/irqchip/irq-gic-v3-mbi.c                 | 2 +-
+ drivers/irqchip/irq-imx-mu-msi.c                 | 2 +-
+ drivers/irqchip/irq-loongarch-avec.c             | 2 +-
+ drivers/irqchip/irq-loongson-pch-msi.c           | 2 +-
+ drivers/irqchip/irq-msi-lib.c                    | 2 +-
+ drivers/irqchip/irq-mvebu-gicp.c                 | 2 +-
+ drivers/irqchip/irq-mvebu-icu.c                  | 2 +-
+ drivers/irqchip/irq-mvebu-odmi.c                 | 2 +-
+ drivers/irqchip/irq-mvebu-sei.c                  | 2 +-
+ drivers/irqchip/irq-riscv-imsic-platform.c       | 2 +-
+ drivers/irqchip/irq-sg2042-msi.c                 | 2 +-
+ {drivers => include/linux}/irqchip/irq-msi-lib.h | 6 +++---
+ 16 files changed, 18 insertions(+), 18 deletions(-)
  rename {drivers => include/linux}/irqchip/irq-msi-lib.h (84%)
 
+diff --git a/drivers/irqchip/irq-bcm2712-mip.c b/drivers/irqchip/irq-bcm2712-mip.c
+index 49a19db2d1e1b..f04a42b16cca0 100644
+--- a/drivers/irqchip/irq-bcm2712-mip.c
++++ b/drivers/irqchip/irq-bcm2712-mip.c
+@@ -11,7 +11,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define MIP_INT_RAISE		0x00
+ #define MIP_INT_CLEAR		0x10
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index c698948618666..62676994d0695 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -26,7 +26,7 @@
+ #include <linux/irqchip/arm-gic.h>
+ #include <linux/irqchip/arm-gic-common.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /*
+ * MSI_TYPER:
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index 68f9ba4085ce5..51cc961bc3181 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -8,7 +8,7 @@
+ #include <linux/pci.h>
+ 
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+ 				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index fd6e7c170d37e..9e6380f597488 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -41,7 +41,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+ #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
+index 34e9ca77a8c36..e562b57923229 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -18,7 +18,7 @@
+ 
+ #include <linux/irqchip/arm-gic-v3.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ struct mbi_range {
+ 	u32			spi_start;
+diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-msi.c
+index 69aacdfc8bef0..137da1927d144 100644
+--- a/drivers/irqchip/irq-imx-mu-msi.c
++++ b/drivers/irqchip/irq-imx-mu-msi.c
+@@ -24,7 +24,7 @@
+ #include <linux/pm_domain.h>
+ #include <linux/spinlock.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define IMX_MU_CHANS            4
+ 
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+index 80e55955a29fa..bf52dc8345f5f 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -18,7 +18,7 @@
+ #include <asm/loongarch.h>
+ #include <asm/setup.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+ 
+ #define VECTORS_PER_REG		64
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index 9c62108b3ad58..fb690c7cbcaa6 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -15,7 +15,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+ 
+ static int nr_pics;
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index 51464c6257f37..2a61c06c4da07 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/export.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /**
+  * msi_lib_init_dev_msi_info - Domain info setup for MSI domains
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index d67f93f6d7505..0b2a857b49018 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -17,7 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 4eebed39880a5..db5dbc6e88b05 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -20,7 +20,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/mvebu-icu.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index 28f7e81df94f0..306a7754e44f8 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -18,7 +18,7 @@
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+index ebd4a9014e8da..a962ef4977169 100644
+--- a/drivers/irqchip/irq-mvebu-sei.c
++++ b/drivers/irqchip/irq-mvebu-sei.c
+@@ -14,7 +14,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /* Cause register */
+ #define GICP_SECR(idx)		(0x0  + ((idx) * 0x4))
+diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
+index b8ae67c25b37a..1b9fbfce95816 100644
+--- a/drivers/irqchip/irq-riscv-imsic-platform.c
++++ b/drivers/irqchip/irq-riscv-imsic-platform.c
+@@ -20,7 +20,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/smp.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-riscv-imsic-state.h"
+ 
+ static bool imsic_cpu_page_phys(unsigned int cpu, unsigned int guest_index,
+diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
+index ee682e87eb8be..d641f3a5eee9e 100644
+--- a/drivers/irqchip/irq-sg2042-msi.c
++++ b/drivers/irqchip/irq-sg2042-msi.c
+@@ -17,7 +17,7 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define SG2042_MAX_MSI_VECTOR	32
+ 
+diff --git a/drivers/irqchip/irq-msi-lib.h b/include/linux/irqchip/irq-msi-lib.h
+similarity index 84%
+rename from drivers/irqchip/irq-msi-lib.h
+rename to include/linux/irqchip/irq-msi-lib.h
+index 681ceabb7bc74..dd8d1d1385449 100644
+--- a/drivers/irqchip/irq-msi-lib.h
++++ b/include/linux/irqchip/irq-msi-lib.h
+@@ -2,8 +2,8 @@
+ // Copyright (C) 2022 Linutronix GmbH
+ // Copyright (C) 2022 Intel
+ 
+-#ifndef _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
+-#define _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
++#ifndef _IRQCHIP_IRQ_MSI_LIB_H
++#define _IRQCHIP_IRQ_MSI_LIB_H
+ 
+ #include <linux/bits.h>
+ #include <linux/irqdomain.h>
+@@ -24,4 +24,4 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 			       struct irq_domain *real_parent,
+ 			       struct msi_domain_info *info);
+ 
+-#endif /* _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H */
++#endif /* _IRQCHIP_IRQ_MSI_LIB_H */
 -- 
 2.39.2
 
