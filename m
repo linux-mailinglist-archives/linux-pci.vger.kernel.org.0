@@ -1,120 +1,107 @@
-Return-Path: <linux-pci+bounces-27647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 746B5AB5878
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E03AB58E6
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 17:41:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82D174A782C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:21:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DEF616D669
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:41:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9E32BE111;
-	Tue, 13 May 2025 15:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C23632BE111;
+	Tue, 13 May 2025 15:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8vB7xWh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgpqreaV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AF72BE110;
-	Tue, 13 May 2025 15:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E052BE0FD;
+	Tue, 13 May 2025 15:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149456; cv=none; b=Tdlqcx1vD4W0qaRuTCYdW8ssewqJ6CE17eU9M0ngUj1AEHPNic9m/v3l23pzEixizXMtrDqidhWly7P+RDIh9k4x7fNupLeXr9XKbWkQEjk6euBCyNhdHgwKEL2+OcW+bOLAQLbzVM05pWn8QHViRNxzQ0PGAo9yCRC8weey+FU=
+	t=1747150876; cv=none; b=MkDwvOATP5zWk5fu5pBcE2CHnU9qGbOVW0Xu7HudBJGY2DeXAbkyshb5e2hJSncA8jGLRPNhCaqQYl5tUfE4mAsyzR8U80ODLMNHNbAdSQa83Nx0RI6+mU8jknurXGCxTyXMJMfjbAje+UsBq6lHYIPKBqc0Usj9NCA+Er9ljSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747149456; c=relaxed/simple;
-	bh=5dEZPjeFOHBN2WQfltNsxASob8VuvLED4acGGlIaNh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOYAJaXAvlLjx5vstvzLBhev5dBvhvSwgXT5juKFAnsH94cbcAfyL0Kq83X/3kjB1PzeI11ABnuWEwtJBxbyp9zvVas+aflwb5je8whP+C0pwrHUR4vTfLWLLhC7C7D+ZZ0bHrJ9KoIC42N0Y9uy5MsS7Oue7QtKR8U3LFMEJNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8vB7xWh; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747149455; x=1778685455;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5dEZPjeFOHBN2WQfltNsxASob8VuvLED4acGGlIaNh0=;
-  b=c8vB7xWhNy3AAkObCukBLzAcYc6ffHhETYkSUmlRIVWsCV7jS9aA3hlS
-   Y1yt1fFKcH2g8sqKy8hhlo9vOxgzhNa6ukIqV9os6EG40kw3NTLTHnzh7
-   yLW6TkEh8yckXqgqf2yEQhZnx+MjR32XTSH2Bov23LA6YYiEYp2GtkGeB
-   tJDPePNBFRmRerRbNSL3yM4ipO8Vho3f24SgFEawqt4eZA9+1KUhn25ll
-   j2AUTjFM6pwK+Lfdx5lekRXwLcl/cUyRGTwlRuGgsIAT+uu6OTauen8bV
-   ZmVMJlEkF/GB9HHjzI40d2ToBOnLclA/sYFkFrQEc4YFIsYfoVz/gCj5/
-   A==;
-X-CSE-ConnectionGUID: AkqlcayKTuCAq1n+bYP3qw==
-X-CSE-MsgGUID: nH29lKd+TS2sThpk+nHcsw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48692875"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="48692875"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:17:33 -0700
-X-CSE-ConnectionGUID: foIf9rVzS2qb614Fx8hxgg==
-X-CSE-MsgGUID: yOkzsa18SK+HOugVHjqNcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="138155411"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 08:17:31 -0700
-Date: Tue, 13 May 2025 18:17:28 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCNiiHzOksQFrPe1@black.fi.intel.com>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <aCLNe2wHTiKdE5ZO@wunner.de>
+	s=arc-20240116; t=1747150876; c=relaxed/simple;
+	bh=aGuVdlcwNSWrVFVeJHxewoF0jDxYsFRpF94u30GXHuQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=CsGa8J/2BmcUY9SiNt8VrRDJBmRqA4uAKKQ9Lw/mnpkkrbvQreyQQwX5TaL+qVqg+9uBz/9xi71nJoTUYmKr40BIiR313hm9dvkvgkcOgbYnieISEOv9vIcxjQFPBxdWlHaO+/MoWWqdbrm8Tn1mkMd/DaNRFlboOpfbnf5yJxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgpqreaV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55111C4CEE4;
+	Tue, 13 May 2025 15:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747150876;
+	bh=aGuVdlcwNSWrVFVeJHxewoF0jDxYsFRpF94u30GXHuQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=AgpqreaV5EI5MfmFRc+1/q30M0vUVJClJ1WGDWsa59yBloMkKxSqjlT9XO8bqupxD
+	 74lTb8N76vJJQ7hvydQNNdp4KbIj3A6Ysv3zMrkOXn3qnYlvoD6C7CMcIBEyQH77Mt
+	 hfGrbp07AdSeUNeY63zncLzuxkYsVkPK8d7vwcVTtiwlhFmZY2Gy4O0AfX6sFyH+Yj
+	 0oEAdmXZ/qjzWKV6VjLuop4q8pNZmBpYgBjHjTJlZ5z22WzrPJ8ZXRsrhnCVlXTqdy
+	 AsR/Y3aWyRkPSN182EaXc2/OYgW3jr1FXhLdv8kxXiC0uVRE6w47MNPVr8ltBGKBld
+	 vGc350kmMTdYQ==
+Date: Tue, 13 May 2025 17:41:15 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+CC: lpieralisi@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BRESEND_PATCH_v2_0/3=5D_Standardi?=
+ =?US-ASCII?Q?ze_link_status_check_to_return_bool?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <d484701c-8a58-4249-a647-d7f06075f7b6@163.com>
+References: <20250510160710.392122-1-18255117159@163.com> <20250513102115.GA2003346@rocinante> <ec54f197-acfe-43f4-b5dd-d158d718c8e9@163.com> <20250513150423.GB3513600@rocinante> <d484701c-8a58-4249-a647-d7f06075f7b6@163.com>
+Message-ID: <BF391DAD-7E2C-44C2-9BE7-C1F7A2946575@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCLNe2wHTiKdE5ZO@wunner.de>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 06:41:31AM +0200, Lukas Wunner wrote:
-> On Sun, May 04, 2025 at 02:34:44PM +0530, Raag Jadav wrote:
-> > If error flags are set on an AER capable device, most likely either the
-> > device recovery is in progress or has already failed. Neither of the
-> > cases are well suited for power state transition of the device, since
-> > this can lead to unpredictable consequences like resume failure, or in
-> > worst case the device is lost because of it. Leave the device in its
-> > existing power state to avoid such issues.
-> 
-> Have you witnessed this on a particular platform / hardware combination?
-> If so, it would be good to mention it.  If I'd happen to find this
-> commit in the future through "git blame", that's the first question
-> that would come to mind:  How and on what hardware was this actually
-> triggered, how can I reproduce it.
 
-We have a few issues[1] reported which are similar in nature. But since
-they are not easily reproducible and still under investigation, I'm
-a bit hesitant to explicitly reference it.
 
-[1] https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/4395
+On 13 May 2025 17:09:58 CEST, Hans Zhang <18255117159@163=2Ecom> wrote:
+>
+>
+>On 2025/5/13 23:04, Krzysztof Wilczy=C5=84ski wrote:
+>> Hello,
+>>=20
+>> [=2E=2E=2E]
+>>> Sorry, this is also the first time I have done this=2E For other patch=
+es in
+>>> the future, I will do this in the new version=2E
+>>=20
+>> See the following:
+>>=20
+>>    - https://lore=2Ekernel=2Eorg/linux-pci/20250513145728=2EGA3513600@r=
+ocinante
+>>=20
+>> While I cannot speak for other maintainers, I am going to change the
+>> approach to the "RESEND" patches that I used to personally have=2E
+>>=20
+>> But, if in doubt, it's always fine to send another version=2E
+>>=20
+>
+>
+>Dear Krzysztof,
+>
+>Ok=2E From now on, I will handle similar problems in the new version=2E
 
-> > +	/*
-> > +	 * If error flags are set on an AER capable device, most likely either
-> > +	 * the device recovery is in progress or has already failed. Neither of
-> > +	 * the cases are well suited for power state transition of the device,
-> > +	 * since this can lead to unpredictable consequences like resume
-> > +	 * failure, or in worst case the device is lost because of it. Leave the
-> > +	 * device in its existing power state to avoid such issues.
-> > +	 */
-> 
-> That's quite verbose and merely a 1:1 repetition of the commit message.
-> I'd recommend a more condensed code comment and anyone interested in
-> further details may look them up in the commit message.
+While I agree that it is always fine to send a new revision (which has pic=
+ked up tags),
+having the RESEND tag is gently informing that the series might have fell =
+thorough the cracks=2E
 
-Sure, will update.
+This information might be lost/less obvious if simply sending a new revisi=
+on (assuming that commit log and code is unchanged)=2E
 
-Raag
+
+Kind regards,
+Niklas
 
