@@ -1,58 +1,65 @@
-Return-Path: <linux-pci+bounces-27636-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27637-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2E04AB564C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 15:39:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AAB7AB56B8
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 16:07:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B2A23B908E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 13:39:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95B9E3A741F
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 14:06:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82CCE28F93E;
-	Tue, 13 May 2025 13:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74B1A1F1932;
+	Tue, 13 May 2025 14:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+jFVjqA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfyJWelT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB428640E;
-	Tue, 13 May 2025 13:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C56D1E883A;
+	Tue, 13 May 2025 14:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143580; cv=none; b=McdGFz7D1v55pQlvwuPIkCsRh3twXyNZ1fBWxjmTFC8+IjMPFGAylGu3Q2PZCc3ahafsgSiV8fhK6WmEKfC1BrMCYz3nMttPGKydyAr9f8a7119v4LYkXczGvAUpcO0mOWgHQHLuFCCJmw159aagXijxgFNY1/rLwnC02NZUV5U=
+	t=1747145228; cv=none; b=upAjqJudjxw1FsA72P5LkdvSw2knfoqHV/37tq//ecC622tSLjckjj/TP74NxWYfAN+9AnMygK8/egeAB/3KecKosL7moPuIRpEZvUSEKuJfOC/dO32VsgCzwXWTiRUOdG3QMw/OMWvMdl51wmHswevV4DG4d8DG7TrNyjKpQL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143580; c=relaxed/simple;
-	bh=x4d59fbZ6X9rBfTcqBtwPRFZoK7UoseJZVn6GZygBM8=;
+	s=arc-20240116; t=1747145228; c=relaxed/simple;
+	bh=14NlYj/WRG8Q0M9cGAjhUlbL7est4+1nXlxlO/Sw13M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f03D56oD6bctRgGTSkgB6K/8f1bRzbYi8y5p3Pexv8klhgConvkLWG8OjH1rA8YRtoFAzR+v18Wn+2ykj6n5FTs431iIWOG1+sfgzJUlqX1yHV3ISlflRqsNK+TBlpGEtN+dgdkhT+lkWMOu77Rd+JbLz5RCaAjnryVvuN+jrn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+jFVjqA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13C4C4CEE4;
-	Tue, 13 May 2025 13:39:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=CPvd46A1PPCcPj4zh5gqXSlDaj3PsnC2vOh9j2xbZcIQ4xjfJhJrHvhBNobsjirrZ6cHdl2YpzuOCrjF7L8E/SmvFQYw9ByFhGYmDyGj9kXcgxExvW3gwb25CeAbJsmXMgFpRwnJFI87xCFj4uZodzdLxvzzI/7ax89MquS1Fko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfyJWelT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CFAC4CEE4;
+	Tue, 13 May 2025 14:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747143579;
-	bh=x4d59fbZ6X9rBfTcqBtwPRFZoK7UoseJZVn6GZygBM8=;
+	s=k20201202; t=1747145228;
+	bh=14NlYj/WRG8Q0M9cGAjhUlbL7est4+1nXlxlO/Sw13M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B+jFVjqAP1rX82EQwPK/SLrflccRtQQkVMnGmM0VhfgHMT6K2pcbRWVFIm2AebsWL
-	 LG7tnoggsI5C4wA4P9t3mgqWw8AAQAxeAC6saO7t0TGNH+U7L8K/Wk0ktYc+/q0FVR
-	 8ByB2oI4bs08AASWF4vN/I90pF1VrvdLFEQpJnBCLbQgN9/L5z59iZ+s1HjH6GwzZF
-	 u08UJbitIHUZKH1HwUhz8U8g609eOzYSPVzDCOrzg7rdLKMKc4KVv1VUxhcVKdBF9d
-	 o3cU5aRJ/mMktwmvaQp3Xc8m8551J53caq1kj59k0wg+KljavLmKqGi+ArFV4lI+yq
-	 oSuTCFUW9mKAw==
-Date: Tue, 13 May 2025 15:39:35 +0200
+	b=jfyJWelTw2cvqNxTtFvNddGoQgPxSGnXDfgHyD7S1pRovdUiRF/RrEDtGkMMA9DqR
+	 0pE2hIGsEcSog39LlatonEh8jFUsdkLIxu4cn3qQWN8jdpdH+481B3gyvxHJ2M/Xf6
+	 XY2cAVg4GaVUqm6IJ9V7w+Sg0ZtJLI/1ftHViBLYDwssJ/39DCw04qoWn3jykvHra8
+	 MzaSWCbobCvW2ZSYrVFLa53JUcsFuME2YlaZnGxvVNNYGY4EI2eounHeNcqtryUUOG
+	 UniSDHJRyX0NXHUCd4pd5M56pd+FakfGKY+FviDSDrJAR4WiPWyMFcLqT+CBTYYkww
+	 JzhK9J0WfRCPA==
+Date: Tue, 13 May 2025 16:07:02 +0200
 From: Niklas Cassel <cassel@kernel.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
- bool
-Message-ID: <aCNLl-Kq0DPwm2Iq@ryzen>
-References: <20250510160710.392122-1-18255117159@163.com>
- <20250513102115.GA2003346@rocinante>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] PCI: dwc: Link Up IRQ fixes
+Message-ID: <aCNSBqWM-HM2vX7K@ryzen>
+References: <20250506073934.433176-6-cassel@kernel.org>
+ <7zcrjlv5aobb22q5tyexca236gnly6aqhmidx6yri6j7wowteh@mylkqbwehak7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,33 +69,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250513102115.GA2003346@rocinante>
+In-Reply-To: <7zcrjlv5aobb22q5tyexca236gnly6aqhmidx6yri6j7wowteh@mylkqbwehak7>
 
-Hello Krzysztof,
+Hello Mani,
 
-On Tue, May 13, 2025 at 07:21:15PM +0900, Krzysztof Wilczyński wrote:
-> > ---
-> > Changes for RESEND:
-> > - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Tue, May 13, 2025 at 11:53:29AM +0100, Manivannan Sadhasivam wrote:
 > 
-> Resending a patch is not a place to add new tags.
+> This wait time is a grey area in the spec tbh. If the Readiness Notification
+> (RN) is not supported, then the spec suggests waiting 1s for the device to
+> become 'configuration ready'. That's why we have the 1s delay in dwc driver.
+> 
+> Also, it has the below in r6.0, sec 6.6.1:
+> 
+> ```
+> * On the completion of Link Training (entering the DL_Active state, see §
+> Section 3.2 ), a component must be able to receive and process TLPs and DLLPs.
+> * Following exit from a Conventional Reset of a device, within 1.0 s the device
+> must be able to receive a Configuration Request and return a Successful
+> Completion if the Request is valid. This period is independent of how quickly
+> Link training completes. If Readiness Notifications mechanisms are used (see
+> § Section 6.22 .), this period may be shorter.
+> ```
+> 
+> As per the first note, once link training is completed, the device should be
+> ready to accept configuration requests from the host. So no delay should be
+> required.
+> 
+> But the second note says that the 1s delay is independent of how quickly the
+> link training completes. This essentially contradicts with the above point.
+> 
+> So I think it is not required to add delay after completing the LTSSM, unless
+> someone sees any issue.
 
-While I realize that:
-https://docs.kernel.org/process/submitting-patches.html#don-t-get-discouraged-or-impatient
+If you look at the commit message in patch 1/2, the whole reason for this
+series is that someone has seen an issue :)
 
-states:
-"""
-"RESEND" only applies to resubmission of a patch or patch series which
-have not been modified in any way from the previous submission.
-"""
+While I personally haven't seen any issue, the user reporting that commit
+ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect
+Link Up") regressed his system so that it can no longer mount rootfs
+(which is on a PLEXTOR PX-256M8PeGN NVMe SSD) clearly has seen an issue.
 
-I would assume that this only refers to the commit log and code,
-and that picking up tags has to be an acceptable exception.
+It is possible that his device is not following the spec.
+I simply compared the code before and after ec9fd499b9c6, to try to
+figure out why it was actually working before, and came up with this,
+which made his device functional again.
 
-If I take myself as an example, I would not be happy if I spent time
-reviewing a large patch series, but because the maintainers somehow
-missed that series, so the patch author has to RESEND it (without
-picking up tags), my Reviewed-by tags get lost.
+Perhaps we should add a comment above the sleep that says that this
+should strictly not be needed as per the spec?
+(And also add the same comment in the (single) controller driver in
+mainline which already does an msleep(PCIE_T_RRS_READY_MS).)
 
 
 Kind regards,
