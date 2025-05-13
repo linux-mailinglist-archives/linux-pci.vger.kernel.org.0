@@ -1,156 +1,125 @@
-Return-Path: <linux-pci+bounces-27627-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27628-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF041AB500E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 11:40:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9F96AB5299
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 12:33:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F0C53A6226
-	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 09:40:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EE1F4A6B0E
+	for <lists+linux-pci@lfdr.de>; Tue, 13 May 2025 10:32:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6E2230264;
-	Tue, 13 May 2025 09:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0652C255250;
+	Tue, 13 May 2025 10:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdQ0v7E0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDIRe6nL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354F621CA0F
-	for <linux-pci@vger.kernel.org>; Tue, 13 May 2025 09:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5F12550BA;
+	Tue, 13 May 2025 10:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129223; cv=none; b=XJVlRxMp3tUrfWJlCMtMaM8NUcQETNSdywpOwDK0rvtXKaIFONK/lQOZ9B5XlcqRj0wAI2SryRyJXXpXL54jJpGlYzkOR+e7Ke8Dn8gStU1hBh0A/8DTG7hmgGHawynyKOXvydEXl1GgqpQ7Qcy94NTcxt65Oc46DDjscksnqDA=
+	t=1747131441; cv=none; b=VbPBD1Eoja/tUh+MS7SSM71c+CSj2EzN6dkEaly0IVyb9HZP5cI4TXBcwTVdyTeyG9jP1XycDET6pmNyl/oqBUqqcZ8okP3UDM+KOtndMbyX4Sjgvotm5N9ubNsVqDGPYzMGlq8uDeZ8gSU2Wy0ZrePg/EgPZSAzzghLy1T716I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129223; c=relaxed/simple;
-	bh=y95+dDV6mcOwRPJJ2X0+bkbLdz55ei6Ti3x5ncLzUjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YV3drGZlqgDUtjGbCTIum4SozMYc206gYK49DAnC6xenkIxJcVgpjkha4aFblFOQ6TLXXDPUHCCaXLSkZ7GChb4bA3d3xAsNZntJTzP7Ia+1WS9FkOJUgQfX3Cs8jhjZgqvW22mwm8QyNsDinTnr4E6GLAohHHPQg80G54qohPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KdQ0v7E0; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ede096d73so37609095e9.2
-        for <linux-pci@vger.kernel.org>; Tue, 13 May 2025 02:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747129219; x=1747734019; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZcH3NoUa9zYUGHE3e6RZVql7e10Z0H4w1SBFkELAfU4=;
-        b=KdQ0v7E06t5F27WJvbxj1MXkA7ou3wUrhUXimfpLUCFJGSfXG+YCgXikTIimhiq65F
-         m5nFetFlMyM+osZMWLjJ2URGxFXXaSYhM9E7n2hHhxeVPdQMNQE8vxa2EjtdSq0DPBBX
-         NbakRh8OsVibDgnrIFsb3Q+CQyJmdKPNeXExpmTwWRgYNer7hFMbaJRAJ/SEpaQIZick
-         FJu7CXK2B2m9R8KzFHUjlDs//7W7yX6E1APnfD4JTxRb+KLtdEmkUM94U/Vyo3qb2vhT
-         rkumT1Cpes2/gMCh+3S+DcBfJVbm1AwhkM+MfWy1en9FPuPPnCJWGVgtDO33dFSVLYY6
-         pL5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747129219; x=1747734019;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcH3NoUa9zYUGHE3e6RZVql7e10Z0H4w1SBFkELAfU4=;
-        b=tz5ovq326RIZl898ir69dwmp7f2pXrctfhQBdeNIWY+EIlEVf7hf/YVCVnLX7SvkM7
-         yPjKjAlx2Nug3KJWWcvx5dDsr+eb5XoYxGQ6CWiviW1QgvaJ5ObFSe43HGYdeGPShePu
-         xnLJmMsCsnXfpIsfi7nxGugHOLZwU05AjErXhQz7mLdkS1tj2PjUTJCGK7QFvDiVY79L
-         +LpOi8VPfIopdXk2ngnJ82+8bz3UEqrpyYZ3DSBKBVv2LpLXyPJnxkUPccHMKHr5LWrS
-         QhfXwhHSoYGyl4a0a4ze68I7mQGLdBsw/HS14u7VJYOgayW+qPA4vybBV/CAmIfKm6GW
-         4Rzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUNqS/VBSE/qd3Vr+ceLB5bZ8ePgZ3CK7CjP0yS4WVM1dtBeOd5ephq/EwFIJ+NBOxYADL+fRxG9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzazLkfuW5mmD71L214iKfsrQM6Uq48kQ+k5vBnlGEkxJi56iQc
-	ncEac+FCi3tBGDtEui+wgUEu+aKsLAzEWpRPkEm5uzTKGu4fgZ6ikP713vl2Yg==
-X-Gm-Gg: ASbGncsRfd3hivPLJMtwH/AOD7ojZac0xcLo2fRJM0YwcZA9tvtNafUpFIHqg4DS59A
-	U+p2fsVwPF4vLBguYH4eh9op4bMYUhA/7SZ5Bs8pXMpawnD1LVqf4RMsJ5M9wmVD8nYz1KNHWql
-	kBcD7yNmBQ1/HgV4RUv1YUgRjfE/mBqJhnYGnB6qa06Qm7Z4Yjty/mIMhIpuWfTS6lGa313Exem
-	UfGshajRSL6aiM7oAhT87+KDSugSSOvpbmhEs/jYSd8hwMWRKtceilFDge8xgdYmNFpnQkcTjV8
-	stoLmKDvrTEBFCzAfSgx6XmMziLzHfQJvnzjI4LM+DzZqim2ExAq0bYXYkDYrcNNI8Ia+dUgJJT
-	Kl+WvTw4GJ4ngEQ==
-X-Google-Smtp-Source: AGHT+IEnFcdOdVeGZ05hT5lYfCJGIEriQAJ/H62kZzWpWG7SrRPdhYj+LEeG7joQas8peUF0EQqhBQ==
-X-Received: by 2002:a05:600c:5118:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-442d6dc557cmr110195405e9.25.1747129219435;
-        Tue, 13 May 2025 02:40:19 -0700 (PDT)
-Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c35sm160428035e9.5.2025.05.13.02.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 02:40:18 -0700 (PDT)
-Date: Tue, 13 May 2025 10:40:17 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	jingoohan1@gmail.com, cassel@kernel.org, robh@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
- bool
-Message-ID: <k2ralcw6ynqfejsyk6z7vdodhbn5gu37gqkt4x6yzs7t2y4h5s@6ag7omevjfl2>
-References: <20250510160710.392122-1-18255117159@163.com>
+	s=arc-20240116; t=1747131441; c=relaxed/simple;
+	bh=hY6JMq7THSkphVKJ2fISJVvqScuKDYpOKS5qPPVopS0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Kv/2nPK2WMp37hpA7VIbNNXaaABqs1OwfAVIJxvYbcgb9eambCq2AafkVaZ41G6dlOGF/cB9GOU5jnSaDrITqgyppP23UDbRNgVsF6UGrlZh5lwBeoX9R3/fMNk5Ve1hFjH5VYIhnS+phYbC4d/zdZqcqa4VEkvM187nMNaECjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDIRe6nL; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747131440; x=1778667440;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=hY6JMq7THSkphVKJ2fISJVvqScuKDYpOKS5qPPVopS0=;
+  b=KDIRe6nLFrFAjexiJsseNsqydHuPDH1DNDU1DeNxqbHSVt0FNwD9IzxQ
+   zxwsWPeK/QM1PkF3W1ODls88dklCJ0JzJ8CwdOGgVH/q/D+yyhhRzROLh
+   1fMSUK0nNpp8g9CxANt06DNnHQlTy86Em8HAX2ddOJJrVJrVx/Xp8YxwC
+   Ixad7OjJuN/rwiDdmFt1azEOiX8e+Qj4kwXGRMmSGdu4eoQhOwfNkEa45
+   6acEGGkc3kDNsll2bOBjUME6YmuOPImPL3Kp/RRAdIZqJ0ej/QQUHmMnJ
+   x7K90mdM9SbGQRHWMAYemMeowmdSK8gTfYEmoEJ3RSai4hunlg2aU6GTJ
+   g==;
+X-CSE-ConnectionGUID: Zg/UqpuSSxucpbj1LVHVvQ==
+X-CSE-MsgGUID: 3hyUFr7ySS+3bwiA85eSSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52770695"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="52770695"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 03:17:19 -0700
+X-CSE-ConnectionGUID: 2OkGwFL6RHmF5mC+jShRFw==
+X-CSE-MsgGUID: /dYZXNteR2qXU5fv6V4NFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="138178180"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO [10.245.246.168]) ([10.245.246.168])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 03:17:17 -0700
+Message-ID: <e7032baf-2742-450a-ab3d-5cb34bd22152@linux.intel.com>
+Date: Tue, 13 May 2025 13:18:28 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ lgirdwood@gmail.com, broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
+ guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+ <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
+ <c95dec28-b77d-47ff-95a3-d103991180ed@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <c95dec28-b77d-47ff-95a3-d103991180ed@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250510160710.392122-1-18255117159@163.com>
 
-On Sun, May 11, 2025 at 12:07:07AM +0800, Hans Zhang wrote:
-> 1. PCI: dwc: Standardize link status check to return bool.
-> 2. PCI: mobiveil: Refactor link status check.
-> 3. PCI: cadence: Simplify j721e link status check.
 
-Please do not paste the patch subjects in cover letter. Cover letter should
-elaborate the issue this series is fixing, its purpose, any dependency etc...
+On 13/05/2025 09:21, Péter Ujfalusi wrote:
+> 
+> 
+> On 12/05/2025 15:59, Pierre-Louis Bossart wrote:
+>>
+>>> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+>>> Panther Lake, the main difference is the number of DSP cores, memory
+>>> and clocking.
+>>> It is based on the same ACE3 architecture.
+>>>
+>>> In SOF the PTL topologies can be re-used for WCL to reduce duplication
+>>> of code and topology files. 
+>>
+>> Is this really true? I thought topology files are precisely the place where a specific pipeline is assigned to a specific core. If the number of cores is lower, then a PTL topology could fail when used on a WCL DSP, no?
+> 
+> Yes, that is true, however for generic (sdw, HDA) topologies this is not
+> an issue as we don't spread the modules (there is no customization per
+> platform).
+> When it comes to product topologies, they can still be named as PTL/WCL
+> if needed and have tailored core use.
+> 
+> Fwiw, in case of soundwire we are moving to a even more generic function
+> topology split, where all SDW device can us generic function fragments
+> stitched together to create a complete topology.
+> Those will have to be compatible with all platforms
 
-- Mani
+My line of thinking was:
+sof-tgl topologies: TGL (4 cores), TGL-H (2 cores)
+sof-adl topologies: ADL/ADL-N (4 cores), ADL-S (2 cores)
+sof-arl topologies: ARL (3 cores), ARL-S (2 cores)
 
-> 
-> ---
-> Changes for RESEND:
-> - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Changes for v2:
-> - Remove the return of some functions (!!) .
-> - Patches 2/3 and 3/3 have not been modified.
-> 
-> Based on the following branch:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
-> ---
-> 
-> Hans Zhang (3):
->   PCI: dwc: Standardize link status check to return bool
->   PCI: mobiveil: Refactor link status check
->   PCI: cadence: Simplify j721e link status check
-> 
->  drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
->  drivers/pci/controller/dwc/pci-dra7xx.c                | 4 ++--
->  drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
->  drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
->  drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
->  drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
->  drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
->  drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
->  drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
->  drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
->  drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
->  drivers/pci/controller/dwc/pcie-qcom-ep.c              | 2 +-
->  drivers/pci/controller/dwc/pcie-qcom.c                 | 4 ++--
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
->  drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
->  drivers/pci/controller/dwc/pcie-tegra194.c             | 4 ++--
->  drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
->  drivers/pci/controller/dwc/pcie-visconti.c             | 4 ++--
->  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
->  21 files changed, 37 insertions(+), 56 deletions(-)
-> 
-> 
-> base-commit: 286ed198b899739862456f451eda884558526a9d
-> -- 
-> 2.25.1
-> 
+the PTL vs WCL is not much of a difference apart from the fact that the
+produce code-name is not a postfixed one:
+sof-ptl topologies: PTL (5 cores), WCL (3 cores)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Péter
+
 
