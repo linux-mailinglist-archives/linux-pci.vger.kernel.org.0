@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-27704-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27705-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0799AB6954
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 12:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C59EAB6958
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 12:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72D1B4A7EFE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 10:58:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D74E2462063
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 10:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58BC2749E5;
-	Wed, 14 May 2025 10:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CAB2741DC;
+	Wed, 14 May 2025 10:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YS6RoZ5g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YK/RR5OJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EA8274672;
-	Wed, 14 May 2025 10:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7432741CD;
+	Wed, 14 May 2025 10:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220316; cv=none; b=DvjOvnG8uRsc/ASlfoXfc5y0HVOKeGknkX/hM80Rxhiq0mX89566U5dtx2cscY65DZwpt4SIRqeYXusG8pKN/sFXEUSuC28m71UQ/5dsJoF8elnLLXXQCf3svO2ZIdy12B/pB+rnVCLgLHW+BF1v4OGToqENweUEr2a2eQtoU+c=
+	t=1747220324; cv=none; b=BP52jiN1DGLhMNz/0//VTS/XNEav2PR2TsrRuXvj/OwjyukVVw3gSR2Mur1G9eNaeA2WUC9p2qppukPymBAktxXSqWjgzQow+6DgRgqW1jzPioWKMJ6kfoIW6v1S79iZ7q5iF0b7ZyL+mJGHOBVOS8KegBSNBPdr0EPpohRZ2e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220316; c=relaxed/simple;
-	bh=+Jx0iphnXuSVjVB7a29W7yimG5/BrqeaURmJ1hW7NZg=;
+	s=arc-20240116; t=1747220324; c=relaxed/simple;
+	bh=rcepHT66z2If6ZasfARNe8zaP0VPeFMjjDuPmLz7KBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UvKk9S/W/elONyf4fDF2kBWcJxRv9B9RLdQRc0vk1Cd1hKTvY1Zszz2hJ7wglHO9wOI52mn9+18uGNI+4eLcCk+XRM+C8zJHGpk9YnYD3gV/7AZHCqxjAIeI4N5DIzU6hvEMjHRhzRxX+Vvdlbb/Kg/32YBbQ/G6b8gy93KqfIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YS6RoZ5g; arc=none smtp.client-ip=209.85.161.48
+	 MIME-Version; b=O81eKKSE6M/gohxnHePzhlAs5WU2OupPI9hZ91fnO3FHwt7RUlYOlXRDRbbNcWos67IjED6eMSHz47f1iGi0fAKrsokYkXdfftIBY5xynwA2LwX1UI3aeTjRm8YwhLIQP3goaLuXzVxj2WT8WK1VpbQryDLyugNfVtqPXy5EAfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YK/RR5OJ; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6062e41916dso3248600eaf.1;
-        Wed, 14 May 2025 03:58:34 -0700 (PDT)
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3fa6c54cc1aso4435802b6e.1;
+        Wed, 14 May 2025 03:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747220313; x=1747825113; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747220319; x=1747825119; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LKfsulkMnbgwajcoUFefYum3KXkpP1AWjoY1QW06NXk=;
-        b=YS6RoZ5grZNuoSpHhXfmf/u4R5/Nfr5o2DyQ8v0BylKYwtobkWj88oaZLP4pbRbsDk
-         dTibry7ioKXWPPozJFcnMh1/tZz2VRTUdctijxLrGk+o/NCAxu/NFpCJL5SV2Vd4CrnN
-         5TK3Qq008Nfj8Du0IqDF32no6XjD6sVgd3MgpGRtxS8JYkUYCd3AWfN3iEHo7HzJxMy5
-         URsvpsC1p278FUfs5+pMD4YowchWSbOtz8li3YDQVMQJ74Wqv6BOKiI2j5/Q8ppJl5LM
-         GSCbBoiLuOTyRjtdQ3JGDpQuK1o/tkBEgofN1q6QG/rkYYa011KQnJqosAP4mjr5HkhC
-         rRCA==
+        bh=L2YGwKqeTKSa1sCOAsRfi0xawxji0Kb2n2VWufPyqvc=;
+        b=YK/RR5OJoC6zjlMAXUGyXhFEQBbPJYjimHHG3q9YliOjXx4f4rid/UpwgVn7/zpVI7
+         E6F0ijtahBx8n3vGcJHADf+CwdpRz0OLq9IQnabGnJxb3yaBwwXx0tJPfD/4EqQOThTq
+         LgPjqqjI0j2tqrIF2TS6/0L4WZm7CUc6XurWprmok+cX5j5crpECJ2E1ph2LlViGudug
+         Fr16HHqHF3qQkKCsZOq8JbMm5jXcjs87s4DmYkT6q5D8K0ig4z+AtNLegMqk/KDMsKIu
+         OoZ1zmV+0LmoJoXh4wRs+l+m7Y4JiAL+99ZtMMSyAN4rathq6wZogwEXi5Su6GGPtn1i
+         2LKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747220313; x=1747825113;
+        d=1e100.net; s=20230601; t=1747220319; x=1747825119;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LKfsulkMnbgwajcoUFefYum3KXkpP1AWjoY1QW06NXk=;
-        b=WGud1fMcRLGYjLR6bBvlVbF8nlMR8sEIHHrnikbJjCc26yeVFLpcRtzKwd3olz5wkQ
-         zgqkIdmIJy8CWNFOwWG7fPrwF38OSJP7lbTTtEujnTWHO+8tn9gZAqRcJ+gxNkfXTGWi
-         2xNIlmVzPSZw68eoaBSreehFkAQEs8yC90GD7xjcHfXXBlh3sL6sS+OsA9Z0IT1sk7ax
-         ihl1mj3zb7XlCXzBv52OfQZKMtC6RzfkA/b4TUaFo2kKWjAt91Isi/Hrpq5YYUx7zg7y
-         aKrEiuxux7N3G0xdY/QWr8KFuUl5BtANKyHGkWLutiMZjuAiG9Os+hXr2zveUjT3PUe+
-         GpIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVir54BQQVFDCtMPsm6WFxGxfCacTGBAJGY011BkBEf+mC/Idqo54sY5PJ1H8x/RMx8a5O3Gxvo0ptlUPPQurA=@vger.kernel.org, AJvYcCWtbGO04Y83N6F/+Wwa9Fz79m9Lju/tKzokJzAuAD6/SSR7BcHrgMyxFViXI7PUh7i+xac6GGDwTOv9iO8=@vger.kernel.org, AJvYcCX/qb8KSaZD2112ONldSfQkmfucbspTqcAkfrZwK/rSDf2h3yl4DlDcK1B82VmiAVaff3fHntJCCxKQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMSVbxU9qpn5fH5ea4XQ83MVONmThdPoGk04E62GUVx6WobkoM
-	yAL9+okp7vmZLyVzfMy2ebyAyhvzH2GGXjpLj0N8RWzvDOeGk6mA
-X-Gm-Gg: ASbGncsZlGUHn1MvNcQTB8QweZ6XXuw4mfRGQXM+fSYVGeGxoNwD8uqOc1+M34YD79D
-	wE3XWWSOxxvgXDjZ2WopsH0bLV2UE7N4dFGoz5moxPqRVhoAFXg3daO1SzfR/33AGbS2lLWfx1V
-	hLZaTHeGKIyPTyPZjVsli9lEwg3Y/xiCtHB47H3hVVxw+Zdd4+bfEZm23dS70y5tOFnIINhqzzc
-	Pq38RDvU5S6zgFZUP6sCCQHtU7LjnsGc9t0sBNdmdtNWAGJdBsBR7MAhq+Wd1YePYOpOyAlpiwS
-	JD7EUaNtwt81d++BUhe1+pSaU4NHdC62A4Z7lMoodsq4wEfD7FrkJ+lMCziHR93uB4rRjIWjOLS
-	dPmjNOxp9ITMA4n0ZSOaY9eE=
-X-Google-Smtp-Source: AGHT+IE+1hE1Q+/pQh+mW7/Ct4/eU4EaXfpxLHVjbsq6qa5H2UcdCaWDv6SmoJgr82fypqkELLhKzg==
-X-Received: by 2002:a05:6870:4591:b0:296:e698:3227 with SMTP id 586e51a60fabf-2e348846b40mr1366801fac.36.1747220313459;
-        Wed, 14 May 2025 03:58:33 -0700 (PDT)
+        bh=L2YGwKqeTKSa1sCOAsRfi0xawxji0Kb2n2VWufPyqvc=;
+        b=rA8RigbFKR8ZUaA57Hlsd294WGToiHao8rygRZ+0VcLz2pROPTg1jMPVp8OzGpUx8d
+         /LX0hDHdJOSU+7YsPUqOBvDuxmxMIzFbx6oAd3zhOyZeOEuxj9wByN4JQA3MCUPJEy8O
+         oksv+C7WNl6bLrEAyviHftDymhlv/geav2bSq84XNYV3DVHwEng4BdAdGBPNSxePXW/1
+         sUiwhpTtJJL/F58PzPiaJMOyr5i9CgI/vyzzlsXHw/HIpKQdbupWlLxTljSJZoy3TxLz
+         75SJkVUcuNf9YRWPiuy+MNBQ8VvVecWAry8Z+LWdWabP0N7m8aFO2SOA0UAMCpIKaPAv
+         Ol2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVflvh38cbL3PcfF8830IAgUETBVKR96CotKwvlXk7YMqcnVuICT2+J1eKFBfupe3u3Cg9brlaSCEOCwByjnyc=@vger.kernel.org, AJvYcCXGDsaaLYx/eYhhSu7k+LdzO/nH5Y7qvHIWkCsSz++dsOgA/ggMViVY7K87+Y+YsDdyLSJ1/thtcOvk@vger.kernel.org, AJvYcCXhWijmhO81njWme1p4BU2HNUWN3rbXH+Z58iLMPyNFWYSK0O+71XcHFMu4M4RNkIVmiLc3mKqwnCDkTmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCCRA5dUmYC+V0oB1dg+CDj2O3Wmw2zywWQKnh0lU5S3McARM+
+	s/JVi2Bf3ns6NbKlkIQX6zqATLCWg3y5oqEgYT2pJr/3kLRf+yD+
+X-Gm-Gg: ASbGncuDfH4E3eGnC/oSPx33F7qzNZULnHwP1ptTEKPwNIJ1q1E/rTgvNJVQwvT+A7u
+	xo4p00SbHjntEmIOjmjH4in1o2CycbMbmPUbkoIIFwcK/c2JGcJsm4Ak5qM3Gi6y9gbBdm5xaY6
+	VLR4j2Ai/4+vOvKpm9sG/gmn1wVTTkSn8/aSbkLwDgB1rdocX03srDGK+M5zloUhBYaOj3kgGHJ
+	lAORFAxW33aCmYjlIwt9BLTlH7oCSRobUja2jN5mYwik9c+4ltOYBNM1OpAdnXg8LUmKzPt9pGr
+	2hhmKrN3Cx+w4BRrxRCqrCz82JOL1tojIgiEVWKw3vp5iUQAj383twPmNzzqPqS/5ops+hQOQcj
+	MEtXoMzgBB9stzOxdUmRndu0=
+X-Google-Smtp-Source: AGHT+IFIDv/Mb+Rtohkq/d/uAhGwS+ySqBGkomUOW9Wg//NzmgduJyMW2cnWhHvDAA3xrhuoO0IgrA==
+X-Received: by 2002:a05:6870:96a6:b0:29d:c832:7ef6 with SMTP id 586e51a60fabf-2e3488725c5mr1367585fac.39.1747220318966;
+        Wed, 14 May 2025 03:58:38 -0700 (PDT)
 Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-2dba060be9esm2654535fac.10.2025.05.14.03.58.27
+        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-2dba060be9esm2654535fac.10.2025.05.14.03.58.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 03:58:32 -0700 (PDT)
+        Wed, 14 May 2025 03:58:38 -0700 (PDT)
 From: Andrew Ballance <andrewjballance@gmail.com>
 To: dakr@kernel.org,
 	a.hindborg@kernel.org,
@@ -103,9 +103,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-pci@vger.kernel.org,
 	nouveau@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v2 1/6] rust: helpers: io: use macro to generate io accessor functions
-Date: Wed, 14 May 2025 05:57:29 -0500
-Message-ID: <20250514105734.3898411-2-andrewjballance@gmail.com>
+Subject: [PATCH v2 2/6] rust: io: make Io use IoAccess trait
+Date: Wed, 14 May 2025 05:57:30 -0500
+Message-ID: <20250514105734.3898411-3-andrewjballance@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250514105734.3898411-1-andrewjballance@gmail.com>
 References: <20250514105734.3898411-1-andrewjballance@gmail.com>
@@ -119,142 +119,573 @@ Content-Transfer-Encoding: 8bit
 
 From: Fiona Behrens <me@kloenk.dev>
 
-Generate the `rust_helper_read{b,w,l,q}`, `rust_helper_write{b,w,l,q}`
-and the relaxed version using a C macro.
+makes the Io struct use the new traits (`IoAccess`, `IoAccess64`,
+ `IoAccessRelaxed` and `IoAccess64Relaxed)` to perform io.
 
-This removes a lot of redundant code and is in preparation for pio
-functions which uses a similar C macro.
+This allows to later implement a generic Io framework.
+
+update pci,rust_driver_pci.rs, nova-core and a devres doc test to use
+the new io api.
 
 Signed-off-by: Fiona Behrens <me@kloenk.dev>
+Co-developed-by: Andrew Ballance <andrewjballance@gmail.com>
 Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
 ---
- rust/helpers/io.c | 105 +++++++++++++---------------------------------
- 1 file changed, 29 insertions(+), 76 deletions(-)
+ drivers/gpu/nova-core/regs.rs   |   1 +
+ rust/kernel/devres.rs           |   4 +-
+ rust/kernel/io.rs               | 438 +++++++++++++++++++-------------
+ rust/kernel/pci.rs              |   2 +-
+ samples/rust/rust_driver_pci.rs |   4 +-
+ 5 files changed, 263 insertions(+), 186 deletions(-)
 
-diff --git a/rust/helpers/io.c b/rust/helpers/io.c
-index 15ea187c5466..d419b5b3b7c7 100644
---- a/rust/helpers/io.c
-+++ b/rust/helpers/io.c
-@@ -12,90 +12,43 @@ void rust_helper_iounmap(void __iomem *addr)
- 	iounmap(addr);
+diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+index b1a25b86ef17..079c3d275a47 100644
+--- a/drivers/gpu/nova-core/regs.rs
++++ b/drivers/gpu/nova-core/regs.rs
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ use crate::driver::Bar0;
++use kernel::io::IoAccess;
+ 
+ // TODO
+ //
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index ddb1ce4a78d9..88d145821ca8 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -45,7 +45,7 @@ struct DevresInner<T> {
+ /// # Example
+ ///
+ /// ```no_run
+-/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::{Io, IoRaw}};
++/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::{Io, IoRaw, IoAccess}};
+ /// # use core::ops::Deref;
+ ///
+ /// // See also [`pci::Bar`] for a real example.
+@@ -80,7 +80,7 @@ struct DevresInner<T> {
+ ///
+ ///    fn deref(&self) -> &Self::Target {
+ ///         // SAFETY: The memory range stored in `self` has been properly mapped in `Self::new`.
+-///         unsafe { Io::from_raw(&self.0) }
++///         unsafe { Io::from_raw_ref(&self.0) }
+ ///    }
+ /// }
+ /// # fn no_run() -> Result<(), Error> {
+diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+index 72d80a6f131e..368167d57863 100644
+--- a/rust/kernel/io.rs
++++ b/rust/kernel/io.rs
+@@ -7,6 +7,210 @@
+ use crate::error::{code::EINVAL, Result};
+ use crate::{bindings, build_assert};
+ 
++/// Private macro to define the [`IoAccess`] functions.
++macro_rules! define_io_access_function {
++    (@read_derived $(#[$attr:meta])* $name_unchecked:ident, $vis:vis $name:ident, $try_vis:vis $try_name:ident, $type_name:ty) => {
++    /// Read data from a given offset known at compile time.
++    ///
++    /// Bound checks are perfomed on compile time, hence if the offset is not known at compile
++    /// time, the build will fail.
++    $(#[$attr])*
++    #[inline]
++    $vis fn $name(&self, offset: usize) -> $type_name {
++        build_assert!(offset_valid::<$type_name>(offset, SIZE));
++
++        // SAFETY: offset checked to be valid above.
++        unsafe { self.$name_unchecked(offset) }
++    }
++
++    /// Read data from a given offset.
++    ///
++    /// Bound checks are performed at runtime, it fails if the offset (plus type size) is
++    /// out of bounds.
++    $(#[$attr])*
++    #[inline]
++    $try_vis fn $try_name(&self, offset: usize) -> Result<$type_name> {
++        if !(offset_valid::<$type_name>(offset, self.maxsize())) {
++            return Err(EINVAL);
++        }
++
++        // SAFETY: offset checked to be valid above.
++        Ok(unsafe { self.$name_unchecked(offset) })
++    }
++    };
++    (@read $(#[$attr:meta])* $name_unchecked:ident, $name:ident, $try_name:ident, $type_name:ty) => {
++    /// Read data from a given offset without doing any bound checks.
++    /// The offset is relative to the base address of Self.
++    ///
++    /// # Safety
++    ///
++    /// The offset has to be valid for self.
++    $(#[$attr])*
++    unsafe fn $name_unchecked(&self, offset: usize) -> $type_name;
++
++    define_io_access_function!(@read_derived $(#[$attr])* $name_unchecked, $name, $try_name, $type_name);
++    };
++    (@read $($(#[$attr:meta])* $name_unchecked:ident, $name:ident, $try_name:ident, $type_name:ty;)+) => {
++    $(
++        define_io_access_function!(@read $(#[$attr])* $name_unchecked, $name, $try_name, $type_name);
++    )*
++    };
++    (@write_derived $(#[$attr:meta])* $name_unchecked:ident, $vis:vis $name:ident, $try_vis:vis $try_name:ident, $type_name:ty) => {
++    /// Write data to a given offset known at compile time.
++    /// Bound checks are performed at compile time, hence if the offset is not known at compile
++    /// time, the build will fail.
++    $(#[$attr])*
++    #[inline]
++    $vis fn $name(&self, value: $type_name, offset: usize) {
++        build_assert!(offset_valid::<$type_name>(offset, SIZE));
++
++        // SAFETY: offset checked to be valid above.
++        unsafe { self.$name_unchecked(value, offset) }
++    }
++
++    /// Write data to a given offset.
++    ///
++    /// Bound checks are performed at runtime, it fails if the offset (plus the type size) is
++    /// out of bounds.
++    $(#[$attr])*
++        #[inline]
++    $try_vis fn $try_name(&self, value: $type_name, offset: usize) -> Result {
++        if !(offset_valid::<$type_name>(offset, self.maxsize())) {
++            return Err(EINVAL);
++        }
++
++        // SAFETY: offset checked to be valid above.
++        Ok(unsafe { self.$name_unchecked(value, offset) })
++    }
++    };
++    (@write $(#[$attr:meta])* $name_unchecked:ident, $name:ident, $try_name:ident, $type_name:ty) => {
++    /// Write data to a given offset without doing any bound checks.
++    /// The offset is relative to the base address of self.
++    ///
++    /// # Safety
++    ///
++    /// The offset has to be valid for Self.
++    $(#[$attr])*
++    unsafe fn $name_unchecked(&self, value: $type_name, offset: usize);
++
++    define_io_access_function!(@write_derived $(#[$attr])* $name_unchecked, $name, $try_name, $type_name);
++    };
++    (@write $($(#[$attr:meta])* $name_unchecked:ident, $name:ident, $try_name:ident, $type_name:ty;)+) => {
++    $(
++        define_io_access_function!(@write $(#[$attr])* $name_unchecked, $name, $try_name, $type_name);
++    )*
++    };
++}
++
++/// Private macro to generate accessor functions that call the correct C functions given as `fn_c`.
++///
++/// This takes either `@read` or `@write` to generate a single read or write accessor function.
++///
++/// This also can take a list of read write pairs to generate both at the same time.
++macro_rules! impl_accessor_fn {
++    (@read $(#[$attr:meta])* $vis:vis $fn_rust:ident, $fn_c:ident, $type_name:ty) => {
++    $(#[$attr])*
++    $vis unsafe fn $fn_rust(&self, offset: usize) -> $type_name {
++        // SAFETY: by the safety requirement of the function `self.addr() + offset` is valid to read
++        // TODO: once MSRV is >= 1.79.0 replace `+` with `unchecked_add`
++        unsafe { bindings::$fn_c((self.addr() + offset) as _) as _ }
++    }
++    };
++    (@write $(#[$attr:meta])* $vis:vis $fn_rust:ident, $fn_c:ident, $type_name:ty) => {
++    $(#[$attr])*
++    $vis unsafe fn $fn_rust(&self, value: $type_name, offset: usize) {
++        // SAFETY:
++        // by the safety requirement of the function `self.addr() + offset` is valid to write
++        // TODO: once MSRV is >= 1.79.0 replace `+` with `unchecked_add`
++        unsafe { bindings::$fn_c(value, (self.addr() + offset) as _) as _ }
++    }
++    };
++    (
++    $(
++        $(#[$attr:meta])*
++        $vis_read:vis $fn_rust_read:ident, $fn_c_read:ident,
++        $vis_write:vis $fn_rust_write:ident, $fn_c_write:ident,
++        $type_name:ty $(;)?
++    )+
++    ) => {
++    $(
++        impl_accessor_fn!(@read $(#[$attr])* $vis_read $fn_rust_read, $fn_c_read, $type_name);
++        impl_accessor_fn!(@write $(#[$attr])* $vis_write $fn_rust_write, $fn_c_write, $type_name);
++    )+
++    };
++}
++
++/// Check if the offset is valid to still support the type U in the given size
++const fn offset_valid<U>(offset: usize, size: usize) -> bool {
++    let type_size = core::mem::size_of::<U>();
++    if let Some(end) = offset.checked_add(type_size) {
++        end <= size && offset % type_size == 0
++    } else {
++        false
++    }
++}
++
++/// Io Access functions.
++///
++/// # Safety
++///
++/// `SIZE` and `maxsize()` has to always be valid to add to the base address.
++pub unsafe trait IoAccess<const SIZE: usize = 0> {
++    /// Returns the maximum size of the accessed IO area.
++    fn maxsize(&self) -> usize;
++
++    /// Returns the base address of the accessed IO area.
++    fn addr(&self) -> usize;
++
++    define_io_access_function!(@read
++        read8_unchecked, read8, try_read8, u8;
++        read16_unchecked, read16, try_read16, u16;
++        read32_unchecked, read32, try_read32, u32;
++    );
++
++    define_io_access_function!(@write
++        write8_unchecked, write8, try_write8, u8;
++        write16_unchecked, write16, try_write16, u16;
++        write32_unchecked, write32, try_write32, u32;
++    );
++}
++
++/// Extending trait of [`IoAccess`] offering 64 bit functions.
++#[cfg(CONFIG_64BIT)]
++pub trait IoAccess64<const SIZE: usize = 0>: IoAccess<SIZE> {
++    define_io_access_function!(@read read64_unchecked, read64, try_read64, u64);
++    define_io_access_function!(@write write64_unchecked, write64, try_write64, u64);
++}
++
++/// Io Relaxed Access functions.
++///
++/// Similar to [`IoAccess`] but using relaxed memory boundries.
++pub trait IoAccessRelaxed<const SIZE: usize = 0>: IoAccess<SIZE> {
++    define_io_access_function!(@read
++        read8_relaxed_unchecked, read8_relaxed, try_read8_relaxed, u8;
++        read16_relaxed_unchecked, read16_relaxed, try_read16_relaxed, u16;
++        read32_relaxed_unchecked, read32_relaxed, try_read32_relaxed, u32;
++    );
++
++    define_io_access_function!(@write
++        write8_relaxed_unchecked, write8_relaxed, try_write8_relaxed, u8;
++        write16_relaxed_unchecked, write16_relaxed, try_write16_relaxed, u16;
++        write32_relaxed_unchecked, write32_relaxed, try_write32_relaxed, u32;
++    );
++}
++
++/// Extending trait of [`IoAccessRelaxed`] offering 64 bit functions.
++#[cfg(CONFIG_64BIT)]
++pub trait IoAccess64Relaxed<const SIZE: usize = 0>: IoAccess<SIZE> {
++    define_io_access_function!(@read
++        read64_relaxed_unchecked, read64_relaxed, try_read64_relaxed, u64;
++    );
++
++    define_io_access_function!(@write
++        write64_relaxed_unchecked, write64_relaxed, try_write64_relaxed, u64;
++    );
++}
++
+ /// Raw representation of an MMIO region.
+ ///
+ /// By itself, the existence of an instance of this structure does not provide any guarantees that
+@@ -43,218 +247,88 @@ pub fn maxsize(&self) -> usize {
+     }
  }
  
--u8 rust_helper_readb(const void __iomem *addr)
--{
--	return readb(addr);
--}
--
--u16 rust_helper_readw(const void __iomem *addr)
--{
--	return readw(addr);
--}
--
--u32 rust_helper_readl(const void __iomem *addr)
--{
--	return readl(addr);
--}
--
-+#define define_rust_io_read_helper(rust_name, name, type) \
-+	type rust_name(void __iomem *addr)                \
-+	{                                                 \
-+		return name(addr);                        \
-+	}
-+
-+#define define_rust_io_write_helper(rust_name, name, type) \
-+	void rust_name(type value, void __iomem *addr)     \
-+	{                                                  \
-+		name(value, addr);                         \
-+	}
-+
-+define_rust_io_read_helper(rust_helper_readb, readb, u8);
-+define_rust_io_read_helper(rust_helper_readw, readw, u16);
-+define_rust_io_read_helper(rust_helper_readl, readl, u32);
- #ifdef CONFIG_64BIT
--u64 rust_helper_readq(const void __iomem *addr)
--{
--	return readq(addr);
--}
-+define_rust_io_read_helper(rust_helper_readq, readq, u64);
- #endif
+-/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
++/// IO-mapped memory, starting at the base address [`addr`] and spanning [`maxsize`] bytes.
+ ///
+ /// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
+-/// mapping, performing an additional region request etc.
+-///
+-/// # Invariant
+-///
+-/// `addr` is the start and `maxsize` the length of valid I/O mapped memory region of size
+-/// `maxsize`.
+-///
+-/// # Examples
+-///
+-/// ```no_run
+-/// # use kernel::{bindings, io::{Io, IoRaw}};
+-/// # use core::ops::Deref;
++/// mapping, performing an additional region request, etc.
+ ///
+-/// // See also [`pci::Bar`] for a real example.
+-/// struct IoMem<const SIZE: usize>(IoRaw<SIZE>);
++/// # Invariants
+ ///
+-/// impl<const SIZE: usize> IoMem<SIZE> {
+-///     /// # Safety
+-///     ///
+-///     /// [`paddr`, `paddr` + `SIZE`) must be a valid MMIO region that is mappable into the CPUs
+-///     /// virtual address space.
+-///     unsafe fn new(paddr: usize) -> Result<Self>{
+-///         // SAFETY: By the safety requirements of this function [`paddr`, `paddr` + `SIZE`) is
+-///         // valid for `ioremap`.
+-///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE as _) };
+-///         if addr.is_null() {
+-///             return Err(ENOMEM);
+-///         }
++/// [`addr`] is the start and [`maxsize`] the length of valid I/O mapped memory region of
++/// size [`maxsize`].
+ ///
+-///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+-///     }
+-/// }
++/// [`addr`] is valid to access with the C [`read`]/[`write`] family of functions.
+ ///
+-/// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+-///     fn drop(&mut self) {
+-///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped by `Self::new`.
+-///         unsafe { bindings::iounmap(self.0.addr() as _); };
+-///     }
+-/// }
+-///
+-/// impl<const SIZE: usize> Deref for IoMem<SIZE> {
+-///    type Target = Io<SIZE>;
+-///
+-///    fn deref(&self) -> &Self::Target {
+-///         // SAFETY: The memory range stored in `self` has been properly mapped in `Self::new`.
+-///         unsafe { Io::from_raw(&self.0) }
+-///    }
+-/// }
+-///
+-///# fn no_run() -> Result<(), Error> {
+-/// // SAFETY: Invalid usage for example purposes.
+-/// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
+-/// iomem.write32(0x42, 0x0);
+-/// assert!(iomem.try_write32(0x42, 0x0).is_ok());
+-/// assert!(iomem.try_write32(0x42, 0x4).is_err());
+-/// # Ok(())
+-/// # }
+-/// ```
++/// [`addr`]: IoAccess::addr
++/// [`maxsize`]: IoAccess::maxsize
++/// [`read`]: https://docs.kernel.org/driver-api/device-io.html#differences-between-i-o-access-functions
++/// [`write`]: https://docs.kernel.org/driver-api/device-io.html#differences-between-i-o-access-functions
+ #[repr(transparent)]
+ pub struct Io<const SIZE: usize = 0>(IoRaw<SIZE>);
  
--void rust_helper_writeb(u8 value, void __iomem *addr)
--{
--	writeb(value, addr);
+-macro_rules! define_read {
+-    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident -> $type_name:ty) => {
+-        /// Read IO data from a given offset known at compile time.
+-        ///
+-        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+-        /// time, the build will fail.
+-        $(#[$attr])*
+-        #[inline]
+-        pub fn $name(&self, offset: usize) -> $type_name {
+-            let addr = self.io_addr_assert::<$type_name>(offset);
+-
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(addr as _) }
+-        }
+-
+-        /// Read IO data from a given offset.
+-        ///
+-        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
+-        /// out of bounds.
+-        $(#[$attr])*
+-        pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
+-            let addr = self.io_addr::<$type_name>(offset)?;
+-
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            Ok(unsafe { bindings::$c_fn(addr as _) })
+-        }
+-    };
 -}
 -
--void rust_helper_writew(u16 value, void __iomem *addr)
--{
--	writew(value, addr);
+-macro_rules! define_write {
+-    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident <- $type_name:ty) => {
+-        /// Write IO data from a given offset known at compile time.
+-        ///
+-        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+-        /// time, the build will fail.
+-        $(#[$attr])*
+-        #[inline]
+-        pub fn $name(&self, value: $type_name, offset: usize) {
+-            let addr = self.io_addr_assert::<$type_name>(offset);
+-
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(value, addr as _, ) }
+-        }
+-
+-        /// Write IO data from a given offset.
+-        ///
+-        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
+-        /// out of bounds.
+-        $(#[$attr])*
+-        pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
+-            let addr = self.io_addr::<$type_name>(offset)?;
+-
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(value, addr as _) }
+-            Ok(())
+-        }
+-    };
 -}
 -
--void rust_helper_writel(u32 value, void __iomem *addr)
--{
--	writel(value, addr);
--}
+ impl<const SIZE: usize> Io<SIZE> {
+-    /// Converts an `IoRaw` into an `Io` instance, providing the accessors to the MMIO mapping.
++    /// Convert a [`IoRaw`] into an [`MMIo`] instance, providing the accessors to the MMIO mapping.
+     ///
+     /// # Safety
+     ///
+-    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
+-    /// `maxsize`.
+-    pub unsafe fn from_raw(raw: &IoRaw<SIZE>) -> &Self {
+-        // SAFETY: `Io` is a transparent wrapper around `IoRaw`.
+-        unsafe { &*core::ptr::from_ref(raw).cast() }
+-    }
 -
-+define_rust_io_write_helper(rust_helper_writeb, writeb, u8);
-+define_rust_io_write_helper(rust_helper_writew, writew, u16);
-+define_rust_io_write_helper(rust_helper_writel, writel, u32);
- #ifdef CONFIG_64BIT
--void rust_helper_writeq(u64 value, void __iomem *addr)
--{
--	writeq(value, addr);
--}
-+define_rust_io_write_helper(rust_helper_writeq, writeq, u64);
- #endif
+-    /// Returns the base address of this mapping.
++    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of
++    /// size `maxsize`.
+     #[inline]
+-    pub fn addr(&self) -> usize {
+-        self.0.addr()
+-    }
+-
+-    /// Returns the maximum size of this mapping.
+-    #[inline]
+-    pub fn maxsize(&self) -> usize {
+-        self.0.maxsize()
++    pub unsafe fn from_raw(raw: IoRaw<SIZE>) -> Self {
++        Self(raw)
+     }
  
--u8 rust_helper_readb_relaxed(const void __iomem *addr)
--{
--	return readb_relaxed(addr);
--}
--
--u16 rust_helper_readw_relaxed(const void __iomem *addr)
--{
--	return readw_relaxed(addr);
--}
--
--u32 rust_helper_readl_relaxed(const void __iomem *addr)
--{
--	return readl_relaxed(addr);
--}
--
-+define_rust_io_read_helper(rust_helper_readb_relaxed, readb_relaxed, u8);
-+define_rust_io_read_helper(rust_helper_readw_relaxed, readw_relaxed, u16);
-+define_rust_io_read_helper(rust_helper_readl_relaxed, readl_relaxed, u32);
- #ifdef CONFIG_64BIT
--u64 rust_helper_readq_relaxed(const void __iomem *addr)
--{
--	return readq_relaxed(addr);
--}
-+define_rust_io_read_helper(rust_helper_readq_relaxed, readq_relaxed, u64);
- #endif
++    /// Convert a ref to [`IoRaw`] into an [`MMIo`] instance, providing the accessors to the
++    /// MMIo mapping.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of
++    /// size `maxsize`.
+     #[inline]
+-    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
+-        let type_size = core::mem::size_of::<U>();
+-        if let Some(end) = offset.checked_add(type_size) {
+-            end <= size && offset % type_size == 0
+-        } else {
+-            false
+-        }
++    pub unsafe fn from_raw_ref(raw: &IoRaw<SIZE>) -> &Self {
++        // SAFETY: `MMIo` is a transparent wrapper around `IoRaw`.
++        unsafe { &*core::ptr::from_ref(raw).cast() }
+     }
++}
  
--void rust_helper_writeb_relaxed(u8 value, void __iomem *addr)
--{
--	writeb_relaxed(value, addr);
--}
++// SAFETY: as per invariant `raw` is valid
++unsafe impl<const SIZE: usize> IoAccess<SIZE> for Io<SIZE> {
+     #[inline]
+-    fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+-        if !Self::offset_valid::<U>(offset, self.maxsize()) {
+-            return Err(EINVAL);
+-        }
 -
--void rust_helper_writew_relaxed(u16 value, void __iomem *addr)
--{
--	writew_relaxed(value, addr);
--}
+-        // Probably no need to check, since the safety requirements of `Self::new` guarantee that
+-        // this can't overflow.
+-        self.addr().checked_add(offset).ok_or(EINVAL)
++    fn maxsize(&self) -> usize {
++        self.0.maxsize()
+     }
+ 
+     #[inline]
+-    fn io_addr_assert<U>(&self, offset: usize) -> usize {
+-        build_assert!(Self::offset_valid::<U>(offset, SIZE));
 -
--void rust_helper_writel_relaxed(u32 value, void __iomem *addr)
--{
--	writel_relaxed(value, addr);
--}
--
-+define_rust_io_write_helper(rust_helper_writeb_relaxed, writeb_relaxed, u8);
-+define_rust_io_write_helper(rust_helper_writew_relaxed, writew_relaxed, u16);
-+define_rust_io_write_helper(rust_helper_writel_relaxed, writel_relaxed, u32);
- #ifdef CONFIG_64BIT
--void rust_helper_writeq_relaxed(u64 value, void __iomem *addr)
--{
--	writeq_relaxed(value, addr);
--}
-+define_rust_io_write_helper(rust_helper_writeq_relaxed, writeq_relaxed, u64);
- #endif
-+
+-        self.addr() + offset
++    fn addr(&self) -> usize {
++        self.0.addr()
+     }
+ 
+-    define_read!(read8, try_read8, readb -> u8);
+-    define_read!(read16, try_read16, readw -> u16);
+-    define_read!(read32, try_read32, readl -> u32);
+-    define_read!(
+-        #[cfg(CONFIG_64BIT)]
+-        read64,
+-        try_read64,
+-        readq -> u64
++    impl_accessor_fn!(
++        read8_unchecked, readb, write8_unchecked, writeb, u8;
++        read16_unchecked, readw, write16_unchecked, writew, u16;
++        read32_unchecked, readl, write32_unchecked, writel, u32;
+     );
++}
+ 
+-    define_read!(read8_relaxed, try_read8_relaxed, readb_relaxed -> u8);
+-    define_read!(read16_relaxed, try_read16_relaxed, readw_relaxed -> u16);
+-    define_read!(read32_relaxed, try_read32_relaxed, readl_relaxed -> u32);
+-    define_read!(
+-        #[cfg(CONFIG_64BIT)]
+-        read64_relaxed,
+-        try_read64_relaxed,
+-        readq_relaxed -> u64
++#[cfg(CONFIG_64BIT)]
++impl<const SIZE: usize> IoAccess64<SIZE> for Io<SIZE> {
++    impl_accessor_fn!(
++        read64_unchecked, readq, write64_unchecked, writeq, u64;
+     );
++}
+ 
+-    define_write!(write8, try_write8, writeb <- u8);
+-    define_write!(write16, try_write16, writew <- u16);
+-    define_write!(write32, try_write32, writel <- u32);
+-    define_write!(
+-        #[cfg(CONFIG_64BIT)]
+-        write64,
+-        try_write64,
+-        writeq <- u64
++impl<const SIZE: usize> IoAccessRelaxed<SIZE> for Io<SIZE> {
++    impl_accessor_fn!(
++        read8_relaxed_unchecked, readb_relaxed, write8_relaxed_unchecked, writeb_relaxed, u8;
++        read16_relaxed_unchecked, readw_relaxed, write16_relaxed_unchecked, writew_relaxed, u16;
++        read32_relaxed_unchecked, readl_relaxed, write32_relaxed_unchecked, writel_relaxed, u32;
+     );
++}
+ 
+-    define_write!(write8_relaxed, try_write8_relaxed, writeb_relaxed <- u8);
+-    define_write!(write16_relaxed, try_write16_relaxed, writew_relaxed <- u16);
+-    define_write!(write32_relaxed, try_write32_relaxed, writel_relaxed <- u32);
+-    define_write!(
+-        #[cfg(CONFIG_64BIT)]
+-        write64_relaxed,
+-        try_write64_relaxed,
+-        writeq_relaxed <- u64
++#[cfg(CONFIG_64BIT)]
++impl<const SIZE: usize> IoAccess64Relaxed<SIZE> for Io<SIZE> {
++    impl_accessor_fn!(
++        read64_relaxed_unchecked, readq_relaxed, write64_relaxed_unchecked, writeq_relaxed, u64;
+     );
+ }
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index c97d6d470b28..9f5ca22d327a 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -356,7 +356,7 @@ impl<const SIZE: usize> Deref for Bar<SIZE> {
+ 
+     fn deref(&self) -> &Self::Target {
+         // SAFETY: By the type invariant of `Self`, the MMIO range in `self.io` is properly mapped.
+-        unsafe { Io::from_raw(&self.io) }
++        unsafe { Io::from_raw_ref(&self.io) }
+     }
+ }
+ 
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 2bb260aebc9e..a8d292f4c1b3 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -4,7 +4,9 @@
+ //!
+ //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
+ 
+-use kernel::{bindings, c_str, device::Core, devres::Devres, pci, prelude::*, types::ARef};
++use kernel::{
++    bindings, c_str, device::Core, devres::Devres, io::IoAccess, pci, prelude::*, types::ARef,
++};
+ 
+ struct Regs;
+ 
 -- 
 2.49.0
 
