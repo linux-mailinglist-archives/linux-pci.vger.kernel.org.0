@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-27679-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27680-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97068AB6355
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 08:41:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACB05AB635F
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 08:43:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD2A43ACCF1
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 06:41:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 464D81B40A6C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 06:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3CA1FECAF;
-	Wed, 14 May 2025 06:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B3B920103A;
+	Wed, 14 May 2025 06:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uajTYLvO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNh8vQSv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA42EEC3
-	for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 06:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072161F6667
+	for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 06:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204895; cv=none; b=WuLcYZGVMTLxR0GVv6g+SfPpp13isxah1Ra8STj+k5htR5pivYm/3knapDn7vRZiMgUKJYFniQNKuyyGQf3E4HqFPLbWrRGHUGyeok2jqrq9vMWRJ/9N6TeikOWShQFz41LWFfiOMm2euZ4e0PVho/6+mgAQu1e4YtGTk3NMyrs=
+	t=1747205004; cv=none; b=E5LTNkO0gHmPXAXLE13hJE1RQzSfxFPo5xBQK5t+f5H32a6UbHmf5SbPNvpdWexEY/KfgQ9EIfVU/vfOsDWM41KIIt0Ey45K9s89eUyZSbypsqQZvDX2Y2JfFD+/LUjnqgekyn1kV9B2YMurdWKouj7svm8Ok6ostCeW5y4huMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204895; c=relaxed/simple;
-	bh=DMk/pFKacrgjvoCa1/n15iM4UgpLTND9x72+WPM5twk=;
+	s=arc-20240116; t=1747205004; c=relaxed/simple;
+	bh=HU309RTzi1NeUVsfWMPzP89UTFkzAZbuQV9Penc4cuY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cw1d3ucLkCPGLLqZdnecZySM6JcySPWIIG79q2BD2wrx53D6M57cpreI6lH+OVsy/FfmM1r99JvCBsU180P+L9T52kEWkChDLN9OBpeaidtimU7ipJq68Vaqz932cctfvRHUZk1bH6lfLTyUe0fsNSnY+yCZF4lUFXWRkegOGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uajTYLvO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E18AC4CEE9;
-	Wed, 14 May 2025 06:41:30 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=JkQyKYIYVFdbfRiM7hssnWoe3irNaCtBENFz8O8WFBaRmyaxhnvOwtHH8OK+fdUL5KghxQqEXNCjYFgOc8J/KBhlBrL4EPJ8GWEHrRhVvoBWt74CSLqCCSz9fqZn+rfichQV5N6ToGQ4P8IriYcuvJNsa4Jd0BkS1lJOS/lNet4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNh8vQSv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33965C4CEE9;
+	Wed, 14 May 2025 06:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747204894;
-	bh=DMk/pFKacrgjvoCa1/n15iM4UgpLTND9x72+WPM5twk=;
+	s=k20201202; t=1747205003;
+	bh=HU309RTzi1NeUVsfWMPzP89UTFkzAZbuQV9Penc4cuY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uajTYLvOC5tbDPHIMSnNGfnZoSoYkKidE25KcrOblW8fdCtgM7JWBDo7hAl1+jK48
-	 G3sM0hWsI9Dg4NsX5DhH3HymDObyBWyuJ63cAJGMG7QuX4srzlsihOdKkloMf9J9LE
-	 u8q7l4WiOtA01kSPa20F604AEHLzUOyFtXqlHp5+6qRvZP6kN9wLeA/FCzJV8dfqrY
-	 HRp0U1lBdBJkfHCO6cYmjm1YDDm53O58r8HJQPn4UkEwEadtLLTwjhlOpqKHE/ZkB8
-	 WWTlleeKDTtSYxBuxBAyNZCFiKXqtRnzOX00nkFGSi5rWzZFvRNyr+1jqa9BVsmPcP
-	 OSupM6evxPd8A==
-Message-ID: <971ba853-cc7e-48e2-9cb2-001d5c8ee8aa@kernel.org>
-Date: Wed, 14 May 2025 15:41:28 +0900
+	b=CNh8vQSvBd8eNlJ8OBqEL+3RCeSrotCySD/bgRNLSEjp374xjHXugpvvTJx9uma5V
+	 0w9LDf5pCseT6BAQp/dVfPHYNuQAdNglb/3GOIJ4tnsLITi4c3sCAo5XxBHQxheMKD
+	 3CmD5aBB4qdAyg3iOqkWoAvlDURR6eI5xa6A0B9aGdHhQrsGv97u4OLTAXhb60rUpD
+	 KUC0hd6ZoX84lJdgoNN20nl2JiTVTJIz4GPBz1zE7CUzNhkH78XileRGXvP2k//f7K
+	 kzXSpRQOqOtPHCwBY9J4LejF92nJo0UL6jTRGouUY2VtYqG5YZ031KlEwCmwHeKi4c
+	 +PR7FIfogILzA==
+Message-ID: <4d9ea518-b649-4bfc-8c3f-42365cc86a0e@kernel.org>
+Date: Wed, 14 May 2025 15:43:16 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] PCI: endpoint: cleanup get_msix() callback
+Subject: Re: [PATCH v2 6/6] PCI: endpoint: cleanup set_msix() callback
 To: Niklas Cassel <cassel@kernel.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -60,39 +60,63 @@ To: Niklas Cassel <cassel@kernel.org>,
 Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>, stable+noautosel@kernel.org,
  linux-pci@vger.kernel.org
 References: <20250513073055.169486-8-cassel@kernel.org>
- <20250513073055.169486-13-cassel@kernel.org>
+ <20250513073055.169486-14-cassel@kernel.org>
 From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <20250513073055.169486-13-cassel@kernel.org>
+In-Reply-To: <20250513073055.169486-14-cassel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/13/25 16:31, Niklas Cassel wrote:
-> The kdoc for pci_epc_get_msix() says:
-> "Invoke to get the number of MSI-X interrupts allocated by the RC"
-> the kdoc for the callback pci_epc_ops->get_msix() says:
-> "ops to get the number of MSI-X interrupts allocated by the RC from the
-> MSI-X capability register"
+> The kdoc for pci_epc_set_msix() says:
+> "Invoke to set the required number of MSI-X interrupts."
+> the kdoc for the callback pci_epc_ops->set_msix() says:
+> "ops to set the requested number of MSI-X interrupts in the MSI-X
+> capability register"
 > 
-> pci_epc_ops->get_msix() does however return the number of interrupts
-> in the encoding as defined by the Table Size field.
+> pci_epc_ops->set_msix() does however expect the parameter 'interrupts' to
+> be in the encoding as defined by the Table Size field.
 > 
-> Nowhere in the kdoc does it say that the returned number of interrupts
-> is in Table Size encoding.
+> Nowhere in the kdoc does it say that the number of interrupts should be
+> in Table Size encoding.
 > 
-> Thus, it is very confusing that the wrapper function (pci_epc_get_msix())
-> and the callback function (pci_epc_ops->get_msix()) don't return the same
-> value.
+> Thus, it is very confusing that the wrapper function (pci_epc_set_msix())
+> and the callback function (pci_epc_ops->set_msix()) both take a parameter
+> named interrupts, but they both expect completely different encodings.
 > 
 > Cleanup the API so that the wrapper function and the callback function
 > will have the same semantics.
 
-Same comment as previous patches. Mention the semantic.
+Again... :)
 
-But looks good.
+> 
+> Cc: <stable+noautosel@kernel.org> # this is simply a cleanup
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+
+A nit below, but looks good.
 
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 5 ++---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c  | 5 ++---
+>  drivers/pci/endpoint/pci-epc-core.c              | 2 +-
+>  3 files changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index bbb310135977..542533a8c56a 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -294,14 +294,13 @@ static int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
+>  	struct cdns_pcie *pcie = &ep->pcie;
+>  	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+>  	u32 val, reg;
+> -	u16 actual_interrupts = interrupts + 1;
+
+Again suggest renaming interrupts to num_interrupts or nr_interrupts to avoid
+any confusion.
+
 
 -- 
 Damien Le Moal
