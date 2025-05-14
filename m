@@ -1,108 +1,143 @@
-Return-Path: <linux-pci+bounces-27717-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27718-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C9BAB6C08
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 15:03:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69F32AB6C2C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 15:08:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CA108C1FDD
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 13:02:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E57F84A4964
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 13:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3769E27816B;
-	Wed, 14 May 2025 13:03:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04DC5278772;
+	Wed, 14 May 2025 13:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuYrbhUJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8rQf3eg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D273274672;
-	Wed, 14 May 2025 13:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247521805B;
+	Wed, 14 May 2025 13:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227781; cv=none; b=UeZpDyHqIWJzIB0iTq+HvaJ4NM94MnB6MLT8rYqVnHVG0z1KT0w3rtfJK49wPA1U4FbL/z9d9HqCVkHo7sNUqvSLza46mpYTxDXBFF/1VUI/6281w+KuIlZGJZ3yUvcTm7iyyTntGg1l7eVEBWLi5ND/w5ubKwqR+Ua/pETjqUU=
+	t=1747228106; cv=none; b=hvOjp+mfWEyYqoifDiHcUnGSdi24oJ6BL4jowC08u073Nssvi2rMsrvOiML30YbK3lLqhybBB0/Ibc/LY4reaDI/c7wDCiQbitiMoyKNZAr2BDxEHW3UykCmzr3ikT2busCs0le2+jiDp1LLHDLH9MCzGBQ8B8n1tDbbn88zauw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227781; c=relaxed/simple;
-	bh=H+aOSXeP9x6b6RxJ88qAfN/mlcVs9pMe2ySIZAbUipE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IpfHmzZKg7/NLx9SmfEJYJOKCWIT142P5+krMIxr2dtQuXxB7wdFXs87fQ5n/F0Rzz1HiLBwUTR4zwKF3WwNl+Xy/7pQeiyDDeCZzcivLjgHcYLKvYFJehW403nIxnFuv9QhrqhCFhxlNizxlM9Fu9JUQTewIkR4Bhoc9Lo5bWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuYrbhUJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FB9C4CEE9;
-	Wed, 14 May 2025 13:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747227780;
-	bh=H+aOSXeP9x6b6RxJ88qAfN/mlcVs9pMe2ySIZAbUipE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GuYrbhUJTm7DKsaMNNeuwd7ZS65ark1VWQ4rCgQrEENaQQPTQvx8ke3W2iwN4dXmv
-	 DA0gTYpqD0YAtTfg+FbPNNphxSerEGqkZRDI+pjXUaJxeUzXLA33Jx1A9N0Ikq7Img
-	 4jXzvn/HsjE0iNXypvB7yQKf+MaJet2gCERj09z5dQ9zlVUyJnAUjeG1+4FFAVn1Vz
-	 /Lv2ctunjW6YkXNV9u9nvxL2KQP5forSo5qUgOaCdNUVmGtOYr9Yr6ZQuauRn3Yz6M
-	 ZdNwNjYu4cSIsd8I/9i+uDXXV507XGlX6F5EsZhbX+Wmau2pzkh0h0GnkK/cLBe2pD
-	 rP0PwKYVVjIoQ==
-Date: Wed, 14 May 2025 15:02:54 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com,
-	Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <aCSUfiwnZRTgMKGT@ryzen>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <20250508051922.4134041-1-vidyas@nvidia.com>
- <174722268141.85510.14696275121588719556.b4-ty@kernel.org>
+	s=arc-20240116; t=1747228106; c=relaxed/simple;
+	bh=SVRgRL86JVF3OrrXSAO0oxvw+IbDlhp+cAEEK0Nj1hM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V/8cy/XrLT1FZPIMs/MarfD7dcyuA+eS6w5LKEPy8s+QHM5YZDpEdN5DAtAV6fmATLOaVDHeBErH/uq1xBJc7Sn7nGJtW09YezNeMrIobkjdbBAy2WhAKvhh7hnpn6P9HiGmjoPGPafqIf3UDd2kOwK5f8VxTrz5cSnmSS9piw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8rQf3eg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747228105; x=1778764105;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SVRgRL86JVF3OrrXSAO0oxvw+IbDlhp+cAEEK0Nj1hM=;
+  b=i8rQf3egMnuwMGrmzy2N5+uDjFb0zgaOvjwtV3S//IAxQ1ucQZox1kHv
+   I12i3BT/gbvou07JQvTGLKNr5h+YdHqXdFKJR8HrlVFczXKvuNywYyG/K
+   x/AZ6j5WueCdf1NQUQ4Fc6UKR3ut/FmJ8zhpmwpPF+58mNmaQ4gapoZ01
+   8jrqetzt15DYcfxxhTb1JqxV7QTBdR4pJbRBzSuJEsAHOBJDkRHCJoLN6
+   Dg/pAHgEIDYdHvBXT5zC3SC6QMX4YqYjAWKOvn3P3MEtiNOWAytgMYGmZ
+   rkeaJ4YWmLWV9JsQuQeJYRGEcZ3cDZPQvd1h2ZKuHLhenpyEkq5CosAZ1
+   w==;
+X-CSE-ConnectionGUID: GtvaTzMpRuCtwWkFqaFRSw==
+X-CSE-MsgGUID: R8qV3v+zQ1+zfHUVfeY8/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51762049"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="51762049"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:08:21 -0700
+X-CSE-ConnectionGUID: 8/1e31aFQXupl/9Zr6oFjw==
+X-CSE-MsgGUID: VTNSiZKHROaIsr7Y6de9dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="168975723"
+Received: from carterle-desk.ger.corp.intel.com (HELO [10.245.246.189]) ([10.245.246.189])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:08:19 -0700
+Message-ID: <0e1005de-f5f8-4ad4-ad23-5fac81b24b33@linux.intel.com>
+Date: Wed, 14 May 2025 16:09:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174722268141.85510.14696275121588719556.b4-ty@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ lgirdwood@gmail.com, broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
+ guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+ <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
+ <bfb8e9a6-92c1-4079-aec0-b1ad2b245c70@linux.intel.com>
+ <7f3b2d28-38d0-482c-b79a-5aabed6b6ea8@linux.dev>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <7f3b2d28-38d0-482c-b79a-5aabed6b6ea8@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Vinod, Krzysztof,
 
-On Wed, May 14, 2025 at 12:38:01PM +0100, Vinod Koul wrote:
+
+On 14/05/2025 15:47, Pierre-Louis Bossart wrote:
+> On 5/13/25 08:23, Péter Ujfalusi wrote:
+>>
+>>
+>> On 12/05/2025 15:59, Pierre-Louis Bossart wrote:
+>>>
+>>>> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+>>>> Panther Lake, the main difference is the number of DSP cores, memory
+>>>> and clocking.
+>>>> It is based on the same ACE3 architecture.
+>>>>
+>>>> In SOF the PTL topologies can be re-used for WCL to reduce duplication
+>>>> of code and topology files. 
+>>>
+>>> Is this really true? I thought topology files are precisely the place where a specific pipeline is assigned to a specific core. If the number of cores is lower, then a PTL topology could fail when used on a WCL DSP, no?
+>>
+>> Yes, that is true, however for generic (sdw, HDA) topologies this is not
+>> an issue as we don't spread the modules (there is no customization per
+>> platform).
+>> When it comes to product topologies, they can still be named as PTL/WCL
+>> if needed and have tailored core use.
+>>
+>> It might be that WCL will not use audio configs common with PTL, in that
+>> case we still can have sof-wcl-* topologies if desired.
 > 
-> On Thu, 08 May 2025 10:49:22 +0530, Vidya Sagar wrote:
-> > Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> > check for the Tegra194 PCIe controller, allowing it to be built on
-> > Tegra platforms beyond Tegra194. Additionally, ensure compatibility
-> > by requiring ARM64 or COMPILE_TEST.
-> > 
-> > 
+> Right, so the topologies can be used except when they cannot :-)
+
+Right, topologies can be used when they are usable, if a new WCL only
+config pops it's head then we can add it as sof-wcl-* or so-ptl-* if it
+is expected to be present in PTL variants.
+
+>> Fwiw, in case of soundwire we are moving to a even more generic function
+>> topology split, where all SDW device can us generic function fragments
+>> stitched together to create a complete topology.
+>> Those will have to be compatible with all platforms, so wide swing of
+>> core use cannot be possible anymore.
 > 
-> Applied, thanks!
-> 
-> [1/1] PCI: dwc: tegra194: Broaden architecture dependency
->       (no commit info)
-> [1/1] phy: tegra: p2u: Broaden architecture dependency
->       commit: 0c22287319741b4e7c7beaedac1f14fbe01a03b9
-> 
-> Best regards,
-> -- 
+> I couldn't follow this explanation, or I am missing some context. My expectation is that as soon as someone starts inserting a 3rd party module all bets on core assignment are off, I am not sure how rules could be generic without adding restrictions on where 3rd party modules are added.
 
-I see that Vinod has queued patch 1/2.
+As soon as anyone inserts 3rd party modules in topologies they will
+create said topology for the machine they use and either select seaid
+topology for the machine or use override to load that.
 
-Please don't forget that this series requires coordination.
+You cannot really add 3rd party modules to generic topologies since
+somehow you need to make sure that the 3rd party module is somehow
+available at the same time.
 
-There are many ways to solve it.
+The difference regarding to audio in PTL to WCL is about the same as ARL
+to ARL-S, yet with sof-arl-* topologies this somehow was not an issue
+(and tgl and adl).
 
-1) One tree takes both patches.
+-- 
+Péter
 
-2) PHY tree puts the PHY patch on an immutable branch with just that
-commit, and PCI merges that branch, so the same SHA1 of the PHY patch
-is in both trees.
-
-3) Send PHY patch for the upcoming merge window. Send PCI patch for
-merge window + 1.
-
-
-Kind regards,
-Niklas
 
