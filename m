@@ -1,351 +1,262 @@
-Return-Path: <linux-pci+bounces-27666-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27667-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42963AB6090
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 03:51:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2485AB61AC
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 06:45:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1180A3A9DC0
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 01:51:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 476E44A3DD6
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 04:45:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07F11D95A9;
-	Wed, 14 May 2025 01:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164A91F03D7;
+	Wed, 14 May 2025 04:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZjUsy+Ds"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJOnvn6E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E0B28EC;
-	Wed, 14 May 2025 01:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747187490; cv=fail; b=Xd5Wu9WZnrAc4+JddmLA7JNk6qjWGaz/Rm1e/6BJqbA4bNxjlA28VAzmP/MXdzZb8XLiBQ1s0c5+/u37LjFJ6md0zQRP/BwmhQnEEh7set2BpyI5mewaN9twVN1Rj8XrJPIn1CQX4jce8mcQEVnyieoKRWMl/vatslODn4TYz5Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747187490; c=relaxed/simple;
-	bh=5pUEU1qo0rBjGgB/690wbaN+6Om54lQPmPifKlZajq0=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=IzpZ3eTW1sML1OUYYdFLaqLMoFVazqrtu8CMva/7Xz3qHLcS5+S1nKrkhiMGQLaTfsFRTOkUyFjLP4vwn7XAxpXOADYJxotBQs8ln0xXcGpJbUBvU6SIGWyz80ofx+yw0sC+2ZvcWveN7uWvamvWJQ97tsxsZ4ObN5A71oySbvo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZjUsy+Ds; arc=fail smtp.client-ip=40.107.244.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mge7MjSgiz/G4Y+xMPjh1jpA0+yIhh8KnZzBHbupf+wF7GYT0qHI1VgNJZnAc1QsKwS7tu9ZW5SdPYTYjIKLZ2fn8XnRsfoV9iqbLGSz7L8FvjTCkXR1uCENYx4DT//wXUX+VKTCOH5X9GoDbo0eo/RQ4MNSKMzBqGaoQKPVVkCcfD1vd/OYKdTVQxl0YK1TOBYZOzKv80V8LrhbJYRpSiNOlhQFAG/NIUHBTJ5rmQGfT1YmiENj238WEhsHgVVIChNbSnj4jDzbHhTFWOzPzO1iA1ZFw9OuO/tQiWCi0C704cPdrjZTYxs7qKlzHwGt66WXT1bysJwc129Bg+SnYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ugpadPjWzRpPMMugAM2Bwir4nOlmrwGRpnHeAzTX8Jc=;
- b=WG/O66Q8Blz+Brqko03gDB00u5seTaAbXTvbNlfQF1VkTuZHht/XeanWuPfhpjt4zlQCMydiYiLIkE4zjlY7Ea7DIHMTsZCsEWLO7Kkh2MdmPQMmaJOI1oDdUbssrDJh6cVZYLbmJcWtYm3hBdic3boN65pwA4xX5gBjtblwHEtuLr4zys9F/WURxFXzX4sU1fvTqKPRcmFwhhUN4kkCweNU0KPfot/+e6AS9+l8Pd/WrwhBDk8kiJPDxeTYuK/2kfwkzH8JtZhDiJwDD6p8LhTeq5Am5XCtOJfJ1JiD9oKJliqM62dDAjPJq39Dct4nT2uJYBufJmBtt2dSHb8ZQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ugpadPjWzRpPMMugAM2Bwir4nOlmrwGRpnHeAzTX8Jc=;
- b=ZjUsy+DsIJcpCtqnY6BTTY3Wu/UBirjCAdXN1zzMfZmqlF+5C9P5JSk6U+vEcZBNCVUSsU3AWtMxt6+AYCIYjQyOdlcjeLjTrMF4DPW7MFMKnrQB6jyXZKpVNJgq3cbjMChvOHRMgK/WxrTdxkmN/XwcjIbpdKFT6BgAD8YsJO3Rursbg7E1gKefnODfSBVG0UlyuzmR4rzP0rxTnRz1ogMTcxhA4V2slCciOraRPwv/2zm3+Sx1XbxTHbvPjKIfDY7XDHbjXRK4EP++an16hEILpcaA0QrlH+Yn/H34yqdk7AOVS7E8pmg0bgjRxEqiCi0oA8NxHDdOudKOlg6F0g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB4186.namprd12.prod.outlook.com (2603:10b6:5:21b::11)
- by LV8PR12MB9716.namprd12.prod.outlook.com (2603:10b6:408:2a1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 14 May
- 2025 01:51:23 +0000
-Received: from DM6PR12MB4186.namprd12.prod.outlook.com
- ([fe80::af59:1fd0:6ccf:2086]) by DM6PR12MB4186.namprd12.prod.outlook.com
- ([fe80::af59:1fd0:6ccf:2086%4]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 01:51:23 +0000
-Message-ID: <1b4c7742-1e0e-42c4-be52-c5fa55c24ca0@nvidia.com>
-Date: Tue, 13 May 2025 18:51:20 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 rc] iommu: Skip PASID validation for devices without
- PASID capability
-From: Tushar Dave <tdave@nvidia.com>
-To: Yi Liu <yi.l.liu@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
- "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "kevin.tian@intel.com" <kevin.tian@intel.com>,
- Jason Gunthorpe <jgg@nvidia.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250505211524.1001511-1-tdave@nvidia.com>
- <a8d9e9ca-4944-40ae-acd8-d576447742d3@intel.com>
- <f10f54a9-e45f-47f0-8f5e-473daae82665@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <f10f54a9-e45f-47f0-8f5e-473daae82665@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4PR04CA0284.namprd04.prod.outlook.com
- (2603:10b6:303:89::19) To DM6PR12MB4186.namprd12.prod.outlook.com
- (2603:10b6:5:21b::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC901CFBC;
+	Wed, 14 May 2025 04:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747197894; cv=none; b=hAxzx9MghfTp2g2mctijo/+Lew+kkpanUq4IeUKlHeyTt0VmcPFNzUcMdpMunhktTiosN23tBzo+uLfR51FvYLg+D+ReObH5BBpHncMhH8NHrY/SUubPesxrWoy8G0uOyFG6IG1p/km94/5JGk4utMPqN+5fZQ5Ypdj3/8nVYj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747197894; c=relaxed/simple;
+	bh=Y6s3AX2jrPC7U4pqLlFuhTwX0EZLQ+3bOheTss9JR7g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WK4lbjNM9DqHYnUth8WRDBDj48Q/GVHAoq1Fske1EMordnU0Zfw/wYI+V3t1SMhThdHfsK999Iabh/oy3ddBL9JEdA8wP62fBgHd+VAurJk1b4uHlwitKj/26QuY6pLFuMu7qwwHwJYmEQkbrlUyB83ftbTCZEW80f2q/Lu7S3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJOnvn6E; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4966016a12.2;
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747197891; x=1747802691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A9trPMXX/EB7UVvTChy9shKqqwZNL3OD0NP24pTFGYI=;
+        b=aJOnvn6Ef+yENNdpZps/EmjmWnQ0Oi0HCcKPOlowEGEy56Ndmv8vhYvtTPgzGTQQ8r
+         jGfk09Qm7I7O2WIwIp0aQYHweyvBM3ImcZJYkSppabRtKYW+FfIVm/2Se5kt4fQjG6CH
+         S59yHlHl1XYprzrTBwGdB/j6y+lheZXs0kpSMrWCSKdOAnG6HUVntFfS5JGKppp1VUT4
+         A0J70Hbd3XxnJVRElmQDaMNAy7b4beDAYmDyNeJZhhGZZW40jLS+rwtA9DjjXyTeYTnd
+         NBEcJ1lzt1YidF8t1khPFV0/AORMJTZ4k7XPJH9zV1yLUWsr/qLBMEHR5glytnl29Ex1
+         PGfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747197891; x=1747802691;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A9trPMXX/EB7UVvTChy9shKqqwZNL3OD0NP24pTFGYI=;
+        b=h3q0xyV0IEDmghZoien8sMrPxZP4nCHF6S09tvh+di0REEvliJxfiZfa7XtS16G6bS
+         kUkdhmPguj18pVPhfBk1ancJGftmZG5zPhxoS1SP9PRuPvJ1n72EZWGlbcmgIckCr9te
+         Ry8hcQcZK8hXQhiHRiDtDLqgKYGn03k+JUw9i63quMqQMl5W67bivResZVCz3y4RUg1s
+         PJsOn6aVrFICNMJVKNdDLs4p3kWkrbn1ElxqoQmYDypeXeoXFrIhpkKvm6gwJIk6rVuA
+         bHoNI/8VDqB7tP5ND3hJRjKaXLw1Ok1pUwZ+GvxcqqTgx9zyGNLCasnnriT4gzaivnWD
+         KpJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfWiK06HHM8sFrpfW0kq7TFjbRjhSJtqdrug+EpP7fLVKJyURBGxMIqnj9Ae/uHYs3Y8/4pSfGV7qIP22t@vger.kernel.org, AJvYcCVBix1f685e6YYvzNaWKojyECC2ULxon85VpUaYnizTK178c6Dwz2GgjJlYPCJjWpT222S3xZcGgMIqw8GC@vger.kernel.org, AJvYcCWm06zLa1RAYwBWowmewvAuOFfvwuhWCkBRZaNFWlJOPfEFthAW011uFP5PK9rp/WF59sLFDY0GlC4J7UrL4y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv4FZFfhglIKiqI9XGTN0ddBUWx14oY41JRrXj9uWheEFyFglY
+	DCAwgYmy5z70BGK/cvQZOhRm/zC33JpeWui4aKxMezY84P4VZfbcO4uLPQ==
+X-Gm-Gg: ASbGncvLsjz1VhvVdWqgFF92VXiODj3AGCHqDTuPKSFgQGup3w41iduWZ6MeTPTVI+Z
+	o0LG3Qbv4r/gDpdPzrK3Y+RJhmDpivIFtHODz69qPX3IzMByBA6qazqvQ1vuSajuiQHJBOHFJHp
+	CYGhLoLBfcKPnxOW1Cv5cEVDWUdF7fKRjdgrQAPVdNnGddSOI379sh+aL2NKAwhBZcEDdhlWiqA
+	KDNI6O8aKNlf/l3iQVNvzavu9UpG9yF4yPRDKMVYwNsqhwPHKVkbmWzIDlsK7j/aHe2TIXarYFG
+	oA3MJ8w/SXwswMEkc1GR3GznJys4wp35vEx0fKg+d8nt2Emvgd+bZ+vObyxyxN8InSVCeYFZ9XT
+	vBdiQLvxLq/599RGuJBS4qegYu9bf4AfXj6bR7wYA
+X-Google-Smtp-Source: AGHT+IHLP2oJUtXKiM26CLjzKW+MVekolbuyEIjQf6pZqRH55HA5MC3HvmIPl+AIf5XTZZhPfj2chA==
+X-Received: by 2002:a17:902:db06:b0:221:78a1:27fb with SMTP id d9443c01a7336-231981057a2mr32169645ad.11.1747197891426;
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7742ceesm90682255ad.73.2025.05.13.21.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	gustavoars@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 1/1] PCI: hv: Remove unnecessary flex array in struct pci_packet
+Date: Tue, 13 May 2025 21:44:40 -0700
+Message-Id: <20250514044440.48924-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4186:EE_|LV8PR12MB9716:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0272d0d6-2435-4cea-7164-08dd9289d473
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b01sMWZ6cE5oT2RxRGthTTl4S0FsODV3TFdhYzdYczhNMXg0SFY4VGtJYi93?=
- =?utf-8?B?V3VobDVkejdhaDRCMWhnOFR5UDJxQmM4YW1iOFpRVTZta2dVcDgzdDBNWVBs?=
- =?utf-8?B?dWJNTC90Ky81KytNL3RzektUOUpTUXdDeitueUw0R200c0dqZGRVSEdmY05F?=
- =?utf-8?B?MEpTMURKWEZsS3Z5MzRaZEhYZDJONU1ISi9sRStkT24vQ0cyS1BDWURyMDIw?=
- =?utf-8?B?TWFIbWw1ejFvQTc0UnZaZ0N3cC9paEJlK2NpRFRWb3gzek1RQ1lIMzB1VUZn?=
- =?utf-8?B?dmhXd3NKcFRZTTVUcit5bkI1MkFkdDFKL3JPdytrZkVObUFnRmcxVmZpMFhq?=
- =?utf-8?B?ZmZWcytPNERlSE4wTWx1SUFLaXBmV0dkUmtreDZVcm1JSzNGQTYvTkFlb3JD?=
- =?utf-8?B?NmpSQm9NTU8weENFYkIwSW82TkdjMEdsRmh2blFSUEJtcnF0UUQ2USt5V25X?=
- =?utf-8?B?MUVoYXZyTG14VER4WnlJdllRcnVHRWczczlQRDVWbDdUV2RVTmplSjJKTDdy?=
- =?utf-8?B?dUtmaEZwa2VkK0h4SkhiNWlxNDB0ellhZEw3WkE2N0VTdlkyV0RoaXB1L1U0?=
- =?utf-8?B?U25aV0dNN2FlRGZYYlh6YWlibk9SYWxnRXNwRDVCeW93MjJsb1p0VkJ1Nk1m?=
- =?utf-8?B?dVRXZXptMEFwQlkyY2pOb29lejlSWlhZaXRJb3VXTElIa0pqN0lsdG1sQzJk?=
- =?utf-8?B?MGZiUUFrLzcrSWZoOG9JODhrcTJyNkVzRUJRVzQ0SWJLNFhERDJMOG1PTHBO?=
- =?utf-8?B?WGFQNzF2MVVkbWVwcUdMaU9kSVdXM1Y4L210RHYza2lhK2tYdFlrNitRN0pP?=
- =?utf-8?B?THlXbEVMRVk4WkZBaE9NN1JFQ0R2T1JDbmhzdE5lSEFBRUQwektkdVNjcTB2?=
- =?utf-8?B?bEJMUllIQWs4eFVwUExvN2lnMW8wWnpxbU1TL2w3dk1yYVBRaHNHaXBWT0Zr?=
- =?utf-8?B?cko0VjQybE9kRUoxamZkRExCSHh3NWg1OStDUGtMR3VZeDE4Rk43QzNwbGtE?=
- =?utf-8?B?Nkt3U2tReC9MT09pRzdqOFhCRWdNMkZCSFVUc2VEN2M3VEZUbHdEcVZKRWsv?=
- =?utf-8?B?eHoySDMyeHQ1bGxpQ0dtOTg2TDczVjNxZHAwWTMxL204UzZlSjRyOS90Y2R5?=
- =?utf-8?B?NURJMlRCc21GMkV0VGNRZ213dGs0emo2T1FodHVFckl6QW0vTStKbjVFQ0hr?=
- =?utf-8?B?K0YwY0VSRzNIQmhHdTBpOFJmcUlXcllRNFpoUWQ4RnNKME5DeXMremRRTEdV?=
- =?utf-8?B?alhBRDNwcHhOOFJNbVhFVmtoMlZqSmxTcytBYm9sQU5lbUtwRHpEWHduUmxU?=
- =?utf-8?B?alVtOU1BK3UyNjBJOXV0bHpkcUZpKzdqeFNaajBRK2s5TTEvTlUrN0s1U1Yv?=
- =?utf-8?B?VW0vSXdrNGlCU2RRanNOcWRLa3VsdkFMLzVoVXFNaW5WamJuQWRZeVp3cElo?=
- =?utf-8?B?b1UrR1FKdTc3cDJNUVhDN2kvZUtRMEUycUtqa2N1bTZCSWRUQUt5VitnMWZp?=
- =?utf-8?B?VEZ0L0FoaTEzbEllcm9UbkhKNER3Zk45V25ISmUwK09vL09sZnhuTlVwaXBK?=
- =?utf-8?B?eTRuQ3RjdGNmUUE3QjZ4alYzVis3cnVrRXU0NXBpWlp1OGpQaXZYQUJJRjhX?=
- =?utf-8?B?N2k3VFZkc3VSb0gyc2dCSktqSi92aG4zdEJrbmlKWTJIODhPRnhndUVHdEk4?=
- =?utf-8?B?ZzYya0VISms1clU3MkZmMzQyMXgySG11WmttcXIzMzF0RjUzR21qNEJ2NDhi?=
- =?utf-8?B?N1VJejE4NEVMejRjQmRUYkN1RTB2NENVUGl6WnNNVFIwTWhVamh1MVJ3UE4w?=
- =?utf-8?B?NjQxK0VSZGtnWjR2R0M4YmZmYzZ1ZlVLWnVMRWtLVDAxNXUrOVFBWEVsTi9J?=
- =?utf-8?B?enJ1QTFDQ09ESk9XbTNnSW5qazFvL09mUkFoS3Z6QU5wcXczQXAvSldsZzZN?=
- =?utf-8?Q?uJ4n5/iS0UE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4186.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cWJPMHVZME5EM1JIeWROb1RtbHFkSzNNZ1pxdjhJcUh3eTluU0JHTitTL09j?=
- =?utf-8?B?clFEc3gyL2wvTFJqRFFQcnlQRng1SG4rOXZURkxQVVcwWXBJUlFNV2xWTG5T?=
- =?utf-8?B?TzdpaDJCSlVFdDZ4UlVzTzJxOUI4Y0dMTXBCd3NuQzFnRzY3S2tNbVFRMkVh?=
- =?utf-8?B?bXRBSVFrZmNrUlVqeGJhdEhMM2NraEpDeDNsMnJBS0t3SEhKZHh0NnJuN1JV?=
- =?utf-8?B?c1R6cHkrUlY3YjJxeXhOQW5iSS9VUTF2UXErYTRwSjY3TWxhYjJaOGVMRFcw?=
- =?utf-8?B?aEllZVh5KzhKc0VvRnozWEI2Yi9LMlNLRWxyVnZybHM5aTl5YzVFVDA4bXZU?=
- =?utf-8?B?OUZHSVA3MXBmWVg0ZWl2ZkdLZG1TN1RUUVA3SWlHL1FlRFVlM0ZubjZZN1Rx?=
- =?utf-8?B?NkxhTm1sbHFPcGJKQTIyRTFZbjVsQWsxWEEyM3V5VUFTM0tVSU1ybXlNNFV5?=
- =?utf-8?B?TUMwQy81U2tKaG54MnhzOEE3aWpaWmtHNzdhMWMxN3hXU3d2dERRb1Awc0ta?=
- =?utf-8?B?cnhXYXZWZXQrSitXVlZOc0Jna0lmV0lHQzVKc2hDMld1VzRwYjFUaUUvQ2RX?=
- =?utf-8?B?M2UxN0RYY1lsaU5DK01selB2Ty9lbVN1VXgxRUtVZ0hMUElBRHQ3eFV1bi9S?=
- =?utf-8?B?K2xjc2s2N0dQMzlKNkZpK1FxNm1pRWIwMWlQQ1RQNTF1L1NmWXljYnlZdDJ1?=
- =?utf-8?B?UjduRFV5THVvY3A1M0VXRjUvKzVIWCt0OFZ5LzRPeEtJV3AvQmZUdTAzaTZX?=
- =?utf-8?B?MHBhVnpyWEJIZmh4NnhsQkFYZTVmb29tZzluZWxRV0oyR20ydUNiVFpKaEVs?=
- =?utf-8?B?VXdxL0F0YndYRU9YdUpTemF5YUZMcG5JK09mRlpUczhydzlHUUFFMjJ4c1pK?=
- =?utf-8?B?RFBERWxWNWRyK0kzbS9RalAwYVlTQ2QvMDJwTFFmNldWVzRyNzlQWS92enlz?=
- =?utf-8?B?eU1RK2VmbStLb255L1k5VkdxTWUrS0kwb0xONFcyeGpTUmJ0cFYrcVk4aEZ5?=
- =?utf-8?B?bmFtZ1FaVEtkajFQZUlBWWlndGhUTDNFWEFUWjdBTndpZUwvZy9IcG9wTGxy?=
- =?utf-8?B?WG84dHB5QVM4TkpESkxGNW90dVF4bmNMNTNQVmpWTkNpUTlhZlBHRFQ3SUZJ?=
- =?utf-8?B?eGg5ZTJydUVzT0hQUHkwaGlLWUQzdjQrR04xR2tTeXFhQVRhbmtUWk5oTTIr?=
- =?utf-8?B?ZVRaYW5hcVpQQ2xIekJUbjhTY1lJT3BsOXREck10cnlRL1Jndll2cy9pUG1z?=
- =?utf-8?B?WTJmQ3E2bklON0hCc2tmL29hanIvZDE0UnhWNi9WdVR1YmRTeGErWm9uVENl?=
- =?utf-8?B?dHVseUVGWUk0dVBjc1dwTDBvUWMycWU0UUhoTStvSW1sWkFxSWV1N1lpU3hT?=
- =?utf-8?B?REFkcWFJajFJVUE3dEJwdW9CRFl2VVAzTFVTaGIyVElra2swa0ptWkIwSzI2?=
- =?utf-8?B?VWxaejVKbE0xUnpBUWpua05EQXQzNVkvbU80RHR6bGl3andieDRpeVRaVzZB?=
- =?utf-8?B?em1BaHdaMmFIL3F3cUN0NmVaUS9ZaG1ybXpPNUN4dmVZU1cyWUcwczh2eWx6?=
- =?utf-8?B?MFNUTGRHRU5qQllOeU4wckVsZlpRUE5hYmpBYTVUejB3YXQzUU5sVW01eFRG?=
- =?utf-8?B?OXNlZkRKUTVQd2ZXenc5WnlSd1Iyemd0RGtzU1pEaGdkV3VmbXJMNzdwS0Y3?=
- =?utf-8?B?ek9VOEtGSnoxNjMrbmFmUmNKclNjaE52bUJHTUdxV1QzNURRUGdEZ2hmelVy?=
- =?utf-8?B?dHN3WU5qMGJyazMyK241ZTg1dUFQNXRvOHpTclhrb3FBaUM0U1dmZHVxL0Iy?=
- =?utf-8?B?UXNpZjZPTlkvcEhCbWFMeUs4N2duN0pac0d0QUV4elBHci9ERUVWMVMwNnE0?=
- =?utf-8?B?aFNZdWwyV1I0dHoxbElQUWVYWGM0OTczdlhGZG1GN1I4b1ZSMk4rV202eUZV?=
- =?utf-8?B?KzAyZllEZmFHREVESjBza2o0YmllS29YcUttVU9WVzhaZ042OVF0ZUp0VWpZ?=
- =?utf-8?B?S3VYd3JRM0M1bDV3UElEeStRZjFPQ2RJcU8veWtZM2xXVEtGcFVSUVpiRFpi?=
- =?utf-8?B?YnZ3YjNoSGFWWlFVdHJNQ1BscjJXOWhuQXJXNTd0Y0RKOUJyNEZXSi9qRC9j?=
- =?utf-8?Q?+4qgYMl4ZxpbU0aNuX1LJTuHs?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0272d0d6-2435-4cea-7164-08dd9289d473
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4186.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 01:51:23.0931
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kbrionKRWIB5Q8cjWGzaih06SX1422chnoyMpe+CPkq+gwdMGFhqe6YKN6vjg08imV6wXBasg2NY2s+k5V/dAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9716
+Content-Transfer-Encoding: 8bit
 
+From: Michael Kelley <mhklinux@outlook.com>
 
+struct pci_packet contains a "message" field that is a flex array
+of struct pci_message. struct pci_packet is usually followed by a
+second struct in a containing struct that is defined locally in
+individual functions in pci-hyperv.c. As such, the compiler
+flag -Wflex-array-member-not-at-end (introduced in gcc-14) generates
+multiple warnings such as:
 
-On 5/7/25 17:21, Tushar Dave wrote:
-> 
-> 
-> On 5/7/25 06:59, Yi Liu wrote:
->>
->> On 2025/5/6 05:15, Tushar Dave wrote:
->>> Generally PASID support requires ACS settings that usually create
->>> single device groups, but there are some niche cases where we can get
->>> multi-device groups and still have working PASID support. The primary
->>> issue is that PCI switches are not required to treat PASID tagged TLPs
->>> specially so appropriate ACS settings are required to route all TLPs to
->>> the host bridge if PASID is going to work properly.
->>>
->>> pci_enable_pasid() does check that each device that will use PASID has
->>> the proper ACS settings to achieve this routing.
->>>
->>> However, no-PASID devices can be combined with PASID capable devices
->>> within the same topology using non-uniform ACS settings. In this case
->>> the no-PASID devices may not have strict route to host ACS flags and
->>> end up being grouped with the PASID devices.
->>>
->>> This configuration fails to allow use of the PASID within the iommu
->>> core code which wrongly checks if the no-PASID device supports PASID.
->>>
->>> Fix this by ignoring no-PASID devices during the PASID validation. They
->>> will never issue a PASID TLP anyhow so they can be ignored.
->>>
->>> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Tushar Dave <tdave@nvidia.com>
->>> ---
->>>
->>> changes in v3:
->>> - addressed review comment from Vasant.
->>>
->>>    drivers/iommu/iommu.c | 27 +++++++++++++++++++--------
->>>    1 file changed, 19 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->>> index 60aed01e54f2..636fc68a8ec0 100644
->>> --- a/drivers/iommu/iommu.c
->>> +++ b/drivers/iommu/iommu.c
->>> @@ -3329,10 +3329,12 @@ static int __iommu_set_group_pasid(struct iommu_domain
->>> *domain,
->>>        int ret;
->>>        for_each_group_device(group, device) {
->>> -        ret = domain->ops->set_dev_pasid(domain, device->dev,
->>> -                         pasid, NULL);
->>> -        if (ret)
->>> -            goto err_revert;
->>> +        if (device->dev->iommu->max_pasids > 0) {
->>> +            ret = domain->ops->set_dev_pasid(domain, device->dev,
->>> +                             pasid, NULL);
->>> +            if (ret)
->>> +                goto err_revert;
->>> +        }
->>>        }
->>>        return 0;
->>> @@ -3342,7 +3344,8 @@ static int __iommu_set_group_pasid(struct iommu_domain
->>> *domain,
->>>        for_each_group_device(group, device) {
->>>            if (device == last_gdev)
->>>                break;
->>> -        iommu_remove_dev_pasid(device->dev, pasid, domain);
->>> +        if (device->dev->iommu->max_pasids > 0)
->>> +            iommu_remove_dev_pasid(device->dev, pasid, domain);
->>
->> Reviewed-by: Yi Liu <yi.l.liu@intel.com>
->>
->> with a nit. would it save some loc by adding the max_pasids check in
->> iommu_remove_dev_pasid()?
-> 
-> With current code:
-> 
->    drivers/iommu/iommu.c | 27 +++++++++++++++++++--------
->    1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> 
-> If I move the pasid check in iommu_remove_dev_pasid(), it would be:
-> 
->    drivers/iommu/iommu.c | 23 ++++++++++++++++-------
->    1 file changed, 16 insertions(+), 7 deletions(-)
-> 
+drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure
+    containing a flexible array member is not at the end of another
+    structure [-Wflex-array-member-not-at-end]
 
-Yi Liu,
+The Linux kernel intends to introduce this compiler flag in standard
+builds, so the current code is problematic in generating these warnings.
 
-Should I send v4 with the change below or we are good with v3?
+The "message" field is used only to locate the start of the second
+struct, and not as an array. Because the second struct can be
+addressed directly, the "message" field is not really necessary.
+Rather than try to fix its usage to meet the requirements of
+-Wflex-array-member-not-at-end, just eliminate the field and
+either directly reference the second struct, or use "pkt + 1"
+when "pkt" is dynamically allocated.
 
--Tushar
+Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+Original discussion of the issue is here:
 
-> 
-> e.g.
-> 
-> @@ -3318,8 +3318,9 @@ static void iommu_remove_dev_pasid(struct device *dev,
-> ioasid_t pasid,
->           const struct iommu_ops *ops = dev_iommu_ops(dev);
->           struct iommu_domain *blocked_domain = ops->blocked_domain;
-> 
-> -       WARN_ON(blocked_domain->ops->set_dev_pasid(blocked_domain,
-> -                                                  dev, pasid, domain));
-> +       if (dev->iommu->max_pasids > 0)
-> +               WARN_ON(blocked_domain->ops->set_dev_pasid(blocked_domain,
-> +                                                          dev, pasid, domain));
->    }
-> 
->    static int __iommu_set_group_pasid(struct iommu_domain *domain,
-> @@ -3329,10 +3330,12 @@ static int __iommu_set_group_pasid(struct iommu_domain
-> *domain,
->           int ret;
-> 
->           for_each_group_device(group, device) {
-> -               ret = domain->ops->set_dev_pasid(domain, device->dev,
-> -                                                pasid, NULL);
-> -               if (ret)
-> -                       goto err_revert;
-> +               if (device->dev->iommu->max_pasids > 0) {
-> +                       ret = domain->ops->set_dev_pasid(domain, device->dev,
-> +                                                        pasid, NULL);
-> +                       if (ret)
-> +                               goto err_revert;
-> +               }
->           }
-> 
->           return 0;
-> 
-> Last hunk remain same as before for iommu_attach_device_pasid()
-> 
-> 
-> Let me know.
-> 
-> -Tushar
-> 
-> 
->>
->>
->>>        }
->>>        return ret;
->>>    }
->>> @@ -3353,8 +3356,10 @@ static void __iommu_remove_group_pasid(struct
->>> iommu_group *group,
->>>    {
->>>        struct group_device *device;
->>> -    for_each_group_device(group, device)
->>> -        iommu_remove_dev_pasid(device->dev, pasid, domain);
->>> +    for_each_group_device(group, device) {
->>> +        if (device->dev->iommu->max_pasids > 0)
->>> +            iommu_remove_dev_pasid(device->dev, pasid, domain);
->>> +    }
->>>    }
->>>    /*
->>> @@ -3391,7 +3396,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->>>        mutex_lock(&group->mutex);
->>>        for_each_group_device(group, device) {
->>> -        if (pasid >= device->dev->iommu->max_pasids) {
->>> +        /*
->>> +         * Skip PASID validation for devices without PASID support
->>> +         * (max_pasids = 0). These devices cannot issue transactions
->>> +         * with PASID, so they don't affect group's PASID usage.
->>> +         */
->>> +        if ((device->dev->iommu->max_pasids > 0) &&
->>> +            (pasid >= device->dev->iommu->max_pasids)) {
->>>                ret = -EINVAL;
->>>                goto out_unlock;
->>>            }
->>
-> 
+https://lore.kernel.org/linux-hyperv/aAu8qsMQlbgH82iN@kspp/
+
+ drivers/pci/controller/pci-hyperv.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e1eaa24559a2..ca5459e0dfcb 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -309,8 +309,6 @@ struct pci_packet {
+ 	void (*completion_func)(void *context, struct pci_response *resp,
+ 				int resp_packet_size);
+ 	void *compl_ctxt;
+-
+-	struct pci_message message[];
+ };
+ 
+ /*
+@@ -1438,7 +1436,7 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	memset(&pkt, 0, sizeof(pkt));
+ 	pkt.pkt.completion_func = hv_pci_read_config_compl;
+ 	pkt.pkt.compl_ctxt = &comp_pkt;
+-	read_blk = (struct pci_read_block *)&pkt.pkt.message;
++	read_blk = (struct pci_read_block *)pkt.buf;
+ 	read_blk->message_type.type = PCI_READ_BLOCK;
+ 	read_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	read_blk->block_id = block_id;
+@@ -1518,7 +1516,7 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	memset(&pkt, 0, sizeof(pkt));
+ 	pkt.pkt.completion_func = hv_pci_write_config_compl;
+ 	pkt.pkt.compl_ctxt = &comp_pkt;
+-	write_blk = (struct pci_write_block *)&pkt.pkt.message;
++	write_blk = (struct pci_write_block *)pkt.buf;
+ 	write_blk->message_type.type = PCI_WRITE_BLOCK;
+ 	write_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	write_blk->block_id = block_id;
+@@ -1599,7 +1597,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 		return;
+ 	}
+ 	memset(&ctxt, 0, sizeof(ctxt));
+-	int_pkt = (struct pci_delete_interrupt *)&ctxt.pkt.message;
++	int_pkt = (struct pci_delete_interrupt *)ctxt.buffer;
+ 	int_pkt->message_type.type =
+ 		PCI_DELETE_INTERRUPT_MESSAGE;
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+@@ -2482,7 +2480,7 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 	comp_pkt.hpdev = hpdev;
+ 	pkt.init_packet.compl_ctxt = &comp_pkt;
+ 	pkt.init_packet.completion_func = q_resource_requirements;
+-	res_req = (struct pci_child_message *)&pkt.init_packet.message;
++	res_req = (struct pci_child_message *)pkt.buffer;
+ 	res_req->message_type.type = PCI_QUERY_RESOURCE_REQUIREMENTS;
+ 	res_req->wslot.slot = desc->win_slot.slot;
+ 
+@@ -2860,7 +2858,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 		pci_destroy_slot(hpdev->pci_slot);
+ 
+ 	memset(&ctxt, 0, sizeof(ctxt));
+-	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
++	ejct_pkt = (struct pci_eject_response *)ctxt.buffer;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+@@ -3118,7 +3116,7 @@ static int hv_pci_protocol_negotiation(struct hv_device *hdev,
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt->completion_func = hv_pci_generic_compl;
+ 	pkt->compl_ctxt = &comp_pkt;
+-	version_req = (struct pci_version_request *)&pkt->message;
++	version_req = (struct pci_version_request *)(pkt + 1);
+ 	version_req->message_type.type = PCI_QUERY_PROTOCOL_VERSION;
+ 
+ 	for (i = 0; i < num_version; i++) {
+@@ -3340,7 +3338,7 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt->completion_func = hv_pci_generic_compl;
+ 	pkt->compl_ctxt = &comp_pkt;
+-	d0_entry = (struct pci_bus_d0_entry *)&pkt->message;
++	d0_entry = (struct pci_bus_d0_entry *)(pkt + 1);
+ 	d0_entry->message_type.type = PCI_BUS_D0ENTRY;
+ 	d0_entry->mmio_base = hbus->mem_config->start;
+ 
+@@ -3498,20 +3496,20 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+ 
+ 		if (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2) {
+ 			res_assigned =
+-				(struct pci_resources_assigned *)&pkt->message;
++				(struct pci_resources_assigned *)(pkt + 1);
+ 			res_assigned->message_type.type =
+ 				PCI_RESOURCES_ASSIGNED;
+ 			res_assigned->wslot.slot = hpdev->desc.win_slot.slot;
+ 		} else {
+ 			res_assigned2 =
+-				(struct pci_resources_assigned2 *)&pkt->message;
++				(struct pci_resources_assigned2 *)(pkt + 1);
+ 			res_assigned2->message_type.type =
+ 				PCI_RESOURCES_ASSIGNED2;
+ 			res_assigned2->wslot.slot = hpdev->desc.win_slot.slot;
+ 		}
+ 		put_pcichild(hpdev);
+ 
+-		ret = vmbus_sendpacket(hdev->channel, &pkt->message,
++		ret = vmbus_sendpacket(hdev->channel, pkt + 1,
+ 				size_res, (unsigned long)pkt,
+ 				VM_PKT_DATA_INBAND,
+ 				VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+@@ -3809,6 +3807,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
++	struct pci_message *msg;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct hv_pci_dev *hpdev, *tmp;
+ 	unsigned long flags;
+@@ -3854,10 +3853,10 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt.teardown_packet.completion_func = hv_pci_generic_compl;
+ 	pkt.teardown_packet.compl_ctxt = &comp_pkt;
+-	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
++	msg = (struct pci_message *)pkt.buffer;
++	msg->type = PCI_BUS_D0EXIT;
+ 
+-	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
+-				     sizeof(struct pci_message),
++	ret = vmbus_sendpacket_getid(chan, msg, sizeof(*msg),
+ 				     (unsigned long)&pkt.teardown_packet,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+-- 
+2.25.1
+
 
