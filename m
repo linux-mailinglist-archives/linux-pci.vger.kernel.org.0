@@ -1,107 +1,87 @@
-Return-Path: <linux-pci+bounces-27758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D827AB75FE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 21:35:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D48AB760C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 21:42:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEDF9865DEE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 19:34:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2620189819B
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 19:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856A02951A3;
-	Wed, 14 May 2025 19:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO6HimHt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFCD38DD8;
+	Wed, 14 May 2025 19:42:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595E22949F9;
-	Wed, 14 May 2025 19:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4BA2920B5;
+	Wed, 14 May 2025 19:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747251280; cv=none; b=a5CxwRIreNp67D2upvPUOWqdfgE9o1pM7rGObfwNsFNYCRK9N2SLQl/ECOnxx8bn24H6niqiTvfvMuwyn3GklezOuqBsakjHLdWJEfa6/xxPqzeYNqoSpz0tFXWzlsuFIwqymtTAa7GOS4LRWADiR29qFAcQm3Cy/uM9DJpc8ao=
+	t=1747251746; cv=none; b=j+4hMQg0JQhLbyV2V8Vaju854ORGzxAioBXFlYQ9c+YoIGFj+vqh+xq1M6xYZQhm3TUfBn0eISvipX1cSaGV0TagVAKjG18hV3ax3PfxjNF1VbLlM3fT3lUY3DD1BOhNBrZwBPQyhOf1ulB2+NnXy+7MmUu+cGX1n6rG6AY4w1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747251280; c=relaxed/simple;
-	bh=LB2ONc/3BqVLy79e00jHCVU/mzynv4kwHq33TPW/jAA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tvXo/r4B7JFqTTZDcL953bjtfKf/wJsknv3d35FycLJjCjlcCnOR/dhKP6w1h+kGiCT9GJmDmcuDPAlTsnPHeBbABQDPR5fguTNgLyKAtdMrg4TJszAMrS82/siTTarSvKPE3Q8WXE9TV+kALrFoHOdExqybWad2hjE41pgQrqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DO6HimHt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D0D4C4CEF3;
-	Wed, 14 May 2025 19:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747251279;
-	bh=LB2ONc/3BqVLy79e00jHCVU/mzynv4kwHq33TPW/jAA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DO6HimHtI31Dcm16iw6Zla/z/RpuGxcX0zMJ6uEjmvrljF1ktSnKgCKJfwbtYt5Bb
-	 lmyc0XfzMriIo2rHrUPGLPKiaSB4Kyk0Nz/+flbXZWKex+vFCsmYw6EQ/fy9eD8M1A
-	 BiXlGkm6AqsHymRfbyFMgreVS3YaGjUiQotn4ysD1di7Gz1VfBOHo0m+3BnBrum6/h
-	 jm5cHDNOz+VOUAVzVzEvKScbd3MH2pfD8rXOKIBXEnADMcm5sZx5927dimAuHrp1hx
-	 tNbGKPoMQt8gInI2K1B/9xFGlGjsr9voeciB+fSDsaaQHfWc45ZmoBIeuMWnziHaic
-	 cX2qCWAJ8XVuQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list),
-	Mario Limonciello <mario.limonciello@amd.com>,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Denis Benato <benato.denis96@gmail.com>,
-	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>
-Subject: [PATCH v2 3/3] drm/amd: Avoid evicting resources at S5
-Date: Wed, 14 May 2025 14:34:06 -0500
-Message-ID: <20250514193406.3998101-4-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250514193406.3998101-1-superm1@kernel.org>
-References: <20250514193406.3998101-1-superm1@kernel.org>
+	s=arc-20240116; t=1747251746; c=relaxed/simple;
+	bh=Vj4fabamFDyKiwQgDUjjkQXPLrCwbSVOfhoUjOl/bfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK5QI6H53nzC399TA2H8mu7wuGvBeYnUFViP3dvIuCsld2xdYrlT/h5D5OZDZQdzIs0yK1Z/ae7E2I7gi3JbHt7dglmQ36VFLwMumIB6ac+b2jIDdwpHIQLVozdUAm7jYXkyLk7LAxjRUkG+0Y5xtuLb0esaFeaiK+4eRmZw1n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A5D802C06844;
+	Wed, 14 May 2025 21:41:42 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id C067120CDF7; Wed, 14 May 2025 21:42:14 +0200 (CEST)
+Date: Wed, 14 May 2025 21:42:14 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+Message-ID: <aCTyFtJJcgorjzDv@wunner.de>
+References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+ <174724335628.23991.985637450230528945.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174724335628.23991.985637450230528945.b4-ty@kernel.org>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, May 14, 2025 at 05:28:33PM +0000, Krzysztof Wilczy??ski wrote:
+> > The commit 0238f352a63a ("PCI/bwctrl: Replace lbms_count with
+> > PCI_LINK_LBMS_SEEN flag") remove all code related to
+> > pcie_bwctrl_lbms_rwsem but forgot to remove the rwsem itself.
+> > Remove it and the associated info from the comment now.
+> > 
+> > 
+> 
+> Applied to bwctrl, thank you!
+> 
+> [1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+>       https://git.kernel.org/pci/pci/c/256ab8a30905
 
-Normally resources are evicted on dGPUs at suspend or hibernate and
-on APUs at hibernate.  These steps are unnecessary when using the S4
-callbacks to put the system into S5.
+This is now an individual commit on the bwctrl branch, but Ilpo
+requested to squash it with the other commit already on that branch...
 
-Cc: AceLan Kao <acelan.kao@canonical.com>
-Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Denis Benato <benato.denis96@gmail.com>
-Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
- 1 file changed, 4 insertions(+)
+   "Bjorn, this should be folded into the original commit I think."
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 4d1b54f58495a..ea1385b6d894f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -4960,6 +4960,10 @@ static int amdgpu_device_evict_resources(struct amdgpu_device *adev)
- 	if (!adev->in_s4 && (adev->flags & AMD_IS_APU))
- 		return 0;
- 
-+	/* No need to evict when going to S5 through S4 callbacks */
-+	if (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF)
-+		return 0;
-+
- 	ret = amdgpu_ttm_evict_resources(adev, TTM_PL_VRAM);
- 	if (ret)
- 		DRM_WARN("evicting device resources failed\n");
--- 
-2.43.0
+...because that other commit breaks the build:
 
+https://lore.kernel.org/r/3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop/
+
+Thanks,
+
+Lukas
 
