@@ -1,227 +1,325 @@
-Return-Path: <linux-pci+bounces-27763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27764-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9C64AB77E6
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 23:25:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DEC9AB78F7
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 00:17:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F422F3ADB02
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 21:25:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B9DD189BAEF
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 22:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF25828D856;
-	Wed, 14 May 2025 21:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04DBF1F0E20;
+	Wed, 14 May 2025 22:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avRYxeJb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Elh0VbAD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39C41F0E47;
-	Wed, 14 May 2025 21:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0081EB189
+	for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 22:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747257941; cv=none; b=EfbRvPDRiXPR8UBIiNmnVSV2NtgyPslL0Cw55Z3O6Ob5EWAWPqwf1QSBkXpgzJ1mwvX/mUCBbDspQKeu7tQ+1LksFNmLi6gL0j8TN+T1hIWMVohyFogLjjwDJiScnG6fgtLKrfhhAceX84yk8IJHUGe5pbrhUHg0QHYyVa2ZbWs=
+	t=1747261057; cv=none; b=aVV0wJA1w6eJ/uje4p9qA1dqJayt097pAjZeFSbqZHg2/2Z+a2wZ7vjWUkHbgcneN3D12AcZ+aDbcylrpltMDXdxfvQ1QeWwTJhUdVWY2H2Hg3mxb4hJG4ARxMLJhlgyp9muMU7xufyqBbNhcaOfb9QgtkBcQbfSY7jM1Z5cFbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747257941; c=relaxed/simple;
-	bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1mUcV4nPVAe0FTg0nfVcnU4qRPGYQVzAt6mdgJIDVcH89TGEbaLJOzkmXIPtRXte1R3CJic9SeUTlwA+ADBdWOjzqnINLE9kGF/hHkCL6MmzvfrAxARJobqW4C6EB47KxkORuuWHsIv0CJMeC9msxq32famEp6tL8g9t/lFp08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avRYxeJb; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5fcc96b6a64so564576a12.0;
-        Wed, 14 May 2025 14:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747257938; x=1747862738; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
-        b=avRYxeJb70gNBiam3EM3PEa4oOuSECL8g5cLvDLWL4phsNTbCK6NYYbvbfq3vKj/Cu
-         GIfx8a5iTchQyoliWYKdE0XJQYt9hIWGE6oZvGXCTnNfy1z10qKQ9hSOaSPb3ORCv49t
-         z1tcjdHN2SHKqpOXEkZgXCkmnbx5Tlh4NV+845GLUVoqZzfkkIf1QTF/dxLkpOSvW9WK
-         eZ11WPMRqeQx3WSvSmV/4FbSE3pdkmgLem9heYu52ELvcnSWHHMCCE07bJdJd+DXExgG
-         ZWchGxt2HfL6yzG5Ahubs6hd13/gwb21jzDd2yGCr5/KxHYgU7rJmQxECwNBgGnEXzU9
-         xfEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747257938; x=1747862738;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
-        b=vyqT2lPAe5xNj4CVBIFRT0vpe4NKw7CmcFqZ83+PQ/AbszPWNmCjREchqa8xX7Z7DS
-         G275I1kf5R0VYrIKZh8ECiAxXzinBf/zYCeawILRrXDKMmauJibS6IYEdr6EVnm4EU/d
-         NSuthoRDJ09+uYow0TA42xMC9UEm+hyAsI8cg6ny+benOyL7hWfsPrrpjk2lgaYCKHd2
-         5dlQwnTcwOemWZBJR8QCUzQ1HUYO4YNykZIn8bPH8tAOxl5Vd8WnWwyYef9QPdZv/AAR
-         e69BMDvRl2tGH5WPBx7Mia/228scga0PPeZbVTt0YS7Wzcslj+O2Unr34GLqnng+ICAD
-         XD7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUedO1EyqN5uFHJk9t6AzsAG5HmY/WzR5OgP1YCAJl8fg95UA8akQaJvZiaYrJ1FrYPCtYNp3FO54hiBac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7xzcSw/CWE76AbTHwdvlNJRF4CQ4MaYzZdGo8GSwEayYwaRrD
-	K58kNt1FNT3zTpQRhqno4kKHJ0bulXTXFLedXEVt6/fUt8yVo9gU
-X-Gm-Gg: ASbGncud1kjJhEa86NAUubH1r7GYoNVFgU8dNnvzuHSHGV6ikduAwShGEGdCjFsCjyK
-	nMV8UNRwxJ6hswRoTE0IG33vP8SpeOxuvVWkBugQTOrOeFJdv0hyhIUpiUk8eirryauw3fatG6A
-	ojnRKLpCNNugeG+5uIAwhG1Wfj7yAq4wUDgtIdx8GlFheHPmww9NTsHjwWkt6CYJPx3agmxY6DS
-	8sfNORjuaonBeBgwtVS8J8hNLJi5GihD4b83Q5CSM0pwOx7HXGWI+SpEdGJBRgGvwReI5++76+c
-	oMatTQ4PRzTSS+yLnhaNLA4HgdkXhCVXjr2KKfy+SuPlHdl3gV3flaLy9q0wD+0=
-X-Google-Smtp-Source: AGHT+IGA/ejkxGCh4W/lw4dP+0sAd0GbaKcMoHrkLayhXBddAQtKtk/FZ4vNZ2mS+R82rlBSPL4oIw==
-X-Received: by 2002:a05:6402:254b:b0:5f8:e955:241d with SMTP id 4fb4d7f45d1cf-5ff988a5551mr3998097a12.8.1747257937853;
-        Wed, 14 May 2025 14:25:37 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d7016b4sm9313385a12.49.2025.05.14.14.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 14:25:37 -0700 (PDT)
-Message-ID: <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
-Date: Wed, 14 May 2025 23:25:36 +0200
+	s=arc-20240116; t=1747261057; c=relaxed/simple;
+	bh=FRauUdP9bZDw6Z0Rf4lBIQNBgYKgOgq0ngfZ+D/1fPU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=blFQdJJcIP06/iPfquFON2VjlrJYK4rIvz9oMMzzCgTbcCQWUmZFG5vwujEPMPvdJsyxvsrRAJrDdHE0v77oEjnBB5mJnB/P3TCT8NsjMDgM6jpq/EkTTY03NgrWUoTlXFZCdvtjLvsPwd+qGOzJ+ycwXPIKvBMqaNyxHovOiCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Elh0VbAD; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747261056; x=1778797056;
+  h=date:from:to:cc:subject:message-id;
+  bh=FRauUdP9bZDw6Z0Rf4lBIQNBgYKgOgq0ngfZ+D/1fPU=;
+  b=Elh0VbADqb5eRb/W0dPdgMpQVkv/4o71j/egu+v63B7GO16klRsA/OaG
+   kIUxsoxjwSfhfvK1utxEF8WaDnrsrxjFZJMNBOTAHqJjQkFWsPlF/5Dk1
+   L7F4NAqW1i/jIBXZOjBRML73TlY76daaI8DkPWBd5COlZOVEBAQZwVqHR
+   LIppp6/N8zw6cgC4hJXwl3JNtLxZNq24AelGDJXzvo3MIxFsCzN9Yy3mO
+   cayW5mJXq47IasIy15mFsKg/CxQk1ApHgPc0dHKrmDxYrK2LJ4wBi9mrj
+   OCdKsPFEsj3MtxDOw681FHTiUuUD2QufK8DYqUVVCzgOSUqqJdQ6+vKg5
+   A==;
+X-CSE-ConnectionGUID: hvifUe0jTvSyQbOu/rkfeA==
+X-CSE-MsgGUID: XxUQLxwASmGGj51teEVshQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49253179"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="49253179"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 15:17:23 -0700
+X-CSE-ConnectionGUID: HFvZFLVbSlaciM/QEAcLFA==
+X-CSE-MsgGUID: sI/ODD3yRmeI5yCXoJ1D0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="137898733"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 14 May 2025 15:17:21 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFKPf-000Hdr-28;
+	Wed, 14 May 2025 22:17:19 +0000
+Date: Thu, 15 May 2025 06:17:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:wip/2505-bjorn-aer-rate-limit-v6-rework] BUILD SUCCESS
+ e380af1c10a3c6ec93d5b1b97265d7de705a065d
+Message-ID: <202505150655.rWbOB2Xo-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-To: Mario Limonciello <superm1@kernel.org>, Raag Jadav
- <raag.jadav@intel.com>, rafael@kernel.org, mahesh@linux.ibm.com,
- oohall@gmail.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
- aravind.iddamsetty@linux.intel.com
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2505-bjorn-aer-rate-limit-v6-rework
+branch HEAD: e380af1c10a3c6ec93d5b1b97265d7de705a065d  PCI/AER: Add sysfs attributes for log ratelimits
 
-On 5/14/25 21:53, Mario Limonciello wrote:
-> On 5/14/2025 11:29 AM, Denis Benato wrote:
->> Hello,
->>
->> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
->>
->> you can follow an example of my problems in this [1] bug report.
->>
->> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
->>
->> You can see the dmesg here: https://pastebin.com/Um7bmdWi
->>
->> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
->>
->
-> Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
->
-Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
+elapsed time: 1461m
 
-Probably this either unveils a pre-existing thunderbolt bug or creates a new one.  If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
+configs tested: 232
+configs skipped: 7
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                 nsimosci_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250514    clang-21
+arc                   randconfig-001-20250514    gcc-13.3.0
+arc                   randconfig-002-20250514    clang-21
+arc                   randconfig-002-20250514    gcc-14.2.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                          pxa910_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250514    clang-21
+arm                   randconfig-002-20250514    clang-21
+arm                   randconfig-003-20250514    clang-21
+arm                   randconfig-003-20250514    gcc-7.5.0
+arm                   randconfig-004-20250514    clang-21
+arm                   randconfig-004-20250514    gcc-7.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250514    clang-17
+arm64                 randconfig-001-20250514    clang-21
+arm64                 randconfig-002-20250514    clang-21
+arm64                 randconfig-002-20250514    gcc-5.5.0
+arm64                 randconfig-003-20250514    clang-21
+arm64                 randconfig-003-20250514    gcc-5.5.0
+arm64                 randconfig-004-20250514    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250514    gcc-10.5.0
+csky                  randconfig-001-20250514    gcc-13.3.0
+csky                  randconfig-002-20250514    gcc-10.5.0
+csky                  randconfig-002-20250514    gcc-14.2.0
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250514    clang-21
+hexagon               randconfig-001-20250514    gcc-10.5.0
+hexagon               randconfig-002-20250514    clang-21
+hexagon               randconfig-002-20250514    gcc-10.5.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250514    clang-20
+i386        buildonly-randconfig-002-20250514    clang-20
+i386        buildonly-randconfig-002-20250514    gcc-12
+i386        buildonly-randconfig-003-20250514    clang-20
+i386        buildonly-randconfig-004-20250514    clang-20
+i386        buildonly-randconfig-005-20250514    clang-20
+i386        buildonly-randconfig-005-20250514    gcc-12
+i386        buildonly-randconfig-006-20250514    clang-20
+i386        buildonly-randconfig-006-20250514    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250514    clang-20
+i386                  randconfig-002-20250514    clang-20
+i386                  randconfig-003-20250514    clang-20
+i386                  randconfig-004-20250514    clang-20
+i386                  randconfig-005-20250514    clang-20
+i386                  randconfig-006-20250514    clang-20
+i386                  randconfig-007-20250514    clang-20
+i386                  randconfig-011-20250514    clang-20
+i386                  randconfig-012-20250514    clang-20
+i386                  randconfig-013-20250514    clang-20
+i386                  randconfig-014-20250514    clang-20
+i386                  randconfig-015-20250514    clang-20
+i386                  randconfig-016-20250514    clang-20
+i386                  randconfig-017-20250514    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250514    gcc-10.5.0
+loongarch             randconfig-001-20250514    gcc-14.2.0
+loongarch             randconfig-002-20250514    gcc-10.5.0
+loongarch             randconfig-002-20250514    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          eyeq6_defconfig    gcc-14.2.0
+mips                        qi_lb60_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250514    gcc-10.5.0
+nios2                 randconfig-001-20250514    gcc-7.5.0
+nios2                 randconfig-002-20250514    gcc-10.5.0
+nios2                 randconfig-002-20250514    gcc-11.5.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250514    gcc-10.5.0
+parisc                randconfig-001-20250514    gcc-12.4.0
+parisc                randconfig-002-20250514    gcc-10.5.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                     akebono_defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                     ep8248e_defconfig    gcc-14.2.0
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc                     mpc83xx_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250514    clang-17
+powerpc               randconfig-001-20250514    gcc-10.5.0
+powerpc               randconfig-002-20250514    gcc-10.5.0
+powerpc               randconfig-002-20250514    gcc-5.5.0
+powerpc               randconfig-003-20250514    gcc-10.5.0
+powerpc               randconfig-003-20250514    gcc-7.5.0
+powerpc                     tqm8560_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250514    gcc-10.5.0
+powerpc64             randconfig-002-20250514    clang-19
+powerpc64             randconfig-002-20250514    gcc-10.5.0
+powerpc64             randconfig-003-20250514    gcc-5.5.0
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250514    clang-21
+riscv                 randconfig-001-20250514    gcc-7.5.0
+riscv                 randconfig-002-20250514    clang-21
+riscv                 randconfig-002-20250514    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250514    clang-21
+s390                  randconfig-002-20250514    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                          kfr2r09_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250514    clang-21
+sh                    randconfig-001-20250514    gcc-11.5.0
+sh                    randconfig-002-20250514    clang-21
+sh                    randconfig-002-20250514    gcc-9.3.0
+sh                          sdk7786_defconfig    gcc-14.2.0
+sh                   sh7770_generic_defconfig    gcc-14.2.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250514    clang-21
+sparc                 randconfig-001-20250514    gcc-8.5.0
+sparc                 randconfig-002-20250514    clang-21
+sparc                 randconfig-002-20250514    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250514    clang-21
+sparc64               randconfig-001-20250514    gcc-14.2.0
+sparc64               randconfig-002-20250514    clang-21
+sparc64               randconfig-002-20250514    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250514    clang-21
+um                    randconfig-001-20250514    gcc-12
+um                    randconfig-002-20250514    clang-21
+um                    randconfig-002-20250514    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250514    clang-20
+x86_64      buildonly-randconfig-001-20250514    gcc-12
+x86_64      buildonly-randconfig-002-20250514    gcc-12
+x86_64      buildonly-randconfig-003-20250514    gcc-12
+x86_64      buildonly-randconfig-004-20250514    gcc-12
+x86_64      buildonly-randconfig-005-20250514    clang-20
+x86_64      buildonly-randconfig-005-20250514    gcc-12
+x86_64      buildonly-randconfig-006-20250514    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250514    gcc-12
+x86_64                randconfig-002-20250514    gcc-12
+x86_64                randconfig-003-20250514    gcc-12
+x86_64                randconfig-004-20250514    gcc-12
+x86_64                randconfig-005-20250514    gcc-12
+x86_64                randconfig-006-20250514    gcc-12
+x86_64                randconfig-007-20250514    gcc-12
+x86_64                randconfig-008-20250514    gcc-12
+x86_64                randconfig-071-20250514    clang-20
+x86_64                randconfig-072-20250514    clang-20
+x86_64                randconfig-073-20250514    clang-20
+x86_64                randconfig-074-20250514    clang-20
+x86_64                randconfig-075-20250514    clang-20
+x86_64                randconfig-076-20250514    clang-20
+x86_64                randconfig-077-20250514    clang-20
+x86_64                randconfig-078-20250514    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250514    clang-21
+xtensa                randconfig-001-20250514    gcc-10.5.0
+xtensa                randconfig-002-20250514    clang-21
+xtensa                randconfig-002-20250514    gcc-12.4.0
 
-
-> The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
->
-> I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
->
-I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
->>
->> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
->>
->> On 5/4/25 11:04, Raag Jadav wrote:
->>
->>> If error flags are set on an AER capable device, most likely either the
->>> device recovery is in progress or has already failed. Neither of the
->>> cases are well suited for power state transition of the device, since
->>> this can lead to unpredictable consequences like resume failure, or in
->>> worst case the device is lost because of it. Leave the device in its
->>> existing power state to avoid such issues.
->>>
->>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>> ---
->>>
->>> v2: Synchronize AER handling with PCI PM (Rafael)
->>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>      Elaborate "why" (Bjorn)
->>>
->>> More discussion on [1].
->>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>
->>>   drivers/pci/pci.c      | 12 ++++++++++++
->>>   drivers/pci/pcie/aer.c | 11 +++++++++++
->>>   include/linux/aer.h    |  2 ++
->>>   3 files changed, 25 insertions(+)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 4d7c9f64ea24..25b2df34336c 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -9,6 +9,7 @@
->>>    */
->>>     #include <linux/acpi.h>
->>> +#include <linux/aer.h>
->>>   #include <linux/kernel.h>
->>>   #include <linux/delay.h>
->>>   #include <linux/dmi.h>
->>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>          || (state == PCI_D2 && !dev->d2_support))
->>>           return -EIO;
->>>   +    /*
->>> +     * If error flags are set on an AER capable device, most likely either
->>> +     * the device recovery is in progress or has already failed. Neither of
->>> +     * the cases are well suited for power state transition of the device,
->>> +     * since this can lead to unpredictable consequences like resume
->>> +     * failure, or in worst case the device is lost because of it. Leave the
->>> +     * device in its existing power state to avoid such issues.
->>> +     */
->>> +    if (pci_aer_in_progress(dev))
->>> +        return -EIO;
->>> +
->>>       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>       if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>           pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index a1cf8c7ef628..4040770df4f0 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>   }
->>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>   +bool pci_aer_in_progress(struct pci_dev *dev)
->>> +{
->>> +    u16 reg16;
->>> +
->>> +    if (!pcie_aer_is_native(dev))
->>> +        return false;
->>> +
->>> +    pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
->>> +    return !!(reg16 & PCI_EXP_AER_FLAGS);
->>> +}
->>> +
->>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>   {
->>>       int rc;
->>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>> index 02940be66324..e6a380bb2e68 100644
->>> --- a/include/linux/aer.h
->>> +++ b/include/linux/aer.h
->>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>   #if defined(CONFIG_PCIEAER)
->>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>   int pcie_aer_is_native(struct pci_dev *dev);
->>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>   #else
->>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>   {
->>>       return -EINVAL;
->>>   }
->>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>   #endif
->>>     void pci_print_aer(struct pci_dev *dev, int aer_severity,
->
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
