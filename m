@@ -1,113 +1,124 @@
-Return-Path: <linux-pci+bounces-27684-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08BE2AB64B9
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 09:43:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5196EAB64BB
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 09:43:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C06511B637EE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 07:43:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07C281B63971
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 07:43:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51844201004;
-	Wed, 14 May 2025 07:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 361662080E8;
+	Wed, 14 May 2025 07:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTzZu+lL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCLUEd3s"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279A21F3B8A;
-	Wed, 14 May 2025 07:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB2F1F3B8A;
+	Wed, 14 May 2025 07:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747208606; cv=none; b=oOnXN4BxR2nauE1/lf1lgIQhh4NBfVXblwU7KgwFwWm1Wqv+ZIrPZQK9hfEjGYyOciU4rq1pqXLUMFqDN59utPSUqVLJX0VFXCRouKtwYAXNzEiDCAsRvc11yxwtFCc5KyILBh8WHG0uMMofVxijt65Vv3/aXGCiSOh9hx9Yk6M=
+	t=1747208610; cv=none; b=Zy2TTPjB/1v63NxVWUhNnYHoqtU32LepnR+TL7flpdpJDT0ayoqXeaLkvsbwT+/ML2nUrqQrL+EA4K+pTh8IHKAL2/SJa+uQaoMbcZBgzVpYqrJGosH7kQxdqey1v7n8OFBUo1B5edbJb8DnSdgndj9YbTsCLi8OCyTyal3zpaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747208606; c=relaxed/simple;
-	bh=IlNY+N9xZbP25gW4EGqg6yQNRWjc9oFtjCsewb4Lipc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iy5Kee8BaPlrOftOQgrZjbLxdqcx+s9mVNc3AsVBG/tQnDML4/1NUycuYpF6ZzMhBfRCzaeokc4ZZ7Tn6tugIfywxb2GWIFuIZ8C34r1e+2g8VNDaYMlzgeBwfZrn8fERpvs037Pp5VxY5Ifqeacz6LnVdwtjHohRB/0UiJgojk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTzZu+lL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5892CC4CEF0;
-	Wed, 14 May 2025 07:43:21 +0000 (UTC)
+	s=arc-20240116; t=1747208610; c=relaxed/simple;
+	bh=0p4WvW8RaRImKPzubhYqD9RMNzWJQrE9S1OPZn9D3uk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FpqJoP+7DAhJau9a7aNnsnwPBTUGKzC1DlHs6/M8dkd7T3MQt6zBb5ZJqIBIokmolHz6J1whczBoFCUhOaR5LUgtHfDef/h8B1Mi7DftvFOCVz5GaYoudHvgNy5vQvXwuL5eiHahi2HXXFYK0HRZRa6RS7uWVFzVGQLhEbcdk3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCLUEd3s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C95BC4CEF2;
+	Wed, 14 May 2025 07:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747208605;
-	bh=IlNY+N9xZbP25gW4EGqg6yQNRWjc9oFtjCsewb4Lipc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZTzZu+lLM2/EY5NaqE4555dxzcvf9L5+n1Q/AqvAOPJ4l5CNK3mFqBHEdRjHx8QHF
-	 Pr700C7l1M2TO+k1PNW8D5/VoiYK6l5SRDWP6dvmPcI/PmDmquobLex6zmBbgU64Hn
-	 w8et4LvHFqbZV0//7yP2mp2YROFqdzLUD6CwH2JEQwZeElBnZuOz/7QQwPQMCY2qjC
-	 x6POWwDGHOaa0CHcAvZBe19ZB197JnDPwH2d4zNuV+OKH798iWeBngrzQztZpJrM5k
-	 iGs2pMt5+CcS2N10zCIhv5NSTOfreZCNGaex9g1Z2Y1E7mcvMFN9n8Ux775y1Q5hpI
-	 BREF6ztaRl+Bw==
+	s=k20201202; t=1747208608;
+	bh=0p4WvW8RaRImKPzubhYqD9RMNzWJQrE9S1OPZn9D3uk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jCLUEd3sOBh0YUxOH1V5tSxI4PIv2OMcl6gdUnX3Jji1LPteSsWR2uM+n8DjiguWU
+	 s+aLhA5y2/ZfV+aLXJmpbnk2M8/jDEv/fv6rrWX4UKzjkIraxnyoAFua+VxwifoZUH
+	 z9oOsrqUpMZ3CVF0RENcD1ZDbQ4ExaxptJ7h+tDOgwY8gER+y3JiK5vg5iRGCz3yHN
+	 dqlsRM90k9QhoYZOWA8maNQSTBDn3cNA4ruIg4qBq2JPFMroOUYBQPbKXXoY9ZFML5
+	 Yek4geqY2HPoZn7eKT2ep/8ZB5eW8blhdGrE25sCB2bJZ7IbO/FSzJZdWD8MGkC06h
+	 vBG/hur2UXkvg==
 From: Niklas Cassel <cassel@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+To: Jingoo Han <jingoohan1@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Alan Douglas <adouglas@cadence.com>
+	Kishon Vijay Abraham I <kishon@kernel.org>
 Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/6] PCI: endpoint: IRQ callback fixes and cleanups
-Date: Wed, 14 May 2025 09:43:13 +0200
-Message-ID: <20250514074313.283156-8-cassel@kernel.org>
+	stable@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3 1/6] PCI: dwc: ep: Fix broken set_msix() callback
+Date: Wed, 14 May 2025 09:43:14 +0200
+Message-ID: <20250514074313.283156-9-cassel@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250514074313.283156-8-cassel@kernel.org>
+References: <20250514074313.283156-8-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1360; i=cassel@kernel.org; h=from:subject; bh=IlNY+N9xZbP25gW4EGqg6yQNRWjc9oFtjCsewb4Lipc=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDJUPCf+XWco1erKs6pN+l7Gp1NrNKoq10le+N4UuLKjS 9W7+d/jjlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExkxleG/xWmYoVW9l+5t1e+ 3fr01zXeOov4BWwtH2LFJ/f0xX56asDwvzx2gufxZNGYp+vMX81gFu4sTOyJs7L0j/B8I7OJ+5g 7BwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2318; i=cassel@kernel.org; h=from:subject; bh=0p4WvW8RaRImKPzubhYqD9RMNzWJQrE9S1OPZn9D3uk=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDJUPCdqa8+JFSz7Ez8jW6NYc1H944lSp/+l2WtU5jO+V e8u2Xa1o5SFQYyLQVZMkcX3h8v+4m73KccV79jAzGFlAhnCwMUpABP5JMTIsErn/v0PE3Wvmd43 0kzfcezJAgmZW7NdXfYENKolinKIMjIyrOM86n8qxL6uzrTE9Fl6uMztdHdBJt1HGjItmV0iV6I ZAQ==
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Hello all,
+While the set_msix() callback function in pcie-designware-ep writes the
+Table Size field correctly (N-1), the calculation of the PBA offset
+is wrong because it calculates space for (N-1) entries instead of N.
 
-The first two patches in this series are IRQ callback fixes that should
-get backported.
+This results in e.g. the following error when using QEMU with PCI
+passthrough on a device which relies on the PCI endpoint subsystem:
+failed to add PCI capability 0x11[0x50]@0xb0: table & pba overlap, or they don't fit in BARs, or don't align
 
-The reason why the bugs existed in the first place is because the APIs
-are very confusing. The rest of the patches are cleanups of the APIs.
-These cleanups should not get backported.
+Fix the calculation of PBA offset in the MSI-X capability.
 
+Cc: stable@vger.kernel.org
+Fixes: 83153d9f36e2 ("PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments")
+Reviewed-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Changes since v2:
--Reorder patches to have more logical ordering
--Capitalize first letter after prefix (Krzysztof)
--Improved commit message of the cleanup patches (Damien)
--Renamed parameter interrupts to nr_irqs (Damien)
--Picked up tags. Did not pick up tags on patches that changed significantly
-
-
-Niklas Cassel (6):
-  PCI: dwc: ep: Fix broken set_msix() callback
-  PCI: cadence-ep: Fix broken set_msix() callback
-  PCI: endpoint: Cleanup get_msi() callback
-  PCI: endpoint: Cleanup get_msix() callback
-  PCI: endpoint: Cleanup set_msi() callback
-  PCI: endpoint: Cleanup set_msix() callback
-
- .../pci/controller/cadence/pcie-cadence-ep.c  | 14 +++++-----
- .../pci/controller/dwc/pcie-designware-ep.c   | 15 ++++++-----
- drivers/pci/controller/pcie-rcar-ep.c         |  8 +++---
- drivers/pci/controller/pcie-rockchip-ep.c     |  9 ++++---
- drivers/pci/endpoint/pci-epc-core.c           | 26 +++++++------------
- include/linux/pci-epc.h                       | 11 ++++----
- 6 files changed, 39 insertions(+), 44 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..24026f3f3413 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -585,6 +585,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct dw_pcie_ep_func *ep_func;
+ 	u32 val, reg;
++	u16 actual_interrupts = interrupts + 1;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+ 	if (!ep_func || !ep_func->msix_cap)
+@@ -595,7 +596,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+ 	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+ 	val &= ~PCI_MSIX_FLAGS_QSIZE;
+-	val |= interrupts;
++	val |= interrupts; /* 0's based value */
+ 	dw_pcie_writew_dbi(pci, reg, val);
+ 
+ 	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+@@ -603,7 +604,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+ 
+ 	reg = ep_func->msix_cap + PCI_MSIX_PBA;
+-	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
++	val = (offset + (actual_interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+ 	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+ 
+ 	dw_pcie_dbi_ro_wr_dis(pci);
 -- 
 2.49.0
 
