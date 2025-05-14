@@ -1,112 +1,106 @@
-Return-Path: <linux-pci+bounces-27682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33A21AB637E
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 08:51:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83BFBAB63C5
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 09:07:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA36D3AE3C8
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 06:51:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18D3317541E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 07:07:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA09F1F791C;
-	Wed, 14 May 2025 06:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+ovNfoW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A08F2040A7;
+	Wed, 14 May 2025 07:07:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9543169;
-	Wed, 14 May 2025 06:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1A11F4297;
+	Wed, 14 May 2025 07:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747205511; cv=none; b=f4jqpyzO8mDqkHj9u3X6qv+xxyvzR0ErBvY4QDzMpoedEqv8os+Dcc1JHmiKX6o+yVy9BW+DnWiU8Lb8EpXsWKD42vovOxVPMG9LhgrDz7CX74Tc+5W5brQGMBfA7uFu01KBMcQ6nA8YaGJCH/4uNxr2F+PcPNN1zNuw1K4kWFw=
+	t=1747206434; cv=none; b=WlcoWegsABmugWO/FRBHEaIKbH7384jYBZh/2W9h6hIZyjlulTDZCrdZqSDLwWMZhhkJ2NG9v26ytmg/GVhDcYix4oKt050p5WJqveMJl7KoAnmh8I/Wf25QlfWu2UKFn7WvfHKS0W2S1vtraNXwxHqJ2O11UqwZHNWvBv14ceg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747205511; c=relaxed/simple;
-	bh=gxZxLOjfyfNFBmAgKgaPaFgJhZ7shuHTtU/Kpk1Npek=;
+	s=arc-20240116; t=1747206434; c=relaxed/simple;
+	bh=j7NkM323q/W5/SDb3vvGCfNpZV3+sYh3aED17kPly/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpQuozEi6wtRpKAhz4+UH5ZTgt63LzrivCWgR1g36cQ2Bq50zOiRUnTwP8qwyDRjJNdpRa922SSDdl09BCCdMxWce5Jd3C+WelVyIXxJ6eZblNNcMijhwAc9ml2hBNzPATVfPkiKeciOnhJfAOLbLQiog4RkrxtoV2IOI33aEFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+ovNfoW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78E4C4CEE9;
-	Wed, 14 May 2025 06:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747205511;
-	bh=gxZxLOjfyfNFBmAgKgaPaFgJhZ7shuHTtU/Kpk1Npek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z+ovNfoWN9liprsyztoT/r0/7q1PZdSzMc9DnvlYts7M/wElEPcQ6rt7FErnECMP/
-	 3MW577cJkL3B49t+JHnr0aHcd1aPAPtF1Pw4eIZCVy/AJMO25JhsvakTid2L1Sl2GD
-	 +hZT4Ek27tP4Q701c0A2twMPijb5GtfigwUjBfGRL3jzhXSd94AOiMGxEwjcoZWDLi
-	 eukr4HEGUOsGMhPwuvGlOfYf9fQRtwlJYWhvKb9kjUMhWlFLaCKh63xIxd4CusX50g
-	 COVGyjK7XzarylcELOsofgXqS7gmCL9GApTSCfR/Cb/h9TakjhF/N/0YGTBoB942Qr
-	 V9UqtwRw9/nsA==
-Date: Wed, 14 May 2025 08:51:45 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
-	dlemoal@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: pci-ep: Add ref-clk-mode
-Message-ID: <aCQ9ge1eROhh9RVE@ryzen>
-References: <20250425092012.95418-2-cassel@kernel.org>
- <7xtp5i3jhntfev35uotcunur3qvcgq4vmcnkjde5eivajdbiqt@n2wsivrsr2dk>
- <aBHOaJFgZiOfTrrT@ryzen>
- <dxgs3wuekwjh6f22ftkmi7dcw7xpw3fa7lm74fwm5thvol42z3@wuovkynp3jey>
- <20250509181827.GA3879057-robh@kernel.org>
- <a7rfa6rlygbe7u3nbxrdc3doln7rk37ataxjrutb2lunctbpuo@72jnf6odl5xp>
- <aB8ysBuQysAR-Zcp@ryzen>
- <20250512135909.GA3177343-robh@kernel.org>
- <aCOAmQNWUWU55VKT@ryzen>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBJu3xZbmu75SpIX6lTpF383ZEowP0glpUn/WeuMqdz5KVoEi7FS2VVG0YJ19bIYE9ZfJcI3/OTEJgHmVFYlnxI71vO7qPVzdc7KRFKCVOW1jNgBAUx6RQDyJ5wkbKvWGYXSCnn/JpKD3f/x7l0XDUvGoa6PJutYJQUPjwyodcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 833D120091A7;
+	Wed, 14 May 2025 09:06:32 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BAD3420CDBD; Wed, 14 May 2025 09:07:01 +0200 (CEST)
+Date: Wed, 14 May 2025 09:07:01 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Move reset and restore related code to
+ reset-restore.c
+Message-ID: <aCRBFWHKa02Hu-ec@wunner.de>
+References: <20250512120900.1870-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aCOAmQNWUWU55VKT@ryzen>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512120900.1870-1-ilpo.jarvinen@linux.intel.com>
 
-Rob,
-
-On Tue, May 13, 2025 at 07:25:50PM +0200, Niklas Cassel wrote:
-> On Mon, May 12, 2025 at 08:59:09AM -0500, Rob Herring wrote:
+On Mon, May 12, 2025 at 03:08:57PM +0300, Ilpo Järvinen wrote:
+> There are quite many reset and restore related functions in pci.c that
+> barely depend on the other functions in pci.c. Create reset-restore.c
+> for reset and restore related logic to keep those 1k lines in one place.
 > 
-> I do realize that, for boards supporting more than a single mode (Common
-> Clock/SRNS/SRIS), this device tree property is basically a configuration
-> option. For boards only supporting a single mode, it is actually describing
-> the hardware.
-> 
-> E.g. Rock 5b can run in both SRNS and SRIS mode (Common Clock is not
-> supported), and since this has to be configured before starting the link,
-> I cannot think of a better way to control this than a device tree property.
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Just to provide some additional context (although it was mentioned in the
-commit log), basically what I am trying to accomplish is to replace the
-vendor specific properties
-"nvidia,enable-ext-refclk" (Common Clock) and "nvidia,enable-srns" (SRNS)
-(the tegra SoC does not support SRIS, that is why it doesn't have a
-property for that) with a generic property that can be used by all PCIe
-endpoint controller drivers.
+Hm, could I get a:
 
-IMO, there is really no reason to have two properties for this, it is
-cleaner to just have a single property which is basically an enum
-(as suggested by this patch).
+Suggested-by: Lukas Wunner <lukas@wunner.de>
 
-To bring some additional insight of how it will be used, one could grep
-for nvidia,enable-ext-refclk and nvidia,enable-srns in the tree.
+... per:
 
-My plan was to get some feedback on this binding before implementing
-support for SRIS in the dw-rockchip driver, but I can also modify the
-tegra driver to also support this new property in V2.
+https://lore.kernel.org/r/Z7hZZNT5NHYncZ3c@wunner.de/
+
+>  drivers/pci/Makefile        |    4 +-
+>  drivers/pci/pci.c           | 1015 +----------------------------------
+>  drivers/pci/pci.h           |   10 +
+>  drivers/pci/reset-restore.c | 1014 ++++++++++++++++++++++++++++++++++
+
+I'd prefer reset.c for succinctness.
+
+That said, this patch conflicts with Mani's slot reset patches
+which a lot of people seem to be interested in:
+
+https://lore.kernel.org/r/20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org/
+
+Maybe it's better to give Mani's series the advantage and defer
+this patch here to the next cycle.
 
 
-Kind regards,
-Niklas
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -69,15 +69,7 @@ struct pci_pme_device {
+>   */
+>  #define PCI_RESET_WAIT 1000 /* msec */
+
+I'd move PCI_RESET_WAIT, pci_dev_wait() and
+pci_bridge_wait_for_secondary_bus() to reset.c as well.
+
+Then pci_dev_d3_sleep() is the only function which is no longer static.
+
+Thanks,
+
+Lukas
 
