@@ -1,43 +1,43 @@
-Return-Path: <linux-pci+bounces-27736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19250AB70EF
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 18:14:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608BFAB70F6
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 18:15:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A6C5867D6C
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 16:13:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10C7B1B612F6
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 16:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E0027AC34;
-	Wed, 14 May 2025 16:13:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD09228033E;
+	Wed, 14 May 2025 16:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YtL7BzIU"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MqIEaGez"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67A202797A0;
-	Wed, 14 May 2025 16:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2384E27FD46;
+	Wed, 14 May 2025 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239232; cv=none; b=Q3tTGqffpHZHuibcshEdqPysvhTwUFFETLu9mTQGLsxR/nxuFZiVJJuxLYQtTaDqgbhSHiMsH+hH0CoLk5hoh7INOF9l2TOFsCmFe21oFuCIEnfBfPfuxcY9IlfmZpvMEFz2U9DUjqiuOn2ZzvphIBvlo2fPSfVMuAHQgl5P8yw=
+	t=1747239238; cv=none; b=IyyG3xCe/prA25FvmYxJD2eYK66PXLKTEn6vHFE/ua5v8NNfCqt8+J+MLAwmY2icLAmVMRlIqZTqvSXeI7vA+fivCU92RjVe8V659GyelFzp1B1WOw0t54yuotwhxgrmzblFu7n8J2CS0SC2SkelaiPmx86n3PquPMVVtpr1Z2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239232; c=relaxed/simple;
-	bh=dOJ0mLotWrxHoKjwkP33U1EmQUs0PVxJKpdG0gz3DjQ=;
+	s=arc-20240116; t=1747239238; c=relaxed/simple;
+	bh=12yeiJL2v0gApG43aRFyNQV7+DVt0HzEwyTJ4Fy99SA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dnK2m7MqGaAd5U2YY1ZcorToVj2Vaa9I7xZCz2h8bE7m+rvjfZS6Ix+3yLvZiamASwGrFYf0L4obQQgrhX+uUxJi4R3TVNQ0qX6uOnRkji5fRQFBfhXFDFHltOgDanzgJW+f9q4iKJPkkYVMtG4CJH0d+Wtav4UKJMW9G18CSNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YtL7BzIU; arc=none smtp.client-ip=117.135.210.5
+	 MIME-Version; b=bQ4NRzgi/W62kUybx0Ibx0LLVWXaL9zASPlZl3QmykXSqvIpqA4/KMoRrSygiUvVMo/rylziBd7M/e4KotmdqixOuEkNC3g/c7otHVK51fMr5MrRwdRABmCLWyo+gT9j2g4dJ6oczSwmg2m9T2i6GOaHy4BhsSOWBZou74JL5o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MqIEaGez; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=UK
-	edITum78h25+/OqLlHUjJq4mXf8eRgY+GnYUEaYOE=; b=YtL7BzIUiEYih7sAFz
-	FwLVeZz9Py9Jk63LS1ZW6GO3891jIe6T0WFaHKsnyVK2S1R8E7q3hSqZQrrGaQTL
-	lhUV/v8npcndespMUECVfSBxO2XuMZigHIqtPy0eFq81vSgvaDVl8AzmRb7RS1ZN
-	4/1IJdCeiiTk4cJhU1ZMAfShc=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=H/
+	RFGx5fGQp5jiVVaRwwNi7aJIeC2+jGNkFXsI55y0c=; b=MqIEaGezzL30BquPUY
+	UmIA6JHWxibQuF5tVITiu2gMgo6aDcB7dudJL+vX3q5x+1UPCiOU8tga+2avB4vR
+	f71Gz4DRstRQTa5330t9tWyPmwj6jKOdSe9UwsvIfQw5Rv261p4fMc2ZaikgaX4J
+	MSceP0IVc1FX/zJvZXsVTAOJk=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3VU0LwSRo5cN_BQ--.35962S5;
-	Thu, 15 May 2025 00:13:01 +0800 (CST)
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3VU0LwSRo5cN_BQ--.35962S6;
+	Thu, 15 May 2025 00:13:02 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	bhelgaas@google.com,
@@ -50,9 +50,9 @@ Cc: cassel@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v12 3/6] PCI: Refactor capability search into common macros
-Date: Thu, 15 May 2025 00:12:55 +0800
-Message-Id: <20250514161258.93844-4-18255117159@163.com>
+Subject: [PATCH v12 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+Date: Thu, 15 May 2025 00:12:56 +0800
+Message-Id: <20250514161258.93844-5-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250514161258.93844-1-18255117159@163.com>
 References: <20250514161258.93844-1-18255117159@163.com>
@@ -63,128 +63,120 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3VU0LwSRo5cN_BQ--.35962S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XrW7ZF1fZF1ftFyxZFWkWFg_yoW3Zr13pr
-	y3A3WSyrW8J3W2qwsIva1UtF1aqan7Jay29rWxGwn8XFyqka4ktrySya4agFy7KrZ7uF13
-	Xan0qFZ5C3ZIyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRB6zbUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh5No2gkwQMCZwAAsh
+X-CM-TRANSID:_____wC3VU0LwSRo5cN_BQ--.35962S6
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuryrCr4UAFyxJFW8Zw4fKrg_yoWrAF1Dpa
+	yrAwn0yrW5Ar1aq3WDZFnIvF15AF9xAFyxJa97G3ZavFy2krWjq340krWaqr1SkrZrKFy5
+	Kr48JFWrAw1DtFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pK-e5dUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOg9No2gkwQMCawABs9
 
-The PCI Capability search functionality is duplicated across the PCI core
-and several controller drivers. The core's current implementation requires
-fully initialized PCI device and bus structures, which prevents controller
-drivers from using it during early initialization phases before these
-structures are available.
-
-Move the Capability search logic into a header-based macro that accepts a
-config space accessor function as an argument. This enables controller
-drivers to perform Capability discovery using their early access
-mechanisms prior to full device initialization while sharing the
-Capability search code.
-
-Convert the existing PCI core Capability search implementation to use this
-new macro. Controller drivers can later use the same macros with their
-early access mechanisms while maintaining the existing protection against
-infinite loops through preserved TTL checks.
-
-The ttl parameter was originally an additional safeguard to prevent
-infinite loops in corrupted config space.  However, the
-PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
-Removing redundant ttl handling simplifies the interface while maintaining
-the safety guarantee. This aligns with the macro's design intent of
-encapsulating TTL management.
+Use the PCI core is now exposing generic macros for the host bridges to
+search for the PCIe capabilities, make use of them in the DWC driver.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
 Changes since v11:
-- Add #include <linux/bitfield.h>, solve the compilation warnings caused by the subsequent patch calls.
+- Resolve compilation errors. s/dw_pcie_read_dbi/dw_pcie_read*_dbi
 
 Changes since v10:
-- Remove #include <uapi/linux/pci_regs.h>.
-- The patch commit message were modified.
-
-Changes since v9:
 - None
 
-Changes since v8:
-- The patch commit message were modified.
----
- drivers/pci/pci.c | 69 +++++--------------------------------
- drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 95 insertions(+), 60 deletions(-)
+Changes since v9:
+- Resolved [v9 4/6] compilation error.
+  The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
+  dw_pcie_find_next_ext_capability.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 27d2adb18a30..271d922abdcc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,7 +9,6 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/align.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -425,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
+Changes since v8:
+- None
+
+Changes since v7:
+- Resolve compilation errors.
+
+Changes since v6:
+https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
+
+- The patch commit message were modified.
+
+Changes since v5:
+https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
+
+- Kconfig add "select PCI_HOST_HELPERS"
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 81 ++++----------------
+ 1 file changed, 14 insertions(+), 67 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 97d76d3dc066..7939411a24eb 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -205,83 +205,30 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+ 		pci->type = ver;
  }
  
- static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
--				  u8 pos, int cap, int *ttl)
-+				  u8 pos, int cap)
+-/*
+- * These interfaces resemble the pci_find_*capability() interfaces, but these
+- * are for configuring host controllers, which are bridges *to* PCI devices but
+- * are not PCI devices themselves.
+- */
+-static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-				  u8 cap)
++static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
  {
--	u8 id;
--	u16 ent;
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
 -
--	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+-	if (!cap_ptr)
+-		return 0;
++	struct dw_pcie *pci = priv;
+ 
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
 -
--	while ((*ttl)--) {
--		if (pos < PCI_STD_HEADER_SIZEOF)
--			break;
--		pos = ALIGN_DOWN(pos, 4);
--		pci_bus_read_config_word(bus, devfn, pos, &ent);
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
 -
--		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
--		if (id == 0xff)
--			break;
--		if (id == cap)
--			return pos;
--		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
--	}
--	return 0;
-+	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
-+				     devfn);
+-	if (cap_id == cap)
+-		return cap_ptr;
++	if (size == 4)
++		*val = dw_pcie_readl_dbi(pci, where);
++	else if (size == 2)
++		*val = dw_pcie_readw_dbi(pci, where);
++	else if (size == 1)
++		*val = dw_pcie_readb_dbi(pci, where);
+ 
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCIBIOS_SUCCESSFUL;
  }
  
- static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
- 			      u8 pos, int cap)
+ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
  {
--	int ttl = PCI_FIND_CAP_TTL;
+-	u8 next_cap_ptr;
+-	u16 reg;
 -
--	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-+	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
++				     pci);
  }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
  
- u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-@@ -554,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
-  */
- u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
- {
+-static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+-					    u8 cap)
+-{
 -	u32 header;
 -	int ttl;
--	u16 pos = PCI_CFG_SPACE_SIZE;
+-	int pos = PCI_CFG_SPACE_SIZE;
 -
 -	/* minimum 8 bytes per capability */
 -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
 -
- 	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
- 		return 0;
- 
 -	if (start)
 -		pos = start;
 -
--	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--		return 0;
--
+-	header = dw_pcie_readl_dbi(pci, pos);
 -	/*
 -	 * If we have no capabilities, this is indicated by cap ID,
 -	 * cap version and next pointer all being 0.
@@ -200,147 +192,30 @@ index 27d2adb18a30..271d922abdcc 100644
 -		if (pos < PCI_CFG_SPACE_SIZE)
 -			break;
 -
--		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--			break;
+-		header = dw_pcie_readl_dbi(pci, pos);
 -	}
 -
 -	return 0;
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
-+					    dev->bus, dev->devfn);
- }
- EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
- 
-@@ -649,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
- 
- static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+-}
+-
+ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
  {
--	int rc, ttl = PCI_FIND_CAP_TTL;
-+	int rc;
- 	u8 cap, mask;
+-	return dw_pcie_find_next_ext_capability(pci, 0, cap);
++	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pci);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
  
- 	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-@@ -658,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 		mask = HT_5BIT_CAP_MASK;
+@@ -294,8 +241,8 @@ static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
+ 	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
+ 		return 0;
  
- 	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
--				      PCI_CAP_ID_HT, &ttl);
-+				      PCI_CAP_ID_HT);
- 	while (pos) {
- 		rc = pci_read_config_byte(dev, pos + 3, &cap);
- 		if (rc != PCIBIOS_SUCCESSFUL)
-@@ -669,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 
- 		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
- 					      pos + PCI_CAP_LIST_NEXT,
--					      PCI_CAP_ID_HT, &ttl);
-+					      PCI_CAP_ID_HT);
- 	}
- 
- 	return 0;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 5e1477d6e254..f9cf45026e6e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -2,6 +2,8 @@
- #ifndef DRIVERS_PCI_H
- #define DRIVERS_PCI_H
- 
-+#include <linux/align.h>
-+#include <linux/bitfield.h>
- #include <linux/pci.h>
- 
- struct pcie_tlp_log;
-@@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
- int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
- 			u32 *val);
- 
-+/* Standard Capability finder */
-+/**
-+ * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search
-+ * @cap: Capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Iterates through the capability list in PCI config space to find
-+ * the specified capability. Implements TTL (time-to-live) protection
-+ * against infinite loops.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-+({									\
-+	int __ttl = PCI_FIND_CAP_TTL;					\
-+	u8 __id, __found_pos = 0;					\
-+	u8 __pos = (start);						\
-+	u16 __ent;							\
-+									\
-+	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-+									\
-+	while (__ttl--) {						\
-+		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-+			break;						\
-+									\
-+		__pos = ALIGN_DOWN(__pos, 4);				\
-+		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-+									\
-+		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-+		if (__id == 0xff)					\
-+			break;						\
-+									\
-+		if (__id == (cap)) {					\
-+			__found_pos = __pos;				\
-+			break;						\
-+		}							\
-+									\
-+		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-+	}								\
-+	__found_pos;							\
-+})
-+
-+/* Extended Capability finder */
-+/**
-+ * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search (0 for initial search)
-+ * @cap: Extended capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Searches the extended capability space in PCI config registers
-+ * for the specified capability. Implements TTL protection against
-+ * infinite loops using a calculated maximum search count.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
-+({										\
-+	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
-+	u16 __found_pos = 0;							\
-+	int __ttl, __ret;							\
-+	u32 __header;								\
-+										\
-+	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
-+	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
-+		__ret = read_cfg(args, __pos, 4, &__header);			\
-+		if (__ret != PCIBIOS_SUCCESSFUL)				\
-+			break;							\
-+										\
-+		if (__header == 0)						\
-+			break;							\
-+										\
-+		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
-+			__found_pos = __pos;					\
-+			break;							\
-+		}								\
-+										\
-+		__pos = PCI_EXT_CAP_NEXT(__header);				\
-+	}									\
-+	__found_pos;								\
-+})
-+
- /* Functions internal to the PCI core code */
- 
- #ifdef CONFIG_DMI
+-	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+-						       PCI_EXT_CAP_ID_VNDR))) {
++	while ((vsec = PCI_FIND_NEXT_EXT_CAPABILITY(
++			dw_pcie_read_cfg, vsec, PCI_EXT_CAP_ID_VNDR, pci))) {
+ 		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
+ 		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
+ 			return vsec;
 -- 
 2.25.1
 
