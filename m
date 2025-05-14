@@ -1,140 +1,182 @@
-Return-Path: <linux-pci+bounces-27721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0427FAB6C93
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 15:26:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27DD0AB6CB3
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 15:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34A268C7323
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 13:25:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92ACC19E8E07
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 13:30:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9D51C8614;
-	Wed, 14 May 2025 13:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9EA628030F;
+	Wed, 14 May 2025 13:28:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q13wIhH1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hky07Zrk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE33270572
-	for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 13:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45E727E7EF;
+	Wed, 14 May 2025 13:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747229160; cv=none; b=jYVO1NSLTBivaJMdmW9WIwGbASQA9jhhrwSVOXV4Cn3o52MtWAtEu/9bFMjpw0zqFxIJT2jJe48w/qQ7URYyvBvch+qCbHVlXN77dniHDL5cYyrHZULx9MxvbKIIhyyE7XLBh501SsywQ3VIyFJAWoQp/H6QozBo2Hx3uR5C1a0=
+	t=1747229312; cv=none; b=U906wdIS6nu0n/NS5f6E+g63fzwRAJSqD5AOdS8BB2xyYEGDsS0D8MrwoajGgQFCS0qdpVhHrFJSlIOTLR4cclBhV6g+/aIOwrvMPopgaTGR/KIWfjgGz+h5o9Yp7cdjPwLY5nm4+YBhklYR5XIRnJEYUPV6V515ywc2/SVkoB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747229160; c=relaxed/simple;
-	bh=tr9E9784jwlXVIOi8Tb2FBN5PrzKrA+2gad6rjWiPhs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aREbl+EJQu+Q2+13qSlfE/B82gdajBzORCOlk9X4FHPFT2vdbiT2EyQZxEV5GFKqjVJyiAG50gMHi0vRDTvi53Y/ShPU+z5+JuI6w1ExzduPzOtDHhzpzPI5twYY0KYYtWO9DMRUpYsbjP7zPlFCkwGOh0UhDbaQ2LlVf7QRUtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q13wIhH1; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso51853685e9.3
-        for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 06:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747229156; x=1747833956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aakUawqIUHWGlW/tgWhb5T3+gxdqWvRqHtfYG+cbNxk=;
-        b=q13wIhH1l4gkmvhI8ySwYJXgnl8fM6KJAOM54awKnP6P+XLryqZoGbR7RriQtlQS3k
-         Rbppq/sWlUWAt2TI2QxEgShyITXVcCZGxqQjJts1fZGdutL3qZvEYiu1haG5wMtqiiU5
-         mQRWAerULFRSYfa9jmw5tK9f3clk9JZsqv7qa4zN+Vzy0FUx/nAsgSMtwatfqm0Vy7G8
-         XqDx8l6+B3QvWa2TV8kAX/gjCPNUjeKHRc9oEUNgi0CvVQvfdRPj8UXdaGc0a9iWXTTa
-         A97RHATghSljYitriUG2MW/hd5kJpZWtDYCAexRbP+AXDkKyP5ygE8A+9H8X19qN7Fpn
-         NnrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747229156; x=1747833956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aakUawqIUHWGlW/tgWhb5T3+gxdqWvRqHtfYG+cbNxk=;
-        b=e9NWr7OzJOm+TDru8OhYlJF5EkvOUz1YUVDogqxyQD7JH5d+371BF5QclylaQTO3P5
-         4Bkn2aIsD8CHDHBcvD3cRScENZ1lbX/CXx9Y+kbOgFfj0xnh5Fvo0CZaAwosX4Rdf1LH
-         vyoilh7iu/FnKFTNf2SobWorts+60/RlDZt8fOlTzZfvGEr2Fu7Xrj1T0w8YE+DD30xh
-         c7de09TWCni3BjJbvv0kzbsjwipcjxLz/3hMjkGRaaosBZilFzP+TBfK9GtvEwBuGelI
-         Ht/Cup76C50vbY894OckU7/rKNEQxaWxvKKrZUQxZ/c/PcdYh2/vBssnogNSJpaMq2nL
-         1LtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWv5hZ+WRbaDdIG8DhW6DOrUTC2g3pLgZfkMjGX0Ay5mA047JdjzL6JPopW8EZMmhWGXmpZDMj1X5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrTLjmwx957xAiHklKbfy/prwV4eALlYPTZnS67ouWuyOKN2Aa
-	HHN+n9wJc1RMTmhmDVzzU8Blw2SRjKYGhF4PiKsAMZQG2kZEYgv2G44cOnzvHA==
-X-Gm-Gg: ASbGncvilWK0ovhldvBhwqQr0HwUzoGhlQo6gyCb86GD7KlmWHVbiuJKJC4Ni3GsOCJ
-	A6ztryLuy9GaOHPTTJc4yttfyhCpq2sKxAoW9FTJWSjFvNSZq6AUiGY0K+RFaJdpuf7NJNezFmA
-	a+W+srGhB4H7W4MLYjnTJSsZmTFwQzh2zllen5j27rV1UVdpWWnMgp/lNuUmRodloOg+mAFi7UR
-	gvLfIuPTI5q2M325yz/jG3xBqg9N84VYS7sZAYaPyNnld3RmCwQZo0SqMVuro5N6L/tmzSeu9SE
-	FTdU4E2lMtIu+bCoH8/9LEFD9jJDqD1cv9q+BNz1FRVpIA6g9Br6D7j2q6zgQPdfoVOIc11h47d
-	uXWetgaygAuey1UXry4l3ruKzt2vAD5tOcsqqXG/aDBzv
-X-Google-Smtp-Source: AGHT+IF69aVHh6QQL7Y9zF5wlxFHQroYuTRB4UFZmRCFpZtw3Ef3bncMvZbprgUs4BgS/0hcTEg57g==
-X-Received: by 2002:a05:600c:c059:20b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-442f285d105mr16754775e9.2.1747229155857;
-        Wed, 14 May 2025 06:25:55 -0700 (PDT)
-Received: from thinkpad.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39ef8c7sm29528365e9.38.2025.05.14.06.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 06:25:55 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1747229312; c=relaxed/simple;
+	bh=j3MZd2/yogImZ8gk7Px6VAzusHeLLA90aFukcxAXcFY=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=gdoI9VDUDJaaZ5AYWYQMG8OyqhwN4s9ThfedTGgTajOWlcsn5lV4DFLb43pIpkR7fIuBaJcrbhNXORHA7k2IlgdiEsINOtu0R1duCDkOqH1SUryYaitWvURktgi8Tz2LEIW1V9zxLxhgyDXlA0W+GYVX01UPiwA5M9NYeHQz2ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hky07Zrk; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747229311; x=1778765311;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=j3MZd2/yogImZ8gk7Px6VAzusHeLLA90aFukcxAXcFY=;
+  b=hky07Zrk2R5d/FFDAdegZVXI+IfhL+77DljHfR+5pw6T5eWECEuegWBu
+   7tLRQiv9ds2+/d0LdjC3oUiunaIf+LGozekCZyftEn5dBBJunRmL3gLQd
+   pG8YNJgm6HbFVko82r+gAj/7XxhzvyuoLOAUh3cZIA6OCBIeIuoFYlEog
+   H7BQ7/n75F2TDtKTj0ZAuZgrjThn2EGx3z+OblNpLfnQ0HX6b5E7ZXVsA
+   4M+BPyOkbpI3KrNPzeGAd2FztbZof3lkyk8D9qGaTysk2+k/t3XFVijpO
+   d4d8H+H/VlpWIfX9I09DiS19+Q4XP35pT/JUhCRIJbGImOrVuRhkkaT03
+   Q==;
+X-CSE-ConnectionGUID: xc+s9fzPSa2q8SBKCGdFxw==
+X-CSE-MsgGUID: MnQo14RNQI+elGXPk7YWhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48236460"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="48236460"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:28:30 -0700
+X-CSE-ConnectionGUID: krHXXo5DQq+V9qMniP2mCw==
+X-CSE-MsgGUID: aOOLb1DiSXKCzXbPbvm/SQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="137917766"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.231])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:28:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Alan Douglas <adouglas@cadence.com>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/6] PCI: endpoint: IRQ callback fixes and cleanups
-Date: Wed, 14 May 2025 14:25:51 +0100
-Message-ID: <174722913586.17855.970020852326837636.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250514074313.283156-8-cassel@kernel.org>
-References: <20250514074313.283156-8-cassel@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] PCI: Update Link Speed after retraining
+Date: Wed, 14 May 2025 16:28:21 +0300
+Message-Id: <20250514132821.15705-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+PCIe Link Retraining can alter Link Speed. pcie_retrain_link() that
+performs the Link Training is called from bwctrl and ASPM driver.
 
-On Wed, 14 May 2025 09:43:13 +0200, Niklas Cassel wrote:
-> The first two patches in this series are IRQ callback fixes that should
-> get backported.
-> 
-> The reason why the bugs existed in the first place is because the APIs
-> are very confusing. The rest of the patches are cleanups of the APIs.
-> These cleanups should not get backported.
-> 
-> [...]
+While bwctrl listens for Link Bandwidth Management Status (LBMS) to
+pick up changes in Link Speed, there is a race between
+pcie_reset_lbms() clearing LBMS after the Link Training and
+pcie_bwnotif_irq() reading the Link Status register. If LBMS is already
+cleared when the irq handler reads the register, the interrupt handler
+will return early with IRQ_NONE and won't update the Link Speed.
 
-Applied, thanks!
+When Link Speed update originates from bwctrl,
+pcie_bwctrl_change_speed() ensures Link Speed is updated after the
+retraining. ASPM driver, however, calls pcie_retrain_link() but does
+not update the Link Speed after retraining which can result in stale
+Link Speed. Also, it is possible to have ASPM support with
+CONFIG_PCIEPORTBUS=n in which case bwctrl will not be built in (and
+thus won't update the Link Speed at all).
 
-[1/6] PCI: dwc: ep: Fix broken set_msix() callback
-      commit: ef2a2813f4c738a5c8f71d47537a8e79b1058319
-[2/6] PCI: cadence-ep: Fix broken set_msix() callback
-      commit: 24e50b43ebb98f147984054730cf30aebae23c51
-[3/6] PCI: endpoint: Cleanup get_msi() callback
-      commit: 6f91c4cae6a3d895265e533630c00e1c4a0b8dee
-[4/6] PCI: endpoint: Cleanup get_msix() callback
-      commit: 262df0e1a10fa8470103d343fe85afbba4b25698
-[5/6] PCI: endpoint: Cleanup set_msi() callback
-      commit: 2b9391dcb26739d0b43927b329d2b670418c69a3
-[6/6] PCI: endpoint: Cleanup set_msix() callback
-      commit: 210de38727c862164e933d978ba39b66569ab552
+To ensure Link Speed is not left stale after Link Training, move the
+call to pcie_update_link_speed() from pcie_bwctrl_change_speed() into
+pcie_retrain_link().
 
-Best regards,
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Link: https://lore.kernel.org/linux-pci/aBCjpfyYmlkJ12AZ@wunner.de/
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+---
+
+Based on top of pci/bwctrl.
+
+v2:
+- Fix changelog typos.
+- Reworded changelog to cover retraining from ASPM when
+  CONFIG_PCIEPORTBUS=n.
+
+ drivers/pci/pci.c         | 17 +++++++++++++++++
+ drivers/pci/pcie/bwctrl.c | 13 +------------
+ 2 files changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 3d94cf33c1b6..eb0c55078d5e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4718,6 +4718,11 @@ static int pcie_wait_for_link_status(struct pci_dev *pdev,
+  * @pdev: Device whose link to retrain.
+  * @use_lt: Use the LT bit if TRUE, or the DLLLA bit if FALSE, for status.
+  *
++ * Trigger retraining of the PCIe Link and wait for the completion of the
++ * retraining. As link retraining is known to asserts LBMS and may change
++ * the Link Speed, LBMS is cleared after the retraining and the Link Speed
++ * of the subordinate bus is updated.
++ *
+  * Retrain completion status is retrieved from the Link Status Register
+  * according to @use_lt.  It is not verified whether the use of the DLLLA
+  * bit is valid.
+@@ -4758,6 +4763,18 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+ 	 * in attempt to correct unreliable link operation.
+ 	 */
+ 	pcie_reset_lbms(pdev);
++
++	/*
++	 * Ensure the Link Speed updates after retraining in case the Link
++	 * Speed was changed because of the retraining. While the bwctrl's
++	 * IRQ handler normally picks up the new Link Speed, clearing LBMS
++	 * races with the IRQ handler reading the Link Status register and
++	 * can result in the handler returning early without updating the
++	 * Link Speed.
++	 */
++	if (pdev->subordinate)
++		pcie_update_link_speed(pdev->subordinate);
++
+ 	return rc;
+ }
+ 
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index fdafa20e4587..790a935b34fd 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -125,18 +125,7 @@ static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool
+ 	if (ret != PCIBIOS_SUCCESSFUL)
+ 		return pcibios_err_to_errno(ret);
+ 
+-	ret = pcie_retrain_link(port, use_lt);
+-	if (ret < 0)
+-		return ret;
+-
+-	/*
+-	 * Ensure link speed updates also with platforms that have problems
+-	 * with notifications.
+-	 */
+-	if (port->subordinate)
+-		pcie_update_link_speed(port->subordinate);
+-
+-	return 0;
++	return pcie_retrain_link(port, use_lt);
+ }
+ 
+ /**
+
+base-commit: 0238f352a63a075ac1f35ea565b5bec3057ec8bd
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.39.5
+
 
