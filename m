@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-27671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27673-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3769AAB628B
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 07:52:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 129B0AB6291
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 07:52:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1A3B189B559
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 05:52:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A10FA178835
+	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 05:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649011F4188;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44381F78E0;
 	Wed, 14 May 2025 05:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIlvKXYK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjbXlIr8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CDA170A0B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A71C1F4C8D;
 	Wed, 14 May 2025 05:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747201954; cv=none; b=TYCEid28rKMEGQ4j+pQwWw5sDRBXwoNM4FYXhIVopVKHBUW0HEo3oL2hzwQOvaCPB07GqzL7e7I4V5sQdwMpE4lno6nVgTYuaMCiODuxw24jBZrffJ5fHKiGEAaUASlHUCzApgEnJQufTduoZCydo4elgCO3Fm8/LfGWd2NuBj0=
+	t=1747201954; cv=none; b=XzytgD4TiqYuWoChtg0/v3lZ+68rbXXRGsTY4ACC4jaUuHJ9tIiSVz8kTWCI4P8W1h+mQ/7ew10INnM1zsFxtifzUrDOWqAp6j3E8DvZhalE2ubxE81yWRTJTFYKgemk4L2joBiZjIzdgo1DGgSThB4DBMRDFxfFaQZCVjNKOPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747201954; c=relaxed/simple;
-	bh=sl5S3py+PsmzdcMi50Xo1/5ZH5rrSt1MsKJo9izB46g=;
+	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QEJSxennuial2D92oKtgrxaJuXqA3XBOksuw3cHadM597EPbmKZ1ip/wzwl7mTwuOF9K7tjxsiVthZFM/JCcy0nhTrwkBqSL1nqBLhBgGGaCjsxXM+Xl03VmIzC/WNQdX2n5b74w5PgRtz7DVFjOwe1mbSnzWlH0rs/WlTJGiDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIlvKXYK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD726C4CEEB;
+	 In-Reply-To:To:Cc; b=LOumkmNwqT5cXj/TiAIyAZFXgJLj3eocSq0C1ntaxi3kRZkbx/roXoMHxWPPjen8U2cXbZHTFHryTxAiSzhIH+5zWy6qN83GprsZzyJ+dgtyUFXmi7+x27tebbSCKPnMwNRbLicgoRVACNv8jiI1my1RyT+7HlyuH1VWgaLjPEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjbXlIr8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7087C4CEF1;
 	Wed, 14 May 2025 05:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747201953;
-	bh=sl5S3py+PsmzdcMi50Xo1/5ZH5rrSt1MsKJo9izB46g=;
+	s=k20201202; t=1747201954;
+	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=aIlvKXYKqZczm9MJ8foYuW50Sh2mAiDPDf58Q41hstEsyxzoJcUhw68CV6NCiVdiZ
-	 YomeG6LJFxzQpElsPeqbFg0r+sieJ1GzGwkVrdslBVcYxh7dbQZaDkFNWWKxWgoqqg
-	 X5SRb3sC5OFXnjpRs5e08AacU+7eIPYr36YXhqG7hGrtQzlIvDGYkT0++kD9RyfwjG
-	 LZ+yfBcFDyVw3Rt3HUsVlVC+2WAqHYVzeN07MhSpRv+XJewsesVXRPQynOFl+YybLH
-	 9DpIO1fgSekIAZmG4vbm88tsHpGuFmS2XpMxQIkDcATIgVs+O0aSgwbXtbBvIyIv4g
-	 nldsVmlSgrmIA==
+	b=TjbXlIr8tSBr86YWv+eDCsx+UjpMXz7ldV62sd+knYTTatma5LVSElbFrD2yjsvlG
+	 yQPqEW4FX10dFFdu1Js79LubPodXy20IfxboVCQW2Vsv0X5AXOVsARki6cRxgMCnWO
+	 2GL/rE4uH4VvM7C2sDQsuyJNaFk+FilfoSVUpi+Z82II+173liBupp7pU/fNcIWgSs
+	 nWAe8TNKZdyAmznPc1XsyS+np0msVEqahOePAf7r/Sx8xdA/Mx+co824R8z7jSavNO
+	 1rhlIVsVWDIW3Qo5bIAeG4DxbivlQAQqApLdbyu/jU7FWnM/qJklT7kC5b3Y90bRu9
+	 UkKRSZy8km/fw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB656C3ABD9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD3C3ABCB;
 	Wed, 14 May 2025 05:52:33 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Wed, 14 May 2025 09:52:13 +0400
-Subject: [PATCH v10 1/2] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+Date: Wed, 14 May 2025 09:52:14 +0400
+Subject: [PATCH v10 2/2] arm64: dts: qcom: ipq5018: Enable PCIe
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-ipq5018-pcie-v10-1-5b42a8eff7ea@outlook.com>
+Message-Id: <20250514-ipq5018-pcie-v10-2-5b42a8eff7ea@outlook.com>
 References: <20250514-ipq5018-pcie-v10-0-5b42a8eff7ea@outlook.com>
 In-Reply-To: <20250514-ipq5018-pcie-v10-0-5b42a8eff7ea@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -76,15 +76,15 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  20250317100029.881286-1-quic_varada@quicinc.com, 
  20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan R <quic_srichara@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747201951; l=7936;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747201951; l=2062;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=TQ9P5zDgZsiAzv1uV71g7uHJCIJJnk28uxRlry0aCGw=;
- b=qfXvlUA4GsgQ9/uqyApsJTsuqHru9BFsnuZvNmFwcDrO+F4yacr1gF7kx9b/x88UM7p4aH6NM
- nG46BnQg/+ABDBLm3LkMguguX7Tx9iILVP60K+gGZDXxLCvDFESMVaw
+ bh=OKmTrcmt0ksiQwz9dz8aVIs/K+GfvvlMVFo78Mfk/ZA=;
+ b=Kdpp0nNjPVPIkhZUEbwUlCo6UHMoANmtgHx2Kel29NApsyxP4Vf0gWcib6DlzyYlQZMG5enJQ
+ HaFqTRaMVQXDjtGTc5p3c1nCZm75Lu0AqLuz26tXIig+5Ob1Wnd5E23
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -94,287 +94,83 @@ Reply-To: george.moussalem@outlook.com
 
 From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-Add phy and controller nodes for a 2-lane Gen2 and
-a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
-one global interrupt.
-
-NOTE: the PCIe controller supports gen3, yet the phy is limited to gen2.
+Enable the PCIe controller and PHY nodes for RDP 432-c2.
 
 Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 240 +++++++++++++++++++++++++++++++++-
- 1 file changed, 238 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 40 ++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 8914f2ef0bc47fda243b19174f77ce73fc10757d..76706fb1415d74858dc5a14444cdb2ee60a3a2df 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+index 8460b538eb6a3e2d6b971bd9637309809e0c0f0c..43def95e9275258041e7522ba4098a3767be3df1 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+@@ -9,6 +9,8 @@
  
-+		pcie1_phy: phy@7e000 {
-+			compatible = "qcom,ipq5018-uniphy-pcie-phy";
-+			reg = <0x0007e000 0x800>;
-+
-+			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-+
-+			resets = <&gcc GCC_PCIE1_PHY_BCR>,
-+				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
-+
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
-+
-+			num-lanes = <1>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie0_phy: phy@86000 {
-+			compatible = "qcom,ipq5018-uniphy-pcie-phy";
-+			reg = <0x00086000 0x1000>;
-+
-+			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-+
-+			resets = <&gcc GCC_PCIE0_PHY_BCR>,
-+				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
-+
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
-+
-+			num-lanes = <2>;
-+
-+			status = "disabled";
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq5018-tlmm";
- 			reg = <0x01000000 0x300000>;
-@@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
- 			reg = <0x01800000 0x80000>;
- 			clocks = <&xo_board_clk>,
- 				 <&sleep_clk>,
--				 <0>,
--				 <0>,
-+				 <&pcie0_phy>,
-+				 <&pcie1_phy>,
- 				 <0>,
- 				 <0>,
- 				 <0>,
-@@ -387,6 +421,208 @@ frame@b128000 {
- 				status = "disabled";
- 			};
- 		};
-+
-+		pcie1: pcie@80000000 {
-+			compatible = "qcom,pcie-ipq5018";
-+			reg = <0x80000000 0xf1d>,
-+			      <0x80000f20 0xa8>,
-+			      <0x80001000 0x1000>,
-+			      <0x00078000 0x3000>,
-+			      <0x80100000 0x1000>,
-+			      <0x0007b000 0x1000>;
-+			reg-names = "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "parf",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			/* The controller supports Gen3, but the connected PHY is Gen2-capable */
-+			max-link-speed = <2>;
-+
-+			phys = <&pcie1_phy>;
-+			phy-names ="pciephy";
-+
-+			ranges = <0x01000000 0 0x00000000 0x80200000 0 0x00100000>,
-+				 <0x02000000 0 0x80300000 0x80300000 0 0x10000000>;
-+
-+			msi-map = <0x0 &v2m0 0x0 0xff8>;
-+
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 0 142 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 0 143 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 0 144 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 0 145 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE1_AHB_CLK>,
-+				 <&gcc GCC_PCIE1_AUX_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>;
-+			clock-names = "iface",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "aux",
-+				      "axi_bridge";
-+
-+			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
-+				 <&gcc GCC_PCIE1_SLEEP_ARES>,
-+				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
-+				 <&gcc GCC_PCIE1_AHB_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_SLAVE_STICKY_ARES>;
-+			reset-names = "pipe",
-+				      "sleep",
-+				      "sticky",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "axi_m_sticky",
-+				      "axi_s_sticky";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
-+
-+		pcie0: pcie@a0000000 {
-+			compatible = "qcom,pcie-ipq5018";
-+			reg = <0xa0000000 0xf1d>,
-+			      <0xa0000f20 0xa8>,
-+			      <0xa0001000 0x1000>,
-+			      <0x00080000 0x3000>,
-+			      <0xa0100000 0x1000>,
-+			      <0x00083000 0x1000>;
-+			reg-names = "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "parf",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <2>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			/* The controller supports Gen3, but the connected PHY is Gen2-capable */
-+			max-link-speed = <2>;
-+
-+			phys = <&pcie0_phy>;
-+			phy-names ="pciephy";
-+
-+			ranges = <0x01000000 0 0x00000000 0xa0200000 0 0x00100000>,
-+				 <0x02000000 0 0xa0300000 0xa0300000 0 0x10000000>;
-+
-+			msi-map = <0x0 &v2m0 0x0 0xff8>;
-+
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 0 75 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 0 78 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 0 79 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 0 83 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE0_AHB_CLK>,
-+				 <&gcc GCC_PCIE0_AUX_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_S_BRIDGE_CLK>;
-+			clock-names = "iface",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "aux",
-+				      "axi_bridge";
-+
-+			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
-+				 <&gcc GCC_PCIE0_SLEEP_ARES>,
-+				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
-+				 <&gcc GCC_PCIE0_AHB_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_SLAVE_STICKY_ARES>;
-+			reset-names = "pipe",
-+				      "sleep",
-+				      "sticky",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "axi_m_sticky",
-+				      "axi_s_sticky";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
- 	};
+ #include "ipq5018.dtsi"
  
- 	timer {
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	model = "Qualcomm Technologies, Inc. IPQ5018/AP-RDP432.1-C2";
+ 	compatible = "qcom,ipq5018-rdp432-c2", "qcom,ipq5018";
+@@ -28,6 +30,20 @@ &blsp1_uart1 {
+ 	status = "okay";
+ };
+ 
++&pcie0 {
++	pinctrl-0 = <&pcie0_default>;
++	pinctrl-names = "default";
++
++	perst-gpios = <&tlmm 15 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 16 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
++
++&pcie0_phy {
++	status = "okay";
++};
++
+ &sdhc_1 {
+ 	pinctrl-0 = <&sdc_default_state>;
+ 	pinctrl-names = "default";
+@@ -43,6 +59,30 @@ &sleep_clk {
+ };
+ 
+ &tlmm {
++	pcie0_default: pcie0-default-state {
++		clkreq-n-pins {
++			pins = "gpio14";
++			function = "pcie0_clk";
++			drive-strength = <8>;
++			bias-pull-up;
++		};
++
++		perst-n-pins {
++			pins = "gpio15";
++			function = "gpio";
++			drive-strength = <8>;
++			bias-pull-up;
++			output-low;
++		};
++
++		wake-n-pins {
++			pins = "gpio16";
++			function = "pcie0_wake";
++			drive-strength = <8>;
++			bias-pull-up;
++		};
++	};
++
+ 	sdc_default_state: sdc-default-state {
+ 		clk-pins {
+ 			pins = "gpio9";
 
 -- 
 2.49.0
