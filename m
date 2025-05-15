@@ -1,151 +1,113 @@
-Return-Path: <linux-pci+bounces-27776-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27777-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D9CAAB8215
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:09:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09C73AB825C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:20:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EEA48C01E1
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 09:05:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94D717ABCDA
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 09:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D20D293B69;
-	Thu, 15 May 2025 09:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="A6h6YO9k"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5133295DB8;
+	Thu, 15 May 2025 09:19:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDDA28E5E6
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C70295DB5
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299930; cv=none; b=jH6yld84b7Y1gRgyvMZ1L6xT0BDyQEG2U8pMObVDPoT50bgpytLfaYVw8MQjInRnzR6tcAk4cxrN49ZQ3Vw8MAAGiJgQcVjWIJJ+Q2iVXfpjdD9MSS/dlp1Y9tUWUJw2EpKo8tnPUupjrcYArHq3wc4cokU9ZhAVAKejxqgv1aM=
+	t=1747300798; cv=none; b=CFSA825Zoin5P+VPA883r4GONJGYPEKlmDVs/brjGBmVoiZMTTJWLqn2FcfCpL02Th9vrjEy337254w6237aWlBNjJ7jsc/s43bJJEbhgiF6qhgD0qtQ5hqrj0deVZPSo+GMp4ELMy4dOZ9iG5Q3z+ATnU3YfsZSTRpa69a3/yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299930; c=relaxed/simple;
-	bh=d/o7Mz3sAp8md6UzDFd0xwUYBNcPpwQbc3zYFVW6fsk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aqg6fKuNE8GbyBaQWkV6pIugQnrMq3I2+LfURbT/P4GZ4d+DEA5qCKHFEIWka0NbWVbl7H+i8rR23KSEHlbrdlkm4A1Ic6tYBUyP30i1L8ozRQ/PXngbPAgmeoibAmCo2pTWkP8oEh2ZNEtdj7KLCw7UMZn0qbZ8I2gViI0EMRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A6h6YO9k; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EKok6J015190
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:05:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=0YoUGwDFzZJBnV+f8ZJ21xbDmwwcBNjqe86
-	lZSuKbew=; b=A6h6YO9kEG6PFhPqn2UQS2MlPIOgGgIfWURMZNbMDsJsPMwakAn
-	mkR61avif1PXE9zNA5Vzxoutz8Z02s+s5e+jiU31h5uxy4Yt1UosK8eQiH+4MioX
-	mdvtQ98XnglIhU+IMIvl7EDxs3tJPdQGXhxbEvXRKv4cGQcio1zfiH01mtdBWqzI
-	U9bbp5GYcnx+uadWFmdPNnjwrgAETPeylWgaRRCRw/xX+bufy79Y0uyxoiEOmq2l
-	qsd6A9zZUtsBpjc+KPZ7do9rnXr513czMaw/h54ksch9wBGKyjkalZraSgyIPG/Y
-	cc4D1upxYxUQugHvLKcSAoUEERl8mxFywyg==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcr5f35-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:05:27 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7425ba8300aso709626b3a.2
-        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 02:05:27 -0700 (PDT)
+	s=arc-20240116; t=1747300798; c=relaxed/simple;
+	bh=27BgqZply+/JSM8w3Q+eEIN5X9am9OQ8w9Lycn4Lcx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3xmckbfn8+myp4MSQ45wwTMLrSLCc7sOVrQW1eUVsWpIZlcH1BA9+7U760cXGt8nIeLVwp4xbGF7EGLlmKuOlBqcgosnoPbjyiwdng5l8nmmaOWWecNkZnMT2TJc6vZw+YUvf72uxjU1o/k8SNQjt/0fVMPQ8zQqakz8nWb9+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73972a54919so669436b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 02:19:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747299926; x=1747904726;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0YoUGwDFzZJBnV+f8ZJ21xbDmwwcBNjqe86lZSuKbew=;
-        b=oAoRi8ccDyGxzhzUposmfmBoEb3AmRqaj6GzbOoC19WKEpru3Wq3/CkxGBx+YYdZou
-         YFSRK4KtdrBXQ15kMqlno2hG0owyWsnQqHFgXJdnuZyEJPba4PuORQHDdenSnX8JBLkM
-         NrFmVRYkRhF/nnUW4/yaZiaXBCbd7HjAfUPqCheOzBiTLIKi3DJk32JDQrUJzAZwXD5x
-         Fgd0GzDFuZ4TtRXJ36wWBWJc1Tei70HojfWMtAJIIFIwpcoOzskK83i4ZMnTR6LkKuUs
-         lnnjCukTi1uM5zxV+DZCSRLMRzW3ZARnoQNPU6+zqi+71ZMyAXvK5QtFrHZ7PDjhafdx
-         +m1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXyBIlDc6XgtrqqSS9x5MGe9yaZNMHbVtl99+qQJcNpXS2IIuOk3jeM5OvS5DFz/OfVwa3xW8fl7iI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9iEHgXZw6TFtLQ5lFZPagSDuNFNL2H79jOPnLdEpV3uYU35hn
-	OX5HOGZP6W/uAkxjDoP0ALNua2ZmKqUy5iqsE9lHoUZeC2qBogTIExEh0NLEEVq2YXEQBiDF3ep
-	UgcU98c5PKDMlXIrwLijnF1tbr8GWdUqmYZzGdCQHjxanWOa9xEFh4kgYPpU=
-X-Gm-Gg: ASbGnctgk7mYwECxPNFzaubAcRoT/V0DOLfOtRzrxFf4PTi6hFYc+WuNo7tDKQHxUeF
-	ph7oJ/ynP1jczjzJJTeiLgnulPfOBfitsUDp8Uprn1SZSpDMCgnG7lVYDAoVh5nu6j89bViQNT/
-	XF0ocSK8GKtg0jBtSrIrSkRR9YjZFG/d9OYq4NMpEB1UZkDlBpB9ckMIdun1YjpzuJd6idg9YCh
-	ExZnA9zJ8EXQJdcHJmvlVBuj45DkUIRDCzSZQCsqJNzHl8BfWKEHpElRVp6t2RW92xIFfULWOPw
-	UvGWJFLHUFNE86/POIQN0F13lS3SBZnga+EHEFWGKdQ7z3c=
-X-Received: by 2002:a05:6a00:b4c:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742984c25damr2428807b3a.4.1747299926109;
-        Thu, 15 May 2025 02:05:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCFMufWAFO9NdsfiHbNKngrTVhvlxFVYN/2LnoJXLvaE75D+Kk58BJpsD/u0hFFioSfscu5Q==
-X-Received: by 2002:a05:6a00:b4c:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742984c25damr2428776b3a.4.1747299925720;
-        Thu, 15 May 2025 02:05:25 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742944e32a0sm1378000b3a.20.2025.05.15.02.05.20
+        d=1e100.net; s=20230601; t=1747300796; x=1747905596;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sly7kHXqrRGdvJB5iOb5QQcI+fsxg5o/luWWE7Ei/To=;
+        b=Q4JrcJHKBmo0nZmziFBTiF7y3Zso6cZBUy9QTszdzr0RXtTSh2WxHXU3DU7ls8GKKN
+         ksuGL9G1cayWU0EGkkNmosIl9y5R3d/fgJre6idb94MTdVHAXF5KC0rWsSi/XhT8Ziab
+         IX4c4au4ERvSrzUaj6B4c2mu8bOQ5bX2uS/ndG59kpy5B3jQPv/faKfom/H1IJGu9NSD
+         iFYKKUChnYlkpz+q+qdLHYL158nSnQlRa1WGHrGUB0K+m+DNtgWWw0MJGy7i5DRNqXK7
+         1OHtBuFdg3qpmt87N+ha3oRd5Oujbby5ShPcaYd1/ueHQZQr67Ho4h2CDjGz6g5r1fd+
+         vG/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVZtpiAvGYg6bgYp4G+ujPoJt/oJNZn3xfdIkwELBr4MGOshfn1Ahk1FuKyfxvax3HkJejt01Iijl0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWP7hQPo2h+FpRwJoOcqHHLQGFC1O7S/plowQyQzuRbhC1lQrJ
+	3Qpw5qXJUOt23Q10Rl8U04yCwVggewQqMf/T4zlchfAg/F6fiwIaMLn1AODmc6A=
+X-Gm-Gg: ASbGnct4E1J7TZhQJ1TwaM8/adjfyQMvFoHqftlxyOrHD1z8MFXucHpo6ZGxkVXKFST
+	Ydl49gcHd/vnO/d84hZq268uGyf8jy/TVnPcCOuTkECnQ2IsXQqe1mGBOxKbBWbeomfgGng4ofv
+	M6wj/+ISkcut+g+LzcHwVC/Bd38btJEQNFwD89fFTjoe+OG6dcpO+tSbQsS9SfXX3RsH8NSKtLm
+	iOUy/o838lUa3aeiti1MAWngEIKXf3sUp+u7GZjfKEBAj2ATrRlfPM4EKzhIKFzAQ3CZRlhZnBg
+	BLlzgT3Se4WGGkjgQ8R5QSYWxx7W0LUsyQXP5T0IGbYTvxi0gpLrk9XOxgVOMWjAnt0Zix9V4c6
+	J3H1SslukCA==
+X-Google-Smtp-Source: AGHT+IFuVEr6BM9jzhK4QkAm9P5QQf8rERAevNQeJYJBnBZfUkBiMmtorh/Gb0R5VbI0wsAM/rbOLw==
+X-Received: by 2002:a05:6a20:b40a:b0:1f5:6b36:f57a with SMTP id adf61e73a8af0-215ff1b6a3cmr9009418637.39.1747300796233;
+        Thu, 15 May 2025 02:19:56 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237a8972asm10649368b3a.157.2025.05.15.02.19.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 02:05:25 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-To: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
-        manivannan.sadhasivam@linaro.org, krzk@kernel.org, helgaas@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com,
-        sherry.sun@nxp.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH] schemas: PCI: Add standard PCIe WAKE# signal
-Date: Thu, 15 May 2025 14:35:17 +0530
-Message-Id: <20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 15 May 2025 02:19:55 -0700 (PDT)
+Date: Thu, 15 May 2025 18:19:54 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: Re: [pci:ptm-debugfs 1/4] drivers/pci/pcie/ptm.c:275
+ context_update_write() error: buffer overflow 'buf' 7 <= 7
+Message-ID: <20250515091954.GA1059401@rocinante>
+References: <b41c1754-c6b7-4805-9f14-7c643d6c5304@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: m9jiJYQNQKJH6KbNGMyLFhXK9xQ3iCu4
-X-Authority-Analysis: v=2.4 cv=Auju3P9P c=1 sm=1 tr=0 ts=6825ae57 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=aeoR8HoxK4P27VDVSowA:9
- a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-GUID: m9jiJYQNQKJH6KbNGMyLFhXK9xQ3iCu4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA4NyBTYWx0ZWRfX6zzhjRjt4LWN
- R7tkQTMdMzywQ6ZFXzpJxPe2JDhc7TOVsfKZYy1CHu0h3BSg2jjGFDrYA/EPvUAJDKXK/18Mcf9
- CzldKLO/MCcyNO2f60rL4un/goJm60fgmiap9aS16n5HEsLWrG22V1+0kkNhDnMa6+LyhvGRlIF
- snkSwXxdgdaYOg3qZ/kDMpRTX4SFo4/hQepiUkblUMgul8DAmTr/XhqdmU1Cb+7QHkxPP4Zge5B
- 2/wYRiu26AzYxUdZHTZW3tdIb9Rqtl6qvoz8vKWl7rGaW8GjH3m+CsjnHsZMSAV+/X76Bn9hEuK
- /S7oNPTXqzyIqviziuD31krVcnveXV0anVn91Kd+MSP/FS8K5S9M6OFyz2zHTINeOiIHADsKFWp
- HrrhyPo69BuiSdMrXiyaUh8X//bX6C86P3E+DIjOXroRrGEek7psPZpBXc+Iul4sOz2dSpBQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_04,2025-05-14_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 mlxscore=0 adultscore=0 priorityscore=1501 mlxlogscore=908
- phishscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b41c1754-c6b7-4805-9f14-7c643d6c5304@suswa.mountain>
 
-As per PCIe spec 6, sec 5.3.3.2 document PCI standard WAKE# signal,
-which is used to re-establish power and reference clocks to the
-components within its domain.
+Hello,
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- dtschema/schemas/pci/pci-bus-common.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+[...]
+> smatch warnings:
+> drivers/pci/pcie/ptm.c:275 context_update_write() error: buffer overflow 'buf' 7 <= 7
+> 
+> vim +/buf +275 drivers/pci/pcie/ptm.c
+> 
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  257  static ssize_t context_update_write(struct file *file, const char __user *ubuf,
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  258  			     size_t count, loff_t *ppos)
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  259  {
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  260  	struct pci_ptm_debugfs *ptm_debugfs = file->private_data;
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  261  	char buf[7];
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  262  	int ret;
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  263  	u8 mode;
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  264  
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  265  	if (!ptm_debugfs->ops->context_update_write)
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  266  		return -EOPNOTSUPP;
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  267  
+> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  268  	if (count < 1 || count > sizeof(buf))
+> 
+> Should be >= instead of >.
 
-diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-index ca97a00..a39fafc 100644
---- a/dtschema/schemas/pci/pci-bus-common.yaml
-+++ b/dtschema/schemas/pci/pci-bus-common.yaml
-@@ -142,6 +142,10 @@ properties:
-     description: GPIO controlled connection to PERST# signal
-     maxItems: 1
- 
-+  wake-gpios:
-+    description: GPIO controlled connection to WAKE# signal
-+    maxItems: 1
-+
-   slot-power-limit-milliwatt:
-     description:
-       If present, specifies slot power limit in milliwatts.
--- 
-2.34.1
+Done.  Fixed directly on the branch, see:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=ptm-debugfs&id=132833405e61463d47d6badff1b8080b09b5808e
+
+Thank you, Dan!
+
+	Krzysztof
 
