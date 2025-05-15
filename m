@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-27778-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27779-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 359CBAB84BE
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:26:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49EFDAB84F6
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:32:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6793A1881D7C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:26:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D44A24E1A3E
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4885298255;
-	Thu, 15 May 2025 11:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27387298CDE;
+	Thu, 15 May 2025 11:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kIHCERj6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHZKEuMx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0D297A73
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 11:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAAF298251
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 11:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308396; cv=none; b=KkKhENnLhJTr4+lW94sKFJ/t5jXv56/FTdXfzDcnYFMEMF6JkhqTkPqVKrkPrhVF9EkQwRgeZyEaRvYK3oiP38CnbGpFLv1jSYYyCaBVNmduMG5aknXOtHGr935sIAuqDPPWec0/Y74jp4luYhgSOhfuwHFPEe8dvDplznqXCuk=
+	t=1747308569; cv=none; b=aiXdtfPOkeb9yUBz7+6fTdKYhTjxKTzAkR4A5Bkf3/5AL0zd2+6e0uBPRtww2j28xHGNvUOcW4V+CL1E/dS6eHYPcsoBEtbefzszU2X9AS3WMvjqIgsBwO56Oa/vBoQ+dQGExByt/tdTjxrIVryn8SX9ehO1Ft5iFnfJGj4ZEeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308396; c=relaxed/simple;
-	bh=9MRD1+jcFedrZg03dVslc9ED/+5UQU4W+jpewP/RIS4=;
+	s=arc-20240116; t=1747308569; c=relaxed/simple;
+	bh=nFtmckRpB0dUuxCAVojM9JULBIGVkNwbMXUo38KSfV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6/pdgIBrULjWaWNMu0zyme/3DYBXCIMRHMaM+DWUR9NOu9ypahZFHreDdUs9X5kxAyXsMmiTq8dtxRGTwqXn+ewxUWGTHOIqAQ749/dkrYN4srxJwdVSvFU+sS64s3DWtNLDHtf1BR55wMR/TQ4enPXIVU1WaWKR2eySqbuzk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kIHCERj6; arc=none smtp.client-ip=209.85.128.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbwJeyUcas9zIokaAcEo8jLcl5qMdn0xouqX/SuM1JRoqYIQUUxR6uCjsnQFCEeIe9K6D8MCd9zHTMg7Quqo2Ew7PNVKPcKi73LLPTUHcmanB9BkdJosyMMSAkkaNByn8QlEpRVQhTbjlh/S37vxUgq2Bht2V/WMQ63L3+UV8LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nHZKEuMx; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso7689445e9.2
-        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 04:26:33 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso477011f8f.1
+        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 04:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747308392; x=1747913192; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747308565; x=1747913365; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=E6YcWQUS/krFSoVF5ePsfXGO+e5W0vWFl3MyrWAJnzQ=;
-        b=kIHCERj6mmy9rvTI4yHJ1eWlFrs8AhWp1mu1CI6Nx6zSuruxJAsfNRS8aZka7i6WaG
-         TbE7kP36LFvAr4641pl2EFkTfjPCYvs5HJRb/RguwuQcO+8iVQrexudlXaOpN0+HnMjw
-         aw0haN9riD4NQTmnCKGw8AhYVOPSpTZ0FwkkQMjy/FaKx9ti+syxDOiMkSZjTuuEThfX
-         w1LiGWmmv361fZXlvik8wn9Kuaopk/CtSmzHZ5g6HEQk3vIkSczDdZp6NnmzWso29KeS
-         idMAMHHXY5Cmf4S80leJjwd0aIk2nsAb31UOUhCLsz2niOQxFmFhq3aKdnjVJAE8xtbU
-         TwDA==
+        bh=sFdj64C/cdI5aMQcMm0++S9r7ta1roUULL87nRUbXCo=;
+        b=nHZKEuMxJU/c3U2mQ8QPSi8pwfpIdA9nhKPZTu3BI0/8pJhTTAJwHdT0N7n/woL5po
+         03UW9gu4ZoRGdZSihjjULzDjcwhI8XYqCH+L9mFT27IO9jCmqc2pV8/UAr38gKPr9rUk
+         JSaXcRbiJk/KC0cSz8RPayUBt8mqZp9ijW2+w7209+u299wjkx5MtIdYsE0TOp8wquJh
+         HIq6C6gv1uSqjOUU9L57IbVCTfyV8PwRsdc/JljrzRl9yNfic35/1C4y0mYcNtdbblQh
+         LKKrbUPpiwWrb7YvM+0MW63Crhp2JRe8PsA8gihqpo01uBykJnRdAqrAMpLtRTxl5E5K
+         bI2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747308392; x=1747913192;
+        d=1e100.net; s=20230601; t=1747308565; x=1747913365;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6YcWQUS/krFSoVF5ePsfXGO+e5W0vWFl3MyrWAJnzQ=;
-        b=vTQxrtc29BwsD6Wl9JpDOkthvSY4mqMdIpA5Yn1w8I+SWZ3a8veYS/ttQH1uaxg2zc
-         1SnEoK2Ha8bu+LOpnERAg7G4FpuuqYHquOmDKWxAXbD18JMrCmodFdYy46Kh3oCyBsBk
-         uAYnjCDS8yLpmgDAp408ch/r5dNjBUTgw6Nqr5KCEX+lGaQgbIvZIM3C4g30nCwhdnrm
-         RdEAHTydKV5lt/X0EEX+YRpVaSuCNG6gx7noNwKeM+Htxv9loakGpFiNRg0qT0NkFcf5
-         wp/6nPpqZhIB1+n7RqITxoFXmXAIBWvhyliNNSnA64F8jvFMVxD11OF/djelM5W/J6ep
-         O4kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8z9bjVNxnwZEIEPQz2AbFK0ovt5LGe05YFzbLQDLhYXkguXBWBH+pfIH1HB7YTh8kXgB4AhXQhes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQw3tSVphp6d5qKkhsv7CHK4tSVCjdeqD7ZXWEPJuLX3QOeU+U
-	xZu2z5w0i+EyKXcbpL3a3+7/HBctElqO3XJ+DL39XJUAch7M8nv7FO2wIOsQLQ==
-X-Gm-Gg: ASbGncsTmLkdwZKfSRpMB90+dlaGwofadyaUH6i2YVXqIyZf9Q07ZuES2g8vbQJBLWB
-	KDtXy0xMfZ3EXCV29hOlFSmeYA688weuQH7XkUFVayvC9RgaO0D1SkeA/dw07ZiRlj40h4uq4/z
-	mwbMFFAuS8vtGg2K2WIZ91zybr3ifmQaCcj9wbWLMmD3s+/X1sMGGX0GmYCgv7VKt34mhYxltCB
-	g4rNMWfVlPfs42ml2g/o1g+v9RowA7ZcdfdC85NtFWd2zwLmF+DB1Zu2eVpGEpGqrbbfdS95+3w
-	CQm+VzofnQN3svRin8EiRbtS7H7D6MbREzYKcrkmBwvIa6i4vSr/+eDLuLoR3q3EDrvjg9stH32
-	O4xcaO9BAGbBplg==
-X-Google-Smtp-Source: AGHT+IEkCceAOB29/pB9CUmVZ8C8Si1ZbNqMfWkWxFcEkinM5zQ7dz5OaP8iyatRAtCIbSSJ7O2kkw==
-X-Received: by 2002:a05:600c:3e12:b0:442:dcdc:41c8 with SMTP id 5b1f17b1804b1-442f96ecf1amr18446915e9.19.1747308392065;
-        Thu, 15 May 2025 04:26:32 -0700 (PDT)
+        bh=sFdj64C/cdI5aMQcMm0++S9r7ta1roUULL87nRUbXCo=;
+        b=YXHOZtqcCoBJoYPSyy34lLpVxTmkj4du34+dK/GfXsRVuqyoshFAaqMOUJotDSHtit
+         nk1xpV+ckYW8UCWWDIZBs5M6x0GmHOsjj8AP7OL0/IQeGHIw5txzmI7jZEZWOrT+S/Bl
+         EuEZNVnDPxKuEnHJQ/dCQ55OlKo1cPe7+kdTCIgYmrqpxx2D+2stoKvg7M8Bas4hPb0a
+         o0ooSi+u9ZGCRGSIiBA5r5V4tITOj9SAxUtFVX4D67sJKIgHGALDD5GyebtZtifmi68H
+         EBYNG6G6fZNbzM21s0CyLXlhKo0Q8mm5ACNrwkmgWPnQ60M/cWImNgiC1FZzoukx0E0l
+         4VmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWt3iokvjtYnomIYh9VJYByCYUF5wQfPTiTPj7C1/Jmv0SEH+HmW7q+EZ6WJpCFwheOCHpEH7CFBJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfpCpBKjSqy0BfuPxGzSGfLJxzaPFx2FBrfc8NEa7T5QVQkE6t
+	EpiY92dXw8/ua10vvcgvzWHHFyDQ8IkhLz8ahfAflM81msaD8bHkvie2jP8gCg==
+X-Gm-Gg: ASbGncttYipCIvvEXA+2AlH1FuoRX4lQI6hWg9KGhm8d50Nb10D8ZHmyYHqI42m4agk
+	JePKApivPk2oSjommfH/RYjqn3ZeWvJrpIdrCtiQCjQtfivpUxGZzDP6aILFkaklhrAEqxKTYej
+	FsLrfoSBW5xfBIyVv9dflT91Rfl5rTgSzRlUacGIsDcA391BsBID77kmQnaEc7zAToi+mtH4uRy
+	LWHKjT2fbVeLidxnzdhkzqlXJXErRhzrFiuzMKM+SHzPu/mnqUx4SYy2MxPpv/tBI1rHDsmAV6N
+	lJD7i8fOZ6HES/KGxPccRRFiNrVRBzBEXqpSFKi27YQ62kBLLeISWX7PnyNpPDdYbtJjTjSf7a/
+	bba7XnYr5uXgD+/tKfyWzLb/7
+X-Google-Smtp-Source: AGHT+IFamW2RPKGKJfE+U6UvXP5DVtS58juDRGBK81mdENW8tAkGVKABiwtzg+vRMFYjw66L5CqtcA==
+X-Received: by 2002:a05:6000:2088:b0:3a3:55e6:eaaf with SMTP id ffacd0b85a97d-3a355e72142mr1087194f8f.24.1747308565358;
+        Thu, 15 May 2025 04:29:25 -0700 (PDT)
 Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3979355sm67419385e9.37.2025.05.15.04.26.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57de087sm22731199f8f.16.2025.05.15.04.29.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 04:26:31 -0700 (PDT)
-Date: Thu, 15 May 2025 12:26:27 +0100
+        Thu, 15 May 2025 04:29:24 -0700 (PDT)
+Date: Thu, 15 May 2025 12:29:21 +0100
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Christian Bruel <christian.bruel@foss.st.com>
 Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
@@ -83,13 +83,12 @@ Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
 	cassel@kernel.org, johan+linaro@kernel.org, linux-pci@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 4/9] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-Message-ID: <b5x4fayqm242xqm3rgwvrz3jywlixedhhxwo7lft2y3tnuszxr@3oy2kzj2of5l>
+Subject: Re: [PATCH v8 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <ec33uuugief45swij7eu3mbx7htfxov6qa5miucqsrdp36z7qe@svpbhliveks4>
 References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
- <20250423090119.4003700-5-christian.bruel@foss.st.com>
- <tdgyva6qyn6qwzvft4f7r3tgp5qswuv4q5swoaeomnnbxtmz5j@zo3gvevx2skp>
- <619756c5-1a61-4aa9-b7fb-6be65175ded2@foss.st.com>
+ <20250423090119.4003700-3-christian.bruel@foss.st.com>
+ <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
+ <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,135 +98,114 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <619756c5-1a61-4aa9-b7fb-6be65175ded2@foss.st.com>
+In-Reply-To: <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
 
-On Mon, May 12, 2025 at 06:06:16PM +0200, Christian Bruel wrote:
-> Hello Manivannan,
+On Mon, May 12, 2025 at 05:08:13PM +0200, Christian Bruel wrote:
+> Hi Manivannan,
 > 
-> On 4/30/25 09:50, Manivannan Sadhasivam wrote:
-> > On Wed, Apr 23, 2025 at 11:01:14AM +0200, Christian Bruel wrote:
-> > > Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
-> > > controller based on the DesignWare PCIe core in endpoint mode.
+> On 4/30/25 09:30, Manivannan Sadhasivam wrote:
+> > On Wed, Apr 23, 2025 at 11:01:12AM +0200, Christian Bruel wrote:
+> > > Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+> > > controller based on the DesignWare PCIe core.
 > > > 
-> > > Uses the common reference clock provided by the host.
+> > > Supports MSI via GICv2m, Single Virtual Channel, Single Function
 > > > 
-> > > The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
-> > > and the ComboPHY PLL must be locked for pipe0_clk to be ready.
-> > > Consequently, PCIe core registers cannot be accessed until the ComboPHY is
-> > > fully initialised and refclk is enabled and ready.
+> > > Supports WAKE# GPIO.
 > > > 
+> > 
+> > Mostly looks good. Just a couple of comments below.
+> > 
 > > > Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 > > > ---
-> > >   drivers/pci/controller/dwc/Kconfig         |  12 +
-> > >   drivers/pci/controller/dwc/Makefile        |   1 +
-> > >   drivers/pci/controller/dwc/pcie-stm32-ep.c | 414 +++++++++++++++++++++
-> > >   drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
-> > >   4 files changed, 428 insertions(+)
-> > >   create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > >   drivers/pci/controller/dwc/Kconfig      |  12 +
+> > >   drivers/pci/controller/dwc/Makefile     |   1 +
+> > >   drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
+> > >   drivers/pci/controller/dwc/pcie-stm32.h |  15 +
+> > >   4 files changed, 396 insertions(+)
+> > >   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+> > >   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
 > > > 
-> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > index 2aec5d2f9a46..aceff7d1ef33 100644
-> > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > @@ -422,6 +422,18 @@ config PCIE_STM32_HOST
-> > >   	  This driver can also be built as a module. If so, the module
-> > >   	  will be called pcie-stm32.
-> > > +config PCIE_STM32_EP
-> > > +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
-> > > +	depends on ARCH_STM32 || COMPILE_TEST
-> > > +	depends on PCI_ENDPOINT
-> > > +	select PCIE_DW_EP
-> > > +	help
-> > > +	  Enables endpoint support for DesignWare core based PCIe controller
-> > > +	  found in STM32MP25 SoC.
-> > 
-> > Can you please use similar description for the RC driver also?
-> > 
-> > "Enables Root Complex (RC) support for the DesignWare core based PCIe host
-> > controller found in STM32MP25 SoC."
-> 
-> Yes, will align the messages
-> 
-> > > +
-> > > +	  This driver can also be built as a module. If so, the module
-> > > +	  will be called pcie-stm32-ep.
-> > > +
-> > >   config PCI_DRA7XX
-> > >   	tristate
 > > 
 > > [...]
 > > 
-> > > +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
-> > > +			     struct platform_device *pdev)
+> > > +static int stm32_pcie_probe(struct platform_device *pdev)
 > > > +{
-> > > +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
+> > > +	struct stm32_pcie *stm32_pcie;
 > > > +	struct device *dev = &pdev->dev;
 > > > +	int ret;
 > > > +
-> > > +	ret = pm_runtime_resume_and_get(dev);
-> > 
-> > This needs to be called before devm_pm_runtime_enable().
-> 
-> OK. Also and we must use pm_runtime_get_noresume() here.
-> 
-
-Yes!
-
-> > 
+> > > +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
+> > > +	if (!stm32_pcie)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	stm32_pcie->pci.dev = dev;
+> > > +	stm32_pcie->pci.ops = &dw_pcie_ops;
+> > > +	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
+> > > +
+> > > +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
+> > > +	if (IS_ERR(stm32_pcie->regmap))
+> > > +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
+> > > +				     "No syscfg specified\n");
+> > > +
+> > > +	stm32_pcie->clk = devm_clk_get(dev, NULL);
+> > > +	if (IS_ERR(stm32_pcie->clk))
+> > > +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
+> > > +				     "Failed to get PCIe clock source\n");
+> > > +
+> > > +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
+> > > +	if (IS_ERR(stm32_pcie->rst))
+> > > +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
+> > > +				     "Failed to get PCIe reset\n");
+> > > +
+> > > +	ret = stm32_pcie_parse_port(stm32_pcie);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	platform_set_drvdata(pdev, stm32_pcie);
+> > > +
+> > > +	ret = pm_runtime_set_active(dev);
 > > > +	if (ret < 0) {
-> > > +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
+> > > +		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
+> > 
+> > Please use dev_err_probe() here and below.
+> 
+> OK, will report this in the EP driver also.
+> 
+> > 
 > > > +		return ret;
 > > > +	}
 > > > +
-> > > +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> > > +				 STM32MP25_PCIECR_TYPE_MASK,
-> > > +				 STM32MP25_PCIECR_EP);
-> > > +	if (ret) {
-> > > +		goto err_pm_put_sync;
+> > > +	ret = devm_pm_runtime_enable(dev);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
 > > > +		return ret;
 > > > +	}
 > > > +
-> > > +	reset_control_assert(stm32_pcie->rst);
-> > > +	reset_control_deassert(stm32_pcie->rst);
-> > > +
-> > > +	ep->ops = &stm32_pcie_ep_ops;
-> > > +
-> > > +	ret = dw_pcie_ep_init(ep);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "failed to initialize ep: %d\n", ret);
-> > > +		goto err_pm_put_sync;
-> > > +	}
-> > > +
-> > > +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "failed to enable resources: %d\n", ret);
-> > > +		goto err_ep_deinit;
-> > > +	}
-> > > +
-> > > +	ret = dw_pcie_ep_init_registers(ep);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
-> > > +		goto err_disable_resources;
-> > > +	}
-> > > +
-> > > +	pci_epc_init_notify(ep->epc);
+> > > +	pm_runtime_get_noresume(dev);
 > > > +
 > > 
-> > Hmm, looks like you need to duplicate dw_pcie_ep_init_registers() and
-> > pci_epc_init_notify() in stm32_pcie_perst_deassert() for hw specific reasons.
-> > So can you drop these from there?
+> > I know that a lot of the controller drivers do this for no obvious reason. But
+> > in this case, I believe you want to enable power domain or genpd before
+> > registering the host bridge. Is that right?
 > 
-> We cannot remove dw_pcie_ep_init_registers() and dw_pcie_ep_init_registers()
-> here because the PCIe registers need to be ready at the end of
-> pcie_stm32_probe, as the host might already be running. In that case the
-> host enumerates with /sys/bus/pci/rescan rather than asserting/deasserting
-> PERST#.
-> Therefore, we do not need to reboot the host after initializing the EP."
+> We call pm_runtime_enable() before stm32_add_pcie_port() and
+> dw_pcie_host_init(). This ensures that PCIe is active during the PERST#
+> sequence and before accessing the DWC registers.
 > 
 
-Since PERST# is level triggered, the endpoint should still receive the PERST#
-deassert interrupt if the host was already booted. In that case, these will be
-called by the stm32_pcie_perst_deassert() function.
+What do you mean by 'PCIe is active'? Who is activating it other than this
+driver?
+
+> > And the fact that you are not
+> > decrementing the runtime usage count means, you want to keep it ON all the time?
+> > Beware that your system suspend/resume calls would never get executed.
+> 
+> We do not support PM runtime autosuspend, so we must notify PM runtime that
+> PCIe is always active. Without invoking pm_runtime_get_noresume(), PCIe
+> would mistakenly be marked as suspended.
+
+This cannot happen unless the child devices are also suspended? Or if there are
+no child devices connected.
 
 - Mani
 
