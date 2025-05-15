@@ -1,53 +1,80 @@
-Return-Path: <linux-pci+bounces-27765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99DBBAB7955
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 01:13:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0EA1AB7AEE
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 03:23:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3519F17DEA7
-	for <lists+linux-pci@lfdr.de>; Wed, 14 May 2025 23:13:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3693860184
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 01:23:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B1B224892;
-	Wed, 14 May 2025 23:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CB9E24C68D;
+	Thu, 15 May 2025 01:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="e5pJzhcV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfnkV+eu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from outbound.pv.icloud.com (p-west1-cluster1-host10-snip4-4.eps.apple.com [57.103.64.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35EE204F99
-	for <linux-pci@vger.kernel.org>; Wed, 14 May 2025 23:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9342A25B1CE;
+	Thu, 15 May 2025 01:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747264380; cv=none; b=j9LX75iUd7w3cQLz/m+JszmBpCkiXtMbpye9n4GxFHZ2ZFT+O7ciJSofFodTEC27DshKAY89bLXZKsqPGR7kG52v4LQp04kM6Q1gjDFiMc7n+CzKz3d++nxxn/aXdI2wgyjO8a6xFqn4z30cpBGjX0frzs7KOVp7YMdEEdmzLrw=
+	t=1747272203; cv=none; b=jDR282DwoE2b37Q1maKaOO0R9bDxBSVcnzyZFWCxAcpQivefcyNBfS5UZb98EpmCsnVt/EHVA5gl94HkfgwsEXQ4FhPIBYiCn7dg1RYhF5tzE9XJnuDZSh6byEUA3eJcjWMZCWS397PSVJEZm5HsBzcy6BMSQNOV4Oj65cjNRy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747264380; c=relaxed/simple;
-	bh=5mT+RQkMC8J5+wPg+K0XzcqnqF5PVE9oDpIqPmC9zvA=;
+	s=arc-20240116; t=1747272203; c=relaxed/simple;
+	bh=MjEDxmDIgnEbN9DbfVfSdVDCDLR/gWzcer0C7w1Qfuk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q76tZeYSTUw+OXq/iPZd4RDaXRQsBsNKjE8N25NQRiBeR189dZgYLKU7nlfcC+IYfdXUoAtZEtq7+tvnwe5CMN+jAKXW/p/LuW6k1SSmu0KYXfbLdoBB1VoIQv3PxLPqGUWZr7tbeG5FZba6upowfeO32/ve3V3xXDnqF51+3Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=e5pJzhcV; arc=none smtp.client-ip=57.103.64.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=ccwJU/LTdnXEs9iAVCu4zSGeS8J9jkqJWbyKvJzQ6hw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=e5pJzhcVeETD5S8VCgumVLW/shAHu+rlzp6wqHDJe49W0viMmf80Y0haG1Ei2Gv1I
-	 zgsWyq5b/PH9Sy80F5TDF6JP3IL9Ztf/ctZLhUzwQQfR543DjMI6IHZpFX/+xkzP8Q
-	 z8FKDdwamLFM9bQ0j6jqGY0qFcyMIy6FzPe84VoXkF4G6e2slyy46MZZjIsD2bLwyw
-	 BPut8wr7B7zPxmo7m77RoeQN9wWDvDSXryHBmetXa1wO5dJH3S31w5AY7SCjZrQKjQ
-	 ypd7fhQkMAR276OdLXlGOvyCStw1ARh0jc9SY4mihYPN9yE3S2IITCmiUyKVubtq+b
-	 wqpvpzjAjMRUw==
-Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 1B4A41800EA2;
-	Wed, 14 May 2025 23:12:55 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id AACED1800453;
-	Wed, 14 May 2025 23:12:53 +0000 (UTC)
-Message-ID: <9302bf79-dd42-4c4f-a521-b25fc94569d4@icloud.com>
-Date: Thu, 15 May 2025 07:12:51 +0800
+	 In-Reply-To:Content-Type; b=oYDlRdgOC/8sVP5hiLBUibxej86yP/iHVy8O17V/ue6IQlyIpJU5q+FZVegiqSpOVUCKK/a/LiaKFzgcoNKknDmX5jewpm5toF6tpOeVTIglEDdCbN641Hbz5kEV27bDkmecpjw7zop4wszUpkcF/K7t85847zbcO8buKQ+oIqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EfnkV+eu; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3feb3f54339so539141b6e.1;
+        Wed, 14 May 2025 18:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747272200; x=1747877000; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m6xEBDe6/MxO+zNG1k99t5k3/oCboXoZUQWqw6+THMU=;
+        b=EfnkV+euBVdki+3XkC+jKL+6B5ClTaMwa7RemqPtmHNBsQatEaPorcG3jGQEzJpKua
+         cvGhffnyPG4aHecNyNmX+oGLAT856pWt5QknjP3WWu3x0TmA4nsRxpE5MlFtV1vUniIc
+         QUgKPgVRG/Tb8vDJQaSlchSkDxW4SMK7X8YIxEOSvZUVYbzVlSiT+dHXHGna00AfPPqV
+         HVqPc3krx6sbF6q8U6ovooGKK9w7LnumdahX2DxflJyrhuqPeC8Cl1k0f38bdTrLxxHX
+         QexvVsKQS8IcLWiyG5+cgwizdwA0AQ58IMHVls85KiHOCJ/aUTSDgv5icdpogGF/EDmD
+         pwOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747272200; x=1747877000;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m6xEBDe6/MxO+zNG1k99t5k3/oCboXoZUQWqw6+THMU=;
+        b=vG8YK3EUSw0YJTUpGXoXTIYr0IAtwBP8KwKJZv7QuDzH9TY9EPCLiNrtkaj7DD3N/l
+         mf+9H0PRaNFTgphGzNeIWSs1gOTWYSqJrwj0aEq2n7GkAC9ZEB4m3QcmQsthcf7sg3fg
+         F04E44UqX9dBt9+4VGhG02TMXLwRv391MIAxlyF8f191+hOMpJjxLkt65NowDWFd7cJz
+         wGkkhBJ3Sa6XR2oUuJlvgI2YXC8tG19nAuhq27xF1KQya9zxdrjwFwAXWMbMwW60QWDu
+         5R8Zs03oFhSqAMzMs7k5aUew72syCOXarx5NN/tyLXOcsknTCHPJ3AqIQsBwSQ8nxbAj
+         +2wg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3jtE+LwfEpGAjyetEfwwYujIDhuI70lX6/YPDtr2PiV4W0Y8+6VUXDtErv47hz6p5z3qKtAL4tZs=@vger.kernel.org, AJvYcCXf3xEe8ZHgRe3nvUDfpMT3povU1gpvNB3MUhjXdnspYZgzeOhzsWwfXA9AsiDqCkbfkONI9E+pnHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXQvhwCnQ7/er8ZYXqE+l6vLYlJk7o+RTdwrYge+Xqw7+rpHHz
+	j9C/hleBBHqAELnOm4RqnxS3katZdhD81Lms+uD77aHVNflxL7Sv
+X-Gm-Gg: ASbGncumNyMn5+x84yfnoxCaws4yhpl8VrvYAW+mmG20SqHlreL187U+TP03mQ/Iphi
+	4MhAXWI8V8rueG/euCbTZTMTX0YhCo6NyvM2d98iUA3u+iePjLDj9rgzTbgQ8bgAdxN4AFnwlxn
+	gM9OLuNx1yb7Dep00rdbW8V4gyRcVvfHzpnMaEkSSQ+dv4BtzziyJvIAHgbqnCGqYinaDpkIW3v
+	XDM6XgoZNJAFBeKsHYwNT5ASuHjJkJy+DOCxOzu0dMofWoYrEysjm+OWVdS9fF/P2IkNhrnvHUm
+	hPdiqNztBmk8gaI53FE1f1V1vGjcFWSdBHGB3wqwTZLoxJSyQPBGx7/kH7Jbn87rufRGn4J6e08
+	KEw==
+X-Google-Smtp-Source: AGHT+IGYaLVMithHh4tayLbXSSqEarmsHPwmDSJ5XBJXtsKHOtQpHNseAytZoZX7sFQkH+Jr9ISfzA==
+X-Received: by 2002:a05:6808:3206:b0:402:17a8:af08 with SMTP id 5614622812f47-404c1fe061bmr4012381b6e.9.1747272200468;
+        Wed, 14 May 2025 18:23:20 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id 5614622812f47-40380398aecsm2626141b6e.43.2025.05.14.18.23.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 18:23:19 -0700 (PDT)
+Message-ID: <7aedd720-c29a-4225-a79a-d44a3a9ca129@gmail.com>
+Date: Wed, 14 May 2025 20:23:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,47 +82,54 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] PCI: of: Fix OF device node refcount leakages
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org,
- Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>
-References: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
+Subject: Re: Raphael, I'd like your help upstreaming this VMD power-saving
+ patch, please
+To: Bjorn Helgaas <helgaas@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>, Vidya Sagar
+ <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Andrea Righi <andrea.righi@canonical.com>,
+ You-Sheng Yang <vicamo.yang@canonical.com>, linux-pci@vger.kernel.org,
+ Sergey Dolgov <sergey.v.dolgov@gmail.com>,
+ Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>,
+ Jian-Hong Pan <jhp@endlessos.org>, "David E. Box"
+ <david.e.box@linux.intel.com>
+References: <20250512210938.GA1128238@bhelgaas>
 Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <20250512210938.GA1128238@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: JDlOn7mvHZ_8tPmSTVyMKBnbbdILqJtJ
-X-Proofpoint-ORIG-GUID: JDlOn7mvHZ_8tPmSTVyMKBnbbdILqJtJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
- spamscore=0 clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503310001 definitions=main-2505140215
 
-On 2025/4/7 22:14, Zijun Hu wrote:
-> This patch series is to fix OF device node refcount leakage for
->  - of_irq_parse_and_map_pci()
->  - of_pci_prop_intr_map()
+
+
+On 5/12/25 4:09 PM, Bjorn Helgaas wrote:
+
+>>  static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>>  {
+>>  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+>> @@ -866,7 +891,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>>  	}
+>>  
+>>  	/* Save default state */
+>> -	link->aspm_default = link->aspm_enabled;
+>> +	link->aspm_default = pci_fixup_vmd_bridge_enable_aspm(parent) ?
+>> +		PCIE_LINK_STATE_ASPM_ALL : link->aspm_enabled;
 > 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
-> Zijun Hu (2):
->       PCI: of: Fix OF device node refcount leakage in API of_irq_parse_and_map_pci()
->       PCI: of: Fix OF device node refcount leakages in of_pci_prop_intr_map()
+> PCIE_LINK_STATE_ASPM_ALL includes PCIE_LINK_STATE_L1_2, so I think
+> this potentially enables L1.2.  The L1.2 configuration depends on
+> T_POWER_ON and Common_Mode_Restore_Time, which depend on electrical
+> design and are not discoverable by the kernel.  See PCIe r6.0, sec
+> 5.5.4:
+> 
+>   The TPOWER_ON and Common_Mode_Restore_Time fields must be programmed
+>   to the appropriate values based on the components and AC coupling
+>   capacitors used in the connection linking the two components. The
+>   determination of these values is design implementation specific.
 
-Hi Bjorn,
+Does that apply to VMD?  As far as I know it's not an actual physical
+PCIe device.
 
-Not sure if this patch series is still in your review queue.
-
-Also show below mainline fixes for your reference.
-
-962a2805e47b ("of/irq: Fix device node refcount leakage in API
-irq_of_parse_and_map()")
-ff93e7213d6c ("of/irq: Fix device node refcount leakage in API
-of_irq_parse_raw()")
-
+- Russell
 
