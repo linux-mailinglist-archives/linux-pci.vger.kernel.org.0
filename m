@@ -1,153 +1,227 @@
-Return-Path: <linux-pci+bounces-27782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F585AB856C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:57:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8C3DAB8571
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 992658C72E6
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:57:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 339F44E160E
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:58:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008152989B3;
-	Thu, 15 May 2025 11:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60ED42989AE;
+	Thu, 15 May 2025 11:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eP3elCmt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pc6bVOvq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1756D2989B8
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 11:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213D7298271;
+	Thu, 15 May 2025 11:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310244; cv=none; b=Ac1JIX2i4196oXwbuvPGp3pxZrfqLITkPgd68S+nAD+VfEJW7bD9YJ60uNoPIJwDiADDrs+nnEzHKSqg5EJxEQmFc1gO7djsYasT+7EYJLCfY4qhSobB4Ykr807l+Eo/pGqlX0cHQAuNTWLsGLdZkpjQAQWo0EwDTjgXc1UoLMw=
+	t=1747310321; cv=none; b=hc7M4Lh31mqeu2i2Egrx9Pi9kWMFnVY1+bkd6ewuE0FVznDhmgtLIT277sHy4O2vcDmp2mcvTQfW/NO2CQga/hTz3LeRU8k9D3DaDsAddwGo0Jz0YSHOBC6L07/50f0UO35qukIP+ZcrcQ4syGsiTdjxrvxbwbuIlVWgAhasIwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310244; c=relaxed/simple;
-	bh=km/RWekW0Wmo0YRMLipkkWHgAO46VaDkUZapim5cAmo=;
+	s=arc-20240116; t=1747310321; c=relaxed/simple;
+	bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LbN97sxhcWYgIXVhhz1qdIM6+pJzOZEsd1aLJQ+DMQpm7fe0dk1f9GfyYzi3pFear5A1wWVRAvR5E7VCOnVA1iH+dxXer69djdeeGY2g6pB/qcHWEw7STVDmtvp4MF3KK3i7xgnDnTyVHxuvm15mZk8SjbmirIJEYN+b3jomI00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eP3elCmt; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0ac853894so653253f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 04:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747310241; x=1747915041; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8kTrvJwPYog6ibdC8R73i3/w/ryvC/QOpevsthuxZsk=;
-        b=eP3elCmtMqnBv10plsMkVaUw6Z95NGpzkoHbLRbKePits2p8iBUyrunw+1Dj+hYMUD
-         YIwVslpX94BfklEu7scmYbM8YVWTcvTPJOQ2kk9Oiu0cxVhSk/CsUS8DhM5MEX/f0IhO
-         q1jCQNSO/ahq8fFxzAfB49Jbi7IsyDwWTDFZUP8DP9QrgrYLGpRSZbJZYieHBFV2pW/F
-         1l6dMfdLDoQBxk7xvOUdyBoHo9YTLTUWX3WEDXfM2DWmZ+Lyzqin8yKy6Iswwyf3vBXw
-         G98IJsfUtfcOXAWdxbZEH0ACpwhXuEpFUpnFUD9EVJs5ws0/p2oZXi18WufXkiRwaFrU
-         URlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747310241; x=1747915041;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kTrvJwPYog6ibdC8R73i3/w/ryvC/QOpevsthuxZsk=;
-        b=UwdlX7mv9qLY4OSU4P05pxpfY9d5+WYH8T3gSpdu5ZbIB5DrGlpAHIUgfhdTdPa+zR
-         cEmJBdMflG6swfn25/rrjBsdJoe1VQ5zz1dT2wb8/RYgIu0kJG0tPT7G+sVnSYKpzN+O
-         7FWy+4qtV0Xfbnhu56PBRCFTGhoQD+Ih48qkpzErxFLNl6k2WJbk2aLOgzrwnqQLNHWs
-         ZQArN4LIr1O0W+2TBRw7T98DvUSD75z9t0wZWWaw9tdNYEf0Mk8FGyTq7ua4IFbZMzqC
-         Yn6CdPiGKE2SRvLY1rzCgWb1r0HMp/fy1Bfwd8Olt9xxRnHeJoLErzbeqATSMXDPzOlK
-         e9GA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmcOdMvnBljxeWZNSNoWyvjbkg4KZBJVBj/6J7lcRg3JRcy5lJ63nlS/Se/kELGaoHYq0EHof0frA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXq6ZsCiwFLLMOXOJonbWwrC/ns8EyURsIisfPtxWObdnJlfq8
-	5SBy20kTSTmtBx2QI7vr8zH3dcxpQNYrXbZuekQTxHTtkb3LOXC3DhngYAN9jg==
-X-Gm-Gg: ASbGncvKBghCu4EmYYaz+WmdJaLZqWFWgnxZLnIpJee45Qng8k3XF3qbmAU0+bkTI0L
-	V3jiFNLmZlIy1pXYIsBf8Xhxhv7/TiIVJo+Tm0gxeI3GD3id+FW8VZjZJqppvpOegDvNuvH88Nh
-	L11bXEGg4oObIMUskF6sJ3WnJxhaSM6/f8tqXWfe/SOA91YihOmza171t3qgVMToNGcckHt4SFU
-	XeuQNHEVclYLs/K0hdvveuNTZrLPzkCedaASSuB0g9sKyH8Pw5lCAxxgmtMA3suQKLCO7r5FPUI
-	UGPBWjJJijDeyNwCZpt9RWjpPqXm2kxNePGRmL+Ej/O48y1/RMnwZGXRgrA4aB5K2rzYW6PQOlg
-	MXxKZjvJitoFwDw==
-X-Google-Smtp-Source: AGHT+IHT8sGe+qq8cIc4avwun1XMAZX5YQZUGXMdjWUKnjqYpkS2IP5Zbr/WCevnDOHJQIVwI5wV7A==
-X-Received: by 2002:a05:6000:188c:b0:3a0:a09d:b31e with SMTP id ffacd0b85a97d-3a34994f2e1mr7059180f8f.59.1747310241228;
-        Thu, 15 May 2025 04:57:21 -0700 (PDT)
-Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5f6sm22405542f8f.86.2025.05.15.04.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 04:57:20 -0700 (PDT)
-Date: Thu, 15 May 2025 12:57:18 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Marek Vasut <marek.vasut@mailbox.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Heiko Stuebner <heiko@sntech.de>, 
-	Junhao Xie <bigfoot@classfun.cn>, Kever Yang <kever.yang@rock-chips.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
- optional aux clock
-Message-ID: <ne4injlr4nwvufjdg7uuisxwipqfwd5voohktnbjjvod5om3p3@eriso5cw77ov>
-References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
- <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
- <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
- <84cc6341-a2c1-4e3c-8c9e-2bc6589c52a6@mailbox.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=b3GQC3i1uyQwe7bYlaset9FEurexhbyNPPhw2CLEU5+Ct2t4opttbYYFeRhEcxm6o2eB22Jqu76OnsEH/qAc227z0gn+60HTRNq/qHSBkOYxWaxTHx+IUf/SCGpTYH0MPmFXxtaaujsrOp/a9jlYi28UMmk4RCX0f9VIA4FV+aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pc6bVOvq; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747310320; x=1778846320;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
+  b=Pc6bVOvqRgkXyNET4/+K3CdnVqCIfNv/VkxwHEPs12icwkollzXXxAdo
+   sM66xgUbx50eNhdINBwCWCMklCWiWiZq2v/hgHt/JlMgQfs4FaDAEpRBv
+   cPT0W1/okWsxB8wVG08VgFyAWMWLAjfAauIaBBH7292qM0+i0xhmgCwNl
+   ylOSH2bgkJbOFI4OSfbywES1bDLj9BSyoPb6AsnW6+zGnon5g1vKBh9u8
+   LJyx7jkNU5xl64Iv2YbWeIm35rh/TN92i39W8vlY4OnKyI032gCj3miyu
+   mNgjHL1+rB/JPESjEN0NzWb4zUHr3cBZRqhSh7B9p27xgHSYyjz3V8w3a
+   A==;
+X-CSE-ConnectionGUID: ODdQC628S0+nomopPCWXuA==
+X-CSE-MsgGUID: nCH2mGZWRf+m7xQCJj1f4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71751202"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="71751202"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:31 -0700
+X-CSE-ConnectionGUID: l7KTccinQTK6rJaTTQ5cfg==
+X-CSE-MsgGUID: REzV7ZHQR3KuaTioUqVMzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="142360904"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:27 -0700
+Date: Thu, 15 May 2025 14:58:25 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: Mario Limonciello <superm1@kernel.org>, rafael@kernel.org,
+	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
+	aravind.iddamsetty@linux.intel.com
+Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aCXW4c-Ocly4t6yF@black.fi.intel.com>
+References: <20250504090444.3347952-1-raag.jadav@intel.com>
+ <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
+ <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
+ <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <84cc6341-a2c1-4e3c-8c9e-2bc6589c52a6@mailbox.org>
+In-Reply-To: <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
 
-On Mon, May 12, 2025 at 10:42:20PM +0200, Marek Vasut wrote:
-> On 5/9/25 9:37 PM, Manivannan Sadhasivam wrote:
-> > On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
-> > > Document 'aux' clock which are used to supply the PCIe bus. This
-> > > is useful in case of a hardware setup, where the PCIe controller
-> > > input clock and the PCIe bus clock are supplied from the same
-> > > clock synthesiser, but from different differential clock outputs:
-> > 
-> > How different is this clock from the 'reference clock'? I'm not sure what you
-> > mean by 'PCIe bus clock' here. AFAIK, endpoint only takes the reference clock
-> > and the binding already has 'ref' clock for that purpose. So I don't understand
-> > how this new clock is connected to the endpoint device.
+On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
+> On 5/14/25 21:53, Mario Limonciello wrote:
+> > On 5/14/2025 11:29 AM, Denis Benato wrote:
+> >> Hello,
+> >>
+> >> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
+> >>
+> >> you can follow an example of my problems in this [1] bug report.
+> >>
+> >> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
+> >>
+> >> You can see the dmesg here: https://pastebin.com/Um7bmdWi
+
+Thanks for the report. From logs it looks like a hotplug event is triggered
+for presence detect which is disabling the slot and in turn loosing the device
+on resume. The cause of it is unclear though (assuming it is not a manual
+intervention).
+
+> >> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
+> >>
+> >
+> > Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
+> >
+> Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
 > 
-> See the ASCII art below , CLK_DIF0 is 'ref' clock that feeds the controller
-> side, CLK_DIF1 is the bus (or 'aux') clock which feeds the bus (or endpoint)
-> side. Both clock come from the same clock synthesizer, but from two separate
-> clock outputs of the synthesizer.
-> 
+> Probably this either unveils a pre-existing thunderbolt bug or creates a new one.  If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
 
-Okay. So separate refclks are suppplied to the host and endpoint here and no,
-you should not call the other one as 'aux' clock, it is still the refclk. In
-this case, you should describe the endpoint refclk in the PCIe bridge node:
+If you're observing this only on thunderbolt port, one experiment I could
+think of is to configure the port power delivery to be always on during suspend
+and observe. Perhaps enable both thunderbolt and PCI logging to help figure out
+what's really happening.
 
-		pcie@... {
-			clock = <refclk_host>;
-			...
+> I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
 
-			pcie@0 {
-				device_type = "pci";
-				reg = <0x0 0x0 0x0 0x0 0x0>;
-				bus-range = <0x01 0xff>;
-				clock = <refclk_ep>;
-				...
-			};
-		};
+Yes, I'm expecting a lot of hidden issues to be surfaced by this patch. Since
+you've confirmed the machine itself is working fine, I'm hoping there are no
+serious regressions.
 
+Raag
 
-and use the pwrctrl driver PCI_PWRCTRL_SLOT to enable it. Right now, the slot
-pwrctrl driver is not handling the refclk, but I can submit a patch for that.
-
-- Mani
-
--- 
-à®®à®£à®¿à®µà®£à¯à®£à®©à¯ à®šà®¤à®¾à®šà®¿à®µà®®à¯
+> > The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
+> >
+> > I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
+> >
+> I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
+> >>
+> >> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
+> >>
+> >> On 5/4/25 11:04, Raag Jadav wrote:
+> >>
+> >>> If error flags are set on an AER capable device, most likely either the
+> >>> device recovery is in progress or has already failed. Neither of the
+> >>> cases are well suited for power state transition of the device, since
+> >>> this can lead to unpredictable consequences like resume failure, or in
+> >>> worst case the device is lost because of it. Leave the device in its
+> >>> existing power state to avoid such issues.
+> >>>
+> >>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> >>> ---
+> >>>
+> >>> v2: Synchronize AER handling with PCI PM (Rafael)
+> >>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
+> >>>      Elaborate "why" (Bjorn)
+> >>>
+> >>> More discussion on [1].
+> >>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
+> >>>
+> >>>   drivers/pci/pci.c      | 12 ++++++++++++
+> >>>   drivers/pci/pcie/aer.c | 11 +++++++++++
+> >>>   include/linux/aer.h    |  2 ++
+> >>>   3 files changed, 25 insertions(+)
+> >>>
+> >>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >>> index 4d7c9f64ea24..25b2df34336c 100644
+> >>> --- a/drivers/pci/pci.c
+> >>> +++ b/drivers/pci/pci.c
+> >>> @@ -9,6 +9,7 @@
+> >>>    */
+> >>>     #include <linux/acpi.h>
+> >>> +#include <linux/aer.h>
+> >>>   #include <linux/kernel.h>
+> >>>   #include <linux/delay.h>
+> >>>   #include <linux/dmi.h>
+> >>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
+> >>>          || (state == PCI_D2 && !dev->d2_support))
+> >>>           return -EIO;
+> >>>   +    /*
+> >>> +     * If error flags are set on an AER capable device, most likely either
+> >>> +     * the device recovery is in progress or has already failed. Neither of
+> >>> +     * the cases are well suited for power state transition of the device,
+> >>> +     * since this can lead to unpredictable consequences like resume
+> >>> +     * failure, or in worst case the device is lost because of it. Leave the
+> >>> +     * device in its existing power state to avoid such issues.
+> >>> +     */
+> >>> +    if (pci_aer_in_progress(dev))
+> >>> +        return -EIO;
+> >>> +
+> >>>       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> >>>       if (PCI_POSSIBLE_ERROR(pmcsr)) {
+> >>>           pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
+> >>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> >>> index a1cf8c7ef628..4040770df4f0 100644
+> >>> --- a/drivers/pci/pcie/aer.c
+> >>> +++ b/drivers/pci/pcie/aer.c
+> >>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
+> >>>   }
+> >>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
+> >>>   +bool pci_aer_in_progress(struct pci_dev *dev)
+> >>> +{
+> >>> +    u16 reg16;
+> >>> +
+> >>> +    if (!pcie_aer_is_native(dev))
+> >>> +        return false;
+> >>> +
+> >>> +    pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
+> >>> +    return !!(reg16 & PCI_EXP_AER_FLAGS);
+> >>> +}
+> >>> +
+> >>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+> >>>   {
+> >>>       int rc;
+> >>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> >>> index 02940be66324..e6a380bb2e68 100644
+> >>> --- a/include/linux/aer.h
+> >>> +++ b/include/linux/aer.h
+> >>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
+> >>>   #if defined(CONFIG_PCIEAER)
+> >>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+> >>>   int pcie_aer_is_native(struct pci_dev *dev);
+> >>> +bool pci_aer_in_progress(struct pci_dev *dev);
+> >>>   #else
+> >>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> >>>   {
+> >>>       return -EINVAL;
+> >>>   }
+> >>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+> >>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
+> >>>   #endif
+> >>>     void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >
 
