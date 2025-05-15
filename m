@@ -1,76 +1,58 @@
-Return-Path: <linux-pci+bounces-27813-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27814-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FE69AB8D2C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 19:08:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16FEFAB8DD5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 19:34:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8A2F175523
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 17:05:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B718B1BC4463
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 17:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65699254878;
-	Thu, 15 May 2025 17:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2631D54EF;
+	Thu, 15 May 2025 17:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lwSUTHmW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A76253F27;
-	Thu, 15 May 2025 17:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9721A316D
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 17:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328604; cv=none; b=WXhQ4tcdlUQ/o/uVExJX1xQ3PqkbrCONe450KxbVqcE/AflcwJ92tZXjzWOeVjyAPhYrcg1Gih6eOWZCihx1PeUau2WeeQUuKO2Hmy9JNS4tYncp82rt2MxUBCZyKBmZ8S8k9Vp8e+6Q9ZI/z64fhLCpNmjSQRCXBe/BgJg4DJk=
+	t=1747330439; cv=none; b=lprb2d+2Xd/5SHD0xdwbbC5Ut+/LVi5qtM7p/vNu3c92pbn4+KTiuOQLknC5qADkw1ZfZ75WwYQYIEoKIaqc87Sh5/XjJLHAyeNuZll7+/Tw20uLqWfzKUdlGlxRvQyy4UufeLHWmZGesVTlmUpWEH7bJvH/yGYsaWH84JrPvHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328604; c=relaxed/simple;
-	bh=uh6R1dlAdgddMGFM6sx3prRUWfMsHYi3x6hGeKjbjow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RJcg4iWl/TfSffgk/3CzffTXoLT+9QUEAVPtouQnQ/d3MOebk5TidPGXGA/9dh6uZBYdNXW1S9SShS6xQRqgxih56Go6YNdMNyEr4wQX/peVdQAopaaz8S8WLguVx1hjlAVMRf7/pvt1z2qI2K/OxbaEGySGASrDCRLhuJwp5j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b170c99aa49so770262a12.1;
-        Thu, 15 May 2025 10:03:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747328602; x=1747933402;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OLxjOod6c7GNxEN7gJsSw7rjhlgITYM+2+XBe1rwdQw=;
-        b=DN+kLqIKw9U6aOzG2DjSi/RX4ZAJC30+0MF/Qh9+4TwB/M1LeAH7ccLpnf+LFBEali
-         qmCLdOhmkZ3g+CkSr9Br/dbbvJSvqpKN7CnZaB4vvGw7gH5EVvG0nsAnwkXd1v2GaCgP
-         j8nPZLg18tQIwUe/rh4z99y37Bd2sGDS2xIhza4vWNcA9hZwBMsm079UtLErE3nSPYQL
-         iJjEYJ2MFUdRBF5irrxB+VTrt4rH5RKk0hi8q4QIcQW6lUngzKarSWn5J45e9bCQMnLB
-         NmAu8Q4HUksq38JlFzUrbXlcwvp/OXsGKDoybMd0H5z4aUGs1Jl+A7JjPKGjXlDQnISi
-         xo3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUsB5bDWSwCVEB6rPfdNG+5Q5uIMQsufCWy/O/dCaIEmEZmx6wX+ZzJY+a0KrSdC8/E22C36V91xO4c@vger.kernel.org, AJvYcCUvMkY/v8CbfoUfWhJtrWJYG21aiPKQEnVeEjLGNyv0WKtV3l1ASA5gGFiDItCq29Xn3AHL0Imp+b1AmAA=@vger.kernel.org, AJvYcCVIs7m8jPM5k6CuibL+9ZVUK9ESZJrLk/sRTHh7+z27y5ULzS3fNhg+qkWKIHcU9FvBzwaJgxclJF3nv38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgpRwjIB6yK6kjGaja+k1cDKcJUc/QyNxdXdwpqEnpTFz3bHVB
-	V+eh8wO9Evxpbli1rbbnt4zQgs1uCcU2ztUt7Z1Fv5dptR7eQeGs2o8i
-X-Gm-Gg: ASbGncuOXkuwlJVZ8D9Gq3gicZi1WHMf04CbKGTlBBdc0FG1z2WAwL6xdcNTZlr5MW7
-	COrbIWtKDPkAetjLuKry8QV1HwSCJfrV76TVVE8dUl8remTRCc3kTRzRcn8FFKEB2ZSaF6o4k68
-	pacsinCdxMgoS/eMdplZMqyq26GBFcu+G0PSbQKjPeYdTv1x2X+ieA5mQ/Bxf/FvMFNmiIHKd1q
-	1pz1fejxEQU4utLh2nGA4oyqabXYb0tUtCeYe4Di3M56xs5FMjiBc/AjmyAUBgDrSDQW7YnWjEZ
-	j3LqMnPhOl+yYKP5QgsJPV/lKBntoWk+yLroqNm8alCk8A2gvXLDaM9HYq+ucv0JDR1DvacxlQY
-	r+IDCYhKEkg==
-X-Google-Smtp-Source: AGHT+IE/Bk6IVs4+hjnuWx3gbqJ9TRm55qbJlImLDRHPOVTczTocRgjyowMb8zfGrZ83cdlpimPwjQ==
-X-Received: by 2002:a17:902:f790:b0:223:325c:89f6 with SMTP id d9443c01a7336-231d43d9ba7mr3660055ad.10.1747328601715;
-        Thu, 15 May 2025 10:03:21 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4ebaf5esm128895ad.194.2025.05.15.10.03.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 10:03:21 -0700 (PDT)
-Date: Fri, 16 May 2025 02:03:18 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, linux-sound@vger.kernel.org,
-	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
-	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
-	guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] PCI: pci_ids: add INTEL_HDA_WCL
-Message-ID: <20250515170318.GA1507459@rocinante>
-References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
- <20250508180240.11282-2-peter.ujfalusi@linux.intel.com>
+	s=arc-20240116; t=1747330439; c=relaxed/simple;
+	bh=QjbIKsNwQsilQSTCPC4ogvIhRicdIGCGqSshCNWSc6k=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aJoggMAgoHB3hlqyx3JIxmkwhMO49ghA2tZ9pLElkJS9VoQvb6Lk8pV0V0zdeIS4FdbjRTjOEIwjqN8LpMu+LRLXjaF1tYLbpg3eWWE/WNOVMkz7jx+UzONrIxWMpbSIbIULdcrEOzbEHkJHAG6qRv6wcO+mz9ey/GBe5tYsYmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lwSUTHmW; arc=none smtp.client-ip=51.77.79.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1747330426; x=1747589626;
+	bh=eMncJgSExIrvYrm15fzLzbqOrXbXjQptW5tx6rKcD4I=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=lwSUTHmW6N+zQ/NW38uEV4P2MhL9KZS6+XrPKUKG8pmscbGxrmYDdsy2E0QY8a8Ad
+	 zloyMRqwi+ZGpgGamuodFCt08pt3kP283lyMkowlmMRZ9P+VvrktpmXv0RH+uLvAsU
+	 wUvljNwbqcP63kKVn37ILqzR0+CvoqA15NtAL8e02fFMSa6s+ktCv+p2X1RWDmtEVD
+	 XB20eYvxdMpxkjw9aRr01z+UBrcIkciJ58GM0EyF7smzzjw82G9nckk4VOH641apED
+	 WAuY/jVLa6qONkh1L0hjvaks7bvTrPkltGZfvRbG43IN7w/DOY69vaUo0vXaY+dYzA
+	 emqthYKG/HHQQ==
+Date: Thu, 15 May 2025 17:33:41 +0000
+To: Niklas Cassel <cassel@kernel.org>
+From: Laszlo Fiat <laszlo.fiat@proton.me>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Krishna chaitanya chundru <quic_krichai@quicinc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] PCI: dwc: Link Up IRQ fixes
+Message-ID: <fCMPjWu_crgW5GkH4DJd17WBjnCAsb363N9N_h6ld1i8NqNNGR9PTpQWAO9-kwv4DUL6um48dwP0GJ8GmdL4uQf-WniBepwuxTEhjmbBnug=@proton.me>
+In-Reply-To: <aCNSBqWM-HM2vX7K@ryzen>
+References: <20250506073934.433176-6-cassel@kernel.org> <7zcrjlv5aobb22q5tyexca236gnly6aqhmidx6yri6j7wowteh@mylkqbwehak7> <aCNSBqWM-HM2vX7K@ryzen>
+Feedback-ID: 130963441:user:proton
+X-Pm-Message-ID: 83d36aa26181c4d7b2012c55407c6d5d0302af1c
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,33 +60,124 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508180240.11282-2-peter.ujfalusi@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+
 
 Hello,
 
-Just a few small nitpicks.
+On Tuesday, May 13th, 2025 at 4:07 PM, Niklas Cassel <cassel@kernel.org> wr=
+ote:
 
-Consider an update to the subject to match the history, e.g.,
+> Hello Mani,
+>=20
+> On Tue, May 13, 2025 at 11:53:29AM +0100, Manivannan Sadhasivam wrote:
+>=20
+> > This wait time is a grey area in the spec tbh. If the Readiness Notific=
+ation
+> > (RN) is not supported, then the spec suggests waiting 1s for the device=
+ to
+> > become 'configuration ready'. That's why we have the 1s delay in dwc dr=
+iver.
+> >=20
+> > Also, it has the below in r6.0, sec 6.6.1:
+> >=20
+> > `* On the completion of Link Training (entering the DL_Active state, se=
+e =C2=A7 Section 3.2 ), a component must be able to receive and process TLP=
+s and DLLPs. * Following exit from a Conventional Reset of a device, within=
+ 1.0 s the device must be able to receive a Configuration Request and retur=
+n a Successful Completion if the Request is valid. This period is independe=
+nt of how quickly Link training completes. If Readiness Notifications mecha=
+nisms are used (see =C2=A7 Section 6.22 .), this period may be shorter.`
+> >=20
+> > As per the first note, once link training is completed, the device shou=
+ld be
+> > ready to accept configuration requests from the host. So no delay shoul=
+d be
+> > required.
+> >=20
+> > But the second note says that the 1s delay is independent of how quickl=
+y the
+> > link training completes. This essentially contradicts with the above po=
+int.
+> >=20
+> > So I think it is not required to add delay after completing the LTSSM, =
+unless
+> > someone sees any issue.
+>=20
+>=20
+> If you look at the commit message in patch 1/2, the whole reason for this
+> series is that someone has seen an issue :)
+>=20
+> While I personally haven't seen any issue, the user reporting that commit
+> ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect
+> Link Up") regressed his system so that it can no longer mount rootfs
+> (which is on a PLEXTOR PX-256M8PeGN NVMe SSD) clearly has seen an issue.
+>=20
+> It is possible that his device is not following the spec.
+> I simply compared the code before and after ec9fd499b9c6, to try to
+> figure out why it was actually working before, and came up with this,
+> which made his device functional again.
+>=20
+> Perhaps we should add a comment above the sleep that says that this
+> should strictly not be needed as per the spec?
+> (And also add the same comment in the (single) controller driver in
+> mainline which already does an msleep(PCIE_T_RRS_READY_MS).)
 
-  PCI: Add Intel Wildcat Lake audio Device ID
+I am the one experiencing the issue with my Orange PI 3B (RK3566, 8 GB RAM)=
+ and a PLEXTOR PX-256M8PeGN NVMe SSD.=20
 
-> Add PCI id for Wildcat Lake audio.
+I first detected the problem while upgrading from 6.13.8 to 6.14.3, that my=
+ system cannot find the NVME SSD which contains the rootfs. After reverting=
+ the two patches:
 
-Also, for consistency with other such commits:
+- ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect =
+Link Up")
+- 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_link_up=
+ IRQ")
 
-  Add Wildcat Lake (WCL) audio Device ID.
+my system booted fine again.=20
+After that I tested the patches sent by Niklas in this thread, which fixed =
+the issue, so I sent Tested-by.
 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+I did another test Today with 6.15.0-rc6, which in itself does not find my =
+SSD. Niklas asked me to test with these=20
 
-Acked-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+- revert ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can =
+detect Link Up")
+- revert 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_=
+link_up IRQ")
+- apply the following patch:
 
-Thank you!
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/con=
+troller/dwc/pcie-designware.c
+index b3615d125942..5dee689ecd95 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -692,7 +692,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+                if (dw_pcie_link_up(pci))
+                        break;
 
-	Krzysztof
+-               msleep(LINK_WAIT_SLEEP_MS);
++               usleep_range(100, 200);
+        }
+
+        if (retries >=3D LINK_WAIT_MAX_RETRIES) {
+
+
+which restores the original behaviour to wait for link-up, then shorten the=
+ time. This resulted again a non booting system, this time with "Phy link n=
+ever came up" error message.
+So please allow to fix the regression that is already in 6.14.x. I now so f=
+ar only I have reported this, but we cannot be sure how many SSDs have this=
+ timing issue. Most users use older, distribution packaged kernels, so othe=
+rs will face this later.
+
+Bye,
+
+Laszlo Fiat
+
+>=20
+>=20
+> Kind regards,
+> Niklas
 
