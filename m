@@ -1,183 +1,288 @@
-Return-Path: <linux-pci+bounces-27814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16FEFAB8DD5
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 19:34:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9293EAB8E06
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 19:43:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B718B1BC4463
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 17:34:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E1DF500518
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 17:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2631D54EF;
-	Thu, 15 May 2025 17:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1342198A08;
+	Thu, 15 May 2025 17:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lwSUTHmW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6FmIZ4K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9721A316D
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 17:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5398F6E
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 17:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330439; cv=none; b=lprb2d+2Xd/5SHD0xdwbbC5Ut+/LVi5qtM7p/vNu3c92pbn4+KTiuOQLknC5qADkw1ZfZ75WwYQYIEoKIaqc87Sh5/XjJLHAyeNuZll7+/Tw20uLqWfzKUdlGlxRvQyy4UufeLHWmZGesVTlmUpWEH7bJvH/yGYsaWH84JrPvHY=
+	t=1747330992; cv=none; b=OFZyIGbMAyh1s7psfLg0j1eovlpaNCOpm5L1SvUcB3Drsxkg/XY9RZqhu0X4akm7VY83ioKq865NF2oMbFrF2iFxqWoJDlGmx4KkAAHWJNdbxs5noSR7x4H8TFdzWu5M8lcoNLchqcG21YedbkP0TGVgYqpRHZULZpHSc/kfPd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330439; c=relaxed/simple;
-	bh=QjbIKsNwQsilQSTCPC4ogvIhRicdIGCGqSshCNWSc6k=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aJoggMAgoHB3hlqyx3JIxmkwhMO49ghA2tZ9pLElkJS9VoQvb6Lk8pV0V0zdeIS4FdbjRTjOEIwjqN8LpMu+LRLXjaF1tYLbpg3eWWE/WNOVMkz7jx+UzONrIxWMpbSIbIULdcrEOzbEHkJHAG6qRv6wcO+mz9ey/GBe5tYsYmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lwSUTHmW; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1747330426; x=1747589626;
-	bh=eMncJgSExIrvYrm15fzLzbqOrXbXjQptW5tx6rKcD4I=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=lwSUTHmW6N+zQ/NW38uEV4P2MhL9KZS6+XrPKUKG8pmscbGxrmYDdsy2E0QY8a8Ad
-	 zloyMRqwi+ZGpgGamuodFCt08pt3kP283lyMkowlmMRZ9P+VvrktpmXv0RH+uLvAsU
-	 wUvljNwbqcP63kKVn37ILqzR0+CvoqA15NtAL8e02fFMSa6s+ktCv+p2X1RWDmtEVD
-	 XB20eYvxdMpxkjw9aRr01z+UBrcIkciJ58GM0EyF7smzzjw82G9nckk4VOH641apED
-	 WAuY/jVLa6qONkh1L0hjvaks7bvTrPkltGZfvRbG43IN7w/DOY69vaUo0vXaY+dYzA
-	 emqthYKG/HHQQ==
-Date: Thu, 15 May 2025 17:33:41 +0000
-To: Niklas Cassel <cassel@kernel.org>
-From: Laszlo Fiat <laszlo.fiat@proton.me>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Krishna chaitanya chundru <quic_krichai@quicinc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] PCI: dwc: Link Up IRQ fixes
-Message-ID: <fCMPjWu_crgW5GkH4DJd17WBjnCAsb363N9N_h6ld1i8NqNNGR9PTpQWAO9-kwv4DUL6um48dwP0GJ8GmdL4uQf-WniBepwuxTEhjmbBnug=@proton.me>
-In-Reply-To: <aCNSBqWM-HM2vX7K@ryzen>
-References: <20250506073934.433176-6-cassel@kernel.org> <7zcrjlv5aobb22q5tyexca236gnly6aqhmidx6yri6j7wowteh@mylkqbwehak7> <aCNSBqWM-HM2vX7K@ryzen>
-Feedback-ID: 130963441:user:proton
-X-Pm-Message-ID: 83d36aa26181c4d7b2012c55407c6d5d0302af1c
+	s=arc-20240116; t=1747330992; c=relaxed/simple;
+	bh=/1NaDtvszn7lx7GzP/KrjIj7ml1ASeDQ9IdgJ3Eznms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DRpXqtivdmvwqVXT4p0Ex38jKLrUqAgJNO4Az1mNwYI1h7rjuG43pYJUQI1zF9dTePaj52a8YSFDeVxkpObqgeqTMtGYgGLOcGEpUx6vVV6W+jBI8EFlS92vdVjRnIolrHGTzTPARm7n+4COoO+SfNdKUE97e8ubAZWPt1IMopU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6FmIZ4K; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747330991; x=1778866991;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=/1NaDtvszn7lx7GzP/KrjIj7ml1ASeDQ9IdgJ3Eznms=;
+  b=Q6FmIZ4KLxIB1bTigfBWUFckidbeojqyc6vgQ+AsajGZeZqfsONEIcwV
+   ITEzUPyDdyLtob849jeYQ001pT77lNhkGAi9e2FmwLBWEhb3DUhva17QP
+   DvIcv1vSWOVW7jr6zVHa2Jj8wvp8jlnBIkXHS/c9CXLqpEmcnpdbPS8g8
+   D4kCpAhhwtoVIrV037IH2qIqu51NIJ1WUUqc6iBEwsCo5qkypT9iaVN3J
+   5hvQvQ6OcAlxK6NgfdcI92rQ3AQgkQfxctVD3SW+wviWddgEWZSwLlPD5
+   3v0h7oxgSp4jMtP1JhhduEzYa2lkWmYrxRRUNXpFGN4yZ5Bo5YUSD+Mmj
+   w==;
+X-CSE-ConnectionGUID: RMLf9W0jS/m+EDlYL0l5PQ==
+X-CSE-MsgGUID: NU1irqMNQ5KoKb0Iwe5J8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59923400"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="59923400"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:43:08 -0700
+X-CSE-ConnectionGUID: 8fWLFdS1R/eCglNqjhso0Q==
+X-CSE-MsgGUID: IuMES/tGTcW1yMqZBg+o0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="139328918"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 15 May 2025 10:43:07 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFcbo-000Ibz-1y;
+	Thu, 15 May 2025 17:43:04 +0000
+Date: Fri, 16 May 2025 01:42:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ 9b388104e87b679bc62d23ae1b215f12942ece95
+Message-ID: <202505160143.XsJQldFB-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: 9b388104e87b679bc62d23ae1b215f12942ece95  PCI: Non-empty add_list/realloc_head does not warrant BUG_ON()
 
-Hello,
+elapsed time: 1453m
 
-On Tuesday, May 13th, 2025 at 4:07 PM, Niklas Cassel <cassel@kernel.org> wr=
-ote:
+configs tested: 193
+configs skipped: 4
 
-> Hello Mani,
->=20
-> On Tue, May 13, 2025 at 11:53:29AM +0100, Manivannan Sadhasivam wrote:
->=20
-> > This wait time is a grey area in the spec tbh. If the Readiness Notific=
-ation
-> > (RN) is not supported, then the spec suggests waiting 1s for the device=
- to
-> > become 'configuration ready'. That's why we have the 1s delay in dwc dr=
-iver.
-> >=20
-> > Also, it has the below in r6.0, sec 6.6.1:
-> >=20
-> > `* On the completion of Link Training (entering the DL_Active state, se=
-e =C2=A7 Section 3.2 ), a component must be able to receive and process TLP=
-s and DLLPs. * Following exit from a Conventional Reset of a device, within=
- 1.0 s the device must be able to receive a Configuration Request and retur=
-n a Successful Completion if the Request is valid. This period is independe=
-nt of how quickly Link training completes. If Readiness Notifications mecha=
-nisms are used (see =C2=A7 Section 6.22 .), this period may be shorter.`
-> >=20
-> > As per the first note, once link training is completed, the device shou=
-ld be
-> > ready to accept configuration requests from the host. So no delay shoul=
-d be
-> > required.
-> >=20
-> > But the second note says that the 1s delay is independent of how quickl=
-y the
-> > link training completes. This essentially contradicts with the above po=
-int.
-> >=20
-> > So I think it is not required to add delay after completing the LTSSM, =
-unless
-> > someone sees any issue.
->=20
->=20
-> If you look at the commit message in patch 1/2, the whole reason for this
-> series is that someone has seen an issue :)
->=20
-> While I personally haven't seen any issue, the user reporting that commit
-> ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect
-> Link Up") regressed his system so that it can no longer mount rootfs
-> (which is on a PLEXTOR PX-256M8PeGN NVMe SSD) clearly has seen an issue.
->=20
-> It is possible that his device is not following the spec.
-> I simply compared the code before and after ec9fd499b9c6, to try to
-> figure out why it was actually working before, and came up with this,
-> which made his device functional again.
->=20
-> Perhaps we should add a comment above the sleep that says that this
-> should strictly not be needed as per the spec?
-> (And also add the same comment in the (single) controller driver in
-> mainline which already does an msleep(PCIE_T_RRS_READY_MS).)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I am the one experiencing the issue with my Orange PI 3B (RK3566, 8 GB RAM)=
- and a PLEXTOR PX-256M8PeGN NVMe SSD.=20
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              alldefconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                   randconfig-001-20250515    gcc-12.4.0
+arc                   randconfig-001-20250515    gcc-6.5.0
+arc                   randconfig-002-20250515    gcc-14.2.0
+arc                   randconfig-002-20250515    gcc-6.5.0
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-14.2.0
+arm                   randconfig-001-20250515    clang-21
+arm                   randconfig-001-20250515    gcc-6.5.0
+arm                   randconfig-002-20250515    gcc-6.5.0
+arm                   randconfig-002-20250515    gcc-8.5.0
+arm                   randconfig-003-20250515    gcc-6.5.0
+arm                   randconfig-003-20250515    gcc-8.5.0
+arm                   randconfig-004-20250515    clang-21
+arm                   randconfig-004-20250515    gcc-6.5.0
+arm                         vf610m4_defconfig    gcc-14.2.0
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250515    clang-21
+arm64                 randconfig-001-20250515    gcc-6.5.0
+arm64                 randconfig-002-20250515    clang-21
+arm64                 randconfig-002-20250515    gcc-6.5.0
+arm64                 randconfig-003-20250515    clang-20
+arm64                 randconfig-003-20250515    gcc-6.5.0
+arm64                 randconfig-004-20250515    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250515    clang-21
+csky                  randconfig-001-20250515    gcc-14.2.0
+csky                  randconfig-002-20250515    clang-21
+csky                  randconfig-002-20250515    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250515    clang-16
+hexagon               randconfig-001-20250515    clang-21
+hexagon               randconfig-002-20250515    clang-21
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250515    gcc-11
+i386        buildonly-randconfig-002-20250515    gcc-11
+i386        buildonly-randconfig-002-20250515    gcc-12
+i386        buildonly-randconfig-003-20250515    clang-20
+i386        buildonly-randconfig-003-20250515    gcc-11
+i386        buildonly-randconfig-004-20250515    clang-20
+i386        buildonly-randconfig-004-20250515    gcc-11
+i386        buildonly-randconfig-005-20250515    gcc-11
+i386        buildonly-randconfig-005-20250515    gcc-12
+i386        buildonly-randconfig-006-20250515    gcc-11
+i386                                defconfig    clang-20
+i386                  randconfig-011-20250515    gcc-12
+i386                  randconfig-012-20250515    gcc-12
+i386                  randconfig-013-20250515    gcc-12
+i386                  randconfig-014-20250515    gcc-12
+i386                  randconfig-015-20250515    gcc-12
+i386                  randconfig-016-20250515    gcc-12
+i386                  randconfig-017-20250515    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250515    clang-21
+loongarch             randconfig-001-20250515    gcc-12.4.0
+loongarch             randconfig-002-20250515    clang-21
+loongarch             randconfig-002-20250515    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250515    clang-21
+nios2                 randconfig-001-20250515    gcc-12.4.0
+nios2                 randconfig-002-20250515    clang-21
+nios2                 randconfig-002-20250515    gcc-6.5.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+openrisc                 simple_smp_defconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250515    clang-21
+parisc                randconfig-001-20250515    gcc-13.3.0
+parisc                randconfig-002-20250515    clang-21
+parisc                randconfig-002-20250515    gcc-13.3.0
+powerpc                    adder875_defconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      katmai_defconfig    gcc-14.2.0
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc                      pcm030_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250515    clang-21
+powerpc               randconfig-001-20250515    gcc-8.5.0
+powerpc               randconfig-002-20250515    clang-21
+powerpc               randconfig-002-20250515    gcc-6.5.0
+powerpc               randconfig-003-20250515    clang-21
+powerpc64             randconfig-001-20250515    clang-21
+powerpc64             randconfig-002-20250515    clang-21
+powerpc64             randconfig-002-20250515    gcc-8.5.0
+powerpc64             randconfig-003-20250515    clang-21
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                    nommu_k210_defconfig    gcc-14.2.0
+riscv                 randconfig-001-20250515    gcc-8.5.0
+riscv                 randconfig-001-20250515    gcc-9.3.0
+riscv                 randconfig-002-20250515    gcc-14.2.0
+riscv                 randconfig-002-20250515    gcc-9.3.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250515    clang-21
+s390                  randconfig-001-20250515    gcc-9.3.0
+s390                  randconfig-002-20250515    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                        apsh4ad0a_defconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250515    gcc-14.2.0
+sh                    randconfig-001-20250515    gcc-9.3.0
+sh                    randconfig-002-20250515    gcc-10.5.0
+sh                    randconfig-002-20250515    gcc-9.3.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250515    gcc-6.5.0
+sparc                 randconfig-001-20250515    gcc-9.3.0
+sparc                 randconfig-002-20250515    gcc-10.3.0
+sparc                 randconfig-002-20250515    gcc-9.3.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250515    gcc-9.3.0
+sparc64               randconfig-002-20250515    gcc-9.3.0
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250515    gcc-12
+um                    randconfig-001-20250515    gcc-9.3.0
+um                    randconfig-002-20250515    clang-21
+um                    randconfig-002-20250515    gcc-9.3.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250515    clang-20
+x86_64      buildonly-randconfig-001-20250515    gcc-12
+x86_64      buildonly-randconfig-002-20250515    clang-20
+x86_64      buildonly-randconfig-002-20250515    gcc-12
+x86_64      buildonly-randconfig-003-20250515    clang-20
+x86_64      buildonly-randconfig-003-20250515    gcc-12
+x86_64      buildonly-randconfig-004-20250515    clang-20
+x86_64      buildonly-randconfig-004-20250515    gcc-12
+x86_64      buildonly-randconfig-005-20250515    clang-20
+x86_64      buildonly-randconfig-005-20250515    gcc-12
+x86_64      buildonly-randconfig-006-20250515    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250515    gcc-12
+x86_64                randconfig-002-20250515    gcc-12
+x86_64                randconfig-003-20250515    gcc-12
+x86_64                randconfig-004-20250515    gcc-12
+x86_64                randconfig-005-20250515    gcc-12
+x86_64                randconfig-006-20250515    gcc-12
+x86_64                randconfig-007-20250515    gcc-12
+x86_64                randconfig-008-20250515    gcc-12
+x86_64                randconfig-071-20250515    clang-20
+x86_64                randconfig-072-20250515    clang-20
+x86_64                randconfig-073-20250515    clang-20
+x86_64                randconfig-074-20250515    clang-20
+x86_64                randconfig-075-20250515    clang-20
+x86_64                randconfig-076-20250515    clang-20
+x86_64                randconfig-077-20250515    clang-20
+x86_64                randconfig-078-20250515    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250515    gcc-14.2.0
+xtensa                randconfig-001-20250515    gcc-9.3.0
+xtensa                randconfig-002-20250515    gcc-13.3.0
+xtensa                randconfig-002-20250515    gcc-9.3.0
+xtensa                    xip_kc705_defconfig    gcc-14.2.0
 
-I first detected the problem while upgrading from 6.13.8 to 6.14.3, that my=
- system cannot find the NVME SSD which contains the rootfs. After reverting=
- the two patches:
-
-- ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect =
-Link Up")
-- 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_link_up=
- IRQ")
-
-my system booted fine again.=20
-After that I tested the patches sent by Niklas in this thread, which fixed =
-the issue, so I sent Tested-by.
-
-I did another test Today with 6.15.0-rc6, which in itself does not find my =
-SSD. Niklas asked me to test with these=20
-
-- revert ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can =
-detect Link Up")
-- revert 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_=
-link_up IRQ")
-- apply the following patch:
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/con=
-troller/dwc/pcie-designware.c
-index b3615d125942..5dee689ecd95 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -692,7 +692,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
-                if (dw_pcie_link_up(pci))
-                        break;
-
--               msleep(LINK_WAIT_SLEEP_MS);
-+               usleep_range(100, 200);
-        }
-
-        if (retries >=3D LINK_WAIT_MAX_RETRIES) {
-
-
-which restores the original behaviour to wait for link-up, then shorten the=
- time. This resulted again a non booting system, this time with "Phy link n=
-ever came up" error message.
-So please allow to fix the regression that is already in 6.14.x. I now so f=
-ar only I have reported this, but we cannot be sure how many SSDs have this=
- timing issue. Most users use older, distribution packaged kernels, so othe=
-rs will face this later.
-
-Bye,
-
-Laszlo Fiat
-
->=20
->=20
-> Kind regards,
-> Niklas
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
