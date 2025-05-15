@@ -1,113 +1,236 @@
-Return-Path: <linux-pci+bounces-27777-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27778-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09C73AB825C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:20:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 359CBAB84BE
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:26:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94D717ABCDA
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 09:18:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6793A1881D7C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:26:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5133295DB8;
-	Thu, 15 May 2025 09:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4885298255;
+	Thu, 15 May 2025 11:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kIHCERj6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C70295DB5
-	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0D297A73
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 11:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300798; cv=none; b=CFSA825Zoin5P+VPA883r4GONJGYPEKlmDVs/brjGBmVoiZMTTJWLqn2FcfCpL02Th9vrjEy337254w6237aWlBNjJ7jsc/s43bJJEbhgiF6qhgD0qtQ5hqrj0deVZPSo+GMp4ELMy4dOZ9iG5Q3z+ATnU3YfsZSTRpa69a3/yQ=
+	t=1747308396; cv=none; b=KkKhENnLhJTr4+lW94sKFJ/t5jXv56/FTdXfzDcnYFMEMF6JkhqTkPqVKrkPrhVF9EkQwRgeZyEaRvYK3oiP38CnbGpFLv1jSYYyCaBVNmduMG5aknXOtHGr935sIAuqDPPWec0/Y74jp4luYhgSOhfuwHFPEe8dvDplznqXCuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300798; c=relaxed/simple;
-	bh=27BgqZply+/JSM8w3Q+eEIN5X9am9OQ8w9Lycn4Lcx8=;
+	s=arc-20240116; t=1747308396; c=relaxed/simple;
+	bh=9MRD1+jcFedrZg03dVslc9ED/+5UQU4W+jpewP/RIS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p3xmckbfn8+myp4MSQ45wwTMLrSLCc7sOVrQW1eUVsWpIZlcH1BA9+7U760cXGt8nIeLVwp4xbGF7EGLlmKuOlBqcgosnoPbjyiwdng5l8nmmaOWWecNkZnMT2TJc6vZw+YUvf72uxjU1o/k8SNQjt/0fVMPQ8zQqakz8nWb9+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73972a54919so669436b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 02:19:56 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6/pdgIBrULjWaWNMu0zyme/3DYBXCIMRHMaM+DWUR9NOu9ypahZFHreDdUs9X5kxAyXsMmiTq8dtxRGTwqXn+ewxUWGTHOIqAQ749/dkrYN4srxJwdVSvFU+sS64s3DWtNLDHtf1BR55wMR/TQ4enPXIVU1WaWKR2eySqbuzk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kIHCERj6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso7689445e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 04:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747308392; x=1747913192; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=E6YcWQUS/krFSoVF5ePsfXGO+e5W0vWFl3MyrWAJnzQ=;
+        b=kIHCERj6mmy9rvTI4yHJ1eWlFrs8AhWp1mu1CI6Nx6zSuruxJAsfNRS8aZka7i6WaG
+         TbE7kP36LFvAr4641pl2EFkTfjPCYvs5HJRb/RguwuQcO+8iVQrexudlXaOpN0+HnMjw
+         aw0haN9riD4NQTmnCKGw8AhYVOPSpTZ0FwkkQMjy/FaKx9ti+syxDOiMkSZjTuuEThfX
+         w1LiGWmmv361fZXlvik8wn9Kuaopk/CtSmzHZ5g6HEQk3vIkSczDdZp6NnmzWso29KeS
+         idMAMHHXY5Cmf4S80leJjwd0aIk2nsAb31UOUhCLsz2niOQxFmFhq3aKdnjVJAE8xtbU
+         TwDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747300796; x=1747905596;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sly7kHXqrRGdvJB5iOb5QQcI+fsxg5o/luWWE7Ei/To=;
-        b=Q4JrcJHKBmo0nZmziFBTiF7y3Zso6cZBUy9QTszdzr0RXtTSh2WxHXU3DU7ls8GKKN
-         ksuGL9G1cayWU0EGkkNmosIl9y5R3d/fgJre6idb94MTdVHAXF5KC0rWsSi/XhT8Ziab
-         IX4c4au4ERvSrzUaj6B4c2mu8bOQ5bX2uS/ndG59kpy5B3jQPv/faKfom/H1IJGu9NSD
-         iFYKKUChnYlkpz+q+qdLHYL158nSnQlRa1WGHrGUB0K+m+DNtgWWw0MJGy7i5DRNqXK7
-         1OHtBuFdg3qpmt87N+ha3oRd5Oujbby5ShPcaYd1/ueHQZQr67Ho4h2CDjGz6g5r1fd+
-         vG/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVZtpiAvGYg6bgYp4G+ujPoJt/oJNZn3xfdIkwELBr4MGOshfn1Ahk1FuKyfxvax3HkJejt01Iijl0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWP7hQPo2h+FpRwJoOcqHHLQGFC1O7S/plowQyQzuRbhC1lQrJ
-	3Qpw5qXJUOt23Q10Rl8U04yCwVggewQqMf/T4zlchfAg/F6fiwIaMLn1AODmc6A=
-X-Gm-Gg: ASbGnct4E1J7TZhQJ1TwaM8/adjfyQMvFoHqftlxyOrHD1z8MFXucHpo6ZGxkVXKFST
-	Ydl49gcHd/vnO/d84hZq268uGyf8jy/TVnPcCOuTkECnQ2IsXQqe1mGBOxKbBWbeomfgGng4ofv
-	M6wj/+ISkcut+g+LzcHwVC/Bd38btJEQNFwD89fFTjoe+OG6dcpO+tSbQsS9SfXX3RsH8NSKtLm
-	iOUy/o838lUa3aeiti1MAWngEIKXf3sUp+u7GZjfKEBAj2ATrRlfPM4EKzhIKFzAQ3CZRlhZnBg
-	BLlzgT3Se4WGGkjgQ8R5QSYWxx7W0LUsyQXP5T0IGbYTvxi0gpLrk9XOxgVOMWjAnt0Zix9V4c6
-	J3H1SslukCA==
-X-Google-Smtp-Source: AGHT+IFuVEr6BM9jzhK4QkAm9P5QQf8rERAevNQeJYJBnBZfUkBiMmtorh/Gb0R5VbI0wsAM/rbOLw==
-X-Received: by 2002:a05:6a20:b40a:b0:1f5:6b36:f57a with SMTP id adf61e73a8af0-215ff1b6a3cmr9009418637.39.1747300796233;
-        Thu, 15 May 2025 02:19:56 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237a8972asm10649368b3a.157.2025.05.15.02.19.55
+        d=1e100.net; s=20230601; t=1747308392; x=1747913192;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6YcWQUS/krFSoVF5ePsfXGO+e5W0vWFl3MyrWAJnzQ=;
+        b=vTQxrtc29BwsD6Wl9JpDOkthvSY4mqMdIpA5Yn1w8I+SWZ3a8veYS/ttQH1uaxg2zc
+         1SnEoK2Ha8bu+LOpnERAg7G4FpuuqYHquOmDKWxAXbD18JMrCmodFdYy46Kh3oCyBsBk
+         uAYnjCDS8yLpmgDAp408ch/r5dNjBUTgw6Nqr5KCEX+lGaQgbIvZIM3C4g30nCwhdnrm
+         RdEAHTydKV5lt/X0EEX+YRpVaSuCNG6gx7noNwKeM+Htxv9loakGpFiNRg0qT0NkFcf5
+         wp/6nPpqZhIB1+n7RqITxoFXmXAIBWvhyliNNSnA64F8jvFMVxD11OF/djelM5W/J6ep
+         O4kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8z9bjVNxnwZEIEPQz2AbFK0ovt5LGe05YFzbLQDLhYXkguXBWBH+pfIH1HB7YTh8kXgB4AhXQhes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQw3tSVphp6d5qKkhsv7CHK4tSVCjdeqD7ZXWEPJuLX3QOeU+U
+	xZu2z5w0i+EyKXcbpL3a3+7/HBctElqO3XJ+DL39XJUAch7M8nv7FO2wIOsQLQ==
+X-Gm-Gg: ASbGncsTmLkdwZKfSRpMB90+dlaGwofadyaUH6i2YVXqIyZf9Q07ZuES2g8vbQJBLWB
+	KDtXy0xMfZ3EXCV29hOlFSmeYA688weuQH7XkUFVayvC9RgaO0D1SkeA/dw07ZiRlj40h4uq4/z
+	mwbMFFAuS8vtGg2K2WIZ91zybr3ifmQaCcj9wbWLMmD3s+/X1sMGGX0GmYCgv7VKt34mhYxltCB
+	g4rNMWfVlPfs42ml2g/o1g+v9RowA7ZcdfdC85NtFWd2zwLmF+DB1Zu2eVpGEpGqrbbfdS95+3w
+	CQm+VzofnQN3svRin8EiRbtS7H7D6MbREzYKcrkmBwvIa6i4vSr/+eDLuLoR3q3EDrvjg9stH32
+	O4xcaO9BAGbBplg==
+X-Google-Smtp-Source: AGHT+IEkCceAOB29/pB9CUmVZ8C8Si1ZbNqMfWkWxFcEkinM5zQ7dz5OaP8iyatRAtCIbSSJ7O2kkw==
+X-Received: by 2002:a05:600c:3e12:b0:442:dcdc:41c8 with SMTP id 5b1f17b1804b1-442f96ecf1amr18446915e9.19.1747308392065;
+        Thu, 15 May 2025 04:26:32 -0700 (PDT)
+Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3979355sm67419385e9.37.2025.05.15.04.26.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 02:19:55 -0700 (PDT)
-Date: Thu, 15 May 2025 18:19:54 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: Re: [pci:ptm-debugfs 1/4] drivers/pci/pcie/ptm.c:275
- context_update_write() error: buffer overflow 'buf' 7 <= 7
-Message-ID: <20250515091954.GA1059401@rocinante>
-References: <b41c1754-c6b7-4805-9f14-7c643d6c5304@suswa.mountain>
+        Thu, 15 May 2025 04:26:31 -0700 (PDT)
+Date: Thu, 15 May 2025 12:26:27 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
+	thippeswamy.havalige@amd.com, shradha.t@samsung.com, quic_schintav@quicinc.com, 
+	cassel@kernel.org, johan+linaro@kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 4/9] PCI: stm32: Add PCIe Endpoint support for
+ STM32MP25
+Message-ID: <b5x4fayqm242xqm3rgwvrz3jywlixedhhxwo7lft2y3tnuszxr@3oy2kzj2of5l>
+References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+ <20250423090119.4003700-5-christian.bruel@foss.st.com>
+ <tdgyva6qyn6qwzvft4f7r3tgp5qswuv4q5swoaeomnnbxtmz5j@zo3gvevx2skp>
+ <619756c5-1a61-4aa9-b7fb-6be65175ded2@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b41c1754-c6b7-4805-9f14-7c643d6c5304@suswa.mountain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <619756c5-1a61-4aa9-b7fb-6be65175ded2@foss.st.com>
 
-Hello,
-
-[...]
-> smatch warnings:
-> drivers/pci/pcie/ptm.c:275 context_update_write() error: buffer overflow 'buf' 7 <= 7
+On Mon, May 12, 2025 at 06:06:16PM +0200, Christian Bruel wrote:
+> Hello Manivannan,
 > 
-> vim +/buf +275 drivers/pci/pcie/ptm.c
+> On 4/30/25 09:50, Manivannan Sadhasivam wrote:
+> > On Wed, Apr 23, 2025 at 11:01:14AM +0200, Christian Bruel wrote:
+> > > Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
+> > > controller based on the DesignWare PCIe core in endpoint mode.
+> > > 
+> > > Uses the common reference clock provided by the host.
+> > > 
+> > > The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
+> > > and the ComboPHY PLL must be locked for pipe0_clk to be ready.
+> > > Consequently, PCIe core registers cannot be accessed until the ComboPHY is
+> > > fully initialised and refclk is enabled and ready.
+> > > 
+> > > Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/Kconfig         |  12 +
+> > >   drivers/pci/controller/dwc/Makefile        |   1 +
+> > >   drivers/pci/controller/dwc/pcie-stm32-ep.c | 414 +++++++++++++++++++++
+> > >   drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
+> > >   4 files changed, 428 insertions(+)
+> > >   create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > index 2aec5d2f9a46..aceff7d1ef33 100644
+> > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > @@ -422,6 +422,18 @@ config PCIE_STM32_HOST
+> > >   	  This driver can also be built as a module. If so, the module
+> > >   	  will be called pcie-stm32.
+> > > +config PCIE_STM32_EP
+> > > +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
+> > > +	depends on ARCH_STM32 || COMPILE_TEST
+> > > +	depends on PCI_ENDPOINT
+> > > +	select PCIE_DW_EP
+> > > +	help
+> > > +	  Enables endpoint support for DesignWare core based PCIe controller
+> > > +	  found in STM32MP25 SoC.
+> > 
+> > Can you please use similar description for the RC driver also?
+> > 
+> > "Enables Root Complex (RC) support for the DesignWare core based PCIe host
+> > controller found in STM32MP25 SoC."
 > 
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  257  static ssize_t context_update_write(struct file *file, const char __user *ubuf,
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  258  			     size_t count, loff_t *ppos)
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  259  {
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  260  	struct pci_ptm_debugfs *ptm_debugfs = file->private_data;
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  261  	char buf[7];
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  262  	int ret;
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  263  	u8 mode;
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  264  
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  265  	if (!ptm_debugfs->ops->context_update_write)
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  266  		return -EOPNOTSUPP;
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  267  
-> 1130deffd29ab2 Manivannan Sadhasivam 2025-05-05  268  	if (count < 1 || count > sizeof(buf))
+> Yes, will align the messages
 > 
-> Should be >= instead of >.
+> > > +
+> > > +	  This driver can also be built as a module. If so, the module
+> > > +	  will be called pcie-stm32-ep.
+> > > +
+> > >   config PCI_DRA7XX
+> > >   	tristate
+> > 
+> > [...]
+> > 
+> > > +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
+> > > +			     struct platform_device *pdev)
+> > > +{
+> > > +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
+> > > +	struct device *dev = &pdev->dev;
+> > > +	int ret;
+> > > +
+> > > +	ret = pm_runtime_resume_and_get(dev);
+> > 
+> > This needs to be called before devm_pm_runtime_enable().
+> 
+> OK. Also and we must use pm_runtime_get_noresume() here.
+> 
 
-Done.  Fixed directly on the branch, see:
+Yes!
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=ptm-debugfs&id=132833405e61463d47d6badff1b8080b09b5808e
+> > 
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+> > > +				 STM32MP25_PCIECR_TYPE_MASK,
+> > > +				 STM32MP25_PCIECR_EP);
+> > > +	if (ret) {
+> > > +		goto err_pm_put_sync;
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	reset_control_assert(stm32_pcie->rst);
+> > > +	reset_control_deassert(stm32_pcie->rst);
+> > > +
+> > > +	ep->ops = &stm32_pcie_ep_ops;
+> > > +
+> > > +	ret = dw_pcie_ep_init(ep);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to initialize ep: %d\n", ret);
+> > > +		goto err_pm_put_sync;
+> > > +	}
+> > > +
+> > > +	ret = stm32_pcie_enable_resources(stm32_pcie);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to enable resources: %d\n", ret);
+> > > +		goto err_ep_deinit;
+> > > +	}
+> > > +
+> > > +	ret = dw_pcie_ep_init_registers(ep);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> > > +		goto err_disable_resources;
+> > > +	}
+> > > +
+> > > +	pci_epc_init_notify(ep->epc);
+> > > +
+> > 
+> > Hmm, looks like you need to duplicate dw_pcie_ep_init_registers() and
+> > pci_epc_init_notify() in stm32_pcie_perst_deassert() for hw specific reasons.
+> > So can you drop these from there?
+> 
+> We cannot remove dw_pcie_ep_init_registers() and dw_pcie_ep_init_registers()
+> here because the PCIe registers need to be ready at the end of
+> pcie_stm32_probe, as the host might already be running. In that case the
+> host enumerates with /sys/bus/pci/rescan rather than asserting/deasserting
+> PERST#.
+> Therefore, we do not need to reboot the host after initializing the EP."
+> 
 
-Thank you, Dan!
+Since PERST# is level triggered, the endpoint should still receive the PERST#
+deassert interrupt if the host was already booted. In that case, these will be
+called by the stm32_pcie_perst_deassert() function.
 
-	Krzysztof
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
