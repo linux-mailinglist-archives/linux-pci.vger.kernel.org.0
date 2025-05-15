@@ -1,90 +1,83 @@
-Return-Path: <linux-pci+bounces-27774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336FDAB8139
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 10:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B05D2AB81FD
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:06:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8886B3BDA39
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 08:43:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91A7A3B4C40
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 09:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5306202F67;
-	Thu, 15 May 2025 08:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6849B28C847;
+	Thu, 15 May 2025 09:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4rtW5JO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mQREhR4+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1AA1A08AF;
-	Thu, 15 May 2025 08:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199DE28CF6B
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 09:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298629; cv=none; b=LoK3lxHDwQ7PQ5qH5gT6PmCCaf8TvC854MimfREWtZN/8fHSoLS8pGq9MR8oC1M+rlVvOSOgFndEKf/YWF8ozYuhv64LpfW6E8NPQfvIDWr9VHQTZAgmYUP69emffc9AiwUqyGRJb1MuC2trA6I8C7Zpz7ztCJpiB6+oPqIvAPA=
+	t=1747299669; cv=none; b=in2ucSqdZtrGXxA3mZp7mpbldB0BddyDXARoBm6Zhh2TB850YbVGqRZdnLPhLW3/ICnJcDpcyvryxfV9k9pN7X2h5UGLdek0Tdenqed61syzIx7Hzoh37I3V+htEA6DC2M8usOJy2+Xp/bAf93QW/EYHJ0xeMWgHHaHJvYpQ1HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298629; c=relaxed/simple;
-	bh=CZss5xRMvF1BVDXEUdgcPvkbFeVaG+FbkKNLrvaQiMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rwHgaPqc8sgnitRur/PjCI5YFDdcKpASku6equbYcZlarLrywOLuXYUr6lD8ksKUGCLTMzrFXft7YvcsparuruxAHGETlcomnGGDx5wShONNKUTn9hpHKmhlDa9Ts598a14Tp6xWiSIQ3/OlR6uSJTS711jtFAvxxiO3Pk4J5sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4rtW5JO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91057C4CEE7;
-	Thu, 15 May 2025 08:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747298629;
-	bh=CZss5xRMvF1BVDXEUdgcPvkbFeVaG+FbkKNLrvaQiMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V4rtW5JOg/i759j5MWYILP7YRFKCHxUz08h7+XxmmFycxXbIB7ORTJNFZvpiIYjJ/
-	 fq3SdXgUc9yyut2gwD0aV3Iaf9wB+3jZld1pZgRgkQJF1d50ylPjDlMfuEBmSFh7WT
-	 M7Ybruzbu6lYSRsUeqdBFVjNeTEFoczji9v9h3NJzGGK4n8F0zh5zlPb1t7oq9sfxe
-	 YBAvUPTBFIJ8YH1qMXes1/wAJ4RIVn622NFRT/6A4VNtjpGYdf8f5xmlL2MbaPx/Dm
-	 fxvct/9r94iyrKCNgBy3jpVkxlbDK4lYGhDPlC1b1RZpbaOvlaRm6AoR+RrJK06opy
-	 KuWHSdy3KDDCw==
-Date: Thu, 15 May 2025 17:43:46 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Message-ID: <20250515084346.GA51912@rocinante>
-References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
- <174724335628.23991.985637450230528945.b4-ty@kernel.org>
- <aCTyFtJJcgorjzDv@wunner.de>
+	s=arc-20240116; t=1747299669; c=relaxed/simple;
+	bh=qg2je0jGwPczjxr7UEmyEcBXhwDxjfTpDkAe2rcZ8Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KVkdpoNh6k+6RzdW/JqYRNF1MBFJQRD1oGwAaAvPzZ2f0RgT40NRmPRxAP3Gxa9AyYLDb9GauNYsviqj0+UjKhU5FN04XxSsBMiNBv/sS+pMrLk9rZnJ9tt4XscQ2tw1SC3OwipKlmTkHwectYsK8Fk7xF7O84YqK0ggZ35NV+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mQREhR4+; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <fca05051-56f1-495e-aaf0-997fa2150fcd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747299653;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+KnDKuPjMe2fUCcW1tV4lBlMzw+7EXjmMesGcn74GA4=;
+	b=mQREhR4+7ST03MmzWDJZ3MiA8ALnrMc17zUGVXVIIajCaxIhp6gbhYtojMSw1eH53Llacd
+	hzdqFzfqeRk165SZNv8dp4nR+TZ2jNWOaxEa6E9lOuUTHitGbOY61LHajBJgqhd2lAHZkF
+	oeGASFMsLnbDRS/egJ3/rYdPa+oTbTI=
+Date: Thu, 15 May 2025 11:00:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCTyFtJJcgorjzDv@wunner.de>
+Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, lgirdwood@gmail.com,
+ broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
+ guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-[...]
-> > Applied to bwctrl, thank you!
-> > 
-> > [1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-> >       https://git.kernel.org/pci/pci/c/256ab8a30905
+On 5/8/25 20:02, Peter Ujfalusi wrote:
+> Hi,
 > 
-> This is now an individual commit on the bwctrl branch, but Ilpo
-> requested to squash it with the other commit already on that branch...
+> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+> Panther Lake, the main difference is the number of DSP cores, memory
+> and clocking.
+> It is based on the same ACE3 architecture.
 > 
->    "Bjorn, this should be folded into the original commit I think."
-> 
-> ...because that other commit breaks the build:
-> 
-> https://lore.kernel.org/r/3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop/
+> In SOF the PTL topologies can be re-used for WCL to reduce duplication
+> of code and topology files. 
 
-Done.  Squashed with the first commit from Ilpo, see:
+The thread clarified that the statement above is for generic topologies. Using specific cores and/or a 3rd party module will force topology editors to provide device-specific configurations.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=bwctrl&id=2389d8dc38fee18176c49e9c4804f5ecc55807fa
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-Let me know if there is anything else needed.
-
-Thank you!
-
-	Krzysztof
 
