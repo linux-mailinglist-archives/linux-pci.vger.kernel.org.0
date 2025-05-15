@@ -1,227 +1,229 @@
-Return-Path: <linux-pci+bounces-27783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8C3DAB8571
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 13:58:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC0BCAB8595
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 14:03:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 339F44E160E
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 11:58:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02B0D9E4CC4
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 12:03:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60ED42989AE;
-	Thu, 15 May 2025 11:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19CCF253923;
+	Thu, 15 May 2025 12:03:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pc6bVOvq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMrsw/vL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213D7298271;
-	Thu, 15 May 2025 11:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06A91F16B
+	for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 12:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310321; cv=none; b=hc7M4Lh31mqeu2i2Egrx9Pi9kWMFnVY1+bkd6ewuE0FVznDhmgtLIT277sHy4O2vcDmp2mcvTQfW/NO2CQga/hTz3LeRU8k9D3DaDsAddwGo0Jz0YSHOBC6L07/50f0UO35qukIP+ZcrcQ4syGsiTdjxrvxbwbuIlVWgAhasIwM=
+	t=1747310617; cv=none; b=Dnu9KLjaA2Z8XPUxHvY0cvQ7ulIZKxsVzZV7IqPKeOp9UjUg2ykYdZsV4Nx6D92zFxwt3H7HRE3Tm9T0QDskOBc4riF8HF+iEq9a4Fse4JMtQ9eomOIr4cR2abR1ueTBdQhNewzD1USCxRUPqTvRo2EGPAPom1PVdasMTcSenS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310321; c=relaxed/simple;
-	bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
+	s=arc-20240116; t=1747310617; c=relaxed/simple;
+	bh=rIaiGOYbokETxOKXtmP8wukLdDqxoOnSlsPQovNIqD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3GQC3i1uyQwe7bYlaset9FEurexhbyNPPhw2CLEU5+Ct2t4opttbYYFeRhEcxm6o2eB22Jqu76OnsEH/qAc227z0gn+60HTRNq/qHSBkOYxWaxTHx+IUf/SCGpTYH0MPmFXxtaaujsrOp/a9jlYi28UMmk4RCX0f9VIA4FV+aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pc6bVOvq; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747310320; x=1778846320;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
-  b=Pc6bVOvqRgkXyNET4/+K3CdnVqCIfNv/VkxwHEPs12icwkollzXXxAdo
-   sM66xgUbx50eNhdINBwCWCMklCWiWiZq2v/hgHt/JlMgQfs4FaDAEpRBv
-   cPT0W1/okWsxB8wVG08VgFyAWMWLAjfAauIaBBH7292qM0+i0xhmgCwNl
-   ylOSH2bgkJbOFI4OSfbywES1bDLj9BSyoPb6AsnW6+zGnon5g1vKBh9u8
-   LJyx7jkNU5xl64Iv2YbWeIm35rh/TN92i39W8vlY4OnKyI032gCj3miyu
-   mNgjHL1+rB/JPESjEN0NzWb4zUHr3cBZRqhSh7B9p27xgHSYyjz3V8w3a
-   A==;
-X-CSE-ConnectionGUID: ODdQC628S0+nomopPCWXuA==
-X-CSE-MsgGUID: nCH2mGZWRf+m7xQCJj1f4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71751202"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="71751202"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:31 -0700
-X-CSE-ConnectionGUID: l7KTccinQTK6rJaTTQ5cfg==
-X-CSE-MsgGUID: REzV7ZHQR3KuaTioUqVMzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="142360904"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:27 -0700
-Date: Thu, 15 May 2025 14:58:25 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Denis Benato <benato.denis96@gmail.com>
-Cc: Mario Limonciello <superm1@kernel.org>, rafael@kernel.org,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
-	aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCXW4c-Ocly4t6yF@black.fi.intel.com>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
- <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ji2ZjmHA3iJ/H6T9/9xWGdOZ50GvAz07/3Xf47iIKWcdgBnfBjTB/PGBiN10dVceWMkrbNjScv7nQKNanYxEn65Rn5lGcpdNTzjxiLGhD9sgxxGJdl0fFyAkXj8qVvsmZJP7Ncejeh/uQwIsr9wwsL3SKHOHLq506A0OCUxxW5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gMrsw/vL; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso8574175e9.0
+        for <linux-pci@vger.kernel.org>; Thu, 15 May 2025 05:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747310613; x=1747915413; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=J5Dm294PbrWONSf7K3CLqY0H7cYyRoYEw+bT1IPWQHo=;
+        b=gMrsw/vLV/MCIMZNu6II4h4X7lqvaP/PTjAsv5aB4WMPGa7GEgP1VJwBDIDihYVgqz
+         erkAWAxLqSi7dqogJrUcJ/hUO7KPIS6lWRKFtDLQRCFmoYyEz19WiL6tDFMGF95nHszM
+         CutiDuLF7PgsunUcrU8MmGEM2yUjepWhtSSj+io7sk4nWBSkWsYKO039jVpZYknru/VC
+         Tjnhz6ljBDunOJjv11mrpN6FrM+FfJzCnBN+lHJJEN36uxEZf1NudvQ+JXUF/Ao58yNq
+         4cgnSmPcgVYotU327oCJFJLi4pHThTTHMkTzenGiHYPQGlSxTLhymTw0LJ5NKbMgVL4m
+         iJAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747310613; x=1747915413;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J5Dm294PbrWONSf7K3CLqY0H7cYyRoYEw+bT1IPWQHo=;
+        b=bDdYuJD7QzgwqG1VNpB237mLUorhGf47Q+Uh/AsNZ2kjSUqbS1hWebJP11U/yqmMAf
+         Kl8VpUirgtxeyKPCogbEcVerHlrXi6gYroFNg+g6W47xdTEDd3HGXGG8qjScDUuzSn+r
+         3pOxEgFQExgg0soMJn0seTbz/zrP4zIwx30UHSdC15wQZOyaFQgaHu2ul5QKMu8KU04I
+         iohkZLz6BbaKY+oTimX1HJohBr6zwi0HLZbQSL6j1oJdcqKlTjuEZJWSbHRehOsrbHnL
+         BBoI7qLn72HMBf80Ds0uNp7mNAAWAo/I3c3rTy98PM5yZRWJ49tCnbqeFAVmSOH6lgIQ
+         bJOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWh+c9cDFXzfburrkSl11qEmTpk1vMUj2VtMaXWEGKdJWOhmDvLs8Nv60viLiEpGuXDtaE7OKXXujc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7uMxebbdI3N0pGVIDfhENs1rhAH+D4r/vSnFPef/fxcGWKKi4
+	bKDmZHK4/GKQ+tIL1h2WAnYBS/CBUd4LGztwWj2vFIv+1BxWbwaOzDnydCeRuA==
+X-Gm-Gg: ASbGncuveUjEceERH3+vddpvcULQusUKi+AzhUNMrFidoDKvcRV8f8UGoKXIRw/vXgM
+	TOZRnHQRs5rl9XC7mIREicoV+S6nYCgcC6J5Pu721lVVdNx1HsZqzepcLkPswM7Hnj/veco87jP
+	JgxtClEHkhTem+tZF46/mMo5BiJKwDYIeKdcxhtF+TMM0TAx5PuMQvItC0NjVuqbe0aVTMajx/8
+	ILbfzSJMVuufRNPwjP0Q9+Tc0JWyQJpYdbKdaXXiVo/qR8IA67Ea9FOsdf+4bTdR7GGRuqYvwfB
+	guHZTSvdRJmqDVaI5ldHGVJr9TRoOhOtJikGtCWEMGNqG9ZUUXYTf4vRX0qM3MO74D271cfZyPe
+	wr3bmJZnRM0Sveg==
+X-Google-Smtp-Source: AGHT+IHlVMLx2LBOebfEdakAr7jMaTKb4vKCXk6oSYtrA1JygFEFmKNR3fFjnt2BvUb5BojRv/MYmQ==
+X-Received: by 2002:a05:600c:a42:b0:442:cd13:f15d with SMTP id 5b1f17b1804b1-442f217a65fmr61066245e9.29.1747310612978;
+        Thu, 15 May 2025 05:03:32 -0700 (PDT)
+Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2961sm22525510f8f.45.2025.05.15.05.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 05:03:32 -0700 (PDT)
+Date: Thu, 15 May 2025 13:03:30 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com, 
+	bhelgaas@google.com, heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org, 
+	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com, 
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <wqzay2jvimjvpsj5rzh6xwxgmrerma5qesbwa6fkjepibhdv6e@hi4dpp4kmt5u>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
+ <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
+ <20250509160025.s65aw5ix6s7533b5@pali>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
+In-Reply-To: <20250509160025.s65aw5ix6s7533b5@pali>
 
-On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
-> On 5/14/25 21:53, Mario Limonciello wrote:
-> > On 5/14/2025 11:29 AM, Denis Benato wrote:
-> >> Hello,
-> >>
-> >> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
-> >>
-> >> you can follow an example of my problems in this [1] bug report.
-> >>
-> >> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
-> >>
-> >> You can see the dmesg here: https://pastebin.com/Um7bmdWi
-
-Thanks for the report. From logs it looks like a hotplug event is triggered
-for presence detect which is disabling the slot and in turn loosing the device
-on resume. The cause of it is unclear though (assuming it is not a manual
-intervention).
-
-> >> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
-> >>
-> >
-> > Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?† IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
-> >
-> Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
+On Fri, May 09, 2025 at 06:00:25PM +0200, Pali Roh√°r wrote:
+> On Friday 09 May 2025 12:38:48 Manivannan Sadhasivam wrote:
+> > On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Roh√°r wrote:
+> > > On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
+> > > > On 2025/5/7 23:03, Hans Zhang wrote:
+> > > > > On 2025/5/7 01:41, Pali Roh√°r wrote:
+> > > > > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+> > > > > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
+> > > > > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+> > > > > > > core negotiations.
+> > > > > > > 
+> > > > > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+> > > > > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+> > > > > > > during device initialization, leveraging root port configurations and
+> > > > > > > device-specific capabilities.
+> > > > > > > 
+> > > > > > > Aligning Aardvark with the unified MPS framework ensures consistency,
+> > > > > > > avoids artificial constraints, and allows the hardware to operate at
+> > > > > > > its maximum supported payload size while adhering to PCIe
+> > > > > > > specifications.
+> > > > > > > 
+> > > > > > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > > > > > ---
+> > > > > > > ¬† drivers/pci/controller/pci-aardvark.c | 2 --
+> > > > > > > ¬† 1 file changed, 2 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > > > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > > > > index a29796cce420..d8852892994a 100644
+> > > > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
+> > > > > > > advk_pcie *pcie)
+> > > > > > > ¬†¬†¬†¬†¬† reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > > > > ¬†¬†¬†¬†¬† reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+> > > > > > > ¬†¬†¬†¬†¬† reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+> > > > > > > -¬†¬†¬† reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> > > > > > > ¬†¬†¬†¬†¬† reg &= ~PCI_EXP_DEVCTL_READRQ;
+> > > > > > > -¬†¬†¬† reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+> > > > > > > ¬†¬†¬†¬†¬† reg |= PCI_EXP_DEVCTL_READRQ_512B;
+> > > > > > > ¬†¬†¬†¬†¬† advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > > > > -- 
+> > > > > > > 2.25.1
+> > > > > > > 
+> > > > > > 
+> > > > > > Please do not remove this code. It is required part of the
+> > > > > > initialization of the aardvark PCI controller at the specific phase,
+> > > > > > as defined in the Armada 3700 Functional Specification.
+> > > > > > 
+> > > > > > There were reported more issues with those Armada PCIe controllers for
+> > > > > > which were already sent patches to mailing list in last 5 years. But
+> > > > > > unfortunately not all fixes were taken / applied yet.
+> > > > > 
+> > > > > Hi Pali,
+> > > > > 
+> > > > > I replied to you in version v2.
+> > > > > 
+> > > > > Is the maximum MPS supported by Armada 3700 512 bytes?
+> > > 
+> > > IIRC yes, 512-byte mode is supported. And I think in past I was testing
+> > > some PCIe endpoint card which required 512-byte long payload and did not
+> > > worked in 256-byte long mode (not sure if the card was not able to split
+> > > transaction or something other was broken, it is quite longer time).
+> > > 
+> > > > > What are the default values of DevCap.MPS and DevCtl.MPS?
+> > > 
+> > > Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
+> > > type?
+> > > 
+> > > Aardvark controller does not have the real HW PCI-to-PCI bridge device.
+> > > There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
+> > > create fake kernel PCI device in the hierarchy to make kernel and
+> > > userspace happy. Yes, this is deviation from the PCIe standard but well,
+> > > buggy HW is also HW.
+> > > 
+> > > And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
+> > > 
+> > 
+> > Oh. Then this patch is not going to change the MPS setting of the root bus. But
+> > that also means that there is a deviation in what the PCI core expects for a
+> > root port and what is actually programmed in the hw.
 > 
-> Probably this either unveils a pre-existing thunderbolt bug or creates a new one.† If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
+> Yes, exactly this aardvark PCIe controller deviates from the PCIe spec
+> in lot of things. That is why it is needed to be really careful about
+> such changes.
+> 
+> Same applies for pci-mvebu.c. Both are PCIe controllers on Marvell
+> hardware, but it questionable from who both these IPs and hence source
+> of the issues.
+> 
+> Also these PCIe controllers have lot of HW bugs and documented and
+> undocumented erratas (for things which should work, but does not).
+> 
+> So it is not just as "enable or disable this bit and it would work". It
+> is needed to properly check if such functionality is provided by HW and
+> whether there is not some documented/undocumented errata for this
+> feature which could say "its broken, do not try to set this bit".
+> 
+> > Even in this MPS case, if the PCI core decides to scale down the MPS value of
+> > the root port, then it won't be changed in the hw and the hw will continue to
+> > work with 512B? Shouldn't the controller driver change the hw values based on
+> > the values programmed by PCI core of the emul bridge?
+> 
+> Marvell PCIe controllers has their own ways how to configure different
+> things of PCIe HW via custom platform registers. This is something which
+> needs to be properly understood and implemented as 1:1 mapping to kernel
+> root port emulator. Drivers should do it but it is unfinished. And as I
+> already said I stopped any development in this area years ago when PCIe
+> maintainers stopped taking my fixes for these drivers. As I said I'm not
+> going to spend my free time to investigate again issues there, prepare
+> fixes for them and just let them dropped into trash as nobody is
+> interested in them. I have other more useful things to do in my free
+> time.
+> 
 
-If you're observing this only on thunderbolt port, one experiment I could
-think of is to configure the port power delivery to be always on during suspend
-and observe. Perhaps enable both thunderbolt and PCI logging to help figure out
-what's really happening.
+If the patches are not related to unloading the driver which acts as a msi
+controller, I don't see issues with them ;) But I have no visibility on the past
+conversations.
 
-> I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
+- Mani
 
-Yes, I'm expecting a lot of hidden issues to be surfaced by this patch. Since
-you've confirmed the machine itself is working fine, I'm hoping there are no
-serious regressions.
-
-Raag
-
-> > The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
-> >
-> > I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
-> >
-> I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
-> >>
-> >> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
-> >>
-> >> On 5/4/25 11:04, Raag Jadav wrote:
-> >>
-> >>> If error flags are set on an AER capable device, most likely either the
-> >>> device recovery is in progress or has already failed. Neither of the
-> >>> cases are well suited for power state transition of the device, since
-> >>> this can lead to unpredictable consequences like resume failure, or in
-> >>> worst case the device is lost because of it. Leave the device in its
-> >>> existing power state to avoid such issues.
-> >>>
-> >>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> >>> ---
-> >>>
-> >>> v2: Synchronize AER handling with PCI PM (Rafael)
-> >>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
-> >>> †††† Elaborate "why" (Bjorn)
-> >>>
-> >>> More discussion on [1].
-> >>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> >>>
-> >>> † drivers/pci/pci.c††††† | 12 ++++++++++++
-> >>> † drivers/pci/pcie/aer.c | 11 +++++++++++
-> >>> † include/linux/aer.h††† |† 2 ++
-> >>> † 3 files changed, 25 insertions(+)
-> >>>
-> >>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >>> index 4d7c9f64ea24..25b2df34336c 100644
-> >>> --- a/drivers/pci/pci.c
-> >>> +++ b/drivers/pci/pci.c
-> >>> @@ -9,6 +9,7 @@
-> >>> †† */
-> >>> † † #include <linux/acpi.h>
-> >>> +#include <linux/aer.h>
-> >>> † #include <linux/kernel.h>
-> >>> † #include <linux/delay.h>
-> >>> † #include <linux/dmi.h>
-> >>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
-> >>> †††††††† || (state == PCI_D2 && !dev->d2_support))
-> >>> ††††††††† return -EIO;
-> >>> † +††† /*
-> >>> +†††† * If error flags are set on an AER capable device, most likely either
-> >>> +†††† * the device recovery is in progress or has already failed. Neither of
-> >>> +†††† * the cases are well suited for power state transition of the device,
-> >>> +†††† * since this can lead to unpredictable consequences like resume
-> >>> +†††† * failure, or in worst case the device is lost because of it. Leave the
-> >>> +†††† * device in its existing power state to avoid such issues.
-> >>> +†††† */
-> >>> +††† if (pci_aer_in_progress(dev))
-> >>> +††††††† return -EIO;
-> >>> +
-> >>> ††††† pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> >>> ††††† if (PCI_POSSIBLE_ERROR(pmcsr)) {
-> >>> ††††††††† pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> >>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >>> index a1cf8c7ef628..4040770df4f0 100644
-> >>> --- a/drivers/pci/pcie/aer.c
-> >>> +++ b/drivers/pci/pcie/aer.c
-> >>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
-> >>> † }
-> >>> † EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
-> >>> † +bool pci_aer_in_progress(struct pci_dev *dev)
-> >>> +{
-> >>> +††† u16 reg16;
-> >>> +
-> >>> +††† if (!pcie_aer_is_native(dev))
-> >>> +††††††† return false;
-> >>> +
-> >>> +††† pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
-> >>> +††† return !!(reg16 & PCI_EXP_AER_FLAGS);
-> >>> +}
-> >>> +
-> >>> † static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
-> >>> † {
-> >>> ††††† int rc;
-> >>> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> >>> index 02940be66324..e6a380bb2e68 100644
-> >>> --- a/include/linux/aer.h
-> >>> +++ b/include/linux/aer.h
-> >>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
-> >>> † #if defined(CONFIG_PCIEAER)
-> >>> † int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> >>> † int pcie_aer_is_native(struct pci_dev *dev);
-> >>> +bool pci_aer_in_progress(struct pci_dev *dev);
-> >>> † #else
-> >>> † static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
-> >>> † {
-> >>> ††††† return -EINVAL;
-> >>> † }
-> >>> † static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> >>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
-> >>> † #endif
-> >>> † † void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> >
+-- 
+‡ÆÆ‡Æ£‡Æø‡Æµ‡Æ£‡Øç‡Æ£‡Æ©‡Øç ‡Æö‡Æ§‡Ææ‡Æö‡Æø‡Æµ‡ÆÆ‡Øç
 
