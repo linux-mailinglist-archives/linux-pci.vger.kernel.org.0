@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-27791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C9F1AB86C1
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 14:48:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33630AB86C0
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 14:48:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C6B8A00837
-	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 12:47:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E1364E4FDA
+	for <lists+linux-pci@lfdr.de>; Thu, 15 May 2025 12:48:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EAD729B20D;
-	Thu, 15 May 2025 12:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCBCF29B22B;
+	Thu, 15 May 2025 12:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0MiLkKr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWIFx1dO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3262929B209;
-	Thu, 15 May 2025 12:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9069829A9F5;
+	Thu, 15 May 2025 12:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313184; cv=none; b=XdyFXpSRZumyhri+D7tEAIn5s5NqUQ6Yzid94evVQb9RgsJSY4mNpUfeAcpZWyTgYjbxqTBT89T5AsZUh5Wo0MNrm4Z2rt1boi3/6ASZAX4xxRriJOVVnGLal/L+JV38lk/IiIuAIM3/EdIgVIF48T2lc1tvW0OSfm63L+G4E84=
+	t=1747313187; cv=none; b=V7+AGVyDzUCNjA6bE9fObb8tSBitGo7ezXs3BaCMgnMK6n0Iy8vvvnRD72qYX6IKqqRTRqND1vlzgMUe+hm9Sjbb/3XFSusNGE8oCk/AJ2aMwGRvZXDj+xVbynpbGGYmuJud2OFiZzuZHlK3dU+wSB5ah1irnV7SnB0FyzPm6KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313184; c=relaxed/simple;
-	bh=/SrqagrckwF6dgNkAoSXSSD6RhUeKwgwHwvPTIQ04bY=;
+	s=arc-20240116; t=1747313187; c=relaxed/simple;
+	bh=anJhc65G7bGsG8RZ5DM3uxXKassmvqJOGcJ5+fNqfr8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SF0qcLCxtwcaRtOVsclbnr1oClex5nthT6YdzLVjZDAlv8+BsjmZ3MdHHbLPFNS65eegpfy439u8rmGMUMXtvIEwlgWmYvBRx40J6tRW65BOGdOdCTRDstlZoS7VOTXg+gduc0OxRei60ceOpaC5KoP8HYC04UzAiC25oldqojo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0MiLkKr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9BD7C4CEF1;
-	Thu, 15 May 2025 12:46:20 +0000 (UTC)
+	 MIME-Version; b=K2CRMAmdlmaz4HDKLX4lnv59bO3tbEYABV13KDoVURmYucdGr879Qm+J2oKSN0GCP/gRtHogp0usRt/yJWvBxickk0pmUk49B34tnTmD7lkQOjENPl9MIDv6y2t20aGD4FkmTaF81ahij0/AjcDh5OZMZxwCI0gsjg0Ix1Rv424=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWIFx1dO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25895C4CEE7;
+	Thu, 15 May 2025 12:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747313183;
-	bh=/SrqagrckwF6dgNkAoSXSSD6RhUeKwgwHwvPTIQ04bY=;
+	s=k20201202; t=1747313187;
+	bh=anJhc65G7bGsG8RZ5DM3uxXKassmvqJOGcJ5+fNqfr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D0MiLkKrQ0MoMun9OU8NJfFYgPyEd4w8monEHSuh9udnUPXC8txU0pcKl6twIcTs4
-	 r0CoBn+RslTYElcxHXBK/VgXmces5xzGVTePXZLXHBrF+9y99nW/q/O6OfRMZ6DqsW
-	 hoTtv1j8dXR1YN9EdmVNH8/V6tFnHL1W1I5fwk64dixlaSN+7LkqgmcE3U7M8thyfZ
-	 g7UaU9ebXFMxNRrNG4CvLQErFY8eLsJEv04CwLk59E23N7NYl883AkJgEFssyVD82d
-	 Yc4kFoimE5zQzliqu80chJ+yVM5AC/UARcZfxibwVws/hgPuCcnZfQTEQ9vg81FO0n
-	 EIALOShswR1YQ==
+	b=oWIFx1dOLtGGOIdemKnG8RCiH6wALzTPSUfdksV9HMAlmfew2pfNn255FykCJkYYg
+	 K6Mtl/anRp6eI/8h9IlqoYehebJGMF6PjL0MHQmadRyq8mkeiG/e2SwRGlcbLpEViC
+	 rd5CeeVKMgyDAtjQac+SUZUb4WrHtyEqrMufWNgjsfYc/GQQcKwasedBj1yPC9DnzJ
+	 K8K0hJX94XOpZDn5PxvoIZWcaFqOpoKjC60mhnH5nAyqrInbqA5wzoBoEElmoTVkw9
+	 Elgt6zdwGGPbdBi1PUPP+3keEDrnfZShvq33GL49LqFL9mzW8uehavU6ghm/uiAsrl
+	 WDw4PZaJsbVEQ==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -54,9 +54,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
-Date: Thu, 15 May 2025 14:46:00 +0200
-Message-ID: <20250515124604.184313-4-phasta@kernel.org>
+Subject: [PATCH 3/7] PCI: Remove pcim_request_region_exclusive()
+Date: Thu, 15 May 2025 14:46:01 +0200
+Message-ID: <20250515124604.184313-5-phasta@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250515124604.184313-2-phasta@kernel.org>
 References: <20250515124604.184313-2-phasta@kernel.org>
@@ -68,30 +68,63 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pcim_enable_device() is not related anymore to switching the mode of
-operation of any functions. It merely sets up a devres callback for
-automatically disabling the PCI device on driver detach.
+pcim_request_region_exclusive() was only needed for redirecting the
+relatively exotic exclusive request functions in pci.c in case of them
+operating in managed mode.
 
-Adjust the function's documentation.
+The managed nature has been removed from those functions and no one else
+uses pcim_request_region_exclusive().
+
+Remove pcim_request_region_exclusive().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- Documentation/driver-api/driver-model/devres.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/devres.c | 18 ------------------
+ drivers/pci/pci.h    |  2 --
+ 2 files changed, 20 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index d75728eb05f8..9443911c4742 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -391,7 +391,7 @@ PCI
-   devm_pci_remap_cfgspace()	: ioremap PCI configuration space
-   devm_pci_remap_cfg_resource()	: ioremap PCI configuration space resource
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 5480d537f400..769b92f4f66a 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -852,24 +852,6 @@ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
+ }
+ EXPORT_SYMBOL(pcim_request_region);
  
--  pcim_enable_device()		: after success, some PCI ops become managed
-+  pcim_enable_device()		: after success, PCI dev gets deactivated automatically
-   pcim_iomap()			: do iomap() on a single BAR
-   pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
-   pcim_iomap_table()		: array of mapped addresses indexed by BAR
+-/**
+- * pcim_request_region_exclusive - Request a PCI BAR exclusively
+- * @pdev: PCI device to request region for
+- * @bar: Index of BAR to request
+- * @name: Name of the driver requesting the resource
+- *
+- * Returns: 0 on success, a negative error code on failure.
+- *
+- * Request region specified by @bar exclusively.
+- *
+- * The region will automatically be released on driver detach. If desired,
+- * release manually only with pcim_release_region().
+- */
+-int pcim_request_region_exclusive(struct pci_dev *pdev, int bar, const char *name)
+-{
+-	return _pcim_request_region(pdev, bar, name, IORESOURCE_EXCLUSIVE);
+-}
+-
+ /**
+  * pcim_release_region - Release a PCI BAR
+  * @pdev: PCI device to operate on
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 8c3e5fb2443a..cfc9e71a4d84 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1060,8 +1060,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+ #endif
+ 
+ int pcim_intx(struct pci_dev *dev, int enable);
+-int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
+-				  const char *name);
+ 
+ /*
+  * Config Address for PCI Configuration Mechanism #1
 -- 
 2.49.0
 
