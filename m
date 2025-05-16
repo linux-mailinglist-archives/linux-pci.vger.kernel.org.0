@@ -1,99 +1,130 @@
-Return-Path: <linux-pci+bounces-27849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25D63AB9A4C
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:36:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFACDAB9A6B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 082BA1BC3365
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:36:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51D9F1718CA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:47:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B52233128;
-	Fri, 16 May 2025 10:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9300233128;
+	Fri, 16 May 2025 10:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVguL4tZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hI/LTokV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A25C1FFC77;
-	Fri, 16 May 2025 10:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0F2481C4;
+	Fri, 16 May 2025 10:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391796; cv=none; b=dM0SRQBgy7yAvuLHqObJeQhE68iPd0v3MmHZU/HsTTC9mFZc5LCrnXOsbFTxEqZGcte2Uqn9Y0R1CDMRuAI+71MddENPh96HKsmIwPkxfySvTrdt37EY4mkUl5YbXKaK9ACYV+iLVCd0aQ2O5shTiFSmLr3s9ghZZ9ioWvhDYCs=
+	t=1747392429; cv=none; b=qgMXKKmFcWkK1UwzL4XYjIttydPIjoT/0J+WpbzUm+hJolCcC/I77skgWEyjpDC/Ip1IqXEXAs7E4QY7m3e398iU7Vjx4h3hBLA5/+/LW4uBo1TWY6zIOr6oJY4a60aSsHpVKUdkgAhCNjxu55LqAn900Q69G3D3J63+k2SS8VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391796; c=relaxed/simple;
-	bh=jgVpL2kojiH7bm46Jld8D85YYTbY0kw/r105XuXS+K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7ZdkWDUGOtP1OWJp5+5+xY4SDFbZCzQeMErLYdxVF+XWXp3A5x7gL6jVoPDl+oqJ/4jriAUKL/10qjA2GwTCgKJLHi5qWpZEQxQYtZpdxcrvtfYdq6OJ1jye6zknhNqjumylOQBvsp9jerM1BdqYhuy8B2QGzwAzbd40RReiGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVguL4tZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560C6C4CEE4;
-	Fri, 16 May 2025 10:36:35 +0000 (UTC)
+	s=arc-20240116; t=1747392429; c=relaxed/simple;
+	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pPw28bnn734KB0zyKHptBv2wX9w9hXhps57g6GuVduWn58RLGo+Hp5jrTjELYJF6OQ/s9aqzHAcPoA9yyYj6h4fYiIamrVY8t1230O+IwLVk+p11K194QZPluJ7r3hlP0GRHnyWWE1lyHqGwGAQDHEOISVhw2k/A+57iA8+p0cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hI/LTokV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A729C4CEE4;
+	Fri, 16 May 2025 10:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747391795;
-	bh=jgVpL2kojiH7bm46Jld8D85YYTbY0kw/r105XuXS+K8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hVguL4tZyjFIsIcQZk4hmgGoVVxYo/WHfCUILoi3R/DCTpDnv3o9PiuWo+NZX4Bc1
-	 kpU44F4ySgUBQKFVcvF2fN+BEmY7pfrvMcFdOXlGLXMscSOiR+DsRbbGYc56WVabV+
-	 BaU1MYUiY8Z/7tz35yTmyCMXqKmV0sAh7PktCpNp2rZU2Q5kcwbquL1WEA+akpBs5J
-	 JZIGra8owWaACG4jaKY/zxaalwY7KodlvFXsS18pa7eNKuJKMdYpJJj6AT3OHcXIRy
-	 n12ufnFFze5Jos7z9RI7pRklfSEsfDan6ZFgSFoTjG6G/NHZuxuq3G2VNYQedixaB4
-	 odP13CWqiw/OA==
-Date: Fri, 16 May 2025 19:36:33 +0900
-From: Krzysztof =?utf-8?B?V2lsY3p577+977+9c2tp?= <kwilczynski@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Hans Zhang <Hans.Zhang@cixtech.com>, kernel test robot <lkp@intel.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbcGNpOnNsb3QtcmVz?=
- =?utf-8?Q?et_1=2F1=5D_drivers=2Fpci=2Fcontroller=2Fdwc=2Fpcie-dw-rockchip?=
- =?utf-8?Q?=2Ec=3A721=3A58=3A_error?= =?utf-8?Q?=3A?= use of undeclared
- identifier 'PCIE_CLIENT_GENERAL_CON'
-Message-ID: <20250516103633.GA448167@rocinante>
-References: <202505152337.AoKvnBmd-lkp@intel.com>
- <KL1PR0601MB4726782470E271865672B2079D90A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
- <20250515162405.GA511285@rocinante>
- <aCcGkN-9pN-jUwkS@ryzen>
+	s=k20201202; t=1747392429;
+	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hI/LTokVQGuf/bVLK8oMBqtsGbr404Fi9ixRTDh/ICpHf5I1UHDkl3W4zut2SQQ4x
+	 /0kxG8ipFe0AfiEt0iVsxHh/+CooD/CnIU+/+O8HFCM+rOSdKqcqsRYqGHy4K8uFLG
+	 PUhV5RZKyE5++NPcrid2+1CmREHzLnGnKF/jCa+oVDIXLklJRlUu0Uo0ELx35MIFtZ
+	 2zDisLNrG3Oky+l6Ml31I9xi68iAWsBm6REEXyrzBci0rMDpXfumllzJP9atv4jHU/
+	 AARVr71OsdcW80D6VfxOyyvY350n/pAHnLv5IL1IHpk6ddO7t9wjjhUyt9ZHwtMmo2
+	 NrTSoNMA8JPMg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFsao-00FWsh-OP;
+	Fri, 16 May 2025 11:47:06 +0100
+Date: Fri, 16 May 2025 11:47:05 +0100
+Message-ID: <86cyc8g7di.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,	Andrew Lunn <andrew@lunn.ch>,	Gregory Clement
+ <gregory.clement@bootlin.com>,	Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>,	Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,	Toan Le <toan@os.amperecomputing.com>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Thierry Reding
+ <thierry.reding@gmail.com>,	Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to msi_create_parent_irq_domain() helper
+In-Reply-To: <87h61kj10o.ffs@tglx>
+References: <20250513172819.2216709-1-maz@kernel.org>
+	<20250513172819.2216709-4-maz@kernel.org>
+	<87h61kj10o.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCcGkN-9pN-jUwkS@ryzen>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, toan@os.amperecomputing.com, alyssa@rosenzweig.io, thierry.reding@gmail.com, jonathanh@nvidia.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
-
-[...]
-> Comparing the commit that landed on the branch, with Wilfred's patch on the
-> mailing list, I did notice this diff:
-
-[...]
-> Reviewing the diff, the changes looks fine to me, but I strongly think
-> that if the actual code is modified from the submission (rather than
-> just fixing some minor grammar in the commit message), the (unwritten?)
-> rule is that the person should add a:
+On Fri, 16 May 2025 11:36:07 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> [person: describe modifications from the original submission]
+> On Tue, May 13 2025 at 18:28, Marc Zyngier wrote:
+> >  	if (!v2m)
+> >  		return 0;
+> >  
+> > -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
+> > -						   &gicv2m_domain_ops, v2m);
+> > +	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
+> > +			.fwnode		= v2m->fwnode,
+> > +			.ops		= &gicv2m_domain_ops,
+> > +			.host_data	= v2m,
+> > +			.parent		= parent,
+> > +		}, &gicv2m_msi_parent_ops);
+> > +
+> 
+> This really makes my eyes bleed. 
+> 
+>  	if (!v2m)
+>  		return 0;
+>  
+> -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
+> -						   &gicv2m_domain_ops, v2m);
+> +	struct irq_domain_info info = {
+> +		.fwnode		= v2m->fwnode,
+> +		.ops		= &gicv2m_domain_ops,
+> +		.host_data	= v2m,
+> +		.parent		= parent,
+> +	};
+> +
+> +	inner_domain = msi_create_parent_irq_domain(&info, &gicv2m_msi_parent_ops);
+> 
+> That's too readable, right?
+> 
+> No need to resend, I just hacked up a few lines of coccinelle script to
+> eliminate this offense.
 
-Sorry about that.  I did forgot to add this.  Good catch.
+I personally find the rework much uglier than the original contraption.
+Variables declared in the middle of the code, Rust-style? Meh.
 
-That said, a single single line with a nudge or a reminder would suffice.
+But hey, your call.
 
-There is no need for a condescending tone and the lecturing and such.
+	M.
 
-You have been doing this for a while now, and if you continue doing this,
-I will have no choice but to start to ignore submissions from you, I do not
-have the time to deal with any forms of such passive-aggressive attitude.
-
-Thank you!
-
-	Krzysztof
+-- 
+Without deviation from the norm, progress is not possible.
 
