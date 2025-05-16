@@ -1,119 +1,99 @@
-Return-Path: <linux-pci+bounces-27848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A7DAB9A4A
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:36:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D63AB9A4C
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:36:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 236445016D3
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:36:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 082BA1BC3365
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:36:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77A122FF35;
-	Fri, 16 May 2025 10:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B52233128;
+	Fri, 16 May 2025 10:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1RLxPr1Q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0oLKTdzY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVguL4tZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4432D1FFC77;
-	Fri, 16 May 2025 10:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A25C1FFC77;
+	Fri, 16 May 2025 10:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391773; cv=none; b=R8u0J9VN092fVhzG/t5sTy4g/RpzPxS9zDk4ZgUG4i8FCf1V4aXjM1h88Cy1W8jF8q3prcDnGm7KJ6zpP8a8rXrSNm+AfdWguqKJYRNI7tXCwXqBg9Dr+xBphcffjHO5gbblk4zjumGQDqGi5YgKj737VOMgIJk4wHT4mzt6mQI=
+	t=1747391796; cv=none; b=dM0SRQBgy7yAvuLHqObJeQhE68iPd0v3MmHZU/HsTTC9mFZc5LCrnXOsbFTxEqZGcte2Uqn9Y0R1CDMRuAI+71MddENPh96HKsmIwPkxfySvTrdt37EY4mkUl5YbXKaK9ACYV+iLVCd0aQ2O5shTiFSmLr3s9ghZZ9ioWvhDYCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391773; c=relaxed/simple;
-	bh=k7z0nyLTl3M/OnuL4GUytgYuYQUznOTN8vHlNfbph00=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fu+OKhTB2wsNni5Ia7L1YNBAjik5oMnKuL6cv4gxhpy067SsFvAvAKLsHXQOGKaGHu8nV7q1TFYkNv2N/6yVS7QMJas1qIgUeupx5r3PH6/Ubnqz16SQzWUpAvulIYD3wsA7+KS0OmwuWBWM6YkxgCFeYCfXUpxHjX5lkt5t0gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1RLxPr1Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0oLKTdzY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747391769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FNXHKgY/p/PBj8nWmVezncK3qsEuUPE+7qreXPSODDI=;
-	b=1RLxPr1Q9YViq4P+Jja3DlqdCVwBVmWrMrNcUPXvUM4KIlrHHK35QAQKQmJ+GMSHh17VD4
-	JdB0bNnjpgEO4rPTed52PZWfl/IjnniVQMUmZ0jMLj7b0f+eK/SUvhs3RCdxdBGIbkJECX
-	fHAv6ttd9E9MPHKU/BkNXnRX1bAF8rg8YRZXAZL7NHm2UhmhQe9PLUD0ZmgyviJorKbEsx
-	/RLCosFge+POjP2rFVlevwcREJ7zypSc31JDoV6OTuBui7LUMjVdJeJKCp7I2htFire8gX
-	agjaLYLAfVoAGIjD7tWFHS9m/xDCXAD3Z71oC/XsIbWvOKttr+gOntew0viVRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747391769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FNXHKgY/p/PBj8nWmVezncK3qsEuUPE+7qreXPSODDI=;
-	b=0oLKTdzYeoyAQaupzKJHMQaqCATV4QiFRcxE/YtfoE7dRBBu+UjOGl26a4IIutckivtwUL
-	x+oxx97OFqNxVrDg==
-To: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Toan Le <toan@os.amperecomputing.com>, Alyssa
- Rosenzweig <alyssa@rosenzweig.io>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to
- msi_create_parent_irq_domain() helper
-In-Reply-To: <20250513172819.2216709-4-maz@kernel.org>
-References: <20250513172819.2216709-1-maz@kernel.org>
- <20250513172819.2216709-4-maz@kernel.org>
-Date: Fri, 16 May 2025 12:36:07 +0200
-Message-ID: <87h61kj10o.ffs@tglx>
+	s=arc-20240116; t=1747391796; c=relaxed/simple;
+	bh=jgVpL2kojiH7bm46Jld8D85YYTbY0kw/r105XuXS+K8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7ZdkWDUGOtP1OWJp5+5+xY4SDFbZCzQeMErLYdxVF+XWXp3A5x7gL6jVoPDl+oqJ/4jriAUKL/10qjA2GwTCgKJLHi5qWpZEQxQYtZpdxcrvtfYdq6OJ1jye6zknhNqjumylOQBvsp9jerM1BdqYhuy8B2QGzwAzbd40RReiGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVguL4tZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560C6C4CEE4;
+	Fri, 16 May 2025 10:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747391795;
+	bh=jgVpL2kojiH7bm46Jld8D85YYTbY0kw/r105XuXS+K8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hVguL4tZyjFIsIcQZk4hmgGoVVxYo/WHfCUILoi3R/DCTpDnv3o9PiuWo+NZX4Bc1
+	 kpU44F4ySgUBQKFVcvF2fN+BEmY7pfrvMcFdOXlGLXMscSOiR+DsRbbGYc56WVabV+
+	 BaU1MYUiY8Z/7tz35yTmyCMXqKmV0sAh7PktCpNp2rZU2Q5kcwbquL1WEA+akpBs5J
+	 JZIGra8owWaACG4jaKY/zxaalwY7KodlvFXsS18pa7eNKuJKMdYpJJj6AT3OHcXIRy
+	 n12ufnFFze5Jos7z9RI7pRklfSEsfDan6ZFgSFoTjG6G/NHZuxuq3G2VNYQedixaB4
+	 odP13CWqiw/OA==
+Date: Fri, 16 May 2025 19:36:33 +0900
+From: Krzysztof =?utf-8?B?V2lsY3p577+977+9c2tp?= <kwilczynski@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Hans Zhang <Hans.Zhang@cixtech.com>, kernel test robot <lkp@intel.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbcGNpOnNsb3QtcmVz?=
+ =?utf-8?Q?et_1=2F1=5D_drivers=2Fpci=2Fcontroller=2Fdwc=2Fpcie-dw-rockchip?=
+ =?utf-8?Q?=2Ec=3A721=3A58=3A_error?= =?utf-8?Q?=3A?= use of undeclared
+ identifier 'PCIE_CLIENT_GENERAL_CON'
+Message-ID: <20250516103633.GA448167@rocinante>
+References: <202505152337.AoKvnBmd-lkp@intel.com>
+ <KL1PR0601MB4726782470E271865672B2079D90A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
+ <20250515162405.GA511285@rocinante>
+ <aCcGkN-9pN-jUwkS@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCcGkN-9pN-jUwkS@ryzen>
 
-On Tue, May 13 2025 at 18:28, Marc Zyngier wrote:
->  	if (!v2m)
->  		return 0;
->  
-> -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-> -						   &gicv2m_domain_ops, v2m);
-> +	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-> +			.fwnode		= v2m->fwnode,
-> +			.ops		= &gicv2m_domain_ops,
-> +			.host_data	= v2m,
-> +			.parent		= parent,
-> +		}, &gicv2m_msi_parent_ops);
-> +
+Hello,
 
-This really makes my eyes bleed. 
+[...]
+> Comparing the commit that landed on the branch, with Wilfred's patch on the
+> mailing list, I did notice this diff:
 
- 	if (!v2m)
- 		return 0;
- 
--	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
--						   &gicv2m_domain_ops, v2m);
-+	struct irq_domain_info info = {
-+		.fwnode		= v2m->fwnode,
-+		.ops		= &gicv2m_domain_ops,
-+		.host_data	= v2m,
-+		.parent		= parent,
-+	};
-+
-+	inner_domain = msi_create_parent_irq_domain(&info, &gicv2m_msi_parent_ops);
+[...]
+> Reviewing the diff, the changes looks fine to me, but I strongly think
+> that if the actual code is modified from the submission (rather than
+> just fixing some minor grammar in the commit message), the (unwritten?)
+> rule is that the person should add a:
+> 
+> [person: describe modifications from the original submission]
 
-That's too readable, right?
+Sorry about that.  I did forgot to add this.  Good catch.
 
-No need to resend, I just hacked up a few lines of coccinelle script to
-eliminate this offense.
+That said, a single single line with a nudge or a reminder would suffice.
 
-Thanks,
+There is no need for a condescending tone and the lecturing and such.
 
-        tglx
+You have been doing this for a while now, and if you continue doing this,
+I will have no choice but to start to ignore submissions from you, I do not
+have the time to deal with any forms of such passive-aggressive attitude.
+
+Thank you!
+
+	Krzysztof
 
