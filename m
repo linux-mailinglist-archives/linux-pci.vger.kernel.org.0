@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-27889-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27890-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41B51ABA21D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:44:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52572ABA221
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:44:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F0E6A23174
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 17:42:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45C03A239C4
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 17:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8028278E67;
-	Fri, 16 May 2025 17:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A480279793;
+	Fri, 16 May 2025 17:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDav7pF1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhDGzoqd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0282741CD;
-	Fri, 16 May 2025 17:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E12825CC77;
+	Fri, 16 May 2025 17:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417328; cv=none; b=lTBe+laJS5FTSD+oJkSHR/Z0ArmFuX3x/868wg2CyEVPCmGHKKlXXTOyA6ukwKkqu8FoW2orHyg73tAVXtgkTJ6RZabS9wi7HGHssAQ5V48PEofleS2UuHvI5z+Yf62KdKlFfTIf24afi9TsA7WLfJD7mwu1+27DxN1YKvS/qj0=
+	t=1747417332; cv=none; b=sXnjoaNhqYPSosJbkNXuV0xZvMpWG7bEJJtk1QdjilI63/5FXmReEwSd8AYsBzURRSrsTaUpgyy+QfqQdXy9IFf1B0A6yNd/MgZCibBR1LriQkKOyin7lukfr4OEqG1D/w6L9zlA22itCRB8e7CMZpnGn/zY99HvESClduQjMuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417328; c=relaxed/simple;
-	bh=42SV3VsGcpt92Drq8U0HrYQWXhRFIKXePa7w+P/2foY=;
+	s=arc-20240116; t=1747417332; c=relaxed/simple;
+	bh=aHb4LFr3eYFJfnPvyI1wlR82Dyg/3IrBHAyHSTUXdVs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jUS05ApE7JSWsUM2GIQcn50ad1q53EOLVW79BAB8qifZrHzt/Y/Wfhox8NOdCJ6PKnOI/e1B8rQ9vw9edohu7yrY2tQSaLYds5tR6rugLO1rH7gYmWSBE3l6yFFhvbohIoLQ1dM738jWjLSibZC4+O/71QAQkzuH93NhqtNS6kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDav7pF1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10D0C4CEED;
-	Fri, 16 May 2025 17:42:04 +0000 (UTC)
+	 MIME-Version; b=JgGycn1dKbIza4Y1VipeuitXaic0JD0GLnboMTT5/q1qPZGnwzrwb8ljdYFvTlC5xyK5jp3pq83oQJJ4ey3RDZb1Bo/x1GKqd82TT9rTgwBgfrYECMCLklmVHFTY0i3ILvVfD9worZ2ClhxFClPezkJJb7u7ycoUOl88M+jXEQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhDGzoqd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B069C4CEE4;
+	Fri, 16 May 2025 17:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747417327;
-	bh=42SV3VsGcpt92Drq8U0HrYQWXhRFIKXePa7w+P/2foY=;
+	s=k20201202; t=1747417331;
+	bh=aHb4LFr3eYFJfnPvyI1wlR82Dyg/3IrBHAyHSTUXdVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gDav7pF1nB5OfnDe5qz8mfj2GY68W3O5AVp24hPXSqiQPIMlULryu7mmU/NjrETpk
-	 A9Ubmp/hmiPt9CHDQp4DqS1PQE+9UkISqnw8KOzV1QdK6annjlZIPhSnbY9AJV7pzE
-	 J7dkv4nE6ZKBbSIDGEyYUoToc0wAJDNXbiyqnkrxJwgguNUJ4rJyAMs3qE0zEFJ6xS
-	 n4I+oFJDoZI3BPiQ2a6WPftetrMZiDn0OkqLVHTZRxOmEJwM5MPngcmD6zKP/zZbxt
-	 4QVvTKWBOYFdKQqmcSn33M/d+FUNgCmW/dc30qo1sucqu3b3a888hmEDOdDul1dCew
-	 pBnib39x7S5Gg==
+	b=NhDGzoqdjletwYuNaDgi1U4AcuQOMgW20BhwcM1wBJvkpFD36SozlJjvnGab7jR/0
+	 diZuymZvQNPzh00utpf2XfPcAiaDTtYwLNFhPD+fI0EFW3nfhJfTMntJFZnylGCbmc
+	 Z4jh04hbZvclFsjw3lNB7X6LqZmugieea71pV3QU2bjlwV3h9RMtc6VWtN4xiKKZNp
+	 WdY/fE/x6W+BpXi9558CrnMDdQSNDv/jBt70GFD8gSuriRiomoAN7X9JjK+CL/LSnd
+	 Qu4uW0tby2Gp1Nb4e67NK+apYNIqzO+pSuksCBaEocXto+Gm/x5nBXt6qGUl5YPwLB
+	 SsX5+xdYz0Z2w==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -55,9 +55,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v2 5/6] PCI: Remove redundant set of request funcs
-Date: Fri, 16 May 2025 19:41:40 +0200
-Message-ID: <20250516174141.42527-6-phasta@kernel.org>
+Subject: [PATCH v2 6/6] PCI: Remove hybrid-devres hazzard warnings from doc
+Date: Fri, 16 May 2025 19:41:41 +0200
+Message-ID: <20250516174141.42527-7-phasta@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250516174141.42527-1-phasta@kernel.org>
 References: <20250516174141.42527-1-phasta@kernel.org>
@@ -69,181 +69,67 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the demangling of the hybrid devres functions within PCI was
-implemented, it was necessary to implement several PCI functions a
-second time to avoid cyclic calls, since the hybrid functions in pci.c
-call the managed functions in devres.c, which in turn can be directly
-used outside of PCI and needed request infrastructure, too.
+pci/iomap.c still contains warnings about those functions not behaving
+in a managed manner if pcim_enable_device() was called. Since all hybrid
+behavior that users could know about has been removed by now, those
+explicit warnings are no longer necessary.
 
-Therefore, __pcim_request_region_range(), __pci_release_region_range()
-and wrappers around them were implemented.
-
-The hybrid nature has recently been removed from all functions in pci.c.
-Therefore, the functions in devres.c can now directly use their
-counterparts in pci.c without causing a call-cycle.
-
-Remove __pcim_request_region_range(), __pcim_request_region_range() and
-the wrappers. Use the corresponding request functions from pci.c in
-devres.c
+Remove the hybrid-devres warnings from the docstrings.
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pci/devres.c | 110 ++-----------------------------------------
- 1 file changed, 5 insertions(+), 105 deletions(-)
+ drivers/pci/iomap.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index ae79e5f95c8a..4a4604b78b90 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -70,106 +70,6 @@ static inline void pcim_addr_devres_clear(struct pcim_addr_devres *res)
- 	res->bar = -1;
- }
- 
--/*
-- * The following functions, __pcim_*_region*, exist as counterparts to the
-- * versions from pci.c - which, unfortunately, were in the past in "hybrid
-- * mode", i.e., sometimes managed, sometimes not.
+diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
+index fe706ed946df..ea86c282a386 100644
+--- a/drivers/pci/iomap.c
++++ b/drivers/pci/iomap.c
+@@ -25,10 +25,6 @@
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR from offset to the end, pass %0 here.
 - *
-- * To separate the APIs cleanly, we defined our own, simplified versions here.
+- * NOTE:
+- * This function is never managed, even if you initialized with
+- * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_range(struct pci_dev *dev,
+ 			      int bar,
+@@ -76,10 +72,6 @@ EXPORT_SYMBOL(pci_iomap_range);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR from offset to the end, pass %0 here.
 - *
-- * TODO: unify those functions with the counterparts in pci.c
-- */
--
--/**
-- * __pcim_request_region_range - Request a ranged region
-- * @pdev: PCI device the region belongs to
-- * @bar: BAR the range is within
-- * @offset: offset from the BAR's start address
-- * @maxlen: length in bytes, beginning at @offset
-- * @name: name of the driver requesting the resource
-- * @req_flags: flags for the request, e.g., for kernel-exclusive requests
+- * NOTE:
+- * This function is never managed, even if you initialized with
+- * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
+ 				 int bar,
+@@ -127,10 +119,6 @@ EXPORT_SYMBOL_GPL(pci_iomap_wc_range);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR without checking for its length first, pass %0 here.
 - *
-- * Returns: 0 on success, a negative error code on failure.
-- *
-- * Request a range within a device's PCI BAR.  Sanity check the input.
-- */
--static int __pcim_request_region_range(struct pci_dev *pdev, int bar,
--				       unsigned long offset,
--				       unsigned long maxlen,
--				       const char *name, int req_flags)
--{
--	resource_size_t start = pci_resource_start(pdev, bar);
--	resource_size_t len = pci_resource_len(pdev, bar);
--	unsigned long dev_flags = pci_resource_flags(pdev, bar);
--
--	if (start == 0 || len == 0) /* Unused BAR. */
--		return 0;
--	if (len <= offset)
--		return -EINVAL;
--
--	start += offset;
--	len -= offset;
--
--	if (len > maxlen && maxlen != 0)
--		len = maxlen;
--
--	if (dev_flags & IORESOURCE_IO) {
--		if (!request_region(start, len, name))
--			return -EBUSY;
--	} else if (dev_flags & IORESOURCE_MEM) {
--		if (!__request_mem_region(start, len, name, req_flags))
--			return -EBUSY;
--	} else {
--		/* That's not a device we can request anything on. */
--		return -ENODEV;
--	}
--
--	return 0;
--}
--
--static void __pcim_release_region_range(struct pci_dev *pdev, int bar,
--					unsigned long offset,
--					unsigned long maxlen)
--{
--	resource_size_t start = pci_resource_start(pdev, bar);
--	resource_size_t len = pci_resource_len(pdev, bar);
--	unsigned long flags = pci_resource_flags(pdev, bar);
--
--	if (len <= offset || start == 0)
--		return;
--
--	if (len == 0 || maxlen == 0) /* This an unused BAR. Do nothing. */
--		return;
--
--	start += offset;
--	len -= offset;
--
--	if (len > maxlen)
--		len = maxlen;
--
--	if (flags & IORESOURCE_IO)
--		release_region(start, len);
--	else if (flags & IORESOURCE_MEM)
--		release_mem_region(start, len);
--}
--
--static int __pcim_request_region(struct pci_dev *pdev, int bar,
--				 const char *name, int flags)
--{
--	unsigned long offset = 0;
--	unsigned long len = pci_resource_len(pdev, bar);
--
--	return __pcim_request_region_range(pdev, bar, offset, len, name, flags);
--}
--
--static void __pcim_release_region(struct pci_dev *pdev, int bar)
--{
--	unsigned long offset = 0;
--	unsigned long len = pci_resource_len(pdev, bar);
--
--	__pcim_release_region_range(pdev, bar, offset, len);
--}
--
- static void pcim_addr_resource_release(struct device *dev, void *resource_raw)
+- * NOTE:
+- * This function is never managed, even if you initialized with
+- * pcim_enable_device(). If you need automatic cleanup, use pcim_iomap().
+  * */
+ void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long maxlen)
  {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-@@ -177,11 +77,11 @@ static void pcim_addr_resource_release(struct device *dev, void *resource_raw)
- 
- 	switch (res->type) {
- 	case PCIM_ADDR_DEVRES_TYPE_REGION:
--		__pcim_release_region(pdev, res->bar);
-+		pci_release_region(pdev, res->bar);
- 		break;
- 	case PCIM_ADDR_DEVRES_TYPE_REGION_MAPPING:
- 		pci_iounmap(pdev, res->baseaddr);
--		__pcim_release_region(pdev, res->bar);
-+		pci_release_region(pdev, res->bar);
- 		break;
- 	case PCIM_ADDR_DEVRES_TYPE_MAPPING:
- 		pci_iounmap(pdev, res->baseaddr);
-@@ -720,7 +620,7 @@ void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
- 	res->type = PCIM_ADDR_DEVRES_TYPE_REGION_MAPPING;
- 	res->bar = bar;
- 
--	ret = __pcim_request_region(pdev, bar, name, 0);
-+	ret = pci_request_region(pdev, bar, name);
- 	if (ret != 0)
- 		goto err_region;
- 
-@@ -734,7 +634,7 @@ void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
- 	return res->baseaddr;
- 
- err_iomap:
--	__pcim_release_region(pdev, bar);
-+	pci_release_region(pdev, bar);
- err_region:
- 	pcim_addr_devres_free(res);
- 
-@@ -835,7 +735,7 @@ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
- 	res->type = PCIM_ADDR_DEVRES_TYPE_REGION;
- 	res->bar = bar;
- 
--	ret = __pcim_request_region(pdev, bar, name, 0);
-+	ret = pci_request_region(pdev, bar, name);
- 	if (ret != 0) {
- 		pcim_addr_devres_free(res);
- 		return ret;
+@@ -152,10 +140,6 @@ EXPORT_SYMBOL(pci_iomap);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR without checking for its length first, pass %0 here.
+- *
+- * NOTE:
+- * This function is never managed, even if you initialized with
+- * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ {
 -- 
 2.49.0
 
