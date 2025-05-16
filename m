@@ -1,606 +1,245 @@
-Return-Path: <linux-pci+bounces-27858-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27859-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11541AB9C71
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 14:43:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18E77AB9C8E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 14:49:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1863A21C6B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:43:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8FD31B665DA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF7F923814C;
-	Fri, 16 May 2025 12:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 834AE239E89;
+	Fri, 16 May 2025 12:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV2zDf1p"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MLzkf2sA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B464D1D6DBB;
-	Fri, 16 May 2025 12:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3441DFDE
+	for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 12:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747399407; cv=none; b=o4xbAMZUt1tavN0qHtJVxNImMS5sERnQcCtpOTY4/TRz7ei1Nz4I5DK+o1jh6ucMNf9kIpZi4yj6SYO0WuFb0OVDgSl+igHr5dmJJuq41JWDPdOPT+gMXhXxiMP16KpNYEwyAlXAXCnNnVmWTV0Eao9viF5vMy+3Md0XpTNMvKw=
+	t=1747399787; cv=none; b=K+QGThFnA2tvl+kw2WDsvpAPCqiwGrXLgYusF9Cgfep/DOTwsaWX3xt1u9VQ74CXJ+OUffLHvHC5EZ31hw6vaGf4GnRXPtrVhVJJAkB3CQ8WzLF6N7jHHeRxK570DV1sF/Z+n+BIrBfl9d/NxNQux0SyMXpLGF8+tGBA3xib80M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747399407; c=relaxed/simple;
-	bh=v9ZtJ8sJxsnL3ffqP6T+9LtiIYre38Xi4HFD/kzTykg=;
+	s=arc-20240116; t=1747399787; c=relaxed/simple;
+	bh=3XXz7vRINk0tGaKj+MeS3kJIyL4bpCw4p+dTKdtdfM8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dQZfqpGG+ASA4FO1MBN5OroiedScgIMxXy3EN+4twX7yrkMd3VDtBNVPqqSXYZb4dHkyR8xBlUWlXFMQ7tzQrlU963gnlx/TB7pSbUU8Y3Lb//Jv4XZxBPsbkX74N2S/yCchfg0n/l3/M2gZCOvHfzUPXZj55btcftKdN0IUWhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV2zDf1p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D3FC4CEE4;
-	Fri, 16 May 2025 12:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747399407;
-	bh=v9ZtJ8sJxsnL3ffqP6T+9LtiIYre38Xi4HFD/kzTykg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iV2zDf1p4zllck22Zyzc34VFgPiNWbrGRc9ruxfDURChy5fODW5acePJSSWQfK49q
-	 89ITyj86UdAHJSAinL2vBwqG4GM7xVqVhS5CfblUewNS455B0uAYq5cT0G+UYJ3T7S
-	 3jVdFWLkpociLR5o2yQGrHGaHBe/NwiEofI8RiqaEjvKtz5L7l+pRmmnzAEZBLicgn
-	 glPTILsBgA63Jo8EiOcoHEBtL12UhSAJR3BwZmEYWFH4sISq3fCscahiakVXLmJm6G
-	 ktlwFv4DAFJ8679PKZM65HwfHtkzAcm7Ok7pW3sv+an9RSI45i1plfO5zvAh0deYsI
-	 6YndbL96JMeow==
-Message-ID: <b5b39790-2559-41eb-9805-8eed1683d34e@kernel.org>
-Date: Fri, 16 May 2025 14:43:20 +0200
+	 In-Reply-To:Content-Type; b=e3uhC38eYU0BdZmZjfjXK9n2y6hha0eMfNLw3vRtsF0JgRSP5v83C7x3BgDgwPegAl5KJBwqKc6WXAsfQAKubqdDCRca4qgCRSJQ+ZEg0998GrTR0bWkI0bmpKlj3tZFLKQ0GUzRySu2+wKSud30LRldtv+i2gbbe3m2xsPIZs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MLzkf2sA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GBakUK025636
+	for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 12:49:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SWaS/wBVLAvfdc/nM2uoXAFHKvztBdqdG5TtveZ7LUM=; b=MLzkf2sA58xbgcHq
+	tFDhCFKlWCFy3uY47/9KRVLZrTrm/R6FwDCLzpnxswkzblxP/KxkP/cflyGiUSvx
+	HhTATA5BPhBo9hzSnLp4VftKFmHMVjlaMdTvcsL14CAw63Kew0tiQrHp9wwB243T
+	3d5WmST8nD02hrPN6iNHBWFFwI5e2/bQNlfqTLm6PTK9SLJx1aur6o2wVgILD3jf
+	WHCGWQy3L9Z26S0xO22mDRdjc7KtvMDGh/VkEc35TCGJySbnKolBP25g3A5PAj1t
+	29vEzInrsSu8AxM4+5LBr7nWZnGiCv86qHUxRJlkOGEzKRkgkKXW1vBB/5WDu2sL
+	0uAuxw==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp1yw7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 12:49:44 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-73c09e99069so2461486b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 05:49:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747399784; x=1748004584;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SWaS/wBVLAvfdc/nM2uoXAFHKvztBdqdG5TtveZ7LUM=;
+        b=DzIX0pxf/4lQ1iBsXdwY3uQHXwONcvv3hiscOUeawcNK4VJlf1slxFemiuAsxb0S3K
+         QTN71ufyrf1VwRNqxOjKV2iQOlhIF+YpUWKfCCDzd+Cvnyzf/oDL5nyGCIWry4MwUoRb
+         IDjrQyW/TbaT2/ayaTuiE+vIUTYnC50Ogdi1v3NpvmRQDQi2qN1AKdu/XfgY01SAxhZV
+         D0v8h9U3EHalFoTdMsovevR9RUvTrza5inzsCFfpC4v6/+uX0ZS0efazsxuv7UI5HJt+
+         2sPdSIvzZ54Fkz+nEixujBstkqGw9S5U3DU2DvmqdZQb0zFwZFxVHUOESMF70Qg50DDM
+         yWhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXL/DrfaiO1DLhtF14MU40yvOb/kc+ICY8W9D8aZR5Ykuo2UpzEMNzl5ehlm+CcuC0LiXSYVAeXt2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAnjQ+D4HzPdtyAhN1rfqKrnaMMUUr2t/sjb3hHGJGcXgemn6T
+	5jBzuM2WUZFVvxhmJpuUCCfmHfOar2MK4yGuJa9a6ueDBDaon/eH4K6F5j1AjdxSqfpQNy+G7g3
+	Uxa8anHxUQyp8TxwJZx78I0RmsAciVoFodgrhecvMuAzFd2tKP6x4mLRzUnEwrG8=
+X-Gm-Gg: ASbGncsEEAY1gsyC+mLr4adyYn9UX5BhaWpo+iG06YRGB0nCONbpM8VpoLCfzZBKrJo
+	0Zi8SfssoMTw7Dr1+8/bN0r8AEYiLZQuYkdKWv6uP5RrTEg0lqS5TjMfkhw7SYBX7nqS8DiLTb4
+	tdWzqggALDDm2DoqQd0h9mZojEyAStZo/hz/g0sd9aXOF6QxE/2qXlaLQcerCzYdr835/aejNx2
+	EGqtqdPID1Iz+QRv5P/NXGXWAi/Lq0nXvMjnCyuJfadCdpzxB2QeBIhfVrVpa2I7BnGNlZc+s4S
+	/wYfbgt9526R9FG2rm/o6sw9RJsm5hMbIDzqc/+vgw==
+X-Received: by 2002:a05:6a00:4606:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-742a98004abmr3848553b3a.10.1747399783816;
+        Fri, 16 May 2025 05:49:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQNLTbI1B+VJP2oSagYa9oYzNOY1Dzfl1XASdr4bvFkyNdifiPDpdHQrMJseRvKhV111pTPQ==
+X-Received: by 2002:a05:6a00:4606:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-742a98004abmr3848526b3a.10.1747399783377;
+        Fri, 16 May 2025 05:49:43 -0700 (PDT)
+Received: from [10.92.214.105] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d9c3sm1407485b3a.121.2025.05.16.05.49.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 05:49:42 -0700 (PDT)
+Message-ID: <7673cb4e-b359-be7c-27db-639f208e3835@oss.qualcomm.com>
+Date: Fri, 16 May 2025 18:19:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host
- controller driver
-To: zhangsenchuan@eswincomputing.com, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.or,
- linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
- johan+linaro@kernel.org, quic_schintav@quicinc.com, shradha.t@samsung.com,
- cassel@kernel.org, thippeswamy.havalige@amd.com
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com
-References: <20250516094057.1300-1-zhangsenchuan@eswincomputing.com>
- <20250516094315.179-1-zhangsenchuan@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 02/10] PCI/bwctrl: Add support to scale bandwidth
+ before & after link re-training
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+ <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson
+ <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
+        quic_mrana@quicinc.com, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
+ <20250313-mhi_bw_up-v2-2-869ca32170bf@oss.qualcomm.com>
+ <7njsbucxngxc2eninh57oexywiqsyysrbesyige5zwr4pmxf7t@rw6657lheg4j>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250516094315.179-1-zhangsenchuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <7njsbucxngxc2eninh57oexywiqsyysrbesyige5zwr4pmxf7t@rw6657lheg4j>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On 16/05/2025 11:43, zhangsenchuan@eswincomputing.com wrote:
-
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-
-Where do you use it?
-
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/resource.h>
-> +#include <linux/types.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/reset.h>
-> +#include <linux/gpio/consumer.h>
-
-That's mess. Clean up your patches before sending from such trivial
-mistakes.
-
-> +#include <linux/property.h>
-
-Most of these headers look like unused.
-
-> +#include "pcie-designware.h"
-> +#include <linux/pm_runtime.h>
-> +struct eswin_pcie {
-> +	struct dw_pcie pci;
-> +	void __iomem *mgmt_base;
-> +	struct gpio_desc *reset;
-> +	struct clk *pcie_aux;
-> +	struct clk *pcie_cfg;
-> +	struct clk *pcie_cr;
-> +	struct clk *pcie_aclk;
-> +	struct reset_control *powerup_rst;
-> +	struct reset_control *cfg_rst;
-> +	struct reset_control *perst;
-> +};
-> +
-> +#define PCIE_PM_SEL_AUX_CLK BIT(16)
-> +#define PCIEMGMT_APP_HOLD_PHY_RST BIT(6)
-> +#define PCIEMGMT_APP_LTSSM_ENABLE BIT(5)
-> +#define PCIEMGMT_DEVICE_TYPE_MASK 0xf
-> +
-> +#define PCIEMGMT_CTRL0_OFFSET 0x0
-> +#define PCIEMGMT_STATUS0_OFFSET 0x100
-> +
-> +#define PCIE_TYPE_DEV_VEND_ID 0x0
-> +#define PCIE_DSP_PF0_MSI_CAP 0x50
-> +#define PCIE_NEXT_CAP_PTR 0x70
-> +#define DEVICE_CONTROL_DEVICE_STATUS 0x78
-> +
-> +#define PCIE_MSI_MULTIPLE_MSG_32 (0x5 << 17)
-> +#define PCIE_MSI_MULTIPLE_MSG_MASK (0x7 << 17)
-> +
-> +#define PCIEMGMT_LINKUP_STATE_VALIDATE ((0x11 << 2) | 0x3)
-> +#define PCIEMGMT_LINKUP_STATE_MASK 0xff
-> +
-> +static void eswin_pcie_shutdown(struct platform_device *pdev)
-> +{
-> +	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	/* Bring down link, so bootloader gets clean state in case of reboot */
-> +	reset_control_assert(pcie->perst);
-> +}
-> +
-> +static int eswin_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	u32 val;
-> +
-> +	/* Enable LTSSM */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val |= PCIEMGMT_APP_LTSSM_ENABLE;
-> +	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_link_up(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-> +	if ((val & PCIEMGMT_LINKUP_STATE_MASK) ==
-> +	    PCIEMGMT_LINKUP_STATE_VALIDATE)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
-> +
-> +static int eswin_pcie_clk_enable(struct eswin_pcie *pcie)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_cr);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable cr clk: %d\n", ret);
-
-No, your driver must use everywhere dev_, not pr_.
-
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_aclk);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable aclk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_cfg);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable cfg_clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_aux);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable aux_clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_clk_disable(struct eswin_pcie *eswin_pcie)
-> +{
-> +	clk_disable_unprepare(eswin_pcie->pcie_aux);
-> +	clk_disable_unprepare(eswin_pcie->pcie_cfg);
-> +	clk_disable_unprepare(eswin_pcie->pcie_cr);
-> +	clk_disable_unprepare(eswin_pcie->pcie_aclk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_power_on(struct eswin_pcie *pcie)
-> +{
-> +	int ret = 0;
-> +
-> +	/* pciet_cfg_rstn */
-> +	ret = reset_control_reset(pcie->cfg_rst);
-> +	WARN_ON(ret != 0);
-
-No, handle the error instead.
-
-> +
-> +	/* pciet_powerup_rstn */
-> +	ret = reset_control_reset(pcie->powerup_rst);
-> +	WARN_ON(ret != 0);
-
-No, handle the error instead.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int eswin_pcie_power_off(struct eswin_pcie *eswin_pcie)
-> +{
-> +	reset_control_assert(eswin_pcie->perst);
-> +
-> +	reset_control_assert(eswin_pcie->powerup_rst);
-> +
-> +	reset_control_assert(eswin_pcie->cfg_rst);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_evb_socket_power_on(struct device *dev)
-> +{
-> +	int err_desc = 0;
-> +	struct gpio_desc *gpio;
-> +
-> +	gpio = devm_gpiod_get(dev, "pci-socket", GPIOD_OUT_LOW);
-
-Undocumented ABI. Looks not correct either - see PCI controller bindings.
+X-Proofpoint-ORIG-GUID: d9cc-zFg5-BPv5XCXtiEDZItxvo1vlcf
+X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=68273468 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=PjKuzrdxt0Go-pjIBLUA:9
+ a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEyMyBTYWx0ZWRfX4nPj5gW0kEF+
+ vCb2BHfF76WYbKHg3/vNy9sOJFXvZ9VdZWhpUnbkqodAxE+sjp3sd4i8mgoZneSav+Joi6s1iwy
+ Ak27ARLhRAqrxdY9V2O695x6pWgOojW8J/jsP3IV0OnxBZw5Htsgbk32vTHKzpMO+ykhuNe1CZN
+ pmFXpklqBwL6xJdI8Xpkl2rGgzVV5rOtFl8HI6cplKtiSyJZ0ONnbMg/e2VYl1pcezv7pxGlhmw
+ gcP4IOndM6pqovF37zKp+2RmMh3ez0hsLyNp4yqf5yIj18/xf1yIYirToSAGbYQbyI/oBnoK4Kv
+ W4QY/0c/8rfxsPYgliOgE5RQC/sUVaaS/OvuVcl/6zM5WOLj0M3BEXg3ah+xOexllpdmpKH7gU9
+ 7g/nTsSi+vnjNT77IMq9v9/wPAlW8G0LT9t1KIEGZqIreX6sCpn/vBtMF9B6nTtRc4L/dYr8
+X-Proofpoint-GUID: d9cc-zFg5-BPv5XCXtiEDZItxvo1vlcf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505160123
 
 
-> +	err_desc = IS_ERR(gpio);
-> +
-> +	if (err_desc) {
-> +		pr_debug("No power control gpio found, maybe not needed\n");
-> +		return 0;
-> +	}
-> +
-> +	gpiod_set_value(gpio, 1);
-> +
-> +	return err_desc;
-> +}
-> +
-> +static int eswin_pcie_host_init(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct eswin_pcie *pcie = dev_get_drvdata(pci->dev);
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* pciet_aux_clken, pcie_cfg_clken */
-> +	ret = eswin_pcie_clk_enable(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = eswin_pcie_power_on(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set device type : rc */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= 0xfffffff0;
-> +	writel_relaxed(val | 0x4, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	ret = reset_control_assert(pcie->perst);
-> +	WARN_ON(ret != 0);
-> +
-> +	eswin_evb_socket_power_on(pcie->pci.dev);
-> +	msleep(100);
-> +	ret = reset_control_deassert(pcie->perst);
-> +	WARN_ON(ret != 0);
-> +
-> +	/* app_hold_phy_rst */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= ~(0x40);
-> +	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	/* wait pm_sel_aux_clk to 0 */
-> +	for (ret = 50; ret > 0; ret--) {
-> +		val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-> +		if (!(val & PCIE_PM_SEL_AUX_CLK))
-> +			break;
-> +		msleep(2);
-> +	}
-> +
-> +	if (!ret) {
-> +		dev_info(pcie->pci.dev, "No clock exist.\n");
-> +		eswin_pcie_power_off(pcie);
-> +		eswin_pcie_clk_disable(pcie);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* config eswin vendor id and win2030 device id */
-> +	dw_pcie_writel_dbi(pci, PCIE_TYPE_DEV_VEND_ID, 0x20301fe1);
-> +
-> +	/* lane fix config, real driver NOT need, default x4 */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	val &= 0xffffff80;
-> +	val |= 0x44;
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-> +
-> +	val = dw_pcie_readl_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS);
-> +	val &= ~(0x7 << 5);
-> +	val |= (0x2 << 5);
-> +	dw_pcie_writel_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS, val);
-> +
-> +	/*  config support 32 msi vectors */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_DSP_PF0_MSI_CAP);
-> +	val &= ~PCIE_MSI_MULTIPLE_MSG_MASK;
-> +	val |= PCIE_MSI_MULTIPLE_MSG_32;
-> +	dw_pcie_writel_dbi(pci, PCIE_DSP_PF0_MSI_CAP, val);
-> +
-> +	/* disable msix cap */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_NEXT_CAP_PTR);
-> +	val &= 0xffff00ff;
-> +	dw_pcie_writel_dbi(pci, PCIE_NEXT_CAP_PTR, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops eswin_pcie_host_ops = {
-> +	.init = eswin_pcie_host_init,
-> +};
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = eswin_pcie_start_link,
-> +	.link_up = eswin_pcie_link_up,
-> +};
-> +
-> +static int __exit eswin_pcie_remove(struct platform_device *pdev)
 
-Remove goes after probe
-
-> +{
-> +	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	dw_pcie_host_deinit(&pcie->pci.pp);
-> +
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	eswin_pcie_power_off(pcie);
-> +	eswin_pcie_clk_disable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct dw_pcie *pci;
-> +	struct eswin_pcie *pcie;
-> +	int err;
-> +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +	pci = &pcie->pci;
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +	pci->pp.ops = &eswin_pcie_host_ops;
-> +
-> +	/* SiFive specific region: mgmt */
-> +	pcie->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
-> +	if (IS_ERR(pcie->mgmt_base))
-> +		return PTR_ERR(pcie->mgmt_base);
-> +
-> +	/* Fetch clocks */
-> +	pcie->pcie_aux = devm_clk_get(dev, "pcie_aux_clk");
-> +	if (IS_ERR(pcie->pcie_aux)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_aux),
-> +			"pcie_aux clock source missing or invalid\n");
-
-Messed alignment. This applies eveywhere.
-
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
-> +	}
-> +
-> +	pcie->pcie_cfg = devm_clk_get(dev, "pcie_cfg_clk");
-> +	if (IS_ERR(pcie->pcie_cfg)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_cfg),
-> +			"pcie_cfg_clk clock source missing or invalid\n");
-> +	}
-> +
-> +	pcie->pcie_cr = devm_clk_get(dev, "pcie_cr_clk");
-> +	if (IS_ERR(pcie->pcie_cr)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_cr),
-> +			"pcie_cr_clk clock source missing or invalid\n");
-> +	}
-> +
-> +	pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-> +
-> +	if (IS_ERR(pcie->pcie_aclk)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_aclk),
-> +			"pcie_aclk clock source missing or invalid\n");
-> +	}
-> +
-> +	/* Fetch reset */
-> +	pcie->powerup_rst =
-> +		devm_reset_control_get_optional(&pdev->dev, "pcie_powerup");
-> +	if (IS_ERR_OR_NULL(pcie->powerup_rst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->powerup_rst),
-> +			      "unable to get powerup reset\n");
-> +
-> +	pcie->cfg_rst = devm_reset_control_get_optional(&pdev->dev, "pcie_cfg");
-> +	if (IS_ERR_OR_NULL(pcie->cfg_rst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->cfg_rst),
-> +			      "unable to get cfg reset\n");
-> +
-> +	pcie->perst = devm_reset_control_get_optional(&pdev->dev, "pcie_pwren");
-> +	if (IS_ERR_OR_NULL(pcie->perst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->perst),
-> +			      "unable to get perst\n");
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	err = pm_runtime_get_sync(dev);
-> +	if (err < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", err);
-> +		goto pm_runtime_put;
-> +	}
-> +
-> +	return dw_pcie_host_init(&pci->pp);
-
-Missing cleanup of runtime PM
-
-> +
-> +pm_runtime_put:
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +	return err;
-> +}
-> +
-> +static const struct of_device_id eswin_pcie_of_match[] = {
-> +	{
-> +		.compatible = "eswin,eic7700-pcie",
-> +	},
-> +	{},
-> +};
-> +
-> +static int eswin_pcie_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "suspend %s\n", __func__);
-
-Drop
-
-> +	if (!pm_runtime_status_suspended(dev))
-> +		eswin_pcie_clk_disable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "resume %s\n", __func__);
-
-Drop
-
-> +	if (!pm_runtime_status_suspended(dev))
-> +		eswin_pcie_clk_enable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_runtime_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "runtime suspend %s\n", __func__);
-
-Drop
-
-> +	return eswin_pcie_clk_disable(pcie);
-> +}
-> +
-> +static int eswin_pcie_runtime_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "runtime resume %s\n", __func__);
-
-Drop
-
-> +	return eswin_pcie_clk_enable(pcie);
-> +}
-> +
-> +static const struct dev_pm_ops eswin_pcie_pm_ops = {
-> +	RUNTIME_PM_OPS(eswin_pcie_runtime_suspend, eswin_pcie_runtime_resume,
-> +		       NULL)
-> +		NOIRQ_SYSTEM_SLEEP_PM_OPS(eswin_pcie_suspend, eswin_pcie_resume)
-> +};
-> +
-> +static struct platform_driver eswin_pcie_driver = {
-> +	.driver = {
-> +			.name = "eic7700-pcie",
-> +			.of_match_table = eswin_pcie_of_match,
-> +			.suppress_bind_attrs = true,
-> +			.pm = &eswin_pcie_pm_ops,
-> +	},
-> +	.probe = eswin_pcie_probe,
-> +	.remove = __exit_p(eswin_pcie_remove),
-
-exit and suppress bind attrs feels wrong. Unnecessary and odd, although
-maybe this is something common in PCI?
-
-> +	.shutdown = eswin_pcie_shutdown,
-> +};
-> +
-> +module_platform_driver(eswin_pcie_driver);
-> +
-> +MODULE_DEVICE_TABLE(of, eswin_pcie_of_match);
-> +MODULE_DESCRIPTION("PCIe host controller driver for eic7700 SoCs");
-> +MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
-> +MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.1
+On 4/25/2025 9:27 PM, Manivannan Sadhasivam wrote:
+> On Thu, Mar 13, 2025 at 05:10:09PM +0530, Krishna Chaitanya Chundru wrote:
+>> If the driver wants to move to higher data rate/speed than the current data
+>> rate then the controller driver may need to change certain votes so that
+>> link may come up at requested data rate/speed like QCOM PCIe controllers
+>> need to change their RPMh (Resource Power Manager-hardened) state. Once
+>> link retraining is done controller drivers needs to adjust their votes
+>> based on the final data rate.
+>>
+>> Some controllers also may need to update their bandwidth voting like
+>> ICC bw votings etc.
+>>
+>> So, add pre_scale_bus_bw() & post_scale_bus_bw() op to call before & after
+>> the link re-train. There is no explicit locking mechanisms as these are
+>> called by a single client endpoint driver.
+>>
+>> In case of PCIe switch, if there is a request to change target speed for a
+>> downstream port then no need to call these function ops as these are
+>> outside the scope of the controller drivers.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>>   drivers/pci/pcie/bwctrl.c | 15 +++++++++++++++
+>>   include/linux/pci.h       | 13 +++++++++++++
+>>   2 files changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+>> index 0a5e7efbce2c..b1d660359553 100644
+>> --- a/drivers/pci/pcie/bwctrl.c
+>> +++ b/drivers/pci/pcie/bwctrl.c
+>> @@ -161,6 +161,8 @@ static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool
+>>   int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>>   			  bool use_lt)
+>>   {
+>> +	struct pci_host_bridge *host = pci_find_host_bridge(port->bus);
+>> +	bool is_rootport = pci_is_root_bus(port->bus);
 > 
+> s/rootport/rootbus
+> 
+>>   	struct pci_bus *bus = port->subordinate;
+>>   	u16 target_speed;
+>>   	int ret;
+>> @@ -173,6 +175,16 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>>   
+>>   	target_speed = pcie_bwctrl_select_speed(port, speed_req);
+>>   
+>> +	/*
+>> +	 * The controller driver may need to be scaled for targeted speed
+> 
+> s/controller/host bridge
+> 
+>> +	 * otherwise link might not come up at requested speed.
+>> +	 */
+>> +	if (is_rootport && host->ops->pre_scale_bus_bw) {
+>> +		ret = host->ops->pre_scale_bus_bw(host->bus, target_speed);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>>   	scoped_guard(rwsem_read, &pcie_bwctrl_setspeed_rwsem) {
+>>   		struct pcie_bwctrl_data *data = port->link_bwctrl;
+>>   
+>> @@ -197,6 +209,9 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>>   	    !list_empty(&bus->devices))
+>>   		ret = -EAGAIN;
+>>   
+>> +	if (is_rootport && host->ops->post_scale_bus_bw)
+>> +		host->ops->post_scale_bus_bw(host->bus, pci_bus_speed2lnkctl2(bus->cur_bus_speed));
+>> +
+>>   	return ret;
+>>   }
+>>   
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 47b31ad724fa..9ae199c1e698 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -804,6 +804,19 @@ struct pci_ops {
+>>   	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
+>>   	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
+>>   	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
+>> +	/*
+>> +	 * Callback to the drivers to update ICC bw votes, clock frequencies etc for
+> 
+> s/drivers/host bridge drivers/
+> 
+>> +	 * the link re-train to come up in targeted speed. These are called by a single
+>> +	 * client endpoint driver, so there is no need for explicit locking mechanisms.
+> 
+> You need to mention that these ops are meant to be called by devices attached
+> to the root port.
+> 
+Ack.
 
+As these are bridge driver specific ops, it feels to me we need to add
+these in the host bridge driver similar to recently added one
+reset_slot, I will move it in the next series.
 
-Best regards,
-Krzysztof
+- Krishna Chaitanya.
+> - Mani
+> 
 
