@@ -1,52 +1,48 @@
-Return-Path: <linux-pci+bounces-27895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27896-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2DF1ABA3BE
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 21:28:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A486FABA3D6
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 21:33:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AFAF1B60382
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:28:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D9FAA0209A
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5775226CE0;
-	Fri, 16 May 2025 19:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E856222579E;
+	Fri, 16 May 2025 19:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M/O+MtAc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIiYRMCB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D401CEAC2;
-	Fri, 16 May 2025 19:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB8EEEBA;
+	Fri, 16 May 2025 19:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747423682; cv=none; b=Xbceu8Dho/R3qaO30NZTb5lb+ZW1YUGxT2atNRX6a+WhQ7KdyWhLxI/rc8yblvChYX/v+EjMCBV7cTbM64ivG0mQPquABQUI6RbGg3Gpi28UdQ6nesUnLaw9kV9j9jibdOo1UBAxdLGYs9eFlBqFzsyijT8H0iHX4ljfQRi49t4=
+	t=1747424007; cv=none; b=O0tCFVMBUeCqK0dpQTmRFrQ9/E2ZWw4niHsOMSjk2inXzqaneUidM533h1Dk7wDY5GQufHMCpKszGbliHtIBEjjXgSrDR6Q78hShTfL2ZjDkRzhOpYRWsG3+yY54tk0uPGxYREKQht/PyZ5Usxe4uNtOJCSyXsClGWPuICE/HMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747423682; c=relaxed/simple;
-	bh=8szMpAx4GbkKtdl9rIKAP5pwATyUKPg7MocRMWOyX2Y=;
+	s=arc-20240116; t=1747424007; c=relaxed/simple;
+	bh=sccI53fPqFZZzNQqVmK+EE/oIeQR01e/22d3c05Pjic=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b6cMBKM7WywAezfsV7heowe1pVA3/MFd7ThYL9bJAa8YtlCYrGtIA53qjr3mnQ92T9a3QwFyqGDpQLdntanuKo9gVLPp5RTXRCugoHdtSB3lLLKW9WQ49ugxNDFtiz2fBflQ/2/c5lEkditP808f9tO4N+uEWARvTnAEyvzsfgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M/O+MtAc; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=JPS4NRNnkUopVfkxBsto11zOA6kziWl5Eya9/gk+PQ8=; b=M/O+MtAcr2hdJSi0CqruV2pI3U
-	ESjAkCxesKcdcRnONIfqv4saA7YhsulDtqtJCGzc1AggQbn7kufDDubq0KLA6bJVmySAbjtb+o9ud
-	BwE7JM35siEEOjJaGVzu/8YNcqBJXM93ZN4ypNCiU7mUUyoRuA/tSSLzHtpDDBCeugv604dvo6gJX
-	tlC+jUPkUyMhEfTvjhvhM5izd4jFdX7Yd0GdxGMalqxSpL8+RYmQAouIX9b63ur/rpDsmxdlkGcr9
-	ubLTZn8vrx4crehCA8vkMiL4LOjLakjxIsyIdcRqIdYLqAIBc+uPZP7qBOMgjCmwUsp//7DxSpP0k
-	srxcmybw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uG0if-000000006g1-2DoZ;
-	Fri, 16 May 2025 19:27:46 +0000
-Message-ID: <393bdc27-a6a3-416c-93e9-d2a9ee9fb465@infradead.org>
-Date: Fri, 16 May 2025 12:27:40 -0700
+	 In-Reply-To:Content-Type; b=bZgSAiQ9JU7ptLuqXs7DAs4PFKkPJdSiMnuTG7riLP6HKarXBd0eYVfFc6o3gJm1DhOSaEhv+DENAsqNo7QXvFFxfNDVDK4fiy3d520Pw7Sw6L47vSH4jkrJuUKt9e7uNqmsgbDFBxboutET2IMCmga/Nd1AMd+IGZ/Vi7bDGpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIiYRMCB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCEDC4CEE4;
+	Fri, 16 May 2025 19:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747424007;
+	bh=sccI53fPqFZZzNQqVmK+EE/oIeQR01e/22d3c05Pjic=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NIiYRMCBb8IXbczp39jbWPPCafdCLMAt5StngHoNs5tiOpFVCUH3PL7v/5I+H+IWs
+	 C977U4ipALgtrwT/eA8nivNnDILFJYfm0dqgObnnkct4IjBQhFcRREUvxD2BoTpD4K
+	 RfRE7r5zvLO4umt3rp/yh+gfapqKqxNFTD8w3g6bcR5ZVI234Dh1dk+99Nr/3Rrel2
+	 GfqVpna+D42rn5RMybR2HpEgZy1PdpekjZO0zPKfwBUXlVkGHI6l44Xrb93LLqnnMi
+	 pd/oh2mn1JEYSV6Mt2DYgH1RRfgjFonePuYpPyS1pSmOAtdBdPQQpyJfeVd2bj2vcT
+	 yuExqVabve3KA==
+Message-ID: <d77b51a6-24a0-4b24-b3f8-c6de8809b686@kernel.org>
+Date: Fri, 16 May 2025 14:33:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,57 +50,142 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] Documentation/driver-api: Update
- pcim_enable_device()
-To: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>,
- David Lechner <dlechner@baylibre.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Zijun Hu <quic_zijuhu@quicinc.com>, Yang Yingliang
- <yangyingliang@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250516174141.42527-1-phasta@kernel.org>
- <20250516174141.42527-3-phasta@kernel.org>
+Subject: Re: [PATCH v2 1/3] PM: Use hibernate flows for system power off
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+ Denis Benato <benato.denis96@gmail.com>
+References: <20250514193406.3998101-1-superm1@kernel.org>
+ <20250514193406.3998101-2-superm1@kernel.org>
+ <CAJZ5v0jifqTP_eZ33nBmKPCuLWrrVF_0jNGf5CpHU6nXuK8qBw@mail.gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250516174141.42527-3-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAJZ5v0jifqTP_eZ33nBmKPCuLWrrVF_0jNGf5CpHU6nXuK8qBw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 5/16/25 10:41 AM, Philipp Stanner wrote:
-> pcim_enable_device() is not related anymore to switching the mode of
-> operation of any functions. It merely sets up a devres callback for
-> automatically disabling the PCI device on driver detach.
+On 5/16/2025 9:58 AM, Rafael J. Wysocki wrote:
+> On Wed, May 14, 2025 at 9:34 PM Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> When the system is powered off the kernel will call device_shutdown()
+>> which will issue callbacks into PCI core to wake up a device and call
+>> it's shutdown() callback.  This will leave devices in ACPI D0 which can
+>> cause some devices to misbehave with spurious wakeups and also leave some
+>> devices on which will consume power needlessly.
+>>
+>> The issue won't happen if the device is in D3 before system shutdown, so
+>> putting device to low power state before shutdown solves the issue.
+>>
+>> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+>> compatible with the current Power Resource states. In other words, all
+>> devices are in the D3 state when the system state is S4."
+>>
+>> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+>> state is similar to the S4 state except that OSPM does not save any
+>> context." so it's safe to assume devices should be at D3 for S5.
+>>
+>> To accomplish this, modify the PM core to call all the device hibernate
+>> callbacks when turning off the system when the kernel is compiled with
+>> hibernate support. If compiled without hibernate support or hibernate fails
+>> fall back into the previous shutdown flow.
+>>
+>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+>> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+>> Tested-by: Denis Benato <benato.denis96@gmail.com>
+>> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/
+>> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v2:
+>>   * Handle failures to hibernate (fall back to shutdown)
+>>   * Don't use dedicated events
+>>   * Only allow under CONFIG_HIBERNATE_CALLBACKS
+>> ---
+>>   kernel/reboot.c | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/kernel/reboot.c b/kernel/reboot.c
+>> index ec087827c85cd..52f5e6e36a6f8 100644
+>> --- a/kernel/reboot.c
+>> +++ b/kernel/reboot.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/kexec.h>
+>>   #include <linux/kmod.h>
+>>   #include <linux/kmsg_dump.h>
+>> +#include <linux/pm.h>
+>>   #include <linux/reboot.h>
+>>   #include <linux/suspend.h>
+>>   #include <linux/syscalls.h>
+>> @@ -305,6 +306,17 @@ static void kernel_shutdown_prepare(enum system_states state)
+>>                  (state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
+>>          system_state = state;
+>>          usermodehelper_disable();
+>> +#ifdef CONFIG_HIBERNATE_CALLBACKS
+>> +       if (dpm_suspend_start(PMSG_HIBERNATE))
+>> +               goto resume_devices;
 > 
-> Adjust the function's documentation.
+> A failure of one device may trigger a cascade of failures when trying
+> to resume devices and it is not even necessary to resume the ones that
+> have been powered off successfully.
+
+Right it "shouldn't" be necessary, but I wanted to make sure that we had 
+a clean (expected) slate going into device_shutdown().
+
+Otherwise drivers might not have been prepared to go right from 
+poweroff() to shutdown() callbacks.
+
 > 
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->  Documentation/driver-api/driver-model/devres.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> IMV this should just ignore errors during the processing of devices,
+> so maybe introduce PMSG_POWEROFF for it?
+
+Hmm - I guess it depends upon the failures that occurred.  I'll start 
+plumbing a new message and see how it looks.
+
+I don't "think" we can safely call dpm_suspend_end() if 
+dpm_suspend_start() failed though.
+
 > 
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-> index d75728eb05f8..9443911c4742 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -391,7 +391,7 @@ PCI
->    devm_pci_remap_cfgspace()	: ioremap PCI configuration space
->    devm_pci_remap_cfg_resource()	: ioremap PCI configuration space resource
->  
-> -  pcim_enable_device()		: after success, some PCI ops become managed
-> +  pcim_enable_device()		: after success, PCI dev gets deactivated automatically
+> It should also ignore wakeup events that occur while devices are powered off.
+> 
+>> +       if (dpm_suspend_end(PMSG_HIBERNATE))
+>> +               goto resume_devices;
+>> +       return;
+>> +
+>> +resume_devices:
+>> +       pr_emerg("Failed to power off devices, using shutdown instead.\n");
+>> +       dpm_resume_end(PMSG_RESTORE);
+> 
+> Unfortunately, PMSG_RESTORE is not the right resume action for
+> PMSG_HIBERNATE because it may not power-up things (some drivers assume
+> that the restore kernel will power-up devices and so they don't do it
+> in "restore" callbacks).
+> 
+> I do realize that hibernation uses it to reverse PMSG_HIBERNATE, but
+> it should not do that either.  That may be fixed later, though.
+> 
+>> +#endif
+>>          device_shutdown();
+>>   }
+>>   /**
+>> --
+> 
+> I'd prefer to get back to this series after the 6.16 merge window
+> starts.  It is sort of last minute for 6.16 and it is far from ready
+> IMV.
 
-I think that the patch description has a better comment that could be put here. ^^^^^
-
->    pcim_iomap()			: do iomap() on a single BAR
->    pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
->    pcim_iomap_table()		: array of mapped addresses indexed by BAR
-
--- 
-~Randy
-
+Sure, I'll get a start on your feedback above and submit a fixed up 
+version after the merge window.
 
