@@ -1,130 +1,97 @@
-Return-Path: <linux-pci+bounces-27850-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27851-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFACDAB9A6B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:47:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD86AB9A96
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 12:55:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51D9F1718CA
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:47:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6046B3B9147
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9300233128;
-	Fri, 16 May 2025 10:47:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2851E236431;
+	Fri, 16 May 2025 10:55:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hI/LTokV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wFRyTgh5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hj8ucecR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0F2481C4;
-	Fri, 16 May 2025 10:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51EC442C;
+	Fri, 16 May 2025 10:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747392429; cv=none; b=qgMXKKmFcWkK1UwzL4XYjIttydPIjoT/0J+WpbzUm+hJolCcC/I77skgWEyjpDC/Ip1IqXEXAs7E4QY7m3e398iU7Vjx4h3hBLA5/+/LW4uBo1TWY6zIOr6oJY4a60aSsHpVKUdkgAhCNjxu55LqAn900Q69G3D3J63+k2SS8VQ=
+	t=1747392928; cv=none; b=DoBXsxlDHEiGpVforXBpXMv5W6Onhmn6Ngc+lP53BAYdv6ZE+BcX+E+SQ+NYzFJSdAV4Uv4I+wyUCzy4XFYUiJVW2cHchFk4gp1lWCZVanrOwLCYI6cih7/Gcp2HB/IwMF7qgiexSpZXJedHZJVeLUGoR2dm9sbuztPG1naPEaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747392429; c=relaxed/simple;
-	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pPw28bnn734KB0zyKHptBv2wX9w9hXhps57g6GuVduWn58RLGo+Hp5jrTjELYJF6OQ/s9aqzHAcPoA9yyYj6h4fYiIamrVY8t1230O+IwLVk+p11K194QZPluJ7r3hlP0GRHnyWWE1lyHqGwGAQDHEOISVhw2k/A+57iA8+p0cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hI/LTokV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A729C4CEE4;
-	Fri, 16 May 2025 10:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747392429;
-	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hI/LTokVQGuf/bVLK8oMBqtsGbr404Fi9ixRTDh/ICpHf5I1UHDkl3W4zut2SQQ4x
-	 /0kxG8ipFe0AfiEt0iVsxHh/+CooD/CnIU+/+O8HFCM+rOSdKqcqsRYqGHy4K8uFLG
-	 PUhV5RZKyE5++NPcrid2+1CmREHzLnGnKF/jCa+oVDIXLklJRlUu0Uo0ELx35MIFtZ
-	 2zDisLNrG3Oky+l6Ml31I9xi68iAWsBm6REEXyrzBci0rMDpXfumllzJP9atv4jHU/
-	 AARVr71OsdcW80D6VfxOyyvY350n/pAHnLv5IL1IHpk6ddO7t9wjjhUyt9ZHwtMmo2
-	 NrTSoNMA8JPMg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFsao-00FWsh-OP;
-	Fri, 16 May 2025 11:47:06 +0100
-Date: Fri, 16 May 2025 11:47:05 +0100
-Message-ID: <86cyc8g7di.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,	Andrew Lunn <andrew@lunn.ch>,	Gregory Clement
- <gregory.clement@bootlin.com>,	Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>,	Lorenzo Pieralisi
- <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kw@linux.com>,	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,	Toan Le <toan@os.amperecomputing.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Thierry Reding
- <thierry.reding@gmail.com>,	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to msi_create_parent_irq_domain() helper
-In-Reply-To: <87h61kj10o.ffs@tglx>
+	s=arc-20240116; t=1747392928; c=relaxed/simple;
+	bh=w7QeoE83CYUeWMXWHItYCFwhRoh7O5YrA1CtSYqaC5w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CqlGyYlL6hpFmEV0/w3eEQk0l5YORV+rIqIVgTTWo529dVsM6ATNNuPSD/q49f1jcOWrrMVVB036bb8hdud/p8Uq03Evzfxy0NyUilvYJv7bieEnZ3A3kOaF1C5yZtueuyOoXj/g2+cNojlj1stJje9Ygb15yxF3n8Y3Wkby7Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wFRyTgh5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hj8ucecR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747392924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dAqrnR9lpSHDZlAAETS+32VSLf1k30Eg11RRVWeYS6I=;
+	b=wFRyTgh5iLzemsXj0MthjLhFkFk+T/oUw5so4tKc93df/qp3XUEjP0//91ABrO72LDZWWA
+	6DOqZ2GdO8dB4KQ2fvSWcSImMetRprkZTdyqi/suBJgic+6Y7YktkkK+V/cvBNH41gSLu9
+	yxTqypSv5u0VKOLcKwO+MNZgkYC/ZYnZk4DUfAt0g3yWrDfpvXbYUkJPw+KY9wu2lmt4uo
+	9zAL3k32Mig1jq4ZJeU+OndA1bjZdk2F2666NyE+R16DTtb78uW7YJyWTRR7G+Qo3zJ/vW
+	xL6O8xtEU5h251EoV00skrMpgNGcr0pV95olUSRyz/dbeEzfpRcvtf0t2+Z0kA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747392924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dAqrnR9lpSHDZlAAETS+32VSLf1k30Eg11RRVWeYS6I=;
+	b=hj8ucecRwdmcFj2oYvgQ0kQwtzo7OZ50CexMIsZVvD8IvuPM4gpusBdRiJjRlyhDME/vuO
+	sYiPVi1U5uXAp6AA==
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Toan Le <toan@os.amperecomputing.com>, Alyssa
+ Rosenzweig <alyssa@rosenzweig.io>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to
+ msi_create_parent_irq_domain() helper
+In-Reply-To: <86cyc8g7di.wl-maz@kernel.org>
 References: <20250513172819.2216709-1-maz@kernel.org>
-	<20250513172819.2216709-4-maz@kernel.org>
-	<87h61kj10o.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+ <20250513172819.2216709-4-maz@kernel.org> <87h61kj10o.ffs@tglx>
+ <86cyc8g7di.wl-maz@kernel.org>
+Date: Fri, 16 May 2025 12:55:23 +0200
+Message-ID: <87bjrsj04k.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, toan@os.amperecomputing.com, alyssa@rosenzweig.io, thierry.reding@gmail.com, jonathanh@nvidia.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, 16 May 2025 11:36:07 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> On Tue, May 13 2025 at 18:28, Marc Zyngier wrote:
-> >  	if (!v2m)
-> >  		return 0;
-> >  
-> > -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-> > -						   &gicv2m_domain_ops, v2m);
-> > +	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-> > +			.fwnode		= v2m->fwnode,
-> > +			.ops		= &gicv2m_domain_ops,
-> > +			.host_data	= v2m,
-> > +			.parent		= parent,
-> > +		}, &gicv2m_msi_parent_ops);
-> > +
-> 
-> This really makes my eyes bleed. 
-> 
->  	if (!v2m)
->  		return 0;
->  
-> -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-> -						   &gicv2m_domain_ops, v2m);
-> +	struct irq_domain_info info = {
-> +		.fwnode		= v2m->fwnode,
-> +		.ops		= &gicv2m_domain_ops,
-> +		.host_data	= v2m,
-> +		.parent		= parent,
-> +	};
-> +
-> +	inner_domain = msi_create_parent_irq_domain(&info, &gicv2m_msi_parent_ops);
-> 
-> That's too readable, right?
-> 
-> No need to resend, I just hacked up a few lines of coccinelle script to
-> eliminate this offense.
+On Fri, May 16 2025 at 11:47, Marc Zyngier wrote:
+> On Fri, 16 May 2025 11:36:07 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> No need to resend, I just hacked up a few lines of coccinelle script to
+>> eliminate this offense.
+>
+> I personally find the rework much uglier than the original contraption.
+> Variables declared in the middle of the code, Rust-style? Meh.
 
-I personally find the rework much uglier than the original contraption.
-Variables declared in the middle of the code, Rust-style? Meh.
+That's not a Rust invention and we already moved over to do this to make
+the __free() magic more obvious.
 
-But hey, your call.
+Thanks,
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+        tglx
 
