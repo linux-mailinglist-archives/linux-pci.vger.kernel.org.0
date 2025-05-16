@@ -1,189 +1,116 @@
-Return-Path: <linux-pci+bounces-27841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5CB3AB98ED
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 11:34:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 187C4AB990D
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 11:42:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A49EC3A8D16
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 09:33:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 090AD1BC0C9E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 09:42:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E9F522FF5E;
-	Fri, 16 May 2025 09:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpTEnYeu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7423E230BDC;
+	Fri, 16 May 2025 09:42:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B80F22F76B;
-	Fri, 16 May 2025 09:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E2E163;
+	Fri, 16 May 2025 09:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388053; cv=none; b=BXejlTKjacv1S7+goI0of4cY0KU25kHa814NbIA3KOWDZ20EARSpCcd3fVO7h2UyY4i0yv0FNm9zjyBs0m4CGNIm4Fs3JJ3p5UugcgZAd+cWLipGkguFk1RPaeUqh6QHalnf4/wuodzHG92L3JG87ncZkS6DskcO+TY3qOHsVKQ=
+	t=1747388536; cv=none; b=luooCuaQ7fMeRQgUReNmcT6uuvR7sULXUko52xf3ItDbEErKNamNTmqQLtYC4vTp4YXq/CN9WmkrMNjC28EzJ2/+sVY2WSelNNTVrDT6C5TlieN1ml2IJRwHkmxBc30SpX/llg6TM4vjFiu5O87gTk+f75LILZnG+5QNRH1d8f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388053; c=relaxed/simple;
-	bh=r/PSjbXy9CjaxKxTjIH4c/qfPkOWog12QPV34Z0bSMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MomC6UmcHhSMKjCJXVh3yekG24MQfnwAoH192IHLaDqXISm8HAIhm/oiebNyt+L2aRe87YJuEx+97q9i5siv6iFrK9it10ln+UQZJJ99+5w1bIFtjCC6skoLoYsSYuG0OJvPL8MWWwVk+3/NpXU+GRRjr2hQtfmcVOqKnjGon+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpTEnYeu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E02BDC4CEE4;
-	Fri, 16 May 2025 09:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747388052;
-	bh=r/PSjbXy9CjaxKxTjIH4c/qfPkOWog12QPV34Z0bSMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YpTEnYeuhHxbdhFVuXDvyL0PIDev3vH8B4dnA6upfTyc7gxbf/RfhLS7A6Ds6zvhy
-	 m14B0coZz+9+SRL8MyFmjZewoRkAZ5AX5FP+zfulLt86kDgGe1TQuuEOJSNApjeM6s
-	 lxqFVuhkUtISatnD5TAwBP6NFU7tP2HyRuRz9M95U8nlvSji7Z8P5Y+UkBIpsvgm7T
-	 0Y8wOPRcQnnPBPlqK3IKPmOqT4kJUtCT9aD909F7yfc6jJGCFYII/nZA7Zy7tKsOVN
-	 oNRB93UqBkJasekS6ig9e7n2f/qAM8E+cgZaJkfSHMhZ0tW18HrATYe3BI1UjdKpW1
-	 HXrA3RPPiz+Og==
-Date: Fri, 16 May 2025 11:34:08 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Krzysztof =?utf-8?B?V2lsY3p577+977+9c2tp?= <kwilczynski@kernel.org>
-Cc: Hans Zhang <Hans.Zhang@cixtech.com>, kernel test robot <lkp@intel.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbcGNpOnNsb3QtcmVz?=
- =?utf-8?Q?et_1=2F1=5D_drivers=2Fpci=2Fcontroller=2Fdwc=2Fpcie-dw-rockchip?=
- =?utf-8?Q?=2Ec=3A721=3A58=3A_error?= =?utf-8?Q?=3A?= use of undeclared
- identifier 'PCIE_CLIENT_GENERAL_CON'
-Message-ID: <aCcGkN-9pN-jUwkS@ryzen>
-References: <202505152337.AoKvnBmd-lkp@intel.com>
- <KL1PR0601MB4726782470E271865672B2079D90A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
- <20250515162405.GA511285@rocinante>
+	s=arc-20240116; t=1747388536; c=relaxed/simple;
+	bh=IqfzZXm9B32jb9GH4WHkt1Mnc8xHk9lHE94NXNBgzB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iLYkIEljAXQkGatXtozqcJsrHcNDzmg72bOdzqB6edvccUfTqAe1Fw00PV5BbGcAcJuVTxEnJuC4EHk6RbKiOT+GOS6S1p0h1wUUhgLrxneVCaWxoq5bBpp9FqRu87fyT4W5fAwr9e1UvksknZCrqubFbzjxy1f8VyHumIUmq14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
+	by app2 (Coremail) with SMTP id TQJkCgBnBpVeCCdodNR8AA--.23978S2;
+	Fri, 16 May 2025 17:41:52 +0800 (CST)
+From: zhangsenchuan@eswincomputing.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.or,
+	linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de,
+	johan+linaro@kernel.org,
+	quic_schintav@quicinc.com,
+	shradha.t@samsung.com,
+	cassel@kernel.org,
+	thippeswamy.havalige@amd.com
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+Subject: [PATCH v1 0/2] Add driver support for Eswin eic7700 SoC PCIe controller
+Date: Fri, 16 May 2025 17:40:56 +0800
+Message-ID: <20250516094057.1300-1-zhangsenchuan@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515162405.GA511285@rocinante>
+X-CM-TRANSID:TQJkCgBnBpVeCCdodNR8AA--.23978S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrZF1fuFy8tr17Xr4fCF43Awb_yoW8Jry5pa
+	yDKF4YyFn7GrW3Jw4fJ3W0kr43J3Z7JFy5Awsag347tFnxC34kXryft3WftFy7Gr1xXrya
+	vry5t3W8GF17AFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRByxiUUUUU=
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
 
-Hello Krzysztof,
+From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 
+     Support for the Eswin eic7700 PCIe driver control program has been
+    added to the Linux kernel, which is part of the Eswin SoC family.
 
-FYI: your name appears corrupted in my inbox.
+    Features:
+     Implements support for the Eswin eic7700 SoC PCIe controller,
+    It is a high-speed data transmission interface, which can
+    enhance the speed and performance of computers,It can be used
+    to connect different types of devices.
 
-From: Krzysztof Wilczy��ski <your-email-address>
+    Supported chips:
+     Eswin eic7700 series SoC.
 
-Perhaps because:
-Content-Type: text/plain; charset=us-ascii
+    Test:
+     Tested this patch on the Sifive HiFive Premier P550 (which uses the
+    EIC7700 SoC),The pcie driver controller operates normally through
+    the nvme peripheral test.
 
-instead of UTF-8?
+Senchuan Zhang (2):
+  dt-bindings: PCI: eic7700: Add Eswin eic7700 PCIe host controller
+  PCI: eic7700: Add Eswin eic7700 PCIe host controller driver
 
+ .../bindings/pci/eswin,eic7700-pcie.yaml      | 171 +++++++
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-eic7700.c     | 437 ++++++++++++++++++
+ 4 files changed, 621 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
 
-On Fri, May 16, 2025 at 01:24:05AM +0900, Krzysztof Wilczy��ski wrote:
-> (+Cc Mani for visibility)
-> 
-> Hello,
-> 
-> > Please merge it into the following branch; otherwise, this compilation error will occur.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> > >> drivers/pci/controller/dwc/pcie-dw-rockchip.c:721:58: error: use of undeclared identifier 'PCIE_CLIENT_GENERAL_CON'
-> >      721 |         rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE, PCIE_CLIENT_GENERAL_CON);
-> >          |                                                                 ^
-> >    1 error generated.
-> 
-> Sorry about this!
-> 
-> I moved changes from the slot-reset to the controller/dw-rockchip branch,
-> to make sure everything has proper dependencies now.  Hopefully, there
-> won't be any more issues.
+--
+2.25.1
 
-
-Comparing the commit that landed on the branch, with Wilfred's patch on the
-mailing list, I did notice this diff:
-
-
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 9a952871e4d0..c4bd7e0abdf0 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -556,7 +556,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
-                return ret;
-        }
- 
--       /* unmask DLL up/down indicator and hot reset/link-down reset irq */
-+       /* Unmask DLL up/down indicator and hot reset/link-down reset IRQ. */
-        val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
-        rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
- 
-@@ -747,11 +747,11 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
- 
-        ret = pp->ops->init(pp);
-        if (ret) {
--               dev_err(dev, "Host init failed: %d\n", ret);
-+               dev_err(dev, "host init failed: %d\n", ret);
-                goto deinit_clk;
-        }
- 
--       /* LTSSM enable control mode */
-+       /* LTSSM enable control mode. */
-        val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-        rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
- 
-@@ -762,11 +762,11 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
- 
-        ret = dw_pcie_setup_rc(pp);
-        if (ret) {
--               dev_err(dev, "Failed to setup RC: %d\n", ret);
-+               dev_err(dev, "failed to setup RC: %d\n", ret);
-                goto deinit_clk;
-        }
- 
--       /* unmask DLL up/down indicator and hot reset/link-down reset irq */
-+       /* Unmask DLL up/down indicator and hot reset/link-down reset IRQ. */
-        val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
-        rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
- 
-@@ -774,9 +774,9 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-        if (ret)
-                goto deinit_clk;
- 
--       /* Ignore errors, the link may come up later */
-+       /* Ignore errors, the link may come up later. */
-        dw_pcie_wait_for_link(pci);
--       dev_dbg(dev, "Slot reset completed\n");
-+       dev_dbg(dev, "slot reset completed\n");
-        return ret;
- 
- deinit_clk:
-
-
-
-Reviewing the diff, the changes looks fine to me, but I strongly think
-that if the actual code is modified from the submission (rather than
-just fixing some minor grammar in the commit message), the (unwritten?)
-rule is that the person should add a:
-
-[person: describe modifications from the original submission]
-
-line after the Signed-off-by of the original submission, such that,
-e.g. if there is a bug in one of the lines that were changed, the
-original author does not unfairly get blamed for some code that he
-didn't write.
-
-When only modifying the commit log, there is no possibility that a
-functional change was introduced, but as soon as the code/diff is
-changed, there is a change that a functional change is introduced
-(intentional or not), so there is a big difference between the cases
-(in my humble opinion).
-
-
-Kind regards,
-Niklas
 
