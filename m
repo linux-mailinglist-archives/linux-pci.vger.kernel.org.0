@@ -1,192 +1,223 @@
-Return-Path: <linux-pci+bounces-27893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27894-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50A24ABA326
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 20:49:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB507ABA3B6
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 21:24:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E00B18969E0
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 18:49:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E7843B7FC0
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:24:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F120E27E7C0;
-	Fri, 16 May 2025 18:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B3527FD6F;
+	Fri, 16 May 2025 19:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YfSLBGme"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgyYe8qW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6782274FF9;
-	Fri, 16 May 2025 18:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82743272E63;
+	Fri, 16 May 2025 19:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421359; cv=none; b=qiZHLvHNu64Z5YtRp2Di5Wa9xZ74GgxP6I/HVw9vkp/KW43sxGdkLU/8/7t1P804taduVadRPXB191M1AozJ0KlhsGaqFGRXGlg4tYrxa+h38HtAEXGfXaep/inOHYNLSEPAnqohx3IR+wZskJEE5HBcdxiGGplrZr7w557KrcI=
+	t=1747423352; cv=none; b=rA8bC/UOAOm//dRIbv7YhiTz61K2FqnLuokIQMR4D6VD9OA/h55gKd/cfhM24M3glzUbOMONzZVW7QHtIcqMsWV4naNBE/WdeJPOelMRrhsGsq3gegcGKpkTx+bifS3/Po0rLgIybEgNjpceOCm3w0PSfgdsgwjzR8s+sUN6IuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421359; c=relaxed/simple;
-	bh=L2zfEnGbFxXlzozh3R4xBVOc9dI6O3z7CfzV+z8eaD4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CU+S0F1wrjNI5jzsNzY5+BEeJQfciximkKVOP41gwSfkj1e5SIAvtqB3ZQfHkK0FMTQrLuAqWmDzyuvYs++la8WMMvKG3wSd0mtYnb6MFDMRBMoHtNzasfbJPYWZAN6A0sTJJvHmYpjsWw6ldyVbCl7QA5YA0E3HcvdRBC6hMSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YfSLBGme; arc=none smtp.client-ip=109.224.244.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1747421348; x=1747680548;
-	bh=7yNiiKDF+KREAb3BL5tgjMXVU2VSaNddorcUcOqgweU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=YfSLBGme+j8sYt6NOtKuOUslAYSSy5jMhTgXKeh1Te/z8i1Ab3lSiBojNz003mqfi
-	 Diz0TWon7Y/W3BD/3c0ViEiGDAxFzRpV1EyJOiyz6PYCfr2N0QjKanbMEfjnsUy/HC
-	 256JSo7wEkjVwq/HEK6Hh1IwvUTOE7hT8tEJz/BIzMw7WtBV2s5fj/PjUzTfGHjGJs
-	 j56yR09sxYPfbIU/gn/gY4RAF/2PRY9JoHBzkCaC22evAvIooVP3C3nr/Jme/Hr0fb
-	 zn3wsw07kH2W73i/q/J6sYWLpcqnZL/G0LBrPa0FaAwp4N6FsgzKcTF4wdMvVg1CmT
-	 zxsEcQ9CJf95A==
-Date: Fri, 16 May 2025 18:48:59 +0000
-To: Niklas Cassel <cassel@kernel.org>
-From: Laszlo Fiat <laszlo.fiat@proton.me>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Krishna chaitanya chundru <quic_krichai@quicinc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] PCI: dwc: Link Up IRQ fixes
-Message-ID: <5l0eAX7zaDMDMp1vJhvB9MVKXSPn3Ra0ZiP5e2q1E4rwmADBB6MlREZO9cuD_zvclAOhhBE0-NFthVbOajeSCfYjchT-83OgLbjclOgx3T4=@proton.me>
-In-Reply-To: <aCcMrtTus-QTNNiu@ryzen>
-References: <20250506073934.433176-6-cassel@kernel.org> <7zcrjlv5aobb22q5tyexca236gnly6aqhmidx6yri6j7wowteh@mylkqbwehak7> <aCNSBqWM-HM2vX7K@ryzen> <fCMPjWu_crgW5GkH4DJd17WBjnCAsb363N9N_h6ld1i8NqNNGR9PTpQWAO9-kwv4DUL6um48dwP0GJ8GmdL4uQf-WniBepwuxTEhjmbBnug=@proton.me> <aCcMrtTus-QTNNiu@ryzen>
-Feedback-ID: 130963441:user:proton
-X-Pm-Message-ID: a32a7c4b900ed4f1e27a751ddab136cfa7cdfb9b
+	s=arc-20240116; t=1747423352; c=relaxed/simple;
+	bh=Ek77gpLsXz/q8aiOBEfN+u6gnh5zOQSz5ZZsCaFKCqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n3HZ7OH2ll2DXWbXgqCo0djHV1lQtHJvpFhSWrxJICaecEmnBuAxBEjyoXYnA9MuPvPCB0eS/hc5l8NGlix+WbKx8tNIoPHEotS/QTbnzc7HHuqIyJ4JCuSyYotGmezTNaYVHvic8KQfbgfN5K4B/lyB28ivooCfhtFT/uVbmIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgyYe8qW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02949C4CEFB;
+	Fri, 16 May 2025 19:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747423352;
+	bh=Ek77gpLsXz/q8aiOBEfN+u6gnh5zOQSz5ZZsCaFKCqc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UgyYe8qWv8jACWqJlHcosSTse6jWsZHzFaz87voEx0CrsIm4cdhQylJ9nrvzj/U4I
+	 LlUX3BMhSxPY+i9tZZr1CvqvhX2jsKF5PXdUJ3Otga8Swz4zA/EE+HdIL8MDFMrHSU
+	 dyv/LRXTo9vQNWviPLi8fWhS/JHMnixXD1K3HFm/qgWwDl170tMK9Eh/R6e0fKwp3h
+	 xQDVtZU+w2FfBW9YFfU6OPDrtEywqpZpoVJtUcptG8ok/EVDAs/IPIRTM2tW29aQ1P
+	 jS3bC3GDVNXYZjMnPzmLQ+aSH/jr/PG1zd+3Y9Z7zQBwQBfgwzG07DcUjYyRdKjgSb
+	 OSirgm+ZjvvSg==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2d071fcd89bso252653fac.3;
+        Fri, 16 May 2025 12:22:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUg2GpoNCyE3DbwvwB88MfWPukyq2k4FIQ0l+OcPKs/xtWOY66Bnpuh4cjXQ4dcEcweEfgX687rIWs2@vger.kernel.org, AJvYcCV4EpIr2tNEBV+OOpvE2DOVaBAmPorU5Fa0/5Dcvzl7bqhieQ1aG4Ve1P6cNO/7pDNUXticYZQnSgEH2qbX@vger.kernel.org, AJvYcCVnCpoIQy8wmdrTDQWGR8lhQsEYPEaohshkv4/0Y8m/ZI3aRjqYnPOqAs1A7Jhpqa/3lYdsAKB5Ubrr@vger.kernel.org, AJvYcCWDRBJhVdxK/qVdKZSoWJ9PqGsGRZIZzazCq+CyfEF9H7VuFQeaDHYNr9Kb2sRbqSAGUvr4rvNhmskW@vger.kernel.org, AJvYcCX9HSXXbmXBQsnm8K8h9+YDL/RsH1SWNC/Hdl+zh1mG9cG/P4xVndgkxOF6tLapfjpI+a/T5uhCGQlb@vger.kernel.org, AJvYcCXeCISqGEdTCyxTrxcDP4UNuUdYENQxgfjfTms9P0GehiiMONbldvPpm59S6leEXEZ/4eJGvgIL9QvK@vger.kernel.org, AJvYcCXwmkRwvGbobMGcijpZRTX71h1ucYUp46kDLdHk70MHM6k3VmXgBPEqKnNH+suh41fA+FSRCMG66AjhMQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHdrBHQhqi6v4/tJhmkRujL280S9n9BCgnqKZEJBggpXR8dPNF
+	fZ0AB50/MqCYBAkLSdTa/fCym5ojpLEFXWskS0i98rQUCmONMnhj7GwHAByPXuz/WxchCNmAU3o
+	/BodwVqACje/KkJ2o6tH0bub6H+8PwEo=
+X-Google-Smtp-Source: AGHT+IGl/Xh2m5Yioj8nj711hLigDhrXfyaCMYocztPRG3qWM9ptNmcZPxoSwPv1HnQirxUyGT+7+NI2qwMqctosLrA=
+X-Received: by 2002:a05:6870:2484:b0:2d5:a360:7df9 with SMTP id
+ 586e51a60fabf-2e3c1b67803mr2961587fac.5.1747423351159; Fri, 16 May 2025
+ 12:22:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250507071315.394857-1-herve.codina@bootlin.com> <20250507071315.394857-6-herve.codina@bootlin.com>
+In-Reply-To: <20250507071315.394857-6-herve.codina@bootlin.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 21:22:20 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
+X-Gm-Features: AX0GCFvpCPNT-ZeaAeVtc8DjE00SK05z3r-qk3RyVev5M5-s80SOM3ivZ1irWZU
+Message-ID: <CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/26] bus: simple-pm-bus: Populate child nodes at probe
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
--------- Original Message --------
-On 16/05/2025 12:00, Niklas Cassel <cassel@kernel.org> wrote:
-
->  On Thu, May 15, 2025 at 05:33:41PM +0000, Laszlo Fiat wrote:
->  > I am the one experiencing the issue with my Orange PI 3B (RK3566, 8 GB=
- RAM) and a PLEXTOR PX-256M8PeGN NVMe SSD.
->  >
->  > I first detected the problem while upgrading from 6.13.8 to 6.14.3, th=
-at my system cannot find the NVME SSD which contains the rootfs. After reve=
-rting the two patches:
->  >
->  > - ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can de=
-tect Link Up")
->  > - 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_li=
-nk_up IRQ")
->  >
->  > my system booted fine again.
->  > After that I tested the patches sent by Niklas in this thread, which f=
-ixed the issue, so I sent Tested-by.
->  >
->  > I did another test Today with 6.15.0-rc6, which in itself does not fin=
-d my SSD. Niklas asked me to test with these
->  >
->  > - revert ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we=
- can detect Link Up")
->  > - revert 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on=
- dll_link_up IRQ")
->  > - apply the following patch:
->  >
->  > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pc=
-i/controller/dwc/pcie-designware.c
->  > index b3615d125942..5dee689ecd95 100644
->  > --- a/drivers/pci/controller/dwc/pcie-designware.c
->  > +++ b/drivers/pci/controller/dwc/pcie-designware.c
->  > @@ -692,7 +692,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  >                 if (dw_pcie_link_up(pci))
->  >                         break;
->  >
->  > -               msleep(LINK_WAIT_SLEEP_MS);
->  > +               usleep_range(100, 200);
->  >         }
->  >
->  >         if (retries >=3D LINK_WAIT_MAX_RETRIES) {
->  >
->  >
->  > which restores the original behaviour to wait for link-up, then shorte=
-n the time. This resulted again a non booting system, this time with "Phy l=
-ink never came up" error message.
-> =20
->  That message was unexpected.
-> =20
->  What I expected to happen was that the link would come up, but by reduci=
-ng
->  delay between "link is up" and device is accessed (from 90 ms -> 100 us)=
-,
->  I was that you would see the same problem on "older" kernels as you do w=
-ith
->  the "link up IRQ" patches (which originally had no delay, but this serie=
-s
->  basically re-added the same delay (PCIE_T_RRS_READY_MS, 100 ms) as we ha=
-d
->  before (LINK_WAIT_SLEEP_MS, 90 ms).
-> =20
->  But I see the problem with the test code that I asked you to test to ver=
-ify
->  that this problem also existed before (if you had a shorter delay).
->  (By reducing the delay, the LINK_WAIT_MAX_RETRIES also need to be bumped=
-.)
-> =20
->  Could you please test:
->  diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/=
-controller/dwc/pcie-designware.c
->  index b3615d125942..5dee689ecd95 100644
->  --- a/drivers/pci/controller/dwc/pcie-designware.c
->  +++ b/drivers/pci/controller/dwc/pcie-designware.c
->  @@ -692,7 +692,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->                  if (dw_pcie_link_up(pci))
->                          break;
-> =20
->  -               msleep(LINK_WAIT_SLEEP_MS);
->  +               usleep_range(100, 200);
->          }
-> =20
->          if (retries >=3D LINK_WAIT_MAX_RETRIES) {
->  diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/=
-controller/dwc/pcie-designware.h
->  index 4dd16aa4b39e..8422661b79d5 100644
->  --- a/drivers/pci/controller/dwc/pcie-designware.h
->  +++ b/drivers/pci/controller/dwc/pcie-designware.h
->  @@ -61,7 +61,7 @@
->          set_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
-> =20
->   /* Parameters for the waiting for link up routine */
->  -#define LINK_WAIT_MAX_RETRIES          10
->  +#define LINK_WAIT_MAX_RETRIES          10000
->   #define LINK_WAIT_SLEEP_MS             90
-> =20
->   /* Parameters for the waiting for iATU enabled routine */
-> =20
-> =20
->  On top of an old kernel instead?
+On Wed, May 7, 2025 at 9:13=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
 >
+> The simple-pm-bus drivers handles several simple bus. When it is used
 
-I have compiled a vanilla 6.12.28, that booted fine, as expeced. Then compi=
-led a  version with the patch directly above.
+s/drivers/driver/ (I think)
+s/simple bus/simple busses/
 
->  We expect the link to come up, but that you will not be able to mount ro=
-otfs.
-> =20
+> with busses other than a compatible "simple-pm-bus", it don't populate
 
-That is exactly what happened.=20
+s/it don't/it doesn't/
 
->  If that is the case, we are certain that the this patch series is 100% n=
-eeded
->  for your device to have the same functional behavior as before.
+> its child devices during its probe.
+>
+> This confuses fw_devlink and results in wrong or missing devlinks.
 
-That is the case.
+Well, fair enough, but doesn't it do that for a reason?
 
-Bye,
+> Once a driver is bound to a device and the probe() has been called,
+> device_links_driver_bound() is called.
+>
+> This function performs operation based on the following assumption:
+>     If a child firmware node of the bound device is not added as a
+>     device, it will never be added.
+>
+> Among operations done on fw_devlinks of those "never be added" devices,
+> device_links_driver_bound() changes their supplier.
+>
+> With devices attached to a simple-bus compatible device, this change
+> leads to wrong devlinks where supplier of devices points to the device
+> parent (i.e. simple-bus compatible device) instead of the device itself
+> (i.e. simple-bus child).
+>
+> When the device attached to the simple-bus is removed, because devlinks
+> are not correct, its consumers are not removed first.
+>
+> In order to have correct devlinks created, make the simple-pm-bus driver
+> compliant with the devlink assumption and create its child devices
+> during its probe.
+>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/bus/simple-pm-bus.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> index d8e029e7e53f..93c6ba605d7a 100644
+> --- a/drivers/bus/simple-pm-bus.c
+> +++ b/drivers/bus/simple-pm-bus.c
+> @@ -42,14 +42,14 @@ static int simple_pm_bus_probe(struct platform_device=
+ *pdev)
+>         match =3D of_match_device(dev->driver->of_match_table, dev);
+>         /*
+>          * These are transparent bus devices (not simple-pm-bus matches) =
+that
+> -        * have their child nodes populated automatically.  So, don't nee=
+d to
+> -        * do anything more. We only match with the device if this driver=
+ is
+> -        * the most specific match because we don't want to incorrectly b=
+ind to
+> -        * a device that has a more specific driver.
+> +        * have their child nodes populated automatically. So, don't need=
+ to
+> +        * do anything more except populate child nodes.
 
-Laszlo Fiat=20
-> =20
-> =20
->  Kind regards,
->  Niklas
->  
+The above part of the comment has become hard to grasp after the
+change.  In particular, why populate child notes if they are populated
+automatically?
+
+> + We only match with the
+> +        * device if this driver is the most specific match because we do=
+n't
+> +        * want to incorrectly bind to a device that has a more specific =
+driver.
+>          */
+>         if (match && match->data) {
+>                 if (of_property_match_string(np, "compatible", match->com=
+patible) =3D=3D 0)
+> -                       return 0;
+> +                       goto populate;
+
+Doesn't this interfere with anything, like the automatic population of
+child nodes mentioned in the comment?
+
+>                 else
+>                         return -ENODEV;
+>         }
+> @@ -64,13 +64,14 @@ static int simple_pm_bus_probe(struct platform_device=
+ *pdev)
+>
+>         dev_set_drvdata(&pdev->dev, bus);
+>
+> -       dev_dbg(&pdev->dev, "%s\n", __func__);
+> -
+>         pm_runtime_enable(&pdev->dev);
+>
+> +populate:
+>         if (np)
+>                 of_platform_populate(np, NULL, lookup, &pdev->dev);
+>
+> +       dev_dbg(&pdev->dev, "%s\n", __func__);
+
+So how to distinguish between devices that only have child nodes
+populated and the ones that have drvdata set?
+
+> +
+>         return 0;
+>  }
+>
+> @@ -78,12 +79,16 @@ static void simple_pm_bus_remove(struct platform_devi=
+ce *pdev)
+>  {
+>         const void *data =3D of_device_get_match_data(&pdev->dev);
+>
+> -       if (pdev->driver_override || data)
+> +       if (pdev->driver_override)
+>                 return;
+>
+>         dev_dbg(&pdev->dev, "%s\n", __func__);
+>
+> -       pm_runtime_disable(&pdev->dev);
+> +       if (pdev->dev.of_node)
+> +               of_platform_depopulate(&pdev->dev);
+> +
+> +       if (!data)
+> +               pm_runtime_disable(&pdev->dev);
+>  }
+>
+>  static int simple_pm_bus_runtime_suspend(struct device *dev)
+> --
 
