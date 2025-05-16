@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-27887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E9ADABA213
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:43:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 539FDABA218
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 19:43:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6C719E192C
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 17:42:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61BB5A06553
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 17:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77DB327874E;
-	Fri, 16 May 2025 17:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D75F27876D;
+	Fri, 16 May 2025 17:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPE0J8mp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hC0rQ8QT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CA52741CD;
-	Fri, 16 May 2025 17:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D292741CD;
+	Fri, 16 May 2025 17:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417321; cv=none; b=B1i0dfRlRceLF8FkJAsLjxHdCFURrVsqTGa4KO+CiHNdLz8FcnGcgDxK5fSUq9lrMxOrDcGnwRT6MhaOaYy/dgpt7aqvngwvv5MoLKLVo1peoqaqE9d3Izw6HvXtTljxTSrPEdKfq04BavAsOcstfeFlj4H0jJwBD3AFDBsQ+PY=
+	t=1747417324; cv=none; b=UpmcHCR4AgBzQiOJq4yyrsfo0PuKBk2wRncSCWa9iIfOXv1e223qHR/LmZq0kfY/pKKSdw8XYZrtkmoNjLhKtbjW8bQcbZ5qiPU8vbw9fPBSoIeLrc4Wy1e8h0uhkZDSCJdRgMSxXS5qhAyAQ782OKgDofyvskIqhYYuhm+jc6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417321; c=relaxed/simple;
-	bh=c1ROWu0lfGtKMMpettEtZCS5NGvMgU/+Xjau9CxLvpo=;
+	s=arc-20240116; t=1747417324; c=relaxed/simple;
+	bh=GU4MOVdN8oQjUQHsT+2DBnOtiOsxgXpBZ4DC2Y4gtzY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FVSXYcJpx0Am06d3EXfEUxHm9sCPxnIqDfL3dPFC8Qd6eaob4hXi/bi8mLG6kzpsI0Vdh1NynV4dQbpwF9PudpdSTmhfBPU1Mvh7yTsN4wsZLd/VT95fRv88ls4LMTKuYqdxR+MnZP+K/tpIbGL3hTw7BSBzRwKub+HsdGdrWuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPE0J8mp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77EDC4CEF0;
-	Fri, 16 May 2025 17:41:57 +0000 (UTC)
+	 MIME-Version; b=c6cTHIqGuqcQZ4l0SpE9DySnmil+s3AfPRIyK4xZjfoSa8w0mj7MGM75c9wDiazXxRCabcOKzyIO3oo8CwE21bkR4uS0/SskjMS240IxbWaK3EYWpC4LpiQKwlPDbxRJxRfuxpAaO3SJJQ2Mmk+hSqFtXgEBKwvixDwy9jqJkwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hC0rQ8QT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52017C4CEE4;
+	Fri, 16 May 2025 17:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747417320;
-	bh=c1ROWu0lfGtKMMpettEtZCS5NGvMgU/+Xjau9CxLvpo=;
+	s=k20201202; t=1747417324;
+	bh=GU4MOVdN8oQjUQHsT+2DBnOtiOsxgXpBZ4DC2Y4gtzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bPE0J8mp3Y48oscDtYpaoS1rkv6XQhRHnDNBBUooWcUegMvh3q7rHlAGEqI9EW1BX
-	 SWcgEJT05vxPpj35mZRT09ykUMkBGVWl0zvEWbl78/OJF42RS6USz6SZwXLZJge19n
-	 hRtSJmwmIFAjVFlkgPD4N7jSl+UmxNqXa/DGa3pGi7/ZnzeU/ehTK16oHj4KmgzMeu
-	 d9mlCUhEA7xyp1xBZiExXlsH58CpChK4sDdbxAjJo1syxU7A8LMUKJ0YDl+5qZ+Xs1
-	 HBIwrRh1HxJk3/4e2Hqaz51hH47HjWJSIZOwK2ora2gfO587MKgSGwNI0KgaD6EtHK
-	 t9cCk3Avz2iWQ==
+	b=hC0rQ8QTsj46e6u5Rs2P7D48OuG1/AEL87VtzEn6EmPjNrYP9uhSNyxoegzwGO62d
+	 3vc7GGdCMQtY8Htn/iFox0Hn54c7rMccbIV5aoX7TjIhEtNdpB55hdBD5VZcOnxBq5
+	 0cm0hlj/BcCAFvxPBP6QO0FJdCqxy13LyduvIpvxehWwiMWHl6Rq1FAyzukyn+HlgO
+	 fUJjXK3NDN6Nbydl7/8Ir4Dp2LyKmGER0kSWXwSXwjGP7HRE57QVlhoyk1d2FZO/QF
+	 q/+dtnfHxC9teQLtSPSjDpJ/Q3xdKulm8MvX+hR1dTeYslWll43SvlD4Gia+Qk2xDF
+	 heDcUBrj3QXCA==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -55,9 +55,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v2 3/6] PCI: Remove pcim_request_region_exclusive()
-Date: Fri, 16 May 2025 19:41:38 +0200
-Message-ID: <20250516174141.42527-4-phasta@kernel.org>
+Subject: [PATCH v2 4/6] PCI: Remove request_flags relict from devres
+Date: Fri, 16 May 2025 19:41:39 +0200
+Message-ID: <20250516174141.42527-5-phasta@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250516174141.42527-1-phasta@kernel.org>
 References: <20250516174141.42527-1-phasta@kernel.org>
@@ -69,64 +69,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pcim_request_region_exclusive() was only needed for redirecting the
-relatively exotic exclusive request functions in pci.c in case of them
-operating in managed mode.
+pcim_request_region_exclusive(), the only user in PCI devres that needed
+exclusive region requests, has been removed.
 
-The managed nature has been removed from those functions and no one else
-uses pcim_request_region_exclusive().
-
-Remove pcim_request_region_exclusive().
+All features related to exclusive requests can, therefore, be removed,
+too. Remove them.
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pci/devres.c | 18 ------------------
- drivers/pci/pci.h    |  2 --
- 2 files changed, 20 deletions(-)
+ drivers/pci/devres.c | 46 +++++++++++++++++++-------------------------
+ 1 file changed, 20 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 5480d537f400..769b92f4f66a 100644
+index 769b92f4f66a..ae79e5f95c8a 100644
 --- a/drivers/pci/devres.c
 +++ b/drivers/pci/devres.c
-@@ -852,24 +852,6 @@ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
+@@ -808,31 +808,6 @@ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name)
  }
- EXPORT_SYMBOL(pcim_request_region);
+ EXPORT_SYMBOL(pcim_iomap_regions);
  
--/**
-- * pcim_request_region_exclusive - Request a PCI BAR exclusively
-- * @pdev: PCI device to request region for
-- * @bar: Index of BAR to request
-- * @name: Name of the driver requesting the resource
-- *
-- * Returns: 0 on success, a negative error code on failure.
-- *
-- * Request region specified by @bar exclusively.
-- *
-- * The region will automatically be released on driver detach. If desired,
-- * release manually only with pcim_release_region().
-- */
--int pcim_request_region_exclusive(struct pci_dev *pdev, int bar, const char *name)
+-static int _pcim_request_region(struct pci_dev *pdev, int bar, const char *name,
+-				int request_flags)
 -{
--	return _pcim_request_region(pdev, bar, name, IORESOURCE_EXCLUSIVE);
+-	int ret;
+-	struct pcim_addr_devres *res;
+-
+-	if (!pci_bar_index_is_valid(bar))
+-		return -EINVAL;
+-
+-	res = pcim_addr_devres_alloc(pdev);
+-	if (!res)
+-		return -ENOMEM;
+-	res->type = PCIM_ADDR_DEVRES_TYPE_REGION;
+-	res->bar = bar;
+-
+-	ret = __pcim_request_region(pdev, bar, name, request_flags);
+-	if (ret != 0) {
+-		pcim_addr_devres_free(res);
+-		return ret;
+-	}
+-
+-	devres_add(&pdev->dev, res);
+-	return 0;
 -}
 -
  /**
-  * pcim_release_region - Release a PCI BAR
-  * @pdev: PCI device to operate on
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 8c3e5fb2443a..cfc9e71a4d84 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1060,8 +1060,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
- #endif
+  * pcim_request_region - Request a PCI BAR
+  * @pdev: PCI device to request region for
+@@ -848,7 +823,26 @@ static int _pcim_request_region(struct pci_dev *pdev, int bar, const char *name,
+  */
+ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
+ {
+-	return _pcim_request_region(pdev, bar, name, 0);
++	int ret;
++	struct pcim_addr_devres *res;
++
++	if (!pci_bar_index_is_valid(bar))
++		return -EINVAL;
++
++	res = pcim_addr_devres_alloc(pdev);
++	if (!res)
++		return -ENOMEM;
++	res->type = PCIM_ADDR_DEVRES_TYPE_REGION;
++	res->bar = bar;
++
++	ret = __pcim_request_region(pdev, bar, name, 0);
++	if (ret != 0) {
++		pcim_addr_devres_free(res);
++		return ret;
++	}
++
++	devres_add(&pdev->dev, res);
++	return 0;
+ }
+ EXPORT_SYMBOL(pcim_request_region);
  
- int pcim_intx(struct pci_dev *dev, int enable);
--int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
--				  const char *name);
- 
- /*
-  * Config Address for PCI Configuration Mechanism #1
 -- 
 2.49.0
 
