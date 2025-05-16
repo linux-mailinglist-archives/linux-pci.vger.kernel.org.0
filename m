@@ -1,82 +1,82 @@
-Return-Path: <linux-pci+bounces-27827-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E824AAB959E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 07:48:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48882AB959C
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 07:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 760DB500C79
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 05:48:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F7F0500AFC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 05:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E83022154D;
-	Fri, 16 May 2025 05:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 330341F463F;
+	Fri, 16 May 2025 05:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MkEZUK62"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P2O6vXk4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6937D221DAB
-	for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 05:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613C22206B7
+	for <linux-pci@vger.kernel.org>; Fri, 16 May 2025 05:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747374487; cv=fail; b=FryvA9NS/WZDQG1zsn3vEpmil5WCLUyCbPnTEGlVvmIYfLNIRYpOCeMwqJqUJv8vRszWCaBGyUYcMXVr5NIFBDEb/QT+vyL4HrToOka9+GE+mapY77wZkqrdGvwLO76Cl8lVS5J8tiNg2g4WF0fGKfqJ/iuegxMr+WY78Jaa0O4=
+	t=1747374485; cv=fail; b=oRP9iaVVF8EFdDvx42CSTNRFhTA3pTaCbp1JWBjyRqUCaWxVXj8gmf85uHNewC+bL/MARQzWjPxKGItT/sFt68NtqXWkm1oAqiaQr52TZZtkgXeYuOOU6Tr3DMdGYpjPpuprhEzm0fOhqndxkbmrn4uVM/rDAR5h3NUKOqmyYH8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747374487; c=relaxed/simple;
-	bh=vg4YNKQPtWHxdfgfch1MS7fQQOJmINrqRSnt17G/h+0=;
+	s=arc-20240116; t=1747374485; c=relaxed/simple;
+	bh=7usiYIj3ZJOIc5b2zkZ9CsReSX/7KdreBUplCkqI/qM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jcZvweWMENAKBLUX/Dsrsruw8RCg0iVtGJ+2fHvrsThcG7zK7+ktfabV9ut0uywK/hhenGUfzcr6dpMxkVTRV8bUYLHRl0xn3E1zlhwkxivorrbsn5s9syjic1/sZaRl29OJ8DpzIDahheQHFmlyKDNQk+C3QqsaoWg35QDK2ec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MkEZUK62; arc=fail smtp.client-ip=192.198.163.16
+	 Content-Type:MIME-Version; b=kDHoFRs+MiSaqSUS1bB9reKUkRCeHLWZSRQOEhe+LeSxI9OJhWlze58FqYOn8mtaOtJFtyU7bnNpk2ms7S6MrUeMFw4szSFi8QW3hrX7bSMbASXIILk3WvoWtA6R3EOR6AAmEbPSiPcg45yc4AbDEKmvbrG9tkNX532K0TUR4T8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P2O6vXk4; arc=fail smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747374485; x=1778910485;
+  t=1747374483; x=1778910483;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=vg4YNKQPtWHxdfgfch1MS7fQQOJmINrqRSnt17G/h+0=;
-  b=MkEZUK62NBspdNZJYztsXYsx/w0DNbreUedoC35jhgKyco5WHa/juSBn
-   YMjsP4PqXfGInnmCEEn6rAqkaee6b4oS1G0OLntdZ1l30n8SkdYO1IAH2
-   Fkgi3YBOsrfEQoumnAOWKWsiRHPCpoc7xWEMB7d9/sd/0QbA245H7UQlf
-   MzEO5JfN89Wtdc6LOEZCteUoi8bWD1NaVfIhGHyAJWfa/0GKgkRh8fAM7
-   OU8cpknuG6llVZm96vdvgwiBkIcXec1Vn3RqknoL87BXEdnS+7Y+l/ZMV
-   CjEao013iHPPO9eTf1qkibSjk/58agsFgCKq9Hft6CpSZAb5yoNfPJoeU
+  bh=7usiYIj3ZJOIc5b2zkZ9CsReSX/7KdreBUplCkqI/qM=;
+  b=P2O6vXk45Cfk1KUjvzsnyp5O1P1IyIeDz9BlYiwwmr9wb2NLnl7gju8P
+   EU0FCMCeBBryNUn+o5RbCWtew3qh3uxpRypC7Ucd1qvzcxfCYd6B5ZVt5
+   7Y9VRe7+Q0dpv1FyDgFy5/e04n0Mz4w1jMLDt1hiKprLYOatC/b7b1cD2
+   HJByb1SSWAPDBPFKj5tS9yWgJDSkYV5rcJnpeRn0Bti2T3amOwQAUNws8
+   KpoAzhhKVyl3f3cmk9XfKywHkhzn3PVrhgElizvZE02iX7MRcwACHVzO2
+   7Jn4+STvCaIIS4DLGPAWyq+kKB3gWWv1KOJQtwqrGi+hCXNaRZFIoKQxc
    g==;
-X-CSE-ConnectionGUID: 27rCqo8WQ9uoXGAZwR2aMw==
-X-CSE-MsgGUID: b0SnTVMmSh+ZDhyozVuRUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36952834"
+X-CSE-ConnectionGUID: 8+Ar2agoT0OrAmzD3ujcNg==
+X-CSE-MsgGUID: gxXr+jo9RzyGFNzHFLdHUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36952819"
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="36952834"
+   d="scan'208";a="36952819"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 22:48:02 -0700
-X-CSE-ConnectionGUID: e8s49qlAROSctShTZcvDlg==
-X-CSE-MsgGUID: 4PnacpxQTeiOk6tDzZfACA==
+X-CSE-ConnectionGUID: yhDbhYUVRm+cGERnY6dzDw==
+X-CSE-MsgGUID: KFT78bJnR3SlEVFMOZMnyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="139084722"
+   d="scan'208";a="139084723"
 Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
   by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 22:47:59 -0700
 Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
  ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 15 May 2025 22:47:47 -0700
+ 15.2.1544.14; Thu, 15 May 2025 22:47:48 -0700
 Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
  ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 22:47:47 -0700
+ 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 22:47:48 -0700
 Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.47) by
  edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 15 May 2025 22:47:47 -0700
+ 15.1.2507.44; Thu, 15 May 2025 22:47:48 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u3rXOMIlqcUtYydzVtiD1Eg+lAK9Ek2op23NmOaOe9xAq73rKphM/NL+YCOY8hzgSsD6rTGEBw9Y2ayFA1D6/1UApSyWLTmrADsLPmI67Gm+tqx5IinTcf2ntzQtINP2e2bJap7slUlu3LxRDRJ7c3U+MHDtEubSEjalIc/bLpk+xNd1fV3D8BrL4SmWlr2TOT9mcDe6CDdi3IsnQiaQCmJLry0DrQ73uStlxJWwZdsm3v3I9V3lPvqNnYCfRZPjtltgUGgh3RpvfCjKn4z6sx/Hi4WCxT1QTQ3QiugEflWZijPMSGNV8mK1J7kWICwFmnvOIh7IXR4GIINp3gObVQ==
+ b=SsqkiJGj1pgNwCT/bvBY44rbGCylW1whqpJhArNiWxka1HzQt+vEFdhnbRg1CPyQhSBr6DiEWGYhRGs3u3FC+HJtHWpqvAhOPc/S21T9EHp3YyQo1zAeiZsWvUKdFjNdELrSbHKHnRZjmcrDNUshKQwhLxRDlNT4kUcrNmE6OrIZP/I2eBQGW6M6xOW5jSWkFp8SJrmzH32DAnIgOEm1D2pchQWZbI9GAQGptmV+0MctdNB2FSqokgck+zKUl6QCMruEb29l5dvoeJQ4OJT9J/stoGfRe11ZFu/VzJkJItaFxRY2yEl2bpUkuF87yQdmdVJiiqDPqUzPsjWZ8gbGFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EYooa4P1GDSRPpgRwdxVyq/cwLt5qW0kQpV65S7nHuQ=;
- b=N75T/DJT5vUPfWftvXGJd0fXZFRxW82iJQixcPVsratvpdxIG+FNXY64F+lREESKPhtUeTqDnWJts+1aEekOF32VQPHAEd9SB32o+lblfuwFNpo9yZVR2pO+X8PF4eeIWr0pxmWzAOYMfIRyJF39IWxB4tXkSk10ZquRA47Gk2cGT4lMnwXVu4tDIJnYdQ3DggouybsnWRbT2EQKKtO7RbRM5Ff+Hoyx16yJqTab8z3gamvPzNWG7wVQquchhw10sf87gqXMR76PvlOQWYvkOwTCf9+IplJw3zVm3YlxzhGPTjQkJU1D5Mz3d7whj+HmypWD5FSYg6kChrnoLK3+Og==
+ bh=OmPD1JBo/CmRZPrI5VQPd40oMWq7sJ4+HtfhTjNqFI4=;
+ b=GzvZabvtT95SdUvWU637VBLuh2W0DJDKbfUgk6QNs21RwKnuokWCmB/NL1+2hRaCTvicZGICPO9CJSNCOKDqr2oTjC50fCNvXhK+k+f1QZGb+3kb/bGCKYSFgIc1/weTAtG/Oe1W9PuC/1idNgNc2tc4fz7MrRWOMgSlMSazJrBMhEQGKxKd107v/dJZ+/B3kQu8CGJfT402ZnvyodBMNP9XosdJ/IVtlxlO7WPBxrhnHw2hU1AhVFQtEXRX2f6Br8/WmBdgpcp/GydEwqK6pwQ6rkSBwhhcPGfvNLLpVu63Fi7xHKPk6Wili2sgaw5Ow6hagPBnFXXod9fksubSOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -86,24 +86,20 @@ Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
  by SA0PR11MB7160.namprd11.prod.outlook.com (2603:10b6:806:24b::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Fri, 16 May
- 2025 05:47:41 +0000
+ 2025 05:47:42 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 05:47:41 +0000
+ 05:47:42 +0000
 From: Dan Williams <dan.j.williams@intel.com>
 To: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>
 CC: <gregkh@linuxfoundation.org>, <lukas@wunner.de>,
 	<aneesh.kumar@kernel.org>, <suzuki.poulose@arm.com>, <sameo@rivosinc.com>,
-	<aik@amd.com>, <jgg@nvidia.com>, <zhiw@nvidia.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, "Dexuan
- Cui" <decui@microsoft.com>
-Subject: [PATCH v3 04/13] PCI: Enable host-bridge emulation for PCI_DOMAINS_GENERIC platforms
-Date: Thu, 15 May 2025 22:47:23 -0700
-Message-ID: <20250516054732.2055093-5-dan.j.williams@intel.com>
+	<aik@amd.com>, <jgg@nvidia.com>, <zhiw@nvidia.com>, Nirmal Patel
+	<nirmal.patel@linux.intel.com>
+Subject: [PATCH v3 05/13] PCI: vmd: Switch to pci_bus_find_emul_domain_nr()
+Date: Thu, 15 May 2025 22:47:24 -0700
+Message-ID: <20250516054732.2055093-6-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250516054732.2055093-1-dan.j.williams@intel.com>
 References: <20250516054732.2055093-1-dan.j.williams@intel.com>
@@ -120,318 +116,170 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA0PR11MB7160:EE_
-X-MS-Office365-Filtering-Correlation-Id: f695d57a-4b54-4351-a6af-08dd943d2bef
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Office365-Filtering-Correlation-Id: e315c9ab-5e6e-4e83-dd36-08dd943d2c92
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?KwfquzcSu0pqvCD37PF+W2z41m+DjcgqRzjAoxn8jW7JWaj4u/9RHSsVz9wX?=
- =?us-ascii?Q?iJtuKRA5PodvEVfK9SXHRVhsjimE39ETdlJO2xU5qP6ZY76j9XX9pWoDrtIp?=
- =?us-ascii?Q?YG0UIrx/2xw951M4cBchLP3KL3mKo+2887brOzhl0NqTTzL7TmfqIUCxKtBG?=
- =?us-ascii?Q?PdHll0+siwP08R4j9rWDd4za/l+Y9ypBYYv7mmqvCcHGwD0sWlDb3U2mQ5EN?=
- =?us-ascii?Q?a+VZNQx4YxBSaaYr9mcxX2WX1pCv9quFdPKzcs1JY0kjFjXVXla6lpHaMaa0?=
- =?us-ascii?Q?JTDFCbmgoKCwt/SSidmb1o4k+uGjrn2u5w2lWRhFQTBxqaYehjWtDFaIQxZC?=
- =?us-ascii?Q?MchmgQP0QIakdGayYAPNmBAyyx6xX/7UYUNhbtIRjMhf2Zyx7V57iqSjxETW?=
- =?us-ascii?Q?ou54nFrWL1usf51GH+CZhm+dXQqbjB4KQUw3qPNR4bw6mtHNkVco2Idk8k68?=
- =?us-ascii?Q?Do3pI7h8XE1PLsq5YcSDGSbG7lLVW1a76ENFeScUApdQceGdbt0IQ2WNrc6S?=
- =?us-ascii?Q?gpypKgBm0EcER+DyL/Y2qLcAI86vS1qxRJu+LRi9OZLIxGhOAXS+vbsc6229?=
- =?us-ascii?Q?dzltKgP3i7aNMr+Pg/KeozaAoc0P0VeNtWFjn/I/ygtWsofUygVWDOxQP/gK?=
- =?us-ascii?Q?PbbAN0MjwfZB7aNIZY5Km6FoFTWr8FyIo6o35Nya8XMVGAaOisT151X6Rr8/?=
- =?us-ascii?Q?3FWoYS149APv+CZRngLtRnmRlQ/IG8nRQNxsH8KMe3Hy+QuRrbV+LCW8AzYK?=
- =?us-ascii?Q?R48kxLwQyeAMUbShEzctcUf0Ta/dWkqYe5voVnPJtMOpFOlJYX42i5CQZ8zv?=
- =?us-ascii?Q?67sgpZrEbDzTSmTdGBC1vL8MtdosEg8jz514FLBvraCldehJQK6eBT6MSYNy?=
- =?us-ascii?Q?hzTX6v5LQawuWMG6v22ZMVyH7DUPcG49uEUl+7rG8zcrv3mbRBHqc+5s+N1X?=
- =?us-ascii?Q?DC0BOYCaHLltKH8ENC0jBxhHUDRYEPWspSo98S5D3FR1e5rCU6Dz4SICfcb5?=
- =?us-ascii?Q?/k7Ba0XMB8DAWnq6pj1dIFWBBqvzFEx1huWS06JrHBVTjExxL87aTLGXHC3Y?=
- =?us-ascii?Q?IJ1E71Oam01KT9P6NtnM7n67NzhGSdLaCCoYxIHj1nIeaYIU6uhHyY9hArO2?=
- =?us-ascii?Q?W0UGSlKaTNQt0r0kHM0nD42Xz+aE9DHuOb3bg+T8WAX7XkbRVWXRQjtciXZA?=
- =?us-ascii?Q?QxsZxljW3iqcb3HZp+NZbmd88sUhP/WN0Clf8xJPdtZwqjjzXOva8VbdotwH?=
- =?us-ascii?Q?sGVVVUB0pZA97fOR4f04T4KF12UWhMSzGPEmVHcS3hShhrSfynLb7B++ELC5?=
- =?us-ascii?Q?KfYQ+p9ZGulRflMCb7x8vf2CvX0lawb4aosqWgzKzJyGInOZmaVuAN0BkEkq?=
- =?us-ascii?Q?R0t6UXYT5jx0519a82oQImiqCrzovvj9br6aY8bHCKIItZYXAQqpUdStyR6d?=
- =?us-ascii?Q?OETymz8rYFg=3D?=
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SXH9BmkOT6q1gvMfLXP1HDTZcO87d52hlPDGaRNykFtGwpafw/SP29EdgXQ1?=
+ =?us-ascii?Q?QljCj+HdG0Ak0/Je5Pbo8rbxBRWOEGzisC7ygB2+vlSU7SXUYNBmJ8FJL7I4?=
+ =?us-ascii?Q?YWqiTNEoy152g29+BJJXyKssLi1J5GnPgmxIQf4+7INTnDEYSy5WRqvsM/TG?=
+ =?us-ascii?Q?Y3sN86Cd/YnEgW0hB8E2AtuQdQ5oiysE5YPjzQaM+5XWC74xd47WqOpQyo6p?=
+ =?us-ascii?Q?dxdMRPasvtczCgBBpCVYMoOc1bA/1+/p2wFuJfC3LKdWd5XJiMi5FM6yod6k?=
+ =?us-ascii?Q?6aYYzyGEwGPOk1Dn5Bw/53sdFem9wFj7FIJOMhHLypz2n0NmaEKdcZqWsyje?=
+ =?us-ascii?Q?+3AEJNkJB7VBq0pu5A80NRPcbJ4tIX2t0pNdHe83fX/yjJUivGervT2/QeZj?=
+ =?us-ascii?Q?KB7w4y6TINY0tohCG7PR9Ttsb91iOIFF69qwIvj6wl906WWgMwULMwzNafWu?=
+ =?us-ascii?Q?m02PxYIS0aZWKDlKBrNLIU/eW+ptwLh/WsdZkC9ZLFc0YzxukiCOeiGuLlsm?=
+ =?us-ascii?Q?CzknXy3zKx7rRD7uje8VGdXxeyEpwD1sKCNGcYKMBMSAUWpkOIbc2q/farcj?=
+ =?us-ascii?Q?e37mZecuHkzjB6lnTTGhF4mnxEEWARxPKKc9ej5sE17cLtrsZQRJ6W/4Cdlb?=
+ =?us-ascii?Q?A/Zn2ErBLpcTczWOXrnqwih5GW0SwVbZs/jfJwOlAFH7T2vOkgFv0w70DxYs?=
+ =?us-ascii?Q?QIkBDPS37u2UsiWF62jYTj3B4ZYPNlKAmE/mFGMLbIyBDP+yGYUawhQNl/sv?=
+ =?us-ascii?Q?82fI1twze15QS2lNysoT6W4u4sQh9916MaJXYRmi28lqsd2Ql2H4v0154Be7?=
+ =?us-ascii?Q?/BOyhVBXxkA3ZNjPrvRRutis3bcGiQ1cJ5UHt0V/xl3gHhWs5sOeaxY+veGj?=
+ =?us-ascii?Q?0ujUkDNhWxOGIBGbSPUsz/FHg07sRBDGr3Ypw0j8gFbG2jO4+daKfDdJRiFY?=
+ =?us-ascii?Q?494JBKdZo9E5fj4ddR5roT8l3BbMm/7VaFl2eD6iJMGf9cHL7XCLk/BtDkAE?=
+ =?us-ascii?Q?kf6KAmZjozj3vc/q/Q93TDyjBy7BF5MA/Patx3luv7Z1kjwEpUcfV7WlaKKS?=
+ =?us-ascii?Q?GZJI73/vJJsEsTnS7wanD7eD2U/BSOlPwxF+VX0+OHMm8rkvbkpisDr45dhG?=
+ =?us-ascii?Q?erE4ELuZyLefC+vN8p4TSRBDVn0jMKBy+q/UCUaE9bYU4Ds9qhi9LrV2GSJ0?=
+ =?us-ascii?Q?3k6vXY6a5sfTqcnkf788ArAQd2URlUhUW66v0XbB+9QwMJN7ekxUamB0zo7W?=
+ =?us-ascii?Q?/hjBLT8UPl32C2mTDFGALzw60VFo20ddEsobg4+Wpx40tMo8lHJI/pCN0a8E?=
+ =?us-ascii?Q?FzW3glYOlod/bLNzDtguM1zUaUCQq7UHnIiB2DoaOeUXx9E9yogztiMTYXfr?=
+ =?us-ascii?Q?FUt42RevE5XszMJsO/daa0LFaI0JyAVlVvpRtkrAZJZJ+0XD6xwRciEddiAl?=
+ =?us-ascii?Q?ZiYmrzSHXSY=3D?=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pbd9Yw/3GiMBR0lonRmDbasPkw9P2U22P26HCvjf0djCQZ4tEUeShOJIe6D6?=
- =?us-ascii?Q?6LTTleRcA9Bt6+msBIfWFU1jIvI+mu8mMtrCQ8JauyqjrPJrh5TZWpo1SRM9?=
- =?us-ascii?Q?KoPQpEb5M25dixBB6Rq4wweLSVOh+fh1Kx/dwUkxhOuoW/XPlujHVeEr7g2V?=
- =?us-ascii?Q?N6t96RIFOhM2Vwefsc23mIE/w8yiqE6i+ssdasnocZmtHDN8EgAqyF2Mg3eV?=
- =?us-ascii?Q?/F73gZnFagC2mjfjlCL0l6EBGkN36Tf9kmdRXMKq7+eLlYNHeRHNO0ISpU5o?=
- =?us-ascii?Q?OlDHiiBNEi9/y2phhxbuELav5e+DvGD9K8cgRH6i8iNEr5winyFrkgqgJzln?=
- =?us-ascii?Q?yLpHtIPCLcEIfPdPg6H4c2Uf3c9pai3s49bTZp2IaEF8zJTpoWas7hwNAuPB?=
- =?us-ascii?Q?GQBq8wad5lsRH2+AGNjoW6MBHDJYuL3uVaPXfky9st9VMV+9CrSGs8zsId9X?=
- =?us-ascii?Q?VECpqIGY4NHf2zRMyXrI9icOtLkDPL5/mbMUCsVoIXKB86AblU540wWpkEjv?=
- =?us-ascii?Q?Yff4jRlS37pGB5T1vejWrdZGp5sxDyMYvI6fiBoMLhdQCJm4pw1b+pqYdJCX?=
- =?us-ascii?Q?s4ukglslBlyPwShlug+UcUYtEHwB0WP3kCjnEZqLDc7FeHw3pvk4zs6IDhfH?=
- =?us-ascii?Q?WtOvrgynPB0ENfYovt5boZnFvnJZAU/dA83RjhpeZMhCP1YlVLkSYBdGycAJ?=
- =?us-ascii?Q?PuWA1vg6+3z1N24cwIpIO5dkqJPh6gM8Ab3O/RQv35x6hiXYfxRqXIBstvnI?=
- =?us-ascii?Q?xUP7NJJ0u86dstLmMSiAaMWs8DJW45GP+5L56RqSHjLQJAB71wQcEK2J9lha?=
- =?us-ascii?Q?cDUUk96euHFpRjnup9G3B7Q7z1+MHEJwg26zaUR4jDUzKRENkRBMp+j2XHbK?=
- =?us-ascii?Q?unm/VcFKl1o327I1OitzGXOqXxaEsF4siFMAW+pqAK18mH9hUXdNpjef2A3g?=
- =?us-ascii?Q?w9M8cdHdRGGEedG+rsde5PZOSJLa6+XYdHfjBhfnMB+5fl7oecU3UWF5LAHs?=
- =?us-ascii?Q?cL93gEh/FG2/P4iyVe9fAgwCRi9SM5pp2S1qL9B9y9fYw6A5VhWuxZnIAOdO?=
- =?us-ascii?Q?XYn3IUUjEFlmzFsyMVhjooNPZnQGl0ElPBfQVJ7JNnj6SGx1Vt4496ODzuJF?=
- =?us-ascii?Q?B8CV+GCgGqCZ3qFONA8hWsspWY5PV1DjP5Igq4eeaZl4qUmWaIr5xjBP5JA7?=
- =?us-ascii?Q?/GIU+uiK2GCxTXp9qBeS8+u1U152QjpcGwKuHTvKIAk582raREPGWHgEC6k9?=
- =?us-ascii?Q?BoJPX8b5RhGp1/TXJBJmg2FUiSdu1oMFpLnynVG87stUxJR8AnqXxN4+UI3D?=
- =?us-ascii?Q?MfHhmqrLKGQeX9jPGXXzFIOsNqCt4hQP3f16P0l5vg8mTsbA93+2HWgRkKNZ?=
- =?us-ascii?Q?WoC2SOzWfZfLjNTD7F4YwkZkHpS5KrUY/tJbIN+xF1QAw7BPPqecuhn/QLWR?=
- =?us-ascii?Q?SxJ/IT3ikSc3A06/QcuZ1tnwWE03H1i6alkZdZdTmbi1NLyx3sVkRYhh+lVL?=
- =?us-ascii?Q?RccrK7f4oHBurTM0gxszRJSRqVrNAY3JP93jHLb3d9PbAZ2RcgZw8dmSgqK+?=
- =?us-ascii?Q?4iLgL2/diEQy0V/+xKKOqINX4TvfeDbYoTKqWi9LmGaEj9XJSq7CQTmk9qer?=
- =?us-ascii?Q?uw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f695d57a-4b54-4351-a6af-08dd943d2bef
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XzeC91eWBCLo0ioekQbxWTPp69Sx3Gi5x2vhdW5eQThu8zytqzjOzju74t7I?=
+ =?us-ascii?Q?1xHP3fQx4aIkzUS3huQUfCmpHPkLTfxjrunzcER1mRdgXaxsqHkDylYt8W/B?=
+ =?us-ascii?Q?i0cnhu+aXeQJWptI03gqdkdYf26ZEqIfbIQLZqiES+ZxbKaW1rtvN5Hd0jw1?=
+ =?us-ascii?Q?VzfpAuAOivnMdPtYyNUJO4E2kgneL8OkWrYc7kEknk6ysZe8EgGTp8OCrJuE?=
+ =?us-ascii?Q?Qhe1Rp7M2SH0Z2uQbxMeuHdXG9e9ymghtiao8rwvAGRo1dAvM+Q83nz7RUhc?=
+ =?us-ascii?Q?oB3v45+kb06jmc2Ugr7QzhLSRHFKzndQOmy19Nirt3ztyEiiqZgxF0Z2v5IN?=
+ =?us-ascii?Q?Gdr2egEYP7dMFWPZKj2OyX2fTRHTdcpGneCCdlJ9uD6fzKjh9aNDWSQSgZMy?=
+ =?us-ascii?Q?kmOltDbjLgg1oRLfloYimdgS2/UHFX7d9C4LzwJH7iw/QyyAzNE2KasRBwg/?=
+ =?us-ascii?Q?zfxg1xoQVd2aWJKWfbP1ta1pyi62rkeJduSTiC2Ib4vAm0OwGGH54iWcjIhL?=
+ =?us-ascii?Q?FUOcC/pV9eVsEQ1lL2Ln9pcpAgN8BgXMfeyAiisDqjKvxf+4tMfXBxa47fwL?=
+ =?us-ascii?Q?ROrJOqI/2G966j0UWGY2KAytRSI0g7/yD8f+1xCQOS09RN3h5DVFANuWdWkt?=
+ =?us-ascii?Q?W8gW6p48xRNLFCgeoZTmY3KUuGqDjzW26VYq7/QxGEvbPf1nMgDYnFmmG6hN?=
+ =?us-ascii?Q?50bXIB8agr+GGDCtRS6VW4JE5afI49yQ0zY6PtVGsZwfRZbnzFTK1elGCmS5?=
+ =?us-ascii?Q?VYSJP87yzQpc3UgWG3jV+bqd0dq1UlDlm6cjvNboOx/KeROVYfjtQW4pozcD?=
+ =?us-ascii?Q?LX2sjSgh3ITzZKxcNQY5nwReBab77LulMZePHMRYx+rs4Q2RyNXVUPp1BJn3?=
+ =?us-ascii?Q?XG6hB0qzWQ9O/N6UKxrkbHW1CzNY5K1He44zYElCpUvnQ4Xbr0Kpb/EvPl19?=
+ =?us-ascii?Q?4AL07ORQ4PEMGdeJpn7nhFr6m/9qgRxa9rAdzjmaLnTnrBLcmBVB2Gu8YDoj?=
+ =?us-ascii?Q?py8CPl1zg6ZHUkOndKiN43WJ8vmEc01Ndk7FP62kODUKj9hFXkJ4VGYLKDSR?=
+ =?us-ascii?Q?zBk0CJgEGTuXh5ZP0wBHJ/pxDh1Qe64KsK4mkV0bgKAnFl664vougQ+gbi7T?=
+ =?us-ascii?Q?6FqmWoXty1iGZ+82sJZPWiMQDq/MTe6kG7KIp/9w6ktMYQQH6viOox5TXZkv?=
+ =?us-ascii?Q?s0TcsCY/QNnh3xhOhjkRGzQK4WsRHMFI5vbLWWRH4cg08dRSOrMWzCnX/NVu?=
+ =?us-ascii?Q?iW6R2qWsaOzREUQcev2dSH8I+vdGU/0JotBJH+R+KTZUHRQwKQbCK2qLYrTZ?=
+ =?us-ascii?Q?fUg0Tf66tv5UtK1l0i3xR86DlS9NRrDHwwtuF5Gw+CZVKIekWxC803qG16TE?=
+ =?us-ascii?Q?Bo+CschF/Pu5xaQJIrbfEQSeT6Qmdi1RwcKxFqx4QpuKH+ou4dadr6XQv+Tk?=
+ =?us-ascii?Q?rl4DlpaavVi0Pk4ikoiFtkqrRvWFL1iv7OPWupv6D3P8TLGLsTiwPOPeUjon?=
+ =?us-ascii?Q?D+qDFuqVw4GtmCIc/TgE1M5vEsIioEO9shlwwGJLkUpcTN742cjT15rAdfXu?=
+ =?us-ascii?Q?3UQiZJACEOvLm+mw7/gz3Qh+bMkUBasCcRUfdqFH52mWd2Og8gjOhERUY+BY?=
+ =?us-ascii?Q?sA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e315c9ab-5e6e-4e83-dd36-08dd943d2c92
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 05:47:40.9552
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 05:47:41.9955
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t5AX303LdBrXYLebZGVlQVh44knNGqjeh9tBknY45DtACyLAogj92OX+BmXA6db0YJq/AHORMGoTfwJq3BvAij8n+wMtHa5rzbx9+1rGFv0=
+X-MS-Exchange-CrossTenant-UserPrincipalName: ddX9IT3L7WTkru+T6LPSz2J5hJxyiBmZImea/e40OZA1tqbXhO7UbvjMUcPmCHqBDoysF5PPwnLpsj09Q3ft+Pq0Cdr91BeFVV9l0tG3538=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB7160
 X-OriginatorOrg: intel.com
 
-The ability to emulate a host-bridge is useful not only for hardware PCI
-controllers like CONFIG_VMD, or virtual PCI controllers like
-CONFIG_PCI_HYPERV, but also for test and development scenarios like
-CONFIG_SAMPLES_DEVSEC [1].
+The new common domain number allocator can replace the custom allocator
+in VMD.
 
-One stumbling block for defining CONFIG_SAMPLES_DEVSEC, a sample
-implementation of a platform TSM for PCI Device Security, is the need to
-accommodate PCI_DOMAINS_GENERIC architectures alongside x86 [2].
+Beyond some code reuse benefits it does close a potential race whereby
+vmd_find_free_domain() collides with new PCI buses coming online with a
+conflicting domain number. Such a race has not been observed in
+practice, hence not tagging this change as a fix.
 
-In support of supplementing the existing CONFIG_PCI_BRIDGE_EMUL
-infrastructure for host bridges:
+As VMD uses pci_create_root_bus() rather than pci_alloc_host_bridge() +
+pci_scan_root_bus_bridge() it has no chance to set ->domain_nr in the
+bridge so needs to manage freeing the domain number on its own.
 
-* Introduce pci_bus_find_emul_domain_nr() as a common way to find a free
-  PCI domain number whether that is to reuse the existing dynamic
-  allocation code in the !ACPI case, or to assign an unused domain above
-  the last ACPI segment.
-
-* Convert pci-hyperv to the new allocator so that the PCI core can
-  unconditionally assume that bridge->domain_nr != PCI_DOMAIN_NR_NOT_SET
-  is the dynamically allocated case.
-
-A follow on patch can also convert vmd to the new scheme. Currently vmd
-is limited to CONFIG_PCI_DOMAINS_GENERIC=n (x86) so, unlike pci-hyperv,
-it does not immediately conflict with this new
-pci_bus_find_emul_domain_nr() mechanism.
-
-Link: http://lore.kernel.org/174107249038.1288555.12362100502109498455.stgit@dwillia2-xfh.jf.intel.com [1]
-Reported-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Closes: http://lore.kernel.org/20250311144601.145736-3-suzuki.poulose@arm.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Dexuan Cui <decui@microsoft.com>
-Tested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 53 ++---------------------------
- drivers/pci/pci.c                   | 43 ++++++++++++++++++++++-
- drivers/pci/probe.c                 |  8 ++++-
- include/linux/pci.h                 |  4 +++
- 4 files changed, 56 insertions(+), 52 deletions(-)
+ drivers/pci/controller/vmd.c | 33 ++++++++++-----------------------
+ 1 file changed, 10 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index ac27bda5ba26..8b624da2fdd7 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3574,48 +3574,6 @@ static int hv_send_resources_released(struct hv_device *hdev)
- 	return 0;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 8df064b62a2f..f60244ff9ef8 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -565,22 +565,6 @@ static void vmd_detach_resources(struct vmd_dev *vmd)
+ 	vmd->dev->resource[VMD_MEMBAR2].child = NULL;
  }
  
--#define HVPCI_DOM_MAP_SIZE (64 * 1024)
--static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
--
 -/*
-- * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
-- * as invalid for passthrough PCI devices of this driver.
+- * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
+- * Per ACPI r6.0, sec 6.5.6,  _SEG returns an integer, of which the lower
+- * 16 bits are the PCI Segment Group (domain) number.  Other bits are
+- * currently reserved.
 - */
--#define HVPCI_DOM_INVALID 0
--
--/**
-- * hv_get_dom_num() - Get a valid PCI domain number
-- * Check if the PCI domain number is in use, and return another number if
-- * it is in use.
-- *
-- * @dom: Requested domain number
-- *
-- * return: domain number on success, HVPCI_DOM_INVALID on failure
-- */
--static u16 hv_get_dom_num(u16 dom)
+-static int vmd_find_free_domain(void)
 -{
--	unsigned int i;
+-	int domain = 0xffff;
+-	struct pci_bus *bus = NULL;
 -
--	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
--		return dom;
--
--	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
--		if (test_and_set_bit(i, hvpci_dom_map) == 0)
--			return i;
--	}
--
--	return HVPCI_DOM_INVALID;
+-	while ((bus = pci_find_next_bus(bus)) != NULL)
+-		domain = max_t(int, domain, pci_domain_nr(bus));
+-	return domain + 1;
 -}
 -
--/**
-- * hv_put_dom_num() - Mark the PCI domain number as free
-- * @dom: Domain number to be freed
-- */
--static void hv_put_dom_num(u16 dom)
--{
--	clear_bit(dom, hvpci_dom_map);
--}
--
- /**
-  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -3659,9 +3617,9 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	 * collisions) in the same VM.
- 	 */
- 	dom_req = hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
--	dom = hv_get_dom_num(dom_req);
-+	dom = pci_bus_find_emul_domain_nr(dom_req);
+ static int vmd_get_phys_offsets(struct vmd_dev *vmd, bool native_hint,
+ 				resource_size_t *offset1,
+ 				resource_size_t *offset2)
+@@ -865,13 +849,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 		.parent = res,
+ 	};
  
--	if (dom == HVPCI_DOM_INVALID) {
-+	if (dom < 0) {
- 		dev_err(&hdev->device,
- 			"Unable to use dom# 0x%x or other numbers", dom_req);
- 		ret = -EINVAL;
-@@ -3795,7 +3753,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- destroy_wq:
- 	destroy_workqueue(hbus->wq);
- free_dom:
--	hv_put_dom_num(hbus->bridge->domain_nr);
-+	pci_bus_release_emul_domain_nr(hbus->bridge->domain_nr);
- free_bus:
- 	kfree(hbus);
- 	return ret;
-@@ -3919,8 +3877,6 @@ static void hv_pci_remove(struct hv_device *hdev)
- 	irq_domain_remove(hbus->irq_domain);
- 	irq_domain_free_fwnode(hbus->fwnode);
- 
--	hv_put_dom_num(hbus->bridge->domain_nr);
+-	sd->vmd_dev = vmd->dev;
+-	sd->domain = vmd_find_free_domain();
+-	if (sd->domain < 0)
+-		return sd->domain;
 -
- 	kfree(hbus);
+-	sd->node = pcibus_to_node(vmd->dev->bus);
+-
+ 	/*
+ 	 * Currently MSI remapping must be enabled in guest passthrough mode
+ 	 * due to some missing interrupt remapping plumbing. This is probably
+@@ -903,9 +880,17 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+ 
++	sd->vmd_dev = vmd->dev;
++	sd->domain = pci_bus_find_emul_domain_nr(PCI_DOMAIN_NR_NOT_SET);
++	if (sd->domain < 0)
++		return sd->domain;
++
++	sd->node = pcibus_to_node(vmd->dev->bus);
++
+ 	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
+ 				       &vmd_ops, sd, &resources);
+ 	if (!vmd->bus) {
++		pci_bus_release_emul_domain_nr(sd->domain);
+ 		pci_free_resource_list(&resources);
+ 		vmd_remove_irq_domain(vmd);
+ 		return -ENODEV;
+@@ -998,6 +983,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 		return -ENOMEM;
+ 
+ 	vmd->dev = dev;
++	vmd->sysdata.domain = PCI_DOMAIN_NR_NOT_SET;
+ 	vmd->instance = ida_alloc(&vmd_instance_ida, GFP_KERNEL);
+ 	if (vmd->instance < 0)
+ 		return vmd->instance;
+@@ -1063,6 +1049,7 @@ static void vmd_remove(struct pci_dev *dev)
+ 	vmd_detach_resources(vmd);
+ 	vmd_remove_irq_domain(vmd);
+ 	ida_free(&vmd_instance_ida, vmd->instance);
++	pci_bus_release_emul_domain_nr(vmd->sysdata.domain);
  }
  
-@@ -4097,9 +4053,6 @@ static int __init init_hv_pci_drv(void)
- 	if (ret)
- 		return ret;
- 
--	/* Set the invalid domain number's bit, so it will not be used */
--	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
--
- 	/* Initialize PCI block r/w interface */
- 	hvpci_block_ops.read_block = hv_read_config_block;
- 	hvpci_block_ops.write_block = hv_write_config_block;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d7c9f64ea24..aea6bf37a360 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6713,9 +6713,50 @@ static void pci_no_domains(void)
- #endif
- }
- 
-+#ifdef CONFIG_PCI_DOMAINS
-+static DEFINE_IDA(pci_domain_nr_dynamic_ida);
-+
-+/*
-+ * Find a free domain_nr either allocated by pci_domain_nr_dynamic_ida or
-+ * fallback to the first free domain number above the last ACPI segment number.
-+ * Caller may have a specific domain number in mind, in which case try to
-+ * reserve it.
-+ *
-+ * Note that this allocation is freed by pci_release_host_bridge_dev().
-+ */
-+int pci_bus_find_emul_domain_nr(int hint)
-+{
-+	if (hint >= 0) {
-+		hint = ida_alloc_range(&pci_domain_nr_dynamic_ida, hint, hint,
-+				       GFP_KERNEL);
-+
-+		if (hint >= 0)
-+			return hint;
-+	}
-+
-+	if (acpi_disabled)
-+		return ida_alloc(&pci_domain_nr_dynamic_ida, GFP_KERNEL);
-+
-+	/*
-+	 * Emulated domains start at 0x10000 to not clash with ACPI _SEG
-+	 * domains.  Per ACPI r6.0, sec 6.5.6,  _SEG returns an integer, of
-+	 * which the lower 16 bits are the PCI Segment Group (domain) number.
-+	 * Other bits are currently reserved.
-+	 */
-+	return ida_alloc_range(&pci_domain_nr_dynamic_ida, 0x10000, INT_MAX,
-+			       GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(pci_bus_find_emul_domain_nr);
-+
-+void pci_bus_release_emul_domain_nr(int domain_nr)
-+{
-+	ida_free(&pci_domain_nr_dynamic_ida, domain_nr);
-+}
-+EXPORT_SYMBOL_GPL(pci_bus_release_emul_domain_nr);
-+#endif
-+
- #ifdef CONFIG_PCI_DOMAINS_GENERIC
- static DEFINE_IDA(pci_domain_nr_static_ida);
--static DEFINE_IDA(pci_domain_nr_dynamic_ida);
- 
- static void of_pci_reserve_static_domain_nr(void)
- {
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index c090289b70be..e4a7bb8b415f 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -632,6 +632,11 @@ static void pci_release_host_bridge_dev(struct device *dev)
- 
- 	pci_free_resource_list(&bridge->windows);
- 	pci_free_resource_list(&bridge->dma_ranges);
-+
-+	/* Host bridges only have domain_nr set in the emulation case */
-+	if (bridge->domain_nr != PCI_DOMAIN_NR_NOT_SET)
-+		pci_bus_release_emul_domain_nr(bridge->domain_nr);
-+
- 	kfree(bridge);
- }
- 
-@@ -1112,7 +1117,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	device_del(&bridge->dev);
- free:
- #ifdef CONFIG_PCI_DOMAINS_GENERIC
--	pci_bus_release_domain_nr(parent, bus->domain_nr);
-+	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-+		pci_bus_release_domain_nr(parent, bus->domain_nr);
- #endif
- 	if (bus_registered)
- 		put_device(&bus->dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 72d07ad994fa..8962bf133316 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1894,10 +1894,14 @@ DEFINE_GUARD(pci_dev, struct pci_dev *, pci_dev_lock(_T), pci_dev_unlock(_T))
-  */
- #ifdef CONFIG_PCI_DOMAINS
- extern int pci_domains_supported;
-+int pci_bus_find_emul_domain_nr(int hint);
-+void pci_bus_release_emul_domain_nr(int domain_nr);
- #else
- enum { pci_domains_supported = 0 };
- static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
- static inline int pci_proc_domain(struct pci_bus *bus) { return 0; }
-+static inline int pci_bus_find_emul_domain_nr(int hint) { return 0; }
-+static inline void pci_bus_release_emul_domain_nr(int domain_nr) { }
- #endif /* CONFIG_PCI_DOMAINS */
- 
- /*
+ static void vmd_shutdown(struct pci_dev *dev)
 -- 
 2.49.0
 
