@@ -1,58 +1,84 @@
-Return-Path: <linux-pci+bounces-27839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 192A5AB981D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 10:52:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 231BBAB9882
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 11:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A901D4A1174
-	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 08:52:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 153BC1889B49
+	for <lists+linux-pci@lfdr.de>; Fri, 16 May 2025 09:17:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A6822D7B4;
-	Fri, 16 May 2025 08:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCE4B15530C;
+	Fri, 16 May 2025 09:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOrz695A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqw4uHgr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6907922D4C7;
-	Fri, 16 May 2025 08:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B65218ADE;
+	Fri, 16 May 2025 09:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747385542; cv=none; b=aqIMJAh0pTpn/8Sfcb/jRMUAVQnBY8M9dBrO31W8OJWuabtKsqmn1eA8PDpwJeGKf8tSAVaHHPfCcft7Wb1lzDvSZCt8b1CM3KDv6Tal1ten/Jnn77SczDEyd7gpIuoDS9R/x5OR5mZSog8EW0TOVoiJMx4QWnAXPA1ds+OiDTw=
+	t=1747387012; cv=none; b=uHoF+1t32AiP0NpcoLT7SBNNFQkTKnk2iDt2vscL6CSkFZmmUAoSu67U5fYZoCyfAuPMqgs25ya04wNuvVBqeH/KRPxJXdtQ5qE0wdS4VLjz1PJ6W+Cgl7Y2I0CCD/CMR4EGmw6BJi/e6Nyx3WDjNExhQ+87rzYxmD3QufVu3m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747385542; c=relaxed/simple;
-	bh=0kC6rQVUs9z3NtsA1Czl/GjAKkE3YW7Ze66a6nN1qP0=;
+	s=arc-20240116; t=1747387012; c=relaxed/simple;
+	bh=5bNokGWiUlhbfBOBRggN7GhZMFpZiGHRUlzivFTfzAc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hlpzrKhsGZZuQTF5QjXuo32r8PuW3xuR04RTZQgZqHlhbKGeM6URYy6rP4a498oHueVRpJc/1FaRmrGB7wBNCVCuQU8JEnY7LC3saFQdMzt9Tp/RtkAXXt6vWEur44ggW1IviE7QNZ0ykuGhN1/G6Fuemj4+VVq3WQ+JleAO/Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOrz695A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E006BC4CEE4;
-	Fri, 16 May 2025 08:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747385541;
-	bh=0kC6rQVUs9z3NtsA1Czl/GjAKkE3YW7Ze66a6nN1qP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pOrz695AsvEBq7UVAQQYINiMfAUnQec5uzOPYgu50wck9xNrT8C0m+UT8zFA9kqMg
-	 uqgB3leMCYAgvneT5kIyf6ezGjU6R9O8oVI6IndJ5EK3x2XNQALZLOnr2SLK3yqSlr
-	 jCqYgzMfOiMvvZstdaq+ABSosSxsXLt1atPrTmCCO6qk4QOdfGQ54vErvcDuFabHRY
-	 6Gk3OC59TqzfztzdBQsbQGsKG9JUxHwTYGvBPMca+3xNNr47hI+AiaTUPy9Qwk/QGB
-	 MT/qYtz0KgqjLW1uzkuBM9vsy5W5t8z95XVFa+vttj2M6uwVFFzOSWJwbC0VA03fK8
-	 dWZjmjMfFYY7g==
-Date: Fri, 16 May 2025 10:52:17 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	jingoohan1@gmail.com, Hans Zhang <18255117159@163.com>,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
- bool
-Message-ID: <aCb8wauW4h85F8YS@ryzen>
-References: <20250510160710.392122-1-18255117159@163.com>
- <174712882946.9059.1080501209546808704.b4-ty@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubdccjCpjs/dxtd0W+PO1WvSNbDFTFQt5DERCODznQP6p/6Lk7hjZ6zkztVcGMupY3XScEzuyBAlFipJ8I5tb/e090GYB/cUSLuvR8VtsiLm01WQpGua2w6KFqqsltiELNGY22rXC5ZlA5HgktWRSmtG1+LyR/GeAzHO4qiYxcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqw4uHgr; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747387011; x=1778923011;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5bNokGWiUlhbfBOBRggN7GhZMFpZiGHRUlzivFTfzAc=;
+  b=iqw4uHgrgco3f9XlG3GVPTsYEAnEYHNLhv3obUgj9t3eG2KKYINEEqSl
+   JRBKWqIHiFRIPdE8trmtIszviJGWjl1rG67TrEa2APftsm8HgpzprrQ/v
+   T2i/Aqr2Gj3WGowRPUQEffx9E+G4DC/7Dpj/TNZmIe6dZfCK64vPIR1bh
+   iGqRp4yx8fBMp0zsP9vnhum9gk9BSqkf2IrOzDWJj6zQNyVeNqW0W2dht
+   MJ8I1py3Hrao989DJp24BbeWtHxq6Z755NaMUnuJH09ohwwesvfiPEgeO
+   1RpJYGwkxq2b/tJEWqNCZxMFi3OlnWuEY+/KnEOfvnPFozVO5+1wMi0Nh
+   A==;
+X-CSE-ConnectionGUID: 82IoawnFQJ+OvOILY+OvlA==
+X-CSE-MsgGUID: 2zq0xG+ZQau8MoqZGbWefA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60690653"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="60690653"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:16:51 -0700
+X-CSE-ConnectionGUID: JzZeaai2Rz6LkmatA+ChmQ==
+X-CSE-MsgGUID: n3qolihySfSuUaicXBZnsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="161947142"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:16:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFrBN-000000025vO-1Kab;
+	Fri, 16 May 2025 12:16:45 +0300
+Date: Fri, 16 May 2025 12:16:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: phasta@kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 6/7] PCI: Remove unnecessary prototype from pci.h
+Message-ID: <aCcCfeRqqOqWKG63@smile.fi.intel.com>
+References: <20250515124604.184313-2-phasta@kernel.org>
+ <20250515124604.184313-8-phasta@kernel.org>
+ <aCXl-U5Dsv3hdCWa@smile.fi.intel.com>
+ <3f1140397e628cfdf4156f02f5454f844003dc6d.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,52 +87,34 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174712882946.9059.1080501209546808704.b4-ty@linaro.org>
+In-Reply-To: <3f1140397e628cfdf4156f02f5454f844003dc6d.camel@mailbox.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Mani,
-
-On Tue, May 13, 2025 at 10:33:59AM +0100, Manivannan Sadhasivam wrote:
-> 
-> On Sun, 11 May 2025 00:07:07 +0800, Hans Zhang wrote:
-> > 1. PCI: dwc: Standardize link status check to return bool.
-> > 2. PCI: mobiveil: Refactor link status check.
-> > 3. PCI: cadence: Simplify j721e link status check.
+On Thu, May 15, 2025 at 03:37:06PM +0200, Philipp Stanner wrote:
+> On Thu, 2025-05-15 at 16:02 +0300, Andy Shevchenko wrote:
+> > On Thu, May 15, 2025 at 02:46:04PM +0200, Philipp Stanner wrote:
+> > > pcim_intx() once was an internal PCI function, but since then has
+> > > been
+> > > published and is used by drivers, and, therefore, available in
+> > > include/linux/pci.h. The function is not used within PCI anymore.
+> > > 
+> > > Remove pcim_intx()'s prototype from drivers/pci/pci.h
 > > 
+> > Can this be moved up in the series? Or is there other dependencies?
+> > I.o.w. this
+> > looks like a leftover from something of the previous work.
 > 
-> Applied, thanks!
-> 
-> [1/3] PCI: dwc: Standardize link status check to return bool
->       commit: f46bfb1d3c6a601caad90eb3c11a1e1e17cccb1a
-> [2/3] PCI: mobiveil: Refactor link status check
->       commit: 0a9d6a3d0fd1650b9ee00bc8150828e19cadaf23
-> [3/3] PCI: cadence: Simplify j721e link status check
->       commit: 1a176b25f5d6f00c6c44729c006379b9a6dbc703
-> 
+> That can be moved to anywhere, including a separate patch. It's an
+> independent patch, a leftover from last year. But it's related to
+> devres, because it was also added because of the problem with
+> pcim_enable_device().
 
-This was all applied to the dw-rockchip branch.
+When put at the end of the series it makes an illusion that there are
+dependencies. Separate patch is ideal, being first is good enough to me.
 
-Was that intentional?
-
-My guess is that perhaps you thought that
-"PCI: dwc: Standardize link status check to return bool"
-was going to conflict with Hans's other commit:
-5e5a3bf48eed ("PCI: dw-rockchip: Use rockchip_pcie_link_up() to check link
-up instead of open coding")
-
-but at least from looking at the diff, they don't seem to touch the same
-lines, but perhaps you got a conflict anyway?
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-mobiveil and cadence patches seem unrelated to dw-rockchip
-(unrelated to DWC even).
-
-If it was intentional, all is good, but perhaps the branch
-should have a more generic name, rather than dw-rockchip,
-especially now when the reset-slot and qcom-reset slot patches
-are also on the same branch.
-
-
-Kind regards,
-Niklas
 
