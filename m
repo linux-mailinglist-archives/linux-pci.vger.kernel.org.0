@@ -1,116 +1,105 @@
-Return-Path: <linux-pci+bounces-27911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C2EDABAB29
-	for <lists+linux-pci@lfdr.de>; Sat, 17 May 2025 18:33:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5E4ABAB2C
+	for <lists+linux-pci@lfdr.de>; Sat, 17 May 2025 18:34:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16F23189FC71
-	for <lists+linux-pci@lfdr.de>; Sat, 17 May 2025 16:34:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 863181B605A3
+	for <lists+linux-pci@lfdr.de>; Sat, 17 May 2025 16:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D45292116FB;
-	Sat, 17 May 2025 16:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42932080C0;
+	Sat, 17 May 2025 16:33:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZIE8dcM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPptJyvP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D30D210F4D;
-	Sat, 17 May 2025 16:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D6819E967;
+	Sat, 17 May 2025 16:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747499566; cv=none; b=UG93aVCE8aJd3ipjoOOud3skAcGDYcwdciE/3Yn7bUznFPwuO4BVMgN2pVe1PtC/ZjJzMU00o+nY2Az5FvSiklBAl8Bx7eQE84BXewSExD25YZT5/3y+th0lwh/ryhr90InMU+AwFm9MBkxP6UU/jYf8yGIw1CI0LCy6/Q4kubU=
+	t=1747499632; cv=none; b=b7aoT4aba+fEBuWd06CLVYySHzRMypsny5EBT8OPcSVcZmvb3IxEry6HIKmsY/0mzX/pQ4S4dpq7HMPVo/jom5kk5ng4f500Pw5QJ372qqkJXTgcq4NEqsX85eW2zKGmMfv1vlqPvJVjgTmWnCS/jU1DfWbOCsytpu0AIZYc71Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747499566; c=relaxed/simple;
-	bh=jiU6fKogEnB2KRfyvkptRXP4LM/NoQwweDs9RAUuC/E=;
+	s=arc-20240116; t=1747499632; c=relaxed/simple;
+	bh=CAjSF0tqJzN8Uqpu8sDf6/DdDP0po6ZjIZckTQoKnGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fApBUWWl2k0/yZ1OksBmZopn+BB32h+13LwHgQnsNXNdNaEblmPyVSh8emAK5lI5JPPkHMbPgBVijxZvXnaMAQBIdQZ0+jzuvf41MsiBr+ir8ZquGju9AecJDwPZIExCf6SxnZ6NHI9NCE8d25EhMfOFE6+pnW3+FrxFjqLaaYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZIE8dcM; arc=none smtp.client-ip=192.198.163.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=kbA45IqX43nlAPGVClaSRiVMYgQo2nubxlS+OghwMlQyNBuFV/aNxnipPokk/WBNc2j3uxOAIZ1+cj72ApN7e3bKPZPeityPxrUOorsKRqh4UbiCQ5OoXN5mN1/gcle1HMroJmfoODhjb9bTHLF6NL8AZ0EzrmlS8/iGW3FW71c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPptJyvP; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747499565; x=1779035565;
+  t=1747499631; x=1779035631;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jiU6fKogEnB2KRfyvkptRXP4LM/NoQwweDs9RAUuC/E=;
-  b=lZIE8dcMw9IZ1rciiXA4jTAJYRWtFkw5JNjLqwuLwNDS5RBSw7tSOUe4
-   1zU2PrG67oTvFRRlHUzBjOX7w11M6wSMfodRBy9pvyXPRsLNM0N/KS/fl
-   lDZLOmIdJtHdOJe1Jwkgqmz0Z8+ys6fPHPwettNturM1NapbwOKdcFCRW
-   xa9WZ8dsHLGZQFE5zyc8EcE9PnhHRZvIjTMxOIWK9tEV/s2T80TYGvbB8
-   noVAn9t/pAmxvm5pI6QLCRV+iWy3vE43GO3+R3xgv++7wrUkV7a2hKlCK
-   9nqSP4hPTxZ5DN2g1bu5pEVsfwyMg1rzb2R63zLtyQXGiHpLw1dQoqsRY
-   Q==;
-X-CSE-ConnectionGUID: orcJ99b3TTqEPCtFnqHHPw==
-X-CSE-MsgGUID: +/yVzFGcQBa8RGD4U6kljg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="37070412"
+   mime-version:in-reply-to;
+  bh=CAjSF0tqJzN8Uqpu8sDf6/DdDP0po6ZjIZckTQoKnGo=;
+  b=EPptJyvPsBdGCZcEQgBWsq7AXozv0OBmoa3hYAglBibw0zr8KaqpZmV/
+   7G7FylZt2scpyglKDA2LvO+0J1NtFhEM8qL2O6BTkdhlipYRnT3ah7TgV
+   EyHbxJHETsCSi2qf63s2bWL6RJXFot1VuWPwChrcIAtLH3PV5NWW5d3Yk
+   0reV3V8caMxbCpAGpvjeHUU5Hn8JSXi6yh4vd88KqYlWfRsEoZrAlpv5V
+   AqpW8eNXwSI/Re6qMaWH4eGUk+UUpTQgIUp3FbVEEUbzRftoHJdh6/D3J
+   vfIAV7wxJVf6JhUGI41WTsKJJ2LjnXlZpKBUdoUdLGPKQ/5i314a49FHn
+   g==;
+X-CSE-ConnectionGUID: puCIiUiwSnyVZAvzl9qumw==
+X-CSE-MsgGUID: aBtQGEODRVeO6eAUprx4XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="48562532"
 X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="37070412"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:32:43 -0700
-X-CSE-ConnectionGUID: rI4RBh/VQXeMmugKSp9TYA==
-X-CSE-MsgGUID: 9w+JebZKRuKF18fyDX/7xg==
+   d="scan'208";a="48562532"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:33:50 -0700
+X-CSE-ConnectionGUID: wTYgRjL2TbqCO6VOcEuwUQ==
+X-CSE-MsgGUID: gymAWzDmRAedWSnOwYeRyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="143755308"
+   d="scan'208";a="144094324"
 Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:32:41 -0700
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:33:47 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uGKSj-00000002TiM-1mVd;
-	Sat, 17 May 2025 19:32:37 +0300
-Date: Sat, 17 May 2025 19:32:37 +0300
+	id 1uGKTo-00000002TjW-2TyR;
+	Sat, 17 May 2025 19:33:44 +0300
+Date: Sat, 17 May 2025 19:33:44 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: phasta@kernel.org, Jonathan Corbet <corbet@lwn.net>,
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Mark Brown <broonie@kernel.org>,
 	David Lechner <dlechner@baylibre.com>,
 	Zijun Hu <quic_zijuhu@quicinc.com>,
 	Yang Yingliang <yangyingliang@huawei.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
-Message-ID: <aCi6Jf-A2gO1WQ_u@smile.fi.intel.com>
-References: <20250515124604.184313-2-phasta@kernel.org>
- <20250515124604.184313-4-phasta@kernel.org>
- <aCXk2eDUJF2UbQ47@smile.fi.intel.com>
- <e44d880e842440d51c14f38df1d20176694e0d57.camel@mailbox.org>
- <20250516132811.GB2390647@rocinante>
- <2e80298be4bcb6b17f5b38302d6945306928c6b0.camel@mailbox.org>
- <20250516134839.GA3308019@rocinante>
+Subject: Re: [PATCH v2 0/6] PCI: Remove hybrid-devres region requests
+Message-ID: <aCi6aI3AmtELfr_X@smile.fi.intel.com>
+References: <20250516174141.42527-1-phasta@kernel.org>
+ <d399dd38-b26f-413f-ab02-49680ff87ed1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250516134839.GA3308019@rocinante>
+In-Reply-To: <d399dd38-b26f-413f-ab02-49680ff87ed1@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 16, 2025 at 10:48:39PM +0900, Krzysztof Wilczyński wrote:
+On Fri, May 16, 2025 at 04:14:47PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 5/16/25 10:41 AM, Philipp Stanner wrote:
 
-[...]
-
-> > > Has Andy been sending his review off-list?  Or something is broken on
-> > > my side...
-> > 
-> > Nope, it's on-list. Andy's a veteran ;-)
-> > 
-> > https://lore.kernel.org/linux-pci/aCXnPHy5heHCKVd_@smile.fi.intel.com/
+> Looks good to me.
 > 
-> Thank you!
-> 
-> I should have checked on lore, too.  Time to move to lei, I suppose...
+> Reviewed-by: Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-I need to setup DKIM, that's might be the reason you got it in the SPAM folder.
+Please, fix your tools, it's always goes two lines while it should be only a
+single one.
 
 -- 
 With Best Regards,
