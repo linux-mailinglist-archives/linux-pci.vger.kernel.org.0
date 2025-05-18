@@ -1,406 +1,166 @@
-Return-Path: <linux-pci+bounces-27918-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27927-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3E7DABB63C
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 09:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8F66ABB9C4
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:43:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3115C3B3580
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 07:34:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4062A7A5CDB
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 09:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C0C265CC9;
-	Mon, 19 May 2025 07:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA94E27055B;
+	Mon, 19 May 2025 09:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Au2uNYvC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UqqKHd4p"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C309E1D7984;
-	Mon, 19 May 2025 07:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABDD270547
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747640053; cv=none; b=L3zY4gxsBwkiVI2S0Z4oBny1yuGbtiLF6iDogIb1eBdjWOwYosXpU70ZKMQWkdAkCx8IQiYOVIIWNv91dRnt3fY+bJqpADboMjWxg6GfiG0SXEbeShdq7J0dVoXT9i9uy1EifNhCqRJG/tSuSPwmj13niHGYH5u1LyFYRH9lWj4=
+	t=1747646971; cv=none; b=uGlMlrR/5AKYMpbUpl7Tn7R/H+Eh+5aztEfIIY8H+CStoGU7lLI7oxrSV9qBYWJg8brJILD7nXTJ6xPRgXmmELIuXJgrx2HXlPyEcmNwHdGnv29Jg8dFkKJcXoY/Rs+88aeTX51wuDLxQa9UfDYL27Aq6EpP4PeUB3Hwz5axkG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747640053; c=relaxed/simple;
-	bh=/3jyY8EaPqYWCfl9T6e6GP8F7HGKgaH/UbDfbRPWE1A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F32wFhWS1p/bV8cYD/DnSTsaRjLVDGZIAmwUYkxJpWsPyBANEok9yMCa37F4BWU5PivN5euiLfMBX5r+asLwOFImtVo6zkhVtTxtHVpveZ4q/3SDj+Yuf0tCbK4HLPQQd+1taCx0ttEroOkQlhJ4tv/fRb3jWUvN4VToLk3t9Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Au2uNYvC; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b18ZL5Mgxz9tWZ;
-	Mon, 19 May 2025 09:34:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747640042; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QJfj7xVO3OOXnCMoWaraCXpMPd3XjqE+bOFqual4HVc=;
-	b=Au2uNYvCB8myXOv5wrotOcmLbQT4P8TbBs1pNYcBeRdwDkK3mR5cpd1DShmf5JYJM3FomA
-	QTMLH8SCXGWcAzpbx4zKavkZaXjQJ+fuF5fe0fT+TcM5Lomq8FBO9LZtJ0tcHA3gKYHhMP
-	qnVlNu5oPnQyCKlAuhRm9LC7A6KQrOxIp2z22/YWFnW+BrbLBEMqSHJqxgL2e/ufyqyDSs
-	/yUWcA1ks0sBdngq8INTC4TADk/+YHX+Eqvci5/5W5N1Zk8u0saUE4YRbo+I9GJ6WV9B72
-	JPw7CAHnZHca5V69oqD3nRryO3JfspRUThlQOIdDGcMDG1YkaX14RgPfhsrXAQ==
-Message-ID: <2041935387a5bdb61dcd4bdffb7084655c9af98d.camel@mailbox.org>
-Subject: Re: [PATCH v2 1/6] PCI: Remove hybrid devres nature from request
- functions
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-  Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, David
- Lechner <dlechner@baylibre.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Zijun Hu <quic_zijuhu@quicinc.com>, 
- Yang Yingliang <yangyingliang@huawei.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Date: Mon, 19 May 2025 09:33:55 +0200
-In-Reply-To: <99dba1da-4fc6-4e35-a6fc-40233144f7dd@linux.intel.com>
-References: <20250516174141.42527-1-phasta@kernel.org>
-	 <20250516174141.42527-2-phasta@kernel.org>
-	 <99dba1da-4fc6-4e35-a6fc-40233144f7dd@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1747646971; c=relaxed/simple;
+	bh=VqfsgDaCFdvADgmhIAYYskRSEPPVkwQynU4VvO/XymA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=uMVS9SA+LX7IGJ7wX7lFxiV2tFcMOMpA6bS0mI/prm+kvxVhoNKJNZNkDrgAmryxOWedU26TRHPx6LJHULIUsfnCw1gO7heFeHJJfeUwRT7Gk4UxBnXm5wJshxpzotS94YbhBtjjh4nwCJ6vsJC8jOYVaCQwoOloaKqa4/AgXWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UqqKHd4p; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250519092928epoutp03a4ecda3da5fd241321b709e3f0ff4855~A46h1jd3c2924429244epoutp03T
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:29:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250519092928epoutp03a4ecda3da5fd241321b709e3f0ff4855~A46h1jd3c2924429244epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747646968;
+	bh=8/g6vyHilQjjcSTnrPbpb3Jk/BH6c4Lj3y4koJE69UY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=UqqKHd4puhiodSUV0+dPUdgSuRwewaKcAn0ru7d1nIcRJFY7jq5q10Q3XZ+ELDRo1
+	 JEFG5+zMHTbFCyaznzS8gUN7oxIGivr7nWW17jDrr1ZvA4dl/zCYF+0FpAW3p4VMTZ
+	 ifNpdDGDGObiy1amtHszeQb60MlgcGblC8nJPknU=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250519092927epcas5p29cc7c78741885d807b4862e37da451c1~A46hKQYX51126411264epcas5p2q;
+	Mon, 19 May 2025 09:29:27 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4b1C7V1cHCz6B9mH; Mon, 19 May
+	2025 09:29:26 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250518193219epcas5p24b442233b3e2bc2a92f43b71a126062f~AtfmzdgcQ1923619236epcas5p2D;
+	Sun, 18 May 2025 19:32:19 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250518193217epsmtrp2417411fcc9c4c964f7a98b47e7b54e7c~AtfkhlhkH0348003480epsmtrp2Z;
+	Sun, 18 May 2025 19:32:17 +0000 (GMT)
+X-AuditID: b6c32a29-566fe7000000223e-0e-682a35c036f9
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	80.C1.08766.0C53A286; Mon, 19 May 2025 04:32:16 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250518193214epsmtip19e58f6b1d64d38c1d3222269b76999bd~Atfhxhd2e0974409744epsmtip1d;
+	Sun, 18 May 2025 19:32:13 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
+	m.szyprowski@samsung.com, jh80.chung@samsung.com, Shradha Todi
+	<shradha.t@samsung.com>
+Subject: [PATCH 00/10] Add PCIe support for Tesla FSD SoC
+Date: Mon, 19 May 2025 01:01:42 +0530
+Message-ID: <20250518193152.63476-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: f8a973dd6fce6a1971b
-X-MBO-RS-META: utuoshy8h6rmg3c4f63b4fajqf7pe1et
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJTveAqVaGwaN/5hYP5m1js/g76Ri7
+	xZKmDIs1e88xWcw/co7V4savNlaLFV9mslscbf3PbPFy1j02i4ae36wWmx5fY7W4vGsOm8XZ
+	ecfZLCas+sZicfb7AiaLlj8tLBZrj9xlt7jb0slq8X/PDnaL3sO1FjvvnGB2EPX4/WsSo8fO
+	WXfZPRZsKvXYtKqTzePOtT1sHk+uTGfy2Lyk3qNvyypGjyNfp7N4fN4kF8AVxWWTkpqTWZZa
+	pG+XwJXR8O8KS8ExoYqOOUdYGxj/8XUxcnJICJhIbP1yhb2LkYtDSGA3o8S0x7uZIRKSEp8v
+	rmOCsIUlVv57DlX0iVHi+cs5YEVsAloSjV+7wGwRgROMEn23LEGKmAXeM0nMXPALrFtYwFLi
+	zIopYDaLgKrEic3bwRp4Bawk5px5CRTnANogL9HfIQERFpQ4OfMJC4jNDBRu3jqbeQIj3ywk
+	qVlIUgsYmVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgRHl5bmDsbtqz7oHWJk4mA8
+	xCjBwawkwrtqs0aGEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkm
+	Dk6pBqbW+rQ4rZcz5rWuOVp96ctH83kTJG8s8lpqzMQZwe1yb+3n6CL7tx+q1e5qNFydyVve
+	mvGxJUTdnrXJIbDe+O7Jo5qNyk6velwZ1vS1Z8udYDuVLVu33yCyv+hpLdtlmSmZ/xUrnx6e
+	8Fztg+T+qYb1K6ZcTbWY8slWocq//pbS6p91rmsMP3ldXWb5octw2wER5bfvUnZEv9pq42cZ
+	uJ358rxHzLOM7cWZay7PvblsdmTX6x9HHsvxrWX/17ly8aeVnp5mATfETS/FvRRP9XttttTS
+	5tEjdu1fi2zUv1uav08umCh6pTdRf9FT/jUV9dMjQzzbPC3aOLqzbsYoHvva3Wx7KcyXs9Tw
+	Bx9DnhJLcUaioRZzUXEiAOrOrZodAwAA
+X-CMS-MailID: 20250518193219epcas5p24b442233b3e2bc2a92f43b71a126062f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250518193219epcas5p24b442233b3e2bc2a92f43b71a126062f
+References: <CGME20250518193219epcas5p24b442233b3e2bc2a92f43b71a126062f@epcas5p2.samsung.com>
 
-On Fri, 2025-05-16 at 15:58 -0700, Sathyanarayanan Kuppuswamy wrote:
-> Hi,
->=20
-> On 5/16/25 10:41 AM, Philipp Stanner wrote:
-> > All functions based on __pci_request_region() and its release
-> > counter
-> > part support "hybrid mode", where the functions become managed if
-> > the
-> > PCI device was enabled with pcim_enable_device().
-> >=20
-> > Removing this undesirable feature requires to remove all users who
-> > activated their device with that function and use one of the
-> > affected
-> > request functions.
-> >=20
-> > These users were:
-> > 	ASoC
-> > 	alsa
-> > 	cardreader
-> > 	cirrus
-> > 	i2c
-> > 	mmc
-> > 	mtd
-> > 	mtd
-> > 	mxser
-> > 	net
-> > 	spi
-> > 	vdpa
-> > 	vmwgfx
-> >=20
-> > all of which have been ported to always-managed pcim_ functions by
-> > now.
-> >=20
-> > The hybrid nature can, thus, be removed from the aforementioned PCI
-> > functions.
-> >=20
-> > Remove all function guards and documentation in pci.c related to
-> > the
-> > hybrid redirection. Adjust the visibility of pcim_release_region().
-> >=20
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
->=20
-> Reviewed-by: Kuppuswamy Sathyanarayanan=20
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
->=20
-> > =C2=A0 drivers/pci/devres.c | 39 ++++++++++++--------------------------=
--
-> > =C2=A0 drivers/pci/pci.c=C2=A0=C2=A0=C2=A0 | 42 -----------------------=
-----------------
-> > ---
-> > =C2=A0 drivers/pci/pci.h=C2=A0=C2=A0=C2=A0 |=C2=A0 1 -
-> > =C2=A0 3 files changed, 12 insertions(+), 70 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > index 73047316889e..5480d537f400 100644
-> > --- a/drivers/pci/devres.c
-> > +++ b/drivers/pci/devres.c
-> > @@ -6,30 +6,13 @@
-> > =C2=A0 /*
-> > =C2=A0=C2=A0 * On the state of PCI's devres implementation:
-> > =C2=A0=C2=A0 *
-> > - * The older devres API for PCI has two significant problems:
-> > + * The older PCI devres API has one significant problem:
-> > =C2=A0=C2=A0 *
-> > - * 1. It is very strongly tied to the statically allocated mapping
-> > table in
-> > - *=C2=A0=C2=A0=C2=A0 struct pcim_iomap_devres below. This is mostly so=
-lved in the
-> > sense of the
-> > - *=C2=A0=C2=A0=C2=A0 pcim_ functions in this file providing things lik=
-e ranged
-> > mapping by
-> > - *=C2=A0=C2=A0=C2=A0 bypassing this table, whereas the functions that =
-were
-> > present in the old
-> > - *=C2=A0=C2=A0=C2=A0 API still enter the mapping addresses into the ta=
-ble for
-> > users of the old
-> > - *=C2=A0=C2=A0=C2=A0 API.
-> > - *
-> > - * 2. The region-request-functions in pci.c do become managed IF
-> > the device has
-> > - *=C2=A0=C2=A0=C2=A0 been enabled with pcim_enable_device() instead of
-> > pci_enable_device().
-> > - *=C2=A0=C2=A0=C2=A0 This resulted in the API becoming inconsistent: S=
-ome
-> > functions have an
-> > - *=C2=A0=C2=A0=C2=A0 obviously managed counter-part (e.g., pci_iomap()=
- <->
-> > pcim_iomap()),
-> > - *=C2=A0=C2=A0=C2=A0 whereas some don't and are never managed, while o=
-thers don't
-> > and are
-> > - *=C2=A0=C2=A0=C2=A0 _sometimes_ managed (e.g. pci_request_region()).
-> > - *
-> > - *=C2=A0=C2=A0=C2=A0 Consequently, in the new API, region requests per=
-formed by
-> > the pcim_
-> > - *=C2=A0=C2=A0=C2=A0 functions are automatically cleaned up through th=
-e devres
-> > callback
-> > - *=C2=A0=C2=A0=C2=A0 pcim_addr_resource_release().
-> > - *
-> > - *=C2=A0=C2=A0=C2=A0 Users of pcim_enable_device() + pci_*region*() ar=
-e
-> > redirected in
-> > - *=C2=A0=C2=A0=C2=A0 pci.c to the managed functions here in this file.=
- This isn't
-> > exactly
-> > - *=C2=A0=C2=A0=C2=A0 perfect, but the only alternative way would be to=
- port ALL
-> > drivers
-> > - *=C2=A0=C2=A0=C2=A0 using said combination to pcim_ functions.
-> > + * It is very strongly tied to the statically allocated mapping
-> > table in struct
-> > + * pcim_iomap_devres below. This is mostly solved in the sense of
-> > the pcim_
-> > + * functions in this file providing things like ranged mapping by
-> > bypassing
-> > + * this table, whereas the functions that were present in the old
-> > API still
-> > + * enter the mapping addresses into the table for users of the old
-> > API.
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * TODO:
-> > =C2=A0=C2=A0 * Remove the legacy table entirely once all calls to
-> > pcim_iomap_table() in
-> > @@ -89,10 +72,12 @@ static inline void
-> > pcim_addr_devres_clear(struct pcim_addr_devres *res)
-> > =C2=A0=20
-> > =C2=A0 /*
-> > =C2=A0=C2=A0 * The following functions, __pcim_*_region*, exist as
-> > counterparts to the
-> > - * versions from pci.c - which, unfortunately, can be in "hybrid
-> > mode", i.e.,
-> > - * sometimes managed, sometimes not.
-> > + * versions from pci.c - which, unfortunately, were in the past in
-> > "hybrid
-> > + * mode", i.e., sometimes managed, sometimes not.
->=20
-> Why not remove "hybrid mode"=C2=A0 reference like other places?
->=20
-> > =C2=A0=C2=A0 *
-> > - * To separate the APIs cleanly, we define our own, simplified
-> > versions here.
-> > + * To separate the APIs cleanly, we defined our own, simplified
-> > versions here.
-> > + *
-> > + * TODO: unify those functions with the counterparts in pci.c
-> > =C2=A0=C2=A0 */
-> > =C2=A0=20
-> > =C2=A0 /**
-> > @@ -893,7 +878,7 @@ int pcim_request_region_exclusive(struct
-> > pci_dev *pdev, int bar, const char *nam
-> > =C2=A0=C2=A0 * Release a region manually that was previously requested =
-by
-> > =C2=A0=C2=A0 * pcim_request_region().
-> > =C2=A0=C2=A0 */
-> > -void pcim_release_region(struct pci_dev *pdev, int bar)
-> > +static void pcim_release_region(struct pci_dev *pdev, int bar)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	struct pcim_addr_devres res_searched;
-> > =C2=A0=20
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index e77d5b53c0ce..4acc23823637 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3937,16 +3937,6 @@ void pci_release_region(struct pci_dev
-> > *pdev, int bar)
-> > =C2=A0=C2=A0	if (!pci_bar_index_is_valid(bar))
-> > =C2=A0=C2=A0		return;
-> > =C2=A0=20
-> > -	/*
-> > -	 * This is done for backwards compatibility, because the
-> > old PCI devres
-> > -	 * API had a mode in which the function became managed if
-> > it had been
-> > -	 * enabled with pcim_enable_device() instead of
-> > pci_enable_device().
-> > -	 */
-> > -	if (pci_is_managed(pdev)) {
-> > -		pcim_release_region(pdev, bar);
-> > -		return;
-> > -	}
-> > -
-> > =C2=A0=C2=A0	if (pci_resource_len(pdev, bar) =3D=3D 0)
-> > =C2=A0=C2=A0		return;
-> > =C2=A0=C2=A0	if (pci_resource_flags(pdev, bar) & IORESOURCE_IO)
-> > @@ -3984,13 +3974,6 @@ static int __pci_request_region(struct
-> > pci_dev *pdev, int bar,
-> > =C2=A0=C2=A0	if (!pci_bar_index_is_valid(bar))
-> > =C2=A0=C2=A0		return -EINVAL;
-> > =C2=A0=20
-> > -	if (pci_is_managed(pdev)) {
-> > -		if (exclusive =3D=3D IORESOURCE_EXCLUSIVE)
-> > -			return pcim_request_region_exclusive(pdev,
-> > bar, name);
-> > -
-> > -		return pcim_request_region(pdev, bar, name);
-> > -	}
-> > -
-> > =C2=A0=C2=A0	if (pci_resource_len(pdev, bar) =3D=3D 0)
-> > =C2=A0=C2=A0		return 0;
-> > =C2=A0=20
-> > @@ -4027,11 +4010,6 @@ static int __pci_request_region(struct
-> > pci_dev *pdev, int bar,
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Returns 0 on success, or %EBUSY on error.=C2=A0 A warnin=
-g
-> > =C2=A0=C2=A0 * message is also printed on failure.
-> > - *
-> > - * NOTE:
-> > - * This is a "hybrid" function: It's normally unmanaged, but
-> > becomes managed
-> > - * when pcim_enable_device() has been called in advance. This
-> > hybrid feature is
-> > - * DEPRECATED! If you want managed cleanup, use the pcim_*
-> > functions instead.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 int pci_request_region(struct pci_dev *pdev, int bar, const char
-> > *name)
-> > =C2=A0 {
-> > @@ -4084,11 +4062,6 @@ static int
-> > __pci_request_selected_regions(struct pci_dev *pdev, int bars,
-> > =C2=A0=C2=A0 * @name: Name of the driver requesting the resources
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Returns: 0 on success, negative error code on failure.
-> > - *
-> > - * NOTE:
-> > - * This is a "hybrid" function: It's normally unmanaged, but
-> > becomes managed
-> > - * when pcim_enable_device() has been called in advance. This
-> > hybrid feature is
-> > - * DEPRECATED! If you want managed cleanup, use the pcim_*
-> > functions instead.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 int pci_request_selected_regions(struct pci_dev *pdev, int bars,
-> > =C2=A0=C2=A0				 const char *name)
-> > @@ -4104,11 +4077,6 @@ EXPORT_SYMBOL(pci_request_selected_regions);
-> > =C2=A0=C2=A0 * @name: name of the driver requesting the resources
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Returns: 0 on success, negative error code on failure.
-> > - *
-> > - * NOTE:
-> > - * This is a "hybrid" function: It's normally unmanaged, but
-> > becomes managed
-> > - * when pcim_enable_device() has been called in advance. This
-> > hybrid feature is
-> > - * DEPRECATED! If you want managed cleanup, use the pcim_*
-> > functions instead.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 int pci_request_selected_regions_exclusive(struct pci_dev *pdev,
-> > int bars,
-> > =C2=A0=C2=A0					=C2=A0=C2=A0 const char *name)
-> > @@ -4144,11 +4112,6 @@ EXPORT_SYMBOL(pci_release_regions);
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Returns 0 on success, or %EBUSY on error.=C2=A0 A warnin=
-g
-> > =C2=A0=C2=A0 * message is also printed on failure.
-> > - *
-> > - * NOTE:
-> > - * This is a "hybrid" function: It's normally unmanaged, but
-> > becomes managed
-> > - * when pcim_enable_device() has been called in advance. This
-> > hybrid feature is
-> > - * DEPRECATED! If you want managed cleanup, use the pcim_*
-> > functions instead.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 int pci_request_regions(struct pci_dev *pdev, const char *name)
-> > =C2=A0 {
-> > @@ -4173,11 +4136,6 @@ EXPORT_SYMBOL(pci_request_regions);
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Returns 0 on success, or %EBUSY on error.=C2=A0 A warnin=
-g message
-> > is also
-> > =C2=A0=C2=A0 * printed on failure.
-> > - *
-> > - * NOTE:
-> > - * This is a "hybrid" function: It's normally unmanaged, but
-> > becomes managed
-> > - * when pcim_enable_device() has been called in advance. This
-> > hybrid feature is
-> > - * DEPRECATED! If you want managed cleanup, use the pcim_*
-> > functions instead.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 int pci_request_regions_exclusive(struct pci_dev *pdev, const
-> > char *name)
-> > =C2=A0 {
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index b81e99cd4b62..8c3e5fb2443a 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -1062,7 +1062,6 @@ static inline pci_power_t
-> > mid_pci_get_power_state(struct pci_dev *pdev)
-> > =C2=A0 int pcim_intx(struct pci_dev *dev, int enable);
-> > =C2=A0 int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
-> > =C2=A0=C2=A0				=C2=A0 const char *name);
-> > -void pcim_release_region(struct pci_dev *pdev, int bar);
-> > =C2=A0=20
->=20
-> Since you removed the only use of pcim_request_region_exclusive(),
-> why=20
-> not remove the definition in the same patch?
+FSD platform has three instances of DesignWare based PCIe IP,
+one is in FSYS0 block and other two in FSYS1 block.
+This patch series add required DT binding, DT file modifications,
+Controller driver support and PHY driver support for the same.
 
-Each maintainer has his own philosophy there =E2=80=93 in previous patch
-series's the feedback from Bjorn was to provide series's which rather
-contain more small atomic patches than larger summarizing ones.
+To keep single PCIe controller driver for all Samsung
+manufactured SoC, we have made changes to Exynos file to extend
+support for FSD platform and other Samsung manufactured SoCs which
+shall be upstreamed soon.
 
-That said, the PCI maintainers of course can squash the patches as they
-see fit. But this way around it's easier for me, because providing
-something small that will be squashed is more simple than splitting
-something large into smaller chunks after being told so.
+First a v1 version was posted as a separate driver file:
+https://lore.kernel.org/lkml/20221121105210.68596-1-shradha.t@samsung.com/
+This was rejected and request was made to add the support in exynos file
+itself.
 
+Then another patchset was posted to refactor existing exynos file:
+https://lore.kernel.org/lkml/649a8d88-0504-5aa9-d167-d25d394f3f26@linaro.org/T/
+This requested some major changes
 
-Regards
-P.
+Taking both these reviews into consideration, I have posted a fresh
+patchset where both changes to exynos framework and addition of new FSD
+support is present. This is why not considering it to be v2 of either
+patchset.
 
-> > =C2=A0 /*
-> > =C2=A0=C2=A0 * Config Address for PCI Configuration Mechanism #1
->=20
+Currently the DT node is not added in this patchset and will send it
+in the devicetree mailing list post this.
+
+Shradha Todi (10):
+  PCI: exynos: Change macro names to exynos specific
+  PCI: exynos: Remove unused MACROs in exynos PCI file
+  PCI: exynos: Reorder MACROs to maintain consistency
+  PCI: exynos: Add platform device private data
+  PCI: exynos: Add structure to hold resource operations
+  dt-bindings: PCI: Add bindings support for Tesla FSD SoC
+  dt-bindings: phy: Add PHY bindings support for FSD SoC
+  phy: exynos: Add PCIe PHY support for FSD SoC
+  PCI: exynos: Add support for Tesla FSD SoC
+  misc: pci_endpoint_test: Add driver data for FSD PCIe controllers
+
+ .../bindings/pci/samsung,exynos-pcie-ep.yaml  |  66 ++
+ .../bindings/pci/samsung,exynos-pcie.yaml     | 199 +++---
+ .../bindings/phy/samsung,exynos-pcie-phy.yaml |   8 +-
+ drivers/misc/pci_endpoint_test.c              |   3 +
+ drivers/pci/controller/dwc/pci-exynos.c       | 569 +++++++++++++++---
+ drivers/phy/samsung/phy-exynos-pcie.c         | 357 ++++++++++-
+ include/linux/pci_ids.h                       |   2 +
+ 7 files changed, 1043 insertions(+), 161 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie-ep.yaml
+
+-- 
+2.49.0
 
 
