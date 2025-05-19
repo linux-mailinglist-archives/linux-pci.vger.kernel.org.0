@@ -1,137 +1,126 @@
-Return-Path: <linux-pci+bounces-27963-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27964-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E89ABBC6A
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 13:32:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC994ABBC98
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 13:37:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70A96170492
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:31:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 602403A8BBB
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5785278758;
-	Mon, 19 May 2025 11:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D930275875;
+	Mon, 19 May 2025 11:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lY4cbMiM"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="StjPzBot"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF45278756;
-	Mon, 19 May 2025 11:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9024D27585C;
+	Mon, 19 May 2025 11:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654244; cv=none; b=rbHGWClqkMsLq6YZBAGMV+U5eb0e5tugiaR8nIy76ZZNu/atTNXFYN2ofncnq3KKI9Y2QQpRyxZBovBSwsW33YkKm7/v7JI0sFO3jmbLKYDoSqUhNjTRUkuBAAibwRkJmMJ9/bR49g1nMYzVRpE8OaDh+IBufYNQRCA3JmD1gM8=
+	t=1747654532; cv=none; b=kjTrMp5jV5cMLnl0atxgo1j0l+YI+Yvw10oXPMWk1/3xzTSZSYCQca97jJPYdw4r6pt/KHa+GpI3Qwzkr/0BnJOJjBPyZqZqGjP3f1POMXtgX7Cn5FYflfuEPVhgGf03JmUL/AD741Xttrwy4y/Zel8/ODyEgX0TivoHQ7tdbsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654244; c=relaxed/simple;
-	bh=Dmbm1Nsz0mLac3rVEQyjSTWhEKqeKGKYB7oPAJpKuco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEbGPiae9v2vSbLlj68tQiFc7M44hkB3Wj/ZaTWm+R0CPDLMWiNL8Xl27vC/8nDpaiYlGhZtGEEk7NsmAMEUBTJYVmFZrBbSoUA9OuICaSTYpN9bz1UTWZH+51PWvXurU5hQrhueqE7tKkAoRSVAWwrzp5qK27/16kPWqiJQkR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lY4cbMiM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FC2C4CEE4;
-	Mon, 19 May 2025 11:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747654244;
-	bh=Dmbm1Nsz0mLac3rVEQyjSTWhEKqeKGKYB7oPAJpKuco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lY4cbMiMv6Z+P9EKta3qTSi8UgTM02ZQ2FlgtSfE5Qo6GK1tS6l9VBjTemm8fVs2S
-	 mS661TIhZ3d61gbOvIdGyTWe1ZaD7Y1LUrdclpqhP1GEWNMZRx7WRuemtIXuGGU3pL
-	 n+rv5P8VY+OZRLqvvvpz2WHS56VIMDsbcgw3IOzMc7AUG4ZiPSK7bD4ZFhMxz4y1KK
-	 RbsJMWfBtkSrU20pC0YV4EXqRNcx5w8T+TLnZu4CN4KBRXEjEfF7X8MbtyLLFYD1UW
-	 5OHIDWgUlQjb7yByJz3sf5fa/+uaSd6Yw0MMJh2NvhZfCdcA/IiwANnQtyw5sjeHuW
-	 LczAisYgykAEg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 6/6] PCI: Remove hybrid-devres hazzard warnings from doc
-Date: Mon, 19 May 2025 13:30:00 +0200
-Message-ID: <20250519112959.25487-8-phasta@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250519112959.25487-2-phasta@kernel.org>
-References: <20250519112959.25487-2-phasta@kernel.org>
+	s=arc-20240116; t=1747654532; c=relaxed/simple;
+	bh=c4Lvu7ujHMSmlSyU6+Vgw3jLSD6EdIq9iAtPYK1lm4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ltgdi6pooAihFju3VSvBL8LaY4eZUptwVzOQ+BGm3siHMFoJR13UXw6PS+JoEcP8nupWDjW7G4mepzB6Wm3e6IhXMKyVLMpNV0q4PakbcN9AOXrD+rw6LkfMei2cbjE6Fl90Lh0nmyVYTyx2BfYNAkELP/MFvstTzaru/tEgzL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=StjPzBot; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 87DEC43A0B;
+	Mon, 19 May 2025 11:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747654527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81nL3/GhkQ2VjUOe+1pO+ZBtDt54R0erupT3wBOarVI=;
+	b=StjPzBotRjmZ4tnUHmQoqCmpf+mchssIgwwekn96rt1gfXBps2XWX7jLEZAhJe4G9sVKqv
+	t6dbwwTxJQEQBRizkflnOEQ8fY20CF6dugtMThMZyT9BLTOXR906FTXrOhwTeD7o9LHG2W
+	DeyxuJBEDBhEEOK37c8ykjfjoE8X5mI4wOUa+DCUfmlFzBMUIgJKFpRcdUWxi1k356vUSX
+	YsJdZmSF+EWVG/OYIn7c8cLUX/s9oBWV8FbtM1QSTJ/cJvwkRRBRophSkMp0kTrFsEVMoX
+	V0tBDlm/n8mpuJ37edJqKi3vLAbvNmdUE5+t+cba0AlWo3W1HaVw7M0xJYtMog==
+Date: Mon, 19 May 2025 13:35:22 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 04/26] driver core: Avoid warning when removing a
+ device while its supplier is unbinding
+Message-ID: <20250519133522.63acf5e5@bootlin.com>
+In-Reply-To: <aBt5FvZ95S1Y_Mba@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	<20250507071315.394857-5-herve.codina@bootlin.com>
+	<aBt5FvZ95S1Y_Mba@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-pci/iomap.c still contains warnings about those functions not behaving
-in a managed manner if pcim_enable_device() was called. Since all hybrid
-behavior that users could know about has been removed by now, those
-explicit warnings are no longer necessary.
+Hi Andy,
 
-Remove the hybrid-devres warnings from the docstrings.
+On Wed, 7 May 2025 18:15:34 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/iomap.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+...
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index fe706ed946df..ea86c282a386 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -25,10 +25,6 @@
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR from offset to the end, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_range(struct pci_dev *dev,
- 			      int bar,
-@@ -76,10 +72,6 @@ EXPORT_SYMBOL(pci_iomap_range);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR from offset to the end, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
- 				 int bar,
-@@ -127,10 +119,6 @@ EXPORT_SYMBOL_GPL(pci_iomap_wc_range);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR without checking for its length first, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device(). If you need automatic cleanup, use pcim_iomap().
-  * */
- void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long maxlen)
- {
-@@ -152,10 +140,6 @@ EXPORT_SYMBOL(pci_iomap);
-  *
-  * @maxlen specifies the maximum length to map. If you want to get access to
-  * the complete BAR without checking for its length first, pass %0 here.
-- *
-- * NOTE:
-- * This function is never managed, even if you initialized with
-- * pcim_enable_device().
-  * */
- void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- {
--- 
-2.49.0
+> 
+> >  		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+> >  			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+> >  		} else {
+> > -			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
+> > +			if (link->supplier->links.status != DL_DEV_UNBINDING)
+> > +				WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));  
+> 
+> Why not
+> 
+> 			WARN_ON(link->supplier->links.status != DL_DEV_UNBINDING &&
+> 			        !(link->flags & DL_FLAG_SYNC_STATE_ONLY));
 
+Indeed, I will update in that way in the next iteration.
+
+> 
+> >  			WRITE_ONCE(link->status, DL_STATE_DORMANT);
+> >  		}  
+> 
+
+Best regards,
+Hervé
 
