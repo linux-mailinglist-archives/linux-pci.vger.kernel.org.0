@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-28030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D948ABCA38
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:46:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA189ABCA29
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:44:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EACCA3B3ACC
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:42:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7609E165353
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31419225A3C;
-	Mon, 19 May 2025 21:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43155227EA1;
+	Mon, 19 May 2025 21:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0WtaEvg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="in/YHymP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DFE226D1F;
-	Mon, 19 May 2025 21:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A173227E95;
+	Mon, 19 May 2025 21:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690635; cv=none; b=TgMW+6qVQ60SDWMBSiRKuw2etu6hrcWAYTGB/fn33FFL56wIk5Gv5dHK1o2CgoWGYMxJHae2cKOxGjmwn6/XAfRmmEPJOGAtflbnymi4dpDRdl54HwvRrHVAfMBDj67u7f1Wp6Q4ndPOkCr5FfaFSpqUprj3zi7lAM00BwmyV5A=
+	t=1747690636; cv=none; b=gNX3ibm9KejvgoxFx5l+92xT6+fT10vttB7+6pVO12QIY739MyZZXBI8l1f+4e0OTcFDHTGyRV9NI5ozweSPxiM/itK+ETiWaJ5K6FNQIJnY5GtSr+NVF233kU7Bw00Us4g7ADRFaV/6ftfRFlN+VM7oTNRhLrXru1OvnNsdA8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690635; c=relaxed/simple;
-	bh=909bKlpGXpejs6alzRrtkNNoVbidxfjnR8RhC93JgX0=;
+	s=arc-20240116; t=1747690636; c=relaxed/simple;
+	bh=12/NRUft87RDeqIIYKl8SbdG7KYjWdZEJIx6gghpJCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GLIh31DcR9TGqUQrZX+9r1zTFkM2zcJuJv7dAs6qkn+CfnVTbewC9drtI0IGPMs10uV/B0eI5XdkYc4v6PBKXUskRmA0n34vZlWQciyXPZGlIiBGaGbPW+8620EPY6BjYCry+z6FSk2gx/4CATddKqMqnJHMfaOS68wOg30yfbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0WtaEvg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 447FAC4CEE9;
-	Mon, 19 May 2025 21:37:14 +0000 (UTC)
+	 MIME-Version; b=mxrXdDKj9mIGKpHGFknHvXkfbd018S6xCOLOwXfJ7B4edvoweU0GCOrGGI16oHZImrigOVO17ObLNr+uTJwch27jOwT/p8TwHGYR4bOJ8Y1422qiEylGB8K9k2qrWORjTQRLxcqzE3zbLPDPcMyBixdfvx/DJiTmL/8rLJZChxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=in/YHymP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E29C4CEEB;
+	Mon, 19 May 2025 21:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690634;
-	bh=909bKlpGXpejs6alzRrtkNNoVbidxfjnR8RhC93JgX0=;
+	s=k20201202; t=1747690636;
+	bh=12/NRUft87RDeqIIYKl8SbdG7KYjWdZEJIx6gghpJCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N0WtaEvgXAzOSk9iDG8i/BZrjzO6AGUdr9aPPpLa2T8Ze5lwku1J0lo6iD8vdJcIy
-	 beoRBdYA6S0glwT3cdvYmet34cpc5K0od22JQ0ScSeDnVipX1eYOoy4F/gv8RKi9Ui
-	 3wAUHYsd6CGCc36udQz7WFL8Me+OvicF9x+5I7CQLfrE8ukBB7oqEN1EjH4uY5asSG
-	 vQbCO8kxhiUNJZ7OwSpryzBcebvWZTu6O7sOWwxgWillMZwAjNURM+0TpG4HUIWiMo
-	 Hueh7xZWZ0WBB47iYJWQnPKbmpdpOjoTLwDeKvg08CCfsHqhCSaeHIb/OckfveUeNQ
-	 SXDn+SHgtYp0w==
+	b=in/YHymPRXWbK35wvQKFGaNCJZBQ8UibZjrxnnVuSCYvfhUchO3AG2tByDNuvrdgG
+	 3GvCHmis0plvbOBpd4DPFMFEOk9golJRoIiyPEXlIrvtvG5Egs8VUkqpWA87cnQ5ey
+	 aCEwhrQtgEa3Tqjp7PU3UTpj8DjCXWq/Sd2ZXy6PCjt//O2ypHpfrgrvEiS++zwUw8
+	 n+PyqU9WivhUVOQ8wSIilkAfq8bJaIEXCTYIj8ouMtc5bXixcnKvq8UU4rMricA2M3
+	 VEgt7j7M6yBvDs0yUBzYFTACByp0ZJ2qqhBoGjv/EMmeRC7TavLmUwZA8JrnfnxtrB
+	 vJzlSvHjYCD3Q==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Jon Pan-Doh <pandoh@google.com>,
@@ -67,9 +67,9 @@ Cc: Jon Pan-Doh <pandoh@google.com>,
 	linux-kernel@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v6 15/16] PCI/AER: Add ratelimits to PCI AER Documentation
-Date: Mon, 19 May 2025 16:35:57 -0500
-Message-ID: <20250519213603.1257897-16-helgaas@kernel.org>
+Subject: [PATCH v6 16/16] PCI/AER: Add sysfs attributes for log ratelimits
+Date: Mon, 19 May 2025 16:35:58 -0500
+Message-ID: <20250519213603.1257897-17-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250519213603.1257897-1-helgaas@kernel.org>
 References: <20250519213603.1257897-1-helgaas@kernel.org>
@@ -83,39 +83,238 @@ Content-Transfer-Encoding: 8bit
 
 From: Jon Pan-Doh <pandoh@google.com>
 
-Add ratelimits section for rationale and defaults.
+Allow userspace to read/write log ratelimits per device (including
+enable/disable). Create aer/ sysfs directory to store them and any
+future aer configs.
+
+Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
+attributes (e.g. stats and ratelimits).
+
+  Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
+    sysfs-bus-pci-devices-aer
+
+Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
+Sent 6 AER errors. Observed 5 errors logged while AER stats
+(cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
+
+Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
+logged and accounted in AER stats (12 total errors).
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
 
 Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
 Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/PCI/pcieaer-howto.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ ...es-aer_stats => sysfs-bus-pci-devices-aer} | 34 +++++++
+ Documentation/PCI/pcieaer-howto.rst           |  5 +-
+ drivers/pci/pci-sysfs.c                       |  1 +
+ drivers/pci/pci.h                             |  1 +
+ drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
+ 5 files changed, 139 insertions(+), 1 deletion(-)
+ rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+similarity index 77%
+rename from Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+rename to Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+index d1f67bb81d5d..771204197b71 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+@@ -117,3 +117,37 @@ Date:		July 2018
+ KernelVersion:	4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_NONFATAL messages reported to rootport.
++
++PCIe AER ratelimits
++-------------------
++
++These attributes show up under all the devices that are AER capable.
++They represent configurable ratelimits of logs per error type.
++
++See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
++
++What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
++Date:		March 2025
++KernelVersion:	6.15.0
++Contact:	linux-pci@vger.kernel.org, pandoh@google.com
++Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
++		gets whether or not AER is currently enabled. Enabled by
++		default.
++
++What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
++Date:		March 2025
++KernelVersion:	6.15.0
++Contact:	linux-pci@vger.kernel.org, pandoh@google.com
++Description:	Ratelimit burst for correctable error logs. Writing a value
++		changes the number of errors (burst) allowed per interval
++		(5 second window) before ratelimiting. Reading gets the
++		current ratelimit burst.
++
++What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
++Date:		March 2025
++KernelVersion:	6.15.0
++Contact:	linux-pci@vger.kernel.org, pandoh@google.com
++Description:	Ratelimit burst for uncorrectable error logs. Writing a
++		value changes the number of errors (burst) allowed per
++		interval (5 second window) before ratelimiting. Reading
++		gets the current ratelimit burst.
 diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-index f013f3b27c82..896d2a232a90 100644
+index 896d2a232a90..043cdb3194be 100644
 --- a/Documentation/PCI/pcieaer-howto.rst
 +++ b/Documentation/PCI/pcieaer-howto.rst
-@@ -85,6 +85,17 @@ In the example, 'Requester ID' means the ID of the device that sent
- the error message to the Root Port. Please refer to PCIe specs for other
- fields.
+@@ -96,12 +96,15 @@ type (correctable vs. uncorrectable).
+ AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
+ DEFAULT_RATELIMIT_INTERVAL (5 seconds).
  
-+AER Ratelimits
-+--------------
-+
-+Since error messages can be generated for each transaction, we may see
-+large volumes of errors reported. To prevent spammy devices from flooding
-+the console/stalling execution, messages are throttled by device and error
-+type (correctable vs. uncorrectable).
-+
-+AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
-+DEFAULT_RATELIMIT_INTERVAL (5 seconds).
++Ratelimits are exposed in the form of sysfs attributes and configurable.
++See Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
 +
  AER Statistics / Counters
  -------------------------
  
+ When PCIe AER errors are captured, the counters / statistics are also exposed
+ in the form of sysfs attributes which are documented at
+-Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
+ 
+ Developer Guide
+ ===============
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index c6cda56ca52c..278de99b00ce 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1805,6 +1805,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+ 	&pcie_dev_attr_group,
+ #ifdef CONFIG_PCIEAER
+ 	&aer_stats_attr_group,
++	&aer_attr_group,
+ #endif
+ #ifdef CONFIG_PCIEASPM
+ 	&aspm_ctrl_attr_group,
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 65c466279ade..a3261e842d6d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -963,6 +963,7 @@ void pci_no_aer(void);
+ void pci_aer_init(struct pci_dev *dev);
+ void pci_aer_exit(struct pci_dev *dev);
+ extern const struct attribute_group aer_stats_attr_group;
++extern const struct attribute_group aer_attr_group;
+ void pci_aer_clear_fatal_status(struct pci_dev *dev);
+ int pci_aer_clear_status(struct pci_dev *dev);
+ int pci_aer_raw_clear_status(struct pci_dev *dev);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index c335e0bb9f51..42df5cb963b3 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -627,6 +627,105 @@ const struct attribute_group aer_stats_attr_group = {
+ 	.is_visible = aer_stats_attrs_are_visible,
+ };
+ 
++/*
++ * Ratelimit enable toggle
++ * 0: disabled with ratelimit.interval = 0
++ * 1: enabled with ratelimit.interval = nonzero
++ */
++static ssize_t ratelimit_log_enable_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	bool enabled = pdev->aer_report->cor_log_ratelimit.interval != 0;
++
++	return sysfs_emit(buf, "%d\n", enabled);
++}
++
++static ssize_t ratelimit_log_enable_store(struct device *dev,
++					  struct device_attribute *attr,
++					  const char *buf, size_t count)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	bool enable;
++	int interval;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	if (kstrtobool(buf, &enable) < 0)
++		return -EINVAL;
++
++	if (enable)
++		interval = DEFAULT_RATELIMIT_INTERVAL;
++	else
++		interval = 0;
++
++	pdev->aer_report->cor_log_ratelimit.interval = interval;
++	pdev->aer_report->uncor_log_ratelimit.interval = interval;
++
++	return count;
++}
++static DEVICE_ATTR_RW(ratelimit_log_enable);
++
++#define aer_ratelimit_burst_attr(name, ratelimit)			\
++	static ssize_t							\
++	name##_show(struct device *dev, struct device_attribute *attr,	\
++		    char *buf)						\
++{									\
++	struct pci_dev *pdev = to_pci_dev(dev);				\
++									\
++	return sysfs_emit(buf, "%d\n",					\
++			  pdev->aer_report->ratelimit.burst);		\
++}									\
++									\
++	static ssize_t							\
++	name##_store(struct device *dev, struct device_attribute *attr,	\
++		     const char *buf, size_t count)			\
++{									\
++	struct pci_dev *pdev = to_pci_dev(dev);				\
++	int burst;							\
++									\
++	if (!capable(CAP_SYS_ADMIN))					\
++		return -EPERM;						\
++									\
++	if (kstrtoint(buf, 0, &burst) < 0)				\
++		return -EINVAL;						\
++									\
++	pdev->aer_report->ratelimit.burst = burst;			\
++									\
++	return count;							\
++}									\
++static DEVICE_ATTR_RW(name)
++
++aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
++aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
++
++static struct attribute *aer_attrs[] = {
++	&dev_attr_ratelimit_log_enable.attr,
++	&dev_attr_ratelimit_burst_cor_log.attr,
++	&dev_attr_ratelimit_burst_uncor_log.attr,
++	NULL
++};
++
++static umode_t aer_attrs_are_visible(struct kobject *kobj,
++				     struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (!pdev->aer_report)
++		return 0;
++
++	return a->mode;
++}
++
++const struct attribute_group aer_attr_group = {
++	.name = "aer",
++	.attrs = aer_attrs,
++	.is_visible = aer_attrs_are_visible,
++};
++
+ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+ 				   struct aer_err_info *info)
+ {
 -- 
 2.43.0
 
