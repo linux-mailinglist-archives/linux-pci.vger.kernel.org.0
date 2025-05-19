@@ -1,126 +1,193 @@
-Return-Path: <linux-pci+bounces-27982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13766ABC045
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:07:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07EC3ABC075
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:22:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3D8F17FF31
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:06:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DA4B3B9732
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE7D926AAB5;
-	Mon, 19 May 2025 14:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D509D28368E;
+	Mon, 19 May 2025 14:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUcoY0EH"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FB3ziFub"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69431DEFF3
-	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 14:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0800267386;
+	Mon, 19 May 2025 14:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663559; cv=none; b=QvKzaSsqPrLHwJn/XcH6q5UNjNhMoCMC20uAidu3Q8ndda7LJZtagW9K3ndmTpo35cFniAjIMq2a7Ud9BJda6Rv3vumpzbikIEf3Gc8xLcGoUc65NnhG/iY789Yq9R0qoiVdMkuWphJL3TFw6lBV/wWZLKb0wKoN3OdmmV8krU8=
+	t=1747664545; cv=none; b=g4iJlGvw4tWRjhN9jR7KGtLRpsh1Dsp6viSp+rF3y49b7PF7Z2umX7FMix0TzQtwqtILCPwh65MWI117Y8BQCeyVJqEbWKvVQgTWL5yRfhnbKu3y/DC1YcolGrFNOR5QJVIQeIo6GET0H2D2OX4qYI8p7CQPG1HOZEdQXrZnFkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663559; c=relaxed/simple;
-	bh=qH1fosS4Hip7qXkkllGf5Qn3Ka2TyrhRF3G+x+Xj9fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=stMf6uylhRVHPldgmkvxophqTQ384iEzrMoG+0T68JLTAOb1v2BdsyLdf5dtafrEwHGWL6gmLKoD/yUkYYKSGJ10IJ7I0ADsCvKf4rjm9lB9AkTJ+DPJjGBPfKd25IYYK7WKaTe5oKl8W//BL+ejXSLa1ej/6d9MisZFhbKSsgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUcoY0EH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B0BC4CEE4;
-	Mon, 19 May 2025 14:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747663559;
-	bh=qH1fosS4Hip7qXkkllGf5Qn3Ka2TyrhRF3G+x+Xj9fA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EUcoY0EHLZbwqwsw544VrTHDWxf/vUyiWLtJk+pqjs+s7jZw/98Bxq4AGXUGoM7WJ
-	 rTL7EWu0gyLrhMEsQa7SOjyBHXAbpBqn+6C9ezw0WfY0AClVMp+10gH7HlUJWrn3KW
-	 /0no9KvA7UzvPZufFE9bfYY4fPvAQeKP8fl2ghzcmVuOQl2C51XqIEZqXjSA7q9J5y
-	 28IoEzx1BBZtcK5oU1++M0Q4ASlAQU3nUY9HTtRWPTIwYei8ioWOm1H9a741SRrsIq
-	 anXdQDg2XC7GA66Z/633dgv3L1r8gbu2+P6foZGbfoijs3W5RYrDFmXWLrEIn7LirO
-	 x5yyGFnyYnIKw==
-Date: Mon, 19 May 2025 09:05:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	'Cyril Brulebois <kibi@debian.org>,
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>,
-	'Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
- further if pwrctrl device is created
-Message-ID: <20250519140557.GA1236950@bhelgaas>
+	s=arc-20240116; t=1747664545; c=relaxed/simple;
+	bh=WGvI9Sys8UB/5p7lpWZaoHuxDNCB9H661muuNo3jXoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pQkN6ylax88/SIBxP0K/OXqYIWdooTev5EVktbIsVGq7rx7W0mWeEjB/zgRO+ahljXUdtg46b1eXsKuVgwbEwVzB/GRuBySzhwWcis+52+JYZ66cU5EI1bsvuESRWl6eTMQB6sBxgYjX6gcwC4a0sQBdwvWhRM2LXgI53r68TJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FB3ziFub; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=Z2COa8w3JR4EYXhLeTUvFO6Inm7EKTyZBbRTLmDni7E=;
+	b=FB3ziFubphHMYU5LQ7efemNN3Zhxa04GyYK48muKgSmw0L5i954sxw3nM+7na6
+	Cqf+g1zHtLKic9/xHuI8HbzgejhoS1hGXipK9SdWnjdUGJAA4iJQwkDPM1FvSGNm
+	QVerCOcJLGqQZOiju88OsMr9IiPrmIZyBVzQMcRpS34JM=
+Received: from [192.168.71.93] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgCXq7VZPitoHf_MAw--.1861S2;
+	Mon, 19 May 2025 22:21:13 +0800 (CST)
+Message-ID: <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+Date: Mon, 19 May 2025 22:21:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgCXq7VZPitoHf_MAw--.1861S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxurW3Ww1DXF1DXw1DuFWUCFg_yoWrKrWUpa
+	yrCan0krZ5GFyIk3Z2k3WxWryYyas3t345GrykG342qF1aqFyYqrWSvFWY9F9IgrZYga15
+	ZrW0va4UWF1DZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U15l8UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgZSo2grO5lKPAAAsa
 
-On Mon, May 05, 2025 at 01:39:39PM -0400, Jim Quinlan wrote:
-> Hello,
-> 
-> I recently rebased to the latest Linux master
-> 
-> ebd297a2affa Linus.Torvalds Merge tag 'net-6.15-rc5' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> 
-> and noticed that PCI is broken for
-> "drivers/pci/controller/pcie-brcmstb.c"  I've bisected this to the
-> following commit
-> 
-> 2489eeb777af PCI/pwrctrl: Skip scanning for the device further if
-> pwrctrl device is created
-> 
-> which is part of the series [1].  The driver in pcie-brcmstb.c is
-> expecting the add_bus() method to be invoked twice per boot-up, but
-> the second call does not happen.  Not only does this code in
-> brcm_pcie_add_bus() turn on regulators, it also subsequently initiates
-> PCIe linkup.
-> 
-> If I revert the aforementioned commit, all is well.
-> 
-> FWIW, I have included the relevant sections of the PCIe DT we use at [2].
 
-Mani, Bartosz, where are we at with this?  The 2489eeb777af commit log
-doesn't mention a problem fixed by that commit; it sounds more like an
-optimization -- just avoiding an unnecessary scan.
 
-2489eeb777af appeared in v6.15-rc1, so there's still time to revert it
-before v6.15 if that's the right way to fix this regression.
+On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>> The following series introduces a new kernel command-line option 
+>> aer_panic
+>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>> mission-critical environments. This feature ensures deterministic recover
+>> from fatal PCIe errors by triggering a controlled kernel panic when 
+>> device
+>> recovery fails, avoiding indefinite system hangs.
+> 
+> Why would a device recovery failure lead to a system hang? Worst case
+> that device may not be accessible, right?  Any real use case?
+> 
 
-> [1] https://lore.kernel.org/lkml/20241231-pci-pwrctrl-slot-v2-0-6a15088ba541@linaro.org/T/#t
-> [2]
-> 
-> pcie@1000110000 {
->         reg = <0x10 0x110000 0x0 0x9130>;
->         ...
-> 
->         pci@0,0 {
->                 vpcie3v3-supply = <0x45>;
->                 vpcie12v-supply = <0x44>;
->                 reg = <0x0 0x0 0x0 0x0 0x0>;
->                 ranges;
->                 bus-range = <0x1 0xff>;
->                 compatible = "pciclass,0604";
->                 device_type = "pci";
->                 #address-cells = <0x3>;
->                 #size-cells = <0x2>;
-> 
->                 pci-ep@0,0 {
->                         local-mac-address = [ 00 10 18 f0 35 55 ];
->                         reg = <0x10000 0x0 0x0 0x0 0x0>;
->                 };
->         };
-> }
 
+Dear Sathyanarayanan,
+
+Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
+SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
+design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers 
+have designed it this way.)  For example, when many mobile phone SoCs of 
+Qualcomm handle AER interrupts and there is a link down, that is, a 
+fatal problem occurs in the current PCIe physical link, the system 
+cannot recover.  At this point, a system restart is needed to solve the 
+problem.
+
+And our company design of SOC: http://radxa.com/products/orion/o6/, it 
+has 5 road PCIe port.
+There is also the same problem.  If there is a problem with one of the 
+PCIe ports, it will cause the entire system to hang.  So I hope linux OS 
+can offer an option that enables SOC manufacturers to choose to restart 
+the system in case of fatal hardware errors occurring in PCIe.
+
+There are also products such as mobile phones and tablets.  We don't 
+want to wait until the battery is completely used up before restarting them.
+
+For the specific code of Qualcomm, please refer to the email I sent.
+
+Best regards,
+Hans
+
+>>
+>> Problem Statement
+>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>> traditional error recovery mechanisms may leave the system unresponsive
+>> indefinitely. This is unacceptable for high-availability environment
+>> requiring prompt recovery via reboot.
+>>
+>> Solution
+>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>
+>> Patch Summary:
+>> Documentation Update: Adds aer_panic to kernel-parameters.txt, explaining
+>> its purpose and usage.
+>>
+>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>> management in PCI core.
+>>
+>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
+>> mode is active.
+>>
+>> Panic Trigger: Modifies recovery logic to panic the system when recovery
+>> fails and aer_panic is enabled.
+>>
+>> Impact
+>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
+>> reboots.
+>>
+>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>
+>> Dependency: Requires CONFIG_PCIEAER.
+>>
+>> For example, in mobile phones and tablets, when there is a problem with
+>> the PCIe link and it cannot be restored, it is expected to provide an
+>> alternative method to make the system panic without waiting for the
+>> battery power to be completely exhausted before restarting the system.
+>>
+>> ---
+>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>> system when they are linked down.
+>>
+>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>
+>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>
+>>
+>> Since the design schemes of each SOC manufacturer are different, the AXI
+>> and other buses connected by PCIe do not have a design to prevent 
+>> hanging.
+>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>> system needs to be restarted.
+>>
+>>
+>> Dear Mani,
+>>
+>> I wonder if you know how other SoCs of qcom handle FATAL errors that 
+>> occur
+>> in PCIe link.
+>> ---
+>>
+>> Hans Zhang (4):
+>>    pci: implement "pci=aer_panic"
+>>    PCI/AER: Introduce aer_panic kernel command-line option
+>>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
+>>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
+>>
+>>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
+>>   drivers/pci/pci.c                              |  2 ++
+>>   drivers/pci/pci.h                              |  4 ++++
+>>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
+>>   drivers/pci/pcie/err.c                         |  8 ++++++--
+>>   5 files changed, 37 insertions(+), 2 deletions(-)
+>>
+>>
+>> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+>> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
+>> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
+> 
 
 
