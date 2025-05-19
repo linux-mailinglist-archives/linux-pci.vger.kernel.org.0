@@ -1,208 +1,195 @@
-Return-Path: <linux-pci+bounces-28032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0406ABCA4E
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73A54ABCA71
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:57:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 900033B1A24
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:46:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64F063ABE04
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:56:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0B1222571;
-	Mon, 19 May 2025 21:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75AE3B280;
+	Mon, 19 May 2025 21:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVZMHXQm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+S4zATC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E146522256A;
-	Mon, 19 May 2025 21:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A427120B1F4
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 21:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690956; cv=none; b=S5lrmvv9P2nvqocZ3HRO3AjDTU/1Pcw4NVald9Za6pfQAGcfSfAgCa9mzJuqtc2OSqVqHC8x3hyW7LUp9xODMcvH/bvrXMC9V6PzVkFRrnhoS2hmCH1VP0nBV70CWaManSO7rlS/Ri/Kuz+vcjmdsioofb426/GQIKYNHmTjuAA=
+	t=1747691764; cv=none; b=ikHaRZMTXtqq5rg2xlA3Yz51TqDxHusw0TZ25OMIJTHCoQ1wTEjTMZZgFLLt5Q0UHkYnwjgYXoaPLIc0P4KvOzsaQ0K/jFPLMrggrGmSEZzZEB4oAkt4IdgCgZA1fCr952OPs3iBB7+Xu0CNmv9sePWqgAykzr4cOwdoVgluZRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690956; c=relaxed/simple;
-	bh=QnEMGygcPA0f5Zad7UyQb4fzXv2pbt0ZV6tKHUFbge8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xh8y7bqAM+O4z9HKO1/ViBeg6YzB4GDBPnX+NC+Y5DxyNnZM7c7n2G+QsXDRk5t6bfZICZuXe7NUCVHGFDl62yghtWiTdy6cG3EC6MsaxUzgNCiEtVZq0quPoibJ0CS9XX73bGSZ3tJUzyBdn913DG7fOOyUapEGCqqXkfTS4BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVZMHXQm; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ede096d73so34889805e9.2;
-        Mon, 19 May 2025 14:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747690953; x=1748295753; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bVHkFyy8oK5TfjbHGf8VAG29vEH7+P6whpOQorlUcWQ=;
-        b=IVZMHXQmZoQsBqU8pD7SUk4vJXECb0lBBbpGFzgsqw0Bamn0huCUP7O6eZsn94A73A
-         GkcI1VhU/i9FSv4PZ7ecbrIANzlO9Zi4obOhtShfYtiqa3Q6NxOsFgFuWVieZgLN/9I0
-         FdWKfG5ZayO2q1cGIvpYNKSZEA0HyzccEbC59QLkQUBGZ7WYCS8ye/D8rTkpeGXKqwQ+
-         PL95BSYMYNQoN5XUiksqfVIJ0W9nhkSrfXiP+jcB9NegogF/dmzKyw0V2erL/PwlPtpg
-         vogf8dGLv4bUespAB/vPkbDOemScLA+FiwD2DpKQLSZjX1ioAMgp0UrlUDNxOnv8gY0q
-         6J1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747690953; x=1748295753;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bVHkFyy8oK5TfjbHGf8VAG29vEH7+P6whpOQorlUcWQ=;
-        b=XHsBtE9FJFG/XAoO/nm4q6ZQDpLHtYvRXDzJxPhbClaX1DeOLVVPYfrCBjB4P2GHsc
-         4uOtB4tLd+/fkDX2hH0K74aQkckEXwNe2hDG+ukD9CHch35SCMDace5HeY1mS4P9jKc2
-         EnoJ5RLD1ShfEXZ/Tk/xsQZIKXOxL5iQOhGRVJhX60kMCmN/lvdePQ/99W/lISSkn+E3
-         mgskXlcWl081sUFTw2Ai2zjktWpg/3jw72ZVYZbZzEiJ3gvoh9Qd5afFDlnW37mgGu0j
-         4x3KBJMy35DPVS1kK7o0kcPQbdeJdURjGzXpHwAgzwIac//fQp+qQTeLvdoXBigkyLot
-         B/pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBrgDaVMA0axRsuHBcSlN4Wdf4voyt8/RwT6hBa7J8pahA7RbwLoeR27MDg/YkueVCbgLy1Zu4fczMkR0=@vger.kernel.org, AJvYcCWbdKWvh/BRvBu5xjYloxJgYaOMJyq8VHoVhfW+wZeQuf2sYmGZmEnXNPetWcLK3mrp7amZy15UQ44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxICYehJOmmMcxEg78WOWSz8MLEpqybZJlOxYLASpWuZPpwI7Mc
-	czu1e9wRNo1/B+OYTnHLuKNS2dVxUjj99Qu/kMeAsWwyafytE+XklJIW
-X-Gm-Gg: ASbGnct0y3hQOB2lYPrYtVCzrtJ+ooz/+JwhOELGMb6k9qc9UH8qsbyEYHYP7UtDbyr
-	uHcXD5RNWl7bmVLfmRzKbT2QOR3gzXAVAOjbRHpn+8AY6GTtVUcXvQjdI9ZQungS7sh5v8Ax8cw
-	1kRAAv1YQWW7zYE/4+lzLyITQAezaIp2PPkEXEo+JhhN1JC4tvU2suNtBJd+dpXKCwJRnAZdnIs
-	kgPcJmxGdAMmxRcYvnrrSyQRsMFmhOKecXgv/f1RTeitSRa0/9wehugu9P2O6H9UwdFPtLSB/n7
-	Xlq2lYcNStuVQytU16b74Tf9k5xSBH6blRpNzhiLdPsnJ282+5V7JTXucNRd+U8=
-X-Google-Smtp-Source: AGHT+IFmA5/6QPgZj8I51Svm91lEeVnURAzRcIbwPNgquD4PPqbXskXY0PnIithLK6BBgFY7KwwrbA==
-X-Received: by 2002:a05:600c:a378:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-442fd64dfb3mr173307515e9.16.1747690952955;
-        Mon, 19 May 2025 14:42:32 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29672sm4431325e9.3.2025.05.19.14.42.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 14:42:32 -0700 (PDT)
-Message-ID: <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
-Date: Mon, 19 May 2025 23:42:31 +0200
+	s=arc-20240116; t=1747691764; c=relaxed/simple;
+	bh=W2sqkX/H9PTnbizHFiL9GZas6iw4LIyLOByROoqL2tM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jzjht0z4u8SJM57zqlwIG/YvYyL0LHnZKt+zseqm/TZZmiUqz/QniQl5qsBhAYi8LbDXeP9Luw2A+onKh56g5xo8yiBzsjsCJrbMInYBh8Q4MV47juJf4OHcGU1zabkeSdTXMQhaw4MsdznAwl8+8z/Ee/yfZIybU+QlQQ1X8sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+S4zATC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7ED1C4CEE4;
+	Mon, 19 May 2025 21:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747691764;
+	bh=W2sqkX/H9PTnbizHFiL9GZas6iw4LIyLOByROoqL2tM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=I+S4zATCGmEuZ7fVQSq72Ncf8skYFxP8pMr2eD8dEkCZfsu4naSWcXU2+IQUI6+ev
+	 Wt2k22KrTHSMi0Y4q4YPPGnzjiq9h9IAlGllRN9KsvA7HTJ2hAoJA8GtOBjM5Ax2Sf
+	 UZLS+WmPiChnuWkbp1QKMo1g9r/hASkcnBpfJDB1Oh49BEj0zVS/SBoUkU3cPArKXZ
+	 XEbWsUcJGEyPSoIEr2YgB9u7ZwjHm+/yT9X7+ltH+6SMk//e6BJ8xXDcaRxHhI0sOF
+	 4J7ehgBgxvry9bXO8X7HiKLXgcZwQT7TbEoyLImNRY8xLfcZlQKFebeaaJ5u5Ybdw5
+	 muwoDlGC9JPAw==
+Date: Mon, 19 May 2025 16:56:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	'Cyril Brulebois <kibi@debian.org>,
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>,
+	'Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
+ further if pwrctrl device is created
+Message-ID: <20250519215601.GA1258127@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-To: Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org,
- mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com, superm1@kernel.org
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
- <aCsK743YSuahPtnH@black.fi.intel.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <aCsK743YSuahPtnH@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNxkYumAvk5G6KhYqON9K3bwxGn+My-22KZnGF5Pg8cgfA@mail.gmail.com>
+
+On Mon, May 19, 2025 at 03:59:10PM -0400, Jim Quinlan wrote:
+> On Mon, May 19, 2025 at 2:25 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+> > On Mon, May 19, 2025 at 1:28 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > > On Mon, May 19, 2025 at 09:05:57AM -0500, Bjorn Helgaas wrote:
+> > > > On Mon, May 05, 2025 at 01:39:39PM -0400, Jim Quinlan wrote:
+> > > > > Hello,
+> > > > >
+> > > > > I recently rebased to the latest Linux master
+> > > > >
+> > > > > ebd297a2affa Linus.Torvalds Merge tag 'net-6.15-rc5' of
+> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> > > > >
+> > > > > and noticed that PCI is broken for
+> > > > > "drivers/pci/controller/pcie-brcmstb.c"  I've bisected this
+> > > > > to the following commit
+> > > > >
+> > > > > 2489eeb777af PCI/pwrctrl: Skip scanning for the device further if pwrctrl device is created
+> > > > >
+> > > > > which is part of the series [1].  The driver in
+> > > > > pcie-brcmstb.c is expecting the add_bus() method to be
+> > > > > invoked twice per boot-up, but the second call does not
+> > > > > happen.  Not only does this code in brcm_pcie_add_bus() turn
+> > > > > on regulators, it also subsequently initiates PCIe linkup.
+> > > > >
+> > > > > If I revert the aforementioned commit, all is well.
+> > > > >
+> > > > > FWIW, I have included the relevant sections of the PCIe DT
+> > > > > we use at [2].
+> > > >
+> > > > Mani, Bartosz, where are we at with this?  The 2489eeb777af
+> > > > commit log doesn't mention a problem fixed by that commit; it
+> > > > sounds more like an optimization -- just avoiding an
+> > > > unnecessary scan.
+> > > >
+> > > > 2489eeb777af appeared in v6.15-rc1, so there's still time to
+> > > > revert it before v6.15 if that's the right way to fix this
+> > > > regression.
+> > >
+> > > We need to find out what is happening in the pcie-brcmstb driver
+> > > first. From Jim's report, it looks like the driver expects
+> > > add_bus() callback to be invoked twice, which seems weird.
+> >
+> > The pci_ops add_bus() method is invoked once for bus 0 and once
+> > for bus 1. Note that our controller only has one port.  If I do
+> > "lspci" I get (our controller is on pci domain==1):
+> >
+> > 0001:00:00.0 PCI bridge: Broadcom Inc. and subsidiaries Device 7712 (rev 20)
+> > 0001:01:00.0 Ethernet controller: Broadcom Inc. ...
+> >
+> > It is the second invocation of add_bus() that has the brcmstb
+> > driver turning on the regulators and the subsequent link-up, and
+> > this call never happens with the 2489eeb777aff9 commit.
+> 
+> Actually, I don't think it is sufficient to just revert that one
+> commit.  If I checkout 6.14-rc1 and just bring in
+> 
+> 06bf05d7349c PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()
+
+06bf05d7349c doesn't exist upstream; I assume it is 957f40d039a9
+("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+
+> I get the following after getting the Linux prompt:
+> 
+> pci 0001:00:00.0: deferred probe pending: pci: supplier
+> 1000110000.pcie:pci@0,0 not ready
+> pci 0001:00:00.0: deferred probe pending: pci: supplier
+> 1000110000.pcie:pci@0,0 not ready
+> 
+> Basically, brcmstb already picks up and controls the regulator nodes
+> under the port driver node.  You folks are adding a new generic
+> system and we are stepping on one another's toes.  The problem here
+> is that I cannot seem to turn your system off using CONFIG_PWR*
+> settings.
+> 
+> We would certainly be open to adopting your system when it meets our
+> requirements; such as turning off/on on regulators @suspend/resume,
+> and the ability to not do that if the downstream device has
+> device_may_wakeup(dev)==true.  But until then we need a way to
+> disable your system or allow brcmstb to "opt out".
+> 
+> AFAICT this regression does not affect the RaspberryPi SoCs, so it
+> is not a big deal for us if we take our time to fix this.   But if
+> so, it is incumbent on you folks to help me get past this
+> regression.  Is that reasonable?
+
+What systems does the regression affect?
+
+I'm not keen on adding any kind of regression in v6.15 if we can avoid
+it.  Given that v6.15 will likely be released next weekend, I want to
+revert whatever is necessary tomorrow unless there's a clear path to a
+fix very soon.
+
+You first thought reverting 2489eeb777af ("PCI/pwrctrl: Skip scanning
+for the device further if pwrctrl device is created") would be enough
+to avoid the regression.
+
+But it sounds like something is broken even if you include only the
+first patch of the branch (957f40d039a9 ("PCI/pwrctrl: Move creation
+of pwrctrl devices to pci_scan_device()")).
+
+Maybe this means we need to revert the entire branch:
+
+  55d25a101d47 ("Merge branch 'pci/pwrctrl'")
+  75996c92f4de ("PCI/pwrctrl: Add pwrctrl driver for PCI slots")
+  2a95c1f3468b ("dt-bindings: vendor-prefixes: Document the 'pciclass' prefix")
+  2489eeb777af ("PCI/pwrctrl: Skip scanning for the device further if pwrctrl device is created")
+  2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to pci_destroy_dev()")
+  957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+
+The only patch there that sounds like it might fix a defect is
+2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to
+pci_destroy_dev()").  I guess if this *does* fix a defect, the defect
+only happens when removing a device, and dropping a defect fix is
+better than adding a regression.
+
+Guidance please.
+
+> > > If the fix takes time, then we can revert 2489eeb777af in the meantime.
+> > >
+> > > - Mani
+> > >
+> > > --
+> > > மணிவண்ணன் சதாசிவம்
 
 
-On 5/19/25 12:41, Raag Jadav wrote:
-> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
->> If error status is set on an AER capable device, most likely either the
->> device recovery is in progress or has already failed. Neither of the
->> cases are well suited for power state transition of the device, since
->> this can lead to unpredictable consequences like resume failure, or in
->> worst case the device is lost because of it. Leave the device in its
->> existing power state to avoid such issues.
->>
->> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->> ---
->>
->> v2: Synchronize AER handling with PCI PM (Rafael)
->> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>     Elaborate "why" (Bjorn)
->> v4: Rely on error status instead of device status
->>     Condense comment (Lukas)
-> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
-> my understanding of this needing a revisit. If this was a mistake, please
-> let me know.
->
-> Denis, Mario, does this fix your issue?
->
-Hello,
-
-Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
-
->> More discussion on [1].
->> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>
->>  drivers/pci/pci.c      |  9 +++++++++
->>  drivers/pci/pcie/aer.c | 13 +++++++++++++
->>  include/linux/aer.h    |  2 ++
->>  3 files changed, 24 insertions(+)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 4d7c9f64ea24..a20018692933 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -9,6 +9,7 @@
->>   */
->>  
->>  #include <linux/acpi.h>
->> +#include <linux/aer.h>
->>  #include <linux/kernel.h>
->>  #include <linux/delay.h>
->>  #include <linux/dmi.h>
->> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>  	   || (state == PCI_D2 && !dev->d2_support))
->>  		return -EIO;
->>  
->> +	/*
->> +	 * If error status is set on an AER capable device, it is not well
->> +	 * suited for power state transition. Leave it in its existing power
->> +	 * state to avoid issues like unpredictable resume failure.
->> +	 */
->> +	if (pci_aer_in_progress(dev))
->> +		return -EIO;
->> +
->>  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index a1cf8c7ef628..617fbac0d38a 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>  
->> +bool pci_aer_in_progress(struct pci_dev *dev)
->> +{
->> +	int aer = dev->aer_cap;
->> +	u32 cor, uncor;
->> +
->> +	if (!pcie_aer_is_native(dev))
->> +		return false;
->> +
->> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
->> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
->> +	return cor || uncor;
->> +}
->> +
->>  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>  {
->>  	int rc;
->> diff --git a/include/linux/aer.h b/include/linux/aer.h
->> index 02940be66324..e6a380bb2e68 100644
->> --- a/include/linux/aer.h
->> +++ b/include/linux/aer.h
->> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>  #if defined(CONFIG_PCIEAER)
->>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>  int pcie_aer_is_native(struct pci_dev *dev);
->> +bool pci_aer_in_progress(struct pci_dev *dev);
->>  #else
->>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>  {
->>  	return -EINVAL;
->>  }
->>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>  #endif
->>  
->>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->> -- 
->> 2.34.1
->>
 
