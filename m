@@ -1,342 +1,204 @@
-Return-Path: <linux-pci+bounces-28040-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28041-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E67F4ABCB47
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 01:03:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D2CBABCB54
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 01:16:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814F8171D07
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:03:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1782D17DF84
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BE2205E3E;
-	Mon, 19 May 2025 23:03:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE7D91AA786;
+	Mon, 19 May 2025 23:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GISfHMcx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e32eysEZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB11DA21
-	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 23:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7D51373;
+	Mon, 19 May 2025 23:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747695814; cv=none; b=dfEx6BP3QjqiIqDs6f5lvylNHiqmEiW6qwKNTzD/LohKSLwOghbpgiynETxppaaGW4kJVDYi5m6Jh66g6r2q9f8vvhtNcxhkQ+IFHLHhb+oFDmEpejwBZRAWHLKQGCp0jnP30p1WMoOfnh7pUstY8EzEH58UYYRs5vJzr6Ple3g=
+	t=1747696569; cv=none; b=rLJmEJnjIZdBwXdau+KuF9x1U0cjZO7Iat0txiShthClWHpyMMPiSuHmTzSMQ0vHlCrAkc8+wEUi1c6IjrsFHyW3kurD8WqxCuOekR+30aALf0MVjNUC+wg8hk+k2V11LPNpr/uhK+NZ82eUPtbeDYRZ6O+Qx8DtsMHI8OUkqes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747695814; c=relaxed/simple;
-	bh=K6YBGL0XckTwM9hrEO2ldcU1JltsML/YXY6lJGg8oJk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qi+tsuLyd19rYNWXxfyk9AN5BRq3lrqpTVB57MpES43/LK56bRRIJu7KRmST2fzTrkqyEqypAJ4Bfi1Kf5aGnagxbr8cn1fnHxv/yUu7/VImeIrUgFrH2s3y9HjuPAuDX9lNazVuxTCXXQQkvS28zRegxdyijjI/8fzTiFI+UZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GISfHMcx; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499614d3d2so6140030e87.3
-        for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 16:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1747695811; x=1748300611; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KzouL2SbbbjB0OB2uzZ6jNHbX/Mi0w3dnkZpIQ5+TLs=;
-        b=GISfHMcxIGCzuZozxzsCnyn7MdWz6hrb2PuF9qQbN4Bhvq31btU+TKFYuF4DTZrDQ3
-         /NuXPQkl5cetjWBasj/cl+5sBII29IhUxTxfnCqR3TKy9IKpnuBmL84Xk+IU/v2X/sF4
-         Y/s8KGtzQX+YdFLZ60H0oyezyckcZDfeEKurQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747695811; x=1748300611;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KzouL2SbbbjB0OB2uzZ6jNHbX/Mi0w3dnkZpIQ5+TLs=;
-        b=ggy5U5opeGv3VbE2Y+mZ5ZsceFGjUTCRJRx0XlAldtI3DdHko1XnyF2wQJ5hCKHJ13
-         nPJdT3Js5TjoauqkK+rNRpU1KVE2jOEM3vJgv9KzFC4Tc8+GKbnJfmpcOPz8KAqYS8L4
-         74dPQFE8uoiyyVc0j1oMP4BvI5mg4EodJtXZnZA2kvc+v27WWFIGtrT8TyAgActXvYCN
-         cN8y3Qqpg/g6twfF7mh5tY9aAj8eZ7l7z4GHutw8hOAIYRofF5VjitLGdPCejULoGrGP
-         NklhVDlCmNWN3w+nztm0nf8dKQGHPSd8B2NFSv3iYf2F975ylVlu7qvV/qWyzqf6gUb8
-         d5tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYh/8SdzjTHfVAtLNJygFMvGwBXr3pKYFC1PpulvpyvlvmXrl6n4Sw4OgN+VUjkI40Pzdp0ZqUmoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4nCewq+UyTbaoyYRkb7fnZxoEOKr2ozQPxG+f8gqf8dejLPET
-	Me74E928UrrF8nuugkWkMKTzDuzfxrhy3shWURPVfJXFbBfj60osC2qPjki5cJfFSoYMvphh5k9
-	lGx7Dvks4SUFjTTfMeE3uOAhripdfWugzQASwm3sZ
-X-Gm-Gg: ASbGncvWHCAfpnQiPNUkMOEX3+dGrsRnrhOpQHy/Llulu/0azAYVM9yILFf+DkPsziQ
-	8NI+qck1nQgHqTa2Hgd7EhuYHJRhSvy3ffVj2G6KN9so0Fifla2SnsMiwVaGRGMXiwEOt/cOjnO
-	EtmuygmI3IQ7ZfWQ4v1vAPwoC9GYK4dPIy/Aad/XZVeYiy
-X-Google-Smtp-Source: AGHT+IGnk7sjHrzip/LFUnXA8Gpqn7yZg21rZqRDgOY/pDZ0V7xaonC7cbxX053qfYohPtzNrTCQc/q05XcokKyYQR4=
-X-Received: by 2002:a05:6512:6317:b0:540:2fd2:6c87 with SMTP id
- 2adb3069b0e04-550e71b4e43mr4673734e87.16.1747695810730; Mon, 19 May 2025
- 16:03:30 -0700 (PDT)
+	s=arc-20240116; t=1747696569; c=relaxed/simple;
+	bh=dXooAyhFtIbkNwlVi/qdsagXG5Z4H1TWB2hLbacD1/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUpgiWtNJ0hr5rLk3zBbfeKbUzpeFw8E5TbdTsHwA4oLlfYyHdTgbqfaCbc1PN5YCrofK4mxWLc1ZuzBlZ+vx8p2IencIreZU/edUhKWhdZ/yvsNrCMYkq6575QVJnN0mNaO4lkZ/k5pRxV7YQ9qdzIOUGupMEweUfLKkefWXfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e32eysEZ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747696568; x=1779232568;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dXooAyhFtIbkNwlVi/qdsagXG5Z4H1TWB2hLbacD1/c=;
+  b=e32eysEZHHhZvUCOQEDUdgbolfjS5yCm0ErtEMecdxOq+j2vPR/P977W
+   W7TQAxV96Ik6GDcKAyx8q4QeqEBvuJeyxH/lh5QLhGBJ0NbG3UrStBhab
+   OTLrq9KWJVB7ZuAdHNkncwZXdjbXpwxOC4kbw9k6yq3R3rhtIvhDfT1TE
+   r8YPCsMDLHxIBoB7g8L1naP+L6s5W3Z0wtpO3C0NCCmuGomKf9tfJETlk
+   rHIRtGbZKEGDT459s3m594bvZN6SS0KwJktl06AcRn1nulZO7iLzAU6g9
+   tBYMGklc+nZYVnf+TmAYSoR6awB2tn9lQa4icGjhnOPVBMYDkAv7hra7k
+   A==;
+X-CSE-ConnectionGUID: qYv9Z1jVT6mxSDkSObQT5A==
+X-CSE-MsgGUID: /mL7n3RoQNKhD7YnWH/mHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49677370"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49677370"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:15:58 -0700
+X-CSE-ConnectionGUID: VzHO+0MGRvOaAlG2gyO3pw==
+X-CSE-MsgGUID: lgvVC65aSzObW5WDwhFXEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="140412830"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 16:15:58 -0700
+Message-ID: <e37c5f7f-3460-4f58-892f-39faf88a8e9c@linux.intel.com>
+Date: Mon, 19 May 2025 16:15:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+-6iNxkYumAvk5G6KhYqON9K3bwxGn+My-22KZnGF5Pg8cgfA@mail.gmail.com>
- <20250519215601.GA1258127@bhelgaas>
-In-Reply-To: <20250519215601.GA1258127@bhelgaas>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Mon, 19 May 2025 19:03:18 -0400
-X-Gm-Features: AX0GCFuPL_mJX782VJaQTZ7MgEWsnGgWjnEPAPk8JMkbZK6hYIVyPsVIyBwbdEo
-Message-ID: <CA+-6iNzY4n=E+4Fcbxu7UU+xyUjEQZBSLQ3sMv26smoFS+nGOA@mail.gmail.com>
-Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
- further if pwrctrl device is created
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, "'Cyril Brulebois" <kibi@debian.org>, 
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, 
-	"'Nicolas Saenz Julienne" <nsaenz@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000000c8390635852437"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/16] PCI/DPC: Log Error Source ID only when valid
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-3-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-3-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---00000000000000c8390635852437
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 5:56=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> On Mon, May 19, 2025 at 03:59:10PM -0400, Jim Quinlan wrote:
-> > On Mon, May 19, 2025 at 2:25=E2=80=AFPM Jim Quinlan <james.quinlan@broa=
-dcom.com> wrote:
-> > > On Mon, May 19, 2025 at 1:28=E2=80=AFPM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > On Mon, May 19, 2025 at 09:05:57AM -0500, Bjorn Helgaas wrote:
-> > > > > On Mon, May 05, 2025 at 01:39:39PM -0400, Jim Quinlan wrote:
-> > > > > > Hello,
-> > > > > >
-> > > > > > I recently rebased to the latest Linux master
-> > > > > >
-> > > > > > ebd297a2affa Linus.Torvalds Merge tag 'net-6.15-rc5' of
-> > > > > > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> > > > > >
-> > > > > > and noticed that PCI is broken for
-> > > > > > "drivers/pci/controller/pcie-brcmstb.c"  I've bisected this
-> > > > > > to the following commit
-> > > > > >
-> > > > > > 2489eeb777af PCI/pwrctrl: Skip scanning for the device further =
-if pwrctrl device is created
-> > > > > >
-> > > > > > which is part of the series [1].  The driver in
-> > > > > > pcie-brcmstb.c is expecting the add_bus() method to be
-> > > > > > invoked twice per boot-up, but the second call does not
-> > > > > > happen.  Not only does this code in brcm_pcie_add_bus() turn
-> > > > > > on regulators, it also subsequently initiates PCIe linkup.
-> > > > > >
-> > > > > > If I revert the aforementioned commit, all is well.
-> > > > > >
-> > > > > > FWIW, I have included the relevant sections of the PCIe DT
-> > > > > > we use at [2].
-> > > > >
-> > > > > Mani, Bartosz, where are we at with this?  The 2489eeb777af
-> > > > > commit log doesn't mention a problem fixed by that commit; it
-> > > > > sounds more like an optimization -- just avoiding an
-> > > > > unnecessary scan.
-> > > > >
-> > > > > 2489eeb777af appeared in v6.15-rc1, so there's still time to
-> > > > > revert it before v6.15 if that's the right way to fix this
-> > > > > regression.
-> > > >
-> > > > We need to find out what is happening in the pcie-brcmstb driver
-> > > > first. From Jim's report, it looks like the driver expects
-> > > > add_bus() callback to be invoked twice, which seems weird.
-> > >
-> > > The pci_ops add_bus() method is invoked once for bus 0 and once
-> > > for bus 1. Note that our controller only has one port.  If I do
-> > > "lspci" I get (our controller is on pci domain=3D=3D1):
-> > >
-> > > 0001:00:00.0 PCI bridge: Broadcom Inc. and subsidiaries Device 7712 (=
-rev 20)
-> > > 0001:01:00.0 Ethernet controller: Broadcom Inc. ...
-> > >
-> > > It is the second invocation of add_bus() that has the brcmstb
-> > > driver turning on the regulators and the subsequent link-up, and
-> > > this call never happens with the 2489eeb777aff9 commit.
-> >
-> > Actually, I don't think it is sufficient to just revert that one
-> > commit.  If I checkout 6.14-rc1 and just bring in
-> >
-> > 06bf05d7349c PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_=
-device()
+> DPC Error Source ID is only valid when the DPC Trigger Reason indicates
+> that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
+> Message (PCIe r6.0, sec 7.9.14.5).
 >
-> 06bf05d7349c doesn't exist upstream; I assume it is 957f40d039a9
-> ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+> When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE)
+> or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
+> log the Error Source ID (decoded into domain/bus/device/function).  Don't
+> print the source otherwise, since it's not valid.
+>
+> For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
+> logging changes:
+>
+>    - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
+>    - pci 0000:00:01.0: DPC: ERR_FATAL detected
+>    + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL received from 0000:02:00.0
+>
+> and when DPC triggered for other reasons, where DPC Error Source ID is
+> undefined, e.g., unmasked uncorrectable error:
+>
+>    - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
+>    - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
+>    + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked uncorrectable error detected
+>
+> Previously the "containment event" message was at KERN_INFO and the
+> "%s detected" message was at KERN_WARNING.  Now the single message is at
+> KERN_WARNING.
 
-Hi Bjorn,
-
-Yes, sorry, you are correct.
+Since we are handling Uncorrectable errors, why not use pci_err?
 
 >
-> > I get the following after getting the Linux prompt:
-> >
-> > pci 0001:00:00.0: deferred probe pending: pci: supplier
-> > 1000110000.pcie:pci@0,0 not ready
-> > pci 0001:00:00.0: deferred probe pending: pci: supplier
-> > 1000110000.pcie:pci@0,0 not ready
-> >
-> > Basically, brcmstb already picks up and controls the regulator nodes
-> > under the port driver node.  You folks are adding a new generic
-> > system and we are stepping on one another's toes.  The problem here
-> > is that I cannot seem to turn your system off using CONFIG_PWR*
-> > settings.
-> >
-> > We would certainly be open to adopting your system when it meets our
-> > requirements; such as turning off/on on regulators @suspend/resume,
-> > and the ability to not do that if the downstream device has
-> > device_may_wakeup(dev)=3D=3Dtrue.  But until then we need a way to
-> > disable your system or allow brcmstb to "opt out".
-> >
-> > AFAICT this regression does not affect the RaspberryPi SoCs, so it
-> > is not a big deal for us if we take our time to fix this.   But if
-> > so, it is incumbent on you folks to help me get past this
-> > regression.  Is that reasonable?
->
-> What systems does the regression affect?
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-All Broadcom STB chips, including the RPi sister chips.  Now is there
-anyone but our team who runs upstream Linux on our boards?  Probably
-not.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
+>   drivers/pci/pcie/dpc.c | 45 ++++++++++++++++++++++++++----------------
+>   1 file changed, 28 insertions(+), 17 deletions(-)
 >
-> I'm not keen on adding any kind of regression in v6.15 if we can avoid
-> it.  Given that v6.15 will likely be released next weekend, I want to
-> revert whatever is necessary tomorrow unless there's a clear path to a
-> fix very soon.
->
-> You first thought reverting 2489eeb777af ("PCI/pwrctrl: Skip scanning
-> for the device further if pwrctrl device is created") would be enough
-> to avoid the regression.
->
-> But it sounds like something is broken even if you include only the
-> first patch of the branch (957f40d039a9 ("PCI/pwrctrl: Move creation
-> of pwrctrl devices to pci_scan_device()")).
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index fe7719238456..315bf2bfd570 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -261,25 +261,36 @@ void dpc_process_error(struct pci_dev *pdev)
+>   	struct aer_err_info info = { 0 };
+>   
+>   	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> -	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> -
+> -	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+> -		 status, source);
+>   
+>   	reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
+> -	ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> -	pci_warn(pdev, "%s detected\n",
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
+> -		 "unmasked uncorrectable error" :
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
+> -		 "ERR_NONFATAL" :
+> -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> -		 "ERR_FATAL" :
+> -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> -		 "RP PIO error" :
+> -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> -		 "software trigger" :
+> -		 "reserved error");
+> +
+> +	switch (reason) {
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
+> +		pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
+> +			 status);
+> +		break;
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
+> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
+> +				     &source);
+> +		pci_warn(pdev, "containment event, status:%#06x, %s received from %04x:%02x:%02x.%d\n",
+> +			 status,
 
-Correct.
+I see the BDF extraction and format code in many places in the PCI drivers. May be a
+common macro will make it more readable.
 
->
-> Maybe this means we need to revert the entire branch:
->
->   55d25a101d47 ("Merge branch 'pci/pwrctrl'")
->   75996c92f4de ("PCI/pwrctrl: Add pwrctrl driver for PCI slots")
->   2a95c1f3468b ("dt-bindings: vendor-prefixes: Document the 'pciclass' pr=
-efix")
->   2489eeb777af ("PCI/pwrctrl: Skip scanning for the device further if pwr=
-ctrl device is created")
->   2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to pci_destro=
-y_dev()")
->   957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_sca=
-n_device()")
->
-> The only patch there that sounds like it might fix a defect is
-> 2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to
-> pci_destroy_dev()").  I guess if this *does* fix a defect, the defect
-> only happens when removing a device, and dropping a defect fix is
-> better than adding a regression.
->
-> Guidance please.
+> +			 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> +				"ERR_FATAL" : "ERR_NONFATAL",
+> +			 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
+> +			 PCI_SLOT(source), PCI_FUNC(source));
+> +		return;
+> +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
+> +		ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> +		pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
+> +			 status,
+> +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> +			 "RP PIO error" :
+> +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> +			 "software trigger" :
+> +			 "reserved error");
+> +		break;
+> +	}
+>   
+>   	/* show RP PIO error detail information */
+>   	if (pdev->dpc_rp_extensions &&
 
-I resisted calling for the entire series to be reverted because I
-don't want to be the bad guy and I know how disappointing it is for
-the authors.  But truth be told it is easier for me to deal with this
-before it goes in than after.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
-
-
->
-> > > > If the fix takes time, then we can revert 2489eeb777af in the meant=
-ime.
-> > > >
-> > > > - Mani
-> > > >
-> > > > --
-> > > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=
-=AE=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=
-=AE=AE=E0=AF=8D
->
->
-
---00000000000000c8390635852437
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
-AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCBKOTXPylX77568JA07x16iz4Edk59/
-j/he/zo9vbDHMDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA1
-MTkyMzAzMzFaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
-AQEFAASCAQAGz8JwF+bVRiJK1MMq4nhqtPbCyPrN3aYmU4gCqeoMqA/EDRebbd4bzArLs4aMaAxf
-33VPUKv6dZLVFS+5Pp2Mbgqw54rvJS2LJV7EcwHKHQpsECQHaREtvkghpHecR+8A9LACvJ7ZgpCG
-1VxaPQF6hx0Mrwyn//WL5zEQzhBviFSZ3agtYIB16q9Fx/7IEYMaONVKFZc/ml7j+KNR7T4uRBq6
-CfrSMWQj6OohpWYC8AI51Tjf03hBxeVfgQwEs8YqEmOlFpVcG+V/Wvw4IzP9VB0j6SVeT7lhQF9t
-PQVluy27fu3JZqUVEaohBeZPQiMNwYO3z3h3u6GVIkTPMoWw
---00000000000000c8390635852437--
 
