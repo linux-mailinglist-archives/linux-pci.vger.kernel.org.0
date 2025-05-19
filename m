@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-27920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DDC7ABB6BF
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 10:08:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBE0EABB6C1
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 10:08:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09C1B7A6435
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 08:06:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D39441896CC9
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 08:08:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B915F269AF9;
-	Mon, 19 May 2025 08:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DE62690F9;
+	Mon, 19 May 2025 08:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DxB5lAYB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6WeyJUV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A38926980B;
-	Mon, 19 May 2025 08:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F2426A081;
+	Mon, 19 May 2025 08:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747642073; cv=none; b=FM6OG3kGgsK4E1+kFFjelyrBeIX0Z8Z/vkj/uftbTEk9TyosQwI9ri8pwiMazN4p5D4Bn6xMKXrCB5eEWQDA9593uurYSSiArLti/U+XNB+d6rw9hZammWseqZupbuEbxnGpAdHNrLySQxoWuRnyKnveV5BaDdoVWWFGeiaBPPE=
+	t=1747642081; cv=none; b=i7s/NLCftL3KEFvocip97M7J5W5v0FhvcXrf4/Db63TqdGYN4g3cctOzAKPHkVdja06ddQh9L+Pq8gJOQwem8KebgRVkdjUhRAMimQh1sk+qGfFA7/71ftt4Qm52IMd2HDXRxWhr8pukYIPrTKwbJtetAlcNZAIUhUGgedtFAFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747642073; c=relaxed/simple;
-	bh=fRseYVawSb8624uASA65g1wB9OLlqp3Ot9LTVJ4lWk0=;
+	s=arc-20240116; t=1747642081; c=relaxed/simple;
+	bh=ZnzLVI2Bq/oZypXBE9n35DzTkQl+6GQEQMub3wccrQ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EJlv7grkOnIhmUoqIa40cZed7esKk/GEbC7BMj343rLHvbUQ+g4CXSv1gt2p/s7IFttVgSRsFxAySTHAYSgqU4fh9XS+qfPc9k7NOxWwoGufpNpzlLSyTZm2HfnWj84+8xJf2xxLpISzaoJU8KfRDhmgkLYGz/5G4ghlWSogau0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DxB5lAYB; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=UTwOq8lV8UzcBDGfcG0IFkRUkH4MJP6rirLdmG1w0eIvcH6i0DMwOgkap519+XiQO1NydiCJSTF86u0KKu36BEbzg8/2rQHGkQvpH+mZRgGBQXvTn1dlO51yVIbxZwY7GkUNgmgnh0i6+5yNTtXVO8A+EwYk/Mze67PecBX7jVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6WeyJUV; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747642072; x=1779178072;
+  t=1747642079; x=1779178079;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fRseYVawSb8624uASA65g1wB9OLlqp3Ot9LTVJ4lWk0=;
-  b=DxB5lAYBNj3Q+so/S6DT6JhDJZ/0sILqTzTxv02hNkspAO0BvExqqwe/
-   4YS2r40HNTd3IMnlkeaheZmsw/kePpQtbHLynQ4mdkMfl8Xabk8Uf8x2n
-   BYpSAAqIXI7E/dSbDau6ulbqwRy8eOKIYobdVLoAZAFr0xcrfc6rzEw+z
-   38FP5NaTAxdcDIReLf+b3EPjG28hEVt3yoUTSuz4BXoVyIe8Lkdn/c9VR
-   7wJ432oo4IqzqC96EoYxVW5gtXpgJDwBGfb0e0twjTLVNRJZtrzkYqTKx
-   jaKy9fGdsf2NOOVST/bUbA+crE7K3WtSg1JYs64G7gqQMJbcmg47JHUEp
-   A==;
-X-CSE-ConnectionGUID: tupxg+LkQiS0dlMizfm4oQ==
-X-CSE-MsgGUID: eEmaoOZMRU+hjh03QlVI5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="52163510"
+  bh=ZnzLVI2Bq/oZypXBE9n35DzTkQl+6GQEQMub3wccrQ0=;
+  b=c6WeyJUVjXnGVoltWz5cQDnGDd0t0lnmj6a3/EyLxtCNsq2fLZ4MUjn1
+   EZ8uBeQ41waE36JgCTpV7UsmwPaI49o3RX3Gla7PNBI5LR8oZCA92S2L0
+   SxGMx4HMj2r/5MzqrlaarFIzflAxPTH9nmvFa3D4PVp/zxNgk6ZyQf9GY
+   g40j4G/qac3rAEKhHUm5tSH6TlMBLjcjSOUTjovC1dH391vLAGmhMECRB
+   try2hkQSTh08g6+JVlc7dAw0dF7THLyLzqz7XWwGYCPhjj8B7R8hsQVPA
+   a/X3SiWg0lWZga1Czn5Gnm5dl5xNg5BqcEi1pOlQJLpDIUqEj7q/Hw9R/
+   Q==;
+X-CSE-ConnectionGUID: rfOC4rG/Q6a8e+PMUOG8Iw==
+X-CSE-MsgGUID: UqnfAOwvQj+In17boaL+Eg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="52163522"
 X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="52163510"
+   d="scan'208";a="52163522"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:51 -0700
-X-CSE-ConnectionGUID: DVgqmBNaQBi/qg5TVDpM3g==
-X-CSE-MsgGUID: 4cd/Q+LSTDGR/PKcZpRrEg==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:54 -0700
+X-CSE-ConnectionGUID: W/wryT69Rk6TAcrVJffZsQ==
+X-CSE-MsgGUID: +0duS5U+TMmuoNrvTTSNKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139205810"
+   d="scan'208";a="139205813"
 Received: from mwiniars-desk2.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.4])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:48 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 01:07:51 -0700
 From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 To: lgirdwood@gmail.com,
 	broonie@kernel.org
@@ -71,9 +71,9 @@ Cc: linux-sound@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kw@linux.com
-Subject: [PATCH v2 1/5] PCI: Add Intel Wildcat Lake audio Device ID
-Date: Mon, 19 May 2025 11:08:51 +0300
-Message-ID: <20250519080855.16977-2-peter.ujfalusi@linux.intel.com>
+Subject: [PATCH v2 2/5] ALSA: hda: add HDMI codec ID for Intel WCL
+Date: Mon, 19 May 2025 11:08:52 +0300
+Message-ID: <20250519080855.16977-3-peter.ujfalusi@linux.intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519080855.16977-1-peter.ujfalusi@linux.intel.com>
 References: <20250519080855.16977-1-peter.ujfalusi@linux.intel.com>
@@ -86,31 +86,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add Wildcat Lake (WCL) audio Device ID.
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Add HDMI codec ID for Intel Wildcat Lake platform.
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-Acked-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 ---
- include/linux/pci_ids.h | 1 +
+ sound/pci/hda/patch_hdmi.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 981ed45cc45e..e2d71b6fdd84 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3049,6 +3049,7 @@
- #define PCI_DEVICE_ID_INTEL_HDA_DG1	0x490d
- #define PCI_DEVICE_ID_INTEL_HDA_EHL_0	0x4b55
- #define PCI_DEVICE_ID_INTEL_HDA_EHL_3	0x4b58
-+#define PCI_DEVICE_ID_INTEL_HDA_WCL	0x4d28
- #define PCI_DEVICE_ID_INTEL_HDA_JSL_N	0x4dc8
- #define PCI_DEVICE_ID_INTEL_HDA_DG2_0	0x4f90
- #define PCI_DEVICE_ID_INTEL_HDA_DG2_1	0x4f91
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 61c3fd0adc07..08308231b4ed 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -4652,6 +4652,7 @@ HDA_CODEC_ENTRY(0x8086281e, "Battlemage HDMI",	patch_i915_adlp_hdmi),
+ HDA_CODEC_ENTRY(0x8086281f, "Raptor Lake P HDMI",	patch_i915_adlp_hdmi),
+ HDA_CODEC_ENTRY(0x80862820, "Lunar Lake HDMI",	patch_i915_adlp_hdmi),
+ HDA_CODEC_ENTRY(0x80862822, "Panther Lake HDMI",	patch_i915_adlp_hdmi),
++HDA_CODEC_ENTRY(0x80862823, "Wildcat Lake HDMI",	patch_i915_adlp_hdmi),
+ HDA_CODEC_ENTRY(0x80862880, "CedarTrail HDMI",	patch_generic_hdmi),
+ HDA_CODEC_ENTRY(0x80862882, "Valleyview2 HDMI",	patch_i915_byt_hdmi),
+ HDA_CODEC_ENTRY(0x80862883, "Braswell HDMI",	patch_i915_byt_hdmi),
 -- 
 2.49.0
 
