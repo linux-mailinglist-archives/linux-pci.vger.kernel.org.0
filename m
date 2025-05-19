@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-28019-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28020-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B576CABCA06
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:40:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38E2DABCA21
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:43:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB0821B67BE4
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:40:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E0FB1616C4
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 21:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A40F221F3E;
-	Mon, 19 May 2025 21:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C9B2222AB;
+	Mon, 19 May 2025 21:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTnNXU7m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0u+lzw8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE0E221D9E;
-	Mon, 19 May 2025 21:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2185C221FD7;
+	Mon, 19 May 2025 21:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690617; cv=none; b=BQo5w/jnWO8QQVVCGeuTK4UswiuCYvLxtT6uiWVaPSL1LqHh07qtFrrJMb0p/sT6MiONns+kfmL37ZQwp03I9hS+6tazkLj4Nx8fUafApZsWgD35s/0eWe0gE0ub2rkllTVyY+Up4SmsoEtqVj9FIt2TI0y+RL2TnGB/7guikUY=
+	t=1747690619; cv=none; b=ZxV9Wu5Ii97Z9fHGcP6BKkfZ3dpKx0Tmqs4rELivn68jNnijnvVKYgc3cYFYJ8V9wF+EdsQ9wu7B8sY21CPqPCyOaM2smrvLgCrPEBQ/gWu9O02sy358Nv+mUSXwegmDkFPlKl0tZrfxsOQf8KKQegyebkKq6xcREH9pMXqrmgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690617; c=relaxed/simple;
-	bh=DulaQY6ernJiaxTu28SIKrpHEXWBgTCvlzTG5LfrQA8=;
+	s=arc-20240116; t=1747690619; c=relaxed/simple;
+	bh=A1yGfiEGjU/jCFLLlMoihWTgBNPiIjwSNSe9WDii04I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aQk7ukRZGtvvXiUmfvkoWHpUC/X13HcwUj/z7DgEPoYOk+EnP/4TjdHTqR9YEIXmvhMyGuSb+6jCJb+W+tWXQ+VOqGRO7DfSdeqQdZSPZVUpEpkgsLkH1ViWHJKOAk0Ovvu4X6tL/BUi/RAeZ67viN5j1vtmvBYa2iNXD78QYzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTnNXU7m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D89EDC4CEE9;
-	Mon, 19 May 2025 21:36:56 +0000 (UTC)
+	 MIME-Version; b=OVLH4/edKtUJr5oXx3uR6ws8wmhMYwGJhJ+jGRYFdR/ksx6bS7KVTkddHj4FSNuPVZxiFzf2OD4bRYSeBgwUn9vXOgXUr6sHIj+elncE7xxgC5VKmWHXv18hIBZTs+zSx3f4WiLws0UjmivvHiig2cWc6pFE64wc2VvFuMyfhe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0u+lzw8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D435C4CEE9;
+	Mon, 19 May 2025 21:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690617;
-	bh=DulaQY6ernJiaxTu28SIKrpHEXWBgTCvlzTG5LfrQA8=;
+	s=k20201202; t=1747690618;
+	bh=A1yGfiEGjU/jCFLLlMoihWTgBNPiIjwSNSe9WDii04I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fTnNXU7mDGJfOvaHgjsFPzu8rMdbjnqqbs3rxFyPOEwKP0a0NVn/WQGfFoLpoaFuX
-	 mhxT3R0NBa56lgjvAbcvsq//vRcK6G9graqeXgjuYxFSWBvxXudsIsAqJWIQu8IX+X
-	 6oHceZioe/o6WKpQfxeAABaqf/SLA/Al66RL3xIcdqt8upxheGG4LcqQ3pCWLXQVbu
-	 dSsrmd9PfaK9Qx/7IcxZS92u1EJs4xIdqWRel3KzpneHQ1fJyE0SfeVMqR0pZ0ueNO
-	 nCFCW+aAdEVa4LALIq++CLJ5VpXwggu9t01J7hh/xGVRMNgBbcFTsBybWXNs2NveUR
-	 +p3/Y77CJOL8w==
+	b=e0u+lzw8mDvA9gp+eW5zaUTMK0Yi1JFv7zXkVhXfkvjhywdPzm3i6FkxnY/W5BMhf
+	 o9js162JL5kbYNpLaZ2Z4NpqGKhJGWDLa4Mk26f0Zd7JGJrz+ttfR2UP7q+z1zvs86
+	 3mskUEo8sBxYpq0Tli0DkBX6WDmGDRwpMGkBE7y62gkAzroOgWt4FmhTC7iV8mvpL0
+	 zSHTVwK/lC3UnYDlIqFtfbaymQcBWk4CkQrm3he+H3bnRisxkBZ+ue5iW0Kj5XXvlR
+	 kGLvwaULc7n4egAQd9sxJ5ejSLW3czHNk71051pve/VlFo6Gulg7eFYyE7kyrSm18F
+	 R7bHyL54YolvA==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Jon Pan-Doh <pandoh@google.com>,
@@ -67,9 +67,9 @@ Cc: Jon Pan-Doh <pandoh@google.com>,
 	linux-kernel@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v6 04/16] PCI/AER: Extract bus/dev/fn in aer_print_port_info() with PCI_BUS_NUM(), etc
-Date: Mon, 19 May 2025 16:35:46 -0500
-Message-ID: <20250519213603.1257897-5-helgaas@kernel.org>
+Subject: [PATCH v6 05/16] PCI/AER: Rename aer_print_port_info() to aer_print_source()
+Date: Mon, 19 May 2025 16:35:47 -0500
+Message-ID: <20250519213603.1257897-6-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250519213603.1257897-1-helgaas@kernel.org>
 References: <20250519213603.1257897-1-helgaas@kernel.org>
@@ -81,39 +81,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Jon Pan-Doh <pandoh@google.com>
 
-Use PCI_BUS_NUM(), PCI_SLOT(), PCI_FUNC() to extract the bus number,
-device, and function number directly from the Error Source ID.  There's no
-need to shift and mask it explicitly.
+Rename aer_print_port_info() to aer_print_source() to be more descriptive.
+This logs the Error Source ID logged by a Root Port or Root Complex Event
+Collector when it receives an ERR_COR, ERR_NONFATAL, or ERR_FATAL Message.
 
+[bhelgaas: aer_print_rp_info() -> aer_print_source()]
+Link: https://lore.kernel.org/r/20250321015806.954866-5-pandoh@google.com
+Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/aer.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/aer.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b8494ccd935b..dc8a50e0a2b7 100644
+index dc8a50e0a2b7..eb42d50b2def 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -736,14 +736,13 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
- 				const char *details)
- {
--	u8 bus = info->id >> 8;
--	u8 devfn = info->id & 0xff;
-+	u16 source = info->id;
- 
- 	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
- 		 info->multi_error_valid ? "Multiple " : "",
- 		 aer_error_severity_string[info->severity],
--		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
--		 PCI_FUNC(devfn), details);
-+		 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
-+		 PCI_SLOT(source), PCI_FUNC(source), details);
+@@ -733,8 +733,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 			info->severity, info->tlp_header_valid, &info->tlp);
  }
  
- #ifdef CONFIG_ACPI_APEI_PCIEAER
+-static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
+-				const char *details)
++static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
++			     const char *details)
+ {
+ 	u16 source = info->id;
+ 
+@@ -932,7 +932,7 @@ static bool find_source_device(struct pci_dev *parent,
+ 	 * RCEC that received an ERR_* Message.
+ 	 */
+ 	if (!e_info->error_dev_num) {
+-		aer_print_port_info(parent, e_info, " (no details found)");
++		aer_print_source(parent, e_info, " (no details found)");
+ 		return false;
+ 	}
+ 	return true;
+@@ -1299,7 +1299,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+ 			e_info.multi_error_valid = 0;
+ 
+ 		if (find_source_device(pdev, &e_info)) {
+-			aer_print_port_info(pdev, &e_info, "");
++			aer_print_source(pdev, &e_info, "");
+ 			aer_process_err_devices(&e_info);
+ 		}
+ 	}
+@@ -1318,7 +1318,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+ 			e_info.multi_error_valid = 0;
+ 
+ 		if (find_source_device(pdev, &e_info)) {
+-			aer_print_port_info(pdev, &e_info, "");
++			aer_print_source(pdev, &e_info, "");
+ 			aer_process_err_devices(&e_info);
+ 		}
+ 	}
 -- 
 2.43.0
 
