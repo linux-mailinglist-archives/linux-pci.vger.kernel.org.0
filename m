@@ -1,132 +1,161 @@
-Return-Path: <linux-pci+bounces-27956-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27957-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42351ABBB90
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 12:58:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4796FABBC56
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 13:30:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D81DB17C01C
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 10:58:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7667169C9C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:30:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D6C1F5833;
-	Mon, 19 May 2025 10:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57341EA7C2;
+	Mon, 19 May 2025 11:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fe2phNgz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0p8ewOh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABECB67A;
-	Mon, 19 May 2025 10:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77042629C;
+	Mon, 19 May 2025 11:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652313; cv=none; b=r5l1fTQewbFB4ZPmE0vS9eegW5FUluvuafCEZTi60CdItDlqy4n4GF6xQlI5gWpPKPoyPy8DkNK0WFuOVoPTgMg+jni7c3ETUq1f6LdNmoainue3WPjFz6If8ZJKVeNBvvZ2Hih+W1Pz5IKE5Mc+gNePkPBieDxLjD1C1tRdVHM=
+	t=1747654223; cv=none; b=KMuqYaEJb7Nd2e/TNZGor3GaGtc/WMz1B6EVV/+yCaUiHUf5a4J9BAMQDKQnhkyM3IQ1mYobD3rBUJ7Cfs0hueu9ZELe+Jd0Jg9P8mhlBWLLmLcrzuVLS74hZFOzPjcFKQg5zGpKJNfaDn9ELB2TduukbCg1KRFK9nSSE+OXmZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747652313; c=relaxed/simple;
-	bh=lR3ufQjfCMt0wa1qQJnPCIl39LwV+E/PY8mCye8iihU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vb78aBP9NoZbIu88d9+RhN9HIb3O19MWWZAQorVbmMHB3UeyhuyVPUAmPKKPZNxlc4HEGw5XteTu2xMvXPmLlRHWVyIycozUvArXmD6TkcpUCffBvhrLEOTfqpiCPvhcGIY7dsd1nPyfJtkeCVOCsE0Bfu/VkF6+TrjPphExJjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=fe2phNgz; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 8A5411C00B2; Mon, 19 May 2025 12:51:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1747651890;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wqHSHMNjwPahuHRb2M/03gC2UK+sZwBdUQwHO3smOZs=;
-	b=fe2phNgzKQNmp8uKjoSeP53Hj3aPw4ryW4AhnKgHl9OELLyCaJ62HkTIhxy7TuvIp2+bn9
-	KMzT35GYGQfU10PxHPtLaYNH8ntH1nPWYJrbhHWSLQ/gip26CAGLtQgMmYr6qdc0yyjy3t
-	Fh2QliFEWwV2qot/FI59YjG2w+0rRaY=
-Date: Mon, 19 May 2025 12:51:30 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Tony Hutter <hutter2@llnl.gov>, linux-leds@vger.kernel.org
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	mariusz.tkaczyk@linux.intel.com, minyard@acm.org,
-	linux-pci@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 RESEND] PCI: Introduce Cray ClusterStor E1000 NVMe
- slot LED driver
-Message-ID: <aCsNMvfSWptltx5k@duo.ucw.cz>
-References: <553813b6-1d44-488c-b41b-4be08e1c1733@llnl.gov>
+	s=arc-20240116; t=1747654223; c=relaxed/simple;
+	bh=m0Scu3isCr2CfBneGD3NWtI5hPshRjUPedGUkByruKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tC/ZtCF94iPT1GKXzp0+eHw/vbV55vg7yo1bUr6iz1Ho9b/LsZ4EoW2TLLy5BKA+a3ZZ+tJBWZQvt+mhDeI3pVNS9GUDdQypJ71DYDfjMll4XJGfAc3W/4ySi1BIeoUsuw1Io9NFWq5aB5GcoQBd7Whe8Em4h+K+sVe/e+NJxnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0p8ewOh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D69C4CEE4;
+	Mon, 19 May 2025 11:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747654223;
+	bh=m0Scu3isCr2CfBneGD3NWtI5hPshRjUPedGUkByruKw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U0p8ewOhPzVTXNVvbv8XQnIlmzA8iR9ZtWoH52sQCk6nukIP5BTcE7r6dQ4ilE2Vo
+	 Xf0zo3NKoAwhjD6l9EkY91MntybBHTD5s9mrWGinbPCuaneAJJtmhKIn4ktNPsxCTj
+	 wkttPcwuc5JGDNxxYTI5PQQ/Umm3nQbJ6Lrn2HQAGtQT7Iz2s3a2GMAw3KVR9QYr0v
+	 ksWRZjH5wLkADi3iBM8eq8tCeWAKScFKjN/ssh+JPYoXY9f6KbBxosky9BqB0AONV2
+	 gcwGYi3wPrDMzbl1L8yX4sAruOxqjrySeMOw+lRfp7bS73kUgdpIdlLblVejDpE8xk
+	 petHB2lahZBJw==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/6] 
+Date: Mon, 19 May 2025 13:29:54 +0200
+Message-ID: <20250519112959.25487-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/0WdGnjK/qdBFyct"
-Content-Disposition: inline
-In-Reply-To: <553813b6-1d44-488c-b41b-4be08e1c1733@llnl.gov>
+PCI: Remove hybrid-devres region requests
+Content-Transfer-Encoding: 8bit
 
+Changes in v3:
+  - Adjust wording for Documentation patch (Randy, Alok)
+  - Apply Sathyanarayanan's RBs.
 
---/0WdGnjK/qdBFyct
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v2:
+  - Drop patch for removing forgotten header. Patch is unrelated. Will
+    resend seperately. (Andy)
+  - Make docu patch headline "Documentation/driver-api:". There seems to
+    be no canonical way, but this style is quite frequent. (Andy)
+  - Apply Andy's RBs where applicable.
 
-Hi!
+Howdy,
 
-> Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
-> The driver provides hotplug attention status callbacks for the 24 NVMe
-> slots on the E1000.  This allows users to access the E1000's locate and
-> fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
-> entries.  This driver uses IPMI to communicate with the E1000 controller
-> to toggle the LEDs.
->=20
-> Signed-off-by: Tony Hutter <hutter2@llnl.gov>
+the great day has finally arrived, I managed to get rid of one of the
+big three remaining problems in the PCI devres API (the other two being
+MSI having hybrid-devres, too, and the good old pcim_iomap_tablle)!
 
-We have LED subsystem.
+It turned out that there aren't even that many users of the hybrid API,
+where pcim_enable_device() switches certain functions in pci.c into
+managed devres mode, which we want to remove.
 
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -231,6 +231,27 @@ Description:
->  		    - scXX contains the device subclass;
->  		    - iXX contains the device class programming interface.
-> =20
-> +What:		/sys/bus/pci/slots/.../attention
-> +Date:		February 2025
-> +Contact:	linux-pci@vger.kernel.org
-> +Description:
-> +		The attention attribute is used to read or write the attention
-> +		status for an enclosure slot.  This is often used to set the
-> +		slot LED value on a NVMe storage enclosure.
-> +
-> +		Common values:
-> +		0 =3D OFF
-> +		1 =3D ON
-> +		2 =3D blink (ampere, ibmphp, pciehp, rpaphp, shpchp)
-> +
-> +		Using the pciehp_craye1k extensions:
-> +		0 =3D fault LED OFF, locate LED OFF
-> +		1 =3D fault LED ON,  locate LED OFF
-> +		2 =3D fault LED OFF, locate LED ON
-> +		3 =3D fault LED ON,  locate LED ON
-> +
-> +		Other values are no-op, OFF, or ON depending on the driver.
-> +
+The affected drivers can be found with:
 
-And this should use it.
+grep -rlZ "pcim_enable_device" | xargs -0 grep -l "pci_request"
 
-Best regards,
-									Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+These were:
 
---/0WdGnjK/qdBFyct
-Content-Type: application/pgp-signature; name="signature.asc"
+	ASoC [1]
+	alsa [2] 
+	cardreader [3]
+	cirrus [4]
+	i2c [5]
+	mmc [6]
+	mtd [7]
+	mxser [8]
+	net [9]
+	spi [10]
+	vdpa [11]
+	vmwgfx [12]
 
------BEGIN PGP SIGNATURE-----
+All of those have been merged and are queued up for the merge window.
+The only possible exception is vdpa, but it seems to be ramped up right
+now; vdpa, however, doesn't even use the hybrid behavior, so that patch
+is just for generic cleanup anyways.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCsNMgAKCRAw5/Bqldv6
-8gL9AJ9ioZr4CiKLusY4swf/Km1O2Q0M2QCggc56FgkysxptA3E0mCfEeZhf3o8=
-=9ag7
------END PGP SIGNATURE-----
+With the users of the hybrid feature gone, the feature itself can
+finally be burned.
 
---/0WdGnjK/qdBFyct--
+So I'm sending out this series now to probe whether it's judged to be
+good enough for the upcoming merge window. If we could take it, we would
+make it impossible that anyone adds new users of the hybrid thing.
+
+If it's too late for the merge window, then that's what it is, of
+course.
+
+In any case I'm glad we can get rid of most of that legacy stuff now.
+
+Regards,
+Philipp
+
+[1] https://lore.kernel.org/all/174657893832.4155013.12131767110464880040.b4-ty@kernel.org/
+[2] https://lore.kernel.org/all/8734dy3tvz.wl-tiwai@suse.de/
+[3] https://lore.kernel.org/all/20250417091532.26520-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
+[4] https://lore.kernel.org/dri-devel/e7c45c099f8981257866396e01a91df1afcfbf97.camel@mailbox.org/
+[5] https://lore.kernel.org/all/l26azmnpceka2obq4gtwozziq6lbilb2owx57aajtp3t6jhd3w@llmeikgjvqyh/
+[6] https://lore.kernel.org/all/CAPDyKFqqV2VEqi17UHmFE0b9Y+h5q2YaNfHTux8U=7DgF+svEw@mail.gmail.com/
+[7] https://lore.kernel.org/all/174591865790.993381.15992314896975862083.b4-ty@bootlin.com/
+[8] https://lore.kernel.org/all/20250417081333.20917-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
+[9] https://lore.kernel.org/all/174588423950.1081621.6688170836136857875.git-patchwork-notify@kernel.org/
+[10] https://lore.kernel.org/all/174492457740.248895.3318833401427095151.b4-ty@kernel.org/
+[11] https://lore.kernel.org/all/20250515072724-mutt-send-email-mst@kernel.org/
+[12] https://lore.kernel.org/dri-devel/CABQX2QNQbO4dMq-Hi6tvpi7OTwcVfjM62eCr1OGkzF8Phy-Shw@mail.gmail.com/
+
+Philipp Stanner (6):
+  PCI: Remove hybrid devres nature from request functions
+  Documentation/driver-api: Update pcim_enable_device()
+  PCI: Remove pcim_request_region_exclusive()
+  PCI: Remove request_flags relict from devres
+  PCI: Remove redundant set of request funcs
+  PCI: Remove hybrid-devres hazzard warnings from doc
+
+ .../driver-api/driver-model/devres.rst        |   2 +-
+ drivers/pci/devres.c                          | 201 +++---------------
+ drivers/pci/iomap.c                           |  16 --
+ drivers/pci/pci.c                             |  42 ----
+ drivers/pci/pci.h                             |   3 -
+ 5 files changed, 32 insertions(+), 232 deletions(-)
+
+-- 
+2.49.0
+
 
