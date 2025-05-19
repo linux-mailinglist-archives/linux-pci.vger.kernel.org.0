@@ -1,137 +1,149 @@
-Return-Path: <linux-pci+bounces-27991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97C60ABC186
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 17:00:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26CEBABC198
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 17:04:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC0787AC9E0
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:59:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4BB23A74C6
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 15:04:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0BD828466A;
-	Mon, 19 May 2025 15:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FB15283FEE;
+	Mon, 19 May 2025 15:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BlrcDWKI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7m+R5C/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138F7284B32;
-	Mon, 19 May 2025 15:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C48F1D5AD4;
+	Mon, 19 May 2025 15:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747666814; cv=none; b=I+ihBr0uHcT3wObm5UT+sGipTtveKereSJRxmwj8gK1FxMhvp9ZSjFRTH71T1+F4vhx+O4Cuzslhya01s+dHaudMSDROiNNufm/yxW3525DX1SzE+s8ph2DvIVQ4CB4djapfIduYm9ApC0RNlDI4ynfWurkdrzgGM7MST1z7b7M=
+	t=1747667063; cv=none; b=JmM0Kt6jW/oHXUvbVH9HpZSS9EaINIfFwfs0FmKkv0fcCcENStEFziYm37Ue+3ZSoFDdwffa8AhG4vud5M4nmyHDkJrNT61PLG2AeaCkcKi/qedBy5TKH5mX90nhADA1AdAg0CRn12C6ia+TJA5lKAz4wvhb9YPK9x10p6Tnt9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747666814; c=relaxed/simple;
-	bh=U4GPv/OEwuURUdMov/CmVGo+Cn6wNOn2vY+JOwulIyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwnmCq0KhbJhDkjnd9n8NwLFWzrrqfbUxwfom+DQ0Col0AhEwqd/PNpppcOs2AJWuAb9UmXpwdQSc/nj5R+J5jZ88YV7ggmyeQLWhZiNlYHFHe/0NpB+S3xJ3eKXq9UXvsGZAIll8JHd3Cs6zbTEGED4cdj6UHjsOXtfY8cu1tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlrcDWKI; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FD121FD58;
-	Mon, 19 May 2025 15:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747666809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zAnJxDH2cQNUkyYzrOZMk+S9iW0aoM/UKY9IFB7P0gI=;
-	b=BlrcDWKIV79p/Nbt0Xh+Zt/BftW3xjkeQJTQnChTfqsL/QJSllXnuNw6dAQUnOnmIUsRtm
-	KSNcU3JqRelJteSXDXFkffd3WHWzlVOhZebpJMqBX3zVQDqvkebzIkM+upiOgh49FvE7t8
-	XBpxGAxmbnLdgWUgXnlma9exg5WYXSMsnf+jKTZ1F5/zhFy6y5dgvRYfJQVuWDx9wO6Gth
-	tFGi86S0BghEV3YKxfBpeBYqhhr3qjsNyzgFA5296OaRyjXg7WbW5YlC2/BblNOfQwHvzL
-	LioPfHZLzqGusr+Qoi/ERBvUNbMAmyY7IGYaK1hnyOFQABEn/j2LT4L3TxWUwA==
-Date: Mon, 19 May 2025 17:00:04 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific
- data
-Message-ID: <20250519170004.631d99af@bootlin.com>
-In-Reply-To: <aB0ERYKdRreDe7Wt@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-24-herve.codina@bootlin.com>
-	<aB0ERYKdRreDe7Wt@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1747667063; c=relaxed/simple;
+	bh=nAKO8OGKF4AztbuJv40zpDcb5wqiwnzv4Jv2Yx8mPxM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SJTkM0QipSL/oS9APdapYbzdtga+Z75FBmdoMyNP+F4BAGgM1bt3/xTfkZKoamQPM8S3M05DsW9nE1EBsThzyfVShaeYFvRtL7CYBoi22UZTZ45ViJ+DxXA0NWxQMJZWEVqYKqwMrzrvPQzQ1/5g+DjToQUFUEbtLXUn+deW5K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7m+R5C/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FACC4CEF0;
+	Mon, 19 May 2025 15:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747667062;
+	bh=nAKO8OGKF4AztbuJv40zpDcb5wqiwnzv4Jv2Yx8mPxM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=N7m+R5C/jhx04v1Ku24Up2mCG2BgcATKFVraI7sIUo7XAP8u2dbPtlv7vuRw62vlY
+	 /8w1gYzG4m1CAMDzFMPiA6++CPaui6KCJRuc9SQiDWSyxz8U+TGzg+Wz+2wijWHeJR
+	 pcbDFfSFXeWMUJFp94GP30An33VJ7g5GxaFCwVELPKRUgWACMTu+FJMQgI+PEYZXY4
+	 B65fte8czpFnla/yA2iZ4Qp657HKfk8Q5nXa23Cvx/H/zYzumLQJqixh9DI5wocQRW
+	 96EjH6KJRzUJL+SRG7gl/Xtdkbkl1f4JAMelVxLM9quBPIcbqwh3SfxD8NvCASyYhW
+	 oDxBWY7VKxX7g==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad56829fabdso213549966b.1;
+        Mon, 19 May 2025 08:04:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjjXTAxyHI9sNPqmkymLeG7HkABwMeOxIyMYfgrQpeX5scGkIXt7OqE0wzolcwIpmfi5k5eV5Yb7IsgAZv@vger.kernel.org, AJvYcCWGaHlHldxWs4GxcrYGJ5iMfSh/+G902dtXCARczgW6QCG3ZkhtOCBjAlUSRqT3JbS6HC95+0MP6SXD@vger.kernel.org, AJvYcCWVVBtivOTYE3/TWgWhsZkz6o69QaGJ22CJ+bCBVc6iO2Q/JF9mu3b8aEn+VnPzck89J/k3D5LO5OObtnkqpHXakpY=@vger.kernel.org, AJvYcCWZPGBHvGSOMF9S9w404Or1RKllr4/YVx6/M55klam87MQ97wK1CiSdNpXsnH7dY0RBlWTDCNvGk9Vk@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxY2iAa+Rrotuyj8x90fGJcKJbtfh5F0vrKsQMztYgD5hzs1oK
+	2d+ZAq9rAK35++vCAYm6Mixluzls1ls53hMs5gPHJQdEVhfAMeL4D8y7TbAkpbu+4EVuxC1t7L7
+	98b+QotkBolnpPKlmxIVexkKozGBEAg==
+X-Google-Smtp-Source: AGHT+IGkl7mO31GpM00ETtQQyjB2apn3OWsMMvOjL6selmU0XxKcDg4XZbV6haY504eFAB8x2LaMP/Ud26Cg5eKnkMA=
+X-Received: by 2002:a17:907:9624:b0:ad5:59c5:a50a with SMTP id
+ a640c23a62f3a-ad559c5e012mr679198866b.41.1747667061193; Mon, 19 May 2025
+ 08:04:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
+ <20250406144822.21784-2-marek.vasut+renesas@mailbox.org> <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
+ <84cc6341-a2c1-4e3c-8c9e-2bc6589c52a6@mailbox.org> <ne4injlr4nwvufjdg7uuisxwipqfwd5voohktnbjjvod5om3p3@eriso5cw77ov>
+In-Reply-To: <ne4injlr4nwvufjdg7uuisxwipqfwd5voohktnbjjvod5om3p3@eriso5cw77ov>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 19 May 2025 10:04:09 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+GdeKFPVpEOz+588QxkF-Uq=oNF5WJU+TK31Q6mkqaDA@mail.gmail.com>
+X-Gm-Features: AX0GCFuM-ijojC5S5c880VBpsAMf0vcAyjr7rPNQjkwKwo82o_lhFRSIQX6xj28
+Message-ID: <CAL_Jsq+GdeKFPVpEOz+588QxkF-Uq=oNF5WJU+TK31Q6mkqaDA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
+ optional aux clock
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Marek Vasut <marek.vasut@mailbox.org>
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-arm-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
+	Kever Yang <kever.yang@rock-chips.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Thu, May 15, 2025 at 6:57=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Mon, May 12, 2025 at 10:42:20PM +0200, Marek Vasut wrote:
+> > On 5/9/25 9:37 PM, Manivannan Sadhasivam wrote:
+> > > On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
+> > > > Document 'aux' clock which are used to supply the PCIe bus. This
+> > > > is useful in case of a hardware setup, where the PCIe controller
+> > > > input clock and the PCIe bus clock are supplied from the same
+> > > > clock synthesiser, but from different differential clock outputs:
+> > >
+> > > How different is this clock from the 'reference clock'? I'm not sure =
+what you
+> > > mean by 'PCIe bus clock' here. AFAIK, endpoint only takes the referen=
+ce clock
+> > > and the binding already has 'ref' clock for that purpose. So I don't =
+understand
+> > > how this new clock is connected to the endpoint device.
+> >
+> > See the ASCII art below , CLK_DIF0 is 'ref' clock that feeds the contro=
+ller
+> > side, CLK_DIF1 is the bus (or 'aux') clock which feeds the bus (or endp=
+oint)
+> > side. Both clock come from the same clock synthesizer, but from two sep=
+arate
+> > clock outputs of the synthesizer.
+> >
+>
+> Okay. So separate refclks are suppplied to the host and endpoint here and=
+ no,
+> you should not call the other one as 'aux' clock, it is still the refclk.=
+ In
+> this case, you should describe the endpoint refclk in the PCIe bridge nod=
+e:
+>
+>                 pcie@... {
+>                         clock =3D <refclk_host>;
+>                         ...
+>
+>                         pcie@0 {
+>                                 device_type =3D "pci";
+>                                 reg =3D <0x0 0x0 0x0 0x0 0x0>;
+>                                 bus-range =3D <0x01 0xff>;
+>                                 clock =3D <refclk_ep>;
+>                                 ...
+>                         };
+>                 };
+>
+>
+> and use the pwrctrl driver PCI_PWRCTRL_SLOT to enable it. Right now, the =
+slot
+> pwrctrl driver is not handling the refclk, but I can submit a patch for t=
+hat.
 
-On Thu, 8 May 2025 22:21:41 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+There's another discussion about PCIe clocks here[1]. Seems there's a
+variety of options here with spread-spectrum layered on top.
 
-> On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
-> > Only one device-tree overlay (lan966x_evb_lan9662_nic.dtbo) is handled
-> > and this overlay is directly referenced in lan966x_pci_load_overlay().
-> > 
-> > This avoid to use the code for an other board.
-> > 
-> > In order to be more generic and to allow support for other boards (PCI
-> > Vendor/Device IDs), introduce the lan966x_pci_info structure and attach
-> > it to PCI Vendor/Device IDs handled by the driver.
-> > 
-> > This structure contains information related to the PCI board such as
-> > information related to the dtbo describing the board we have to load.  
-> 
-> ...
-> 
-> >  static struct pci_device_id lan966x_pci_ids[] = {
-> > -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> > +	{ PCI_VDEVICE(EFAR, 0x9660), (kernel_ulong_t)&evb_lan9662_nic_info },  
-> 
-> PCI_DEVICE_DATA() ?
+Rob
 
-PCI_DEVICE_DATA() need the device ID defined using a #define in the form
-PCI_DEVICE_ID_##vend##_##dev
-
-PCI_VDEVICE() allows the device ID value passed as an integer in the same
-way as for PCI_DEVICE().
-
-Also, according to its kdoc, it allows the next field to follow as the
-device private data.
-
-IMHO, I think PCI_VDEVICE() use is correct here and I will keep it.
-
-Best regards,
-Hervé
-
+[1] https://lore.kernel.org/all/20250425092012.95418-2-cassel@kernel.org
 
