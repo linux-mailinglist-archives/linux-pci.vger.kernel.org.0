@@ -1,284 +1,138 @@
-Return-Path: <linux-pci+bounces-27974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C65BABBE33
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A447ABBEA2
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 15:09:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF45F17CD33
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 12:46:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0ADED179CF4
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 13:09:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DCD274673;
-	Mon, 19 May 2025 12:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE22B279799;
+	Mon, 19 May 2025 13:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ILHAtyQv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nCId4YK7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72DF3F9D2;
-	Mon, 19 May 2025 12:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F8E279787;
+	Mon, 19 May 2025 13:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747658779; cv=none; b=lgOOUBFq8MyXyoldZTB7jD1S1dIoOWC5H/6kevA6C8UVY0UTibDij3pdILbXvILIfhlHUAe/aj1p2+SgYD+VIZIBIy/IV9fju24jlZQ8OS80k3z6N+bqlGSREAN/x3z43h5sU3MJ5p4gBbWDGNJuMagfRa4dBzdwI1efsywy77M=
+	t=1747660182; cv=none; b=fJtRgeKqLCW2LmXVbJZ+jxYusipS8xqjI5wHoOUGj99rYAZ2VxPQKzK7jyzgT+cj5apSXxHnt87QCRyWDUWxdxCBQgW5+thMU/CzTFOy4E6QFbQ5a7IgYo3TbgS45DK963i+cGbJnKg3hNi6VNoLXSMbZvBPUUwT66kRU10Ypx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747658779; c=relaxed/simple;
-	bh=zSLiK74+854AbjStgDFA1Lpx3mRIWseM8M2ZjwDK8fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M0cBQa5GxRqT/4y6NRDvR8tJncbL6bwrlPkdx02Hhxj1+qbdzro4gDBqpArIhDRa1E9D891NQoABBqy6Pqp3IFAFL1Hv5Dk77D54OCD+yTY9TfUrYyzzewiN7C65/M3R6PZow7tdqG7msg+lNfMkTjnweNKvNP+1Q/KN5hLoZbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ILHAtyQv; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4F2CF43B16;
-	Mon, 19 May 2025 12:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747658768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftDhpzUCFCgv9VuWBrFfvAn7gkRBGVdQ8LoorzEtpsw=;
-	b=ILHAtyQvoP+l2aYzHP8Fne8YPi4v3LTOIJmtiweeGuqExqV7XVp/RAGwvlWo+2bozMnJxz
-	xvT2E0qMBoy/JD4wgc6RIcO0JDORVOwgN+JNpzL1Jh2kQ9iNH8Xp0BDG2RJ2h6CvUeVnHW
-	vzQNNTOebdoZy+NCYZ6DHctXLI07e0mzrWnLh5MnJ4sUL7vHKuUvljTnyHJnOMrjTvBAGD
-	pzOqJu4GyhIFiwLVotKe5XZ8jGxnwS6gzpXVsb3qlCYp/gJCXGvOD90J5VhE2H+5Xg2AFQ
-	/Ki2TGqtfWeo7+6iL1S2bR5R9EEHx8pr6jLf0w3i/oScnDNxEkwd0ylP3bzyyA==
-Date: Mon, 19 May 2025 14:46:02 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 05/26] bus: simple-pm-bus: Populate child nodes at
- probe
-Message-ID: <20250519144602.0399c9c5@bootlin.com>
-In-Reply-To: <CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-6-herve.codina@bootlin.com>
-	<CAJZ5v0iL9-JzTzE7pYTJGuB1BbrE6L12K2FKNpQ8dhX9GureJw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1747660182; c=relaxed/simple;
+	bh=XkpJ6tPlbFlgCwUloxB4+DSdIpU5E6VB27qBjkhOUZY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=L4C3n48eX6f4AYIcs74HKKnLgb7VJFl+WKN1bsr7mOoY0gFaIRQTVtHRekBhGBXKVccyKtDaV40mFkNQuz4UXwHeK+VRQLhplUR7yASAQpflEWheTnSSwJLxp73XXgju02jvdaPPd3LkKZ3F4p5Pp8TFwNF84oFjuX2bJ/NGV6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nCId4YK7; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747660181; x=1779196181;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XkpJ6tPlbFlgCwUloxB4+DSdIpU5E6VB27qBjkhOUZY=;
+  b=nCId4YK7/MDDVzX7wFmoDPGqTLuSnz9qgVi0hI0CcWZfnxmGQ7EP812M
+   9Y0tDNZw2w+/jXN7PYYy+FPzFd3fgyxUjACax3f7rAmFQAfyDlIbcDBB5
+   vpHIvP/0LqgPxmAPSEt9ZZ4Sku3cvrYN4l24ftBeT1YMEzw22y9PtVNCy
+   kU9jW5+i0qgff0MwR/yQtyfWWV4+1M9m17vClvinZYyhOHedTosVvRGmW
+   S0VWRb0bd2DvQYYdvsffa7xf/ho4khzTaIfdtW6YQhpDyDx9cOC4FZKx6
+   jHMXOgWUJIG15xCm1kxZl5TRgRvvyz26+1tMRl7c/Shybyg56LzoNi037
+   A==;
+X-CSE-ConnectionGUID: sCPLbqiiSXKm+JCvX/Ed/w==
+X-CSE-MsgGUID: qB6hA4C7Q36lJEYNSOjMIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49461251"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49461251"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:09:40 -0700
+X-CSE-ConnectionGUID: i7eVy+IHQsae7CF1FyJ1Zg==
+X-CSE-MsgGUID: dqBI7AaxQyeWNq1kumUO4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="170396769"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 06:09:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 16:09:30 +0300 (EEST)
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
+    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
+    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: Re: [PATCH v3 01/11] PCI: Update current bus speed as part of
+ pci_pwrctrl_notify()
+In-Reply-To: <20250519-mhi_bw_up-v3-1-3acd4a17bbb5@oss.qualcomm.com>
+Message-ID: <10de35f5-bec6-5df3-768d-04f88c4e3d77@linux.intel.com>
+References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com> <20250519-mhi_bw_up-v3-1-3acd4a17bbb5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddugedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefflefhieduteegffeifeeggfffvdeuvdeutddvfeduudeukeffleehheffkeetnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Rafael,
+On Mon, 19 May 2025, Krishna Chaitanya Chundru wrote:
 
-On Fri, 16 May 2025 21:22:20 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
-
-> On Wed, May 7, 2025 at 9:13 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > The simple-pm-bus drivers handles several simple bus. When it is used  
+> If the link is not up till the pwrctl drivers enable power to endpoints
+> then cur_bus_speed will not be updated with correct speed.
 > 
-> s/drivers/driver/ (I think)
-> s/simple bus/simple busses/
-
-Will be fixed.
-
+> As part of rescan, pci_pwrctrl_notify() will be called when new devices
+> are added and as part of it update the link bus speed.
 > 
-> > with busses other than a compatible "simple-pm-bus", it don't populate  
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/pwrctrl/core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> s/it don't/it doesn't/
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 9cc7e2b7f2b5608ee67c838b6500b2ae4a07ad52..034f0a5d7868fe956e3fc6a9b7ed485bb69caa04 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -10,16 +10,21 @@
+>  #include <linux/pci-pwrctrl.h>
+>  #include <linux/property.h>
+>  #include <linux/slab.h>
+> +#include "../pci.h"
+>  
+>  static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
+>  			      void *data)
+>  {
+>  	struct pci_pwrctrl *pwrctrl = container_of(nb, struct pci_pwrctrl, nb);
+>  	struct device *dev = data;
+> +	struct pci_bus *bus = to_pci_dev(dev)->bus;
+>  
+>  	if (dev_fwnode(dev) != dev_fwnode(pwrctrl->dev))
+>  		return NOTIFY_DONE;
+>  
+> +	if (bus->self)
+> +		pcie_update_link_speed((struct pci_bus *)bus);
 
-Will be fixed.
+Why are you casting here?? (Perhaps it's a leftover).
 
+> +
+>  	switch (action) {
+>  	case BUS_NOTIFY_ADD_DEVICE:
+>  		/*
 > 
-> > its child devices during its probe.
-> >
-> > This confuses fw_devlink and results in wrong or missing devlinks.  
 > 
-> Well, fair enough, but doesn't it do that for a reason?
 
-I think devlink is confused just because "simple-bus" or similar handled
-by this driver didn't follow the devlink rule: "Child nodes should be
-created during parent probe".
+-- 
+ i.
 
-Suppose the following:
-   foo@0 {
-	compatible = "vendor,foo"
-
-	bar@0 {
-		compatible = "simple-bus";
-
-		baz@100 {
-			compatible = "vendor,baz"
-		};
-	};
-   };
-
-The foo driver probe() calls from of_platform_default_populate() to create
-the bar device.
-
-The bar is create and thanks to its compatible string, the simple-bus
-probe() is called. Without my modification, the baz device was not created
-during the simple-bus probe().
-
-of_platform_default_populate() called from foo probe() creates the baz
-device thanks to the recursive of_platform_bus_create() call.
-
-This leads the baz device created outside the bar probe() call.
-This "out of bus probe()" device creation confuses devlink.
-
-> 
-> > Once a driver is bound to a device and the probe() has been called,
-> > device_links_driver_bound() is called.
-> >
-> > This function performs operation based on the following assumption:
-> >     If a child firmware node of the bound device is not added as a
-> >     device, it will never be added.
-> >
-> > Among operations done on fw_devlinks of those "never be added" devices,
-> > device_links_driver_bound() changes their supplier.
-> >
-> > With devices attached to a simple-bus compatible device, this change
-> > leads to wrong devlinks where supplier of devices points to the device
-> > parent (i.e. simple-bus compatible device) instead of the device itself
-> > (i.e. simple-bus child).
-> >
-> > When the device attached to the simple-bus is removed, because devlinks
-> > are not correct, its consumers are not removed first.
-> >
-> > In order to have correct devlinks created, make the simple-pm-bus driver
-> > compliant with the devlink assumption and create its child devices
-> > during its probe.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/bus/simple-pm-bus.c | 23 ++++++++++++++---------
-> >  1 file changed, 14 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> > index d8e029e7e53f..93c6ba605d7a 100644
-> > --- a/drivers/bus/simple-pm-bus.c
-> > +++ b/drivers/bus/simple-pm-bus.c
-> > @@ -42,14 +42,14 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
-> >         match = of_match_device(dev->driver->of_match_table, dev);
-> >         /*
-> >          * These are transparent bus devices (not simple-pm-bus matches) that
-> > -        * have their child nodes populated automatically.  So, don't need to
-> > -        * do anything more. We only match with the device if this driver is
-> > -        * the most specific match because we don't want to incorrectly bind to
-> > -        * a device that has a more specific driver.
-> > +        * have their child nodes populated automatically. So, don't need to
-> > +        * do anything more except populate child nodes.  
-> 
-> The above part of the comment has become hard to grasp after the
-> change.  In particular, why populate child notes if they are populated
-> automatically?
-
-What do you thing about:
-	/*
-	 * These are transparent bus devices (not simple-pm-bus matches) that
-	 * have their child nodes be populated automatically. So, don't need to
-	 * do anything more except populate child nodes. We only match with the
-	 * device if this driver is the most specific match because we don't
-	 * want to incorrectly bind to a device that has a more specific driver.
-	 */
-
-> 
-> > + We only match with the
-> > +        * device if this driver is the most specific match because we don't
-> > +        * want to incorrectly bind to a device that has a more specific driver.
-> >          */
-> >         if (match && match->data) {
-> >                 if (of_property_match_string(np, "compatible", match->compatible) == 0)
-> > -                       return 0;
-> > +                       goto populate;  
-> 
-> Doesn't this interfere with anything, like the automatic population of
-> child nodes mentioned in the comment?
-
-I don't think so.
-
-Device population is protected against multiple calls with OF_POPULATED_BUS
-flag:
-  https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/of/platform.c#L349
-
-> 
-> >                 else
-> >                         return -ENODEV;
-> >         }
-> > @@ -64,13 +64,14 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
-> >
-> >         dev_set_drvdata(&pdev->dev, bus);
-> >
-> > -       dev_dbg(&pdev->dev, "%s\n", __func__);
-> > -
-> >         pm_runtime_enable(&pdev->dev);
-> >
-> > +populate:
-> >         if (np)
-> >                 of_platform_populate(np, NULL, lookup, &pdev->dev);
-> >
-> > +       dev_dbg(&pdev->dev, "%s\n", __func__);  
-> 
-> So how to distinguish between devices that only have child nodes
-> populated and the ones that have drvdata set?
-
-Hum, I don't see your point.
-Can you clarify ?
-
-> 
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -78,12 +79,16 @@ static void simple_pm_bus_remove(struct platform_device *pdev)
-> >  {
-> >         const void *data = of_device_get_match_data(&pdev->dev);
-> >
-> > -       if (pdev->driver_override || data)
-> > +       if (pdev->driver_override)
-> >                 return;
-> >
-> >         dev_dbg(&pdev->dev, "%s\n", __func__);
-> >
-> > -       pm_runtime_disable(&pdev->dev);
-> > +       if (pdev->dev.of_node)
-> > +               of_platform_depopulate(&pdev->dev);
-> > +
-> > +       if (!data)
-> > +               pm_runtime_disable(&pdev->dev);
-> >  }
-> >
-> >  static int simple_pm_bus_runtime_suspend(struct device *dev)
-> > --  
-
-Thanks for your feedback.
-
-Best regards,
-Hervé
 
