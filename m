@@ -1,228 +1,123 @@
-Return-Path: <linux-pci+bounces-27988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11877ABC11E
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:42:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1F8FABC130
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:45:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6734A1894232
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:42:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE826166112
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577F827F758;
-	Mon, 19 May 2025 14:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB1A8284666;
+	Mon, 19 May 2025 14:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Fl3xvs8S"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eH3WdAKN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F377283C8D;
-	Mon, 19 May 2025 14:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887792797B0;
+	Mon, 19 May 2025 14:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665731; cv=none; b=hSKMDE3stKKW8/Uj1Z+ebaGe0dIZZiAHoyBquBS1sPhfVhUvV7XMGIwp3pPwhPHtFrNVBdx00pGkP9QOTajVLkoExlSvNIL1rweQOVLm3pvNlYabrzU5s5P+bOGIIko6iUj620yLCXY8h5ti4AAYOJ2lrXtt36ixpSpKP6tCPhg=
+	t=1747665896; cv=none; b=V7w0KyxFl2FB1QZGqGlglQ6PHu7irRpqfCd/YU9Oz/2/DsCSQCd6gOpWx9wTjT3FHuLypKAc07EmA6a0SAQDtwimSEiSL9dIzInwG3SUnO2KEiwmZonkAthSDxsfOWZr/B3+aGkzvbhfk+jcupuIQeLYZuVIruzkXhBRZj3Q0aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665731; c=relaxed/simple;
-	bh=DaOCYWXng+bb+aRYRVQm2JJU3PH7hKp12qAzn1qQlzg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=buGjKjaQQdAI1YHgYzWS/nNySfie0jkgF0cq5rQZipnEC1YJTwJNx3XjISoCVnH5Z0c3slLWnGNbQcurhxKniLnsMcAuJhiekSxd4b37GWRKDUXrJi5UamVpmJ+iClPP2bWG48lsDdVTxW3IJLuQ+Hu97FsZZAR0AChlnhW5tyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Fl3xvs8S; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:To:
-	Content-Type; bh=+bDEs4YvFGFvsVERzFVHp93VMAxXcdRq+jn9IvMHqRw=;
-	b=Fl3xvs8SvCi4Zhs3rMFvVXx3NsYnUHeww1T5Sd97BYxRIlwVUhBWe8IKWrHOxd
-	4yvmZZVKUJD8MQ2WoeD3aiCt99fhrpUkpPRUfodCoN9xHplfOC5t9wu46gYWUarP
-	bLH6qbTSZaF+QBXqNBwwSYzPJ2hlkbCgnrk/niP8TcX48=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD31xYTQytocPGwCg--.349S2;
-	Mon, 19 May 2025 22:41:24 +0800 (CST)
-Message-ID: <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
-Date: Mon, 19 May 2025 22:41:23 +0800
+	s=arc-20240116; t=1747665896; c=relaxed/simple;
+	bh=vBqhKMKC4OdHgrV/CQyjfP3RTYzJtSE/7KU63stqSvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OU9sWDd8Xa3eO9BQ1HZKVc9UFGEq0nu9VAsS9H+uLoEnql6ldzRU3Vok4CwCUZf6K2R+i+5J7eKMDhBgUP3j2R6PSkNApRY7ol+UvIifIeR8r3TsJiR/KbS961VvF+mJMO7QvKaR3ifuzwBSeqKsjx+xDe8k43Diuz1GNDnpEfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eH3WdAKN; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C35E543A62;
+	Mon, 19 May 2025 14:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747665891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qhRsdDycI0OlXvOuPwJxvAYxJ8SUxX7xj+GFLQ0kVvw=;
+	b=eH3WdAKNnNb3TD5/ufVcgMos6dNTqXPDtuD8xsTELsY3XFQ2nqsXkOcUDh1YfySKaHwJz8
+	I+/Fp/PaWvCD6rTsGXxTBdTUwvz1i56dSEnQ7WeL4xSL/dmY+eQ7hzb2XG6NmwN0kTYDhy
+	NF6MfmYzMzFIqkMomuXzHCLETqPRY1nwHvOqSTwFe0VeKUEerfPB6LCt1T+Z+KZxjnYkPA
+	FBEmBnaZXG/rxvub1PVImJTtGAPI4UiJvlFWZl0Fd/0fnmbLjWFeThj67uheOOpXUShINU
+	4UBnKrqa15BzocMqVTJT33gGXwX+b6a+LPQ8BjWxKuC6xmy26F8Iz4/6Ac1gxg==
+Date: Mon, 19 May 2025 16:44:48 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific
+ data
+Message-ID: <20250519164448.57792b6d@bootlin.com>
+In-Reply-To: <8b97e095-dbed-438c-9c6d-d3c2c5929fc0@lunn.ch>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	<20250507071315.394857-24-herve.codina@bootlin.com>
+	<8b97e095-dbed-438c-9c6d-d3c2c5929fc0@lunn.ch>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
-From: Hans Zhang <18255117159@163.com>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
- manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
-Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20250516165518.125495-1-18255117159@163.com>
- <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
- <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
-Content-Language: en-US
-In-Reply-To: <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD31xYTQytocPGwCg--.349S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4UJr4kAw13XFy5try7KFg_yoW7tF4kpa
-	yrGa1YkrWkGF92van2k3WIqFyYyas3t345WrykGw13XFnIvFyjqrWSvFWYkFZIgrZYgw45
-	ZrW0v347Wrn8AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UjiihUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwZSo2grPXGRfAAAsO
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduieehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhgu
+ hhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
+Hi Andrew,
 
+On Thu, 8 May 2025 00:24:03 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-On 2025/5/19 22:21, Hans Zhang wrote:
+> On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
+> > Only one device-tree overlay (lan966x_evb_lan9662_nic.dtbo) is handled
+> > and this overlay is directly referenced in lan966x_pci_load_overlay().
+> > 
+> > This avoid to use the code for an other board.
+> > 
+> > In order to be more generic and to allow support for other boards (PCI
+> > Vendor/Device IDs), introduce the lan966x_pci_info structure and attach
+> > it to PCI Vendor/Device IDs handled by the driver.
+> > 
+> > This structure contains information related to the PCI board such as
+> > information related to the dtbo describing the board we have to load.
+> > 
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
 > 
-> 
-> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
->>
->> On 5/16/25 9:55 AM, Hans Zhang wrote:
->>> The following series introduces a new kernel command-line option 
->>> aer_panic
->>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
->>> mission-critical environments. This feature ensures deterministic 
->>> recover
->>> from fatal PCIe errors by triggering a controlled kernel panic when 
->>> device
->>> recovery fails, avoiding indefinite system hangs.
->>
->> Why would a device recovery failure lead to a system hang? Worst case
->> that device may not be accessible, right?  Any real use case?
->>
-> 
-> 
-> Dear Sathyanarayanan,
-> 
-> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
-> SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
-> design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers 
-> have designed it this way.)  For example, when many mobile phone SoCs of 
-> Qualcomm handle AER interrupts and there is a link down, that is, a 
-> fatal problem occurs in the current PCIe physical link, the system 
-> cannot recover.  At this point, a system restart is needed to solve the 
-> problem.
-> 
-> And our company design of SOC: http://radxa.com/products/orion/o6/, it 
-> has 5 road PCIe port.
-> There is also the same problem.  If there is a problem with one of the 
-> PCIe ports, it will cause the entire system to hang.  So I hope linux OS 
-> can offer an option that enables SOC manufacturers to choose to restart 
-> the system in case of fatal hardware errors occurring in PCIe.
-> 
-> There are also products such as mobile phones and tablets.  We don't 
-> want to wait until the battery is completely used up before restarting 
-> them.
-> 
-> For the specific code of Qualcomm, please refer to the email I sent.
-> 
+> How big is the dtbo ?
 
-
-Dear Sathyanarayanan,
-
-Supplementary reasons:
-
-drivers/pci/controller/cadence/pcie-cadence-host.c
-cdns_pci_map_bus
-     /* Clear AXI link-down status */
-     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
-
-https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
-
-If there has been a link down in this PCIe port, the register 
-CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
-continue.  This is different from Synopsys.
-
-If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD saving 
-files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it causes 
-CPU Core1 to be unable to send TLP transfers and hang.  This is a very 
-extreme situation.
-(The current Cadence code is Legacy PCIe IP, and the HPA IP is still in 
-the upstream process at present.)
-
-Radxa O6 uses Cadence's PCIe HPA IP.
-http://radxa.com/products/orion/o6/
+With current series applied, the dtbo is 6029 Bytes.
 
 Best regards,
-Hans
-
-> 
->>>
->>> Problem Statement
->>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
->>> traditional error recovery mechanisms may leave the system unresponsive
->>> indefinitely. This is unacceptable for high-availability environment
->>> requiring prompt recovery via reboot.
->>>
->>> Solution
->>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
->>> This bypasses prolonged recovery attempts and ensures immediate reboot.
->>>
->>> Patch Summary:
->>> Documentation Update: Adds aer_panic to kernel-parameters.txt, 
->>> explaining
->>> its purpose and usage.
->>>
->>> Command-Line Handling: Implements pci=aer_panic parsing and state
->>> management in PCI core.
->>>
->>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
->>> mode is active.
->>>
->>> Panic Trigger: Modifies recovery logic to panic the system when recovery
->>> fails and aer_panic is enabled.
->>>
->>> Impact
->>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
->>> reboots.
->>>
->>> Optional: Enabled via pci=aer_panic; no default behavior change.
->>>
->>> Dependency: Requires CONFIG_PCIEAER.
->>>
->>> For example, in mobile phones and tablets, when there is a problem with
->>> the PCIe link and it cannot be restored, it is expected to provide an
->>> alternative method to make the system panic without waiting for the
->>> battery power to be completely exhausted before restarting the system.
->>>
->>> ---
->>> For example, the sm8250 and sm8350 of qcom will panic and restart the
->>> system when they are linked down.
->>>
->>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
->>>
->>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
->>>
->>>
->>> Since the design schemes of each SOC manufacturer are different, the AXI
->>> and other buses connected by PCIe do not have a design to prevent 
->>> hanging.
->>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
->>> system needs to be restarted.
->>>
->>>
->>> Dear Mani,
->>>
->>> I wonder if you know how other SoCs of qcom handle FATAL errors that 
->>> occur
->>> in PCIe link.
->>> ---
->>>
->>> Hans Zhang (4):
->>>    pci: implement "pci=aer_panic"
->>>    PCI/AER: Introduce aer_panic kernel command-line option
->>>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
->>>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
->>>
->>>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
->>>   drivers/pci/pci.c                              |  2 ++
->>>   drivers/pci/pci.h                              |  4 ++++
->>>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
->>>   drivers/pci/pcie/err.c                         |  8 ++++++--
->>>   5 files changed, 37 insertions(+), 2 deletions(-)
->>>
->>>
->>> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
->>> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
->>> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
->>
-
+Hervé
 
