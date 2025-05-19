@@ -1,187 +1,132 @@
-Return-Path: <linux-pci+bounces-27955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD673ABBB52
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 12:42:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42351ABBB90
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 12:58:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B533517836D
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 10:42:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D81DB17C01C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 10:58:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0612749EB;
-	Mon, 19 May 2025 10:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D6C1F5833;
+	Mon, 19 May 2025 10:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rn7q29cf"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fe2phNgz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66930274656;
-	Mon, 19 May 2025 10:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABECB67A;
+	Mon, 19 May 2025 10:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747651320; cv=none; b=OVrIEX2qO46EC/gUPxQDtDXQlVM/WpopoS2Ii3+E3YH9ZywOJLidmpufMvLXxMV1rfzy/iNNd1rKv+iwEWS2XOJhFIX1DgNtfz4Ud0yi7EfvIuWEIYlKoMkmRgNkmgAJ3gO6EuAjVshfp/5v1LWFa1EoiyGJIgzvpaMEeKaQFng=
+	t=1747652313; cv=none; b=r5l1fTQewbFB4ZPmE0vS9eegW5FUluvuafCEZTi60CdItDlqy4n4GF6xQlI5gWpPKPoyPy8DkNK0WFuOVoPTgMg+jni7c3ETUq1f6LdNmoainue3WPjFz6If8ZJKVeNBvvZ2Hih+W1Pz5IKE5Mc+gNePkPBieDxLjD1C1tRdVHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747651320; c=relaxed/simple;
-	bh=WwdWSDzHYkwFYjUjNLqQ7dTd0+b4+asbHn//f9+h/z4=;
+	s=arc-20240116; t=1747652313; c=relaxed/simple;
+	bh=lR3ufQjfCMt0wa1qQJnPCIl39LwV+E/PY8mCye8iihU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WR4vbPyTb4kVKq/jn+5ObtOwfYe1C6g2RK2YiD9N1m0NzzzygOKNeLgsbnNVTvxmhVabwsQUNN4lCV/w8s8HRp0LA6VqVDmLVUsdFGW6TOlZNC70ZaZJ1r2tsWpHTmiwclUOREI71snlDvaNVt+07HPCumL/1fof7IiUc+9cLlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rn7q29cf; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747651318; x=1779187318;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WwdWSDzHYkwFYjUjNLqQ7dTd0+b4+asbHn//f9+h/z4=;
-  b=Rn7q29cfOQYGEkBAR/oTQ8fdjbj28nTP/WXiNHdHpPrxOmDd1/caStAN
-   5Tv9sQWIulPqkddkYA9uRLoDZ9vJvphx7U0TASj40znc8N7gxIyoZxp7h
-   1nOOXiVcChsQUyHwXuAJXNgKacmAT2SzFmF2e6aj7+m1pR7IYBZpnE/Ie
-   11NK3ihVH8qvbzW0vlkwZlKS2d9d/uXqirkxnRfzS3HIwITbgwH+Tj4O5
-   NkhhUo9ZBLyFi0plhzHEYs1MRVvhpgBD61ugPWCSaHLS7cEpctl5rLG9/
-   oqDBw0IuaHhmh5DL186P/52vNp9oFLPhOct7qfjQ8v+UoPf5tuj+gPII0
-   g==;
-X-CSE-ConnectionGUID: /vLTRnN8SlKhSKpU6wgALQ==
-X-CSE-MsgGUID: ANoeMXuAR1W1tap6dlU3Hw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="48657721"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="48657721"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:41:57 -0700
-X-CSE-ConnectionGUID: oUqXr90sQfCsQ0lxJh+iXQ==
-X-CSE-MsgGUID: VJV/wwbTSwy/hsPTBHueXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="170243692"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 03:41:54 -0700
-Date: Mon, 19 May 2025 13:41:51 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	lukas@wunner.de, aravind.iddamsetty@linux.intel.com,
-	superm1@kernel.org, benato.denis96@gmail.com
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCsK743YSuahPtnH@black.fi.intel.com>
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vb78aBP9NoZbIu88d9+RhN9HIb3O19MWWZAQorVbmMHB3UeyhuyVPUAmPKKPZNxlc4HEGw5XteTu2xMvXPmLlRHWVyIycozUvArXmD6TkcpUCffBvhrLEOTfqpiCPvhcGIY7dsd1nPyfJtkeCVOCsE0Bfu/VkF6+TrjPphExJjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=fe2phNgz; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 8A5411C00B2; Mon, 19 May 2025 12:51:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1747651890;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wqHSHMNjwPahuHRb2M/03gC2UK+sZwBdUQwHO3smOZs=;
+	b=fe2phNgzKQNmp8uKjoSeP53Hj3aPw4ryW4AhnKgHl9OELLyCaJ62HkTIhxy7TuvIp2+bn9
+	KMzT35GYGQfU10PxHPtLaYNH8ntH1nPWYJrbhHWSLQ/gip26CAGLtQgMmYr6qdc0yyjy3t
+	Fh2QliFEWwV2qot/FI59YjG2w+0rRaY=
+Date: Mon, 19 May 2025 12:51:30 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Tony Hutter <hutter2@llnl.gov>, linux-leds@vger.kernel.org
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	mariusz.tkaczyk@linux.intel.com, minyard@acm.org,
+	linux-pci@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 RESEND] PCI: Introduce Cray ClusterStor E1000 NVMe
+ slot LED driver
+Message-ID: <aCsNMvfSWptltx5k@duo.ucw.cz>
+References: <553813b6-1d44-488c-b41b-4be08e1c1733@llnl.gov>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/0WdGnjK/qdBFyct"
+Content-Disposition: inline
+In-Reply-To: <553813b6-1d44-488c-b41b-4be08e1c1733@llnl.gov>
+
+
+--/0WdGnjK/qdBFyct
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519102808.4130271-1-raag.jadav@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
-> If error status is set on an AER capable device, most likely either the
-> device recovery is in progress or has already failed. Neither of the
-> cases are well suited for power state transition of the device, since
-> this can lead to unpredictable consequences like resume failure, or in
-> worst case the device is lost because of it. Leave the device in its
-> existing power state to avoid such issues.
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
-> 
-> v2: Synchronize AER handling with PCI PM (Rafael)
-> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->     Elaborate "why" (Bjorn)
-> v4: Rely on error status instead of device status
->     Condense comment (Lukas)
+Hi!
 
-Since pci_aer_in_progress() is changed I've not included Rafael's tag with
-my understanding of this needing a revisit. If this was a mistake, please
-let me know.
+> Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
+> The driver provides hotplug attention status callbacks for the 24 NVMe
+> slots on the E1000.  This allows users to access the E1000's locate and
+> fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
+> entries.  This driver uses IPMI to communicate with the E1000 controller
+> to toggle the LEDs.
+>=20
+> Signed-off-by: Tony Hutter <hutter2@llnl.gov>
 
-Denis, Mario, does this fix your issue?
+We have LED subsystem.
 
-> More discussion on [1].
-> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> 
->  drivers/pci/pci.c      |  9 +++++++++
->  drivers/pci/pcie/aer.c | 13 +++++++++++++
->  include/linux/aer.h    |  2 ++
->  3 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24..a20018692933 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/aer.h>
->  #include <linux/kernel.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->  	   || (state == PCI_D2 && !dev->d2_support))
->  		return -EIO;
->  
-> +	/*
-> +	 * If error status is set on an AER capable device, it is not well
-> +	 * suited for power state transition. Leave it in its existing power
-> +	 * state to avoid issues like unpredictable resume failure.
-> +	 */
-> +	if (pci_aer_in_progress(dev))
-> +		return -EIO;
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -231,6 +231,27 @@ Description:
+>  		    - scXX contains the device subclass;
+>  		    - iXX contains the device class programming interface.
+> =20
+> +What:		/sys/bus/pci/slots/.../attention
+> +Date:		February 2025
+> +Contact:	linux-pci@vger.kernel.org
+> +Description:
+> +		The attention attribute is used to read or write the attention
+> +		status for an enclosure slot.  This is often used to set the
+> +		slot LED value on a NVMe storage enclosure.
 > +
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..617fbac0d38a 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->  
-> +bool pci_aer_in_progress(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +	u32 cor, uncor;
+> +		Common values:
+> +		0 =3D OFF
+> +		1 =3D ON
+> +		2 =3D blink (ampere, ibmphp, pciehp, rpaphp, shpchp)
 > +
-> +	if (!pcie_aer_is_native(dev))
-> +		return false;
+> +		Using the pciehp_craye1k extensions:
+> +		0 =3D fault LED OFF, locate LED OFF
+> +		1 =3D fault LED ON,  locate LED OFF
+> +		2 =3D fault LED OFF, locate LED ON
+> +		3 =3D fault LED ON,  locate LED ON
 > +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
-> +	return cor || uncor;
-> +}
+> +		Other values are no-op, OFF, or ON depending on the driver.
 > +
->  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->  {
->  	int rc;
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324..e6a380bb2e68 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
-> +bool pci_aer_in_progress(struct pci_dev *dev);
->  #else
->  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->  #endif
->  
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> -- 
-> 2.34.1
-> 
+
+And this should use it.
+
+Best regards,
+									Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--/0WdGnjK/qdBFyct
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCsNMgAKCRAw5/Bqldv6
+8gL9AJ9ioZr4CiKLusY4swf/Km1O2Q0M2QCggc56FgkysxptA3E0mCfEeZhf3o8=
+=9ag7
+-----END PGP SIGNATURE-----
+
+--/0WdGnjK/qdBFyct--
 
