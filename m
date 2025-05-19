@@ -1,180 +1,226 @@
-Return-Path: <linux-pci+bounces-27986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CE74ABC107
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:40:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D3CCABC110
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:41:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 206BE1B62265
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:40:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B23091B623EF
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 14:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99F0E284691;
-	Mon, 19 May 2025 14:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E37283C87;
+	Mon, 19 May 2025 14:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R7v7B6CD"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ftzeb1H+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAB4283FFD;
-	Mon, 19 May 2025 14:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1664C284676;
+	Mon, 19 May 2025 14:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747665591; cv=none; b=YKjf9zqrbZUkyvX5I9yZsrlLH2H6YEh6oG8nij8ze3PNY3QTbg/0z1YhKgfGGRj0Wazvt7aF2UurJOG9Gu6QfRcIJXeG59CLAGEWIT0dcKU3t3IFE5BKzbP6jeRS6SAzUziWhY8bZDwK7AbZinHXr26MxhKoVc0hJaX8J4Wj6Mo=
+	t=1747665636; cv=none; b=EQlz3fFAajkP9MGaKhcpQlOXpr/R+emwnanWhm+EuCzKNy6WN63Ialh5CWUE5Fn8vxggYeHR5RuuWDjM9EpyJfBWIItorsPbFyeMauwnfQ09w/JyuH1ratTyPuxlmus3eUtAaG9bqYlXeraumfRkJ5WHhoUS9+aCHUw6vmjtsc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747665591; c=relaxed/simple;
-	bh=msd4Nbv4JsXtgheMB/Yu77g5qkVvbJz4LMQVT6RHC/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uFka7WdWXwnzsGkAtitwkcTo7CkYH4DQUFaphwBQGfAByMnVPqwiBbjn73vpjjDxu4+kAZCTlE6iLV0inZom/wlmrFzWoMXPxjzkDyrZvv0/lspJncUFD+cxlt+jN83AyH/x55OeCdMcDCzSnPWsynolK0F7qOOKPfJw7dJpfQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R7v7B6CD; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A340F43150;
-	Mon, 19 May 2025 14:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747665581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s78TSynP1yOAyv5ym7VeOQWFY/KVrRxunsW0R6Vz4B0=;
-	b=R7v7B6CDR6I0+2oPYtmWBWzRnlYJgjGM2QkIe3qdD/oGnjK8GyM+fnt5g3CO81bKOUjxJ+
-	z9pFesZxkLYN6SnX7pQI0/KypX07xDTZpGwRBw2cMkXFpSqam9BsKYON7+6iLDSWVFsJlm
-	t2ueG/KBIL1kYvX6KuExE+eEV/8isoWnJNj8D1Ph8C2F7UUxQrABw8X8SCBO/5RggRK2EU
-	wn+F5KqsdhyBKw5sJU2aeNn6MjEg3bZZI/bbr2leXReaNfQeHKQH94KlP3LoUJ09sKn6qM
-	vb7hCmlrDD4j1zzcvnanZr8bYalKd5bLxL9srDdhcUdysADuHcWWugAsfM9Sgg==
-Date: Mon, 19 May 2025 16:39:35 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 16/26] i2c: mux: Create missing devlink between mux
- and adapter physical device
-Message-ID: <20250519163935.3e47ec04@bootlin.com>
-In-Reply-To: <aB0C05WnKkgslAuT@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
-	<20250507071315.394857-17-herve.codina@bootlin.com>
-	<aB0C05WnKkgslAuT@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1747665636; c=relaxed/simple;
+	bh=k6eA1jkXcThyePw6CZwg5Q3R+W1tppfokRGe0lT2dsU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TTIyufBoh1PUisym3N+ngJqpfvuW8GzkuONU57JiKVpOCSX0ZlCQIkHRg3hs0TgIi51h1wNtIXG8wOx4QZ1mlctjCcGBZg+Tr6vD2bmG83FjgI1Oarhp4eIjTaVoFrbbQ3Ejm12ev07CM78+fZ3KsGx1/TlhwyjryowwSdnZmm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ftzeb1H+; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:To:
+	Content-Type; bh=AntKYH1ZwZOest/SN1xkVuvvLJOxFubIGIo8RltCreo=;
+	b=ftzeb1H+0uTdhT6UuNoZVvK9VHRpz8MvCA9PXsLsdZQQcNLR5LOcw0GuXR73qN
+	Uth9YEhGeszNDlYKH3RYLPCyQoAS+0Hyq9P4UXQJ0ptT3/tOKIubywj4ZwTF4KIl
+	4z0H6dzA/mpBrD75lk/FzZbzyeLcUPyZEs9DwSj9yXnI8=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3526nQitoFe1UCg--.45396S2;
+	Mon, 19 May 2025 22:39:36 +0800 (CST)
+Message-ID: <ca5a4b17-d784-408d-a894-09e282751f99@163.com>
+Date: Mon, 19 May 2025 22:39:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+From: Hans Zhang <18255117159@163.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+Content-Language: en-US
+In-Reply-To: <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdduieegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: herve.codina@bootlin.com
+X-CM-TRANSID:_____wD3526nQitoFe1UCg--.45396S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4UJr4kAw13XFy5try7KFg_yoW7tF4kpa
+	yrGa1YkrWkGF92van2k3WIqFyYyas3t345WrykGw13XFnIvFyjqrWSvFWYkFZIgrZYgw45
+	ZrW0v347Wrn8AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U15l8UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw1So2grQqIAxAAAsU
 
-Hi Andy,
 
-On Thu, 8 May 2025 22:15:31 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> On Wed, May 07, 2025 at 09:12:58AM +0200, Herve Codina wrote:
-> > When removing an i2c controller device handling an i2c bus where an i2c
-> > mux is connected to, the removal process hangs and is stuck in the
-> > wait_completion() call done in i2c_del_adapter().
-> > 
-> > The i2c_del_adapter() tries to removed the i2c adapter related to the
-> > i2c controller device and the wait_completion() is waiting for the i2c
-> > adapter device release. This release is performed when the device is no
-> > more used (i.e. refcount reaches zero).
-> > 
-> > When an i2c mux is involved in an i2c path, the struct dev topology is
-> > the following:
-> >     +----------------+                +-------------------+
-> >     | i2c controller |                |      i2c mux      |
-> >     |     device     |                |      device       |
-> >     |       ^        |                |                   |
-> >     |       |        |                |                   |
-> >     |  dev's parent  |                |                   |
-> >     |       |        |                |                   |
-> >     |   i2c adapter  |                | i2c adapter chanX |
-> >     |     device  <---- dev's parent ------  device       |
-> >     |   (no driver)  |                |    (no driver)    |
-> >     +----------------+                +-------------------+
-> > 
-> > When an i2c mux device creates an i2c adapter for its downstream
-> > channel, a reference is taken to its adapter dev's parent. This parent
-> > is the i2c mux upstream adapter device.
-> > 
-> > No relationship exists between the i2c mux device itself and the i2c
-> > controller device (physical device) in order to have the i2c mux device
-> > calling i2c_del_adapter() to remove its downtream adapters and so,
-> > release references taken to the upstream adapter.
-> > 
-> > This consumer/supplier relationship is typically a devlink relationship.
-> > 
-> > Also, i2c muxes can be chained and so, the upstream adapter can be
-> > supplied by either an i2c controller device or an other i2c mux device.
-> > 
-> > In order to get the physical device of the adapter a mux is connected
-> > to, rely on the newly introduced i2c_adapter_get_physdev() and create
-> > the missing devlink between the i2c mux device and the physical
-> > device of the adapter the mux is connected to.
-> > 
-> > With that done, the i2c mux device is removed before the device
-> > handling the upstream i2c adapter (i2c controller device or i2c mux
-> > device). All references are released and the i2c_del_adapter() call
-> > performed by driver handling the upstream adapter device is not blocking
-> > anymore.  
+On 2025/5/19 22:21, Hans Zhang wrote:
 > 
-> ...
 > 
-> > +	/*
-> > +	 * There is no relationship set between the mux device and the physical
-> > +	 * device handling the parent adapter. Create this missing relationship
-> > +	 * in order to remove the i2c mux device (consumer) and so the dowstream
-> > +	 * channel adapters before removing the physical device (supplier) which
-> > +	 * handles the i2c mux upstream adapter.
-> > +	 */
-> > +	parent_physdev = i2c_get_adapter_physdev(parent);
-> > +	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);
-> > +	if (!dl) {
-> > +		dev_err(muxc->dev, "failed to create device link to %s\n",
-> > +			dev_name(parent_physdev));
-> > +		put_device(parent_physdev);
-> > +		ret = -EINVAL;
-> > +		goto err_free_priv;
-> > +	}
-> > +	put_device(parent_physdev);  
+> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>
+>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>> The following series introduces a new kernel command-line option 
+>>> aer_panic
+>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>> mission-critical environments. This feature ensures deterministic 
+>>> recover
+>>> from fatal PCIe errors by triggering a controlled kernel panic when 
+>>> device
+>>> recovery fails, avoiding indefinite system hangs.
+>>
+>> Why would a device recovery failure lead to a system hang? Worst case
+>> that device may not be accessible, right?  Any real use case?
+>>
 > 
-> Since you are not checking parent_physdev for NULL, the dev_name() can print a
-> "(null)" string. Is this by design?
+> 
+> Dear Sathyanarayanan,
+> 
+> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
+> SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
+> design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers 
+> have designed it this way.)  For example, when many mobile phone SoCs of 
+> Qualcomm handle AER interrupts and there is a link down, that is, a 
+> fatal problem occurs in the current PCIe physical link, the system 
+> cannot recover.  At this point, a system restart is needed to solve the 
+> problem.
+> 
+> And our company design of SOC: http://radxa.com/products/orion/o6/, it 
+> has 5 road PCIe port.
+> There is also the same problem.  If there is a problem with one of the 
+> PCIe ports, it will cause the entire system to hang.  So I hope linux OS 
+> can offer an option that enables SOC manufacturers to choose to restart 
+> the system in case of fatal hardware errors occurring in PCIe.
+> 
+> There are also products such as mobile phones and tablets.  We don't 
+> want to wait until the battery is completely used up before restarting 
+> them.
+> 
+> For the specific code of Qualcomm, please refer to the email I sent.
+> 
 
-It is worse than that. If parent_physdev is NULL, dev_name() can crash.
+Dear Sathyanarayanan,
 
-I will fix that and check parent_physdev for NULL in the next iteration.
+Supplementary reasons:
+
+drivers/pci/controller/cadence/pcie-cadence-host.c
+cdns_pci_map_bus
+     /* Clear AXI link-down status */
+     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+
+https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+
+If there has been a link down in this PCIe port, the register 
+CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
+continue.  This is different from Synopsys.
+
+If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD saving 
+files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it causes 
+CPU Core1 to be unable to send TLP transfers and hang.  This is a very 
+extreme situation.
+(The current Cadence code is Legacy PCIe IP, and the HPA IP is still in 
+the upstream process at present.)
+
+Radxa O6 uses Cadence's PCIe HPA IP.
+http://radxa.com/products/orion/o6/
 
 Best regards,
-Hervé
+Hans
+> 
+>>>
+>>> Problem Statement
+>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>> traditional error recovery mechanisms may leave the system unresponsive
+>>> indefinitely. This is unacceptable for high-availability environment
+>>> requiring prompt recovery via reboot.
+>>>
+>>> Solution
+>>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>>
+>>> Patch Summary:
+>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, 
+>>> explaining
+>>> its purpose and usage.
+>>>
+>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>> management in PCI core.
+>>>
+>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
+>>> mode is active.
+>>>
+>>> Panic Trigger: Modifies recovery logic to panic the system when recovery
+>>> fails and aer_panic is enabled.
+>>>
+>>> Impact
+>>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
+>>> reboots.
+>>>
+>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>
+>>> Dependency: Requires CONFIG_PCIEAER.
+>>>
+>>> For example, in mobile phones and tablets, when there is a problem with
+>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>> alternative method to make the system panic without waiting for the
+>>> battery power to be completely exhausted before restarting the system.
+>>>
+>>> ---
+>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>> system when they are linked down.
+>>>
+>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>
+>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>
+>>>
+>>> Since the design schemes of each SOC manufacturer are different, the AXI
+>>> and other buses connected by PCIe do not have a design to prevent 
+>>> hanging.
+>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>> system needs to be restarted.
+>>>
+>>>
+>>> Dear Mani,
+>>>
+>>> I wonder if you know how other SoCs of qcom handle FATAL errors that 
+>>> occur
+>>> in PCIe link.
+>>> ---
+>>>
+>>> Hans Zhang (4):
+>>>    pci: implement "pci=aer_panic"
+>>>    PCI/AER: Introduce aer_panic kernel command-line option
+>>>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
+>>>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
+>>>
+>>>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
+>>>   drivers/pci/pci.c                              |  2 ++
+>>>   drivers/pci/pci.h                              |  4 ++++
+>>>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
+>>>   drivers/pci/pcie/err.c                         |  8 ++++++--
+>>>   5 files changed, 37 insertions(+), 2 deletions(-)
+>>>
+>>>
+>>> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+>>> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
+>>> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
+>>
+
 
