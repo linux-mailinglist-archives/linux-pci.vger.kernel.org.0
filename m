@@ -1,154 +1,121 @@
-Return-Path: <linux-pci+bounces-27993-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27996-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38F7AABC2C7
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 17:44:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E52CABC3F9
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 18:13:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 312133B4C95
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 15:44:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D713817EC54
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:13:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4942A22A7FF;
-	Mon, 19 May 2025 15:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EB728C87A;
+	Mon, 19 May 2025 16:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOMWIman"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fOzwOBIs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D912820C6;
-	Mon, 19 May 2025 15:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112AE28C5D6;
+	Mon, 19 May 2025 16:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669470; cv=none; b=fTSnr74qZOvgdGVe149C7Bk08UIXwQW5PQ6OSsxoThj2HBSP3+TQPOwMjxNef46k0rTmZnjxfhD+4pZD4A5HGIzncViSltESc3uxefIgd2bxjh7cngYurzZlEC8DcS7CMokrtf8CvHwePvi48tTM8Vxv8F4tgm2XTUeFW1Xo4K4=
+	t=1747670736; cv=none; b=dT+MYvNPnxG+JJtW8DEBUJSXqPBiGYkEGDIGwRZoC6+yTKejmMuP77yJlbWbFbrGQzBHl3MjFj5tzoSibuCc+bchuiAg0rw3mVU1EWwC7WVWx0/CCmowKfwDAbRs9UxFDvrZ5UFn7qLQTHO0fL7tpwBg5fj/oqucqYdy7npQBRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747669470; c=relaxed/simple;
-	bh=ucbRC+By9t6hiwEjSnTGEwM8Sp7zd3PXSGJLq749aGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qm92AmcR87mf6YgWqphb2IWpliXJ34Epejc8119Sq6cqpJcbaXX0pagIl+7WLlYnLx/dH9buWEVbWl5znbOm6Kop1FfR+RTfZF5oguHp6w8gR14h4i1R/IDYKraJq5GIicufo0QjBXbdCjNJuvYit0cepe/m5V+dYVzOtSwK0Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOMWIman; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747669469; x=1779205469;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ucbRC+By9t6hiwEjSnTGEwM8Sp7zd3PXSGJLq749aGA=;
-  b=gOMWImanockod7A/QxMhBip60hxhwDqRMjfZuqjMPulix1cJgkOeSY9G
-   uVp4Yfeopxznj7KPDWdx8aDdTANeeh0rx/ejfIZCzjkxiti+WqL+PmzFf
-   o1nKoJkAzHClGxWTcgXkZnlKwp4AhiTlkj+901XhieoRlr1OeDhQ1GuCe
-   ztEM0zzEnZyGd/e813Xl1dy35NKQ6y1kG+fb5ugBZeRgcOZQ0s42OGZaB
-   h6DRoK8EOBiuZzWHD4AbfQO1MQw0rWE+a5DeGvFSD1A2mdz0gEuP4HjH3
-   3stFLGelmUzcOHA/rhR55DG/iKyxCkWH6ilFRwL5H5rubH2wuP/0bcbzZ
-   w==;
-X-CSE-ConnectionGUID: WKLKd6ubTY+f8O88tW3VcA==
-X-CSE-MsgGUID: /UA6LEhJRMWQmdgoLNy3YA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="60966638"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="60966638"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:44:28 -0700
-X-CSE-ConnectionGUID: D9nnBx4yRm2U9Gb6be0UuQ==
-X-CSE-MsgGUID: O7jOjWPERG2e6Txxz393/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="176513494"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 08:44:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uH2f0-000000034rN-2cA2;
-	Mon, 19 May 2025 18:44:14 +0300
-Date: Mon, 19 May 2025 18:44:14 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific data
-Message-ID: <aCtRzm6nPk61WtRj@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-24-herve.codina@bootlin.com>
- <aB0ERYKdRreDe7Wt@smile.fi.intel.com>
- <20250519170004.631d99af@bootlin.com>
+	s=arc-20240116; t=1747670736; c=relaxed/simple;
+	bh=4rkOMpvboA4bqkGU/KoxpZYtamjteNUs9xHAUuSSMiw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kNU8KTJz90vps+s+U3YKBllF6EIxHkFuwbJgcTA3aP6T/ocjDkz8CB8aWhQyyf3wuIJihm/4N8ihcGCcg1tHIZY9zKNyVcAXalP7VCwIRHlR/yREDxu2rtg+tjh07VW+S0FjzAIQ28sgqEtwyWyZVa4CMVTjalxsrskMEvkwnuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fOzwOBIs; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=jH
+	vaX9YB/20lBOtBtYQ8vti6dWBiuMXx3X707zJ7qMg=; b=fOzwOBIsa9hlNlVN6P
+	5COqnGG6+i7nxKWkiEA/K7hg3dNT4e3Fc9KVeKCyjvjCerXxAmMCamoCIuSgwzur
+	Sf/3XMhXTqXXrg7hbXltFG48uRbzPEvv/OsYmgSvJmDfVWvUM4EQBAhqd56MJ68P
+	4V7Ic6jjCk4jQIaYSBLjIOxic=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHWSeiVitokozvCQ--.46206S2;
+	Tue, 20 May 2025 00:04:51 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	krzk+dt@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	conor+dt@kernel.org
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 0/3] Relax max-link-speed check to support PCIe Gen5/Gen6
+Date: Tue, 20 May 2025 00:04:45 +0800
+Message-Id: <20250519160448.209461-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519170004.631d99af@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHWSeiVitokozvCQ--.46206S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4UJF18JrWxtr1rCF4DArb_yoW8CrWDpF
+	ZxCry8tF1xuw15Xw4xZ3ZY9Fy7WFn5Xa13trs8W3srJFnxGa4ftFWI9F1fXF9rWF4fur1x
+	Xa1avws5Ga48Aw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEdWFUUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxNSo2grTN7iCAAAsW
 
-On Mon, May 19, 2025 at 05:00:04PM +0200, Herve Codina wrote:
-> On Thu, 8 May 2025 22:21:41 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
+This patch series extends PCIe Gen5/Gen6 support for the max-link-speed
+property across device tree bindings and kernel validation logic.
 
-...
+With PCIe 6.0 now supported in the Linux kernel and industry IP providers
+like Synopsys/Cadence offering PCIe 6.0-compatible IPs, existing device
+tree bindings and checks for max-link-speed (limited to Gen1~Gen4) no
+longer align with hardware capabilities.
 
-> > >  static struct pci_device_id lan966x_pci_ids[] = {
-> > > -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> > > +	{ PCI_VDEVICE(EFAR, 0x9660), (kernel_ulong_t)&evb_lan9662_nic_info },  
-> > 
-> > PCI_DEVICE_DATA() ?
-> 
-> PCI_DEVICE_DATA() need the device ID defined using a #define in the form
-> PCI_DEVICE_ID_##vend##_##dev
-> 
-> PCI_VDEVICE() allows the device ID value passed as an integer in the same
-> way as for PCI_DEVICE().
-> 
-> Also, according to its kdoc, it allows the next field to follow as the
-> device private data.
-> 
-> IMHO, I think PCI_VDEVICE() use is correct here and I will keep it.
+Documentation updates:
 
-It's correct, no doubts, but using PCI_DEVICE_DATA() makes sense when you need
-to supply driver_data. In particular it will take care of needed castings and
-also as you noticed asks users to apply the regular pattern for PCI ID
-definitions.
+Patch 1/3 extends the PCI host controller binding (pci.txt) to explicitly
+include Gen5/Gen6.
 
-Moreover, the 0x9660 is used in two drivers and it's a good candidate to be in
-pci_ids.h. (Note drivers/pci/quirks.c:6286)
+Patch 2/3 updates the PCI endpoint binding (pci-ep.yaml) with the same
+extension.
 
+Kernel validation fix:
+
+Patch 3/3 relaxes the max-link-speed check in of_pci_get_max_link_speed()
+to accept values up to 6, ensuring compatibility with newer generations.
+
+These changes ensure that device tree configurations for modern PCIe
+controllers (e.g., Synopsys/Cadence IP-based designs) can fully utilize
+Gen5/Gen6 speeds without DT validation errors.
+
+---
+In my impression, they have already obtained the relevant certifications.
+
+e.g.:
+Synopsys:
+https://www.synopsys.com/dw/ipdir.php?ds=dwc_pcie6_controller
+
+Cadence:
+https://www.cadence.com/en_US/home/tools/silicon-solutions/protocol-ip/pcie-and-compute-express-link/controller-for-pcie-and-cxl/controller-for-pcie.html
+---
+
+Hans Zhang (3):
+  dt-bindings: PCI: Extend max-link-speed to support PCIe Gen5/Gen6
+  dt-bindings: PCI: pci-ep: Extend max-link-speed to PCIe Gen5/Gen6
+  PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
+
+ Documentation/devicetree/bindings/pci/pci-ep.yaml | 2 +-
+ Documentation/devicetree/bindings/pci/pci.txt     | 5 +++--
+ drivers/pci/of.c                                  | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+
+base-commit: fee3e843b309444f48157e2188efa6818bae85cf
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
 
