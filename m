@@ -1,88 +1,88 @@
-Return-Path: <linux-pci+bounces-27946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54CFEABBA32
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78EEAABBA34
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 11:52:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5336F1B630CF
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 09:48:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC8791893F4F
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 09:49:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A4792777E3;
-	Mon, 19 May 2025 09:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF13B278155;
+	Mon, 19 May 2025 09:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NT+X5ju3"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Cofpnuv/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF952277026
-	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22162277811
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747647828; cv=none; b=ifNSwoqIE1BV3VzYDdg88MjctXcT1KUf/0T1XCl8lYI0kBAWtu3s1D90V2/ouU0t4fukcP+7yVZk8+zNF89UNl3pxNY0sc9wa8o9nRLWfEfX6gnsw+YFQhXNK5k0mAWrQNt7jWazjB4ryutDIazbQXsrhqDi5Ez7xAj6XR9h5UI=
+	t=1747647830; cv=none; b=NzpBQd0kk3Let1jj1BeWOJ06fAQFTfTzZ4WBvm9nWrXLnpJRnyQIqFqYt7RQ0xveSYjU9Fif+ESzESaJqYdObK0uUk5Yv8yMpNHDFJVpaVL9mMbOaVEIcCjpBskRpygCfwIpFwP0+EYBP3Gt3RzoXEJ4iDO7e/iHdeWw/mxdMqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747647828; c=relaxed/simple;
-	bh=ciggJN5AEA2xtLRmbdfXbsqmVBeTQ+3RUbZugVrrsac=;
+	s=arc-20240116; t=1747647830; c=relaxed/simple;
+	bh=T0NWxEeit0FkTClv+OgVI5h2belfjblWs7pI02lhyuA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GtXMb7CP+WfiJGpI1eEWxe9E6j8EO1eOBSRp1LgyGt47WcDSLb27nh5fPyrgXnIrtnwssOx7lJ+I2JS6hl2S7mABylU5M5BNb4fb7IdXBGAIeWjnNluEzneOboQQToI/CpxCBpL/qRoQdXYhe0HqKEeNI4ukYWmZ4vggr8bN9VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NT+X5ju3; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=GKiqj53BnuqquDuzjt8rG3Fd4WckBnRpMMSrW1KdgD3y15K1FvdDplQoPm0qEhW8QP8CDPKmng5kMmKFXVK38A29yBfpynBCn/BrpMHeBfMAOyZ7QUAnwM17CWTt0w0FLFiejLxKv6UFg3NNx/J4Pvcm0eLMsW7IQxIxzVz2Ktc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Cofpnuv/; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9Zu9d020271
-	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:45 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J9IR6e025244
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sdf7PFBmZ+dWTupOwPp2L2RRFGZXAccr7B/5Kw7lJr4=; b=NT+X5ju3qOKvzfHe
-	xc5ntELMAsH2oxInT4ogGF8raCjNMz+8pSHBkmWC7inueP4yKG40TmtQpMEoxBxZ
-	Oj3K6ZDzdek8HDAP4rTU2xpSbjJB9kHw3jb9NyV9jp25oMDkQp4nSVMEPo7bYXr/
-	YA9MNSXVqfdsUZuSJLj57rDsD9XWuGegv0GeY+4ppbGcShh1WrF+na4/dmRq/Hjq
-	IL6/UsqwvDSzt62q0jcKEg9tv4ji86zVbAHP/nCoINLm8NSlxhOR1r9rIGAa6G9z
-	7dknjoM8VhmGRlu7SmX02PS3VgB/TZTgcevLW+xDbSujeAaw4eZuV84rmIJG06Lj
-	CfvzFQ==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pkr9uur2-1
+	qRVHI8/PRu42Vqh4HuSgclK2SbkQHWxggBlquWyWIxQ=; b=Cofpnuv/SbPbPmum
+	mOg/azUhsuV9+yaOnOWWnXp43mis01mYqJ/AuFutf9LrYHERSJD6HZqK+FAIIoc+
+	0dsW3IVCzIBrX4xqZEx4iwcFNvOUcUmmlUTwkCaY7KeK3vydbcj9gVFPr7LoLMMm
+	8PpTb8iyq5gKfYDwoooQrOfoAcssj6cxlpjQiJlHwjP/A8TxnyJQLzJxm4VWaorP
+	fR8m3uLyoh9mctfKKm0vpL+QTCElfnLatCKGL/NNDkCS8yFsEXB1Gxvfh5zghEA2
+	aV9MChn3tpJsjz/mAF+Jpaw2uT05ew/JKG8UtKqVGS74hAMZEElrkd1wQZ6ZhDCm
+	y4v1UA==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjnykw6m-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:44 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-742cc20e11eso626043b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 02:43:44 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 09:43:47 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-742b8c0eaf0so951165b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 02:43:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747647810; x=1748252610;
+        d=1e100.net; s=20230601; t=1747647816; x=1748252616;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sdf7PFBmZ+dWTupOwPp2L2RRFGZXAccr7B/5Kw7lJr4=;
-        b=vG6n0FkbaobDkxptSn0GB7Caj0kYqdqlXchl+4mIC/jQ5TOF5NNKaNmdN3Rg4rMniJ
-         Ug+NQ++4TZ8v96CTRJ0cDinHO5syKmu+J/FaCdfZKhDlR7ctvgPCDyOXxC9gQ9I3pzPF
-         JXSaz11g+ELxvm9L963eKeFBs7ASyY0dGFNp4zzuH2EPBba1x8m4JAuLUQuUIYYttwSD
-         TK4hql5mXxf3EbF0l0ra5WJ257mQTexeRgxJLlUmPOgonVc1QLCuogGADiz086xC87Ld
-         +IA8FGp5nOxGjtGuPR6KbH+Ih51mC7b+64jIlHAkqMbTp4Ox94iKSQ82aOsswJkK8epy
-         TqYQ==
-X-Gm-Message-State: AOJu0Yz16afpJ09eExaefPvUXJdAa3bq8z6uanXX7hYk9H4Mt5zAJ1Qg
-	5yCFpV1i+TnuGyPJGWngvAWXrpjyt8coiPbxpubuJkmhPWBeSknS358p4wGWtegCY/XHlNIoTUB
-	wod8/V0qdR+h2MvtIMWZS1e+sjKRAsrUqmnKtkEIk5NYNM0dg0VU3YTGi6kuGFLE=
-X-Gm-Gg: ASbGncsdHzo7haWzM33MK25IrgAXwSW2sf47k43j8kd9m7UAnjlBMiEUtU8SE5WZeXA
-	0qM/GXfsDihDLyjDbvh9QOuzKFYRLOznBBekwQ8I/dpQ3+c5GB2crsN/xWE8n/agSuYMxRcG7WC
-	KtdTF01oj61y8ybCG133NKt0yNqzK5MnB1eILA9BI8/fv00TF9hUd/dbEQZOnrnWrn3Ug5GugL/
-	1aUto+l3khFMy1V7kBpP73oyhdOYSUsZmUb+YRWoNvt/jYNcCc/KzYWicihJ0LmLgGG64u4rQKy
-	+CtFONFO/8RVp4AKYLHnrHXme6Ci47fLuSzhhcGsqglFMUA=
-X-Received: by 2002:a05:6a00:858f:b0:73e:1566:5960 with SMTP id d2e1a72fcca58-742acd507c1mr15013613b3a.19.1747647810004;
-        Mon, 19 May 2025 02:43:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFBiZoJIttAqGh73o7b+oxSz8Gg3VOIHkxWf1cUJrHMPT58Y/cYk/xydm04u9gJFvMbMdWJzw==
-X-Received: by 2002:a05:6a00:858f:b0:73e:1566:5960 with SMTP id d2e1a72fcca58-742acd507c1mr15013579b3a.19.1747647809549;
-        Mon, 19 May 2025 02:43:29 -0700 (PDT)
+        bh=qRVHI8/PRu42Vqh4HuSgclK2SbkQHWxggBlquWyWIxQ=;
+        b=EL3fENvV+eIM2JLcxt1yX+imdI6DBdC4xIBVaC5/4pUogw+cEtyn0rMk2P+2kR+Mn+
+         tP7CQ3d5y7Oc48nxin/ahs0tWgST1JF/Ew8XJBHWs3ddyKh+Mzi1qsMjsBY/l9TfcmOA
+         fFZxKTQCynMqL2777qg8toy8WrGwFid5i61TCdeco3x8Q1bum4Ush/hZamD/0ymrswCs
+         tstv1otJgdDfrzcQ2vprzETab92YqTMdz1Dpbzzcm0dq8/fiU0t2Ms2wlJkozbubRYA5
+         VaZznNoN5u/Dc6M3Spdv08Iw9Y5mING54rfOrLFgURT00b+y05EJviUWDQdC2XVM3v9F
+         Yl9A==
+X-Gm-Message-State: AOJu0YzN5rOnD6scbIJMUt0l93SEpnR/ttBpsjyZJ4VnKGt1cXJX3D15
+	WTZZMOZCqgbNuoTWcp9BWRClyNeGmufTVFwloFiQ92NZFYx1QYpPMvUlu4E4eqVwFLDDOD/Y0GW
+	uxQeSch5G8zgW0m4Z8HV69gJ2ftPqchQceN15EKF0tWbL5NOnBrjuuo2HFdBM1N0=
+X-Gm-Gg: ASbGncuCK3gD8pDQDOrTVMjoTxocfo7FmJCP/h+i0739aHm7LHIKTdZ0FGrEKjzJyGJ
+	vwYaMT3n7ibRMSw8QJBpg9jgkbS92FL0UUlrWIo5JMako/AtTUqgPSNDNwzfBis3lS5pAqAoQJ4
+	/t1RrWU3pBSNrCi7fdQUBvRY5nCI7PgVuzv1WYFxy1TkyYXjV5MKEg2+s7RsAw0tvCNboxwqTMR
+	i1DIHttoWkMULTdt0VpVCM21gtD7tq8ZhwLrP/J1snO+cJfC30/cNvGuXjxRJA5gOirj/4jvu3N
+	jdvVZzcQauKBUJMbvFFfQa7DA6xaSjxgDpJWU+jfMvR3AAc=
+X-Received: by 2002:a05:6a20:258e:b0:1f5:7fcb:397d with SMTP id adf61e73a8af0-2162189eedemr17085541637.16.1747647815826;
+        Mon, 19 May 2025 02:43:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBn3YQuItzmOTeDJuwyBkkScPtNvgmsDQnEm68ODCFtCJxD6yFeqm20eMNewUKrXrunStz3Q==
+X-Received: by 2002:a05:6a20:258e:b0:1f5:7fcb:397d with SMTP id adf61e73a8af0-2162189eedemr17085507637.16.1747647815410;
+        Mon, 19 May 2025 02:43:35 -0700 (PDT)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a97398f8sm5809092b3a.78.2025.05.19.02.43.24
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a97398f8sm5809092b3a.78.2025.05.19.02.43.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 02:43:29 -0700 (PDT)
+        Mon, 19 May 2025 02:43:35 -0700 (PDT)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Mon, 19 May 2025 15:12:23 +0530
-Subject: [PATCH v3 10/11] PCI: Add function to convert lnkctl2speed to
- pci_bus_speed
+Date: Mon, 19 May 2025 15:12:24 +0530
+Subject: [PATCH v3 11/11] wifi: ath11k: Add support for MHI bandwidth
+ scaling
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,7 +91,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-mhi_bw_up-v3-10-3acd4a17bbb5@oss.qualcomm.com>
+Message-Id: <20250519-mhi_bw_up-v3-11-3acd4a17bbb5@oss.qualcomm.com>
 References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
 In-Reply-To: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
@@ -110,82 +110,132 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
         quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Miaoqing Pan <quic_miaoqing@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747647743; l=1624;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747647743; l=3170;
  i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=ciggJN5AEA2xtLRmbdfXbsqmVBeTQ+3RUbZugVrrsac=;
- b=9tbNb0ShTaqF9yKpDzZgn5+IkqxjlBzSFrrncqIPIUBywJht4BGIpIewbdNC9EZoJ5T+rqib5
- hi5eVz2dqkxA/eMOSAv3OvErH80iQTydRIqFwBY3czPX7odtNQdyhO4
+ bh=iRU0Yv6S7aDJfgJ0sXHZ6i8h1thDD71OEAeHK48lWWg=;
+ b=pXC6t6KaeeBZiubaUAqowVVgtQcd663spifrqVy/Jik6wxRwizcXUr66OHogqm7b7P17DWCKX
+ VrPMhEfEqf+B12YjfPKGzQBoQhF857+WH09MfRydBuondK7ulCXpE33
 X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: 8ykCSyVfm7INpzo9svSDhdDpAnA1Oy78
-X-Proofpoint-ORIG-GUID: 8ykCSyVfm7INpzo9svSDhdDpAnA1Oy78
-X-Authority-Analysis: v=2.4 cv=DdAXqutW c=1 sm=1 tr=0 ts=682afd50 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=rcts_Xg4tTJKaDXoMsUA:9
- a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA5MiBTYWx0ZWRfX5ic483nVcums
- +SI9p8jJRdnji9JJGXrSr4g3PyPJGCQ5Y6gN0u8qlY1XYK/QuQqo1KCthibridrLcTiaSuJjir3
- pyZRRYWbfbw04UtTNFxaNa0frexBxueYUCOOm0NIJFHcFShJPQ2wVqvvfPiJTCcxhsE/SUBEcqe
- hpTu4+w8SdlQYKnJdHghnlWTsYtFQOjt0jnFlgOiSicGHRPtHvyleWmJNqtPlafxE0MxH2zIFQF
- D5CbZQLyno4QH9QqUODqX32Q353laxWvMsBMXCgPWhljN5xOcFMtDvWCPhAdUOB/VZKyFkHgGA6
- Ht/+GK1S/yK6Vyl2aQ7snYhF8sUeHGjSUM9k700+IIXTZXeUEhgC+ir0rXFpIjjyu/SQGiOEcv3
- FK4PenC72qmnSZZsRqS1sBcAFQBoiZh1iR0DaxH302shVepYTpH6J2N/NWyauuNfZwLueW6h
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDA5MiBTYWx0ZWRfXyBtAh49NrD7e
+ AWEJ2OJuXL7DI/6qnhV+pJDcGxnD4T1XluI9UPA/cWX2zGawunDxU9RvcbKGEznlOtWj7iu1IkT
+ n19LQL2xSr+WhAFafO/J1FAsyTWzgQWEygc4dZxjc+7qi9ydwGjxshOs+WW7nKKrU3cZRMfmoif
+ F8+HhSSv0BupqEw2WCqYHDe/+l2+CLJdGeDOBsHjBGHO2sHp35d7ycPmemdYkEIUzRPFNpEziha
+ o6EZwE8f0pliicdVLNrSWUjMs0z0SyI6nTwHvWLxSbTaJlVbuxciGVpewDuTGrWpKDa3F7y40He
+ nVbhB3balyuJ2W3zOeiTFqm/lF5/jK47dICtxwaxghCO9YgWSdoboygAem6v9qtc/qLRbAT1hM4
+ mTEfnnQIyW7r17WILqAhVVQehg6rdxECVDcd0gLGS5MAzafNP2iCTw5c3Nl15blWYW4QmF0X
+X-Authority-Analysis: v=2.4 cv=Z9XsHGRA c=1 sm=1 tr=0 ts=682afd53 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=262QNBeyodYRG1lUGOYA:9 a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: mOpH3r7uFeS6ZRVR3p7p-YZREaoNFtWK
+X-Proofpoint-ORIG-GUID: mOpH3r7uFeS6ZRVR3p7p-YZREaoNFtWK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-19_04,2025-05-16_03,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505190092
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190092
 
-Add a exported function to convert lnkctl2speed to enum pci_bus_speed,
-so that other kernel drivers can use it.
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
 
+Add support for MHI bandwidth scaling, which will reduce power consumption
+if WLAN operates with lower bandwidth. This feature is only enabled for
+QCA6390.
+
+Bandwidth scaling is initiated by the endpoint firmware based upon the
+bandwidth requirements, if there is high bandwidth data endpoint requests
+for higher data rates or if there is less bandwidth they request for lower
+data rates to reduce power. Endpoint initiates this through MHI protocol.
+
+Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
+
+Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- drivers/pci/pci.c   | 12 ++++++++++++
- include/linux/pci.h |  1 +
- 2 files changed, 13 insertions(+)
+ drivers/net/wireless/ath/ath11k/mhi.c | 41 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e77d5b53c0cec9c7cdd043ac44329d1b285cae83..363565fd71bc184bb07e4f21e9009ce382e6075b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6035,6 +6035,18 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
+index fc77eac83e953148b96cad096d26b32222157b24..8057031d654d794f9e882a975f99083c193e492c 100644
+--- a/drivers/net/wireless/ath/ath11k/mhi.c
++++ b/drivers/net/wireless/ath/ath11k/mhi.c
+@@ -20,6 +20,7 @@
+ #define MHI_TIMEOUT_DEFAULT_MS	20000
+ #define RDDM_DUMP_SIZE	0x420000
+ #define MHI_CB_INVALID	0xff
++#define MHI_BW_SCALE_CHAN_DB 126
+ 
+ static const struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
+ 	{
+@@ -73,6 +74,17 @@ static struct mhi_event_config ath11k_mhi_events_qca6390[] = {
+ 		.client_managed = false,
+ 		.offload_channel = false,
+ 	},
++	{
++		.num_elements = 8,
++		.irq_moderation_ms = 0,
++		.irq = 1,
++		.mode = MHI_DB_BRST_DISABLE,
++		.data_type = MHI_ER_BW_SCALE,
++		.priority = 2,
++		.hardware_event = false,
++		.client_managed = false,
++		.offload_channel = false,
++	},
+ };
+ 
+ static const struct mhi_controller_config ath11k_mhi_config_qca6390 = {
+@@ -313,6 +325,33 @@ static void ath11k_mhi_op_write_reg(struct mhi_controller *mhi_cntrl,
+ 	writel(val, addr);
  }
- EXPORT_SYMBOL(pcie_link_speed_mbps);
  
-+/**
-+ * pci_lnkctl2_bus_speed - convert lnkctl2 speed to pci_bus_speed
-+ * @speed: LNKCAP2 SLS value
-+ *
-+ * Return: pci_bus_speed
-+ */
-+enum pci_bus_speed pci_lnkctl2_bus_speed(int speed)
++static int ath11k_mhi_op_get_misc_doorbell(struct mhi_controller *mhi_cntrl,
++					   enum mhi_er_data_type type)
 +{
-+	return pcie_link_speed[speed];
-+}
-+EXPORT_SYMBOL(pci_lnkctl2_bus_speed);
++	if (type == MHI_ER_BW_SCALE)
++		return MHI_BW_SCALE_CHAN_DB;
 +
- /**
-  * pcie_bandwidth_available - determine minimum link settings of a PCIe
-  *			      device and its bandwidth limitation
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index ce9d0812a61c2337ba533ef246393a0101e617ee..48c3f5b1f6f86b652355fc9edbcf834d64fddd11 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1655,6 +1655,7 @@ int pci_cfg_space_size(struct pci_dev *dev);
- unsigned char pci_bus_max_busnr(struct pci_bus *bus);
- resource_size_t pcibios_window_alignment(struct pci_bus *bus,
- 					 unsigned long type);
-+enum pci_bus_speed pci_lnkctl2_bus_speed(int speed);
++	return -EINVAL;
++}
++
++static int ath11k_mhi_op_bw_scale(struct mhi_controller *mhi_cntrl,
++				  struct mhi_link_info *link_info)
++{
++	enum pci_bus_speed speed = pci_lnkctl2_bus_speed(link_info->target_link_speed);
++	struct ath11k_base *ab = dev_get_drvdata(mhi_cntrl->cntrl_dev);
++	struct pci_dev *pci_dev = to_pci_dev(ab->dev);
++	struct pci_dev *pdev;
++
++	if (!pci_dev)
++		return -EINVAL;
++
++	pdev = pci_upstream_bridge(pci_dev);
++	if (!pdev)
++		return -ENODEV;
++
++	return pcie_set_target_speed(pdev, speed, true);
++}
++
+ static int ath11k_mhi_read_addr_from_dt(struct mhi_controller *mhi_ctrl)
+ {
+ 	struct device_node *np;
+@@ -389,6 +428,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
+ 	mhi_ctrl->status_cb = ath11k_mhi_op_status_cb;
+ 	mhi_ctrl->read_reg = ath11k_mhi_op_read_reg;
+ 	mhi_ctrl->write_reg = ath11k_mhi_op_write_reg;
++	mhi_ctrl->bw_scale = ath11k_mhi_op_bw_scale;
++	mhi_ctrl->get_misc_doorbell = ath11k_mhi_op_get_misc_doorbell;
  
- #define PCI_VGA_STATE_CHANGE_BRIDGE (1 << 0)
- #define PCI_VGA_STATE_CHANGE_DECODES (1 << 1)
+ 	switch (ab->hw_rev) {
+ 	case ATH11K_HW_QCN9074_HW10:
 
 -- 
 2.34.1
