@@ -1,416 +1,342 @@
-Return-Path: <linux-pci+bounces-28039-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28040-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83948ABCB17
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 00:45:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E67F4ABCB47
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 01:03:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 826721B65544
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 22:45:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814F8171D07
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 23:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A85B1F12FC;
-	Mon, 19 May 2025 22:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BE2205E3E;
+	Mon, 19 May 2025 23:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="EZuXMDtz"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GISfHMcx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2065.outbound.protection.outlook.com [40.107.249.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C3221CC57;
-	Mon, 19 May 2025 22:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747694696; cv=fail; b=iXWeKCar9o+el6WZDywX8+yTPTpk9Kflb93MLxO++YYX8lwPyVlk1R0soHQpf0cQ+h+/6BiZJro0cHtpMum7KIqjr8NyhnOLJeClexR61rMisKM/W5tXTGhq34dRfBcUzzhnghJLFXp3rLiVYa6R7E52oUjss/a/zx10CF1/IRM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747694696; c=relaxed/simple;
-	bh=Ih1iRgfkmcUYhE2oigAkBQjpETJhVbtnYH6hP95luXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=C97bG1N543CFfl2KrYKaoMBd7jkgKioVfpkV0IapW+ZrNKCYaEET1tr/BaQ1TN0t/ZclrmZTyvzsyjifx8/RPnUWVO5HdYYbf/U4PNTLFaun7tmOqODFhcrnvSULAp3raAobpr2oPgbRxR+60lpyUKQy5A4iHyMIoYMBFBWKVgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=EZuXMDtz; arc=fail smtp.client-ip=40.107.249.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Or15bGbf6ZGGI3JhlPvpmgLxBVuaS26Ty2I9UEom+f2dRuCMvCErbSKIUM6SEMhpAJBG/XxKfdgQnwzFFWVwIx6IMY8BBud2lYNTCsRgNlkVYWQBE94DTCXJkADDKDmiFIgL/AqEIAxPIef7ZGGWaN4iILhhatj7tGwx3SXuzggKQrqaa8juOtmck01Rj3L6CP7ZnV5Syv/n4XAp70F+V+mfhkv5Sh/9/E2pKhNl+cZlHLc5e+uQbkX6edrpP2RHUVbOCHH93x2OjYssgAdGqgs8T+ZC723oRXBkezbYzc7RlmnnVhQmhKTy+ESrM6EonWbIJUWYnFdlSufxyOc03g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LUWSmnr1aQP7FbTpLRpdR6suiLIOpXC1UkVLok9p3iE=;
- b=E8OJqTYg94WCfUpuUBxDnfaPmcMqoAgyVPYUyFEVtJoKAKvQesDzTPMjxtFs02SFlx5mxOvGcEC1KvCRy3O/5AT/Rm/ZeCCsv6Uvm/Nekl6r0EvbDJR/0E6akfESWl+JEz0Sw28D6OLsR3m2+ziYd5DKy6DqvYIJu8hQOJ9Gt+smK2BrHSvBZxJ8tz2YltZi4ZJpEn/5h3j3KT+ymcOS3SnTMz3KCNpsttEnPztY8qxxcfHodg/ZJxgwTz7KAP8oosP6/1V2jzq5bl+N+lF1wMJ//fumgLuiELUAIwNzqpNCjG784UPUcvFnw9yjHFaDMPOhakJd2ZZIRAWtAIhvvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LUWSmnr1aQP7FbTpLRpdR6suiLIOpXC1UkVLok9p3iE=;
- b=EZuXMDtzunr3qh+1BER4Y5BQxjJ8vFXFXWBNLeJ+6fcaCvdlC+6+LsAziAbOi4ecsLrd2qjLcEezKkMyd/243ux6QOPlJb8/o7kM5c1wYkPT9D2fWrgIUiPkNdecduVVPI/Blkl15uMaHqa7BJ6uSUGWkx888UCgBZDsXoAfuGu4sO/tVZAjyEK3KheSY7fHc2WdzCFJCEIKnov6QhE0BIrmRq5V0RQi2ustFuknkpGcNtHhmugi8m7MPlNLZ22jT654GgWZs2IidcP/5xy2WpKtDYDDSY6ghLB2H0wQwuqRydcfi/6vUVPzGOkoHHypSQJ/A8y+Cr3443mQXTCeZA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB10074.eurprd04.prod.outlook.com (2603:10a6:800:1d5::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Mon, 19 May
- 2025 22:44:49 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Mon, 19 May 2025
- 22:44:49 +0000
-Date: Mon, 19 May 2025 18:44:41 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] NTB: epf: Allow arbitrary BAR mapping
-Message-ID: <aCu0Wem4KkaybW4f@lizhi-Precision-Tower-5810>
-References: <20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com>
- <20250505-pci-vntb-bar-mapping-v1-4-0e0d12b2fa71@baylibre.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-pci-vntb-bar-mapping-v1-4-0e0d12b2fa71@baylibre.com>
-X-ClientProxiedBy: SJ0PR03CA0155.namprd03.prod.outlook.com
- (2603:10b6:a03:338::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB11DA21
+	for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 23:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747695814; cv=none; b=dfEx6BP3QjqiIqDs6f5lvylNHiqmEiW6qwKNTzD/LohKSLwOghbpgiynETxppaaGW4kJVDYi5m6Jh66g6r2q9f8vvhtNcxhkQ+IFHLHhb+oFDmEpejwBZRAWHLKQGCp0jnP30p1WMoOfnh7pUstY8EzEH58UYYRs5vJzr6Ple3g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747695814; c=relaxed/simple;
+	bh=K6YBGL0XckTwM9hrEO2ldcU1JltsML/YXY6lJGg8oJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qi+tsuLyd19rYNWXxfyk9AN5BRq3lrqpTVB57MpES43/LK56bRRIJu7KRmST2fzTrkqyEqypAJ4Bfi1Kf5aGnagxbr8cn1fnHxv/yUu7/VImeIrUgFrH2s3y9HjuPAuDX9lNazVuxTCXXQQkvS28zRegxdyijjI/8fzTiFI+UZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GISfHMcx; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499614d3d2so6140030e87.3
+        for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 16:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1747695811; x=1748300611; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzouL2SbbbjB0OB2uzZ6jNHbX/Mi0w3dnkZpIQ5+TLs=;
+        b=GISfHMcxIGCzuZozxzsCnyn7MdWz6hrb2PuF9qQbN4Bhvq31btU+TKFYuF4DTZrDQ3
+         /NuXPQkl5cetjWBasj/cl+5sBII29IhUxTxfnCqR3TKy9IKpnuBmL84Xk+IU/v2X/sF4
+         Y/s8KGtzQX+YdFLZ60H0oyezyckcZDfeEKurQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747695811; x=1748300611;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KzouL2SbbbjB0OB2uzZ6jNHbX/Mi0w3dnkZpIQ5+TLs=;
+        b=ggy5U5opeGv3VbE2Y+mZ5ZsceFGjUTCRJRx0XlAldtI3DdHko1XnyF2wQJ5hCKHJ13
+         nPJdT3Js5TjoauqkK+rNRpU1KVE2jOEM3vJgv9KzFC4Tc8+GKbnJfmpcOPz8KAqYS8L4
+         74dPQFE8uoiyyVc0j1oMP4BvI5mg4EodJtXZnZA2kvc+v27WWFIGtrT8TyAgActXvYCN
+         cN8y3Qqpg/g6twfF7mh5tY9aAj8eZ7l7z4GHutw8hOAIYRofF5VjitLGdPCejULoGrGP
+         NklhVDlCmNWN3w+nztm0nf8dKQGHPSd8B2NFSv3iYf2F975ylVlu7qvV/qWyzqf6gUb8
+         d5tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYh/8SdzjTHfVAtLNJygFMvGwBXr3pKYFC1PpulvpyvlvmXrl6n4Sw4OgN+VUjkI40Pzdp0ZqUmoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4nCewq+UyTbaoyYRkb7fnZxoEOKr2ozQPxG+f8gqf8dejLPET
+	Me74E928UrrF8nuugkWkMKTzDuzfxrhy3shWURPVfJXFbBfj60osC2qPjki5cJfFSoYMvphh5k9
+	lGx7Dvks4SUFjTTfMeE3uOAhripdfWugzQASwm3sZ
+X-Gm-Gg: ASbGncvWHCAfpnQiPNUkMOEX3+dGrsRnrhOpQHy/Llulu/0azAYVM9yILFf+DkPsziQ
+	8NI+qck1nQgHqTa2Hgd7EhuYHJRhSvy3ffVj2G6KN9so0Fifla2SnsMiwVaGRGMXiwEOt/cOjnO
+	EtmuygmI3IQ7ZfWQ4v1vAPwoC9GYK4dPIy/Aad/XZVeYiy
+X-Google-Smtp-Source: AGHT+IGnk7sjHrzip/LFUnXA8Gpqn7yZg21rZqRDgOY/pDZ0V7xaonC7cbxX053qfYohPtzNrTCQc/q05XcokKyYQR4=
+X-Received: by 2002:a05:6512:6317:b0:540:2fd2:6c87 with SMTP id
+ 2adb3069b0e04-550e71b4e43mr4673734e87.16.1747695810730; Mon, 19 May 2025
+ 16:03:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB10074:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51043432-1f48-4441-0673-08dd9726c2b4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qG7YLJjt+i+5tJt6Zk1MnT4Za8Y8yV4w4Tq260GLsJ1O60E7LOlrgmt1V7Ik?=
- =?us-ascii?Q?+LTov4X2wjEheQBDWS5RWg/i4qRMcHKJSjptbWXaVoYqaZZ0ao3oPN0IRYqk?=
- =?us-ascii?Q?9XxyJ4eR0wAPTGjN6gb9Znfu/MZB6zSR4kf31tFwL4NrDjOZIAOLTS/eX19v?=
- =?us-ascii?Q?xugAjO5WrJ99t4lIstnv8+HDypyiIRhaBOz8c5zFann+wX7edTKvl0j2GxtD?=
- =?us-ascii?Q?kpHtToEWO7AQhn7kgWrXfd9PbG2I0pVQ6PaLsLXobVd4ZkgHX6oEY3/LulLg?=
- =?us-ascii?Q?qxk7VypwOw0lt6EBDUkAN07P0HMzfX+2PQZSGTjPryBQZ+xI5XHoTmWZcrex?=
- =?us-ascii?Q?2UqMFTIQZe2zwZlN96Y0d9yYt8ATQQCooWFWSmo3aY8UxBcpPbqJYa8KRq74?=
- =?us-ascii?Q?zKeQHUKzaypipAyb1BJxAoqFjYZ2EHV3UsdV/cJUvTUu3SGczPe+xSgwtoKe?=
- =?us-ascii?Q?K7d1gskukJFBF3c7HGSDpdqJp/Al6j7oZ1r1xH3wXJN27XV8Wr7axLLItGdr?=
- =?us-ascii?Q?dwHVEq2u0P9Gy3wv+z2B6juOaGt11Gw+a0b9dmnBLXCQ+DNoLA7+XSW20JKy?=
- =?us-ascii?Q?ArnkVo5ucMKyyYUJBsYdBcefcUB+SzRNOx/d26J1yyyPO+e3rQQLfXU0rnqd?=
- =?us-ascii?Q?/XWF4E3fAkQLpgY9sQasgdgCYTFmz0wRoxgIlUC2hrGNGsqWyYaEASZX1Qri?=
- =?us-ascii?Q?X6Ewlcn8DpDzTj6SDuUKmWPyqIXJ0693BrMXTy4o9X/gjZsJlqTj9FiHNBpG?=
- =?us-ascii?Q?QE9rVcAnUdnpjobNrgSbA+bCZkd4YfyuMpObF5DXm39sVt7vg82gBy/fGzN9?=
- =?us-ascii?Q?3zhzx/4zNnfHcyH7GXfhRQM8tuOECjtXG9Yb+1+mL0WQ4riFOM5uE0Exmsbb?=
- =?us-ascii?Q?oIzC3LoXE8Gj+biTDdv3+DiWF/YSe2w/PncDZBOwz+FqVAqX+5fq3A09CzHf?=
- =?us-ascii?Q?GHbHK/+eeMSwwY6JFVqv26etRKPu4RBF/1EDZlNcNgcpAc9tbuTrCYTddreo?=
- =?us-ascii?Q?kaCXqe/Ol3bvGnpNYOrbpPoHRda8JjZ2fsPU3enxxJo0UYf2cdaqR/NIBmVH?=
- =?us-ascii?Q?mAx3+fleoK6MQ9W+MKge1hxxVuKakK5y7+RM4wgHJRSy8THvWJbpXmMp30LX?=
- =?us-ascii?Q?xtCvcI0pwkLR+P8icm6Tl9iokfJfkL078utBqX2M0SiB0dy6PeF3/ZIz6Owt?=
- =?us-ascii?Q?2yN3KrkgD2WD7SV9S6hNFeX66mTbxOvyFXnXFa72awOycC7z8HzSRVCTb4UJ?=
- =?us-ascii?Q?maiHZgv86Bsz64xcAvnhvw0EI/cTeXXrPyruXNlmX6UM0VdhKK2SZfD13+MG?=
- =?us-ascii?Q?FTCAGsm/DILpf9+DokYoJUmFNEnvZYIPnJbJQ8X3pFhhrA+frh1XDyeejo2h?=
- =?us-ascii?Q?itoVhu82P5gKkikVlvFus//jV7Qj7R1OLAUevygPplosJGw+qu8+Q1etUEu4?=
- =?us-ascii?Q?VD57z44yz5Ku9s13EEoZQnpftgBO3Az/VPu2l3pC+lb1Kin+BPN8hg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wutt8N57cwre8xmU8IA/3JsefcTMiWIeFTIGOLC6bhAovvffisBLquF5eZgE?=
- =?us-ascii?Q?laAT+Eb1I+HMTV7NM84lzMExmoJcNQsLBdeGSwOZBQVxWIQOHWPavn4Iba7e?=
- =?us-ascii?Q?jHi3Qpdjn7GesT+Gf0EvgciZ97TRDApPv7ChgbcRMdR7QEPArwpM1iJk016s?=
- =?us-ascii?Q?mXd+H6RmwwYwamvc3C6w+kQapoyw+FTMLPW9ucKp1W3XHPoEe+nCzpoax7VF?=
- =?us-ascii?Q?rtD1xhNptf9KJ9Os29rltwpwQ2tKAcQkFfVL1jjmRhZxmdA0yXAJnE8K0tSu?=
- =?us-ascii?Q?tbaJbN7bejykAK7zqcI+q0ZvRPZvLsHDurFeqQ6wUF4+pPl9cTiPtfrICFFb?=
- =?us-ascii?Q?g6j1MGRj1i3TOnK9OHO54mVk342NE/r+89cFxTzLlFR09duJ6AUMjckdMkLe?=
- =?us-ascii?Q?4lp5uFKvHN+zfkNPjL8ZSOxcYelzkuh2zZpEmeJ2ykftSYNMt+NARKIgTHvt?=
- =?us-ascii?Q?S0ARUuCWmUqsGDstKHQS6cLce7/lllr7RoRKCwBqRNVzzBKG5WxLGlWRob4x?=
- =?us-ascii?Q?uHMqUFWGwdN6AXs2HjBUt4c+G8ck+QtNwqF4LH3zBm5NNh4LiBInoaQH4glo?=
- =?us-ascii?Q?T8Ss2CWWL/kVHXO49TxNz+W0/PpmTsetOyD908O0ofvlJ1bhpGHoXDaqfS4K?=
- =?us-ascii?Q?B47jVl/e6ad7szJK6S3LXbJkvSvg9Hg6QfqRVRXS+SKU7k6ZUggHrlkm+Dnb?=
- =?us-ascii?Q?aE0VbpCkE4SVVfobqznq3eG+/8sJuLOQMqGu13x0z8BKFRi2qy/gbPBpgPiP?=
- =?us-ascii?Q?mjMBCW5j4SrZ4HG9FADUMLDmc4clHT9H97lKezs3YGvBTDQSJAXJXLJIU28M?=
- =?us-ascii?Q?MAN7CA9ACTsh+I6L7LFwWhm7Bp8gCsQsD6YL7Iioo5FwNMJmVD+enTXgAT8z?=
- =?us-ascii?Q?LmrEMUo8ltTBOZpk6OYVbUlYcpDWl/OkC+Y1qpNaSneu2HtcxHYmWjFxYCWb?=
- =?us-ascii?Q?8dHrRqg4xr4aDlP9ladYK3Njd3v9bld8SW+NqCLUiiLkFK6+eodoztBGSGpb?=
- =?us-ascii?Q?GZw2+coxOUakmPJaDQyG9uSxq1k/JJZxy/N/vBdxS6hGk66j9IAbewkBGYZO?=
- =?us-ascii?Q?/XkAB0P2tHvBFlvz9ZnnaU9OG6YRYxywx58CbzJPRA+Kj3BY5XQ4GC0YxbnU?=
- =?us-ascii?Q?YJyfdae8Qeu0XoiWAcI0ntaNfU/Hg3sd6OGmueUFJSI4z0ORBxdE0MIfLirU?=
- =?us-ascii?Q?yJn6C1p+bX7jOFCKpCKZjylNzMr7qlwFp/CT36kAFpbqvs7/Rn1i1N9we1B6?=
- =?us-ascii?Q?jE4X6baulqjEPIm7aUs6FEcyFrxpfgAssr/cJsWfb8uuV0oQf+C4L/TxZK9B?=
- =?us-ascii?Q?ov0457Ilq6FJJk0UrcAMbSG4e4xJWzsxVSzf9dLr1MPwVitbrRJFCfFFD4mS?=
- =?us-ascii?Q?YfQmE2S5epvvWL2IpX9h1/I3/XwwgPtv/PfQ3wgwrtogMu6yAWWlkT7W6KYl?=
- =?us-ascii?Q?Ao6/FV7hKA3/bJVbBVTsvVyyHBN2eVfBuLXrK1husTqSxYxKWwNrYT+3v3g6?=
- =?us-ascii?Q?4hmqgMfq4q62T0qx1BcZHsS7CNeXUz7kwqlxA+dkxT3NBpZtz4iAd+76jHfR?=
- =?us-ascii?Q?CupCf7vQ6QWKVmerDxeL1/3CO/T2QEFHgFnPJ4gZ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51043432-1f48-4441-0673-08dd9726c2b4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 22:44:49.1143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1nE7zCLBVcVuMSGgu1Q78/0TnzxzjT5OPlM44TFHiWUaBTA4yp2q17sW1nY5N0TEq8O2huH6zkCmePm3U+T4yA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB10074
+References: <CA+-6iNxkYumAvk5G6KhYqON9K3bwxGn+My-22KZnGF5Pg8cgfA@mail.gmail.com>
+ <20250519215601.GA1258127@bhelgaas>
+In-Reply-To: <20250519215601.GA1258127@bhelgaas>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Mon, 19 May 2025 19:03:18 -0400
+X-Gm-Features: AX0GCFuPL_mJX782VJaQTZ7MgEWsnGgWjnEPAPk8JMkbZK6hYIVyPsVIyBwbdEo
+Message-ID: <CA+-6iNzY4n=E+4Fcbxu7UU+xyUjEQZBSLQ3sMv26smoFS+nGOA@mail.gmail.com>
+Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
+ further if pwrctrl device is created
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, "'Cyril Brulebois" <kibi@debian.org>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, 
+	"'Nicolas Saenz Julienne" <nsaenz@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000000c8390635852437"
 
-On Mon, May 05, 2025 at 07:41:50PM +0200, Jerome Brunet wrote:
-> The NTB epf host driver assumes the BAR number associated with a memory
-> window is just incremented from the BAR number associated with MW1. This
-> seems to have been enough so far but this is not really how the endpoint
-> side work and the two could easily become mis-aligned.
->
-> ntb_epf_mw_to_bar() even assumes that the BAR number is the memory window
-> index + 2, which means the function only returns a proper result if BAR_2
-> is associated with MW1.
->
-> Instead, fully describe and allow arbitrary NTB BAR mapping.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/ntb/hw/epf/ntb_hw_epf.c | 108 ++++++++++++++++++++--------------------
->  1 file changed, 55 insertions(+), 53 deletions(-)
->
-> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> index 00f0e78f685bf7917b02dd8a52b5b35f68d5bb64..9539cdcd0f8fa4b5c5e66477672f8f97d5ec4e52 100644
-> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
-> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> @@ -49,6 +49,7 @@
->  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
->
->  enum pci_barno {
-> +	NO_BAR = -1,
+--00000000000000c8390635852437
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Not related with this patch, but there are too many place to define
-enum pci_barno. it need be consolidate.
-
->  	BAR_0,
->  	BAR_1,
->  	BAR_2,
-> @@ -57,16 +58,26 @@ enum pci_barno {
->  	BAR_5,
->  };
+On Mon, May 19, 2025 at 5:56=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
 >
-> +enum epf_ntb_bar {
-> +	BAR_CONFIG,
-> +	BAR_PEER_SPAD,
-> +	BAR_DB,
-> +	BAR_MW1,
-> +	BAR_MW2,
-> +	BAR_MW3,
-> +	BAR_MW4,
-> +	NTB_BAR_NUM,
-> +};
-> +
-> +#define NTB_EPF_MAX_MW_COUNT	(NTB_BAR_NUM - BAR_MW1)
-> +
->  struct ntb_epf_dev {
->  	struct ntb_dev ntb;
->  	struct device *dev;
->  	/* Mutex to protect providing commands to NTB EPF */
->  	struct mutex cmd_lock;
+> On Mon, May 19, 2025 at 03:59:10PM -0400, Jim Quinlan wrote:
+> > On Mon, May 19, 2025 at 2:25=E2=80=AFPM Jim Quinlan <james.quinlan@broa=
+dcom.com> wrote:
+> > > On Mon, May 19, 2025 at 1:28=E2=80=AFPM Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > On Mon, May 19, 2025 at 09:05:57AM -0500, Bjorn Helgaas wrote:
+> > > > > On Mon, May 05, 2025 at 01:39:39PM -0400, Jim Quinlan wrote:
+> > > > > > Hello,
+> > > > > >
+> > > > > > I recently rebased to the latest Linux master
+> > > > > >
+> > > > > > ebd297a2affa Linus.Torvalds Merge tag 'net-6.15-rc5' of
+> > > > > > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> > > > > >
+> > > > > > and noticed that PCI is broken for
+> > > > > > "drivers/pci/controller/pcie-brcmstb.c"  I've bisected this
+> > > > > > to the following commit
+> > > > > >
+> > > > > > 2489eeb777af PCI/pwrctrl: Skip scanning for the device further =
+if pwrctrl device is created
+> > > > > >
+> > > > > > which is part of the series [1].  The driver in
+> > > > > > pcie-brcmstb.c is expecting the add_bus() method to be
+> > > > > > invoked twice per boot-up, but the second call does not
+> > > > > > happen.  Not only does this code in brcm_pcie_add_bus() turn
+> > > > > > on regulators, it also subsequently initiates PCIe linkup.
+> > > > > >
+> > > > > > If I revert the aforementioned commit, all is well.
+> > > > > >
+> > > > > > FWIW, I have included the relevant sections of the PCIe DT
+> > > > > > we use at [2].
+> > > > >
+> > > > > Mani, Bartosz, where are we at with this?  The 2489eeb777af
+> > > > > commit log doesn't mention a problem fixed by that commit; it
+> > > > > sounds more like an optimization -- just avoiding an
+> > > > > unnecessary scan.
+> > > > >
+> > > > > 2489eeb777af appeared in v6.15-rc1, so there's still time to
+> > > > > revert it before v6.15 if that's the right way to fix this
+> > > > > regression.
+> > > >
+> > > > We need to find out what is happening in the pcie-brcmstb driver
+> > > > first. From Jim's report, it looks like the driver expects
+> > > > add_bus() callback to be invoked twice, which seems weird.
+> > >
+> > > The pci_ops add_bus() method is invoked once for bus 0 and once
+> > > for bus 1. Note that our controller only has one port.  If I do
+> > > "lspci" I get (our controller is on pci domain=3D=3D1):
+> > >
+> > > 0001:00:00.0 PCI bridge: Broadcom Inc. and subsidiaries Device 7712 (=
+rev 20)
+> > > 0001:01:00.0 Ethernet controller: Broadcom Inc. ...
+> > >
+> > > It is the second invocation of add_bus() that has the brcmstb
+> > > driver turning on the regulators and the subsequent link-up, and
+> > > this call never happens with the 2489eeb777aff9 commit.
+> >
+> > Actually, I don't think it is sufficient to just revert that one
+> > commit.  If I checkout 6.14-rc1 and just bring in
+> >
+> > 06bf05d7349c PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_=
+device()
 >
-> -	enum pci_barno ctrl_reg_bar;
-> -	enum pci_barno peer_spad_reg_bar;
-> -	enum pci_barno db_reg_bar;
-> -	enum pci_barno mw_bar;
-> +	const enum pci_barno *barno;
+> 06bf05d7349c doesn't exist upstream; I assume it is 957f40d039a9
+> ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
 
-barno_map?
+Hi Bjorn,
+
+Yes, sorry, you are correct.
 
 >
->  	unsigned int mw_count;
->  	unsigned int spad_count;
-> @@ -85,17 +96,6 @@ struct ntb_epf_dev {
+> > I get the following after getting the Linux prompt:
+> >
+> > pci 0001:00:00.0: deferred probe pending: pci: supplier
+> > 1000110000.pcie:pci@0,0 not ready
+> > pci 0001:00:00.0: deferred probe pending: pci: supplier
+> > 1000110000.pcie:pci@0,0 not ready
+> >
+> > Basically, brcmstb already picks up and controls the regulator nodes
+> > under the port driver node.  You folks are adding a new generic
+> > system and we are stepping on one another's toes.  The problem here
+> > is that I cannot seem to turn your system off using CONFIG_PWR*
+> > settings.
+> >
+> > We would certainly be open to adopting your system when it meets our
+> > requirements; such as turning off/on on regulators @suspend/resume,
+> > and the ability to not do that if the downstream device has
+> > device_may_wakeup(dev)=3D=3Dtrue.  But until then we need a way to
+> > disable your system or allow brcmstb to "opt out".
+> >
+> > AFAICT this regression does not affect the RaspberryPi SoCs, so it
+> > is not a big deal for us if we take our time to fix this.   But if
+> > so, it is incumbent on you folks to help me get past this
+> > regression.  Is that reasonable?
 >
->  #define ntb_ndev(__ntb) container_of(__ntb, struct ntb_epf_dev, ntb)
->
-> -struct ntb_epf_data {
-> -	/* BAR that contains both control region and self spad region */
-> -	enum pci_barno ctrl_reg_bar;
-> -	/* BAR that contains peer spad region */
-> -	enum pci_barno peer_spad_reg_bar;
-> -	/* BAR that contains Doorbell region and Memory window '1' */
-> -	enum pci_barno db_reg_bar;
-> -	/* BAR that contains memory windows*/
-> -	enum pci_barno mw_bar;
-> -};
-> -
->  static int ntb_epf_send_command(struct ntb_epf_dev *ndev, u32 command,
->  				u32 argument)
->  {
-> @@ -144,7 +144,7 @@ static int ntb_epf_mw_to_bar(struct ntb_epf_dev *ndev, int idx)
->  		return -EINVAL;
->  	}
->
-> -	return idx + 2;
-> +	return ndev->barno[BAR_MW1 + idx];
->  }
->
->  static int ntb_epf_mw_count(struct ntb_dev *ntb, int pidx)
-> @@ -413,7 +413,9 @@ static int ntb_epf_mw_set_trans(struct ntb_dev *ntb, int pidx, int idx,
->  		return -EINVAL;
->  	}
->
-> -	bar = idx + ndev->mw_bar;
-> +	bar = ntb_epf_mw_to_bar(ndev, idx);
-> +	if (bar < 0)
-> +		return bar;
->
->  	mw_size = pci_resource_len(ntb->pdev, bar);
->
-> @@ -455,7 +457,9 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
->  	if (idx == 0)
->  		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
->
-> -	bar = idx + ndev->mw_bar;
-> +	bar = ntb_epf_mw_to_bar(ndev, idx);
-> +	if (bar < 0)
-> +		return bar;
->
->  	if (base)
->  		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
-> @@ -557,8 +561,13 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
->  	}
->
->  	ndev->db_valid_mask = BIT_ULL(ndev->db_count) - 1;
-> -	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
->  	ndev->spad_count = readl(ndev->ctrl_reg + NTB_EPF_SPAD_COUNT);
-> +	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
-> +
-> +	if (ndev->mw_count > NTB_EPF_MAX_MW_COUNT) {
-> +		dev_err(dev, "Unsupported MW count: %u\n", ndev->mw_count);
-> +		return -EINVAL;
-> +	}
->
->  	return 0;
->  }
-> @@ -596,14 +605,14 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->  		dev_warn(&pdev->dev, "Cannot DMA highmem\n");
->  	}
->
-> -	ndev->ctrl_reg = pci_iomap(pdev, ndev->ctrl_reg_bar, 0);
-> +	ndev->ctrl_reg = pci_iomap(pdev, ndev->barno[BAR_CONFIG], 0);
->  	if (!ndev->ctrl_reg) {
->  		ret = -EIO;
->  		goto err_pci_regions;
->  	}
->
-> -	if (ndev->peer_spad_reg_bar) {
-> -		ndev->peer_spad_reg = pci_iomap(pdev, ndev->peer_spad_reg_bar, 0);
-> +	if (ndev->barno[BAR_PEER_SPAD] != ndev->barno[BAR_CONFIG]) {
-> +		ndev->peer_spad_reg = pci_iomap(pdev, ndev->barno[BAR_PEER_SPAD], 0);
->  		if (!ndev->peer_spad_reg) {
->  			ret = -EIO;
->  			goto err_pci_regions;
-> @@ -614,7 +623,7 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->  		ndev->peer_spad_reg = ndev->ctrl_reg + spad_off  + spad_sz;
->  	}
->
-> -	ndev->db_reg = pci_iomap(pdev, ndev->db_reg_bar, 0);
-> +	ndev->db_reg = pci_iomap(pdev, ndev->barno[BAR_DB], 0);
->  	if (!ndev->db_reg) {
->  		ret = -EIO;
->  		goto err_pci_regions;
-> @@ -656,15 +665,20 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
->  	pci_free_irq_vectors(pdev);
->  }
->
-> +static const enum pci_barno ntb_epf_default_barno[NTB_BAR_NUM] = {
-> +	[BAR_CONFIG]	= BAR_0,
-> +	[BAR_PEER_SPAD]	= BAR_1,
-> +	[BAR_DB]	= BAR_2,
-> +	[BAR_MW1]	= BAR_2,
-> +	[BAR_MW2]	= BAR_3,
-> +	[BAR_MW3]	= BAR_4,
-> +	[BAR_MW4]	= BAR_5
-> +};
-> +
->  static int ntb_epf_pci_probe(struct pci_dev *pdev,
->  			     const struct pci_device_id *id)
->  {
-> -	enum pci_barno peer_spad_reg_bar = BAR_1;
-> -	enum pci_barno ctrl_reg_bar = BAR_0;
-> -	enum pci_barno db_reg_bar = BAR_2;
-> -	enum pci_barno mw_bar = BAR_2;
->  	struct device *dev = &pdev->dev;
-> -	struct ntb_epf_data *data;
->  	struct ntb_epf_dev *ndev;
->  	int ret;
->
-> @@ -675,18 +689,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
->  	if (!ndev)
->  		return -ENOMEM;
->
-> -	data = (struct ntb_epf_data *)id->driver_data;
-> -	if (data) {
-> -		peer_spad_reg_bar = data->peer_spad_reg_bar;
-> -		ctrl_reg_bar = data->ctrl_reg_bar;
-> -		db_reg_bar = data->db_reg_bar;
-> -		mw_bar = data->mw_bar;
-> -	}
-> +	ndev->barno = (const enum pci_barno *)id->driver_data;
-> +	if (!ndev->barno)
-> +		ndev->barno = ntb_epf_default_barno;
+> What systems does the regression affect?
 
-I think needn't check it because all .driver_data already set in ntb_epf_pci_tbl
+All Broadcom STB chips, including the RPi sister chips.  Now is there
+anyone but our team who runs upstream Linux on our boards?  Probably
+not.
 
-Frank
 >
-> -	ndev->peer_spad_reg_bar = peer_spad_reg_bar;
-> -	ndev->ctrl_reg_bar = ctrl_reg_bar;
-> -	ndev->db_reg_bar = db_reg_bar;
-> -	ndev->mw_bar = mw_bar;
->  	ndev->dev = dev;
+> I'm not keen on adding any kind of regression in v6.15 if we can avoid
+> it.  Given that v6.15 will likely be released next weekend, I want to
+> revert whatever is necessary tomorrow unless there's a clear path to a
+> fix very soon.
 >
->  	ntb_epf_init_struct(ndev, pdev);
-> @@ -730,30 +736,26 @@ static void ntb_epf_pci_remove(struct pci_dev *pdev)
->  	ntb_epf_deinit_pci(ndev);
->  }
+> You first thought reverting 2489eeb777af ("PCI/pwrctrl: Skip scanning
+> for the device further if pwrctrl device is created") would be enough
+> to avoid the regression.
 >
-> -static const struct ntb_epf_data j721e_data = {
-> -	.ctrl_reg_bar = BAR_0,
-> -	.peer_spad_reg_bar = BAR_1,
-> -	.db_reg_bar = BAR_2,
-> -	.mw_bar = BAR_2,
-> -};
-> -
-> -static const struct ntb_epf_data mx8_data = {
-> -	.ctrl_reg_bar = BAR_0,
-> -	.peer_spad_reg_bar = BAR_0,
-> -	.db_reg_bar = BAR_2,
-> -	.mw_bar = BAR_4,
-> +static const enum pci_barno mx8_barno[NTB_BAR_NUM] = {
-> +	[BAR_CONFIG]	= BAR_0,
-> +	[BAR_PEER_SPAD]	= BAR_0,
-> +	[BAR_DB]	= BAR_2,
-> +	[BAR_MW1]	= BAR_4,
-> +	[BAR_MW2]	= BAR_5,
-> +	[BAR_MW3]	= NO_BAR,
-> +	[BAR_MW4]	= NO_BAR,
->  };
+> But it sounds like something is broken even if you include only the
+> first patch of the branch (957f40d039a9 ("PCI/pwrctrl: Move creation
+> of pwrctrl devices to pci_scan_device()")).
+
+Correct.
+
 >
->  static const struct pci_device_id ntb_epf_pci_tbl[] = {
->  	{
->  		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
->  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
-> -		.driver_data = (kernel_ulong_t)&j721e_data,
-> +		.driver_data = (kernel_ulong_t)ntb_epf_default_barno,
->  	},
->  	{
->  		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
->  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
-> -		.driver_data = (kernel_ulong_t)&mx8_data,
-> +		.driver_data = (kernel_ulong_t)mx8_barno,
->  	},
->  	{ },
->  };
+> Maybe this means we need to revert the entire branch:
 >
-> --
-> 2.47.2
+>   55d25a101d47 ("Merge branch 'pci/pwrctrl'")
+>   75996c92f4de ("PCI/pwrctrl: Add pwrctrl driver for PCI slots")
+>   2a95c1f3468b ("dt-bindings: vendor-prefixes: Document the 'pciclass' pr=
+efix")
+>   2489eeb777af ("PCI/pwrctrl: Skip scanning for the device further if pwr=
+ctrl device is created")
+>   2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to pci_destro=
+y_dev()")
+>   957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_sca=
+n_device()")
 >
+> The only patch there that sounds like it might fix a defect is
+> 2d923930f2e3 ("PCI/pwrctrl: Move pci_pwrctrl_unregister() to
+> pci_destroy_dev()").  I guess if this *does* fix a defect, the defect
+> only happens when removing a device, and dropping a defect fix is
+> better than adding a regression.
+>
+> Guidance please.
+
+I resisted calling for the entire series to be reverted because I
+don't want to be the bad guy and I know how disappointing it is for
+the authors.  But truth be told it is easier for me to deal with this
+before it goes in than after.
+
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+
+
+>
+> > > > If the fix takes time, then we can revert 2489eeb777af in the meant=
+ime.
+> > > >
+> > > > - Mani
+> > > >
+> > > > --
+> > > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=
+=AE=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=
+=AE=AE=E0=AF=8D
+>
+>
+
+--00000000000000c8390635852437
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
+AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCBKOTXPylX77568JA07x16iz4Edk59/
+j/he/zo9vbDHMDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA1
+MTkyMzAzMzFaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
+AQEFAASCAQAGz8JwF+bVRiJK1MMq4nhqtPbCyPrN3aYmU4gCqeoMqA/EDRebbd4bzArLs4aMaAxf
+33VPUKv6dZLVFS+5Pp2Mbgqw54rvJS2LJV7EcwHKHQpsECQHaREtvkghpHecR+8A9LACvJ7ZgpCG
+1VxaPQF6hx0Mrwyn//WL5zEQzhBviFSZ3agtYIB16q9Fx/7IEYMaONVKFZc/ml7j+KNR7T4uRBq6
+CfrSMWQj6OohpWYC8AI51Tjf03hBxeVfgQwEs8YqEmOlFpVcG+V/Wvw4IzP9VB0j6SVeT7lhQF9t
+PQVluy27fu3JZqUVEaohBeZPQiMNwYO3z3h3u6GVIkTPMoWw
+--00000000000000c8390635852437--
 
