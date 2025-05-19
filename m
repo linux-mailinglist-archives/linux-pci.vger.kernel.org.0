@@ -1,61 +1,58 @@
-Return-Path: <linux-pci+bounces-27997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-27999-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53287ABC420
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 18:15:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7152DABC493
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 18:33:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 708277AB376
-	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:11:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DE487A902D
+	for <lists+linux-pci@lfdr.de>; Mon, 19 May 2025 16:32:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09C2528CF51;
-	Mon, 19 May 2025 16:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3FD288C2A;
+	Mon, 19 May 2025 16:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XH/baRnp"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DZGfBp2h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63F528C5CA;
-	Mon, 19 May 2025 16:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46F98288503;
+	Mon, 19 May 2025 16:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670736; cv=none; b=ZueXbzwGtHbrxycSGhCja5EUFqnwvwK485KEFJUL/y7emJvtGF+XsMSj/TjeZGoTaX8bedRkHFGm/RwgDsaD6sOX8l+liy7glF1lGqvJG5HXOJV0otscuKbToWXXvhah21mLmOFcL8sb0XlSyproUePvOoSnX6FUcfMqkTk+iyY=
+	t=1747672357; cv=none; b=sc4pW0+To4CXHy/fc2dZoVWL3UlpywVGee+Bzh+TEnk045cJWTP++sxpZU0CtmKDSpfyI9xwVC/ycwwHCMEFaqfTj19EptUp9HWR8yxvdGodTpo6XquXKWIlOnH1NfkyxpLbFZ3DWHEePSO3lwib4pm3de18BUqkMvRgYNwTYzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670736; c=relaxed/simple;
-	bh=UamZjfyN6na3p67Dkavvu/KY840DiztSpAhsgs34BpE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p/in6YiAkIZk+c2pP6yOhzgjbKpOPn88CotD6uCAZZbxozknTqJC7uVF7DpPrLXD4C2XGXYReiIrxLdM/rxdPxZ1Q0bWurnKkE8OX+fW3yGpMmcU+307udqJ0zw2CCOrTcUJCcuUMhBs7fgcupr7xP010LZFsaThSwmPwchi4tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XH/baRnp; arc=none smtp.client-ip=117.135.210.3
+	s=arc-20240116; t=1747672357; c=relaxed/simple;
+	bh=H7wDwel0re9GO1dno0YqLQ+D3CK0Xo2XFnoe8dJh/60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hsKzzk5goTnn7DgqOql1R9dR1qJ9h1aw1N8s2mTunkd+rYsMkDdrXtOfzgzMfpZbuIQrhz1j+a5Tu9eGekkyZ88HQLcZ07Tcm2wC+8YPjm9UFig3Cp62KuXWk5S8rrbSclDL1SoHzDGQ+JLvjQ049SnR4qSdhWXkp/4yxh+aSyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DZGfBp2h; arc=none smtp.client-ip=220.197.31.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ij
-	u8xELG4+fnR3215qcICf+KmnT2kIbCVpbjooreXLw=; b=XH/baRnpZkoCFnUWlI
-	8PdkaQFL2V/4NL010Kv9mP+kS7L9tWiD9zon/IGFbi2vFhromKdjzouFPXBemLel
-	6fbPRXYIQjeqk79VmduLST9cOJzdtEaO2yDwYTX7iFD+Ay+S2STALDoC1QQLSOw6
-	4c02GN5P1jtwdXWGlpED4V3ms=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=8Q
+	o+vUjMkLVvouDppHhMA1ElL0zWu6omF/GhbdA/+k4=; b=DZGfBp2hL9cJnoKDrX
+	fgjRFAS8CzF5whtge4XlVTQvL4CzZBL1J6r96m+Q0t6aIEuzi4j+hheCfNvE+j/5
+	EDxVQFoEmT1yQ5PyUw7N2MO/FWOQTZJde38gkVxJkAZtfsqFEIUMr8B3wmm+HBZ1
+	siSeJeNWVYvVZ+kA0aicH50Aw=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHWSeiVitokozvCQ--.46206S5;
-	Tue, 20 May 2025 00:04:53 +0800 (CST)
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wC3vJ4CXStoPbk5Cg--.56045S2;
+	Tue, 20 May 2025 00:32:03 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: bhelgaas@google.com,
 	lpieralisi@kernel.org,
 	kw@linux.com,
 	krzk+dt@kernel.org,
 	manivannan.sadhasivam@linaro.org,
-	conor+dt@kernel.org
+	ilpo.jarvinen@linux.intel.com,
+	jingoohan1@gmail.com
 Cc: robh@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 3/3] PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
-Date: Tue, 20 May 2025 00:04:48 +0800
-Message-Id: <20250519160448.209461-4-18255117159@163.com>
+Subject: [PATCH 0/3] PCIe: Refactor link speed configuration with unified macro
+Date: Tue, 20 May 2025 00:31:53 +0800
+Message-Id: <20250519163156.217567-1-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250519160448.209461-1-18255117159@163.com>
-References: <20250519160448.209461-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,36 +60,34 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDHWSeiVitokozvCQ--.46206S5
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtw43uFWDZw4fKFyUGrWDXFb_yoWfAwbE9F
-	17XrWfGr4Fkry5Gw1YyrWavrn0v34rW3WUXFyFy3WfAa4UuFyDZFnxuF45Za93A3W3JF1U
-	GFyDGr1UKr1DKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRifOzJUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhhSo2grT8qeFwAAsc
+X-CM-TRANSID:_____wC3vJ4CXStoPbk5Cg--.56045S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtrWxZF48JF4Dtr1fCFW5Awb_yoWfAFXE9F
+	yaqFy2kr4UtrW3ZFySyr4avry5ZayUWF15AF18Kw4rJFW7CF4DGr4kurZrXa4kWFsxG3yD
+	JFn8Zr1rAw1xCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRu89NDUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgdSo2grWzwjMAAAs7
 
-The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
-but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
-This patch updates the validation in `of_pci_get_max_link_speed` to allow
-values up to 6, ensuring compatibility with newer PCIe generations.
+This series standardizes PCIe link speed handling across multiple drivers
+by introducing a common conversion macro PCIE_SPEED2LNKCTL2_TLS_ENC. The
+changes eliminate redundant speed-to-register mappings and simplify code
+maintenance:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The refactoring improves code consistency and reduces conditional
+branching, while maintaining full backward compatibility with existing
+speed settings.
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index ab7a8252bf41..379d90913937 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
- 	u32 max_link_speed;
- 
- 	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
--	    max_link_speed == 0 || max_link_speed > 4)
-+	    max_link_speed == 0 || max_link_speed > 6)
- 		return -EINVAL;
- 
- 	return max_link_speed;
+Hans Zhang (3):
+  PCI: Add PCIE_SPEED2LNKCTL2_TLS_ENC conversion macro
+  PCI: dwc: Simplify link speed configuration with macro
+  PCI/bwctrl: Replace legacy speed conversion with shared macro
+
+ drivers/pci/controller/dwc/pcie-designware.c | 18 +++---------------
+ drivers/pci/pci.h                            |  9 +++++++++
+ drivers/pci/pcie/bwctrl.c                    | 19 +------------------
+ 3 files changed, 13 insertions(+), 33 deletions(-)
+
+
+base-commit: fee3e843b309444f48157e2188efa6818bae85cf
 -- 
 2.25.1
 
