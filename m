@@ -1,48 +1,65 @@
-Return-Path: <linux-pci+bounces-28124-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28125-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74FE4ABDF85
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 17:49:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B89B7ABE00D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 18:09:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 837AF1BA82A9
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 15:50:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 600028A6EDA
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 16:09:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC18252299;
-	Tue, 20 May 2025 15:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 172B924C068;
+	Tue, 20 May 2025 16:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGiIpAcq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VBd4wFNz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DE521FF4B;
-	Tue, 20 May 2025 15:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3598426A1D0;
+	Tue, 20 May 2025 16:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756182; cv=none; b=N/J1JTiEDROGZWbn4DbJdP/O0HMFDs+VCQaBkIlb3viygjNFqEL6Xw7Qpmk5b/eN99z1HyntZGegXi/GPr+xcsResqBuic4eZykHzVhp/Pr4JCmWR8joWVpGXmGZvPJDkHrCBfrJYHilPtwVa3nh0pwKlBvYdk4LW4UYy227FF8=
+	t=1747757367; cv=none; b=lt6AeBcJfKKaWix2lb/0iDc9PGiC9PQUzWfx3NmUKGA9SZg4+gwj83aNIR915YIsu/xuucGJE1i7FOg8n9iOoAwvd/1gSVa7KjuipRbxmhDSLtrLp1ZmFj2/dXs1OlwnsSAGfy2d+BYXuhzWtyHFmIASs0RW8Quw9PZeCUK4U0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756182; c=relaxed/simple;
-	bh=1kgxIrpPnNW65TFZHJGLHu1T1BhNard7yhUu7zCYEs8=;
+	s=arc-20240116; t=1747757367; c=relaxed/simple;
+	bh=EJXFb+XddUeHCetLI8orU9U87ooUcIVtB4tWRHZm93k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfLkfuU6FQx1pMBPmocbGQP/fBCpObqxZTfW8KX7dzr/l6jSUrJRMQ1Bsl9KR95VHCjhwqWWslNyvArE+vLy9/7DfjNQDnrCIpGSfMrkGw9ZhsClCdxlT7QTBlSinTxoqwZcYnA4gzf6bwn+HKc9Ee/TCDI4crqPNdANYQ88F9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGiIpAcq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78DAC4CEE9;
-	Tue, 20 May 2025 15:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747756181;
-	bh=1kgxIrpPnNW65TFZHJGLHu1T1BhNard7yhUu7zCYEs8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GGiIpAcqtWGlhOE9bDV/LJbHvGiYVdFK0G22DbjgFDSFfd/Q33zKrYzhWCrHDTpyZ
-	 lrnefswshvsLSemDVvPl9wUxX1ITgsKSXDE1PPtR5UyyU2gfIaEooiPU3O0j4wQYPM
-	 5krYcWSA2t9/r/RHXO2lXZlTNsy4nmR7JI0QiK2Qm6YOc+CKz2GJB6b1pMy7vRCIzj
-	 cadeCA40t6xYC/dnJoIrRLhMsDSx2oVJAW4+fG446sl9Uo/mgEzOF7sm0Q3l426l0q
-	 ZsycbCnPVe36JsFloSkAzopZQBilH76aN1kpENoKoMKbR5XvQbr7fSLGsz2RcrXl81
-	 loNOw9MoeZBow==
-Message-ID: <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
-Date: Tue, 20 May 2025 10:49:39 -0500
+	 In-Reply-To:Content-Type; b=DeyVCcrywqh47Eu+JJFv0v3TEL+/lkePLHkw2JIVaz1BIvLjFswu5vMlTCP3w1o0Xxbagd4Eun3632jjGOu0hSw4Nqv/vnKo6TQQdJP0RL0RCEtgQKDJ7i1doEF1mmfPsY2OGFAmQVjjWZxebnKP0+Yxu+iMzG3eGsbdijpUfsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VBd4wFNz; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747757365; x=1779293365;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EJXFb+XddUeHCetLI8orU9U87ooUcIVtB4tWRHZm93k=;
+  b=VBd4wFNzEpmg7Z+XjDCPb72RH2/zWvziP0PO3lNMBtnSJUL/2uOhzny2
+   6BYBbK7aP/dPlsjG4Q7HIQCHarwSeHKgpDUt7pY3CY/5MBaY2oRpPN+51
+   3i6E5sg0uNe4xBgP1V4nFtpDn2Osaxgt8J81b3JpuSfC268UI2ZD2Gb2Q
+   SvGP1eb99x5pooNJEuUDWwJKdEH0Qo3d7Qmt5M3rB7M/xdLYvkrNivxp1
+   7zOKTGCCujP8BPhUrimPBtRdUX/0WbM/1uHjRo25Cya/v4yHq0/4gjcA8
+   s19t3Sf7ElGYGrCuKXhnipHY/2GIfm4DNnMeo/0ZTa50jhfJ5O2QDkh7u
+   A==;
+X-CSE-ConnectionGUID: vE0CneaBStOcc/Kjw6PERw==
+X-CSE-MsgGUID: n0Mw3wAoRpOZd0yMgpNu8w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67256440"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="67256440"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:09:24 -0700
+X-CSE-ConnectionGUID: Ag+J9HIZSDuCjiEShKf8GA==
+X-CSE-MsgGUID: dIBIza+KRWiskrFtGhjq1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="143730925"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO [10.124.221.231]) ([10.124.221.231])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:09:23 -0700
+Message-ID: <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
+Date: Tue, 20 May 2025 09:09:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,181 +67,167 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>, rafael@kernel.org,
- mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
- <aCsK743YSuahPtnH@black.fi.intel.com>
- <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
- <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
- <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
- <aCyj9nbnIRet93O-@black.fi.intel.com>
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Hans Zhang <18255117159@163.com>, bhelgaas@google.com,
+ tglx@linutronix.de, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+ <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aCyj9nbnIRet93O-@black.fi.intel.com>
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/20/2025 10:47 AM, Raag Jadav wrote:
-> On Tue, May 20, 2025 at 10:23:57AM -0500, Mario Limonciello wrote:
->> On 5/20/2025 4:48 AM, Raag Jadav wrote:
->>> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
->>>> On 5/19/25 12:41, Raag Jadav wrote:
->>>>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
->>>>>> If error status is set on an AER capable device, most likely either the
->>>>>> device recovery is in progress or has already failed. Neither of the
->>>>>> cases are well suited for power state transition of the device, since
->>>>>> this can lead to unpredictable consequences like resume failure, or in
->>>>>> worst case the device is lost because of it. Leave the device in its
->>>>>> existing power state to avoid such issues.
->>>>>>
->>>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>>>>> ---
->>>>>>
->>>>>> v2: Synchronize AER handling with PCI PM (Rafael)
->>>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>>>>       Elaborate "why" (Bjorn)
->>>>>> v4: Rely on error status instead of device status
->>>>>>       Condense comment (Lukas)
->>>>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
->>>>> my understanding of this needing a revisit. If this was a mistake, please
->>>>> let me know.
->>>>>
->>>>> Denis, Mario, does this fix your issue?
->>>>>
->>>> Hello,
+
+On 5/19/25 7:41 AM, Hans Zhang wrote:
+>
+>
+> On 2025/5/19 22:21, Hans Zhang wrote:
+>>
+>>
+>> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>>
+>>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>>> The following series introduces a new kernel command-line option aer_panic
+>>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>>> mission-critical environments. This feature ensures deterministic recover
+>>>> from fatal PCIe errors by triggering a controlled kernel panic when device
+>>>> recovery fails, avoiding indefinite system hangs.
+>>>
+>>> Why would a device recovery failure lead to a system hang? Worst case
+>>> that device may not be accessible, right?  Any real use case?
+>>>
+>>
+>>
+>> Dear Sathyanarayanan,
+>>
+>> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers have designed it this way.)  For example, when many mobile phone SoCs of Qualcomm handle AER interrupts and there is a link down, that is, a fatal problem occurs in the current PCIe physical link, the system cannot recover.  At this point, a system restart is needed to solve the problem.
+>>
+>> And our company design of SOC: http://radxa.com/products/orion/o6/, it has 5 road PCIe port.
+>> There is also the same problem.  If there is a problem with one of the PCIe ports, it will cause the entire system to hang.  So I hope linux OS can offer an option that enables SOC manufacturers to choose to restart the system in case of fatal hardware errors occurring in PCIe.
+>>
+>> There are also products such as mobile phones and tablets.  We don't want to wait until the battery is completely used up before restarting them.
+>>
+>> For the specific code of Qualcomm, please refer to the email I sent.
+>>
+>
+>
+> Dear Sathyanarayanan,
+>
+> Supplementary reasons:
+>
+> drivers/pci/controller/cadence/pcie-cadence-host.c
+> cdns_pci_map_bus
+>     /* Clear AXI link-down status */
+>     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+>
+> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+>
+> If there has been a link down in this PCIe port, the register CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to continue.  This is different from Synopsys.
+>
+> If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD saving files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it causes CPU Core1 to be unable to send TLP transfers and hang. This is a very extreme situation.
+> (The current Cadence code is Legacy PCIe IP, and the HPA IP is still in the upstream process at present.)
+>
+> Radxa O6 uses Cadence's PCIe HPA IP.
+> http://radxa.com/products/orion/o6/
+>
+
+It sounds like a system level issue to me. Why not they rely on watchdog to reboot for
+this case ?
+
+Even if you want to add this support, I think it is more appropriate to add this to your
+specific PCIe controller driver.  I don't see why you want to add it part of generic
+AER driver.
+
+> Best regards,
+> Hans
+>
+>>
 >>>>
->>>> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
+>>>> Problem Statement
+>>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>>> traditional error recovery mechanisms may leave the system unresponsive
+>>>> indefinitely. This is unacceptable for high-availability environment
+>>>> requiring prompt recovery via reboot.
+>>>>
+>>>> Solution
+>>>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>>>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>>>
+>>>> Patch Summary:
+>>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, explaining
+>>>> its purpose and usage.
+>>>>
+>>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>>> management in PCI core.
+>>>>
+>>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
+>>>> mode is active.
+>>>>
+>>>> Panic Trigger: Modifies recovery logic to panic the system when recovery
+>>>> fails and aer_panic is enabled.
+>>>>
+>>>> Impact
+>>>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
+>>>> reboots.
+>>>>
+>>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>>
+>>>> Dependency: Requires CONFIG_PCIEAER.
+>>>>
+>>>> For example, in mobile phones and tablets, when there is a problem with
+>>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>>> alternative method to make the system panic without waiting for the
+>>>> battery power to be completely exhausted before restarting the system.
+>>>>
+>>>> ---
+>>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>>> system when they are linked down.
+>>>>
+>>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>>
+>>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>>
+>>>>
+>>>> Since the design schemes of each SOC manufacturer are different, the AXI
+>>>> and other buses connected by PCIe do not have a design to prevent hanging.
+>>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>>> system needs to be restarted.
+>>>>
+>>>>
+>>>> Dear Mani,
+>>>>
+>>>> I wonder if you know how other SoCs of qcom handle FATAL errors that occur
+>>>> in PCIe link.
+>>>> ---
+>>>>
+>>>> Hans Zhang (4):
+>>>>    pci: implement "pci=aer_panic"
+>>>>    PCI/AER: Introduce aer_panic kernel command-line option
+>>>>    PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
+>>>>    PCI/AER: Trigger kernel panic on recovery failure if aer_panic is set
+>>>>
+>>>>   .../admin-guide/kernel-parameters.txt          |  7 +++++++
+>>>>   drivers/pci/pci.c                              |  2 ++
+>>>>   drivers/pci/pci.h                              |  4 ++++
+>>>>   drivers/pci/pcie/aer.c                         | 18 ++++++++++++++++++
+>>>>   drivers/pci/pcie/err.c                         |  8 ++++++--
+>>>>   5 files changed, 37 insertions(+), 2 deletions(-)
+>>>>
+>>>>
+>>>> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+>>>> prerequisite-patch-id: 299f33d3618e246cd7c04de10e591ace2d0116e6
+>>>> prerequisite-patch-id: 482ad0609459a7654a4100cdc9f9aa4b671be50b
 >>>
->>> Thanks for the test. It seems there's no hotplug event this time around
->>> and endpoint device is still intact without any PCI related failure.
->>>
->>> Also,
->>>
->>> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
->>>
->>> Which means whatever you're facing is either not related to this patch,
->>> or at best exposed some nasty side-effect that's not handled correctly
->>> by the driver.
->>>
->>> I'd say amdgpu folks would be of better help for your case.
->>>
->>> Raag
->>
->> So according to the logs Denis shared with v4
->> (https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. This
->> stands for "Bus off Chip Off"
->>
->> amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
->>
->> If it's going to D3hot - that's not going to be BOCO, it should be going to
->> D3cold.
-> 
-> Yes, because upstream port is in D0 for some reason (might be this patch
-> but not sure) and so will be the root port.
-> 
-> pcieport 0000:07:00.0: PCI PM: Suspend power state: D0
-> pcieport 0000:07:00.0: PCI PM: Skipped
-> 
-> and my best guess is the driver is not able to cope with the lack of D3cold.
-
-Yes; if the driver is configured to expect BOCO (D3cold) if it doesn't 
-get it, chaos ensues.
-
-I guess let's double check the behavior with CONFIG_PCI_DEBUG to verify 
-this patch is what is changing that upstream port behavior.
-
-> 
-> Raag
-> 
->> Denis, can you redo your logs with out Raag's patch patch and set
->> CONFIG_PCI_DEBUG to compare?  The 6.14.6 log you shared already
->> (https://pastebin.com/kLZtibcD) also chooses BOCO but I'm suspecting picks
->> D3cold like it should.
->>
->>>
->>>>>> More discussion on [1].
->>>>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>>>>
->>>>>>    drivers/pci/pci.c      |  9 +++++++++
->>>>>>    drivers/pci/pcie/aer.c | 13 +++++++++++++
->>>>>>    include/linux/aer.h    |  2 ++
->>>>>>    3 files changed, 24 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>>> index 4d7c9f64ea24..a20018692933 100644
->>>>>> --- a/drivers/pci/pci.c
->>>>>> +++ b/drivers/pci/pci.c
->>>>>> @@ -9,6 +9,7 @@
->>>>>>     */
->>>>>>    #include <linux/acpi.h>
->>>>>> +#include <linux/aer.h>
->>>>>>    #include <linux/kernel.h>
->>>>>>    #include <linux/delay.h>
->>>>>>    #include <linux/dmi.h>
->>>>>> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>>>>    	   || (state == PCI_D2 && !dev->d2_support))
->>>>>>    		return -EIO;
->>>>>> +	/*
->>>>>> +	 * If error status is set on an AER capable device, it is not well
->>>>>> +	 * suited for power state transition. Leave it in its existing power
->>>>>> +	 * state to avoid issues like unpredictable resume failure.
->>>>>> +	 */
->>>>>> +	if (pci_aer_in_progress(dev))
->>>>>> +		return -EIO;
->>>>>> +
->>>>>>    	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>>>>    	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>>>>    		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>>>> index a1cf8c7ef628..617fbac0d38a 100644
->>>>>> --- a/drivers/pci/pcie/aer.c
->>>>>> +++ b/drivers/pci/pcie/aer.c
->>>>>> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>>>> +bool pci_aer_in_progress(struct pci_dev *dev)
->>>>>> +{
->>>>>> +	int aer = dev->aer_cap;
->>>>>> +	u32 cor, uncor;
->>>>>> +
->>>>>> +	if (!pcie_aer_is_native(dev))
->>>>>> +		return false;
->>>>>> +
->>>>>> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
->>>>>> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
->>>>>> +	return cor || uncor;
->>>>>> +}
->>>>>> +
->>>>>>    static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>>>>    {
->>>>>>    	int rc;
->>>>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>>>>> index 02940be66324..e6a380bb2e68 100644
->>>>>> --- a/include/linux/aer.h
->>>>>> +++ b/include/linux/aer.h
->>>>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>>>>    #if defined(CONFIG_PCIEAER)
->>>>>>    int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>>>>    int pcie_aer_is_native(struct pci_dev *dev);
->>>>>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>>>>    #else
->>>>>>    static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>>>>    {
->>>>>>    	return -EINVAL;
->>>>>>    }
->>>>>>    static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>>>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>>>>    #endif
->>>>>>    void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>>>>> -- 
->>>>>> 2.34.1
->>>>>>
->>
+>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
