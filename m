@@ -1,191 +1,198 @@
-Return-Path: <linux-pci+bounces-28136-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28137-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC33AABE33F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 20:56:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8670ABE3CF
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 21:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4BC81BA3840
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 18:56:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24E2D7A1EB0
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 19:38:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285E926C390;
-	Tue, 20 May 2025 18:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA8B250C06;
+	Tue, 20 May 2025 19:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toSS6erc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAU8LXRP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0877485;
-	Tue, 20 May 2025 18:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B337C1D8DE1;
+	Tue, 20 May 2025 19:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767391; cv=none; b=Spm1PIl9d7btwEZUSDMP0VlHoBtZ79EB6KlbfMhyAQWXHA4E7Lw10wemgCqrjlTi9lx0UD9lOAPO6d/PeWbLiQJNK11U1ehix8vMKOTvGNQlb1Cfi39PLxc0XXckrgSKRWKjs+x/z1iVqnaTknnm1xgtafV/suZgqp0WcxBUuto=
+	t=1747769901; cv=none; b=CfsGPhrSBoK0/0tbr4tqrRshG30gD6+cxeW7RTjknGiP7xl3fCta1KIb+rYK+XUyweUXN00MDM5HyW5OYlxodaDviRmMTeURulOgU9DOL0+q4MjJbMXRkk8h8xVaGrGarS61QoC1x7QlInYM3XI/oEF6O5nui00XLha261N4ti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767391; c=relaxed/simple;
-	bh=OENKUQyaM4BuN8bH8ns8/4Vc0ap1To6lcfFetFEiQpE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lW5ywajwG5jXlDtn8WZryPOaeS3S+OcegHVS/mX9vy65eSvogt294XTrJfWouvfFo3xmTjRqBmDsbVNFd7/rfzRjxQgwbhN/iVCanl68sm+5Q4kF98oxEr8usgwBWc9b5qlm719RZ/hQWhahHANS79IRj7p5BXEJYt/aZDRCUGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toSS6erc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E60C4CEE9;
-	Tue, 20 May 2025 18:56:29 +0000 (UTC)
+	s=arc-20240116; t=1747769901; c=relaxed/simple;
+	bh=YtynzzOjmtbSgflGVRNroS8xiOdA61c9iv0Eb1pXHsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ROXIGJIrOuWD/ezB+YXqJTQNh8ejiy4YQ8MkEgu749JQQVACo72XuxxJj9z5GHbqnMwOZMynL9SWomw/fs5P7qsKKtxdgtXlN07KXCloLGUZ1ncgQGrIv7Q8wNHju5+ekHIpGjNXllEDGEbRWaxwd52rmVZAQVShDo2dPEodlDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAU8LXRP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB804C4CEE9;
+	Tue, 20 May 2025 19:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747767390;
-	bh=OENKUQyaM4BuN8bH8ns8/4Vc0ap1To6lcfFetFEiQpE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=toSS6ercj5WRjD98Zc7wTxVi5L6qtlGRqxjfkXLBenxUqpBwAkyEIv2xSKOghXPDW
-	 TiET+7Z+UnzkKDgC1+zd1/Ue+33pUekIqSbU3giAuU9cQpJICElyixiq21zNM3I8+F
-	 QolHaPiu/Ma1e6nPeSIr0REJdZW3kaqWVarAmEw+bV2vZ1QMmNi45UbDva89JwX+a+
-	 BneDwdClHjLrw6paEzdqmL7yJkGZ8tZDbmzgGp4ItUDK4IGPPeGgjigr+t61ncyYP7
-	 zptDG+/Iiw08i+jPeme52P8IjMux+ThIanPnnH7YYdqtiSpLZpe2D7oTDlIxzOTpxH
-	 A5kIAle9kuurw==
-Message-ID: <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
-Date: Tue, 20 May 2025 13:56:28 -0500
+	s=k20201202; t=1747769901;
+	bh=YtynzzOjmtbSgflGVRNroS8xiOdA61c9iv0Eb1pXHsI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IAU8LXRPLq8n2P+sOZB+ws0nPRSX8pkj5PY+JNtGXH7t10US27FGmOh4dfDUb6kT/
+	 5n2Fj9Q6y5rYwA44U/T7OSUv5XSaJsbWuR1ZpP8SJgLxw6bXj2A+Uy3zZZqNhZqXJj
+	 hGfb5FGaoJwDgnS/jnKp596+PZLPm4xgctVAxPfziliuvt597Ky1axMJrQEzB6595q
+	 c8XrS1Xz/W/FkdVm8UqwgGjOnTsjrgoqP1u5nYQd7YHUSJmT3RguNwHqCrJ6tMtgYf
+	 Ey5hatKp0J+he1918aDcyhhNm9Csz27wwrYiVA5XkZL3YKo7j31nBe2+Seho6u/Yem
+	 wSw07Zq4mIJIQ==
+Date: Tue, 20 May 2025 14:38:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 14/16] PCI/AER: Introduce ratelimit for error logs
+Message-ID: <20250520193819.GA1318016@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>, rafael@kernel.org,
- mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Alex Deucher <alexander.deucher@amd.com>
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
- <aCsK743YSuahPtnH@black.fi.intel.com>
- <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
- <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
- <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
- <aCyj9nbnIRet93O-@black.fi.intel.com>
- <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
- <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
- <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
- <aCzNL9uXGbBSdF2S@black.fi.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aCzNL9uXGbBSdF2S@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a983acbd-bf6e-63df-a3cc-e4d61a602537@linux.intel.com>
 
-On 5/20/2025 1:42 PM, Raag Jadav wrote:
-> On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
->> On 5/20/2025 12:22 PM, Denis Benato wrote:
->>> On 5/20/25 17:49, Mario Limonciello wrote:
->>>> On 5/20/2025 10:47 AM, Raag Jadav wrote:
->>>>> On Tue, May 20, 2025 at 10:23:57AM -0500, Mario Limonciello wrote:
->>>>>> On 5/20/2025 4:48 AM, Raag Jadav wrote:
->>>>>>> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
->>>>>>>> On 5/19/25 12:41, Raag Jadav wrote:
->>>>>>>>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
->>>>>>>>>> If error status is set on an AER capable device, most likely either the
->>>>>>>>>> device recovery is in progress or has already failed. Neither of the
->>>>>>>>>> cases are well suited for power state transition of the device, since
->>>>>>>>>> this can lead to unpredictable consequences like resume failure, or in
->>>>>>>>>> worst case the device is lost because of it. Leave the device in its
->>>>>>>>>> existing power state to avoid such issues.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>>>>>>>>> ---
->>>>>>>>>>
->>>>>>>>>> v2: Synchronize AER handling with PCI PM (Rafael)
->>>>>>>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>>>>>>>>         Elaborate "why" (Bjorn)
->>>>>>>>>> v4: Rely on error status instead of device status
->>>>>>>>>>         Condense comment (Lukas)
->>>>>>>>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
->>>>>>>>> my understanding of this needing a revisit. If this was a mistake, please
->>>>>>>>> let me know.
->>>>>>>>>
->>>>>>>>> Denis, Mario, does this fix your issue?
->>>>>>>>>
->>>>>>>> Hello,
->>>>>>>>
->>>>>>>> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
->>>>>>>
->>>>>>> Thanks for the test. It seems there's no hotplug event this time around
->>>>>>> and endpoint device is still intact without any PCI related failure.
->>>>>>>
->>>>>>> Also,
->>>>>>>
->>>>>>> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
->>>>>>>
->>>>>>> Which means whatever you're facing is either not related to this patch,
->>>>>>> or at best exposed some nasty side-effect that's not handled correctly
->>>>>>> by the driver.
->>>>>>>
->>>>>>> I'd say amdgpu folks would be of better help for your case.
->>>>>>>
->>>>>>> Raag
->>>>>>
->>>>>> So according to the logs Denis shared with v4
->>>>>> (https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. This
->>>>>> stands for "Bus off Chip Off"
->>>>>>
->>>>>> amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
->>>>>>
->>>>>> If it's going to D3hot - that's not going to be BOCO, it should be going to
->>>>>> D3cold.
->>>>>
->>>>> Yes, because upstream port is in D0 for some reason (might be this patch
->>>>> but not sure) and so will be the root port.
->>>>>
->>>>> pcieport 0000:07:00.0: PCI PM: Suspend power state: D0
->>>>> pcieport 0000:07:00.0: PCI PM: Skipped
->>>>>
->>>>> and my best guess is the driver is not able to cope with the lack of D3cold.
->>>>
->>>> Yes; if the driver is configured to expect BOCO (D3cold) if it doesn't get it, chaos ensues.
->>>>
->>>> I guess let's double check the behavior with CONFIG_PCI_DEBUG to verify this patch is what is changing that upstream port behavior.
->>>
->>>
->>> This is the very same exact kernel, minus the patch in question:  https://pastebin.com/rwMYgG7C
->>>
->>>
->>> Both previous kernel and this one have CONFIG_PCI_DEBUG=y.
->>>
->>> Removed the initial bootup sequence to be able to use pastebin.
->>
->> Thanks - this confirms that the problem is the root port not going to D3.
->> This new log shows:
->>
->> pcieport 0000:07:00.0: PCI PM: Suspend power state: D3hot
->>
->> So I feel we should fixate on solving that.
+On Tue, May 20, 2025 at 02:55:32PM +0300, Ilpo Järvinen wrote:
+> On Mon, 19 May 2025, Bjorn Helgaas wrote:
 > 
-> Which means what you're looking for is error flag being set somewhere in
-> the hierarchy that is preventing suspend.
+> > From: Jon Pan-Doh <pandoh@google.com>
+> > 
+> > Spammy devices can flood kernel logs with AER errors and slow/stall
+> > execution. Add per-device ratelimits for AER correctable and uncorrectable
+> > errors that use the kernel defaults (10 per 5s).
+> > 
+> > There are two AER logging entry points:
+> > 
+> >   - aer_print_error() is used by DPC and native AER
+> > 
+> >   - pci_print_aer() is used by GHES and CXL
+> > 
+> > The native AER aer_print_error() case includes a loop that may log details
+> > from multiple devices.  This is ratelimited by the union of ratelimits for
+> > these devices, set by add_error_device(), which collects the devices.  If
+> > no such device is found, the Error Source message is ratelimited by the
+> > Root Port or RCEC that received the ERR_* message.
+> > 
+> > The DPC aer_print_error() case is currently not ratelimited.
+> > 
+> > The GHES and CXL pci_print_aer() cases are ratelimited by the Error Source
+> > device.
 
-Is the issue perhaps that this is now gated on both correctable and 
-uncorrectable errors?
-
-Perhaps should *correctable errors* be emitted with a warning and the 
-*uncorrectable errors* be fatal?
-
+> >  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+> >  {
+> > +	/*
+> > +	 * Ratelimit AER log messages.  Generally we add the Error Source
+> > +	 * device, but there are is_error_source() cases that can result in
+> > +	 * multiple devices being added here, so we OR them all together.
 > 
-> But regardless of it, my understanding is that root port suspend depends
-> on a lot of factors (now errors flags being one of them with this patch)
-> and endpoint driver can't possibly enforce or guarantee it - the best it
-> can do is try.
+> I can see the code uses OR ;-) but I wasn't helpful because this comment 
+> didn't explain why at all. As this ratelimit thing is using reverse logic 
+> to begin with, this is a very tricky bit.
 > 
-> What's probably needed is D3cold failure handling on driver side, but I'm
-> no PCI PM expert and perhaps Rafael can comment on it.
+> Perhaps something less vague like:
 > 
-> Raag
+> ... we ratelimit if all devices have reached their ratelimit.
+> 
+> Assuming that was the intention here? (I'm not sure.)
 
- From the driver perspective it does have expectations that the parts 
-outside the driver did the right thing.  If the driver was expecting the 
-root port to be powered down at suspend and it wasn't there are hardware 
-components that didn't power cycle and that's what we're seeing here.
+My intention was that if there's any downstream device that has an
+unmasked error logged and it has not reached its ratelimit, we should
+log messages for all devices with errors logged.  Does something like
+this help?
+
+  /*
+   * Ratelimit AER log messages.  "dev" is either the source
+   * identified by the root's Error Source ID or it has an unmasked
+   * error logged in its own AER Capability.  If any of these devices
+   * has not reached its ratelimit, log messages for all of them.
+   * Messages are emitted when e_info->ratelimit is non-zero.
+   *
+   * Note that e_info->ratelimit was already initialized to 1 for the
+   * ERR_FATAL case.
+   */
+
+The ERR_FATAL case is from this post-v6 change that I haven't posted
+yet:
+
+  aer_isr_one_error(...)
+  {
+    ...
+    if (status & PCI_ERR_ROOT_UNCOR_RCV) {
+      int fatal = status & PCI_ERR_ROOT_FATAL_RCV;
+      struct aer_err_info e_info = {
+        ...
+ +      .ratelimit = fatal ? 1 : 0;
 
 
+> > +	 */
+> >  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+> >  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> > +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
+> >  		e_info->error_dev_num++;
+> >  		return 0;
+> >  	}
+
+> > @@ -1147,9 +1183,10 @@ static void aer_recover_work_func(struct work_struct *work)
+> >  		pdev = pci_get_domain_bus_and_slot(entry.domain, entry.bus,
+> >  						   entry.devfn);
+> >  		if (!pdev) {
+> > -			pr_err("no pci_dev for %04x:%02x:%02x.%x\n",
+> > -			       entry.domain, entry.bus,
+> > -			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+> > +			pr_err_ratelimited("%04x:%02x:%02x.%x: no pci_dev found\n",
+> 
+> This case was not mentioned in the changelog.
+
+Sharp eyes!  What do you think of this commit log text?
+
+  The CXL pci_print_aer() case is ratelimited by the Error Source device.
+
+  The GHES pci_print_aer() case is via aer_recover_work_func(), which
+  searches for the Error Source device.  If the device is not found, there's
+  no per-device ratelimit, so we use a system-wide ratelimit that covers all
+  error types (correctable, non-fatal, and fatal).
+
+This isn't really ideal because in pci_print_aer(), the struct
+aer_capability_regs has already been filled by firmware and the
+logging doesn't read any registers from the device at all.
+
+However, pci_print_aer() *does* want the pci_dev for statistics and
+tracing (pci_dev_aer_stats_incr()) and, of course, for the aer_printks
+themselves.
+
+We could leave this pr_err() completely alone; hopefully it's a rare
+case.  I think the CXL path just silently skips pci_print_aer() if
+this happens.
+
+Eventually I would really like the native AER path to start by doing
+whatever firmware is doing, e.g., fill in struct aer_capability_regs,
+so the core of the AER handling could be identical between native AER
+and GHES/CXL.  If we could do that, maybe we could figure out a
+cleaner way to handle this corner case.
 
