@@ -1,341 +1,209 @@
-Return-Path: <linux-pci+bounces-28169-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28170-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66477ABE746
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 00:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62C11ABE82E
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 01:40:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC2467B5DAB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 22:34:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E28417B1DE0
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 23:39:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC9825F976;
-	Tue, 20 May 2025 22:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E880A25C818;
+	Tue, 20 May 2025 23:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yj1XEdZa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcVnZiJ4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CCD2620F5;
-	Tue, 20 May 2025 22:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B88256C7D
+	for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 23:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747780512; cv=none; b=lYRQsyrQyEvS1clo25Q+I5hxM9Zo1Hgfyo0olYnfGgs3tpCaDEWENvXPJ5hPuuhlrzrbfQRpDR9RqrPAIqGVcUDM7C7nFTNUnpddLqoQBbfGuEyCenz57bbI+Y9XvUOd17g2WkGvxBoHy0BsLLuJSdwx9cDD033Glku4LIZ5sj8=
+	t=1747784425; cv=none; b=ZVnj+6AqJzZKVRYPC/3vC/hyFm7ik7QV2OA7qnw67YkY3F795a1BoPValH6tr7RRGDM1v30i3hVwlWiUaIOm8O6S3sCJuJuQ+R8AL2xni5cxmnh90iHEZQStptde4KDanQ4VVX9gAGeB7rKhd0MAfqhHgi8TpzHzeK+CTHpyzqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747780512; c=relaxed/simple;
-	bh=IQkpAQPzHZXRcrPSkC3DW3/Yn3xi4KpmzCgvdp1oIV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rbx4MUgGZIvwOS38mnOKxN+BlVGvuy5ukDPJIcc7A8/RU0AHcP/yR6dPZFWQ3hUjzipBfWcejCAdrGnuYrlj0XNTXyL4X4nsk7+zE/Qn4HcdnU2tlx+IbGXwB19XrHUcpGXTQetn7+8Deag0OylxmbEFSPaay7PK0pywQtXPbK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yj1XEdZa; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747780510; x=1779316510;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IQkpAQPzHZXRcrPSkC3DW3/Yn3xi4KpmzCgvdp1oIV0=;
-  b=Yj1XEdZaKlyoP+IaE9UH6xCrzKl2qluWMNq93racliRTrEHZTtwmMLLT
-   RmGYqRZMyaGg+ANAWErfT/JPEfqap4Ms8IzTdb1li8ZxoSRIZ47gCLL7t
-   +WWQ+cnrY3Bwtx9ccDQ9WvZhCRgXL44bkelGD6A+rJIzGjXdSt5qApFfx
-   A5EIJZWJFVMJhtIgan3+Q4YY65CqtuVAUTI5TrqHbmINWg80BSA9Ar2bP
-   v++t/m8lMGZ0MUO5jcubrRYMRxpMfldPah0V3ME2U/7Cdw//CUSElDmCn
-   rZj/SlAGkBBf+5LyhDxppVppUXjWEoJFJhMXoYqf5OTDA9tzFwkcZd6Nd
-   w==;
-X-CSE-ConnectionGUID: EAV2Z53bRZOlCOJhS+yULw==
-X-CSE-MsgGUID: mQ5NBdv5Sou/A/5UQUYalA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49665344"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="49665344"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:35:10 -0700
-X-CSE-ConnectionGUID: 166wFNzmTLu5ve1EO8+i5A==
-X-CSE-MsgGUID: j+YAHzFdQ7qaOgCKKuCstQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="140758647"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO [10.124.222.89]) ([10.124.222.89])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:35:08 -0700
-Message-ID: <11d6dbb5-34de-4008-bc0b-1f0599b02029@linux.intel.com>
-Date: Tue, 20 May 2025 15:35:07 -0700
+	s=arc-20240116; t=1747784425; c=relaxed/simple;
+	bh=SX+UcDxDxooKe46ZCkztzQdf9ywTt+hzpPqr+Dk9CiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9/p6jFlt18SGGEebEWzB9CMh/689IO4yQI4uG39eKwc5VGtGPN1G4oNh8Lg+LJB09LhtFqiRpUBx9B59haG5Ug/aNRlMdNshj68ItBmWOV+dwP9BGjZjX7ltbqlnW+GVTQmUuFAo3DTyFEuWeuzwOTKnCL0fIOYhkvwuVJSMx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wcVnZiJ4; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4721840a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 16:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747784423; x=1748389223; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aqZ+48uzoG4Laks60UH8Pr7nDATfOwjlEAjIjwnXH8g=;
+        b=wcVnZiJ4r/NnICLqXqcVeY/f9/oIuq1lonQczmUT2jo582z4W3le5f4Ynrkwi5SNh7
+         o393pbCqei+Vdqb9LldOO4h5K5muzn+wXp1AyN6fsN5E6uhANKAp3kA6ZA9bwV1N2uUD
+         creq+42b0XM/eaA/3+ZeuDbRkW5FiX19OQY+BLurqZMlFZHldD5JRGYy4ImI2ehT7WsD
+         KQZZsyHzZow9nwBXqZNAkkxpQjF9aKZT5L3vhaT/pC9TVFIn8EsOFE9blW7/ZKriV62j
+         v/6WUfT1nuEUtD3VndTAwxiWordBrqZdt0OrsxWjvbBvNnvWBEwEmteUzCCR1uvBV4Nw
+         yReA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747784423; x=1748389223;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aqZ+48uzoG4Laks60UH8Pr7nDATfOwjlEAjIjwnXH8g=;
+        b=ecQqYbjbpJh1rLLSK00S+Ll0TODCKELrbsHXZxdfowav8FgOmUui+MF+GQN9tRWmyH
+         3A4/15fuWeJfrKBQMJ1SB7kLBHep3fisrxEyCi3wPid/py+8IwWcubhw4p1TfD5fUfj1
+         CaKmSZWvaGeD6cCiGokuZIbD2BvZ9tItqcjUqYfFdIms5FxQSrjolgO4mv6L6hWAHdm5
+         3WBcOk9l8xFNQ8rQH/RzhUAX2CghaaVXxMt7pv3uSdjEBFCz70whKhoEGCn1E6sD6VXK
+         UbisTN6CNrdX8E2vQt0Xu9+LSttZ1YAt0v25N9REcw9X02AC+J38AbUJZeac2WMH0yCy
+         JSIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmhyX91lF+xhx6fYDqHv+89yQt7PHl1sFFggHXPVuGspdEHo6ntn3t3aunp/BuLIDtT6GRv0OHJW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOSg4RrEKbnagSMUAs6dzDagRp2/TbVwFAAqd03Qid0Q5OkkOT
+	m+p29u6kC3Y7QfTvJACzgxmNsAqSuyXOGkyWNhV9F8n5warhrMd8TZgzLtsud4ou6Q==
+X-Gm-Gg: ASbGncs9B2Z36Qed4z6ZYPDc1vNoP+K/RNuVtLu2JXgka+ZsVvkNvW/mDBTN1mfpibI
+	lvrer7NN6mXgV9LImrAjGviFzdhppTQWrfEFhrQueQmfypl0L/FS3WSKWuYkY7KWVAReXEbshju
+	kgD5uc6TS7MX8KqV5ayuS85ixNzVDSb6uKdxX1uzAJjWVvo8Pq3mNoCUktC0Tqn5SWOAMXclrBe
+	EkCEoJcFUszLw5ooDV04MiGir+N5Ic1vE317tnceabs59jr/DQaqbOpQ6otW2OzrKTYRZGm8H29
+	QasZwdkM1XzmPHkV/aAE4tBUPU3Mmi8wqXHiwISxJKULrYUkq3JKLH+aB6nv4qF8RVtcGqTlKw=
+	=
+X-Google-Smtp-Source: AGHT+IGLOF8Oz3iIbi7z+4PFDCTgEXwLx/JfBFJ7u4aeO1DNr49AGrVsutLPXjUIBAZ305Cg4SHFrQ==
+X-Received: by 2002:a05:6a21:33a5:b0:1f5:87ea:2a10 with SMTP id adf61e73a8af0-216218827c2mr25840743637.9.1747784423382;
+        Tue, 20 May 2025 16:40:23 -0700 (PDT)
+Received: from thinkpad ([103.241.193.55])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a3380sm8701239b3a.170.2025.05.20.16.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 16:40:22 -0700 (PDT)
+Date: Wed, 21 May 2025 00:40:18 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 'Cyril Brulebois <kibi@debian.org>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, 'Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
+ further if pwrctrl device is created
+Message-ID: <uye7kpakmj5vx6bdzzy4tsmqqi777rhdb273tqsvgr6tv27apy@jyneanv3blit>
+References: <CA+-6iNxkYumAvk5G6KhYqON9K3bwxGn+My-22KZnGF5Pg8cgfA@mail.gmail.com>
+ <20250519215601.GA1258127@bhelgaas>
+ <CA+-6iNzY4n=E+4Fcbxu7UU+xyUjEQZBSLQ3sMv26smoFS+nGOA@mail.gmail.com>
+ <pxscvlfsvzaatjwty3bt3lpjmhhq4hriwmqo2s4vycwb27uvpq@m3afnghha5dd>
+ <CA+-6iNz-qyKDKif5mv5FProqbpkQdfOYx+nSUA4NHSiCL9Ng5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log ratelimits
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Weinan Liu <wnliu@google.com>, Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
- <20250520215047.1350603-18-helgaas@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250520215047.1350603-18-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNz-qyKDKif5mv5FProqbpkQdfOYx+nSUA4NHSiCL9Ng5Q@mail.gmail.com>
+
+On Tue, May 20, 2025 at 11:06:33AM -0400, Jim Quinlan wrote:
+
+[...]
+
+> > > > What systems does the regression affect?
+> > >
+> > > All Broadcom STB chips, including the RPi sister chips.  Now is there
+> > > anyone but our team who runs upstream Linux on our boards?  Probably
+> > > not.
+> > >
+> >
+> > I forgot to ask you this question. Is your devicetree upstreamed? Because, while
+> > introducing the pwrctrl knobs, I made sure that there are no upstream users
+> > using the supply properties in child nodes. All our existing users are using the
+> > properties in controller nodes, so they are not impacted.
+> Hello Mani,
+> 
+> Our device tree is constructed on the fly by our custom bootloader
+> and passed to Linux, so it does not make sense (IMO) to put them
+> upstream as long as we strictly follow our upstreamed YAML bindings
+> file.  As I mentioned before, our  brcm,stb-pcie.yaml example, which
+> is upstream, contains a "vpcie3v3-supply" property under the pci@0,0
+> node.
+> 
+
+Okay, thanks for the pointer. I was not aware that you have bootloader
+constructed DTB.
+
+> >
+> > Here it looks like you are running out-of-tree dts, which we do not support
+> > unfortunately.
+> The brcmstb YAML file is upstream, and a grep for the standard pcie
+> regulator names would have led you to it. I don't see how you can say
+> you don't support a DT that follows the upstream YAML file(s).
+> 
+
+I didn't say that exactly. I thought you were using some out-of-tree vendor DTS
+which doesn't adhere to the DT bindings, but I was wrong. Your usecase is
+completely valid.
+
+> But it doesn't mean that I do not care about the issue you
+> > reported. I'm flying back home from vacation tomorrow and it will be the first
+> > thing I'm goona look into.
+> >
+> > Adding suspend/resume support is pretty much what I'm going to work on the
+> > upcoming weeks (combined with some rework). So until then, I request you to
+> > revert the changes in your downstream tree and bear with me.
+> 
+> I would rather our systems peacefully coexist, and take your changes
+> voluntarily and on my own schedule, rather than wait for you to add
+> future features.  I'm a little surprised that the CONFIG_PCI_PWRCTL
+> code seems to act on the PCI regulators even when its driver is not
+> present.
+> 
+
+I overlooked at that part. Would the below diff help you?
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..b38a62f40448 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2514,6 +2514,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+        struct platform_device *pdev;
+        struct device_node *np;
+ 
++       if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
++               return NULL;
++
+        np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+        if (!np || of_find_device_by_node(np))
+                return NULL;
 
 
-On 5/20/25 2:50 PM, Bjorn Helgaas wrote:
-> From: Jon Pan-Doh <pandoh@google.com>
->
-> Allow userspace to read/write log ratelimits per device (including
-> enable/disable). Create aer/ sysfs directory to store them and any
-> future aer configs.
->
-> Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
-> attributes (e.g. stats and ratelimits).
->
->    Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
->      sysfs-bus-pci-devices-aer
->
-> Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
-> Sent 6 AER errors. Observed 5 errors logged while AER stats
-> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
->
-> Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
-> logged and accounted in AER stats (12 total errors).
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
->
-> [bhelgaas: note fatal errors are not ratelimited, "aer_report" -> "aer_info"]
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-> ---
+> In addition, I need the ability to cancel at runtime the
+> suspend/resume off/on of the regulators if the downstream device.
+> 
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+I don't get what you mean by 'ability to cancel at runtime'. Like I said before,
+I'm going to rework pwrctrl little bit and probably add suspend/resume (system
+PM first) on the way, if that's what you are referring to.
 
->   ...es-aer_stats => sysfs-bus-pci-devices-aer} | 34 +++++++
->   Documentation/PCI/pcieaer-howto.rst           |  5 +-
->   drivers/pci/pci-sysfs.c                       |  1 +
->   drivers/pci/pci.h                             |  1 +
->   drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
->   5 files changed, 139 insertions(+), 1 deletion(-)
->   rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> similarity index 77%
-> rename from Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> rename to Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> index d1f67bb81d5d..01bb577bfee8 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> @@ -117,3 +117,37 @@ Date:		July 2018
->   KernelVersion:	4.19.0
->   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
->   Description:	Total number of ERR_NONFATAL messages reported to rootport.
-> +
-> +PCIe AER ratelimits
-> +-------------------
-> +
-> +These attributes show up under all the devices that are AER capable.
-> +They represent configurable ratelimits of logs per error type.
-> +
-> +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
-> +Date:		May 2025
-> +KernelVersion:	6.16.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
-> +		gets whether or not AER ratelimiting is currently enabled.
-> +		Enabled by default.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
-> +Date:		May 2025
-> +KernelVersion:	6.16.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for correctable error logs. Writing a value
-> +		changes the number of errors (burst) allowed per interval
-> +		(5 second window) before ratelimiting. Reading gets the
-> +		current ratelimit burst.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
-> +Date:		May 2025
-> +KernelVersion:	6.16.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for non-fatal uncorrectable error logs.
-> +		Writing a value changes the number of errors (burst)
-> +		allowed per interval (5 second window) before ratelimiting.
-> +		Reading gets the current ratelimit burst.
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 6fb31516fff1..4b71e2f43ca7 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -97,12 +97,15 @@ DPC errors, are not ratelimited.
->   AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
->   DEFAULT_RATELIMIT_INTERVAL (5 seconds).
->   
-> +Ratelimits are exposed in the form of sysfs attributes and configurable.
-> +See Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
-> +
->   AER Statistics / Counters
->   -------------------------
->   
->   When PCIe AER errors are captured, the counters / statistics are also exposed
->   in the form of sysfs attributes which are documented at
-> -Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
->   
->   Developer Guide
->   ===============
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index c6cda56ca52c..278de99b00ce 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1805,6 +1805,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->   	&pcie_dev_attr_group,
->   #ifdef CONFIG_PCIEAER
->   	&aer_stats_attr_group,
-> +	&aer_attr_group,
->   #endif
->   #ifdef CONFIG_PCIEASPM
->   	&aspm_ctrl_attr_group,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 65c466279ade..a3261e842d6d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -963,6 +963,7 @@ void pci_no_aer(void);
->   void pci_aer_init(struct pci_dev *dev);
->   void pci_aer_exit(struct pci_dev *dev);
->   extern const struct attribute_group aer_stats_attr_group;
-> +extern const struct attribute_group aer_attr_group;
->   void pci_aer_clear_fatal_status(struct pci_dev *dev);
->   int pci_aer_clear_status(struct pci_dev *dev);
->   int pci_aer_raw_clear_status(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f9e684ac7878..9b8dea317a79 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -627,6 +627,105 @@ const struct attribute_group aer_stats_attr_group = {
->   	.is_visible = aer_stats_attrs_are_visible,
->   };
->   
-> +/*
-> + * Ratelimit enable toggle
-> + * 0: disabled with ratelimit.interval = 0
-> + * 1: enabled with ratelimit.interval = nonzero
-> + */
-> +static ssize_t ratelimit_log_enable_show(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enabled = pdev->aer_info->cor_log_ratelimit.interval != 0;
-> +
-> +	return sysfs_emit(buf, "%d\n", enabled);
-> +}
-> +
-> +static ssize_t ratelimit_log_enable_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enable;
-> +	int interval;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	if (enable)
-> +		interval = DEFAULT_RATELIMIT_INTERVAL;
-> +	else
-> +		interval = 0;
-> +
-> +	pdev->aer_info->cor_log_ratelimit.interval = interval;
-> +	pdev->aer_info->uncor_log_ratelimit.interval = interval;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(ratelimit_log_enable);
-> +
-> +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> +	static ssize_t							\
-> +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> +		    char *buf)						\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +									\
-> +	return sysfs_emit(buf, "%d\n",					\
-> +			  pdev->aer_info->ratelimit.burst);		\
-> +}									\
-> +									\
-> +	static ssize_t							\
-> +	name##_store(struct device *dev, struct device_attribute *attr,	\
-> +		     const char *buf, size_t count)			\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +	int burst;							\
-> +									\
-> +	if (!capable(CAP_SYS_ADMIN))					\
-> +		return -EPERM;						\
-> +									\
-> +	if (kstrtoint(buf, 0, &burst) < 0)				\
-> +		return -EINVAL;						\
-> +									\
-> +	pdev->aer_info->ratelimit.burst = burst;			\
-> +									\
-> +	return count;							\
-> +}									\
-> +static DEVICE_ATTR_RW(name)
-> +
-> +aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
-> +aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
-> +
-> +static struct attribute *aer_attrs[] = {
-> +	&dev_attr_ratelimit_log_enable.attr,
-> +	&dev_attr_ratelimit_burst_cor_log.attr,
-> +	&dev_attr_ratelimit_burst_uncor_log.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
-> +				     struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (!pdev->aer_info)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group aer_attr_group = {
-> +	.name = "aer",
-> +	.attrs = aer_attrs,
-> +	.is_visible = aer_attrs_are_visible,
-> +};
-> +
->   static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   				   struct aer_err_info *info)
->   {
+> That being said,  I don't mind if the series stays as long as you
+> promise to work with me to have our systems coexist.  But I do not
+> want to wait for future features to be added for our code to work.
+> >
+> > Bjorn, FYI: We do not need any revert in mainline since the issue is not
+> > affecting upstream users.
+> 
+> So is it a rule that all DT  must be upstreamed, or is it sufficient
+> to have a bindings YAML file that defines the DT for the driver?
+> 
+
+The latter IMO. If the diff I supplied above works fine, I'll submit a patch for
+that. Eventually, we do like to control the supplies from the pwrctrl driver
+instead of from controller drivers. That's the whole point of introducing this
+framework. But since it is not enabled in defconfig yet, your driver should
+continue working in the meantime with the diff. Later on, I will modify brcmstb
+driver to adapt to pwrctrl framework. Since the binding is same, the driver is
+going to be backwards compatible also.
+
+Please let me know if it works of not!
+
+- Mani
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+மணிவண்ணன் சதாசிவம்
 
