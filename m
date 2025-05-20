@@ -1,150 +1,107 @@
-Return-Path: <linux-pci+bounces-28078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8E37ABD2EB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:13:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7877ABD34C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:25:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A642E8A61B7
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 09:13:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3630E163272
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 09:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FF14266EFC;
-	Tue, 20 May 2025 09:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 407FE2641EA;
+	Tue, 20 May 2025 09:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aL+LzJSU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZmQL4qo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7849B266B59;
-	Tue, 20 May 2025 09:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE0C25DD18;
+	Tue, 20 May 2025 09:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732374; cv=none; b=dsXqIVo2fR3ixLixU9Z/xkZLhGL6FSbzJSm/U3fIdnDdOyude0HpETDTD+LsHg7GASUSDplVtKOUZTXDsqeiTtuC1Hdb2yg9LwFbXWgEPF4jYYRP+UqeGWZVfQRvwISALyTmSBb1IL6O0guqQeTSvyjWcHD0l8c6YQAjMgoKhmA=
+	t=1747733118; cv=none; b=b+Tchzcibelh8iRHEkgjj4nKTZEt/hC2YcItX+IAjdRNDkUhr36vdhFmzY7AJbfEjbIK1qNC157mH1NjLJjTAwWQkr3kR9JnmfBCt9Z3ND/8OXbX5W48i/2UwPxjGTJNbb8zrmYjjY9KTyKBF6KC1IQnKg3sMzHkBxETv5j6Qsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732374; c=relaxed/simple;
-	bh=VyNSIUVE3L1AVI9sfU40qgyG3ZplchlZ8Y8Ao5j96PM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LluF4Apjswxq+70q5cVFaF3dwlGCgI4BcGR3FGe5xnreRzMyKjlt63bFfq733LwBPVv5rA2J3gbekXD3nDm0cpWlAYeGvsMAr/TTJnZPbcBmZL6CBFLx4Jz5lEVRIMohNlId3IvTJ7gibpcOueJ+9MD5JlFadtfzXuKNt754+oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aL+LzJSU; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747732372; x=1779268372;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VyNSIUVE3L1AVI9sfU40qgyG3ZplchlZ8Y8Ao5j96PM=;
-  b=aL+LzJSUzSnOxPN8rIMqHhaEzbe2jVJkRi4Mb3bKoyV6641ARzYWZzjK
-   D2nZv7JBdmo7Yp4kVBwAp+b91rmZlOk7MX1AnCDTg6E1JgtTMQek8UGhd
-   PWlQrCJCfLKR3wy07vPtGs+72oySg7L1vQic7XEWlinAN9HQGfTly9GE3
-   IVgUddP9KcY3vnICGrhb0p1uWFxHH9/Xqe94Wr/BGxu7B6pxXKFw2lvkn
-   fdE35Ahmu4ORFUAMI/y8QiF6XXMN20WHAXa5W4rLV51fQJX8PgFHyUec8
-   l+2lEyYgggQPnnvu2HddJNkCo6DjwQmDG4b+VN7TPDWOVP7BCE/qqnnxW
-   w==;
-X-CSE-ConnectionGUID: GkA0bKEaTQiQwbEKU2RiOQ==
-X-CSE-MsgGUID: jhsPU6WzRfO6cGsCoRrRNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49810070"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49810070"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:12:51 -0700
-X-CSE-ConnectionGUID: zyRZGchVQy2k9iJkYhgmYg==
-X-CSE-MsgGUID: cLs/JexxRjufODmenBzt8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="162938153"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.99]) ([10.124.243.99])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:12:49 -0700
-Message-ID: <b8ab3c01-0602-4980-8c31-0d16c5de2545@linux.intel.com>
-Date: Tue, 20 May 2025 17:12:46 +0800
+	s=arc-20240116; t=1747733118; c=relaxed/simple;
+	bh=syLi3+nLFiEkErIkSF2SB2/M2ELgSIug80hxjccCA0w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Nke0iqsEI3qO3OgnQJ2tWIUfCqRphR05rJx4mzM5ublQ5RA3l4Z5SXq2mXosYVAdVKsUr5a4HJ6Z1qcr9uUpqrSSXnt2d3Bxwc6wQ3r1PEEntRmXKLkrTCtOKjy6jmmadVU031rvTOPMW6vJqucyRwfdgsbOITaF8y3k4DGAmXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZmQL4qo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97389C4CEEB;
+	Tue, 20 May 2025 09:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747733115;
+	bh=syLi3+nLFiEkErIkSF2SB2/M2ELgSIug80hxjccCA0w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WZmQL4qo2/IR86fycFhPOErzPxTa+ulL0ZuP3SaVpnmG/s5AuEJQ+4QUblwbtaIfs
+	 4EZsL7xRKsg008DAAAsZw2g7MMQY/B/FC8IADoVqbDFoggdjnnNtv4I2ScsgvtMfLi
+	 hjll37mGws75wpJkI5a7y47Km66J2Br5/qQ8U+2m8lW+68tSKLICNxpfd1knso04IH
+	 T8ihzB2OYWPMY9kgrM2Konx74FsFPytrNal+f4pPe40Ud04gr4ywgZQgy0i/HiTgMl
+	 SSZbN1aFCmrjnsfbW3JvHojcmuhLbUQxBeHjdyYPhEaHd/yeWOHWuug7TO3A8IXKTj
+	 0bifDOt9PGiag==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, lukas@wunner.de, suzuki.poulose@arm.com,
+	sameo@rivosinc.com, aik@amd.com, jgg@nvidia.com, zhiw@nvidia.com,
+	Xu Yilun <yilun.xu@linux.intel.com>
+Subject: Re: [PATCH v3 13/13] PCI/TSM: Add Guest TSM Support
+In-Reply-To: <20250516054732.2055093-14-dan.j.williams@intel.com>
+References: <20250516054732.2055093-1-dan.j.williams@intel.com>
+ <20250516054732.2055093-14-dan.j.williams@intel.com>
+Date: Tue, 20 May 2025 14:55:08 +0530
+Message-ID: <yq5att5f4osr.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v4 rc] iommu: Skip PASID validation for devices without
- PASID capability
-To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
- yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250520011937.3230557-1-tdave@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250520011937.3230557-1-tdave@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/20/2025 9:19 AM, Tushar Dave wrote:
-> Generally PASID support requires ACS settings that usually create
-> single device groups, but there are some niche cases where we can get
-> multi-device groups and still have working PASID support. The primary
-> issue is that PCI switches are not required to treat PASID tagged TLPs
-> specially so appropriate ACS settings are required to route all TLPs to
-> the host bridge if PASID is going to work properly.
-> 
-> pci_enable_pasid() does check that each device that will use PASID has
-> the proper ACS settings to achieve this routing.
-> 
-> However, no-PASID devices can be combined with PASID capable devices
-> within the same topology using non-uniform ACS settings. In this case
-> the no-PASID devices may not have strict route to host ACS flags and
-> end up being grouped with the PASID devices.
-> 
-> This configuration fails to allow use of the PASID within the iommu
-> core code which wrongly checks if the no-PASID device supports PASID.
-> 
-> Fix this by ignoring no-PASID devices during the PASID validation. They
-> will never issue a PASID TLP anyhow so they can be ignored.
-> 
-> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
-> Cc:stable@vger.kernel.org
-> Signed-off-by: Tushar Dave<tdave@nvidia.com>
-> ---
-> 
-> changes in v4:
-> - rebase to 6.15-rc7
-> 
->   drivers/iommu/iommu.c | 43 ++++++++++++++++++++++++++++---------------
->   1 file changed, 28 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 4f91a740c15f..9d728800a862 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -3366,10 +3366,12 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
->   	int ret;
->   
->   	for_each_group_device(group, device) {
-> -		ret = domain->ops->set_dev_pasid(domain, device->dev,
-> -						 pasid, old);
-> -		if (ret)
-> -			goto err_revert;
-> +		if (device->dev->iommu->max_pasids > 0) {
-> +			ret = domain->ops->set_dev_pasid(domain, device->dev,
-> +							 pasid, old);
-> +			if (ret)
-> +				goto err_revert;
-> +		}
+Dan Williams <dan.j.williams@intel.com> writes:
 
-You can save an indent by making it like this,
+> From: Xu Yilun <yilun.xu@linux.intel.com>
+> 
+ .....
 
-for_each_group_device(group, device) {
-	if (device->dev->iommu->max_pasids == 0)
-		continue;
+> @@ -558,11 +675,11 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
+>  	if (!pdev->tsm)
+>  		return -EINVAL;
+>  
+> -	struct pci_dev *pf0_dev __free(pci_dev_put) = tsm_pf0_get(pdev);
+> -	if (!pf0_dev)
+> +	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
+> +	if (!dsm_dev)
+>  		return -EINVAL;
+>
 
-	ret = domain->ops->set_dev_pasid(domain, device->dev, pasid, old);
-	if (ret)
-		goto err_revert;
-}
+Can we do the below?
 
-Anyway,
+modified   include/linux/pci-tsm.h
+@@ -38,7 +38,6 @@ enum pci_tsm_type {
+  */
+ struct pci_tdi {
+ 	struct pci_dev *pdev;
+-	struct pci_dev *dsm_dev;
+ 	struct kvm *kvm;
+ };
+ 
+@@ -56,6 +55,7 @@ struct pci_tdi {
+  */
+ struct pci_tsm {
+ 	struct pci_dev *pdev;
++	struct pci_dev *dsm_dev;
+ 	enum pci_tsm_type type;
+ 	struct pci_tdi *tdi;
+ };
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+And update dsm_dev during ->probe(). That will avoid these get/put()
+operations in these functions.
+
+
+-aneesh
 
