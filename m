@@ -1,145 +1,150 @@
-Return-Path: <linux-pci+bounces-28077-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57681ABD2AC
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:05:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8E37ABD2EB
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3F4D4A68EB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 09:05:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A642E8A61B7
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 09:13:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888A1263898;
-	Tue, 20 May 2025 09:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FF14266EFC;
+	Tue, 20 May 2025 09:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aL+LzJSU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E0120D506;
-	Tue, 20 May 2025 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7849B266B59;
+	Tue, 20 May 2025 09:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731916; cv=none; b=OajXh+LqmIEQ5/1etqx8rY/kB6BLf1PT1vuxa1K0flH9ozcU6d4/jcon3gttNfUy4zu33vD0jrlAcp7Li8/hlcY5mxXRQZRboUrc0sJY/Im76Au4Dl9OXpOkKPfAiqvTc2XlXtQF/QpDvXTSF3TgS5rpEHI0gLKKaKu1IanNBbc=
+	t=1747732374; cv=none; b=dsXqIVo2fR3ixLixU9Z/xkZLhGL6FSbzJSm/U3fIdnDdOyude0HpETDTD+LsHg7GASUSDplVtKOUZTXDsqeiTtuC1Hdb2yg9LwFbXWgEPF4jYYRP+UqeGWZVfQRvwISALyTmSBb1IL6O0guqQeTSvyjWcHD0l8c6YQAjMgoKhmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731916; c=relaxed/simple;
-	bh=dslqiiVnq1SOhLyyjEybB4KGFPRMGpZlVqR4W9BJhlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ed49JsdZRIiCucoq2llaUvkET1++Z6CMewj0HMgTQG5pTBosmdUr4hX6dmtJ+JSXMW1xUVrHOXZT/kMfONI6U0WcjdZaPUpgwLZ2mx7aRZAl5/f8Xr5QTH56e62CegVYbISnaA1+mf9URWU+WoUtcHSm0ACrg+sH+c3KrvPVTyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so3563103a12.0;
-        Tue, 20 May 2025 02:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747731914; x=1748336714;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vPLD9IYUR0Y+5sJprRW/vuKK7RVWsVDEYp/o2Jak7lM=;
-        b=FOTzOxc3SxtcuTzDJV0DkP3wQ8oA61TzUEXDF4VuYhJlVxry1uSvSaEf+hcu75kUDl
-         86++PdH9a4AbhWnkiKIVWppsWBbsHbPewQchC6ZXEZI7pTDjZoiEGA36fDIweWq+Q+zp
-         Y07JIpeaRThLXEZqhb667qzigWKhL41HxB0yJaAicrxcNeuqIIo/GLPAO9pXpihYFBxq
-         XHCnnNpUCjilzDDji4lgbmMlcxblL+ge3b26M3fY3Z5vWIMGoZxwspkm4Fku8MSOH6tl
-         L0lQaiKZqZ4VGBgt0t5xndklbKk9z6QgOc2X5T+sV4wj+7dh2pP+0FCkJLfWbMjwlrFp
-         VvVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWD0YrxoY9+WxmXz0fpjlusXrM478gE7ZnW8t6umuXPDaEVtDyPIERwn0EWAx4ZBkrmADsf+AjGoAHfC8w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye3IPVPfmqlS1Hh6qH/b8C06r0WLjHmuGLikl5Rldc6Ml+wEKY
-	gU//TmozYwjKq67ZWuKxOAkEfxTFDFjUMsuOfPFUqRCX+BgQVw3KN8z3
-X-Gm-Gg: ASbGncvBcmZtfdc+XAt7vTDmt8ahcqY3jx06xqJFfGgB537E/ngtPEnChaJIBNTVZTB
-	2wU7l/pfuuVZfLVJwta7/e0X4ZaUR1qf74Nbg6rbmfpxJYosfQIaMoAbhSOJz7JuVBj0mbti2nJ
-	RVGxstRLKKRq2HoR/cTca+zMbpGMwJ+zvJR/+RlVHdCddRD91aQ8rbUVGw+11Pw8lnufkbEOhxy
-	oPsGmh52Krdgzon35NaQuonasQHMALqQeH80Tje6yQoKvj1sHM3/t77AdBAsXEHWltqPEyN14Ba
-	g9JTa2SioO0d91nHCwiyu8mgsX94VejLk45VU1lbRCbgtl/PkyfalEoR6FbfbEDc5BOcItssU1n
-	OwMBhjYwKiA==
-X-Google-Smtp-Source: AGHT+IF9SMS8koL5Y6RdygoaqjEc6b1s5T1eXmJSkB0oyvgy8zufe4IJynlSet98+P+t12+8WtOqgQ==
-X-Received: by 2002:a17:902:f551:b0:22e:627f:ebc9 with SMTP id d9443c01a7336-231de3514e9mr164934925ad.3.1747731914152;
-        Tue, 20 May 2025 02:05:14 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf8cc59sm7547070a12.40.2025.05.20.02.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 02:05:13 -0700 (PDT)
-Date: Tue, 20 May 2025 18:05:11 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 00/16] Rate limit AER logs
-Message-ID: <20250520090511.GC261485@rocinante>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
+	s=arc-20240116; t=1747732374; c=relaxed/simple;
+	bh=VyNSIUVE3L1AVI9sfU40qgyG3ZplchlZ8Y8Ao5j96PM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LluF4Apjswxq+70q5cVFaF3dwlGCgI4BcGR3FGe5xnreRzMyKjlt63bFfq733LwBPVv5rA2J3gbekXD3nDm0cpWlAYeGvsMAr/TTJnZPbcBmZL6CBFLx4Jz5lEVRIMohNlId3IvTJ7gibpcOueJ+9MD5JlFadtfzXuKNt754+oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aL+LzJSU; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747732372; x=1779268372;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VyNSIUVE3L1AVI9sfU40qgyG3ZplchlZ8Y8Ao5j96PM=;
+  b=aL+LzJSUzSnOxPN8rIMqHhaEzbe2jVJkRi4Mb3bKoyV6641ARzYWZzjK
+   D2nZv7JBdmo7Yp4kVBwAp+b91rmZlOk7MX1AnCDTg6E1JgtTMQek8UGhd
+   PWlQrCJCfLKR3wy07vPtGs+72oySg7L1vQic7XEWlinAN9HQGfTly9GE3
+   IVgUddP9KcY3vnICGrhb0p1uWFxHH9/Xqe94Wr/BGxu7B6pxXKFw2lvkn
+   fdE35Ahmu4ORFUAMI/y8QiF6XXMN20WHAXa5W4rLV51fQJX8PgFHyUec8
+   l+2lEyYgggQPnnvu2HddJNkCo6DjwQmDG4b+VN7TPDWOVP7BCE/qqnnxW
+   w==;
+X-CSE-ConnectionGUID: GkA0bKEaTQiQwbEKU2RiOQ==
+X-CSE-MsgGUID: jhsPU6WzRfO6cGsCoRrRNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49810070"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49810070"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:12:51 -0700
+X-CSE-ConnectionGUID: zyRZGchVQy2k9iJkYhgmYg==
+X-CSE-MsgGUID: cLs/JexxRjufODmenBzt8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="162938153"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.99]) ([10.124.243.99])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:12:49 -0700
+Message-ID: <b8ab3c01-0602-4980-8c31-0d16c5de2545@linux.intel.com>
+Date: Tue, 20 May 2025 17:12:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250519213603.1257897-1-helgaas@kernel.org>
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v4 rc] iommu: Skip PASID validation for devices without
+ PASID capability
+To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250520011937.3230557-1-tdave@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250520011937.3230557-1-tdave@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 5/20/2025 9:19 AM, Tushar Dave wrote:
+> Generally PASID support requires ACS settings that usually create
+> single device groups, but there are some niche cases where we can get
+> multi-device groups and still have working PASID support. The primary
+> issue is that PCI switches are not required to treat PASID tagged TLPs
+> specially so appropriate ACS settings are required to route all TLPs to
+> the host bridge if PASID is going to work properly.
+> 
+> pci_enable_pasid() does check that each device that will use PASID has
+> the proper ACS settings to achieve this routing.
+> 
+> However, no-PASID devices can be combined with PASID capable devices
+> within the same topology using non-uniform ACS settings. In this case
+> the no-PASID devices may not have strict route to host ACS flags and
+> end up being grouped with the PASID devices.
+> 
+> This configuration fails to allow use of the PASID within the iommu
+> core code which wrongly checks if the no-PASID device supports PASID.
+> 
+> Fix this by ignoring no-PASID devices during the PASID validation. They
+> will never issue a PASID TLP anyhow so they can be ignored.
+> 
+> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
+> Cc:stable@vger.kernel.org
+> Signed-off-by: Tushar Dave<tdave@nvidia.com>
+> ---
+> 
+> changes in v4:
+> - rebase to 6.15-rc7
+> 
+>   drivers/iommu/iommu.c | 43 ++++++++++++++++++++++++++++---------------
+>   1 file changed, 28 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 4f91a740c15f..9d728800a862 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -3366,10 +3366,12 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
+>   	int ret;
+>   
+>   	for_each_group_device(group, device) {
+> -		ret = domain->ops->set_dev_pasid(domain, device->dev,
+> -						 pasid, old);
+> -		if (ret)
+> -			goto err_revert;
+> +		if (device->dev->iommu->max_pasids > 0) {
+> +			ret = domain->ops->set_dev_pasid(domain, device->dev,
+> +							 pasid, old);
+> +			if (ret)
+> +				goto err_revert;
+> +		}
 
-> This work is mostly due to Jon Pan-Doh and Karolina Stolarek.  I rebased
-> this to v6.15-rc1, factored out some of the trace and statistics updates,
-> and added some minor cleanups.
-> 
-> Proposal
-> ========
-> 
-> When using native AER, spammy devices can flood kernel logs with AER errors
-> and slow/stall execution. Add per-device per-error-severity ratelimits for
-> more robust error logging. Allow userspace to configure ratelimits via
-> sysfs knobs.
-> 
-> Motivation
-> ==========
-> 
-> Inconsistent PCIe error handling, exacerbated at datacenter scale (myriad
-> of devices), affects repairabilitiy flows for fleet operators.
-> 
-> Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
-> rasdaemon) to collect/pass on to repairability services will allow for more
-> predictable repair flows and decrease machine downtime.
-> 
-> Background
-> ==========
-> 
-> AER error spam has been observed many times, both publicly (e.g. [1], [2],
-> [3]) and privately. While it usually occurs with correctable errors, it can
-> happen with uncorrectable errors (e.g. during new HW bringup).
-> 
-> There have been previous attempts to add ratelimits to AER logs ([4], [5]).
-> The most recent attempt[5] has many similarities with the proposed
-> approach.
+You can save an indent by making it like this,
 
-I have been testing this series locally with and without faults triggered
-using the AER error injection facility.  No issues thus far.
+for_each_group_device(group, device) {
+	if (device->dev->iommu->max_pasids == 0)
+		continue;
 
-And, as such...
+	ret = domain->ops->set_dev_pasid(domain, device->dev, pasid, old);
+	if (ret)
+		goto err_revert;
+}
 
-Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Anyway,
 
-Thank you!
-
-	Krzysztof
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
