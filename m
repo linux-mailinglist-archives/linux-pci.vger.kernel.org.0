@@ -1,165 +1,98 @@
-Return-Path: <linux-pci+bounces-28089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FC21ABD583
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 12:50:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C578ABD579
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 12:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A02E117BAF8
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 10:45:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BE323A437C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 10:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD9E276030;
-	Tue, 20 May 2025 10:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GpUXhDpl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E627D270544;
+	Tue, 20 May 2025 10:44:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994FB2701B6;
-	Tue, 20 May 2025 10:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFA71A3177;
+	Tue, 20 May 2025 10:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737768; cv=none; b=EJ+8+IcnNSKsdJ407987THU4zkzB98Pwd0onoRjODUGEErYYXbjgsYjq20ejFkF+XSzcMKmR33bSrJSF2dxntxIv4VYvUAPMOMPPLSe62YWKBMTIeHWTZHmkppmkLa2rW8XyrLd4xi/PT/6BedTE3CxObqvA+kSGtznAswlHK/U=
+	t=1747737890; cv=none; b=nP6iyeJTzwITwAvYS3PGlHLUJFESlPZPFqbDBLAoAvN8Ro9E/MyWB+QWd7s8AAOXAGZGuzFf4r63ovEvUt1/SKL66H3Jg6PTYgVzM9gjtV/RluNAIJtW/Rs3FBi2dRIamztBd8bP+Lm/opo5+aHY2RVs2fC7idja8jILbN7boIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737768; c=relaxed/simple;
-	bh=VVRJ0cc49ivFUcS/222ihD/X953hUY24HsmeyEvjzMI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lDYaAUxF2pora85DG7LwaF40OAu90pQsCUJ21UZP2jjHAI37OEZybvG1kFHBxKrTU3a6vQsubMSXxhcVW3GLHfhDGUiohY2C7O4p/kKK3Ol6IX9G7MHh+XJNsEDdkxIy/FRIreJiYqFhjCdoUEe5xNyqkglMaYp+xHF4G/HG//4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GpUXhDpl; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747737767; x=1779273767;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=VVRJ0cc49ivFUcS/222ihD/X953hUY24HsmeyEvjzMI=;
-  b=GpUXhDpl8sUR2sqygVhNfamtMTksiWxc0ZZu18yPfezoQJckFiW95l1Q
-   xql48hInGxyjmKbgHD1K9SY2AcZhLFKSANKrS83EYyMXDdydzE+CGwmq+
-   ceyJUr/IHaMbmZPTA8AGjvrjyrGX3Kp8G1yhvrJFBC88kpTj1xVJ9pnUA
-   6lIENMcGHHG7+A/yJdWAD8R1gkrUuw2IDP+6gsduNnNM8oG3ZCD49KgoL
-   2JxHC91yfzsqCYuu9kMvjNY+V3+Hl1yHyf8Bxxmc5Xms7A6nAdFSGKl+m
-   UwX+LtgZ7Tk8WJ5uB+VQuoDnGfFn5lZiEeEfqTPYt/7htmWmPrDV5VLPn
-   g==;
-X-CSE-ConnectionGUID: Dj2Y+0ACTe6hJaWGlOxu8Q==
-X-CSE-MsgGUID: /w3GzhmgTyeS5FHNnHdlmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="75066297"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="75066297"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:42:46 -0700
-X-CSE-ConnectionGUID: ZBtXtbmQRgSzVNxZmPrKIQ==
-X-CSE-MsgGUID: Ljl4tQ5iQpCWru7A/t3jlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144408251"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:42:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 13:42:36 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 08/16] PCI/AER: Simplify pci_print_aer()
-In-Reply-To: <20250519213603.1257897-9-helgaas@kernel.org>
-Message-ID: <c77305f2-1117-8c7c-83e4-1036c46dbbbb@linux.intel.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-9-helgaas@kernel.org>
+	s=arc-20240116; t=1747737890; c=relaxed/simple;
+	bh=dTHAEP/VM9QFDcvAVhrlLjg+6G233HJXFhDRHzhX1II=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7RJGhTZgo/DJ1i/JC2GvVYnEUVC+B37GFuLZXQOURvTfmZVngbCo6InYZ/0+Uek7/MtrFlJueWNeZI9XpSCz/56Qc4HhNHzyCkxRO2Ui9TVeJlEwIf1kOWlNUpyec24/6Rp9EC3GjvWvNetkkdcJRHy7y2LLQPTCO4UhXiVANI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 708702C00092;
+	Tue, 20 May 2025 12:44:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3D1F41B826B; Tue, 20 May 2025 12:44:38 +0200 (CEST)
+Date: Tue, 20 May 2025 12:44:38 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+	peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aCxdFm_BpgOTFFUv@wunner.de>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+ <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+ <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1668877726-1747737756=:936"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, May 20, 2025 at 01:07:28PM +0300, Ilpo Järvinen wrote:
+> On Tue, 20 May 2025, Shuai Xue wrote:
+> > , and the format of "Link Speed changed" is a bit different from 
+> > "pci_hp_event".
+> 
+> The difference is only because when the Link is down, there's no Link
+> Speed (obviously). Whenever a new device is hotplugged and it comes up, 
+> there's also Link Speed for it which can be included into the trace event. 
+> 
+> I think the trace event should have some special value for the fields that 
+> are N/A due to Link being off. While it would be possible to create 
+> separate events for speed changes and hotplug, I don't see any pros in 
+> that approach over just having the N/A fields marked as such when the Link 
+> is Down.
 
---8323328-1668877726-1747737756=:936
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Link speed changes and device plug/unplug events are orthogonal,
+I don't think they should be mixed together in the same event.
 
-On Mon, 19 May 2025, Bjorn Helgaas wrote:
+A link speed event can be signaled simultaneously to a plug event
+and then user space can decide in which type of event it's
+interested in.
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> Simplify pci_print_aer() by initializing the struct aer_err_info "info"
-> with a designated initializer list (it was previously initialized with
-> memset()) and using pci_name().
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pcie/aer.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 40f003eca1c5..73d618354f6a 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -765,7 +765,10 @@ void pci_print_aer(struct pci_dev *dev, int aer_seve=
-rity,
->  {
->  =09int layer, agent, tlp_header_valid =3D 0;
->  =09u32 status, mask;
-> -=09struct aer_err_info info;
-> +=09struct aer_err_info info =3D {
-> +=09=09.severity =3D aer_severity,
-> +=09=09.first_error =3D PCI_ERR_CAP_FEP(aer->cap_control),
-> +=09};
-> =20
->  =09if (aer_severity =3D=3D AER_CORRECTABLE) {
->  =09=09status =3D aer->cor_status;
-> @@ -776,14 +779,11 @@ void pci_print_aer(struct pci_dev *dev, int aer_sev=
-erity,
->  =09=09tlp_header_valid =3D status & AER_LOG_TLP_MASKS;
->  =09}
-> =20
-> -=09layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
-> -=09agent =3D AER_GET_AGENT(aer_severity, status);
-> -
-> -=09memset(&info, 0, sizeof(info));
-> -=09info.severity =3D aer_severity;
->  =09info.status =3D status;
->  =09info.mask =3D mask;
-> -=09info.first_error =3D PCI_ERR_CAP_FEP(aer->cap_control);
-> +
-> +=09layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
-> +=09agent =3D AER_GET_AGENT(aer_severity, status);
-> =20
->  =09pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
->  =09__aer_print_error(dev, &info);
-> @@ -797,7 +797,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
->  =09if (tlp_header_valid)
->  =09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> =20
-> -=09trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +=09trace_aer_event(pci_name(dev), (status & ~mask),
->  =09=09=09aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->=20
+That also avoids the awkwardness of having N/A values for the
+link speed on unplug.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Thanks,
 
---=20
- i.
-
---8323328-1668877726-1747737756=:936--
+Lukas
 
