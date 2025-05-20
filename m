@@ -1,180 +1,106 @@
-Return-Path: <linux-pci+bounces-28110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C19B9ABDB90
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 16:12:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2284ABDC51
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 16:23:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B64AA4C6D59
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 14:05:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E1127B626C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 14:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 252B6242D9A;
-	Tue, 20 May 2025 14:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4482B248F76;
+	Tue, 20 May 2025 14:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxPz/9Kl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qEgbBOqa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED80DEEDE;
-	Tue, 20 May 2025 14:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1761B247290;
+	Tue, 20 May 2025 14:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749937; cv=none; b=V+9t32Gp77MCzhYCeZxi3TJZxamp36hGEjRJdF9Tq/tDscDvhTRkvbPykd3VppC0OvvucoGynUgrrg7Cn5qhY0ufDWveKW7Iq58RRsdmvCYlRENMFjaL1B8eL4xpYAYhxxAUAMb9Y7iyfOdW5kvDsLjXr4i7q1VPXwLpfbPfn3c=
+	t=1747750346; cv=none; b=mHhcBrhNBH4fK4yNArcuxMZ2OzxopiOkt0n0t0HhSR4HKhTz2RgSFuIRbOhMF+NqbEGibbpX9nc8hE346bFsXv3DMrfGO2PF+iwlP+EpoBp+jFSSp5lARmtciBBs8d7d36+IPqHlENZOsrcgeUBlkaI5ArSvSP1ghoak04JoFmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749937; c=relaxed/simple;
-	bh=Aw0u5qiCrfy3PtV1eC5TuUu69ReE3gjbZ+S8PG4ER8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nujCBHrtIL3UsWX/sb+VBGgFuHegTN0QVU+bIqdpEUa8TdxfNZ/bEKbfxudzwW2WPV+ajh0ePRTD10i+PtUZiGjttKK9/qF96hGzg28QwStjc6CZ8eYo8sIYVoHpp3+FlWvgAlIjeCpWaFGAkK8ZqKTDvZMieoGNQoqLFYduVG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxPz/9Kl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFDCC4CEEB;
-	Tue, 20 May 2025 14:05:36 +0000 (UTC)
+	s=arc-20240116; t=1747750346; c=relaxed/simple;
+	bh=+Pu6dKnw6J7LjD0sUA9DOJvqMqJXTd4BBn3UDaN8PtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PayqWz/tFStMjjZxxa3NP4EBPwhLrSTgjfzJbJyGihQGoOtGSekPld9OD5fAfx0ngtZrjExUbqDp6EIYFcscaYMOEa0XDoR9hpKRH8pQ7HxyItGRIEW3K5S4aBTqcttg4Pj/QNqpa6MuV8rw1H3hGOGMQ7fikevF13VaaphzrwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qEgbBOqa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8818C4CEEA;
+	Tue, 20 May 2025 14:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747749936;
-	bh=Aw0u5qiCrfy3PtV1eC5TuUu69ReE3gjbZ+S8PG4ER8c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lxPz/9KlwyaHpGSsfVSURFLpXxfxw+Wg3IaN5utk3Eq0AVYoy3LtaneRXZ0JNEAC/
-	 1E7refYyMYzV+n0YiKmb64U2ozIsV+TT3LjGVDcComg4d7wJDHL3SfxvGalQNK5voZ
-	 taT1mG7iqbBgrcXQZOYDYomma+RuLqbYtOmUayWHf5vGfVN1IW/eh8W5w9inEtLUNd
-	 YHTF9z+FNVDCtaF9Z7KPV4z9BWXmAeaoL1iDmcxFdgtYIM8h2tFLZl7w5O755mvlOC
-	 fX09j3zRmI9ibRN+Od5lIABbKztTq0ECUMNecZByaBMs57l/pMAZPbvVrMbCzg/uIU
-	 0KFGwVebeygmg==
-Date: Tue, 20 May 2025 09:05:35 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 02/16] PCI/DPC: Log Error Source ID only when valid
-Message-ID: <20250520140535.GA1291979@bhelgaas>
+	s=k20201202; t=1747750345;
+	bh=+Pu6dKnw6J7LjD0sUA9DOJvqMqJXTd4BBn3UDaN8PtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qEgbBOqa0QDAgwJUmKX7to3N4SvkLp/ELv7tbiKV0ZvoZrhp6j9CxT4rntCB515yX
+	 61rxm01GNykh/pI2fgW+YpLghRUP8NXjWIZT3RwF5H2aBLJn7WILIdhxzfgfPUeylM
+	 uHqe6NejBYdJNXz/x1v14ulJMOKS2h2K20Xg00xN9hzZniiihdF+EYRoy9Kf14pSWv
+	 1bD61U/+0rXZwkUVmL9p1WdY/Y+PfJS2v3XydGIMhpIpzfylxUS5ADHoiHsP2m7ugA
+	 n6bS8nj48sHYbZ5TDVbaRze9Oh+xb/7O6/NHntCKkYnPq/ft1k5Ffe9sSK9VCk1P4F
+	 g2113p9YGILvw==
+Date: Tue, 20 May 2025 10:12:24 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, bhelgaas@google.com,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 382/642] PCI/pwrctrl: Move
+ pci_pwrctrl_unregister() to pci_destroy_dev()
+Message-ID: <aCyNyHqFvRmxtqtd@lappy>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-382-sashal@kernel.org>
+ <aBnDI_40fX7SM4tp@wunner.de>
+ <tfil3k6pjl5pvyu5hrhnoq7bleripyvdpcimuvjrvswpqrail3@65t65y2owbpw>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6ba76ff-7cbd-2d73-fdc4-41aa8c788bc9@linux.intel.com>
+In-Reply-To: <tfil3k6pjl5pvyu5hrhnoq7bleripyvdpcimuvjrvswpqrail3@65t65y2owbpw>
 
-On Tue, May 20, 2025 at 01:28:02PM +0300, Ilpo Järvinen wrote:
-> On Mon, 19 May 2025, Bjorn Helgaas wrote:
-> > DPC Error Source ID is only valid when the DPC Trigger Reason indicates
-> > that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
-> > Message (PCIe r6.0, sec 7.9.14.5).
-> > 
-> > When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE)
-> > or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
-> > log the Error Source ID (decoded into domain/bus/device/function).  Don't
-> > print the source otherwise, since it's not valid.
-> > 
-> > For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
-> > logging changes:
-> > 
-> >   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
-> >   - pci 0000:00:01.0: DPC: ERR_FATAL detected
-> >   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL received from 0000:02:00.0
-> > 
-> > and when DPC triggered for other reasons, where DPC Error Source ID is
-> > undefined, e.g., unmasked uncorrectable error:
-> > 
-> >   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
-> >   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
-> >   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked uncorrectable error detected
-> > 
-> > Previously the "containment event" message was at KERN_INFO and the
-> > "%s detected" message was at KERN_WARNING.  Now the single message is at
-> > KERN_WARNING.
-> > 
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/dpc.c | 45 ++++++++++++++++++++++++++----------------
-> >  1 file changed, 28 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index fe7719238456..315bf2bfd570 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -261,25 +261,36 @@ void dpc_process_error(struct pci_dev *pdev)
-> >  	struct aer_err_info info = { 0 };
-> >  
-> >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> > -	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
-> > -
-> > -	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
-> > -		 status, source);
-> >  
-> >  	reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
-> > -	ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
-> > -	pci_warn(pdev, "%s detected\n",
-> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
-> > -		 "unmasked uncorrectable error" :
-> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
-> > -		 "ERR_NONFATAL" :
-> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
-> > -		 "ERR_FATAL" :
-> > -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
-> > -		 "RP PIO error" :
-> > -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
-> > -		 "software trigger" :
-> > -		 "reserved error");
-> > +
-> > +	switch (reason) {
-> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
-> > +		pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
-> > +			 status);
-> > +		break;
-> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
-> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
-> > +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
-> > +				     &source);
-> > +		pci_warn(pdev, "containment event, status:%#06x, %s received from %04x:%02x:%02x.%d\n",
-> > +			 status,
-> > +			 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
-> > +				"ERR_FATAL" : "ERR_NONFATAL",
-> > +			 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
-> > +			 PCI_SLOT(source), PCI_FUNC(source));
-> > +		return;
-> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
-> > +		ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
-> > +		pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
-> > +			 status,
-> > +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
-> > +			 "RP PIO error" :
-> > +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
-> > +			 "software trigger" :
-> > +			 "reserved error");
-> > +		break;
-> > +	}
-> >  
-> >  	/* show RP PIO error detail information */
-> >  	if (pdev->dpc_rp_extensions &&
-> 
-> After adding that switch (reason) there, wouldn't it make sense to move 
-> also the code from the if blocks into the case blocks? That if 
-> conditions check for reason anyway so those if branches would naturally 
-> belong under one of the cases each.
+On Sat, May 10, 2025 at 12:01:31PM +0530, Manivannan Sadhasivam wrote:
+>On Tue, May 06, 2025 at 10:06:59AM +0200, Lukas Wunner wrote:
+>> On Mon, May 05, 2025 at 06:09:58PM -0400, Sasha Levin wrote:
+>> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> >
+>> > [ Upstream commit 2d923930f2e3fe1ecf060169f57980da819a191f ]
+>> >
+>> > The PCI core will try to access the devices even after pci_stop_dev()
+>> > for things like Data Object Exchange (DOE), ASPM, etc.
+>> >
+>> > So, move pci_pwrctrl_unregister() to the near end of pci_destroy_dev()
+>> > to make sure that the devices are powered down only after the PCI core
+>> > is done with them.
+>>
+>> The above was patch [2/5] in this series:
+>>
+>> https://lore.kernel.org/r/20250116-pci-pwrctrl-slot-v3-0-827473c8fbf4@linaro.org/
+>>
+>> ... so I think the preceding patch [1/5] is a prerequisite and would
+>> need to be cherry-picked as well.  Upstream commit id is:
+>> 957f40d039a98d630146f74f94b3f60a40a449e4
+>>
+>
+>Yes, thanks for spotting it Lukas, appreciated!
+>
+>> That said, I'm not sure this is really a fix that merits backporting
+>> to stable.  Mani may have more comments whether it makes sense.
+>>
+>
+>Both this commit and the one corresponding to patch 1/5 are not bug fixes that
+>warrants backporting. So please drop this one from the queue.
 
-Great idea, thanks!
+I'll drop it, thanks!
+
+-- 
+Thanks,
+Sasha
 
