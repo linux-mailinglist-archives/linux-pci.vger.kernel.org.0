@@ -1,170 +1,125 @@
-Return-Path: <linux-pci+bounces-28095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B56CDABD658
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 13:12:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1404ABD65E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 13:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67A621888C15
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:12:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3FA93B334E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:12:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D08C27CCE2;
-	Tue, 20 May 2025 11:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="beU5rQlQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBB227FB0E;
+	Tue, 20 May 2025 11:08:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9305027CCEE;
-	Tue, 20 May 2025 11:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632CD27A128;
+	Tue, 20 May 2025 11:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739312; cv=none; b=oK9xFEy6Mm5Cb27LX8TfZPknB3Hp9SoAh5ZNe2ndWKg863fBu/xCMlvvbSIcaUNGX8dZ7XhjNtzax4/otooaiJZZ6bsVNrPqFKeKkb7K45xj6FkV7vPpRXyeRCBjV3enz0gaqiJ0zFWucHmKOJsc62BGqrDU/VHAfOwnB+m4/iY=
+	t=1747739339; cv=none; b=hSyI6Gn8wHcFeAMiKKYi4BpyDCMQOLw5UvWpCFLaIS9WCcMXb4aaE0+KxcHpTkEpFsMnVMuKh6KRpinUv/AQzCLBW7DWJzsYbsJUHIh7zbYwRU1oYQ+ERcZyya5I4TbfqoT9g6B4/hypyl6cfx7F5kbnKsVtyk5gBETSvyNKkWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747739312; c=relaxed/simple;
-	bh=2prKnSO821SeuO9H2s4uOwiNlz7rB9Uw7dRLE80sspg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GzsDg5plYmAgE57ZQFwBxN7QKS4ahxiZgneOkJAh6o8cNR3RezRTJhTYYJHb2jCk8CssT1MSzCgOptS9Dyc0uKKyB97Osf+uCtO+qgMJpVh+0t/V9sDSz5FRZHUUdAA/L6ydAfoHKvm40aNV8u/dZOLd3j3lX4YVDGX7jICAF1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=beU5rQlQ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747739311; x=1779275311;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2prKnSO821SeuO9H2s4uOwiNlz7rB9Uw7dRLE80sspg=;
-  b=beU5rQlQPYQVo6Vabeq14xobBJVwdQQ5h3OmAr3XnZFumstrkTZLEnVY
-   BU8GjK3M5whI1MltPXvL+1g5c2dLpMtm15OrVEky8b4DkX5y4XY3MaYKg
-   SwXE/slD9pBx1T8S90PQGolI+lM5uUR+p6QUrTtfKpPehkEeTZy4ftcRG
-   4BQKKYGWhGNDyriml9hSYcMjuRthxa/83sUKkwLSDZwPJUmqPkZ3pDtB6
-   Vu0h3cKhLEX41SU0ZTOv8tZCESdt11Jr8Wn/5xNz/thiOSqq/sGkGJuZF
-   WgGyhnLepEHQdW7Md4xls9eKZh8LrQFWVeUoKO2DAa6Tv5vHg/yNT+iV9
-   Q==;
-X-CSE-ConnectionGUID: VlRnVtJaQDeaj/X8CI2qxQ==
-X-CSE-MsgGUID: 5D7ADScVQUWYQngu2qxhUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="67222150"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="67222150"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:08:30 -0700
-X-CSE-ConnectionGUID: Psky762oSGWT9Xebg7dWIw==
-X-CSE-MsgGUID: vN1G9CdjQXOh3FilZV04og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144914007"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:08:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 14:08:19 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 10/16] PCI/AER: Combine trace_aer_event() with statistics
- updates
-In-Reply-To: <20250519213603.1257897-11-helgaas@kernel.org>
-Message-ID: <a6260206-a02f-2212-9610-66186d6e26a2@linux.intel.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-11-helgaas@kernel.org>
+	s=arc-20240116; t=1747739339; c=relaxed/simple;
+	bh=xOSgR7Uj1iG0IGZQV8kzsDkw1k4xr5zmRTWDBRZ71fU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YBIqLoUTpTMohvwEJg458CjCucXGMrAVLZUPVg6RySjHBlsHGFRSNv4s0AkTLSQW3wV353XVd0TORSzR7RfXja3zNh7fYiGe4leRfdrYcI9wO3O8pUAudicgmm7poq0gf4fqY7YLgO6Sp+mgp+pzvG3VAvQubuYs4M/itXZ+bwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b1sBD4ZWFz6M4rd;
+	Tue, 20 May 2025 19:04:04 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 77202140114;
+	Tue, 20 May 2025 19:08:54 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 20 May
+ 2025 13:08:53 +0200
+Date: Tue, 20 May 2025 12:08:51 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+CC: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-pci@vger.kernel.org>, <linux-edac@vger.kernel.org>
+Subject: Re: [PATCH 1/4 v2] ACPI: extlog: Trace CPER Non-standard Section
+ Body
+Message-ID: <20250520120851.000062cf@huawei.com>
+In-Reply-To: <20250429172109.3199192-2-fabio.m.de.francesco@linux.intel.com>
+References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+	<20250429172109.3199192-2-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1580202455-1747739299=:936"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 29 Apr 2025 19:21:06 +0200
+"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
 
---8323328-1580202455-1747739299=:936
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> ghes_do_proc() has a catch-all for unknown or unhandled CPER formats
+> (UEFI v2.10 Appendix N 2.3), extlog_print() does not. This gap was
+> noticed by a RAS test that injected CXL protocol errors which were
+> notified to extlog_print() via the IOMCA (I/O Machine Check
+> Architecture) mechanism. Bring parity to the extlog_print() path by
+> including a similar log_non_standard_event().
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+Makes sense to me.
 
-On Mon, 19 May 2025, Bjorn Helgaas wrote:
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> As with the AER statistics, we always want to emit trace events, even if
-> the actual dmesg logging is rate limited.
->=20
-> Call trace_aer_event() directly from pci_dev_aer_stats_incr(), where we
-> update the statistics.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/pcie/aer.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index eb80c382187d..4683a99c7568 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -625,6 +625,9 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pd=
-ev,
->  =09u64 *counter =3D NULL;
->  =09struct aer_stats *aer_stats =3D pdev->aer_stats;
-> =20
-> +=09trace_aer_event(pci_name(pdev), (info->status & ~info->mask),
-> +=09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+>  drivers/acpi/acpi_extlog.c | 6 ++++++
+>  drivers/ras/ras.c          | 1 +
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index f7fb7205028d..caca6ccd6e99 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -182,6 +182,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			if (gdata->error_data_length >= sizeof(*mem))
+>  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>  						       (u8)gdata->error_severity);
+> +		} else {
+> +			void *err = acpi_hest_get_payload(gdata);
 > +
->  =09if (!aer_stats)
->  =09=09return;
-> =20
-> @@ -741,9 +744,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
-err_info *info)
->  out:
->  =09if (info->id && info->error_dev_num > 1 && info->id =3D=3D id)
->  =09=09pci_err(dev, "  Error of this Agent is reported first\n");
-> -
-> -=09trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> -=09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+> +			log_non_standard_event(sec_type, fru_id, fru_text,
+> +					       gdata->error_severity, err,
+> +					       gdata->error_data_length);
+>  		}
+>  	}
+>  
+> diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
+> index a6e4792a1b2e..ac0e132ccc3e 100644
+> --- a/drivers/ras/ras.c
+> +++ b/drivers/ras/ras.c
+> @@ -51,6 +51,7 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
+>  {
+>  	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
 >  }
-> =20
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
-> @@ -782,6 +782,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
-> =20
->  =09info.status =3D status;
->  =09info.mask =3D mask;
-> +=09info.tlp_header_valid =3D tlp_header_valid;
-> +=09if (tlp_header_valid)
-> +=09=09info.tlp =3D aer->header_log;
-> =20
->  =09pci_dev_aer_stats_incr(dev, &info);
-> =20
-> @@ -799,9 +802,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
-> =20
->  =09if (tlp_header_valid)
->  =09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> -
-> -=09trace_aer_event(pci_name(dev), (status & ~mask),
-> -=09=09=09aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> =20
->=20
+> +EXPORT_SYMBOL_GPL(log_non_standard_event);
+>  
+>  void log_arm_hw_error(struct cper_sec_proc_arm *err)
+>  {
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1580202455-1747739299=:936--
 
