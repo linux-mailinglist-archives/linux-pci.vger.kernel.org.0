@@ -1,173 +1,166 @@
-Return-Path: <linux-pci+bounces-28092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28093-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64069ABD5B5
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 13:00:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ED65ABD5C8
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 13:05:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DA157AB4B7
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 10:58:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 775BB166C0D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 11:04:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A3A27510C;
-	Tue, 20 May 2025 11:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0712721D3F1;
+	Tue, 20 May 2025 11:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nG1nKKbO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gVjzks3q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093892571C5;
-	Tue, 20 May 2025 11:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6827A21D3E8;
+	Tue, 20 May 2025 11:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747738809; cv=none; b=Q73sFuYfGTd9JAIH5Yqh1WEj5zM639cBPxHhWfAuO3x3xwlX+UxEWOg8IGFHHVDz6oHlmFUCiHTfBYJ1N35eqoDifbMhRTRWqmXeSTrCmLWTN48C3R5gGINkSvKPEaImkmCaTY8GtMuFlnqFOYEeKp83BdjavRqwfPY91RwBkeY=
+	t=1747739090; cv=none; b=I7ERCsLIoh765Fc3k4AWuy/+dnKv4aajoa7AUHR5pMImaHWOiFnVMaRqSNxv8nE2JmDWeC8o92SuPQq13hwA4Gy2K89Ntj5T4AX65rtSodTsUYJSILvXlmv6WKGIZO2kUxPSpOr99NOE4UiGSFhSVE9Oou9+Wh91kLTYjAovy3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747738809; c=relaxed/simple;
-	bh=fNBNOvnSO4ornS7Fqdg0T7Vkbw0XCVVCOgfGhmlue7g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qCLC+pwdSH9dKXYDB3rxKy2VPRwvLJWZUcPYadiC3H9IK8yFdl2qWq9SzRQbuYxp+iw9YOpuiG2NoXZpDOMX9SmfaLcTEZDuufQypPfkucXgt43MBfjPjCMevmw5TisJeZaPT2RSgZPZztV66Uz3ZIPUTBHSntwfYiv0oYtAxw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nG1nKKbO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA21CC4CEE9;
-	Tue, 20 May 2025 11:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747738808;
-	bh=fNBNOvnSO4ornS7Fqdg0T7Vkbw0XCVVCOgfGhmlue7g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nG1nKKbOcAmw5B3/IKd7g/gctFDAdEv5GEt3hh2DYkvwUWvB+8OpOLDjVpKajOMHC
-	 L8C9V4Jl9j91txRCH3hFePZj+pwb/VG0Ay7afMeWJK04u3vGZyjWM1gUHmsGUQ3XN2
-	 FoObhNOvkEqka1CQUS16QOeihfdcbkvbnC3tVi7I/yPK6dDET8NiRjXKrw7gFYx20A
-	 +KTXizLpTwlcKQ53PYFfei4xJp5k70jrSBJQTfNXCJ+szBiiHW4pA1s3IXxXcKv8HU
-	 E1gSHTm1U2GuuiNm1tuPzL2dWHKAeriRQFF3qtv7bXEyeV62cC+Fell62xEHmM8xvG
-	 OSNU6y1Gik/tA==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, lukas@wunner.de, suzuki.poulose@arm.com,
-	sameo@rivosinc.com, aik@amd.com, jgg@nvidia.com, zhiw@nvidia.com,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v3 13/13] PCI/TSM: Add Guest TSM Support
-In-Reply-To: <20250516054732.2055093-14-dan.j.williams@intel.com>
-References: <20250516054732.2055093-1-dan.j.williams@intel.com>
- <20250516054732.2055093-14-dan.j.williams@intel.com>
-Date: Tue, 20 May 2025 16:30:01 +0530
-Message-ID: <yq5ar00j4kem.fsf@kernel.org>
+	s=arc-20240116; t=1747739090; c=relaxed/simple;
+	bh=2q3Euz3gWXew0Lix6LkM48KWDqKNDLqiRhgOnRlDonc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Hf8T0o23WyH/i/CQ8Lob9LZrbvqqiCy/ZWAW5cgsX/1meho4iIPhx5mNCE0iV5SlmBKqbkWO13TdeHqjRc/n2Yr06mGoudr3pkeRinqfjxSb26ciIfHwGVqadU8wwmxVlYwe3rcAt4fN2JifuIO5qLiReVMQgH6TQrWmH5Q7unw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gVjzks3q; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747739089; x=1779275089;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2q3Euz3gWXew0Lix6LkM48KWDqKNDLqiRhgOnRlDonc=;
+  b=gVjzks3qrp7PxueW/wLtsFNhlCiqHX8okWiF3kGFCyTxcMjRfRzSFx7D
+   XdAtNI7qN4IZ2+Ocdl+I2j8zG1bkpJjgfLFcZp/ODyX0JYEPyyoT6mxna
+   /48zLqjTAgUd0jbKOs8iMJJusCinS6raawQn8pKWl38LHTS5lL4qqouxz
+   rjWnbghu4vhZHZ26WN5ZCZ91rnsHsM0uuQhT6fBMsP1TWtkVY7wZzyT1I
+   dh/9Xws2+SoOSJVRCXggKYHNq55DlmaoR4SheoxPcICEZCNksbGSU0meb
+   POdAcUXGzaHZ9HYhZW7eFW2Bw0HmkLhoNSV5zMRAvn0TG4E12UCiS/uQc
+   g==;
+X-CSE-ConnectionGUID: 9bkSUVs3QB+Xx7bDKXEdWA==
+X-CSE-MsgGUID: 8pQWQc32R5+Spo0v/a1s0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49570075"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49570075"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:04:48 -0700
+X-CSE-ConnectionGUID: lsWvy+8XTtOpxXcW+r6gMA==
+X-CSE-MsgGUID: zI7pvXqoT7ea0loC5Vlm4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="176784390"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:04:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 14:04:38 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 09/16] PCI/AER: Update statistics early in logging
+In-Reply-To: <20250519213603.1257897-10-helgaas@kernel.org>
+Message-ID: <0e27ac92-0b94-43c2-1c7a-da706f60792d@linux.intel.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-10-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/mixed; boundary="8323328-1997636967-1747739078=:936"
 
-Dan Williams <dan.j.williams@intel.com> writes:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> From: Xu Yilun <yilun.xu@linux.intel.com>
-...
+--8323328-1997636967-1747739078=:936
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> @@ -558,11 +675,11 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
->  	if (!pdev->tsm)
->  		return -EINVAL;
->  
-> -	struct pci_dev *pf0_dev __free(pci_dev_put) = tsm_pf0_get(pdev);
-> -	if (!pf0_dev)
-> +	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
-> +	if (!dsm_dev)
->  		return -EINVAL;
->  
-> -	struct mutex *ops_lock __free(tdi_ops_unlock) = tdi_ops_lock(pf0_dev);
-> +	struct mutex *ops_lock __free(tdi_ops_unlock) = tdi_ops_lock(dsm_dev);
->  	if (IS_ERR(ops_lock))
->  		return PTR_ERR(ops_lock);
->  
-> @@ -573,10 +690,13 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
->  			return -EBUSY;
->  	}
->  
-> -	tdi = tsm_ops->bind(pdev, pf0_dev, kvm, tdi_id);
-> +	tdi = tsm_ops->bind(pdev, dsm_dev, kvm, tdi_id);
->  	if (!tdi)
->  		return -ENXIO;
->  
-> +	tdi->pdev = pdev;
-> +	tdi->dsm_dev = dsm_dev;
-> +	tdi->kvm = kvm;
->  	pdev->tsm->tdi = tdi;
->
+On Mon, 19 May 2025, Bjorn Helgaas wrote:
 
-should that be no_free_ptr(dsm_dev)? Also unbind needs to drop that
-device reference? 
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> There are two AER logging entry points:
+>=20
+>   - aer_print_error() is used by DPC (dpc_process_error()) and native AER
+>     handling (aer_process_err_devices()).
+>=20
+>   - pci_print_aer() is used by GHES (aer_recover_work_func()) and CXL
+>     (cxl_handle_rdport_errors())
+>=20
+> Both use __aer_print_error() to print the AER error bits.  Previously
+> __aer_print_error() also incremented the AER statistics via
+> pci_dev_aer_stats_incr().
+>=20
+> Call pci_dev_aer_stats_incr() early in the entry points instead of in
+> __aer_print_error() so we update the statistics even if the actual printi=
+ng
+> of error bits is rate limited by a future change.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 73d618354f6a..eb80c382187d 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -693,7 +693,6 @@ static void __aer_print_error(struct pci_dev *dev,
+>  =09=09aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+>  =09=09=09=09info->first_error =3D=3D i ? " (First)" : "");
+>  =09}
+> -=09pci_dev_aer_stats_incr(dev, info);
+>  }
+> =20
+>  static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
+nfo,
+> @@ -714,6 +713,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
+err_info *info)
+>  =09int id =3D pci_dev_id(dev);
+>  =09const char *level;
+> =20
+> +=09pci_dev_aer_stats_incr(dev, info);
+> +
+>  =09if (!info->status) {
+>  =09=09pci_err(dev, "PCIe Bus Error: severity=3D%s, type=3DInaccessible, =
+(Unregistered Agent ID)\n",
+>  =09=09=09aer_error_severity_string[info->severity]);
+> @@ -782,6 +783,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
+ity,
+>  =09info.status =3D status;
+>  =09info.mask =3D mask;
+> =20
+> +=09pci_dev_aer_stats_incr(dev, &info);
+> +
+>  =09layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
+>  =09agent =3D AER_GET_AGENT(aer_severity, status);
+> =20
+>=20
 
-modified   drivers/pci/tsm.c
-@@ -697,7 +697,7 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
- 		return -ENXIO;
- 
- 	tdi->pdev = pdev;
--	tdi->dsm_dev = dsm_dev;
-+	tdi->dsm_dev = no_free_ptr(dsm_dev);
- 	tdi->kvm = kvm;
- 	pdev->tsm->tdi = tdi;
- 
-@@ -714,10 +714,6 @@ static int __pci_tsm_unbind(struct pci_dev *pdev)
- 	if (!pdev->tsm)
- 		return -EINVAL;
- 
--	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
--	if (!dsm_dev)
--		return -EINVAL;
--
- 	struct mutex *lock __free(tdi_ops_unlock) = tdi_ops_lock(dsm_dev);
- 	if (IS_ERR(lock))
- 		return PTR_ERR(lock);
-@@ -726,6 +722,10 @@ static int __pci_tsm_unbind(struct pci_dev *pdev)
- 	if (!tdi)
- 		return 0;
- 
-+	struct pci_dev *dsm_dev __free(pci_dev_put) = tdi->dsm_dev;
-+	if (!dsm_dev)
-+		return -EINVAL;
-+
- 	tsm_ops->unbind(tdi);
- 	pdev->tsm->tdi = NULL;
- 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
+--=20
+ i.
 
->  
->  	return 0;
-> @@ -592,11 +712,11 @@ static int __pci_tsm_unbind(struct pci_dev *pdev)
->  	if (!pdev->tsm)
->  		return -EINVAL;
->  
-> -	struct pci_dev *pf0_dev __free(pci_dev_put) = tsm_pf0_get(pdev);
-> -	if (!pf0_dev)
-> +	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
-> +	if (!dsm_dev)
->  		return -EINVAL;
->  
-> -	struct mutex *lock __free(tdi_ops_unlock) = tdi_ops_lock(pf0_dev);
-> +	struct mutex *lock __free(tdi_ops_unlock) = tdi_ops_lock(dsm_dev);
->  	if (IS_ERR(lock))
->  		return PTR_ERR(lock);
->  
-> @@ -641,11 +761,11 @@ int pci_tsm_guest_req(struct pci_dev *pdev, struct pci_tsm_guest_req_info *info)
->  	if (!pdev->tsm)
->  		return -ENODEV;
->  
-> -	struct pci_dev *pf0_dev __free(pci_dev_put) = tsm_pf0_get(pdev);
-> -	if (!pf0_dev)
-> +	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
-> +	if (!dsm_dev)
->  		return -EINVAL;
->  
-> -	struct mutex *lock __free(tdi_ops_unlock) = tdi_ops_lock(pf0_dev);
-> +	struct mutex *lock __free(tdi_ops_unlock) = tdi_ops_lock(dsm_dev);
->  	if (IS_ERR(lock))
->  		return -ENODEV;
->  
-
-...
-
--aneesh
+--8323328-1997636967-1747739078=:936--
 
