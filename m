@@ -1,192 +1,304 @@
-Return-Path: <linux-pci+bounces-28062-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28063-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4BF2ABCE25
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 06:12:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BF9AABCE59
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 06:59:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71CE37ABD08
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 04:11:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E38B3A94FA
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 04:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A211F1E50B;
-	Tue, 20 May 2025 04:12:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77FFC21D3C6;
+	Tue, 20 May 2025 04:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lywcwxId"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XDiKeq5+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268CE256C95
-	for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 04:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5AE33F9;
+	Tue, 20 May 2025 04:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747714336; cv=none; b=eRoFXkjKKSNeTD9fZVdfVWWdjm4VxRFMI5jXCy80vnlINwyprS6JC7K7MIlxoOx8xNx+lHoul25CMFYBxW8WyILCWtds8AnUp2jmXLQgoKtsH2EH/qxf/R9c3LQWyMvCyI+u2k9af2vYqogxPsJfaQkBJUFj9T4xqqZihs5wR6k=
+	t=1747717176; cv=none; b=dOkwPoS6CjYi34CdtOY/e1fA0HnvECfBnmvkpPnhSeD1RMOC8M+uDbcaQqW0fUjSHr5LMdGxDtH8KqQ6GUfkCOJr+vL6QBurrD+bqQE+MnX8CtTDKU2gG1Zdv1dVMXktieywzXgvCm2ZZdXsmV5OVfwkyKCliAC1bzVJrUpIGdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747714336; c=relaxed/simple;
-	bh=AA5z1Iv12EICjBiN6kqrFqLyeWGwCCQ1jyhoLxGEHpU=;
+	s=arc-20240116; t=1747717176; c=relaxed/simple;
+	bh=GZDcuorP/pXX666TLKaJr4ROBUaG28ei/hv6M8Pc4+A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cunYP65/Y4ABEyDelMxAMr/gJZqZzAoFwN+jcRyUYLBeAc6bo8QpGkkchTVtFfFyOj3IHpGK4+4p3Ix1usAik+A8zVVV0m2HJrGNguktaNzu+6nOTXOWQiui8OyZ6E0BKTl9c6KrkCO2Kjrs1pCt+1IiJzxUF8E1yFLQ8F7vTsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lywcwxId; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKZrLH013451
-	for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 04:12:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K3tXKNyZNuZQgUCz+o2yPQ/bI2CEVtZtYjF3TqmtdC4=; b=lywcwxId5OmbcrEh
-	/CJqR1sA26WgjKj0WAtXnpSsrQwYfBonv/giChvR+jIHajB/VGcR68mBjrdLQ0NM
-	cl2NxTMuRbWyqyqm12gPwb+FY0++nlu4jcsU/NwMZw/pimxeUo92OhrlfRiynK/M
-	++t0uan5lGrEB+fyfI6D3Mk1cgBdbo8ata8BQa67CDleiLbiZ7G+QmJSr/cCc3DG
-	5yztyiOXyaZTQEMa2vT6fSSvr2EfwOwcUPfZpjtd/Tq6N6vgfbTAi9V5KEjSdF+P
-	uhYAOSlAJxKKA0pVNfoWgcMFBkOF50LdHMMeotam+IePGjH1Y5LZRwf+0+z6VXtC
-	onRlsQ==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rbt20uyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 04:12:14 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b16b35ea570so5041255a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 May 2025 21:12:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747714333; x=1748319133;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3tXKNyZNuZQgUCz+o2yPQ/bI2CEVtZtYjF3TqmtdC4=;
-        b=vVQGU1Io4dddxdxbf8mNMeVKcFrjrtFNG43KZppNA77rI0frjGiNxLKAmk9wXxMAEL
-         Ofpy88alKX1QGmP6tLAyi59TvtGwZaNJh+NO4hQQ9i97bIIzgRE6F9T1MUJvWSCzIopG
-         J9soOXP3rzLlsw/xAtsWjavFgRLkXTr/8/qvBD/gVcMD+47si4c/jkQqKfvwChqm1n+H
-         3F2N8VVZg9l8CaudC5gz6YLYwOaMv2e2Ar3eY6FcoRmpvu5z20D6uY+JVK8cbxjKqu7+
-         ZL1DQF3oEUXvlCueRogQ36cVaVD3MhFIOrEDjdbFPEoGvBQWaNqL+i+G+lbW3PssmZkw
-         4SpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9HtcQCyANlT7zBVOPddMv+1YrSWYrocEG8CT3bij2PJhcx14B7YGMXtBFXQYi+dHNQj8rsMwHYmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEZcIVfs+yaB+NLXN1Ydm6edz3wZgRvviHsD5mywO48GILKSXe
-	aPkaouITjaoGZrtK7ep0GbZuvjLsGng7FRgUzja2T8VEsU5qbUKlF3GIyIzMIxBGOpyuS7kGvJ4
-	/GljWmegHESv0s9n7FbsjlrI06kUMgw6Hxj3Vm8oH475asmFyMasSi1ca14THFBg=
-X-Gm-Gg: ASbGncuned7y9YrHZ/Po0WGOlIbSZ6v9Kop3CQzbqYKviFj7igpbidpYYdjECDFRIq2
-	l2lwKIP0lQXmnir4Wy4kCytZwhl8PhTWVOaewwJ4dUpigUKPSe94ec3lrYJt3gMabtxCXDQN6K7
-	+suicC4crq1n2XIdgyIF9AJvzp3Dq6bA32N0cTTeQrzAZ0Kb3SKXlkMmGPkiCR39dd7uZLJUS4n
-	l161q4vmThtitWahRNp27g1tIoG+wGDzhyFgAc/dXqjAdp21mpakGJKWYMo9erYnuOrgvvJxfPe
-	QPFspNBUupQM6KuDsUfLCaXUmUcWTxmmmggn4+dOHA==
-X-Received: by 2002:a05:6300:218b:b0:216:1ea0:a51a with SMTP id adf61e73a8af0-216219fffedmr22921475637.38.1747714333312;
-        Mon, 19 May 2025 21:12:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECTNHl0XI2RQjqcne0zYA1ZVA00vadeEtwniXUnY/EXFpPQMXaSNaBx2qH/VBg0UrtXPfDsQ==
-X-Received: by 2002:a05:6300:218b:b0:216:1ea0:a51a with SMTP id adf61e73a8af0-216219fffedmr22921423637.38.1747714332879;
-        Mon, 19 May 2025 21:12:12 -0700 (PDT)
-Received: from [10.92.214.105] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb082c66sm7092530a12.60.2025.05.19.21.12.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 21:12:12 -0700 (PDT)
-Message-ID: <b3d818f5-942c-1761-221d-af7d7e8f3624@oss.qualcomm.com>
-Date: Tue, 20 May 2025 09:42:05 +0530
+	 In-Reply-To:Content-Type; b=H7tm3J3/km0EKNC5Ez5wGVmYCtyRZfs1ar9JuuN1J8HlQ4lO7DjzOrbOPNpSHB82xMak2NnMIZ/3TOxSCDnMw5NyoirUzbtksOQqeqqn/lssIU5VMmWPS/92lBNVafopwC+0/1QMwF5EhLfr87fpWn5p95Q5rTQTbMwEhwe06NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XDiKeq5+; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747717174; x=1779253174;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GZDcuorP/pXX666TLKaJr4ROBUaG28ei/hv6M8Pc4+A=;
+  b=XDiKeq5+nJkVRD47Ci6vS/netqSeim3dOXhP9WNAhVWlyJi6oXr9fVWk
+   W+5WdBTYw1hpExR0jU4+TT0NomlWomXxB+zML4V8SJAkECMQDz/mTkd71
+   egfvSBtRM5LPyeFS+IkCkZpYdj8sjiut8nihNKaxiiVn1O3IPhLDgrM42
+   fIcKVSRat/JCDwuR18ccDelxY7pnk7os2ps8RIdc/LVVCgewOjJsI1WSt
+   1Tg+C7ncXprIKM6DR+hQLStjTYTC5OthfbL1559A0e+xpje9KRvar/eLL
+   yJMq/5/AaTvKpx0DHrSmgX+aRghq0KbsA5X5vbsD4kNaWU4dE2GGfrfJl
+   A==;
+X-CSE-ConnectionGUID: Trf4vIapTsu8417lewlqMA==
+X-CSE-MsgGUID: VVUc8rAdSkK5jt94RvRDiw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="37251631"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="37251631"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 21:59:33 -0700
+X-CSE-ConnectionGUID: 0keAV7GJTkOovI04xB5YHA==
+X-CSE-MsgGUID: vSHYEWaeQXqQ/cV2uOL9Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139305901"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 21:59:31 -0700
+Message-ID: <e056eb23-e38a-4a0e-83d7-c17c62c0f9f7@linux.intel.com>
+Date: Mon, 19 May 2025 21:59:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 04/11] PCI/ASPM: Clear aspm_disable as part of
- __pci_enable_link_state()
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 14/16] PCI/AER: Introduce ratelimit for error logs
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-15-helgaas@kernel.org>
 Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
-        mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
-        quic_mrana@quicinc.com, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
- <20250519-mhi_bw_up-v3-4-3acd4a17bbb5@oss.qualcomm.com>
- <649c2bb2-d9a3-66ce-8bc5-2735195aaa5e@linux.intel.com>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <649c2bb2-d9a3-66ce-8bc5-2735195aaa5e@linux.intel.com>
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-15-helgaas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDAzMiBTYWx0ZWRfX7HFSq4RwdaPN
- UJN4XKL8VQ9yCiVzYCePnMT4CECzTNwAhB0pSJG6biPnom0EMrWvvMH9gpGadMBj9+rUikejioP
- FRw0X/TLGL4Dewun8yJN18gxIAmiL+eSHuwUXccFKUp9rDFdOJveLnQxF1Zol/god/QDA+5vCfE
- 5u6HuOw1apsYfs3RAuVrswUgYUMRL8h69286EUYzLVqWY8eiRnwSbcnmzXoI1VA25GkNkYpEbuH
- h/Pnw6O40C3SE+hucA80H9GzYQsAfqmm+bfLXZbczR2+OGnkbi9ctr+Iyv6HUvEKOTvfy7os3Ei
- 5dhp5Ec3qndxTPW1iw7hu+f2EvoMerWnrzebZDIKRpcWKm3AFYztbei7Lt+YBCQYdREpVuyrSb/
- PBV/hnRJAWlkhJxfyOqmfpBy49thbfDZk3FEQIe1bUQgI/JvulQHnkN4FnD4M4+qjFLJqClJ
-X-Proofpoint-GUID: UM0Krcciw5a02XaISmKt_0FZSB6EWNle
-X-Proofpoint-ORIG-GUID: UM0Krcciw5a02XaISmKt_0FZSB6EWNle
-X-Authority-Analysis: v=2.4 cv=dISmmPZb c=1 sm=1 tr=0 ts=682c011e cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=cbGetAF2pF-RjulI4vsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_02,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 bulkscore=0 malwarescore=0 adultscore=0 mlxscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505200032
+Content-Transfer-Encoding: 7bit
 
+Hi Bjorn,
 
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Jon Pan-Doh <pandoh@google.com>
+>
+> Spammy devices can flood kernel logs with AER errors and slow/stall
+> execution. Add per-device ratelimits for AER correctable and uncorrectable
+> errors that use the kernel defaults (10 per 5s).
+>
+> There are two AER logging entry points:
+>
+>    - aer_print_error() is used by DPC and native AER
+>
+>    - pci_print_aer() is used by GHES and CXL
+>
+> The native AER aer_print_error() case includes a loop that may log details
+> from multiple devices.  This is ratelimited by the union of ratelimits for
+> these devices, set by add_error_device(), which collects the devices.  If
+> no such device is found, the Error Source message is ratelimited by the
+> Root Port or RCEC that received the ERR_* message.
+>
+> The DPC aer_print_error() case is currently not ratelimited.
 
-On 5/19/2025 6:51 PM, Ilpo Järvinen wrote:
-> On Mon, 19 May 2025, Krishna Chaitanya Chundru wrote:
-> 
->> If a driver wants to enable ASPM back after disabling ASPM for some
->> usecase, it is not being enabled properly because of the aspm_disable
->> flag is not getting cleared. This flag is being properly when aspm
->> is controlled by sysfs.
-> 
-> This sentence has broken grammar/is missing something?
-> 
-> aspm -> ASPM
-> 
->>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>   drivers/pci/pcie/aspm.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->> index 94324fc0d3e650cd3ca2c0bb8c1895ca7e647b9d..0f858ef86111b43328bc7db01e6493ce67178458 100644
->> --- a/drivers/pci/pcie/aspm.c
->> +++ b/drivers/pci/pcie/aspm.c
->> @@ -1453,6 +1453,7 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
->>   		down_read(&pci_bus_sem);
->>   	mutex_lock(&aspm_lock);
->>   	link->aspm_default = pci_calc_aspm_enable_mask(state);
->> +	link->aspm_disable &= ~state;
->>   	pcie_config_aspm_link(link, policy_to_aspm_state(link));
->>   
->>   	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> 
-> I disagree with this change.
-> 
-> The problem currently with ASPM driver is that pci_disable_link_state()
-> and pci_enable_link_state() are not symmetric pairs despite their
-> misleading names. pci_enable_link_state() should be renamed to
-> pci_set_default_link_state() and if the symmetric pair is needed for
-> pci_disable_link_state(), it would have to be added separately.
-> 
-I just want to know what are disadvantages/side effects having this
-change here, we can use same API to be symmetric with 
-pci_disable_link_state(). The drivers which are using this API has
-already option to specific the ASPM states which they want to enable and 
-they don't need to call pci_disable_link_state() to specify the states
-they want to disable.
+Can we also not rate limit fatal errors in AER driver?
 
-- Krishna Chaitanya.
-> I've some (rotting) patches which try to do that, in case you want to try
-> to solve this inconsistency in the ASPM driver (I can send them to you)?
-> 
+>
+> The GHES and CXL pci_print_aer() cases are ratelimited by the Error Source
+> device.
+>
+> Sargun at Meta reported internally that a flood of AER errors causes RCU
+> CPU stall warnings and CSD-lock warnings.
+>
+> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
+> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
+> true count of 11.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+>
+> [bhelgaas: commit log, factor out trace_aer_event() and aer_print_rp_info()
+> changes to previous patches, collect single aer_err_info.ratelimit as union
+> of ratelimits of all error source devices]
+> Link: https://lore.kernel.org/r/20250321015806.954866-7-pandoh@google.com
+> Reported-by: Sargun Dhillon <sargun@meta.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>   drivers/pci/pci.h      |  3 ++-
+>   drivers/pci/pcie/aer.c | 49 ++++++++++++++++++++++++++++++++++++------
+>   drivers/pci/pcie/dpc.c |  1 +
+>   3 files changed, 46 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 705f9ef58acc..65c466279ade 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -593,7 +593,8 @@ struct aer_err_info {
+>   	unsigned int id:16;
+>   
+>   	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+> -	unsigned int __pad1:5;
+> +	unsigned int ratelimit:1;	/* 0=skip, 1=print */
+> +	unsigned int __pad1:4;
+>   	unsigned int multi_error_valid:1;
+>   
+>   	unsigned int first_error:5;
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index da62032bf024..c335e0bb9f51 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/interrupt.h>
+>   #include <linux/delay.h>
+>   #include <linux/kfifo.h>
+> +#include <linux/ratelimit.h>
+>   #include <linux/slab.h>
+>   #include <acpi/apei.h>
+>   #include <acpi/ghes.h>
+> @@ -88,6 +89,10 @@ struct aer_report {
+>   	u64 rootport_total_cor_errs;
+>   	u64 rootport_total_fatal_errs;
+>   	u64 rootport_total_nonfatal_errs;
+> +
+> +	/* Ratelimits for errors */
+> +	struct ratelimit_state cor_log_ratelimit;
+> +	struct ratelimit_state uncor_log_ratelimit;
+>   };
+>   
+>   #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
+> @@ -379,6 +384,11 @@ void pci_aer_init(struct pci_dev *dev)
+>   
+>   	dev->aer_report = kzalloc(sizeof(*dev->aer_report), GFP_KERNEL);
+>   
+> +	ratelimit_state_init(&dev->aer_report->cor_log_ratelimit,
+> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+> +	ratelimit_state_init(&dev->aer_report->uncor_log_ratelimit,
+> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+> +
+>   	/*
+>   	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+>   	 * PCI_ERR_COR_MASK, and PCI_ERR_CAP.  Root and Root Complex Event
+> @@ -672,6 +682,18 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   	}
+>   }
+>   
+> +static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+> +{
+> +	struct ratelimit_state *ratelimit;
+> +
+> +	if (severity == AER_CORRECTABLE)
+> +		ratelimit = &dev->aer_report->cor_log_ratelimit;
+> +	else
+> +		ratelimit = &dev->aer_report->uncor_log_ratelimit;
+> +
+> +	return __ratelimit(ratelimit);
+> +}
+> +
+>   static void __aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+>   	const char **strings;
+> @@ -715,6 +737,9 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   
+>   	pci_dev_aer_stats_incr(dev, info);
+>   
+> +	if (!info->ratelimit)
+> +		return;
+> +
+>   	if (!info->status) {
+>   		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>   			aer_error_severity_string[info->severity]);
+> @@ -785,6 +810,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   
+>   	pci_dev_aer_stats_incr(dev, &info);
+>   
+> +	if (!aer_ratelimit(dev, info.severity))
+> +		return;
+> +
+>   	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+>   	agent = AER_GET_AGENT(aer_severity, status);
+>   
+> @@ -815,8 +843,14 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>    */
+>   static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+>   {
+> +	/*
+> +	 * Ratelimit AER log messages.  Generally we add the Error Source
+> +	 * device, but there are is_error_source() cases that can result in
+> +	 * multiple devices being added here, so we OR them all together.
+> +	 */
+>   	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+>   		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
+>   		e_info->error_dev_num++;
+>   		return 0;
+>   	}
+> @@ -914,7 +948,7 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+>    * e_info->error_dev_num and e_info->dev[], based on the given information.
+>    */
+>   static bool find_source_device(struct pci_dev *parent,
+> -		struct aer_err_info *e_info)
+> +			       struct aer_err_info *e_info)
+>   {
+>   	struct pci_dev *dev = parent;
+>   	int result;
+> @@ -935,10 +969,12 @@ static bool find_source_device(struct pci_dev *parent,
+>   	/*
+>   	 * If we didn't find any devices with errors logged in the AER
+>   	 * Capability, just print the Error Source ID from the Root Port or
+> -	 * RCEC that received an ERR_* Message.
+> +	 * RCEC that received an ERR_* Message, ratelimited by the RP or
+> +	 * RCEC.
+>   	 */
+>   	if (!e_info->error_dev_num) {
+> -		aer_print_source(parent, e_info, " (no details found)");
+> +		if (aer_ratelimit(parent, e_info->severity))
+> +			aer_print_source(parent, e_info, " (no details found)");
+>   		return false;
+>   	}
+>   	return true;
+> @@ -1147,9 +1183,10 @@ static void aer_recover_work_func(struct work_struct *work)
+>   		pdev = pci_get_domain_bus_and_slot(entry.domain, entry.bus,
+>   						   entry.devfn);
+>   		if (!pdev) {
+> -			pr_err("no pci_dev for %04x:%02x:%02x.%x\n",
+> -			       entry.domain, entry.bus,
+> -			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+> +			pr_err_ratelimited("%04x:%02x:%02x.%x: no pci_dev found\n",
+> +					   entry.domain, entry.bus,
+> +					   PCI_SLOT(entry.devfn),
+> +					   PCI_FUNC(entry.devfn));
+>   			continue;
+>   		}
+>   		pci_print_aer(pdev, entry.severity, entry.regs);
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 34af0ea45c0d..597df7790f36 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -301,6 +301,7 @@ void dpc_process_error(struct pci_dev *pdev)
+>   	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+>   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>   		 aer_get_device_error_info(pdev, &info)) {
+> +		info.ratelimit = 1;	/* no ratelimiting */
+>   		aer_print_error(pdev, &info);
+>   		pci_aer_clear_nonfatal_status(pdev);
+>   		pci_aer_clear_fatal_status(pdev);
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
