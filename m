@@ -1,372 +1,233 @@
-Return-Path: <linux-pci+bounces-28072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6B45ABD18A
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 10:11:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46973ABD218
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 10:35:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B06664A12D8
-	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 08:11:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 234CF1BA1FD9
+	for <lists+linux-pci@lfdr.de>; Tue, 20 May 2025 08:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7016525D219;
-	Tue, 20 May 2025 08:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24E8212D67;
+	Tue, 20 May 2025 08:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1+UPMy3+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0SceTs8c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2085.outbound.protection.outlook.com [40.107.236.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C893C21A43C
-	for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 08:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728700; cv=none; b=LxlSMjP3AbiPtHaMbsG6c7tLxMEHPylexPg0dG7cgB1R2jeucDdamw+7dX4ySZ+A3u01Ajm4w/mRUfBOftMha9LdYIYMQIrm4Al791UgTPXFq8cwuXyj7wGeAefqAU3wfQBaK5GJn/cPOlxP1WOhkWfIY+P1Fxsy1f8gtdM3XdM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728700; c=relaxed/simple;
-	bh=qjH47GrG87pNSlPUuN452xvygvFX5iLewuJM3iBM2pE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HbDvXqWssV4NoVkaBiFI1ephQIvO6Mqamb+zV94bLvtSKbMb1rMfIoHM2PvSCNHwWw/Pqdf0wr6/nizvWizJTupEN4c+f/+TOfRl9A0GuC33YPQjt3USL/mK7XINQiDAssQptCQLJmzR/DwohXwfdVaT0tmzuuDMTaGmwmMzQgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1+UPMy3+; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso40499545e9.0
-        for <linux-pci@vger.kernel.org>; Tue, 20 May 2025 01:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747728696; x=1748333496; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=THF+HMUCeR+ZEHyvD0Jg4qnj89QwaX1MllBVWuesBV8=;
-        b=1+UPMy3+WZ7HupT4yxBSzEPI1O0a8S9JOhoiWnmUwpLb5xjOhSpSa8BFZHC9+XANhF
-         oLEAMwE8ypXpxH9qOrtej+JAtxFjIuNehCCW6Bzr1/iAKhTJms6WiNKLHbUqZ3KOlmvw
-         rgjG8LkfhPQDIzWUfTP4xH1UZKMJKiIgA10ub7ywVr7WpwAW0O4WPnkbeQYER4KzeGUs
-         pwpJdrmc8EqyMocHipOo4yY6nZ8GnZpqoy44eDAqxogPdrbW8olJJ6OC9iVtP3tmo+gf
-         090FCSMtCBtzh6UL03r4f2cA956YsxmSFZX1aZJ6wYd1RLIBARqbtGp8wCUYYXpiHaj5
-         ye1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747728696; x=1748333496;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=THF+HMUCeR+ZEHyvD0Jg4qnj89QwaX1MllBVWuesBV8=;
-        b=t/KUgFSlB1wu4v9q8Fh/P2TaIvTSZfI1RN1OEKABFi+rO08CSpHOrISGixy927g1I6
-         hv5hM+mcrYP6Kcp47AQvNDhw+2s28YRJh3kVbtMduSoPVAvVQrclWNzIvlKGPKMdvNZb
-         Y41W8NWOsL5YOdb/KNqWtNATiIx4o56tHxOm9Fok0+7a4uCvRb+IiK8odlTE2K4rmmjs
-         qpkcwPs6QkpWxnqo4h8NLoEdwzllYYZywZTjotIHZan0I8nhLX7f0NNFcrY86j8KVIh4
-         yIFjljHfMX50bSEFGVJdY+sktaqbSNxY8knzL+SL+Z57Cb3MOb7WkE3uo1mm8cS+kwZ2
-         nb9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVmb9Yvj8e48a3WZwyR1tLXqRQl782GD07mY8IsXgEgakCRZOWd8rLjPSN3jeRtm2X2ovQb06/b3Sc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbxZnyvvbWPDHZpIaI8JIfTJItpHo03sUmGo01Eq4yKDJEdM/l
-	4M3UCCkDZq3G+9PtUIIBpseHbmYvvM12Cl16cvMIaps/8/jjvgCieu2aU4o9QcU1sqI=
-X-Gm-Gg: ASbGnctrSMFNlCNLa8wVf/K2RtctqX6XqpkVsqa/R3dKfAiiKlGiwKbJSLRxn/wkevC
-	NDCXxJwQLuz9MsTwlayRZNY6U7r5tQ7ZY4mwd/kIYvbhJ20sWdXvDDogOwlc8dV5us9lCtmX/iG
-	0cZ3eWSpB1gJI9V73Aqq/o1nJgNBxJl0y448iR3gpevYUzFAguXm1hCIFkUmNN33cuSx/IOcQun
-	FaxmpMxVOZdWAEH3zfvfYhQtzKa2Dmsf1w5pmCFsrz2tfTAcZATg2aFfqJe2BDV3zArfK/sDRrx
-	0Tgu/mTcMJpGMh0Hg7n7o1vZWflt69ne7IM2CruUz69kzDYnPkY=
-X-Google-Smtp-Source: AGHT+IHtId6x3szrS7b6effYezOLNKLAda69T0xvOKtzK7SCyXc6cFPh10PQsKA7MJT0nqyWBYBUvA==
-X-Received: by 2002:a05:600c:5491:b0:440:6a1a:d8a0 with SMTP id 5b1f17b1804b1-442fefd6da8mr128464775e9.7.1747728696095;
-        Tue, 20 May 2025 01:11:36 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:f683:3887:7e7c:b492])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f45a8434sm22137365e9.0.2025.05.20.01.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 01:11:35 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Jon Mason <jdmason@kudzu.us>,  Dave Jiang <dave.jiang@intel.com>,  Allen
- Hubbe <allenbh@gmail.com>,  Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
-  Kishon Vijay Abraham I <kishon@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  ntb@lists.linux.dev,  linux-pci@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] NTB: epf: Allow arbitrary BAR mapping
-In-Reply-To: <aCu0Wem4KkaybW4f@lizhi-Precision-Tower-5810> (Frank Li's message
-	of "Mon, 19 May 2025 18:44:41 -0400")
-References: <20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com>
-	<20250505-pci-vntb-bar-mapping-v1-4-0e0d12b2fa71@baylibre.com>
-	<aCu0Wem4KkaybW4f@lizhi-Precision-Tower-5810>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 20 May 2025 10:11:34 +0200
-Message-ID: <1j34czn1l5.fsf@starbuckisacylon.baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CFA1E0DCB;
+	Tue, 20 May 2025 08:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747730144; cv=fail; b=tGLaijSa2IRKdC2rOzf0OPRJjRPV5gWgfyjvLqqicx4lQjVnHwKzOvBphAz33NRXSdUJ4V49QSEhPaxfYdttUV85++cVQ+2xkQVp+bU1UqX6CZ0fdYA18rySDrtKAmxUr9uXSbXS52z6E3pjInxgqQYeLtxnUz3zO8AI22WwwqI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747730144; c=relaxed/simple;
+	bh=2HxhAfz4z1X49G8axpVI6QP+PxJsNXAJuYi+XeIw4zI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lwfo24sL2pACueD07GKbplJu7RqtRXyjDy7RJGzbX3nJf4PjlRU6ZawuFmrK33MPRuEvMEYTyTQ0SqOlIenejnZ3fXnk2FK/Hkxl617qZFn2Y964MF1CwEPtsNhvleUoxgYHmx3jG2peoHQsFRDPcuTyTNSMH0CxwbOT1+I+m50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0SceTs8c; arc=fail smtp.client-ip=40.107.236.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xuW1faW0vezSnf38GNMvtLDUNV9oXrZ/RFGI2/p5PsRwGJRR12lrVXlUMg0aZ+TWlasrlXKP75O08ZSw6RZ+b0/OP3vTSNyhvMnSxeZwUY1CcZgT+69zmYGrkHFDe23bQLUMDWmokqAEvAXzr2HG/jDAZlw/9GpdYcHiLL6eP7wVarzCUYTlJFpTs/H62ZxpWJJN5qPQ+1aRbH2BXq7mrVHJnNOa1HTGQFDfLu0g0ekcTeMkkXLo/DZ2mNWxSRyCN3rl7lb/XhvYN9/WOuWuU/3Jrpl+d17p6lKswicy/qMYr/FpJZKYQ3A+umVjORiydvyJOaLS3Tqt4EG2qSgEQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gQS48q4Vpa2pznaevv91ePHNkE3c08OdMleodWfTGZI=;
+ b=JAaD1l2Y4FDWgU4LLuJ6pYo0s3MjNznEtguvQ7SLZ9ca/xD0SZZFmE1CuEe19CxrE+6GqKFTwHaN+m7H4in2Glnyh21CApGvWDsNMOm053yVVfkhiiD+FBZZJk5mZ7usCIXNshsW78vfZOc985saspnymZm6YvsW7KPI4O0zLmGSasx8QQKK6f0mcLQbiPv6JEe/b/mFCh9Xd6UWyC2Qc1LbOr4u7aHFZqhsfg/UbCitDmdOKLesdeCg5KGM0ukdeWpegaH8Bl73fOLqjZz4RGGIA1O7xVXlAib06kNV59SLy31KPthPnRAOV0AJKjtkedf1vYDy/MichByxhLuF7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gQS48q4Vpa2pznaevv91ePHNkE3c08OdMleodWfTGZI=;
+ b=0SceTs8cSIiXosgWBzr2BxD/rTyCrtSa2wjjnBVqkrjzBUqtLygplRuZGuNOg3S+52nE0o6h8uZo8LLpKQ9uQ3Zq5H2sE3fnRfcf+zd1DEc/wf0OInxaydKrUidT2E83aKEoiT3yl7rqWw4Rm5ahPg5OB/Vmn5QeC75tQZIB93s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DM6PR12MB4467.namprd12.prod.outlook.com (2603:10b6:5:2a8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 20 May
+ 2025 08:35:40 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 08:35:40 +0000
+Message-ID: <dab69e0c-37c2-41f1-a9db-fe116fe4cbbd@amd.com>
+Date: Tue, 20 May 2025 18:35:29 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 00/18] PCI device authentication
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ David Woodhouse <dwmw2@infradead.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+ David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ "Li, Ming" <ming4.li@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
+ Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+ Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+ Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ Eric Biggers <ebiggers@google.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com> <ZovrK7GsDpOMp3Bz@wunner.de>
+ <b1595ceb-a916-4ff0-97bd-1a223e0cef15@amd.com> <Z6zN8R-E9uJpkU7j@wunner.de>
+Content-Language: en-US
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <Z6zN8R-E9uJpkU7j@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0095.namprd11.prod.outlook.com
+ (2603:10b6:806:d1::10) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM6PR12MB4467:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d4d1607-ff0d-4489-dcad-08dd97794d43
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bm01QWtickZ2d2xIMTFnK0ZiNUZ4YkNMMUp0Ri8wMkpLYVpUUyt4aVdycGNs?=
+ =?utf-8?B?dHZ5OURzNkJISE5NZHptdStaNVo0Zzg1OGR5cjV3dXhUOXFmRm1JVk0wdjFV?=
+ =?utf-8?B?Z2V3VVYxekJ1YTR2RmRGNHNtaEp4RUZuRlJBM3pQaWNsZkRWcDJnYW1aUFRs?=
+ =?utf-8?B?V3FkeFJXR1R0SDd6bzN1N1VHOHpqMGxCeGdPczBNckIwaFZGRGhqb2QrT1ps?=
+ =?utf-8?B?N1c0VWRDb2FBbFh2SUFrY3FQMmF2SmhCRkJjL3RHRFNjbDRkU1RCNW1xNVY1?=
+ =?utf-8?B?bTBxQVRPc1k2UU5OaklJM3g1WnBaQmtSTGVCNDYrRElNR1AvZzR2Rkp2NHZG?=
+ =?utf-8?B?em90RGxXdDZLeUVxaTcwMjFQVjh1dksxZmVXbzRBT0VsSmp6aGtBa2VYeE5t?=
+ =?utf-8?B?NE9JOXo1K1hNSmZQbWNubTUzMFBtajJLZG9LbGtLTmZpdmo0Y1hmbVJSSko1?=
+ =?utf-8?B?bTdzRk9MekxBQTYxR1BoeXRadkJMajB5cDJTa3ZRbEJSZ1owSHFkNXRWVktt?=
+ =?utf-8?B?T2Z2MkJOcVlvNGVGVkZuU0JEUzIySy8yMzZjZ3orUUx6QmhZNHZ3NHFvdy9C?=
+ =?utf-8?B?YnpOZXZOeTVIdzFreEpCVnNSRDN1V1QxeC9nVHVya1pQeHZjR29lYlJ3RVFj?=
+ =?utf-8?B?VGVKSXJwSHEvY1BBR3QyQ1hFRUdTcVpUclV6SGhyQkMreVpnWHZ0N1BzYVE2?=
+ =?utf-8?B?OHhIZUxydUhwRkRDaHVScGIxTkl4d0pFbUlkOXdnUmN5b1lXbEptYzRrd1ZZ?=
+ =?utf-8?B?MDBGTkhyN3JPd0ZoaStjUU92ZjJZU2g2dzdhS0x3bGxUNTJ1YXhXVlRwVk1p?=
+ =?utf-8?B?M3NiZFoyNERuNFR6MDFDbTlrRWlkN25CNWdRaitiZmczZFA3SFYzWnkzemY4?=
+ =?utf-8?B?ZWNvZlhlM25HMnN4TWVlbkd6d0J6VkFJTzhYZkZLM3M3ejQ0TFdPcUhsRXdQ?=
+ =?utf-8?B?K1N1ZzRZMSsrNkE0ZFE3ZG9zc3dCenpON2Q0MVRkalRFWGI4UUVOdE5EOERy?=
+ =?utf-8?B?SFRxVzFwMVhSYTVTT3EzeUNKeFNwdXFhazNKVVF5TjBNQlE3czZ4Qjl5TmJN?=
+ =?utf-8?B?V3JMdDFMZmZ5K1ppaTFvTktXaVYvL0tGSjVzYnQ0d2Y1MW9lSFNNQmRVZEVy?=
+ =?utf-8?B?TlpGdWVnc3IvSUp2L1BUTTJFdklKRFkvcmhXM1lYSVhHWFdpRytLYlRSRVRn?=
+ =?utf-8?B?U2lkWFR2S2g4Tm9IOTROSDFUakJHajAwUk94YzJPSUJxMG0wZzdXak1zYSs1?=
+ =?utf-8?B?QmVOMnJzOC84aTdWZFYxcFRDb3hoSUgwUTFNK3M0NldFL2c3ck5VQU1PY0Ri?=
+ =?utf-8?B?Y1ZET0FnWmlJYWs0cTdqVnlVYVVyWWxjcEV1S0FDditwS25HSDh0RkpJUHh1?=
+ =?utf-8?B?RnNDK25RcldWNE1kU2E0cG1XQlJkNDQ3UHNrSkFSeXF5YnVSc3AzVk90VWNO?=
+ =?utf-8?B?VjdIZDVTbzFGaWlYYXB5OWNrcDJrTlppQ0Vqdk5wNjRKQ0hHWWE5SS90V2g0?=
+ =?utf-8?B?eTlxN1R4TWM1a3RQYURjMWNodFl0RDNFcFhLM25ER01ua3MraUYvcUVHRTFU?=
+ =?utf-8?B?cTJnTUFNR3RvSUNZbS9oeG9SL0lITURnVWF5d3duYnBDa0RKeVliTVMra3NU?=
+ =?utf-8?B?RWRrZXNyZEZlMm5lYkdmNlpKa29sQUJSY3RmQjRxaDFPTW1WL2pMYjArQWZs?=
+ =?utf-8?B?aTd5Vk9RUlFRWFJLWGE1VVhyM1NXSkswSll5ZlBQT1IzTWUxQU9rSFlKY1FS?=
+ =?utf-8?B?Q3BrVW1yMW5UamJCOXN2QVh0eDVkYWVSZE5GeFE1S2VUbUVQN2JuU0ZCVVRx?=
+ =?utf-8?B?eTdDcFdvdkwydExnMkRoaDh5U2R5K0VYSGRjQ3pQTGV5aGZJQ0lPWWUwT2hZ?=
+ =?utf-8?Q?i05HS2nv+Duax?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cHJRTEQxd0NiRWQ3SzBmRE1zRXN0WkNkOHdoK01vWHQwUnFMLzVDQkdjZ1lC?=
+ =?utf-8?B?Y0N1NnNHU1B6TzBrZElwZWNHbEdhcWJ5Z2t0WDM3WGhObTVLZFV6dFdJTGRa?=
+ =?utf-8?B?Kyt3TWlZS3pxcFk2RVhJWWJkbE82V2EwWkpodVNQQ2s3SkhkOVNMR2t6RFhp?=
+ =?utf-8?B?OE4xRzJ4eHdBcHY2c0ZJbEZTVHhSZGdEcUdQU1IvNytSVWE2eU5ZL3VPeDBi?=
+ =?utf-8?B?OS83V294YUpwVTlJVGdRd3VQdFh0SFlXWnFWWTNHMDRwREFRSGxUc0hBLzNY?=
+ =?utf-8?B?Y1FYRlpiL25uS0o3V2JNQU1YYjdqNW91TXNyak9IVkp4YnJrSVFYNlZxZVVl?=
+ =?utf-8?B?cG53N0w1aFY1bGpsT2lqOE9naGlRTThra1JNYUQzRzhGRGw2VnMxdE9KR1FQ?=
+ =?utf-8?B?Vy85aUxSdjlPd2EycHM2ZG9melAyM2trMmhIYUc0UE00NTJKMmhZWEVuWVhI?=
+ =?utf-8?B?aHJIUkRxbW93UUxBaVB3TCs2bG5SR29UeDg1VTlTS09UQUxhNjJncEJQeW1J?=
+ =?utf-8?B?SE53UGdmcDIrbjJQUFpnR1REVGpWWjQvNk5xQ2lsYlM1Qkp5ZEN3NkdnakJu?=
+ =?utf-8?B?Y1hJZG82c2N0dlpmV2ZtaWNEL3pBYllIdmtweTk4N1RFTnc4R0NUYWZRWmg1?=
+ =?utf-8?B?M2FlR1RuaWdNcnU1L0xHR2dsQXcxRnJJNFcrRUVpMHhvWk0zajBRV0NjN3R6?=
+ =?utf-8?B?K2hSNzRBWG91am5uRkw0MGlYdTJnUWl0amJtTUU3SWpjYkVQc0pwR0tIMEdO?=
+ =?utf-8?B?QjhmZXA0dGJRblpDVVNPbjRGZVNQZEVrREFRSDQxSWtQWVdTWVdHREhiYlEy?=
+ =?utf-8?B?b3d5YjdKRjlseVdiMGJPTDZqenVjVVRtMEVTUVlkb3l5dWpOMGJYOEFyaHl6?=
+ =?utf-8?B?ZHdpc0hwUW85RUUxcmlpTThNNC82L0k4dVJmRHFUV2Q5N2laUnl0OWZyS0tF?=
+ =?utf-8?B?TTlROWVhMnpHcXRYa2Z2bGtmMW1zRGZaSHQ1djNKTldxRkZ4K0dlcVk5NGtY?=
+ =?utf-8?B?eFVvV1hiWnQxSS9zVmYwb1dQRVZyYThuMHlCaGQrcnluOUdSZWhyaHdMNndk?=
+ =?utf-8?B?bm85OWtKbmpXZUFIOUpIVThEWFN3aFc5RURjZnFPZ1MwYUlpRGJNNjc2Qzdu?=
+ =?utf-8?B?WEhmaTVmWHVWck9QK2R3T1RyQXUxTjlwdmxKQjhJMW5Ddm1EaFFNVmpuQ2VF?=
+ =?utf-8?B?N0ZBKzJHb2ptcElQTjc2TkN4TmxxOHJoOHMxQVB5TTF5T0NkWk9YVmFsc1R5?=
+ =?utf-8?B?eDlPcyszODV3WGVSc2hHc2QxeVpaR2FHU0xUWVlTOEdDelJqU3lpMno0MVBz?=
+ =?utf-8?B?ejBtdHE4amhBZ1MwN0xkY094NVVybmdPN1c2ajIrODl1OUptV09HMFNWTHZM?=
+ =?utf-8?B?WnNZVkg3S3lBYVZtc2VQcmZkSCs0bmVYWDIvdWRCdUVrOFFoc1RGWnFYNk9j?=
+ =?utf-8?B?U1AwcXQyVEU1c0lWUnNWMmdyLzNKZGdyc1ZrbmJJTlA2M2pVZWw5WFVteVdC?=
+ =?utf-8?B?emxLaEdzZjhnKzBza0R1S3dUMmRzTE1tSUhNT1dweWRBa2VIQS9QRzZSRGI4?=
+ =?utf-8?B?V0ttVS9YZ2JrNWh5WnVlRVV6TC9zVUpNbFZtVEp1VWprNGJLWGxWSjI3d3ZN?=
+ =?utf-8?B?N01EWE90cW1WMGEvdmovaUdrNk9JUXBTYnZENVFIdzJnSVI0cWwwTVI3bXpH?=
+ =?utf-8?B?Vk80RkNmaWp3V1BoZEcxdmd6QzROUHcvbXFpOUd2UlFKTnBoYmdSVzIvQTho?=
+ =?utf-8?B?MERmUmJEQU9hYmFMQ1FTTkJMcDV5c0l6Ny80WXRONExZVGl3WDdQOGt2M3FW?=
+ =?utf-8?B?KzRWMDhqY2w3SFBRV28vVVVpNXVKQWRvSm9idHZidDhsTG9GaDdTRE5GNjRx?=
+ =?utf-8?B?M0IyT3NXY2d2RWNvQm92VmFvZFQ3Q1BJUW5GQjd5NllwdlpBUE9NTCsrQ3dJ?=
+ =?utf-8?B?N0J3WmJUUWxVb1UwNC9mSUdZUU5wWnVxQVMzVllIRkgvUnQyb291OWlDS2dV?=
+ =?utf-8?B?SEdzT1RPbU51MU40MnUwOTlQT1dqSEh3d0w2UmhpbmxsbnFDc0lzdVlpVFM3?=
+ =?utf-8?B?ZEN1eEdzMkhDWHhzSU43dE5YbnJ1c1VOWVRvTnJDdy81VDZXMlA2eWdzK3dW?=
+ =?utf-8?Q?2+LFok2O7EwDFpJVFT41cOI0N?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d4d1607-ff0d-4489-dcad-08dd97794d43
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 08:35:40.1183
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B5d6Uzul23hOOfHKtMXFOCGWzULDRiggc82qoA3bIfEZ7CH7BSiKr5G6N8ngpi4w5kxXwaUnnoeVGAGNy9VUjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4467
 
-On Mon 19 May 2025 at 18:44, Frank Li <Frank.li@nxp.com> wrote:
 
-> On Mon, May 05, 2025 at 07:41:50PM +0200, Jerome Brunet wrote:
->> The NTB epf host driver assumes the BAR number associated with a memory
->> window is just incremented from the BAR number associated with MW1. This
->> seems to have been enough so far but this is not really how the endpoint
->> side work and the two could easily become mis-aligned.
->>
->> ntb_epf_mw_to_bar() even assumes that the BAR number is the memory window
->> index + 2, which means the function only returns a proper result if BAR_2
->> is associated with MW1.
->>
->> Instead, fully describe and allow arbitrary NTB BAR mapping.
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->>  drivers/ntb/hw/epf/ntb_hw_epf.c | 108 ++++++++++++++++++++--------------------
->>  1 file changed, 55 insertions(+), 53 deletions(-)
->>
->> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
->> index 00f0e78f685bf7917b02dd8a52b5b35f68d5bb64..9539cdcd0f8fa4b5c5e66477672f8f97d5ec4e52 100644
->> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
->> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
->> @@ -49,6 +49,7 @@
->>  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
->>
->>  enum pci_barno {
->> +	NO_BAR = -1,
->
-> Not related with this patch, but there are too many place to define
-> enum pci_barno. it need be consolidate.
 
-I agree it needs to consilidated at some point but that's another topic
-and there are tiny differences between the 3 definitions so it won't be
-as trivial as one might initially think
+On 13/2/25 03:36, Lukas Wunner wrote:
+> On Tue, Feb 11, 2025 at 12:30:21PM +1100, Alexey Kardashevskiy wrote:
+>>>> On 1/7/24 05:35, Lukas Wunner wrote:
+>>>>> PCI device authentication v2
+>>>>>
+>>>>> Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
+>>>>> expose the result in sysfs.
+>>
+>> Has any further development happened since then? I am asking as I have the
+>> CMA-v2 in my TSM exercise tree (to catch conflicts, etc) but I do not see
+>> any change in your github or kernel.org/devsec since v2 and that v2 does not
+>> merge nicely with the current upstream.
+> 
+> Please find a rebase of v2 on v6.14-rc2 on this branch:
+> 
+> https://github.com/l1k/linux/commits/doe
+> 
+> A portion of the crypto patches that were part of v2 have landed in v6.13.
+> So the rebased version has shrunk.
+> 
+> There was a bit of fallout caused by the upstreamed crypto patches
+> and dealing with that kept me occupied during the v6.13 cycle.
+> However I'm now back working on the PCI/CMA patches,
 
->
->>  	BAR_0,
->>  	BAR_1,
->>  	BAR_2,
->> @@ -57,16 +58,26 @@ enum pci_barno {
->>  	BAR_5,
->>  };
->>
->> +enum epf_ntb_bar {
->> +	BAR_CONFIG,
->> +	BAR_PEER_SPAD,
->> +	BAR_DB,
->> +	BAR_MW1,
->> +	BAR_MW2,
->> +	BAR_MW3,
->> +	BAR_MW4,
->> +	NTB_BAR_NUM,
->> +};
->> +
->> +#define NTB_EPF_MAX_MW_COUNT	(NTB_BAR_NUM - BAR_MW1)
->> +
->>  struct ntb_epf_dev {
->>  	struct ntb_dev ntb;
->>  	struct device *dev;
->>  	/* Mutex to protect providing commands to NTB EPF */
->>  	struct mutex cmd_lock;
->>
->> -	enum pci_barno ctrl_reg_bar;
->> -	enum pci_barno peer_spad_reg_bar;
->> -	enum pci_barno db_reg_bar;
->> -	enum pci_barno mw_bar;
->> +	const enum pci_barno *barno;
->
-> barno_map?
+Any luck with these? Asking as there is another respin  https://lore.kernel.org/r/20250516054732.2055093-1-dan.j.williams@intel.com  and it considers merge with yours. Thanks,
 
-ok
-
->
->>
->>  	unsigned int mw_count;
->>  	unsigned int spad_count;
->> @@ -85,17 +96,6 @@ struct ntb_epf_dev {
->>
->>  #define ntb_ndev(__ntb) container_of(__ntb, struct ntb_epf_dev, ntb)
->>
->> -struct ntb_epf_data {
->> -	/* BAR that contains both control region and self spad region */
->> -	enum pci_barno ctrl_reg_bar;
->> -	/* BAR that contains peer spad region */
->> -	enum pci_barno peer_spad_reg_bar;
->> -	/* BAR that contains Doorbell region and Memory window '1' */
->> -	enum pci_barno db_reg_bar;
->> -	/* BAR that contains memory windows*/
->> -	enum pci_barno mw_bar;
->> -};
->> -
->>  static int ntb_epf_send_command(struct ntb_epf_dev *ndev, u32 command,
->>  				u32 argument)
->>  {
->> @@ -144,7 +144,7 @@ static int ntb_epf_mw_to_bar(struct ntb_epf_dev *ndev, int idx)
->>  		return -EINVAL;
->>  	}
->>
->> -	return idx + 2;
->> +	return ndev->barno[BAR_MW1 + idx];
->>  }
->>
->>  static int ntb_epf_mw_count(struct ntb_dev *ntb, int pidx)
->> @@ -413,7 +413,9 @@ static int ntb_epf_mw_set_trans(struct ntb_dev *ntb, int pidx, int idx,
->>  		return -EINVAL;
->>  	}
->>
->> -	bar = idx + ndev->mw_bar;
->> +	bar = ntb_epf_mw_to_bar(ndev, idx);
->> +	if (bar < 0)
->> +		return bar;
->>
->>  	mw_size = pci_resource_len(ntb->pdev, bar);
->>
->> @@ -455,7 +457,9 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
->>  	if (idx == 0)
->>  		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
->>
->> -	bar = idx + ndev->mw_bar;
->> +	bar = ntb_epf_mw_to_bar(ndev, idx);
->> +	if (bar < 0)
->> +		return bar;
->>
->>  	if (base)
->>  		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
->> @@ -557,8 +561,13 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
->>  	}
->>
->>  	ndev->db_valid_mask = BIT_ULL(ndev->db_count) - 1;
->> -	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
->>  	ndev->spad_count = readl(ndev->ctrl_reg + NTB_EPF_SPAD_COUNT);
->> +	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
->> +
->> +	if (ndev->mw_count > NTB_EPF_MAX_MW_COUNT) {
->> +		dev_err(dev, "Unsupported MW count: %u\n", ndev->mw_count);
->> +		return -EINVAL;
->> +	}
->>
->>  	return 0;
->>  }
->> @@ -596,14 +605,14 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->>  		dev_warn(&pdev->dev, "Cannot DMA highmem\n");
->>  	}
->>
->> -	ndev->ctrl_reg = pci_iomap(pdev, ndev->ctrl_reg_bar, 0);
->> +	ndev->ctrl_reg = pci_iomap(pdev, ndev->barno[BAR_CONFIG], 0);
->>  	if (!ndev->ctrl_reg) {
->>  		ret = -EIO;
->>  		goto err_pci_regions;
->>  	}
->>
->> -	if (ndev->peer_spad_reg_bar) {
->> -		ndev->peer_spad_reg = pci_iomap(pdev, ndev->peer_spad_reg_bar, 0);
->> +	if (ndev->barno[BAR_PEER_SPAD] != ndev->barno[BAR_CONFIG]) {
->> +		ndev->peer_spad_reg = pci_iomap(pdev, ndev->barno[BAR_PEER_SPAD], 0);
->>  		if (!ndev->peer_spad_reg) {
->>  			ret = -EIO;
->>  			goto err_pci_regions;
->> @@ -614,7 +623,7 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->>  		ndev->peer_spad_reg = ndev->ctrl_reg + spad_off  + spad_sz;
->>  	}
->>
->> -	ndev->db_reg = pci_iomap(pdev, ndev->db_reg_bar, 0);
->> +	ndev->db_reg = pci_iomap(pdev, ndev->barno[BAR_DB], 0);
->>  	if (!ndev->db_reg) {
->>  		ret = -EIO;
->>  		goto err_pci_regions;
->> @@ -656,15 +665,20 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
->>  	pci_free_irq_vectors(pdev);
->>  }
->>
->> +static const enum pci_barno ntb_epf_default_barno[NTB_BAR_NUM] = {
->> +	[BAR_CONFIG]	= BAR_0,
->> +	[BAR_PEER_SPAD]	= BAR_1,
->> +	[BAR_DB]	= BAR_2,
->> +	[BAR_MW1]	= BAR_2,
->> +	[BAR_MW2]	= BAR_3,
->> +	[BAR_MW3]	= BAR_4,
->> +	[BAR_MW4]	= BAR_5
->> +};
->> +
->>  static int ntb_epf_pci_probe(struct pci_dev *pdev,
->>  			     const struct pci_device_id *id)
->>  {
->> -	enum pci_barno peer_spad_reg_bar = BAR_1;
->> -	enum pci_barno ctrl_reg_bar = BAR_0;
->> -	enum pci_barno db_reg_bar = BAR_2;
->> -	enum pci_barno mw_bar = BAR_2;
->>  	struct device *dev = &pdev->dev;
->> -	struct ntb_epf_data *data;
->>  	struct ntb_epf_dev *ndev;
->>  	int ret;
->>
->> @@ -675,18 +689,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
->>  	if (!ndev)
->>  		return -ENOMEM;
->>
->> -	data = (struct ntb_epf_data *)id->driver_data;
->> -	if (data) {
->> -		peer_spad_reg_bar = data->peer_spad_reg_bar;
->> -		ctrl_reg_bar = data->ctrl_reg_bar;
->> -		db_reg_bar = data->db_reg_bar;
->> -		mw_bar = data->mw_bar;
->> -	}
->> +	ndev->barno = (const enum pci_barno *)id->driver_data;
->> +	if (!ndev->barno)
->> +		ndev->barno = ntb_epf_default_barno;
->
-> I think needn't check it because all .driver_data already set in ntb_epf_pci_tbl
->
-
-A check was there before, I'm not changing what was done in that regard.
-I'll another patch to implement your suggestion seperately.
-
-> Frank
->>
->> -	ndev->peer_spad_reg_bar = peer_spad_reg_bar;
->> -	ndev->ctrl_reg_bar = ctrl_reg_bar;
->> -	ndev->db_reg_bar = db_reg_bar;
->> -	ndev->mw_bar = mw_bar;
->>  	ndev->dev = dev;
->>
->>  	ntb_epf_init_struct(ndev, pdev);
->> @@ -730,30 +736,26 @@ static void ntb_epf_pci_remove(struct pci_dev *pdev)
->>  	ntb_epf_deinit_pci(ndev);
->>  }
->>
->> -static const struct ntb_epf_data j721e_data = {
->> -	.ctrl_reg_bar = BAR_0,
->> -	.peer_spad_reg_bar = BAR_1,
->> -	.db_reg_bar = BAR_2,
->> -	.mw_bar = BAR_2,
->> -};
->> -
->> -static const struct ntb_epf_data mx8_data = {
->> -	.ctrl_reg_bar = BAR_0,
->> -	.peer_spad_reg_bar = BAR_0,
->> -	.db_reg_bar = BAR_2,
->> -	.mw_bar = BAR_4,
->> +static const enum pci_barno mx8_barno[NTB_BAR_NUM] = {
->> +	[BAR_CONFIG]	= BAR_0,
->> +	[BAR_PEER_SPAD]	= BAR_0,
->> +	[BAR_DB]	= BAR_2,
->> +	[BAR_MW1]	= BAR_4,
->> +	[BAR_MW2]	= BAR_5,
->> +	[BAR_MW3]	= NO_BAR,
->> +	[BAR_MW4]	= NO_BAR,
->>  };
->>
->>  static const struct pci_device_id ntb_epf_pci_tbl[] = {
->>  	{
->>  		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
->>  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
->> -		.driver_data = (kernel_ulong_t)&j721e_data,
->> +		.driver_data = (kernel_ulong_t)ntb_epf_default_barno,
->>  	},
->>  	{
->>  		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
->>  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
->> -		.driver_data = (kernel_ulong_t)&mx8_data,
->> +		.driver_data = (kernel_ulong_t)mx8_barno,
->>  	},
->>  	{ },
->>  };
->>
->> --
->> 2.47.2
->>
+> specifically the migration to netlink for retrieval of signatures
+> and measurements as discussed at Plumbers.
+> 
+> Thanks,
+> 
+> Lukas
 
 -- 
-Jerome
+Alexey
+
 
