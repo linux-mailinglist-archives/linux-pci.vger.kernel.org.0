@@ -1,93 +1,104 @@
-Return-Path: <linux-pci+bounces-28212-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26E12ABF62F
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 15:33:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78E01ABF64B
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 15:39:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE82C3AE670
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 13:33:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A5884E3B28
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 13:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8938B27F194;
-	Wed, 21 May 2025 13:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4107027CCE4;
+	Wed, 21 May 2025 13:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqYCxOqL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555F27C16A;
-	Wed, 21 May 2025 13:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EDA27C875;
+	Wed, 21 May 2025 13:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834397; cv=none; b=KwqmB/Z8+AWPvlt6uUqBy1UdvIJRjZSxiRgdRS2hcU8f8MVpjZ1p1WNJIenKAvpmccbW4iD2DjIwyyqZYQwC7Tn5KgfVJSS9bQol6vswAAMdbbHzXGI0ie6+x5J4Cd2LI3dUP8B9UwCB1qIiv0FaOqBM9hNOv4r9L5rEhJtI/jg=
+	t=1747834737; cv=none; b=Qkvzc/4OSONtzq1WuW3rvU83HC9KMhpHjuKAZjweaG4eCtd3CFON4APTv6jd3c+4/aILl7cDPwhE0u3aDFOS7BakkoJcyxhRZzmBsZDgThQ1UuidOilhVrSwWNEy6vfmqqotF5/ag/a/zuUv9lYXw5y5oSZYaAz/QkEuYRKCfMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834397; c=relaxed/simple;
-	bh=/kpC3OxvJHN8RxMVYVHLBRDyK+ravG6fOx3B63Lkpfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UzGVzPzVe43CuH3fKU37/T2BSbm6MmP6QfAMpBDgjYctAR7hpgEQkVZlUlNpxy7G44vPpVOUsLo9SyXbzuQZ5nzSdzNhxY1ViDScgkjbEO/lEyE1nsAqf5YyIhcEOrJRj68jW5JiUDiBlT0AcD5dubTYJkUEf0Mv5O4yRRkekPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A52FB2C06E70;
-	Wed, 21 May 2025 15:33:05 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7641E1B823E; Wed, 21 May 2025 15:33:05 +0200 (CEST)
-Date: Wed, 21 May 2025 15:33:05 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>,
-	Mario Limonciello <superm1@kernel.org>, rafael@kernel.org,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aC3WESz-Jeox5_TA@wunner.de>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
- <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
- <aCXW4c-Ocly4t6yF@black.fi.intel.com>
+	s=arc-20240116; t=1747834737; c=relaxed/simple;
+	bh=1+QzCuOqllZpR2M2g5vpAg8VG9l9Srm2BHPfriaKwPo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TjF4UYwvxCM0mFC/OTizMAni2np9AA5oZC4wjCwAUwB343dQFrZnRAV2gXFTZBuzMzgsE2d8YUiU8t5Ab9FdJzIWwYNAMwFChMGBLS6s72dbsVI4NVSOwBSTNtbtkfj5zqK1MI3t7UAMUXa6Zx+2413mlT+TPdyA7+erlUpt+8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqYCxOqL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5E1C4CEE4;
+	Wed, 21 May 2025 13:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747834736;
+	bh=1+QzCuOqllZpR2M2g5vpAg8VG9l9Srm2BHPfriaKwPo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=KqYCxOqL1FbYfzcLf3jIZ/E/gAkCYTWkWKFFiC0VihTejeFk8QvypqRkXbhtVDuYQ
+	 /oxS3Bbui7PUeCCe4bk5ELzrgo79N6FRMakaMjx9j/UqCdzoMBN8klYFVAxXy2rr+O
+	 iJfsSrqb7gQ64P8IPoblo6gR2NCXRmiTZk6K2CpaA+nwgvY14BWcl4kC5xiEIvZVN1
+	 07Y123NquizwGF2B71crsl1jAb+LeH1FgCSQ6HtX44M5DXrRaWil23/qmPy6geUIB5
+	 Rk0Vd8jpcEBFuz7lseNDpLhJtRIamHMg+ZZj4wt8ci3jNRozpj/8k6fvTerj58ncfb
+	 w0kndaOZ61Kvw==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 0/4] Drop unrelated clocks from SM8150/SC8180X PCIe RCs
+Date: Wed, 21 May 2025 15:38:09 +0200
+Message-Id: <20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCXW4c-Ocly4t6yF@black.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEHXLWgC/x3MSwqAIBAA0KvErBPUkD5XiRAZpxqKFI0IorsnL
+ d/mPZApMWUYqgcSXZw5HAWqrgBXdywk2BeDltpIo5U4Q2QUnTLSRmSyPoVocQ+4ZTGb1vWyIex
+ 8A2WIiWa+/32c3vcDBuWns20AAAA=
+X-Change-ID: 20250521-topic-8150_pcie_drop_clocks-f57a903ec8d3
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Qiang Yu <quic_qianyu@quicinc.com>, 
+ Ziyue Zhang <quic_ziyuzhan@quicinc.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747834731; l=983;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=1+QzCuOqllZpR2M2g5vpAg8VG9l9Srm2BHPfriaKwPo=;
+ b=sDuEZUlODpLMpvGWu7/L0wo/2AauzZd0u6bL2FdnUI+fi0wwEGUbKAJf90/De7eDIaA5CjuQ3
+ qqQw45HSFKCD2FIl8fkUsKvuiMRajGfMUdx9+xYSgROhtgh0UWcGDki
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Thu, May 15, 2025 at 02:58:25PM +0300, Raag Jadav wrote:
-> On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
-> > >> You can see the dmesg here: https://pastebin.com/Um7bmdWi
-> 
-> Thanks for the report. From logs it looks like a hotplug event is triggered
-> for presence detect which is disabling the slot and in turn loosing the
-> device on resume. The cause of it is unclear though (assuming it is not
-> a manual intervention).
+Smoke tested on both, but more is always welcome.
 
-Below the Root Port 0000:00:1a.0, there is a discrete Intel Thunderbolt
-controller.  Attached to it is an ASMedia Thunderbolt controller.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (4):
+      dt-bindings: PCI: qcom,pcie-sc8180x: Drop unrelated clocks from PCIe hosts
+      dt-bindings: PCI: qcom,pcie-sm8150: Drop unrelated clocks from PCIe hosts
+      arm64: dts: qcom: sc8180x: Drop unrelated clocks from PCIe hosts
+      arm64: dts: qcom: sm8150: Drop unrelated clocks from PCIe hosts
 
-The Presence Detect Changed event occurs at the Intel Thunderbolt
-controller's Downstream Port.  Because PCIe is tunneled over Thunderbolt,
-this means that the tunnel to the ASMedia controller could not be
-re-established on resume, hence the Presence Detect Changed event.
-Could be the result of the device being unplugged or some Thunderbolt
-issue.
+ .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 14 +++-------
+ .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  | 14 +++-------
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 32 ++++++----------------
+ arch/arm64/boot/dts/qcom/sm8150.dtsi               | 16 +++--------
+ 4 files changed, 20 insertions(+), 56 deletions(-)
+---
+base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+change-id: 20250521-topic-8150_pcie_drop_clocks-f57a903ec8d3
 
-For the same reason, anything below the Intel Thunderbolt controller
-is inaccessible on resume, hence the "Unable to change power state"
-messages for the HDA controller on the AMD GPU.
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Thanks,
-
-Lukas
 
