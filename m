@@ -1,487 +1,184 @@
-Return-Path: <linux-pci+bounces-28244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28245-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA53AC0080
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 01:14:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E65CAAC0082
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 01:15:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D95207B3225
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 23:13:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19B981BC4BDF
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 23:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72A0A23C519;
-	Wed, 21 May 2025 23:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F5F1C6FFB;
+	Wed, 21 May 2025 23:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdJ0c0s9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="exd+CbyU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4971823C503;
-	Wed, 21 May 2025 23:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677401514E4;
+	Wed, 21 May 2025 23:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747869260; cv=none; b=fdj+eqO+Ofi68r4WngwVI8DtHM6E4FhbtCxupDpbFbomm9JW4f1O4GTdqSuaz/yBmCnKuU+ATZv1TRhZy9Lrf4sujGJJUYzA3lnVpo5Zu0WDRRqvYx2Vr2kHOyeFcI2zgmSik7V1GWz4UQR5YzPvS1xrdI5hDhrWNhkl64yZv74=
+	t=1747869348; cv=none; b=AiZ59hWcfOZ9EtpixaE+lkO6oxDHOfKsG986rorHQtRVNwM0NO04aIf88JxMZm4J6VNuorAYq6XZA29daLoJm2fcDfpe+fZ+7E9+IA6KSueQeW43jfdkpJh3Xue5Rhlnx1KL7NeGg3UQVkN4+NPKyk1ZCyyq3KRmZcrbgJsvUsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747869260; c=relaxed/simple;
-	bh=Voi7I3S+A0StWAxqXEP+uWXA3AEGImT0GetIfq3rdNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ixs/3IHWHLnwHtZepvflRb1nwGmUauZY+/M98vxiMmlSZ1q1/Nq7YhzH36Qm7wHHLcC6akMY3L8RvfxgC1mulLO5Zna3X861TfIHW2TnTFMva0fschqs5NXgIV5Fr9WF3smbId02WhI5SVWtiZLlPRvIIsZlMhvhKAsMnnY/WA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdJ0c0s9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4D2C4CEE4;
-	Wed, 21 May 2025 23:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747869259;
-	bh=Voi7I3S+A0StWAxqXEP+uWXA3AEGImT0GetIfq3rdNI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RdJ0c0s9E/j+A//tCE8ylFaKiFYOpVx0L6xMmNLMjEQxg86r8gEpv7yJuTpW5wTuB
-	 +6Yp8wiLwGD8yO9FgE6QOPdIDkDaazUwFBuss6bTE+MWozbBaNFp2HQvE843+oAlpO
-	 YYVGpEDg/6qbybPv6W2z/axXg1rMpQBszy6mndiSO6aZiHmfOiKmb3B52+Y2qErixB
-	 dMspmnYWcyU4l5hWaSFHW21vJWMRlrUHfvXXYJOfZiTt1EkppGZsacbHiMGVeHFusD
-	 ZQEt5GN5moKzJDk074zNku6zWEmk9LOsQ8qMiqTxYj2DYA9M0c/0ibhW3x7e+xoywZ
-	 VB5yAtRo9XEBw==
-Date: Wed, 21 May 2025 18:14:18 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
+	s=arc-20240116; t=1747869348; c=relaxed/simple;
+	bh=UZH8O/yFhlSvBGj6PPR/eSxBbfCrW3GJCL7zdOrXI3k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B6twH4+bip2CnoqKxDDfMrkNL1RSRAISAMnqdeix58bRwD5/faJQc/LlCbf3BuncaoZPGud3EGFk3vBPhMuaW0lfqEpoFSVI9RdZnFVRsN7jHwm3K3wsswX7uv56A7Yr4Abwm35hN1amlz2VXpeGOl0gFBtf53VwYT6RnYj8CBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=exd+CbyU; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from CPC-grwhy-1BDK8.redmond.corp.microsoft.com (unknown [70.37.26.36])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EF091206833B;
+	Wed, 21 May 2025 16:15:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EF091206833B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747869341;
+	bh=PNaUsQe2aYaNXAl5aCvXXrNudZA8LGO1pKKU6yDFpC8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=exd+CbyU6iS7yU7B+s03INckHHHJCYjYooxmbdv6w8PoNcw1HkhoNex/sh3LZzTnx
+	 1ui0b2A7995TiYnqm7V01gxArc+PYVcgPWbAezxdJIwHYt552jEX1xcoTH/993eccz
+	 c94wWxaBVm9XmY6mQzBdHbLGeG9q82BDsM8ssMGc=
+From: grwhyte@linux.microsoft.com
 To: linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 00/17] Rate limit AER logs
-Message-ID: <20250521231418.GA1454532@bhelgaas>
+Cc: shyamsaini@linux.microsoft.com,
+	code@tyhicks.com,
+	Okaya@kernel.org,
+	bhelgaas@google.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
+Date: Wed, 21 May 2025 23:15:39 +0000
+Message-Id: <20250521231539.815264-1-grwhyte@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520215047.1350603-1-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 04:50:17PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This work is mostly due to Jon Pan-Doh and Karolina Stolarek.  I rebased
-> this to v6.15-rc1, factored out some of the trace and statistics updates,
-> and added some minor cleanups.
-> 
-> I'm sorry to post a v7 so soon after v6, but I really want to get this in
-> v6.16 so it needs to get into pci/next soonish.  I pushed this to pci/aer
-> at https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=aer
-> (head cbde036e5615 ("PCI/AER: Add sysfs attributes for log ratelimits"))
-> and appended the interdiff from v6 to v7 below.
+From: Graham Whyte <grwhyte@linux.microsoft.com>
 
-Thank you ever so much for all your reviewing time.  I addressed most
-of the comments (except Sathy's comments about the sysfs
-cor/uncor/nonfatal names), but I hate to deluge you all with another
-full posting.
+Add a device-specific reset for Microsoft MANA devices with the FLR
+delay reduced from 100ms to 10ms. While this is not compliant with the pci
+spec, these devices safely complete the FLR much quicker than 100ms and
+this can be reduced to optimize certain scenarios
 
-So for now I updated the "aer" branch above (current head d41e0decb7d7
-("PCI/AER: Add sysfs attributes for log ratelimits")) and attached the
-interdiff between v7 and d41e0decb7d7 below.
+Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
+---
+ drivers/pci/pci.c    |  3 ++-
+ drivers/pci/pci.h    |  1 +
+ drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 1 deletion(-)
 
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9cb1de7658b5..ad2960117acd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
+ 		pci_walk_bus(bus, pci_resume_one, NULL);
+ }
+ 
+-static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
++int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+ {
+ 	int delay = 1;
+ 	bool retrain = false;
+@@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(pci_dev_wait);
+ 
+ /**
+  * pci_power_up - Put the given device into D0
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index a3261e842d6d..eca2812cfd25 100644
+index f2958318d259..3a98e00eb02a 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -587,13 +587,14 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+@@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
+ int __pci_reset_bus(struct pci_bus *bus);
++int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
  
- struct aer_err_info {
- 	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
-+	int ratelimit_print[AER_MAX_MULTI_ERR_DEVICES];
- 	int error_dev_num;
- 	const char *level;		/* printk level */
- 
- 	unsigned int id:16;
- 
- 	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
--	unsigned int ratelimit:1;	/* 0=skip, 1=print */
-+	unsigned int root_ratelimit_print:1;	/* 0=skip, 1=print */
- 	unsigned int __pad1:4;
- 	unsigned int multi_error_valid:1;
- 
-@@ -606,15 +607,16 @@ struct aer_err_info {
- 	struct pcie_tlp_log tlp;	/* TLP Header */
- };
- 
--int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
--void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
-+int aer_get_device_error_info(struct aer_err_info *info, int i);
-+void aer_print_error(struct aer_err_info *info, int i);
- 
- int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- 		      unsigned int tlp_len, bool flit,
- 		      struct pcie_tlp_log *log);
- unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
- void pcie_print_tlp_log(const struct pci_dev *dev,
--			const struct pcie_tlp_log *log, const char *pfx);
-+			const struct pcie_tlp_log *log, const char *level,
-+			const char *pfx);
- #endif	/* CONFIG_PCIEAER */
- 
- #ifdef CONFIG_PCIEPORTBUS
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9b8dea317a79..48014010dc8b 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -672,31 +672,31 @@ static DEVICE_ATTR_RW(ratelimit_log_enable);
- 	static ssize_t							\
- 	name##_show(struct device *dev, struct device_attribute *attr,	\
- 		    char *buf)						\
--{									\
--	struct pci_dev *pdev = to_pci_dev(dev);				\
-+	{								\
-+		struct pci_dev *pdev = to_pci_dev(dev);			\
- 									\
--	return sysfs_emit(buf, "%d\n",					\
--			  pdev->aer_info->ratelimit.burst);		\
--}									\
-+		return sysfs_emit(buf, "%d\n",				\
-+				  pdev->aer_info->ratelimit.burst);	\
-+	}								\
- 									\
- 	static ssize_t							\
- 	name##_store(struct device *dev, struct device_attribute *attr,	\
- 		     const char *buf, size_t count)			\
--{									\
--	struct pci_dev *pdev = to_pci_dev(dev);				\
--	int burst;							\
-+	{								\
-+		struct pci_dev *pdev = to_pci_dev(dev);			\
-+		int burst;						\
- 									\
--	if (!capable(CAP_SYS_ADMIN))					\
--		return -EPERM;						\
-+		if (!capable(CAP_SYS_ADMIN))				\
-+			return -EPERM;					\
- 									\
--	if (kstrtoint(buf, 0, &burst) < 0)				\
--		return -EINVAL;						\
-+		if (kstrtoint(buf, 0, &burst) < 0)			\
-+			return -EINVAL;					\
- 									\
--	pdev->aer_info->ratelimit.burst = burst;			\
-+		pdev->aer_info->ratelimit.burst = burst;		\
- 									\
--	return count;							\
--}									\
--static DEVICE_ATTR_RW(name)
-+		return count;						\
-+	}								\
-+	static DEVICE_ATTR_RW(name)
- 
- aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
- aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
-@@ -734,9 +734,6 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
- 	u64 *counter = NULL;
- 	struct aer_info *aer_info = pdev->aer_info;
- 
--	trace_aer_event(pci_name(pdev), (info->status & ~info->mask),
--			info->severity, info->tlp_header_valid, &info->tlp);
--
- 	if (!aer_info)
- 		return;
- 
-@@ -785,6 +782,9 @@ static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
- {
- 	struct ratelimit_state *ratelimit;
- 
-+	if (severity == AER_FATAL)
-+		return 1;	/* AER_FATAL not ratelimited */
-+
- 	if (severity == AER_CORRECTABLE)
- 		ratelimit = &dev->aer_info->cor_log_ratelimit;
- 	else
-@@ -817,7 +817,7 @@ static void __aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ struct pci_cap_saved_data {
+ 	u16		cap_nr;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index c354276d4bac..94bd2c82cbbd 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
+ 	return 0;
  }
  
- static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
--			     const char *details)
-+			     bool found)
- {
- 	u16 source = info->id;
- 
-@@ -825,18 +825,27 @@ static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
- 		 info->multi_error_valid ? "Multiple " : "",
- 		 aer_error_severity_string[info->severity],
- 		 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
--		 PCI_SLOT(source), PCI_FUNC(source), details);
-+		 PCI_SLOT(source), PCI_FUNC(source),
-+		 found ? "" : " (no details found");
- }
- 
--void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
-+void aer_print_error(struct aer_err_info *info, int i)
- {
--	int layer, agent;
--	int id = pci_dev_id(dev);
-+	struct pci_dev *dev;
-+	int layer, agent, id;
- 	const char *level = info->level;
- 
--	pci_dev_aer_stats_incr(dev, info);
-+	if (i >= AER_MAX_MULTI_ERR_DEVICES)
-+		return;
- 
--	if (!info->ratelimit)
-+	dev = info->dev[i];
-+	id = pci_dev_id(dev);
++#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
++#define MICROSOFT_2051_SVC 0xb210
++#define MICROSOFT_2051_MANA_MGMT 0x00b8
++#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
 +
-+	pci_dev_aer_stats_incr(dev, info);
-+	trace_aer_event(pci_name(dev), (info->status & ~info->mask),
-+			info->severity, info->tlp_header_valid, &info->tlp);
++/* Device specific reset for msft GFT and gdma devices */
++static int msft_pcie_flr(struct pci_dev *dev)
++{
++	if (!pci_wait_for_pending_transaction(dev))
++		pci_err(dev, "timed out waiting for pending transaction; "
++			"performing function level reset anyway\n");
 +
-+	if (!info->ratelimit_print[i])
- 		return;
- 
- 	if (!info->status) {
-@@ -858,7 +867,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	__aer_print_error(dev, info);
- 
- 	if (info->tlp_header_valid)
--		pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
-+		pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
- 
- out:
- 	if (info->id && info->error_dev_num > 1 && info->id == id)
-@@ -903,11 +912,10 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 
- 	info.status = status;
- 	info.mask = mask;
--	info.tlp_header_valid = tlp_header_valid;
--	if (tlp_header_valid)
--		info.tlp = aer->header_log;
- 
- 	pci_dev_aer_stats_incr(dev, &info);
-+	trace_aer_event(pci_name(dev), (status & ~mask),
-+			aer_severity, tlp_header_valid, &aer->header_log);
- 
- 	if (!aer_ratelimit(dev, info.severity))
- 		return;
-@@ -925,13 +933,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
- 			   aer->uncor_severity);
- 
--	/*
--	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
--	 * tlp_header_valid is set, and info.level is always KERN_ERR in
--	 * that case.
--	 */
- 	if (tlp_header_valid)
--		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-+		pcie_print_tlp_log(dev, &aer->header_log, info.level,
-+				   dev_fmt("  "));
- }
- EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
- 
-@@ -942,23 +946,27 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-  */
- static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
- {
-+	int i = e_info->error_dev_num;
++	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
 +
-+	if (i >= AER_MAX_MULTI_ERR_DEVICES)
-+		return -ENOSPC;
-+
-+	e_info->dev[i] = pci_dev_get(dev);
-+	e_info->error_dev_num++;
-+
- 	/*
- 	 * Ratelimit AER log messages.  "dev" is either the source
- 	 * identified by the root's Error Source ID or it has an unmasked
--	 * error logged in its own AER Capability.  If any of these devices
--	 * has not reached its ratelimit, log messages for all of them.
--	 * Messages are emitted when "e_info->ratelimit" is non-zero.
--	 *
--	 * Note that "e_info->ratelimit" was already initialized to 1 for the
--	 * ERR_FATAL case.
-+	 * error logged in its own AER Capability.  Messages are emitted
-+	 * when "ratelimit_print[i]" is non-zero.  If we will print detail
-+	 * for a downstream device, make sure we print the Error Source ID
-+	 * from the root as well.
- 	 */
--	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
--		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
--		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
--		e_info->error_dev_num++;
--		return 0;
-+	if (aer_ratelimit(dev, e_info->severity)) {
-+		e_info->ratelimit_print[i] = 1;
-+		e_info->root_ratelimit_print = 1;
- 	}
--	return -ENOSPC;
-+	return 0;
- }
- 
- /**
-@@ -1337,19 +1345,26 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
- 
- /**
-  * aer_get_device_error_info - read error status from dev and store it to info
-- * @dev: pointer to the device expected to have an error record
-  * @info: pointer to structure to store the error record
-+ * @i: index into info->dev[]
-  *
-  * Return: 1 on success, 0 on error.
-  *
-  * Note that @info is reused among all error devices. Clear fields properly.
-  */
--int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
-+int aer_get_device_error_info(struct aer_err_info *info, int i)
- {
--	int type = pci_pcie_type(dev);
--	int aer = dev->aer_cap;
-+	struct pci_dev *dev;
-+	int type, aer;
- 	u32 aercc;
- 
-+	if (i >= AER_MAX_MULTI_ERR_DEVICES)
++	if (dev->imm_ready)
 +		return 0;
 +
-+	dev = info->dev[i];
-+	aer = dev->aer_cap;
-+	type = pci_pcie_type(dev);
++	/*
++	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
++	 * 100ms, but may silently discard requests while the FLR is in
++	 * progress. However, 100ms is much longer than required for modern
++	 * devices, so we can afford to reduce the timeout to 10ms.
++	 */
++	usleep_range(10000, 10001);
 +
- 	/* Must reset in this function */
- 	info->status = 0;
- 	info->tlp_header_valid = 0;
-@@ -1401,11 +1416,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
- 
- 	/* Report all before handling them, to not lose records by reset etc. */
- 	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
--		if (aer_get_device_error_info(e_info->dev[i], e_info))
--			aer_print_error(e_info->dev[i], e_info);
-+		if (aer_get_device_error_info(e_info, i))
-+			aer_print_error(e_info, i);
- 	}
- 	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
--		if (aer_get_device_error_info(e_info->dev[i], e_info))
-+		if (aer_get_device_error_info(e_info, i))
- 			handle_error_source(e_info->dev[i], e_info);
- 	}
- }
-@@ -1425,17 +1440,18 @@ static void aer_isr_one_error_type(struct pci_dev *root,
- 
- 	/*
- 	 * If we're going to log error messages, we've already set
--	 * "info->ratelimit" to non-zero (which enables printing) because
--	 * this is either an ERR_FATAL or we found a device with an error
--	 * logged in its AER Capability.
-+	 * "info->root_ratelimit_print" and "info->ratelimit_print[i]" to
-+	 * non-zero (which enables printing) because this is either an
-+	 * ERR_FATAL or we found a device with an error logged in its AER
-+	 * Capability.
- 	 *
- 	 * If we didn't find the Error Source device, at least log the
- 	 * Requester ID from the ERR_* Message received by the Root Port or
- 	 * RCEC, ratelimited by the RP or RCEC.
- 	 */
--	if (info->ratelimit ||
-+	if (info->root_ratelimit_print ||
- 	    (!found && aer_ratelimit(root, info->severity)))
--		aer_print_source(root, info, found ? "" : " (no details found");
-+		aer_print_source(root, info, found);
- 
- 	if (found)
- 		aer_process_err_devices(info);
-@@ -1470,14 +1486,12 @@ static void aer_isr_one_error(struct pci_dev *root,
- 		aer_isr_one_error_type(root, &e_info);
- 	}
- 
--	/* Note that messages for ERR_FATAL are never ratelimited */
- 	if (status & PCI_ERR_ROOT_UNCOR_RCV) {
- 		int fatal = status & PCI_ERR_ROOT_FATAL_RCV;
- 		int multi = status & PCI_ERR_ROOT_MULTI_UNCOR_RCV;
- 		struct aer_err_info e_info = {
- 			.id = ERR_UNCOR_ID(e_src->id),
- 			.severity = fatal ? AER_FATAL : AER_NONFATAL,
--			.ratelimit = fatal ? 1 : 0,
- 			.level = KERN_ERR,
- 			.multi_error_valid = multi ? 1 : 0,
- 		};
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 530c5e2cf7e8..fc18349614d7 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
- 			  dpc_tlp_log_len(pdev),
- 			  pdev->subordinate->flit_mode,
- 			  &tlp_log);
--	pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
-+	pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
- 
- 	if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
- 		goto clear_status;
-@@ -253,6 +253,10 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
- 		info->severity = AER_NONFATAL;
- 
- 	info->level = KERN_ERR;
++	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
++}
 +
-+	info->dev[0] = dev;
-+	info->error_dev_num = 1;
++/*
++ * msft_pcie_reset_flr - initiate a PCIe function level reset
++ * @dev: device to reset
++ * @probe: if true, return 0 if device can be reset this way
++ *
++ * Initiate a function level reset on @dev.
++ */
++static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
++{
++	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
++		return -ENOTTY;
 +
- 	return 1;
- }
++	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
++		return -ENOTTY;
++
++	if (probe)
++		return 0;
++
++	return msft_pcie_flr(dev);
++}
++
+ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+ 		 reset_intel_82599_sfp_virtfn },
+@@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 		reset_chelsio_generic_dev },
+ 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+ 		reset_hinic_vf_dev },
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
++		msft_pcie_reset_flr},
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
++		msft_pcie_reset_flr},
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
++		msft_pcie_reset_flr},
+ 	{ 0 }
+ };
  
-@@ -270,9 +274,8 @@ void dpc_process_error(struct pci_dev *pdev)
- 		pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
- 			 status);
- 		if (dpc_get_aer_uncorrect_severity(pdev, &info) &&
--		    aer_get_device_error_info(pdev, &info)) {
--			info.ratelimit = 1;	/* ERR_FATAL; no ratelimit */
--			aer_print_error(pdev, &info);
-+		    aer_get_device_error_info(&info, 0)) {
-+			aer_print_error(&info, 0);
- 			pci_aer_clear_nonfatal_status(pdev);
- 			pci_aer_clear_fatal_status(pdev);
- 		}
-diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-index 890d5391d7f5..71f8fc9ea2ed 100644
---- a/drivers/pci/pcie/tlp.c
-+++ b/drivers/pci/pcie/tlp.c
-@@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
-  * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
-  * @dev: PCIe device
-  * @log: TLP Log structure
-+ * @level: Printk log level
-  * @pfx: String prefix
-  *
-  * Prints TLP Header and Prefix Log information held by @log.
-  */
- void pcie_print_tlp_log(const struct pci_dev *dev,
--			const struct pcie_tlp_log *log, const char *pfx)
-+			const struct pcie_tlp_log *log, const char *level,
-+			const char *pfx)
- {
- 	/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode */
- 	char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
-@@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
- 		}
- 	}
- 
--	pci_err(dev, "%sTLP Header%s: %s\n", pfx,
-+	dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
- 		log->flit ? " (Flit)" : "", buf);
- }
+-- 
+2.25.1
+
 
