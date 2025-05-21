@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-28214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22059ABF64F
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 15:39:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7430ABF652
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 15:39:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73F9F1BA7997
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 13:39:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3AC71BA7AE8
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 13:39:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2799A27C17F;
-	Wed, 21 May 2025 13:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65CD027E7F4;
+	Wed, 21 May 2025 13:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UY2MtFRu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ck8hXaxZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E869815098F;
-	Wed, 21 May 2025 13:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333E827D763;
+	Wed, 21 May 2025 13:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834743; cv=none; b=ObzePntZ8XNd9xWd1oC78BdeITutIv9SzN+olGFoOd5vQMhQqx0Tgz6XFZhnn/XNveD4qSlO6+6m1WbsqsPYK0+ynssJ4csXy9/1q4y2adNe3P/6mHKRk9lXK6FgxlDbdNykS+9aY9g0E8xncQnP5qC18XCTp2Rc7xqyZwj6BoY=
+	t=1747834748; cv=none; b=HtSm2XBP9H22xU2+WoHFxkNesZQpTOU0uSaBxei77cQd0Pxr6vr5xASmo2UOG//Pm2pj6p8MjQ1OLupJKeK56fCOXMWFxYbamDKU5kvD/GVNDK+xHNnST39EZbkAvK8lX78r6UzsGR7e9gLfW1J9kSwH2UvDMXM3vp0uGE0MmCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834743; c=relaxed/simple;
-	bh=hmw3/TYYvnguBR8TqyLON4vogTv3Z6PA39/cDuVfL8E=;
+	s=arc-20240116; t=1747834748; c=relaxed/simple;
+	bh=higOUmwE/JWWFF1zmcM7ckjtomNy5EXZlVjC90Xww/M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=plxY1+3h3WTxkPY47IjsUZzcM+0cwn2mS2PmEsYi0KBPl8R7UpcZgOFz7Z5XtlMwpgSXqCG5r0R8CmmpnlEteJbBVI13OxG8l9pMBPAZksNseLZsZyEBCDr2S+M8LSTdK7JouZKDtGDi/fwFUyMfEQajYj3q4YDmeLKTuf6OtNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UY2MtFRu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A0EDC4CEE7;
-	Wed, 21 May 2025 13:38:56 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=G4YhqmxzDTFcES537bhnpCL4F6Q3WQpaPUokOEgBRKiQb4/7CknI/egrjvPtRzIYeI1Uk5tUiJ/+nxbAFZnBaZZ+ljRxE/ixIi8l+0eNKZZs46zXdqkd4C4qKfW6nIw5WRm7/SGtgMC2U4czncWmKPp5g2DSdwcYmw6YTVGLy4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ck8hXaxZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D02DC4CEE4;
+	Wed, 21 May 2025 13:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834742;
-	bh=hmw3/TYYvnguBR8TqyLON4vogTv3Z6PA39/cDuVfL8E=;
+	s=k20201202; t=1747834747;
+	bh=higOUmwE/JWWFF1zmcM7ckjtomNy5EXZlVjC90Xww/M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UY2MtFRuf29jjPSvmAzXOqwqgIzULtyOEfclYllVGbcz3fZXRqRBIqgN7iuhjknzw
-	 qjwmSveiM1XykMblK+F4gO3RNnXAf5555WyKYHXYH8uxg6+3cz52788g8LeSlPI+0j
-	 1QaN5yxdOPWwaj6FReeIaApJ3mlQitUSNAcqpPAW8tQQQs0afXANgDjaxIcIeVOYKX
-	 9FTFCD00gGT2ZBXO0XEz0apytoSkeEYUaZqUhUAZ/oFZU6dQqHoCtXu7yv6kyDsixc
-	 Eyi5Hr68nzSbXwLF3f9Uzgrvb1Sf1VjqD5oeG5iIof61jYd8XE2lTGsYDK1O0YjVs0
-	 64mk4E899jc6A==
+	b=ck8hXaxZ8G/WXT6hcLlbAoMnmttfJzWy29Xpi7wEkQw4T/2SubYJyaLTJsBW1gg6b
+	 ppKn+hjJfDTsk5mlSoq14+kKzJT48k3sp/SfrnsnzrWrD94gP4Uj4LyFXWAeKkHief
+	 2wgP2MiQQhJP0nk0THXvQH7arKFAu2nx/VLHK0K9rES7425HtO7Qu6Y2TqB6shtyfy
+	 9Z62I5RxbFXGXQpQBSxF0WHgsKxstzplRJq80J8v4+6Upc9YSwVBU+j9rm5hG3SBME
+	 PSwNKJFOd+chcJ7N7Xq2/bM7+fKGv2keU3iXsPoeB8k0u9S/Uvz3dQTzpeUlee50CE
+	 jfZLGx1pja8Sw==
 From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 21 May 2025 15:38:10 +0200
-Subject: [PATCH 1/4] dt-bindings: PCI: qcom,pcie-sc8180x: Drop unrelated
+Date: Wed, 21 May 2025 15:38:11 +0200
+Subject: [PATCH 2/4] dt-bindings: PCI: qcom,pcie-sm8150: Drop unrelated
  clocks from PCIe hosts
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-topic-8150_pcie_drop_clocks-v1-1-3d42e84f6453@oss.qualcomm.com>
+Message-Id: <20250521-topic-8150_pcie_drop_clocks-v1-2-3d42e84f6453@oss.qualcomm.com>
 References: <20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com>
 In-Reply-To: <20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -70,11 +70,11 @@ Cc: Qiang Yu <quic_qianyu@quicinc.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747834731; l=2010;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747834731; l=2093;
  i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=HJbsRaZED0wy0A3F8QPlsAh5wTABzi2Z6ovJBrDz3qg=;
- b=6G8DmoAaPdMGYwy9JopFryWqvO8O2YBHxxPULwgFPvcZXhmatN/zSSHMIzu6ikGNhFa9pz/YD
- ITdfoN1G752C5yf1xiY1ZYKXdLpCQg8qt63OCbkSmTp+4H5wvoJBmev
+ bh=sQCw7E34cAPyLXmDB3OvJZnN+ubAWssAmMHAauecdyk=;
+ b=9OQWHcrk9X3HLOJbNqQj8gTtxkBVN0/QoYhamzyVIhXCpJw+FiqgqfwtvnI+RVx7rthnkBgAf
+ 22LvHyNGAhTAhSA41k+pMrDa78H2fx7Kt5OCxUsDVQDzhhIw06GwTzr
 X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
@@ -86,13 +86,13 @@ branches.
 
 Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml         | 14 ++++----------
+ .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml          | 14 ++++----------
  1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-index 331fc25d7a17d657d4db3863f0c538d0e44dc840..34a4d7b2c8459aeb615736f54c1971014adb205f 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
+index a604f2a79de3b28863a0b8933e6679df4953402c..434448cd816ad4241ade402bbc621efc49646bdd 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
 @@ -33,8 +33,8 @@ properties:
        - const: mhi # MHI registers
  
@@ -108,18 +108,18 @@ index 331fc25d7a17d657d4db3863f0c538d0e44dc840..34a4d7b2c8459aeb615736f54c197101
        - const: bus_master # Master AXI clock
        - const: bus_slave # Slave AXI clock
        - const: slave_q2a # Slave Q2A clock
--      - const: ref # REFERENCE clock
 -      - const: tbu # PCIe TBU clock
+-      - const: ref # REFERENCE clock
  
    interrupts:
      minItems: 8
-@@ -117,17 +115,13 @@ examples:
+@@ -111,17 +109,13 @@ examples:
                       <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
                       <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
                       <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
 -                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
--                     <&gcc GCC_PCIE_0_CLKREF_CLK>,
--                     <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
+-                     <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
+-                     <&rpmhcc RPMH_CXO_CLK>;
 +                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
              clock-names = "pipe",
                            "aux",
@@ -127,12 +127,12 @@ index 331fc25d7a17d657d4db3863f0c538d0e44dc840..34a4d7b2c8459aeb615736f54c197101
                            "bus_master",
                            "bus_slave",
 -                          "slave_q2a",
--                          "ref",
--                          "tbu";
+-                          "tbu",
+-                          "ref";
 +                          "slave_q2a";
  
-             dma-coherent;
- 
+             interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
+                          <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 
 -- 
 2.49.0
