@@ -1,96 +1,141 @@
-Return-Path: <linux-pci+bounces-28198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28200-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8DC1ABF0A1
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 11:59:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F15ABF0DA
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 12:07:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 358151BA0D21
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 09:59:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D6078E017A
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 10:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3398825A358;
-	Wed, 21 May 2025 09:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB0B25A624;
+	Wed, 21 May 2025 10:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nwufn/BP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE1025A2B5;
-	Wed, 21 May 2025 09:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB9423BCF4;
+	Wed, 21 May 2025 10:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821556; cv=none; b=SHyGbj8ypx6bayODhwZ2egXyBTEDX5lxKfCwzQ9/sBbufupHcCoNJbtvbedmaiygaIIB/p5Jo6d9iU5Gfb3wmOxchhNdqsRuOnDOE/ICf0OcCU0XCKU3z/HaCUxbAExyCKAaZ9J1nva0KqFdJblRJBJrEYGSbLdCw1RAlkA0mAk=
+	t=1747822000; cv=none; b=bTdovuO3qGdPQ9phe6XgEQNahHMA7mEs5H805Pd3xYUghhqoFrBXO7Viza2L9DenDUvKmIXEaXQSPgEu9YWc3tHkAtaAQXUsGFg7XloJuCBTDYJRvT6u622wdm3aFcADw0uTrcDthZDk5tHzgJg3BU3dl0aVdOVXyM9EqTiRtjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821556; c=relaxed/simple;
-	bh=aVKNovIlIgiN/Yt2TbWAYza/i7PM9bMGgpl9JyNT0kQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EQjoJO9pzVqEjo6U7W1kiO1Bx316fM9O0jYeLgRfLPrTC6P9thJTFd8Ro7JJX0djUXnnmg4gbVd3ReGPUJ8ous1NBOgDfV/W0PK6j95L3CT/CWWpm4IaNCfqG4y7USvoEJ9zxzi4PShWC4WIHHDI3tu7Tl1tc/nGFDmRXP3Suz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2RbJ47krz6D9XP;
-	Wed, 21 May 2025 17:54:20 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D13AE140557;
-	Wed, 21 May 2025 17:59:11 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:59:10 +0200
-Date: Wed, 21 May 2025 10:59:08 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1747822000; c=relaxed/simple;
+	bh=/66uzKbD2Pt/moi6vCnG0yTy0xxQ1qdjvrWSrTVybq4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ToZ7HqL48KnArwhlE4j8yTx0x8JrNPOJgTnNzhH0PAKrT9X20fhOgit0fXcBuPrLRQDbMGEcCJJ0Mw82N3soG4MxmKyQfVcVorGCVKse+8gPJ0d/Qgh4R29cS6m5zcpKIZNnZMfvYQbxeHcrua4PqhD9ALfcnu1EboBRVXFfQ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nwufn/BP; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747821998; x=1779357998;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/66uzKbD2Pt/moi6vCnG0yTy0xxQ1qdjvrWSrTVybq4=;
+  b=Nwufn/BPDXbNEbXnQiGIZPrxL6URobbQNYNirNV2ioxDoFm7GiWc0UbF
+   7BM7+ke9ppBBDXjtkex04c/4mqlCv6Rw/nTOumz2NiPUhxeJSa48ERve1
+   wGnpGSxpv8z0m1VJwV0VriXmBUUVLCy8FQ0+V8TNgiClOU3i8ygHmiJyD
+   P0PyBWW+POoF7TxQzOOxFDaGkmkiXgQlu5RZOsNSm8XIR7f/kyfWrpjJo
+   H7ZBOkW/BPvXgrFZckOM581P9xjpmoVp4E1iDcmZ99awsLSslIluYqAOc
+   /x3m2Q4e8214GJA5MbzsJSiPKb0dGI7JcIZhHEV4tw2uzqhyEikCFuQyO
+   g==;
+X-CSE-ConnectionGUID: ooyqN10rRXWW+9/pr2G/Cw==
+X-CSE-MsgGUID: kM8hmALHQRiAzXZhBNGiiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49851703"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49851703"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:06:37 -0700
+X-CSE-ConnectionGUID: F28VW0UoT6e7arA1XbwwQg==
+X-CSE-MsgGUID: yzbKDZP+SmGyofNmWssABQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="141053400"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:06:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 May 2025 13:06:25 +0300 (EEST)
 To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 14/17] PCI/AER: Rename struct aer_stats to aer_info
-Message-ID: <20250521105908.0000622b@huawei.com>
-In-Reply-To: <20250520215047.1350603-15-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-15-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 01/17] PCI/DPC: Initialize aer_err_info before using
+ it
+In-Reply-To: <20250520215047.1350603-2-helgaas@kernel.org>
+Message-ID: <b74260bc-9991-1590-91e1-97e77ae0fa41@linux.intel.com>
+References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-2-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/mixed; boundary="8323328-302389236-1747821985=:946"
 
-On Tue, 20 May 2025 16:50:31 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+--8323328-302389236-1747821985=:946
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 20 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >=20
-> Update name to reflect the broader definition of structs/variables that a=
-re
-> stored (e.g. ratelimits). This is a preparatory patch for adding rate lim=
-it
-> support.
+> Previously the struct aer_err_info "info" was allocated on the stack
+> without being initialized, so it contained junk except for the fields we
+> explicitly set later.
 >=20
-> [bhelgaas: "aer_report" -> "aer_info"]
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Initialize "info" at declaration so it starts as all zeros.
+>=20
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+=2Eintel.com>
+> ---
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index df42f15c9829..3daaf61c79c9 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_=
+dev *dev,
+>  void dpc_process_error(struct pci_dev *pdev)
+>  {
+>  =09u16 cap =3D pdev->dpc_cap, status, source, reason, ext_reason;
+> -=09struct aer_err_info info;
+> +=09struct aer_err_info info =3D {};
+> =20
+>  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+>  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+>=20
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-302389236-1747821985=:946--
 
