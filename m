@@ -1,147 +1,114 @@
-Return-Path: <linux-pci+bounces-28191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9F88ABF046
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 11:43:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 968D2ABF058
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 11:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 138251BA77C6
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 09:44:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 109BA7A3BCF
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 09:43:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24EF25394E;
-	Wed, 21 May 2025 09:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C16F253B75;
+	Wed, 21 May 2025 09:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjhjgSnA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3174E1A3BD7;
-	Wed, 21 May 2025 09:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E36B253B5A;
+	Wed, 21 May 2025 09:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820626; cv=none; b=tYrB4uq5ibzYIoPHcQSyV/hT4+kRHbFscS/0fl4/vSC/Fv2OlKR9HZEdixUU90wNPvSxwXp1xwhGiDcJ8tqhjnxuiKFiHPUGd1/RX6pj8CuRfFzp36Zr+veDYsXBRZ0DrnXSVt2zIz7M65k6lrQTGoWEBTOVMxoGAo7fcEYltUc=
+	t=1747820703; cv=none; b=U+YcMYp4/bhfDdbeyBYPm7HnP1pJFAjoOwLVmhy9mTkUFmrjkYmoai1oDMjnVXxwsfSn2EvtKwCJl0tp/OxvZEGVeB/2luGkFAMjcnUmPenX2eZIuEH0wSkYdU6TxrBf1v9zWD2KBZtw4Iui+xX/N92GnIiTMwRvylqdtfgdA/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820626; c=relaxed/simple;
-	bh=EpMirKs3V4vscdqhbkz9OdoZWXChfs/1azyGpZR/Es4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U4L9CFPO54IHSxekJXLPQa3s4CfnooSYga/6NVbz0d54iZX7WQl0U1TlVxFL3c21LACcGAsigksEvvU+6LZNBANjuAIa4Nqasmfw2lvklsTyP44QImw/kI7xkW8t3SiMa95r3gXfgjbCarg4iA2up4VUPe9nIDcR8W3GoN+Z05Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2RHD2zfWz6L55h;
-	Wed, 21 May 2025 17:40:24 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5AF3614020A;
-	Wed, 21 May 2025 17:43:35 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:43:34 +0200
-Date: Wed, 21 May 2025 10:43:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 10/17] PCI/AER: Update statistics early in logging
-Message-ID: <20250521104331.00001a6a@huawei.com>
-In-Reply-To: <20250520215047.1350603-11-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-11-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747820703; c=relaxed/simple;
+	bh=FZEEaVi5Z5wlFR4wqNKg2BEAk2iE1vh3bIqVALVnJN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2i5ohEzdqil0Y3fnjj30ybNfQLMz7r8WN3KfziVE65g2m9DN137qLYIgw4OdaOswtTF36YnQEx2hjtllFSsSuF7/qMq8YXsT+yM1j1HRXFn3ZF0Ri+z8RmASVQMvZIGmuroT13c7j4q9JfHWa8G+bkTBuNOVsI1/ypIp/AGK+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjhjgSnA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF46DC4CEEA;
+	Wed, 21 May 2025 09:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747820702;
+	bh=FZEEaVi5Z5wlFR4wqNKg2BEAk2iE1vh3bIqVALVnJN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FjhjgSnAQckzuwu9psZRqGye7MuCDKWsuflqm5RH3Ls3rFxZwJWEhyEGDklBCIq0W
+	 2ok6ePTvqpDkdaG+5pULv/53UNXzidBzKJGEKQ04pahsvE4RfM8YF3y84Xkzb3AsFe
+	 MNtNhQ5bXF84GoYcadh+MiZs7wuB3yE3c7WcwoDyAL5s/ebbd9O3+z44d2BtRCJmBz
+	 f2LiYJ7Yqo+Uh/HxgDC2YEmn0NbzJesB6E9BBO6qqOmFSZTtCmoUi1/KH3l5wU5W9w
+	 dnw7GmkVfp2UhbXPZA0VFrPIOT0aaHKj4Z3VyeDHzz8NBnW8/XW/J7EXZxdaF9hdDe
+	 cf+bfYlebTF4w==
+Date: Wed, 21 May 2025 11:44:59 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org, 
+	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com, 
+	Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+Message-ID: <20250521-cheerful-spiked-mackerel-ef7ade@kuoka>
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193239epcas5p4cb4112382560f38ad9708e000eb2335f@epcas5p4.samsung.com>
+ <20250518193152.63476-5-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250518193152.63476-5-shradha.t@samsung.com>
 
-On Tue, 20 May 2025 16:50:27 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> There are two AER logging entry points:
->=20
->   - aer_print_error() is used by DPC (dpc_process_error()) and native AER
->     handling (aer_process_err_devices()).
->=20
->   - pci_print_aer() is used by GHES (aer_recover_work_func()) and CXL
->     (cxl_handle_rdport_errors())
->=20
-> Both use __aer_print_error() to print the AER error bits.  Previously
-> __aer_print_error() also incremented the AER statistics via
-> pci_dev_aer_stats_incr().
->=20
-> Call pci_dev_aer_stats_incr() early in the entry points instead of in
-> __aer_print_error() so we update the statistics even if the actual printi=
-ng
-> of error bits is rate limited by a future change.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-Always felt odd that a stat got updated in a _print_ function
-so even without the other reasoning this is a good change.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/pci/pcie/aer.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index d845079429f0..53b7559564a9 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -693,7 +693,6 @@ static void __aer_print_error(struct pci_dev *dev,
->  		aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
->  				info->first_error =3D=3D i ? " (First)" : "");
->  	}
-> -	pci_dev_aer_stats_incr(dev, info);
->  }
-> =20
->  static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
-nfo,
-> @@ -714,6 +713,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
-err_info *info)
->  	int id =3D pci_dev_id(dev);
->  	const char *level;
-> =20
-> +	pci_dev_aer_stats_incr(dev, info);
+On Mon, May 19, 2025 at 01:01:46AM GMT, Shradha Todi wrote:
+> -static const struct dw_pcie_ops dw_pcie_ops = {
+> +static const struct dw_pcie_ops exynos_dw_pcie_ops = {
+>  	.read_dbi = exynos_pcie_read_dbi,
+>  	.write_dbi = exynos_pcie_write_dbi,
+>  	.link_up = exynos_pcie_link_up,
+> @@ -279,6 +286,7 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct exynos_pcie *ep;
+> +	const struct samsung_pcie_pdata *pdata;
+>  	struct device_node *np = dev->of_node;
+>  	int ret;
+>  
+> @@ -286,8 +294,11 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>  	if (!ep)
+>  		return -ENOMEM;
+>  
+> +	pdata = of_device_get_match_data(dev);
 > +
->  	if (!info->status) {
->  		pci_err(dev, "PCIe Bus Error: severity=3D%s, type=3DInaccessible, (Unr=
-egistered Agent ID)\n",
->  			aer_error_severity_string[info->severity]);
-> @@ -782,6 +783,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
->  	info.status =3D status;
->  	info.mask =3D mask;
-> =20
-> +	pci_dev_aer_stats_incr(dev, &info);
-> +
->  	layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
->  	agent =3D AER_GET_AGENT(aer_severity, status);
-> =20
+> +	ep->pdata = pdata;
+>  	ep->pci.dev = dev;
+> -	ep->pci.ops = &dw_pcie_ops;
+> +	ep->pci.ops = pdata->dwc_ops;
+>  
+>  	ep->phy = devm_of_phy_get(dev, np, NULL);
+>  	if (IS_ERR(ep->phy))
+> @@ -363,9 +374,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
+>  		return ret;
+>  
+>  	/* exynos_pcie_host_init controls ep->phy */
+> -	exynos_pcie_host_init(pp);
+> +	ep->pdata->host_ops->init(pp);
+>  	dw_pcie_setup_rc(pp);
+> -	exynos_pcie_start_link(pci);
+> +	ep->pdata->dwc_ops->start_link(pci);
+
+One more layer of indirection.
+
+Read:
+https://lore.kernel.org/all/CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com/
+
+Best regards,
+Krzysztof
 
 
