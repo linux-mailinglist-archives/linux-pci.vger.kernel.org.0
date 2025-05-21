@@ -1,63 +1,45 @@
-Return-Path: <linux-pci+bounces-28219-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 004BEABF87E
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 16:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4413BABF88F
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 17:00:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CA167B45FD
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 14:57:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C28047A75F8
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 14:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2493D229B18;
-	Wed, 21 May 2025 14:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF9621B9C7;
+	Wed, 21 May 2025 14:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pFk1IfYN"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bEG+QU3s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB7722126A;
-	Wed, 21 May 2025 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6651421CC71;
+	Wed, 21 May 2025 14:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839174; cv=none; b=DbYCadLu6d76HP0BDn1lMv3bjCYzjLyWOvaw6tEDJs0oB9tEd5xEL039P/ZTOVcd1kQIhaqJXYHiWU8aRkidiqJqD2QeTjiZ4P/uNpsjC16NQAIPMoXv10/9GsIyItDxf/cxrVePhvP1Sm0AqTIkbU2jcXAfKafUAhDQO7SKkA4=
+	t=1747839359; cv=none; b=KN1yV4JzPF9vpqpKBDK/DsLbYG6yp0g27jO50hqzMXAfMGrJ1PFauzluT3Y+yraZZyBpX3I2LofhLuOFBNJrsvU1tYkkugDvAmP7LCtmktwSGvU8HA6BUVTnBHRYIs1JmdrXTLJbla1wjYbnU9oJPH9KL0cc2gvb/61e1sUol7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839174; c=relaxed/simple;
-	bh=WLDWeiD6ADAKu53SIAClrIwXxM68N8o3/ZFh0r242jU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Xwc2iEgHcbjFqLSn6E09Vcb5iK1v2iYYX3tPxm6an4coceiHV/bsuNpyFwnzMVcklPqfmS7ir7xt/Kg85hCWPt4CKa6Nx6ltSrvkQVJlH1KBvc99jEDgg/kxKdszQtGWxS1SOPSTsVL2ja5Tbq4mwpz99WIvO3oUiTeAHUICMaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pFk1IfYN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XMXe024816;
-	Wed, 21 May 2025 14:52:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SdsgstMIdU3g6wwrbjZnLWpwKvICMJd1ZoQalcYim8s=; b=pFk1IfYNBTOt7iUr
-	PRqbzChNk4400R51z7u3OyjLRVTjlhSnRbySXZTk2U6DFGOuyxzj5vCqDqyv4/h7
-	pKY4Mvzh2icgfeaB+5aq9LT2yqtTMrGMbjsPO6ntL6u+QnxDzMeEBo/nZLEDsx7Q
-	DDBdApL1wL1DcO+l6/WgF7RnkCDLQ74lEm0g9GD2FXb1A1dRQi2Xp2wtprIy7Sa1
-	9gYoJTiyunOlSaxhxzjghhN4V+2jVxxSYjYJ6ydfM/4Cl16Cr8ztiw2F7/blBEJA
-	6CAErPaDPMAbL+MrRkJnxVSS/GTJwTn+uidXLPPDHIaxaeZu9KHWtDfjLZmu86bx
-	Tx6Bcg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4u9m8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:52:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LEqWYo007457
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:52:32 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 07:52:30 -0700
-Message-ID: <aa45ff83-bc8f-4cef-a82c-9a868396d19d@quicinc.com>
-Date: Wed, 21 May 2025 08:52:29 -0600
+	s=arc-20240116; t=1747839359; c=relaxed/simple;
+	bh=LkusQmqOpI75o2Q1VxnAhBjBHjhBv81PTj17PfR973Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EDz5D6YHMTOWKFnPLIQKZ+TaCofmnVy1UIbcT9siSaHroZHXQOWF+7a160lDjcaBaRbAt/XDtYaiz0iQjP33OfxI7E7+6jpXAwtMtFM+uD2CsAxj6lFw8FaSaL0usBWA2oDAcW/NPlaiz2dYmJBTs05kgYNOe9TTMZ6CmhOMN1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bEG+QU3s; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=nhOxlgQ7+nfY4fwX45DJfisexcraDE8HthO3m6cUSD8=;
+	b=bEG+QU3sKSN/NuvpbocLmTAFjn3OMDEwDPaUnaC4kS0C3iK4mzIwaEF4HmcXVO
+	ZnavcnhanmaTbXJVe895+oOvXpEvoByrtyGULwfs5LbkZZWGHlKzzDNA9uV/SDpM
+	sPf/8zRaFqw9/a8dXV2ei6j7Fyqo0BTA7lfmWG7yDChVg=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX_2cp6S1oyxI2DA--.34395S2;
+	Wed, 21 May 2025 22:54:34 +0800 (CST)
+Message-ID: <1c21ec0b-ca89-4f7e-85f2-bdb48edb8055@163.com>
+Date: Wed, 21 May 2025 22:54:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,164 +47,212 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/11] bus: mhi: host: Add support to read MHI
- capabilities
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Bartosz
- Golaszewski" <brgl@bgdev.pl>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <qiang.yu@oss.qualcomm.com>, <quic_vbadigan@quicinc.com>,
-        <quic_vpernami@quicinc.com>, <quic_mrana@quicinc.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>
-References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
- <20250519-mhi_bw_up-v3-7-3acd4a17bbb5@oss.qualcomm.com>
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+ <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
+ <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
 Content-Language: en-US
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20250519-mhi_bw_up-v3-7-3acd4a17bbb5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fxrs8dZ9kRawyfjjg5wdyvwEH6rkQL3M
-X-Proofpoint-ORIG-GUID: fxrs8dZ9kRawyfjjg5wdyvwEH6rkQL3M
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE0NCBTYWx0ZWRfX9SjuTT+ee+g+
- /GASVjVY2ENXk1MSVLLkTtSk5izXs6pLdPGNjQaczlIX2BA5X88Rcx70K7Q8fuPfsrEy2YFW1Og
- 64EFiwReGlkcMYqO2FPvSIh+M+7AnrAbzQkzwhN5xvemAYSCh4FtMLo1AtZSQ8FefWmWgKRd6ir
- SgZBeLaHUh1y1cR3VMtcdyLDkrOKcS7n0066kRJ2BEkJSn1D8MKCxKj6pMJiYx+ZOiM1RZv+HRE
- Qx15ksBQB6qG9uvbOD7cY0uLZEEKIz+KMuNddUjUQOwUd4jKOkSFev4zYIvsl4AOyzzIiyWOaX7
- cPdhNidRI91ikTpzfM3UozbwX5k1on9FXnByw1yPHBVfy6ZpcqLpdMX4foffmYoA6w1rRfIi6YL
- JwwZfa+nLvwKZqOIsk30y3xhjGNVgPtQDS7iB4NzESbMmgYwn8gXndQriUplyikd3XHI0adD
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682de8b1 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=3N43v1ldxO06oT20SBYA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1011 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210144
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX_2cp6S1oyxI2DA--.34395S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GFy3GrW7tF1fZF13XF1DKFg_yoWxAw1rpa
+	yrAa1jkr4DJFyxAFn2yw1xXryYyasrJwn8Wrn5Jr1agrn0vryUXr4SvF45CF98WrnrWw1U
+	ZF40v3srWr15ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U1rWwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOg5Uo2gt4OzfkwAAsG
 
-On 5/19/2025 3:42 AM, Krishna Chaitanya Chundru wrote:
-> From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+
+
+On 2025/5/21 00:09, Sathyanarayanan Kuppuswamy wrote:
 > 
-> As per MHI spec v1.2,sec 6.6, MHI has capability registers which are
-> located after the ERDB array. The location of this group of registers is
-> indicated by the MISCOFF register. Each capability has a capability ID to
-> determine which functionality is supported and each capability will point
-> to the next capability supported.
+> On 5/19/25 7:41 AM, Hans Zhang wrote:
+>>
+>>
+>> On 2025/5/19 22:21, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>>>
+>>>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>>>> The following series introduces a new kernel command-line option 
+>>>>> aer_panic
+>>>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>>>> mission-critical environments. This feature ensures deterministic 
+>>>>> recover
+>>>>> from fatal PCIe errors by triggering a controlled kernel panic when 
+>>>>> device
+>>>>> recovery fails, avoiding indefinite system hangs.
+>>>>
+>>>> Why would a device recovery failure lead to a system hang? Worst case
+>>>> that device may not be accessible, right?  Any real use case?
+>>>>
+>>>
+>>>
+>>> Dear Sathyanarayanan,
+>>>
+>>> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
+>>> SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
+>>> design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all 
+>>> customers have designed it this way.)  For example, when many mobile 
+>>> phone SoCs of Qualcomm handle AER interrupts and there is a link 
+>>> down, that is, a fatal problem occurs in the current PCIe physical 
+>>> link, the system cannot recover.  At this point, a system restart is 
+>>> needed to solve the problem.
+>>>
+>>> And our company design of SOC: http://radxa.com/products/orion/o6/, 
+>>> it has 5 road PCIe port.
+>>> There is also the same problem.  If there is a problem with one of 
+>>> the PCIe ports, it will cause the entire system to hang.  So I hope 
+>>> linux OS can offer an option that enables SOC manufacturers to choose 
+>>> to restart the system in case of fatal hardware errors occurring in 
+>>> PCIe.
+>>>
+>>> There are also products such as mobile phones and tablets.  We don't 
+>>> want to wait until the battery is completely used up before 
+>>> restarting them.
+>>>
+>>> For the specific code of Qualcomm, please refer to the email I sent.
+>>>
+>>
+>>
+>> Dear Sathyanarayanan,
+>>
+>> Supplementary reasons:
+>>
+>> drivers/pci/controller/cadence/pcie-cadence-host.c
+>> cdns_pci_map_bus
+>>     /* Clear AXI link-down status */
+>>     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+>>
+>> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+>>
+>> If there has been a link down in this PCIe port, the register 
+>> CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
+>> continue.  This is different from Synopsys.
+>>
+>> If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD 
+>> saving files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it 
+>> causes CPU Core1 to be unable to send TLP transfers and hang. This is 
+>> a very extreme situation.
+>> (The current Cadence code is Legacy PCIe IP, and the HPA IP is still 
+>> in the upstream process at present.)
+>>
+>> Radxa O6 uses Cadence's PCIe HPA IP.
+>> http://radxa.com/products/orion/o6/
+>>
 > 
-> Add a basic function to read those capabilities offsets.
+> It sounds like a system level issue to me. Why not they rely on watchdog 
+> to reboot for
+> this case ?
+
+Dear Sathyanarayanan,
+
+Thank you for your reply. Yes, personally, I think it's also a problem 
+at the system level. I conducted a local test. When I directly unplugged 
+the EP device on the slot, the system would hang. It has been tested 
+many times. Since we don't have a bus timeout response mechanism for 
+PCIe, it hangs easily.
+
 > 
-> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->   drivers/bus/mhi/common.h    |  4 ++++
->   drivers/bus/mhi/host/init.c | 29 +++++++++++++++++++++++++++++
->   2 files changed, 33 insertions(+)
+> Even if you want to add this support, I think it is more appropriate to 
+> add this to your
+> specific PCIe controller driver.  I don't see why you want to add it 
+> part of generic
+> AER driver.
 > 
-> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
-> index dda340aaed95a5573a2ec776ca712e11a1ed0b52..eedac801b80021e44f7c65d33cd50760e06c02f2 100644
-> --- a/drivers/bus/mhi/common.h
-> +++ b/drivers/bus/mhi/common.h
-> @@ -16,6 +16,7 @@
->   #define MHICFG				0x10
->   #define CHDBOFF				0x18
->   #define ERDBOFF				0x20
-> +#define MISCOFF				0x24
->   #define BHIOFF				0x28
->   #define BHIEOFF				0x2c
->   #define DEBUGOFF			0x30
-> @@ -113,6 +114,9 @@
->   #define MHISTATUS_MHISTATE_MASK		GENMASK(15, 8)
->   #define MHISTATUS_SYSERR_MASK		BIT(2)
->   #define MHISTATUS_READY_MASK		BIT(0)
-> +#define MISC_CAP_MASK			GENMASK(31, 0)
-> +#define CAP_CAPID_MASK			GENMASK(31, 24)
-> +#define CAP_NEXT_CAP_MASK		GENMASK(23, 12)
->   
->   /* Command Ring Element macros */
->   /* No operation command */
-> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-> index 13e7a55f54ff45b83b3f18b97e2cdd83d4836fe3..a7137a040bdce1c58c98fe9c2340aae4cc4387d1 100644
-> --- a/drivers/bus/mhi/host/init.c
-> +++ b/drivers/bus/mhi/host/init.c
-> @@ -467,6 +467,35 @@ int mhi_init_dev_ctxt(struct mhi_controller *mhi_cntrl)
->   	return ret;
->   }
->   
-> +static int mhi_find_capability(struct mhi_controller *mhi_cntrl, u32 capability, u32 *offset)
-> +{
-> +	u32 val, cur_cap, next_offset;
-> +	int ret;
-> +
-> +	/* Get the 1st supported capability offset */
+Because we want to use the processing logic of the general AER driver. 
+If the recovery is successful, there will be no problem. If the recovery 
+fails, my original intention was to restart the system.
 
-"first"?  Does not seem like you are short on space here.
-
-> +	ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MISCOFF,
-> +				 MISC_CAP_MASK, offset);
-
-This fits on one line.
-
-> +	if (ret)
-> +		return ret;
-
-Blank line here would be nice.
-
-> +	do {
-> +		if (*offset >= mhi_cntrl->reg_len)
-> +			return -ENXIO;
-> +
-> +		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
-> +		if (ret)
-> +			return ret;
+If added to the specific PCIe controller driver, a lot of repetitive AER 
+processing logic will be written. So I was thinking whether the AER 
+driver could be changed to be compiled as a KO module.
 
 
-There is no sanity checking we can do on val?  We've had plenty of 
-issues blindly trusting the device.  I would like to avoid having more.
+If this series is not reasonable, I'll drop it.
 
-Also looks like if we find the capability we are looking for, we return 
-the offset without validating it.
 
-> +
-> +		cur_cap = FIELD_GET(CAP_CAPID_MASK, val);
-> +		next_offset = FIELD_GET(CAP_NEXT_CAP_MASK, val);
-> +		if (cur_cap == capability)
-> +			return 0;
-> +
-> +		*offset = next_offset;
-> +	} while (next_offset);
-> +
-> +	return -ENXIO;
-> +}
-> +
->   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->   {
->   	u32 val;
-> 
+Best regards,
+Hans
+
+>>>
+>>>>>
+>>>>> Problem Statement
+>>>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>>>> traditional error recovery mechanisms may leave the system 
+>>>>> unresponsive
+>>>>> indefinitely. This is unacceptable for high-availability environment
+>>>>> requiring prompt recovery via reboot.
+>>>>>
+>>>>> Solution
+>>>>> The aer_panic option forces a kernel panic on unrecoverable AER 
+>>>>> errors.
+>>>>> This bypasses prolonged recovery attempts and ensures immediate 
+>>>>> reboot.
+>>>>>
+>>>>> Patch Summary:
+>>>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, 
+>>>>> explaining
+>>>>> its purpose and usage.
+>>>>>
+>>>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>>>> management in PCI core.
+>>>>>
+>>>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the 
+>>>>> panic
+>>>>> mode is active.
+>>>>>
+>>>>> Panic Trigger: Modifies recovery logic to panic the system when 
+>>>>> recovery
+>>>>> fails and aer_panic is enabled.
+>>>>>
+>>>>> Impact
+>>>>> Controlled Recovery: Reduces downtime by replacing hangs with 
+>>>>> immediate
+>>>>> reboots.
+>>>>>
+>>>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>>>
+>>>>> Dependency: Requires CONFIG_PCIEAER.
+>>>>>
+>>>>> For example, in mobile phones and tablets, when there is a problem 
+>>>>> with
+>>>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>>>> alternative method to make the system panic without waiting for the
+>>>>> battery power to be completely exhausted before restarting the system.
+>>>>>
+>>>>> ---
+>>>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>>>> system when they are linked down.
+>>>>>
+>>>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>>>
+>>>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>>>
+>>>>>
+>>>>> Since the design schemes of each SOC manufacturer are different, 
+>>>>> the AXI
+>>>>> and other buses connected by PCIe do not have a design to prevent 
+>>>>> hanging.
+>>>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>>>> system needs to be restarted.
+>>>>>
+>>>>>
+>>>>> Dear Mani,
+>>>>>
+>>>>> I wonder if you know how other SoCs of qcom handle FATAL errors 
+>>>>> that occur
+>>>>> in PCIe link.
+>>>>> ---
+>>>>>
 
 
