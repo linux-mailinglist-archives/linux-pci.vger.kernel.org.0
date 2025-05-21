@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-28180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71D01ABEF90
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 11:23:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 648EEABEFA2
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 11:26:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A91D17B5FEE
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 09:21:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55B247AD939
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 09:23:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D6823C51A;
-	Wed, 21 May 2025 09:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F113B23C51A;
+	Wed, 21 May 2025 09:23:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6188221549;
-	Wed, 21 May 2025 09:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6669E23C506;
+	Wed, 21 May 2025 09:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819361; cv=none; b=uTopTBnEPN4jUnHdRADPQkZy/WHGgOoJe1Ml6dKKSbpAzYPJ27u/12UeY97qBu/Khka2l73O6/4jLPTO1Oo5Ftg3Xnn+pnRJDvAIXxIskDpOYlu71Zj1S8u9XYP5CDhWjeXgwqmWAMgtwMTYw8LCBYpLds2K8mcqmSe0gxeCab4=
+	t=1747819400; cv=none; b=V4IaH8aIf+Ss6z2iH5YKSAJWlkZ5AnoF67ZJFCe3G+zxKylkD+TLjeEOxoqfCpn3CoCoDq1wjbzllmA2Fqix6w3JApNpgUimwvR/MRXsms2JiM0lh9VOEn4U8ynW7lDXMcJm3SwRoLv+ZFwaQkRPNQ+qcgHnRcNvoJu/dxutG2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819361; c=relaxed/simple;
-	bh=bCmT3vfeUi4izEBzYuy7AQHOHeQpWT2kMw2gXQ95Ijk=;
+	s=arc-20240116; t=1747819400; c=relaxed/simple;
+	bh=Vst9xN4V2xd3ha5EIguv93ARIYfLdLOm0rOTYYgJ7AA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ayszRb1gq+3RYlKWFSTYjDP8MvkV6OWv38oyrDVJzeL4ueHMkUAMDEY3tkIcO9m8F0gwMcqllyw5TveHEDEUZFesbGCQDEqQUCKAbYRpFpJNxh1BkyAIpEyOQuL8K9CgnluWlIiI83Y4LH+YY0EWuUNiiouZktcYBddZ2rbw5aA=
+	 MIME-Version:Content-Type; b=UNFcDSxG11BJzNaPFI7AliYOsneO/i/meONBZ0FdPR+TvVXSGPVvGngOKwvK6rFaTWH9I9zFYTc6PrNo7khMiGL3/LVfKpWaQML05YbNMLX2B8KRSQ+9FeRCFMZBPQdBNvfxybL3pRBCCUUR5CAUnrha1deSuZj0HoPHMNBw7EA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qn60w5Xz6D9Cy;
-	Wed, 21 May 2025 17:17:46 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qqp3wHGz6L4tZ;
+	Wed, 21 May 2025 17:20:06 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 597331400F4;
-	Wed, 21 May 2025 17:22:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 74AC2140519;
+	Wed, 21 May 2025 17:23:17 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:22:36 +0200
-Date: Wed, 21 May 2025 10:22:34 +0100
+ 2025 11:23:16 +0200
+Date: Wed, 21 May 2025 10:23:15 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
@@ -57,12 +57,12 @@ CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
 	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
 	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 06/17] PCI/AER: Rename aer_print_port_info() to
- aer_print_source()
-Message-ID: <20250521102234.00005ba9@huawei.com>
-In-Reply-To: <20250520215047.1350603-7-helgaas@kernel.org>
+Subject: Re: [PATCH v7 07/17] PCI/AER: Move aer_print_source() earlier in
+ file
+Message-ID: <20250521102315.0000270b@huawei.com>
+In-Reply-To: <20250520215047.1350603-8-helgaas@kernel.org>
 References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-7-helgaas@kernel.org>
+	<20250520215047.1350603-8-helgaas@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -75,22 +75,18 @@ Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 20 May 2025 16:50:23 -0500
+On Tue, 20 May 2025 16:50:24 -0500
 Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> From: Jon Pan-Doh <pandoh@google.com>
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >=20
-> Rename aer_print_port_info() to aer_print_source() to be more descriptive.
-> This logs the Error Source ID logged by a Root Port or Root Complex Event
-> Collector when it receives an ERR_COR, ERR_NONFATAL, or ERR_FATAL Message.
+> Move aer_print_source() earlier in the file so a future change can use it
+> from aer_print_error(), where it's easier to rate limit it.
 >=20
-> [bhelgaas: aer_print_rp_info() -> aer_print_source()]
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
 .intel.com>
-Makes sense.
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
