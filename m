@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-28242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07B50AC003A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 00:59:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8427AC0059
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 01:06:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5576E1BC1CA5
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 23:00:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95BFD9E1E4C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 23:06:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6431D239E6A;
-	Wed, 21 May 2025 22:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5FE23BCF2;
+	Wed, 21 May 2025 23:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iazKkXCX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsUde9Z2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399DA1624CE;
-	Wed, 21 May 2025 22:59:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E0A220686;
+	Wed, 21 May 2025 23:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868384; cv=none; b=T3ngtZgNRSbhqxPOdoLz3Qv9vHaVKP8uBEMjmpAylWuDJ9r2XWb9JKNrvPft1HnuEms8oJcaN/d1ZmXYIkgWGZ/iiiM897zAf1DeyWYHkofl+CO2sGr6J3ABSm5sv3yosWD4Kb3m4nRG3hXDSCvyuNC66Qfokm3pzmrSZwqqFYY=
+	t=1747868803; cv=none; b=beOp6D7DnDvlGx6Atr7wt37ASSnRNMgQmja7fND0Xv5kvSzvnUtcQGQ/BuO6gNpgx87ziAY4SD2R5DeHeoUPk33JBS15sSdQARi412mHqU2e3yW9F2aL34zuh+d8jU1/g6RIUIq9yv3+25ZOoMAtpOdpmzuFee10j6tyJLfh2WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868384; c=relaxed/simple;
-	bh=IbhrjqjCd+IL+OzZrKr4UCUXAEgx35sVZsX2gaP8Cs8=;
+	s=arc-20240116; t=1747868803; c=relaxed/simple;
+	bh=NEfRGNGqd+jQ4ZBng1dfzvjrKmSVR+/dtJx0zlR93Ws=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=o0iWlu665pQXpxfxEMxDIg4Mg1cHt1c6e/f/v2d4ZSrk7O6zMNUG9B/5bL5UstfBhmzTpcLKMntMQiRN87KG8QUE3kG6uH2czZs0nGT1lseF2w3aFMc381m8p6DC4JbqQv4uVPf4Lh02Fn6e6bm3j1168drl+g/eA3cFHuJGmI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iazKkXCX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7092BC4CEE4;
-	Wed, 21 May 2025 22:59:43 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=cw7ItFdOPxGiXkDVH4f9MVmvWAoDus7cd9oW6whVlAJsgd5mvdwEJAipe1jttSsJnWaDaZ4pWo32EzPVyTcRwBETZlGYAOTMdb2CuCkYO3r6TfRRfOtVtOohvKZ885ZIsS4NBaNg+LHxCufXvc+yeqHRcO71A4fNd9IzpbNMgcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsUde9Z2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369B4C4CEEA;
+	Wed, 21 May 2025 23:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747868383;
-	bh=IbhrjqjCd+IL+OzZrKr4UCUXAEgx35sVZsX2gaP8Cs8=;
+	s=k20201202; t=1747868801;
+	bh=NEfRGNGqd+jQ4ZBng1dfzvjrKmSVR+/dtJx0zlR93Ws=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iazKkXCXaj/wq12Dr4QVfxGACmZ2mHC0jptz6htAaLWZf9BN+4m5ku+D+0PA8AemS
-	 B9ycUgm/A7JPDBgVLs+RIf3beXTuqVbQrIWcQbNPP2mhgdmXQnsToMEqxmQkLFo4mc
-	 Sxiu/jdiTMhKHTjeRcrzen6HOsu1AdPAri+wB5TPB85CzPopbBUZyT+BQNjaz3LjF5
-	 JD6VLT4AfBZJFQPGJtJwQJuQbx1YlTPUWSEnoTAAhJyX4thfIbsgQGlf92hrqUDcAK
-	 GtmjihJFKjDmOlHGMBPLgKMHKcgemgh9+R0Ihwj/HxQip7+fGb3HKT8BGlWn8EiKWy
-	 igNF5NhEiqbzw==
-Date: Wed, 21 May 2025 17:59:42 -0500
+	b=SsUde9Z2FPViWIrd9w4gBW4lxhWaZCxVaNRIUwfdG98emO4Q0nTSUmtVGXUa/K62u
+	 4kDvqYBFgk5Vjli1GmKSnXNG4CCjkJGZlKPPLZ0hPDXPQCA7vKajIGUWEHeubI/6IP
+	 T3+Xzs0eQp22gYrGHaPWQVYwKpqEuMPINy2sIw5udEBO4KjiUXbfhZ8rXJoJrTrohp
+	 aZRTX4UJs/vAqJ5qq0sxK4MBdIZiOapIz0SWEPizirFpYHQrC1plIDGXVtml7qj9x6
+	 PCZVBQGvP4tg6eiVTFEXiLhWk7M90tWuK+VjhuxZRZH5dYupM94ZZhZcJjt9KUFzL2
+	 TnwGOmuLP9dRw==
+Date: Wed, 21 May 2025 18:06:39 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	Weinan Liu <wnliu@google.com>,
@@ -53,8 +53,9 @@ Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
 	Anil Agrawal <anilagrawal@meta.com>,
 	Tony Luck <tony.luck@intel.com>,
 	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
 	"Paul E . McKenney" <paulmck@kernel.org>,
 	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
 	Oliver O'Halloran <oohall@gmail.com>,
@@ -63,10 +64,10 @@ Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
 	Terry Bowman <terry.bowman@amd.com>,
 	Shiju Jose <shiju.jose@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log ratelimits
-Message-ID: <20250521225942.GA1452275@bhelgaas>
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
+ error logging
+Message-ID: <20250521230639.GA1452526@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,55 +76,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521114600.00007010@huawei.com>
+In-Reply-To: <ac30a88d-7139-40ce-ae3c-34ef12c939a5@linux.intel.com>
 
-On Wed, May 21, 2025 at 11:46:00AM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 16:50:34 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
+On Tue, May 20, 2025 at 03:33:45PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 5/20/25 2:50 PM, Bjorn Helgaas wrote:
 > > From: Jon Pan-Doh <pandoh@google.com>
 > > 
-> > Allow userspace to read/write log ratelimits per device (including
-> > enable/disable). Create aer/ sysfs directory to store them and any
-> > future aer configs.
-> ...
+> > Spammy devices can flood kernel logs with AER errors and slow/stall
+> > execution. Add per-device ratelimits for AER correctable and non-fatal
+> > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
+> > fatal errors is not ratelimited.
 
-> There is some relatively new SYSFS infra that I think will help
-> make this slightly nicer by getting rid of the extra directory when
-> there is nothing to be done with it.
+> > +	/* Ratelimits for errors */
+> > +	struct ratelimit_state cor_log_ratelimit;
+> > +	struct ratelimit_state uncor_log_ratelimit;
+> 
+> Nit: Do you think we should name it as nonfatal_log_ratelimit?
 
-> > +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> > +	static ssize_t							\
-> > +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> > +		    char *buf)						\
-> > +{									\
-> 
-> A little odd looking to indent this less than the line above.
+Maybe so.  We can always change this internal name, so I guess the
+important part is the sysfs filename
+("/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log").
 
-Yep, fixed.
+"ratelimit_burst_nonfatal_log" is not quite parallel with
+"ratelimit_burst_cor_log" the way "ratelimit_burst_uncor_log" is.
 
-> > +const struct attribute_group aer_attr_group = {
-> > +	.name = "aer",
-> > +	.attrs = aer_attrs,
-> > +	.is_visible = aer_attrs_are_visible,
-> > +};
-> 
-> There are a bunch of macros to simplify cases where
-> a whole group is either enabled or not and make the group
-> itself go away if there is nothing to be shown.
-> 
-> DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() combined with
-> SYSFS_GROUP_VISIBLE() around the assignment does what we
-> want here I think.
-> 
-> Whilst we can't retrofit that stuff onto existing ABI
-> as someone may be assuming directory presence, we can
-> make sysfs less cluttered for new stuff.
-> 
-> Maybe I'm missing why that doesn't work here though!
+But it's definitely true that the underlying PCIe Messages are
+ERR_COR, ERR_NONFATAL, and ERR_FATAL.
 
-Is this something we can fix later, or are we locking ourselves into
-user-visible ABI that's hard to change?  I'm kind of against the wall
-relative to the v6.16 merge window and haven't had time to dig into
-this part.
+So I think this is more than a nit, and you're right that we should
+use "cor" and "nonfatal" somehow.
+
+I'll work on that tomorrow.
 
