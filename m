@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-28262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F205FAC08D2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 11:34:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD53AC08E5
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 11:41:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 372951892255
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 09:34:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 479274A76DF
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 09:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F776235BF4;
-	Thu, 22 May 2025 09:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D4D284691;
+	Thu, 22 May 2025 09:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fw+AoSAq"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YjWwZuC9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94BF33DB;
-	Thu, 22 May 2025 09:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396BF17BB6;
+	Thu, 22 May 2025 09:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747906480; cv=none; b=hYnp70etgNHvaBz17Gtv55FsB4BefMRTLIxA96XNtWzHLl33Y+VM4v1VDi5RWZaR2L9PlULG5BuGS58h1Q8vE2u1ECEtWkXhjlYfQBxJI1ZdnbehbBo6tv6CNOMdetIOuZIVaEylPnYXId097kSTlF/Y6Ds8xRYTQh1115XCVIU=
+	t=1747906908; cv=none; b=CY50CRgIdErS/uI7eyukaFuIJMsMYDLSlB361zebq+rae4iomOoOkpWgX4GHZzSEpCMPlGDNrqFJEjf1kC5rZA3Xh+uDd/izHlmuDCQjBfiPI2jkq66qJPSrRbyUEQ+sPVdt6U7H/40ZobpWT+iNoOzfBeA2ZMI4TU2LZL1bTx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747906480; c=relaxed/simple;
-	bh=yeBGKLcED5Dq1hPYIJzbyPGNOX9+l3fp0mMhiRy5aPQ=;
+	s=arc-20240116; t=1747906908; c=relaxed/simple;
+	bh=f2jUJ1j8NtmYUowY699rjzNoYmDolsYrdjZChArE8qQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hnvi0zo87fHf4F/r8uqgosV/bAnPOCsdYc5TrpqgJSxcqKmtQLUx9xOjSrsZJMRuHmVNy5kRa1RRHFcrVcdpa7Tkfg1wd09yRoz2bxfJCkLWyKHmdzGRlMtr6epxR+ztnO509JjSubDB+Bmtue7Y0NWsNmHVGQeKJPNOnB4kPJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fw+AoSAq; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=5joGvSMwoogVlNO6iG3yyrQRJaGl4pOo4UfrlDIsfzo=;
-	b=fw+AoSAqF+Qy+D//w43Bpup1HrzL/gV326OincHmp3P90CZQhps46uOHrvDZL2
-	pd9vToAHpWN2PTnxV9gkl9tKSrl5+xndBHdC/PTnE+DZw7WGdqrJD7dDB946JJbH
-	Inxta77WOucOpzKUjcPi9iBWRP/vH27rZj1osuLITwJO8=
-Received: from [192.168.18.52] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wC3T8tx7y5oT9UADQ--.40824S2;
-	Thu, 22 May 2025 17:33:38 +0800 (CST)
-Message-ID: <dd887a30-4bdc-4e7d-ba04-1f417a082a9f@163.com>
-Date: Thu, 22 May 2025 17:33:37 +0800
+	 In-Reply-To:Content-Type; b=XZBgv9d8+zW+byBjlg0Nf/AgZTt9zODCizgTOeMBZ1jbLHtM+RGmhfP8ZzjuJ90lLQRrXgsb+HcZeMv4j3uwd1C/A/ItOnEhpkoCyDDSaFuszlqmE0fUwdqdU5EifoJQFcAsXvyUqX0uUnLblUQEIcQQZw3/JHPnEvqvr9Ic0k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YjWwZuC9; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747906895; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=SYVo3gNekqV9B2COH5LnMpPWBh5kyqXGT2+V3ar74LE=;
+	b=YjWwZuC9Tae2Pq3DqOniKOek/TE2i7BhpmtAiOLzAJR4zCn7RoHQz8ymyN/rbOM3gu2KSN8F9KRtA2bltaOfGtyjw++2zhZ2/B9iYLagWWxJ3/9gCH2xPhePpq/DgtgXxTxClDrHiFKDr29blodNke3Irn83crW98oHsW2BjByA=
+Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbVRhKz_1747906892 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 22 May 2025 17:41:33 +0800
+Message-ID: <a036291f-2483-4bf0-9ac1-db310f8115aa@linux.alibaba.com>
+Date: Thu, 22 May 2025 17:41:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,173 +48,275 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
- manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
-Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20250516165518.125495-1-18255117159@163.com>
- <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
- <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
- <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
- <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
- <1c21ec0b-ca89-4f7e-85f2-bdb48edb8055@163.com>
- <97e9850f-8a74-425f-93ab-5017599c98b5@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <97e9850f-8a74-425f-93ab-5017599c98b5@linux.intel.com>
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+ <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+ <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3T8tx7y5oT9UADQ--.40824S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtrWktF1kArWfAFy7Zry7ZFb_yoW7XrWDpa
-	yrAa1jyr4DJFW2vFnFvw10qry5ta4DJw15Wrn8Jr13Kr90yr1UJr42vF4jkasrGrnrWw1j
-	vF4Ut347WFy5JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRJ8n5UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxlVo2gu7XhKJQAAsc
 
 
 
-On 2025/5/22 00:17, Sathyanarayanan Kuppuswamy wrote:
+在 2025/5/20 18:07, Ilpo Järvinen 写道:
+> On Tue, 20 May 2025, Shuai Xue wrote:
 > 
-> On 5/21/25 7:54 AM, Hans Zhang wrote:
+>> Hi, Ilpo,
 >>
->>
->> On 2025/5/21 00:09, Sathyanarayanan Kuppuswamy wrote:
+>> 在 2025/5/20 01:10, Ilpo Järvinen 写道:
+>>> On Mon, 12 May 2025, Shuai Xue wrote:
 >>>
->>> On 5/19/25 7:41 AM, Hans Zhang wrote:
+>>>> Hotplug events are critical indicators for analyzing hardware health,
+>>>> particularly in AI supercomputers where surprise link downs can
+>>>> significantly impact system performance and reliability.
 >>>>
+>>>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+>>>> tracepoint for hotplug event to help healthy check, and generate
+>>>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+>>>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>>>> tracepoint event handlers for it.
 >>>>
->>>> On 2025/5/19 22:21, Hans Zhang wrote:
->>>>>
->>>>>
->>>>> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
->>>>>>
->>>>>> On 5/16/25 9:55 AM, Hans Zhang wrote:
->>>>>>> The following series introduces a new kernel command-line option 
->>>>>>> aer_panic
->>>>>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
->>>>>>> mission-critical environments. This feature ensures deterministic 
->>>>>>> recover
->>>>>>> from fatal PCIe errors by triggering a controlled kernel panic 
->>>>>>> when device
->>>>>>> recovery fails, avoiding indefinite system hangs.
->>>>>>
->>>>>> Why would a device recovery failure lead to a system hang? Worst case
->>>>>> that device may not be accessible, right?  Any real use case?
->>>>>>
->>>>>
->>>>>
->>>>> Dear Sathyanarayanan,
->>>>>
->>>>> Due to Synopsys and Cadence PCIe IP, their AER interrupts are 
->>>>> usually SPI interrupts, not INTx/MSI/MSIx interrupts. (Some 
->>>>> customers will design it as an MSI/MSIx interrupt, e.g.: RK3588, 
->>>>> but not all customers have designed it this way.)  For example, 
->>>>> when many mobile phone SoCs of Qualcomm handle AER interrupts and 
->>>>> there is a link down, that is, a fatal problem occurs in the 
->>>>> current PCIe physical link, the system cannot recover.  At this 
->>>>> point, a system restart is needed to solve the problem.
->>>>>
->>>>> And our company design of SOC: http://radxa.com/products/orion/o6/, 
->>>>> it has 5 road PCIe port.
->>>>> There is also the same problem.  If there is a problem with one of 
->>>>> the PCIe ports, it will cause the entire system to hang.  So I hope 
->>>>> linux OS can offer an option that enables SOC manufacturers to 
->>>>> choose to restart the system in case of fatal hardware errors 
->>>>> occurring in PCIe.
->>>>>
->>>>> There are also products such as mobile phones and tablets. We don't 
->>>>> want to wait until the battery is completely used up before 
->>>>> restarting them.
->>>>>
->>>>> For the specific code of Qualcomm, please refer to the email I sent.
->>>>>
+>>>> The output like below:
 >>>>
+>>>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>>>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>>>       <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0
+>>>> slot:10, event:Link Down
 >>>>
->>>> Dear Sathyanarayanan,
+>>>>       <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0
+>>>> slot:10, event:Card not present
 >>>>
->>>> Supplementary reasons:
+>>>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>>>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> ---
+>>>> changes since v7:
+>>>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+>>>> - pick up Reviewed-by from Lukas Wunner
+>>>> ---
+>>>>    drivers/pci/hotplug/Makefile      |  3 ++
+>>>>    drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+>>>>    drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+>>>>    include/uapi/linux/pci.h          |  7 ++++
+>>>>    4 files changed, 105 insertions(+), 6 deletions(-)
+>>>>    create mode 100644 drivers/pci/hotplug/trace.h
 >>>>
->>>> drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> cdns_pci_map_bus
->>>>     /* Clear AXI link-down status */
->>>>     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
->>>>
->>>> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
->>>>
->>>> If there has been a link down in this PCIe port, the register 
->>>> CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
->>>> continue.  This is different from Synopsys.
->>>>
->>>> If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD 
->>>> saving files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, 
->>>> it causes CPU Core1 to be unable to send TLP transfers and hang. 
->>>> This is a very extreme situation.
->>>> (The current Cadence code is Legacy PCIe IP, and the HPA IP is still 
->>>> in the upstream process at present.)
->>>>
->>>> Radxa O6 uses Cadence's PCIe HPA IP.
->>>> http://radxa.com/products/orion/o6/
->>>>
+>>>> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+>>>> index 40aaf31fe338..a1a9d1e98962 100644
+>>>> --- a/drivers/pci/hotplug/Makefile
+>>>> +++ b/drivers/pci/hotplug/Makefile
+>>>> @@ -3,6 +3,9 @@
+>>>>    # Makefile for the Linux kernel pci hotplug controller drivers.
+>>>>    #
+>>>>    +# define_trace.h needs to know how to find our header
+>>>> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
+>>>> +
+>>>>    obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
+>>>>    obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
+>>>>    obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
+>>>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> b/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> index d603a7aa7483..f9beb4d3a9b8 100644
+>>>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> @@ -23,6 +23,9 @@
+>>>>    #include "../pci.h"
+>>>>    #include "pciehp.h"
+>>>>    +#define CREATE_TRACE_POINTS
+>>>> +#include "trace.h"
+>>>> +
+>>>>    /* The following routines constitute the bulk of the
+>>>>       hotplug controller logic
+>>>>     */
+>>>> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct
+>>>> controller *ctrl, u32 events)
+>>>>    	case ON_STATE:
+>>>>    		ctrl->state = POWEROFF_STATE;
+>>>>    		mutex_unlock(&ctrl->state_lock);
+>>>> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+>>>> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>>>>    			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>>>>    				  slot_name(ctrl));
+>>>> -		if (events & PCI_EXP_SLTSTA_PDC)
+>>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>>>> +					   slot_name(ctrl),
+>>>> +					   PCI_HOTPLUG_LINK_DOWN);
+>>>> +		}
+>>>> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>>>>    			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>>>    				  slot_name(ctrl));
+>>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>>>> +					   slot_name(ctrl),
+>>>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>>>> +		}
+>>>>    		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>>>>    		break;
+>>>>    	default:
+>>>> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct
+>>>> controller *ctrl, u32 events)
+>>>>    					      INDICATOR_NOOP);
+>>>>    			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>>>    				  slot_name(ctrl));
+>>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>>>> +					   slot_name(ctrl),
+>>>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>>>>    		}
+>>>>    		mutex_unlock(&ctrl->state_lock);
+>>>>    		return;
+>>>> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct
+>>>> controller *ctrl, u32 events)
+>>>>    	case OFF_STATE:
+>>>>    		ctrl->state = POWERON_STATE;
+>>>>    		mutex_unlock(&ctrl->state_lock);
+>>>> -		if (present)
+>>>> +		if (present) {
+>>>>    			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>>>>    				  slot_name(ctrl));
+>>>> -		if (link_active)
+>>>> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>>>> -				  slot_name(ctrl));
+>>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>>>> +					   slot_name(ctrl),
+>>>> +					   PCI_HOTPLUG_CARD_PRESENT);
+>>>> +		}
+>>>> +		if (link_active) {
+>>>> +			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>>>> slot_name(ctrl));
+>>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>>>> +					   slot_name(ctrl),
+>>>> +					   PCI_HOTPLUG_LINK_UP);
+>>>> +		}
+>>>>    		ctrl->request_result = pciehp_enable_slot(ctrl);
+>>>>    		break;
+>>>>    	default:
+>>>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>>>> new file mode 100644
+>>>> index 000000000000..21329c198019
+>>>> --- /dev/null
+>>>> +++ b/drivers/pci/hotplug/trace.h
+>>>> @@ -0,0 +1,68 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) ||
+>>>> defined(TRACE_HEADER_MULTI_READ)
+>>>> +#define _TRACE_HW_EVENT_PCI_HP_H
+>>>> +
+>>>> +#include <linux/tracepoint.h>
+>>>> +
+>>>> +#undef TRACE_SYSTEM
+>>>> +#define TRACE_SYSTEM pci
+>>>> +
+>>>> +#define PCI_HOTPLUG_EVENT					\
+>>>> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+>>>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+>>>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+>>>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 >>>
->>> It sounds like a system level issue to me. Why not they rely on 
->>> watchdog to reboot for
->>> this case ?
+>>> Hi,
+>>>
+>>> While I was thinking of adding tracing into PCIe BW controller (bwctrl),
+>>> I ended up thinking that perhaps it would make more sense to have PCIe
+>>> Link related tracepoints which would cover both hotplug and bwctrl so that
+>>> also Link Speed changes would be reported through the same trace event.
+>>>
+>>> Downgraded speed may indicate there's something wrong with the card and
+>>> the Link Speed does have performance impact too for those who are pushing
+>>> BW boundaries such as AI systems.
 >>
->> Dear Sathyanarayanan,
->>
->> Thank you for your reply. Yes, personally, I think it's also a problem 
->> at the system level. I conducted a local test. When I directly 
->> unplugged the EP device on the slot, the system would hang. It has 
->> been tested many times. Since we don't have a bus timeout response 
->> mechanism for PCIe, it hangs easily.
-> 
-> Any comment on why watchdog is not used to reboot the unresponsive system?
-
-Dear Sathyanarayanan,
-
-Thank you very much for your reply.
-
-After my testing, the watchdog doesn't work properly every time. There 
-might be other reasons causing the entire system to hang.
-
-
-> 
+>> Agreed!
 >>
 >>>
->>> Even if you want to add this support, I think it is more appropriate 
->>> to add this to your
->>> specific PCIe controller driver.  I don't see why you want to add it 
->>> part of generic
->>> AER driver.
+>>> So my suggestion is:
 >>>
->> Because we want to use the processing logic of the general AER driver. 
->> If the recovery is successful, there will be no problem. If the 
->> recovery fails, my original intention was to restart the system.
->>
->> If added to the specific PCIe controller driver, a lot of repetitive 
->> AER processing logic will be written. So I was thinking whether the 
->> AER driver could be changed to be compiled as a KO module.
-> 
-> May be you can rely on err handler callbacks to get notification on 
-> fatal errors or you can even use uevent handler to detect the 
-> disconnected device event and handle it there.
-
-I will try the method you suggested.
-
-> 
+>>> - Add "Link Speed changed" to the event types.
+>>> - Add Link Speed and Width into the event format (and probably also Flit
+>>>     mode as PCIe gen6 is coming).
 >>
 >>
->> If this series is not reasonable, I'll drop it.
+>> How about bellow event format:
+>>
+>> +	TP_STRUCT__entry(
+>> +		__string(	port_name,	port_name	)
+>> +		__field(	unsigned char,	cur_bus_speed	)
+>> +		__field(	unsigned char,	max_bus_speed	)
 > 
-> Adding new kernel param to solve a specific system issue is not 
-> recommended. Try to find some custom solution for your chip/controller.
+> Add also the Link Width.
+
+Got it.
+> 
+>> +		__field(	unsigned char,	flit_mode	)
+>> +	),
+>>
+>> And add the event to pcie_update_link_speed():
+>>
+>> @@ -796,6 +799,10 @@ void pcie_update_link_speed(struct pci_bus *bus)
+>>          pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+>>          pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
+>>          __pcie_update_link_speed(bus, linksta, linksta2);
+>> +
+>> +       trace_pci_link_event(pci_name(bridge), bus->cur_bus_speed,
+>> +                                          bus->max_bus_speed,
+> 
+> I don't think outputting the internal values of enum pci_bus_speed is a
+> good idea. Maybe these could be printed as a string (with
+> pci_speed_string()) or encoded with trace interface specific values.
+
+I see, a human readable string is better.
+> 
+> Perhaps it would make sense to check if the speed really changed before
+> sending that event, but there are good sides in both approaches as I
+> know some platforms assert LBMS more than once during a single Link Speed
+> change.
+> 
+>> +                                          PCI_HOTPLUG_LINK_SPEED_CHANGED);
+>>
+>> But I don't find link speed changed in hotplug driver
+> 
+> pciehp_check_link_status() calls __pcie_update_link_speed().
+
+Thanks.
+
+> 
+>> , and the format of "Link Speed changed" is a bit different from
+>> "pci_hp_event".
+> 
+> The difference is only because when the Link is down, there's no Link
+> Speed (obviously). Whenever a new device is hotplugged and it comes up,
+> there's also Link Speed for it which can be included into the trace event.
+> 
+> I think the trace event should have some special value for the fields that
+> are N/A due to Link being off. While it would be possible to create
+> separate events for speed changes and hotplug, I don't see any pros in
+> that approach over just having the N/A fields marked as such when the Link
+> is Down.
+> 
+> Perhaps it would even make sense to add PCIE_SPEED_LINK_DOWN into
+> bus->cur_bus_speed when hotplug finds the card is gone (I'm not entirely
+> sure how bwctrl or pcie_cooling driver would cope with that though, they
+> might need minor tweaking to support it, and there are a few other drivers
+> that use that field).
+> 
+>> Do we really need a PCI_HOTPLUG_EVENT? May PCI_LINK_EVENT is more
+>> appropriate?
+> 
+> Ah, right, I forgot to mention it would make sense to rename it to
+> PCI_LINK_EVENT.
 > 
 
-Ok. Understood. Thank you again for your reply.
+Got it.
 
-Best regards,
-Hans
-
+Thanks.
+Shuai
 
