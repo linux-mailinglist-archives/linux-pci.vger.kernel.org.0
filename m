@@ -1,145 +1,216 @@
-Return-Path: <linux-pci+bounces-28271-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28272-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33337AC0BC1
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 14:40:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66CE9AC0C49
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 15:09:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CAE73AADB3
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 12:39:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152BD17891E
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 13:09:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC2222FF2B;
-	Thu, 22 May 2025 12:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138401D618A;
+	Thu, 22 May 2025 13:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxFyp0Pw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TkKbiOO0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1192135CB
-	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 12:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F532F85B
+	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 13:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747917608; cv=none; b=t9rZKT6lY7vOc2b+OhksCOJ8mKXmfx6UJnkbyqiqXCJGxPbO2frNxt7Vbx2VA9XXdJlnOSsTQXoOAunbLuoux+UemnRwsFBrnRE4JyeiKviGGvZVagKOuUxJCM0CjmIpmUrs0V639XWnA2aI23SPf/OkOAsTLd4qG1VaJnCiPjo=
+	t=1747919390; cv=none; b=rNXPpqm7WFkGNDBjxb6Qxl7mXOKys0/SNTSpbGQjB7vQUsF7Gjme0LGCidZ5uLtSJ7lixw2+8U79AXEXwOEAG+hDgaPgzn/BDRAuRhaURfkYZMU91I47h7AATt1eozoPwyafco7CNfkao0vmWzFZ+PZDnAgoSlYNhoGBUvQjk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747917608; c=relaxed/simple;
-	bh=dIFmpsAhMvCplcUfGCTOY0heRVtKxZ1RNz40PxK8rOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I4LVKt3eNdSv+rbunlEAXgt7RRrStNU1CRPMzZsz2rQ+ZXC207PZqhXBGTTkxIghYB5jiMaRC5z4c6gNI+F+s7vFM4VmaxjtxDwyZPxdKrz5xVfFrdsOkHJlZx3MerwcXsrWxrFWFlKsUtRkMgYfOCP+csaxPGbGa4aYnQhpk1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxFyp0Pw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8FF2C4CEE4;
-	Thu, 22 May 2025 12:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747917607;
-	bh=dIFmpsAhMvCplcUfGCTOY0heRVtKxZ1RNz40PxK8rOk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nxFyp0PwZTmRg83D1Vmmh/ZmyrjdXltyLFpuIVGyrQkxQO6Km0FRL4NpEGGEVHKIP
-	 w1tLszf6o3IpPne4hxLm49xKOCbP4pWWs+C+kXBgg4kU/7O2Pr8plog5//wbd4MnrS
-	 nX+SgixA8xLvDOUfCO4D67Rb2cQ6GeeNGEg3+0OXwUaLLnov/zY0LVtKfsds843w8/
-	 KfthzZFTuAIIEYQ6uwJs7zMGLoHsq+ZIXH4bY+1wMzvJ4uiVr6iA4z07qvZj2uRJGo
-	 VQ7sjEqPx/xIsVHkTtfCd9hGAWdrWbVYRecaRvjlGXYQQ1vqEgvjebkKhs1LdvWZ8V
-	 l3cPr3nqTJBmw==
-From: Niklas Cassel <cassel@kernel.org>
-To: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH] PCI: dw-rockchip: Delay link training after hot reset in EP mode
-Date: Thu, 22 May 2025 14:39:59 +0200
-Message-ID: <20250522123958.1518205-2-cassel@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747919390; c=relaxed/simple;
+	bh=QjE1NNa+x8ovxdLUuOxM03rYsYFy1XqdyXIewof0rr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cmYNABmoMVJcMe7mzrL0V9yOGH/HXAX54FEDpbbCV3KP1izXBxc0D4oMWeB8pAA3PakiR3zO1LWLpwxoNGylquOVTdGvW53NCHrF/0wG4DN70BWrurHcA1ua09l0ND8R1GKuy3pC9pxdVJjPFCUDj/DiIMVPQTlkEVqImPEyM1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TkKbiOO0; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747919388; x=1779455388;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=QjE1NNa+x8ovxdLUuOxM03rYsYFy1XqdyXIewof0rr8=;
+  b=TkKbiOO0GYAXMYheTp3/VJ99ahr6OIqNC7/XQZ8il5LNAueJgTiF5bFI
+   +x6xJJ/98TAbZQk/QWCL0I8ikP/ZveizL6dhzO427B9ufbUh8ECeq7pnu
+   p/K1Hde31xH8ZsTvUfGQeMH22iGJoHYLePoSFW7vzwIBpwj96SL3iQq+2
+   YaSAsx/ctTQI3tCmxS30zEUoC8ebOUkIY83A9xYGoWlzmZeM989hmxIYb
+   DlgKhJVR2E/sG1sfFj5OvTmYrf3/lCZ4f3kYB2wOADsnRLHz2UIRygSTU
+   Y9y6jUABcQgcm29NNG9BCBp3FXK3TqxGvxImOub35/JYzbY7BjhTDnCPE
+   g==;
+X-CSE-ConnectionGUID: m83r7Cx7S1yQketmyT9s6w==
+X-CSE-MsgGUID: NzC6CtVSTgasqMjq2rV5zw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="60601813"
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="60601813"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 06:09:47 -0700
+X-CSE-ConnectionGUID: 8xjbq0k2RR69fjf2PvaeEQ==
+X-CSE-MsgGUID: wLBVXuqDSl+umYtc9EQzSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
+   d="scan'208";a="141098295"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 22 May 2025 06:09:46 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uI5g8-000PM8-1C;
+	Thu, 22 May 2025 13:09:44 +0000
+Date: Thu, 22 May 2025 21:09:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rcar-gen4] BUILD SUCCESS
+ 003d15b30f3690b14315822439edc2c3f823c6cd
+Message-ID: <202505222126.ZImL1eAZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3121; i=cassel@kernel.org; h=from:subject; bh=ZYXfFcQXDiFwjrTUi2n35UtRuclFuX1gTrMksp86lBY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDL0peVOfwo++dH/xZEkw9+pYrfqzyZMiD+ikTfHNGeXU fMZ8aL6jlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExEh5nhv7dRmMyUWUYZtZu+ r3XzevN+8+I/yj0NunNVZbwn7pk1y5aRoSt4a/AK72KtVYFBSSKSkwS+r/0l3MtyYvWL/owK/o1 KzAA=
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 
-From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-gen4
+branch HEAD: 003d15b30f3690b14315822439edc2c3f823c6cd  PCI: rcar-gen4: Document how to obtain platform firmware
 
-RK3588 TRM, section "11.6.1.3.3 Hot Reset and Link-Down Reset" states that:
-"""
-If you want to delay link re-establishment (after reset) so that you can
-reprogram some registers through DBI, you must set app_ltssm_enable =0
-immediately after core_rst_n as shown in above. This can be achieved by
-enable the app_dly2_en, and end-up the delay by assert app_dly2_done.
-"""
+elapsed time: 1450m
 
-I.e. setting app_dly2_en will automatically deassert app_ltssm_enable on
-a hot reset, and setting app_dly2_done will re-assert app_ltssm_enable,
-re-enabling link training.
+configs tested: 121
+configs skipped: 2
 
-When receiving a hot reset/link-down IRQ when running in EP mode, we will
-call dw_pcie_ep_linkdown(), which will call the .link_down() callback in
-the currently bound endpoint function (EPF) drivers.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The callback in an EPF driver can theoretically take a long time to
-complete, so make sure that the link is not re-established until after
-dw_pcie_ep_linkdown() (which calls the .link_down() callback(s)
-synchronously).
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                      axs103_smp_defconfig    gcc-14.2.0
+arc                     haps_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250521    gcc-10.5.0
+arc                   randconfig-002-20250521    gcc-12.4.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                          moxart_defconfig    gcc-14.2.0
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250521    clang-21
+arm                   randconfig-002-20250521    clang-21
+arm                   randconfig-003-20250521    clang-16
+arm                   randconfig-004-20250521    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250521    gcc-6.5.0
+arm64                 randconfig-002-20250521    gcc-6.5.0
+arm64                 randconfig-003-20250521    gcc-8.5.0
+arm64                 randconfig-004-20250521    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250521    gcc-10.5.0
+csky                  randconfig-002-20250521    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250521    clang-20
+hexagon               randconfig-002-20250521    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250521    clang-20
+i386        buildonly-randconfig-002-20250521    clang-20
+i386        buildonly-randconfig-003-20250521    gcc-12
+i386        buildonly-randconfig-004-20250521    clang-20
+i386        buildonly-randconfig-005-20250521    gcc-12
+i386        buildonly-randconfig-006-20250521    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250521    gcc-15.1.0
+loongarch             randconfig-002-20250521    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5275evb_defconfig    gcc-14.2.0
+m68k                            mac_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip32_defconfig    clang-21
+mips                           mtx1_defconfig    clang-21
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250521    gcc-14.2.0
+nios2                 randconfig-002-20250521    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250521    gcc-13.3.0
+parisc                randconfig-002-20250521    gcc-11.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                 canyonlands_defconfig    clang-21
+powerpc                        fsp2_defconfig    gcc-14.2.0
+powerpc                      ppc64e_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250521    clang-21
+powerpc               randconfig-002-20250521    gcc-8.5.0
+powerpc               randconfig-003-20250521    gcc-6.5.0
+powerpc                        warp_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250521    gcc-8.5.0
+powerpc64             randconfig-002-20250521    gcc-6.5.0
+powerpc64             randconfig-003-20250521    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250522    gcc-9.3.0
+riscv                 randconfig-002-20250522    clang-18
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250522    clang-19
+s390                  randconfig-002-20250522    clang-18
+s390                       zfcpdump_defconfig    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250522    gcc-13.3.0
+sh                    randconfig-002-20250522    gcc-13.3.0
+sh                           sh2007_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250522    gcc-14.2.0
+sparc                 randconfig-002-20250522    gcc-6.5.0
+sparc64               randconfig-001-20250522    gcc-14.2.0
+sparc64               randconfig-002-20250522    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250522    gcc-12
+um                    randconfig-002-20250522    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250521    clang-20
+x86_64      buildonly-randconfig-002-20250521    clang-20
+x86_64      buildonly-randconfig-003-20250521    gcc-12
+x86_64      buildonly-randconfig-004-20250521    gcc-12
+x86_64      buildonly-randconfig-005-20250521    clang-20
+x86_64      buildonly-randconfig-006-20250521    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250522    gcc-14.2.0
+xtensa                randconfig-002-20250522    gcc-10.5.0
 
-Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Co-developed-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c4bd7e0abdf0..05b8e4cbd30b 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -61,6 +61,8 @@
- 
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-+#define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-+#define  PCIE_LTSSM_APP_DLY2_DONE	BIT(3)
- #define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
- 
- /* LTSSM Status Register */
-@@ -487,7 +489,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	struct rockchip_pcie *rockchip = arg;
- 	struct dw_pcie *pci = &rockchip->pci;
- 	struct device *dev = pci->dev;
--	u32 reg;
-+	u32 reg, val;
- 
- 	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -498,6 +500,10 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
- 		dev_dbg(dev, "hot reset or link-down reset\n");
- 		dw_pcie_ep_linkdown(&pci->ep);
-+		/* Stop delaying link training. */
-+		val = HIWORD_UPDATE_BIT(PCIE_LTSSM_APP_DLY2_DONE);
-+		rockchip_pcie_writel_apb(rockchip, val,
-+					 PCIE_CLIENT_HOT_RESET_CTRL);
- 	}
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
-@@ -585,8 +591,11 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
- 		return ret;
- 	}
- 
--	/* LTSSM enable control mode */
--	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-+	/*
-+	 * LTSSM enable control mode, and automatically delay link training on
-+	 * hot reset/link-down reset.
-+	 */
-+	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE | PCIE_LTSSM_APP_DLY2_EN);
- 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
- 
- 	/*
--- 
-2.49.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
