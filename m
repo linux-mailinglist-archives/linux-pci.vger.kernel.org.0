@@ -1,270 +1,367 @@
-Return-Path: <linux-pci+bounces-28285-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28286-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59D1EAC14D9
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 21:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E99BFAC1745
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:07:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E68F37B7609
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 19:28:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28D3C7B8D01
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:05:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D3729CB49;
-	Thu, 22 May 2025 19:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0825B2C2AAC;
+	Thu, 22 May 2025 23:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sack7/r2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPW+fP+9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2054.outbound.protection.outlook.com [40.107.22.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA82828C875;
-	Thu, 22 May 2025 19:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942188; cv=fail; b=amOK1vnhiU+Nd5UJrQSQats8v1Fs2zsjURUl8fTHT+GigZ80FaCh8g2UVQctcAQ1QUk+4HGNdzBDAx81lpNAR+gIviTmBBDfo053mpEisDks7YBjIUABY1zZ5ufLK38kCXWbnwWjTMW6pVoRck8DT4kMG2HkO7U5OLFoVQtwuwE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942188; c=relaxed/simple;
-	bh=kLGhHvjg5FGNNfCvFbXcfdEsMvzER74sB57wHpRSIIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qNB+ZmpZq9jAcCCAxuHD8TQcdYh/CyTGVP5j0M2Nwf6rh+krr0kaVbUZNab8Qizr7PxzJCeI9OTh9A1cHX0Bpqkp8lCbetLn949HlrX/5K5t2pyJUHj6vYYjvrovzTfLy/C1hb1pWmyZCvFfNqCdsJCDv1+afAXnTk/m5MVNBz4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Sack7/r2; arc=fail smtp.client-ip=40.107.22.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jx4IOmVJUYZIHoT50pT/3mouBfxfh31Eoe/ZwL8moMHY3MgyRe6mWIiFcHiqSNnmXp82NfZye1FkOcA5elrjraxcc4IRJMpBzSURP5nnLzeThJDbnYD1UoQpMWS8u80srvKzcmiHxCLitfH8xMpkjwS5a+wz29lX40ZUDOCeH4lKy1FDtTlPjxOwK+BjxJ9BfQWl+Y2x4bLnLOoqR5KJ16JFor85pc2AANfNNb8LBfESyMWJwIIPty8kkVYCyKPk2oHEpbm5vQre3M1oQ1t04Oj4keVWSgp5HbBArQrQiMwpyfV+5WZO8Fe8Eh+H/XvDYGkQSXPnTHS9wulZppao1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=15xagGFsClb1JpWH3ksSyXQus3/deBKjt6Nms7URPVA=;
- b=OP9UJvCNRyNNWqWTsf64omRRZGkOY1Qsm9nXSBi7bcBZxmzVdQRSPtYVw5sqMtc0WoW7sb1xvSVL9PtndDf5OiGG7SeM+Xn+9e6hg3JkkBnO8Kmhny3+py6wGpimh79oTWj3kmRyR+vb+Jbk1eFuKwtM5K9MQVf3HNmwOAsTdSwgsv+Fogux4pSn+LVKTbOFVoLgv/yr5KCBUGt0vEl74xrqdKsvoBVwoNYOVCdP27Ef1vFIOyHB9UcDA87OK8XRG1pOqO1UumoFQNBqUtEskPOWU39XTQxSG9qddQcJYdeKX99sUgcrSffNSZOeN8+TIcISKhMfYQE8C8drPmkTvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=15xagGFsClb1JpWH3ksSyXQus3/deBKjt6Nms7URPVA=;
- b=Sack7/r2GYliWwgrHWLonGTMbiWPZdhPsjjXeO8E5YGBEyiGNDE352LjlMasuSMrEoFfYTJ5pHdq+pcTV8fLrbnx+PHNJwXDDR6i+/FyT4dt0iJzFP+qbdemmgKrX8cd0zfr3ITHaqTjg2P+UQFP+sbdQ0VKww9IBSoqH7xLOGZBBug5Trf1mrEqTEodlpYC3sTgrA7qTQ02fYuCbwnIaS/CrF7L43LjsEWpN27JXyreTI7LNCJB3RNGBNnF0WlIGxUZ8uC5KCLDCPZvfmAJ5DZQSkiIpwBwPO+WKwf5b2333jYTB4vjwwrt4Iqu5Is5ObFJCvJgtiosUritQIAdKw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB8675.eurprd04.prod.outlook.com (2603:10a6:20b:42a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
- 2025 19:29:42 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Thu, 22 May 2025
- 19:29:42 +0000
-Date: Thu, 22 May 2025 15:29:34 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: s-vadapalli@ti.com
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	krzk+dt@kernel.org, kw@linux.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, tony@atomide.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Message-ID: <aC97HguxSt56BkHa@lizhi-Precision-Tower-5810>
-References: <20250411153454.3258098-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411153454.3258098-1-Frank.Li@nxp.com>
-X-ClientProxiedBy: PH7P221CA0069.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:328::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F7D2C17A2;
+	Thu, 22 May 2025 23:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747955146; cv=none; b=HAJtGufi68P39ChznVpB7aunHcmw3I0xKfcV27eK2LtB0S0UsjRVAPEbAm4V7GUvmWtH+S8HHhTJrmlPvXvjLdNdt048eYiPfCrfSS9J0YFevc4PuoDB5NL9jGVySrTk9if2DQMHWRFKWQ8onL/suHOVgprTLZ8WrAkJFHz+MRc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747955146; c=relaxed/simple;
+	bh=r4ITQcw1+GunUGAmNVITy56pCkvnCemY9Tx2nWzkD44=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dBvNy8EXjRK2pKZQLTM2MFnFlhMHqoyDZ0rr3EK4UEsUL7hmuqPIfwY3K4ysDPWPic8+Ng5uzKdKd9HlYmp0CPmRZj+Mj5QqeLC7+pmZoffIkLqp62rDHlArvfJp/o6aMXghBznnoW0D6EkqvzRp0vh2Uvy4OekfMokAYTUlBu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPW+fP+9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E7E9C4CEE4;
+	Thu, 22 May 2025 23:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747955146;
+	bh=r4ITQcw1+GunUGAmNVITy56pCkvnCemY9Tx2nWzkD44=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nPW+fP+9dG39OxRDoleYIK+aH7/ZYKA784Q2slH/0ORJB6spXZ0mf9H7BmwClgCgo
+	 0G24og15eN/0A1SFrIw1mLQzfK8pQ86tOp5jkPRAGO8tLYfc2qJOzhqGjo/98uxQGP
+	 5SMwkuVkYRofgPLpURTPJEjXt4rCuyGF7sDjvOcdJnaAA7rUAxllYZ0jrsl4jZOJSc
+	 J3sAfMMpH7bXi4NPev5x1rH3T0c+C1YU2QMx9D4G2lQgNh2uPD/UYEhLLxCPc6JMKC
+	 MQohE1oTgp1VkEYqcstBzTTEPL7YjXPZ0WzYyMoD0dtSMYekZXdPDut/fj8k3lDiqs
+	 kDeJ+nGdoi+uQ==
+Date: Thu, 22 May 2025 18:05:45 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log ratelimits
+Message-ID: <20250522230545.GA1496972@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8675:EE_
-X-MS-Office365-Filtering-Correlation-Id: 163ed006-4b17-40e6-63f1-08dd99670068
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|7416014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?P5s1FurvnWCWydECSt9sXaHNZFQ3SWoqiHccFVWo9LKZ0QZK90vieC1/57Og?=
- =?us-ascii?Q?TnzybrP3Do9yOSpRrYqR2UJBbaFsXol0l1CCwMjYCv7RBxBd7q9znvV6Ri81?=
- =?us-ascii?Q?vkxPs3U3YbQpYspS/MPOAQ7zuA6det1od/cBiZ2B7XteZyGk4+L9u9LgzD/g?=
- =?us-ascii?Q?Kb62iyXGi+vjsz3bUVF64Jkpgctz9WezIpm0sz8N+MaipxFIzpXJngp9xE7E?=
- =?us-ascii?Q?fEkMDKA+iSMY6/tZBdtv8Ai6HQBIBAU+0JXUjIMG0TsrqQpSQLOheNuG1F4b?=
- =?us-ascii?Q?NqSaBnt1Y3ncGRVzXU+Erp7ljhlAiaohnUBeeg/Ttowh82fWScOp82gqGQeM?=
- =?us-ascii?Q?00Upk1Vo3F2iVGuNjR4NMxmm6Mjp5ffH1zdzGlI+N3JKR+8znGceiWj9jbzJ?=
- =?us-ascii?Q?l6OajHbd+RdQDCfaCikU5lwwb+dnX6z5Did6pz5DnIOb30hW2lVaJBFqD3DE?=
- =?us-ascii?Q?JyCSlWzU+Efz4Gwo7xdoyrTBoaRF/+LUcTK6/7dM2RoumN4KXCslo09OY9iF?=
- =?us-ascii?Q?Vg/G6OYvcSUDC28/UYyy1H1oenC7QRQag12IFqLGCKjUDWTz6tqtLHvNs4US?=
- =?us-ascii?Q?DypTbkMYzsKlCN/tZxCSTauhldsN3t5wJRafhl7BiTGbfobznBqymA4HvhUs?=
- =?us-ascii?Q?qnyyaFhIgy2H1vpYs5FMeA/E2L95LZoq65xt4vQ0uLXq0QlGgk0wGo/pI2Xb?=
- =?us-ascii?Q?pRHpyR7Wo+3mWecn94dBYZohTNx6gXR3wx0pirYj4OmvRjQrtvOOXlZQKDvO?=
- =?us-ascii?Q?gv6JOgi9sdYFVvzWtrbHbYS7TII5FasNXO1Fm8/PZwQ3UsZe1hH/RR6Kf+1v?=
- =?us-ascii?Q?pSYwRNGDPfiuRTg12nnk3K70p4Oo4r1p0mD4PjV8gqtOdunQfRTGmxQQfjIc?=
- =?us-ascii?Q?riiMTLyXGSKCcE83UK4JF01+6CQHMvX/LwuV484knQmhtzo32xy2QhKw2gjm?=
- =?us-ascii?Q?uBm3PWb6M9MEgPTkMyk/X0jPLw8Tdw57xkaTz9PUxMpm5iB4HzBeucS5/clw?=
- =?us-ascii?Q?a7/0bY0d41BU/QObXNFsmIkztdt/wmx92bc3wMc1pbY2IZQ3QCb01yBWScLo?=
- =?us-ascii?Q?w6lrKGHQ0b2v7dpYwV2+EZMFsDUu4Uq3rrXAf2xeRXGCItsKjS7Groupy19w?=
- =?us-ascii?Q?pbm2aygd1ju/zZyooYgq4Yq44ItlU6Lv9wlxsex25fXzRSmTay9LphNei4G9?=
- =?us-ascii?Q?gW2hr56zjvDrNGeRB4vD88G16c4DdyuIjlm4Lf5yDH5zKmxcp07FtaRmgtqr?=
- =?us-ascii?Q?jyHVmoGb4Uv1w5nJIJMHmqYEKeVN3/YM7WMfIs6tc7ycwlQKdJZQoV7xEm94?=
- =?us-ascii?Q?2vdjWPLMDCQVyNh9jGOIA3dGa+a69BfJ9cmSI5+Rr8h7nqsW3tAlM6ZgwAFi?=
- =?us-ascii?Q?QBqCVqNy3h1nc6FXL8usYsi4vyGkGOzo8envvHHqCn7igU1Mk8ri5+b41PQB?=
- =?us-ascii?Q?S3U5JotI1mU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ggH0g/goxN0cou6xvUZkShzmVWzB4bM0hMWFUFFzp3ZMaKSNrEl4Hxgi8x5a?=
- =?us-ascii?Q?lJ9OIk7MHobsvSuNGP4joQ0+n97jKSmZ68c3EcpLGJENJvfAyiQpiUeETJAQ?=
- =?us-ascii?Q?YIuRb0QX8Llx4XlH1kC/Gbk7ZutFF6PjE4qPO45DAxk6XctbWPbA2O4n9rv3?=
- =?us-ascii?Q?RcsLIXDNxNBiE3iYu9jblE6BNwYZJtbkHF7X7Hv721NRFsdCiFW1qcczv5vY?=
- =?us-ascii?Q?RcEp8zt0r6b6VSFImCL7vUH5IJmUNA1p6ab4krjtUtyPreFL/LdkYHpR1xsN?=
- =?us-ascii?Q?NPKKiqKUzRQ5I6gmWOhJUHV808IRfVvKMxo9sbaMLjVTQ8CCddR+RxtHNtAp?=
- =?us-ascii?Q?sgxKzO3egn4lsMgCYVzZcljuaKT96NTzNz0RU3aIKzVKAANKRADvRM+p69YK?=
- =?us-ascii?Q?fkjZNgH3IEPVS7G940b0gDBidPlGKkasKSXv1lAdGmD8QP9RcghokUA2k4CV?=
- =?us-ascii?Q?3vmL3aO3U55jzp3Bnmtjl87xPLFLxsr+ZP0Xr/93Lvv0YtomrdNEf1PlrLNV?=
- =?us-ascii?Q?Z1s3VERlqo6jxTLaLCnaLISb00W6FoMCIhmgn+blKpx8aAP3jGqy/MBBNRKm?=
- =?us-ascii?Q?MMabuv44M0IDN55DqQn38i2pIo/258eMAsTHFBLsyZXf9bED16lEdr62E5U0?=
- =?us-ascii?Q?hzdcjIi/LIGhmkvRLzMJ6jok3YUt+7x024EBggFtE1O+wAoUdE6YDt0P3C3v?=
- =?us-ascii?Q?7kkkwG1fCS47VZJOwFN3XZF8FxxsgSd1XCoHnRRSncY4uTpYoEKzzrLGgqn1?=
- =?us-ascii?Q?+CFpI/d4zpc6GOBxqpvKy1fT5uhyznqTIKVsYGjLiwxGSp1H7a6Q/LhHMJLr?=
- =?us-ascii?Q?qWagi3i7kUJr8J7zp1IR7x7Gr3GRtXZ3ogqKFODlb2C/Ca/MSHVS/uFJ/cRl?=
- =?us-ascii?Q?Knc7K+rTalQQh/pkOSHKTGKw11g6cCqj3TxbA6J2YBOx65ws6dpZYQklfSL+?=
- =?us-ascii?Q?M+DWMsWsb/1GcdLe2UEzTGa7eEMw7rqmu56vR/R0AsCyKLDSGPxC+Fw9SvoR?=
- =?us-ascii?Q?/CjiPSWTUu97y/g1qJbTZpvmceC3MqVDXkUGP8LPnGdU9OSrn5jVY59n0YgH?=
- =?us-ascii?Q?mm1IRy5WU4zGTBCQNUYaJq19QQLxmzQ6/Kb9No5hh7s9cHWw+CNUa8tnt6Gv?=
- =?us-ascii?Q?UWBGmWL8nLWS9oGCzfENahoXY6htvx0A3Aa4TxPQp/nAorlY/iv7jPK/GZmN?=
- =?us-ascii?Q?v0awxQxtNXaXnsE8ixlls68KWwS6OpKPEnIWwO94MS8bl6jOkaGpqRQWTVQW?=
- =?us-ascii?Q?4rw+5GsGiCNWsW87tekzg3FNipUTtS03xGVWC9AmApjmn+b7NThDu9hgIbFw?=
- =?us-ascii?Q?7d0S2nTAof8o+WsmL4vsGknLInTfGTj828A08z69HmbG7cR3ZgXjZyC5OoZW?=
- =?us-ascii?Q?jGXfngRZ9olIabknupRGjCa+6g1fKVyBPHdXA5+umRo8NH8v4by+xmMBD/ie?=
- =?us-ascii?Q?THlcOLxvAj4qBoLITPbIbaxTFG46by9fTAnWt2WHsJRTY1eVHPWsLDGlybxe?=
- =?us-ascii?Q?nJXQ+kIICVCmYzQuetIJqRwunRBeHIvAshlLXMbUthiO5hudT6QCADMltCch?=
- =?us-ascii?Q?oissLwv+y/RCH41LnSA=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 163ed006-4b17-40e6-63f1-08dd99670068
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 19:29:42.6589
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WjkHlO/VZ55Jhl99Mb+7anG6M1homjyrARDzyTtiqY8G+UBqNDh2DhsuISHOKEVd0J1F0/wMwJIUmsYU4CGYeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8675
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520215047.1350603-18-helgaas@kernel.org>
 
-On Fri, Apr 11, 2025 at 11:34:54AM -0400, Frank Li wrote:
-> This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
->
-> The commit being reverted updated the "ranges" property for the sake of
-> readability. However, this change is no longer appropriate due to the
-> following reasons:
->
-> - On many SoCs, the PCIe parent bus translates CPU addresses to different
-> values before passing them to the PCIe controller.
-> - The reverted commit introduced a fake address translation, which violates
-> the fundamental DTS principle: the device tree should reflect actual
-> hardware behavior.
->
-> Reverting this change prepares for the cleanup of the driver's
-> cpu_addr_fixup() hook.
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+On Tue, May 20, 2025 at 04:50:34PM -0500, Bjorn Helgaas wrote:
+> From: Jon Pan-Doh <pandoh@google.com>
+> 
+> Allow userspace to read/write log ratelimits per device (including
+> enable/disable). Create aer/ sysfs directory to store them and any
+> future aer configs.
 
-s-vadapalli:
+> +PCIe AER ratelimits
+> +-------------------
+> +
+> +These attributes show up under all the devices that are AER capable.
+> +They represent configurable ratelimits of logs per error type.
+> +
+> +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
+> +Date:		May 2025
+> +KernelVersion:	6.16.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
+> +		gets whether or not AER ratelimiting is currently enabled.
+> +		Enabled by default.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
+> +Date:		May 2025
+> +KernelVersion:	6.16.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Ratelimit burst for correctable error logs. Writing a value
+> +		changes the number of errors (burst) allowed per interval
+> +		(5 second window) before ratelimiting. Reading gets the
+> +		current ratelimit burst.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
+> +Date:		May 2025
+> +KernelVersion:	6.16.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Ratelimit burst for non-fatal uncorrectable error logs.
+> +		Writing a value changes the number of errors (burst)
+> +		allowed per interval (5 second window) before ratelimiting.
+> +		Reading gets the current ratelimit burst.
 
-	Any update about this patch? it prepare to remove cpu_addr_fixes()!
+I propose that we rename these to:
 
-Frank
+  aer/correctable_ratelimit_burst
+  aer/nonfatal_ratelimit_burst
+
+I think "log" is probably unnecessary, and the error type part
+should correspond with the existing entries (unfortunately not in the
+"aer" directory):
+
+  aer_dev_correctable
+  aer_dev_nonfatal
+
+and making "ratelimit_burst" a suffix will make it correspond to
+these:
+
+  fs/ext4/sysfs.c:        ATTR_LIST(err_ratelimit_burst),
+  fs/ext4/sysfs.c:        ATTR_LIST(warning_ratelimit_burst),
+  fs/ext4/sysfs.c:        ATTR_LIST(msg_ratelimit_burst),
+  lib/fault-inject.c:FAULT_CONFIGFS_ATTR_NAMED(ratelimit_burst, "verbose_ratelimit_burst",
+
+Also, I think we should split up "aer/ratelimit_log_enable" so we can
+do it separately for correctable and nonfatal errors and name as:
+
+  aer/correctable_ratelimit_interval_ms
+  aer/nonfatal_ratelimit_interval_ms
+
+so we can set the interval as well as the burst and to match these:
+
+  fs/ext4/sysfs.c:        ATTR_LIST(err_ratelimit_interval_ms),
+  fs/ext4/sysfs.c:        ATTR_LIST(warning_ratelimit_interval_ms),
+  fs/ext4/sysfs.c:        ATTR_LIST(msg_ratelimit_interval_ms),
+  lib/fault-inject.c:FAULT_CONFIGFS_ATTR_NAMED(ratelimit_interval, "verbose_ratelimit_interval_ms",
+
+I'll post the series as a whole again, but here's the interdiff
+related to this particular change:
 
 
-> Change from v1 to v2:
-> - update commit message to add more detail.
->
-> Previous disscusion at
-> https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
-> ---
->  arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
->  1 file changed, 11 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> index b709703f6c0d4..711ce4c31bb1f 100644
-> --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> @@ -195,24 +195,22 @@ axi0: target-module@51000000 {
->  			clock-names = "fck", "phy-clk", "phy-clk-div";
->  			#size-cells = <1>;
->  			#address-cells = <1>;
-> -			ranges = <0x51000000 0x51000000 0x3000>,
-> -				 <0x20000000 0x20000000 0x10000000>;
-> +			ranges = <0x51000000 0x51000000 0x3000
-> +				  0x0	     0x20000000 0x10000000>;
->  			dma-ranges;
->  			/**
->  			 * To enable PCI endpoint mode, disable the pcie1_rc
->  			 * node and enable pcie1_ep mode.
->  			 */
->  			pcie1_rc: pcie@51000000 {
-> -				reg = <0x51000000 0x2000>,
-> -				      <0x51002000 0x14c>,
-> -				      <0x20001000 0x2000>;
-> +				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
->  				reg-names = "rc_dbics", "ti_conf", "config";
->  				interrupts = <0 232 0x4>, <0 233 0x4>;
->  				#address-cells = <3>;
->  				#size-cells = <2>;
->  				device_type = "pci";
-> -				ranges = <0x81000000 0 0x00000000 0x20003000 0 0x00010000>,
-> -					 <0x82000000 0 0x20013000 0x20013000 0 0x0ffed000>;
-> +				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-> +					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
->  				bus-range = <0x00 0xff>;
->  				#interrupt-cells = <1>;
->  				num-lanes = <1>;
-> @@ -235,10 +233,7 @@ pcie1_intc: interrupt-controller {
->  			};
->
->  			pcie1_ep: pcie_ep@51000000 {
-> -				reg = <0x51000000 0x28>,
-> -				      <0x51002000 0x14c>,
-> -				      <0x51001000 0x28>,
-> -				      <0x20001000 0x10000000>;
-> +				reg = <0x51000000 0x28>, <0x51002000 0x14c>, <0x51001000 0x28>, <0x1000 0x10000000>;
->  				reg-names = "ep_dbics", "ti_conf", "ep_dbics2", "addr_space";
->  				interrupts = <0 232 0x4>;
->  				num-lanes = <1>;
-> @@ -269,21 +264,19 @@ axi1: target-module@51800000 {
->  			reset-names = "rstctrl";
->  			#size-cells = <1>;
->  			#address-cells = <1>;
-> -			ranges = <0x51800000 0x51800000 0x3000>,
-> -				 <0x30000000 0x30000000 0x10000000>;
-> +			ranges = <0x51800000 0x51800000 0x3000
-> +				  0x0	     0x30000000 0x10000000>;
->  			dma-ranges;
->  			status = "disabled";
->  			pcie2_rc: pcie@51800000 {
-> -				reg = <0x51800000 0x2000>,
-> -				      <0x51802000 0x14c>,
-> -				      <0x30001000 0x2000>;
-> +				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
->  				reg-names = "rc_dbics", "ti_conf", "config";
->  				interrupts = <0 355 0x4>, <0 356 0x4>;
->  				#address-cells = <3>;
->  				#size-cells = <2>;
->  				device_type = "pci";
-> -				ranges = <0x81000000 0 0x00000000 0x30003000 0 0x00010000>,
-> -					 <0x82000000 0 0x30013000 0x30013000 0 0x0ffed000>;
-> +				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-> +					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
->  				bus-range = <0x00 0xff>;
->  				#interrupt-cells = <1>;
->  				num-lanes = <1>;
-> --
-> 2.34.1
->
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+index 01bb577bfee8..5ed284523956 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
+@@ -126,28 +126,38 @@ They represent configurable ratelimits of logs per error type.
+ 
+ See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
+ 
+-What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
++What:		/sys/bus/pci/devices/<dev>/aer/correctable_ratelimit_interval_ms
+ Date:		May 2025
+ KernelVersion:	6.16.0
+-Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+-Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
+-		gets whether or not AER ratelimiting is currently enabled.
+-		Enabled by default.
++Contact:	linux-pci@vger.kernel.org
++Description:	Writing 0 disables AER correctable error log ratelimiting.
++		Writing a positive value sets the ratelimit interval in ms.
++		Default is DEFAULT_RATELIMIT_INTERVAL (5000 ms).
+ 
+-What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
++What:		/sys/bus/pci/devices/<dev>/aer/correctable_ratelimit_burst
+ Date:		May 2025
+ KernelVersion:	6.16.0
+-Contact:	linux-pci@vger.kernel.org, pandoh@google.com
++Contact:	linux-pci@vger.kernel.org
+ Description:	Ratelimit burst for correctable error logs. Writing a value
+ 		changes the number of errors (burst) allowed per interval
+-		(5 second window) before ratelimiting. Reading gets the
+-		current ratelimit burst.
++		before ratelimiting. Reading gets the current ratelimit
++		burst. Default is DEFAULT_RATELIMIT_BURST (10).
+ 
+-What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
++What:		/sys/bus/pci/devices/<dev>/aer/nonfatal_ratelimit_interval_ms
+ Date:		May 2025
+ KernelVersion:	6.16.0
+-Contact:	linux-pci@vger.kernel.org, pandoh@google.com
++Contact:	linux-pci@vger.kernel.org
++Description:	Writing 0 disables AER non-fatal uncorrectable error log
++		ratelimiting. Writing a positive value sets the ratelimit
++		interval in ms. Default is DEFAULT_RATELIMIT_INTERVAL
++		(5000 ms).
++
++What:		/sys/bus/pci/devices/<dev>/aer/nonfatal_ratelimit_burst
++Date:		May 2025
++KernelVersion:	6.16.0
++Contact:	linux-pci@vger.kernel.org
+ Description:	Ratelimit burst for non-fatal uncorrectable error logs.
+ 		Writing a value changes the number of errors (burst)
+-		allowed per interval (5 second window) before ratelimiting.
+-		Reading gets the current ratelimit burst.
++		allowed per interval before ratelimiting. Reading gets the
++		current ratelimit burst. Default is DEFAULT_RATELIMIT_BURST
++		(10).
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 48014010dc8b..6c331695af58 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -91,8 +91,8 @@ struct aer_info {
+ 	u64 rootport_total_nonfatal_errs;
+ 
+ 	/* Ratelimits for errors */
+-	struct ratelimit_state cor_log_ratelimit;
+-	struct ratelimit_state uncor_log_ratelimit;
++	struct ratelimit_state correctable_ratelimit;
++	struct ratelimit_state nonfatal_ratelimit;
+ };
+ 
+ #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
+@@ -384,9 +384,9 @@ void pci_aer_init(struct pci_dev *dev)
+ 
+ 	dev->aer_info = kzalloc(sizeof(*dev->aer_info), GFP_KERNEL);
+ 
+-	ratelimit_state_init(&dev->aer_info->cor_log_ratelimit,
++	ratelimit_state_init(&dev->aer_info->correctable_ratelimit,
+ 			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+-	ratelimit_state_init(&dev->aer_info->uncor_log_ratelimit,
++	ratelimit_state_init(&dev->aer_info->nonfatal_ratelimit,
+ 			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+ 
+ 	/*
+@@ -628,45 +628,44 @@ const struct attribute_group aer_stats_attr_group = {
+ };
+ 
+ /*
+- * Ratelimit enable toggle
+- * 0: disabled with ratelimit.interval = 0
+- * 1: enabled with ratelimit.interval = nonzero
++ * Ratelimit interval
++ * <=0: disabled with ratelimit.interval = 0
++ * >0: enabled with ratelimit.interval in ms
+  */
+-static ssize_t ratelimit_log_enable_show(struct device *dev,
+-					 struct device_attribute *attr,
+-					 char *buf)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	bool enabled = pdev->aer_info->cor_log_ratelimit.interval != 0;
+-
+-	return sysfs_emit(buf, "%d\n", enabled);
+-}
+-
+-static ssize_t ratelimit_log_enable_store(struct device *dev,
+-					  struct device_attribute *attr,
+-					  const char *buf, size_t count)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	bool enable;
+-	int interval;
+-
+-	if (!capable(CAP_SYS_ADMIN))
+-		return -EPERM;
+-
+-	if (kstrtobool(buf, &enable) < 0)
+-		return -EINVAL;
+-
+-	if (enable)
+-		interval = DEFAULT_RATELIMIT_INTERVAL;
+-	else
+-		interval = 0;
+-
+-	pdev->aer_info->cor_log_ratelimit.interval = interval;
+-	pdev->aer_info->uncor_log_ratelimit.interval = interval;
+-
+-	return count;
+-}
+-static DEVICE_ATTR_RW(ratelimit_log_enable);
++#define aer_ratelimit_interval_attr(name, ratelimit)			\
++	static ssize_t							\
++	name##_show(struct device *dev, struct device_attribute *attr,	\
++					 char *buf)			\
++	{								\
++		struct pci_dev *pdev = to_pci_dev(dev);			\
++									\
++		return sysfs_emit(buf, "%d\n",				\
++				  pdev->aer_info->ratelimit.interval);	\
++	}								\
++									\
++	static ssize_t							\
++	name##_store(struct device *dev, struct device_attribute *attr, \
++		     const char *buf, size_t count) 			\
++	{								\
++		struct pci_dev *pdev = to_pci_dev(dev);			\
++		int interval;						\
++									\
++		if (!capable(CAP_SYS_ADMIN))				\
++			return -EPERM;					\
++									\
++		if (kstrtoint(buf, 0, &interval) < 0)			\
++			return -EINVAL;					\
++									\
++		if (interval <= 0)					\
++			interval = 0;					\
++		else							\
++			interval = msecs_to_jiffies(interval); 		\
++									\
++		pdev->aer_info->ratelimit.interval = interval;		\
++									\
++		return count;						\
++	}								\
++	static DEVICE_ATTR_RW(name);
+ 
+ #define aer_ratelimit_burst_attr(name, ratelimit)			\
+ 	static ssize_t							\
+@@ -696,15 +695,22 @@ static DEVICE_ATTR_RW(ratelimit_log_enable);
+ 									\
+ 		return count;						\
+ 	}								\
+-	static DEVICE_ATTR_RW(name)
++	static DEVICE_ATTR_RW(name);
+ 
+-aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
+-aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
++#define aer_ratelimit_attrs(name)					\
++	aer_ratelimit_interval_attr(name##_ratelimit_interval_ms,	\
++				    name##_ratelimit)			\
++	aer_ratelimit_burst_attr(name##_ratelimit_burst,		\
++				 name##_ratelimit)
++
++aer_ratelimit_attrs(correctable)
++aer_ratelimit_attrs(nonfatal)
+ 
+ static struct attribute *aer_attrs[] = {
+-	&dev_attr_ratelimit_log_enable.attr,
+-	&dev_attr_ratelimit_burst_cor_log.attr,
+-	&dev_attr_ratelimit_burst_uncor_log.attr,
++	&dev_attr_correctable_ratelimit_interval_ms.attr,
++	&dev_attr_correctable_ratelimit_burst.attr,
++	&dev_attr_nonfatal_ratelimit_interval_ms.attr,
++	&dev_attr_nonfatal_ratelimit_burst.attr,
+ 	NULL
+ };
+ 
+@@ -786,9 +792,9 @@ static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+ 		return 1;	/* AER_FATAL not ratelimited */
+ 
+ 	if (severity == AER_CORRECTABLE)
+-		ratelimit = &dev->aer_info->cor_log_ratelimit;
++		ratelimit = &dev->aer_info->correctable_ratelimit;
+ 	else
+-		ratelimit = &dev->aer_info->uncor_log_ratelimit;
++		ratelimit = &dev->aer_info->nonfatal_ratelimit;
+ 
+ 	return __ratelimit(ratelimit);
+ }
 
