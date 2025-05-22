@@ -1,88 +1,95 @@
-Return-Path: <linux-pci+bounces-28276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB584AC10C2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 18:10:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C50EAC10DC
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 18:16:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1975501E98
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 16:10:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC1B050274F
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 16:16:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3259E299ABF;
-	Thu, 22 May 2025 16:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3254F154BFE;
+	Thu, 22 May 2025 16:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jv6oG1+i"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bYYy3qhY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0881219F461;
-	Thu, 22 May 2025 16:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F305C1494DF;
+	Thu, 22 May 2025 16:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930205; cv=none; b=Z13wgW00YmPgXtw7iudy8KX3yGypmHed4UlBXq9o/weWz91XXEXJlSe3kRqSAKFzEA61ejxefT42GgXyj2210nJSsX4igQs2IV5X+ZefTiwmMS0CNpJSvBs3f3IvVOL+aq+71YlzXxLpmB4+ymByKypwcDi/N6TEw6YiaQohhW4=
+	t=1747930576; cv=none; b=ODxVjnY8MXBvQ9gJZPZqw75ONLg2w6vJ9JJ0IXi32Nz7pLQE2NFxitXaV714DGEaQKKqxOV8Nv6e2toBhqfou3zO1j/roISQavXdy1wZye66fJo6dHlCH6uBvHYDkV2bvC8fh8tm+KjFVsc/qykYwBwLvC/FhG0AuoFrp4C9keQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930205; c=relaxed/simple;
-	bh=HXHBF0h6Tl3AILR6V2N+QJABLI/wgChzJ6iTjiDv5mY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eZOA9Ua9ph5ru/dlQ8HRqc2WJHLjfXio5up3Be/+ftq5nfl7U15tM/ZuTUJ5ov3fg51QjHr2u6owmbALWYnwBW8zpMytpupnscKaAy0t0KKW4bb8lTJZDlvr7r0aE/1sjKw3kNyLIjz+3D2IzxouxdfUPaMO6hhXhWw6H0zZd+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jv6oG1+i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC81C4CEE4;
-	Thu, 22 May 2025 16:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747930204;
-	bh=HXHBF0h6Tl3AILR6V2N+QJABLI/wgChzJ6iTjiDv5mY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jv6oG1+iZY4Fr1HTAALl12wMdGHJPelpHMt+tUTsAozsZjsuIgmskSIQF86m78SPT
-	 3H5Pmgp6+JVbyltvmj0/7afRIftF9pUVONE4FXe3zxyjwu9gxQ7UmZ9wVjypm7vy4G
-	 6idKRpzh9AhwIkieQ7AuP2bq6lUg3gwwaKS42pNbufTl+1mgOemT+JTLYtmN17kKJs
-	 o0lo5GQaosuSzoNdlY3JTF04PU10lcNxxOh9RmXZ1IqqnfKiY5U+xfy71rKcKbfEZ0
-	 6OMnXlMocyYb+ERdRu8LZ//VHLBa1n0xhgwO/5XJOolP0p72bnf2Ug1Zkkl2sRJW/i
-	 5iC66fbsEw7jg==
-From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device if CONFIG_PCI_PWRCTL is not enabled
-Date: Thu, 22 May 2025 16:10:00 +0000
-Message-ID: <174793004987.85440.5412777644593320433.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250522140326.93869-1-manivannan.sadhasivam@linaro.org>
-References: <20250522140326.93869-1-manivannan.sadhasivam@linaro.org>
+	s=arc-20240116; t=1747930576; c=relaxed/simple;
+	bh=RKlmtOOjNUTn5OKb3TiOdJBECxNOmYVWkOdgZzFFWsk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tpf6MB6nAA39Dz2wP93n6Hd5iQI22xUQrjl/3rqP4rZaSxF8CZtluYQwiUgEayWbwyZ3htAjdbSwSLCBwfuI6DqtVF2M3mNsBKSyKvgkyycvHtM327AIBdW73qhY1tvWH/xbtgDACopp9+vIK5Npfuj7ScuHOHsBm2m8El3SK6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bYYy3qhY; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=2e
+	AsPXra0w35Puc8JmmnT+ZNd7jxaOPWj/+mEfcYg9A=; b=bYYy3qhYKYuhXx9pQL
+	6++Kp9XVN4s1wVoKN6g7RGgz1/xWGyoRTLFExRQ7Uj1AkZUpRpOadWB8n+jU4fD8
+	3N7HFnHKd5bS7zYDgSlETRrDniwy5NF33oZym9rLTswWXRd9g5WeFqNqiLPiVVdB
+	Qd+YKjeuZ49BsR5YfaH84uDnY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3_jamTS9opM81DQ--.53642S2;
+	Fri, 23 May 2025 00:15:35 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	manivannan.sadhasivam@linaro.org
+Cc: ajayagarwal@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] PCI/ASPM: consolidate variable declaration and initialization
+Date: Fri, 23 May 2025 00:15:33 +0800
+Message-Id: <20250522161533.394689-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3_jamTS9opM81DQ--.53642S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZFWDZw1DCF47Wr4kZFy5Jwb_yoWDWFc_ua
+	47Krs2kF40kF4akr1a9a13AasY9ayvqF17Wwn7K3ySka9rCr1UZ3ZY9ry5XayxWw43AFyf
+	ur1qyr4UCry7tjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_yv3UUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhhVo2gvTRkNowAAsp
 
-Hello,
+Merge the declaration and initialization of val into a single statement
+for clarity. This eliminates a redundant assignmentoperation and improves
+code readability while maintaining the same functionality.
 
-> For platforms that do not use pwrctrl framework, the existence of the
-> pwrctrl platform device will prevent the enumeration of the PCI devices due
-> to the devlink dependency. This issue is reported on the systems using the
-> pci-brcmstb.c driver, which doesn't use pwrctrl framework and handles the
-> endpoint supplies on its own.
-> 
-> So, skip creating the pwrctrl platform device if the framework is not
-> enabled. It is only a temporary solution to the issue. The actual fix would
-> be to make pwrctrl framework feature complete (by supporting system PM with
-> WOL) and convert the drivers that already support system PM like
-> pci-brcmstb.c to use it.
-> 
-> [...]
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/pcie/aspm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Applied to pwrctrl, thank you!
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 98b3022802b2..919a05b97647 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -884,10 +884,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ /* Configure the ASPM L1 substates. Caller must disable L1 first. */
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+-	u32 val;
++	u32 val = 0;
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 
+-	val = 0;
+ 	if (state & PCIE_LINK_STATE_L1_1)
+ 		val |= PCI_L1SS_CTL1_ASPM_L1_1;
+ 	if (state & PCIE_LINK_STATE_L1_2)
+-- 
+2.25.1
 
-[1/1] PCI/pwrctrl: Skip creating platform device if CONFIG_PCI_PWRCTL is not enabled
-      https://git.kernel.org/pci/pci/c/afcae53871ce
-
-	Krzysztof
 
