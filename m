@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-28294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE346AC17C3
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:25:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A43AC17C6
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:25:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A8161C04B71
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:25:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65279189E11A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:25:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C134F2D3A63;
-	Thu, 22 May 2025 23:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD1D2D3A7F;
+	Thu, 22 May 2025 23:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJiY9s6O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kucjZAEC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9975C2D323F;
-	Thu, 22 May 2025 23:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D442D3A73;
+	Thu, 22 May 2025 23:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956236; cv=none; b=sUWxBt+PJ1X4Vq3DX2C3lKDk1JaZcXpX0/4a5NJMYXAKO/leutf+ecCIXWuJkWNnd7pFsmureYhMy6+tJNI0T4+jh/o7rybaEBCvT5V/UjGH4Y03mZqVi6VOMwRznhjfOQSHkbxzF7PWuzoofww+/nJbkTKDjrgapWlaNYrrAAE=
+	t=1747956238; cv=none; b=j5i5eCNHUF10lPyfNCq+vsjoZW0+wxYFHjOTgQIRmLgmsLnFPpBstPenZrc9/KMoN8qjk6/KFTDOXXj4/q6baMqypYd+ml4bCO6Pqm8VSdxQBO4fWkwc/DHAEammQxeIj1x1u2q7slVbpuCg/zogAuVpCLeSosLfRD3vM77O/bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956236; c=relaxed/simple;
-	bh=0WV3S2hggEo8UB79jSOkfPluYQMTTXi8KwtvSdvTY18=;
+	s=arc-20240116; t=1747956238; c=relaxed/simple;
+	bh=wyPNuoCqqAp7UpTmuisvayUbc0/MzFt2Tiz1dgzkV9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MKBvChy9k8DcbTFQ0RyGI1o8pS/7m0/V/W3WKgoJ4wcv3eUMg08MHf9d3EEcRDiXNBMmV6MPnmjaXMjxEzcLi9D0busAiSQJVk9GZO0sZiRKCrtT5dWOQtBIVbwNjekZkR1Fgpe3vhEKLGVh5G637wOdEIl4rbSfZ77sq9hF70w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJiY9s6O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC70DC4CEE4;
-	Thu, 22 May 2025 23:23:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=npnH40gK5FUCdItfthm7Te7rJPyjC/Lzx6rR4xClT88bsjKU9KBp44kkCmJt4duwFxmbBb/N00tWapfzCdaqj2we1JKoI3L5Ob9X8uxEjrvjY9IhIcuyAEg2nnA3VBGmGPUCkmW9q5KzYYt6DeE4+0DEMaORg5XSKMMRrvQ9QVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kucjZAEC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56AAFC4CEEF;
+	Thu, 22 May 2025 23:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747956236;
-	bh=0WV3S2hggEo8UB79jSOkfPluYQMTTXi8KwtvSdvTY18=;
+	s=k20201202; t=1747956237;
+	bh=wyPNuoCqqAp7UpTmuisvayUbc0/MzFt2Tiz1dgzkV9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AJiY9s6OH7qIicXuS2Ll0QHIyK6j/AWpefUUSdt4LQ8yVlNr6r7iGmcfjJspy//UT
-	 jgaj7B41td+8JM3OWqEiS6RXnYRM3z3RUfzS0psqsia66YER2qk0nNDZ5OvejnXPUD
-	 IetaDWdOi8KHzJujxUQIjzh5a48tnUttgj3L3a/A4a1eG0609Tp7G1fM1frR+kT3Rs
-	 TH6SOIdq6VWqnjbkOJc4abab2sCHcYURXPg0goPTRyEEXrJ3CIkCB+Txy0aTFkKAMh
-	 KG+4EYdIPQkdKIWsvoNC5oqxexQCSZDyG0/AlE+V/1OVG6XW0Ie8/vrovK6d8w+H2R
-	 KH0Sm/rRbQHcQ==
+	b=kucjZAECQrkhTD+lksVfoYIPUKGQJ/SpFSdfEx/nkTvXcxN9RJ8mEL/Wtdf9gMYFg
+	 2n0N2qdzJsHrZkD0p0JJNyhz2ONMjLp8EVn8GhCpTCGTheFvOovtvJ2m7zoF7JKH0c
+	 N8B7St/PTI1Y5r4nJz2y9H0yeckcv1bkqUWwnyhqjZN/Egx8/sdv/78swOAjN0S+Ed
+	 mCvs9bhARNYLuCRfRWu1ASLv1Rr+l420SLDYtTvBiTSzfxbk9tGGjw1N562bCdFZj7
+	 fpFilhBxxu4PByNRQMACjKVpuNiAVInH8FCLJY2SvnuFKxaqAjWff8QYnH8pdU0sWg
+	 y18zlLbVMms+g==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Jon Pan-Doh <pandoh@google.com>,
@@ -69,9 +69,9 @@ Cc: Jon Pan-Doh <pandoh@google.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: [PATCH v8 07/20] PCI/AER: Move aer_print_source() earlier in file
-Date: Thu, 22 May 2025 18:21:13 -0500
-Message-ID: <20250522232339.1525671-8-helgaas@kernel.org>
+Subject: [PATCH v8 08/20] PCI/AER: Initialize aer_err_info before using it
+Date: Thu, 22 May 2025 18:21:14 -0500
+Message-ID: <20250522232339.1525671-9-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250522232339.1525671-1-helgaas@kernel.org>
 References: <20250522232339.1525671-1-helgaas@kernel.org>
@@ -86,63 +86,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Move aer_print_source() earlier in the file so a future change can use it
-from aer_print_error(), where it's easier to rate limit it.
+Previously the struct aer_err_info "e_info" was allocated on the stack
+without being initialized, so it contained junk except for the fields we
+explicitly set later.
+
+Initialize "e_info" at declaration with a designated initializer list,
+which initializes the other members to zero.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://patch.msgid.link/20250520215047.1350603-8-helgaas@kernel.org
+Link: https://patch.msgid.link/20250520215047.1350603-9-helgaas@kernel.org
 ---
- drivers/pci/pcie/aer.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/pci/pcie/aer.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 8b23ef90345b..c0481550363b 100644
+index c0481550363b..109f5e0ade8a 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -696,6 +696,19 @@ static void __aer_print_error(struct pci_dev *dev,
- 	pci_dev_aer_stats_incr(dev, info);
- }
- 
-+static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
-+			     bool found)
-+{
-+	u16 source = info->id;
-+
-+	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
-+		 info->multi_error_valid ? "Multiple " : "",
-+		 aer_error_severity_string[info->severity],
-+		 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
-+		 PCI_SLOT(source), PCI_FUNC(source),
-+		 found ? "" : " (no details found");
-+}
-+
- void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+@@ -1290,9 +1290,9 @@ static void aer_isr_one_error_type(struct pci_dev *root,
+  * @e_src: pointer to an error source
+  */
+ static void aer_isr_one_error(struct pci_dev *root,
+-		struct aer_err_source *e_src)
++			      struct aer_err_source *e_src)
  {
- 	int layer, agent;
-@@ -733,19 +746,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 			info->severity, info->tlp_header_valid, &info->tlp);
- }
+-	struct aer_err_info e_info;
++	u32 status = e_src->status;
  
--static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
--			     bool found)
--{
--	u16 source = info->id;
+ 	pci_rootport_aer_stats_incr(root, e_src);
+ 
+@@ -1300,30 +1300,25 @@ static void aer_isr_one_error(struct pci_dev *root,
+ 	 * There is a possibility that both correctable error and
+ 	 * uncorrectable error being logged. Report correctable error first.
+ 	 */
+-	if (e_src->status & PCI_ERR_ROOT_COR_RCV) {
+-		e_info.id = ERR_COR_ID(e_src->id);
+-		e_info.severity = AER_CORRECTABLE;
 -
--	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
--		 info->multi_error_valid ? "Multiple " : "",
--		 aer_error_severity_string[info->severity],
--		 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
--		 PCI_SLOT(source), PCI_FUNC(source),
--		 found ? "" : " (no details found");
--}
+-		if (e_src->status & PCI_ERR_ROOT_MULTI_COR_RCV)
+-			e_info.multi_error_valid = 1;
+-		else
+-			e_info.multi_error_valid = 0;
++	if (status & PCI_ERR_ROOT_COR_RCV) {
++		int multi = status & PCI_ERR_ROOT_MULTI_COR_RCV;
++		struct aer_err_info e_info = {
++			.id = ERR_COR_ID(e_src->id),
++			.severity = AER_CORRECTABLE,
++			.multi_error_valid = multi ? 1 : 0,
++		};
+ 
+ 		aer_isr_one_error_type(root, &e_info);
+ 	}
+ 
+-	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+-		e_info.id = ERR_UNCOR_ID(e_src->id);
 -
- #ifdef CONFIG_ACPI_APEI_PCIEAER
- int cper_severity_to_aer(int cper_severity)
- {
+-		if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
+-			e_info.severity = AER_FATAL;
+-		else
+-			e_info.severity = AER_NONFATAL;
+-
+-		if (e_src->status & PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+-			e_info.multi_error_valid = 1;
+-		else
+-			e_info.multi_error_valid = 0;
++	if (status & PCI_ERR_ROOT_UNCOR_RCV) {
++		int fatal = status & PCI_ERR_ROOT_FATAL_RCV;
++		int multi = status & PCI_ERR_ROOT_MULTI_UNCOR_RCV;
++		struct aer_err_info e_info = {
++			.id = ERR_UNCOR_ID(e_src->id),
++			.severity = fatal ? AER_FATAL : AER_NONFATAL,
++			.multi_error_valid = multi ? 1 : 0,
++		};
+ 
+ 		aer_isr_one_error_type(root, &e_info);
+ 	}
 -- 
 2.43.0
 
