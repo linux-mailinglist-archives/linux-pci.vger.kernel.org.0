@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-28297-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28298-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E89CAC17CE
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:26:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73F5AC17D1
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:26:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DA3B1C04C23
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:26:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05A17A44977
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04FE12D4B55;
-	Thu, 22 May 2025 23:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3192D4B78;
+	Thu, 22 May 2025 23:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFx8zZ9g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMMQV3nY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B672D4B53;
-	Thu, 22 May 2025 23:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E9C2D0286;
+	Thu, 22 May 2025 23:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956240; cv=none; b=ux+Th19im8bodfoRGH4o95wyWcib4FTjZVqfb/2CMuvuqcZuofL6JhqeDCBkV4TT2EczAUucRqqNoPbCIuR3rFiuA2ZsGLo5baGrQio0ms2es0ZmL38Y9ycTbxDCkOrcTfoJz3oc4R9T8ZYp1CRI8AxNSq5buczjSIgUYIz7bKo=
+	t=1747956242; cv=none; b=U+Gz3mVtENAqfQDlFblNv2NM3dTcYJ3ATKh6hewM0Fp7+fri7mekzwnyuax+/iJSycRtz6Sv1SkGmIctIfkl7kg5/4Ur8mpSvGkroGTlxNsMyRo37pT8D1vgLTT2nGHWEmAZ8MlMpyoMREVu9QuBl/e4aSMEnQaDYPbOP9nN/UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956240; c=relaxed/simple;
-	bh=vMqIejXWrlK9YxYbwyOyBG/YD596/rgWjQHdO+zCV/U=;
+	s=arc-20240116; t=1747956242; c=relaxed/simple;
+	bh=UNgXV/OmBS6XzWhwhC+kkuFi7ERITkNf7w0qVbubW7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ImGSCpFpZ6TTN8fgOHxfcW17BxVCUMOSZTB+RVaoSUEwlDNDYiiq3iEf77cylq1M1SepMsXqfsGwgKGjXEBri5jvl5N8bnKo4Qm3fzjffl6FfDxWsWLjo0cf+4CBPaYuI7gR+481jPE2xLH2H5VjyINOqgT5TYCmA5ouodQDDHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFx8zZ9g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7012AC4CEE4;
-	Thu, 22 May 2025 23:24:00 +0000 (UTC)
+	 MIME-Version:Content-Type; b=oxycrvRFfPsSgAxA7VWwjxX2fSei7a9ClPldyPya2cko12WJQa6UQml68WHqcNOamOCCxS0hrh8sNZYn8351GqHZkkRtsZRzn5Mu5bjFGIsFBViUHUCK/SoAFzZm3evJXgV1J4eF+prkjutILGQDP9/xn6nZ1xBaqF+J7fRMJy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMMQV3nY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9CBC4CEE4;
+	Thu, 22 May 2025 23:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747956240;
-	bh=vMqIejXWrlK9YxYbwyOyBG/YD596/rgWjQHdO+zCV/U=;
+	s=k20201202; t=1747956242;
+	bh=UNgXV/OmBS6XzWhwhC+kkuFi7ERITkNf7w0qVbubW7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KFx8zZ9gtzz+M+TQIukhFM31oXy1KvmvxRKSfpeVN+zdenOX4OlIJ4FGPbr0pOebp
-	 qkSbyvWrkkq9j/w6e+Qh/BR08bJnyTX1XtdLSB5HXXffRqqMvSIxUDzFy4XFKx1Xi2
-	 OCvRmNktga4eU8xbxTlChXAB9T/8J5OLOY/SR1BvkJN5Cz1FYzTg0vaRAfATp+RKnI
-	 wsh2ubsFLsue9r4++yf80kyMlXgkRKJ80CGbwoMACHcssxDh8nP5eDeFxCYExlX6Va
-	 m0v5RUX0j8fHN8bSkOq9Y5jKLCAoTGFL7Ed1gRn6jHs4qDHemLEWg2jUEmbHH7Id+R
-	 SaPaWumEZxKBw==
+	b=qMMQV3nY413SZHUGA7ZTLZm9sJPK+q0/t8R2Px72ZIoVNrFdQvWPwFFePax/+cRDX
+	 3OQ82iuVCHEa2kN4D7N+C49x+FHq7ZIu50Bvz8B34ywcczBrKa1Vw1BkHls8JaiQ5+
+	 LaMwxBn2R+nLBHsOqvxRjefRybuob14n2c/Sx1+4/GSsH/wYDc2Qm4IPFcPwVx7GZj
+	 wqUA6WwJ2sNVX2YYeYnegmid3kV36QdCqfd8FbIlnfkx5++IjzMh69c6PggeNyXbgr
+	 hLFouW59TEoBpGdufaLlgQAnT2dTAAhfDjx+ye3EImrYOUkwVYpC6++IARxc5ynyFy
+	 gqA83HpvDIWRg==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Jon Pan-Doh <pandoh@google.com>,
@@ -69,9 +69,9 @@ Cc: Jon Pan-Doh <pandoh@google.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: [PATCH v8 10/20] PCI/AER: Update statistics before ratelimiting
-Date: Thu, 22 May 2025 18:21:16 -0500
-Message-ID: <20250522232339.1525671-11-helgaas@kernel.org>
+Subject: [PATCH v8 11/20] PCI/AER: Trace error event before ratelimiting
+Date: Thu, 22 May 2025 18:21:17 -0500
+Message-ID: <20250522232339.1525671-12-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250522232339.1525671-1-helgaas@kernel.org>
 References: <20250522232339.1525671-1-helgaas@kernel.org>
@@ -86,61 +86,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-There are two AER logging entry points:
+As with the AER statistics, we always want to emit trace events, even if
+the actual dmesg logging is rate limited.
 
-  - aer_print_error() is used by DPC (dpc_process_error()) and native AER
-    handling (aer_process_err_devices()).
-
-  - pci_print_aer() is used by GHES (aer_recover_work_func()) and CXL
-    (cxl_handle_rdport_errors())
-
-Both use __aer_print_error() to print the AER error bits.  Previously
-__aer_print_error() also incremented the AER statistics via
-pci_dev_aer_stats_incr().
-
-Call pci_dev_aer_stats_incr() early in the entry points instead of in
-__aer_print_error() so we update the statistics even if the actual printing
-of error bits is rate limited by a future change.
+Call trace_aer_event() immediately after pci_dev_aer_stats_incr() so both
+happen before ratelimiting.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://patch.msgid.link/20250520215047.1350603-11-helgaas@kernel.org
+Link: https://patch.msgid.link/20250520215047.1350603-12-helgaas@kernel.org
 ---
- drivers/pci/pcie/aer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aer.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index dc5f4bebd613..53f460bb7e6c 100644
+index 53f460bb7e6c..636bcd92afa1 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -693,7 +693,6 @@ static void __aer_print_error(struct pci_dev *dev,
- 		aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
- 				info->first_error == i ? " (First)" : "");
- 	}
--	pci_dev_aer_stats_incr(dev, info);
- }
- 
- static void aer_print_source(struct pci_dev *dev, struct aer_err_info *info,
-@@ -715,6 +714,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	int id = pci_dev_id(dev);
+@@ -715,6 +715,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
  	const char *level;
  
-+	pci_dev_aer_stats_incr(dev, info);
-+
+ 	pci_dev_aer_stats_incr(dev, info);
++	trace_aer_event(pci_name(dev), (info->status & ~info->mask),
++			info->severity, info->tlp_header_valid, &info->tlp);
+ 
  	if (!info->status) {
  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
- 			aer_error_severity_string[info->severity]);
-@@ -783,6 +784,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	info.status = status;
+@@ -742,9 +744,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ out:
+ 	if (info->id && info->error_dev_num > 1 && info->id == id)
+ 		pci_err(dev, "  Error of this Agent is reported first\n");
+-
+-	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+-			info->severity, info->tlp_header_valid, &info->tlp);
+ }
+ 
+ #ifdef CONFIG_ACPI_APEI_PCIEAER
+@@ -785,6 +784,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
  	info.mask = mask;
  
-+	pci_dev_aer_stats_incr(dev, &info);
-+
+ 	pci_dev_aer_stats_incr(dev, &info);
++	trace_aer_event(pci_name(dev), (status & ~mask),
++			aer_severity, tlp_header_valid, &aer->header_log);
+ 
  	layer = AER_GET_LAYER_ERROR(aer_severity, status);
  	agent = AER_GET_AGENT(aer_severity, status);
+@@ -800,9 +801,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 
+ 	if (tlp_header_valid)
+ 		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+-
+-	trace_aer_event(pci_name(dev), (status & ~mask),
+-			aer_severity, tlp_header_valid, &aer->header_log);
+ }
+ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
  
 -- 
 2.43.0
