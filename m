@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-28300-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28301-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63584AC17D5
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:26:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89D87AC17D7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 01:27:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B9D318803ED
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:27:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F57E7AECA2
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 23:25:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C482D8DC5;
-	Thu, 22 May 2025 23:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F0AC2D8DDE;
+	Thu, 22 May 2025 23:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrdVwkLv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIKJjdVW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4722D8DC1;
-	Thu, 22 May 2025 23:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93F72D8DDA;
+	Thu, 22 May 2025 23:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956245; cv=none; b=XcEcTmAKxj6IO6zm6ejnkluQDM1Eqwjfsny+WqCtNjf+3a9DXwmZMUDjPBtumKbXktyLad9n+18ogsfry+kADnFMXTLiml276wFF820PMKDAxu34/rre63YpiWt/7cDQV/urDe8tMN1BB7snzukSL2v+o1VamsUs1SsWY0LXMrA=
+	t=1747956246; cv=none; b=J5BjL1Rt0EzMwqKDHkLxPSaqUyke3ExaIaixTqc5BwF35q4a/GY+xXggBvr0xKDCE9AzL85L2nHfrdFZ7PJpqKshgUQgms5BX9AtHOu6JQHBwRn+CUcONDmcWYba8rfXg0BpAagjOPPl03bG5W91OvcSGGvHpnayXe4beZXccF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956245; c=relaxed/simple;
-	bh=k8jIGcmmJTsTorkecrSYGUokEgm0UmcwpovGAJ2cVHg=;
+	s=arc-20240116; t=1747956246; c=relaxed/simple;
+	bh=oYnRbf5eM382uxxio2T4IzMms5Vip3YfxnE2tqRR/yM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I3mSQbujR8cS0eX9t/qO6NqCEFY8eJvawzywsz8qKT3GAOY/nXcS1ItaUElxGDGkX+uwS7L0VEBmpnQDWJsoKvNjAFS1o/TAHT6+g75b7aD0W3bVwZ7ItOOJU0ohwVq8U0HKaK4UnRZa2rMlJNVuBoGkF53r7ZeBQuCi8IhJ+tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrdVwkLv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B38C4CEE4;
-	Thu, 22 May 2025 23:24:05 +0000 (UTC)
+	 MIME-Version:Content-Type; b=HtPJyhRkK/S5zfasVumTsPsvCXu2wCJwvQ02on5fqxCXYjyt7cwALNq8K0591Gx90A5dD+C0eri8mS9dsri0dyDT/sbTqtPkjL1TTJAYy6T3tFIcoQ8Khycwr3cqETeU98trRu75TVgOb4iUs1VRyHrEOZKmucZDORj4n1fHP68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIKJjdVW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8714CC4CEE4;
+	Thu, 22 May 2025 23:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747956245;
-	bh=k8jIGcmmJTsTorkecrSYGUokEgm0UmcwpovGAJ2cVHg=;
+	s=k20201202; t=1747956246;
+	bh=oYnRbf5eM382uxxio2T4IzMms5Vip3YfxnE2tqRR/yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LrdVwkLvYhii/xN9pOwZjCNATgKkqRdCqFLtsUv16mwkDqRif34AdMaRz5XVbI/sj
-	 GRPZnNUcIID4wGX7gOXMfBcvnnsLZLTLiansFM6UErVL+sv1Y/2AGCZNr0Gz9EqTp4
-	 hKZ8jjrzKuwulgz3kYPXvH+vPXqmAAljxckOcYkmXpjoOlA1goEN+3UWjykL0AZJ6e
-	 tS1Lax4V8KnwedNBSgDh5fOpgMayXDzGQNJ+T4/9I1coAOgDxkTY6Vv0lgFNOm0UG2
-	 iHWSeUjaf92KrmmHoNOjD/oV6QiovkalrRvBQNK6UHu1C6eduERdVyek+362kTERzr
-	 9ErhC4Rlvlc4A==
+	b=dIKJjdVW9YlYiyDbOFV4Uyr8YPX5CqE4M/Bnp89E4wVpf9JMpbN9soHDG715gKa0i
+	 FldBSW69STXzjnKNTOQO3EvTFqQQLqO0+RaT9Am7z7dz6t99ZDvCDy79Gi37bGk9OB
+	 6iK+UPaNJ2vqiiEr1EzX4GnhUyi6L3qnKPE6Sp4AIdjG2aUTwIDcQMpHic71MA7Y6u
+	 v7v/kulpxhK8OUV6HagE8yM5WtGCQMTIA6HciftYNUtlqrpRdVo15aFKV4rCiKvVCM
+	 XfDhp+/co791lchVrgqTDx6aWwV5Ce7oY6jp+E3X/y3PWRBkf2DREVjnSGUF4DV6v6
+	 S7PFuuQraInWQ==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Jon Pan-Doh <pandoh@google.com>,
@@ -67,10 +67,11 @@ Cc: Jon Pan-Doh <pandoh@google.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	linux-kernel@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v8 13/20] PCI/ERR: Add printk level to pcie_print_tlp_log()
-Date: Thu, 22 May 2025 18:21:19 -0500
-Message-ID: <20250522232339.1525671-14-helgaas@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [PATCH v8 14/20] PCI/AER: Reduce pci_print_aer() correctable error level to KERN_WARNING
+Date: Thu, 22 May 2025 18:21:20 -0500
+Message-ID: <20250522232339.1525671-15-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250522232339.1525671-1-helgaas@kernel.org>
 References: <20250522232339.1525671-1-helgaas@kernel.org>
@@ -80,103 +81,53 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Karolina Stolarek <karolina.stolarek@oracle.com>
 
-aer_print_error() produces output at a printk level (KERN_ERR/KERN_WARNING/
-etc) that depends on the kind of error, and it calls pcie_print_tlp_log(),
-which previously always produced output at KERN_ERR.
+Some existing logs in pci_print_aer() log with error severity by default.
 
-Add a "level" parameter so aer_print_error() can control the level of the
-pcie_print_tlp_log() output to match.
+Convert them to use KERN_WARNING for correctable errors and KERN_ERR for
+uncorrectable errors.
 
+[bhelgaas: commit log]
+Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://patch.msgid.link/20250520215047.1350603-14-helgaas@kernel.org
 ---
- drivers/pci/pci.h      | 3 ++-
- drivers/pci/pcie/aer.c | 5 +++--
- drivers/pci/pcie/dpc.c | 2 +-
- drivers/pci/pcie/tlp.c | 6 ++++--
- 4 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/pci/pcie/aer.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 705f9ef58acc..1a9bfc708757 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -613,7 +613,8 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- 		      struct pcie_tlp_log *log);
- unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
- void pcie_print_tlp_log(const struct pci_dev *dev,
--			const struct pcie_tlp_log *log, const char *pfx);
-+			const struct pcie_tlp_log *log, const char *level,
-+			const char *pfx);
- #endif	/* CONFIG_PCIEAER */
- 
- #ifdef CONFIG_PCIEPORTBUS
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f80c78846a14..f0936759ba8b 100644
+index f0936759ba8b..16779f281b2f 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -734,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	__aer_print_error(dev, info);
+@@ -787,14 +787,15 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+ 	agent = AER_GET_AGENT(aer_severity, status);
  
- 	if (info->tlp_header_valid)
--		pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
-+		pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
+-	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
++	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
++		   status, mask);
+ 	__aer_print_error(dev, &info);
+-	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+-		aer_error_layer[layer], aer_agent_string[agent]);
++	aer_printk(info.level, dev, "aer_layer=%s, aer_agent=%s\n",
++		   aer_error_layer[layer], aer_agent_string[agent]);
  
- out:
- 	if (info->id && info->error_dev_num > 1 && info->id == id)
-@@ -797,7 +797,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 			aer->uncor_severity);
+ 	if (aer_severity != AER_CORRECTABLE)
+-		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
+-			aer->uncor_severity);
++		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
++			   aer->uncor_severity);
  
  	if (tlp_header_valid)
--		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-+		pcie_print_tlp_log(dev, &aer->header_log, info.level,
-+				   dev_fmt("  "));
- }
- EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
- 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 6c98fabdba57..7ae1590ea1da 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
- 			  dpc_tlp_log_len(pdev),
- 			  pdev->subordinate->flit_mode,
- 			  &tlp_log);
--	pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
-+	pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
- 
- 	if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
- 		goto clear_status;
-diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-index 890d5391d7f5..71f8fc9ea2ed 100644
---- a/drivers/pci/pcie/tlp.c
-+++ b/drivers/pci/pcie/tlp.c
-@@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
-  * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
-  * @dev: PCIe device
-  * @log: TLP Log structure
-+ * @level: Printk log level
-  * @pfx: String prefix
-  *
-  * Prints TLP Header and Prefix Log information held by @log.
-  */
- void pcie_print_tlp_log(const struct pci_dev *dev,
--			const struct pcie_tlp_log *log, const char *pfx)
-+			const struct pcie_tlp_log *log, const char *level,
-+			const char *pfx)
- {
- 	/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode */
- 	char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
-@@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
- 		}
- 	}
- 
--	pci_err(dev, "%sTLP Header%s: %s\n", pfx,
-+	dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
- 		log->flit ? " (Flit)" : "", buf);
- }
+ 		pcie_print_tlp_log(dev, &aer->header_log, info.level,
 -- 
 2.43.0
 
