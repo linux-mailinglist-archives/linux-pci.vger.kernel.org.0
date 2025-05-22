@@ -1,324 +1,224 @@
-Return-Path: <linux-pci+bounces-28246-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28247-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90877AC00B2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 01:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EE1B6AC013D
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 02:14:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A138D1BA1005
-	for <lists+linux-pci@lfdr.de>; Wed, 21 May 2025 23:30:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EA1E1BC46E1
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 00:14:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CA041A9B4C;
-	Wed, 21 May 2025 23:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF3833F7;
+	Thu, 22 May 2025 00:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NrX21wHF"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pTEmUFKZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5A6148827;
-	Wed, 21 May 2025 23:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747870225; cv=fail; b=i2IMTqSFPz+7DlnklbFPm/EKfZgO3k8ZTODJQY8RlBuyh8t7Rx0CterPD67LPPk1f8Tn0sa8tdvKJi9Id25pBwHnqLCV+sA0VYmXsMmq95KnjMwN8+ZCwo16xHfY3iD+8t2Xx7LQAphLrxiZAbOEIs3YmdkC4jQqxWQOpKTJnek=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747870225; c=relaxed/simple;
-	bh=ynrPdkIktm/Qz6zVrAl0F3z2ACwktIlI0MyDRkJA3tc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tpeazpw5uChL0GSLEbIyOFEaZtrpldO35wG2yavYj5VcUepBOZI9RKCbO1UGZOqcZXZLnfIIu/dTZ+n1J7G/A9sY7U8bosFFWrO+4MTEPjrlhEXRhlP7na6QWp8h4hV0skbWKHCobDPCgd++PReCzzkwOPQBbBr/IXeKFv2yvd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NrX21wHF; arc=fail smtp.client-ip=40.107.243.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QXAa1eWkQRB9fN/aRvl/MyIpo2bGyBYTNDN0mqi6Wb/0nQreukfFzMzMVWYJQVUf1ddd86o90PRRw3CEpTW/Z/jl/4sEMGPaiLNq5dDvHLst+kuL5P3d7K33rYJXr7fkPCreLPdD2OIiHgG7vGeYqZoJwTQWuEXrL4ud1qAaii1T0IlTdzRM6UueC1aUKSR+pecP32+c+C+kKGEwJzP4Zx2ar6uuKL4QOjDOfViPEY7d6AoxyghfJm4f3X4Ox5pD5gHYTxM2FPSObkPxvgFhLFUXKg0ZjfJ8gFvjxLoEdOj9OpWH3DDFFkjHYBUba7caFTBOvu2pcuC0yl4CYZsM8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qs+6vatvsUMOSkzffkAbfBGUriIHmMZt9LjOb2N/MU0=;
- b=AGI4L9re24FInm+cDafRAhtOoLMmJKvRLJRpbWHnnpBMjeDAX2uMOvw19baqdFYQ7Bou+mmGi5Ph1QYsZJV3nNHdzRJtlJp+dbXGHbO8w+8r4zaxi4pl21mzAmGmx10fG4HOI+YaLdgLceYMbQ/E9nTqfN5wkVtNGN+y7jydS13y9BsoYTBP5ea+mY2TX/49AszOZteCXsMx6ElhK2Pjsj69ecMNDBVGyh61AAOGvjVkDZNohQ8tQ4PwwZXmYfO8+9a7D81WgZp5Y+v/KHNBQvB23/8G5Kvyd0pUN1KDLQIhpWQRYLoMP2kLOJi+8miYq4OGzFNKGkn45G4AFMxZcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qs+6vatvsUMOSkzffkAbfBGUriIHmMZt9LjOb2N/MU0=;
- b=NrX21wHFV27PWMpAnN797+2DrUEuOwIAjvqHsqKZlTn1YdBuGE33a1+fobUSaKDqvV6nBnX2YekjoKjRzFxlAntv7GeSb/pt1W9HLxk1dTVpNLA6v/gyZOFnkUr3sYrX8ptwoCjbNs1xwCny0GvpNqIpJuYBEgHRg8FSu+XeN68=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- SA1PR12MB9001.namprd12.prod.outlook.com (2603:10b6:806:387::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.31; Wed, 21 May 2025 23:30:14 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%7]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 23:30:14 +0000
-Message-ID: <1ee2446e-0b8a-4255-a648-30d2019b591f@amd.com>
-Date: Wed, 21 May 2025 18:30:11 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/16] cxl/aer: AER service driver forwards CXL error
- to CXL driver
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
- <20250327014717.2988633-5-terry.bowman@amd.com>
- <20250423160443.00006ee0@huawei.com>
- <e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
- <20250425141849.00003c92@huawei.com>
- <8042c08a-42f0-49d5-b619-26bfc8e6f853@amd.com>
- <20250520120446.000022b2@huawei.com>
- <46c962de-a691-4e67-9af6-5765225633ae@amd.com>
- <20250521193412.000067b3@huawei.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20250521193412.000067b3@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR03CA0025.namprd03.prod.outlook.com
- (2603:10b6:806:20::30) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68C2914
+	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 00:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747872874; cv=none; b=rElPOKk4WNzsGJ0L1ii1q3vmN2aRc59aA/CDdLghBCmEiW3QLOo7yLFtfSS3Jja7lLl48NEymyIcHSdh71e1FwM+YEexwlY9IiYwgF/cALI6uCyaYgnbTpXYW3eNfoRD3BpjTGqAGILT8NtHM3eLNgqcZ8pGkpV/8QDi73S34XU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747872874; c=relaxed/simple;
+	bh=edI79B8W9Irv6D1Or/1dXWMUP7gTvkZpR+yPWqgr8yw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dztaj1t6a9rPzdoOLBP3XjuT0a8s07bvfSCpDI1oo4EB3rTYZYrw8Loa+lerNsH/Ww75zSaoDA4bP3DxdJyS47o/a6LUg8R6NrN3IzWOXSCbdzq1iOQ6mF8aZEMNAyL8PX4ZBUOiSvcx0OPTo9u52LcOVQd97RpeMZNPptbP0JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pTEmUFKZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LI4dVg006603
+	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 00:14:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=U6xp5AJ7VB4CMULMF+Ti29
+	p5yTPqf1Xlc13Nwd3PO6s=; b=pTEmUFKZZhGpFmKQIspbFQtX0awNsuG0P54Ays
+	RToo8idkHFxb+ZdB98waPAkSvUxPgKYTWTZMBroLxu99wOG4Rqh0vjP4vML4o6FC
+	v2XgRey2i+hLuaO+sC6yZotcNzsV7P+IE83RsN5z8jgBNOrbLoj5fisWsxB8i7M2
+	TYgG8CRYmQcA4Bg88IMb73OYmd/g6nmW2eXnlBaElSwJQup3wzMBGRhmlXOzGBQP
+	ZLgSmb3M5jYqr/Ywv0/qPaFH7/CpQhifMCjMqitH7J9LJCXxNmvD5/pQjOtuaQsY
+	qxHY6HdzlJXmzQxwj4O9b2lESbfRzW0Q+9QPfKTm5itLUdFg==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0mkbj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 00:14:30 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-30ebf91d150so5665455a91.0
+        for <linux-pci@vger.kernel.org>; Wed, 21 May 2025 17:14:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747872870; x=1748477670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U6xp5AJ7VB4CMULMF+Ti29p5yTPqf1Xlc13Nwd3PO6s=;
+        b=jTcS9SmycdbhfgNFWQA83MOpzlaArL9Vb2CSAPY4nbrGUDBIjK050nq7AFAKblfDJ7
+         DAjf51ysI7p5t9LMNXJRzKcOGgBBkqlz0vnmwrINowZ09W8qPhm6u+xTw1Uiw9GjklhX
+         Fg32OoyvreiLHdc+Fkohn67ri/8p+JbEgfHxPatYdTwksr13qk4rLq8NsMAhe0wQJcGo
+         YXsWHGOTq4oazfDBg2jzKdfpdamWWPDQezTeFovmYLXOl2MjgclRB8MkG32ji8tw0YOZ
+         TbEjnbg05M8/KT589Ywh8BMtiRLpcMpNeRLUTINv0pSeqMg93AzO6jhfXXvzhUgJO7q7
+         J2Og==
+X-Gm-Message-State: AOJu0Yww+Ws9AgUQidctVRuXSetsVhXAte+ACM6wsMmsk/gsmtP+xFkc
+	BHHrhE8TDsip/OYbu/7SINVuEj3ybxqC8+8zPqtmtD8cv345kqQVDVc38aGsu8af5oU7h/OfFPV
+	jdCgVlDcX12cHQEdR2LPEGFvCe4NTXfjbFvNl0EEMXD8AxdrK/FipFuaKh+9f2k1eFPxW+14=
+X-Gm-Gg: ASbGncu0K0G21UefUtzT54CG+I7EJLPwEKGPH8dxEAIMUZ6tWkhRASSIxSoDp2lSHrs
+	7s+XlwNa55sqWHgjlGaa6uxTtPizXB7xdBcpeWMXbsK7kw+wduc+yCcSYQMHmTBT0623avJ5Oe+
+	bQhOacOD+ZKmka76f1+9GJ0uKGA/nwP6tWZWO5J0D6/9qg2XN4/8o2+fmuhP5i2H+4gdvZlgnYd
+	kcBuZfeZ4P1Uu9rE/KZLN6Xt7O2cYJjgGxd4+Jv0ndBwzpObMAeN64YAKmEATZFoeex6iBqClII
+	6fSJbOaVKA7JCh1UMdlqTE9FttTa6nG7kPsYnCrsfcjzWwAsOJXOIZEgooXaLQ==
+X-Received: by 2002:a17:90b:2d83:b0:30e:9349:2da4 with SMTP id 98e67ed59e1d1-30e934931cbmr39908458a91.12.1747872869552;
+        Wed, 21 May 2025 17:14:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEsweHC9ULxBh7eoovmC9696yOI/sWLnAKPkFynD6DNFZsIc6w2B5xdRvsEb7lreF2Ds+Dspg==
+X-Received: by 2002:a17:90b:2d83:b0:30e:9349:2da4 with SMTP id 98e67ed59e1d1-30e934931cbmr39908396a91.12.1747872869055;
+        Wed, 21 May 2025 17:14:29 -0700 (PDT)
+Received: from hu-mrana-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f3651611bsm4617101a91.49.2025.05.21.17.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 17:14:28 -0700 (PDT)
+From: Mayank Rana <mayank.rana@oss.qualcomm.com>
+To: linux-pci@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, andersson@kernel.org,
+        manivannan.sadhasivam@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com,
+        quic_nkela@quicinc.com, quic_shazhuss@quicinc.com,
+        quic_msarkar@quicinc.com, quic_nitegupt@quicinc.com,
+        Mayank Rana <mayank.rana@oss.qualcomm.com>
+Subject: [PATCH v4 0/4] Add Qualcomm SA8255p based firmware managed PCIe root complex
+Date: Wed, 21 May 2025 17:14:21 -0700
+Message-Id: <20250522001425.1506240-1-mayank.rana@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA1PR12MB9001:EE_
-X-MS-Office365-Filtering-Correlation-Id: f03de56e-b3fb-4e4a-0658-08dd98bf701e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ekdRTGZsc0tGeWJ1L3VoV09hbGFCZTFnWUFmcncyOS9hUUIwNjgyTTNwZi9t?=
- =?utf-8?B?TU9kTmIzaC9VaE9nTHgzZzNNd0xMTUlETVdaZ2hEQVN5anpNaDBmK2ZQa2l0?=
- =?utf-8?B?Y3pzZWZGemFRVjVCT0d6UHZEMzlmbE9ZVm5kamlFREpxTG11Z3BvbnBoN3FS?=
- =?utf-8?B?dDVxNVczdmJEaS9IdWdzSG1Wc3pFU2FCamg1bjZoYlp5SlpyYW8xQ0lhNmFS?=
- =?utf-8?B?di9LTWNYUDlnUlFhRXBibnFZd1gyU3llaTQrRGY2Y3EvMEV3Z0t4RDhqcDYy?=
- =?utf-8?B?UGcvOWIrUW1RcjF0RVZ3VHRJbEx0VEpHWjVqclNac3JkWldSM0xvcG1ybGhF?=
- =?utf-8?B?VllFd1pkdHJCb2JXc2xCNy9qZElJOVloWWZURHB4SzB6MEI2Y0xMS0xMaU9u?=
- =?utf-8?B?a0U2TUZjcFJpbGNLMmoxY09JZGJXVGFWUGRtQXRXZTJGcHk4TFNUMEtwc25X?=
- =?utf-8?B?LzFIa2FoTk1Lanl6dHRzb1gyVDlTMGszZDRLWFltWkJqN2piWkkvZmUyWnNv?=
- =?utf-8?B?aDh0dXNjYlVINEVDbjZIZ3V2SGhUVXBRWHYzRXk5S3VyZHNjeWt4ME5BRnBx?=
- =?utf-8?B?endDWHhaNEpCNkgveGtqU0ZDdlA1R3hFS0pCU3pmWDJDMEtlNzFFWW42MnNj?=
- =?utf-8?B?SkhEQXFZY212UC8yZUhBUjVDZzlBYlZCZno1eEdEajhVY0o4azUyMUo4ZXpw?=
- =?utf-8?B?R2FYbjRNZ01EZmZ4OStNbjdWaEZ0MTlBUWx2NWZmU2N6R2JDWWZpSDN2WlVr?=
- =?utf-8?B?MGRtM1N5TGNOeXBPNmI5OVE5SUJYVmVtRTlyZTJBazFSRGl1ZDcrbFZvRldk?=
- =?utf-8?B?ei9URkRka21IK3ozQzkwaEN1NVBoVVZ6eFd1ZzVjYWZjb3lYVG55UEpIbE53?=
- =?utf-8?B?UitjbWdMR0s1d3pKT3RNTTQ1aVRxSkV0WjIwUmx6TDY0eWZ6R2l1U3c0cXE0?=
- =?utf-8?B?czJWMzNhMXhPQjVMVDVqZDV3NFdpakQ4V3lIa1V3Z1pCUXMwdjRORGhEcjVr?=
- =?utf-8?B?cVNUYTB2MjBlUWpXOHkzL0NsQ3JQMUZrZ3FFVXM3dyt0SVhwcEJtWFRTRWhl?=
- =?utf-8?B?L3FyK1hSa09GK1c2VFZ4S3p2RUpTWGxIUVhEd014bTNJUnEySFdYR2JOb0cv?=
- =?utf-8?B?WkFCMjN2QWVwWEN1c2RXQjd5TGQyQzlhUzhJWDRuZjZ2cC9nb3djajJwbXU1?=
- =?utf-8?B?RVBXYnVGaGFRdmowWEY3K3pQWnNUOGZQRVNFbVc5UDlxTkhTRVJUL1ArVVhn?=
- =?utf-8?B?MGVHWXdOalR4ZmRXcUl2cGcycGhPR2JtVTB6Qno0WWY1SkorVEU4V0F1d0cy?=
- =?utf-8?B?VGsrYjhyeGovMTQ2THpGc2ZObEpjaXN3MERmL0ZsaS94c2NFQmZBNzNIM0p0?=
- =?utf-8?B?Nnl0R1U5dWlNN3A3UXNudEdnZ0JaRlR4c0lEMkYra1VOWWNybGZ6Y0h2NEtJ?=
- =?utf-8?B?TTQ5UksrTFI1b0ZCelpQM3VBMDE5WHFiVjA4Y1hkV29yWGNTakR5ajBndVJP?=
- =?utf-8?B?WWd6eEp6U3ZMRlZzdlgxaFBETzdkZWVTdFhYa1lUUGlhT3loYTRpZnNac214?=
- =?utf-8?B?OFcrYklpRmh0VkRHY0g2YjV1WnVJc1J4bnMrdmRkeG50MHFMckJpWlFqL3c3?=
- =?utf-8?B?K3daVmxHNXVxaEYvbkRqdnk1NmFsRFBXcFgxYy8xVUZSTytKb2syYWsveWU3?=
- =?utf-8?B?bkdhWXhMcUUvYjNUanZid0IzeFFoVXVmWkdPVmJaemEzV3dsdEtMOHRRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MTZpbnFkekd1aXdSbXpmT1g4LzRUcnM3MU44TVFnVCtEbEM0R2IwSVc5UHFa?=
- =?utf-8?B?MFA1MVZVNXJCOWErU0JRaDBzT2kzbGl2K1VKNXZTREJrMzFjcjZRRzZ3T1NW?=
- =?utf-8?B?RktFUk5IRHdsY0Vuclo4b3ZrWUtXZjlBcVBaOXNCTkl6bkhCNVVEbmk5N05H?=
- =?utf-8?B?SWRGblhPV3F1VTR4RCs4aHViY2Y0QkRGM1BTODkzZkdFNDR2VVY3Tzd1cEth?=
- =?utf-8?B?NzlJRzlJMUlQa2gzbm1qS2RZY25yZWIwNnh6WDlMbEQ5MUlEYVdUb0FWbUwx?=
- =?utf-8?B?SGUvY3FMREhSM1RtVkVzTXhtb05kK2tsczgzSlEreWkzR2pjMGl3Ym94Z3ZB?=
- =?utf-8?B?b0xoWHFPRUkzcTc0b3pnSjJWSXlmQmVJdzFsMVllYkVIZWZvcUR1NHBKQ3FN?=
- =?utf-8?B?b1VzQnl0cXZ1Nm1TWlVFZVQ3Rk5uWGUxTmdsK2VNZzJQeDRFR3padDZqalh5?=
- =?utf-8?B?YU1WTDUrUmk2dHNySUZIeUs3djZ5MUxzZDYvZWJ6enJDeXMyWHEyRklGdWNy?=
- =?utf-8?B?T2YwMGNyOCtNcnZCYTJtWGxNTlIyRzJrMjA2MGY5MkRFTHlwLzkyeFd3bHVl?=
- =?utf-8?B?TEJjdVl6ZkxKeUduQ3hSNExPUW5FM0pkUm1STXl0amxTRG1FNWZNRG4zOUta?=
- =?utf-8?B?N0JOdldhK0Z1dytsMUpQNGhHVkhHbjRZTEtFNml0cVdCRUNIaGdZYTZpVFM3?=
- =?utf-8?B?VTU1dmw1eU1EaVZ4Q2w5WTdReHF3YW1TWjNuN3huUTdPSGtxSk1mOTdFYUla?=
- =?utf-8?B?SWRHWmZVTyttNmlkOEtld01YbzV6K09pMXlLbHR1ZVgrZ2tLUFZZMTRVTlhI?=
- =?utf-8?B?WU5FcUg4b1pjQXB2UlBSa2xCbDlXaURSYmEvVVNEOEZaOGttNXhiTTA0WTVh?=
- =?utf-8?B?MXJwek4zbG1LOFZHcVVCdVVPVTM2UWhIai9uOUFQRHUxMTJmOEZSWHV5MTFO?=
- =?utf-8?B?R0VyRG1MODhwMU1XaWNmL2MrTGNxQkN6b3Z4bXlLOTlMeUVTYWUzbFhhbFEy?=
- =?utf-8?B?Q0h0T1dZdTJ0NG01N3BEbTVGeFpsUGpMYmxnVWNjRGlBc2h3N2pHVk5iaGJ4?=
- =?utf-8?B?NG5HZitwbFRrWkZNVHVaaGNYSU1qbEJmQjltK2svbEJpS1k2Y2JvSW8xTFhi?=
- =?utf-8?B?TnRzQXcrU2VnZGRQNDdnNEtxWi9PVW1NSkp3K1NoZnRldWt0dHZhakJjd0Iz?=
- =?utf-8?B?cWtNQVBrbU9sbmJSTlFSSStGMW4wUXJYajFzTUZoNU1EWkR2REsyM3hlWWhr?=
- =?utf-8?B?K2FqWGFYYjA2aTQwZ0dvNkNnVlZCcDA3YnFYMWExeElnQmdpdGUraTFBVUM0?=
- =?utf-8?B?N0NBNlRJd0d6NDcvemNKT2hlK2w0OHhZRTF2akVVcXdSZWIzM1gvMlJsbFd0?=
- =?utf-8?B?YmhZdGVvM0tQaTUxUk9BWVlvemJSSVl2L20zaFQwYkt3U0VWaThkWE03Q1RP?=
- =?utf-8?B?aHF0b1dKL3YrUGp2NWhjUlQ0V0Q5SjBqZ0I0eHJPeVQ2WlpxUFBSQ0NFV3pF?=
- =?utf-8?B?cEd2ekR6TExJMlM0aldhOHVCZjE2RTJhaXFxMGNFU2lBVDRvSGc5cERHZVZa?=
- =?utf-8?B?a3pIcmNsMmd5d1BNdTJ3bkJscXMzcmd2ZkJMV3pVNTNXU3pETW9JR0Qvc3Q3?=
- =?utf-8?B?ZlJnS292Q2kzdm4yc2dGckdrV0o3TmpCWHZ3S2R1Z2ZIRkxiOU1VbkFXck9G?=
- =?utf-8?B?R1lRK0FQV2tSYzFrajJ2bDdsN0ZUS1g1WEhUdkluV2liVFg0cHFrTWRtTW4v?=
- =?utf-8?B?OEJ1T3ZBa1RvL3M0TmRWa3NuSVdVaTM2NjdZcWdtM1p3RmtXR2ZnSnMvYzhC?=
- =?utf-8?B?anpUSHdTbjc4N3pDdG9leWhDYlNiYS9DZzVZLzhpSlhzZFIxOFJtZlQwZmgz?=
- =?utf-8?B?TFRxTFJ2T2NBTDdiaVpvdXJDK1d6L25YZ1dMSWE2N2RpdDM5NmdvZVlOajdT?=
- =?utf-8?B?dytFVXI4YjlldVNrT1ZUbnhIdVRwRmdnTk1xN3ZpQU42dVM2UUhCU0ROTjIy?=
- =?utf-8?B?Sys5bTV5UU1hZlR3aWRacWJ3Vi9EbjFaSU1wMFk2UVdpTUUyb3RhRnVQbDFi?=
- =?utf-8?B?bnU2TXNCT25pM0tEVGRGb0xPOFZsWlFEOCtVVG9BN0YrMEtUTURMaUJMcXZa?=
- =?utf-8?Q?Bj6BVfsSfp80voQ5Hw4HZXz79?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f03de56e-b3fb-4e4a-0658-08dd98bf701e
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 23:30:14.5763
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8G7o1hqdgONiGJO9PBc0ye7ZBv0n14Wi8uoWl5kHcSRtFC11FLLmCf5ceSVOzgq7NL37ZEc5jEkYnlC1FowG2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: AkmRdhdqEglCHwKlY9CLZ2Nvc8Fc15Tg
+X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=682e6c66 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=GGYVUzGw-MCdzQFq8EIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: AkmRdhdqEglCHwKlY9CLZ2Nvc8Fc15Tg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDAwMCBTYWx0ZWRfX++tYTlJiXi6v
+ My+moK7Tn53XJgboDjN23QoClocz5Nd6UBcljvmgMVU+vgZFnQ1aNOBRWyqUYXB/kgMbcZV4JSn
+ fira8yoCphbECWeDLhKEQoDMMajnxMSH1W9loG2l1Ee/X1IzRHa4XkAEqCPS52AUdTCJ45YhN/U
+ bqBZIiTBer8VPC+2IjofIio7VEY81CMbWXGYCEoxoBDpfX21/UkjDYFZQ5UNX1bPKlDjtdtNlD1
+ BB3LEh8M7+G+A0Ac3DcxghcNaqg4kR0EMz6EWOGQumCG5BI/cmx/TQ2c9elfIo3zZ/7zcJ61afP
+ JpMSBbzG8N6J7SraDllMhDqfnrWEl+/vNlHO03Q0yMriebbzIeHNFS/743fSrmKDlblWgQu5jo+
+ EIQOciKH8//M0i4yxqbLy2H52Rl5AKFXaABL9Q8T9BUW9jjN9SIGFK4jc+Fge1m4IdLnQOZX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_07,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1011 mlxlogscore=997 suspectscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220000
 
-On 5/21/2025 1:34 PM, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 08:21:18 -0500
-> "Bowman, Terry" <terry.bowman@amd.com> wrote:
-> 
->> On 5/20/2025 6:04 AM, Jonathan Cameron wrote:
->>> On Thu, 15 May 2025 16:52:15 -0500
->>> "Bowman, Terry" <terry.bowman@amd.com> wrote:
->>>  
->>>> On 4/25/2025 8:18 AM, Jonathan Cameron wrote:  
->>>>> On Thu, 24 Apr 2025 09:17:45 -0500
->>>>> "Bowman, Terry" <terry.bowman@amd.com> wrote:
->>>>>    
->>>>>> On 4/23/2025 10:04 AM, Jonathan Cameron wrote:    
->>>>>>> On Wed, 26 Mar 2025 20:47:05 -0500
->>>>>>> Terry Bowman <terry.bowman@amd.com> wrote:
->>>>>>>      
->>>>>>>> The AER service driver includes a CXL-specific kfifo, intended to forward
->>>>>>>> CXL errors to the CXL driver. However, the forwarding functionality is
->>>>>>>> currently unimplemented. Update the AER driver to enable error forwarding
->>>>>>>> to the CXL driver.
->>>>>>>>
->>>>>>>> Modify the AER service driver's handle_error_source(), which is called from
->>>>>>>> process_aer_err_devices(), to distinguish between PCIe and CXL errors.
->>>>>>>>
->>>>>>>> Rename and update is_internal_error() to is_cxl_error(). Ensuring it
->>>>>>>> checks both the 'struct aer_info::is_cxl' flag and the AER internal error
->>>>>>>> masks.
->>>>>>>>
->>>>>>>> If the error is a standard PCIe error then continue calling pcie_aer_handle_error()
->>>>>>>> as done in the current AER driver.
->>>>>>>>
->>>>>>>> If the error is a CXL-related error then forward it to the CXL driver for
->>>>>>>> handling using the kfifo mechanism.
->>>>>>>>
->>>>>>>> Introduce a new function forward_cxl_error(), which constructs a CXL
->>>>>>>> protocol error context using cxl_create_prot_err_info(). This context is
->>>>>>>> then passed to the CXL driver via kfifo using a 'struct work_struct'.
->>>>>>>>
->>>>>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>      
->>>>>>> Hi Terry,
->>>>>>>
->>>>>>> Finally got back to this.  I'm not following how some of the reference
->>>>>>> counting in here is working.  It might be fine but there is a lot
->>>>>>> taking then dropping device references - some of which are taken again later.
->>>>>>>      
->>>>>>>> @@ -1082,10 +1094,44 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
->>>>>>>>  	pci_info(rcec, "CXL: Internal errors unmasked");
->>>>>>>>  }
->>>>>>>>  
->>>>>>>> +static void forward_cxl_error(struct pci_dev *_pdev, struct aer_err_info *info)
->>>>>>>> +{
->>>>>>>> +	int severity = info->severity;      
->>>>>>> So far this variable isn't really justified.  Maybe it makes sense later in the
->>>>>>> series?      
->>>>>> This is used below in call to cxl_create_prot_err_info().    
->>>>> Sure, but why not just do
->>>>>
->>>>> if (cxl_create_prot_error_info(pdev, info->severity, &wd.err_info)) {
->>>>>
->>>>> There isn't anything modifying info->severity in between so that local
->>>>> variable is just padding out the code to no real benefit.
->>>>>
->>>>>    
->>>>>>>> +		pci_err(pdev, "Failed to create CXL protocol error information");
->>>>>>>> +		return;
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>> +	struct device *cxl_dev __free(put_device) = get_device(err_info->dev);      
->>>>>>> Also this one.  A reference was acquired and dropped in cxl_create_prot_err_info()
->>>>>>> followed by retaking it here.  How do we know it is still about by this call
->>>>>>> and once we pull it off the kfifo later?      
->>>>>> Yes, this is a problem I realized after sending the series.
->>>>>>
->>>>>> The device reference incr could be changed for all the devices to the non-cleanup
->>>>>> variety. Then would add the reference incr in the caller after calling cxl_create_prot_err_info().
->>>>>> I need to look at the other calls to to cxl_create_prot_err_info() as well.
->>>>>>
->>>>>> In addition, I think we should consider adding the CXL RAS status into the struct cxl_prot_err_info.
->>>>>> This would eliminate the need for further accesses to the CXL device after being dequeued from the
->>>>>> fifo. Thoughts?    
->>>>> That sounds like a reasonable solution to me.
->>>>>
->>>>> Jonathan    
->>>> Hi Jonathan,  
->>> Hi Terry,
->>>
->>> Sorry for delay - travel etc...
->>>  
->>>> Is it sufficient to rely on correctly implemented reference counting implementation instead
->>>> of caching the RAS status I mentioned earlier?
->>>>
->>>> I have the next revision coded to 'get' the CXL erring device's reference count in the AER
->>>> driver before enqueuing in the kfifo and then added a reference count 'put' in the CXL driver
->>>> after dequeuing and handling/logging. This is an alternative to what I mentioned earlier reading
->>>> the RAS status and caching it. One more question: is it OK to implement the get and put (of
->>>> the same object) in different drivers?  
->>> It's definitely unusual.  If there is anything similar to point at I'd be happier than
->>> this 'innovation' showing up here first. 
->>>  
->>>> If we need to read and cache the RAS status before the kfifo enqueue there will be some other
->>>> details to work through.  
->>> This still smells like the cleaner solution to me, but depends on those details..
->>>
->>> Jonathan  
->>
->> In this case I believe we will need to move the CE handling (RAS status reading and clearing) before
->> the kfifo enqueue. I think this is necessary because CXL errors may continue to be received and we
->> don't want their status's combined when reading or clearing. I can refactor cxl_handle_ras()/
->> cxl_handle_cor_ras() to return the RAS status value and remove the trace logging (to instead be
->> called after kfifo dequeue).
->>
->> This leaves the UCE case. It's worth mentioning the UCE flow is different than the the CE case
->> because it uses the top-bottom traversal starting at the erring device. Correct me if I'm wrong
->> this would be handled before the kfifo as well. The handling and logging in the UCE case are
->> baked together. The UCE flow would therefore need to include the trace logging during handling.
->>
->> Another flow is the PCI EP errors. The PCIe EP CE and UCE handlers remain and can call the
->> the refactored cxl_handle_ras()/cxl_handle_cor_ras() and then trace log afterwards. This is no
->> issue.
->>
->> This leaves only CE trace logging to be called after the kfifo dequeue. This is what doesn't
->> feel right and wanted to draw attention to.
->>
->> All this to say: very little work will be done after the kfifo dequeue. Most of the work in
->> the kfifo implementation would be before the kfifo enqueuing in the CXL create_prot_error_info()
->> callback. I am concerned the balance of work done before and after the kfifo enqueue/dequeue
->> will be very asymmetric with little value provided from the kfifo.
->>
-> As per the discord chat - if you look up the device again from BDF or similar and get this
-> info once you have right locks post kfifo all should be fine as any race will be easy
-> to resolve by doing nothing if the driver has gone away.
-> 
-> Jonathan
-> 
->> -Terry
->>
-> 
+Based on received feedback, this patch series adds support with existing
+Linux qcom-pcie.c driver to get PCIe host root complex functionality on
+Qualcomm SA8255P auto platform.
 
-Ok. I understand. Thanks.
+1. Interface to allow requesting firmware to manage system resources and
+performing PCIe Link up (devicetree binding in terms of power domain and
+runtime PM APIs is used in driver)
 
--Terry
+2. SA8255P is using Synopsys Designware PCIe controller which supports MSI
+controller. Using existing MSI controller based functionality by exporting
+important pcie dwc core driver based MSI APIs, and using those from
+pcie-qcom.c driver.
+
+Below architecture is used on Qualcomm SA8255P auto platform to get ECAM
+compliant PCIe controller based functionality. Here firmware VM based PCIe
+driver takes care of resource management and performing PCIe link related
+handling (D0 and D3cold). Linux pcie-qcom.c driver uses power domain to
+request firmware VM to perform these operations using SCMI interface.
+--------------------
+
+
+                                   ┌────────────────────────┐                                               
+                                   │                        │                                               
+  ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐       
+  │     Firmware VM      │         │                        │            │         Linux VM         │       
+  │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │       
+  │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE Qcom    │    │       
+  │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │    driver      │    │       
+  │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │       
+  │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │       
+  │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │       
+  │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │       
+  │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │       
+  │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │       
+  │               │  │   │         │                        │            │       │          │       │       
+  └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘       
+                  │  │             │                        │                    │          │               
+                  │  │             └────────────────────────┘                    │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │IRQ       │HVC            
+              IRQ │  │HVC                                                        │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
+│                                                                                                          │
+│                                                                                                          │
+│                                      HYPERVISOR                                                          │
+│                                                                                                          │
+│                                                                                                          │
+│                                                                                                          │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                                                                                            
+  ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐        
+  │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │        
+  │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │        
+  └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘        
+-----------------
+Changes in v4:
+- Addressed provided review comments from reviewers
+Link to v3: https://lore.kernel.org/lkml/20241106221341.2218416-1-quic_mrana@quicinc.com/
+
+Changes in v3:
+- Drop usage of PCIE host generic driver usage, and splitting of MSI functionality
+- Modified existing pcie-qcom.c driver to add support for getting ECAM compliant and firmware managed
+PCIe root complex functionality
+Link to v2: https://lore.kernel.org/linux-arm-kernel/925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com/T/
+
+Changes in v2:
+- Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
+- Add power domain based functionality within existing ECAM driver
+Link to v1: https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/                                                                                                      
+
+Tested:
+- Validated NVME functionality with PCIe1 on SA8255P-RIDE platform
+
+Mayank Rana (4):
+  PCI: dwc: Export dwc MSI controller related APIs
+  PCI: host-generic: Rename and export gen_pci_init() API to allow ECAM
+    creation
+  dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM compliant PCIe root
+    complex
+  PCI: qcom: Add Qualcomm SA8255p based PCIe root complex functionality
+
+ .../bindings/pci/qcom,pcie-sa8255p.yaml       | 103 ++++++++++++++++
+ drivers/pci/controller/dwc/Kconfig            |   1 +
+ .../pci/controller/dwc/pcie-designware-host.c |  38 +++---
+ drivers/pci/controller/dwc/pcie-designware.h  |  14 +++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 114 ++++++++++++++++--
+ drivers/pci/controller/pci-host-common.c      |   5 +-
+ include/linux/pci-ecam.h                      |   2 +
+ 7 files changed, 248 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
+
+-- 
+2.25.1
+
 
