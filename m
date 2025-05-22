@@ -1,322 +1,259 @@
-Return-Path: <linux-pci+bounces-28263-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28264-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD53AC08E5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 11:41:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03D1DAC08E8
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 11:42:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 479274A76DF
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 09:41:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F03C188E3C7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 09:42:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D4D284691;
-	Thu, 22 May 2025 09:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37031264610;
+	Thu, 22 May 2025 09:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YjWwZuC9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIFUBnD2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396BF17BB6;
-	Thu, 22 May 2025 09:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6066D17BB6
+	for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 09:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747906908; cv=none; b=CY50CRgIdErS/uI7eyukaFuIJMsMYDLSlB361zebq+rae4iomOoOkpWgX4GHZzSEpCMPlGDNrqFJEjf1kC5rZA3Xh+uDd/izHlmuDCQjBfiPI2jkq66qJPSrRbyUEQ+sPVdt6U7H/40ZobpWT+iNoOzfBeA2ZMI4TU2LZL1bTx4=
+	t=1747906926; cv=none; b=F0iG1VxG6BNon8FPaI59D/IB90+oB6+xAxThmc/OdTjiYOw5OG1WQtoLW864OKSZ4DoWZ3JiEUo/KGuBSlJhp/Y5cKD+pvCRJ2BdDElHMF/NX7KFQwDWm+abaEwUY9N4G6fKso0krX73dRv31W7O4G2sKWedV9Y5Qk6JqnuQq8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747906908; c=relaxed/simple;
-	bh=f2jUJ1j8NtmYUowY699rjzNoYmDolsYrdjZChArE8qQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XZBgv9d8+zW+byBjlg0Nf/AgZTt9zODCizgTOeMBZ1jbLHtM+RGmhfP8ZzjuJ90lLQRrXgsb+HcZeMv4j3uwd1C/A/ItOnEhpkoCyDDSaFuszlqmE0fUwdqdU5EifoJQFcAsXvyUqX0uUnLblUQEIcQQZw3/JHPnEvqvr9Ic0k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YjWwZuC9; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747906895; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=SYVo3gNekqV9B2COH5LnMpPWBh5kyqXGT2+V3ar74LE=;
-	b=YjWwZuC9Tae2Pq3DqOniKOek/TE2i7BhpmtAiOLzAJR4zCn7RoHQz8ymyN/rbOM3gu2KSN8F9KRtA2bltaOfGtyjw++2zhZ2/B9iYLagWWxJ3/9gCH2xPhePpq/DgtgXxTxClDrHiFKDr29blodNke3Irn83crW98oHsW2BjByA=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbVRhKz_1747906892 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 22 May 2025 17:41:33 +0800
-Message-ID: <a036291f-2483-4bf0-9ac1-db310f8115aa@linux.alibaba.com>
-Date: Thu, 22 May 2025 17:41:31 +0800
+	s=arc-20240116; t=1747906926; c=relaxed/simple;
+	bh=AaXVgDa1eBKpI8kWchWJy0Boh6XId2G2feXa2Caqkh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MY8VeCv9G1U9yE+7U/f7IeQIbhIpPiav3GERlCiKfyJ0nsdq+YwLeDjWQrPZnqxUR27eOBkJFdHnsJ41wPBUIIX8h1alPSHsKa/CfVDKaeM1LNNaoqb6gUSOvDyqyo3FVfUjsYY49SrjhelpNrWwYrQ6jrZBu8NOaWWGVuOQXpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIFUBnD2; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33677183so62996595ad.2
+        for <linux-pci@vger.kernel.org>; Thu, 22 May 2025 02:42:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747906923; x=1748511723; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2W9pDs2fUjwyXWIYRNrL2TSTjfx1+/7VESqDmUiYB7s=;
+        b=LIFUBnD2EV0SwfbHxnO/OQ/Kf2GSHNu23tMpeq7xB2GC+X/WxUPq0H9Bd12e6DZAsR
+         MQk0bIXYnfpx/V6XHJB3bL21ZEBA+Hq8mQUnQtPOUoEq5kZWsjvogdFoWH51ZZx8cCmH
+         oW6tGcH6RljwdxURZZuDFGCigWXmflCgJmz1CRp9n57VjxPHMpfHhLwzEuDOlhLNHnjc
+         5c12MDaxnd9ArXK5QXc42VnlVwT7T2qKv2I3iRKA9nYyKw+5IH0nvZpSzvkTFIxJBWmg
+         TnGoUnl1rog/NzuryhMCqDBIR6/IK/IJyHxWz13nHOjWXvxLbi4TVJMz06R4QvrbkJIT
+         Hw7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747906923; x=1748511723;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2W9pDs2fUjwyXWIYRNrL2TSTjfx1+/7VESqDmUiYB7s=;
+        b=aGtDWGEiQiOOmYR1Q3UY4kvyNjwHfe46bvLca5+quk+RpH0NcTPqYg2eVD+KW8xmvt
+         i+4gmOcJPPFduSTUZgdkUtLVitbyaQN3j2WqBcFBzJgDqsFL8su/9zTxgM+RX9B/om57
+         k8DDFT0nbcACK3OrKGo12XQstApkpRrNO7SgmtxL8x92C3akZkxG9875dkWdRge4g4Kf
+         7cFGMjlveZt+GaCrbNKmDHAbGWNktu53W9RuNfzPYX49ndODsJPcKurioao89E8TOroA
+         bBCIjzVpHaem6GUaUGaezMuVcUdes9hNZrxSYrNz0dGANPkjdVaafvcl4SaEYqaAOZn2
+         FzHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVblun3kbutd+Ro7qnigBTcRL2WyaZUq0ek9kFjYxXwObCeS3OKJT797bWQ5SGwP40hltZzOdgfQlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXNMWrF9ebLbLTiNHEkNe31r70xqrDuzNWNHJqfY4sSjq0v4RT
+	B/90Y1xmm2eIYz7551/i+JQthY/nqPUH7b59AS/pTRvHee7TSxCMTljtj/N64vie+g==
+X-Gm-Gg: ASbGncvTt81w9tdLM9jLh0SkuRq33lGTGkte7P8MhM8KQ2G/LWYhZUGHtkubnWqtepi
+	GjykGcNeEHZbu3yCdYNKxK60ZRx2Y8oBafWeqC+wk+2zUUvVMJ6Q170jFGSCFl8yv0L5ueYglv6
+	CQTeeydRcyuP3JI9gFx5jdcKEqnj8VvPFJXCQZKEvFE1e35f/1vhxXDTFbvNxgLgZ1wiWOkNbcG
+	WX25Xy6bNCirGprI2C0ydNkefrxCgInlAwFW+x0x30wIbm167EnT804pV9WHQ9D4WWTQzzsEl5r
+	CbdIPnUEQOaFO4NuG2gmzrsaxhhNi6LpzRJlvjl7/zpSq9gf1CVg3a3T139rlw==
+X-Google-Smtp-Source: AGHT+IEC8lIoCISzMMJj1zQvnTEQ9Ckv+Jlw2n1VOmoUYBsbME34b4s+KjzcmPoCAmRhfzBt6vRNRg==
+X-Received: by 2002:a17:902:dac5:b0:22e:4509:cb89 with SMTP id d9443c01a7336-231de21d4d5mr320912565ad.0.1747906923409;
+        Thu, 22 May 2025 02:42:03 -0700 (PDT)
+Received: from thinkpad ([120.60.130.60])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebac18sm105471675ad.193.2025.05.22.02.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 02:42:02 -0700 (PDT)
+Date: Thu, 22 May 2025 15:11:58 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 'Cyril Brulebois <kibi@debian.org>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, 'Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: POSSIBLE REGRESSION: PCI/pwrctrl: Skip scanning for the device
+ further if pwrctrl device is created
+Message-ID: <vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne>
+References: <CA+-6iNxkYumAvk5G6KhYqON9K3bwxGn+My-22KZnGF5Pg8cgfA@mail.gmail.com>
+ <20250519215601.GA1258127@bhelgaas>
+ <CA+-6iNzY4n=E+4Fcbxu7UU+xyUjEQZBSLQ3sMv26smoFS+nGOA@mail.gmail.com>
+ <pxscvlfsvzaatjwty3bt3lpjmhhq4hriwmqo2s4vycwb27uvpq@m3afnghha5dd>
+ <CA+-6iNz-qyKDKif5mv5FProqbpkQdfOYx+nSUA4NHSiCL9Ng5Q@mail.gmail.com>
+ <uye7kpakmj5vx6bdzzy4tsmqqi777rhdb273tqsvgr6tv27apy@jyneanv3blit>
+ <CA+-6iNwTkrmVWuitrmkLJ+=B935LFuK6Q91obMWe03v7sZ_MCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
- <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
- <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
- <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNwTkrmVWuitrmkLJ+=B935LFuK6Q91obMWe03v7sZ_MCQ@mail.gmail.com>
 
+On Wed, May 21, 2025 at 06:08:14PM -0400, Jim Quinlan wrote:
+> On Tue, May 20, 2025 at 7:40 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Tue, May 20, 2025 at 11:06:33AM -0400, Jim Quinlan wrote:
+> >
+> > [...]
+> >
+> > > > > > What systems does the regression affect?
+> > > > >
+> > > > > All Broadcom STB chips, including the RPi sister chips.  Now is there
+> > > > > anyone but our team who runs upstream Linux on our boards?  Probably
+> > > > > not.
+> > > > >
+> > > >
+> > > > I forgot to ask you this question. Is your devicetree upstreamed? Because, while
+> > > > introducing the pwrctrl knobs, I made sure that there are no upstream users
+> > > > using the supply properties in child nodes. All our existing users are using the
+> > > > properties in controller nodes, so they are not impacted.
+> > > Hello Mani,
+> > >
+> > > Our device tree is constructed on the fly by our custom bootloader
+> > > and passed to Linux, so it does not make sense (IMO) to put them
+> > > upstream as long as we strictly follow our upstreamed YAML bindings
+> > > file.  As I mentioned before, our  brcm,stb-pcie.yaml example, which
+> > > is upstream, contains a "vpcie3v3-supply" property under the pci@0,0
+> > > node.
+> > >
+> >
+> > Okay, thanks for the pointer. I was not aware that you have bootloader
+> > constructed DTB.
+> >
+> > > >
+> > > > Here it looks like you are running out-of-tree dts, which we do not support
+> > > > unfortunately.
+> > > The brcmstb YAML file is upstream, and a grep for the standard pcie
+> > > regulator names would have led you to it. I don't see how you can say
+> > > you don't support a DT that follows the upstream YAML file(s).
+> > >
+> >
+> > I didn't say that exactly. I thought you were using some out-of-tree vendor DTS
+> > which doesn't adhere to the DT bindings, but I was wrong. Your usecase is
+> > completely valid.
+> >
+> > > But it doesn't mean that I do not care about the issue you
+> > > > reported. I'm flying back home from vacation tomorrow and it will be the first
+> > > > thing I'm goona look into.
+> > > >
+> > > > Adding suspend/resume support is pretty much what I'm going to work on the
+> > > > upcoming weeks (combined with some rework). So until then, I request you to
+> > > > revert the changes in your downstream tree and bear with me.
+> > >
+> > > I would rather our systems peacefully coexist, and take your changes
+> > > voluntarily and on my own schedule, rather than wait for you to add
+> > > future features.  I'm a little surprised that the CONFIG_PCI_PWRCTL
+> > > code seems to act on the PCI regulators even when its driver is not
+> > > present.
+> > >
+> >
+> > I overlooked at that part. Would the below diff help you?
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 4b8693ec9e4c..b38a62f40448 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -2514,6 +2514,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+> >         struct platform_device *pdev;
+> >         struct device_node *np;
+> >
+> > +       if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
+> > +               return NULL;
+> > +
+> >         np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+> >         if (!np || of_find_device_by_node(np))
+> >                 return NULL;
+> >
+> Hi Mani,
+> Yes that works but I have to set
+> 
+> CONFIG_ATH11K=n
+> CONFIG_ATH12K=n
+> CONFIG_ATH11K_PCI=n
+> 
+> in order to get
+> 
+> CONFIG_PCI_PWRCTRL=n
+> 
+> This would be a problem if we had a customer system that required
+> ATH1[2].  We do have one with ATH9k but we are safe for now.
 
+Yeah. I do not intend to make it as "the fix", but just a workaround to get your
+driver working again. The actual fix would be to convert your driver to use the
+pwrctrl framework, which I'll do soon.
 
-在 2025/5/20 18:07, Ilpo Järvinen 写道:
-> On Tue, 20 May 2025, Shuai Xue wrote:
+> >
+> > > In addition, I need the ability to cancel at runtime the
+> > > suspend/resume off/on of the regulators if the downstream device.
+> > >
+> >
+> > I don't get what you mean by 'ability to cancel at runtime'. Like I said before,
+> > I'm going to rework pwrctrl little bit and probably add suspend/resume (system
+> > PM first) on the way, if that's what you are referring to.
 > 
->> Hi, Ilpo,
->>
->> 在 2025/5/20 01:10, Ilpo Järvinen 写道:
->>> On Mon, 12 May 2025, Shuai Xue wrote:
->>>
->>>> Hotplug events are critical indicators for analyzing hardware health,
->>>> particularly in AI supercomputers where surprise link downs can
->>>> significantly impact system performance and reliability.
->>>>
->>>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
->>>> tracepoint for hotplug event to help healthy check, and generate
->>>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
->>>> include/uapi/linux/pci.h so applications like rasdaemon can register
->>>> tracepoint event handlers for it.
->>>>
->>>> The output like below:
->>>>
->>>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
->>>> $ cat /sys/kernel/debug/tracing/trace_pipe
->>>>       <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0
->>>> slot:10, event:Link Down
->>>>
->>>>       <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0
->>>> slot:10, event:Card not present
->>>>
->>>> Suggested-by: Lukas Wunner <lukas@wunner.de>
->>>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>> ---
->>>> changes since v7:
->>>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
->>>> - pick up Reviewed-by from Lukas Wunner
->>>> ---
->>>>    drivers/pci/hotplug/Makefile      |  3 ++
->>>>    drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
->>>>    drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
->>>>    include/uapi/linux/pci.h          |  7 ++++
->>>>    4 files changed, 105 insertions(+), 6 deletions(-)
->>>>    create mode 100644 drivers/pci/hotplug/trace.h
->>>>
->>>> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
->>>> index 40aaf31fe338..a1a9d1e98962 100644
->>>> --- a/drivers/pci/hotplug/Makefile
->>>> +++ b/drivers/pci/hotplug/Makefile
->>>> @@ -3,6 +3,9 @@
->>>>    # Makefile for the Linux kernel pci hotplug controller drivers.
->>>>    #
->>>>    +# define_trace.h needs to know how to find our header
->>>> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
->>>> +
->>>>    obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
->>>>    obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
->>>>    obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
->>>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c
->>>> b/drivers/pci/hotplug/pciehp_ctrl.c
->>>> index d603a7aa7483..f9beb4d3a9b8 100644
->>>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
->>>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
->>>> @@ -23,6 +23,9 @@
->>>>    #include "../pci.h"
->>>>    #include "pciehp.h"
->>>>    +#define CREATE_TRACE_POINTS
->>>> +#include "trace.h"
->>>> +
->>>>    /* The following routines constitute the bulk of the
->>>>       hotplug controller logic
->>>>     */
->>>> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct
->>>> controller *ctrl, u32 events)
->>>>    	case ON_STATE:
->>>>    		ctrl->state = POWEROFF_STATE;
->>>>    		mutex_unlock(&ctrl->state_lock);
->>>> -		if (events & PCI_EXP_SLTSTA_DLLSC)
->>>> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
->>>>    			ctrl_info(ctrl, "Slot(%s): Link Down\n",
->>>>    				  slot_name(ctrl));
->>>> -		if (events & PCI_EXP_SLTSTA_PDC)
->>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->>>> +					   slot_name(ctrl),
->>>> +					   PCI_HOTPLUG_LINK_DOWN);
->>>> +		}
->>>> +		if (events & PCI_EXP_SLTSTA_PDC) {
->>>>    			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->>>>    				  slot_name(ctrl));
->>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->>>> +					   slot_name(ctrl),
->>>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
->>>> +		}
->>>>    		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
->>>>    		break;
->>>>    	default:
->>>> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct
->>>> controller *ctrl, u32 events)
->>>>    					      INDICATOR_NOOP);
->>>>    			ctrl_info(ctrl, "Slot(%s): Card not present\n",
->>>>    				  slot_name(ctrl));
->>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->>>> +					   slot_name(ctrl),
->>>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
->>>>    		}
->>>>    		mutex_unlock(&ctrl->state_lock);
->>>>    		return;
->>>> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct
->>>> controller *ctrl, u32 events)
->>>>    	case OFF_STATE:
->>>>    		ctrl->state = POWERON_STATE;
->>>>    		mutex_unlock(&ctrl->state_lock);
->>>> -		if (present)
->>>> +		if (present) {
->>>>    			ctrl_info(ctrl, "Slot(%s): Card present\n",
->>>>    				  slot_name(ctrl));
->>>> -		if (link_active)
->>>> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
->>>> -				  slot_name(ctrl));
->>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->>>> +					   slot_name(ctrl),
->>>> +					   PCI_HOTPLUG_CARD_PRESENT);
->>>> +		}
->>>> +		if (link_active) {
->>>> +			ctrl_info(ctrl, "Slot(%s): Link Up\n",
->>>> slot_name(ctrl));
->>>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
->>>> +					   slot_name(ctrl),
->>>> +					   PCI_HOTPLUG_LINK_UP);
->>>> +		}
->>>>    		ctrl->request_result = pciehp_enable_slot(ctrl);
->>>>    		break;
->>>>    	default:
->>>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
->>>> new file mode 100644
->>>> index 000000000000..21329c198019
->>>> --- /dev/null
->>>> +++ b/drivers/pci/hotplug/trace.h
->>>> @@ -0,0 +1,68 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) ||
->>>> defined(TRACE_HEADER_MULTI_READ)
->>>> +#define _TRACE_HW_EVENT_PCI_HP_H
->>>> +
->>>> +#include <linux/tracepoint.h>
->>>> +
->>>> +#undef TRACE_SYSTEM
->>>> +#define TRACE_SYSTEM pci
->>>> +
->>>> +#define PCI_HOTPLUG_EVENT					\
->>>> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
->>>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
->>>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
->>>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
->>>
->>> Hi,
->>>
->>> While I was thinking of adding tracing into PCIe BW controller (bwctrl),
->>> I ended up thinking that perhaps it would make more sense to have PCIe
->>> Link related tracepoints which would cover both hotplug and bwctrl so that
->>> also Link Speed changes would be reported through the same trace event.
->>>
->>> Downgraded speed may indicate there's something wrong with the card and
->>> the Link Speed does have performance impact too for those who are pushing
->>> BW boundaries such as AI systems.
->>
->> Agreed!
->>
->>>
->>> So my suggestion is:
->>>
->>> - Add "Link Speed changed" to the event types.
->>> - Add Link Speed and Width into the event format (and probably also Flit
->>>     mode as PCIe gen6 is coming).
->>
->>
->> How about bellow event format:
->>
->> +	TP_STRUCT__entry(
->> +		__string(	port_name,	port_name	)
->> +		__field(	unsigned char,	cur_bus_speed	)
->> +		__field(	unsigned char,	max_bus_speed	)
-> 
-> Add also the Link Width.
-
-Got it.
-> 
->> +		__field(	unsigned char,	flit_mode	)
->> +	),
->>
->> And add the event to pcie_update_link_speed():
->>
->> @@ -796,6 +799,10 @@ void pcie_update_link_speed(struct pci_bus *bus)
->>          pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
->>          pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
->>          __pcie_update_link_speed(bus, linksta, linksta2);
->> +
->> +       trace_pci_link_event(pci_name(bridge), bus->cur_bus_speed,
->> +                                          bus->max_bus_speed,
-> 
-> I don't think outputting the internal values of enum pci_bus_speed is a
-> good idea. Maybe these could be printed as a string (with
-> pci_speed_string()) or encoded with trace interface specific values.
-
-I see, a human readable string is better.
-> 
-> Perhaps it would make sense to check if the speed really changed before
-> sending that event, but there are good sides in both approaches as I
-> know some platforms assert LBMS more than once during a single Link Speed
-> change.
-> 
->> +                                          PCI_HOTPLUG_LINK_SPEED_CHANGED);
->>
->> But I don't find link speed changed in hotplug driver
-> 
-> pciehp_check_link_status() calls __pcie_update_link_speed().
-
-Thanks.
-
-> 
->> , and the format of "Link Speed changed" is a bit different from
->> "pci_hp_event".
-> 
-> The difference is only because when the Link is down, there's no Link
-> Speed (obviously). Whenever a new device is hotplugged and it comes up,
-> there's also Link Speed for it which can be included into the trace event.
-> 
-> I think the trace event should have some special value for the fields that
-> are N/A due to Link being off. While it would be possible to create
-> separate events for speed changes and hotplug, I don't see any pros in
-> that approach over just having the N/A fields marked as such when the Link
-> is Down.
-> 
-> Perhaps it would even make sense to add PCIE_SPEED_LINK_DOWN into
-> bus->cur_bus_speed when hotplug finds the card is gone (I'm not entirely
-> sure how bwctrl or pcie_cooling driver would cope with that though, they
-> might need minor tweaking to support it, and there are a few other drivers
-> that use that field).
-> 
->> Do we really need a PCI_HOTPLUG_EVENT? May PCI_LINK_EVENT is more
->> appropriate?
-> 
-> Ah, right, I forgot to mention it would make sense to rename it to
-> PCI_LINK_EVENT.
+> If you look at  drivers/pci/controller/pcie-brcmstb.c and search for
+> brcm_pcie_suspend_noirq(),, you will see that we only turn off/on the
+> regulators on suspend/resume if the downstream device has
+> device_may_wakeup(dev)==false.  We discover this at runtime by walking
+> the bus.  The idea here is to support an optional  WOL scenario.
 > 
 
-Got it.
+Oh yes! Supporting WOL is indeed a requirement when the system PM support is
+added to the pwrctrl framework. Also do note that some endpoints like NVMe would
+like to keep the devices in D0 during suspend. So if you connect it to your
+platform, it most likely will not work during resume. I'm also intending to fix
+it.
 
-Thanks.
-Shuai
+> I'm currently inquiring whether we can lessen this requirement somehow
+> and will let you know when I get the answer.
+> 
+
+I don't think it is needed. We should support it anyway.
+
+> >
+> > > That being said,  I don't mind if the series stays as long as you
+> > > promise to work with me to have our systems coexist.  But I do not
+> > > want to wait for future features to be added for our code to work.
+> > > >
+> > > > Bjorn, FYI: We do not need any revert in mainline since the issue is not
+> > > > affecting upstream users.
+> > >
+> > > So is it a rule that all DT  must be upstreamed, or is it sufficient
+> > > to have a bindings YAML file that defines the DT for the driver?
+> > >
+> >
+> > The latter IMO. If the diff I supplied above works fine, I'll submit a patch for
+> > that. Eventually, we do like to control the supplies from the pwrctrl driver
+> > instead of from controller drivers. That's the whole point of introducing this
+> > framework. But since it is not enabled in defconfig yet, your driver should
+> > continue working in the meantime with the diff. Later on, I will modify brcmstb
+> > driver to adapt to pwrctrl framework. Since the binding is same, the driver is
+> > going to be backwards compatible also.
+> >
+> > Please let me know if it works of not!
+> 
+> Yes it does work.  Not a perfect situation, but it will keep me going
+> as we move toward having the pcie-brcmstb driver move to the pwrctrl
+> framework.
+> 
+
+Thanks a lot for testing. I will push out a patch with your tested-by tag.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
