@@ -1,57 +1,63 @@
-Return-Path: <linux-pci+bounces-28266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89188AC0A2B
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 12:58:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B299AC0A44
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 13:04:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4373A17CC48
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 10:58:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 911341BC4E14
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 11:05:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488EC254AF2;
-	Thu, 22 May 2025 10:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58C22690C0;
+	Thu, 22 May 2025 11:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx7ujbeO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="el3XRMu4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E613189F3F;
-	Thu, 22 May 2025 10:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B843B221FAA;
+	Thu, 22 May 2025 11:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911502; cv=none; b=QqkfOS3dRwyjA1ufBPFwzvAfrdkZOZUpyYatUE4YLFoXBeGr9Kvu1M0Odt3LsUey7IgDgSwuFV5uF47Z/OX0kV1IIwoN497IIwlh1q2ylRrpLRK/U5p/xzBeBR45mQVYl+Mff7W0OeO9ZEdLUwN3v3IGcxlB0B41IzX3Hlv74ec=
+	t=1747911887; cv=none; b=KUIz9CddY6+/1gje8VevBaGl5dCKV48Uhl+3G1Bx+oN4TViwfy2/j0lO9B10mb2ZgBjpqmh8dBO45bl+6TispUgUCKrZF8AUmvhQ+1EOy9G3RIsmtwR0YT1SVuMnzCwP/g4Jk4uZUIdZP7+/tWzjxwIiRuy5EPo0p3joQR0320g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911502; c=relaxed/simple;
-	bh=PDHSuJeVzaQLbG5Jx/nVIsNqj3Jmhb+WDPT0/4r9BfY=;
+	s=arc-20240116; t=1747911887; c=relaxed/simple;
+	bh=XCVGZBptPngsgiauWq4BS6Y5vaFq0UsSrQKpKR80tU4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o78RBchDOBiZdr5PXhih68ZeLleHDa1ilszST1Sj2JqscIhbVS/FcchhKrldfYYPl90l9yl39p8R0Z6HUb2xnllZW3FtrgbF7Zk1tvyiFbc3IgUoEqJNLVaFbehTfj6ty+qsfCr1YTkgRwR6hMcDg8fqSOUH365b/eXiddPWzvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx7ujbeO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5BBC4CEE4;
-	Thu, 22 May 2025 10:58:20 +0000 (UTC)
+	 MIME-Version:Content-Type; b=WJbDQoTpR4MODy8dcJDu0TWcAJ/CK/aUzhtC0KHDRalwg83O/v4x9HWJc2AuN7mVyhQPdF7XRELBylheeZo8pMA6N7ckKe91+4Dl9pNE2RN8I+d3/5IBGB9kPvOHS7t5yqEmBr47g3wFSIQBj33J6sKaOsA/sCf5CgFKSdcBTDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=el3XRMu4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74ACDC4CEE4;
+	Thu, 22 May 2025 11:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747911501;
-	bh=PDHSuJeVzaQLbG5Jx/nVIsNqj3Jmhb+WDPT0/4r9BfY=;
+	s=k20201202; t=1747911887;
+	bh=XCVGZBptPngsgiauWq4BS6Y5vaFq0UsSrQKpKR80tU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dx7ujbeOEtpC0ObXPE5GfsSOt4gzXV/ttJRjWRgkhIWTPbOAYpzgnRXo8jcopm8Ib
-	 0PJAM+A0DLbnjy4tl4AEf8x+BDPt92emnMIAw0SHJ0wW3/M8LMQyl2SddNqHhTWSIY
-	 85bFqZbXnugUQmbBZofH5tOrEFOnN0sKWyOuXPc/O2gEldiWWfcWX9J7UT81RObOsm
-	 7hwk08IE4OeVJbUvhsnyNF4wAUj3BQJ6Co8lYd2rdAW2k30xM0ZYsDRVIY/dXiLNvx
-	 2/cPmPI/x95vYLap2gDKGl/s7F8Wxrf8u2c0aY3SR3DIBnGnjzaVi7bkgPtBZS3xWK
-	 P3JUEnS/MMoMQ==
+	b=el3XRMu4vilz47QpC2uw9DYSWpAYhV/6JriIIjR2OedWeTusRVyornwfNJVYiI2pL
+	 d1cZ5rMN5z+TNIsh2sKZTgk9tPNGB50QDgbqy2ynXPX6GVsBMNWNZksF5tOLhf+ENt
+	 zSrFgktIh2YsCzqqNcxWTcBm7ElLOXQNg01D+NJJcwpCkln1llNHFpRMoPbanG/7//
+	 C+pGJpWKwxEgvk64FKowOZchGQc0wTQUZ19OGxM+RcqYi8t6L/zwIiywb2FYqUjsDA
+	 yh9KrU/F/l6I/KyOt4zcvgPKXesRGp5pwzCrYBeKS1ca212OiFjJTnkuteBE3CNM57
+	 Tx0HW9RG63olQ==
 From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Stanner <phasta@kernel.org>
-Cc: linux-pci@vger.kernel.org,
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	bhelgaas@google.com,
+	will@kernel.org,
+	sunilvl@ventanamicro.com,
+	Markus.Elfring@web.de,
+	Zhe Qiao <qiaozhe@iscas.ac.cn>
+Cc: linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Remove forgotten function prototype
-Date: Thu, 22 May 2025 10:58:18 +0000
-Message-ID: <174791142570.69774.3694250973468244165.b4-ty@kernel.org>
+Subject: Re: [PATCH v3] ACPI: PCI: Release excess memory usage.
+Date: Thu, 22 May 2025 11:04:43 +0000
+Message-ID: <174791182681.71268.8372880535317037945.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250522084626.150148-2-phasta@kernel.org>
-References: <20250522084626.150148-2-phasta@kernel.org>
+In-Reply-To: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
+References: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,19 +69,14 @@ Content-Transfer-Encoding: 8bit
 
 Hello,
 
-> The subsystem-internal header pci.h still contains the function
-> prototype of pcim_intx(), which has since been made public in the global
-> header.
-> 
-> Remove the redundant function prototype.
-> 
-> 
-> [...]
+> In the pci_acpi_scan_root() function, when creating a PCI bus fails,
+> we need to free up the previously allocated memory, which can avoid
+> invalid memory usage and save resources.
 
-Applied to devres, thank you!
+Applied to pci-acpi, thank you!
 
-[1/1] PCI: Remove forgotten function prototype
-      https://git.kernel.org/pci/pci/c/dfc970ad6197
+[1/1] ACPI: PCI: Release excess memory usage.
+      https://git.kernel.org/pci/pci/c/631b2af2f357
 
 	Krzysztof
 
