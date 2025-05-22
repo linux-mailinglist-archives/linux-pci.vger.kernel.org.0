@@ -1,95 +1,73 @@
-Return-Path: <linux-pci+bounces-28279-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28280-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31E7CAC111A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 18:33:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04E20AC1120
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 18:35:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3AC37A497F
-	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 16:32:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEF6E1663D9
+	for <lists+linux-pci@lfdr.de>; Thu, 22 May 2025 16:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25E72951C0;
-	Thu, 22 May 2025 16:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C369145A18;
+	Thu, 22 May 2025 16:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="C+YhtKph"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bvks9uFP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E66251792;
-	Thu, 22 May 2025 16:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7132F9DA;
+	Thu, 22 May 2025 16:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931607; cv=none; b=uDus6H86Hld7W5/4yqqk20q+rQ7BA8LSKRknBcoqdloe2Q9lXvSC3amyduL/Uh+MkIIpoHv+zl/5X5ljosOwL5ChlbDdQ64049plKPumZ+Dg9YeYzxPIWTg8a6Ij3HwLty+yjsLxyAtVlrbyY0aL/GfnwSiFz/61gQ5i61k4hJE=
+	t=1747931737; cv=none; b=KrupMNbmhRm4xvZR+RFEYxZ+phmbMS9/eu89kusmJyoer8CT85T4WQDITklg/5uK1ueSjRdHomntI9NB4/B1vThkiRHMv2Sjbr7YUqNqFScNm1+ExbR7owKi2bS1zweB7luvIWTTpAABLmSHTgUUhnFQgv8ne93E7KH4V+eaFOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931607; c=relaxed/simple;
-	bh=BNpi2nFBQAFV/WMKJHvYLfcwSSej3dZ3v1djNDve9jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b2aCMdfvJBBhnvZltpgZsTbOyjUgmATHplAx2NkjHiYWloEO9Bt/nIqnhP171OEDcrLJ+jg/6WXQyHHbrvGTBDKaoLqSe7OZUaAr8RN6ZeDg4V//5AD+KPjEbpDvaYqgYL9GcnbSPo2xHXhHKUnq0zHqE9mqEw7PSXMggWZIVEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=C+YhtKph; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=x3
-	IEnvTJUGCZMysuw/nTm9ZVJwxYs3uYCivFSvi4Vsk=; b=C+YhtKphBx7XusaxS3
-	VHugP6/eurb44OboiEEdxNB+oNmIu14murO4V6R3z7Ms9GMWHFoeLd65krr/uUPv
-	4l2pusa4lBEwsemV9Teo+qk8Qsfew3x1Gzmz/pfKHy1maxzqPe5nA6a0GLHW+2VK
-	08ckQnr9RdW06sZyGDhar3waw=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3FVK0US9oZlrDDA--.28595S2;
-	Fri, 23 May 2025 00:32:53 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	manivannan.sadhasivam@linaro.org
-Cc: ajayagarwal@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] i2c: tegra: Add missing kernel-doc for dma_dev member
-Date: Fri, 23 May 2025 00:32:51 +0800
-Message-Id: <20250522163251.399223-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747931737; c=relaxed/simple;
+	bh=KQunkX5Y+69leEqE6y50+DVV28FqijPf6zXjTdQfLFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcXxPppCQHcyi5b5muQvNUM3IUXkLc2O6Z/PBsXB4BDT7C8SVpPXVxKu01OZgzmaEZcBlKp8CU/v3QQc8t1GeqQX6Va5lHAGsR3XfcuWhj0KAP9qPJGT4dxe2CZDqK5Kx4Xh8D2SsyhZMHijYylDH4OD4LQ0kuvE5OlJFUob03I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bvks9uFP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3D1C4CEE4;
+	Thu, 22 May 2025 16:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747931737;
+	bh=KQunkX5Y+69leEqE6y50+DVV28FqijPf6zXjTdQfLFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bvks9uFPJX/IOvkjeyVjdSR9Jaa+F6bP10MpCkbDTAGTyGee457NqgBFeNFMG565T
+	 oTiQlhDPMJsoTKSBR8RmQdXLf1cly9dnc11JB9+t6qfUcMEr8WH7LqG53UlhomHNZ3
+	 JE1GwAChFy5ZNnHK8bzJOjL/5MH8YCnOwHK6Ai+mC31+UjRYLitp/xNfrXahimf4xh
+	 btTXo0DYCiWFi0bkQKVy/3HTc7jt+IzZ/Rnd68rxvLYPr6Q7HxFP9TBOkfu71RStUX
+	 cBP+dGe1zhb/2hFfa1tFfTIRlJtjWl8nMNZYSQJ7CBC8reTSzdaALEAc3djjmlTd1p
+	 xEAgUPzzXottg==
+Date: Fri, 23 May 2025 01:35:35 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+	ajayagarwal@google.com, ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: tegra: Add missing kernel-doc for dma_dev member
+Message-ID: <20250522163535.GA3558378@rocinante>
+References: <20250522163251.399223-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3FVK0US9oZlrDDA--.28595S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKr45Kry3trWDZw1rury7trb_yoWkXrgEvF
-	n7WF47tr1q9rnIyF13WF4fXryjkrWYgF1ktas7t39aka4qqw15GF1DZrWfCrW8X3ZrtFsr
-	Wr1DtFWIyrnxAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRMjg4DUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxxVo2gvTnlNyQAAsF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522163251.399223-1-18255117159@163.com>
 
-Fix the kernel-doc warning by describing the 'dma_dev' member in
-the tegra_i2c_dev struct.  This resolves the compilation warning:
+Hello,
 
-drivers/i2c/busses/i2c-tegra.c:297: warning: Function parameter or struct member 'dma_dev' not described in 'tegra_i2c_dev'
+[...]
+>  drivers/i2c/busses/i2c-tegra.c | 1 +
 
-Fixes: cdbf26251d3b ("i2c: tegra: Allocate DMA memory for DMA engine")
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/i2c/busses/i2c-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+I think you got a wrong set of maintainers here. :)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 87976e99e6d0..07bb1e7e84cc 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -253,6 +253,7 @@ struct tegra_i2c_hw_feature {
-  * @dma_phys: handle to DMA resources
-  * @dma_buf: pointer to allocated DMA buffer
-  * @dma_buf_size: DMA buffer size
-+ * @dma_dev: DMA device used for transfers
-  * @dma_mode: indicates active DMA transfer
-  * @dma_complete: DMA completion notifier
-  * @atomic_mode: indicates active atomic transfer
+Thank you!
 
-base-commit: fee3e843b309444f48157e2188efa6818bae85cf
--- 
-2.25.1
-
+	Krzysztof
 
