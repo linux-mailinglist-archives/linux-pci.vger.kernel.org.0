@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-28348-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28349-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFCA4AC2A18
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:00:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C099DAC2A19
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:00:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B009A42462
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 19:00:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73AA5545912
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 19:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A544429AB07;
-	Fri, 23 May 2025 19:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 516C529A332;
+	Fri, 23 May 2025 19:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZLZqwulY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CWuGjxDH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4CE29AB04;
-	Fri, 23 May 2025 19:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9473629B213;
+	Fri, 23 May 2025 19:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748026816; cv=none; b=X8lRQFma5Cf5gwRHoYb+6WQftKQ2XmyTZ1vG47x4NgIcJ6Uqm44n3GO6FeVlrvTS9LTKB8nVFtaA4VJupuUu3DW9Rk0S2BtuPyKwidPxE+URZbiiZtPsKd5hRsOPXPIyooJx64eLlNSWwRX69CnlLt/iimr2+1MOvZPG+OXC1DY=
+	t=1748026821; cv=none; b=hTrIsdg67PpaoHQk09jxCyRBrbvG004hXtAUEwGgbquqCAoDfJBWfwQMQV27JnX60d2vabduq50KiBrmefxhS18dpi1yC+RsHEtMYbA2u57Xynzw0MyUDdiw46pv5/c1vc4R35/dQpakJdxMQj4ftEaa/sjrMqEvRW/QWPOa6W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748026816; c=relaxed/simple;
-	bh=b8/kMQ/FsDCaYXXWww0z3hlfMYO0pN/0TiF2OzI9tQY=;
+	s=arc-20240116; t=1748026821; c=relaxed/simple;
+	bh=C34/4ysj5vZesiKl8Ggq9yK1/mADQlAym0DKFnAWprQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lAC2onCoiZIqZvBAA2QsBx47IGHLzXUNKolvI9lispq7tPQ16dl7M/W+cNazhjZ5mxoZxldN0hSZdOYMfenK5fYX/Cl92Dd1m5zJxiHoxQve3GAjBgAj0Pd0yTiRQvvZuiNZdPgTz9saNOYoqPRcCV6TGW+0r/W+jxn5FU/+/V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZLZqwulY; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=LFxIiXqob4z1j9iR2uRJBrbDsfhQTEtVid+4wkCfZmvn7JkUtfxq11gSzNAUd3NHfBVCPqxCvLj1+W67fUqhkQqnhPuoG9FydEE8dfZS9G/OPTwN1/RvF3a5WDEBeDjHdHiY2pAUHULrHioEuhza7odZqLMjmw9hA6OiGmpF/jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CWuGjxDH; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748026814; x=1779562814;
+  t=1748026820; x=1779562820;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=b8/kMQ/FsDCaYXXWww0z3hlfMYO0pN/0TiF2OzI9tQY=;
-  b=ZLZqwulYAIQzA3ZXSqsiFr8DS9pJAGHLrVfVqcLjlwaJ5bBGgI2NnXk1
-   wSlgbmODzDplGkezzv2qTGz5GmNgSU10J6e1PDBQnJjlgI6Kav9KXRxj0
-   hMus0btormkJF6qKAAdXBAjBXMTQS3TwwRTbDn+39aFEmF2iNfNUJu+u/
-   PPgWn9IgwduScOZg43ELYVJwr5L7yrT1CZiI9LpKpBT3NKCL0r6SExYY8
-   crxbOgbLrQwpRBz2d4dHVhYLNecJqBQtqXeFxn0OUObHijyhEgjdmQcz8
-   d/xL0fkQWClMi22oRfbi9lhRctza6ovk2cYYt9bgNGKy7lRM4UXHrsPEX
-   A==;
-X-CSE-ConnectionGUID: kf8AgD7hSt2tUmvr6JLm0w==
-X-CSE-MsgGUID: WvzgZMDyQJeUYqjyQ2vUBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61498564"
+  bh=C34/4ysj5vZesiKl8Ggq9yK1/mADQlAym0DKFnAWprQ=;
+  b=CWuGjxDHBY2YP6YOIE2dJl1ZL+C3CMigTf8LKuCFORNi6O3eHUNmSt9j
+   IUcWju4qXWnmMPhOe8hwGwEc3V83GX9awaSXU48N9XhHztcgyG+eycLjN
+   JwETe4/hv26mNtuXnTF+XbBG/aHn/4fNrLaKALrJ99kJSWs5sHuIRw5Tp
+   f5H3wXn+JsU+n7SOrI5BdpPJdy7DUmewrQ7kG/wW7Nqu3UgkHT8LYyNzT
+   LNOLgzpr5HHioyZCBZQsfn9EOVDq+B35YDCyBjH6+/VXisy1sB6n18v65
+   bG5061ViaKHgSV7t97IpdjxQwfioAkWqujmSbeqxNGgoABErc5Hd9BZB+
+   w==;
+X-CSE-ConnectionGUID: oXQoS58YR2+1YQ1ED+coNQ==
+X-CSE-MsgGUID: MMvZGF2OQsWhqBipsBR7Ew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61498606"
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="61498564"
+   d="scan'208";a="61498606"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:13 -0700
-X-CSE-ConnectionGUID: OO2v4yrHSJ+Wn+zVD0ASAQ==
-X-CSE-MsgGUID: vYZkvnNxRzap15N2ZuqyVg==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:17 -0700
+X-CSE-ConnectionGUID: kSG3OCIxTv+ApD59R97RRQ==
+X-CSE-MsgGUID: EAZ10O2pTKaUgcFd8DyBTw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="141758984"
+   d="scan'208";a="141759010"
 Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:10 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:13 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc: anshuman.gupta@intel.com,
 	varun.gupta@intel.com,
 	ville.syrjala@linux.intel.com,
 	uma.shankar@intel.com
-Subject: [PATCH v3 07/11] drm/xe/vrsr: Enable VRSR on default VGA boot device
-Date: Sat, 24 May 2025 00:31:51 +0530
-Message-Id: <20250523190155.2623462-8-badal.nilawar@intel.com>
+Subject: [PATCH v3 08/11] drm/xe/vrsr: Refactor d3cold.allowed to a enum
+Date: Sat, 24 May 2025 00:31:52 +0530
+Message-Id: <20250523190155.2623462-9-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250523190155.2623462-1-badal.nilawar@intel.com>
 References: <20250523190155.2623462-1-badal.nilawar@intel.com>
@@ -86,100 +86,199 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The VRSR feature is to enhance the display screen refresh experience
-when the device exits from the D3Cold state. Therefore, apply the VRSR
-feature to the default VGA boot device and when a display is connected.
+From: Anshuman Gupta <anshuman.gupta@intel.com>
 
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+Add xe_d3_state enum to add support for VRAM Self Refresh
+d3cold state.
+
 Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
 ---
- drivers/gpu/drm/xe/display/xe_display.c | 22 ++++++++++++++++++++++
- drivers/gpu/drm/xe/display/xe_display.h |  2 ++
- drivers/gpu/drm/xe/xe_pm.c              |  5 +++++
- 3 files changed, 29 insertions(+)
+ drivers/gpu/drm/xe/display/xe_display.c |  6 +++---
+ drivers/gpu/drm/xe/xe_device_types.h    |  5 +++--
+ drivers/gpu/drm/xe/xe_pci.c             |  6 +++---
+ drivers/gpu/drm/xe/xe_pm.c              | 16 ++++++++--------
+ drivers/gpu/drm/xe/xe_pm.h              |  8 +++++++-
+ 5 files changed, 24 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/gpu/drm/xe/display/xe_display.c b/drivers/gpu/drm/xe/display/xe_display.c
-index 20c3bcd953b7..b3da88b12b35 100644
+index b3da88b12b35..7ccd9b447ace 100644
 --- a/drivers/gpu/drm/xe/display/xe_display.c
 +++ b/drivers/gpu/drm/xe/display/xe_display.c
-@@ -88,6 +88,28 @@ static void display_destroy(struct drm_device *dev, void *dummy)
- 	destroy_workqueue(xe->display.hotplug.dp_wq);
- }
- 
-+bool xe_display_connected(struct xe_device *xe)
-+{
-+	struct drm_connector *list_connector;
-+	struct drm_connector_list_iter iter;
-+	bool ret = false;
-+
-+	mutex_lock(&xe->drm.mode_config.mutex);
-+	drm_connector_list_iter_begin(&xe->drm, &iter);
-+
-+	drm_for_each_connector_iter(list_connector, &iter) {
-+		if (list_connector->status == connector_status_connected) {
-+			ret = true;
-+			break;
-+		}
-+	}
-+
-+	drm_connector_list_iter_end(&iter);
-+	mutex_unlock(&xe->drm.mode_config.mutex);
-+
-+	return ret;
-+}
-+
- /**
-  * xe_display_create - create display struct
-  * @xe: XE device instance
-diff --git a/drivers/gpu/drm/xe/display/xe_display.h b/drivers/gpu/drm/xe/display/xe_display.h
-index 46e14f8dee28..a432790d6d34 100644
---- a/drivers/gpu/drm/xe/display/xe_display.h
-+++ b/drivers/gpu/drm/xe/display/xe_display.h
-@@ -39,6 +39,7 @@ void xe_display_pm_resume(struct xe_device *xe);
- void xe_display_pm_runtime_suspend(struct xe_device *xe);
- void xe_display_pm_runtime_suspend_late(struct xe_device *xe);
- void xe_display_pm_runtime_resume(struct xe_device *xe);
-+bool xe_display_connected(struct xe_device *xe);
- 
- #else
- 
-@@ -71,5 +72,6 @@ static inline void xe_display_pm_runtime_suspend(struct xe_device *xe) {}
- static inline void xe_display_pm_runtime_suspend_late(struct xe_device *xe) {}
- static inline void xe_display_pm_runtime_resume(struct xe_device *xe) {}
- 
-+static inline bool xe_display_connected(struct xe_device *xe) {}
- #endif /* CONFIG_DRM_XE_DISPLAY */
- #endif /* _XE_DISPLAY_H_ */
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index 278f2eeeaab6..c84b9b3f7371 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -9,6 +9,7 @@
- #include <linux/fault-inject.h>
- #include <linux/pm_runtime.h>
- #include <linux/suspend.h>
-+#include <linux/vgaarb.h>
- 
- #include <drm/drm_managed.h>
- #include <drm/ttm/ttm_placement.h>
-@@ -310,6 +311,7 @@ static int pci_acpi_aux_power_setup(struct xe_device *xe)
- 
- static void xe_pm_vrsr_init(struct xe_device *xe)
- {
-+	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
- 	int ret;
- 
- 	/* Check if platform support D3Cold VRSR */
-@@ -319,6 +321,9 @@ static void xe_pm_vrsr_init(struct xe_device *xe)
- 	if (!xe_pm_vrsr_capable(xe))
+@@ -433,7 +433,7 @@ void xe_display_pm_runtime_suspend(struct xe_device *xe)
+ 	if (!xe->info.probe_display)
  		return;
  
-+	if (pdev != vga_default_device() || !xe_display_connected(xe))
-+		return;
-+
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		xe_display_enable_d3cold(xe);
+ 		return;
+ 	}
+@@ -459,7 +459,7 @@ void xe_display_pm_runtime_suspend_late(struct xe_device *xe)
+ 	if (!xe->info.probe_display)
+ 		return;
+ 
+-	if (xe->d3cold.allowed)
++	if (xe->d3cold.target_state)
+ 		xe_display_pm_suspend_late(xe);
+ 
  	/*
- 	 * If the VRSR initialization fails, the device will proceed with the regular
- 	 * D3Cold flow
+@@ -537,7 +537,7 @@ void xe_display_pm_runtime_resume(struct xe_device *xe)
+ 	if (!xe->info.probe_display)
+ 		return;
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		xe_display_disable_d3cold(xe);
+ 		return;
+ 	}
+diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+index 5f9a1a358468..48ca0d8c4c45 100644
+--- a/drivers/gpu/drm/xe/xe_device_types.h
++++ b/drivers/gpu/drm/xe/xe_device_types.h
+@@ -20,6 +20,7 @@
+ #include "xe_memirq_types.h"
+ #include "xe_oa_types.h"
+ #include "xe_platform_types.h"
++#include "xe_pm.h"
+ #include "xe_pmu_types.h"
+ #include "xe_pt_types.h"
+ #include "xe_sriov_types.h"
+@@ -510,8 +511,8 @@ struct xe_device {
+ 		/** @d3cold.capable: Indicates if root port is d3cold capable */
+ 		bool capable;
+ 
+-		/** @d3cold.allowed: Indicates if d3cold is a valid device state */
+-		bool allowed;
++		/** @d3cold.target_state: Indicates d3cold target state */
++		enum xe_d3_state target_state;
+ 
+ 		/** @d3cold.vrsr_capable: Indicates if d3cold VRAM Self Refresh is supported */
+ 		bool vrsr_capable;
+diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
+index 46a99d6ef1a5..5ae1df345416 100644
+--- a/drivers/gpu/drm/xe/xe_pci.c
++++ b/drivers/gpu/drm/xe/xe_pci.c
+@@ -977,7 +977,7 @@ static int xe_pci_runtime_suspend(struct device *dev)
+ 
+ 	pci_save_state(pdev);
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		d3cold_toggle(pdev, D3COLD_ENABLE);
+ 		pci_disable_device(pdev);
+ 		pci_ignore_hotplug(pdev);
+@@ -1002,7 +1002,7 @@ static int xe_pci_runtime_resume(struct device *dev)
+ 
+ 	pci_restore_state(pdev);
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		err = pci_enable_device(pdev);
+ 		if (err)
+ 			return err;
+@@ -1018,7 +1018,7 @@ static int xe_pci_runtime_idle(struct device *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct xe_device *xe = pdev_to_xe_device(pdev);
+ 
+-	xe_pm_d3cold_allowed_toggle(xe);
++	xe_pm_d3cold_target_state_toggle(xe);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+index c84b9b3f7371..b86e95493cb5 100644
+--- a/drivers/gpu/drm/xe/xe_pm.c
++++ b/drivers/gpu/drm/xe/xe_pm.c
+@@ -606,7 +606,7 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
+ 
+ 	xe_display_pm_runtime_suspend(xe);
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		err = xe_bo_evict_all(xe);
+ 		if (err)
+ 			goto out_resume;
+@@ -653,7 +653,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+ 
+ 	xe_rpm_lockmap_acquire(xe);
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		err = xe_pcode_ready(xe, true);
+ 		if (err)
+ 			goto out;
+@@ -676,7 +676,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+ 
+ 	xe_display_pm_runtime_resume(xe);
+ 
+-	if (xe->d3cold.allowed) {
++	if (xe->d3cold.target_state) {
+ 		err = xe_bo_restore_late(xe);
+ 		if (err)
+ 			goto out;
+@@ -918,13 +918,13 @@ int xe_pm_set_vram_threshold(struct xe_device *xe, u32 threshold)
+ }
+ 
+ /**
+- * xe_pm_d3cold_allowed_toggle - Check conditions to toggle d3cold.allowed
++ * xe_pm_d3cold_target_state_toggle - Check conditions to toggle target_state
+  * @xe: xe device instance
+  *
+  * To be called during runtime_pm idle callback.
+  * Check for all the D3Cold conditions ahead of runtime suspend.
+  */
+-void xe_pm_d3cold_allowed_toggle(struct xe_device *xe)
++void xe_pm_d3cold_target_state_toggle(struct xe_device *xe)
+ {
+ 	struct ttm_resource_manager *man;
+ 	u32 total_vram_used_mb = 0;
+@@ -932,7 +932,7 @@ void xe_pm_d3cold_allowed_toggle(struct xe_device *xe)
+ 	int i;
+ 
+ 	if (!xe->d3cold.capable) {
+-		xe->d3cold.allowed = false;
++		xe->d3cold.target_state = XE_D3HOT;
+ 		return;
+ 	}
+ 
+@@ -947,9 +947,9 @@ void xe_pm_d3cold_allowed_toggle(struct xe_device *xe)
+ 	mutex_lock(&xe->d3cold.lock);
+ 
+ 	if (total_vram_used_mb < xe->d3cold.vram_threshold)
+-		xe->d3cold.allowed = true;
++		xe->d3cold.target_state = XE_D3COLD_OFF;
+ 	else
+-		xe->d3cold.allowed = false;
++		xe->d3cold.target_state = XE_D3HOT;
+ 
+ 	mutex_unlock(&xe->d3cold.lock);
+ }
+diff --git a/drivers/gpu/drm/xe/xe_pm.h b/drivers/gpu/drm/xe/xe_pm.h
+index ba550281b130..c6c2bd6187a5 100644
+--- a/drivers/gpu/drm/xe/xe_pm.h
++++ b/drivers/gpu/drm/xe/xe_pm.h
+@@ -12,6 +12,12 @@
+ 
+ struct xe_device;
+ 
++enum xe_d3_state {
++	XE_D3HOT = 0,
++	XE_D3COLD_VRSR,
++	XE_D3COLD_OFF,
++};
++
+ int xe_pm_suspend(struct xe_device *xe);
+ int xe_pm_resume(struct xe_device *xe);
+ 
+@@ -30,7 +36,7 @@ void xe_pm_runtime_get_noresume(struct xe_device *xe);
+ bool xe_pm_runtime_resume_and_get(struct xe_device *xe);
+ void xe_pm_assert_unbounded_bridge(struct xe_device *xe);
+ int xe_pm_set_vram_threshold(struct xe_device *xe, u32 threshold);
+-void xe_pm_d3cold_allowed_toggle(struct xe_device *xe);
++void xe_pm_d3cold_target_state_toggle(struct xe_device *xe);
+ bool xe_rpm_reclaim_safe(const struct xe_device *xe);
+ struct task_struct *xe_pm_read_callback_task(struct xe_device *xe);
+ int xe_pm_module_init(void);
 -- 
 2.34.1
 
