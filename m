@@ -1,79 +1,81 @@
-Return-Path: <linux-pci+bounces-28358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D7E1AC2B67
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 23:34:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 894D8AC2BA4
+	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 00:05:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2238BA43697
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:33:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46ADF171541
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 22:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A5620B801;
-	Fri, 23 May 2025 21:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E148B20F085;
+	Fri, 23 May 2025 22:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZI9Eq5i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qi9TNjH/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF07A1E2602;
-	Fri, 23 May 2025 21:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F8D20E717;
+	Fri, 23 May 2025 22:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748036020; cv=none; b=RePN52jvwvpihelmOuaYTtuBmGP9X+ltL73dy8uJ8w29Ngi/rT/IpAWkaKg1MuYT54ynpbMcSxiGytL6EPKxNGXHFHllGgPjN/sIwlLJi7XUk9R5pjiasgSu3qRclTRrUtQILtWwo3wyI6z6Rl57NppFcoNnxjPa2V6cwMpEy9Q=
+	t=1748037942; cv=none; b=nixuc7gCgwa/j7dT44XHZ8IB+768BG44bPuRyMjTqfNBEIVLHgvxrynwCYePS9lS9eCBCmAKd/oVZbcjtP8JwFpZKuhs4PbuKrcQ89vFpjpAKXFXk7qVmBO7g+29O38ObtbvI8nBEYq0Qxv77Ejvu812YWHRZYRhtt6SHD0ZZaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748036020; c=relaxed/simple;
-	bh=sm8mw8DhfqY+1KlR3no0+z64hdItrfdVOkj9hlVT2Mc=;
+	s=arc-20240116; t=1748037942; c=relaxed/simple;
+	bh=3SQ4b9mvlcSn5gq02pzro1J5w5A8mstVDIuSThnUHIg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIdftZKf1iWwEVCHXRQmtD3/+06e7nRls42bpf8N42qUFga3j7FiPT2WycFqIsfhIFQiSdRwSR+FbktZ+xLhlHNZh4XDm1je1ItEH8zPzXUkgM4s1bIetBsRxXakgPbGAeqMiVyl3Za3vKd33M6mhAFaRSBWwFrs+z6DkdIoPyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZI9Eq5i; arc=none smtp.client-ip=192.198.163.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=G+wWN24H4bYZhzAeAVqUcHUDfjm+/1M2lNZozQ4nrRo6a4yVLFHJCE22A/GUBw5owP94+9UX5eYFQXJyvIeJUAM0wXNtIXm0mNV1imFLWrva6NxDZIpfQVWZWgGnFHVogskbdd9hZ1pNoveRlMvbqr8mDF3VLH9ORD2SNLs8oMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qi9TNjH/; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748036019; x=1779572019;
+  t=1748037941; x=1779573941;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=sm8mw8DhfqY+1KlR3no0+z64hdItrfdVOkj9hlVT2Mc=;
-  b=VZI9Eq5iPAIHj2FuuIR1MBUzlBTMBqtcx+kI3m7TtWCybbUNseocza/C
-   cvKg4b2jkS1F/5Un4cPLMabJlkh6z/mvmwhjErucgGpAw6uuwZqEH8MV+
-   apxXa+jOAg1NAUhgnzlaXaQOcZ4pqy4R9TNimFo/Fm0jUyJwgOPqFXT+8
-   QuYQE7vMuETN9Vk3QYvugXvBdMKcWZSI8haXzQGzFJmMC/2BhFQWbTs6T
-   7RoQWdPRvvD9VOilfxr+Laik7cAXOOtD14ljkdAey+dc5C+DzFf28jwDB
-   zpkTFV/a/vCSUUoIJw9Ph0DQDax2Mcdw17dwNIQY1RMvr1uVPGVEO+lh2
-   Q==;
-X-CSE-ConnectionGUID: 589RGN2cTe2wix6jl3Kovw==
-X-CSE-MsgGUID: uKf2neMkSo+opa2txzx2tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49354665"
+  bh=3SQ4b9mvlcSn5gq02pzro1J5w5A8mstVDIuSThnUHIg=;
+  b=Qi9TNjH/waw5f9ygMDq1s4SoY5KScswo1IfzIrXFFTwnlSNO/GLLQQ1j
+   FTDoO5a6vXrUQgF/ADLlPDJEzpjzDieEtovwxf+9m7yHWVBFKCi4p+4VS
+   1987U5RtQMxoirEM1Njwj8IL3eMUZBoz7J9O9aASBPj+2HJYGLM4bN7v4
+   XMnGSkkYccVSKaUZImfoQalEAGJSvjHyNgt33EdzFW0cWD7st8nRgOHBd
+   AhLpTno9iFiXfUsOR7VjSb2GBhtEY7M8HonEkfcf0JG6o1CHaX+60zX3u
+   +0Ky0wbmRF5c6tPC9d1fyZlVFcSKBfhQ6JIQadrAoB2CmRjl1vafl4PBD
+   A==;
+X-CSE-ConnectionGUID: NJQNS+L+S7eVsc2pFBzcig==
+X-CSE-MsgGUID: vP4lwnk2RQa5Md+o2t7A4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61153573"
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="49354665"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 14:33:38 -0700
-X-CSE-ConnectionGUID: 17/+h9EMQc+nneemEVveSA==
-X-CSE-MsgGUID: 3jNwTZ+nSMOcgwIt04d4jw==
+   d="scan'208";a="61153573"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 15:05:41 -0700
+X-CSE-ConnectionGUID: 8TFKGq4FSIyyrHHqNIV5uA==
+X-CSE-MsgGUID: oZA2c1PyRUCo6iWAFdZKTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="178422381"
+   d="scan'208";a="142274870"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 23 May 2025 14:33:34 -0700
+  by orviesa008.jf.intel.com with ESMTP; 23 May 2025 15:05:37 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uIa1E-000QkK-18;
-	Fri, 23 May 2025 21:33:32 +0000
-Date: Sat, 24 May 2025 05:33:30 +0800
+	id 1uIaWE-000Ql6-1e;
+	Fri, 23 May 2025 22:05:34 +0000
+Date: Sat, 24 May 2025 06:04:38 +0800
 From: kernel test robot <lkp@intel.com>
 To: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, anshuman.gupta@intel.com,
-	rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com,
-	rodrigo.vivi@intel.com, varun.gupta@intel.com,
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Subject: Re: [PATCH v3 06/11] drm/xe/vrsr: Initialize VRSR feature
-Message-ID: <202505240511.h1zy992X-lkp@intel.com>
-References: <20250523190155.2623462-7-badal.nilawar@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org,
+	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
+	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
+	varun.gupta@intel.com, ville.syrjala@linux.intel.com,
+	uma.shankar@intel.com
+Subject: Re: [PATCH v3 07/11] drm/xe/vrsr: Enable VRSR on default VGA boot
+ device
+Message-ID: <202505240521.BnNwr31U-lkp@intel.com>
+References: <20250523190155.2623462-8-badal.nilawar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,7 +84,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523190155.2623462-7-badal.nilawar@intel.com>
+In-Reply-To: <20250523190155.2623462-8-badal.nilawar@intel.com>
 
 Hi Badal,
 
@@ -97,54 +99,46 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Badal-Nilawar/PCI-ACPI-Add-D3cold-Aux-Power-Limit_DSM-method/20250524-030125
 base:   https://gitlab.freedesktop.org/drm/xe/kernel.git drm-xe-next
-patch link:    https://lore.kernel.org/r/20250523190155.2623462-7-badal.nilawar%40intel.com
-patch subject: [PATCH v3 06/11] drm/xe/vrsr: Initialize VRSR feature
-config: arm-randconfig-002-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240511.h1zy992X-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240511.h1zy992X-lkp@intel.com/reproduce)
+patch link:    https://lore.kernel.org/r/20250523190155.2623462-8-badal.nilawar%40intel.com
+patch subject: [PATCH v3 07/11] drm/xe/vrsr: Enable VRSR on default VGA boot device
+config: s390-randconfig-001-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240521.BnNwr31U-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240521.BnNwr31U-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240511.h1zy992X-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505240521.BnNwr31U-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from drivers/gpu/drm/xe/xe_device_types.h:10:0,
-                    from drivers/gpu/drm/xe/xe_bo_types.h:16,
-                    from drivers/gpu/drm/xe/xe_bo.h:11,
-                    from drivers/gpu/drm/xe/xe_query.c:17:
->> include/linux/pci-acpi.h:149:12: warning: 'pci_acpi_add_perst_assertion_delay' defined but not used [-Wunused-function]
-    static int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/pci-acpi.h:143:12: warning: 'pci_acpi_request_d3cold_aux_power' defined but not used [-Wunused-function]
-    static int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/gpu/drm/xe/xe_irq.c:12:
+>> drivers/gpu/drm/xe/display/xe_display.h:75:64: warning: non-void function does not return a value [-Wreturn-type]
+      75 | static inline bool xe_display_connected(struct xe_device *xe) {}
+         |                                                                ^
+   In file included from drivers/gpu/drm/xe/xe_irq.c:12:
+   In file included from drivers/gpu/drm/xe/display/xe_display.h:9:
+   In file included from drivers/gpu/drm/xe/xe_device.h:11:
+   In file included from drivers/gpu/drm/xe/xe_device_types.h:10:
+   include/linux/pci-acpi.h:143:12: warning: unused function 'pci_acpi_request_d3cold_aux_power' [-Wunused-function]
+     143 | static int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/pci-acpi.h:149:12: warning: unused function 'pci_acpi_add_perst_assertion_delay' [-Wunused-function]
+     149 | static int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   3 warnings generated.
+--
+   In file included from drivers/gpu/drm/xe/xe_pm.c:17:
+>> drivers/gpu/drm/xe/display/xe_display.h:75:64: warning: non-void function does not return a value [-Wreturn-type]
+      75 | static inline bool xe_display_connected(struct xe_device *xe) {}
+         |                                                                ^
+   1 warning generated.
 
 
-vim +/pci_acpi_add_perst_assertion_delay +149 include/linux/pci-acpi.h
+vim +75 drivers/gpu/drm/xe/display/xe_display.h
 
-ac1c8e35a3262d Kuppuswamy Sathyanarayanan 2020-03-23  134  
-59dc33252ee777 Rafael J. Wysocki          2021-08-24  135  int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
-59dc33252ee777 Rafael J. Wysocki          2021-08-24  136  void pci_acpi_clear_companion_lookup_hook(void);
-004b1d6651d930 Anshuman Gupta             2025-05-24  137  int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-004b1d6651d930 Anshuman Gupta             2025-05-24  138  				      u32 *retry_interval);
-57059451b12af0 Anshuman Gupta             2025-05-24  139  int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us);
-5090d4a6a1f150 Jiang Liu                  2013-04-12  140  #else	/* CONFIG_ACPI */
-5090d4a6a1f150 Jiang Liu                  2013-04-12  141  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
-5090d4a6a1f150 Jiang Liu                  2013-04-12  142  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
-004b1d6651d930 Anshuman Gupta             2025-05-24 @143  static int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-004b1d6651d930 Anshuman Gupta             2025-05-24  144  					     u32 *retry_interval)
-004b1d6651d930 Anshuman Gupta             2025-05-24  145  {
-004b1d6651d930 Anshuman Gupta             2025-05-24  146  	return -EOPNOTSUPP;
-004b1d6651d930 Anshuman Gupta             2025-05-24  147  }
-57059451b12af0 Anshuman Gupta             2025-05-24  148  
-57059451b12af0 Anshuman Gupta             2025-05-24 @149  static int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
-57059451b12af0 Anshuman Gupta             2025-05-24  150  {
-57059451b12af0 Anshuman Gupta             2025-05-24  151  	return -EOPNOTSUPP;
-57059451b12af0 Anshuman Gupta             2025-05-24  152  }
-5090d4a6a1f150 Jiang Liu                  2013-04-12  153  #endif	/* CONFIG_ACPI */
-^1da177e4c3f41 Linus Torvalds             2005-04-16  154  
+    74	
+  > 75	static inline bool xe_display_connected(struct xe_device *xe) {}
 
 -- 
 0-DAY CI Kernel Test Service
