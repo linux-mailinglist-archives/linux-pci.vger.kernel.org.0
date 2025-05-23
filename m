@@ -1,99 +1,102 @@
-Return-Path: <linux-pci+bounces-28356-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28357-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 104F9AC2B18
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 22:49:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16F00AC2B52
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 23:26:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 784EE1B6614F
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 20:50:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF6C4E20AB
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F9C01F78E6;
-	Fri, 23 May 2025 20:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="WSKrnYRu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C32E1FE45A;
+	Fri, 23 May 2025 21:26:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92401F1527;
-	Fri, 23 May 2025 20:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812691F3B87;
+	Fri, 23 May 2025 21:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748033384; cv=none; b=MJcadLycmjQ7X3wa1V1NDGWnXEzDlfKTySCwlkSLmcwMye7VfK32etzCqKiDkEkmJDMNbVq9WRyKmmsPOn/wDiaolOxNeflT9PyiX5ubeF6mE3ksNVgDjJP5Ex46+ZVUieyqISZZvD/q0SB1jBOLRZ0Ja1gBccblMXyxGn8oHk8=
+	t=1748035581; cv=none; b=UFBe8uIDra+Wmcv3F9QJzru+KuSY2fUa5+HtCSnhEaJNsCwUNcg9QZLZpK6T8/EDinI+1Kmp7KFAewbaTjKpWCzFVQiehf1wOQVJf4FcW3J/YVI8BzDgDK1WXKW5sAhlS+BcFq6qlkpC9VCNnTNDLadAx+HNAjrYRaT1t3yBwRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748033384; c=relaxed/simple;
-	bh=rmrqfWLefbhaUco9usgJOWeiHWTgCLPJYBQDj5C+X+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TkkT9uzyhcT+XtqOuOzHkF2A4dkbPna46OP8jlHJ5P+QL/MaOwDi11zPjrlMJQheQ4hyiwBTrbGauChRc1BG5mgUFj+V1WryDjkE5dtD14mWTgndts+F3Oijf/jRdOIRK/pv0ab5652dX/xWJqoMZiqKBeA32kGftyVIGqpcE2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=WSKrnYRu; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [10.50.4.32] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4b3y2V4qhVz4gBY;
-	Fri, 23 May 2025 16:49:38 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1748033380; bh=rmrqfWLefbhaUco9usgJOWeiHWTgCLPJYBQDj5C+X+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WSKrnYRuyxhZZxgZPtLRdF2Y05TGKqdmF840p+QYiNTTYZs3q76fEr0M4fqCMwkk6
-	 reJUsA1txEUxdS+/FMf79FaUrRjHexQEPlJxR3T9o9HiSufUguIw8kXZ1C/2oCHnDG
-	 bRVPeRJ/kHhbA0QTtxga70pZX8sdiHy9hRuZTVzU=
-Message-ID: <c8746066-b5cf-4582-83d1-02ca28fe4c38@panix.com>
-Date: Fri, 23 May 2025 13:49:37 -0700
+	s=arc-20240116; t=1748035581; c=relaxed/simple;
+	bh=SOHTYxjEKCoVoQ/vP2ctFKnsmi301z+p0Ait05tMC6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S5TCz7//IvfyCxV6XnAxx/SQGbThDB+AGJOvlpAYvUfaouRIX/qabctiG43LIDlhvZWcn4TeVwdksaycHNIKQy4JVGFrUQ8xtewWyxCzvERk5oi3+O5tgPytabmyBhXOFUhTA06lwC7PCkaigCeFtKspOFrGKDDA/d9MTXatBm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1CAA52009D05;
+	Fri, 23 May 2025 23:26:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 07AFF24A2A7; Fri, 23 May 2025 23:26:15 +0200 (CEST)
+Date: Fri, 23 May 2025 23:26:15 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Cyril Brulebois <kibi@debian.org>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
+ CONFIG_PCI_PWRCTL enabled
+Message-ID: <aDDn94q9gS8SfK9_@wunner.de>
+References: <20250523201935.1586198-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Raphael, I'd like your help upstreaming this VMD power-saving
- patch, please
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Me <kenny@panix.com>
-Cc: Russell Haley <yumpusamongus@gmail.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pm@vger.kernel.org,
- Kai-Heng Feng <kai.heng.feng@canonical.com>, Vidya Sagar
- <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Andrea Righi <andrea.righi@canonical.com>,
- You-Sheng Yang <vicamo.yang@canonical.com>, linux-pci@vger.kernel.org,
- Sergey Dolgov <sergey.v.dolgov@gmail.com>,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>,
- Jian-Hong Pan <jhp@endlessos.org>, "David E. Box"
- <david.e.box@linux.intel.com>
-References: <20250512210938.GA1128238@bhelgaas>
- <7aedd720-c29a-4225-a79a-d44a3a9ca129@gmail.com>
- <b52a2045-0b26-4287-80a4-e1b571d76a26@panix.com>
- <CAJZ5v0hWAbwtvZm4WrFc06v79JEpTVQ9KeHPuzVkvm5Vp9gK3Q@mail.gmail.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <CAJZ5v0hWAbwtvZm4WrFc06v79JEpTVQ9KeHPuzVkvm5Vp9gK3Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523201935.1586198-1-helgaas@kernel.org>
 
-
-
-On 5/23/25 12:44, Rafael J. Wysocki wrote:
-
-> I would try to replace the PCIE_LINK_STATE_ASPM_ALL in the patch with
+On Fri, May 23, 2025 at 03:17:59PM -0500, Bjorn Helgaas wrote:
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2510,6 +2510,7 @@ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+>  
+>  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+>  {
+> +#if defined(CONFIG_PCI_PWRCTL) || defined(CONFIG_PCI_PWRCTL_MODULE)
+>  	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+>  	struct platform_device *pdev;
+>  	struct device_node *np;
+> @@ -2536,6 +2537,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+>  	}
+>  
+>  	return pdev;
+> +#else
+> +	return NULL;
+> +#endif
+>  }
+[...]
+> This an alternate to
+> https://lore.kernel.org/r/20250522140326.93869-1-manivannan.sadhasivam@linaro.org
 > 
-> PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1 | PCIE_LINK_STATE_L1_1 |
-> PCIE_LINK_STATE_L1_1_PCIPM
+> It should accomplish the same thing but I think using #ifdef makes it a
+> little more visible and easier to see that pci_pwrctrl_create_device() is
+> only relevant when CONFIG_PCI_PWRCTL is enabled.
 
-I could get "Pkg%pc8" with these but no deeper until I'd added 
-"PCIE_LINK_STATE_L1_2" to the mix.
+Just noting though that section 21 of Documentation/process/coding-style.rst
+discourages use of #ifdef and recommends IS_ENABLED() and inline stubs
+instead.
 
-(I didn't see any power regressions after that (including 
-suspend/resume, but I didn't try for a longer time), so didn't re-add 
-"PCIE_LINK_STATE_L1_2_PCIPM", so that one may not be needed.)
+Thanks,
 
-
--Kenny
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
+Lukas
 
