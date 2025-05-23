@@ -1,106 +1,213 @@
-Return-Path: <linux-pci+bounces-28318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A6A8AC1D71
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 09:02:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CD30AC206B
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 12:02:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 574347ABF68
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 07:01:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B05BD3BD4EC
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 10:01:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84BC11A0BE0;
-	Fri, 23 May 2025 07:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99BE23237B;
+	Fri, 23 May 2025 09:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7VypC0+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iBrQ3jJQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077319C554
-	for <linux-pci@vger.kernel.org>; Fri, 23 May 2025 07:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CABE227EAF;
+	Fri, 23 May 2025 09:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747983763; cv=none; b=kgRMP/p/VWlil6zzVXZ4rDHzL1gKMOvL1fve+XbTpkAG2HvFT0GB1+hKnfvq/2Qyc3PytJYu1R8ucpBGyLGK7XashDYu/vchJjZbTMMMUZ5+oonmlhAv7xt/qra7EJjQQvujO89XbO57bqqdzaJe8+xhp2EpUlh1KRm7jFtBIvk=
+	t=1747994209; cv=none; b=DhTSEZcQ/min+YbFKJjdD4VIRG5lsvSXVmg/qaGocYhqxBe1n+MAWkjcr2eetvrE92VNEVgLrYLzDWtvgXFKpfz7TMNyEy/km7qFR9slGVKUgCo52e2DtjzK6og6bM2QnaNqI+49oJ3MDHJEF4OcJ3g5pG9Zt7EExNdl2X/oBT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747983763; c=relaxed/simple;
-	bh=8r9Hi1gIyfVoTRlx/Tn8V/O9/Gd9U8ajp1fOgP9tvqI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmthIxDsKaD2PS7BY4jMPWG+ZSQQw5GabLyK7883EVBAy31LLe26qmD7z9TTDhjDt8qbb3jMDw72U32tbkEoPhlD+jD+di8RzJWjDfMnvi7PPQ3geGzq+sJSeesUEUcv8BWfKiSIIfEFPax44PHUL5/+THh3RO4+6/vpFHuEWXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7VypC0+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72507C4CEE9;
-	Fri, 23 May 2025 07:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747983762;
-	bh=8r9Hi1gIyfVoTRlx/Tn8V/O9/Gd9U8ajp1fOgP9tvqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K7VypC0+9B8QVZQIpk5LceZtLwlO11iVcVRN4XMp4ucopeqzikvpP1dhvOKGs5Fvx
-	 1TcyaXlJpnR84Hx7sIRWOTEmR1l1kDiHLCn2l9JhhflsFN/dUhm+sPUz++QOPAPujC
-	 GjRJDACA5nB+mjfvCE/lu6V0zCW6FJgLFImTlg0lUrdcw1PFmG7NVgDqFksB0CCmGu
-	 wlwleAwMEJHl2qP+Bcb+wxEsXZ9JaNFz53KMDWGuhsaG1VxPBa/m/vE3uQzOpHq0xm
-	 jseKAwy2mlnTr1XFI2GJMR8649jpRl80H4p+uTWTa/QOwb2KKERT9XOmyifNH9Xpa1
-	 9hlaoB5/hgo3Q==
-Date: Fri, 23 May 2025 09:02:38 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: reset_slot() callback not respecting MPS config
-Message-ID: <aDAdjie1jGBQ-mKf@ryzen>
-References: <aC9OrPAfpzB_A4K2@ryzen>
- <aDAInK0F0Qh7QTiw@wunner.de>
+	s=arc-20240116; t=1747994209; c=relaxed/simple;
+	bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hi/QUgS8xwJmyoWJOhxB5OILiVOkYk94zpmdo23J616lTC8ytAxVMOKVNAVO8kKPsxHiDeKcZWdkiCA685zqXM30Nt0vx0oRLoKzqEzIcV7ROz0AkwY3S379J7BQVZYobKwfiketgHRTFFlODRVvmnTscc8VZSzLNMPFPO65pGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iBrQ3jJQ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747994208; x=1779530208;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JbxZhZlzZC1d54wodrzZn1J3iTj3tlK9lW0dMu8lctw=;
+  b=iBrQ3jJQGW6Amzi5IxO2Tt5QMzvfSDlPwPD9s4VGIdQoa4t34b2r3GPG
+   Kn/84phHtGOQZEN4KNPbIux1f3efFmvtakxu6mSttpZyewCzzRtDTSMBc
+   ctoMdIxBY1+yMvNTPjHVC+5YsVJBygj83gDjPIleoTL9TjhIJiZ4YbuYL
+   ZtEFChdwRno2hJaaeYaSKrbEuow7Ai5s6o5HL4fEfTZUltefrHafIOsUC
+   bbet/RUhHX8b4nCck29nUUR/fHOf6FlLkif7ZMeogEjcz5UO1hQl7WT9H
+   lZQlXwA7B6pQij+lTtaNso1W7duXYu78Rt34gPHg9fj8o5/tsgTPsROj3
+   A==;
+X-CSE-ConnectionGUID: liSpU07WSh+iuPqcYs5n0w==
+X-CSE-MsgGUID: kE2K5jMIT9adk/8sfy4wgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37670357"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="37670357"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:47 -0700
+X-CSE-ConnectionGUID: yFtpiiTURPqBOqi3zo9T/A==
+X-CSE-MsgGUID: suIahlvJSs2wQTPTiC/a1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="146063780"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:56:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 May 2025 12:56:35 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
+ pcie_print_tlp_log()
+In-Reply-To: <20250522232339.1525671-14-helgaas@kernel.org>
+Message-ID: <ce537bc4-a302-4da5-2e65-0fb07c9e3e1d@linux.intel.com>
+References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-14-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDAInK0F0Qh7QTiw@wunner.de>
+Content-Type: multipart/mixed; boundary="8323328-2019861423-1747994195=:933"
 
-On Fri, May 23, 2025 at 07:33:16AM +0200, Lukas Wunner wrote:
-> On Thu, May 22, 2025 at 06:19:56PM +0200, Niklas Cassel wrote:
-> > As you know the reset_slot() callback patches were merged recently.
-> > 
-> > Wilfred and I (mostly Wilfred), have been debugging DMA issues after the
-> > reset_slot() callback has been invoked. The issue is reproduced when MPS
-> > configuration is set to performance, but might be applicable for other
-> > MPS configurations as well. The problem appears to be that reset_slot()
-> > feature does not respect/restore the MPS configuration.
-> 
-> The Device Control register (and thus the MPS setting) is saved via:
-> 
->   pci_save_state()
->     pci_save_pcie_state()
-> 
-> So either you're missing a call to pci_restore_state() after reset,
-> or you're missing a call to pci_save_state() after changing MPS,
-> or MPS is somehow overwritten after pci_restore_state().
-> Which one is it?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I kind of liked the earlier revision of Mani's series where we kicked the
-devices off the bus, that way, we would re-use the exact same code paths
-as when doing the initial enumeration.
+--8323328-2019861423-1747994195=:933
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Also, by removing the device, the exact same solution works fine both for
-link-down (since the device might never come back again), and for a sysfs
-initiated reset.
+On Thu, 22 May 2025, Bjorn Helgaas wrote:
 
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> aer_print_error() produces output at a printk level (KERN_ERR/KERN_WARNIN=
+G/
+> etc) that depends on the kind of error, and it calls pcie_print_tlp_log()=
+,
+> which previously always produced output at KERN_ERR.
+>=20
+> Add a "level" parameter so aer_print_error() can control the level of the
+> pcie_print_tlp_log() output to match.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.h      | 3 ++-
+>  drivers/pci/pcie/aer.c | 5 +++--
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  drivers/pci/pcie/tlp.c | 6 ++++--
+>  4 files changed, 10 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 705f9ef58acc..1a9bfc708757 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -613,7 +613,8 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
+ int where2,
+>  =09=09      struct pcie_tlp_log *log);
+>  unsigned int aer_tlp_log_len(struct pci_dev *dev, u32 aercc);
+>  void pcie_print_tlp_log(const struct pci_dev *dev,
+> -=09=09=09const struct pcie_tlp_log *log, const char *pfx);
+> +=09=09=09const struct pcie_tlp_log *log, const char *level,
+> +=09=09=09const char *pfx);
+>  #endif=09/* CONFIG_PCIEAER */
+> =20
+>  #ifdef CONFIG_PCIEPORTBUS
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f80c78846a14..f0936759ba8b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -734,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
+err_info *info)
+>  =09__aer_print_error(dev, info);
+> =20
+>  =09if (info->tlp_header_valid)
+> -=09=09pcie_print_tlp_log(dev, &info->tlp, dev_fmt("  "));
+> +=09=09pcie_print_tlp_log(dev, &info->tlp, level, dev_fmt("  "));
+> =20
+>  out:
+>  =09if (info->id && info->error_dev_num > 1 && info->id =3D=3D id)
+> @@ -797,7 +797,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
+ity,
+>  =09=09=09aer->uncor_severity);
+> =20
+>  =09if (tlp_header_valid)
+> -=09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> +=09=09pcie_print_tlp_log(dev, &aer->header_log, info.level,
+> +=09=09=09=09   dev_fmt("  "));
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> =20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 6c98fabdba57..7ae1590ea1da 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -222,7 +222,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *=
+pdev)
+>  =09=09=09  dpc_tlp_log_len(pdev),
+>  =09=09=09  pdev->subordinate->flit_mode,
+>  =09=09=09  &tlp_log);
+> -=09pcie_print_tlp_log(pdev, &tlp_log, dev_fmt(""));
+> +=09pcie_print_tlp_log(pdev, &tlp_log, KERN_ERR, dev_fmt(""));
+> =20
+>  =09if (pdev->dpc_rp_log_size < PCIE_STD_NUM_TLP_HEADERLOG + 1)
+>  =09=09goto clear_status;
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> index 890d5391d7f5..71f8fc9ea2ed 100644
+> --- a/drivers/pci/pcie/tlp.c
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -98,12 +98,14 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,=
+ int where2,
+>   * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
+>   * @dev: PCIe device
+>   * @log: TLP Log structure
+> + * @level: Printk log level
+>   * @pfx: String prefix
+>   *
+>   * Prints TLP Header and Prefix Log information held by @log.
+>   */
+>  void pcie_print_tlp_log(const struct pci_dev *dev,
+> -=09=09=09const struct pcie_tlp_log *log, const char *pfx)
+> +=09=09=09const struct pcie_tlp_log *log, const char *level,
+> +=09=09=09const char *pfx)
+>  {
+>  =09/* EE_PREFIX_STR fits the extended DW space needed for the Flit mode =
+*/
+>  =09char buf[11 * PCIE_STD_MAX_TLP_HEADERLOG + 1];
+> @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
+>  =09=09}
+>  =09}
+> =20
+> -=09pci_err(dev, "%sTLP Header%s: %s\n", pfx,
+> +=09dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
+>  =09=09log->flit ? " (Flit)" : "", buf);
+>  }
+>=20
 
-Anyway, I'm happy with whatever solution that works.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Adding pci_save_state() + pci_restore_state() seems fine, but since things
-are not working, I assume that those calls are missing, at least of the
-bridge.
+--=20
+ i.
 
-Are we also missing similar pci_save_state() + pci_restore_state() calls
-for the EP?
-
-
-Kind regards,
-Niklas
+--8323328-2019861423-1747994195=:933--
 
