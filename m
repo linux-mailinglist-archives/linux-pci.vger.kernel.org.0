@@ -1,54 +1,73 @@
-Return-Path: <linux-pci+bounces-28338-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28339-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C8A4AC27BF
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 18:39:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65EA7AC2839
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 19:09:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C19481BC0462
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 16:39:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 771ED3A57EF
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 17:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A33B222580;
-	Fri, 23 May 2025 16:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F84211A11;
+	Fri, 23 May 2025 17:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mX3UR/6K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y/gWqpCP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA874120B;
-	Fri, 23 May 2025 16:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30742236F8
+	for <linux-pci@vger.kernel.org>; Fri, 23 May 2025 17:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748018374; cv=none; b=CYagrjqGngy4CfJA5JbZBctjttcmQ0V+BDYwxJpJ++h4dDw7U0Rb0AwtEGjOFkTFRpGb4IB1wU77lT3Uas8F6AuPXPhi9NBcI+IcOrr9G+T6r+6gaJ9FnFoaCDZi2C+pRElQlRcZTysir8BUDcBxuybnTWdNsmyC000WGPxIFJ8=
+	t=1748020159; cv=none; b=YJOM2RM0OH21QrnPZ2bZ+Fj6W3kDefxZzedWioEhkjJblTfgroNffp6sB3XCKb2fyFmaRlZ8p/x52AOPK0wh4kyhFXVZTlm6YFbOi9XIhvrCMihK2ErlPKQuEAGgfwkrrwtqAI2tfuj8mk1v2pOkcHqq0cS2Xig8OvOT/HMm1r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748018374; c=relaxed/simple;
-	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DBCP7+SvB5AmBmFw4uMbPHKFdKVb/e7N3ilhMtPs/KrA7dhwWOB/ECR8zQNk6vVt93AGaa7iuNmvUNX8Lu53oqgOGax7naSlZr3/1quV6Na7Gp4A0ZiWW7AIZehMwIkwADqh8SC7HbtwlasUUp6xjfqZceCXumMnZwJDhNh1JMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mX3UR/6K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C05C4CEE9;
-	Fri, 23 May 2025 16:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748018373;
-	bh=4E4NkvJq/R7U01X4XIKDFjPJuXJax6DDUhPYflAvPOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mX3UR/6Kl0MmdPgCRRIWz3uPT1hCf139/OspEcnnVyh2KlN2NZ/LRYlVV0R4upLEC
-	 a6XrVyVUo0PqQ4GB1irujOO6r45TY9UiZDlCXNOt+gz8iYXbBIMdWk912XwQOFPmcD
-	 oLjzcm7gCSY53ZFbSxdze68Z1b05jyrIpWMffj4eNUQQJJbY7sTpFhZeD7JvqNr5o2
-	 GL/m9N/UD+GHuy2QDdV8UO3+byUZY4WIs27bvFCliqYDw4ly8hjd7W/miCl0unoAZ4
-	 076tMCY3PJkl8kcEwc5Q+1We02OjL/clI8Ij5J/bFqkbaWaEwJKrgKjeYiwj/J+ACK
-	 V0xTNVv6JXFhQ==
-Date: Fri, 23 May 2025 11:39:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: grwhyte@linux.microsoft.com
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
-	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
-Message-ID: <20250523163932.GA1566378@bhelgaas>
+	s=arc-20240116; t=1748020159; c=relaxed/simple;
+	bh=K3vXVcnQcVKpSxMenPFi3K8iLR+/f4lbckLz1CwNpe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=g62bPH6OvExDTD6RqdhhaQwMCkc5/x/kEo5PNQ2QqIDqkjDbOkMsEyUJwiAP8isc8v+SdOf1KJZiP25sxsJRlb6akDO3sNyy9Uw+0dgwA+W5BLURCysr+tf2ouzB1NY0Vx6UnlZeepu/rADHlS75uffyjggyjGuPD1JcVPHWC3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y/gWqpCP; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748020158; x=1779556158;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=K3vXVcnQcVKpSxMenPFi3K8iLR+/f4lbckLz1CwNpe4=;
+  b=Y/gWqpCPeXEeDa4GxbmhWGDperpX4uCgxsWNJrFrDIbZzJSVM2vPbciK
+   dcvyWiAC4ZLSNQXbTFT1rGwR8PJdVXLfyWhE2zt+uskJ6pQn4HYXWs0Yh
+   CrRjAVTPy4L73wPjd16ok38GcGp0tG4XBQxPz8FAroUyEmOzM2yJPUy9v
+   OCehEdeBtBNSRRFLgLSPPtyh1ZrgulhOmJPvX9xoggp00GBmrifo+Z67o
+   mcw6Qk3QaRhtSQKEtjZJU7CnZ0fgNAaWb1PeDxdONIECllOSSVoj/mcOu
+   1KoQ7yz/8+CtxNKDgdnPOENLsxapBFoZSY+zHbmmBIhhnbnMK+8DpIqbd
+   A==;
+X-CSE-ConnectionGUID: 5kaF6fN+Svq69NGvL+xhQA==
+X-CSE-MsgGUID: XXmvGfXnS/Gvr39dCIULCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50007228"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="50007228"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:09:16 -0700
+X-CSE-ConnectionGUID: jzyg6Di9QHWl94oM/AGc5A==
+X-CSE-MsgGUID: 108zMnSuRHW6AyLIxrJPJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="146196146"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 23 May 2025 10:09:14 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uIVtQ-000QbW-1F;
+	Fri, 23 May 2025 17:09:12 +0000
+Date: Sat, 24 May 2025 01:08:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:pwrctrl] BUILD SUCCESS
+ 0e99ca5ffb8b1716723e3b645e38d56448183ecd
+Message-ID: <202505240133.UzI909ZM-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,143 +75,239 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521231539.815264-1-grwhyte@linux.microsoft.com>
 
-On Wed, May 21, 2025 at 11:15:39PM +0000, grwhyte@linux.microsoft.com wrote:
-> From: Graham Whyte <grwhyte@linux.microsoft.com>
-> 
-> Add a device-specific reset for Microsoft MANA devices with the FLR
-> delay reduced from 100ms to 10ms. While this is not compliant with the pci
-> spec, these devices safely complete the FLR much quicker than 100ms and
-> this can be reduced to optimize certain scenarios
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pwrctrl
+branch HEAD: 0e99ca5ffb8b1716723e3b645e38d56448183ecd  arm64: Kconfig: switch to HAVE_PWRCTRL
 
-It looks like this could be done generically if the device advertised
-the Readiness Time Reporting Capability (PCIe r6.0, sec 7.9.16) and
-Linux supported that Capability (which it currently does not)?
+elapsed time: 1449m
 
-From 7.9.16.3:
+configs tested: 218
+configs skipped: 7
 
-  FLR Time - is the time that the Function requires to become
-  Configuration-Ready after it was issued an FLR.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Does the device advertise that capability?  It would be much nicer if
-we didn't have to add a device-specific quirk for this.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-14.2.0
+arc                     nsimosci_hs_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250523    clang-16
+arc                   randconfig-001-20250523    gcc-15.1.0
+arc                   randconfig-002-20250523    clang-16
+arc                   randconfig-002-20250523    gcc-10.5.0
+arc                           tb10x_defconfig    gcc-14.2.0
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-19
+arm                        clps711x_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250523    clang-16
+arm                   randconfig-002-20250523    clang-16
+arm                   randconfig-002-20250523    gcc-8.5.0
+arm                   randconfig-003-20250523    clang-16
+arm                   randconfig-004-20250523    clang-16
+arm                   randconfig-004-20250523    clang-21
+arm                        spear3xx_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250523    clang-16
+arm64                 randconfig-002-20250523    clang-16
+arm64                 randconfig-003-20250523    clang-16
+arm64                 randconfig-003-20250523    clang-21
+arm64                 randconfig-004-20250523    clang-16
+arm64                 randconfig-004-20250523    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250523    gcc-10.5.0
+csky                  randconfig-002-20250523    gcc-10.5.0
+csky                  randconfig-002-20250523    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250523    clang-21
+hexagon               randconfig-001-20250523    gcc-10.5.0
+hexagon               randconfig-002-20250523    clang-21
+hexagon               randconfig-002-20250523    gcc-10.5.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250523    clang-20
+i386        buildonly-randconfig-002-20250523    clang-20
+i386        buildonly-randconfig-003-20250523    clang-20
+i386        buildonly-randconfig-004-20250523    clang-20
+i386        buildonly-randconfig-005-20250523    clang-20
+i386        buildonly-randconfig-006-20250523    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250523    gcc-12
+i386                  randconfig-002-20250523    gcc-12
+i386                  randconfig-003-20250523    gcc-12
+i386                  randconfig-004-20250523    gcc-12
+i386                  randconfig-005-20250523    gcc-12
+i386                  randconfig-006-20250523    gcc-12
+i386                  randconfig-007-20250523    gcc-12
+i386                  randconfig-011-20250523    gcc-12
+i386                  randconfig-012-20250523    gcc-12
+i386                  randconfig-013-20250523    gcc-12
+i386                  randconfig-014-20250523    gcc-12
+i386                  randconfig-015-20250523    gcc-12
+i386                  randconfig-016-20250523    gcc-12
+i386                  randconfig-017-20250523    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250523    gcc-10.5.0
+loongarch             randconfig-001-20250523    gcc-15.1.0
+loongarch             randconfig-002-20250523    gcc-10.5.0
+loongarch             randconfig-002-20250523    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+m68k                            mac_defconfig    gcc-14.2.0
+m68k                           sun3_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          eyeq6_defconfig    gcc-14.2.0
+mips                          rb532_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250523    gcc-10.5.0
+nios2                 randconfig-002-20250523    gcc-10.5.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           alldefconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250523    gcc-10.5.0
+parisc                randconfig-001-20250523    gcc-9.3.0
+parisc                randconfig-002-20250523    gcc-10.5.0
+parisc                randconfig-002-20250523    gcc-7.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc                    mvme5100_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250523    clang-21
+powerpc               randconfig-001-20250523    gcc-10.5.0
+powerpc               randconfig-002-20250523    clang-21
+powerpc               randconfig-002-20250523    gcc-10.5.0
+powerpc               randconfig-003-20250523    clang-20
+powerpc               randconfig-003-20250523    gcc-10.5.0
+powerpc64             randconfig-001-20250523    clang-21
+powerpc64             randconfig-001-20250523    gcc-10.5.0
+powerpc64             randconfig-002-20250523    clang-19
+powerpc64             randconfig-002-20250523    gcc-10.5.0
+powerpc64             randconfig-003-20250523    clang-21
+powerpc64             randconfig-003-20250523    gcc-10.5.0
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250523    gcc-11.5.0
+riscv                 randconfig-001-20250523    gcc-8.5.0
+riscv                 randconfig-002-20250523    clang-17
+riscv                 randconfig-002-20250523    gcc-11.5.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250523    gcc-11.5.0
+s390                  randconfig-001-20250523    gcc-6.5.0
+s390                  randconfig-002-20250523    clang-21
+s390                  randconfig-002-20250523    gcc-11.5.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                          kfr2r09_defconfig    gcc-14.2.0
+sh                          polaris_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250523    gcc-11.5.0
+sh                    randconfig-001-20250523    gcc-12.4.0
+sh                    randconfig-002-20250523    gcc-11.5.0
+sh                    randconfig-002-20250523    gcc-6.5.0
+sh                           se7722_defconfig    gcc-14.2.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250523    gcc-10.3.0
+sparc                 randconfig-001-20250523    gcc-11.5.0
+sparc                 randconfig-002-20250523    gcc-10.3.0
+sparc                 randconfig-002-20250523    gcc-11.5.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250523    gcc-11.5.0
+sparc64               randconfig-001-20250523    gcc-9.3.0
+sparc64               randconfig-002-20250523    gcc-11.5.0
+sparc64               randconfig-002-20250523    gcc-7.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250523    gcc-11.5.0
+um                    randconfig-001-20250523    gcc-12
+um                    randconfig-002-20250523    gcc-11.5.0
+um                    randconfig-002-20250523    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250523    gcc-12
+x86_64      buildonly-randconfig-002-20250523    clang-20
+x86_64      buildonly-randconfig-002-20250523    gcc-12
+x86_64      buildonly-randconfig-003-20250523    clang-20
+x86_64      buildonly-randconfig-003-20250523    gcc-12
+x86_64      buildonly-randconfig-004-20250523    clang-20
+x86_64      buildonly-randconfig-004-20250523    gcc-12
+x86_64      buildonly-randconfig-005-20250523    clang-20
+x86_64      buildonly-randconfig-005-20250523    gcc-12
+x86_64      buildonly-randconfig-006-20250523    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250523    clang-20
+x86_64                randconfig-002-20250523    clang-20
+x86_64                randconfig-003-20250523    clang-20
+x86_64                randconfig-004-20250523    clang-20
+x86_64                randconfig-005-20250523    clang-20
+x86_64                randconfig-006-20250523    clang-20
+x86_64                randconfig-007-20250523    clang-20
+x86_64                randconfig-008-20250523    clang-20
+x86_64                randconfig-071-20250523    clang-20
+x86_64                randconfig-072-20250523    clang-20
+x86_64                randconfig-073-20250523    clang-20
+x86_64                randconfig-074-20250523    clang-20
+x86_64                randconfig-075-20250523    clang-20
+x86_64                randconfig-076-20250523    clang-20
+x86_64                randconfig-077-20250523    clang-20
+x86_64                randconfig-078-20250523    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250523    gcc-11.5.0
+xtensa                randconfig-001-20250523    gcc-9.3.0
+xtensa                randconfig-002-20250523    gcc-11.5.0
 
-> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
-> ---
->  drivers/pci/pci.c    |  3 ++-
->  drivers/pci/pci.h    |  1 +
->  drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 58 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9cb1de7658b5..ad2960117acd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
->  		pci_walk_bus(bus, pci_resume_one, NULL);
->  }
->  
-> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  {
->  	int delay = 1;
->  	bool retrain = false;
-> @@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(pci_dev_wait);
->  
->  /**
->   * pci_power_up - Put the given device into D0
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index f2958318d259..3a98e00eb02a 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
->  int __pci_reset_bus(struct pci_bus *bus);
-> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
->  
->  struct pci_cap_saved_data {
->  	u16		cap_nr;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index c354276d4bac..94bd2c82cbbd 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
->  	return 0;
->  }
->  
-> +#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
-> +#define MICROSOFT_2051_SVC 0xb210
-> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
-> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
-> +
-> +/* Device specific reset for msft GFT and gdma devices */
-> +static int msft_pcie_flr(struct pci_dev *dev)
-> +{
-> +	if (!pci_wait_for_pending_transaction(dev))
-> +		pci_err(dev, "timed out waiting for pending transaction; "
-> +			"performing function level reset anyway\n");
-> +
-> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
-> +
-> +	if (dev->imm_ready)
-> +		return 0;
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
-> +	 * 100ms, but may silently discard requests while the FLR is in
-> +	 * progress. However, 100ms is much longer than required for modern
-> +	 * devices, so we can afford to reduce the timeout to 10ms.
-> +	 */
-> +	usleep_range(10000, 10001);
-> +
-> +	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
-> +}
-> +
-> +/*
-> + * msft_pcie_reset_flr - initiate a PCIe function level reset
-> + * @dev: device to reset
-> + * @probe: if true, return 0 if device can be reset this way
-> + *
-> + * Initiate a function level reset on @dev.
-> + */
-> +static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
-> +{
-> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-> +		return -ENOTTY;
-> +
-> +	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
-> +		return -ENOTTY;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	return msft_pcie_flr(dev);
-> +}
-> +
->  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->  		 reset_intel_82599_sfp_virtfn },
-> @@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  		reset_chelsio_generic_dev },
->  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
->  		reset_hinic_vf_dev },
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
-> +		msft_pcie_reset_flr},
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
-> +		msft_pcie_reset_flr},
-> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
-> +		msft_pcie_reset_flr},
->  	{ 0 }
->  };
->  
-> -- 
-> 2.25.1
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
