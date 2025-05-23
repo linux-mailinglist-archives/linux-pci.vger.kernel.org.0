@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-28351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28352-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AA7DAC2A25
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C5BFAC2A28
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7AB677B4D3B
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 18:59:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8105F7B37AA
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 18:59:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F233B22541F;
-	Fri, 23 May 2025 19:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D02A29ACE3;
+	Fri, 23 May 2025 19:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUUtkb4Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ms9mDGFM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50867204C0F;
-	Fri, 23 May 2025 19:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFA9204C0F;
+	Fri, 23 May 2025 19:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748026827; cv=none; b=mbTqfw6j3CbLqOymYmuPPDAAZvIzC/M2hga7H+XNrQuBlpazkxYM1BVOCLMZkvrmsDbwd05dl720Ex8zfHRo2z+7YZ/a5Vz8yLn7+kMTZFkCdbq+lmujhK7i8NrSPesM7s7CqZ0RWqqlBScvVDXp11lt/YF6D+kUIJlCZg3AyqI=
+	t=1748026830; cv=none; b=EKgomYn5uI8Z+/I6R6w+xQKsfj4VhmPMmtAdBZI0zY20OB4Q44njYdoZjxLok4qYAZSynca0kSiur8Vjc4kk4lkab3Zqqh9410GVg371wMffUbISGDn/XrfI82JNipay3YDc+azefFSwqg26UmgZeLi8t8sYgzHKd3rx9PadUoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748026827; c=relaxed/simple;
-	bh=bHhjXPjW14vl0hXyhieamfk7eD9SwgFwuqVjFNzqnTM=;
+	s=arc-20240116; t=1748026830; c=relaxed/simple;
+	bh=j0RX+hYzyhMgc0XGcBiN0az+uJ5tRmncGyuo6+y7pf0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J2X3SfJtKE0L2Tq2+O/f+MeEdEekla9I/fmJL/zF1SIQl7UYdCxOLcJv80vqIQsk1e4ZRDoAR+7sf2ELwPO6NKhi0VNLkyRgLKcg+qSsX4KkB8Isr9lyw/9rimXLa30xARXUoDBdbDKJRH5digRAq5O3UrIeYpFPEwO69wqGIJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUUtkb4Q; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=bYbcGaIJz1AWqxXMO3SiKLu/SYl97umkGmnYQjTzRo56RYPCkXSOuwshI9LU1axUwNn6YABXTAxvajyg2bbtCaSqQcw/d5MK/mDZ0TvOZGKs/cXOZvVffyE3XA7hiLuPUlBHxkRM2wUgHYpcRoge5IvDukkiZDn5M7s/t3kfEZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ms9mDGFM; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748026827; x=1779562827;
+  t=1748026829; x=1779562829;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bHhjXPjW14vl0hXyhieamfk7eD9SwgFwuqVjFNzqnTM=;
-  b=gUUtkb4QgV3BBnC/yYXhUu5ibQA1u+77tNbROLrxr33TPFWtE0FLfLFi
-   IUUiYC00urbdN3W56P9oSiGHxEaj3iGqTg1sa4zQDw4EVLcUSAgS8Vb1P
-   tCla+wJIYmJXDrcjI8k2FrHw97NRMKlsIvUSmNKjlKW94jdd4ORLDaev5
-   P+du/Y5saPxG3fAH1ae8jLx22YEB4yvrBL94a3Cex02fY+IlxrKGluLP5
-   5RBzf405c+/W0Em/khOI+mxkxQh9QPhx7me/pkpvB2t+VOFDXIPAW8Dl6
-   SR9GgeaPpd3b73B32hhPBZbYygcUgHM3MT3oe8AmkxT5oamBlUVYhwNSY
-   g==;
-X-CSE-ConnectionGUID: vgXH1F90RHuTx3Uv23/v7w==
-X-CSE-MsgGUID: AQlh0mChSDuHTUQap67/3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61498699"
+  bh=j0RX+hYzyhMgc0XGcBiN0az+uJ5tRmncGyuo6+y7pf0=;
+  b=Ms9mDGFMDlX8wXcr//kPObvntqZqTppTQwBr4Uhwi7SseontOM82msjA
+   TJ2wBqLVqiIxNXWLxnsXzmJZRsyMvplwePylSg+rUm7XxaJ9cS35wO0GD
+   kooF8+wLHQYKxvTnAK5LX005oiPJ1sr0vHR6TOwGNNsYdm1gIHb6L0+xo
+   /zxTnISK0vuVi+dafp/QZYnJU8vhV4YnxvvlgJ28K91bfuO3t/C9oCQpe
+   P2BU6+l4I5lppDJ1KmcXRbtvKwEbJHlOYbYfXKJsCKVIsHrEFDQVmNatV
+   yrB2+W0nw1RMvGkO2m9EGQJIXPM24FajYXiJ13CvJapEshWXBBxR1qSmE
+   A==;
+X-CSE-ConnectionGUID: VKoS9ExaQD+jeuulU5Z3hw==
+X-CSE-MsgGUID: B5bxJnJoR3m9NF8uNhyG+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61498729"
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="61498699"
+   d="scan'208";a="61498729"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:24 -0700
-X-CSE-ConnectionGUID: XFhQepFiQZa2FHHRgZ3LOQ==
-X-CSE-MsgGUID: 5whG7uvsSVy7uIn3wCRQpA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:28 -0700
+X-CSE-ConnectionGUID: //PnBGV4RhKehWlFiUvdcQ==
+X-CSE-MsgGUID: cVrJxG/QTCScwW0RBSL68w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="141759081"
+   d="scan'208";a="141759109"
 Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:21 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 12:00:24 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc: anshuman.gupta@intel.com,
 	varun.gupta@intel.com,
 	ville.syrjala@linux.intel.com,
 	uma.shankar@intel.com
-Subject: [PATCH v3 10/11] drm/xe/vrsr: Enable VRSR
-Date: Sat, 24 May 2025 00:31:54 +0530
-Message-Id: <20250523190155.2623462-11-badal.nilawar@intel.com>
+Subject: [PATCH v3 11/11] drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
+Date: Sat, 24 May 2025 00:31:55 +0530
+Message-Id: <20250523190155.2623462-12-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250523190155.2623462-1-badal.nilawar@intel.com>
 References: <20250523190155.2623462-1-badal.nilawar@intel.com>
@@ -86,147 +86,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Anshuman Gupta <anshuman.gupta@intel.com>
+Add a debugfs node named vrsr_capable to check if the device
+supports VRSR.
 
-Enabling VRSR in runtime suspend and also in System wide suspend.
-Also fix couple of typo in xe_pm.c.
-
-Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
 Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
 ---
- drivers/gpu/drm/xe/xe_pci.c |  4 ++--
- drivers/gpu/drm/xe/xe_pm.c  | 46 +++++++++++++++++++++++++++----------
- 2 files changed, 36 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/xe/xe_debugfs.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-index 5ae1df345416..fdf878594fb0 100644
---- a/drivers/gpu/drm/xe/xe_pci.c
-+++ b/drivers/gpu/drm/xe/xe_pci.c
-@@ -926,7 +926,7 @@ static int xe_pci_suspend(struct device *dev)
+diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
+index d83cd6ed3fa8..d969a8f6d430 100644
+--- a/drivers/gpu/drm/xe/xe_debugfs.c
++++ b/drivers/gpu/drm/xe/xe_debugfs.c
+@@ -226,6 +226,23 @@ static const struct file_operations atomic_svm_timeslice_ms_fops = {
+ 	.write = atomic_svm_timeslice_ms_set,
+ };
  
- 	/*
- 	 * Enabling D3Cold is needed for S2Idle/S0ix.
--	 * It is save to allow here since xe_pm_suspend has evicted
-+	 * It is safe to allow here since xe_pm_suspend has evicted
- 	 * the local memory and the direct complete optimization is disabled.
- 	 */
- 	d3cold_toggle(pdev, D3COLD_ENABLE);
-@@ -943,7 +943,7 @@ static int xe_pci_resume(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	int err;
- 
--	/* Give back the D3Cold decision to the runtime P M*/
-+	/* Give back the D3Cold decision to the runtime PM */
- 	d3cold_toggle(pdev, D3COLD_DISABLE);
- 
- 	err = pci_set_power_state(pdev, PCI_D0);
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index 1e061bfc3e52..19596d467298 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -147,10 +147,12 @@ int xe_pm_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_suspend(xe);
- 
--	/* FIXME: Super racey... */
--	err = xe_bo_evict_all(xe);
--	if (err)
--		goto err_pxp;
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
-+		/* FIXME: Super racey... */
-+		err = xe_bo_evict_all(xe);
-+		if (err)
-+			goto err_pxp;
-+	}
- 
- 	for_each_gt(gt, xe, id) {
- 		err = xe_gt_suspend(gt);
-@@ -162,6 +164,12 @@ int xe_pm_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_suspend_late(xe);
- 
-+	if (xe->d3cold.target_state == XE_D3COLD_VRSR) {
-+		err = xe_pm_vrsr_enable(xe, true);
-+			if (err)
-+				goto err_display;
-+	}
++static ssize_t vrsr_capable_show(struct file *f, char __user *ubuf,
++				 size_t size, loff_t *pos)
++{
++	struct xe_device *xe = file_inode(f)->i_private;
++	char buf[32];
++	int len = 0;
 +
- 	drm_dbg(&xe->drm, "Device suspended\n");
- 	return 0;
- 
-@@ -203,9 +211,11 @@ int xe_pm_resume(struct xe_device *xe)
- 	 * This only restores pinned memory which is the memory required for the
- 	 * GT(s) to resume.
- 	 */
--	err = xe_bo_restore_early(xe);
--	if (err)
--		goto err;
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
-+		err = xe_bo_restore_early(xe);
-+		if (err)
-+			goto err;
-+	}
- 
- 	xe_irq_resume(xe);
- 
-@@ -214,9 +224,11 @@ int xe_pm_resume(struct xe_device *xe)
- 
- 	xe_display_pm_resume(xe);
- 
--	err = xe_bo_restore_late(xe);
--	if (err)
--		goto err;
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
-+		err = xe_bo_restore_late(xe);
-+		if (err)
-+			goto err;
-+	}
- 
- 	xe_pxp_pm_resume(xe->pxp);
- 
-@@ -616,7 +628,7 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_suspend(xe);
- 
--	if (xe->d3cold.target_state) {
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
- 		err = xe_bo_evict_all(xe);
- 		if (err)
- 			goto out_resume;
-@@ -632,6 +644,14 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_suspend_late(xe);
- 
-+	if (xe->d3cold.target_state == XE_D3COLD_VRSR) {
-+		err = xe_pm_vrsr_enable(xe, true);
-+			if (err) {
-+				drm_err(&xe->drm, "Failed to enable VRSR: %d\n", err);
-+				goto out_resume;
-+			}
-+	}
++	len = scnprintf(buf, sizeof(buf), "%s\n", xe->d3cold.vrsr_capable ? "true" : "false");
 +
- 	xe_rpm_lockmap_release(xe);
- 	xe_pm_write_callback_task(xe, NULL);
- 	return 0;
-@@ -669,7 +689,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
- 			goto out;
++	return simple_read_from_buffer(ubuf, size, pos, buf, len);
++}
++
++static const struct file_operations vrsr_capable_fops = {
++	.owner = THIS_MODULE,
++	.read = vrsr_capable_show,
++};
++
+ void xe_debugfs_register(struct xe_device *xe)
+ {
+ 	struct ttm_device *bdev = &xe->ttm;
+@@ -249,6 +266,9 @@ void xe_debugfs_register(struct xe_device *xe)
+ 	debugfs_create_file("atomic_svm_timeslice_ms", 0600, root, xe,
+ 			    &atomic_svm_timeslice_ms_fops);
  
- 		xe_display_pm_resume_early(xe);
-+	}
++	debugfs_create_file("vrsr_capable", 0400, root, xe,
++			    &vrsr_capable_fops);
++
+ 	for (mem_type = XE_PL_VRAM0; mem_type <= XE_PL_VRAM1; ++mem_type) {
+ 		man = ttm_manager_type(bdev, mem_type);
  
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
- 		/*
- 		 * This only restores pinned memory which is the memory
- 		 * required for the GT(s) to resume.
-@@ -686,7 +708,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_resume(xe);
- 
--	if (xe->d3cold.target_state) {
-+	if (xe->d3cold.target_state == XE_D3COLD_OFF) {
- 		err = xe_bo_restore_late(xe);
- 		if (err)
- 			goto out;
 -- 
 2.34.1
 
