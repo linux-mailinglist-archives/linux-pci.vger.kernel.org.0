@@ -1,124 +1,136 @@
-Return-Path: <linux-pci+bounces-28353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03C61AC2A83
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:40:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26BB9AC2A88
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 21:44:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10E323ABE2D
-	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 19:40:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D63E54A590D
+	for <lists+linux-pci@lfdr.de>; Fri, 23 May 2025 19:44:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB8229551B;
-	Fri, 23 May 2025 19:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69F0297A61;
+	Fri, 23 May 2025 19:44:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="UkZ97WFF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2wEoCmv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4226A1B4241;
-	Fri, 23 May 2025 19:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5AF1531F0;
+	Fri, 23 May 2025 19:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748029235; cv=none; b=tW73MEMQ4GjIn8RYx/KYehnGgW+wdtnZbVxdPH3RDJHxOf9n72mHcAbUgmQJaADZztZGhYPyctHaeLBMvOCuEag5GzhcumefaGvdF8Rz7M5KuaemzY1B0nUJD2AgW9aVWM0445eMaPKUkEFSG8YinNI4FHKhK0cRO0YJOvGakzY=
+	t=1748029489; cv=none; b=kLLfL/9AVGlaRJPAN102pE7scAFxFXU6DV6AWWfC0qeM+8JBHEkaoApsmUR+ekx0lyq9ARabFGdkcZdlDY34DITTy3ZYXR8gGOBR2KbAtGotZy53lJYLQDJ+71slq7X+xgUw5ukc1xvt/zczOez1WpcwiLzvrr8HW/2/yk9TMCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748029235; c=relaxed/simple;
-	bh=n3Sy0eg2ohtMgO9kJp2IH3bGKvErpWrOqCVwYxjs+MY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cUiVPTnD8c+Yee6ZBQYgXGGkwRE5GX4Gqpf9lQUp0MqDpGNMj9fCCU8uV2NKfzB6BRxa5Zcux5EE5ta03m+AHd6MMD60y7etwPQ3poo1N8U3UT65V8CMHvCwvw/FMGEkWMadk62zRS6NxBtmL9MUqL7kJAbzG6iGJ58XsQqFg8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=UkZ97WFF; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4b3w555BQ9zDQ4;
-	Fri, 23 May 2025 15:21:45 -0400 (EDT)
-Received: from [10.50.4.32] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4b3w4w2kV1z4Ygl;
-	Fri, 23 May 2025 15:21:36 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1748028097; bh=n3Sy0eg2ohtMgO9kJp2IH3bGKvErpWrOqCVwYxjs+MY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=UkZ97WFFTXOp8NRJSfjbxjnR5M3exAOsIQAv3HePEZk8hhagZZsK8l9sWPBsHd+AO
-	 2xKPPkJtaPUCeKEHvGlJSoE66Mlsd4+hi9yr94VLbIKmm0lV5kFJCCB6eyCsdnK2cD
-	 5SA6bGhHSqDVTttuHqewvOvCnOT5pYA3UpVIdUPc=
-Message-ID: <b52a2045-0b26-4287-80a4-e1b571d76a26@panix.com>
-Date: Fri, 23 May 2025 12:21:35 -0700
+	s=arc-20240116; t=1748029489; c=relaxed/simple;
+	bh=p2qITD20YSBB4hnNbHBch9rvmIplfjjfNEzZZvafuic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dyxXr2KZD1pjk6Kl9cLKeYsVEV8J3hEJt+QjD5qMSo27055oL0eDQ2d6dfQAIpig2zhShxVUP7Tkafnb+rM8KNbeIHFQS31xj/uldCd1wp57xgONv/7DuPnxU/cwVujkIsFNjHbevgpZy2HqKybtF0dGivZShbYHNZE3sitm5MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2wEoCmv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E6AC4CEF0;
+	Fri, 23 May 2025 19:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748029489;
+	bh=p2qITD20YSBB4hnNbHBch9rvmIplfjjfNEzZZvafuic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u2wEoCmvKXDsxjk22b0zjfhv2WJ1kwghSzx38VYnpUl51W7dOvri2FG6eJ8WOPYUP
+	 uE4kSGclxDIoy9ce4DIOceC4zbgAgMfW5lLT02kV/W//TqYZcQK+MqJAPywtDEjogo
+	 tCQnrvkpyYTNt6CbNc6y3bU1y8X2WXlRTgjEAkNxQNIxserd2k0Hd4ELRA+m8jV2BG
+	 Bgjuw7qsrQ7BV/K3xVSJQzCTtSxs29GC364SMoiAKfofEfT4+KvZLAsl0JvQDa7NMq
+	 7B9j9xEHStsU6H6bHoIG+TwwuBe3BIUM58v/+bhrjlL77q/Di/cEm61A/Npf054Wgr
+	 D/RRolPS5XMDg==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2d5e5e21b92so157403fac.0;
+        Fri, 23 May 2025 12:44:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUyO+0v95cr5u2OzMF1Wm2t1RqGtOgRIt4Gm7Uc0RhKQ4WQTXOaWAeDqL7+j2DXYCKNR/LSlKlMOzE=@vger.kernel.org, AJvYcCV7nlmhnx1Hj+pmidoORbk0amGoFP6k4boqqOtRN29DoFnYADnAev4BJ7vAXKum5D64rBSMYBOPEQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRvtIJ5oCt5Z1ZoBd/fZ32DuMpbgF87S/n2UY+ADW58+vOZwXx
+	52X/XlkkzPB3Au0/VTMEIpNkEQXvenKPhZrnS9IVOHRUdOOYFLgou/ASFJJw9M8NPNsdHrkcJDv
+	rBjZPgSyqviZJcKOygAUZ6xZPpYbYQBs=
+X-Google-Smtp-Source: AGHT+IEI73k2jPg3EjVWDKv5Ptp3jzyUGizZ0IApSY04qVPFWowELVsOzLK0JNuzc0rfgyMPbciW/ZiKAZhLEPzt7EM=
+X-Received: by 2002:a05:6870:ef0b:b0:2c2:cd87:7521 with SMTP id
+ 586e51a60fabf-2e861d43fc3mr419666fac.4.1748029488323; Fri, 23 May 2025
+ 12:44:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20250512210938.GA1128238@bhelgaas> <7aedd720-c29a-4225-a79a-d44a3a9ca129@gmail.com>
+ <b52a2045-0b26-4287-80a4-e1b571d76a26@panix.com>
+In-Reply-To: <b52a2045-0b26-4287-80a4-e1b571d76a26@panix.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 23 May 2025 21:44:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hWAbwtvZm4WrFc06v79JEpTVQ9KeHPuzVkvm5Vp9gK3Q@mail.gmail.com>
+X-Gm-Features: AX0GCFsl5y8KlU0nB-4OHFXVK5ssEpeMlmXcYreuhiBUWeVe-VKMXJEXWP1unsc
+Message-ID: <CAJZ5v0hWAbwtvZm4WrFc06v79JEpTVQ9KeHPuzVkvm5Vp9gK3Q@mail.gmail.com>
 Subject: Re: Raphael, I'd like your help upstreaming this VMD power-saving
  patch, please
-To: Russell Haley <yumpusamongus@gmail.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
- Kai-Heng Feng <kai.heng.feng@canonical.com>, Vidya Sagar
- <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Andrea Righi <andrea.righi@canonical.com>,
- You-Sheng Yang <vicamo.yang@canonical.com>, linux-pci@vger.kernel.org,
- Sergey Dolgov <sergey.v.dolgov@gmail.com>,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>,
- Jian-Hong Pan <jhp@endlessos.org>, "David E. Box"
- <david.e.box@linux.intel.com>
-References: <20250512210938.GA1128238@bhelgaas>
- <7aedd720-c29a-4225-a79a-d44a3a9ca129@gmail.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <7aedd720-c29a-4225-a79a-d44a3a9ca129@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Kenneth Crudup <kenny@panix.com>
+Cc: Russell Haley <yumpusamongus@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>, rafael@kernel.org, 
+	linux-pm@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	Vidya Sagar <vidyas@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Andrea Righi <andrea.righi@canonical.com>, You-Sheng Yang <vicamo.yang@canonical.com>, 
+	linux-pci@vger.kernel.org, Sergey Dolgov <sergey.v.dolgov@gmail.com>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, Jian-Hong Pan <jhp@endlessos.org>, 
+	"David E. Box" <david.e.box@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 23, 2025 at 9:21=E2=80=AFPM Kenneth Crudup <kenny@panix.com> wr=
+ote:
+>
+> Raphael, any input?
 
-Raphael, any input?
+Well, Bjorn's concerns are valid AFAICS.
 
-Thanks,
+> On 5/14/25 18:23, Russell Haley wrote:
+> >
+> >
+> > On 5/12/25 4:09 PM, Bjorn Helgaas wrote:
+> >
+> >>>   static void pcie_aspm_cap_init(struct pcie_link_state *link, int bl=
+acklist)
+> >>>   {
+> >>>     struct pci_dev *child =3D link->downstream, *parent =3D link->pde=
+v;
+> >>> @@ -866,7 +891,8 @@ static void pcie_aspm_cap_init(struct pcie_link_s=
+tate *link, int blacklist)
+> >>>     }
+> >>>
+> >>>     /* Save default state */
+> >>> -   link->aspm_default =3D link->aspm_enabled;
+> >>> +   link->aspm_default =3D pci_fixup_vmd_bridge_enable_aspm(parent) ?
+> >>> +           PCIE_LINK_STATE_ASPM_ALL : link->aspm_enabled;
+> >>
+> >> PCIE_LINK_STATE_ASPM_ALL includes PCIE_LINK_STATE_L1_2, so I think
+> >> this potentially enables L1.2.  The L1.2 configuration depends on
+> >> T_POWER_ON and Common_Mode_Restore_Time, which depend on electrical
+> >> design and are not discoverable by the kernel.  See PCIe r6.0, sec
+> >> 5.5.4:
+> >>
+> >>    The TPOWER_ON and Common_Mode_Restore_Time fields must be programme=
+d
+> >>    to the appropriate values based on the components and AC coupling
+> >>    capacitors used in the connection linking the two components. The
+> >>    determination of these values is design implementation specific.
+> >
+> > Does that apply to VMD?  As far as I know it's not an actual physical
+> > PCIe device.
 
--Kenny
+The devices on the VMD bus are physical PCIe devices, but they need to
+be accessed in a special way and the BIOS doesn't have access to them.
 
-On 5/14/25 18:23, Russell Haley wrote:
-> 
-> 
-> On 5/12/25 4:09 PM, Bjorn Helgaas wrote:
-> 
->>>   static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->>>   {
->>>   	struct pci_dev *child = link->downstream, *parent = link->pdev;
->>> @@ -866,7 +891,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->>>   	}
->>>   
->>>   	/* Save default state */
->>> -	link->aspm_default = link->aspm_enabled;
->>> +	link->aspm_default = pci_fixup_vmd_bridge_enable_aspm(parent) ?
->>> +		PCIE_LINK_STATE_ASPM_ALL : link->aspm_enabled;
->>
->> PCIE_LINK_STATE_ASPM_ALL includes PCIE_LINK_STATE_L1_2, so I think
->> this potentially enables L1.2.  The L1.2 configuration depends on
->> T_POWER_ON and Common_Mode_Restore_Time, which depend on electrical
->> design and are not discoverable by the kernel.  See PCIe r6.0, sec
->> 5.5.4:
->>
->>    The TPOWER_ON and Common_Mode_Restore_Time fields must be programmed
->>    to the appropriate values based on the components and AC coupling
->>    capacitors used in the connection linking the two components. The
->>    determination of these values is design implementation specific.
-> 
-> Does that apply to VMD?  As far as I know it's not an actual physical
-> PCIe device.
-> 
-> - Russell
-> 
+I would try to replace the PCIE_LINK_STATE_ASPM_ALL in the patch with
 
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1 | PCIE_LINK_STATE_L1_1 |
+PCIE_LINK_STATE_L1_1_PCIPM
 
+and see how far it gets you.  Please let me know how it goes.
+
+In the meantime, I'll try to find somebody who can pick this up.
+
+Thanks!
 
