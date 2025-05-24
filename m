@@ -1,300 +1,267 @@
-Return-Path: <linux-pci+bounces-28370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AB58AC3101
-	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 20:53:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8D80AC314E
+	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 22:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 681CA17E9AC
-	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 18:53:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FAC29E1462
+	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 20:34:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508441F1517;
-	Sat, 24 May 2025 18:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53306280337;
+	Sat, 24 May 2025 20:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WLyDJWaw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zfyuojyw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3851F1513
-	for <linux-pci@vger.kernel.org>; Sat, 24 May 2025 18:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91C427F754;
+	Sat, 24 May 2025 20:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748112805; cv=none; b=Q0B851P6GdKpGJ0zkK3ow1ln3Po/ROtzD6M4TdD6aolq6iQYTJDIxxQSwFwoYkN9hCDeB2w9MfUxjbVRm1ie5rw/0RAZVmOU+tsXGwC8L/zXw5afVrc/a7+f5IpDrv83/b8IPe6XAVKJeaU2ay+UGUzs+xKi6r1FY1lDLLkRlJI=
+	t=1748118813; cv=none; b=i3RFYGOPB7THA5xUWUJVvgWJ2LqR4IdK97JhjWGqt4Q9twzO67kx2LOy6d/mKZKuYcVqKzDBvhlvxqgWtR8sOEsZ+fobdmF1ha8oTs85zQrUzz3rTcVWvfexZ0/G15c1F8rf2bp4kY9rm1Rz3wzN6fyL8Ppfy3cLpGjrrnHdIKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748112805; c=relaxed/simple;
-	bh=zCMczU4v06ghUQ9pw1P+u0746zqUXj2cY86m3N4kgoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hX0NYIB3Bcc2XvNS9sX2t3JqdHJIBe1spw7ClmuWjI8sH22HB6jooG9kSmYWIg5ywrnovAqKXZcl7vQo2oZ09kPOF1FIh2qmh2lKKZiTbdyu2/8rGrlit3mC2acIG46eMuQRWkUNj1mF5sRkX5WyP2Ky+8KI/gUZs8JLhK9qGY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WLyDJWaw; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso1133520b3a.3
-        for <linux-pci@vger.kernel.org>; Sat, 24 May 2025 11:53:22 -0700 (PDT)
+	s=arc-20240116; t=1748118813; c=relaxed/simple;
+	bh=y/agLfL8cvRLwjOLQ2FmgleRZcO69KtrQd6QQg0+Gcs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jhNUAorD2nYOq6LCOjkE7PM3nHrFy8ptVoDKOl3KQVHQiKQcnLSS6C6RChuTiLL4tlsewAtkpq7Bae4r8dsKwPnQwS+YvnMKvdMxlo0JppEqG2ylzk2bQN5SB7alqhRyTz+BwBz+c3YIy4PWKBhZ0umen6gEQfBEiiC7UsJ/394=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zfyuojyw; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so100204439f.1;
+        Sat, 24 May 2025 13:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748112802; x=1748717602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PDL6QRovWt7sBQP7alBAWgPBh+2vhpbIyHwbqahrS2s=;
-        b=WLyDJWawRD1FNVUO53IcDqiIk+1S8tTG07NErfEEomLbdnKYT+NDprIEJk4GbdabR7
-         t0zLzHXhgHuDQep/TSjSf8jngJySlhSK+9JXOpTI+RBJ+yUQACwke93CsyQIvc4kHkkh
-         qVYvdRTkJNwXKy0P826BxgCk7Yx8Y0vsh1IrhkPyczACJlItM9aYmZVUtoikSj+s2lJ9
-         acOWchrLvxZ8aWAm0gkB/9UV+Y9tXtWxN3852prXeypOhl+YV0yFiIz57d3mopz5R1/j
-         xO3CFaIiLnKrQn3YUpltvTaW/bRHwSLO2j0IAoUt+6yVJYrY3rp0NXfDJmSLz8deqRp2
-         tm5A==
+        d=gmail.com; s=20230601; t=1748118810; x=1748723610; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDpP7s7cOkPavUulBU3Ba+a6zZqUiVMm4fW37bEOlm0=;
+        b=ZfyuojywW03t5ljuKajvfzL2pOBrB9ohgstqGCE4E9gYti65Kx6aJltzIdkZd05dzM
+         bK386Q62Y/lWzlIQwIDOabYN9TMfN6bKCTKNqXS7mQ0zhQzc8Qz0kemIW0urwahRgunw
+         6XqrFTXbwr2jjDvFeQLeOkMDo2bmiLo07RXhSg1faL+1LQam19FxD5mHm91izThd+VOv
+         GEkP4ARVOAlu5YGxEyfNM7XTtL5QDrVMCWfbzfhYQycx7BpnFFq8LC/t8C7z6mg/R5Iv
+         hQAZqB6tjtHNVJrElUs5168g2JKw6WTzU7UsMNe89kvooJSKEtOeRnm7CEdWi6bShlF6
+         ROkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748112802; x=1748717602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PDL6QRovWt7sBQP7alBAWgPBh+2vhpbIyHwbqahrS2s=;
-        b=Ht80pzlbel4qdZGcGMEs56Fn2pWI4OZMchDkxf5Q9iImPrVDXQ9vasSr4Nkz6qU0mV
-         t6n899T6FCregT3nmLf1C8/G0S7gj512tsP+d2r437bZbG42AjBH0M3mD4ueF/nPhv1J
-         TXiWVELiRpYjtaYNmFXhmYKGcOgA3D8WSaJD2oX9QAw988pZkhEAaqD3VTeUjVbrid3m
-         hVIef2lfAUcCz/qnp/NhTT4mnrCDfwrnGZ96zkTfxzrnFj0zeRCOnZoDp6IG5RYGsCIb
-         CNoN8hdbpVnlmGSOKEhQvw6OfyCdcrG1RKThCGHgY+e+LBDE8ZoZyjQTcPZOVMIpt0tf
-         nMTg==
-X-Gm-Message-State: AOJu0Yx5gWTjPKT3zylPOjU21de9BkwQQTuNyGOYMq33uAkwNbNTzt/t
-	ioKfKlo4YHSeYJYKTccKZHZ5GfF1TGiXRXDocnplttJ9neK83GJZ2mH6BALTB5kIaQ==
-X-Gm-Gg: ASbGnctBYoHu47TOS8f896ebdk2wPQJTOs1AGXR6llqfpxiPZuggSsz4YgjUvh4Yltp
-	jaaOWR3ZoL12thfllJbV/GrOLY2NKxKW+KbbPOet0bXn4oUN/lMVZwTaqIWvEJvALEp7TpImoRr
-	TROlNvPvwCluXOsopQfBapNDuKOpZFxQYvABWYJDHVih1m1SH2Pp2BeiQ+rBYK68pYjWf0vwFBk
-	NeA2sBAV7tBVtx1F5C0bjW4XbKmzgULiYg8wm7BQBAx3suqBuVoIu3TP3ilXV0yNhy0hnPUHYSf
-	cBQnEcT+D0XjOlqt7/nyGoR/IcMWbLFSUbx/tbYg6Nc9FHVZ5ehJ/XK9GJm06lES
-X-Google-Smtp-Source: AGHT+IH+7qg3wNDv5nyRf+S4VLDCGgKjl9E0QRjKmpL5PiZmmYwJKZ+o/DGKeM99GhkflOY9BkiCbg==
-X-Received: by 2002:a05:6a20:a11c:b0:215:e60b:3bd3 with SMTP id adf61e73a8af0-2188c353194mr6571996637.29.1748112802033;
-        Sat, 24 May 2025 11:53:22 -0700 (PDT)
-Received: from thinkpad.. ([120.56.192.43])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a906bsm14532931a12.71.2025.05.24.11.53.18
+        d=1e100.net; s=20230601; t=1748118810; x=1748723610;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gDpP7s7cOkPavUulBU3Ba+a6zZqUiVMm4fW37bEOlm0=;
+        b=sEP4mmGyo4Xtl19UxF9PS8JUH5ie/kefOWMvrcgj8k4aDH3vfuOK2bfd+weCTxTEUL
+         J1/HiEz0CLVff4BiKxq+bdzgBb7nVuAUMW25Kwayet1I2SFGO3+cjzBA8Lp9sHFucEBd
+         I8QNMQHzPPXhrPyZ9Ap8ybKCfHkc75MGxAvhlGUBwbZ8QFHCEnZbe9qXdO4Ty7P294WK
+         btoXjlYUZeG/u6wVMWFO5kGW54W3E3qKXAcFTy3CYM1mTP5Tw6Q3e+7NFOk1WM0IEj24
+         i1bbrjEcWfWuHv28TDxNZPYeCu5vSwykCZNJZz4Qlm6UCBoI+0+GeJSjuOgy6/UvvxF3
+         3vjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNyRZPELGRbSnZCICL8FUtGzqbFPKDL6mYdo97Yql/M4P8SI6wPJe++5ONoVgcw5WR1I+60uHf@vger.kernel.org, AJvYcCVSmRtjRGp/GegxB52OzztnWaeQtg9JybXSmApBaccmUU32LBDi19S6JPYFoNg0cVUeGNmt5L71eDqH@vger.kernel.org, AJvYcCWA2TR+Dk5RVhgmBG9WH5nfSp6Hua/9tRqrNOEoN9uoioaPT9BapIqDnyhPmf2rXTw1lbSrtangqPBi@vger.kernel.org, AJvYcCWBm90vx86KXDg/DO8/ViJ43uunxc6Uxj/NSxyquZUCX2qb/B2APgIOro5UKGt3UBojybaqUkRnQz+m9Kdt@vger.kernel.org, AJvYcCWO9ciJQbFrd4CXxPqRMhLTrLwNJjnXbcYkMJWp1gGVbBoWkvcN6GQMF07OLMw3ahDJEZM1Zz6baPe+Vvw=@vger.kernel.org, AJvYcCXi14CaEnhdHd8n7klGlmkHkJQ+i8HsW8AjrLE261lCXnIpxzzB7UmlEzCaEivdoaKiKp9gsCS+nG7OJ6vi48Om@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYkKycFw5NWODVBcwOSpRUufKiFJnhqQDoJrJsWHDKystq9hP8
+	H0wNjznl+xOQOdmG5H6h4RhN6q2YaqYaUmn7qV+SlVMp1MGXCiOFMfdiuxiNL50qTJk=
+X-Gm-Gg: ASbGnctwDjU4F1EKwZ030G1YVgX4dr5GCuYb+hv32+p1gmUF+qlgzY0fiKqryTOm9L+
+	clxj9/Dd2MB2hW/zOdpte176QLbjww6U3R7tkWSOoPT586eYbhEdsax2mi7U+klJtMYOHE6TX6m
+	N1SsVeCXDh/AoXJlZSm7Z7lex9EN8ZybPJDbBzBJfIJQ8VItQH9sxaJYB/sWUWeC0md1vpDy7SA
+	xbwCo+V67ZUwa9EV49h3VD/GZ9conLaVa99Y+3ro5EKLFmDbIJnUVgPoAlCmyBhf6ZCtkzy7G6f
+	kqIGAocui0bjtdkQFcZM3RKhi3xkIJnMI1VbPyWTqfMKKdooezrY2MDOASrJxRGXePhJi/Gkb6N
+	fdUXWpAXokwgvwrfmOZujgqpyeUAF2sd9kXv5byUVe1diciu8VudcRG2KJkcX3Zoqykz8x4ArF7
+	PCGYY=
+X-Google-Smtp-Source: AGHT+IEY1bus7pYi5JcXesXRddo5ekO8LWT2IX5dDBSF4gjuh1ID95e7jx0zQU9fIvHGHwyslvJU7A==
+X-Received: by 2002:a05:620a:44c2:b0:7c3:cd78:df43 with SMTP id af79cd13be357-7ceecc45f6amr602236985a.58.1748118799405;
+        Sat, 24 May 2025 13:33:19 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:8563:e370:791f:7436])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467d7fd1sm1379590085a.29.2025.05.24.13.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 11:53:21 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cassel@kernel.org,
-	wilfred.mallawa@wdc.com,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH 2/2] PCI: Rename host_bridge::reset_slot() to host_bridge::reset_root_port()
-Date: Sun, 25 May 2025 00:23:04 +0530
-Message-ID: <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
+        Sat, 24 May 2025 13:33:17 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v10 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Sat, 24 May 2025 16:33:00 -0400
+Message-Id: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPwsMmgC/3XOy27DIBAF0F+JWJcIxvYAWeU/qi4wjxi1NhFYq
+ FHkfy+OlBZF6nIe5+reSXYpuExOhztJroQc4lIHzt4OxEx6uTgabF0QYDAwYJyavCZqYnLU9qM
+ aUXFgxpP6f03Oh+9H2PtHnX2KM12n5PQzoWeSKz50OOARpGSCAi3axhRL/rydrymucZl1+DqaO
+ O+RU8hrTLdHvYJ78LMINEUKUkZlj8pYtKC8PV9+Q/YiRfwrRZVWc1lPwPpOvkrZyq6Vskozdh7
+ QCYkSX6X6kx0XrVRVDtyiMQOAR2jltm0/fH5cIZQBAAA=
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+ nouveau@lists.freedesktop.org, linux-block@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-The callback is supposed to reset the root port, hence it should be named
-as 'reset_root_port'. This also warrants renaming the rest of the instances
-of 'reset slot' as 'reset root port' in the drivers.
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-dw-rockchip.c |  8 ++++----
- drivers/pci/controller/dwc/pcie-qcom.c        |  8 ++++----
- drivers/pci/controller/pci-host-common.c      | 20 +++++++++----------
- drivers/pci/pci.c                             |  6 +++---
- include/linux/pci.h                           |  2 +-
- 5 files changed, 22 insertions(+), 22 deletions(-)
+Changes in v10:
+- Rebase on cbeaa41dfe26b72639141e87183cb23e00d4b0dd.
+- Implement Alice's suggestion to use a proc macro to work around orphan
+  rules otherwise preventing `core::ffi::CStr` to be directly printed
+  with `{}`.
+- Link to v9: https://lore.kernel.org/r/20250317-cstr-core-v9-0-51d6cc522f62@gmail.com
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 193e97adf228..0cc7186758ce 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -85,7 +85,7 @@ struct rockchip_pcie_of_data {
- 	const struct pci_epc_features *epc_features;
- };
- 
--static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-+static int rockchip_pcie_rc_reset_root_port(struct pci_host_bridge *bridge,
- 				       struct pci_dev *pdev);
- 
- static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
-@@ -261,7 +261,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- 					 rockchip);
- 
- 	rockchip_pcie_enable_l0s(pci);
--	pp->bridge->reset_slot = rockchip_pcie_rc_reset_slot;
-+	pp->bridge->reset_root_port = rockchip_pcie_rc_reset_slot;
- 
- 	return 0;
- }
-@@ -700,7 +700,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-+static int rockchip_pcie_rc_reset_root_port(struct pci_host_bridge *bridge,
- 				       struct pci_dev *pdev)
- {
- 	struct pci_bus *bus = bridge->bus;
-@@ -759,7 +759,7 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
- 
- 	/* Ignore errors, the link may come up later. */
- 	dw_pcie_wait_for_link(pci);
--	dev_dbg(dev, "slot reset completed\n");
-+	dev_dbg(dev, "Root port reset completed\n");
- 	return ret;
- 
- deinit_clk:
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0c59030a2d55..840263c1efe0 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -291,7 +291,7 @@ struct qcom_pcie {
- };
- 
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
--static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-+static int qcom_pcie_reset_root_port(struct pci_host_bridge *bridge,
- 				  struct pci_dev *pdev);
- 
- static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-@@ -1277,7 +1277,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 			goto err_assert_reset;
- 	}
- 
--	pp->bridge->reset_slot = qcom_pcie_reset_slot;
-+	pp->bridge->reset_root_port = qcom_pcie_reset_root_port;
- 
- 	return 0;
- 
-@@ -1533,7 +1533,7 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
- 	}
- }
- 
--static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-+static int qcom_pcie_reset_root_port(struct pci_host_bridge *bridge,
- 				  struct pci_dev *pdev)
- {
- 	struct pci_bus *bus = bridge->bus;
-@@ -1589,7 +1589,7 @@ static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
- 
- 	qcom_pcie_start_link(pci);
- 
--	dev_dbg(dev, "Slot reset completed\n");
-+	dev_dbg(dev, "Root port reset completed\n");
- 
- 	return 0;
- 
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index afa7b140a04a..24e357e85adb 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -99,22 +99,22 @@ void pci_host_common_remove(struct platform_device *pdev)
- EXPORT_SYMBOL_GPL(pci_host_common_remove);
- 
- #if IS_ENABLED(CONFIG_PCIEAER)
--static pci_ers_result_t pci_host_reset_slot(struct pci_dev *dev)
-+static pci_ers_result_t pci_host_reset_root_port(struct pci_dev *dev)
- {
- 	int ret;
- 
- 	ret = pci_bus_error_reset(dev);
- 	if (ret) {
--		pci_err(dev, "Failed to reset slot: %d\n", ret);
-+		pci_err(dev, "Failed to reset root port: %d\n", ret);
- 		return PCI_ERS_RESULT_DISCONNECT;
- 	}
- 
--	pci_info(dev, "Slot has been reset\n");
-+	pci_info(dev, "Root port has been reset\n");
- 
- 	return PCI_ERS_RESULT_RECOVERED;
- }
- 
--static void pci_host_recover_slots(struct pci_host_bridge *host)
-+static void pci_host_reset_root_ports(struct pci_host_bridge *host)
- {
- 	struct pci_bus *bus = host->bus;
- 	struct pci_dev *dev;
-@@ -124,11 +124,11 @@ static void pci_host_recover_slots(struct pci_host_bridge *host)
- 			continue;
- 
- 		pcie_do_recovery(dev, pci_channel_io_frozen,
--				 pci_host_reset_slot);
-+				 pci_host_reset_root_port);
- 	}
- }
- #else
--static void pci_host_recover_slots(struct pci_host_bridge *host)
-+static void pci_host_reset_root_ports(struct pci_host_bridge *host)
- {
- 	struct pci_bus *bus = host->bus;
- 	struct pci_dev *dev;
-@@ -140,17 +140,17 @@ static void pci_host_recover_slots(struct pci_host_bridge *host)
- 
- 		ret = pci_bus_error_reset(dev);
- 		if (ret)
--			pci_err(dev, "Failed to reset slot: %d\n", ret);
-+			pci_err(dev, "Failed to reset root port: %d\n", ret);
- 		else
--			pci_info(dev, "Slot has been reset\n");
-+			pci_info(dev, "Root port has been reset\n");
- 	}
- }
- #endif
- 
- void pci_host_handle_link_down(struct pci_host_bridge *bridge)
- {
--	dev_info(&bridge->dev, "Recovering slots due to Link Down\n");
--	pci_host_recover_slots(bridge);
-+	dev_info(&bridge->dev, "Recovering root ports due to Link Down\n");
-+	pci_host_reset_root_ports(bridge);
- }
- EXPORT_SYMBOL_GPL(pci_host_handle_link_down);
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 6d6e9ce2bbcc..154d33e1af84 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4985,16 +4985,16 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
- 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
- 	int ret;
- 
--	if (pci_is_root_bus(dev->bus) && host->reset_slot) {
-+	if (pci_is_root_bus(dev->bus) && host->reset_root_port) {
- 		/*
- 		 * Save the config space of the root port before doing the
- 		 * reset, since the state could be lost. The device state
- 		 * should've been saved by the caller.
- 		 */
- 		pci_save_state(dev);
--		ret = host->reset_slot(host, dev);
-+		ret = host->reset_root_port(host, dev);
- 		if (ret)
--			pci_err(dev, "failed to reset slot: %d\n", ret);
-+			pci_err(dev, "failed to reset root port: %d\n", ret);
- 		else
- 			/* Now restore it on success */
- 			pci_restore_state(dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8d7d2a49b76c..ab4f4a668f6d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -599,7 +599,7 @@ struct pci_host_bridge {
- 	void (*release_fn)(struct pci_host_bridge *);
- 	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
- 	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
--	int (*reset_slot)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-+	int (*reset_root_port)(struct pci_host_bridge *bridge, struct pci_dev *dev);
- 	void		*release_data;
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+Changes in v9:
+- Rebase on rust-next.
+- Restore `impl Display for BStr` which exists upstream[1].
+- Link: https://doc.rust-lang.org/nightly/std/bstr/struct.ByteStr.html#impl-Display-for-ByteStr [1]
+- Link to v8: https://lore.kernel.org/r/20250203-cstr-core-v8-0-cb3f26e78686@gmail.com
+
+Changes in v8:
+- Move `{from,as}_char_ptr` back to `CStrExt`. This reduces the diff
+  some.
+- Restore `from_bytes_with_nul_unchecked_mut`, `to_cstring`.
+- Link to v7: https://lore.kernel.org/r/20250202-cstr-core-v7-0-da1802520438@gmail.com
+
+Changes in v7:
+- Rebased on mainline.
+- Restore functionality added in commit a321f3ad0a5d ("rust: str: add
+  {make,to}_{upper,lower}case() to CString").
+- Used `diff.algorithm patience` to improve diff readability.
+- Link to v6: https://lore.kernel.org/r/20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com
+
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
+
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
+
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (5):
+      rust: retitle "Example" section as "Examples"
+      rust: support formatting of foreign types
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/block/rnull.rs               |   2 +-
+ drivers/gpu/drm/drm_panic_qr.rs      |   5 +-
+ drivers/gpu/nova-core/driver.rs      |   2 +-
+ drivers/gpu/nova-core/firmware.rs    |   2 +-
+ drivers/net/phy/ax88796b_rust.rs     |   8 +-
+ drivers/net/phy/qt2025.rs            |   6 +-
+ rust/kernel/block/mq.rs              |   2 +-
+ rust/kernel/device.rs                |   9 +-
+ rust/kernel/devres.rs                |   2 +-
+ rust/kernel/driver.rs                |   4 +-
+ rust/kernel/error.rs                 |  10 +-
+ rust/kernel/faux.rs                  |   5 +-
+ rust/kernel/firmware.rs              |  16 +-
+ rust/kernel/fmt.rs                   |  77 +++++++
+ rust/kernel/kunit.rs                 |  21 +-
+ rust/kernel/lib.rs                   |   3 +-
+ rust/kernel/miscdevice.rs            |   5 +-
+ rust/kernel/net/phy.rs               |  12 +-
+ rust/kernel/of.rs                    |   5 +-
+ rust/kernel/pci.rs                   |   2 +-
+ rust/kernel/platform.rs              |   6 +-
+ rust/kernel/prelude.rs               |   5 +-
+ rust/kernel/print.rs                 |   4 +-
+ rust/kernel/seq_file.rs              |   6 +-
+ rust/kernel/str.rs                   | 415 ++++++++++-------------------------
+ rust/kernel/sync.rs                  |   7 +-
+ rust/kernel/sync/condvar.rs          |   4 +-
+ rust/kernel/sync/lock.rs             |   4 +-
+ rust/kernel/sync/lock/global.rs      |   6 +-
+ rust/kernel/sync/poll.rs             |   1 +
+ rust/kernel/workqueue.rs             |   1 +
+ rust/macros/fmt.rs                   | 118 ++++++++++
+ rust/macros/kunit.rs                 |   6 +-
+ rust/macros/lib.rs                   |  21 +-
+ rust/macros/module.rs                |   2 +-
+ samples/rust/rust_driver_faux.rs     |   4 +-
+ samples/rust/rust_driver_pci.rs      |   4 +-
+ samples/rust/rust_driver_platform.rs |   4 +-
+ samples/rust/rust_misc_device.rs     |   3 +-
+ scripts/rustdoc_test_gen.rs          |   2 +-
+ 40 files changed, 426 insertions(+), 395 deletions(-)
+---
+base-commit: cbeaa41dfe26b72639141e87183cb23e00d4b0dd
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
 -- 
-2.43.0
+Tamir Duberstein <tamird@gmail.com>
 
 
