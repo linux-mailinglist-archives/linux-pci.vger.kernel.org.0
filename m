@@ -1,218 +1,152 @@
-Return-Path: <linux-pci+bounces-28360-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28361-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4031EAC2CA2
-	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 02:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F3BDAC2D23
+	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 04:42:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BC881BA1282
-	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 00:24:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB046189DBE9
+	for <lists+linux-pci@lfdr.de>; Sat, 24 May 2025 02:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 327194315A;
-	Sat, 24 May 2025 00:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5D7A944;
+	Sat, 24 May 2025 02:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LAqteAz5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1ag/CFs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C08443ABC
-	for <linux-pci@vger.kernel.org>; Sat, 24 May 2025 00:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2B417BBF;
+	Sat, 24 May 2025 02:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748046230; cv=none; b=SOJJb/6cWE0+xm8rjXkG6nboxjVUfRbbBYeuSj1gspEIkIoLdC9MZ6s3Mkv7odLY2XUA/4QA9cS4am8G3I5BRFxesn3t4vfx+qg47L8aD1DSckMj50kkpfMwpWsqyE/naZybrcPJ/ZB8juOzd7mBjLj4Oy7Zy+bgeb3vDGEp7t4=
+	t=1748054530; cv=none; b=M2fVQQl3fitfnNBHnboK1wdXoQ/VQ/6PqTcaHBDOQu4LQ5eXxoX0NDgBfNnsyrhTlNqZ8/1xOOJcX5bFfKgw8RCY2RWnlh2ENrAL23djXEr8fRJ7Queg3pN7bJy7twzYcAHxm8CMcFc5IJ+iO0BeJmFuEHVovp/+YIO9I8N1+F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748046230; c=relaxed/simple;
-	bh=jR7uoDGP9eIWtPowLV1T+/SV2K0U68rqB0fSgAl+8FE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MF+Rr/+JzlCZnpPJk+1eSbyMMBKI1Sx458ulHkCRwfT8QGtDjDTfgcjpngCDyFKLeIukIBNgX998a3aYIjqmrl7azShmeHltDvgqe5H4EjHNAe60txvC6yINwl0k6WJ4CFtbmb1pegCPuHF1ukQs3kfF/hIIbCXT6R2i3H8DxAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LAqteAz5; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748046228; x=1779582228;
-  h=date:from:to:cc:subject:message-id;
-  bh=jR7uoDGP9eIWtPowLV1T+/SV2K0U68rqB0fSgAl+8FE=;
-  b=LAqteAz5dnZ10U7n4FP0lKKahG4dRdlE4NLI+6n7+ecV2s1zd9L6Qn3W
-   lBTQtUuXW28mx0GFqG1fGHBKpwvKIbfZDTTU987J5iLV1cebH7nBcTkMZ
-   udnHnJoapgsc3PStHNGhovNS39Tc3i76VyyX/8ib/COpz6bHhj3MhjOnJ
-   00ZbVupNFcbr5OD8fdsd4qE+3QbBvUM01wL3T/7NdQmnoGW5y3nSxf6ax
-   hg6rLjW8ClWm9cxqrYOVQoZ5F9Txch500U8PZac7fm4D9ePmMSVXU3QDK
-   scjEV38Ljr5Jnq4NepZ/IMhyLVRPyNzpXr/mnxV4lwvRVhzSg+zRcoJsS
-   w==;
-X-CSE-ConnectionGUID: RrQJIjAvQISsSewMZMXizg==
-X-CSE-MsgGUID: 4zqtk9kAQt2Rn7SGDG8LBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61461330"
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="61461330"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 17:23:48 -0700
-X-CSE-ConnectionGUID: 0X+V1s08QXaZQ7J1AjNKrA==
-X-CSE-MsgGUID: 77n7g/EIRGGLX5o9nkh1cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="146552068"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 23 May 2025 17:23:47 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIcfx-000QpM-00;
-	Sat, 24 May 2025 00:23:45 +0000
-Date: Sat, 24 May 2025 08:23:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- e07c193b4728df83d02a8e99357a0581bf6a355f
-Message-ID: <202505240813.nu26n5Y3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1748054530; c=relaxed/simple;
+	bh=hJBGEXSDXftTSK2poU6B84MMf35kTyveWAY3zABcuxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jCCoa4mdA483PXDw9Z9tpRSRze/XSuLx9yTsQTP9Y4ZuiHEVvdxokwwGuY/uTVOGcRjOmOIHPNHs1QZQxTic8aGZi6rhSRjdikmS67UXNzDNq7vXg7IVzsYjsaCmzYw5l/EUE79sC87AD3vQOQRU+C66YMD+O6rweIkAHNZ2AJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1ag/CFs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40868C4CEE9;
+	Sat, 24 May 2025 02:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748054529;
+	bh=hJBGEXSDXftTSK2poU6B84MMf35kTyveWAY3zABcuxk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K1ag/CFsCY+Vs9dk6QJWRiIPXnR+g2TWtYfIJy7wqNMieCvRcc4lUxOVCCnHpUegV
+	 PVAyi36eeoxZ1vpZovzEpki2NLYE2/VsdvrP/kCdcr4+t9+KOmBFBJjEudV9WtjsAH
+	 9doEJNeBxzaeUbLjmyK0j/JumYZSjx/HZmnIEkYwmGYeRUB+mtqcAcJmtIc0L9Uphy
+	 tk0gQQzwXoRjGwx6C9RbAM+6Q6RGUM5SoEyB97MveHLWSvEBxbbfdF5fuX63cgWlBS
+	 cKlCJkaJ5xSrlGlPyL2m57b/xJKfA33j1H0pTVlTEu7PtE+jh8QGVKnWi5G3bQS7Wx
+	 aFaXuOUMJSnkg==
+Date: Fri, 23 May 2025 21:42:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Cyril Brulebois <kibi@debian.org>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
+ CONFIG_PCI_PWRCTL enabled
+Message-ID: <20250524024207.GA1598583@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDDn94q9gS8SfK9_@wunner.de>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: e07c193b4728df83d02a8e99357a0581bf6a355f  Merge branch 'pci/misc'
+On Fri, May 23, 2025 at 11:26:15PM +0200, Lukas Wunner wrote:
+> On Fri, May 23, 2025 at 03:17:59PM -0500, Bjorn Helgaas wrote:
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -2510,6 +2510,7 @@ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+> >  
+> >  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+> >  {
+> > +#if defined(CONFIG_PCI_PWRCTL) || defined(CONFIG_PCI_PWRCTL_MODULE)
+> >  	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+> >  	struct platform_device *pdev;
+> >  	struct device_node *np;
+> > @@ -2536,6 +2537,9 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+> >  	}
+> >  
+> >  	return pdev;
+> > +#else
+> > +	return NULL;
+> > +#endif
+> >  }
+> [...]
+> > This an alternate to
+> > https://lore.kernel.org/r/20250522140326.93869-1-manivannan.sadhasivam@linaro.org
+> > 
+> > It should accomplish the same thing but I think using #ifdef makes it a
+> > little more visible and easier to see that pci_pwrctrl_create_device() is
+> > only relevant when CONFIG_PCI_PWRCTL is enabled.
+> 
+> Just noting though that section 21 of Documentation/process/coding-style.rst
+> discourages use of #ifdef and recommends IS_ENABLED() and inline stubs
+> instead.
 
-elapsed time: 1443m
+True, although I kind of object to IS_ENABLED() in cases like this
+where what we really want is a no-op function, because IS_ENABLED()
+forces me to mentally execute the function to see what's going on.
 
-configs tested: 125
-configs skipped: 3
+What I would prefer is something like the first paragraph in that
+section: the #ifdef in a header file that declares the function and
+defines a no-op stub, with the implementation in some pwrctrl file.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+But now since we're considering this for v6.15 in a couple days, we
+need a minimal fix.  Mani's original patch is probably the best for
+that, and I'm fine with that, although I don't think we should throw
+brcmstb under the bus.  The pci_pwrctrl_create_device() assumption
+that pwrctrl is enabled is just broken, and I don't think the fix is
+to improve pwrctrl and convert drivers.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250523    gcc-15.1.0
-arc                   randconfig-002-20250523    gcc-10.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                          ep93xx_defconfig    clang-21
-arm                      footbridge_defconfig    clang-17
-arm                       imx_v4_v5_defconfig    clang-21
-arm                        keystone_defconfig    gcc-14.2.0
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250523    clang-16
-arm                   randconfig-002-20250523    gcc-8.5.0
-arm                   randconfig-003-20250523    gcc-7.5.0
-arm                   randconfig-004-20250523    clang-21
-arm                           sama5_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250523    gcc-8.5.0
-arm64                 randconfig-002-20250523    clang-16
-arm64                 randconfig-003-20250523    clang-21
-arm64                 randconfig-004-20250523    gcc-8.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250523    gcc-10.5.0
-csky                  randconfig-002-20250523    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250523    clang-21
-hexagon               randconfig-002-20250523    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250523    clang-20
-i386        buildonly-randconfig-002-20250523    clang-20
-i386        buildonly-randconfig-003-20250523    clang-20
-i386        buildonly-randconfig-004-20250523    clang-20
-i386        buildonly-randconfig-005-20250523    clang-20
-i386        buildonly-randconfig-006-20250523    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250523    gcc-15.1.0
-loongarch             randconfig-002-20250523    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                         amcore_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           gcw0_defconfig    clang-21
-mips                        qi_lb60_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250523    gcc-10.5.0
-nios2                 randconfig-002-20250523    gcc-10.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250523    gcc-9.3.0
-parisc                randconfig-002-20250523    gcc-7.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250523    clang-21
-powerpc               randconfig-002-20250523    clang-21
-powerpc               randconfig-003-20250523    clang-20
-powerpc                    sam440ep_defconfig    gcc-14.2.0
-powerpc                     tqm8555_defconfig    gcc-14.2.0
-powerpc                      tqm8xx_defconfig    clang-19
-powerpc64             randconfig-001-20250523    clang-21
-powerpc64             randconfig-002-20250523    clang-19
-powerpc64             randconfig-003-20250523    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250523    gcc-8.5.0
-riscv                 randconfig-002-20250523    clang-17
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                          debug_defconfig    gcc-14.2.0
-s390                  randconfig-001-20250523    gcc-6.5.0
-s390                  randconfig-002-20250523    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                             espt_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250523    gcc-12.4.0
-sh                    randconfig-002-20250523    gcc-6.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250523    gcc-10.3.0
-sparc                 randconfig-002-20250523    gcc-10.3.0
-sparc64               randconfig-001-20250523    gcc-9.3.0
-sparc64               randconfig-002-20250523    gcc-7.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250523    gcc-12
-um                    randconfig-002-20250523    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250523    gcc-12
-x86_64      buildonly-randconfig-002-20250523    clang-20
-x86_64      buildonly-randconfig-003-20250523    clang-20
-x86_64      buildonly-randconfig-004-20250523    clang-20
-x86_64      buildonly-randconfig-005-20250523    clang-20
-x86_64      buildonly-randconfig-006-20250523    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250523    gcc-9.3.0
-xtensa                randconfig-002-20250523    gcc-11.5.0
+Maybe we could use Mani's patch with something like my commit log
+(it's quite possible I don't understand the situation completely):
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  If devicetree describes power supplies related to a PCI device, we
+  previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
+  not enabled.
+
+  When pci_pwrctrl_create_device() creates and returns a pwrctrl
+  device, pci_scan_device() doesn't enumerate the PCI device; it
+  assumes the pwrctrl core will rescan the bus after turning on the
+  power.  If CONFIG_PCI_PWRCTL is not enabled, the rescan never
+  happens.
+
+  This may break PCI enumeration on any system that describes power
+  supplies in devicetree but does not use pwrctrl.  Jim reported that
+  some brcmstb platforms break this way.
+
+  If CONFIG_PCI_PWRCTL is not enabled, skip creating the pwrctrl
+  platform device and scan the device normally.
+
+Looking at pci_pwrctrl_create_device() raised more questions for me:
+
+  - If pwrctrl is enabled, devicetree describes a regulator, and the
+    power is already on, do we really want to defer enumeration?
+
+  - If pwrctrl *not* enabled, devicetree describes a regulator, and
+    the power is off, is there anything in dmesg that gives us a clue
+    about why we don't enumerate the device?  Could/should we emit a
+    message as a hint?
+
+  - Creating a pwrctrl device, returning a pointer to it, and then
+    throwing that pointer away seems ... weird?  Makes me wonder about
+    the lifetime management of that device.
+
+Bjorn
 
