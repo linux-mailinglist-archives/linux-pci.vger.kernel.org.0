@@ -1,90 +1,91 @@
-Return-Path: <linux-pci+bounces-28385-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28386-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E2D5AC32DB
-	for <lists+linux-pci@lfdr.de>; Sun, 25 May 2025 09:58:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8968EAC32DE
+	for <lists+linux-pci@lfdr.de>; Sun, 25 May 2025 09:59:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 414553B8EED
-	for <lists+linux-pci@lfdr.de>; Sun, 25 May 2025 07:58:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F8DD17381B
+	for <lists+linux-pci@lfdr.de>; Sun, 25 May 2025 07:59:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9AB19DF99;
-	Sun, 25 May 2025 07:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DDA4315E;
+	Sun, 25 May 2025 07:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCF96fdi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dxXNfsiI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906C6198E63
-	for <linux-pci@vger.kernel.org>; Sun, 25 May 2025 07:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB66A2BB13
+	for <linux-pci@vger.kernel.org>; Sun, 25 May 2025 07:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748159905; cv=none; b=FvZiWQyIXBfdlKAs3bCpCu7Y7/QeRSVIAD0WD4rogr0WUsO6oOn+xj6mkDi0k6ukkss63G2uASuBT8G0Rj8FIoS0JG2lFbTlCagXjtmRrVDyRd6o4bjDSxsqyCVjx54ewv5Fxq4gwyC/UYRRt11VZm7u1A7wXrLaSiWuy8qcyPE=
+	t=1748159975; cv=none; b=b2MUjd6iupBVgvkKONKhupfjZElyFOuMIwBbtBexowuQqk7n7iGS1rHUvrI5VUyDdwOp3RXenbFr2giBqzbYNy5savH0G2y3nCPD/xKzFn1FTB5UebmS/SOFq+DVVm3eG7ZUj6VKk/5+mzuUC80AZ4RaScNDA4VgldHJMcrr2jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748159905; c=relaxed/simple;
-	bh=f3j4XWibVHV4tRvZckwAtdzTdZVe7JCXa8Aund97Tw0=;
+	s=arc-20240116; t=1748159975; c=relaxed/simple;
+	bh=w+giIiLFG6tsdv3u/JAi7I8sAZi/tewoh+Q3Nb/k7JE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=okdOQTCZIF57JeZQC1cAI2cwcsChjH2dFzMMkMvMIl4gF8S3v+M/1MheCJQsI7KL94pn2uzDOqS8miSoCIzfeajmyznWf1+e4UDTp/jd1ziTr5UiOdng6YS0lUKpCcIRdme73XmsfTWtJIoRl39cNj95IqvskVyyORq3jsZP6I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCF96fdi; arc=none smtp.client-ip=209.85.214.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jtgw94/AWCp1RDmgpk+YEZAxG4zVEos/EDAv9ZjJtGzBqgp2u4sejxMmGZTZAJ6JqGvZYaZV3cdmrjCPZTLJrVb8l+FYRHd3EjYVCOsp+ZoYOLY5NK4b2HEJKP4fd9ePB0UbxbgueuIUrKjsljEwMsMa+e7c3AP/8y5DsPA4D8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dxXNfsiI; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22c33677183so7232815ad.2
-        for <linux-pci@vger.kernel.org>; Sun, 25 May 2025 00:58:23 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c3d06de3so1336355b3a.0
+        for <linux-pci@vger.kernel.org>; Sun, 25 May 2025 00:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748159903; x=1748764703; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748159973; x=1748764773; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=qnO1NuGahzG2mdNmPSvD3Tqb2hXBIfduG76mUpbTku8=;
-        b=tCF96fdivfNMrORqpN/d1KfCd5M+1Wyt0W2UZwhmuZPhfiLyGmwiTYJW180TWbcpRq
-         Q50uXGTbv+lpcascPGagrdXm/wjaLZOutsMqVpLgdMt6ZHw3WTYdzwJvko2u9lwUFJhW
-         DRMIL4IIkd1pbDp4QFtpfvrm7cNiOErdUg8VFs91JYxwOmli/YdgNYZt4uTrYQ5a1ibu
-         UBqnYaHYqPjgaZt2cm0WaCqB+tR88WiMIx4JsyHxgO+cFJgS6m7bUQw/oBefk7uUkNO0
-         mZxGURpFaSLjWyEgyDv1HwC638hcs8avjTu1k5dfmCI9aKdTF6ewtsgELxIArtnCGqVd
-         2pow==
+        bh=/zvLKqtAfPfj+meyEvxFMBGG/uoHhAlIpi2hY07UkPg=;
+        b=dxXNfsiIC0n3FjOR5qv1l9GzjwZjSz+y81Lj2G8EJnbrbWLxAQjiUkeWVxHe+D6ezP
+         W7NjnSSumeV1Kn1dgPrR5GTrjw7BCmsFV6VhOqETHgieVVUMh+AKI8nhuTaQkW7M4Vj/
+         luVM8+PhBKOELe0XNmtmUDiH783Sty0MEgCinzSl2vmTgVKhmChwrwbljvWMDJuR+S8n
+         tzI5gL9W9896VwJSQkHqM4N/NYf1inhj7EH/egP4q1cUaFyhJl9bXJ+AGygPkumtQGBG
+         4zHlYSLSosILW6VJZ5PSlya72zSPAMB524ZfwqhTFmTKs6EmVE+UxJjzTUp5bMejy+uc
+         Tg2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748159903; x=1748764703;
+        d=1e100.net; s=20230601; t=1748159973; x=1748764773;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qnO1NuGahzG2mdNmPSvD3Tqb2hXBIfduG76mUpbTku8=;
-        b=ESKm/lkGLtcNAGz4RNpIcdSEY3WJ6MRwWlsDiovh0HMM/stHsuWuDynPH+hduRMM0i
-         OvEi12pOJ4ldLsXgYcAY4cPU6LcOJs4otq43Fk8vAAPi6d4FHB6PfmhYeBrE+okRLoit
-         hy99WWm0vylFP9pKG4s0/vQzsyIYjCgTLISny6AJUIRoY/she7tVUl/4QNyr/GSDiMs5
-         chGN9WH4wWukYmm+RruUwLXX7egO+z3A7r7LfjzRC+Mcbum4kD3soM+4RDjlDy2RLN2a
-         2c4eA6cInVrFzUXpbrgPImEtdIoYmEEqjytrjcgLxzA3H2iRnO3HqjMpJrr9BwHDkJ4V
-         SI4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU9J2qAWEWOYuZ99uAJO2tvJPO2V1htz2DeHu3v1urk9UW4auMsA/AMVRRJD/10htwIlKiwb36S1DA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQdlWY2+tjqpfaKlIOtPw/5kMGEvtuMxULz0gkGoUYVdiNgr/W
-	ieUKKfKvLVoi2UufRZVBcKOTOJztSrx5vj5nfUlioR+QsrDT6AR0JZDVd9morzr2/unlgcqXps5
-	n5MQ=
-X-Gm-Gg: ASbGncugnpffmXrkM/VywMCd3dur4L2anXVo0VGF4nlOGx9CdQomkmh2952BxKZoWbb
-	4KxGTDMP25egFutKnwInPOq2/eikwRLGpqrNXXf4WAlBFK4/KeXJL6yUUultfaYOE1jV9kofSPo
-	pXowrgsTmRKha64AWpWjHvBfLDljNFdziqvaLrzrvVvCALoxLOaoR5O/boESSvVz1NJ+Lmh0HTr
-	xALG2uVvChP3q6BRon3WW4mbjbb81PtX8XN9RI32wX8GaAiO7j2qW0HjWAO8ixIT6wLfNeF0pzm
-	NrOTJLuv2F817DTUH32iyndFoy7GIUDegQGChqs7yfpHVe4SaU/8WfPietG1qmk=
-X-Google-Smtp-Source: AGHT+IEMRT41ZFTlA+yA9dc7yj6AJ8N+9zXv3PwdNNtc5ynVweV7/6bTw2xvTml3M2T3hjsotCoDwA==
-X-Received: by 2002:a17:902:d2c1:b0:223:5a6e:b2c with SMTP id d9443c01a7336-23414f57f54mr86739865ad.17.1748159902787;
-        Sun, 25 May 2025 00:58:22 -0700 (PDT)
+        bh=/zvLKqtAfPfj+meyEvxFMBGG/uoHhAlIpi2hY07UkPg=;
+        b=SIYmADZGxnXP+r/e8JjsqtxPc/z/IErhwYGhHo7SzxzGbqTvKqe1H9NqGnQwZBTSi2
+         oy1HgO+w+Vvv2lQYC3z3cJOuuP0A4BeOjkuU3kgmKyRrX0YHHgCUD3brlnZyb+vxV4PS
+         bAq+6tld7yiZVA2XazwaQR9OKuIzGqw8XDNBcMfDct7+iDFqboNG9DCYk4qoWu+2KfeY
+         NdCjbhu3sUWb3f6C/lAs7IoK9If4SxAXdFVwoBCngG3fWv0m5LdnJObm5FHTP8Qu0xIt
+         f84zHW1oFIWEmMXiNztpSjzlCWLjdFydJTyxGNPv9U50LVCDg3/UkghShmUeHkYNnhvE
+         coGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3CtYRq9A3EUBGs39nM5lCl04utPMQX9uN7JJSzThLVHZjgA48/ny08kKP/nsqi2NSgKm+nStwdSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpS3+GF4AwMZ1Ixs3s3h3QkuYJ1W5gjQOzSEtpVkw0TOJkU/My
+	vwNFs+SWSjvk883QmKT8mjKa19/HR7PRGdlcO1ZdusHlUSo06N/vb+q7sCR4IqmaFw==
+X-Gm-Gg: ASbGnctgoEPey3kJJsFTnONmJJK6AhMfZTowSJEHaGzxak8zmNvrFiquEdKn6/2VHPw
+	QDW5p3E7OUsvmJ2nbAVfm41PLpYkb+4msIDQOns1RU5uXLEGEYMU5ThJh89LcQF3XEbGO6f2TQM
+	oSMEJtpe8q9+aZ1LaJluAraZRX7COyq7I0G1Yjb46AiIYIFfP5kYvgiBc+pvhxbKQb9QhLV1sso
+	6Va4k9T4WMiZvqnFP7AKFkcVoIEAFI5gq+N5DjrLmR6+YNDDuWJos2qH9J0aFqNIt6utksMpuYj
+	+aVuNQwvcrfS30ZBDxJ2gPMFnvQUTVJk67FQuWIfwkSA+nKLtZMghyFPb3nhXkI=
+X-Google-Smtp-Source: AGHT+IHQ9pl075joeeVM1gptl3UdrdvoXOghGj26j+ff4DJOCFvA16VCyVGRaxk2/uo55lAurkiY7A==
+X-Received: by 2002:a05:6a21:329a:b0:215:d611:5d9b with SMTP id adf61e73a8af0-2188c240698mr8143808637.12.1748159972982;
+        Sun, 25 May 2025 00:59:32 -0700 (PDT)
 Received: from thinkpad ([120.56.207.198])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2344797f610sm5331785ad.119.2025.05.25.00.58.19
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a95b2b19sm15104473b3a.0.2025.05.25.00.59.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 00:58:22 -0700 (PDT)
-Date: Sun, 25 May 2025 13:28:18 +0530
+        Sun, 25 May 2025 00:59:32 -0700 (PDT)
+Date: Sun, 25 May 2025 13:29:29 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	cassel@kernel.org, wilfred.mallawa@wdc.com
-Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
- pcibios_reset_secondary_bus()
-Message-ID: <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
- <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
- <aDLFG06J-kXnvckG@wunner.de>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: reset_slot() callback not respecting MPS config
+Message-ID: <zxwkdz5udwvtqmhfbfbvugnuplkhq6uyzpsqx3gubyv6zkv6oi@o42zsj2mt73w>
+References: <aC9OrPAfpzB_A4K2@ryzen>
+ <aDAInK0F0Qh7QTiw@wunner.de>
+ <hqdp64mksr6whmncm5dhrjima32v5oyng4ov6hdklcamqtm4ib@prsatdutb5oj>
+ <aDCLYl3y-4ktQrjH@wunner.de>
+ <6jslic5nfxz3ywllriiw7uw6jwc6iz362nwuane6xam66kbv6a@x6krddl53mkg>
+ <aDG-NzeW0fdIwall@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,37 +95,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDLFG06J-kXnvckG@wunner.de>
+In-Reply-To: <aDG-NzeW0fdIwall@wunner.de>
 
-On Sun, May 25, 2025 at 09:22:03AM +0200, Lukas Wunner wrote:
-> On Sun, May 25, 2025 at 12:23:03AM +0530, Manivannan Sadhasivam wrote:
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -4985,10 +4985,19 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
-> >  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> >  	int ret;
-> >  
-> > -	if (host->reset_slot) {
-> > +	if (pci_is_root_bus(dev->bus) && host->reset_slot) {
-> > +		/*
-> > +		 * Save the config space of the root port before doing the
-> > +		 * reset, since the state could be lost. The device state
-> > +		 * should've been saved by the caller.
-> > +		 */
-> > +		pci_save_state(dev);
-> >  		ret = host->reset_slot(host, dev);
+On Sat, May 24, 2025 at 02:40:23PM +0200, Lukas Wunner wrote:
+> On Fri, May 23, 2025 at 09:00:27PM +0530, Manivannan Sadhasivam wrote:
+> > I thought that it *might* be possible to reset individual ports,
+> > so that's why I passed the root port 'pci_dev' to the callback
+> > in a hope that the controller drivers could use it to identify
+> > the root port they are resetting.
 > 
-> Nit:  Capitalize terms as the PCIe Base Spec does, i.e. "Root Port".
+> Makes sense.
+> 
+> > You are right. We should check if the parent bus of the bridge
+> > is a root bus or not.
+> 
+> Okay, that's simple enough:  pci_is_root_bus(dev->bus)
+> 
+> > Yes, pretty much so. I could rename it to reset_root_port(),
+> > since I still believe that multi root port setups may be able
+> > to reset them separately.
+> 
+> Conceivably, a PCIe host controller might also possess RCiEPs
+> in addition to Root Ports.  Those are allowed to be FLR-capable,
+> but could also be reset through a platform-specific means.
+> 
+> PCIe r6.3 page 121 defines the term "Root Complex Component",
+> which encompasses Root Ports but also RCiEPs.  So if you want to
+> be super generic, you could use that term in lieu of Root Port,
+> though it consumes more characters.
 > 
 
-Ack.
-
-> "The device state" is ambiguous as the Root Port is a device itself
-> and even referred to by the "dev" variable.  I think what you mean
-> is "The Endpoint state".
-> 
-
-Yes! Will fix them while applying, thanks!
+We don't have any PCI controller driver incorporating RCiEPs afaik. So I'll
+stick to 'reset_root_port' for now.
 
 - Mani
 
