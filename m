@@ -1,106 +1,123 @@
-Return-Path: <linux-pci+bounces-28400-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28401-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9F46AC3DF5
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 12:42:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6676AC3E65
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 13:16:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A09C3B85D2
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 10:42:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74EB1176F61
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 11:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 372E21C07C4;
-	Mon, 26 May 2025 10:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55AC1F8BC6;
+	Mon, 26 May 2025 11:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xaxGoRwP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jr895s3t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81EB320F
-	for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 10:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B621F5838
+	for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 11:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748256168; cv=none; b=a+51jase5kLDov/n8snLQVXk27+CG/Y6b+DW1vrIZuAoJJYmREEkfeLSx4PHxjrLP/M5liSNS26TXE9Trm3IQjqKYsqZvpEk0lmLbh8FFaYmuZKTlp/+PoYLuytfIj7X18xADBBHD2YaMV5nQKl/pSEW6Uoh1+9vPbmOuBKfFPg=
+	t=1748258214; cv=none; b=fk1xx4xewDz4QGv+3MmI/+p/ev445LW5sIZl1xI465geVnAV+ZhE8+s0OF5p75VK8wFY9/3qXgx+MV+xIAQLsEOuPVDmVNaIeen4GX8zEUVHRzj8g6VhlbBgPw5lJbG1XggIwSau8H+jGQ8S9YAuxXsHMZCsMtqwGBGZpnppB2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748256168; c=relaxed/simple;
-	bh=fUwz1mg0Wq4VD3WtIWWxA+8j7o1n672LeoQiq7Dpqx8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Nw2vnPIZgMdZChY484iNmXXag9SjZ94igidRwD1brJ7rmyMvb0YqLQd9lh1WJ8nNi77SgVa85kOI1WSqXKt8xTmqThpmo52nVjn55x+3b/LojDTPfTbZcKbXhMSWQxG7EDhabZv1w0csDHDeY3epamRtrIVpJPD53xjHf0PiFpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samikshagarg.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xaxGoRwP; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samikshagarg.bounces.google.com
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b270145b864so1231675a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 03:42:46 -0700 (PDT)
+	s=arc-20240116; t=1748258214; c=relaxed/simple;
+	bh=oc+X8bF/5frSyry5RmoMGZugC3S28EX+om9zx6pPuzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEUufQ4OkGPF+c05zIC1RbeieU/GCj1xp9JiZX3F5F1Gk3ta4MG+4PkztCgiZS5Y4GitvIBYUhcYkG54YHULpXdC1Fxf6uCbofPtHYZNg/TBLLXVAKt0HfHMkE5d+86DY7dyWKSO5ofX/Jmhnz/kjBVFjxfmAXdpJ1EdTudhBNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jr895s3t; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2346846ee0eso5838285ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 04:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748256166; x=1748860966; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6SIGHh/Ha36Zobz2HnNwfDHbCE8x7N0HhlHgcxveQHA=;
-        b=xaxGoRwPNN37qbI0T6m74sxPu6/Rtxpcfte78L1RsZJt3vGnwzjrBGFd5Y2ya/SqJV
-         ZQmkmIzuudKC8OdHqfMBbMYufggsZet2OjYBmSJU/1tcSHpu1UVFUeQ/bumJ4Qh/Ypsk
-         EGQpDVv3LNkfD1usTyDOuow8PVjVGMZ899AUOA7m31Czhg5NZrerbDuW1DzwMVKYbfBF
-         7H87COHOpTpE66Nzw1DEAHOQnUIbKij+3U25L6MhrfOFjW1BRkKBIW1c5ub+ySjh7QwE
-         Gyi0/0z8wc8/47/Z604Pot3FJmSjkiMXxJq9rLASrtbOHA1rcCTHApRRQIcaYrSAQiJo
-         KELA==
+        d=linaro.org; s=google; t=1748258212; x=1748863012; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
+        b=jr895s3tV1MBSAWPfXqDo93zmyExxl4EhiDUsSLC4hv0CumYvXZUUGiGnony6JNsVN
+         /DZ541bnerw82EGtaMJfl5YQI7WaPP3ZMlDLSCyA8gDsgQnC0JCwNBG+FTcZ1rcRvypr
+         cha90JWZxBzo7nt+dYTYgzI6iMV+k1fcf0kYO6VVTgLDM2J6RtCQMTK6wTH+KZsUHS8g
+         OONMYnBuTnwYNVwDQO1Lo9jSBTS3cGRc/JbsiHomCOlCcjiECDRQZyvWhTPy29oSCcs1
+         +hry76irJdfajtCmOkra1XUCuCcwID2KtCHAd13lwL66Awzh0tbTjtx3wDBY1mseXcVA
+         eWcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748256166; x=1748860966;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6SIGHh/Ha36Zobz2HnNwfDHbCE8x7N0HhlHgcxveQHA=;
-        b=s7r5QUqqD6/OXY1L65W0hwJAg2YtAqFPEJ0UFxZydUQC9JlEU1Iz0hhiolDfCatzQu
-         Oic1OIWe1p36pORBtm6R7IXKBoKOE6b5StMc43/GK15ps96hJmhbMkI5+J8FEcRcqSbI
-         ZnUmNR27fUYkAp2q1uD5/NHkjfZdyo6UyFM3FoRSF0s5ekpc3aCeclpHgNHcGwDIq2wO
-         QfWN6kE1KqDLBlmvGW8Ifl/vwOLvzGOi24z8g73C+BiNL8NRRJ0gZGFQoJrvXBVPeX3C
-         2inkrztirTVIMa9XuaJX0stzegGWn/KmRwNNVgkgAmgGoSZfBtiBSBXf/K5pclJzeXdh
-         ZtEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW82MhhA+NzDAqaCH7Jo/78ZYHQaJflQOw7ftVVXFN45NBHrOWB1Jfmgpuqjh+WNYJBXWCJ6FWOM+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypuQLFiqlICvQ6pOc8IubQnP7pCvyXp7H1OIYLTXMM4sw+vVLg
-	/HdvW7pKIifRZrr5ujiTrIvZPhRj7bSAnddJ7skVbZScEI8iDyZUG4lWIUsZpOklcwPEE4uJbax
-	JMPj+Gp7+sqIZSfEuD16v6I1L2gKoaA==
-X-Google-Smtp-Source: AGHT+IH4OyNSNtJ26a5M47mrX+mmEIiibwfws1X+hbtf3HjwQ6a6qw6EC8HmBGPRonRaoHJ/yHllcDRSoln/lJg6O0k=
-X-Received: from plk21.prod.google.com ([2002:a17:902:e9d5:b0:234:4c97:1e83])
- (user=samikshagarg job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:e881:b0:22e:50e1:746 with SMTP id d9443c01a7336-23414fb2517mr146619145ad.36.1748256165984;
- Mon, 26 May 2025 03:42:45 -0700 (PDT)
-Date: Mon, 26 May 2025 10:42:40 +0000
+        d=1e100.net; s=20230601; t=1748258212; x=1748863012;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
+        b=RTqzWIOtoxvA9+pEuqaG17n8ShtFNwbynAdmkDX8Jesw16DiWUDWyQjik4ZZLn7VJt
+         bCoTC6klExSF00ClKhmWpDgrdqqaolrSIBLN7SbpFU85NIIRpzWgzHUvPRC3RKmQz6Xo
+         DxeyYDV5GkOOOcJmwBoUmNcvkRZ7DpmANSSAnhOgZtScDawp+r8HmiSUkELxqrOj9Rqm
+         FOF9bEaKnOwEWh0KH6UlJEQmw6HPK+2RsaD4uZ4I15eANqMq8aoTwigfFmRcfgOcIP2Q
+         2oW1XLTfVyAdccnNUDVmTKPWpV5hilgBJhrUawV9vd5rSJi6FP8bLsByg4qtgKUQYAAH
+         TWCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSVI2eN2L7RuKS/0Tn2lQDmIGwzMZZ0oAB5k5bHp3uL21E6cbUdQuPtqhx8OQd/4X9rOt1OgZImWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3OKcx22oLj96+tghQ46qxM7LvnUt9xPuFTyPbt94CAAAIcLFm
+	V9s5bXfSDGDyuogOssZxOLdzrKRzRNVCZJ8D6EWxY4H4L/WUQV4Mrq5mgNoCZnrRmA==
+X-Gm-Gg: ASbGncv0PSNONpZuJOeVsZpvZKApyBAaLMp68Hdijia4OOw9EoaoOaTPdZvn1ARm88x
+	CYZ0NPawCZjhwSaUozHyQSB0fa4YGR0fZ4LZ7G8nFNcxbZCFlGPLoRA3Xj8yUuS6wBGJgktP6YI
+	8pV69XOPo7WADNYfVIseJ5QCa4kiuCGDb+a+xs66IwF+XZRp5noSVRm9ux+obhyR9xHr70kX5ay
+	cAx5pOWoAQt81pFCsKUbOv4taFqUnrdkOM1XgoNrNiEHuBjybwwi1LmsULJ6XZjZUTaSQvvnyc4
+	ePRUr9algJKtxElurPMYw4hbIu2KC9yezYQkssQv49OtJ5WYFPNv+90ubiQhzs1R224wvXgPuA=
+	=
+X-Google-Smtp-Source: AGHT+IE3knpqyPoHytl1HTPVu5Io02EXVExU+HLdRLl7BELYi33dIBObAhSkST7PxeVLbJc2K7u30g==
+X-Received: by 2002:a17:903:4b30:b0:224:24d5:f20a with SMTP id d9443c01a7336-23414fe558emr147961405ad.48.1748258212357;
+        Mon, 26 May 2025 04:16:52 -0700 (PDT)
+Received: from thinkpad ([120.56.205.192])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234180b2c31sm39997795ad.155.2025.05.26.04.16.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 04:16:51 -0700 (PDT)
+Date: Mon, 26 May 2025 16:46:42 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	cassel@kernel.org, wilfred.mallawa@wdc.com
+Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
+ pcibios_reset_secondary_bus()
+Message-ID: <crihkpezsnfuzwm4b7fkyy5b3je55zwxhnk65ctq5wncr4hwq5@63f4fr3bvrsx>
+References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
+ <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
+ <aDLFG06J-kXnvckG@wunner.de>
+ <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
+ <aDQQLU1wrgstypEi@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250526104241.1676625-1-samikshagarg@google.com>
-Subject: [PATCH] PCI: dwc: EXPORT dw_pcie_allocate_domains
-From: Samiksha Garg <samikshagarg@google.com>
-To: jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org
-Cc: ajayagarwal@google.com, maurora@google.com, linux-pci@vger.kernel.org, 
-	manugautam@google.com, Samiksha Garg <samikshagarg@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDQQLU1wrgstypEi@wunner.de>
 
-Some vendor drivers need to write their own `msi_init` while
-still utilizing `dw_pcie_allocate_domains` method to allocate
-IRQ domains. Export the function for this purpose.
+On Mon, May 26, 2025 at 08:54:37AM +0200, Lukas Wunner wrote:
+> On Sun, May 25, 2025 at 01:28:18PM +0530, Manivannan Sadhasivam wrote:
+> > On Sun, May 25, 2025 at 09:22:03AM +0200, Lukas Wunner wrote:
+> > > "The device state" is ambiguous as the Root Port is a device itself
+> > > and even referred to by the "dev" variable.  I think what you mean
+> > > is "The Endpoint state".
+> > > 
+> > 
+> > Yes! Will fix them while applying, thanks!
+> 
+> ICYMI, current controller/dw-rockchip branch still uses
+> "The device state", not "The Endpoint state" in commit
+> 56eecfc8f46f ("PCI/ERR: Add support for resetting the
+> Root Ports in a platform specific way").
+> 
 
-Signed-off-by: Samiksha Garg <samikshagarg@google.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
- 1 file changed, 1 insertion(+)
+Ah, missed this comment. Incorported now!
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ecc33f6789e3..5b949547f917 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -249,6 +249,7 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_allocate_domains);
- 
- static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
- {
+- Mani
+
 -- 
-2.49.0.1151.ga128411c76-goog
-
+மணிவண்ணன் சதாசிவம்
 
