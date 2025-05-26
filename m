@@ -1,187 +1,133 @@
-Return-Path: <linux-pci+bounces-28407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D330AC41E2
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 16:54:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FAA5AC41E7
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 16:56:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57FD93B8BF7
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 14:54:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 094053A41D6
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 14:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C6720F09A;
-	Mon, 26 May 2025 14:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61EEE20E023;
+	Mon, 26 May 2025 14:56:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kUL7fobQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2u6SKz5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E1020E01F;
-	Mon, 26 May 2025 14:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205DB28373;
+	Mon, 26 May 2025 14:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271268; cv=none; b=cFw6Kwr3CfCWgnu8bl8rJO1kGx3l2g3sEEIWRQed9WEyE0xGpS4FvBh5zdXccRz/Z0RZipLYsd0rCHkC1a2vHUTxPuLTCsz+EjCgNHJq0Uqb7zsMLCYruuoGAaJyQVbKvIGQh/zHVcTf/z6hIsuSTQRzdUD4bnNx5uOtXME2+xI=
+	t=1748271404; cv=none; b=F0M46PCbyWZH1EVTpPXuGmv8OyoiQoD46GWkYpjKgiQPq7FQomI290PvoNWWZg6qcv3z/DJDeSb8Eazzj66iJq9ZxPZ/o1Sq+Zr5Of7wUBt9cW/L7Z5tA6qIMrIoIiCgzssuhWhEvwhyq/rw6p7jS/GrOaRYvmaaHF9RSVzRXac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271268; c=relaxed/simple;
-	bh=JFs9+wDYyc+/5TaWqhHhVWBo67C7BQy53q6HAKhlo/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vwi/DWZQdhNUHVMhNdKCMH2S7ZrM+fFMSH/lo4zz4ZYuY1ZKq2F5oMEFCjp2zx+ernwNOx/vAxVRdhywY7/GRCxVn3PNM2vxGmx9xyP1qG18hNL5mSEvsT+JGLYi/+BRzu+7AIG+ufjqt+Hur1beqf+okPWP3MoXhsKNa7zGGnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kUL7fobQ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=W0V5A4hmMfXrnMU3cZdDhRR4hXBKJTTiA4wVB7nCdiQ=;
-	b=kUL7fobQdqsEHgi9poZcyazu5uTiJUgbG3o9YJw6gb6/K6RD6lztxzKxLQtwTV
-	1aDqRb/I26FnA66K0XcvFi6rmZ/Vrc2O6ViUal5h0TEvD0CYMf6PR8Qo/qSI66MZ
-	Mr71m0XpaNcpPP+xvTJKMzf8PdD6XcPYfxeFAn1OlpTa0=
-Received: from [192.168.71.94] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wC3_HZagDRoErghEA--.12334S2;
-	Mon, 26 May 2025 22:53:15 +0800 (CST)
-Message-ID: <60860792-ef02-4c10-b313-b3f34bab0a8b@163.com>
-Date: Mon, 26 May 2025 22:53:15 +0800
+	s=arc-20240116; t=1748271404; c=relaxed/simple;
+	bh=FquHezFUc7DH27pfpWI+rH+kmjgYOsLlioRhkjrQCPs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=eZ+rDGAlPyYpAGcFbCGh/kzVQz7MkJ5SfFpf6pXMJOOrIf3c0+wPd3IeyykE3yxmvr/5hFKRXRcUKws7x4Fdmrtk3JAYyILz6QHLfX7+WEBOZ+02+jS5BnPsQPDk3SATvednedYM2vwG0dBil2RoePhOS48hcInoHnhWMkjFDAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2u6SKz5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51704C4CEE9;
+	Mon, 26 May 2025 14:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748271403;
+	bh=FquHezFUc7DH27pfpWI+rH+kmjgYOsLlioRhkjrQCPs=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=I2u6SKz5k5kaCxDX4uSlRUIJZbwixl2yhSR3XLFBE1J++2X4FAsCXkSjofc1VlCY7
+	 VBLN0Cl5HvPpWt6CG9iBzCDfaCicBR3fVmTroqdFJGSpPQFkB4XK860J2Jn/XKO6a4
+	 OatOQ6AjrmPficieHssNFE4Oo3mKqgwHkX7Yr/177vz7FGGPCvChV1QslpsSyp8HtW
+	 vpT2b5LtdSsWlRdKEPvRqeCaaZLo6wUiyh/IJP1vRFyoZwcfP+/nA1wx3usYofjEez
+	 fzu1dW2zgTZTJFsZ/IOYU5QtABXcSKFywKh2XyLJ6wExrlEe3sQIbfsVMMixELYon/
+	 Z0ruliGT49S9g==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 0/6] Refactor capability search into common macros
-To: lpieralisi@kernel.org, bhelgaas@google.com,
- manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com, kw@linux.com
-Cc: cassel@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250514161258.93844-1-18255117159@163.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250514161258.93844-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wC3_HZagDRoErghEA--.12334S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1rWw1ruw1DJFy7Xw17GFg_yoWrurWrpF
-	yrGwnxCrW8JFZruan2ya1I9FW5Xan7t347J3y5Kwn8ZFnxuFyrJrn7Kw4rAF9rKrZ7X3W2
-	vFWUtrykCF1DAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UB7K3UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwhZo2g0evyS9wAAsW
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 May 2025 16:56:31 +0200
+Message-Id: <DA66HHUA8ANF.BI2FH7POFSRJ@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
+ <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
+ <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>, "Thomas Zimmermann"
+ <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Luis Chamberlain"
+ <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "FUJITA
+ Tomonori" <fujita.tomonori@gmail.com>, "Rob Herring" <robh@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Will Deacon"
+ <will@kernel.org>, "Waiman Long" <longman@redhat.com>, "Nathan Chancellor"
+ <nathan@kernel.org>, "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt"
+ <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit"
+ <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, "Arnd Bergmann" <arnd@arndb.de>, "Jens
+ Axboe" <axboe@kernel.dk>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v10 3/5] rust: replace `CStr` with `core::ffi::CStr`
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-3-6412a94d9d75@gmail.com>
+In-Reply-To: <20250524-cstr-core-v10-3-6412a94d9d75@gmail.com>
 
+On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+> `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64. Replace
+> `kernel::str::CStr` with `core::ffi::CStr` now that we can.
 
-Dear Ilpo,
+What's this supposed to mean?
 
-May I ask if you have time to review the patches of this series? If 
-there are any problems, I can continue to improve. If you think there is 
-no problem, could you review it and add review tags?
+> C-String literals were added in Rust 1.77. Opportunistically replace
+> instances of `kernel::c_str!` with C-String literals where other code
+> changes were already necessary; the rest will be done in a later commit.
 
+Similarly this, the message should explain the motivation for the
+change, the change itself and can include additional information.
 
-Best regards,
-Hans
-
-On 2025/5/15 00:12, Hans Zhang wrote:
-> Dear Maintainers,
-> 
-> This patch series addresses long-standing code duplication in PCI
-> capability discovery logic across the PCI core and controller drivers.
-> The existing implementation ties capability search to fully initialized
-> PCI device structures, limiting its usability during early controller
-> initialization phases where device/bus structures may not yet be
-> available.
-> 
-> The primary goal is to decouple capability discovery from PCI device
-> dependencies by introducing a unified framework using config space
-> accessor-based macros. This enables:
-> 
-> 1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
-> can now perform capability searches during pre-initialization stages
-> using their native config accessors.
-> 
-> 2. Code Consolidation: Common logic for standard and extended capability
-> searches is refactored into shared macros (`PCI_FIND_NEXT_CAP_TTL` and
-> `PCI_FIND_NEXT_EXT_CAPABILITY`), eliminating redundant implementations.
-> 
-> 3. Safety and Maintainability: TTL checks are centralized within the
-> macros to prevent infinite loops, while hardcoded offsets in drivers
-> are replaced with dynamic discovery, reducing fragility.
-> 
-> Key improvements include:
-> - Driver Conversions: DesignWare and Cadence drivers are migrated to
->    use the new macros, removing device-specific assumptions and ensuring
->    consistent error handling.
-> 
-> - Enhanced Readability: Magic numbers are replaced with symbolic
->    constants, and config space accessors are standardized for clarity.
-> 
-> - Backward Compatibility: Existing PCI core behavior remains unchanged.
-> 
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > ---
-> Changes since v11:
-> - Resolved some compilation warning.
-> - Add some include.
-> - Add the *** BLURB HERE *** description(Corrected by Mani and Krzysztof).
-> 
-> Changes since v10:
-> - The patch [v10 2/6] remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
-> - The patch [v10 3/6] remove #include <uapi/linux/pci_regs.h> and commit message were modified.
-> - The other patches have not been modified.
-> 
-> Changes since v9:
-> - Resolved [v9 4/6] compilation error.
->    The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses
->    dw_pcie_find_next_ext_capability.
-> - The other patches have not been modified.
-> 
-> Changes since v8:
-> - Split patch.
-> - The patch commit message were modified.
-> - Other patches(4/6, 5/6, 6/6) are unchanged.
-> 
-> Changes since v7:
-> - Patch 2/5 and 3/5 compilation error resolved.
-> - Other patches are unchanged.
-> 
-> Changes since v6:
-> - Refactor capability search into common macros.
-> - Delete pci-host-helpers.c and MAINTAINERS.
-> 
-> Changes since v5:
-> - If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
->    the kernel's .text section even if it's known already at compile time
->    that they're never going to be used (e.g. on x86).
-> - Move the API for find capabilitys to a new file called
->    pci-host-helpers.c.
-> - Add new patch for MAINTAINERS.
-> 
-> Changes since v4:
-> - Resolved [v4 1/4] compilation warning.
-> - The patch subject and commit message were modified.
-> 
-> Changes since v3:
-> - Resolved [v3 1/4] compilation error.
-> - Other patches are not modified.
-> 
-> Changes since v2:
-> - Add and split into a series of patches.
-> ---
-> 
-> Hans Zhang (6):
->    PCI: Introduce generic bus config read helper function
->    PCI: Clean up __pci_find_next_cap_ttl() readability
->    PCI: Refactor capability search into common macros
->    PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
->    PCI: cadence: Use common PCI host bridge APIs for finding the
->      capabilities
->    PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
-> 
->   drivers/pci/access.c                          | 17 ++++
->   .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
->   drivers/pci/controller/cadence/pcie-cadence.c | 28 ++++++
->   drivers/pci/controller/cadence/pcie-cadence.h | 18 ++--
->   drivers/pci/controller/dwc/pcie-designware.c  | 81 +++--------------
->   drivers/pci/pci.c                             | 68 ++------------
->   drivers/pci/pci.h                             | 88 +++++++++++++++++++
->   include/uapi/linux/pci_regs.h                 |  2 +
->   8 files changed, 194 insertions(+), 148 deletions(-)
-> 
-> 
-> base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+>  drivers/gpu/drm/drm_panic_qr.rs |   2 +-
+>  rust/kernel/device.rs           |   4 +-
+>  rust/kernel/error.rs            |   4 +-
+>  rust/kernel/firmware.rs         |  11 +-
+>  rust/kernel/kunit.rs            |   6 +-
+>  rust/kernel/miscdevice.rs       |   2 +-
+>  rust/kernel/net/phy.rs          |   2 +-
+>  rust/kernel/of.rs               |   2 +-
+>  rust/kernel/prelude.rs          |   5 +-
+>  rust/kernel/seq_file.rs         |   4 +-
+>  rust/kernel/str.rs              | 358 +++++++++-------------------------=
+------
+>  rust/kernel/sync/condvar.rs     |   2 +-
+>  rust/kernel/sync/lock.rs        |   2 +-
+>  rust/kernel/sync/lock/global.rs |   2 +-
+>  14 files changed, 112 insertions(+), 294 deletions(-)
 
+I'm a bit confused by some of the diffs here, they seem pretty messy,
+any chance that they can be improved?
+
+---
+Cheers,
+Benno
 
