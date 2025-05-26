@@ -1,138 +1,140 @@
-Return-Path: <linux-pci+bounces-28412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D9A2AC42C2
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 18:04:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 594B6AC42D6
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 18:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 125B73A57C6
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 16:03:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E80853B9970
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 16:15:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDDA51E48A;
-	Mon, 26 May 2025 16:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5935922F773;
+	Mon, 26 May 2025 16:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3jffqJnH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaoFpGaU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A933594A
-	for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 16:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF2522E40F;
+	Mon, 26 May 2025 16:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748275453; cv=none; b=HAhLFupn844K9LHMrKOSrZVzgyXqKyTvdnvspKRnlzEjH6gZ3B2vKJNyNvN1s6fIknrt3YeE0DzyCOrdMWPFLFa0g8Jboo7fIJFETH9FvBwqs6CUQsPg5xsOGWsnjE9tuG3yzVGHPE2HYn5Mqnmc/l1VIjVcmW+cgacNWQcbDYg=
+	t=1748276129; cv=none; b=su5mKCXGMGvdrz2Gt7Pj0DWEt8u1aoYQDv5+3vyB6H28Zn9WqsQTjscOn8opmXZKjmtcWscevpOCVw3XTNLFWCPlt3XwKLomFopsqTtW+N4xnoPUpWC56Q7L6M6Z4fNXnkCF1obTjfqEOv91tFAmMa5pKoJwjkXHPW8veyK3m8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748275453; c=relaxed/simple;
-	bh=q4UffFyDswm8nMzHDFCTY7t6jCR0+naYSV5NUMtPht8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e+f0G7McinWIjUIg3tTpRzbLqgcpQ1IoujKF8vaxpEPEJ/DRaZRw9I0TqyzioyzcahY5mmVuusjkZ6Sn8yk5xFUDS1J6JnoGn1itH7VUoa4EnqBcDc9mWlXckrYMU8u4tucQ76XvSz0i16Cb1zDMb7H32OeJhmHmXXbU7N66sDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3jffqJnH; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74019695377so1465417b3a.3
-        for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 09:04:12 -0700 (PDT)
+	s=arc-20240116; t=1748276129; c=relaxed/simple;
+	bh=DC66KEtFPPf6dRsTAkyJ8ORz4uW/csyD3M/JlX2dpLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VzMX1Le6KQeX7pLs1ntwlrDQ9D5EKUjxZHptLIb7rAUTPXRF04sjjsubOV48q6Rik3OmfIfKCfPLdz9EUEGwmzGXLiQx8dA+x5M7pnXW80SPrIyz8ygxkazLL99ZAA9w6KMw6C1WHJy0rr1Kkva/z/u3Kz9PCHNfBmaJnXhtB5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OaoFpGaU; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b1276984386so329094a12.0;
+        Mon, 26 May 2025 09:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748275451; x=1748880251; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TkO0Al1qkogxtsptnkzwoi/d2g3/Fd1fNDxMLZ5tpBM=;
-        b=3jffqJnHu3AvLdW95nyISd3PHQwV7GeGfUtr9Gl0A2q96SspEQkzVOTLZp/8gA4vlr
-         +3or1Sg5MeoO4tkxzgGrxjaydn5RxEiJCt+2dahNPfm8L9sVn9NBdBvcA2w6K24qQSOM
-         bsU5os9j3wP2fcy04tl4Wo+u3lvlbDwwidYoGeLaeuBlmNjYwENCO1nis5ZRI7B0kCH3
-         LHtraje4EjhyWuz8MEpnG6b9BqT5L5kWNJTp1FRd+0wnfBVhCxeNRdYjNHRFESv880ci
-         RYz5slzCDdj/gw/5viF86TLmkfT1Me11YCRWb3kEIUl5QElynDnB+romZtQo27wWxv81
-         u6lg==
+        d=gmail.com; s=20230601; t=1748276126; x=1748880926; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IqqBHeb+ye/Ia2+xZyQMqJHybQMTShtOHZU6XZo753Q=;
+        b=OaoFpGaUgnlDA3ra9JqyULkI2Qi0da6dYY4bVK9wKowW4vrHpaj7A3AD4RZfayBEy3
+         q6hh5tkcQXCEWCGsaMqpFpTDxaVFwMtD7Tmm7sTW+JMwB0tRcriD3F5+ECTishNSnuMZ
+         XQ4r0hZefJQBWaQKGlQFg2oB1r70JxVSRqgDDU/2kI7y4J1Lk+b9aPaB8mrfUMezFkSf
+         8rj5y1wfi9WIhvE0C/63VSGLE7aIvuWWeBJkT1dBUXD5HUQ22tMY0MQfFtRbdeAtjhkN
+         K//thMAw/jly2mHIf+SLE4yROfkKI8NzkydHMAI78rS3EUZhhT15MM6GGjKcGtccgL95
+         JLlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748275451; x=1748880251;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TkO0Al1qkogxtsptnkzwoi/d2g3/Fd1fNDxMLZ5tpBM=;
-        b=Rz325OsPIb7LzD+laQJtGULbglkfYk7a1obXP0+xhDK3rzVHghi3kLSdgLQl0ehyh3
-         0sIEaHA/7XgqykGrlwqTGhJr6iuRcHvZVWHW0AXyjaJdtByzlTQYtonD6YWZGGoJTy2C
-         WZ2H9M27VqwpQsT+h2TzthpYrNamdh1CIP7K0oCQ/oNYn1D1z2QlBpja/QqRvi2s7xR9
-         xp2XsrmOlYbA04eT5L4/b1v9YvPlpkVrvsdSlxmKKvJq6FJ6fYTvf6t6MN/U42FcDXJF
-         BAMBbu0oIcpAWCyflYt0US8iWPnKDMsvs2GAw6RHWdJUiy39wA57QBbXVzk0IqTuRy+f
-         OQzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhNzf6K8N9B7muqw3UEmQwF+9H2s5fKC3W50R/wAKzJrxqSTaO0llsZ/mfOQ2NTbneEV/oeGgCi6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRaxAOssq573qz9X0ziD1GWruKf0BLvy0C6qAZnGzXJQN0nrkc
-	YRhXWX5JdO23xRetcvrMW7V6h5Wr4o6K9cMLS+qNYamWYUuru+WYeE94knzdWfmLJg==
-X-Gm-Gg: ASbGncvwZPVgAFuR31kpk/Y9/uFGwfnokwp0YzEiJYln96DL1vskExrjm91/VPp0shl
-	TDvSR8mPO1L/xPqIFvWi/nMmy6b80dhz6GlvmRdYDa5aqsFxlNoDs+xanDicSKpDMPisPeii+dZ
-	O69vwt19KUeoEVgEk4kyZSLK6BQ5cChIdGiZCQDSdDH1OT1RwP+sRKdZRsMiXb/FaVknzwslRbM
-	LC0p62ATh028JMqwHOWA5Ff3UdVOhsPV8wdoXjZ6TQp9mz4QXUzgF/k6Pf/qQ2B/yAve0Ttn6W+
-	Kg42NC3hoJnRMUo1iPKVKs3nNEcb7L9J5Ep1037QOX3sA8xUpjdeUTW2rvCTGcPfR+he3scQ4Gc
-	rwW/tErSfuBKxuRgRTvESuEuCqC4Zow==
-X-Google-Smtp-Source: AGHT+IHlek8zylvWet1iDp9a9eAHjVC/8ezfzMlqkk0r3BP8Db/tZ9PzSYr9wCuQ6CzjhEoXww//aA==
-X-Received: by 2002:a05:6a00:4646:b0:742:ae7e:7da8 with SMTP id d2e1a72fcca58-745fdfcc5e9mr13997882b3a.8.1748275451195;
-        Mon, 26 May 2025 09:04:11 -0700 (PDT)
-Received: from google.com (243.106.81.34.bc.googleusercontent.com. [34.81.106.243])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a987150bsm17745308b3a.136.2025.05.26.09.04.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 09:04:10 -0700 (PDT)
-Date: Mon, 26 May 2025 16:04:04 +0000
-From: Samiksha Garg <samikshagarg@google.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: jingoohan1@gmail.com, ajayagarwal@google.com, maurora@google.com,
-	linux-pci@vger.kernel.org, manugautam@google.com
-Subject: Re: [PATCH] PCI: dwc: EXPORT dw_pcie_allocate_domains
-Message-ID: <aDSQ9EuzlHiv6HTH@google.com>
-References: <20250526104241.1676625-1-samikshagarg@google.com>
- <bddr5afnyppbtpajk3wsymwnxrdvyyradxwqf2kkiahwat63av@h2kttx5blizv>
+        d=1e100.net; s=20230601; t=1748276126; x=1748880926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IqqBHeb+ye/Ia2+xZyQMqJHybQMTShtOHZU6XZo753Q=;
+        b=A3juX01mS/2MWVA3WhPF45Y/LVGnmMamOH2XvndVR+Yzk2V6LWQrEGQwscjXyL1eDr
+         b+jIaj4oQJP7ahHrPJG/PKnoI0MjLr4JYRY6eEmKW66AF+txQ4Omf4iOYDrx1LdoLc8j
+         DWLv2LxBkPQ5bl8bCMA3wjacJsQS2LXLeGgiMQ/iJxzjrxPp1QC4hYMTb2+dxNLjfN1v
+         66F7SpWprEcnSQYozNuhdfLRY3msj2ADMGWtQX6Ko84TNj1m4CuLDfSBvaZJXVban+Aq
+         swhLdHz2H8zHUdlcmKSnqmKru++IxNHaegvl3vyRVDdrnQB+Z9RD/00Rx89H0oy00077
+         miaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHAJcqZqZMzwTY8gAz2Rl+2/YtGTEFWgCwgNYrsON91EsDNiWpCGX38gZXQn6lRf8ON0qNbyt+5ffDH9Q=@vger.kernel.org, AJvYcCUKAO4cyBdrjl5Z+0VYTs0rKDOdB6cUDfE7sKF9pi7z+GH111XK3JLJWMajzCscqC5K4H4rNbBeOrST23+UZmP4@vger.kernel.org, AJvYcCUZWuqDoSmtmBkvNVSQB2nbobvIJVq7tZuXYhW58W8MSFSW/pLnSalODEq3hUw6qxpGYS5sBnul3gQGPvnHA8Q=@vger.kernel.org, AJvYcCVEIZ8Z8lZ8FjCf3DNgtru1684T9qDmyJ5MxLFAGFDD7izxk0DoVaLeTCoUY/JbRhWV/sM1f4bw@vger.kernel.org, AJvYcCW/eaA2Kbzkvqm9U+mvMOPdPH/auc1PNBWXOrpPWskFPSCg/Zcklr/M9nq5/mGKwPshDMFnVWTVRRrhpwSI@vger.kernel.org, AJvYcCXC96slXCOngaru1ZnOy6HN5JEfxlxjZBnyrZsXCwafKmr87WmgCMUw7rhNfvb6aIeHHuz2UHXVioBn@vger.kernel.org, AJvYcCXyP2eB07mxTjNW1ZMSgeq5X9LmlFvNjGZXnzp1CnLd8TKfjNXWytonN6r5cGhMLbiBX44DtZpMLghc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh8R1ZW6FXnxYnNQqcAUjTyd6J74OYp3Ol+s3eaXTl0b12/lLk
+	zzVkmHs9g3DRGLmeOWwNDt2Os3cxirCVfkoUyhpuUTkBT0t036U/3HGrj+EOQmrbE/ZqrNeNszx
+	UF5P+z+GkGwyLy21CArOrbgNPfCqJItw=
+X-Gm-Gg: ASbGncsLj8pUNKy1W7qgy/Cw/+uED/TPxvSqwF3ctuVhmGleWqEfG5S1wMklhdHZYJL
+	GT/V9PyBfDeR5OI8I+cZSwAnYjkmz/ApgUwzLbFQpFHg5xIdhU+2bI+Sx6qaindcGSQnf3ZnEQ1
+	pZxDC+cNZbO8kPN1Ojzaz8q8b5wlonvyXJ
+X-Google-Smtp-Source: AGHT+IGHSiBqTNM5XKVporfsZuIAk8+0k1ziYJ6wqAO1b1FVW8Ifoco0RVgiuBOzn9y42qT5ODX8sdvF5WeB8wXqxCo=
+X-Received: by 2002:a17:90b:4b06:b0:2ff:7b67:2358 with SMTP id
+ 98e67ed59e1d1-3110f0be892mr5688853a91.2.1748276125761; Mon, 26 May 2025
+ 09:15:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bddr5afnyppbtpajk3wsymwnxrdvyyradxwqf2kkiahwat63av@h2kttx5blizv>
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com> <20250524-cstr-core-v10-1-6412a94d9d75@gmail.com>
+In-Reply-To: <20250524-cstr-core-v10-1-6412a94d9d75@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 26 May 2025 18:15:12 +0200
+X-Gm-Features: AX0GCFs4zlXhbhwkFm69GRcSGgMcjMarvAu4nWr6-nQj7bz2FlpzmLVkBB1QzB0
+Message-ID: <CANiq72nhNmLMdFTzpSQSxxMLanFA7Od6tBZ+3CrVERv9Spou5Q@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] rust: retitle "Example" section as "Examples"
+To: Tamir Duberstein <tamird@gmail.com>, Patrick Miller <paddymills@proton.me>, 
+	Hridesh MG <hridesh699@gmail.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mani,
-Thanks for your response. I can see that pci-keystone driver already calls this function.
-Does it not mean that there is already an upstream user?
+On Sat, May 24, 2025 at 10:33=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> This title is consistent with all other macros' documentation,
+> regardless of the number of examples contained in their "Examples"
+> sections.
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Thanks,
-Samiksha
+I was going to say that I could take this one independently, but we
+already had #1 of:
 
-On Mon, May 26, 2025 at 04:50:11PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, May 26, 2025 at 10:42:40AM +0000, Samiksha Garg wrote:
-> > Some vendor drivers need to write their own `msi_init` while
-> > still utilizing `dw_pcie_allocate_domains` method to allocate
-> > IRQ domains. Export the function for this purpose.
-> > 
-> 
-> NAK. Symbols should have atleast one upstream user to be exported. We do not
-> export symbols for random vendor drivers, sorry.
-> 
-> - Mani
-> 
-> > Signed-off-by: Samiksha Garg <samikshagarg@google.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index ecc33f6789e3..5b949547f917 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -249,6 +249,7 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
-> >  
-> >  	return 0;
-> >  }
-> > +EXPORT_SYMBOL_GPL(dw_pcie_allocate_domains);
-> >  
-> >  static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-> >  {
-> > -- 
-> > 2.49.0.1151.ga128411c76-goog
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+    https://lore.kernel.org/rust-for-linux/20240906164448.2268368-1-paddymi=
+lls@proton.me/
+
+I will take that one (which given the `checkpatch.pl` one got stalled,
+I should have taken it separately as I mentioned at some point).
+
+Patrick/Hridesh: there are new cases arriving (i.e. singular section
+names), so it would be great if the `checkpatch.pl` patch discussion
+could be restarted to see if we can land it, i.e. there is now even
+more justification behind it just after some months. Thanks!
+
+Cheers,
+Miguel
 
