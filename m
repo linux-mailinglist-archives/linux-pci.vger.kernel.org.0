@@ -1,413 +1,603 @@
-Return-Path: <linux-pci+bounces-28424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A9AEAC44FF
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 23:54:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B305AC4526
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 00:18:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4EF823BDE36
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 21:53:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2510F172E9F
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 22:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1EE417332C;
-	Mon, 26 May 2025 21:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2001E1E1F;
+	Mon, 26 May 2025 22:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DBADtJGS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfBU+Ijr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143723C465;
-	Mon, 26 May 2025 21:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748296455; cv=fail; b=LR6Y5el1WNywUgyGN6js/CicuV4rKJxvQ2oOPPT2LInwzYc8jMg1LcR3kYuIAOW26FlKuzoKDiNsK0pNTiJGj/dZI4SFh/tDYyOCEosh4857j0lmAUfrmV6iam7mcyCQ2bN4nOzqTZ/E5rSPaR4jNwgj602p8MN1S6zxqiz+jA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748296455; c=relaxed/simple;
-	bh=IiNpM+tv7JPZJM3z8PpFhT45bnztdzj3w4faH1IMa6k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=of0evFow4UkhbUBwtfcnjdQPH90vpZ8/wjwrw6YyRLFJctmMSKVZyWK4uPEzes+umevy1iPUJdvEwId2SNGxiIcg3Bb+vvZcxcfx1UqdTbKPyWHGm+KXZb9wXIxlM/sNfAZYh0FVQsuPC4Ng0c3zxNn1p9NfS3dH3+EH/qU5gQg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DBADtJGS; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748296454; x=1779832454;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=IiNpM+tv7JPZJM3z8PpFhT45bnztdzj3w4faH1IMa6k=;
-  b=DBADtJGSd6HqQgw6Uu3UvK713l+e/UxkCQV6KtEue/CSisuJ9aP5i7Qh
-   cRhexohG+wpyBF77b2DHGTwqt5SsfupEIoW8SNhT3uyVgZT0ffdJRlGcm
-   pJttx3TjvIkL1FKWaISxGPMGYTM9vEeAGReyCeIHoDjp+dAHoQXaKiOCa
-   sGhxS5/uvrhgBgRVQIFmyvo9bGDg3w+TFK6ZYo69pMmDzCLI7pgpfFJAx
-   AsVgQxgeqydu2E61Vg+5SasgYo/26DZowUryIL6bgZvvL0mnDlUugv1aV
-   wXjzqYsoBF4NXpqv3N8nWRK39HtO/DAJ0z/gC1H/Bo+E1lBqrQm6YJeAv
-   Q==;
-X-CSE-ConnectionGUID: zttc6xouQlysVvfI5RKrtw==
-X-CSE-MsgGUID: OKeS/IO9Tiqqm+Z7EbqPzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="54066182"
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="54066182"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 14:54:13 -0700
-X-CSE-ConnectionGUID: 8znRBDnSSl2pTVbY7Mgxsw==
-X-CSE-MsgGUID: 0jyBxhvLSSWvoYfwIgKorw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="179706579"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 14:54:13 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 26 May 2025 14:54:12 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 26 May 2025 14:54:12 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.41)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Mon, 26 May 2025 14:54:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pHdom+q/KCPdm5KfzNs+LLKBlvxD6JLZqClU7gHb+NvfEJaD6y+DurgBFhB6jGXw6wqWJ333vPxPBa7m3HVlwsfjuPF6GV8QJ8cX8xY5BEw2fWRi5057HAj5iiPyk+27y9NQl+1p+cv8WDo6aGSEMhunQAr66VLJKnkvGjrGYDKnFExJAp4fb5KdSdGrld4xkkx7fHDA+itxHdoRYcytrSOuU7bSWENGYHLwu3HTOPQqu3l+n/0l9axpew4ZADYqH6UdneaPBbB6FbdXljCymLZSpwxI+hoUL8hnGUKl3G69M6ULH1CDRDlWn16yRxWarLpWcQMhhI2VOfIdgeZ0jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jzASw//9A/WFFkcuJvyF+wEr2//RDXal5ZBPUkijDZI=;
- b=TFRyH+FTX+0+aKejGq/LrUo3RZRmx7cyJQYYDjv30vRVWjvzGfmRvfhHlVom2KNwmt8hTP3AMnfGcW1evy9/B6j7Jl01nNp/H7lkWGvDvCJnhzOeFJDqowtoiy9zGTGXqSZ8Rc3ujO9q/puGZO/Q/0IH2f6z+19YQN3ZQsYNNKVJ9YzhBVvG6PdRkiF+3MopKUowDEQdTm2IOT/JP1BgRUovWLMeaD44cO3+oIVpTlaMNeE9L7//qTzsMdpx107nsrLb5G7/8yktBJZ/PKzmb9mTekYEtgBcw5fOvGNRJ8u4LPbCdS/AQqi6TtUJI9VqUlxEZufR9rZ3SCFFxNZUIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- PH3PPF4E874A00C.namprd11.prod.outlook.com (2603:10b6:518:1::d1e) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Mon, 26 May
- 2025 21:54:09 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39%5]) with mapi id 15.20.8769.025; Mon, 26 May 2025
- 21:54:09 +0000
-Date: Mon, 26 May 2025 23:54:06 +0200
-From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
-	"Bjorn Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
-	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
-	<matthew.d.roper@intel.com>
-Subject: Re: [PATCH v7 5/6] PCI: Allow drivers to control VF BAR size
-Message-ID: <75wlttxlp3xno2j5xmt5dk7vxnpmowte2r5wtmla5uksmpzx45@3af6xcmzdyje>
-References: <20250402141122.2818478-1-michal.winiarski@intel.com>
- <20250402141122.2818478-6-michal.winiarski@intel.com>
- <14a7c29e-31b9-2954-9142-0d1c49988b07@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <14a7c29e-31b9-2954-9142-0d1c49988b07@linux.intel.com>
-X-ClientProxiedBy: VE1PR08CA0015.eurprd08.prod.outlook.com
- (2603:10a6:803:104::28) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34CBBA33;
+	Mon, 26 May 2025 22:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748297907; cv=none; b=Jf8mYRMIkwU6bDiym9QYCQEHsBpBl7N7nb0UHhmve9O8RuN5dZHIdoRGI0I1AT45QT37S4ODnCBY4A0i9/6GYYmIPntTy19vF4fS/PTBJbXB21eAjFV9kiQvaasRO3ePwXmgUy2DvexfbqP73CixAV9KXQdaXzYKNvu/0yv6qh8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748297907; c=relaxed/simple;
+	bh=NqDuuw8y/zcOvuzlMP/hZ9rukt0A3R4TOELBNcHpu44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jRyozKY555E8We+ksBL1Fn95suVwhEtEi6PY0q47wDi0VdwUVPy4TftRwN1x1d2YAV4eb3jFU4xCkHdUIvtF658L0ef3MMCXhvY+nLWrfUp7veVhaDw+4Mmf7ppTc50y2Qr9a4ddyV0DmpkNoIYEkc1+XlG8EladGrkvz4f7Pl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TfBU+Ijr; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32a64f8480eso11248831fa.1;
+        Mon, 26 May 2025 15:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748297903; x=1748902703; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gk9w8Jz/JOZsWyVBOeaULPLkT7NT86+b2yFCJVUqiI8=;
+        b=TfBU+Ijr44clNmRX3A1AVx4mxj4Wu12axqBbdp/2iw+WH/3okAKFZRDrL0L+1IrWOZ
+         3bonLbZAWbY0LOzwiyeupg39tqK2pkn5c0XdsMkhL/HE766Pz8oLXuyPnPw+QJIu2H1X
+         Oq5zovB+cp0VlXwUheuWsaFG72dvPMWTcVKAlzSgkTUvznCP1yp+LfHdzII6nO9y7Ixy
+         8InXy1iPF0qH6wAjkqboM7QJKNvSdrV89X3h8Gu/WfDdg5BH3Dqo8N9Ydoo/1o5CgOB9
+         RnDt1pu0gwEn/gFI3pz+pDCiJFDwe4N6lN4AoqiGRSna/g7IKeIyY1f0UI0hMADFm9oN
+         zNXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748297903; x=1748902703;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gk9w8Jz/JOZsWyVBOeaULPLkT7NT86+b2yFCJVUqiI8=;
+        b=i4/+zvS6XKQPc4A4rjlayfssNCawvqC7kf4R3IIelD2Z35W8W/9TuzfCDLg3lSqp7x
+         1or9Wrzn0fYmuAVVtcbUUQkn6U7RzxzlnxbqpgvStyfRdwAZ0z+BXXtnrEeU+RE1+om1
+         0G8Qp/EFYeHJBTabZUMIwRdv/vlWlbSM5VpzYtQZk+r63gaUI5WWjHyPxEvRERJbA7jL
+         chk7Xz6QatvameY7lsG2Zo08OL6C8e2aFFH2ziuzBFguwJh0p0aZSbcGE9DPsh8LpC+h
+         +DffQqBQTZZB3XZJyCXkpto+EzMYzVAFrkZhpb2u1f2weBbWHezPXJznzaTqQFJqpKKe
+         pngg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLQ9/fTrQV4cewGmQd/PvxzR403H9KEHHLNnSkTMB/ZDMzM9KpYx7DOzwJ+IvM1EkwK6zo0+NBrnLF@vger.kernel.org, AJvYcCVLhDaIHVpTmlgTbDg754cUXmNkRu4NesFbtOvMWqxB+zy4HGkVY+txXKxGz/DccWVL3dIOvKTGzy94Mzvx@vger.kernel.org, AJvYcCVQTdSGg9nYOb9U2BoqhBIYQk4j+BVRyBIFdaJ/cCvQKQOe5i9TKalTxm0PPylVXDcM9TJWJYBLHIe+Oz3Rooo=@vger.kernel.org, AJvYcCWGinMpDnHkT2FRxt94QGP9uC0wfTHzSaYcTzxu9rrt0BK+D+1DR9vSUMz+ABg59Oe/q/OTEL7bIB7wveaPohpb@vger.kernel.org, AJvYcCWPjZ7UoWUVjzHa+O4acPh5SlT0aSQX6QML2uR9NDemD85JfdLRdZTTfKEWMek3uzuEFvbYUkmRKwRarHs=@vger.kernel.org, AJvYcCWSZvI3w4+fBxXo44Qbnn3hrOpTZRoMJq8w7K20mAtx2DrkzR3w9IRI15gqFCo5cduiT8GTNO2EYNTz@vger.kernel.org, AJvYcCXyhNkupg3TNPdgx7wEkz6c7FsCObgBKfL5Id9hIsWK2W4YCmfvgzC/EOguP9iDpvAVZpaxbbB5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBSDTYnfW5H7629Y116mzTH+hAYzBxa27LNz2VNHpr0goubhjy
+	VTzHQ/2jGgz3YC0xbiSkiuyoqsG7aFgYwAuf2d072hckE30nZUnwZq8wTjPUrdTVv2uaXPw5aWj
+	Gb+riDc6qCyBaSxBdBufVxG/6gWpieH4=
+X-Gm-Gg: ASbGncu6SeIn7PEpF4J5mOyo/taXlCGIMPqXv2SrwixCicuR3WuKOSeyOx6NmM1KmQd
+	iKGu0YVexTfxcLNUmh8GgCMz1xLH0//hgKij6lz0qt/AIL1dhb9khmiMAdrSAShqNF2PmDubqdZ
+	wW9nz+yRZHrLdMHmy0bcfGFC1a2yxVhRC0lT9Xpp6HW7UR3CvHvcos2+IUSskxyeRUIRM=
+X-Google-Smtp-Source: AGHT+IFC/j6l5oPDKB+wWTNoJRvlWqeCdlfxZ4sXrKB6DnTYTNB/0CKZeP3gcfPzFQmL4OmuYtRMAtBzIRqzKj0TIB8=
+X-Received: by 2002:a05:651c:1586:b0:329:1550:1446 with SMTP id
+ 38308e7fff4ca-3294f4e407cmr47791451fa.0.1748297902436; Mon, 26 May 2025
+ 15:18:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|PH3PPF4E874A00C:EE_
-X-MS-Office365-Filtering-Correlation-Id: bcbed217-d7ef-4e3a-8a57-08dd9c9fd805
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YWxlMzQ5UGh1TWZMWGQ3cm1tNmllbGVQb0RyNEI4NHhwdmVXME9xcUk2UFdZ?=
- =?utf-8?B?bzBscHByQTNKL1BHaUpIbHFYMXVGcUhTaDZJVDZBSGxlWVJPL0VLNDZuWCtP?=
- =?utf-8?B?WWQ0UWhBcXNDTEIxSEkxNTE2b2daMlB5dnl2aFpMRitCRzgvM3pkbm40VEsz?=
- =?utf-8?B?a2xwdVRSQmVlNFJuSStkWUVmR0JncTVvQXlIS00yMzZqdU12Wk01ZXNYbkNF?=
- =?utf-8?B?Q0dGeXFBQXViVkNEQnJpdTU2Yi8rVytuOVJhMlZ4Z3BRdzRjdCtFNitGa0Zs?=
- =?utf-8?B?ZTVZZmZ4aTdDdTJ3TnlvZ1hhU2o1bXNPMVVZS3pTMFVqcjFWVy9KeTQ1QWRX?=
- =?utf-8?B?UFR3TEkrQWdGZWxhOE94WjN2S0FLR1B1dUdCeWZ6ZmpCUkcrZ010bFBWNmpm?=
- =?utf-8?B?aXJRd2wvbjBwQW9FZ083eEh5RFVTVzJQSlNLY2dFb2NMcXRkMzVoYkFsMHMw?=
- =?utf-8?B?UFNwMzJVSXFuejRBelNWWWdmc3pBR1d5TWx6ZDQwaEZmSWtjVk5ubWpWVFEr?=
- =?utf-8?B?bTgvK2F3NDR3TVVPU3lFTTM5elpQUzRUME05dUlvTEVOUkpWZWNlajBRTWZX?=
- =?utf-8?B?eW1JSTZQZXdMUFJWQjEySkM0aXY4TXJpVlI4WVh0YzlJcnRWcjFMZE4yV0dn?=
- =?utf-8?B?M0ZwM0ZPU0wvQjhsSnB0YytvS0lXNlAvZFJCM09SMzdPRTcxN2MzdDUwRXVU?=
- =?utf-8?B?ZkgvTGZOUHE2U3dJbnB6TkNVL1cvWjBvVis2TFJEYXA3NzgxU1FIZ3hxMHdN?=
- =?utf-8?B?MFU4SUNNNlZYUDU5dmNqUkpobGpZY24rVFAybDNtcm5pSTJIS09jQm4xZXRU?=
- =?utf-8?B?YmtCWnRUVmxvZGhGTzlnUWcxVzVmajVPU3gyUzlyNXlRM09tNitxMjdhUHdU?=
- =?utf-8?B?a2g1UWdJZ0srLzd5U2VzUDM4OUhDVUt2TTlZczB0NTIxdi90Mm54akJjeENF?=
- =?utf-8?B?czRUYllBYllIT0Z1ZG5WWGpNbHN2VkhGRVY0N0p6Mi95THczMFoyUmlIdHA2?=
- =?utf-8?B?dUtFTG5scW4rK1dJMGRhdXR4aVQ0SWZmcnVXSEZYYnRRVVNoK3RDKzBPZ3Vy?=
- =?utf-8?B?NncvVElneTZmNEpvUk1HT3NMeXJaazZBRUNLK1d4bFdVZndLNHVvKytyK3Vq?=
- =?utf-8?B?bHBFdHAzNXV3eUFydjkwWi9PTWU1a1gxSXVHdTJrMGRmM2d3NnhkOFErU2la?=
- =?utf-8?B?ZGgvWVVHbXBzOUR5MkxmOFptRUR3YmNPQjBqUUtXVGtvNlo3ODQ2QzNWNzU4?=
- =?utf-8?B?LzIwbG5IQVQ5RWtEeXMvanY0T0owWERqanpvZWxETG0vckdWNWxKNHNjQUYz?=
- =?utf-8?B?RjczSzB6cU5DVHFYdlRGS2wvVGhxaHZJdlNBVExQbWlCWnZYVGtJNjI1bXpq?=
- =?utf-8?B?UVBSdm1MWGJsbE5wVG5oS1d1ZUNDUGg0Tlo3Nm9jVng2R3lQdXR4SUczT3FX?=
- =?utf-8?B?Slp1bGZza3VYRXZPMVBpekNUNHEyN3JhaVdVdTdNZklnbnA4Zm9ERkNPZGdt?=
- =?utf-8?B?VlRBa0xiNjZMZHlWRU5Fa1U3WUkvQTlud2FWUXVuSlF4RG1aRllNbndmL2k3?=
- =?utf-8?B?STI1cVd3ak5LVWtZWkF1OHpqN0VaaDB1VUlDOGRtZlVaVEdZVnN0bXg2cnU5?=
- =?utf-8?B?bkR6c004dWViZldEN0grQVFGTEx2Zkc2SytmYXhvSzlVOVhFQ3lhZ1VMR1g1?=
- =?utf-8?B?NmlZYlhOVjduQTVYU3RCZlhVR1A0YkYvbDVLc3M3OWhmKzJucytTMkhuVDNq?=
- =?utf-8?B?ZU5XdWdQN3JKSUhJcERpMnZjSC9TVkthYXk5dlAyM2VJYkFLR21McEhkMFlh?=
- =?utf-8?B?MTFHTndMSDhkSnRBcW1HaEVRQXdOaW5RVFd3c2l2VXp0OWxmTCtBVHcveEZh?=
- =?utf-8?B?U0x2dGdEamlMalUxeGZPQ3EwR3JmNnVQeEV1OVgyTlEyS0VlenFiWkV6VHhj?=
- =?utf-8?Q?GkRIKxjnEDk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N0pNVFl6Zk1KeXlyamNKbjc4TUVZQ2pic0cwTGEzQTU5aStxTWUyNHpoaDlT?=
- =?utf-8?B?cjBVVzBEbFBwQUdNdzNWdStwMjVqeHNOQnduQm9xdkJaR3o5VTF4aEdySExS?=
- =?utf-8?B?d1lVQUYzcjQzeEYxMlhDQ09kcXpFZU5maEVmbUhRUWxWM1hCc09Tam9WV1gw?=
- =?utf-8?B?QzlFWHdnU24rSHpSQkxuREV4Uk1HdStxZytxUHZ4K09lNEhyeUgyaWFCTnl5?=
- =?utf-8?B?RitxYlJYSHZRWUNObUNoUGVvbHd1eTMyV1NmMnRZRzRTcHNieHRzVWsvNDhY?=
- =?utf-8?B?MDV4MUVnL3U3blJiZVJ1cTlTditoeXA3UGtWRCtaamFDUmVjbmxuZThhSzNV?=
- =?utf-8?B?ZEVUNldPVXhiaUpKTzJSN1hlZENKOEErZWtvYXlPL1c2bEsrV00yL3gzVlI0?=
- =?utf-8?B?dERuelRNaDNoNWI4OVZwd2pId0V2UkJrOXh3bFFlTzRKekF3SVFteDJvUWdX?=
- =?utf-8?B?T3hBZWpIU3NvNGNuOTdaeGJtSHhFMk5rdnVRZG9zaDlpNWdyTnFMbWt4bm80?=
- =?utf-8?B?UDVraW5JRzg2eW9XZzBBVVByVE12ZXJMODFoUW1zYWU5Z0xlUFI1Zk5pUVBC?=
- =?utf-8?B?N3lESG1OSTJJUEdHRmRhSDdhVUYxVXhIS3l2OVk2eGFUSk1WS3ZVa2t1ODNG?=
- =?utf-8?B?YjlXOVJzM3dlUHpIVFA1NE1qTU5uN2ROTGQvenNyNXhhYlgvNjZMRTdvMytv?=
- =?utf-8?B?MktUWW52SUlBek5ES0g3RTNjYTVNa2IzOEhObHhVWmZlYVZ1SUxnSVNYTGJF?=
- =?utf-8?B?aEVWTlAySzE3bFEvaUpTVk5PNDlpdWhxVTdRQ2VaOG9hSjlDUzl3cUYrT2dJ?=
- =?utf-8?B?ZXdVWmV6Y0xWS1o3UU5IakFsN3VRZTdHRTdWRE1PR2x5eXkwTzNET2JiM1Q2?=
- =?utf-8?B?N2VoWGhBa1VpOU9vSFo5VmFpVVV4OFQwbkpJUVlRU3I0S0pDbWR1dGxTdGxl?=
- =?utf-8?B?ZG85NmZndithS3o4SVlsQ1B0b2FWSWVtNDJ6VzlxMWE3ODA3MHgvdEVQUmhZ?=
- =?utf-8?B?Sk5qVkxER0xVb2xORnVnNVJoWXhXL0k0K1VvVWhEdkFzOEI1KzltNnd1QkFB?=
- =?utf-8?B?aFczd2ltUFdZTEx0WXNZdHY1N1dQVytmVkJoUmJGRDZnc0hNbU9aeTFmZDgw?=
- =?utf-8?B?aURPUUhWcjV2VVFBOUl1N3NzNC9PRzY2SS9PTFU4VVVaZVdob2lxaDBLT1l2?=
- =?utf-8?B?dit2ZlFhdkV4a041eWJ4UGpGdkRPbnYxdXEvM2hlTjUzcE1UTUlZeHE2UWl2?=
- =?utf-8?B?NjVrbU9mRlhVL1JDSk1XaFQ3LzYxaGJ1VnQrM2NVemNXNkljKzdpakdXVTU4?=
- =?utf-8?B?Mkp1YmtOUUJJYVBCei93YTZ2QWxzRmZkMlJrWXVtQzQxK2VCRExCRVRNLzJZ?=
- =?utf-8?B?cEx1SFZBMWl3UkVyRmdSTUl4K1YwK0pTeVNuRU1GalZBOUxKemlVa0VMbjJr?=
- =?utf-8?B?NmwxV1NSSzdEZlg1cWhsM1lQeHk0c0FNcXR5cVpxWm9OMUIrWFZsN0NvYVFH?=
- =?utf-8?B?YlYwRjBpZThQa0NjTEVMZEFkcjhFN1ZYNXpMMVREQXBROXFvZ3FRQUdDeVZy?=
- =?utf-8?B?SEhXTWxFSDl0MFRUdFY3QjJON2NkL1RMbFRudzFFenZGcFA0Y3A1RVljekhH?=
- =?utf-8?B?YUdCbFlISU9STVZ1bktmRU0xWnVmbWtpblVaWE9GVVJzQUh0Ly91WjhoUWdO?=
- =?utf-8?B?ZlR5bC91ZzRmb3ZocTRwSHJGekkvSTdKdEVZUDNtMzgvSTN2blkrMHRqMW0y?=
- =?utf-8?B?OE93ZS9ZQWtRUXNYUFVkQTNuZDd2anRaSDZwSDlpcmhoTWJrTmFFVjNOSjVT?=
- =?utf-8?B?VEUrVmtReE8wZE81Nmk3TGpHNnlHak96ZkE4cHBxSDAxaW1DcG1Mdlc0MExM?=
- =?utf-8?B?MU1zbU9oaE10WFZhMHljdzlCNHh5ZmIvSVpXQnliREtTanh5YU5vYTRGTFFh?=
- =?utf-8?B?TTc0VFg1TDdDYldrdXNtTm9ZK1R3SVZGdnk0azR2YXJjY1NpZ2xlVXY4OGND?=
- =?utf-8?B?R2p4NXRsWFVZbVRKK0MyaEh3VmxIMXJSTjFxY2hFKzJ4V2pKNVkzY2hLdjdr?=
- =?utf-8?B?ckJMVGVCQ1g0ZEJwajlNbHl3b1MwcnZQZDlOdDFXaG9FbjEzSFZydU5uVlR2?=
- =?utf-8?B?MlBKd3FYMXNtd2kyektnR3huZ2NhaEhtbUhJWTE1RWVuOGh0RUZtc2Q1SzRy?=
- =?utf-8?B?alE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcbed217-d7ef-4e3a-8a57-08dd9c9fd805
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 21:54:09.5937
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nmN8JjLlJ2NBRSxq/CRBiLWJwBOdsXlslrMUAivLorStU6xRa4IMvu3tjyNh4xdvfLxkRp+S/jwe0uMq77auHdElsH1XIKvBzkNRqB2UI9g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF4E874A00C
-X-OriginatorOrg: intel.com
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com> <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
+In-Reply-To: <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 26 May 2025 18:17:45 -0400
+X-Gm-Features: AX0GCFsy6Ta66kdrdQTYpfu0kDD24JnEWD5e1_mELg1JsfrT7RoPeQYtxeEQTLQ
+Message-ID: <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com>
+Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 01:20:58PM +0300, Ilpo Järvinen wrote:
-> On Wed, 2 Apr 2025, Michał Winiarski wrote:
-> 
-> > Drivers could leverage the fact that the VF BAR MMIO reservation is
-> > created for total number of VFs supported by the device by resizing the
-> > BAR to larger size when smaller number of VFs is enabled.
-> > 
-> > Add a pci_iov_vf_bar_set_size() function to control the size and a
-> > pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
-> > allow up to num_vfs to be successfully enabled with the current
-> > underlying reservation size.
-> > 
-> > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+On Mon, May 26, 2025 at 10:48=E2=80=AFAM Benno Lossin <lossin@kernel.org> w=
+rote:
+>
+> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+> > Introduce a `fmt!` macro which wraps all arguments in
+> > `kernel::fmt::Adapter` This enables formatting of foreign types (like
+> > `core::ffi::CStr`) that do not implement `fmt::Display` due to concerns
+> > around lossy conversions which do not apply in the kernel.
+> >
+> > Replace all direct calls to `format_args!` with `fmt!`.
+> >
+> > In preparation for replacing our `CStr` with `core::ffi::CStr`, move it=
+s
+> > `fmt::Display` implementation to `kernel::fmt::Adapter<&CStr>`.
+> >
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-Gener=
+al/topic/Custom.20formatting/with/516476467
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > > ---
-> >  drivers/pci/iov.c   | 69 +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h |  6 ++++
-> >  2 files changed, 75 insertions(+)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index 2fafbd6a998f0..8a62049b56b41 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -1313,3 +1313,72 @@ int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn)
-> >  	return nr_virtfn;
+> >  drivers/block/rnull.rs      |   2 +-
+> >  rust/kernel/block/mq.rs     |   2 +-
+> >  rust/kernel/device.rs       |   2 +-
+> >  rust/kernel/fmt.rs          |  77 +++++++++++++++++++++++++++++
+> >  rust/kernel/kunit.rs        |   6 +--
+> >  rust/kernel/lib.rs          |   1 +
+> >  rust/kernel/prelude.rs      |   3 +-
+> >  rust/kernel/print.rs        |   4 +-
+> >  rust/kernel/seq_file.rs     |   2 +-
+> >  rust/kernel/str.rs          |  23 ++++-----
+> >  rust/macros/fmt.rs          | 118 ++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  rust/macros/lib.rs          |  19 +++++++
+> >  scripts/rustdoc_test_gen.rs |   2 +-
+> >  13 files changed, 235 insertions(+), 26 deletions(-)
+>
+> Can you split this into creating the proc-macro, forwarding the display
+> impls and replacing all the uses with the proc macro?
+
+Can you help me understand why that's better?
+
+>
+> > diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
+> > index d07e76ae2c13..6366da12c5a5 100644
+> > --- a/drivers/block/rnull.rs
+> > +++ b/drivers/block/rnull.rs
+> > @@ -51,7 +51,7 @@ fn init(_module: &'static ThisModule) -> impl PinInit=
+<Self, Error> {
+> >                  .logical_block_size(4096)?
+> >                  .physical_block_size(4096)?
+> >                  .rotational(false)
+> > -                .build(format_args!("rnullb{}", 0), tagset)
+> > +                .build(fmt!("rnullb{}", 0), tagset)
+> >          })();
+> >
+> >          try_pin_init!(Self {
+> > diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
+> > index fb0f393c1cea..842be88aa1cf 100644
+> > --- a/rust/kernel/block/mq.rs
+> > +++ b/rust/kernel/block/mq.rs
+> > @@ -82,7 +82,7 @@
+> >  //!     Arc::pin_init(TagSet::new(1, 256, 1), flags::GFP_KERNEL)?;
+> >  //! let mut disk =3D gen_disk::GenDiskBuilder::new()
+> >  //!     .capacity_sectors(4096)
+> > -//!     .build(format_args!("myblk"), tagset)?;
+> > +//!     .build(fmt!("myblk"), tagset)?;
+> >  //!
+> >  //! # Ok::<(), kernel::error::Error>(())
+> >  //! ```
+> > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> > index 5c372cf27ed0..99d99a76934c 100644
+> > --- a/rust/kernel/device.rs
+> > +++ b/rust/kernel/device.rs
+> > @@ -240,7 +240,7 @@ impl DeviceContext for Normal {}
+> >  macro_rules! dev_printk {
+> >      ($method:ident, $dev:expr, $($f:tt)*) =3D> {
+> >          {
+> > -            ($dev).$method(core::format_args!($($f)*));
+> > +            ($dev).$method($crate::prelude::fmt!($($f)*));
+> >          }
+> >      }
 > >  }
-> >  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+> > diff --git a/rust/kernel/fmt.rs b/rust/kernel/fmt.rs
+> > new file mode 100644
+> > index 000000000000..12b08debc3b3
+> > --- /dev/null
+> > +++ b/rust/kernel/fmt.rs
+> > @@ -0,0 +1,77 @@
+> > +// SPDX-License-Identifier: GPL-2.0
 > > +
-> > +/**
-> > + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
-> > + * @dev: the PCI device
-> > + * @resno: the resource number
-> > + * @size: new size as defined in the spec (0=1MB, 31=128TB)
-> > + *
-> > + * Set the new size of a VF BAR that supports VF resizable BAR capability.
-> > + * Unlike pci_resize_resource(), this does not cause the resource that
-> > + * reserves the MMIO space (originally up to total_VFs) to be resized, which
-> > + * means that following calls to pci_enable_sriov() can fail if the resources
-> > + * no longer fit.
-> > + *
-> > + * Return: 0 on success, or negative on failure.
-> > + */
-> > +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
-> > +{
-> > +	int ret;
-> > +	u32 sizes;
-
-Hi,
-I thought this series was already ready to be merged, but now I just
-went back through the review comments for v7 and realized that I missed
-this email and never applied the changes you requested.
-Sorry for the delay.
-
-> Please reverse the order of these variables.
-
-Ok.
-
-> 
+> > +//! Formatting utilities.
 > > +
-> > +	if (!pci_resource_is_iov(resno))
-> > +		return -EINVAL;
+> > +use core::fmt;
 > > +
-> > +	if (pci_iov_is_memory_decoding_enabled(dev))
-> > +		return -EBUSY;
+> > +/// Internal adapter used to route allow implementations of formatting=
+ traits for foreign types.
+> > +///
+> > +/// It is inserted automatically by the [`fmt!`] macro and is not mean=
+t to be used directly.
+> > +///
+> > +/// [`fmt!`]: crate::prelude::fmt!
+> > +#[doc(hidden)]
+> > +pub struct Adapter<T>(pub T);
 > > +
-> > +	sizes = pci_rebar_get_possible_sizes(dev, resno);
-> > +	if (!sizes)
-> > +		return -ENOTSUPP;
-> > +
-> > +	if (!(sizes & BIT(size)))
-> 
-> Add include for BIT().
-> 
-> Although adding a helper like this would be helpful for multiple callers:
-> 
-> @@ -3780,6 +3780,88 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  }
->  EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
->  
-> +/**
-> + * pci_rebar_size_supported - check if size is supported for a resizable BAR
-> + * @pdev: PCI device
-> + * @bar: BAR to check
-> + * @size: size as defined in the spec (0=1MB, 31=128TB)
-> + *
-> + * Return: %0 if @size is supported for @bar,
-> + *        %-EINVAL if @size is not supported,
-> + *        %-ENOTSUPP if @bar is not resizable.
-> + */
-> +int pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
-> +{
-> +       u64 sizes;
-> +
-> +       sizes = pci_rebar_get_possible_sizes(pdev, bar);
-> +       if (!sizes)
-> +               return -ENOTSUPP;
-> +
-> +       return BIT(size) & sizes ? 0 : -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
-> 
-> (Yes, I've some rebar helpers pending so this is extract from that.)
-
-Added include for BIT(). I'll wait for your series with helpers :)
-
-> 
-> > +		return -EINVAL;
-> > +
-> > +	ret = pci_rebar_set_size(dev, resno, size);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
-> > +
-> > +	return 0;
+> > +macro_rules! impl_fmt_adapter_forward {
+> > +    ($($trait:ident),* $(,)?) =3D> {
+> > +        $(
+> > +            impl<T: fmt::$trait> fmt::$trait for Adapter<T> {
+> > +                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Resu=
+lt {
+> > +                    let Self(t) =3D self;
+> > +                    fmt::$trait::fmt(t, f)
+> > +                }
+> > +            }
+> > +        )*
+> > +    };
 > > +}
-> > +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
 > > +
-> > +/**
-> > + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to num_vfs
-> > + * @dev: the PCI device
-> > + * @resno: the resource number
-> > + * @num_vfs: number of VFs
-> > + *
-> > + * Get the sizes of a VF resizable BAR that can accommodate @num_vfs within
-> > + * the currently assigned size of the resource @resno.
-> > + *
-> > + * Return: A bitmask of sizes in format defined in the spec (bit 0=1MB,
-> > + * bit 31=128TB).
-> > + */
-> > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
-> > +{
-> > +	resource_size_t vf_len = pci_resource_len(dev, resno);
-> > +	u32 sizes;
+> > +impl_fmt_adapter_forward!(Debug, LowerHex, UpperHex, Octal, Binary, Po=
+inter, LowerExp, UpperExp);
 > > +
-> > +	if (!num_vfs)
-> > +		return 0;
-> > +
-> > +	do_div(vf_len, num_vfs);
-> 
-> Add include for do_div().
+> > +macro_rules! impl_display_forward {
+> > +    ($(
+> > +        $( { $($generics:tt)* } )? $ty:ty $( { where $($where:tt)* } )=
+?
+>
+> You don't need `{}` around the `where` clause, as a `where` keyword can
+> follow a `ty` fragment.
 
-Ok.
+This doesn't work:
+```
+error: local ambiguity when calling macro `impl_display_forward`:
+multiple parsing options: built-in NTs tt ('r#where') or 2 other
+options.
+  --> rust/kernel/fmt.rs:75:78
+   |
+75 |     {<T: ?Sized>} crate::sync::Arc<T> where crate::sync::Arc<T>:
+fmt::Display,
+   |
+           ^
+```
 
-> 
-> > +	sizes = (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
-> 
-> Doesn't resource_size() already do that + 1 so why is a second one needed 
-> here?
-
-It's not about resource_size() doing + 1 for the resource length, it's
-needed because roundup_pow_of_two() is not rounding up to the next power
-of two if the input is already a power of two. So we need to add 1 to
-ensure that we get the next size up to make the math with bitmap
-representing BAR sizes work correctly.
-
-> 
-> Add include for ilog() and SZ_*.
-
-Ok.
-
-Thanks,
--Michał
-
-> 
-> > +
-> > +	return sizes & pci_rebar_get_possible_sizes(dev, resno);
+>
+> > +    ),* $(,)?) =3D> {
+> > +        $(
+> > +            impl$($($generics)*)? fmt::Display for Adapter<&$ty>
+> > +            $(where $($where)*)? {
+> > +                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Resu=
+lt {
+> > +                    let Self(t) =3D self;
+> > +                    fmt::Display::fmt(t, f)
+> > +                }
+> > +            }
+> > +        )*
+> > +    };
 > > +}
-> > +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 0e8e3fd77e967..c8708f3749757 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -2389,6 +2389,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16 numvfs);
-> >  int pci_sriov_get_totalvfs(struct pci_dev *dev);
-> >  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
-> >  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
-> > +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
-> > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs);
-> >  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
-> >  
-> >  /* Arch may override these (weak) */
-> > @@ -2441,6 +2443,10 @@ static inline int pci_sriov_get_totalvfs(struct pci_dev *dev)
-> >  #define pci_sriov_configure_simple	NULL
-> >  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
-> >  { return 0; }
-> > +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
-> > +{ return -ENODEV; }
-> > +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
-> > +{ return 0; }
-> >  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
-> >  #endif
-> >  
-> > 
-> 
-> -- 
->  i.
+> > +
+> > +impl<T: ?Sized> fmt::Display for Adapter<&&T>
+> > +where
+> > +    for<'a> Adapter<&'a T>: fmt::Display,
+> > +{
+> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+> > +        let Self(t) =3D self;
+> > +        Adapter::<&T>(**t).fmt(f)
+> > +    }
+> > +}
+> > +
+> > +impl_display_forward!(
+> > +    bool,
+> > +    char,
+> > +    core::panic::PanicInfo<'_>,
+> > +    crate::str::BStr,
+> > +    fmt::Arguments<'_>,
+> > +    i128,
+> > +    i16,
+> > +    i32,
+> > +    i64,
+> > +    i8,
+> > +    isize,
+> > +    str,
+> > +    u128,
+> > +    u16,
+> > +    u32,
+> > +    u64,
+> > +    u8,
+> > +    usize,
+> > +    {<T: ?Sized>} crate::sync::Arc<T> {where crate::sync::Arc<T>: fmt:=
+:Display},
+> > +    {<T: ?Sized>} crate::sync::UniqueArc<T> {where crate::sync::Unique=
+Arc<T>: fmt::Display},
+> > +);
+>
+> If we use `{}` instead of `()`, then we can format the contents
+> differently:
+>
+>     impl_display_forward! {
+>         i8, i16, i32, i64, i128, isize,
+>         u8, u16, u32, u64, u128, usize,
+>         bool, char, str,
+>         crate::str::BStr,
+>         fmt::Arguments<'_>,
+>         core::panic::PanicInfo<'_>,
+>         {<T: ?Sized>} crate::sync::Arc<T> {where Self: fmt::Display},
+>         {<T: ?Sized>} crate::sync::UniqueArc<T> {where Self: fmt::Display=
+},
+>     }
 
+Is that formatting better? rustfmt refuses to touch it either way.
+
+>
+> > diff --git a/rust/macros/fmt.rs b/rust/macros/fmt.rs
+> > new file mode 100644
+> > index 000000000000..6b6bd9295d18
+> > --- /dev/null
+> > +++ b/rust/macros/fmt.rs
+> > @@ -0,0 +1,118 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +use proc_macro::{Delimiter, Group, Ident, Punct, Spacing, Span, TokenS=
+tream, TokenTree};
+> > +use std::collections::BTreeSet;
+> > +
+> > +/// Please see [`crate::fmt`] for documentation.
+> > +pub(crate) fn fmt(input: TokenStream) -> TokenStream {
+> > +    let mut input =3D input.into_iter();
+> > +
+> > +    let first_opt =3D input.next();
+> > +    let first_owned_str;
+> > +    let mut names =3D BTreeSet::new();
+> > +    let first_lit =3D {
+> > +        let Some((mut first_str, first_lit)) =3D (match first_opt.as_r=
+ef() {
+> > +            Some(TokenTree::Literal(first_lit)) =3D> {
+> > +                first_owned_str =3D first_lit.to_string();
+> > +                Some(first_owned_str.as_str()).and_then(|first| {
+> > +                    let first =3D first.strip_prefix('"')?;
+> > +                    let first =3D first.strip_suffix('"')?;
+> > +                    Some((first, first_lit))
+> > +                })
+> > +            }
+> > +            _ =3D> None,
+> > +        }) else {
+> > +            return first_opt.into_iter().chain(input).collect();
+> > +        };
+>
+> This usage of let-else + match is pretty confusing and could just be a
+> single match statement.
+
+I don't think so. Can you try rewriting it into the form you like?
+
+>
+> > +        while let Some((_, rest)) =3D first_str.split_once('{') {
+> > +            first_str =3D rest;
+> > +            if let Some(rest) =3D first_str.strip_prefix('{') {
+> > +                first_str =3D rest;
+> > +                continue;
+> > +            }
+> > +            while let Some((name, rest)) =3D first_str.split_once('}')=
+ {
+> > +                first_str =3D rest;
+> > +                if let Some(rest) =3D first_str.strip_prefix('}') {
+>
+> This doesn't make sense, we've matched a `{`, some text and a `}`. You
+> can't escape a `}` that is associated to a `{`.
+
+Sure, but such input would be malformed, so I don't think it's
+necessary to handle it "perfectly". We'll get a nice error from
+format_args anyhow.
+
+https://play.rust-lang.org/?version=3Dstable&mode=3Ddebug&edition=3D2024&gi=
+st=3D5f529d93da7cf46b3c99ba7772623e33
+
+>
+> > +                    first_str =3D rest;
+> > +                    continue;
+> > +                }
+> > +                let name =3D name.split_once(':').map_or(name, |(name,=
+ _)| name);
+> > +                if !name.is_empty() && !name.chars().all(|c| c.is_asci=
+i_digit()) {
+> > +                    names.insert(name);
+> > +                }
+> > +                break;
+> > +            }
+> > +        }
+> > +        first_lit
+>
+> `first_lit` is not modified, so could we just the code above it into a
+> block instead of keeping it in the expr for `first_lit`?
+
+As above, can you suggest the alternate form you like better? The
+gymnastics here are all in service of being able to let malformed
+input fall through to core::format_args which will do the hard work of
+producing good diagnostics.
+
+>
+> > +    };
+> > +
+> > +    let first_span =3D first_lit.span();
+> > +    let adapt =3D |expr| {
+> > +        let mut borrow =3D
+> > +            TokenStream::from_iter([TokenTree::Punct(Punct::new('&', S=
+pacing::Alone))]);
+> > +        borrow.extend(expr);
+> > +        make_ident(first_span, ["kernel", "fmt", "Adapter"])
+> > +            .chain([TokenTree::Group(Group::new(Delimiter::Parenthesis=
+, borrow))])
+>
+> This should be fine with using `quote!`:
+>
+>     quote!(::kernel::fmt::Adapter(&#expr))
+
+Yeah, I have a local commit that uses quote_spanned to remove all the
+manual constructions.
+
+>
+> > +    };
+> > +
+> > +    let flush =3D |args: &mut TokenStream, current: &mut TokenStream| =
+{
+> > +        let current =3D std::mem::take(current);
+> > +        if !current.is_empty() {
+> > +            args.extend(adapt(current));
+> > +        }
+> > +    };
+> > +
+> > +    let mut args =3D TokenStream::from_iter(first_opt);
+> > +    {
+> > +        let mut current =3D TokenStream::new();
+> > +        for tt in input {
+> > +            match &tt {
+> > +                TokenTree::Punct(p) =3D> match p.as_char() {
+> > +                    ',' =3D> {
+> > +                        flush(&mut args, &mut current);
+> > +                        &mut args
+> > +                    }
+> > +                    '=3D' =3D> {
+> > +                        names.remove(current.to_string().as_str());
+> > +                        args.extend(std::mem::take(&mut current));
+> > +                        &mut args
+> > +                    }
+> > +                    _ =3D> &mut current,
+> > +                },
+> > +                _ =3D> &mut current,
+> > +            }
+> > +            .extend([tt]);
+> > +        }
+>
+> This doesn't handle the following code correctly ):
+>
+>     let mut a =3D 0;
+>     pr_info!("{a:?}", a =3D a =3D a);
+>
+> Looks like we'll have to remember what "kind" of an equals we parsed...
+
+Hmm, good point. Maybe we can just avoid dealing with `=3D` at all until
+we hit the `,` and just split on the leftmost `=3D`. WDYT? I'll have
+that in v11.
+
+>
+> > +        flush(&mut args, &mut current);
+> > +    }
+> > +
+> > +    for name in names {
+> > +        args.extend(
+> > +            [
+> > +                TokenTree::Punct(Punct::new(',', Spacing::Alone)),
+> > +                TokenTree::Ident(Ident::new(name, first_span)),
+> > +                TokenTree::Punct(Punct::new('=3D', Spacing::Alone)),
+> > +            ]
+> > +            .into_iter()
+> > +            .chain(adapt(TokenTree::Ident(Ident::new(name, first_span)=
+).into())),
+> > +        );
+>
+> This can probably be:
+>
+>     let name =3D Ident::new(name, first_span);
+>     let value =3D adapt(name.clone());
+>     args.extend(quote!(, #name =3D #value));
+
+Indeed, see above - manual construction will be gone in v11.
+
+>
+> > +    }
+> > +
+> > +    TokenStream::from_iter(make_ident(first_span, ["core", "format_arg=
+s"]).chain([
+> > +        TokenTree::Punct(Punct::new('!', Spacing::Alone)),
+> > +        TokenTree::Group(Group::new(Delimiter::Parenthesis, args)),
+> > +    ]))
+>
+> This can be:
+>
+>     quote!(::core::format_args!(#args))
+>
+> (not sure if you need `#(#args)*`)
+>
+> > +}
+> > +
+> > +fn make_ident<'a, T: IntoIterator<Item =3D &'a str>>(
+> > +    span: Span,
+> > +    names: T,
+> > +) -> impl Iterator<Item =3D TokenTree> + use<'a, T> {
+> > +    names.into_iter().flat_map(move |name| {
+> > +        [
+> > +            TokenTree::Punct(Punct::new(':', Spacing::Joint)),
+> > +            TokenTree::Punct(Punct::new(':', Spacing::Alone)),
+> > +            TokenTree::Ident(Ident::new(name, span)),
+> > +        ]
+> > +    })
+> > +}
+> > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> > index d31e50c446b0..fa956eaa3ba7 100644
+> > --- a/rust/macros/lib.rs
+> > +++ b/rust/macros/lib.rs
+> > @@ -10,6 +10,7 @@
+> >  mod quote;
+> >  mod concat_idents;
+> >  mod export;
+> > +mod fmt;
+> >  mod helpers;
+> >  mod kunit;
+> >  mod module;
+> > @@ -196,6 +197,24 @@ pub fn export(attr: TokenStream, ts: TokenStream) =
+-> TokenStream {
+> >      export::export(attr, ts)
+> >  }
+> >
+> > +/// Like [`core::format_args!`], but automatically wraps arguments in =
+[`kernel::fmt::Adapter`].
+> > +///
+> > +/// This macro allows generating `core::fmt::Arguments` while ensuring=
+ that each argument is wrapped
+> > +/// with `::kernel::fmt::Adapter`, which customizes formatting behavio=
+r for kernel logging.
+> > +///
+> > +/// Named arguments used in the format string (e.g. `{foo}`) are detec=
+ted and resolved from local
+> > +/// bindings. All positional and named arguments are automatically wra=
+pped.
+> > +///
+> > +/// This macro is an implementation detail of other kernel logging mac=
+ros like [`pr_info!`] and
+> > +/// should not typically be used directly.
+> > +///
+> > +/// [`kernel::fmt::Adapter`]: ../kernel/fmt/struct.Adapter.html
+> > +/// [`pr_info!`]: ../kernel/macro.pr_info.html
+> > +#[proc_macro]
+> > +pub fn fmt(input: TokenStream) -> TokenStream {
+>
+> I'm wondering if we should name this `format_args` instead in order to
+> better communicate that it's a replacement for `core::format_args!`.
+
+Unfortunately that introduces ambiguity in cases where
+kernel::prelude::* is imported because core::format_args is in core's
+prelude.
+
+>
+> ---
+> Cheers,
+> Benno
+>
+> > +    fmt::fmt(input)
+> > +}
+> > +
+> >  /// Concatenate two identifiers.
+> >  ///
+> >  /// This is useful in macros that need to declare or reference items w=
+ith names
+> > diff --git a/scripts/rustdoc_test_gen.rs b/scripts/rustdoc_test_gen.rs
+> > index ec8d70ac888b..22ed9ee14053 100644
+> > --- a/scripts/rustdoc_test_gen.rs
+> > +++ b/scripts/rustdoc_test_gen.rs
+> > @@ -197,7 +197,7 @@ macro_rules! assert_eq {{
+> >      // This follows the syntax for declaring test metadata in the prop=
+osed KTAP v2 spec, which may
+> >      // be used for the proposed KUnit test attributes API. Thus hopefu=
+lly this will make migration
+> >      // easier later on.
+> > -    kernel::kunit::info(format_args!("    # {kunit_name}.location: {re=
+al_path}:{line}\n"));
+> > +    kernel::kunit::info(fmt!("    # {kunit_name}.location: {real_path}=
+:{line}\n"));
+> >
+> >      /// The anchor where the test code body starts.
+> >      #[allow(unused)]
+>
 
