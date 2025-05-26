@@ -1,150 +1,229 @@
-Return-Path: <linux-pci+bounces-28404-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28405-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57BE8AC3F17
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 14:11:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6F7AC40FC
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 16:07:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 163713B6D6B
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 12:11:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC62D3ABA0C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 14:06:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87DE1F2388;
-	Mon, 26 May 2025 12:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C342F1FE44B;
+	Mon, 26 May 2025 14:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QzVzaho+"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NViilAsC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D561FC7D2;
-	Mon, 26 May 2025 12:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EEB3C465
+	for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 14:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748261477; cv=none; b=reCcH+R40eLXtyxq4cqHP/gklugxmRbJvdOjgNYupbUYLUgZ668eFiZMB39eAIXG5rf3+qsc8NXg0xe2cP98QvLDss2iYMNNkfd8qsVbDjT9GoTYjZ2dgWqxzD/0wvHTq79aJT9ev9fKIQK6s/Tm0x9OwkhU1Z2rpUJGYl14o8w=
+	t=1748268419; cv=none; b=qCcKSkrNtSk9on4ys30C4kGsHud3fADNRIPF+jUcKgVz+9Uk/U8deVvQVjLUQDGZrkyjNuwMwOhSdZkJAXFVW4nMSnZ8lGlEMwXStH5J52bD8wOfVuj4IZPZSm3KE6RaV7TKmw0vVBy6C+4AxfS5NjVbpxpb/LPuW5stqlF/Heo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748261477; c=relaxed/simple;
-	bh=hrWZ8l1cZmzGb0rBjRlN4YTI9FJ+eVKg64HEKHwbNCc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=rMF/XH3x5Wa9aFjS9afXYU1e/oZfE1fB9gUbxZGFmE1iDpyfdAyyQFpdAyPpx2XyJeJ8oFAEOrvruA9W/25J3HxD1ny7jozp7R5vA2xx2VOiy3+plPa39phaUCn2bQwkBYwuDfbdE5xFgciBRijyGtdFiAW870KJt4XdF2nBoeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QzVzaho+; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250526121112euoutp020939f6f970e100a8dc72a890f537db4f~DEovd-X3V0823508235euoutp02J;
-	Mon, 26 May 2025 12:11:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250526121112euoutp020939f6f970e100a8dc72a890f537db4f~DEovd-X3V0823508235euoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748261472;
-	bh=oEQfyNRCcF96rAB00+i4LTDnH6eyExMGUimV2Hx1YDM=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=QzVzaho+gT//bWlkOTURTWXtnc4hEIbMGV8JGp+3YxyiCKTP2iSsBUjdf1+HZQ4kU
-	 KfdrZt6CeW5/LJ23tYHTuLXJ3kJbiO3M7rL7lK/fpNvKAIkHIo4/mt7rD+GA9hvsRQ
-	 YvWT05wESqHMdmy9XXFENm1m1Kn4J6FrqN3/kJzQ=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d~DEovH6I0i1358313583eucas1p2X;
-	Mon, 26 May 2025 12:11:11 +0000 (GMT)
-Received: from AMDC4653.digital.local (unknown [106.120.51.32]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250526121110eusmtip1782073e50a70b6e2a3e0c1a2ca4e7eda~DEotgHSUL0843308433eusmtip13;
-	Mon, 26 May 2025 12:11:10 +0000 (GMT)
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Leon Romanovsky <leon@kernel.org>, Jens Axboe
-	<axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch
-	<kbusch@kernel.org>, Jake Edge <jake@lwn.net>, Jonathan Corbet
-	<corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun
-	<zyjzyj2000@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe
-	<logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org, Niklas Schnelle
-	<schnelle@linux.ibm.com>, Chuck Lever <chuck.lever@oracle.com>, Luis
-	Chamberlain <mcgrof@kernel.org>, Matthew Wilcox <willy@infradead.org>, Dan
-	Williams <dan.j.williams@intel.com>, Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [GIT PULL] dma-mapping update for Linux 6.16
-Date: Mon, 26 May 2025 14:11:05 +0200
-Message-Id: <20250526121105.434835-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748268419; c=relaxed/simple;
+	bh=QTeXWNX2iUXDBSxx5jGj9CcIe9hdPTaRCVCOms2e+b0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rjJvFhCmJWZduyzTYMEIt2zMGIoLUp7piUvpruxbsAeKn4nJ6LhG4s1otPOZaHJFHqDjT//+rdh3PEy5G0I5lqneSpzeQtn1OGd8AegkF6hTt7UeyRf0If7Gi1nN7LWlDJPAjoydGAzSkAPc41rAT5L8ekR4g9juvUIt0FMi5KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NViilAsC; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a37d24e607so210194f8f.1
+        for <linux-pci@vger.kernel.org>; Mon, 26 May 2025 07:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748268416; x=1748873216; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zUalJN5MUy3YAR3UhbDJtGyL6WBv2slh5mtlXFKO8b0=;
+        b=NViilAsCn2xGDAq4FOPQ0O+rbmAKtR1y9M/EpUXRPhsLYuzOnc4Riy0hIuhq6t6l4A
+         MVJiy9yv/Tbb/P6gBUY0AgLntktU9C83mf1QrpKce21ajCVDOwq56j4COXFgaN09dCo5
+         +9QojH5rRaZ/3TA4K5UBIysnuAe+f4jkOUAPV6/WAdxHtv6EjPYZJPUfYw2e84qcu6yk
+         VE3iErTgyIBThBWPVCQeb1PDqNKc1BfV/OGKXZeaA56HLtnjipmEh7LqoIu9Yh8Vpz7C
+         n/FTweIowzD4V3cVmaFqDG627iheHLJkajisy2fjAA5QpnJ48+sMO2uCvCIip37F3jiJ
+         nuCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748268416; x=1748873216;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zUalJN5MUy3YAR3UhbDJtGyL6WBv2slh5mtlXFKO8b0=;
+        b=B7p8EPfCCeNIFNPW5HUwRJq5dICP0I1lHb14FEcDX9nKgyz6uJLaij9/DyvFoq21CN
+         I5atqeB7no1eN6Hpk+jRNt/eORvnAbmjvipla1WSFhyo4q/p9LPVPe5luzIgUu52MDv0
+         s91sv1LRFf8V63SpT+CN9kCL8LwYeO5L6OGIIz49oHk0nGLg05fyQw2LEU/XeRDVUasp
+         ZRp1V0J77yiQKO6V1Hk6SSF044x2QQYMBSG3XWQd/+voeasYUjjbbY8AZc7epIcnRA0u
+         X/B/3rVecCH7s4OyReyfkwRT5zQy8h2m6F+VcqE8iz2jJMUn+HctMIo39+vQV6FJwwYt
+         TzxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBeA88AHVfcg2nOA48eIgAySJ8t3i3hjx/5jtcgB0Gn/o/Gges82qFQO8ltay6jaEjkDzE4LO/kGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvBB4BFpbbnfGOfoGKB/eVPdq3KaInkD3lpasEtlE5qKEQbelU
+	mBfbG85ySgFOe5yrYUvm3c2Zmj4bNG7PgbIxqK5PkAKIJx+bzCq/L1RjOT7HO0h6/9w=
+X-Gm-Gg: ASbGnctcHVJnQ+uh1FbARPsQgaEQ+OqOzS59Tdo/9iFHlSt9UUC+8LLs95El9RAsxqw
+	wbaKrgRqtLutNOMElUHfOzMRoDkwtj0qbOM/xUoFvVAoo5noCCDgg3o63+pnv+rDdiQ3vgtCwRW
+	YhpwRdM2SVxV3kxggNnmZWo1Pljw774/kUGGFdfuu8eFcqNOV8XtygVg1kqcvXF+rY8gzsj306z
+	BHnlE7ar3IDKE24zxveFokMJMrev1EjbO/4rZUB8Osbef+kHZ9wua1lFcl6j/nYBJC0KlmNXRgi
+	Te0yIQAlpkLkvX4+YhRTYYnMJuTZWnjvgjxXtNeJujbWQ88Xo2Mz
+X-Google-Smtp-Source: AGHT+IFn52fIeGag1IWUAYwZ0XrL+fmHEWUQ8gimnAH86GvLzi97W0zr1r99vIRe5MeCAnEzOnrUPA==
+X-Received: by 2002:a05:6000:1886:b0:3a4:c909:ce2a with SMTP id ffacd0b85a97d-3a4cb489a8cmr7582347f8f.45.1748268415632;
+        Mon, 26 May 2025 07:06:55 -0700 (PDT)
+Received: from [192.168.2.177] ([91.116.220.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4db284261sm2418574f8f.67.2025.05.26.07.06.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 07:06:55 -0700 (PDT)
+Message-ID: <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+Date: Mon, 26 May 2025 16:06:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d
-X-EPHeader: CA
-X-CMS-RootMailID: 20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d
-References: <CGME20250526121111eucas1p277b74b79fe4ae4323fc687a06039044d@eucas1p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; keydata=
+ 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
+ PVrr2NoUqi/bxI8fFQJD1jVj8K0=
+In-Reply-To: <aCIk40642nXZ3arz@apocalypse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-are available in the Git repository at:
+On 12/05/2025 18:42, Andrea della Porta wrote:
+> Hi Florian,
+> 
+> On 15:02 Mon 12 May     , Florian Fainelli wrote:
+>> On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta <andrea.porta@suse.com> wrote:
+>>> Hi Florian, to accept the patches, what would work best for you?
+>>>
+>>> 1) Send only the relevant updated patches (maybe as an entirely new
+>>> patchset with
+>>>    only those specific patches)
+>>
+>> Only the updated patches work for me. I don't think there is that much coupling between the DT changes and the non-DT changes (other than without DT entries nothing is activated)
+> 
+> It's a little bit more involved than that:
+> 
+> - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+>    depends on 1 (clock binding header). Should be taken by Greg.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.16-2025-05-26
+Greg gave an Acked-by so I think Florian is good to take that patch. Which 
+leaves us to the clock patches (driver + dt-bindings).
 
-for you to fetch changes up to 3ee7d9496342246f4353716f6bbf64c945ff6e2d:
+> 
+> - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+>    depends on 1 (clock binding header). Should be taken by Florian.
+> 
+> - Patch 4 (clock driver) depends on 1 (clock binding header) and
+>    should be taken by Stephen.
+> 
 
-  docs: core-api: document the IOVA-based API (2025-05-06 08:36:54 +0200)
+Steven reviewed the patches (driver + dt-binding) so he is waiting for a new 
+version which addresses the review. He offered to either take them and provide a 
+branch that Florian can merge into his branch or provide a Acked-by tag.
 
-----------------------------------------------------------------
-dma-mapping updates for Linux 6.16:
+@Florian what would you prefer?
 
-- new two step DMA mapping API, which is is a first step to a long path
-  to provide alternatives to scatterlist and to remove hacks, abuses and
-  design mistakes related to scatterlists; this new approach optimizes
-  some calls to DMA-IOMMU layer and cache maintenance by batching them,
-  reduces memory usage as it is no need to store mapped DMA addresses to
-  unmap them, and reduces some function call overhead; it is a combination
-  effort of many people, lead and developed by Christoph Hellwig and Leon
-  Romanovsky
+Regards,
+Matthias
 
-----------------------------------------------------------------
-Christoph Hellwig (6):
-      PCI/P2PDMA: Refactor the p2pdma mapping helpers
-      dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
-      iommu: generalize the batched sync after map interface
-      iommu/dma: Factor out a iommu_dma_map_swiotlb helper
-      dma-mapping: add a dma_need_unmap helper
-      docs: core-api: document the IOVA-based API
+> So patches 6 and 1 are in common between Florian and Greg, while patch 1
+> is in common between everyone in the pool.
+> 
+> If I uniquely assign the patches in common to one of you, the others
+> won't be able to compile their own branch because they will be missing
+> the dependent patch.
+> 
+> If, on the other hand, I duplicate common patches to each of you to
+> make the kernel compile for veryone, you should remember that there
+> will be conflicts due to duplicated patches among different trees
+> down the merge path.
+> 
+> Any advice about how to proceed is appreciated.
+> 
+> Many thanks,
+> Andrea
+> 
+>>
+>> Florian
 
-Leon Romanovsky (3):
-      iommu: add kernel-doc for iommu_unmap_fast
-      dma-mapping: Provide an interface to allow allocate IOVA
-      dma-mapping: Implement link/unlink ranges API
-
- Documentation/core-api/dma-api.rst |  71 ++++++
- drivers/iommu/dma-iommu.c          | 482 ++++++++++++++++++++++++++++++++-----
- drivers/iommu/iommu.c              |  84 ++++---
- drivers/pci/p2pdma.c               |  38 +--
- include/linux/dma-map-ops.h        |  54 -----
- include/linux/dma-mapping.h        |  85 +++++++
- include/linux/iommu.h              |   4 +
- include/linux/pci-p2pdma.h         |  85 +++++++
- kernel/dma/direct.c                |  44 ++--
- kernel/dma/mapping.c               |  18 ++
- 10 files changed, 764 insertions(+), 201 deletions(-)
-----------------------------------------------------------------
-
-Thanks!
-
-Best regards
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
 
