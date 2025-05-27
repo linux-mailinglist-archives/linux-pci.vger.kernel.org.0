@@ -1,225 +1,206 @@
-Return-Path: <linux-pci+bounces-28458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9205AC5126
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 16:45:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29E6BAC516D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 16:57:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64AF31BA1588
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 14:45:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9175B189919C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 14:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53B4718D649;
-	Tue, 27 May 2025 14:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A445427990D;
+	Tue, 27 May 2025 14:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KgcgvX0L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhAw9Kqr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935FD17FAC2
-	for <linux-pci@vger.kernel.org>; Tue, 27 May 2025 14:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357124; cv=fail; b=RxqML3IabcjBKt+uLeLSbzfHuIUgacqfmpXZZmd5W7lgntmbyj8YEo5UZFW7o1kB0UfTxp9xLSqA0cam4tCZaMUP6w71KfZXgwjuyva9TKtA47pkdBaW4jKln0v2BA7LMk5aeMPKxRCxcbhNSNpx23tj/+XCHtgNNtTCICr5JKc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357124; c=relaxed/simple;
-	bh=mnvMghZeydebei9XuKlkYoZ4rm+Mwk5BFuXCDkGWqBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jTK25j6PQoTXso1+MKd6y63yFC59SivVL2rw/U2DbdQFuhpNqbG0fp9WiauqMucAQQ9HNszzxwiCfOC9q+iRwjmFYocaMYe/TqCd3KtWNd9KjTso3z84xguMgfu2UXVTKK9BfhbFGDlDzZGa9wIDuqlxyb9JBOq5SP982BK56wo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KgcgvX0L; arc=fail smtp.client-ip=40.107.93.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AVyFCzdQz3Ox/pkk6NWblEpcdAfEnquDWPUfLbwrZUUZM8f1BllzsBACdrx/l5hiE8E9pUSebjz5WId/xgSB2JFKsEoMBLONodFE4BM4uR+7XFVD+hd5NzX3qUyssCfRRw0WTmyg2MTlJTvzdZMY1GUNEgzL8okBJl7zeSkOD5TDAg+2akGG9WCHE/UkhE+nTmamu4IWluqum3IktvxOYkJXOtjCwqHRPfLcSLv39Us940j+qscAQQDXgDfEg2saG/O5n/Hd3v9c53kZwjrRMyZVh8UIaW2F7MunSBrNSA0les/bp+rnbQo0IDlMnpVkGzqFqTKS8Pq9hbHhy2xMhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/OxQYtJXaBwsibKZnWGSXzcCbJQWW10biQjetmX14sU=;
- b=wqChD5ySA15Ae1r577yezZnnSDytJaawfv69y+ax+pgHVC8w8qCUYM9detIN9KyRPYrRuHIlOjquGz9dydgTNPM/QR5ZJceUefmUHwZ2jKXAsH0lrw0VQVNa+iZW6zN8zJWSbCOv7tlOIEcl2UqBnNJm5uTuPZOcTveu3y1q2e8JTDZMBguD9u1c9e1Bqrorzv/nsPlE9cRmADApr0xx7Nn1QOE5YguONWQWxaCaSF0gwa9eJ2QIegd1ZASdxJO8YNvG7GZvktODansnVkzm3UxjrMSsuNq5YQwjXTrNQmCEp1mHwUfLbpjBzIDBjikZUylhynN+ZPeYgrmqlI4tIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/OxQYtJXaBwsibKZnWGSXzcCbJQWW10biQjetmX14sU=;
- b=KgcgvX0Le0bgMzePSifWVUpqpyCSuLUWPN9qL0BYaMwMReMKEhQnby88xdIwWAsz5rtZRV7YJyqJjlTnPCO0Z2EDgmgK13GKzhKDb7KARHw9UkMsbtveluNKR+JaTo9weDbaWuFGzMQjCB4VfOgplqvjDUIMlFXLGwbuzN9O3rGlSZm8zzuBEKrhcn13BbfLAERjBTg+FEyW+PFrYKy9uh/lJFy0Rsp1sGxlIWhPR5wUeOU8wuY2zeOcOR4qhHBrZfoapvx12mwr2oXcITh0/vo7QJ+Ot21rW6iPH67kG7sJh3Os3NtusbdJluvn50mXQfD3FJ2uY6P+iEe9RT+6DA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by IA1PR12MB7758.namprd12.prod.outlook.com (2603:10b6:208:421::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Tue, 27 May
- 2025 14:45:17 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 14:45:17 +0000
-Date: Tue, 27 May 2025 11:45:16 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Alexey Kardashevskiy <aik@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
-	zhiw@nvidia.com
-Subject: Re: [PATCH v3 12/13] PCI/TSM: support TDI related operations for
- host TSM driver
-Message-ID: <20250527144516.GO61950@nvidia.com>
-References: <aCbglieuHI1BJDkz@yilunxu-OptiPlex-7050>
- <yq5awmab4uq6.fsf@kernel.org>
- <aC2eTGpODgYh7ND7@yilunxu-OptiPlex-7050>
- <yq5aa570dks9.fsf@kernel.org>
- <1bcf37cd-0fc4-40fa-bcd1-e499619943bd@amd.com>
- <yq5ah617s7fs.fsf@kernel.org>
- <cfdfd053-9e9d-43c0-8301-5411a02ffdf9@amd.com>
- <yq5abjres2a6.fsf@kernel.org>
- <20250527130610.GN61950@nvidia.com>
- <yq5a8qmiruym.fsf@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5a8qmiruym.fsf@kernel.org>
-X-ClientProxiedBy: MN2PR11CA0002.namprd11.prod.outlook.com
- (2603:10b6:208:23b::7) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78F42798E6;
+	Tue, 27 May 2025 14:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748357871; cv=none; b=bqyuucQ06WB3oZEjNTS3pM3BqhhfPaionBMD2mlXlIPKcjPPYpUQpX3JmnOfyXk54tZbMhpHhWGU+vXHBujfANo9vhjHsIQd83Y/IBC1W2HORveumxpepH2YAvFAS1suC6XD3cOh2HmYH8um+PhcGVKbMrRdzNzPu8/s6yTbmg4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748357871; c=relaxed/simple;
+	bh=si/3D/lqAp5z97oyh3H7Ttrei9OF36F1phtFBwnKSQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FpRpsKGhmhqQjAaLxArtw/0F+POVcK/beT4BmGqyiIr+8bAY2n/+c0GZQJM6qjzbaknppD63WQlApVxV8AWY4CicwYzlNJZcNL6GHSyM5Q9KD+gRyldKkg1GZKrDtXfdbK4FaXJPYMHMhrXESQ3a8kSyTzA7kXvJvE/n0O3w06w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhAw9Kqr; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30f30200b51so36628581fa.3;
+        Tue, 27 May 2025 07:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748357868; x=1748962668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SNE3eNQigcgAPplki00LvwTSib7PfNi6+3iBJNr9+88=;
+        b=fhAw9Kqr7Zb/809HyPBiQNKjRIKXzu0HwWwyhYLtt98exSLsMpzdXm+fiFWgYHR2Aj
+         AjJg4Wgd4hjKMukqVAnmtvfsYZA1DN/YhBgTB222JylLvgfRAM2gcAV87f4W2XDZg58/
+         RDo2U+HVo+WWLujhQ8ssw5KDYA6dtO4tulg7t1RjoJmZzZY1xly+k996XERpo4dI/lbv
+         gLCK5AAyaB8xRVGQXkMJonUVKKZi9cvpq3mYU8dpBiBdeoySddI6BNcjagXY7OOugUvj
+         JyYRtUP+ojpyw2LkGklM0rdqdToblJKT+qFHUwx/2uKHFne+zUI2JzpYKDS3Qck2hWQC
+         +cxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748357868; x=1748962668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SNE3eNQigcgAPplki00LvwTSib7PfNi6+3iBJNr9+88=;
+        b=w8tWlA6LBXg5f3uzmWEDjwYQ3Rr8U1JNHaheFQwUVbeTeul8grWA5NfbPrYz2y2yz7
+         PRyF6NI0BSvR0gE3fviGxzTrpuHTlyfElWoY25pIc7ZobyValFMt4xlmwsIYrooYyvxX
+         yqubnTVnBcnzQq6pdM0MdvvNIU0gyRdBBnwbcszDm5L6DTmvHqcmh6SkC6Tw7b8lfayZ
+         MLvv3LI9CqexbX2ciaGwMGUbJE0Rz2KtzDFFdcn1HGfsv83R5nFph6PGVG3uE52+L5NT
+         SRp0IFDs1+iKAnMmCY0aQAPgrAMllwvJ/gO7HeP0VJEOXvDTA/NAAR41N1PbKiSixpsD
+         0z0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNAfzms8ShxzK8AprRSOIWxWaFFwdFwya0rLrBPdTFfkczLP2Fm5O0Y+9vFQElU9WrZy8rWfrL8tstXcQ=@vger.kernel.org, AJvYcCV4VuLf3CGUzY0qTtWYkqU4ujymEt0TQ0hV62hdUS/maWv3Fm3zdHgjNZFTao9/Gz+UBmj9voxbBZ0M@vger.kernel.org, AJvYcCVO2Pq4WGiTgdCRKSuyb2bYOqThS95PreUPZiuTLzEdj36mYt+mE0SWuh741j6mJKxmEpRBZoRHAtKUSRjC@vger.kernel.org, AJvYcCWCftjuKhBxAh1+o+DE0TGXw/WPlwKHrqgOQWDEWQKj8wnXNKQnRc9emvV0P5kcBh4J29Rxcr+F@vger.kernel.org, AJvYcCWHpJFsRqU7ha4pNDnFPP7WIINau4XHyx/FB2B7TYWij53uirMS5Y3WeKGmf9PBG/3o8h0AKAMj+K4x8kqvLtg=@vger.kernel.org, AJvYcCWfOZRnZk7cg6GPd4TcY0Cm31D6GPnt9OEkyorqo9LS4AaN2KKLG2eoxRIaMIVxrXaXf9oyp3hxh5AZ5unr7EGD@vger.kernel.org, AJvYcCX2wqzDGcLBnHLPfhPdVwX4d+TP8Or33havnSaDCePx6v9WH6Xfq5dmV9g1tvJXKvmEUfHeiq6HeObD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4LYTwl5CyyMfPYxh99YwFTU+uINXZ9k/A8+SlzoADFxUg0Sdd
+	A5DdEfq0wmK6njqhsm6CNKqRx6FHmNyctHQgGqkxEc4KJggF0Idm+4ziW2BoOC4DItw4ev3T4rp
+	sQDIC97TO09Akva7p0O0c/Q4dt9hPC6A=
+X-Gm-Gg: ASbGncuxt4TNLbesUhcDviTqFRFg21sp379DQvM7Vn0XGWydTiUBCFXlCjTpR21LGkY
+	uSiNcLFo4QNNztG63iC2nbz4BUNBmTMFQiyfk+376EuMktoYXaZHBFoC45700Qu5uMrD7JoE0BF
+	SyeeqC8+JEtq7PPt5NxXldMAjm+hd90cZCUbvbwFbAFi2/HYEx
+X-Google-Smtp-Source: AGHT+IGMpsgNs0H0v36WCubbxlinvgNLfiVk9IX6EmewrCYJWnUCTsflWg1QTkNc19iE0AzQz3ot/ZAJjdnwjF/SkXc=
+X-Received: by 2002:a2e:8a93:0:b0:32a:604c:504e with SMTP id
+ 38308e7fff4ca-32a604c5122mr6252591fa.38.1748357867433; Tue, 27 May 2025
+ 07:57:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB7758:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c7cdee1-fd57-4b67-b75d-08dd9d2d1893
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?89Y4mkCe4LgLcpIoZd1LWBFK3W7LXYQQLcKkuEp8DnnvrA8DPHkV5c9aaQgz?=
- =?us-ascii?Q?kD976h0FdCNQJPgbGMBHL3fE1rXbMwVx25JPsUeR40XOdFpxsrn+bubcRnCU?=
- =?us-ascii?Q?BPlZOxd+PEsQQBNUE3VD6GD7QojgqMOGV9vZdmYYKLtC6CvYqD7YXZ+H0NZM?=
- =?us-ascii?Q?Q7TL+hWeRPIz4atlE5kzWxvnbotxwZADY5hgTQvktAXSSbgAxWEQ3QOsLQdy?=
- =?us-ascii?Q?BwopAzBGz/SMxadBylXXlganWZv+E1QV5mPH74TpoDWkczslfFBLVpvEym5e?=
- =?us-ascii?Q?xtz9qbV9ByrzvmEYOi2P24jMPEkdNMrZjCkEdZtmX7sxELutsyMFbJg55b8N?=
- =?us-ascii?Q?oPPQ8tBy8OcRuritDM3xQUPXij9HJKAZqTxao4m3aufZsD5E+Pl/xFTtfz1t?=
- =?us-ascii?Q?8m4O7ovDPZ1EkoeIU9/y2Y9NljzwBmUgDHdh9J31VwyZtSCfVQb2atG5btDd?=
- =?us-ascii?Q?/d9qgS1A7NEiOoflFLFdLriK2xHRVfTLyDqmtJhUrAMVB2HRjdwA1In818AU?=
- =?us-ascii?Q?JBriXH75uMY0Ihn/mK9YnuEGY7QH2hd0a+Hmfh//6FIsXTp8POlQiB3h7nnp?=
- =?us-ascii?Q?ilh4/ok64v4L5O04h4MxBp1ei4HgpmKbzU19snderi49b1Dr1NE/CphAF4yF?=
- =?us-ascii?Q?kpLavrBiGs5xLj/rPUkPKmZfJ8YbBQZSA54MVIOCE9LMK8ANfY8krxQp0xkS?=
- =?us-ascii?Q?hw9+FnTTX8Ve/0CG0oNVZl13uHl5tzlxowb3/+9pjR2oHyeNGBx73ttqkRl4?=
- =?us-ascii?Q?CsWhmk1OGpPmgF/hIu7hqWSLOldO4pRWdTpwtK+8R7P9oE8fueQYoT+TbbYV?=
- =?us-ascii?Q?btNS6ssyg/QFE31uSbDWiSrVg5R6dWEkJV5tJQFvJRHHOsjlxT3xlh0Wc1+f?=
- =?us-ascii?Q?qKUg62mwfGoePGYiVkJptDqIdWb8jYLS8Sv66ymAQv2A2BrXhoMZv1Ah8miP?=
- =?us-ascii?Q?+SrVEWmEaLekBxXwKfVD9+GsMLiQndB1OI89DzVcfW+I6MJZ62LVcsmOarDH?=
- =?us-ascii?Q?tu8kFNUdIngVywtTZMfb9oaOYXQaUfqQ6mYiWZCzuZO7kkpncqTrV9KZIeZs?=
- =?us-ascii?Q?nRG7dykOhZ3v3Ua1GdWybAslxcZu77hPJqsG/+Mb07Wq2A4w9x3Iig4pns5J?=
- =?us-ascii?Q?WxrDJH+vvLtbowmhNxjpb0gaDZ61Ir2X7lkYsTlRNSoHnXyuabIowc3ENVKy?=
- =?us-ascii?Q?52WeTjdvzrdnLh0+JAUWFuX8qoFYz+OGa9+Tzvm87CC6EGato7/U15jHYpgG?=
- =?us-ascii?Q?oKKFXckByotrb9F8pN86R0142yUGzP4TxbgG7z7LQ8fmuGNYOGR7EqM6N4+b?=
- =?us-ascii?Q?PdY/rMgbL4GGzvUmCco5Egy4FU1cWcg8cq5mikt5btqpczcXNTz1TAoxhzxy?=
- =?us-ascii?Q?1PGNPMcJch7q/E2dIdhLWXhQHFMCN7KkzxNXVHLUbApC0f0zrs1XpLW56zed?=
- =?us-ascii?Q?C5dwNCMHJkQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MAyQrsj8fID8eo8/KdyrOZgp/4ahvnP7VV8s5IgrPLZOt0dXY7UkShzZO3JN?=
- =?us-ascii?Q?Pn1iqHv5mT/uHOaT+nBbYowRFnLKQkXTLjhU6Llob6COq8wkU/sQ/IFu8QhO?=
- =?us-ascii?Q?TUBCcmsKHd2Mk/KTDK/FxTxBb7v57oKPSC4OPh7CVQ2C1CgyODHYsZJf9/x5?=
- =?us-ascii?Q?4p8ZZGFedJ92o80m+d9ayjQKcDljSol9KV5CJ/DqFtDatsbkQuCuwnV5MA0e?=
- =?us-ascii?Q?RtdBhLCisy3hgWmGpO4O/mSBhoJd5mpEMUCLfhbaj/BWyf4Yh0MobEXUQrTL?=
- =?us-ascii?Q?GbaeDHb6qPd6RbWDJMxCQwIh6nothGHAGBlm6RyvjD6juEaO7qs1JlNu3tOp?=
- =?us-ascii?Q?bX+vMpL/LY4c3FX46z8VbJX11Mx07zDWq/GjBS8WXzrZ2TSnFmYASIakiCA9?=
- =?us-ascii?Q?nBUEJ2cNgQzdWUxJ8667cSGDxhm+tQ+wpfYAiU2wqHfpUOXGnrlg7xrAE6jL?=
- =?us-ascii?Q?6IMhVqaw685qwC1n/xw/3z18FI5bWwwW5aaZDjjdMAE8H0bKk4SwbRQEuoRM?=
- =?us-ascii?Q?LvqLXpMQ0wwR0ShwSsGyOccaK0YkQ1F2i2qL1JOkp3RL4OXkWtVADM7qCM39?=
- =?us-ascii?Q?V7DBJWvsPh8gdxG2269I0o3xY2UxDEAt6lkvCHWAIAldo3jdPQZ4tiUCGyni?=
- =?us-ascii?Q?YyhKegRgKaZicTBRueezCLX5p/UAsDPAT40oHj/fUziicg/tpnCZEjMSm7ub?=
- =?us-ascii?Q?gTPoqWdH7P9el09D1TRiKox6DZ6Bh6N4p+5c3u/I44GGrm2sUfTqf8rrOQzn?=
- =?us-ascii?Q?c6BHqWoiHpTzp4tZNsAL79qNMPC5Yx3J8tnpddngJGBTO3lYFhxdp/ajJZqx?=
- =?us-ascii?Q?nGD9mlilv3/mh860A1YjByac0TJlWlnS08wKEMhN1W5J4Nh821dlkQM2jgo4?=
- =?us-ascii?Q?1FIqkd7qzP8vT1LFYYLRH/8LQbj5iIQoTPaCmC0fm2dmMEj2ABP/BLbxT1kv?=
- =?us-ascii?Q?JqaRaT3ogku0q4VSRkgu4Wp/1BbhFnKkdS+0baHAFkmMS9SMtvKfsHBHoD/m?=
- =?us-ascii?Q?Th/sX7I30TxPaEx+/vw1LkLU4QFv54qu2df9vuCVZt7cEZ2+2ckzJG0H5s33?=
- =?us-ascii?Q?XoXj5Huc2p17F7AVXZKdhD9Z41F8+ZzkXUCYflZWiwvKlT0pvt4Z0N806gaD?=
- =?us-ascii?Q?IFLPN+lG4DH7ce3/hrR/nfwg59f32uY1L73oaSvbno4MGJsN9CSGA9mr6009?=
- =?us-ascii?Q?A88YaNjV3xcc7i89/N3L51qoBvjeVbkIAe15iEo6l6BB6gB69s6oF2qR1xAU?=
- =?us-ascii?Q?xC9hDlcL3DDSNLKHbS6dfc8e8/98LaNEhv1v0zlnPU1Fa2MOY7fptJVe+55S?=
- =?us-ascii?Q?NpfJdDGeJrEgqh4pOqLwmHtCbs7tjHEGdAAdvAQSSiFVpkP5ka/TB1qjBirP?=
- =?us-ascii?Q?nu7IOWVpFmxa2WQlOUXsaXHBNi8ctUaZlrwLSEacKBheKYxPvGuqw7YN2NDM?=
- =?us-ascii?Q?HyoBArnWRpuBMJh31ROcjNmCO/XjEv+gRaMm//vtBEGBJakEeD+xWyXol6Tk?=
- =?us-ascii?Q?moorPrX1KUWqcK9wiRQFxvrgyhG2sv1Hn2be/+lJuxq1II34/t/ksAycYdvW?=
- =?us-ascii?Q?6E6AvJTcZ89r0yXhC08OOVBIv8QUvOYR81LLsi/T?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c7cdee1-fd57-4b67-b75d-08dd9d2d1893
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 14:45:16.9822
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FXKcsTW49LtNgpUYsFeagOY2i/fVB32J2odn1B+8qpSXDPG/MciQqy+Sa0H6DaCp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7758
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com> <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
+ <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com> <CAH5fLgiUhvp9P7oSf4Rtv5jK1SNebW9-r5YFHVzCZjEwaR=Mjg@mail.gmail.com>
+In-Reply-To: <CAH5fLgiUhvp9P7oSf4Rtv5jK1SNebW9-r5YFHVzCZjEwaR=Mjg@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 27 May 2025 10:57:11 -0400
+X-Gm-Features: AX0GCFv2oY8lzrXQtwfj6_dQyq0RFoGjtHhR6-NzX_hnZZ_7RGNdHOXxleigo1M
+Message-ID: <CAJ-ks9=prR2TNFhqip8MsjtTWKkoUhoMG75v2mSLF1UaRNwJLg@mail.gmail.com>
+Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Benno Lossin <lossin@kernel.org>, Michal Rostecki <vadorovsky@protonmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 07:56:09PM +0530, Aneesh Kumar K.V wrote:
-> Jason Gunthorpe <jgg@nvidia.com> writes:
-> 
-> > On Tue, May 27, 2025 at 05:18:01PM +0530, Aneesh Kumar K.V wrote:
-> >> > yeah, I guess, there is a couple of places like this
-> >> >
-> >> > git grep pci_dev drivers/iommu/iommufd/
-> >> >
-> >> > drivers/iommu/iommufd/device.c:                 struct pci_dev *pdev = to_pci_dev(idev->dev);
-> >> > drivers/iommu/iommufd/eventq.c:         struct pci_dev *pdev = to_pci_dev(dev);
-> >> >
-> >> > Although I do not see any compelling reason to have pci_dev in the TSM API, struct device should just work and not spill any PCI details to IOMMUFD but whatever... Thanks,
-> >> 
-> >> Getting the kvm reference is tricky here.
+On Tue, May 27, 2025 at 8:44=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> On Tue, May 27, 2025 at 12:18=E2=80=AFAM Tamir Duberstein <tamird@gmail.c=
+om> wrote:
+> > > > +}
+> > > > +
+> > > > +fn make_ident<'a, T: IntoIterator<Item =3D &'a str>>(
+> > > > +    span: Span,
+> > > > +    names: T,
+> > > > +) -> impl Iterator<Item =3D TokenTree> + use<'a, T> {
+> > > > +    names.into_iter().flat_map(move |name| {
+> > > > +        [
+> > > > +            TokenTree::Punct(Punct::new(':', Spacing::Joint)),
+> > > > +            TokenTree::Punct(Punct::new(':', Spacing::Alone)),
+> > > > +            TokenTree::Ident(Ident::new(name, span)),
+> > > > +        ]
+> > > > +    })
+> > > > +}
+> > > > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> > > > index d31e50c446b0..fa956eaa3ba7 100644
+> > > > --- a/rust/macros/lib.rs
+> > > > +++ b/rust/macros/lib.rs
+> > > > @@ -10,6 +10,7 @@
+> > > >  mod quote;
+> > > >  mod concat_idents;
+> > > >  mod export;
+> > > > +mod fmt;
+> > > >  mod helpers;
+> > > >  mod kunit;
+> > > >  mod module;
+> > > > @@ -196,6 +197,24 @@ pub fn export(attr: TokenStream, ts: TokenStre=
+am) -> TokenStream {
+> > > >      export::export(attr, ts)
+> > > >  }
+> > > >
+> > > > +/// Like [`core::format_args!`], but automatically wraps arguments=
+ in [`kernel::fmt::Adapter`].
+> > > > +///
+> > > > +/// This macro allows generating `core::fmt::Arguments` while ensu=
+ring that each argument is wrapped
+> > > > +/// with `::kernel::fmt::Adapter`, which customizes formatting beh=
+avior for kernel logging.
+> > > > +///
+> > > > +/// Named arguments used in the format string (e.g. `{foo}`) are d=
+etected and resolved from local
+> > > > +/// bindings. All positional and named arguments are automatically=
+ wrapped.
+> > > > +///
+> > > > +/// This macro is an implementation detail of other kernel logging=
+ macros like [`pr_info!`] and
+> > > > +/// should not typically be used directly.
+> > > > +///
+> > > > +/// [`kernel::fmt::Adapter`]: ../kernel/fmt/struct.Adapter.html
+> > > > +/// [`pr_info!`]: ../kernel/macro.pr_info.html
+> > > > +#[proc_macro]
+> > > > +pub fn fmt(input: TokenStream) -> TokenStream {
+> > >
+> > > I'm wondering if we should name this `format_args` instead in order t=
+o
+> > > better communicate that it's a replacement for `core::format_args!`.
 > >
-> > The KVM will come from the viommu object, passed in by userspace that
-> > is the plan at least.. If you are not presenting a viommu to the guest
-> > then I imagine we would still have some kind of NOP viommu object..
-> 
-> I assume you are not suggesting using IOMMU_VIOMMU_ALLOC? That would
-> break the ABI, which we need to maintain.
+> > Unfortunately that introduces ambiguity in cases where
+> > kernel::prelude::* is imported because core::format_args is in core's
+> > prelude.
+>
+> I'm pretty sure that glob imports are higher priority than the core
+> prelude? Or is this because there are macros that now incorrectly use
+> kernel::prelude::format_args when they should use the one from core?
 
-Yes I am, what ABI are you talking about? CC is all new.
+compiler says no, e.g.:
 
-> Instead, my approach uses VFIO_DEVICE_BIND_IOMMUFD to associate the KVM
-> context. The vfio device file descriptor had already been linked to the
-> KVM instance via KVM_DEV_VFIO_FILE_ADD.
-> 
-> Through VFIO_DEVICE_BIND_IOMMUFD, we inherit the necessary KVM details
-> and pass them along to iommufd_device, and subsequently to
-> iommufd_vdevice, using IOMMU_VDEVICE_ALLOC.
-
-It is not OK, we want this in the viommu not the device for a bunch of
-other reasons. I don't want two copies of the KVM running around
-inside iommfd..
-
-> >> +	if (rc) {
-> >> +		rc = -ENODEV;
-> >> +		goto out_put_vdev;
-> >> +	}
-> >> +
-> >> +	/* locking? */
-> >> +	vdev->tsm_bound = true;
-> >> +	refcount_inc(&vdev->obj.users);
-> >
-> > This refcount isn't going to work, it will make an error close()
-> > crash..
-> >
-> > You need to auto-unbind on destruction I think.
-> 
-> Can you elaborate on that? if vdevice is tsm_bound,
-> iommufd_vdevice_destroy() do call tsm_unbind in the changes I shared.
-
-You are driving it from the vfio side? Then you don't need the
-refcount at all here because the vfio facing APIs already take one.
-
-Jason
+error[E0659]: `format_args` is ambiguous
+    --> rust/doctests_kernel_generated.rs:8783:25
+     |
+8783 |     kernel::kunit::info(format_args!("    #
+rust_doctest_kernel_workqueue_rs_3.location:
+rust/kernel/workqueue.rs:77\n"));
+     |                         ^^^^^^^^^^^ ambiguous name
+     |
+     =3D note: ambiguous because of a conflict between a name from a
+glob import and an outer scope during import or macro resolution
+     =3D note: `format_args` could refer to a macro from prelude
+note: `format_args` could also refer to the macro imported here
+    --> rust/doctests_kernel_generated.rs:8772:9
+     |
+8772 |     use kernel::prelude::*;
+     |         ^^^^^^^^^^^^^^^^^^
+     =3D help: consider adding an explicit import of `format_args` to disam=
+biguate
 
