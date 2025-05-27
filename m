@@ -1,144 +1,202 @@
-Return-Path: <linux-pci+bounces-28432-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F99AC4580
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 01:17:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F3B4AC45B9
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 02:42:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE29E174D96
-	for <lists+linux-pci@lfdr.de>; Mon, 26 May 2025 23:17:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84E4D18912D5
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 00:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D703B24166B;
-	Mon, 26 May 2025 23:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C128435942;
+	Tue, 27 May 2025 00:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Toydrlzg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOuAdOtS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C97414830A;
-	Mon, 26 May 2025 23:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99982F43;
+	Tue, 27 May 2025 00:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748301470; cv=none; b=RuLSdEQ8WXJUab1mzmS8hBZCsgbIMqeegDV65vYJyfFghxdJZd+8XqxIJETkCitE57AcckSca09JUlbREfLuQxqGRUvp7vSG02gaEDVkJjCzsPCXc/U1qcFKE/w2MyH0yBALJe79R0KVMUCefoVlFRVxmMMn6BXummUlTBIIAQM=
+	t=1748306526; cv=none; b=nobMTip0zL4rKa0n+OGHTPOImYAidyEDB01ARMRA8MYkLsIKeYdm+wRgc9m2lIFOcxlcZ/abj1bsipTa3uDAK17BoYxAh406YfxDJ3ufCOySYZoQKSLRNmA9cfLbLFdwULl9hF5udLRAoJLOu3W9iNg3NZpvsFq+IwDVINZXEKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748301470; c=relaxed/simple;
-	bh=/j09BPeE3E/NiK7v4LnFTp0Eilk8zqqtlKV3xNNcsj0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=UAnHw0p8s6IR2xzFoHmWzNgl/EqtlYuOD2JQklrEQVYVKGnsOrOSvgvM1Rrck2LVylh3p1m4OPLtHxefqZxk1HM3d8zsx6wa3WSpmG2AWu5kI4lrNwjOKrNz7qNZ1jt6PiX/IWh84y6+5OvtJhM5gpnoRl0Vwm/wnj89HLjAqWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Toydrlzg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B731DC4CEE7;
-	Mon, 26 May 2025 23:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748301470;
-	bh=/j09BPeE3E/NiK7v4LnFTp0Eilk8zqqtlKV3xNNcsj0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ToydrlzgB4/AD3R5ylHQaqRl4ZwuDOd8XUO/vXyOQKaD+BNCEtkjvG30nQds8Kcck
-	 uxdM/EeTv80EfppD02Kl6C4PUw9tRq4C88IoPUPfvt/PChD2VVh0+gtYApq3ptma4t
-	 cEdfN2IMxVM0k1m6aAi0zb+s8pLJHC5osqxdDw/6IMPNdy6DC9O+rKe9eu4uqd2Td7
-	 bE9wD58tojx1yvua91L7DXNa+w4Fh3QxrkOeGSwJOPO6S4rjmraVwPGsIRDR5Ole7k
-	 SA0EGxWootSi2CsKpF8BX6pAT9QrnmKEXZrDlS9l1Wkjkd55uY+PVvKLL7Hqoy2VsH
-	 siNYX66Wiwi7Q==
+	s=arc-20240116; t=1748306526; c=relaxed/simple;
+	bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVqaUvf/muFDaNOvlBBseF2ZbSrQ211NjMKMuZUi1fWOBju+kav0dKA3Jlq08YnWV+qSdksewGtOrNm6VGuuU2xKOPlEywLWY/zH47FK3INJPn3PvFplFr+/T8J9XEmk/JyRL2P4x9axbzfIzgJ3tCUwrZfg3emFVj6cOHm9sU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOuAdOtS; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748306525; x=1779842525;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
+  b=aOuAdOtSg0GlpjXGXelG/tzC6x/hDbIn9s4rnfquLaZHLDSbtbRUwn3W
+   wOArn8qLHkiecnYwxg6dLVTxt9t4nqSiqOqhw/DEQnTVX48OYr6wQxkUD
+   zoXgZuS0KW6sQcnLTzUj8QJLl+XtfM9ttKDOrTZ36VeA8CuNHUqXXC5KG
+   iIA3IHcrBJ13JAeDp2lAjeztW7Nlg7gR1PUq0mm7aOX9vKhsgojwc/ita
+   PxhGkH1l2hewI9pzVI+GuKWwfPRPJQMpg4RzDqNF966sDdX3NkqupmAlY
+   FkzMLYqlQWkLg6klk5i+zsKeev+HopS3ZpT6G8eNOWN6s2yCoI3HciOxN
+   Q==;
+X-CSE-ConnectionGUID: nLM45KmCSMSoJ/oHsR/CXw==
+X-CSE-MsgGUID: fhrEauUzQQqWjcrej5WuKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50163171"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="50163171"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 17:42:04 -0700
+X-CSE-ConnectionGUID: eTTSD+LqToKvDzQ0EUascQ==
+X-CSE-MsgGUID: 0VpP+OZISlmWiR6xJdGwjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="147454221"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 26 May 2025 17:42:00 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uJiOE-000Slo-0w;
+	Tue, 27 May 2025 00:41:58 +0000
+Date: Tue, 27 May 2025 08:41:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matt Roper <matthew.d.roper@intel.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+Subject: Re: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
+Message-ID: <202505270842.rZMzTQh6-lkp@intel.com>
+References: <20250526214257.3481760-6-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 01:17:37 +0200
-Message-Id: <DA6H562MA3LJ.25NISAF9FT1ZD@kernel.org>
-Cc: "Michal Rostecki" <vadorovsky@protonmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Brendan Higgins"
- <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
- <rmoar@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
- Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>, "Russ Weight"
- <russ.weight@linux.dev>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
- "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>,
- "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
- "Nathan Chancellor" <nathan@kernel.org>, "Nick Desaulniers"
- <nick.desaulniers+lkml@gmail.com>, "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Arnd
- Bergmann" <arnd@arndb.de>, "Jens Axboe" <axboe@kernel.dk>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v10 5/5] rust: remove core::ffi::CStr reexport
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-5-6412a94d9d75@gmail.com>
- <DA66OFXQCWUK.31LM78DIVABZV@kernel.org>
- <CAJ-ks9m=okC9_K2MJU80xbnO+3+Z0hvC_FYzCtzW9pD=WA_xqQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9m=okC9_K2MJU80xbnO+3+Z0hvC_FYzCtzW9pD=WA_xqQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250526214257.3481760-6-michal.winiarski@intel.com>
 
-On Tue May 27, 2025 at 12:30 AM CEST, Tamir Duberstein wrote:
-> On Mon, May 26, 2025 at 11:05=E2=80=AFAM Benno Lossin <lossin@kernel.org>=
- wrote:
->>
->> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
->> > Clean up references to `kernel::str::CStr`.
->> >
->> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->> > ---
->> >  drivers/gpu/drm/drm_panic_qr.rs   |  3 ++-
->> >  drivers/gpu/nova-core/firmware.rs |  2 +-
->> >  drivers/net/phy/ax88796b_rust.rs  |  1 +
->> >  drivers/net/phy/qt2025.rs         |  1 +
->> >  rust/kernel/device.rs             |  3 +--
->> >  rust/kernel/driver.rs             |  4 ++--
->> >  rust/kernel/error.rs              |  6 ++----
->> >  rust/kernel/faux.rs               |  5 ++++-
->> >  rust/kernel/firmware.rs           | 15 ++++-----------
->> >  rust/kernel/kunit.rs              |  6 +++---
->> >  rust/kernel/lib.rs                |  2 +-
->> >  rust/kernel/miscdevice.rs         |  3 +--
->> >  rust/kernel/net/phy.rs            |  4 +++-
->> >  rust/kernel/of.rs                 |  3 ++-
->> >  rust/kernel/pci.rs                |  2 +-
->> >  rust/kernel/platform.rs           |  2 +-
->> >  rust/kernel/prelude.rs            |  5 +----
->> >  rust/kernel/str.rs                | 22 ++++++++++------------
->> >  rust/kernel/sync/condvar.rs       |  4 ++--
->> >  rust/kernel/sync/lock.rs          |  4 ++--
->> >  rust/kernel/sync/lock/global.rs   |  5 +++--
->> >  rust/kernel/sync/poll.rs          |  1 +
->> >  rust/kernel/workqueue.rs          |  1 +
->> >  rust/macros/module.rs             |  2 +-
->> >  24 files changed, 51 insertions(+), 55 deletions(-)
->>
->> Haven't compile tested this series yet, but this commit seems to suggest
->> to me that some of the previous commits introduced code that doesn't
->> compile or emits warnings? If so that needs to be fixed.
->
-> That's not the case. There are no warnings and no compilation failures
-> in prior commits.
+Hi Michał,
 
-Ah it's because of the `pub use`... I tested it both with 1.86 and 1.78
-and aside from the `use<>` error reported by the bot everything worked.
+kernel test robot noticed the following build errors:
 
----
-Cheers,
-Benno
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus drm-xe/drm-xe-next drm-exynos/exynos-drm-next linus/master v6.15 next-20250526]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Micha-Winiarski/PCI-IOV-Restore-VF-resizable-BAR-state-after-reset/20250527-054652
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250526214257.3481760-6-michal.winiarski%40intel.com
+patch subject: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
+config: csky-randconfig-002-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505270842.rZMzTQh6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from ./arch/csky/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/mutex.h:17,
+                    from include/linux/kernfs.h:11,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/pci.h:35,
+                    from drivers/pci/iov.c:13:
+   drivers/pci/iov.c: In function 'pci_iov_vf_bar_get_sizes':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+   In file included from include/linux/build_bug.h:5,
+                    from include/linux/bitfield.h:10,
+                    from drivers/pci/iov.c:10:
+   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+>> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    resource_size_t * {aka unsigned int *}
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'resource_size_t *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/__div64_32 +199 include/asm-generic/div64.h
+
+^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  195  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @199  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
