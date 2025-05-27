@@ -1,202 +1,222 @@
-Return-Path: <linux-pci+bounces-28434-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28433-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F3B4AC45B9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 02:42:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E42DAC45B7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 02:42:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84E4D18912D5
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 00:42:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0971E1890D94
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 00:42:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C128435942;
-	Tue, 27 May 2025 00:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C5AF1DFCE;
+	Tue, 27 May 2025 00:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOuAdOtS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WtdUueUD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99982F43;
-	Tue, 27 May 2025 00:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1F32F43
+	for <linux-pci@vger.kernel.org>; Tue, 27 May 2025 00:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748306526; cv=none; b=nobMTip0zL4rKa0n+OGHTPOImYAidyEDB01ARMRA8MYkLsIKeYdm+wRgc9m2lIFOcxlcZ/abj1bsipTa3uDAK17BoYxAh406YfxDJ3ufCOySYZoQKSLRNmA9cfLbLFdwULl9hF5udLRAoJLOu3W9iNg3NZpvsFq+IwDVINZXEKg=
+	t=1748306523; cv=none; b=e0gKs29auHYp2Ob46lamCyPmNJCkAPyPeNo9DtVT3YMPVn63Cu1jig3xlxYcmm8vPNqvrGJpbSOKYFcJyntP0ZKaEz3FgbJxr3eiCX+o8vUHH/Vupbd7wMUzi3bAVaYALdmSb06PHnfG+E8QkQD4/T4IpKTtFi1ySC+y3/3Teu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748306526; c=relaxed/simple;
-	bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVqaUvf/muFDaNOvlBBseF2ZbSrQ211NjMKMuZUi1fWOBju+kav0dKA3Jlq08YnWV+qSdksewGtOrNm6VGuuU2xKOPlEywLWY/zH47FK3INJPn3PvFplFr+/T8J9XEmk/JyRL2P4x9axbzfIzgJ3tCUwrZfg3emFVj6cOHm9sU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOuAdOtS; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1748306523; c=relaxed/simple;
+	bh=IKBXPrJk050VSs/7ikjf2SgESi7p/sxDw47aJYjY3Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=QKG62s6FaliuExohcbIYZWD3GIwYMAnrFhV1TKWPAdu6d7TwC4zJqcAtWBAhngOrJCr57hJ+8rpwu9yKehymcUTPE+TV1sjwmlY1gkzVGQ6gbGsa5poE+OjJEQ94EEi+J0FrkGUMj6FKCLndsbceNJCcyq9G1FhSr4AfJzXNpew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WtdUueUD; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748306525; x=1779842525;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
-  b=aOuAdOtSg0GlpjXGXelG/tzC6x/hDbIn9s4rnfquLaZHLDSbtbRUwn3W
-   wOArn8qLHkiecnYwxg6dLVTxt9t4nqSiqOqhw/DEQnTVX48OYr6wQxkUD
-   zoXgZuS0KW6sQcnLTzUj8QJLl+XtfM9ttKDOrTZ36VeA8CuNHUqXXC5KG
-   iIA3IHcrBJ13JAeDp2lAjeztW7Nlg7gR1PUq0mm7aOX9vKhsgojwc/ita
-   PxhGkH1l2hewI9pzVI+GuKWwfPRPJQMpg4RzDqNF966sDdX3NkqupmAlY
-   FkzMLYqlQWkLg6klk5i+zsKeev+HopS3ZpT6G8eNOWN6s2yCoI3HciOxN
+  t=1748306522; x=1779842522;
+  h=date:from:to:cc:subject:message-id;
+  bh=IKBXPrJk050VSs/7ikjf2SgESi7p/sxDw47aJYjY3Oo=;
+  b=WtdUueUDxzpBjmqBpRcJ7xVpXiIhgTrQEGU2y9dteysnk8UV0mbVMW1x
+   kg/4aizvfVL4p6wpGNX3b4zdE/gUiShvTcNjiTr9zkOr5FthGHnv/vOYA
+   6igYLKqiBZ0JBr0CjWd9AAAd4mlGmPRdX+b5BU/LNnRAVMTTdLeHO3VBV
+   9hUKk82TSRUVfcxN0d8dBKCUV6rJqH47cd6h92Sd6NZRnz278v0Dl9Rwb
+   P/7iWauEYIi0A8xXbYIqQLVhLNmjBhp65NsTTdz1Res98tNmcIKsifh5G
+   YZKprTAWsA4UcLCvdzUJbzZJaonH8LvhlF930QEM1fbAZzX2KHIiSoqQa
    Q==;
-X-CSE-ConnectionGUID: nLM45KmCSMSoJ/oHsR/CXw==
-X-CSE-MsgGUID: fhrEauUzQQqWjcrej5WuKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50163171"
+X-CSE-ConnectionGUID: /L6prD/VSvuA0IJvVKvuxA==
+X-CSE-MsgGUID: /ykfTBBYSLy7Bwho1ef1dA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50163166"
 X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="50163171"
+   d="scan'208";a="50163166"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 17:42:04 -0700
-X-CSE-ConnectionGUID: eTTSD+LqToKvDzQ0EUascQ==
-X-CSE-MsgGUID: 0VpP+OZISlmWiR6xJdGwjw==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 17:42:01 -0700
+X-CSE-ConnectionGUID: YOK7bbiKQO2ioxQ8XKDZgw==
+X-CSE-MsgGUID: 1gcImiSxReaRDpVZgAKgUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="147454221"
+   d="scan'208";a="147454204"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
   by fmviesa005.fm.intel.com with ESMTP; 26 May 2025 17:42:00 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uJiOE-000Slo-0w;
+	id 1uJiOE-000Slr-1R;
 	Tue, 27 May 2025 00:41:58 +0000
-Date: Tue, 27 May 2025 08:41:21 +0800
+Date: Tue, 27 May 2025 08:41:31 +0800
 From: kernel test robot <lkp@intel.com>
-To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Matt Roper <matthew.d.roper@intel.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Subject: Re: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
-Message-ID: <202505270842.rZMzTQh6-lkp@intel.com>
-References: <20250526214257.3481760-6-michal.winiarski@intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dw-rockchip] BUILD SUCCESS
+ d3d0c2012576be2194c518bcf51c0481510e6137
+Message-ID: <202505270822.DiurI4cm-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250526214257.3481760-6-michal.winiarski@intel.com>
 
-Hi Michał,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dw-rockchip
+branch HEAD: d3d0c2012576be2194c518bcf51c0481510e6137  PCI: qcom: Replace PERST sleep time with proper macro
 
-kernel test robot noticed the following build errors:
+elapsed time: 734m
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus drm-xe/drm-xe-next drm-exynos/exynos-drm-next linus/master v6.15 next-20250526]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 129
+configs skipped: 5
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Micha-Winiarski/PCI-IOV-Restore-VF-resizable-BAR-state-after-reset/20250527-054652
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250526214257.3481760-6-michal.winiarski%40intel.com
-patch subject: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
-config: csky-randconfig-002-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505270842.rZMzTQh6-lkp@intel.com/
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                          axs101_defconfig    gcc-14.2.0
+arc                            hsdk_defconfig    gcc-14.2.0
+arc                 nsimosci_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250526    gcc-15.1.0
+arc                   randconfig-002-20250526    gcc-15.1.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                   milbeaut_m10v_defconfig    clang-19
+arm                       multi_v4t_defconfig    clang-16
+arm                   randconfig-001-20250526    gcc-6.5.0
+arm                   randconfig-002-20250526    clang-21
+arm                   randconfig-003-20250526    gcc-7.5.0
+arm                   randconfig-004-20250526    gcc-7.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250526    clang-21
+arm64                 randconfig-002-20250526    clang-19
+arm64                 randconfig-003-20250526    clang-20
+arm64                 randconfig-004-20250526    gcc-5.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250526    gcc-9.3.0
+csky                  randconfig-002-20250526    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250526    clang-19
+hexagon               randconfig-002-20250526    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250526    gcc-12
+i386        buildonly-randconfig-002-20250526    clang-20
+i386        buildonly-randconfig-003-20250526    clang-20
+i386        buildonly-randconfig-004-20250526    gcc-12
+i386        buildonly-randconfig-005-20250526    clang-20
+i386        buildonly-randconfig-006-20250526    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250526    gcc-15.1.0
+loongarch             randconfig-002-20250526    gcc-15.1.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         apollo_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ci20_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250526    gcc-5.5.0
+nios2                 randconfig-002-20250526    gcc-9.3.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250526    gcc-6.5.0
+parisc                randconfig-002-20250526    gcc-8.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                       ebony_defconfig    clang-21
+powerpc                          g5_defconfig    gcc-14.2.0
+powerpc                        icon_defconfig    gcc-14.2.0
+powerpc                     ksi8560_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250526    clang-21
+powerpc               randconfig-002-20250526    clang-18
+powerpc               randconfig-003-20250526    clang-21
+powerpc64             randconfig-001-20250526    gcc-7.5.0
+powerpc64             randconfig-002-20250526    gcc-7.5.0
+powerpc64             randconfig-003-20250526    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250526    clang-21
+riscv                 randconfig-002-20250526    clang-16
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250526    clang-18
+s390                  randconfig-002-20250526    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                          r7780mp_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250526    gcc-11.5.0
+sh                    randconfig-002-20250526    gcc-7.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250526    gcc-14.2.0
+sparc                 randconfig-002-20250526    gcc-14.2.0
+sparc                       sparc32_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250526    gcc-14.2.0
+sparc64               randconfig-002-20250526    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250526    clang-21
+um                    randconfig-002-20250526    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250526    gcc-12
+x86_64      buildonly-randconfig-002-20250526    gcc-12
+x86_64      buildonly-randconfig-004-20250526    gcc-12
+x86_64      buildonly-randconfig-005-20250526    gcc-12
+x86_64      buildonly-randconfig-006-20250526    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                  audio_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250526    gcc-12.4.0
+xtensa                randconfig-002-20250526    gcc-10.5.0
 
-All errors (new ones prefixed by >>):
-
-   In file included from ./arch/csky/include/generated/asm/div64.h:1,
-                    from include/linux/math.h:6,
-                    from include/linux/kernel.h:27,
-                    from include/linux/cpumask.h:11,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/mutex.h:17,
-                    from include/linux/kernfs.h:11,
-                    from include/linux/sysfs.h:16,
-                    from include/linux/kobject.h:20,
-                    from include/linux/pci.h:35,
-                    from drivers/pci/iov.c:13:
-   drivers/pci/iov.c: In function 'pci_iov_vf_bar_get_sizes':
-   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
-     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                                   ^~
-   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
-    1383 |         do_div(vf_len, num_vfs);
-         |         ^~~~~~
-   In file included from include/linux/build_bug.h:5,
-                    from include/linux/bitfield.h:10,
-                    from drivers/pci/iov.c:10:
-   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-     195 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^~
-   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
-    1383 |         do_div(vf_len, num_vfs);
-         |         ^~~~~~
->> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     199 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-         |                                    |
-         |                                    resource_size_t * {aka unsigned int *}
-   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
-    1383 |         do_div(vf_len, num_vfs);
-         |         ^~~~~~
-   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'resource_size_t *' {aka 'unsigned int *'}
-     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
-         |                            ~~~~~~~~~~^~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/__div64_32 +199 include/asm-generic/div64.h
-
-^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
-^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
-^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
-^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
-^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
-461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
-461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
-461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
-461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
-911918aa7ef6f8 Nicolas Pitre      2015-11-02  195  	} else if (likely(((n) >> 32) == 0)) {		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
-^1da177e4c3f41 Linus Torvalds     2005-04-16 @199  		__rem = __div64_32(&(n), __base);	\
-c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
-^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
-^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
-
--- 
+--
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
