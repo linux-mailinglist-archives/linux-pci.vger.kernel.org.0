@@ -1,151 +1,152 @@
-Return-Path: <linux-pci+bounces-28462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E19AC5218
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 17:33:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F622AC526D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 17:57:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B6851BA2484
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 15:32:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 950E38A0845
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 15:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79B227EC74;
-	Tue, 27 May 2025 15:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CBB27C84C;
+	Tue, 27 May 2025 15:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIE9v0bO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UlzknXOq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7FE27A465;
-	Tue, 27 May 2025 15:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACFE17C211;
+	Tue, 27 May 2025 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748359932; cv=none; b=DbezBKw+XHFG6seIzrhsLkByqEupoN1nIHoe8H2JUwBUuV7s4WwetazISHrnAvSXJJ02YAwz2Z18nJob9v1luqy1KgyB3KRxX/bbYpEfGhMJE3PL1m9gGlstBxpzawJda2WbA/Egl/WkyOx2B/3ecMTLUGN7Da78WLgYts4iNbk=
+	t=1748361458; cv=none; b=GF2KmrpsLd46YWqo/zlnUYDOM06QXkSrLJDqtpkUwog+YYgrdRX33Y1S5Z9XUpIJ/+qZ/NBtvdSWL3JtGu1Kn3sZlvq2R4Epo3uRnrjLqkiNYFqpVLvGy4ss2nYSw3Tgwd6SNoGOQGdKGxLNR++V7WsRW3nhMU8f+oYZj7eB2zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748359932; c=relaxed/simple;
-	bh=UE1f648Va6HLI8/Jhdv9ETvSve+kkYfIA2LFmifxheE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=By5yXHNKEsHVhZvprw3dwCkBEt9rty5ZsVbGVGtdZOlKDZ+vYMppmPI3sE8XwvC3psJBfglg2RMrVmZI50tefcPiyL57jl+WpXF/OEurtEflBfa2DkjOzIPKt+SMq7EQfX0RXegvx296GsTwm6bSZMTkHSbrzE76IX4yEbjO2aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KIE9v0bO; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-549b116321aso4755329e87.3;
-        Tue, 27 May 2025 08:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748359929; x=1748964729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6xak8pIYLubcnK6pBqvVQcKCjzEoRL1YIbbP2xw0LEs=;
-        b=KIE9v0bOs9F9uWZgzTtVUtlzDd9kxvKa66+rvGTITCqajj0DhUpOCqypSknCc1d5Di
-         uMLx4FZ78HimDzRdMTVv0qkDb26anhMp9DT222qYS/u59sVBhLoxqzgGU6me9k9srSuI
-         WSPOduWKBM9cWXZzoR1w5Ei4EwW0EDCxb3Vd9CdPtWq+jCK0N3RH3rlzkqpouxcaRVbp
-         QXLeb2Yq3ZGAdgQEtkbyaU+eQfDh4cVashiYjFvs/Fhwce7GV0dMOD4S58E9BH+kIUdS
-         HK2nYGtkYiIz40ib/ApCvcWtn81pZW9hMVYc5UNJvQFrc+mSq0SM7gxDtCsWq3He8xTS
-         py2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748359929; x=1748964729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6xak8pIYLubcnK6pBqvVQcKCjzEoRL1YIbbP2xw0LEs=;
-        b=k/1njSoHJlrWF/fRixt+ZCX9PyM3IEzRbGk39FWZhXH1nP+Cnm08OQ6R+fuzvgcKnP
-         2SoWBGqzvnCgmEFzqqhCPqVZUlqHoCvFG3PmrmqC1YcdYeY/L8yFYyJWp+DC96GxFW3r
-         BSU7H54Fact27xCnAHUtqFyhjI2CQfIx/CScbVn+PGDNxIANBZevWfL28cupDSCSYEdF
-         X9/SV+HBOF6y1edzw+9PoIy+8fAzijX1+gDJC8KItlE8wGGj5T17H+PLza+Nm2Mmrqno
-         IZ59lyse6ZfMIOE2wpJ/rvBS08ScOA+XTwTPtvHQuSVO19ITPo6KsbyZSWGxUP8wNC9U
-         dVDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDUjUMSWav+I08VqD72waGWN3gdJDkbT9/MZq3FS9EvcmJI829oc8EmwStqWMYN2z/n/K0zFJi9IAV@vger.kernel.org, AJvYcCUgtma4dxamTSOh2nejqSxUPJLn4EQUW4Eq2ym9U1BS0yQAlS8U6WIUPBZcGVPIKDOKleFJFs4k@vger.kernel.org, AJvYcCUrGz15hdU/h2ObGFclvTgKHmUQrxrnRTsZng6mtK1eG3jlBwqUjbORIPzmQSBfiJrLlrxbeyqd9O5dtOE=@vger.kernel.org, AJvYcCUrObMuxRXYbCTilv7ZwHGCDVY2XDouG8tQ0zy8jNeNkDTMJyWq5OkmQcHTOLyThtV8K++m1Bxs831cnihx@vger.kernel.org, AJvYcCV6TW0oq8NwffXM726TYP4UbPirMTVX9dSMUS5jjy54pmOmr3XrrAvGHsXe3RhWqxjAkk9FZpnzAnf0K9noNiKZ@vger.kernel.org, AJvYcCVYs3F5d2/Hh6jgloK2VcvyZz+aHOfjQdnaryq27pOwLEicKruMyXddAQyBCvoITWFtTJ4iD85oXp/0@vger.kernel.org, AJvYcCWrrS1hONpQ0m6tSI2nj5BCA2dCG5je92uABy1F7+tLbyfnyQzr+3M7+UhfMY4uh/BTF0TPiidOJzpcOqfe+sU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV9CifUze1UaUucdpnkV+dVk2FQLmjoYNA8v2n6OEJdjVt8BLY
-	IilCPAZ7rkT/H5NEwLhTfrPPGyhwP+tcN91mC+7Y1FRjkMOc93eXYS+pDhsxm+hilxgBrkXywc/
-	NXr96nPXEWQfMLgkyWEtUMAueaYyTeKw=
-X-Gm-Gg: ASbGncuxEcFy09r/bueOkQ5Cca99l4P8vDu90CHHhQ0CXpLAR96KgLCrpfGx/72CD/q
-	fAlcq1bS+Tw/zFBKkZ0iua40PxctwZdF/AzkQyi8tAIqM72zXBVa91+l11V7oRvyQAy9vKlMKA/
-	0qB7lh6qojCxZdOuBn+wWqp1tBxQjnc6UEyd2I6hHPQp+8kvcP
-X-Google-Smtp-Source: AGHT+IGvM6m4b/lOw7Cp3xhdEUvITDXLXKyTA8U5LnOCkoop3fcnfDwhYylu9Lc+nCvgTUxjeVkZb8rgZTfeSHv0dQ4=
-X-Received: by 2002:ac2:4c41:0:b0:549:38d5:8853 with SMTP id
- 2adb3069b0e04-5521c7addf9mr4617901e87.17.1748359928583; Tue, 27 May 2025
- 08:32:08 -0700 (PDT)
+	s=arc-20240116; t=1748361458; c=relaxed/simple;
+	bh=Q0upW2MgUAlLSl7j1DYmGhG7iF+PDf28Zfc2BqZQyKY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=BGmSMxWS5v4fxr/6CPuIbWdCHCTkG/RUjdfvxm7ekBLaTRn+HBQomK13BEywXyLI/6TirVcy0Y1eDh1Z8fkklKuJvdf0FX6b/y7DzNOuwNgZQYqtvbCTH1uWXFldIj7Cb8nny56+otGdaQnDIgNhFs7PGlcqE6u2n0jgCUIQ1+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UlzknXOq; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id E5D8A206B777; Tue, 27 May 2025 08:57:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E5D8A206B777
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748361455;
+	bh=JH1E9Bklt4LVBdscDmCNneQkD0i97h9Q61pIEzzDQhY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UlzknXOqRG7NQgSHOJgt8ZTtGtcR+GKwQITawsfWJDPB6f9OcsExOlYxs6tUG22hm
+	 m19qBZS3e3f+4fppKD5ePhMrYCr4Dern3Tjw4ztcFAYVLUUz/yVl7sBV4mdb+OulMs
+	 xK4EHtz81dsfKvHDF98MfdCYS+U7QTWePxBB9a0Y=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: 
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
+Date: Tue, 27 May 2025 08:57:33 -0700
+Message-Id: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-4-6412a94d9d75@gmail.com> <DA66NJXU86M4.1HU12P6E79JLO@kernel.org>
- <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com> <DA6GWYHOSTWH.1OBQV7XCU2643@kernel.org>
-In-Reply-To: <DA6GWYHOSTWH.1OBQV7XCU2643@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 27 May 2025 11:31:32 -0400
-X-Gm-Features: AX0GCFuUtwm-Eot6MMjkQOKkHLHoljek9W49DxDhFIb7DRDERITQ1VimQxG0kN0
-Message-ID: <CAJ-ks9=gW_viqDMQwyVeGfT9821tfZ7w-4Tycd7e7bZ3xKwXRw@mail.gmail.com>
-Subject: Re: [PATCH v10 4/5] rust: replace `kernel::c_str!` with C-Strings
-To: Benno Lossin <lossin@kernel.org>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 26, 2025 at 7:07=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> On Tue May 27, 2025 at 12:29 AM CEST, Tamir Duberstein wrote:
-> > On Mon, May 26, 2025 at 11:04=E2=80=AFAM Benno Lossin <lossin@kernel.or=
-g> wrote:
-> >> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
-> >> > +macro_rules! c_str_avoid_literals {
-> >>
-> >> I don't like this name, how about `concat_to_c_str` or
-> >> `concat_with_nul`?
-> >>
-> >> This macro also is useful from macros that have a normal string litera=
-l,
-> >> but can't turn it into a `c""` one.
-> >
-> > Uh, can you give an example? I'm not attached to the name.
->
-> There is one in this patch (:
->
->     diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
->     index e5621d596ed3..09148e982f48 100644
->     --- a/rust/kernel/kunit.rs
->     +++ b/rust/kernel/kunit.rs
->     @@ -58,9 +58,10 @@ macro_rules! kunit_assert {
->                      break 'out;
->                  }
->
->     -            static FILE: &'static $crate::str::CStr =3D $crate::c_st=
-r!($file);
->     +            static FILE: &'static $crate::str::CStr =3D $crate::c_st=
-r_avoid_literals!($file);
+In this patchset we want to enable the MANA driver to be able to
+allocate MSI-X vectors in PCI dynamically.
 
-Great point, and an easy one to replace with a c-string literal. Done in v1=
-1.
+The first patch exports pci_msix_prepare_desc() in PCI to be able to
+correctly prepare descriptors for dynamically added MSI-X vectors.
+
+The second patch adds the support of dynamic vector allocation in
+pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+flag and using the pci_msix_prepare_desc() exported in first patch.
+
+The third patch adds a detailed description of the irq_setup(), to
+help understand the function design better.
+
+The fourth patch is a preparation patch for mana changes to support
+dynamic IRQ allocation. It contains changes in irq_setup() to allow
+skipping first sibling CPU sets, in case certain IRQs are already
+affinitized to them.
+
+The fifth patch has the changes in MANA driver to be able to allocate
+MSI-X vectors dynamically. If the support does not exist it defaults to
+older behavior.
+---
+ Change in v4
+ * add a patch describing the functionality of irq_setup() through a 
+   comment
+ * In irq_setup(), avoid using a label next_cpumask:
+ * modify the changes in MANA patch about restructuring the error
+   handling path in mana_gd_setup_dyn_irqs()
+ * modify the mana_gd_setup_irqs() to simplify handling around
+   start_irq_index
+ * add warning if an invalid gic is returned
+ * place the xa_destroy() cleanup in mana_gd_remove
+---
+ Changes in v3
+ * split the 3rd patch into preparation patch around irq_setup() and
+   changes in mana driver to allow dynamic IRQ allocation
+ * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
+   controller
+---
+ Changes in v2
+ * split the first patch into two(exporting the preapre_desc
+   func and using the function and flag in pci-hyperv)
+ * replace 'pci vectors' by 'MSI-X vectors'
+ * Change the cover letter description to align with changes made
+---
+
+Shradha Gupta (5):
+  PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
+  PCI: hv: Allow dynamic MSI-X vector allocation
+  net: mana: explain irq_setup() algorithm
+  net: mana: Allow irq_setup() to skip cpus for affinity
+  net: mana: Allocate MSI-X vectors dynamically
+
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 356 ++++++++++++++----
+ drivers/pci/controller/pci-hyperv.c           |   5 +-
+ drivers/pci/msi/irqdomain.c                   |   5 +-
+ include/linux/msi.h                           |   2 +
+ include/net/mana/gdma.h                       |   8 +-
+ 5 files changed, 293 insertions(+), 83 deletions(-)
+
+-- 
+2.34.1
+
 
