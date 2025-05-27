@@ -1,120 +1,101 @@
-Return-Path: <linux-pci+bounces-28473-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28474-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0575AC5AC4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 21:33:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 56755AC5AD7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 21:35:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A606D16C2D3
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 19:33:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FAD116BD8A
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 19:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93DAF27FD78;
-	Tue, 27 May 2025 19:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13BD2882B4;
+	Tue, 27 May 2025 19:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKg/Mn1I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+sSydqP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1C17A314;
-	Tue, 27 May 2025 19:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D9412B93;
+	Tue, 27 May 2025 19:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374429; cv=none; b=X8hktnFo3iwKMmDx0BuLgORzB7TctTsAvRRl1iCIxCK5KPKn2IzvXOmzhHcMv5PpJ5TiCkJ5c3tcn9AgBq96fk78IiZaW2LJ5k5wHJZCife34j6+hlxZdRekKDA8hjaVbHLkCa/LAMs/hBZ7C2/ufRKJyI6pRwlb5stJY32s40c=
+	t=1748374552; cv=none; b=boCFlB8+tpzkohdBxyOF9lju6dOTK6IHUiXBAbcqD1sGIuBRY36alsEGrLCRuL+kdjVyrKUsteOw531kAN+7dF7FYmUUX1D1LrQXqT7eKot754a3Yy9/q2H9YGQZl69rOqQHYlVvUUMC7Dvme6c0Kl9RwWnAN2VuIxEbEIuch4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374429; c=relaxed/simple;
-	bh=wZgm6b+aaYaDHSCtiEqey06T+bU5xLWsquPRNzTnwAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OEGa+7DMlbTAtE7L63xAJV+kXg7IVIirQM+9lIsSCukjQIlzV2cMAES12tKRSydP8TyeVkPgvIYOtFDT+ZRHR12vfjNch+GgauE6Fe25swtsLBZydHY2dwfsnqi16dWaOQ6gQmYy8jkBekCxy3uT/Wut8ffOUALpTuAubNPVaRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XKg/Mn1I; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87e049bb3e4so1093361241.0;
-        Tue, 27 May 2025 12:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748374427; x=1748979227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mDW7FpZdddVN8iP+dZ71T1ANA9fYJqbCRdgup6n4kvE=;
-        b=XKg/Mn1IvmxJp09xlzp5XyWi2FnmCUPlVePP8Ecujwp/pZGVRb9R+Y8E2WAzxlV4Gt
-         7FXMFDP+y7XMa2YQ1d523VaNUCPxqgXkQK3jGKQ1hBsu6dRpTunIpD5rK2i2paDRzzBT
-         6iGoGlGZYGr6ywLVh0GJKTe7oVekeaM/1d1drOhrxJP1n8fOAc87xYG2DBm3UR1NBqNb
-         pSK/S8eYIDQ3m6MEI2gN4/lufoMuAEhgUqD9HKncjtC5WLGXt0s/xSqOg1h8lIoaO+gk
-         NpZ1MotAsrMcbp7OQMAzvwTNKUkhyhdzPRBFTTu9zLTmylW6MfyaVqUSvp3+TV5Ukbf5
-         fGeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748374427; x=1748979227;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mDW7FpZdddVN8iP+dZ71T1ANA9fYJqbCRdgup6n4kvE=;
-        b=KvIDWN91V/SiEkNI36jntBCSnmAD2YnRBSUAJ8l6uT0nNosuJf3+G/ulU0XvrRBpki
-         4P6INHdDa+2fZ7/PoslTqdv6mTXBMvQ5plkpbAg2B6q2KZ2MMHfliJpe3fWJBe1UxetA
-         OdWbXmlh75DQJfMwqdd3Mfk0FUwDrc6XrqE6WGtY4xd3WCp0h6b+kYIuGP/mDLwuLEat
-         ZXzWyxttqY1iKzO4M+GX9tFfMFKjm4i6ZpKCxOR/VHcS7PNEkfTGs95rz8TiogUY9xVy
-         atVaFTzSTEtUJh78zmEjd1fdXu26vRW1RutNVxA73i1X+BM02k1qP8vyk3PlOFWescQC
-         uaXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKAgehCABi/hf56+1X+xY36t2TCDTABddg60iHwhzjBEj72rp8riIH05Izd2cEA2p+5dkL8uiXg0rbDWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywDUMHWYY7uugPWQQTOm7Bw419vazEvyYiXY04ZOw2HaWaK9UU
-	v7pLGemxJM5wYolqQ2wvx+/SNwf4za/vZbFayVGRtiERIpyMZZjAZUuhnDszbJEs
-X-Gm-Gg: ASbGncu+7pxEq0aY2jtNFycPrHtRx6h47EQu2JkbaY7tqrraBTrM+sLpbPTIZXyCou+
-	4c5IIJWLmAfUBReblA5cHz6LYMmyr/PuoAbXhQE18yoTfH7lEL03xVyxf8B9cDVlJFQ5DHYASO7
-	okeJadEy8VQO4MuNYeOeMpB7E+j7Ho6f86qHM2IX8f2kPxx9oa4uQpqWOU/taYXT8TCPO1wBGkG
-	jq8/nQEQg2IG8Evdmoc6TrrkS5rVoSF7zP55VnSzcoETBWzUh9WqWj/JxG8huT0p5ECVY4uMm8u
-	YEP+5CHgzyVBENayghFYGtic1THmYGB20nH3kegRBiip+b5mdz1aWS1OV4qJfA==
-X-Google-Smtp-Source: AGHT+IHleVfAYbprBkha7Sxd/HbDmeea5NfDCG1nXZZh+m5RwRGihOKTx5xoyAae/DidOgdg6N81wQ==
-X-Received: by 2002:a05:6102:c04:b0:4e5:9b5f:a7a2 with SMTP id ada2fe7eead31-4e59b5fa9admr784991137.9.1748374426799;
-        Tue, 27 May 2025 12:33:46 -0700 (PDT)
-Received: from pop-os.. ([201.49.69.163])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e1d329b4dsm22294241.0.2025.05.27.12.33.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 12:33:46 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: bhelgaas@google.com,
-	ngn@ngn.tf
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Subject: [PATCH] PCI: hotplug: remove resolved TODO
-Date: Tue, 27 May 2025 16:33:37 -0300
-Message-Id: <20250527193337.144148-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748374552; c=relaxed/simple;
+	bh=h4zhoTMI38sWqikCbt4K2joSWNXLc0BKXMI8jK3thK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ce3ntRg3LtC2RfocnAw7nKBYSTDYLtaU041dJmn88DOnsV9/gP0QRYopY7qYEumclCV6bF8bgOWeXrh67ty2Oaj7lwTFwCip9rvJbsHaXIAjbql1b2EXnNSkKy3V0+ZSajbmIwkIbcs9IcN1fhz+GFaGsHCX9Dd3dw5VOM64cM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+sSydqP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF79C4CEE9;
+	Tue, 27 May 2025 19:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748374552;
+	bh=h4zhoTMI38sWqikCbt4K2joSWNXLc0BKXMI8jK3thK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p+sSydqP5tn9jeoRxzdTngtlfBBVE6Cl+O5HAaayPvtMv5LSsjRXdR5A79KFXAHyc
+	 dR3OFtSGo0VJoXb+xzGazN/EXH7FH9VW/7nbJjIjOscTssd+ebtXqPA/sp7tqAMYh0
+	 5tHfqhfV/TNlTFkNY2katYbMI2tDjm5kzWK+DGWCUpERnlQtJ8vPKB0GQWXLXByVat
+	 dqWrgGtcaMv0NzF6jWkwTP0SySyHoHMvj9Ggck3WQuejZD2z394r7MYSEuODmBaO2y
+	 WyFrf+mO8TNNuJE1huH7+Zrz3DRhXyqbFq32/j/BJUAwOiuClVeHrb7R2u2ZSYNC6W
+	 iQzZ+3NdFAEwA==
+Date: Tue, 27 May 2025 14:35:50 -0500
+From: Rob Herring <robh@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: Extend max-link-speed to support
+ PCIe Gen5/Gen6
+Message-ID: <20250527193550.GA1104855-robh@kernel.org>
+References: <20250519160448.209461-1-18255117159@163.com>
+ <20250519160448.209461-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519160448.209461-2-18255117159@163.com>
 
-The commit 8ff4574cf73d ("PCI: cpcihp: Remove unused .get_power() and
-.set_power()") and commit 5b036cada481 ("PCI: cpcihp: Remove unused
-struct cpci_hp_controller_ops.hardware_test") is resolved this TODO.
+On Tue, May 20, 2025 at 12:04:46AM +0800, Hans Zhang wrote:
+> Update the device tree binding documentation for PCI to include
+> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
+> The original documentation limited the value to 1~4 (Gen1~Gen4),
+> but the kernel now supports up to Gen6. This change ensures the
+> documentation aligns with the actual code implementation.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Remove this obsolete TODO notes.
+This file is now removed. Update the schema if you need to. It lives in 
+dtschema project.
 
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- drivers/pci/hotplug/TODO | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-index 92e6e20e8595..7397374af171 100644
---- a/drivers/pci/hotplug/TODO
-+++ b/drivers/pci/hotplug/TODO
-@@ -2,10 +2,6 @@ Contributions are solicited in particular to remedy the following issues:
- 
- cpcihp:
- 
--* There are no implementations of the ->hardware_test, ->get_power and
--  ->set_power callbacks in struct cpci_hp_controller_ops.  Why were they
--  introduced?  Can they be removed from the struct?
--
- * Returned code from pci_hp_add_bridge() is not checked.
- 
- cpqphp:
--- 
-2.34.1
-
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 6a8f2874a24d..5ffd690e3fc7 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
+>     If present this property specifies PCI gen for link capability.  Host
+>     drivers could add this as a strategy to avoid unnecessary operation for
+>     unsupported link speed, for instance, trying to do training for
+> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+> -   for gen2, and '1' for gen1. Any other values are invalid.
+> +   unsupported link speed, etc.  Must be '6' for gen6, '5' for gen5, '4' for
+> +   gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other values are
+> +   invalid.
+>  - reset-gpios:
+>     If present this property specifies PERST# GPIO. Host drivers can parse the
+>     GPIO and apply fundamental reset to endpoints.
+> -- 
+> 2.25.1
+> 
 
