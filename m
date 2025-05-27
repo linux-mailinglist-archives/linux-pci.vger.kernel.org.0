@@ -1,275 +1,201 @@
-Return-Path: <linux-pci+bounces-28476-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28477-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CA07AC5BA3
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 22:50:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7994AC5C1B
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 23:22:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2DC87A849F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 20:48:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38AFA9E2C6D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 21:22:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064F520E034;
-	Tue, 27 May 2025 20:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C57C212D7D;
+	Tue, 27 May 2025 21:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZrC8roU"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H69psyHK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D5520C48D;
-	Tue, 27 May 2025 20:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECE320966B
+	for <linux-pci@vger.kernel.org>; Tue, 27 May 2025 21:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748378989; cv=none; b=a9d/+pNEMA0ffKJsr4TGJm2vZpMd17BR1jK+sTWs52sJXlLY0oHCupzSeEXpNyC+kgeofUsuxHTis4bDjaXrRQfJRSx8EPFOottVDFBU6U9v7t7LvPGZBuwa/doSz+LShq+lmU51XCm6Fy8iPOJW3w5XZKrZQReF0igFPGhQSAs=
+	t=1748380971; cv=none; b=XRWhcmqRldzNIFguSo69QAzSWLRcA2CrQCEOXfZl+/d8Is4pQbAiL/qnCTIy2Ms8bf3B5HrYNHI0JZCA69rT6uwbpvWLTPMDBDjCWPY+Biiers0f+mhPlJ80jHfw1xunnccQITpIYXK1igsbbGXnKxblkc80PHmQHmFBkY9t+eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748378989; c=relaxed/simple;
-	bh=AU9LU7Nfj9orPVkMVTA/U57FFt4iUo111sXVjNeMwhA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TmzW9J53YcyJkfpPhzh+9+U74GOtRw3GOd0YLQaAx/WqFPfd1VUohIc9yei/6Jp7A84LrtPExhLvTuJ+kAY/bZieQM2NEfEE7Bc5JDZS30KSyziuVYqqvAtwf50vxyyIwSgH67KWp8flCrypk5MCp01eu/2PRjDKV3hh/Q5IIaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZrC8roU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926C0C4CEE9;
-	Tue, 27 May 2025 20:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748378989;
-	bh=AU9LU7Nfj9orPVkMVTA/U57FFt4iUo111sXVjNeMwhA=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=fZrC8roUMokBYhflU/jyR8KKzKXFLL0o3LZTrRmKy1rZn7MPtTMJKlmei9wGWFtKx
-	 awwyhFAbRLFB/rdLuB9QzwI5TrILJVlQ3x8gcyZw2qp4xV9pc6qacWH7KVoRDzn21O
-	 AuqlrgQPpPJPQqS48ObY/2BDrx2trlDnhwFnd3NytpV9aPvnv5KIJF50yMGDeTrhc1
-	 L/zRSIE1TY3Vtv6/1CaynsrFDTRo4pc3C0ObsCZrtks1PVTGAwp4yg6FCH6oBHDIUb
-	 9ALlGXQbcEWzWDDjL7+aE7/dbeemgdE984ysWfkZWCXv4hSv6k2Bra0ejPACNkkFNY
-	 ggYxYHyAsAymw==
+	s=arc-20240116; t=1748380971; c=relaxed/simple;
+	bh=CmXNjfU2YBa1jt2Z+F/46nl2cI2JRC7z389h5i3eWiA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nShUVUwKLqgNe0PN8bxs7tC+bsxoR1auoWN/sWpX4V2FeCKI5XSqhcfQJF/G3oNqQy7/W+P4v7rP0mdBvB4hB2k2ceAGv+SYGEuxR+zSLqmp2CnE6Vx+yoat+vQ9h9+Xl6iD+aH0BVrql6N3140e1gZcQxRrDc6h8iT/ux3cLCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H69psyHK; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6045a3a2c5eso3976918a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 27 May 2025 14:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748380967; x=1748985767; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
+        b=H69psyHKbQd+b1T7e2t1AoZ7tFyB8lK5HSQmjuD4D/7k4SnwZHcfu1urhxpPqWYzwc
+         qw3Da9W98rPjPC8ZszP9Mcd5P2DBqssZl30GNyhWM66Yb/IdMXGAQXObQO1lNdzTw7zu
+         yLWwhTGy04iCD04EUbey1mHl7vQs8uiYqk+b+VEatSNwgPTfVN+XHTWFz5wHHdQf6t78
+         PfPNlOGGSo3fYrlwSkDTATULV6VvjZ7Vjd6ezZOhT3c3ch9kFOIPjD4Zyk5hAsXvZEjY
+         FU2Gda7Cf1knFTS16k5nMmS7BMg/rG2zpr5I7z8D3yy+na7KjrTQRVXitX4ZsZLNHJO0
+         BFDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748380967; x=1748985767;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
+        b=JtxSTsbz7qcHcpazpoQWQ3yJw32KQvBDjVLMqbqLQdU41/iRMHrKG26uXIp2h6My9G
+         In57YR3gPQEqJTEkmBet2s4PO11EK4sAiIdaMK7dVB26GV0iK+1QAl+6YxsuhMoNykaJ
+         wfnpdBwHFSYwXRWetxRHZiIiqb+YI9lzksf0oFPdwnG6fgov7KH+7vQ2+xIX6keHPUD5
+         jLLKun2hzB/HhdGJEaXvu6yDD/WBKG8nJlh0rfZFCH0pIR5tJFtjBrw9mFyrlXHNTQ7n
+         WsrtFRQuYpJ0XXEi5rcT3+OTeuMMuzr26qssR+d/ktYQFG8fVZzlQ1Md4HwcewoWuf0R
+         n0dA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqHM+334vycJtp+xyGMPtANA2k02TnCksKs2ABDqaFEXOEhtALAjKzhpN4UtA4jpX3R62V0ZWnMeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUThQxiFJS5/XdcdNQ0b1JF5tWdSDl1g0+xAbM85IzLplD2qdZ
+	iyRk51Op6sHMbuR8Q3VoT0JgW0raY48JQgOalQSr6PHsTIN0qze63PYKYDcrNPO3/8A=
+X-Gm-Gg: ASbGncvKiINj5GJycIyNewTAflGSnal2thKWNiVwb3wvMyuYP+D2GtRfJ5h7C1ly/hC
+	46C9ndodQFEwPsPZUyUumBZZUhbXof2G1q4FFLPy0lsnVQ8jI1wD2ADbZxoogU7QJoOgbeWl7H0
+	w7Iop/hoE/FX6hAKWg/hzqPN5t8KF4MEpFPz/2/gbYGWi23zcwyFv3w0vy1LuRDkRTE8s0PMBrG
+	ha8h2Kr61T5cpvRHRyHPM4ICPK/n+YLBUZbrRELpLA3KRumtNBEFn2xTsfnlb1w1G0fB3FOjTIM
+	eLy/Kve4BEZ4eEF/LhbqfUAht9lQGk2Jv5NokmNkep7K+3K3vyld9QtsTHNx6QZB+hgZfwaKgrp
+	BGahCGFj8Lcsdn1hPe3hfvSG/HwcSdUID
+X-Google-Smtp-Source: AGHT+IFERg8h0M0q68ymhrrsY3ViILpvzLyzrWuNOWeP4SVGe1Wg+ZNpOzN/Rnmv7ShgttQHfLkmmw==
+X-Received: by 2002:a05:6402:1d4b:b0:601:f185:fc2 with SMTP id 4fb4d7f45d1cf-602d8e5e352mr13569888a12.3.1748380967163;
+        Tue, 27 May 2025 14:22:47 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60517a7f920sm128296a12.53.2025.05.27.14.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 14:22:46 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 27 May 2025 23:24:20 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Matthias Brugger <mbrugger@suse.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+Message-ID: <aDYthG54Wz3khQ88@apocalypse>
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse>
+ <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+ <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 22:49:36 +0200
-Message-Id: <DA78MDRNCNB8.X69904APMYCB@kernel.org>
-Cc: "Michal Rostecki" <vadorovsky@protonmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Brendan Higgins"
- <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
- <rmoar@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
- Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>, "Russ Weight"
- <russ.weight@linux.dev>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
- "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>,
- "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
- "Nathan Chancellor" <nathan@kernel.org>, "Nick Desaulniers"
- <nick.desaulniers+lkml@gmail.com>, "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>,
- "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Arnd
- Bergmann" <arnd@arndb.de>, "Jens Axboe" <axboe@kernel.dk>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com>
- <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
- <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com>
- <DA6GSMHMLRFM.YH9RGZWLY2X4@kernel.org>
- <CAJ-ks9nTf4dCoDdg4+YSkXM1sJsZ-0vuSC7wybc2JMAoGemhXQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9nTf4dCoDdg4+YSkXM1sJsZ-0vuSC7wybc2JMAoGemhXQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
 
-On Tue May 27, 2025 at 5:02 PM CEST, Tamir Duberstein wrote:
-> On Mon, May 26, 2025 at 7:01=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
-wrote:
->> On Tue May 27, 2025 at 12:17 AM CEST, Tamir Duberstein wrote:
->> > On Mon, May 26, 2025 at 10:48=E2=80=AFAM Benno Lossin <lossin@kernel.o=
-rg> wrote:
->> >> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
->> >> > +impl_display_forward!(
->> >> > +    bool,
->> >> > +    char,
->> >> > +    core::panic::PanicInfo<'_>,
->> >> > +    crate::str::BStr,
->> >> > +    fmt::Arguments<'_>,
->> >> > +    i128,
->> >> > +    i16,
->> >> > +    i32,
->> >> > +    i64,
->> >> > +    i8,
->> >> > +    isize,
->> >> > +    str,
->> >> > +    u128,
->> >> > +    u16,
->> >> > +    u32,
->> >> > +    u64,
->> >> > +    u8,
->> >> > +    usize,
->> >> > +    {<T: ?Sized>} crate::sync::Arc<T> {where crate::sync::Arc<T>: =
-fmt::Display},
->> >> > +    {<T: ?Sized>} crate::sync::UniqueArc<T> {where crate::sync::Un=
-iqueArc<T>: fmt::Display},
->> >> > +);
->> >>
->> >> If we use `{}` instead of `()`, then we can format the contents
->> >> differently:
->> >>
->> >>     impl_display_forward! {
->> >>         i8, i16, i32, i64, i128, isize,
->> >>         u8, u16, u32, u64, u128, usize,
->> >>         bool, char, str,
->> >>         crate::str::BStr,
->> >>         fmt::Arguments<'_>,
->> >>         core::panic::PanicInfo<'_>,
->> >>         {<T: ?Sized>} crate::sync::Arc<T> {where Self: fmt::Display},
->> >>         {<T: ?Sized>} crate::sync::UniqueArc<T> {where Self: fmt::Dis=
-play},
->> >>     }
->> >
->> > Is that formatting better? rustfmt refuses to touch it either way.
->>
->> Yeah rustfmt doesn't touch macro parameters enclosed in `{}`. I think
->> it's better.
->
-> OK, but why? This seems entirely subjective.
+Hi Florian,
 
-If more types are added to the list, it will grow over one screen size.
-With my formatting, leaving related types on a single line, that will
-only happen much later.
+On 09:18 Tue 27 May     , Florian Fainelli wrote:
+> On 5/26/25 07:06, Matthias Brugger wrote:
+> > 
+> > 
+> > On 12/05/2025 18:42, Andrea della Porta wrote:
+> > > Hi Florian,
+> > > 
+> > > On 15:02 Mon 12 May     , Florian Fainelli wrote:
+> > > > On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta
+> > > > <andrea.porta@suse.com> wrote:
+> > > > > Hi Florian, to accept the patches, what would work best for you?
+> > > > > 
+> > > > > 1) Send only the relevant updated patches (maybe as an entirely new
+> > > > > patchset with
+> > > > >    only those specific patches)
+> > > > 
+> > > > Only the updated patches work for me. I don't think there is
+> > > > that much coupling between the DT changes and the non-DT changes
+> > > > (other than without DT entries nothing is activated)
+> > > 
+> > > It's a little bit more involved than that:
+> > > 
+> > > - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+> > >    depends on 1 (clock binding header). Should be taken by Greg.
+> > 
+> > Greg gave an Acked-by so I think Florian is good to take that patch.
+> > Which leaves us to the clock patches (driver + dt-bindings).
+> > 
+> > > 
+> > > - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+> > >    depends on 1 (clock binding header). Should be taken by Florian.
+> > > 
+> > > - Patch 4 (clock driver) depends on 1 (clock binding header) and
+> > >    should be taken by Stephen.
+> > > 
+> > 
+> > Steven reviewed the patches (driver + dt-binding) so he is waiting for a
+> > new version which addresses the review. He offered to either take them
+> > and provide a branch that Florian can merge into his branch or provide a
+> > Acked-by tag.
+> > 
+> > @Florian what would you prefer?
+> 
+> I am fine either way, it's definitively simpler if I can take all of the
+> patches in the respective Broadcom ARM SoC branches, but pulling a branch
+> from another maintainer's tree works just as well.
+> 
+> Andrea, sorry to ask you this, can you post a v10 and we aim to get that
+> version applied?
 
->> >> > +/// Please see [`crate::fmt`] for documentation.
->> >> > +pub(crate) fn fmt(input: TokenStream) -> TokenStream {
->> >> > +    let mut input =3D input.into_iter();
->> >> > +
->> >> > +    let first_opt =3D input.next();
->> >> > +    let first_owned_str;
->> >> > +    let mut names =3D BTreeSet::new();
->> >> > +    let first_lit =3D {
->> >> > +        let Some((mut first_str, first_lit)) =3D (match first_opt.=
-as_ref() {
->> >> > +            Some(TokenTree::Literal(first_lit)) =3D> {
->> >> > +                first_owned_str =3D first_lit.to_string();
->> >> > +                Some(first_owned_str.as_str()).and_then(|first| {
->> >> > +                    let first =3D first.strip_prefix('"')?;
->> >> > +                    let first =3D first.strip_suffix('"')?;
->> >> > +                    Some((first, first_lit))
->> >> > +                })
->> >> > +            }
->> >> > +            _ =3D> None,
->> >> > +        }) else {
->> >> > +            return first_opt.into_iter().chain(input).collect();
->> >> > +        };
->> >>
->> >> This usage of let-else + match is pretty confusing and could just be =
-a
->> >> single match statement.
->> >
->> > I don't think so. Can you try rewriting it into the form you like?
->>
->>     let (mut first_str, first_lit) match first_opt.as_ref() {
->>         Some(TokenTree::Literal(lit)) if lit.to_string().starts_with('"'=
-) =3D> {
->>             let contents =3D lit.to_string();
->>             let contents =3D contents.strip_prefix('"').unwrap().strip_s=
-uffix('"').unwrap();
->>             ((contents, lit))
->>         }
->>         _ =3D> return first_opt.into_iter().chain(input).collect(),
->>     };
->
-> What happens if the invocation is utterly malformed, e.g.
-> `fmt!("hello)`? You're unwrapping here, which I intentionally avoid.
+No problem, just to avoid any confusion I'll summarize what-goes-where with
+respect to branches in your repo broadcom/stblinux, so I can adapt each patch
+to the relevant branch:
 
-That example won't even survive lexing (macros always will get valid
-rust tokens as input). If a literal begins with a `"`, it also will end
-with one AFAIK.
+- dt-binding/DTS (patch 1,2,3,6,8,9,10) -> devicetree/next
+- defconfig (patch 11,12) -> defconfig/next
+- drivers (patch 4,5,7) -> drivers/next or soc/next?
 
->> Yes it will error like that, but if we do the replacement only when the
->> syntax is correct, there also will be compile errors because of a
->> missing `Display` impl, or is that not the case?
->
-> I'm not sure - I would guess syntax errors "mask" typeck errors.
+Also, should I split any patches that have MAINTAINERS changes so you can apply
+them to your maintainers/next branch? Those are patches 4,5,6,7.
 
-I checked and it seems to be so, that's good.
+Many thanks,
+Andrea
 
->> >> > +                    first_str =3D rest;
->> >> > +                    continue;
->> >> > +                }
->> >> > +                let name =3D name.split_once(':').map_or(name, |(n=
-ame, _)| name);
->> >> > +                if !name.is_empty() && !name.chars().all(|c| c.is_=
-ascii_digit()) {
->> >> > +                    names.insert(name);
->> >> > +                }
->> >> > +                break;
->> >> > +            }
->> >> > +        }
->> >> > +        first_lit
->> >>
->> >> `first_lit` is not modified, so could we just the code above it into =
-a
->> >> block instead of keeping it in the expr for `first_lit`?
->> >
->> > As above, can you suggest the alternate form you like better? The
->> > gymnastics here are all in service of being able to let malformed
->> > input fall through to core::format_args which will do the hard work of
->> > producing good diagnostics.
->>
->> I don't see how this is hard, just do:
->>
->>     let (first_str, first_lit) =3D ...;
->
-> It requires you to unwrap, like you did above, which is what I'm
-> trying to avoid.
-
-How so? What do you need to unwrap?
-
->> >> > +    };
->> >> > +
->> >> > +    let first_span =3D first_lit.span();
->> >> > +    let adapt =3D |expr| {
->> >> > +        let mut borrow =3D
->> >> > +            TokenStream::from_iter([TokenTree::Punct(Punct::new('&=
-', Spacing::Alone))]);
->> >> > +        borrow.extend(expr);
->> >> > +        make_ident(first_span, ["kernel", "fmt", "Adapter"])
->> >> > +            .chain([TokenTree::Group(Group::new(Delimiter::Parenth=
-esis, borrow))])
->> >>
->> >> This should be fine with using `quote!`:
->> >>
->> >>     quote!(::kernel::fmt::Adapter(&#expr))
->> >
->> > Yeah, I have a local commit that uses quote_spanned to remove all the
->> > manual constructions.
->>
->> I don't think that you need `quote_spanned` here at all. If you do, then
->> let me know, something weird with spans is going on then.
->
-> You need to give idents a span, so each of `kernel`, `fmt`, and
-> `adapter` need a span. I *could* use `quote!` and get whatever span it
-> uses (mixed_site) but I'd rather retain control.
-
-Please use `quote!` if it works. No need to make this more complex than
-it already is. If it doesn't work then that's another story.
-
----
-Cheers,
-Benno
+> Thanks!
+> -- 
+> Florian
 
