@@ -1,200 +1,175 @@
-Return-Path: <linux-pci+bounces-28438-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE29BAC47CC
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 07:50:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 332FAAC4949
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 09:21:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 819EF1893AC0
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 05:50:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7250B17AFDE
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 07:21:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9951D5145;
-	Tue, 27 May 2025 05:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6110A225414;
+	Tue, 27 May 2025 07:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BdxKKiDk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021080.outbound.protection.outlook.com [52.101.129.80])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5727713AD3F
-	for <linux-pci@vger.kernel.org>; Tue, 27 May 2025 05:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748325008; cv=fail; b=Oh+LHjb/bjA1oGHP8vubfiETyVgRWahLxOGgSP6AuMz7yopJmsTl1AA6iRd3yO+jYbeMf1QCZHLCA+V4Jm6pGOH6isqQa9+W2fESlxlNlVT6P/3VRnjFFXJ8No0ZPL1DCiO+YbQKwg5bHB5SXkhkDcrjCpmOKcOP24ba+dRjUng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748325008; c=relaxed/simple;
-	bh=rzN41XowvwPDnkkV87NJLsQuYZn8TgNrRTebcTa+LPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rxx0PREGqZTAKKm5YqbOLYMw1S/uJ+MvzgWECYm4hEOkOY978WePuWrbsQKDbWFobrxJJ0tApRhwGskpmNoKLCCSSesOduY6ZbBi5DF7KrCJXuSIEkFFiEVjHP9+EaVH5T/4URqgQRs2dWFufi+x4wZqGDrm8tsNWfkhWEWvZPM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cEWmJkaby7GqNRAAz56+gllfim0qicOm14SumICZCkjWLABcR3nd60Mtea/fHUuvDOo9ohNvCp0so2YuvP9U/A02zDuFNIwWys04CWXYA7STbW6IP+sEt77D8pL9Zkn1b0+II97170ucnCbz47+izGuM5ambP79+Jx1QXPaQ94NzMAbi7DmUDSzLkaMTzk+XI+JWJ0n5dX/BLr59wT8fL6XEbeFCRLtWfS4OVkZITRSkcx/Qs3Q5s8hxJJ6lOZF4cXHuucku67DaAh/oU2Gi3nZ4gZUGQoI2trPG33k4z6XcMNZjsOXm3EHIt7Cpbl8R0tp5Q77nmaNNyDsmkf5WeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4OrrB3ImCCsbdSScX4P61dXRjg3D5A0TZ1e7zmgAd4Q=;
- b=llHjeD39wl3Xl6slZUuGJeQiy7WJ5A4LERfALDVB99/fWLfb5VZ6HpWhIplJjpeQQFc0GLftLvL7Z0siCHNCiOp7/Aye7BiGcfp8Q/Biv2quvQ6kXD9T50Dptq2mAh/K7jFheHiR97HODPcCMkieR/UM7aS8yaKcA53HDKVtCD9BrKhjuvdd+TTE2warQOPF1Bhoid+ZQ86U7gdOpNzjCXw0tcOe0AOf3c/EmxLo/dQijuag6brs5R4OquFxW6D9SeCRgFucFLZKTj4ae55XheSVUUveudZ114/YWbo5MSLClLqnVNizyJIbRGxqDk+3PyjWj+qbeay05LZyQUDTaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=163.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYWP286CA0016.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:178::21)
- by TYZPR06MB6216.apcprd06.prod.outlook.com (2603:1096:400:332::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 05:49:59 +0000
-Received: from OSA0EPF000000C8.apcprd02.prod.outlook.com
- (2603:1096:400:178:cafe::54) by TYWP286CA0016.outlook.office365.com
- (2603:1096:400:178::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.27 via Frontend Transport; Tue,
- 27 May 2025 05:49:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000C8.mail.protection.outlook.com (10.167.240.54) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 05:49:57 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 3B6DC400CA08;
-	Tue, 27 May 2025 13:49:57 +0800 (CST)
-Message-ID: <9c52c87c-236b-4e8b-b40f-92d5f39f944d@cixtech.com>
-Date: Tue, 27 May 2025 13:49:57 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2A01EA7DF;
+	Tue, 27 May 2025 07:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748330464; cv=none; b=kovsc0hvTfD36hZx3h25zxh1OSstQEP92rvb9s6f+M2Oz8gh1rA1xTzVVbAMHIFznt1QUsQd5AqDOiVpQ6VXnmzT5vGUQZ3i/IAZ1tFN0Lo7BPanLUsL/bnmrNX2wPpbMCs7X88aJjq5kZJXPRYEdfO4dUxIdl27ZodWwhpkzqg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748330464; c=relaxed/simple;
+	bh=L0e9W9YV1UaeqxD6hL087tuo3eB/tosYyT7whElV4h8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ru0fdFWMqsyGxoa9lZrz/2Xnd6lWw2+JBLXwir7Exa+o/kY2Jo/JLc4JkyWlMgYti5pfM4p3XBH+/1na7MOjK130ErpwKe0N72tSQQjBrrgmaZAxmFAdM7EBG8YiG/f0Sir8gxxaUXFp7xV9NBanLcuRQj1pXnKpZq56c9zwnuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BdxKKiDk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54QMC8Gh027572;
+	Tue, 27 May 2025 07:20:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=vXLWBrAPHYOKMWfPcah4/KdLo/tLyhzeM4q
+	gkaB9mcc=; b=BdxKKiDkVCge7N7uMfFzqUwFH2grKdhUWjY5gQwFUiDqgnnSKb3
+	d8slv0LdE89CLhmBVkWMVeYio+OysKCozNanR/cMlR9J3kkeGkY4Gfgl1hHflrq2
+	qllk96kpUhyCIRCaFre8KSTFAa9aWeIf2s3TvX6rbMtE7wMxWnd6HoWcOg4AJZAF
+	uI23R1POS1J3OLe2iQxMbVk4nYG3eL2D0in3ck6sP0FnxFv/NaZGstBsdqtXYKGo
+	ilFzedaLuCvTHSNbYJGJNL+dmAfPSQ+rCwleau1LYBARgc3Moqln5qbRYcKTtAod
+	x8+DKhgdN9h7zwK4+h43JMVaA2OTvSREAgQ==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g8wyur-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 07:20:44 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54R7HXcY028192;
+	Tue, 27 May 2025 07:20:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 46u76kypsq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 07:20:41 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54R7KfRJ031372;
+	Tue, 27 May 2025 07:20:41 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 54R7KeXC031363
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 07:20:41 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 6970534FD; Tue, 27 May 2025 15:20:39 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: lpieralisi@kernel.org, kwilczynski@kernel.org,
+        manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
+        krzk+dt@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v5 0/4] pci: qcom: Add QCS615 PCIe support
+Date: Tue, 27 May 2025 15:20:32 +0800
+Message-Id: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: EXPORT dw_pcie_allocate_domains
-To: Samiksha Garg <samikshagarg@google.com>, Hans Zhang <18255117159@163.com>
-Cc: jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org,
- ajayagarwal@google.com, maurora@google.com, linux-pci@vger.kernel.org,
- manugautam@google.com
-References: <20250526104241.1676625-1-samikshagarg@google.com>
- <39743267-6a2c-4a5a-9581-05b03e25477f@163.com> <aDVCronBm32GwF77@google.com>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <aDVCronBm32GwF77@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000C8:EE_|TYZPR06MB6216:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7684a12-5f91-421b-8fb3-08dd9ce25068
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dFlkTis0cUR5Qmlwb1NFNE11c3VyRmQ3aWZNck5EWGg0TGZyMUZ6eEY3RFpt?=
- =?utf-8?B?NlB1M0lDc1UxaTNyUXdrYVZ6ZUVhNkJwNzVkQ00valRWaWE4UFZocERxMEw0?=
- =?utf-8?B?TnAwUVFDb29nTUNGd3B0VFIxQ1prTnRCdW4xdzZ5RUdmbEJ6Y1JLdXVTdU0x?=
- =?utf-8?B?eVoybnZRZHdYSEU0ekNXemk1WjJhWkJpVHlmcWFuYlpHR0Q5L3BHdFJQNGxH?=
- =?utf-8?B?c0NwdlJ1cll1OG9PMEtCM1BLTnpDV1FNN1ZCVG04eFp4WGpCWm5nUVlOWVhy?=
- =?utf-8?B?MHgxLy8zNVU2VXAwbU81NFV6VXphZDk3Qm13Zk1xTUxVOXVmSU1iQWtmcVpu?=
- =?utf-8?B?c3QvT2IxZWE4bEhwbU1uRU5UN1RibWNDbGtGUlkrd0pyNHhZS3lvODJ6R2lT?=
- =?utf-8?B?LzhoS3ZKdEhnRUt3Z3JkRkxhejJhYkhQOCsxd3djaDc4RDBKU0ZubnMreU5q?=
- =?utf-8?B?cDRCRTdtOHRSeVJ2STlodUROa2ZrQkhCYnVLeUpYL0tSNXV5djFPb0FQZ2pk?=
- =?utf-8?B?K0RYY0JQdzViZytUNGVRckQ4QlovNHFNVlNVS2N6WnJjRVVoSUhpRXlmOElT?=
- =?utf-8?B?NGdBVzJHcFZGSGV5Tlk5RUM1b0RmVm5OQThhVm4xUkpCK1BTb0JVZE4ySHVa?=
- =?utf-8?B?S0lVMy9RTkM3TEJqblZqVk16N0JneDhqamltL2ZGeE55dVNkdURUZktWcXhh?=
- =?utf-8?B?b3ZHSDREOUwzUkdGVEJ6VnAxcEV6OEFvenZtZmhGL3NYZjlBQUJSLy9SSStU?=
- =?utf-8?B?N2tIUVAwSnFHZGZtUC90QXorVVdhSzBpa0wra1AyTFhkRzRWbjZCOTY5dG9H?=
- =?utf-8?B?a1p0dUVIckZHQnE4UmZVQ0dmWnowNENDdkgvV2ozaTl1UVpCbEU5WThwYzZs?=
- =?utf-8?B?dW00T056c0puaGwrdkhEcTU0dkpySHNkM1hNYVNMeGw0T1JWRDRPSzVpMDNl?=
- =?utf-8?B?aXY2QlVZRkF5LzNhY2ZKZFpnTFhMZFJCczZJQUduTlRody9aKzVubEt5Q2gz?=
- =?utf-8?B?SVk1V0Zyd0JMSWd3RmFtMktCQWF4K1FRL2p1UkJELzZQbHdldmVFRU52OG16?=
- =?utf-8?B?WlJzWkx6RGVRVTBycWNYdjh0ZTNDaVl0SitsMXc0SmZFVW1HRHdEN3FNVEt1?=
- =?utf-8?B?MjJDZjhHTTVjYTFoa1FjUVhEZWpxdW44OUdLOWVHN0tLSGtMcElPTUhRK0M3?=
- =?utf-8?B?OWJrQXIvTmpoMEJpSXdPUUQ2ZUFsenNWN3Jtd3dWenV4dWxlU2FRQjQvdjho?=
- =?utf-8?B?UXo3QlZMSGFvZ09qdzQ4ZTFHcTg0MVVkODFpUWFwSVBDN3VVS2VkdWxLakJl?=
- =?utf-8?B?dFMwMXFmM0ZyRTBwY0JoTkI4U3JzRjdjdDVITVhXTlJRb0hPT2NYckNUTUNT?=
- =?utf-8?B?WThoVnczR2tqQnpBeVVWc3Zha0dVd0xoNVZiYUFKS2JWOE15RXZzak0xV3A4?=
- =?utf-8?B?TUZ3VkIrbDF3QklPY3RaQ1hSWEh6WThRdnVTSWFSZlliSk8zR3owd2pTb1NQ?=
- =?utf-8?B?am1vMTJpYlFVTXIwb29HM2dsMXpXdmJGOGdkVDZidnBHZVJpSWFrTmRjTnNn?=
- =?utf-8?B?TUVGVERlczU4eFBnbFArcC9wRkpBcFhwdWdUT3BKcmxDSWtoa3h1Yi9SZWF1?=
- =?utf-8?B?NmtueUhhWEg4S1Q1WUJWVnhEcm1DTEwwMjUxcW5KdUNiRGlha2R2NVFrcUpa?=
- =?utf-8?B?K2dodHJTUWlOZzhKSkNBM1pTWUgrekZyUlZDTUNHN0NBMjFQY0tzbG8rZ1l6?=
- =?utf-8?B?YkRSeTVSanVRQkp3QlVyS0tVQUE5TGpUYXM2TDRFTEttZFZLY3pYdW1QZE41?=
- =?utf-8?B?NFN4Z3JxU2ZldkxOVjErVWpTWVNVeDZjM1BsQWxYckpkS3ZQZm5BMXE1dmpR?=
- =?utf-8?B?QXFlQ3dHeUxKN2EzR0dIcE9Welcwamxha0dLTmFLejJtTXBmQzYwcTFpaEZI?=
- =?utf-8?B?VWVKN25rRlowdFU0d2NvMktObWZldVAyZHlwQndpRzhuU2htRnBUSktxRkFI?=
- =?utf-8?B?cElBa0hTRFNiUm1JRkVFZ3kzeW45dXg2Q1VaSTUwdGs5TlRjSElFQjA4cjNq?=
- =?utf-8?Q?Z9DTDW?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 05:49:57.9983
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7684a12-5f91-421b-8fb3-08dd9ce25068
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C8.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6216
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=683567cc cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
+ a=Vf7fM4WGy8ubjBm1pJIA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: mbQNpZT7pHYL6pgp6u0sCGvDrPGO6Oy1
+X-Proofpoint-GUID: mbQNpZT7pHYL6pgp6u0sCGvDrPGO6Oy1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA1OCBTYWx0ZWRfX7c2mdtG64O8t
+ ItVoKgHe6GhJE0GjG0qQwZcPUzU81REzrrPEy1XM11IyburPiXK7pTDgkv6+CmVBri+SOHmtb5p
+ pBE+edxy3vFystk+0IoxD6ZyIlbWfpVrWR4TcyyGDYJqFQP0X++R2dm3B1PV5K8jwIFMKpFoF6H
+ UDE3+goBaZXuslhMvGeUoHRNob7NWW5NXyrduRszRegs0gs3qTemVymz+4FmARu6s7rteXMl0Xj
+ BMHhkA3Dua1FzREXH5JmK304i6qhWWfGbzqtYIZiI907Ux4Jxefvr2fG9kOTCvduua4lfiD3zIv
+ LkG+wBEffw7CVF3l228xPJc8EbqutcUfLjBmI9SwPa5QAJJZYt6R3o854zkHnWOCZiRghwJ9BqX
+ p+dtZhPcW3bSPPRD7EOAz0p91r826o3iEEmiGfRhuD4maZ3vMI3ItceTXO13r4y/4DOftxor
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_03,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=633
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270058
+
+This series adds document, phy, configs support for PCIe in QCS615.
+
+This series depend on the dt-bindings change
+https://lore.kernel.org/all/20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com/
+
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+---
+Have following changes:
+	- Add a new Document the QCS615 PCIe Controller
+	- Add configurations in devicetree for PCIe, including registers, clocks, interrupts and phy setting sequence.
+	- Add configurations in devicetree for PCIe, platform related gpios, PMIC regulators, etc.
+
+Changes in v5:
+- Drop qcs615-pcie.yaml and use sm8150, as qcs615 is the downgraded
+  version of sm8150, which can share the same yaml.
+- Drop compatible enrty in driver and use sm8150's enrty (Krzysztof)
+- Fix the DT format problem (Konrad)
+- Link to v4: https://lore.kernel.org/all/20250507031559.4085159-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v4:
+- Fixed compile error found by kernel test robot(Krzysztof)
+- Update DT format (Konrad & Krzysztof)
+- Remove QCS8550 compatible use QCS615 compatible only (Konrad)
+- Update phy dt bindings to fix the dtb check errors.
+- Link to v3: https://lore.kernel.org/all/20250310065613.151598-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v3:
+- Update qcs615 dt-bindings to fit the qcom-soc.yaml (Krzysztof & Dmitry)
+- Removed the driver patch and using fallback method (Mani)
+- Update DT format, keep it same with the x1e801000.dtsi (Konrad)
+- Update DT commit message (Bojor)
+- Link to v2: https://lore.kernel.org/all/20241122023314.1616353-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v2:
+- Update commit message for qcs615 phy
+- Update qcs615 phy, using lowercase hex
+- Removed redundant function
+- split the soc dtsi and the platform dts into two changes
+- Link to v1: https://lore.kernel.org/all/20241118082619.177201-1-quic_ziyuzhan@quicinc.com/
+
+Krishna chaitanya chundru (2):
+  arm64: dts: qcom: qcs615: enable pcie
+  arm64: dts: qcom: qcs615-ride: Enable PCIe interface
+
+Ziyue Zhang (2):
+  dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+    for QCS615
+  dt-bindings: PCI: qcom,pcie-sm8150: document qcs615
+
+ .../bindings/pci/qcom,pcie-sm8150.yaml        |   7 +-
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   2 +-
+ arch/arm64/boot/dts/qcom/qcs615-ride.dts      |  42 +++++
+ arch/arm64/boot/dts/qcom/qcs615.dtsi          | 146 ++++++++++++++++++
+ 4 files changed, 195 insertions(+), 2 deletions(-)
 
 
+base-commit: ac12494a238dba00fe8d1459fcf565f9877960f1
+-- 
+2.34.1
 
-On 2025/5/27 12:42, Samiksha Garg wrote:
-> [You don't often get email from samikshagarg@google.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> EXTERNAL EMAIL
-> 
-> Hi,
-> Yes I understand that `pci-keystone` is currently built in,
-> which is why it can use `dw_pcie_allocate_domains` without
-> the need for symbol export.
-> 
-> My intent with the patch was to make this API accessible to
-> other out-of-tree drivers that rely on the Designware core
-> and might have similar want as `pci-keystone`.
-> 
-> Since `dw_pcie_allocate_domains` is already non-static,
-> exporting it could enable consistent reuse without requiring
-> duplication or workarounds.
-> 
-
-Hello,
-
-Just as Mani said, you need to upstream your Root Port driver. 
-Otherwise, too many APIs need to be exported.
-
-I have also encountered this kind of problem of yours. Actually, I think 
-the dwc driver should be compiled as a module so that many SOC 
-manufacturers can modify it by themselves. Otherwise, for example, 
-Android GKI cannot meet the requirements. My previous approach was to 
-copy the entire dwc driver and rename all the functions. Finally, it is 
-loaded in the form of ko.
-
-Best regards,
-Hans
-
-> Thanks,
-> Samiksha
-> 
-> On Tue, May 27, 2025 at 12:29:18AM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/5/26 18:42, Samiksha Garg wrote:
->>> Hi Mani,
->>> Thanks for your response. I can see that pci-keystone driver already calls this function.
->>> Does it not mean that there is already an upstream user?
->>>
->>
->> Hello,
->>
->> pci-keystone is build-in.
->>
->> Best regards,
->> Hans
->>
-> 
 
