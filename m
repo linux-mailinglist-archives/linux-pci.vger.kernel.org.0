@@ -1,381 +1,302 @@
-Return-Path: <linux-pci+bounces-28446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D90FAC4DD9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 13:48:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 915AAAC4E3A
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 14:08:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB404189FAA6
-	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 11:48:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1876F188CF5F
+	for <lists+linux-pci@lfdr.de>; Tue, 27 May 2025 12:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCBE025C80B;
-	Tue, 27 May 2025 11:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E101E1E12;
+	Tue, 27 May 2025 12:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3cEJKBO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZzLP6oJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E41E5710;
-	Tue, 27 May 2025 11:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346489; cv=none; b=DSTPNGAJB8madcqBeMwvi4VXUoV6FZnjgBRam/BZiIAs3sbvt+HUOgXZK4RtPabFYuDBTNFCL9ETZxMk+zK7DSciM/kgQOSJ4ZTEZmAg8+tnfV+sXK3VW7YyOqJOtmEduRTdNlKVeJMHGgXNR/gie2ya2yuXBEiVSTzdYgBNebA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346489; c=relaxed/simple;
-	bh=v9lXOBARzVpo2IQ1xAOHG8PQvci/HwKxjxbOKnsGajk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WLUUyAf3w7C6xCIpx6De3pAMx0KiZOw8hfcMwUiCb91P6lpIuTMcyYvQ5Fte5qYqIqs347j/UUaLaFRGoUXD047W/mZnMWGiF0GBUHDBfAlHOsNwhCRbpnJG+3XDnrfyxGDTKulhIn7il0md/AzY8h8VfRgfdPZ3CdQQ9Os1wg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3cEJKBO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1FD1C4CEE9;
-	Tue, 27 May 2025 11:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748346489;
-	bh=v9lXOBARzVpo2IQ1xAOHG8PQvci/HwKxjxbOKnsGajk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=N3cEJKBOT0yNrfXCsOPKYdbi2dt4iNHuNWgB667h4ODU4Hu9ioKQSES9vQ2uuGfd2
-	 3HiwljsEDEN7R6SingE+P0YBVAKWVGC16Wso8vOtQUbYD8++6yXEzXhSHYERPwbynM
-	 Fior1kNwiGgnXzkW8qOgE4UbQinkrUUEaep6N0wEix6pwlkIBDTh/wrpr7VdCceA4q
-	 FrNBI+pDK/Bh8w8VByV1ftFT3C+JadzEqAvlUDIEOIV3rXupn79MTkZJtWHc1dWu57
-	 vmTMmvQGiwkID9/4B9fwRxup9cVG6a7uzyDQCkejlgS/+iHB4txx98YKiZ0UTVji18
-	 ZP5zFLhYRMk9Q==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
-	jgg@nvidia.com, zhiw@nvidia.com
-Subject: Re: [PATCH v3 12/13] PCI/TSM: support TDI related operations for
- host TSM driver
-In-Reply-To: <cfdfd053-9e9d-43c0-8301-5411a02ffdf9@amd.com>
-References: <20250516054732.2055093-1-dan.j.williams@intel.com>
- <20250516054732.2055093-13-dan.j.williams@intel.com>
- <aCbglieuHI1BJDkz@yilunxu-OptiPlex-7050> <yq5awmab4uq6.fsf@kernel.org>
- <aC2eTGpODgYh7ND7@yilunxu-OptiPlex-7050> <yq5aa570dks9.fsf@kernel.org>
- <1bcf37cd-0fc4-40fa-bcd1-e499619943bd@amd.com>
- <yq5ah617s7fs.fsf@kernel.org>
- <cfdfd053-9e9d-43c0-8301-5411a02ffdf9@amd.com>
-Date: Tue, 27 May 2025 17:18:01 +0530
-Message-ID: <yq5abjres2a6.fsf@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA334267B73;
+	Tue, 27 May 2025 12:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748347671; cv=fail; b=CzuvZ8UVFWA9NWxya5/KYBPXKbZ09uoUNB2bnKQwroZlOLYiMUFc/9pM8zRPBDDyXl9sgbOJE/M6BA4XdJqe72701HA4CdgwPPqwjP1fSOMQpz649yQkw/pz3McNEWFDskngKm3odGtnsohz9Xglp6BA6dyRyNCZnQ0f9Ouc9+4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748347671; c=relaxed/simple;
+	bh=Wn0bvX8sWOWKkAmC2CTjILq5UmFFEdMEXtTy73v0Z28=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=X9Tsw9WYgbGmNBnXqTvTdL4sYGgfVUSu2W4BzOMREGBSUatrQi/t+1FuNtae9VnrZwkiAvrLoAe0euJ4N4k6SZ1qgarxJxUSZrcbvNdVpxl+pb2/b9Zgs/OsAV4EgV/7U6QntJ050DXopghLouSQQwwSQnUKbUxTMGOiaEf8Cys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZzLP6oJ; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748347670; x=1779883670;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=Wn0bvX8sWOWKkAmC2CTjILq5UmFFEdMEXtTy73v0Z28=;
+  b=GZzLP6oJkZWm5xJ2EeWhS5jo5pgUsFhqBFxPAPISWqnnvnAv6vzXCmpC
+   bpFbG//EhNpM+vev4BilY6ReAAyF5dzzwvIcJhLOqDN0fj4qELtf7J+iZ
+   IeAlvLvNKRVLNT7UxR6rPUhXrweRDId/VmVny7xHkKC5QRmHGBt1b9FLz
+   spzSHqqAJ033jI8RQOKj3avPKo33ADawMpLze/Dr/poIjLzV+nsas78yP
+   buRICq3jtDKtV0VDU8uVLrrwJbfGoH98U8+vncaksAnH/bN0C8lPQckSh
+   mroP2tRsdcmbSc/0Poq+yj23TPqafUN5ocsupJLlB3q7aSitg2XP7Rizv
+   Q==;
+X-CSE-ConnectionGUID: 9u8xfS5wRz++p0B8P5Xa+Q==
+X-CSE-MsgGUID: TX/gugk+SxuNeX+lo89Unw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="49443583"
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="49443583"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 05:07:49 -0700
+X-CSE-ConnectionGUID: On26k6kYQ9OT94d7FaDLLQ==
+X-CSE-MsgGUID: CQYHnDEHR86eXHXQsWrA1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="142792166"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 05:07:49 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 27 May 2025 05:07:48 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 05:07:48 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.46)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 27 May 2025 05:07:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wyR6XVAARETLxqiR9iKspPunf7ZuoIpnCmCw2Yy/C6GiE78RQxx/NhweFM4RBjaLzp1LzE9TTj+N+DTVn0JQDJikmdOO9lXeM/nsJ+5ZoMuIwh7xsuT4CvJB/glx8djXUldkQnu4vRQFfOlnyvUZLYj45m9Dv65IHBplzk/76kUDCrRqsy8CZ4Nk0uoiwYXEdvFbIOvvivL9DzxvceNru1hhZJeEORUSkX4zaGhMjlF9uy04yH3oTGd+83nIMJs2XwLyXz0twStdzk1wZWrEsdLSWQQ3jmmsWQkMWyMRuaLnxHZM3JHl1hTlCPodYoLP3EYkK5VrcVvZ0c2ZV6ef0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wKlffMKC7iO3lXXd6nMM0MMJwBE/IxC3XXbDNCcMTaI=;
+ b=mXxhK2D9dRsLrYsxYN8ZRtRLUZpz2CaOcMvJfofk1HAA2YDhX6j+Ax0mB8J4ugXcyXFcaZzpjDt4Uuf2bQpIQz+WT2crj8+rVIvWmKLuLREMnd1EbBNa5gCo4aOyaoGLCEheHSS5k0iyNLKhTDe3BEOepTkxnWGsq8bJ/6OnmH+LvP3VSnz/y1ltzyco0kNl+X4xJky0RLoCN7gq+FQQ8YrSklcCfovYudLILq2DOMV7Vel6GQY0ZDv/di16ZGAF583RJjqTS9ni5o2B5szoYnBovzmQ1cWPuezf/Y6WUXNuwsOvDCyNk2NjCidHExW7H++7LseSwkerYOKuCFVplA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ SJ2PR11MB7575.namprd11.prod.outlook.com (2603:10b6:a03:4ce::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
+ 2025 12:07:45 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%5]) with mapi id 15.20.8769.025; Tue, 27 May 2025
+ 12:07:45 +0000
+From: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
+To: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+	<christian.koenig@amd.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
+	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
+	<matthew.d.roper@intel.com>, =?UTF-8?q?Micha=C5=82=20Winiarski?=
+	<michal.winiarski@intel.com>
+Subject: [PATCH v9 0/6] PCI: VF resizable BAR
+Date: Tue, 27 May 2025 14:06:31 +0200
+Message-ID: <20250527120637.665506-1-michal.winiarski@intel.com>
+X-Mailer: git-send-email 2.49.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: WA1P291CA0010.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::10) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|SJ2PR11MB7575:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2bc6fa0f-4397-4e7e-8d0c-08dd9d17171a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cDhXYk1WR3JYN1p5UzFpYUtFeDd4cVZGc2pmWFZYazhOMEZQTVIranpNUUVk?=
+ =?utf-8?B?aGZzdGxVMmFKZmxYa1lyNWY3SlovK2dXNTdDeStRYnZuZXBHQUVDNnY5elRh?=
+ =?utf-8?B?WE14bFY5eEhuQml0K0dyNys0bzRtQ3BJVGtDb0NnUHJIaG5YeElpS2JUdUxZ?=
+ =?utf-8?B?TkJsR09sU0cvUk1BZFlEd3BKTzh5WE5zVXFWN25GdWpaSXF4a2FWSEpGdG43?=
+ =?utf-8?B?eTBsUzA0QU9MR244amIzT1RWWmx6dlNQZjVleG5zYVhvaHVBaVg0R2tiNVpi?=
+ =?utf-8?B?aVFDSDFMeGJnVE1GSVZ5MDhGbjJIVU85MStkZkxuVmRmWHV6YmFKRDV5RG9H?=
+ =?utf-8?B?aWFmV25ETmcxYVRWbktOblg2Mk0rNXZBUmdiNkFZdUNXNkE5RzVPNEttT3Uw?=
+ =?utf-8?B?cDZVYy9hdlYzSHNHU0hPeGlRc2RZemw3REs5Tm5aK0o3akYra0lmRENBQVR1?=
+ =?utf-8?B?TXl6Ymd2NDc2R2hGaC9xYmo5OFNjL3pzOFNQTDl5S3Zobmxab0MyYXgvVGgy?=
+ =?utf-8?B?aEZVZ1lWUDJBK3R1SzFqV2kxNkJ0SnMxTTRwVThuWDZIeUN4NjFiYVl2Ujl5?=
+ =?utf-8?B?STFWWkM0NFFGZ2FSVUg2ckpPazA3YURKM1pVREY3VXc5aWp5YU14a2hzWFdy?=
+ =?utf-8?B?MjFRSmxoenhRc3MwM0xSV3dlSjYvRWlVUExBZ1hXaTNjY05tMHJGNEFhVFJF?=
+ =?utf-8?B?MFFqT1ZzZ0grdHhZZVZUVVZuNGZpMnFJMGtZWHZ4YVRrMC9aTDdHWDZuQWR5?=
+ =?utf-8?B?RkFkNnBhaGdKaWVSVlQzK0x4eGtqUFdKR0ZXUEl1bTRBY3ErQldxQmk1MHBE?=
+ =?utf-8?B?Ly9uUys5cW83MUZTdkpVdlBRYWRnMHlrWWVYN3R1L0hKVnZOMldaaktTRE95?=
+ =?utf-8?B?OGRvVEFGU0xPMFRUWUFtaEVJSXZEbE1meGE5bjc5eHdsb3V3M3o3L2Yva0h1?=
+ =?utf-8?B?Sk5iT3V1RVl1a2dVNjRFazNVNHVNbVBpVVJRQ2J2QVRCQ1N5cElEb0VydVZD?=
+ =?utf-8?B?cGhGMEpLcURheGh5bmdQZHIrMGNabWNuQktQdUZxK3NaWC9UekIrd2ZpOENT?=
+ =?utf-8?B?MGRHeTErR0NNcm1keVdzbkIxdlcvSnc1MlF4V2h6T0lud3hoUk1iWGpFTEp0?=
+ =?utf-8?B?WExrNXhvOFpzYWRJSlVvV2pPWXYwN3VZRUluRlBjQ2xDNlhTclZtRXFlVTdI?=
+ =?utf-8?B?SUJXUkRRYWxrTnhVMFgyUXFFYyt4aHJFbnpCS2hwUEN2TElhTk1keUZDZ3p4?=
+ =?utf-8?B?em4yZUVEQUc3c29MMHBtSW4yUStQb3dyNWdLSVRqT1ZCR0ZsYXZUQ1E3UFNM?=
+ =?utf-8?B?eWtmRk5KcHplLzlSTFdRNmJMREN5aHRhUklFdndPNlUvNmFUM21pd3V4azly?=
+ =?utf-8?B?eU56SHhsaituSEl4SjN4ald0WjU5cXJxVWFDR3BBd09uQ3RwWG5rTUZUVmZ1?=
+ =?utf-8?B?Y0lQMTk3VzJPRzVldklicElIc1RhNlZyM01zN0pqTXhFdUlwdFp6YVd5dXky?=
+ =?utf-8?B?UzNGdXdnK2VaMG1hQnVNU1YyNXBYTk8rNHlqNkhsVXRGejJZWmxQVDhBRTBq?=
+ =?utf-8?B?MGR6ZHczVUhoa2tYa3lnM2lNVGZ3cnZxcFhVdnJrVC9Ca3JaaUtxTjQ4KzAv?=
+ =?utf-8?B?Y1lnL3hqNDZqU3NkbEk5WS9ERGxnUTlrRS9TZ2JKbXhwV3JvUE5NT1BJYVE4?=
+ =?utf-8?B?SWFTWXBwQjR6Nm9CNmFDcmtlQ0d0dXJSTVlmY1VJRnJnM3VoMkhUNndDREQ2?=
+ =?utf-8?B?eVIyZzVPbzYzSEhYK016a09VRVUyY08zRDE2UVBIcU4rMmFmbUNQdmorenFE?=
+ =?utf-8?B?OGJzK3RDcVlsaFJkczBXdU5jTHd3N1BhVDRRbEVmZW9kM2l1SkEwaU93ZGJ5?=
+ =?utf-8?B?Um02MWtGaENaVnRjWkVPdzNzSGhEQU5YUzl2a2QvUzIrNUROL3NNNHAxRkdR?=
+ =?utf-8?Q?2mPnxUx0cuY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YVZhWmJRSHpBZnE4dHVZdmFTOE5qb2FadHVvNnl1M1VFcWZuZ2FvbWJaOWlC?=
+ =?utf-8?B?SzJmZkhURXlML2J2RDBkYkZQU0o0Z0NoMzJobU9yMnhPMmJHRGxnVGtuUFFO?=
+ =?utf-8?B?MWhQQTFhN0MwV2VtMCtoTmVjRzYvMDhJNE1wZUd3RVRsTmo3MlFwcGsrTlJr?=
+ =?utf-8?B?SEZTMFpwNTBHaVp5dndJWGlBODV3S3dwL2VWaVNmd2NBSHBua3VMczVTNWRJ?=
+ =?utf-8?B?Z1dGV25vNkU3TmhPci9mckoyaEFTcEIzM3VMWjdscmkvRUtxY1dMMkFjdHM3?=
+ =?utf-8?B?czVNT0hybkFDRWlwV3VRbHZRVXZWMkxRTHBVcTI0MTJyVTQ5UEVzUks5UHJZ?=
+ =?utf-8?B?dEtiQkpqY2pWbnE1Qkw3UFpQczIvTU1WYXpVc1l2WmFiNjJpTjZtZzYyTHk0?=
+ =?utf-8?B?bGxjMWx6TXFPYjZTTllZSW5QenNzcW0wS0U4WlRMVW1NTUdlQ2hyZHh2Y3hS?=
+ =?utf-8?B?elJWQVdzRTlyeXM0Rm00QXhpZjhZbUZibGpwczBxNUw0OTF6VWwvTlZaQU1x?=
+ =?utf-8?B?ZHlEbmpsSXpoTmNDV0c2NVQ0ZklDNGNIR1hJSk13QS9ZK0tZT3ExSzZUL29W?=
+ =?utf-8?B?WnJFNmxUVEVrZXhhdUYzZ0M5ZTZoUnk5bkZ0NGpsWVNvNmNlTXdTQThBalhr?=
+ =?utf-8?B?L1VsM2gvT3BWT0xURjNPNlc1S291cFhwTmFBUXVzanJGZStBLzlpVGdWMXZq?=
+ =?utf-8?B?TjFtaGc2MlB4Sm1vbjgwRmtXT3FDZ2lhNDNuT01wbGdIVk16WFg5VTFyVWZn?=
+ =?utf-8?B?QnZPZGV5N3B6cHF6SjRYY2NPbVUzSDhoazFsQ3liVlMrWXJFTWdoK3NqRkow?=
+ =?utf-8?B?Y0IweldvNmFOei9qQTUxNDliUGx6bjRSeWZQZCtoWG5nY3lpTnBodUM1TGJK?=
+ =?utf-8?B?aFEyZWJuN3ZDd2dMQndUU2RjZ3NnN3FLQzdZak1XcFQvZTNlTEtKNmtDYTBw?=
+ =?utf-8?B?SStQTzlBZTlkdTIzYXllOEIxY28zK1NMTGdYWUNBbm53d3VBRmlqeW15YzNN?=
+ =?utf-8?B?dGJ6K0dSbjNaY0xtV1FpNXN2VTZlc0haU0dObzFmYUxtWkFWd0FOYWRLQWFP?=
+ =?utf-8?B?NmpPcjZTT2Z1YitBUUJqMDUwbzUrUmUrLzNoSjJYd0R0bmNqYzJqV2E3aUJj?=
+ =?utf-8?B?Sjg3QzZRQ083WnMxM1JKbVgxVk9kaXlQQzdmRU9TSk1RclROeldKbSs1aG9h?=
+ =?utf-8?B?azZoMVVobFBkL1Y2YTJLcDVrZzM1aDVzcWl3djdHQ2ppU2F4Tll6YmhuT1NK?=
+ =?utf-8?B?WUhZMTl0LzlaaEJzVmNsYkJnRFgrRE1EUG5YTmF6TWQzeHBiVGVGck9BZEJi?=
+ =?utf-8?B?Z1FQZ3JDZTB5ZkJNWGV1OEh3RlU2QlB4SWtkODFKSEduNFR3Y1BST3Z2c1dD?=
+ =?utf-8?B?czZqTHBLeWZ1Mk00VU15TWdDTE1WZTdyZ2hKbGxacWRKOG81ZE5PenY2L1pq?=
+ =?utf-8?B?akhLQ0wwMVpqTWNyNEhJWndTcjNGL0g1NUdBdTlZanBCN0htNlB2VzRoUVpB?=
+ =?utf-8?B?WmVpMmNhOEs3SGtQKy9nNkVWM1lQRFcwQXJJSnhEMCthNzFxSC9WTGhkTVFO?=
+ =?utf-8?B?Y3NCYVZieFduRVNCS2xQLzVGVVR3c0RtWVpRTHpQalZxQTRyb2JrMUlTbG05?=
+ =?utf-8?B?N3ZtZERSWlFKTGJZMG8vK05sSHJyVnNUY0MxUk03a2oyK3k1cTVaaVYwUlFT?=
+ =?utf-8?B?R05peHNaUWk3TTZ0elcvR3YxNlZ3OHNiNVhibHhNUTRtTDBiTk5iektWT1Mr?=
+ =?utf-8?B?NkJncnRUNlR0dW9FYldoZFBkVWNiTTkzaTZQSkVqa0laNkpqVG9CdFBCd2o4?=
+ =?utf-8?B?VWEwelpqaUZ6L3ZxZmlzd1FYekI3ZUZPNExzYm5Bek44QTZzMHppRGZtdEho?=
+ =?utf-8?B?UkROSG56aWlaUHZ2NkVxSk9TYkNEWmpxUFdET0dxYU1CUFB1Yk5ra3dEaW41?=
+ =?utf-8?B?YXhjZDBQLzRkZXg4alljL1QvSEpMdEViRXZ6S0FYSHBMKzJuUElQSEhWT1Zj?=
+ =?utf-8?B?TldvR1krOFovckpoVkZMQVZVb2FCdllzNlFnM2I0d1gvUitPczgrVThXSTNy?=
+ =?utf-8?B?eE9FUms5T2l3WlpxWDRIaWdsN3luaHoySWNNYTVlc2dBWFZhSzllcklPOGlX?=
+ =?utf-8?B?U1FDblRlK1JmTnNXeW5BbVdldlFxWURhT1UyU2JtbXdrR0dKb0FuTjRYenlp?=
+ =?utf-8?B?Z2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bc6fa0f-4397-4e7e-8d0c-08dd9d17171a
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 12:07:45.5186
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L1VsaphaUJ3t6uSDGaqaAwcjNo0RkM90zGnMnW7sVDpurTJqO2nAjNIXpX5JdiByoAxkiNc+wPJxlQ8McAtYgKrhFZqy17DMK8fi9OeN2Dg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7575
+X-OriginatorOrg: intel.com
 
-Alexey Kardashevskiy <aik@amd.com> writes:
+Hi,
 
-> On 27/5/25 01:44, Aneesh Kumar K.V wrote:
->> Alexey Kardashevskiy <aik@amd.com> writes:
->> 
->>> On 26/5/25 15:05, Aneesh Kumar K.V wrote:
->>>> Xu Yilun <yilun.xu@linux.intel.com> writes:
->>>>
->>>>> On Tue, May 20, 2025 at 12:47:05PM +0530, Aneesh Kumar K.V wrote:
->>>>>> Xu Yilun <yilun.xu@linux.intel.com> writes:
->>>>>>
->>>>>>> On Thu, May 15, 2025 at 10:47:31PM -0700, Dan Williams wrote:
->>>>>>>> From: Xu Yilun <yilun.xu@linux.intel.com>
->>>>>>>>
->>>>>>>> Add kAPIs pci_tsm_{bind,unbind,guest_req}() for PCI devices.
->>>>>>>>
->>>>>>>> pci_tsm_bind/unbind() are supposed to be called by kernel components
->>>>>>>> which manages the virtual device. The verb 'bind' means VMM does extra
->>>>>>>> configurations to make the assigned device ready to be validated by
->>>>>>>> CoCo VM as TDI (TEE Device Interface). Usually these configurations
->>>>>>>> include assigning device ownership and MMIO ownership to CoCo VM, and
->>>>>>>> move the TDI to CONFIG_LOCKED TDISP state by LOCK_INTERFACE_REQUEST
->>>>>>>> TDISP message. The detailed operations are specific to platform TSM
->>>>>>>> firmware so need to be supported by vendor TSM drivers.
->>>>>>>>
->>>>>>>> pci_tsm_guest_req() supports a channel for CoCo VM to directly talk
->>>>>>>> to TSM firmware about further TDI operations after TDI is bound, e.g.
->>>>>>>> get device interface report, certifications & measurements. So this kAPI
->>>>>>>> is supposed to be called from KVM vmexit handler.
->>>>>>>
->>>>>>> To clarify, this commit message is staled. We are proposing existing to
->>>>>>> QEMU, then pass to TSM through IOMMUFD VDEVICE.
->>>>>>>
->>>>>>
->>>>>> Can you share the POC code/git repo implementing that? I am looking for
->>>>>> pci_tsm_bind()/pci_tsm_unbind() example usage.
->>>>>
->>>>> The usage of these kAPIs should be in IOMMUFD, that's what I'm doing for
->>>>> Stage 2 patchset. I need to rebase this series, adopt suggestions from
->>>>> Jason, and make TDX Connect work to verify, so need more time...
->>>>>
->>>>
->>>> Since the bind/unbind operations are PCI-specific callbacks, and iommufd
->>>
->>> Not really, it is PCI-specific in TSM (for DOE) but since IOMMUFD is not doing any of that, it can work with struct device (not pci_dev). Thanks,
->>>
->> 
->> Ok, something like this? and iommufd will call tsm_bind()?
->
-> yeah, I guess, there is a couple of places like this
->
-> git grep pci_dev drivers/iommu/iommufd/
->
-> drivers/iommu/iommufd/device.c:                 struct pci_dev *pdev = to_pci_dev(idev->dev);
-> drivers/iommu/iommufd/eventq.c:         struct pci_dev *pdev = to_pci_dev(dev);
->
-> Although I do not see any compelling reason to have pci_dev in the TSM API, struct device should just work and not spill any PCI details to IOMMUFD but whatever... Thanks,
+This revision fixes compile-errors found by LKP on 32bit and PCI_ATS=n
+configs.
 
-Getting the kvm reference is tricky here. Also the locking while
-updating vdevice->tsm_bound needs some solution. Here is what I am
-improving. Are you also planning something similar?
+v8 can be found here:
+https://lore.kernel.org/linux-pci/20250526214257.3481760-1-michal.winiarski@intel.com
 
- drivers/iommu/iommufd/device.c          |  4 +-
- drivers/iommu/iommufd/iommufd_private.h |  5 ++
- drivers/iommu/iommufd/main.c            |  5 ++
- drivers/iommu/iommufd/viommu.c          | 62 +++++++++++++++++++++++++
- drivers/vfio/iommufd.c                  |  2 +-
- include/linux/iommufd.h                 |  3 +-
- include/uapi/linux/iommufd.h            | 16 +++++++
- 7 files changed, 94 insertions(+), 3 deletions(-)
+For regular BAR, drivers can use pci_resize_resource to resize it to the
+desired size provided that it is supported by the hardware, which the
+driver can query using pci_rebar_get_possible_sizes.
+This series expands the API to work with IOV BAR as well.
+It also adds the additional API for drivers to change the VF BAR size
+without resizing the entire underlying reservation (within the original
+resource boundary).
 
-diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-index 2111bad72c72..79d669064044 100644
---- a/drivers/iommu/iommufd/device.c
-+++ b/drivers/iommu/iommufd/device.c
-@@ -165,7 +165,7 @@ void iommufd_device_destroy(struct iommufd_object *obj)
-  * The caller must undo this with iommufd_device_unbind()
-  */
- struct iommufd_device *iommufd_device_bind(struct iommufd_ctx *ictx,
--					   struct device *dev, u32 *id)
-+					   struct device *dev, struct kvm *kvm, u32 *id)
- {
- 	struct iommufd_device *idev;
- 	struct iommufd_group *igroup;
-@@ -221,6 +221,7 @@ struct iommufd_device *iommufd_device_bind(struct iommufd_ctx *ictx,
- 	refcount_inc(&idev->obj.users);
- 	/* igroup refcount moves into iommufd_device */
- 	idev->igroup = igroup;
-+	idev->kvm = kvm;
- 	mutex_init(&idev->iopf_lock);
- 
- 	/*
-@@ -1009,6 +1010,7 @@ void iommufd_device_detach(struct iommufd_device *idev, ioasid_t pasid)
- 	if (!hwpt)
- 		return;
- 	iommufd_hw_pagetable_put(idev->ictx, hwpt);
-+	idev->kvm = NULL;
- 	refcount_dec(&idev->obj.users);
- }
- EXPORT_SYMBOL_NS_GPL(iommufd_device_detach, "IOMMUFD");
-diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-index 80e8c76d25f2..dd1c87500a74 100644
---- a/drivers/iommu/iommufd/iommufd_private.h
-+++ b/drivers/iommu/iommufd/iommufd_private.h
-@@ -424,6 +424,7 @@ struct iommufd_device {
- 	struct list_head group_item;
- 	/* always the physical device */
- 	struct device *dev;
-+	struct kvm *kvm;
- 	bool enforce_cache_coherency;
- 	/* protect iopf_enabled counter */
- 	struct mutex iopf_lock;
-@@ -606,13 +607,17 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd);
- void iommufd_viommu_destroy(struct iommufd_object *obj);
- int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd);
- void iommufd_vdevice_destroy(struct iommufd_object *obj);
-+int iommufd_vdevice_tsm_bind_ioctl(struct iommufd_ucmd *ucmd);
-+int iommufd_vdevice_tsm_unbind_ioctl(struct iommufd_ucmd *ucmd);
- 
- struct iommufd_vdevice {
- 	struct iommufd_object obj;
- 	struct iommufd_ctx *ictx;
- 	struct iommufd_viommu *viommu;
- 	struct device *dev;
-+	struct kvm *kvm;
- 	u64 id; /* per-vIOMMU virtual ID */
-+	bool tsm_bound;
- };
- 
- #ifdef CONFIG_IOMMUFD_TEST
-diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-index 3df468f64e7d..9959436d0d42 100644
---- a/drivers/iommu/iommufd/main.c
-+++ b/drivers/iommu/iommufd/main.c
-@@ -320,6 +320,7 @@ union ucmd_buffer {
- 	struct iommu_veventq_alloc veventq;
- 	struct iommu_vfio_ioas vfio_ioas;
- 	struct iommu_viommu_alloc viommu;
-+	struct iommu_vdevice_id vdev_id;
- #ifdef CONFIG_IOMMUFD_TEST
- 	struct iommu_test_cmd test;
- #endif
-@@ -379,6 +380,10 @@ static const struct iommufd_ioctl_op iommufd_ioctl_ops[] = {
- 		 __reserved),
- 	IOCTL_OP(IOMMU_VIOMMU_ALLOC, iommufd_viommu_alloc_ioctl,
- 		 struct iommu_viommu_alloc, out_viommu_id),
-+	IOCTL_OP(IOMMU_VDEVICE_TSM_BIND, iommufd_vdevice_tsm_bind_ioctl,
-+		 struct iommu_vdevice_id, vdevice_id),
-+	IOCTL_OP(IOMMU_VDEVICE_TSM_UNBIND, iommufd_vdevice_tsm_unbind_ioctl,
-+		 struct iommu_vdevice_id, vdevice_id),
- #ifdef CONFIG_IOMMUFD_TEST
- 	IOCTL_OP(IOMMU_TEST_CMD, iommufd_test, struct iommu_test_cmd, last),
- #endif
-diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-index 01df2b985f02..9182353f7069 100644
---- a/drivers/iommu/iommufd/viommu.c
-+++ b/drivers/iommu/iommufd/viommu.c
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES
-  */
- #include "iommufd_private.h"
-+#include "linux/tsm.h"
- 
- void iommufd_viommu_destroy(struct iommufd_object *obj)
- {
-@@ -90,6 +91,9 @@ void iommufd_vdevice_destroy(struct iommufd_object *obj)
- 		container_of(obj, struct iommufd_vdevice, obj);
- 	struct iommufd_viommu *viommu = vdev->viommu;
- 
-+	if (vdev->tsm_bound)
-+		tsm_unbind(vdev->dev);
-+
- 	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
- 	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
- 	refcount_dec(&viommu->obj.users);
-@@ -134,6 +138,8 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
- 	vdev->dev = idev->dev;
- 	get_device(idev->dev);
- 	vdev->viommu = viommu;
-+	vdev->kvm = idev->kvm;
-+	pr_info("Assigning kvm 0x%lx\n", vdev->kvm);
- 	refcount_inc(&viommu->obj.users);
- 
- 	curr = xa_cmpxchg(&viommu->vdevs, virt_id, NULL, vdev, GFP_KERNEL);
-@@ -157,3 +163,59 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
- 	iommufd_put_object(ucmd->ictx, &viommu->obj);
- 	return rc;
- }
-+
-+int iommufd_vdevice_tsm_bind_ioctl(struct iommufd_ucmd *ucmd)
-+{
-+	struct iommu_vdevice_id *cmd = ucmd->cmd;
-+	struct iommufd_vdevice *vdev;
-+	int rc = 0;
-+
-+	vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
-+					       IOMMUFD_OBJ_VDEVICE),
-+			    struct iommufd_vdevice, obj);
-+	if (IS_ERR(vdev))
-+		return PTR_ERR(vdev);
-+
-+	rc = tsm_bind(vdev->dev, vdev->kvm, vdev->id);
-+	if (rc) {
-+		rc = -ENODEV;
-+		goto out_put_vdev;
-+	}
-+
-+	/* locking? */
-+	vdev->tsm_bound = true;
-+	refcount_inc(&vdev->obj.users);
-+	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
-+
-+out_put_vdev:
-+	iommufd_put_object(ucmd->ictx, &vdev->obj);
-+	return rc;
-+}
-+
-+int iommufd_vdevice_tsm_unbind_ioctl(struct iommufd_ucmd *ucmd)
-+{
-+	struct iommu_vdevice_id *cmd = ucmd->cmd;
-+	struct iommufd_vdevice *vdev;
-+	int rc = 0;
-+
-+	vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
-+					       IOMMUFD_OBJ_VDEVICE),
-+			    struct iommufd_vdevice, obj);
-+	if (IS_ERR(vdev))
-+		return PTR_ERR(vdev);
-+
-+	rc = tsm_unbind(vdev->dev);
-+	if (rc) {
-+		rc = -ENODEV;
-+		goto out_put_vdev;
-+	}
-+
-+	refcount_dec(&vdev->obj.users);
-+	/* locking ? */
-+	vdev->tsm_bound = false;
-+	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
-+
-+out_put_vdev:
-+	iommufd_put_object(ucmd->ictx, &vdev->obj);
-+	return rc;
-+}
-diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
-index c8c3a2d53f86..3441d24538a8 100644
---- a/drivers/vfio/iommufd.c
-+++ b/drivers/vfio/iommufd.c
-@@ -115,7 +115,7 @@ int vfio_iommufd_physical_bind(struct vfio_device *vdev,
- {
- 	struct iommufd_device *idev;
- 
--	idev = iommufd_device_bind(ictx, vdev->dev, out_device_id);
-+	idev = iommufd_device_bind(ictx, vdev->dev, vdev->kvm, out_device_id);
- 	if (IS_ERR(idev))
- 		return PTR_ERR(idev);
- 	vdev->iommufd_device = idev;
-diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
-index 34b6e6ca4bfa..79a9bb0a7a00 100644
---- a/include/linux/iommufd.h
-+++ b/include/linux/iommufd.h
-@@ -51,8 +51,9 @@ struct iommufd_object {
- 	unsigned int id;
- };
- 
-+struct kvm;
- struct iommufd_device *iommufd_device_bind(struct iommufd_ctx *ictx,
--					   struct device *dev, u32 *id);
-+					   struct device *dev, struct kvm *kvm, u32 *id);
- void iommufd_device_unbind(struct iommufd_device *idev);
- 
- int iommufd_device_attach(struct iommufd_device *idev, ioasid_t pasid,
-diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-index f29b6c44655e..abcdad90bfba 100644
---- a/include/uapi/linux/iommufd.h
-+++ b/include/uapi/linux/iommufd.h
-@@ -56,6 +56,8 @@ enum {
- 	IOMMUFD_CMD_VDEVICE_ALLOC = 0x91,
- 	IOMMUFD_CMD_IOAS_CHANGE_PROCESS = 0x92,
- 	IOMMUFD_CMD_VEVENTQ_ALLOC = 0x93,
-+	IOMMUFD_CMD_VDEVICE_TSM_BIND = 0x94,
-+	IOMMUFD_CMD_VDEVICE_TSM_UNBIND = 0x95,
- };
- 
- /**
-@@ -1038,6 +1040,20 @@ enum iommu_veventq_flag {
- 	IOMMU_VEVENTQ_FLAG_LOST_EVENTS = (1U << 0),
- };
- 
-+/**
-+ * struct iommu_vdevice_tsm_unbind - ioctl(IOMMU_VDEVICE_TSM_UNBIND)
-+ * @size: sizeof(struct iommu_vdevice_tsm_unbind)
-+ * @vdevice_id:
-+ *
-+ */
-+struct iommu_vdevice_id {
-+	__u32 size;
-+	__u32 vdevice_id;
-+} __packed;
-+#define IOMMU_VDEVICE_TSM_BIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE_TSM_BIND)
-+#define IOMMU_VDEVICE_TSM_UNBIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE_TSM_UNBIND)
-+
-+
- /**
-  * struct iommufd_vevent_header - Virtual Event Header for a vEVENTQ Status
-  * @flags: Combination of enum iommu_veventq_flag
+Thanks,
+-Michał
+
+v8 -> v9:
+- Use u64 as do_div() dividend (LKP)
+- Introduce a helper to access cached vf_rebar_cap (LKP)
+
+v7 -> v8:
+- Update variable ordering and missing includes (Ilpo)
+
+v6 -> v7:
+- Eliminate the loop in pci_iov_vf_bar_get_sizes() (Ilpo)
+- Use helper variable for indexes (Ilpo)
+- Kerneldoc formatting (Ilpo)
+- Refer to latest PCI spec (Ilpo)
+- Commit message wording (Ilpo)
+
+v5 -> v6:
+- Rebased on latest pci/next
+- Cache the VF resizable BAR capability position to avoid multiple
+  lookups (Ilpo)
+- Use pci_resource_n helper (Ilpo)
+
+v4 -> v5:
+- Rename pci_resource_to/from_iov helpers and add WARN if called without
+  CONFIG_PCI_IOV (Ilpo)
+- Reword kerneldoc for pci_iov_vf_bar_get_sizes (Bjorn)
+- Reword commit message for VF BAR size check, extract the additional
+  size check to separate conditional (Bjorn)
+
+v3 -> v4:
+- Change the approach to extending the BAR (Christian)
+- Tidy the commit messages, use 80 line limit where necessary (Bjorn)
+- Add kerneldocs to exported functions (Bjorn)
+- Add pci_resource_to_iov() / pci_resource_from_iov() helpers (Ilpo)
+- Use FIELD_GET(), tidy whitespace (Ilpo)
+
+v2 -> v3:
+- Extract introducing pci_resource_is_iov to separate commit and
+  use it elsewhere in PCI subsystem (Christian)
+- Extract restoring VF rebar state to separate commit (Christian)
+- Reorganize memory decoding check (Christian)
+- Don't use dev_WARN (Ilpo)
+- Fix build without CONFIG_PCI_IOV (CI)
+
+v1 -> v2:
+- Add pci_iov_resource_extend() and usage in Xe driver
+- Reduce the number of ifdefs (Christian)
+- Drop patch 2/2 from v1 (Christian)
+- Add a helper to avoid upsetting static analysis tools (Krzysztof)
+
+Michał Winiarski (6):
+  PCI/IOV: Restore VF resizable BAR state after reset
+  PCI: Add a helper to convert between VF BAR number and IOV resource
+  PCI: Allow IOV resources to be resized in pci_resize_resource()
+  PCI/IOV: Check that VF BAR fits within the reservation
+  PCI: Allow drivers to control VF BAR size
+  drm/xe/pf: Set VF LMEM BAR size
+
+ drivers/gpu/drm/xe/regs/xe_bars.h |   1 +
+ drivers/gpu/drm/xe/xe_pci_sriov.c |  22 +++++
+ drivers/pci/iov.c                 | 153 +++++++++++++++++++++++++++---
+ drivers/pci/pci.c                 |   8 +-
+ drivers/pci/pci.h                 |  39 ++++++++
+ drivers/pci/setup-bus.c           |   3 +-
+ drivers/pci/setup-res.c           |  35 ++++++-
+ include/linux/pci.h               |   6 ++
+ include/uapi/linux/pci_regs.h     |   9 ++
+ 9 files changed, 258 insertions(+), 18 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
 
