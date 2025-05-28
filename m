@@ -1,77 +1,69 @@
-Return-Path: <linux-pci+bounces-28516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 136D8AC7136
-	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 20:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F145AC741B
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 00:35:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B95481C01FD2
-	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 18:55:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0960188B56E
+	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 22:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2258F214A94;
-	Wed, 28 May 2025 18:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA531F151C;
+	Wed, 28 May 2025 22:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iymk3p3q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTS9s/t9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF49B74BE1;
-	Wed, 28 May 2025 18:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A070A55;
+	Wed, 28 May 2025 22:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748458520; cv=none; b=tRCa3qJWtPMgvXr34etPhYsYQ/zv2aoiOQdJT5unY4KqEOC7Apf5HRKNW1NMZcrRGcak6r6FZpY6A6cTjOCJd/Oi4f/Trjrh4L5rMAxoX8Owl7joFD+PpPhv9LBmk1r0JSD+m8qyelCv+lJp/+pUz7TMPKTlmcdb2xIJDGmK/9M=
+	t=1748471702; cv=none; b=OqngqMPzOQ+zl72dfp9NX+TvKbRYntoKtRmNWNlervrFOFUMAT2kF+5O+R9vgh0bWuBhsMOuYeEEPNaqJubzFvIjoLEdBt/exowJd0f0M9yM2Wa0MsIm6uofKjvtculhi2MrzW5oQbF1xlw3chCKW0F90fPith0ELU3tmXnqws0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748458520; c=relaxed/simple;
-	bh=HPXyaBEtLP4rxgNlcKWVIBnWfTrSOpit78Uj4rkTXY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dw8bKR5+378LkZPiPHg3zjKxn5r4bngcDBJBQb1HiAt1LfWjOXUjZjyXgNNfLJPKamOPL0B8irFJczXWJtz6uSaAUT5tvYakfGmnn+Y97yCd1QsMOBDh8CbceyUcyOCCccEjPdBTe+v+42FlkVj92WAgqKXuvnsENxispbIiVrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iymk3p3q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B485C4CEE3;
-	Wed, 28 May 2025 18:55:11 +0000 (UTC)
+	s=arc-20240116; t=1748471702; c=relaxed/simple;
+	bh=G/c8gLq1UOYM2sneyafsU62G5RMVALyJq3J1BkyGhfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=u/cB3Z8gpMZ4RDNK5sOUbmDCO+qhj2UVJbtYQUJvHT94ocApuyQnCN6dsnQPBjPMc9CwzBik7JdVeedCIK09lWXRUtYFu1SXWTzv8NpfkUsbFdh4KatJHOpsfEaP6boQw54bqrvj8g+1LTISFH4wxtlc9ID7DtJr81dC3rk+d6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTS9s/t9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D324BC4CEE3;
+	Wed, 28 May 2025 22:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748458519;
-	bh=HPXyaBEtLP4rxgNlcKWVIBnWfTrSOpit78Uj4rkTXY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iymk3p3qurAJxmEFyt4xikozpFvS6K2PsBr+wTDcEbMAZGS6WX6FNTJ+aUuh+dmdv
-	 bARe1NiR7jmFMTdtSgD6Ksesge5RPAZovOtY/P+kB6+fV3bi6tzQaLCvJeeyLh5VMS
-	 JoYJ2Vv5wyPbfKESQm1/EUAv4ELsKQO+qMnIi6Y6LlpdbJ70UJYcSfDBIqYzZpIpxh
-	 GigV1Mz4Qmw4rKievHayPHUIB1/+7ygJcqh05xUEsdUC3Lc40nlr+Lh4PcE21iJ6Xp
-	 XGX1Jxf4Ug8C0dh2uURttHV1kd9aYS8/hf++KkJ72QR3fkv7vnj7Lz84hB8iFyHzWT
-	 VgeV8/foOnIeQ==
-Date: Wed, 28 May 2025 19:55:08 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
+	s=k20201202; t=1748471702;
+	bh=G/c8gLq1UOYM2sneyafsU62G5RMVALyJq3J1BkyGhfo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UTS9s/t9dgzKMS69c26wtss9wbJFXwAdQVw0jYJpOf0PidV1XhhRUQYejNZvNZdlK
+	 HeaIovN6Mcj2OQMfrCvy3nHZrJrKlYoKMHhozxBCRXO8C2PhsjzmArrHbPBRrQnubZ
+	 rbVClPpcjpNZxQizn8W3Oj6piVhPORsVI/wlef5kpq/P8Pa3WG+04h5IpWKDjZoVwE
+	 GZMsZWYRvz9BSd632glvDalgHlYLaT8RWlFn28UaTSo+X94gm1rnSbuZbCr35yZU1Z
+	 ZIn0WY7wkryHte585r5iTZnOJtzoeUXqrXA8Uuh3K/axLPciB5TsR3Y2bqeFzN+WDx
+	 SYwfxPGqcuwUA==
+Date: Wed, 28 May 2025 17:35:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250528185508.GK1484967@horms.kernel.org>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <20250528223500.GA58129@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,50 +72,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To: <20250508-pcie-reset-slot-v4-4-7050093e2b50@linaro.org>
 
-On Tue, May 27, 2025 at 08:57:33AM -0700, Shradha Gupta wrote:
-> In this patchset we want to enable the MANA driver to be able to
-> allocate MSI-X vectors in PCI dynamically.
+On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> The PCI link, when down, needs to be recovered to bring it back. But that
+> cannot be done in a generic way as link recovery procedure is specific to
+> host bridges. So add a new API pci_host_handle_link_down() that could be
+> called by the host bridge drivers when the link goes down.
 > 
-> The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> correctly prepare descriptors for dynamically added MSI-X vectors.
-> 
-> The second patch adds the support of dynamic vector allocation in
-> pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> flag and using the pci_msix_prepare_desc() exported in first patch.
-> 
-> The third patch adds a detailed description of the irq_setup(), to
-> help understand the function design better.
-> 
-> The fourth patch is a preparation patch for mana changes to support
-> dynamic IRQ allocation. It contains changes in irq_setup() to allow
-> skipping first sibling CPU sets, in case certain IRQs are already
-> affinitized to them.
-> 
-> The fifth patch has the changes in MANA driver to be able to allocate
-> MSI-X vectors dynamically. If the support does not exist it defaults to
-> older behavior.
+> The API will iterate through all the slots and calls the pcie_do_recovery()
+> function with 'pci_channel_io_frozen' as the state. This will result in the
+> execution of the AER Fatal error handling code. Since the link down
+> recovery is pretty much the same as AER Fatal error handling,
+> pcie_do_recovery() helper is reused here. First the AER error_detected
+> callback will be triggered for the bridge and the downstream devices. Then,
+> pci_host_reset_slot() will be called for the slot, which will reset the
+> slot using 'reset_slot' callback to recover the link. Once that's done,
+> resume message will be broadcasted to the bridge and the downstream devices
+> indicating successful link recovery.
 
-Hi Shradha,
-
-It's unclear what the target tree for this patch-set is.
-But if it is net-next, which seems likely given the code under
-drivers/net/, then:
-
-Please include that target in the subject of each patch in the patch-set.
-
-	Subject: [PATCH v5 net-next 0/5] ...
-
-And, moreover, ...
-
-## Form letter - net-next-closed
-
-The merge window for v6.16 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations. We are
-currently accepting bug fixes only.
-
-Please repost when net-next reopens after June 8th.
-
-RFC patches sent for review only are obviously welcome at any time.
+Link down is an event for a single Root Port.  Why would we iterate
+through all the Root Ports if the link went down for one of them?
 
