@@ -1,116 +1,134 @@
-Return-Path: <linux-pci+bounces-28501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B914AC668D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 12:01:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0431AC6713
+	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 12:36:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09E321BC689D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 10:01:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A9A04E39EE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 May 2025 10:36:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B0927817D;
-	Wed, 28 May 2025 10:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3365279912;
+	Wed, 28 May 2025 10:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cdILFMRo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B5eSM2ys"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A182798FD;
-	Wed, 28 May 2025 10:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFF1279789
+	for <linux-pci@vger.kernel.org>; Wed, 28 May 2025 10:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748426450; cv=none; b=dahxTCX/QJJ3pcvlzXEFALfcq6xBquk1q7LxCiZ4NnvXmRtrm88YxRn5fl7LY6gW351QhLS+EWnB/qVnAgXfgQmPkgYHKhBNJ8g72CYSLSfSasvtkdkOMOzb8f4aFcKxhvu4MAYD95Ex9kUOLamT0FcD/XGQOSdFYLw4Xs8063Y=
+	t=1748428597; cv=none; b=THKQ766GzP8YG/3YlnJenEpHZYobIuy7oUsrtKez3lbgujqmG0sWmNH3SJKLyeHUYtTI6XsfF+j5gTBraz3cnqKxfZuc+mXVdR9043gYAnANG006AVwdCgx/TQd2GGuHRQih79b5QNFE3YQ0E9DhavFz4VgbvQUgqSYmEVAMD6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748426450; c=relaxed/simple;
-	bh=Zhox0hjZ9k9Tt2WB921pjM7KHIySapcRetCIkbZvAm0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WkxRN43BXigGJkWr6cLFweqYJeXJUNP5l92vRM9pvUJcKi32rMhC3OxdNujJsDsnrf2GoQhIyZOBSW9iluV6VfGYdt/f+0YmuD7I2+ifQhmxuMqxVi+7YqGvOJhxdRv7gQ2AV6bdSTUmYpKAjU5nXifEA/rGx0wie6u1hjvMqGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cdILFMRo; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748426448; x=1779962448;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Zhox0hjZ9k9Tt2WB921pjM7KHIySapcRetCIkbZvAm0=;
-  b=cdILFMRoRwHC5vkOg9MFMgqAQ6XJncbvcurNOGnkjsk5oRe4Y2k1E7di
-   30RkqndfCBLeEm8NRQR851dfWim+tR3nneLCXGxDESXvozG7Xl+XrTQRB
-   CEz/5l90F7/J7aDTZWrPpTiSH01xZND8erRQy6UtzzRrUJfsYm3dkRw0U
-   5q29gkRzCY4EuPgzmoxXbTWhVZBj4fZoc62DxjN2FEWGxCjbmLH3H6Bu2
-   gd51b+23QeoGuxPdjDsMAamRvoXlsagXK/TJQ5tBobJmd2awvV6sZnyrp
-   cp97JohdkzciOSBeXEIkZ5qpYCPShOt/HYDtSabVoEDJF0GBwoX2tZ89I
-   w==;
-X-CSE-ConnectionGUID: t7uIP5u1QjeXwn2n4s7ppw==
-X-CSE-MsgGUID: FodMmgNPRiGYrm34C/N2TQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50550866"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="50550866"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 03:00:47 -0700
-X-CSE-ConnectionGUID: H40m0oA3Tme67hHo37j6Hw==
-X-CSE-MsgGUID: kCQj+gMSSgORFrdMdims+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="166372921"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.151])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 03:00:38 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 28 May 2025 13:00:34 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Weinan Liu <wnliu@google.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
- pcie_print_tlp_log()
-In-Reply-To: <aDave5XyXZoKWole@wunner.de>
-Message-ID: <1565a7a9-bcf0-e8e4-0f75-de8859b47a8f@linux.intel.com>
-References: <20250522232339.1525671-1-helgaas@kernel.org> <20250522232339.1525671-14-helgaas@kernel.org> <aDave5XyXZoKWole@wunner.de>
+	s=arc-20240116; t=1748428597; c=relaxed/simple;
+	bh=Si1j6uouuZRKixZgcv6BHoJXWodMnlY2oC/q9yWhRtM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pC533zs9iHDHy+6qD5Ypj7cc6TkAQgLCEnQfeG/cwx3N/cI0KO5xQlLzD7Ko+khM6GkNecx2e02q129/MXyCi0vLJDC3wwWtGSXHktBX2UeE/TFZZkLCX4Wo+VzMOFyzLuccZ07+sExCr06A8yKLXJu6Ra4Rut2KDXwzHyHorf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B5eSM2ys; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442ffaa7dbeso32999855e9.3
+        for <linux-pci@vger.kernel.org>; Wed, 28 May 2025 03:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748428594; x=1749033394; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Si1j6uouuZRKixZgcv6BHoJXWodMnlY2oC/q9yWhRtM=;
+        b=B5eSM2ys+lzU9jsSKW8f2NVwNe8eM8+bJ9Ksg0qLUykjwmdFPweLQsA2/kF+LfbdR8
+         EsIc+idddvAhVYGr1+sUwYD72Xxq4Phgts9qUcpqLWH+zBunCLT3mtJRvorYWaH269ia
+         76WYrmuuTpaSXQ8kuLwNcE2+uzJ/VTMxs1CwpmHEICrvEzUCg77IGhCE9EiXGSZf7oO6
+         cdUa6gukkH8IQC4asmvi9L4vk+ZfJZwyoAAApzCpjJjmSJxvcZjnKFqxENnZ6YR8a/4u
+         CwEEY+jVnVwEYzBGXymd/EtIjY0b5Fek0EzcpNvaUSIVlrGx5DPowZVn1EwrZkjzaW1r
+         Tgbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748428594; x=1749033394;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Si1j6uouuZRKixZgcv6BHoJXWodMnlY2oC/q9yWhRtM=;
+        b=qysxers0+vlwKaUewN6p7oXgaeUIFO1GzmOGEocoqtnR/i9SKVq6DAIWbx6w9WZ2nV
+         ghJiZEO0fJ9c+S4q75Z40xTd4gE1L1L16rOzbvWObZ3CiDTNN6Y8rmP9lhgKuhq4UPZT
+         vELM1BQy7ViSR8JauE+1HWzpPkzxThU/F7YWLk95dbME38+6S9JCRVDMRIcqI94d5v+p
+         IP3cDQhyfGtsUPf3HN9CsbphAQ9tnOPlEYLs9gJw9cq1vXLuk9y1ES/UBaLec0VWpAL3
+         nHzBbdpo28Go8LLZ486rP6DBDU3QpzLbEQROuQSykSoP/paE8zzEjBBStlj1k8+9c4Ct
+         4aLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOMqt/LbJh/rug8USH4ezQiuaRNjWIHwxJGUg7pfbSgItS7swX88q5Bpj3jzm4RxZJmFrmYaBplQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEpwaLt2RlZHcJIJ0h2sgYGDip533Eh3Qv07+ntaVaAw9LjZxS
+	BKZqo8VyqWiawtxX9yPkQYBTV9mF0I7h7EYv+K/PYDfBoznnXDdVwOPBazL1Ax/8mwaY1MVYMdG
+	nc3pKSOooD8KB1XbRkg==
+X-Google-Smtp-Source: AGHT+IHiPY375iu6n+ZkU8ZC6vWYnO6vfkfIsES083JMYvmdbEogAqIJfVfK9XDvKlL1n6CsZmK6dlKKd2C91Us=
+X-Received: from wmbhc21.prod.google.com ([2002:a05:600c:8715:b0:442:f984:ed5e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:a13:b0:43d:160:cd9e with SMTP id 5b1f17b1804b1-44c91fbb448mr159783095e9.17.1748428594079;
+ Wed, 28 May 2025 03:36:34 -0700 (PDT)
+Date: Wed, 28 May 2025 10:36:31 +0000
+In-Reply-To: <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-4-6412a94d9d75@gmail.com> <DA66NJXU86M4.1HU12P6E79JLO@kernel.org>
+ <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com>
+Message-ID: <aDbnLzPIGiAZISOq@google.com>
+Subject: Re: [PATCH v10 4/5] rust: replace `kernel::c_str!` with C-Strings
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>, Michal Rostecki <vadorovsky@protonmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 May 2025, Lukas Wunner wrote:
+On Mon, May 26, 2025 at 06:29:46PM -0400, Tamir Duberstein wrote:
+> On Mon, May 26, 2025 at 11:04=E2=80=AFAM Benno Lossin <lossin@kernel.org>=
+ wrote:
+> >
+> > On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+> > > +macro_rules! c_str_avoid_literals {
+> >
+> > I don't like this name, how about `concat_to_c_str` or
+> > `concat_with_nul`?
+> >
+> > This macro also is useful from macros that have a normal string literal=
+,
+> > but can't turn it into a `c""` one.
+>=20
+> Uh, can you give an example? I'm not attached to the name.
 
-> On Thu, May 22, 2025 at 06:21:19PM -0500, Bjorn Helgaas wrote:
-> > @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
-> >  		}
-> >  	}
-> >  
-> > -	pci_err(dev, "%sTLP Header%s: %s\n", pfx,
-> > +	dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
-> >  		log->flit ? " (Flit)" : "", buf);
-> >  }
-> 
-> Nit: pci_printk() ?
-> 
-> The definition in include/linux/pci.h was retained by fab874e12593.
+I also think it should be renamed. Right now it sounds like it creates a
+c string while avoiding literals in the input ... whatever that means. I
+like Benno's suggestions, but str_to_cstr! could also work?
 
-If pci_printk() is taken into use once again, there's 56d305b24d64 ("PCI: 
-Remove pci_printk()") queued already in pci/misc which should be dropped 
-in that case.
-
--- 
- i.
-
+Alice
 
