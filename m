@@ -1,144 +1,217 @@
-Return-Path: <linux-pci+bounces-28684-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07368AC83AF
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 23:46:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AB30AC83BD
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 23:57:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17ABA7AD64A
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 21:44:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A28AF3B86C9
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 21:56:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F541293752;
-	Thu, 29 May 2025 21:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5298129292D;
+	Thu, 29 May 2025 21:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bl45ywHV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H7hizPo6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486C9293725
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 21:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616A2335C7;
+	Thu, 29 May 2025 21:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748555152; cv=none; b=L9+vOkGliXdEucoHTMeYwJRTny9WIdD7lOwIFEcr6Xps8MGUHlNPF8ELOtqRMJoUJBBJlb6dI4l6mIxf1Y6aNXDOcTmStxNLQ6Rte6QryL1/ltrFmNb5nuO2BCo78xWDMlLjOTG/PHsdgOEE7XTBsThS4RkZptfrRMh/bU96b38=
+	t=1748555826; cv=none; b=JOUvymm048S6Cg11kH/N10HjKJkvmMhEMC2tASv0jG6H99WDsp7wwQF8EjyfSSUA19o/uZrFF1CTS9UwXVoQzwO2FgAufqDIZYytArhk995pjq+4WlRuiJu3jYd1W0M4PlVaPOaa/M8xoI/81LXF9yBNJdWotmlSOI+Q4FslG/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748555152; c=relaxed/simple;
-	bh=BCaMPS+A2FwMWe536A/mkcK+XQdRzFV9OSoLZ8TvP7w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I7yaAzpQTfQdl2djMhMJcgz99KR99BQdP5lnwNmW+lIgAqWWcIU+tQxpR0EWx07nnsdLmQWeU8XpZRO9PaWCnp03tw4yjkObsZ75b/PDCf+GKkuc0SbmRAobDEAlYSkfQC5Q4jZhi1Jxu23RFYmJ2PMXO/g1wrlghbD6QM4W2SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=bl45ywHV; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TLjkYq024376
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 14:45:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=facebook; bh=D+IQI7hzYY4AdulWkAeQeVS
-	VYH2EOVQ0gfgjGpBkn+M=; b=bl45ywHVXtgR56V3eZOByDZ+5tuWz0lz3cILXPo
-	zbOU/8xYy4hjIfp5fvWWi6DG5oNZq7efhZU7ea+QpS1NIWqx0ZbTY3/fgaP/ymX6
-	D96Obhbvd0/H7Ot4zq5fT0HKODtruUVyWVzAVbkGFlBX13kZqchaoP7eOL/Bi1LC
-	JvFk=
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46xhf5dvy5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 14:45:48 -0700 (PDT)
-Received: from twshared0377.32.frc3.facebook.com (2620:10d:c0a8:1b::2d) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Thu, 29 May 2025 21:44:29 +0000
-Received: by devgpu004.nha5.facebook.com (Postfix, from userid 199522)
-	id C78E440913C; Thu, 29 May 2025 14:44:15 -0700 (PDT)
-From: Alex Mastro <amastro@fb.com>
-To: <linux-pci@vger.kernel.org>
-CC: <alex.williamson@redhat.com>, <jgg@nvidia.com>, <peterx@redhat.com>,
-        <kbusch@kernel.org>, <linux-mm@kvack.org>
-Subject: [BUG?] vfio/pci: VA alignment sensitivity of VFIO_IOMMU_MAP_DMA which target MMIO
-Date: Thu, 29 May 2025 14:44:14 -0700
-Message-ID: <20250529214414.1508155-1-amastro@fb.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1748555826; c=relaxed/simple;
+	bh=Q5m5LwduiDAi79so+2oUpFh3hy74EZUg/SO/rtagSxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c25tbBPv3W10breoYhfdq1cIeZgIXlyzWSNZ0EkSNe3YjJO6mR/J2wAPtBQtpkJ0LXeJFUXCBo4eyxnrAbgwNFWk6uTgOPvSenoOAyvjo7pIT596eL4KTx3ic6Hca/a88m5UWQeG/H8BCL5fEzmoQtrvjLRkZ//oj6Qg1ZdSMg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H7hizPo6; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748555824; x=1780091824;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Q5m5LwduiDAi79so+2oUpFh3hy74EZUg/SO/rtagSxE=;
+  b=H7hizPo6dKPpQdiRdpiZtFfwZrOmfD/v7+yp1fINq01zO8PPYCYg1N4l
+   NGOrlsBI2+CcZjULzoWDfGbEfp2beMbPY8c1/We9YMXSkQ/hqJWB3f49M
+   Vtx9BZ2GEHzY506GJRqnDDrqa8PNN6bGESmxUusS4GdAe7VGqaSWLQhjU
+   LpPMGbRgCu0GUCm2Jjdr5J3Oieg3WE2ZPajuedqpWXj6hIrpkkxLKOw6W
+   9heDpJ7uzs+zgG2UGVMyqL2RMz/3G9gbRS+kqdzEZHgBQSvrO+sRPX7o0
+   XsQkbbBL6pzYCg2ix//UgHFwqixTZEksZginWqTlRQNhwvAQV4nxz3vAb
+   g==;
+X-CSE-ConnectionGUID: koat9jclRgmvNJlrSk83lA==
+X-CSE-MsgGUID: 03jJDlSoR8Sq7YA11DV8VQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="61268903"
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="61268903"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 14:57:04 -0700
+X-CSE-ConnectionGUID: XHYYuFR1QfS0+B1NuOcZrg==
+X-CSE-MsgGUID: CufcH5FgQ8ObWPNna/XvfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="174682216"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 14:57:03 -0700
+Received: from [10.124.222.225] (unknown [10.124.222.225])
+	by linux.intel.com (Postfix) with ESMTP id 9F6DC20B5736;
+	Thu, 29 May 2025 14:57:02 -0700 (PDT)
+Message-ID: <7bf8430d-fbb5-4e6f-9b09-11f6bc1ff67e@linux.intel.com>
+Date: Thu, 29 May 2025 14:57:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDIxMiBTYWx0ZWRfX14oI89rA0cXl L37Ylh4Sep+HkyHJhjDiDo+ivNi+mcB8kUI+OzLL/XHcdxvFLmJL0mPOICztc5L/UOVzAE2+9rj IvWU/bM8q9H066wb0styrOygFklaT0tWd+B3gx1yslI59+zHvgpSuTa2kLTjKZazH31L6xvQsnc
- X5t5Zdjs1GuNkeiYwWNxBoNrjTpSEKMBlrt4Uyy1Gu0OzD5QRLkFoEnTKN1eNKJNugPFa80bT+d LDtj6SZvGML9nYOm4ffs5pHWfO+fUBMaj/M96mwoBtxwVmflGb3EGKjOax0s8OC9NrqR6X9vV7Q e7KuG4CQFgfxMGlU9FFOIi9DVt25zweZ0/7Rd37hHq93SQfvZxx5SbjnSYQLem4ZWIhiWnMgUqo
- y7Q1Y2hX/ShB1WoSuO2dsV6ErjSNWLyy1Nv46XoOnntZ+AyaPVJ6x9rVz8vKkPrtHs8IUdxi
-X-Authority-Analysis: v=2.4 cv=HuZ2G1TS c=1 sm=1 tr=0 ts=6838d58c cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=7NlN7ispKPTGJu6vY8wA:9
-X-Proofpoint-GUID: Ox7qUUws9lDcYiVPcg4dqY-ug5LlM4le
-X-Proofpoint-ORIG-GUID: Ox7qUUws9lDcYiVPcg4dqY-ug5LlM4le
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_09,2025-05-29_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] PCI/ACPI: Add PERST# Assertion Delay _DSM method
+To: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org,
+ linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org,
+ bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
+ lucas.demarchi@intel.com, rodrigo.vivi@intel.com, varun.gupta@intel.com,
+ ville.syrjala@linux.intel.com, uma.shankar@intel.com
+References: <20250529111654.3140766-1-badal.nilawar@intel.com>
+ <20250529111654.3140766-4-badal.nilawar@intel.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250529111654.3140766-4-badal.nilawar@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-We are running user space drivers in production on top of VFIO, and after
-upgrading from v6.9.0 to v6.13.2 noticed intermittent, slow performance l=
-eading
-to "rcu_sched self-detected stall" when issuing VFIO_IOMMU_MAP_DMA on ~64=
- GiB
-mmap-ed BAR regions. When doing this on enough devices concurrently, we
-triggered softlockup_panic. The mmap-ed BAR regions were obtained from mm=
-ap on
-a VFIO device fd.
+On 5/29/25 4:16 AM, Badal Nilawar wrote:
+> From: Anshuman Gupta <anshuman.gupta@intel.com>
+>
+> Implement _DSM Method 0Bh as per PCI firmware specs
+> section 4.6.11 Rev 3.3.
+>
+> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/pci/pci-acpi.c   | 57 ++++++++++++++++++++++++++++++++++++++++
+>   include/linux/pci-acpi.h |  8 +++++-
+>   2 files changed, 64 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index d33efba4ca94..88044491feaa 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1531,6 +1531,63 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>   }
+>   EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
+>   
+> +/**
+> + * pci_acpi_add_perst_assertion_delay - Request PERST# delay via ACPI DSM
+> + * @dev: PCI device instance
+> + * @delay_us: Requested delay_us
+> + *
+> + * This function sends a request to the host BIOS via ACPI _DSM to grant the
+> + * required PERST# delay for the specified PCI device. It evaluates the _DSM
+> + * to request the PERST# delay and handles the response accordingly.
+> + *
+> + * Return: returns 0 on success and errno on failure.
+> + */
+> +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
+> +{
+> +	union acpi_object in_obj = {
+> +		.integer.type = ACPI_TYPE_INTEGER,
+> +		.integer.value = delay_us,
+> +	};
+> +
+> +	union acpi_object *out_obj;
+> +	acpi_handle handle;
+> +	int result, ret = -EINVAL;
+> +
+> +	if (!dev)
+> +		return -EINVAL;
+> +
+> +	handle = ACPI_HANDLE(&dev->dev);
+> +	if (!handle)
+> +		return -EINVAL;
+> +
+> +	if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4, 1 << DSM_PCI_PERST_ASSERTION_DELAY)) {
+> +		pci_dbg(dev, "ACPI _DSM 0%Xh not supported\n", DSM_PCI_PERST_ASSERTION_DELAY);
+> +		return -ENODEV;
+> +	}
+> +
+> +	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+> +					  DSM_PCI_PERST_ASSERTION_DELAY,
+> +					  &in_obj, ACPI_TYPE_INTEGER);
+> +	if (!out_obj)
+> +		return -EINVAL;
+> +
+> +	result = out_obj->integer.value;
+> +
+> +	if (result == delay_us) {
+> +		pci_info(dev, "PERST# Assertion Delay set to %u microseconds\n", delay_us);
+> +		ret = 0;
 
-We map regions > 1G, which sometimes do not start at 1G-aligned BAR offse=
-ts,
-but they are always aligned by at least 2 MiB.
+I think above is a debug message. If it is set properly, why would you want to know
+the details?
 
-We determined that slow, stalling runs were correlated with 4 KiB-aligned
-addresses returned by mmap, and normal runs with >=3D 2 MiB alignment.
+> +	} else if (result == 0) {
+> +		pci_warn(dev, "PERST# Assertion Delay request failed, no previous valid request\n");
+> +	} else {
+> +		pci_warn(dev, "PERST# Assertion Delay request failed, Previous valid delay: %u microseconds\n",
+> +			 result);
+> +	}
 
-Inspired by QEMU's mmap-alloc.c, we are handling this by reserving VA wit=
-h an
-oversized mmap, and then clobbering with MAP_FIXED at a good address insi=
-de the
-reservation with the mmap on the VFIO device fd.
+May be you don't need to elaborate the error details. Will following work?
 
-At first we settled for aligning the mmap address to {1 GiB, 2 MiB} exact=
-ly,
-and the stalls disappeared, but then improved performance with the follow=
-ing:
+pci_warn(dev, "PERST# Assertion Delay request failed, result:%u micro seconds\n", result);
 
-We found that the best addresses to pass to VFIO_IOMMU_MAP_DMA have the
-following properties, where va_align and va_offset are chosen based on th=
-e size
-and BAR offsets of the desired mapping.
+> +
+> +	ACPI_FREE(out_obj);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_acpi_add_perst_assertion_delay);
+> +
+>   static void pci_acpi_set_external_facing(struct pci_dev *dev)
+>   {
+>   	u8 val;
+> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+> index 6079306ad754..e53d4893cf56 100644
+> --- a/include/linux/pci-acpi.h
+> +++ b/include/linux/pci-acpi.h
+> @@ -122,6 +122,7 @@ extern const guid_t pci_acpi_dsm_guid;
+>   #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
+>   #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
+>   #define DSM_PCI_D3COLD_AUX_POWER_LIMIT		0x0A
+> +#define DSM_PCI_PERST_ASSERTION_DELAY		0x0B
+>   
+>   #ifdef CONFIG_PCIE_EDR
+>   void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
+> @@ -135,7 +136,7 @@ int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_de
+>   void pci_acpi_clear_companion_lookup_hook(void);
+>   int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>   				      u32 *retry_interval);
+> -
+> +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us);
+>   #else	/* CONFIG_ACPI */
+>   static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+>   static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
+> @@ -144,6 +145,11 @@ static inline int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 req
+>   {
+>   	return -EOPNOTSUPP;
+>   }
+> +
+> +static inline int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+>   #endif	/* CONFIG_ACPI */
+>   
+>   #endif	/* _PCI_ACPI_H_ */
 
-va_align =3D {1 GiB, 2 MiB, 4 KiB}
-va_offset =3D mmap_offset % va_align
-(addr_to_mmap % va_align) =3D=3D va_offset
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Using addresses with the above properties seems to optimize the count and
-granularity of faults as confirmed by bpftrace-ing vfio_pci_mmap_huge_fau=
-lt.
-
-We then backported "Improve DMA mapping performance for huge pfnmaps" [1]=
- to
-our 6.13 tree, and saw further performance improvements consistent with t=
-hose
-described in the patch (thank you!). However, with the backport, we still=
- need
-to align mmap addresses manually, otherwise we see stalls.
-
-We are wondering the following:
-- Is all of the above expected behavior, and usage of VFIO?
-- Is there an expected minimum alignment greater than 4K (our system page=
- size)
-  for non-MAP_FIXED mmap on a VFIO device fd?
-- Was there an unintended regression to our use-case in between 6.9 and 6=
-.13?
-
-Thanks,
-Alex Mastro
-
-[1] https://lore.kernel.org/all/20250205231728.2527186-1-alex.williamson@=
-redhat.com/
 
