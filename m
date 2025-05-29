@@ -1,122 +1,80 @@
-Return-Path: <linux-pci+bounces-28595-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28596-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39773AC7C37
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 12:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA70BAC7C72
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 13:14:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E98FB5002FF
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 10:50:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99AD24A4CBF
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 11:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB99290093;
-	Thu, 29 May 2025 10:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE87B28E560;
+	Thu, 29 May 2025 11:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q3CtZRCJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6d4Jq0M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D7B28FA86
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 10:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1312C207A0B;
+	Thu, 29 May 2025 11:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748515698; cv=none; b=FHdf11a5meNoWOB/IRkZNe9u7LmjLqKrxn/ycGUXgIDvH3bvo756G/i9lSZ5q2KQhSt9UmobZH++7m536pLdricgrNDJgDQd1s38jYRkqk1duZv8ojFRcAAAal9HY58tX7TXmgwIDzQSRIhGO6iqgyvz/Op1JPz1d1bCUWijAtA=
+	t=1748517287; cv=none; b=n5TAbO0jjDFfEcVdsmuSGRxd1BvaWiOC5pLgBYJ1Jc+GuTdmbbesl5+eRQTNhkxTv0QIfSxjBf7ZIWeHLWH8nEie3p3v9TdlzzCZVkUb78Yvq81fOMhtzlAa1ra6sjmUhM3R/5quoP+nliFDO0D82pXTGSC3Ad2WXvZGS6zmUz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748515698; c=relaxed/simple;
-	bh=Cxv3DdNSTbG6mkWW+XlQDzM5M3k//FCq7uG/9MGjWvM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ogf7fBrgditU1QdEJebVFuuVnKZ7MaDyIQ6wsWMwcc3eGbgCtJkdmuSPtIeHkh7WGPwdmhyjH2jtOfgnPI81clN5vuuUHkJCvMicywZlGgga4gU4HdD2yABSzFH2tT/pPDsNI5xx3SE36eKAiB0TN9D23BDDfJU8qr4ckg9ciok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q3CtZRCJ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso158850066b.3
-        for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 03:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748515694; x=1749120494; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i8LMEHYmovrRN8zYWQwYy5+2ddqvSDMDQcnZraZcEHI=;
-        b=Q3CtZRCJowoXIw9k5V+3iZoCTdugPF58iaqdfcqz80heP0XsjGP0ABOSveurgOuHYE
-         GHm89aeuaU7zghhvq9/WpfhwyhDFWfsHIiBIpUc8JZcguiJTz3BJ1cqwpyGZS8dhzP4F
-         drGimBhYTxl3t3ALgQMncORgvKX9iE4HO4/S45E822yfoGb2EPnmH0fCz3x0DD5MAOSc
-         ezPmAq4UAUU+JbT7igdYJmMiAWShIssFwVNUlFlIUPLwewCpL/bC8H75h8z21TcPBl2z
-         77ZhBj0KvUfYH9+5oOfpBpMnenj70rKWikvl9R0Pp8fwbkUS1ju5hH2DHoIozYrLH1Gd
-         xKSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748515694; x=1749120494;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i8LMEHYmovrRN8zYWQwYy5+2ddqvSDMDQcnZraZcEHI=;
-        b=N/qQbAeb/fmG1Ma7ovxaAaFHwWc8NhGbKb7jKcIgaofPegTfnflkULQv2aP8SVVfkf
-         9z4ckJ04BdufCcZgTmBobf2lcEFuE1/T+9/zh5yOWCXDAm2gR4ZmLHzurf9HqQidbDj9
-         LRHGFltpp2JAn3pOQzBfhXYO+dYJp/mX0tjm2Ueus13Gr4DyJyH1w7/VNj/Vv3hLoJLn
-         mWLiY7eXdzCZ2J6exGzVEFDMF0FLdZB9FEpsuDNztoV7LI9U7Aiy4ZXlHu4ojI65HpZr
-         gJtVSjKhHqmhazxeyaE0uJ8Aa5n7KnlBKVs+IFDwIK2sIkki0YQ2Lsz55P/74ZKq/mYr
-         WM0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVNF9HxtEY3KZldo8FqVty5eo6UeFE7nL1zVV2Owjn1uvde4g2V+uDg5uO0Tzr6fEVl1T1I/WSMVLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzClRasUreDA/uMGViQXD9NI/PU1E427gjHv77hWdkEcbNO3ClY
-	p8g5FGzzBGSbtMS5qeIPfMDw6D7f4e4mSfBI4WENkr7UWJssWgRk9StvptiTWsYUkp8=
-X-Gm-Gg: ASbGnctoY3TTtkGXs5NLyjX/fUx3pRC039xZ95aGtbux6Uskf6euQFKjG/bEieg81q2
-	xomuop8sbwAHcfuNGqTBVH+NhMWyYVL4vAyXYbfNkAzUwAbRYUDdSAtqtb+h22cOf7YaEL29IYB
-	XwSPG9lCjvASpcYQIL8bpB3EUoMQxdody/VIpIzBpQi+ge2kz8Ra4V6Os11Ir+Xa07rTrJkNkYf
-	UAF93uutO51iTEbSDI1vDhQu++RPM9LvCTavMrAWlpw0+eo9GV7BD5zSRXWcukFWiK4DDgiqV1o
-	1UGF/dXiDKZWtOfpUGUAAvov60H8ir/2CsjU2BlbIKZXXMg07VmBHTshi/dCIjoXYm+0VoU7b1W
-	omdZUGaRhm6ljfPaFz3F8vg==
-X-Google-Smtp-Source: AGHT+IFh2Bjt/nqjLOv5kZdMBtyzXg8Cp6AwiLw6gyh2kIz8WiLSbkCwXlnCYcseB95A5qV9519CkQ==
-X-Received: by 2002:a17:906:c152:b0:aca:c38d:fef0 with SMTP id a640c23a62f3a-ad8a1da7029mr467304966b.0.1748515693881;
-        Thu, 29 May 2025 03:48:13 -0700 (PDT)
-Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad6aa17sm120147166b.175.2025.05.29.03.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 03:48:13 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com,
-	Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH v10] MAINTAINERS: add Raspberry Pi RP1 section
-Date: Thu, 29 May 2025 12:49:30 +0200
-Message-ID: <20250529104940.23053-8-andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1748514765.git.andrea.porta@suse.com>
-References: <cover.1748514765.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1748517287; c=relaxed/simple;
+	bh=m9cw6xNYlfVUW5fGzoPuQKjTw1qi9nFw9HPmQqmdH0U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S94mVcrkvLwRvECGN98b02J2wdBkiHtwt/IXXWIJjrH1gZnKiwrAbc4PfhoIe1VSyv8rO5SfuOp2zWLvSotWyNQK5vqKZjebfNY+Ad5UKFWHj75fBi0ZMv8GUcMDt9Xt4y5HQB4qPQHU1soDPN1cSRMJaiP4/X4tjoOnLO4tTZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6d4Jq0M; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748517286; x=1780053286;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=m9cw6xNYlfVUW5fGzoPuQKjTw1qi9nFw9HPmQqmdH0U=;
+  b=m6d4Jq0Myg5QrH7kpytdB547zzYkShYm7fW5qehIWWWXAfPHXPapIG98
+   1yBI7csA8PN3Nz5VObxgRjed8bBg5TuBbE/OkfQrx0i6C6PCXytHKGKMu
+   WZ7hFzbQnXiki2f2JKhExrbiqoSJdVRzH1+P+VeHxrxSSIkvUiAeCwLMe
+   JF45vISbUxf2/CJDO76+vlwNcEMya2mkGG1ULdOXP4Ga+gK/NTXdrUA3V
+   pmRXzQ7CEnr7a8OmzENnwYgLWEH6aCUO2ruv16LSOuxG+Cic4meX5UxpI
+   cIRYhOP2TJmII+NrIkagxnA+aBbIoDUV8oGk5d0O+fv8vPtI8KwATzOZh
+   Q==;
+X-CSE-ConnectionGUID: 6PQMAYpvSDu9wcKidWkVdQ==
+X-CSE-MsgGUID: WlNfqsmxQkeupxaSclhdpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="68123086"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="68123086"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 04:14:45 -0700
+X-CSE-ConnectionGUID: vDOsLtxwTs6/Pbg/56o+Rw==
+X-CSE-MsgGUID: q4Kiwg8dTcyc+AInkJMsyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="143510364"
+Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 04:14:42 -0700
+From: Badal Nilawar <badal.nilawar@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: anshuman.gupta@intel.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	lucas.demarchi@intel.com,
+	rodrigo.vivi@intel.com,
+	varun.gupta@intel.com,
+	ville.syrjala@linux.intel.com,
+	uma.shankar@intel.com
+Subject: [PATCH v4 00/11] VRAM Self Refresh 
+Date: Thu, 29 May 2025 16:46:43 +0530
+Message-Id: <20250529111654.3140766-1-badal.nilawar@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -125,36 +83,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Raspberry Pi RP1 is a southbridge PCIe device which embeds several
-peripherals.
-Add a new section to cover the main RP1 driver, DTS and specific
-subperipherals (such as clock and pinconf/pinmux/gpio controller).
+Changes in v4:
+  - Resolved build warnings
 
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v3:
+ PCIe ACPI Patches:
+  - dropped the notifier block code and added patch to allow only one Aux
+    power limit request per root port (Rafael J. Wysocki)
+  - Addressed Review comments (Rafael J. Wysocki, Bjorn Helgaas)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2b16ba4eb1ce..2add073f5bdf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20197,6 +20197,14 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
- F:	drivers/media/platform/raspberrypi/rp1-cfe/
- 
-+RASPBERRY PI RP1 PCI DRIVER
-+M:	Andrea della Porta <andrea.porta@suse.com>
-+S:	Maintained
-+F:	arch/arm64/boot/dts/broadcom/rp1*.dts*
-+F:	drivers/clk/clk-rp1.c
-+F:	drivers/misc/rp1/
-+F:	drivers/pinctrl/pinctrl-rp1.c
-+
- RC-CORE / LIRC FRAMEWORK
- M:	Sean Young <sean@mess.org>
- L:	linux-media@vger.kernel.org
+ Xe Pacthes:
+  - Addressed Review comments (Bjorn Helgaas)
+
+
+Anshuman Gupta (6):
+  PCI/ACPI: Add D3cold Aux Power Limit_DSM method
+  PCI/ACPI: Add PERST# Assertion Delay _DSM method
+  drm/xe/vrsr: Detect VRSR Capability
+  drm/xe/vrsr: Refactor d3cold.allowed to a enum
+  drm/xe/pm: D3Cold target state
+  drm/xe/vrsr: Enable VRSR
+
+Badal Nilawar (5):
+  PCI/ACPI: Per root port allow one Aux power limit request
+  drm/xe/vrsr: Introduce flag has_vrsr
+  drm/xe/vrsr: Initialize VRSR feature
+  drm/xe/vrsr: Enable VRSR on default VGA boot device
+  drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
+
+ drivers/acpi/scan.c                     |   1 +
+ drivers/gpu/drm/xe/display/xe_display.c |  28 +++-
+ drivers/gpu/drm/xe/display/xe_display.h |   2 +
+ drivers/gpu/drm/xe/regs/xe_regs.h       |   3 +
+ drivers/gpu/drm/xe/xe_debugfs.c         |  20 +++
+ drivers/gpu/drm/xe/xe_device_types.h    |  12 +-
+ drivers/gpu/drm/xe/xe_pci.c             |  13 +-
+ drivers/gpu/drm/xe/xe_pcode_api.h       |   7 +
+ drivers/gpu/drm/xe/xe_pm.c              | 206 +++++++++++++++++++++---
+ drivers/gpu/drm/xe/xe_pm.h              |   9 +-
+ drivers/pci/pci-acpi.c                  | 167 +++++++++++++++++++
+ include/acpi/acpi_bus.h                 |   2 +
+ include/linux/pci-acpi.h                |  16 +-
+ 13 files changed, 456 insertions(+), 30 deletions(-)
+
 -- 
-2.35.3
+2.34.1
 
 
