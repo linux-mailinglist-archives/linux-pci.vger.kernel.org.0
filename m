@@ -1,209 +1,144 @@
-Return-Path: <linux-pci+bounces-28683-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28684-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 443ACAC83A6
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 23:41:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07368AC83AF
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 23:46:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0F744A33AB
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 21:41:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17ABA7AD64A
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 21:44:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AA6B22CBD2;
-	Thu, 29 May 2025 21:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F541293752;
+	Thu, 29 May 2025 21:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fMIHkpx6"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bl45ywHV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927071D63D8;
-	Thu, 29 May 2025 21:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486C9293725
+	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 21:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748554865; cv=none; b=Dooj7a6Mz7L74dkZkxYcAlgbNcYf76BNeqm2rQnijHRZZ//Q0SZqL6zigEr3gNJbMwWqswAfaxd5IgcXR0FLg/bJBxDPE6jqlc8qOXoAHbzjrr4MDFLYp8o0ytEGrm6T4kAnhoQmfXAHlG4lxUR6S+yumjgJHRyl5YrSBFK7VaY=
+	t=1748555152; cv=none; b=L9+vOkGliXdEucoHTMeYwJRTny9WIdD7lOwIFEcr6Xps8MGUHlNPF8ELOtqRMJoUJBBJlb6dI4l6mIxf1Y6aNXDOcTmStxNLQ6Rte6QryL1/ltrFmNb5nuO2BCo78xWDMlLjOTG/PHsdgOEE7XTBsThS4RkZptfrRMh/bU96b38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748554865; c=relaxed/simple;
-	bh=yquT3Q4Y6eg+V6FFQsYXuCPYWA9Chl04Rh0ku0nJ8pY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lNFeNktKGJUrXRnUyaBLaIwZUlsycHLYd6j+sGUwfHe30t76P1NkLEo1+fQHHOMuveVsm/wNUokX1uJiOiay77J1Hd+rU5aKronydGqj0hmnFY3rFZf8DOx8q5+pa0ch5A1/u39wF8FR0CW3bIqOk4ppHGB6DSs8YjT//yQLTjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fMIHkpx6; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748554864; x=1780090864;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yquT3Q4Y6eg+V6FFQsYXuCPYWA9Chl04Rh0ku0nJ8pY=;
-  b=fMIHkpx6dtF3Y6NG/tCM+qk9v7AKPhUg9zj9ChEeoUlJ2iSIPgFCE5+l
-   Nbkot8Tr0PLiexC4L6xQ7gJP6Spuxq7W5EoftA/cCRJM58KY+feRGIX/L
-   c+CE1/BCh6pCkUBkhGSDzGOxrrwrtNhyN2nsd9YTCU1Pac/x+mir17o3a
-   iYQWDBMmyxB3zBtLjpv42sqU/6CIy8Z+LHpQu260DkjLOcPQoeVnB8S+K
-   Y2iht49fLF+RdgHk7Q8D4sSCplI5Y7J/48yO3Aeaym0XofnBqRvao2w73
-   arJG/RaN8/bMCnlGBWl6oI4u3gXQYW64vuxsput90fDNQ3Zgo1I+IxHf/
-   A==;
-X-CSE-ConnectionGUID: 0a/H9yw7Sjm/RcIoX9vuSQ==
-X-CSE-MsgGUID: Jo/o/uoYQm+MJ4h/EKkF0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50522139"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="50522139"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 14:41:03 -0700
-X-CSE-ConnectionGUID: 5MEdQjDERmmsOI2lYMSOZQ==
-X-CSE-MsgGUID: RA+F4muaQNKdTjJTYvCpvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="143638735"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 14:41:03 -0700
-Received: from [10.124.222.225] (unknown [10.124.222.225])
-	by linux.intel.com (Postfix) with ESMTP id D020A20B5736;
-	Thu, 29 May 2025 14:41:01 -0700 (PDT)
-Message-ID: <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
-Date: Thu, 29 May 2025 14:41:01 -0700
+	s=arc-20240116; t=1748555152; c=relaxed/simple;
+	bh=BCaMPS+A2FwMWe536A/mkcK+XQdRzFV9OSoLZ8TvP7w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I7yaAzpQTfQdl2djMhMJcgz99KR99BQdP5lnwNmW+lIgAqWWcIU+tQxpR0EWx07nnsdLmQWeU8XpZRO9PaWCnp03tw4yjkObsZ75b/PDCf+GKkuc0SbmRAobDEAlYSkfQC5Q4jZhi1Jxu23RFYmJ2PMXO/g1wrlghbD6QM4W2SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=bl45ywHV; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TLjkYq024376
+	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 14:45:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=facebook; bh=D+IQI7hzYY4AdulWkAeQeVS
+	VYH2EOVQ0gfgjGpBkn+M=; b=bl45ywHVXtgR56V3eZOByDZ+5tuWz0lz3cILXPo
+	zbOU/8xYy4hjIfp5fvWWi6DG5oNZq7efhZU7ea+QpS1NIWqx0ZbTY3/fgaP/ymX6
+	D96Obhbvd0/H7Ot4zq5fT0HKODtruUVyWVzAVbkGFlBX13kZqchaoP7eOL/Bi1LC
+	JvFk=
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46xhf5dvy5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 14:45:48 -0700 (PDT)
+Received: from twshared0377.32.frc3.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1748.24; Thu, 29 May 2025 21:44:29 +0000
+Received: by devgpu004.nha5.facebook.com (Postfix, from userid 199522)
+	id C78E440913C; Thu, 29 May 2025 14:44:15 -0700 (PDT)
+From: Alex Mastro <amastro@fb.com>
+To: <linux-pci@vger.kernel.org>
+CC: <alex.williamson@redhat.com>, <jgg@nvidia.com>, <peterx@redhat.com>,
+        <kbusch@kernel.org>, <linux-mm@kvack.org>
+Subject: [BUG?] vfio/pci: VA alignment sensitivity of VFIO_IOMMU_MAP_DMA which target MMIO
+Date: Thu, 29 May 2025 14:44:14 -0700
+Message-ID: <20250529214414.1508155-1-amastro@fb.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
- limit request
-To: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org,
- linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org,
- bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
- lucas.demarchi@intel.com, rodrigo.vivi@intel.com, varun.gupta@intel.com,
- ville.syrjala@linux.intel.com, uma.shankar@intel.com
-References: <20250529111654.3140766-1-badal.nilawar@intel.com>
- <20250529111654.3140766-3-badal.nilawar@intel.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250529111654.3140766-3-badal.nilawar@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDIxMiBTYWx0ZWRfX14oI89rA0cXl L37Ylh4Sep+HkyHJhjDiDo+ivNi+mcB8kUI+OzLL/XHcdxvFLmJL0mPOICztc5L/UOVzAE2+9rj IvWU/bM8q9H066wb0styrOygFklaT0tWd+B3gx1yslI59+zHvgpSuTa2kLTjKZazH31L6xvQsnc
+ X5t5Zdjs1GuNkeiYwWNxBoNrjTpSEKMBlrt4Uyy1Gu0OzD5QRLkFoEnTKN1eNKJNugPFa80bT+d LDtj6SZvGML9nYOm4ffs5pHWfO+fUBMaj/M96mwoBtxwVmflGb3EGKjOax0s8OC9NrqR6X9vV7Q e7KuG4CQFgfxMGlU9FFOIi9DVt25zweZ0/7Rd37hHq93SQfvZxx5SbjnSYQLem4ZWIhiWnMgUqo
+ y7Q1Y2hX/ShB1WoSuO2dsV6ErjSNWLyy1Nv46XoOnntZ+AyaPVJ6x9rVz8vKkPrtHs8IUdxi
+X-Authority-Analysis: v=2.4 cv=HuZ2G1TS c=1 sm=1 tr=0 ts=6838d58c cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=7NlN7ispKPTGJu6vY8wA:9
+X-Proofpoint-GUID: Ox7qUUws9lDcYiVPcg4dqY-ug5LlM4le
+X-Proofpoint-ORIG-GUID: Ox7qUUws9lDcYiVPcg4dqY-ug5LlM4le
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_09,2025-05-29_01,2025-03-28_01
 
+Hello,
 
-On 5/29/25 4:16 AM, Badal Nilawar wrote:
-> For given root port allow one Aux power limit request.
->
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Anshuman Gupta <anshuman.gupta@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> ---
->   drivers/acpi/scan.c     |  1 +
->   drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
->   include/acpi/acpi_bus.h |  2 ++
->   3 files changed, 27 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index fb1fe9f3b1a3..9ae7be9db01a 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
->   	INIT_LIST_HEAD(&device->physical_node_list);
->   	INIT_LIST_HEAD(&device->del_list);
->   	mutex_init(&device->physical_node_lock);
-> +	mutex_init(&device->power.aux_pwr_lock);
->   
->   	mutex_lock(&acpi_device_lock);
->   
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 87f30910a5f1..d33efba4ca94 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->   	union acpi_object *out_obj;
->   	acpi_handle handle;
->   	int result, ret = -EINVAL;
-> +	struct acpi_device *adev;
->   
->   	if (!dev || !retry_interval)
->   		return -EINVAL;
-> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->   		return -ENODEV;
->   	}
->   
-> +	adev = ACPI_COMPANION(&dev->dev);
-> +	if (!adev)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&adev->power.aux_pwr_lock);
-> +
-> +	/* Check if aux power already granted */
-> +	if (adev->power.aux_power_limit) {
-> +		pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
-> +			 adev->power.aux_power_limit);
-> +		mutex_unlock(&adev->power.aux_pwr_lock);
-> +		return -EPERM;
-> +	}
-> +
->   	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
->   					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
->   					  &in_obj, ACPI_TYPE_INTEGER);
-> -	if (!out_obj)
-> +	if (!out_obj) {
-> +		mutex_unlock(&adev->power.aux_pwr_lock);
->   		return -EINVAL;
-> +	}
->   
->   	result = out_obj->integer.value;
->   	if (retry_interval)
-> @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->   	case 0x0:
->   		pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
->   			requested_power);
-> +		adev->power.aux_power_limit = 0;
->   		break;
->   	case 0x1:
->   		pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
->   			 requested_power);
-> +		adev->power.aux_power_limit = requested_power;
->   		ret = 0;
->   		break;
->   	case 0x2:
->   		pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
-> +		adev->power.aux_power_limit = 0;
->   		ret = -EBUSY;
->   		break;
->   	default:
-> @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->   			pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
->   				result);
->   		}
-> +		adev->power.aux_power_limit = 0;
->   		break;
->   	}
->   
-> +	mutex_unlock(&adev->power.aux_pwr_lock);
-> +
->   	ACPI_FREE(out_obj);
->   	return ret;
->   }
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index aad1a95e6863..c4ce3d84be00 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -294,6 +294,8 @@ struct acpi_device_power {
->   	struct acpi_device_power_flags flags;
->   	struct acpi_device_power_state states[ACPI_D_STATE_COUNT];	/* Power states (D0-D3Cold) */
->   	u8 state_for_enumeration; /* Deepest power state for enumeration */
-> +	u32 aux_power_limit;		/* aux power limit granted by bios */
-> +	struct mutex aux_pwr_lock;	/* prevent concurrent aux power limit requests */
+We are running user space drivers in production on top of VFIO, and after
+upgrading from v6.9.0 to v6.13.2 noticed intermittent, slow performance l=
+eading
+to "rcu_sched self-detected stall" when issuing VFIO_IOMMU_MAP_DMA on ~64=
+ GiB
+mmap-ed BAR regions. When doing this on enough devices concurrently, we
+triggered softlockup_panic. The mmap-ed BAR regions were obtained from mm=
+ap on
+a VFIO device fd.
 
+We map regions > 1G, which sometimes do not start at 1G-aligned BAR offse=
+ts,
+but they are always aligned by at least 2 MiB.
 
-Do you need a new lock ? Is it possible to reuse existing mutex like device_lock()?
+We determined that slow, stalling runs were correlated with 4 KiB-aligned
+addresses returned by mmap, and normal runs with >=3D 2 MiB alignment.
 
+Inspired by QEMU's mmap-alloc.c, we are handling this by reserving VA wit=
+h an
+oversized mmap, and then clobbering with MAP_FIXED at a good address insi=
+de the
+reservation with the mmap on the VFIO device fd.
 
->   };
->   
->   struct acpi_dep_data {
+At first we settled for aligning the mmap address to {1 GiB, 2 MiB} exact=
+ly,
+and the stalls disappeared, but then improved performance with the follow=
+ing:
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+We found that the best addresses to pass to VFIO_IOMMU_MAP_DMA have the
+following properties, where va_align and va_offset are chosen based on th=
+e size
+and BAR offsets of the desired mapping.
 
+va_align =3D {1 GiB, 2 MiB, 4 KiB}
+va_offset =3D mmap_offset % va_align
+(addr_to_mmap % va_align) =3D=3D va_offset
+
+Using addresses with the above properties seems to optimize the count and
+granularity of faults as confirmed by bpftrace-ing vfio_pci_mmap_huge_fau=
+lt.
+
+We then backported "Improve DMA mapping performance for huge pfnmaps" [1]=
+ to
+our 6.13 tree, and saw further performance improvements consistent with t=
+hose
+described in the patch (thank you!). However, with the backport, we still=
+ need
+to align mmap addresses manually, otherwise we see stalls.
+
+We are wondering the following:
+- Is all of the above expected behavior, and usage of VFIO?
+- Is there an expected minimum alignment greater than 4K (our system page=
+ size)
+  for non-MAP_FIXED mmap on a VFIO device fd?
+- Was there an unintended regression to our use-case in between 6.9 and 6=
+.13?
+
+Thanks,
+Alex Mastro
+
+[1] https://lore.kernel.org/all/20250205231728.2527186-1-alex.williamson@=
+redhat.com/
 
