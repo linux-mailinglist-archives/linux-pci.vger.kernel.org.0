@@ -1,157 +1,126 @@
-Return-Path: <linux-pci+bounces-28687-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28688-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 491F9AC8422
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 00:22:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EF37AC8426
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 00:22:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 056924A52BC
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 22:22:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B83016DC81
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 22:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1E221D011;
-	Thu, 29 May 2025 22:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61B5E21D011;
+	Thu, 29 May 2025 22:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A05dt31G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGliEGuf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A312192F4;
-	Thu, 29 May 2025 22:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C4219303;
+	Thu, 29 May 2025 22:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748557333; cv=none; b=NHLAIWCYywP9qMHmI/OnCLP+xgYzBYF8H6PuOnu10/3LjsfRy5SnMduJxrOZ6wA+3455+k9ZsjOvNr82xJr/BJ3aLspSfPoiGbDqKLa50wkPq1ceM8fDTaIvtIXS50QtKlACTgv+h2Ip9GwOahiZ1jqzRSOmjxVtoahSBOBYemk=
+	t=1748557345; cv=none; b=Ol4wBBaAUbrdjyDKpOIAXC5ZLXIkxDXQ/PcFkeDc5GoCa9vPlAofrmr1usEPn5N7/tAQE8cUKB25hfhghupu6cFUxHbP/QRR0Rw7AmwySuUA0i0Tfn6C1cy+oTebLzwczJJCH4OGUaNNl3IqUugf/ra8dJ2s0+XgCf4xA0uPA1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748557333; c=relaxed/simple;
-	bh=h+uxh98nAg0a8/1S0TuqkdF8yPeO03QyPmf3K/bLIm4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ajpTsAtsPNY2AJtdnuqYJBouMU1tjYFF0Z7nZR52qLq2j65ti2yDJfDcw6lcj+n5h6O9cGvfWFzKJF2Mi2lD/ACfsz8oo2aiRHo+vy/2SM2JXQ4cRc7ZSCGtS4+WbfGe8IHozTCeyUG/vQvOxkoXcucBvLzNLXpWom10g0OaPxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A05dt31G; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad51ef2424bso276680566b.0;
-        Thu, 29 May 2025 15:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748557330; x=1749162130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzt/MQxcUpDWFeSkaHOplUQ43G4Uz/X3hb9h5NpZQYg=;
-        b=A05dt31GDlBX0sDmmPPAE9pCt8Ybqo2x/WmH1FXtbAAXbdv8JKFFKupv53M4gVzOzB
-         PU+Z4p3l5Zt22lQoNbFoa1nLYgUlJu6pQpKCvRvv/dGNl7QQrK6IufVKrSE6njAzPdRH
-         MeoJWK8QAh5yj/nrGokqdQsQOFP14/r9B8vyFDt40ZV3A2dOjpyIwTvCcEhaPtOdCREG
-         1EVzKNHSx6OGs5ODUqlqyvC7BUntBSfUtgVqjE1NyaLD3Yw3l2B89pYE8jjt1fPDQHRU
-         UPY2fUbb4gIkw5BF8ym/X3t4Te2earxc0tLDRLm9c9c/fYuD+CFtJJLrgZHgI5cShSoH
-         WVhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748557330; x=1749162130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kzt/MQxcUpDWFeSkaHOplUQ43G4Uz/X3hb9h5NpZQYg=;
-        b=rKVZ1dkzmDsL/+6CONyiulF2ncADzMMdAWoklx2ODCjvvqBrpfZrtRBoXi7Lig9mcd
-         NoVAJld4NG4Nhem2qTr4+OCQ60Z0Eci3DuTWgYHJ1VjU0TDFS5BteRJCS/FvHkfubD1+
-         xT0mBzWle9icUeL4s7N4fpwo22d3V5736i6hM4OfDvq+xPaBk2YZWO3hHU9zWKbcw38n
-         kqUTDI5JvOCMsN2JynQdUxwpnyTMmSrhuuwx7nMLu3jSUsI1EqnLuui4CpL/q4bQ+CtJ
-         xhrHLZzIKjM+CLeQ2JUHCBC16TskI5VWWruNFz7B3mwP8caG1yp5gUtYc9o70wtUHpHl
-         /djQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7thufnnMVZTI3SZC8UhO07FwZaq5ur0ZfDa69IYtRMBdFL4avZqFpxGMjc/JoEba7G12DE0bjNf85uchguRAP@vger.kernel.org, AJvYcCVNWWy5RHm+nyl9ZkTHkIgwLSE08f7aWtH8Zkfkdc5wBkW7/3bsm8dXnKc7mqXGCLiHKj8z8Z9ofjA7MO6XK58=@vger.kernel.org, AJvYcCX2qtKNR1kXgwCJqV2iBj3KkX0aEMduQzv6bNVzJvwmV3UOjduDJvyUv7uBMRuDgo1eqjcUEd31BiOhK3NR@vger.kernel.org, AJvYcCXMWD9Aamrj3SYc6HwaKI/n8KcDbTX45e1vYQIb/MO+pB7uGBYs6kPKfc3hiVSNIlJFg8UTcrQ3ktk3KvQ=@vger.kernel.org, AJvYcCXbT/Z6X0nurt5xF8gPcW9no35lRd2rpJa6C75aSyGuMlvbrttWJItEctPJdoXt7YTVwXN5TiUn@vger.kernel.org, AJvYcCXc+31NpO6bLac2IMIQGcLyruqM/ObzGD4BQCNrUlT+nGI3kjccEW5IjJk4u9ybyDa3S/p+BpIByXKX@vger.kernel.org, AJvYcCXm1tk0mAV7LNe/t3cO1UgP5auAwfsVHEzfciZimnF0ufQ2Cq7562IALzFu3JCkTELC3zYcgF8edYlA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPo9D1MXjvyl8+Nx0FdxQlY1bHStcBcOfxZ4pfdRF0UDFaabvN
-	eBDRZzxk09g5rq9R02mGPHfE3uae8qnxl/kGli9zeGvam9AWnd8IBMaEQUaFYEzZMyj51+iJLXD
-	PrZRmXLJUcPKa8Ao9Jejsq4IlzHdefH0=
-X-Gm-Gg: ASbGncucIkEcy+77Ymr5oSL6pe0s3ep2YouhzJNnmYKpbuZq5xasj9P7UuvHHF451gh
-	/yv5ZQbjY7jmXu0GFO8rhzKqn28HBIayJ3eQm1cnwn7ymryzadEfYAjhWNMZJWXKOBhCkmIsQ4q
-	xdK/CdEOmdp6kR76GyO8j51jUmQS1do0gpwHOidtYu5Lwb31SWt8dDUxH4+d7IaRYlUA==
-X-Google-Smtp-Source: AGHT+IFIWF7by3gTs9nskHKuDrd5DhLirM+9vmkqnyJc8DqSb/t3iOg3xoZJQ/VvsEAFPlJfLOTUIKCA5jn+ma8BioI=
-X-Received: by 2002:a17:907:72ca:b0:adb:229a:f8bd with SMTP id
- a640c23a62f3a-adb322fcfebmr110658666b.29.1748557329539; Thu, 29 May 2025
- 15:22:09 -0700 (PDT)
+	s=arc-20240116; t=1748557345; c=relaxed/simple;
+	bh=qiABFbsJcWyIhPq0FNeTctPGJf0KQJvA0uRNtOQkP0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=leisMT+74XsVX40alLIXEtIhqM4l98k7aA2TfZ+ZqLStv5iMFQCDGEjQUXO5nRxvTTYdtlYNz6ZrPdHQfuR5+k4qAWnCWDyigkOlQEQCAMjLOzCBK0mMf8QBinAe9+fXaTo0F+IeHkdtLagKquuxEFOZSH1F8OX7m4jzSqZ4NRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGliEGuf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85753C4CEE7;
+	Thu, 29 May 2025 22:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748557344;
+	bh=qiABFbsJcWyIhPq0FNeTctPGJf0KQJvA0uRNtOQkP0A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aGliEGufqyb+DIOC8pTu31skuxGM1Z9/+SBkPULyPbr7nBDcxTbfxm5e2OUf5hw8Q
+	 QvfhKaZWDrf+WxR0bBbtdSw4ly+IGFJlVwH0yuuoVWkXfDfdZgWq0tglZ66zaN1TXX
+	 NLLHhx4s4PPmLeWSmxMN5eeH3mtObhhx5LGnKjSysl2JX+gnwni6m7HXwkvfBLqb+9
+	 nZ0FVDBfrx2BRLfPAIgpjIRalxKEdgKsh2zSfdfVpTO34nmT7w9gTdK9bn33O9NOfP
+	 lc9QNYhRqvj2kWX969thEjACIxvGrrqO0l/8li70WgBdyuUXaPYaO0kICEoHBeF7gy
+	 +2dY6S4VzDr0Q==
+Date: Thu, 29 May 2025 17:22:23 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Lukas Wunner <lukas@wunner.de>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-usb@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: [bugzilla-daemon@kernel.org: [Bug 220175] New: NVMe SSD doesn't work
+ via Thunderbolt enclosure on Framework 13 (Ryzen AI 300)]
+Message-ID: <20250529222223.GA119209@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-4-6412a94d9d75@gmail.com> <DA66NJXU86M4.1HU12P6E79JLO@kernel.org>
- <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com>
- <aDbnLzPIGiAZISOq@google.com> <DA7WJYNAN5AI.2HE6B953GR16A@kernel.org>
-In-Reply-To: <DA7WJYNAN5AI.2HE6B953GR16A@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 29 May 2025 18:21:33 -0400
-X-Gm-Features: AX0GCFuFM8jRq3YcmcHlgxg8fSyonDU9gdfdyymDZiM0nf24_ZjIqY6KX4ZOh1M
-Message-ID: <CAJ-ks9nmxdSKtEuzT=yBU-WEuZXBupr5N6tainzrk=w3U_enXw@mail.gmail.com>
-Subject: Re: [PATCH v10 4/5] rust: replace `kernel::c_str!` with C-Strings
-To: Benno Lossin <lossin@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Michal Rostecki <vadorovsky@protonmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, May 28, 2025 at 11:35=E2=80=AFAM Benno Lossin <lossin@kernel.org> w=
-rote:
->
-> On Wed May 28, 2025 at 12:36 PM CEST, Alice Ryhl wrote:
-> > On Mon, May 26, 2025 at 06:29:46PM -0400, Tamir Duberstein wrote:
-> >> On Mon, May 26, 2025 at 11:04=E2=80=AFAM Benno Lossin <lossin@kernel.o=
-rg> wrote:
-> >> >
-> >> > On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
-> >> > > +macro_rules! c_str_avoid_literals {
-> >> >
-> >> > I don't like this name, how about `concat_to_c_str` or
-> >> > `concat_with_nul`?
-> >> >
-> >> > This macro also is useful from macros that have a normal string lite=
-ral,
-> >> > but can't turn it into a `c""` one.
-> >>
-> >> Uh, can you give an example? I'm not attached to the name.
-> >
-> > I also think it should be renamed. Right now it sounds like it creates =
-a
-> > c string while avoiding literals in the input ... whatever that means.
->
-> Yeah that's a good way to put why the name is weird.
->
-> > I like Benno's suggestions, but str_to_cstr! could also work?
->
-> Hmm, I think then people won't know that it can also concat? I don't
-> think it matters too much, the macro probably won't be used that often
-> and if someone needs to use it, they probably wouldn't fine it by name
-> alone.
+[+cc pciehp, thunderbolt, nvme folks;
+ +bcc Andrey (reporter)]
 
-What do you mean by "it can also concat"? This macro by itself doesn't
-concat, it takes only a single expr. The example in the docs
-illustrates:
+Andrey, sorry that you tripped over this, and thank you very much for
+reporting it.  I'm forwarding this to the mailing lists because most
+subsystems don't really pay attention to the bugzilla.
 
-    const MY_CSTR: &CStr =3D c_str_avoid_literals!(concat!(...));
+Obviously we don't want to have to use kernel args to make things
+work, and we also don't want to have to use /sys/bus/pci/rescan after
+a hot-add.
 
-I think str_to_cstr is ok - I'll do that in v11.
+IIUC, if you boot while the SSD in the enclosure is already attached
+to the USB 3.2 port, everything works fine?  Could you please attach a
+complete dmesg log from such a boot to the bugzilla, just as a
+baseline?
+
+----- Forwarded message from bugzilla-daemon@kernel.org -----
+
+https://bugzilla.kernel.org/show_bug.cgi?id=220175
+
+           Summary: NVMe SSD doesn't work via Thunderbolt enclosure on
+                    Framework 13 (Ryzen AI 300)
+
+Created attachment 308180
+  --> https://bugzilla.kernel.org/attachment.cgi?id=308180&action=edit
+lspci -vvv
+
+I have a Samsung 970 Evo Plus SSD installed in an ACASIS TBU401E USB4
+enclosure. When I connect it to the USB 3.2 port, everything is fine, the SSD
+is detected by the scsi driver and shows up in the system as /dev/sdb. But when
+I plug it into the USB4 port, the device doesn't show up.
+
+However, I can connect and use this disk by using kernel args
+`nvme_core.default_ps_max_latency_us=0 pcie_aspm=off pcie_port_pm=off` and
+doing `echo 1 | sudo tee /sys/bus/pci/rescan` after connecting the SSD.
+
+Solution described in https://bugzilla.kernel.org/show_bug.cgi?id=216000#c65
+doesn't help and breaks most of the PCIe devices in the system.
+
+More info:
+
+```
+$ uname -r
+6.14.6-300.fc42.x86_64
+$ ls /dev/nvme*    
+zsh: no matches found: /dev/nvme*
+$ cat /sys/bus/thunderbolt/devices/1-2/vendor_name         
+ACASIS
+$ cat /sys/bus/thunderbolt/devices/1-2/authorized         
+1
+$ inxi -MC           
+Machine:
+  Type: Laptop System: Framework product: Laptop 13 (AMD Ryzen AI 300 Series)
+    v: A9 serial: <superuser required>
+  Mobo: Framework model: FRANMGCP09 v: A9 serial: <superuser required>
+    UEFI: INSYDE v: 03.03 date: 03/10/2025
+CPU:
+  Info: 12-core model: AMD Ryzen AI 9 HX 370 w/ Radeon 890M bits: 64
+```
 
