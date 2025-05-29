@@ -1,160 +1,176 @@
-Return-Path: <linux-pci+bounces-28639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 130B2AC7E12
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 14:45:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D68FAC7E79
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 15:15:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 469D1A254BC
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 12:44:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D95391C021A9
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 13:16:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E1A522F778;
-	Thu, 29 May 2025 12:42:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A2621B8F2;
+	Thu, 29 May 2025 13:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZS5zncOf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="isufujcA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276ED22D789
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 12:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937D4647;
+	Thu, 29 May 2025 13:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522570; cv=none; b=eNEnV2y6bwTeLCf18TiBfEJkxUmW3xWliLBaPh0ovqMsAixoAKnlktSBCNAxhf6GUGAZ4bNEPbUyunfZwWx25Fq6RG6PaYDwNhZVy5ytY1GhCBvq7tSNQCJ0iF4lQidyOQe2K9bvV6H5gcGc7SNvByYpgTuWnx7tSWkWp8uP9+A=
+	t=1748524525; cv=none; b=L9NbPNKAypb+HqKV9dC7Bz2Jsqee2ntvNXnXTD8KN+y5IAqDgx+4XCWV8WjhRNQAhZ4ipkwg2UgReFE3gTepGFipwLehoa2pWalXaJr/3SbRBChQxfoUi6KnPwbZqjo09dv1cnxRETLIAjvs5cqxmxV/xDg6DwRVc8UoO2aE9TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522570; c=relaxed/simple;
-	bh=Cxv3DdNSTbG6mkWW+XlQDzM5M3k//FCq7uG/9MGjWvM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GGpP02HGy/ycZjf/GtDKKf9uLQU+IQj9+q/0c3d8OhamVX194ctbMOcABZCfvZOq4iKCp3vOcUh+DRU2VYaNenqaitP6gHHBG6grBt+1XoGg7ebwMSoiFSDORoAKPyAUMlG/vRwdc1tHQL7zGygf7CoSJHJ2GZaoBHoZD03rOBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZS5zncOf; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60461fc88d7so1627740a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 05:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748522565; x=1749127365; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i8LMEHYmovrRN8zYWQwYy5+2ddqvSDMDQcnZraZcEHI=;
-        b=ZS5zncOfC+K7c9w1dnbJRv6ieLVSoQAPrRkjhVg60LhgyGuVHQ7FO+jREy4JVcZsZf
-         wUaohrPRRPCxex9EznSVNEWLE297C90KV73nVMKFqMaUoXwzqB8HYsvLOM2oQnZ42N0y
-         6VvAp4BryHzZQRTqOPHh6aIIX/Kuue8Sx7e/m3GEhZrkHVMg4ABmRKtP8g20NBD8F1MG
-         NmGmMZBi2Lc4wyI0g4kMyB3Z5QaVpDoORuJbmrAxi8lMGmRhAcjcyAzE91gPRfXIHVFE
-         a7IMY9I+Z0xXgbWV5YLC3bWMRrX65sl2KAtNegTxnaabqfoVoM/fCPEjzxbOzP0NP+NR
-         iR4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748522565; x=1749127365;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i8LMEHYmovrRN8zYWQwYy5+2ddqvSDMDQcnZraZcEHI=;
-        b=pD4Dj+VAaXyKLOt997Xynjl2Re7euSuch0UjKGW+fYc54NNXxpt2aGIU5WMZEiaWkB
-         /TpM3ZpXpmsr1hJUZZPfyT6dDAOl4aaUzfOvmEHNR1IiKs0Ovq5DNXfHPrSS9Nn7uLtu
-         xn4I4DqQ8Rb0MRfh2RQxdR0MTn8RobQRGFeTbaqZEVjAmky8ncF3FnZqNlFm9TTpINnf
-         dqR1oecfaEdzhNZTW1g0tUb2HOlUSKp5FZSeHttTRuFN/NsALQiiaIvujVXevxdEvrPL
-         Q8SCbO17ZOXDWLWs/JgfOpQ9tCX5b3X4dunBsyrERdKFHHnbSnzpR286l1pFALEzZMEa
-         qZXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXrQkld6khpKHu7ObcpU/jDvkBzWqVLGfm9A+Y3iuW4vxopf/W5yVoND0CjAuz3W8dZ7hw0xv1Bj78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTSwMTH2GrHuCMChMrhmwkmgvymM2D5e97YyckwEOWV5RoX0bY
-	5yakHQSb4HtarqJnzAHN+7/nK1o+TV8KsJIRUMCNSBHuHE7R6MWfw5Aw/nHlMi6rZdw=
-X-Gm-Gg: ASbGncsps3kMVbRjxubllL5z985Y94wLknOKFUstH3Ur4bpLfP42phmyep4pO5zeMqn
-	jcb3DFxupbs7iDUGzw3SGgDomhvS+FpC/uXkTZBtF5tmJVta3MimwP99aAUVcI613A0CTI5JmAD
-	T7LohXNc8cY/Z017E1lnKMVwUa3dGuQ2ApJb3/0Jd/T+oHHwdDMVRcZ7JLqKjL3kD0auAfzJgp2
-	56bEQiISOLUXxMC1ZzeNgfGqqriFCIWnkHKivTGFoT19b6ZaqkAeLTnrGAzQbv+qT9BQIrMbUZQ
-	cyxpQ2N+huak6y/YdV9InAe4K0+82bYbnmSUmwZOa288UohT9vww8hEK8kQdDpmJr95kpIkwkJQ
-	up695QDfKR6E9nzBKAgPXicpTxkn9ksve
-X-Google-Smtp-Source: AGHT+IGSKPwPkYLca5xt4DTsp41XrvIAXEH42/7GBMAHBHwSDsKU5tUb2elBTXwGWSigWuI5ixWpNw==
-X-Received: by 2002:a17:907:72cb:b0:ad8:9909:20a3 with SMTP id a640c23a62f3a-ad8a1fcd782mr609032066b.43.1748522564992;
-        Thu, 29 May 2025 05:42:44 -0700 (PDT)
-Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fed3dsm139572166b.12.2025.05.29.05.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 05:42:44 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
+	s=arc-20240116; t=1748524525; c=relaxed/simple;
+	bh=+aU5coUTqdWc4L2KpPHN9OKmnhKhXyOVMxJInCN/ebk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN8T/+tu6tK1s6v2zfyRcBPeSU7yInYJG80VntWGM4HRO6tQCX4WKlc/Q0eGpFEYcFcm2bixZ3FH7WZwWBVG0GFWjdXugZ4DUQ8ptdF/dJdTi18vPbHs6WymvxNWNk7vQIM7AW7pbAvLxZoKngiZ9UYTtrUPaie6WaiX07Qn8pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=isufujcA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id E6D682078611; Thu, 29 May 2025 06:15:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6D682078611
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748524522;
+	bh=Ezqk5Ddjq2iKkVzyKUvJjsCMCcife5igRAcu3O9LX2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=isufujcARZKa+Tr14FliUe/xB/VXxC27m1DAqmnuRWKLOm2Ltgy1mZ0cGbFwcGGyU
+	 CeK09cu9hOkaT2ru0eM9004OXeAe/E755bELXTHgo3EFO2Gpf2v+4BBDo8U0+On3rq
+	 MZl0wrfeUcVcIg9nivDlyfHFM9TTy7SiFqLxk7Yk=
+Date: Thu, 29 May 2025 06:15:22 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com,
-	Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH v11 13/13] MAINTAINERS: add Raspberry Pi RP1 section
-Date: Thu, 29 May 2025 14:44:02 +0200
-Message-ID: <20250529124412.26311-8-andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1748522349.git.andrea.porta@suse.com>
-References: <cover.1748522349.git.andrea.porta@suse.com>
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4 3/5] net: mana: explain irq_setup() algorithm
+Message-ID: <20250529131522.GA27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <aDYOFzQrfDFcti-u@yury>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDYOFzQrfDFcti-u@yury>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Raspberry Pi RP1 is a southbridge PCIe device which embeds several
-peripherals.
-Add a new section to cover the main RP1 driver, DTS and specific
-subperipherals (such as clock and pinconf/pinmux/gpio controller).
+On Tue, May 27, 2025 at 03:10:15PM -0400, Yury Norov wrote:
+> So now git will think that you're the author of the patch.
+> 
+> If author and sender are different people, the first line in commit
+> message body should state that. In this case, it should be:
+> 
+> From: Yury Norov <yury.norov@gmail.com>
+> 
+> Please consider this one example
+> 
+> https://patchew.org/linux/20250326-fixed-type-genmasks-v8-0-24afed16ca00@wanadoo.fr/20250326-fixed-type-genmasks-v8-6-24afed16ca00@wanadoo.fr/
+> 
+> Thanks,
+> Yury
+>
 
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Understood, Thank you Yury. I'll make this change in the next version
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2b16ba4eb1ce..2add073f5bdf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20197,6 +20197,14 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
- F:	drivers/media/platform/raspberrypi/rp1-cfe/
- 
-+RASPBERRY PI RP1 PCI DRIVER
-+M:	Andrea della Porta <andrea.porta@suse.com>
-+S:	Maintained
-+F:	arch/arm64/boot/dts/broadcom/rp1*.dts*
-+F:	drivers/clk/clk-rp1.c
-+F:	drivers/misc/rp1/
-+F:	drivers/pinctrl/pinctrl-rp1.c
-+
- RC-CORE / LIRC FRAMEWORK
- M:	Sean Young <sean@mess.org>
- L:	linux-media@vger.kernel.org
--- 
-2.35.3
-
+Regards,
+Shradha. 
+> On Tue, May 27, 2025 at 08:58:25AM -0700, Shradha Gupta wrote:
+> > Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
+> > added the irq_setup() function that distributes IRQs on CPUs according
+> > to a tricky heuristic. The corresponding commit message explains the
+> > heuristic.
+> > 
+> > Duplicate it in the source code to make available for readers without
+> > digging git in history. Also, add more detailed explanation about how
+> > the heuristics is implemented.
+> > 
+> > Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > ---
+> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index 4ffaf7588885..f9e8d4d1ba3a 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+> >  	r->size = 0;
+> >  }
+> >  
+> > +/*
+> > + * Spread on CPUs with the following heuristics:
+> > + *
+> > + * 1. No more than one IRQ per CPU, if possible;
+> > + * 2. NUMA locality is the second priority;
+> > + * 3. Sibling dislocality is the last priority.
+> > + *
+> > + * Let's consider this topology:
+> > + *
+> > + * Node            0               1
+> > + * Core        0       1       2       3
+> > + * CPU       0   1   2   3   4   5   6   7
+> > + *
+> > + * The most performant IRQ distribution based on the above topology
+> > + * and heuristics may look like this:
+> > + *
+> > + * IRQ     Nodes   Cores   CPUs
+> > + * 0       1       0       0-1
+> > + * 1       1       1       2-3
+> > + * 2       1       0       0-1
+> > + * 3       1       1       2-3
+> > + * 4       2       2       4-5
+> > + * 5       2       3       6-7
+> > + * 6       2       2       4-5
+> > + * 7       2       3       6-7
+> > + *
+> > + * The heuristics is implemented as follows.
+> > + *
+> > + * The outer for_each() loop resets the 'weight' to the actual number
+> > + * of CPUs in the hop. Then inner for_each() loop decrements it by the
+> > + * number of sibling groups (cores) while assigning first set of IRQs
+> > + * to each group. IRQs 0 and 1 above are distributed this way.
+> > + *
+> > + * Now, because NUMA locality is more important, we should walk the
+> > + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
+> > + * implemented by the medium while() loop. We do like this unless the
+> > + * number of IRQs assigned on this hop will not become equal to number
+> > + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
+> > + * do the same thing.
+> > + */
+> > +
+> >  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+> >  {
+> >  	const struct cpumask *next, *prev = cpu_none_mask;
+> > -- 
+> > 2.34.1
 
