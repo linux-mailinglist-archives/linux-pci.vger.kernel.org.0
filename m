@@ -1,193 +1,152 @@
-Return-Path: <linux-pci+bounces-28646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0F31AC7EB6
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 15:28:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 184CBAC7EC2
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 15:34:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75D664E6BB8
-	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 13:28:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0780CA201AF
+	for <lists+linux-pci@lfdr.de>; Thu, 29 May 2025 13:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5BD322687B;
-	Thu, 29 May 2025 13:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C7828F4;
+	Thu, 29 May 2025 13:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A3v8zUXn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0Qan5EH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69D0226165
-	for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 13:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0682110;
+	Thu, 29 May 2025 13:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525313; cv=none; b=c0187ZV5pZVGMeimF22ZTxcXjXiRp1+W/fukbC032OrMW+eKP7ABSy6wjtZL1iQD3XDhXIg04og/TqDTB6Jofj9NOxNHqr2KzhVEdcJrP8aHLtLstxFl2KRJK8p5xxa28c6quz01uaeuXbsNff0HpddezB/LW5d0022XOw2D45s=
+	t=1748525659; cv=none; b=R4fN0pN53EesjyrEguof+sr/p6djkfzZVafXZKgTH/nA0rePZ/cGuhjykBlHTBATs6qq24lVpWZU1oKtHFk4miVnuRxtgvLgSdUpK43dSL/C94I0qbQuXVqT3ECY3w8r8Yxhe+YevHv7WigVJRRz7K2pDwF6iZ0jA0/Vai9NA5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525313; c=relaxed/simple;
-	bh=dxaIdhwkxrcOH7PEuve5FxQGB0PHBCUqWE1E/dvQymc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SajptpRATuMcOGC/Kb0IwU2Jz9LN3WrwWeomMCAzUlGZ5HFjy4Idwk43dGl9q5c2CjdCvQIZpajcv9DqQyGnpZYTEx0nnUK7fBU/7SD35HJE+K6KfLeH6A6Efs1l+dMRUtSF3m3knr1OSTQVuLrA2eC8ZD8ngfre4Dv0xIz8iuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A3v8zUXn; arc=none smtp.client-ip=209.85.208.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso1626202a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 06:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748525310; x=1749130110; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1kiFDdDACgorTtuRk6Gy6UOaoSPvn2tyJrIu3RsE3v0=;
-        b=A3v8zUXnzauQLe9ygE6mTbuXx1BUCCXTZaNjNvsVuhlJM4xdoOkcJZVNMEHC21WEDR
-         oMYMuh6MVkOPh3tuPnDWs1noaLEPe2ioTEJQXn8E1p9L6RasaWKK9QHPk/ln0EOk09fN
-         VEx08SFJHeYBdvO6QuKBXlyJjwNfITKmr6qnoyTsioaxGdxDwrFLHXfumzowGdqWBusE
-         7oBr8AhYUM8JSI3APz2CfNeUkn2LfQyQWloaj7yEPiqWTooDA62nUc0Fr0ue6wnz1PoK
-         GCoULDD35NKBw87W4rVdP8ZADod79bcKFVf9+VFckjV5RhFS/xJKOon8BlGh7AWeBprf
-         m1gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748525310; x=1749130110;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1kiFDdDACgorTtuRk6Gy6UOaoSPvn2tyJrIu3RsE3v0=;
-        b=OrjOxZU6rSq/gCCKWjKIZXKEad7CWSbbHjfoggRTcMpS+POo+nQ6SNK6ys01IXE04L
-         Tv895z0t5uip+4TUJOdCDJy5zdtGk7dSUjcyYQ82gOKTAlJ8UdJcgnYQnP4IP+tYybNb
-         PyJp2iZNEHt9t8WgtskbwCEEOXJypY3Et5N7vrs8I4pu/XT2jSJrtDTFdKx3aDEqgp2o
-         6eNPm7fIeDdSKPyufoJsv6zdQ1Nv8z1YfvnGi1NDEZHvxIwYMn1MDKe7O+1Ov3nrXWB4
-         ltr9JZCwtIq+jGIZpteafLwHvEilNN7NSTDMAAeN2qJkcaEUcLX7jDCY9kBstU4b4vym
-         zELw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzrqOuLvzflAMfdzEoAavF30LSkusRC5h4Gb0cc1F5mGHhV4nbvHHE4JaWv8LYoW18wmWMaHUxRn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyoirO7i6SJauNVu5USnrCdiiiqpHVygu0Kve9Zd7VeyOAUcRM
-	WLILx919T1L7xiRJGMhLYkyxfIJggOXoDoS1hjfWmE2mAwOzoBPo6mvYfNTSLe5MqVg=
-X-Gm-Gg: ASbGncuojCdXiDyTjzrS7fhN28c49CAPhwExihpnDSDVk1sekgZHO2Wg/8mDYnKQ2kV
-	nm1BLj9M8+Frp41OOipaayYQUJb1mq/YWAMQ5WrfWeJA0SBBMqP4Z8PDLiVc9P0Pz1hMy0AQ3Sk
-	yJPvLKpeSgfqWIpEVqWViQSHw1XdDYxDqO3N5HcZNNz24Nb5A3LgktHKRSHP6+uWxSgosHFEYv9
-	N2ncNY/vzZM2JvK137yLrtOCm0AmLxVcB7naHcyTFl55csvKV0mBLD0i0gr7+QS6UuHsU3W8pnf
-	b8r6mo1+JEKpoldPsSVA9ZgCb72HB9bT4DqM1ycjmstUBGAsrJMC5Rch9lFZbWK+CJqkl5LLIQd
-	GNIcoSbjRh81sFEQ3YFnIv33AL6++A4+J
-X-Google-Smtp-Source: AGHT+IHK4Y7PatnxnQUlnLwZj15PpOrDfyPqPLYipWAui/kq0fXHKQv8bz76vrMm7M/L8eA7f812UQ==
-X-Received: by 2002:a05:6402:27c6:b0:5fc:954e:bd4f with SMTP id 4fb4d7f45d1cf-602d906bc1amr16501831a12.8.1748525309931;
-        Thu, 29 May 2025 06:28:29 -0700 (PDT)
-Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d9587sm2364236a12.15.2025.05.29.06.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 06:28:29 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 29 May 2025 15:30:04 +0200
-To: Matthias Brugger <mbrugger@suse.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v11 07/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <aDhhXF_MNn34Bu2N@apocalypse>
-References: <cover.1748522349.git.andrea.porta@suse.com>
- <20250529124412.26311-2-andrea.porta@suse.com>
- <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
+	s=arc-20240116; t=1748525659; c=relaxed/simple;
+	bh=gGrPcUbjKM6TOgRqHUDQ5O4yAB1Xa1r59brAeraY4Qw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IQDNrmag2cZ7te5ask/ay4AXx/gQWjx1qk78rHg04kXzWH6Y7oJW73kcTJoMSROtDpPLLsi5L85HnlbsLMw0drDbvktQEBnHu810P3P4t/95UQi3Y2U8IRHGFH3+37b6wFTQRotAgmbVc5fyxWK+N67culmOJHAlT/D4wQg+N28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0Qan5EH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7988CC4CEE7;
+	Thu, 29 May 2025 13:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748525659;
+	bh=gGrPcUbjKM6TOgRqHUDQ5O4yAB1Xa1r59brAeraY4Qw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=V0Qan5EHlAvol6V/NKAopzFvGEhSt7zbvOqq3ktGIGQvCU2Gy1fD/l3XsfyJhf4hZ
+	 BUUmCrux3Euu9ytpV+Y/hBxpeSkk7xjKvdbhtvbxmb61kBrbNveb2n4g2y/mpvyWDd
+	 8elN/Hz3X2jg+d/arQ+0WKQBKUTtciGsMqn+yDbMEenuN7nQvcoTEEA2sQkK2ECdqX
+	 F5zuXrjXf53V9U01hbRBHfqmot9w83HaiqX8lgL/QhQvOCBOMyoo2SOFw1mic3jw8D
+	 Y1W09otXsltMpCNuOBRnR8uz5cgr2otN6ROCvrwRSXKXUzDMNB0B9ylbENPEbmweF9
+	 O0dWQYgrkTYWA==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Alexey Kardashevskiy <aik@amd.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
+	jgg@nvidia.com, zhiw@nvidia.com
+Subject: Re: [PATCH v3 12/13] PCI/TSM: support TDI related operations for
+ host TSM driver
+In-Reply-To: <b96cb784-6097-49af-ae3c-bf469cd609de@amd.com>
+References: <20250516054732.2055093-1-dan.j.williams@intel.com>
+ <20250516054732.2055093-13-dan.j.williams@intel.com>
+ <aCbglieuHI1BJDkz@yilunxu-OptiPlex-7050> <yq5awmab4uq6.fsf@kernel.org>
+ <aC2eTGpODgYh7ND7@yilunxu-OptiPlex-7050> <yq5aa570dks9.fsf@kernel.org>
+ <1bcf37cd-0fc4-40fa-bcd1-e499619943bd@amd.com>
+ <yq5ah617s7fs.fsf@kernel.org>
+ <cfdfd053-9e9d-43c0-8301-5411a02ffdf9@amd.com>
+ <yq5abjres2a6.fsf@kernel.org>
+ <b96cb784-6097-49af-ae3c-bf469cd609de@amd.com>
+Date: Thu, 29 May 2025 19:04:11 +0530
+Message-ID: <yq5a5xhj5yng.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
+Content-Type: text/plain
 
-Hi Matthias,
+Alexey Kardashevskiy <aik@amd.com> writes:
 
-On 15:24 Thu 29 May     , Matthias Brugger wrote:
-> 
-> 
-> On 29/05/2025 14:43, Andrea della Porta wrote:
-> > The RaspberryPi RP1 is a PCI multi function device containing
-> > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > and others.
-> > 
-> > Implement a bare minimum driver to operate the RP1, leveraging
-> > actual OF based driver implementations for the on-board peripherals
-> > by loading a devicetree overlay during driver probe if the RP1
-> > node is not already present in the DT.
-> > 
-> > The peripherals are accessed by mapping MMIO registers starting
-> > from PCI BAR1 region.
-> > 
-> > With the overlay approach we can achieve more generic and agnostic
-> > approach to managing this chipset, being that it is a PCI endpoint
-> > and could possibly be reused in other hw implementations. The
-> > presented approach is also used by Bootlin's Microchip LAN966x
-> > patchset (see link) as well, for a similar chipset.
-> > In this case, the inclusion tree for the DT overlay is as follow
-> > (the arrow points to the includer):
-> > 
-> >   rp1-pci.dtso <---- rp1-common.dtsi
-> > 
-> > On the other hand, to ensure compatibility with downstream, this
-> > driver can also work with a DT already comprising the RP1 node, so
-> > the dynamically loaded overlay will not be used if the DT is already
-> > fully defined.
-> > 
-> > The reason why this driver is contained in drivers/misc has
-> > been paved by Bootlin's LAN966X driver, which first used the
-> > overlay approach to implement non discoverable peripherals behind a
-> > PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> > since the driver code is not running on-chip and is not like an MFD
-> > since it does not really need all the MFD infrastructure (shared regs,
-> > etc.). So, for this particular use, misc has been proposed and deemed
-> > as a good choice. For further details about that please check the links.
-> > 
-> > This driver is heavily based on downstream code from RaspberryPi
-> > Foundation, and the original author is Phil Elwell.
-> > 
-> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> > Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> > Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> > Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> > Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
-> 
-> What changed in this patch so that you didn't include the Acked-by from Greg
-> [1], or is this an oversight?
+> On 27/5/25 21:48, Aneesh Kumar K.V wrote:
+>> Alexey Kardashevskiy <aik@amd.com> writes:
+>> 
+>>> On 27/5/25 01:44, Aneesh Kumar K.V wrote:
+>>>> Alexey Kardashevskiy <aik@amd.com> writes:
+>>>>
+>>>>> On 26/5/25 15:05, Aneesh Kumar K.V wrote:
+>>>>>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>>>>>>
+>>>>>>> On Tue, May 20, 2025 at 12:47:05PM +0530, Aneesh Kumar K.V wrote:
+>>>>>>>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>>>>>>>>
+>>>>>>>>> On Thu, May 15, 2025 at 10:47:31PM -0700, Dan Williams wrote:
+>>>>>>>>>> From: Xu Yilun <yilun.xu@linux.intel.com>
+>>>>>>>>>>
+>>>>>>>>>> Add kAPIs pci_tsm_{bind,unbind,guest_req}() for PCI devices.
+>>>>>>>>>>
+>>>>>>>>>> pci_tsm_bind/unbind() are supposed to be called by kernel components
+>>>>>>>>>> which manages the virtual device. The verb 'bind' means VMM does extra
+>>>>>>>>>> configurations to make the assigned device ready to be validated by
+>>>>>>>>>> CoCo VM as TDI (TEE Device Interface). Usually these configurations
+>>>>>>>>>> include assigning device ownership and MMIO ownership to CoCo VM, and
+>>>>>>>>>> move the TDI to CONFIG_LOCKED TDISP state by LOCK_INTERFACE_REQUEST
+>>>>>>>>>> TDISP message. The detailed operations are specific to platform TSM
+>>>>>>>>>> firmware so need to be supported by vendor TSM drivers.
+>>>>>>>>>>
+>>>>>>>>>> pci_tsm_guest_req() supports a channel for CoCo VM to directly talk
+>>>>>>>>>> to TSM firmware about further TDI operations after TDI is bound, e.g.
+>>>>>>>>>> get device interface report, certifications & measurements. So this kAPI
+>>>>>>>>>> is supposed to be called from KVM vmexit handler.
+>>>>>>>>>
+>>>>>>>>> To clarify, this commit message is staled. We are proposing existing to
+>>>>>>>>> QEMU, then pass to TSM through IOMMUFD VDEVICE.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Can you share the POC code/git repo implementing that? I am looking for
+>>>>>>>> pci_tsm_bind()/pci_tsm_unbind() example usage.
+>>>>>>>
+>>>>>>> The usage of these kAPIs should be in IOMMUFD, that's what I'm doing for
+>>>>>>> Stage 2 patchset. I need to rebase this series, adopt suggestions from
+>>>>>>> Jason, and make TDX Connect work to verify, so need more time...
+>>>>>>>
+>>>>>>
+>>>>>> Since the bind/unbind operations are PCI-specific callbacks, and iommufd
+>>>>>
+>>>>> Not really, it is PCI-specific in TSM (for DOE) but since IOMMUFD is not doing any of that, it can work with struct device (not pci_dev). Thanks,
+>>>>>
+>>>>
+>>>> Ok, something like this? and iommufd will call tsm_bind()?
+>>>
+>>> yeah, I guess, there is a couple of places like this
+>>>
+>>> git grep pci_dev drivers/iommu/iommufd/
+>>>
+>>> drivers/iommu/iommufd/device.c:                 struct pci_dev *pdev = to_pci_dev(idev->dev);
+>>> drivers/iommu/iommufd/eventq.c:         struct pci_dev *pdev = to_pci_dev(dev);
+>>>
+>>> Although I do not see any compelling reason to have pci_dev in the TSM API, struct device should just work and not spill any PCI details to IOMMUFD but whatever... Thanks,
+>> 
+>> Getting the kvm reference is tricky here. Also the locking while
+>> updating vdevice->tsm_bound needs some solution. Here is what I am
+>> improving. Are you also planning something similar?
+>
+>
+> At the moment I am planning getting/holding the KVM reference in the TSM:
+>
+> https://lore.kernel.org/r/20250218111017.491719-15-aik@amd.com
+>
+> but may push it even further to the AMD TSM (CCP, the firmware driver) as this where I actually need the kvm struct to get GCTX+ASID from kvm_svm; Intel folks have a similar intimate knowledge sharing between kvm_intel and TDX-connect. Thanks,
 
-Nothing really, just an oversight. Thanks for spotting that out. I will resend V12
-with it as I also notice that are some inconsistencies with mail Message-id, as a
-result of subseqeunt invokation of git-format-patch from different branch.
+So you won't be able to work with already available kvm reference in
+viommu alloc? I will send the tsm_bind changes i have done so that we
+can share the diff against that with explanation of why things can't
+work that way?
 
-Thanks,
-Andrea
-
-> 
-> Regards,
-> Matthias
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/2025042551-agency-boozy-dc3b@gregkh/
-> 
+-aneesh
 
