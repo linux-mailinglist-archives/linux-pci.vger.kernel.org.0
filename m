@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-28757-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28745-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E86AC9877
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:49:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56A61AC9837
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:40:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CFF31C05829
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:49:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DC937B301E
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 295CB283C90;
-	Fri, 30 May 2025 23:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2979828B501;
+	Fri, 30 May 2025 23:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="lOvtW1Lz"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SuBlRXAw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A361C84A5;
-	Fri, 30 May 2025 23:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22C421772B;
+	Fri, 30 May 2025 23:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648943; cv=none; b=EJ6QOyRk4/6RAtDFmqKp4xjzdLAeMr0a1O/W8+KGMp7dRh2FUkaTU3FDyP4RhhtXPEDDrvjx+ZNnkMijOFVmlaqMNtmrmU47bhZnGD/kmpw09E4lKfUlnFI35OzKeMeiG1pkM6OMrRiYjYMqP8xxUKKw8dnQFjvnHb8Ivrj7seo=
+	t=1748648394; cv=none; b=ZwasMMZDhHlgkM3A8Koch37Ev1xHNy8kmyqu5p1MXFhnqTPB10SvWVd1ReR6GMJ4IuErYOtTVlUooic/cA6x6tUvNnH0zRgtRh7OW9DEJ1L7UdfUOEu5pZt8A6N3q3BSJ24Rob7lXaHVSFwdbT6ZZqbPAuhAIRSk7rrhPpF/2JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748648943; c=relaxed/simple;
-	bh=qiSi2RMw4OCprktJ66ksyftuz6LIjongIXBr0hh9PtA=;
+	s=arc-20240116; t=1748648394; c=relaxed/simple;
+	bh=HQLL6oy8ZRg5FLSlf5MShpJ+lnIP0MZVXprcCEo99V0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uRJR0Q7ubwE8IetRMCkZjaGAnKPgmnA1qBLrGUmXt5IeVg+2T81lAdRRG3iB1JoB1WpobSOvzyh6GPVUqa47u345DstOdZSHAeuTWhSgBNFImYxcqkSSbtfHblh5HmBSL3b53Pi2cgGjms5LSNIOHH4ITrccs9nunk/pUxDdhcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=lOvtW1Lz; arc=none smtp.client-ip=192.19.166.228
+	 MIME-Version; b=la/l+Fy3fQHzOuMHhzJQl5owc4he/cXo8s7SMTMShhBGE1p1DkbeDwbkoH84kr1POI8JIqG3HmYOQ0Ge8KhAiffrHsQj9Jf6M8X0UtZnFmJ9W1yipF4lmmp8roOEczzzwm7HMmFt89eci3/dGY5tBHO/ypfh9DFf6E0d8REl00Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SuBlRXAw; arc=none smtp.client-ip=192.19.166.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 81EF5C000957;
-	Fri, 30 May 2025 16:39:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 81EF5C000957
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id C8130C00034B;
+	Fri, 30 May 2025 16:39:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com C8130C00034B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1748648360;
-	bh=qiSi2RMw4OCprktJ66ksyftuz6LIjongIXBr0hh9PtA=;
+	s=dkimrelay; t=1748648370;
+	bh=HQLL6oy8ZRg5FLSlf5MShpJ+lnIP0MZVXprcCEo99V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lOvtW1LzpnNuJqngJe9FrZ3ZYg08+HYibZrfRYOcHamFTiE6qpnCcc2mtJ/RTyC8s
-	 RqEUSr22l93aWfIXke41YgIGRSGThtn9l22o55FNoha4nA4C/Bu9lehloawgfqx5Wy
-	 3phfPGOUR3gfMDNXlD11eiiePKK45zNi/DDVL1RE=
+	b=SuBlRXAw1BC0PHXwmqdbyJtiVaTuxhMuFStPEkuRbDydcgL1Ep9qcgSePjyxgpu9r
+	 5Hm8Fy7VPQ/AcqRkpude4nhNLrr65rEsCbzDSBOV0LM42e+gioj/51QofO3jOpCgHQ
+	 5puLZoUTWiV/NTC8qkeLcxaAGe15oSxPuFwSszmo=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 12F7718000530;
-	Fri, 30 May 2025 16:39:20 -0700 (PDT)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 4947E18000530;
+	Fri, 30 May 2025 16:39:30 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: bcm-kernel-feedback-list@broadcom.com,
 	Andrea della Porta <andrea.porta@suse.com>,
@@ -88,12 +88,12 @@ To: bcm-kernel-feedback-list@broadcom.com,
 	Matthias Brugger <mbrugger@suse.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v12 01/13] dt-bindings: clock: Add RaspberryPi RP1 clock bindings
-Date: Fri, 30 May 2025 16:39:19 -0700
-Message-ID: <20250530233919.464832-1-florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v12 02/13] dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+Date: Fri, 30 May 2025 16:39:29 -0700
+Message-ID: <20250530233929.464957-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250529135052.28398-1-andrea.porta@suse.com>
-References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-1-andrea.porta@suse.com>
+In-Reply-To: <20250529135052.28398-2-andrea.porta@suse.com>
+References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-2-andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -104,12 +104,13 @@ Content-Transfer-Encoding: 8bit
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-On Thu, 29 May 2025 15:50:38 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> Add device tree bindings for the clock generator found in RP1 multi
-> function device, and relative entries in MAINTAINERS file.
+On Thu, 29 May 2025 15:50:39 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> Add device tree bindings for the gpio/pin/mux controller that is part of
+> the RP1 multi function device, and relative entries in MAINTAINERS file.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > ---
 
