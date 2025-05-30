@@ -1,133 +1,117 @@
-Return-Path: <linux-pci+bounces-28734-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28735-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32EC3AC978A
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:04:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53CE5AC97C9
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:40:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F1AE9E1AA8
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:04:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 113FA503507
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:40:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27B4827AC25;
-	Fri, 30 May 2025 22:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F51E2882A2;
+	Fri, 30 May 2025 22:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKwZd9ly"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="L2F9PIFq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18CD230D1E;
-	Fri, 30 May 2025 22:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFE5280339
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 22:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748642677; cv=none; b=HC0wHdBkRckWkTCsWHNUIXFBsNKJJDZ+c1o2K/r1CweVaH/xjUtq7KwMYRd+gwXumLzrqeRvb5pr5ZbchIq7URrmWrSos4OMbKlsfJ+JCtAAQW7zKadwvqFSIb1jCCpV/qdxkRV3J9rHqrYtpYZLURxwyKZc1UU5mMH8kKfpUko=
+	t=1748644844; cv=none; b=Bj/k4INjDzh2IqM1imlbViM8dMQ4caDq0HYezP90fLWmXyhNsI40QHp5PRcq2tNwQniXdNPKkx+fVOoVvMQTPHyuwsdx5XhMdH0FJvHWNgqaLxQdigUsXZJsWOoBPbVwVw0Jqfc8Zdha+RDAo7ItiLeWruX+Tp2LmdiIc2z+Kow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748642677; c=relaxed/simple;
-	bh=wVEqYeIheJTsExh0y+ny/dya1Ge9pSIKZyHUPQ3jebc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qAvHuiI026Orw5OLCXnqMYBptaCAYF8nmg2g0mxXnIB0YxyapP3Ewd4n+eXm0gqKhXmp8jHeI6V5pNf6AJBnGlSZ5HRt51MOrBXFzrUBTJYoM1FPFtkZzdzxHsaPVJCQbJgwztAp+fU2ULMuATSK9+gpJAheP/CP4gu9PYseag4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKwZd9ly; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FBDC4CEE9;
-	Fri, 30 May 2025 22:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748642676;
-	bh=wVEqYeIheJTsExh0y+ny/dya1Ge9pSIKZyHUPQ3jebc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rKwZd9lyPdPEM8MP7oUfj2hnyU3L4/w8QAG9hWnnPROC7M/2pv0SM0FNRhk9ys+DF
-	 piY/m+S3ai4rReTaOh3ktqD0anAJtDoBJitNQ2d06eUqOUSZNHtYKKDgjh+a+syYwc
-	 u/WcKYyLpZuIr4RCeTeSQ7yetoQx1FF19Zxug9cAbrDR5JtBZUTo5poys8SQA0eAKC
-	 LmQ/erALu33vZOXOUAHRmyFi3mx8+bSw7qIHXbR99I2zpuf/tjtzpsAKpAhh2SuS0p
-	 Yip7iVtHzgOhTHoSisx7V7iWYY/t18cjRPGDkK/FUXiKdQzBGd5hHQXvnoXHLLUgD0
-	 cTCSLafdf/REQ==
-Date: Fri, 30 May 2025 17:04:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Niklas Cassel <cassel@kernel.org>, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Hans Zhang <18255117159@163.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [pci:controller/dw-rockchip 2/3]
- drivers/pci/controller/dwc/pcie-dw-rockchip.c:227:9: error:
- 'PCIE_T_PVPERL_MS' undeclared; did you mean 'PCIE_ATU_TYPE_MSG'?
-Message-ID: <20250530220433.GA239797@bhelgaas>
+	s=arc-20240116; t=1748644844; c=relaxed/simple;
+	bh=v9IOZt9qHGKgp78Ef+68zRxwUDTcYE0bI2uCER1pMZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qXT4uBtyQoC1OT4ePq+yEcNAOywzeOYpZmXgwNs+c8/JJkvMiXhfGTQs14Rc8ghBfl40cEbsGwqtR8yELbXPieQ8gccEEeSnfjseZRKRQACXTptgyGTXAJGyN8FHQK1LWko3x/4Np929JOoy3eXaMXCjQP2MoR+vWHevflSBGSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=L2F9PIFq; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2351ffb669cso18604345ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 15:40:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748644841; x=1749249641; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m1drmllmtmwtWNasJJpvTqgcFCz1TJ/ySV8IFsfDlfk=;
+        b=L2F9PIFqDmX7zjxhYLVjMP3i0DnXLzT/sNR7sg3aftg1OFCL2VBrAVAwqwOgv+D1TE
+         k243xCvis+Bs8c8Ne2dWEeg8oU3Rj9lbNGfd4EVDGnsWtYjzHhVgnG+IBfX33TUfeUBu
+         arbGrGmi2cZV/gv2uLK/JzU8WRc0GyEEWqZlg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748644841; x=1749249641;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m1drmllmtmwtWNasJJpvTqgcFCz1TJ/ySV8IFsfDlfk=;
+        b=JSO3UJ6qvAHdlj9szqpim/yhVKe0ZgsIVQkHD4wBc26RJUlWnggMtgkLClqve7Lpfk
+         3FV4yYAteU7bxUJaU5/FmQ8+ExW4LyhY0zcU7/BoL3tkYeKiT7Ntf9Wrqc190XldYS8S
+         BKr0eNncfPl1m54sWSzUi+b3PMBC3zM7VLrBMEfF97zV6BKhuJirBirOwOWhDcDQ9EP8
+         IAu5A0DCnE4zCh6XO7ld2E40lrjDn2DkH9Q6EFbns4hH3c09wuxfbDh66pYZPKeDU806
+         VswOchAURFTYjWj7+sbAU2G/mOuhxGEwyAXAA2yUoY7XFUslncspk6SOTruYtqahCNWW
+         roOw==
+X-Gm-Message-State: AOJu0Yw5nPz58qtWJnxl4kMOzyYV9jK4qq9qqXNHQYORe0kZKjz+Vfzr
+	khlMXN10o05HwEHkcGzDYmaD6z2R2RZJCgrGDfZ0p4jgPrkpQjmcMoK54n7eIV5KmuR1I3n3awS
+	F+z51F3aM1yepVjUa/yZdhi3ts5a2melebn9rgKC8BAkL4cQe90V+CcxC8JjWAxLl/Nu9xn6czS
+	hGaruU8PGTpBvm/xgKyF+Lyay2GQ7jv+Zd9RT/VjiXJu8+dpgKqDF+
+X-Gm-Gg: ASbGncvjWHeHYdocGxryDnZ3tfUFtMQXSfZselAI75+7TrvyIlAz8zMiU4FsGppHjVG
+	OhbEHfgSN/FfngAL0rpOaCBiAFu2uR/L1ErDZQMbIQIoQQ0M+OS6wuCPNxtmjTWwJvrDb7TKPmK
+	8LnqvdwcO7oFXLurBywVTzc1KeA0Oac5Fm5kdgl3hjjip7rU6Cqq5aE0CH4+14LfikK/jhwcxXu
+	bXeh2lykLotUwQCjtY6fWptFhuWpK184NdffqUe77Jwe6ZZrqyvqaMiWjUmGHcoym6iBzBoc7hg
+	j/5Bj3UlnCUbK2MSrlo3l8lPHyN/Cx9OAwU1hEABYAk4GV/g7HFK33CGrA8hAvIlZtZr2qB5Cdm
+	MTtmwlOi7WW7yOE/4YLFztzaQBPx2am4=
+X-Google-Smtp-Source: AGHT+IEjX5DIunGuGQempttaCvqzE5hKj7Lhn61f4N914bLVvv2ywe+jCdSk6DPyHm6F+JX3bD1s6A==
+X-Received: by 2002:a17:903:b0e:b0:234:eadc:c0b4 with SMTP id d9443c01a7336-2352a08997fmr77984725ad.44.1748644841428;
+        Fri, 30 May 2025 15:40:41 -0700 (PDT)
+Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf523esm33109385ad.170.2025.05.30.15.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 15:40:40 -0700 (PDT)
+From: Jim Quinlan <james.quinlan@broadcom.com>
+To: linux-pci@vger.kernel.org,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	jim2101024@gmail.com,
+	james.quinlan@broadcom.com
+Cc: Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list),
+	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH 0/2] PCI: brcmstb: Use "num-lanes" DT property if present
+Date: Fri, 30 May 2025 18:40:31 -0400
+Message-ID: <20250530224035.41886-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202505310520.ElO2YbM3-lkp@intel.com>
 
-On Sat, May 31, 2025 at 05:29:09AM +0800, kernel test robot wrote:
-> Hi Niklas,
-> 
-> FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dw-rockchip
-> head:   a47c73d6a884edf2a8b09015596744a495c6a236
-> commit: 56825f5946a0da29658fa8e768c8706dffdac82b [2/3] PCI: dw-rockchip: Replace PERST# sleep time with proper macro
-> config: arm-randconfig-003-20250531 (https://download.01.org/0day-ci/archive/20250531/202505310520.ElO2YbM3-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505310520.ElO2YbM3-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505310520.ElO2YbM3-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/controller/dwc/pcie-dw-rockchip.c: In function 'rockchip_pcie_start_link':
-> >> drivers/pci/controller/dwc/pcie-dw-rockchip.c:227:9: error: 'PCIE_T_PVPERL_MS' undeclared (first use in this function); did you mean 'PCIE_ATU_TYPE_MSG'?
->      msleep(PCIE_T_PVPERL_MS);
->             ^~~~~~~~~~~~~~~~
->             PCIE_ATU_TYPE_MSG
->    drivers/pci/controller/dwc/pcie-dw-rockchip.c:227:9: note: each undeclared identifier is reported only once for each function it appears in
-> 
+v2:
+  -- DT bindings: Add default, maximum values for 'num-lanes' (Rob)
+  -- Add 'if' clause to clamp maximum requested num-lanes
 
-My fault, I added
 
-  #include "../../pci.h"
+v1: original
 
-which was previously added by "PCI: dw-rockchip: Do not enumerate bus
-before endpoint devices are ready" patch, which I dropped while we
-figure out where to put the delay.
+Jim Quinlan (2):
+  dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
+  PCI: brcmstb: Use "num-lanes" DT property if present
 
-> vim +227 drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> 
->    208	
->    209	static int rockchip_pcie_start_link(struct dw_pcie *pci)
->    210	{
->    211		struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
->    212	
->    213		/* Reset device */
->    214		gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
->    215	
->    216		rockchip_pcie_enable_ltssm(rockchip);
->    217	
->    218		/*
->    219		 * PCIe requires the refclk to be stable for 100µs prior to releasing
->    220		 * PERST. See table 2-4 in section 2.6.2 AC Specifications of the PCI
->    221		 * Express Card Electromechanical Specification, 1.1. However, we don't
->    222		 * know if the refclk is coming from RC's PHY or external OSC. If it's
->    223		 * from RC, so enabling LTSSM is the just right place to release #PERST.
->    224		 * We need more extra time as before, rather than setting just
->    225		 * 100us as we don't know how long should the device need to reset.
->    226		 */
->  > 227		msleep(PCIE_T_PVPERL_MS);
->    228		gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
->    229	
->    230		return 0;
->    231	}
->    232	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+ .../bindings/pci/brcm,stb-pcie.yaml           |  4 +++
+ drivers/pci/controller/pcie-brcmstb.c         | 26 ++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+
+base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
+-- 
+2.43.0
+
 
