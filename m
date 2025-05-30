@@ -1,134 +1,149 @@
-Return-Path: <linux-pci+bounces-28741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE46CAC97FE
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:07:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E09ADAC9826
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:33:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8738E4E4F16
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:07:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9C4A4A4516
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33BA2236F7;
-	Fri, 30 May 2025 23:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E4228B51F;
+	Fri, 30 May 2025 23:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="imE/ZAWy"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fCNwhGWt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE27219313
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1722750E5
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748646427; cv=none; b=bJeEvpkO6MqTUN16wrBuwU8fW20XyMFi2nKFQZTYFXkJW+0LUzW0NfH++lXj9YJjAZRVqP6Ihag3zAOppI0LTHUYG+h+egBpTxkXubfywFh/QH2Gj3EpEluXVC0rio8HS8v9y5raLWOWbjecNPR0UCCyKrFG+U7QqTp149fjwy0=
+	t=1748647983; cv=none; b=JMyjisgcnpcqRgDxRynfAdhmaWHAD6yM8ohrG8WXYWNSr3be5sYKoEmI6Xk7bYipON9eMF+IZGkzPY+YI7bcc5IDmPi9J4Bq7hjW8OP5qwB/rSYUm5ThpD7ir2XUSIuzIVx0oYJyMOhGut3ngC+67Dfv6BzavYez18Dmr3nN+Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748646427; c=relaxed/simple;
-	bh=AR6cTw5HYbxJ2qMyCfAaeRdYxE8L1ZMz12yMlbY423Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NmFFcksc3EszbxBtZmKx/x4mGu4MRAmxAarA9J0fENEqB7SDIYIfjcynKG8d/MLtCtrEJthr2I+qJTYPpQ4Ungdkm3r3iRkBhGw++nohu96GyIDwMoEmkdRoXSWvu52VpdUDHe4Ic8GioCChnI7VKujYRYBlVyriTHKWn+ncPB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=imE/ZAWy; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UL5uXS021647
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 16:07:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=facebook; bh=Q
-	mEUoEof0XuWSY9NCPw+hCQm0lsio92LEaLT6yMorqU=; b=imE/ZAWynTjwlpBYh
-	PCW2pGUFiXZl3Bvejc9tti4hCz8QIv8KeJ0/jfLsTsVV6W+Knk++GgyogmMlhJx3
-	iYjRaL6Ac4BMBDOhK3qi79DGZFtq4q5S3ihQIMIG1uvAD3QaxsasWFWbsYaxWExJ
-	3vGCZ3f3jcXaGG5+1YWEx73Qz4=
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46y7qhwtcf-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 16:07:05 -0700 (PDT)
-Received: from twshared37834.15.frc2.facebook.com (2620:10d:c0a8:1c::1b) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Fri, 30 May 2025 23:07:03 +0000
-Received: by devgpu004.nha5.facebook.com (Postfix, from userid 199522)
-	id AC0F14B34DC; Fri, 30 May 2025 16:06:58 -0700 (PDT)
-From: Alex Mastro <amastro@fb.com>
-To: <peterx@redhat.com>
-CC: <alex.williamson@redhat.com>, <jgg@nvidia.com>, <kbusch@kernel.org>,
-        <linux-mm@kvack.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [BUG?] vfio/pci: VA alignment sensitivity of VFIO_IOMMU_MAP_DMA which target MMIO
-Date: Fri, 30 May 2025 16:05:10 -0700
-Message-ID: <20250530230510.2680688-1-amastro@fb.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <aDm_vaQUnrVbuvxO@x1.local>
-References: <aDm_vaQUnrVbuvxO@x1.local>
+	s=arc-20240116; t=1748647983; c=relaxed/simple;
+	bh=0Kx5fdeO9kkEbPY5HTMbK9SIDlW+EZkZvQurAeicY58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oZUiL2wrN22lTGj+Rv1IzssMjeiyBSSMwa3gntR0cNKpzoxdvf4uKTr9MATsal6c5iM3Kv1/4Ssn+jfbGzbhiTlN5J1/G47aq1gTOrvSHNWC7H2ruQY7qxnJQpsdMhwuON7CwHke1ohRZiscsDeRxUdfLJgcMbMAWvyCCYeiJSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fCNwhGWt; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234f17910d8so25628455ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 16:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748647981; x=1749252781; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=fO/4KVyqLd7BgsoaaqAUu12+AA5eN8Wk8zQzu+oUQLU=;
+        b=fCNwhGWtkj8qNIR5MbVaquaZvpgpVs9Rbya5tG5DyDOLzWJii4BdCywrIwNbUuOL1h
+         APEb1mNymjsfAtSTS4//bzigQtUnBhQeyzP1bVW2Gueho1UdtzXkPj+ze/QGmUdG6A6u
+         Kb0/w9pQQ/cwz/r9sQh17RhP+euzs41UIv7+M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748647981; x=1749252781;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fO/4KVyqLd7BgsoaaqAUu12+AA5eN8Wk8zQzu+oUQLU=;
+        b=PhMcIID4Ib+quDrrqVL7bGV20IRuJJWDq7mUZ8KrFpbgokR0FoUH8QMxadoAgAh49e
+         uo6ORefE7QQm1K1okmGF0NFrCy64oFBZYEOaEuiamEDAoRQ9TNpt9POqrmLTFsenDUJw
+         JrdQMJN5+mLQnGwit9QmnkfYdqJSDHNMCdJL3zlklFA/2YqwlPNmlfbKHkJQWSucbo/0
+         pY9atBJYZAMGTxiQANk0NAu5pBI+BmCr1SR//OcPoWqiEUlEOUiYNzz/iBQLKZa3YJ7i
+         wLB2fAzBKaUUTsFKYvxInvMSrre6CygBvzf/w8DrVYd8kCEkkqQMiWCcpzLb1BQH3352
+         OnDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaxH2qOK38R+o4yKzmfBx0PivISRyaWGpA6j1PbPZfmgfanrDRMwH9F9wKEDxYaE1yuqfX+w7sX5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD55gAsO4MGznO8uW0X7LergYxEIxpg/ioFRcIWa+lCd/5ytBN
+	LS7jh7kYqeWn+2aEPe9RoCNQT+nhDdbIwf9r3+NQhx4c6O+UY8A7/t1MHNtGB3ljiw==
+X-Gm-Gg: ASbGncvJjMQVkI2t7Mr9CFclLgiCgVbLY2F7mb2yo44I7+uSlmoSJL1HVnaNo0lMLsp
+	FuiQgrn5RyqvAbsQ4FAyFGmanBtIpMUOAoN6CnOCd2SpO3wulohx5SZLmj+r//mb8QxvpnwWM5w
+	Kv5zoQWehnfZVsR2Wb3ca9FJRrHi+KzrFEiXIGfKrF+vWuiZbtZ1HdWiX94cvOFB4NvtQoPazBv
+	VmiHjbuzPWFauO4rZTpEnTebt4rHF1JDWIweyqBLDdsVBByI6n5VxOvGXw3MImSHb00ktircwqG
+	xXE5taDRf4KdiTUgPdODArE7R3YOXFeTXFYLSnGW95SmOVnoVWKGbj2nqfVMf6KHncqGQlIPFLr
+	YpatCRFjsoCj/3RAF+Vvg6TCJDg==
+X-Google-Smtp-Source: AGHT+IF9TsYKCXhHP+BKtTXbH09zwj1ypcFvEuEq452X4UyJrKl9DCN8BMUbAtxtyBD0jYmN+eERjQ==
+X-Received: by 2002:a17:902:ba85:b0:234:909b:3da9 with SMTP id d9443c01a7336-235395b1dcbmr39401845ad.27.1748647981175;
+        Fri, 30 May 2025 16:33:01 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd7618sm33196345ad.152.2025.05.30.16.32.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 16:33:00 -0700 (PDT)
+Message-ID: <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
+Date: Fri, 30 May 2025 16:32:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDIwNyBTYWx0ZWRfX/cvYocVvL1JO Ni9u2QBWrw5iEKG+SqEpO4AwD2EMxACkz4ZjyBku92r7qHKG5w7TrH3Na3UzG+wH2fdF/j6WqO3 meZh+ywYQ25bo/m9yEcuyj+pKreLarmXW2q1uWZUGRYFZpKoHAKqsSyPSzwdjGQK2G9M+k0n6Uc
- ayaiAeIxJpLWiOmKtCSWtjzkV6/LWlyUwM0OkunOvsi4lq6QY059Hi1EtwuoKsLrVDCa3C9Mjqi psVQ3d/a2+c5uvPfU6kXBjlLQWQ++++IW4UXFAT5LyQq14psdBujldpWpyNR/ecE3yJrArhdBvT La7tam5D9+ozNzajacRhny3mzOWf7JFM0WAomXjr37qZiSM33AGfdPRnrSA0Lqo7VzYjIANCQV5
- 5F7G5+p8KsT8hFn4FiytkshIiNu0qW1auULwqZV3HhmT1TKW0BQCYbr+YRB6+OnFPDg1UR01
-X-Proofpoint-ORIG-GUID: U2FRY1nluy57zYY3lsm7PQRLpfl61rmG
-X-Authority-Analysis: v=2.4 cv=cZPSrmDM c=1 sm=1 tr=0 ts=683a3a19 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=dt9VzEwgFbYA:10 a=20KFwNOVAAAA:8 a=BpDLBPb1mtdKZWO58xwA:9
-X-Proofpoint-GUID: U2FRY1nluy57zYY3lsm7PQRLpfl61rmG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_10,2025-05-30_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes
+ property
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+ <20250530224035.41886-2-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250530224035.41886-2-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 30 May 2025 10:25:01 -0400 Peter Xu <peterx@redhat.com> wrote:
-> On Fri, May 30, 2025 at 10:10:50AM -0300, Jason Gunthorpe wrote:
+On 5/30/25 15:40, Jim Quinlan wrote:
+> Add optional num-lanes property Broadcom STB PCIe host controllers.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
-> Probably due to aac6db75a9fc vfio/pci: Use unmap_mapping_range().
-
-Ack.
-
-> > I think this is something we have missed. VFIO should automatically
-> > align the VMA's address if not MAP_FIXED, otherwise it can't use the
-> > efficient huge page sizes anymore. qemu uses MAP_FIXED so we've left
-> > out the non-qemu users from this performance optimization.
-
-Thanks for confirming.
-
-> Good point!  I overlooked the VA hints when QEMU doesn't need it.  I ca=
-n
-> have a closer look if nobody else will.
-
-This would be appreciated -- thank you!
-
-> > I think if you are mmaping a huge huge BAR it is not surprising that
-> > it will take a huge amount of time to write out all of the 4K
-> > PTEs.=20
-
-Agreed. This matches what we observed.
-
-> I think if your trace shows correct huge faults when you did correct
-> alignment, it should mean it doesn't affect your case (likely your app
-> sequentially fault in the bar region.
-
-Yes, this is the faulting triggered by the call stack below, downstream f=
-rom
-VFIO_IOMMU_MAP_DMA, which faults in the entire VA range to be mapped.
-
-vfio_pci_mmap_huge_fault+0xf5/0x1b0 [vfio_pci_core]
-__do_fault+0x3f/0x130
-do_pte_missing+0x363/0xf40
-handle_mm_fault+0x6d2/0x1200
-fixup_user_fault+0x121/0x280
-vaddr_get_pfns+0x185/0x3c0 [vfio_iommu_type1]
-vfio_pin_pages_remote+0x1a1/0x590 [vfio_iommu_type1]
-vfio_pin_map_dma+0xe6/0x2c0 [vfio_iommu_type1]
-vfio_iommu_type1_ioctl+0xd32/0xea0 [vfio_iommu_type1]
-
-I also confirmed that cherry picking "vfio/pci: Align huge faults to orde=
-r"
-does not affect our usage of this path (manual mmap alignment is still
-required).
-
-Thanks,
-Alex Mastro
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
