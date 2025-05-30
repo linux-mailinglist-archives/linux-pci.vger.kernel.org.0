@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-28758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA39DAC987D
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:49:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FE97AC9842
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:40:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAC5AA60A68
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:49:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4A2BA45F5F
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:40:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC89828C2D0;
-	Fri, 30 May 2025 23:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FEBC28D85A;
+	Fri, 30 May 2025 23:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="lcc7J+bt"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xau7hgHN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3650F2192EF;
-	Fri, 30 May 2025 23:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AC428D836;
+	Fri, 30 May 2025 23:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648974; cv=none; b=A8tIgZ00gz3gpC6vH8gjDjhm9cxfxVE9uki89kfh97uaijpJtbURdk6r+Gt9mLwFFJTmHB2C9XBx1p+CepsTzkIcyhVOovm+DpPXCqmHft2Vc97j8u283FbWIKJjSzs+BOQT9mZNN7Y0MTQKDhwVdFRYsiuwoWHa9Cvx/Hd+fxc=
+	t=1748648429; cv=none; b=cwskxcwHjRIguyLSrO5I52gNrw8N7EAMAptWQ2HfLUBKKvmqucV6SE+xPtaVi7sqJiHXPWH+bYnt7FszDuIC7pV+IRVJeQOVUQInUXc0ej7to5uynWcxC3Ccf0nviLHNpOspPwEgpy9MKdW3e2aXHfkz1/yy/gzwd8b3Y4Mpn5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748648974; c=relaxed/simple;
-	bh=uXtMeHYnc/oPonqfKUQW9+2wh0nmnb+RChVQF07BalY=;
+	s=arc-20240116; t=1748648429; c=relaxed/simple;
+	bh=HFiVtogORiAI/oF4a+jzZLzZYQ+/3mOas55PYUhzW9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adsb3ROQXGDm0N5h0oz7OpLCdwheIwt6uV+y/qzOYRklCut92MiWE5tHvp1fQ7cnT1jcNOavtKlT5SZptW3VTRmhdn81UTM3HPl5Ic3YQvRDc3WAJqoL5+F4+GpBMzl63iJPtg7sklDFU6YvvDNM8NcnQUoj1bR6FZISGrzQ1uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=lcc7J+bt; arc=none smtp.client-ip=192.19.144.207
+	 MIME-Version; b=UhvVIagJEKio+idbKBMXkwpZexuPmEc6A/qZqVEQXcNaMkDbS/b01p8zV27o4cj3wYJVsSMifVfH4DSTaTZPctVX5sjtK7EX+0yBBBqSiuMFIF+yld9K7nCBBVgyijGObIU+180bd+vz70m3vwQOLxVllcR2Vj7qpBlb3fWjhws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Xau7hgHN; arc=none smtp.client-ip=192.19.144.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 7269AC003AB1;
-	Fri, 30 May 2025 16:39:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 7269AC003AB1
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id B1AA2C003AB8;
+	Fri, 30 May 2025 16:40:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com B1AA2C003AB8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1748648382;
-	bh=uXtMeHYnc/oPonqfKUQW9+2wh0nmnb+RChVQF07BalY=;
+	s=dkimrelay; t=1748648426;
+	bh=HFiVtogORiAI/oF4a+jzZLzZYQ+/3mOas55PYUhzW9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lcc7J+btWA+TNsSIebmaHweiiSIcMQqyaP4nJIpTvijYkglWUv7hFziqEqDfMMYgk
-	 yW5xb6JRlPt0CD9lNv17MaaQrkB9hpH7qJEndW+YcJchXgVCBc+jX4x9Z7amLR5gNV
-	 CbnK2/ROmpGlpjVq5TQ38uCT3u8hRnQP8tg1yizM=
+	b=Xau7hgHNWZ/bUsjnADjxg13st9ZnP1ECq6XKHIdiZ6Uj/0aS/POb5yDLG55eUKwjh
+	 5dYiccTqa6Sl3s+K7owrmJSZT6FAxkijkif2Lg/DMK1nUxpRK7MQ++iYniFbfDMUnn
+	 qDsBKxxPXOwOrpjwT0skAxSmiqzm6PQ/S9yHxdg8=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id D84D618000530;
-	Fri, 30 May 2025 16:39:41 -0700 (PDT)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 2749B18000530;
+	Fri, 30 May 2025 16:39:56 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: bcm-kernel-feedback-list@broadcom.com,
 	Andrea della Porta <andrea.porta@suse.com>,
@@ -87,12 +87,12 @@ To: bcm-kernel-feedback-list@broadcom.com,
 	kernel-list@raspberrypi.com,
 	Matthias Brugger <mbrugger@suse.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v12 03/13] dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
-Date: Fri, 30 May 2025 16:39:41 -0700
-Message-ID: <20250530233941.465046-1-florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v12 06/13] arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+Date: Fri, 30 May 2025 16:39:55 -0700
+Message-ID: <20250530233955.465160-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250529135052.28398-3-andrea.porta@suse.com>
-References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-3-andrea.porta@suse.com>
+In-Reply-To: <20250529135052.28398-6-andrea.porta@suse.com>
+References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-6-andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,13 +103,18 @@ Content-Transfer-Encoding: 8bit
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-On Thu, 29 May 2025 15:50:40 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> schema is intended as minimal support for the clock generator and
-> gpio controller peripherals which are accessible through BAR1.
+On Thu, 29 May 2025 15:50:43 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> RaspberryPi RP1 is a multi function PCI endpoint device that
+> exposes several subperipherals via PCI BAR.
+> 
+> Add a dtb overlay that will be compiled into a binary blob
+> and linked in the RP1 driver.
+> 
+> This overlay offers just minimal support to represent the
+> RP1 device itself, the sub-peripherals will be added by
+> future patches.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > ---
 
