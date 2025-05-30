@@ -1,98 +1,84 @@
-Return-Path: <linux-pci+bounces-28737-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28738-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BCDDAC97CE
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB2DAC97DC
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:55:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94491BC6AD3
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:41:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5359C1BA183B
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:56:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE77028C2C8;
-	Fri, 30 May 2025 22:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7926A28B4E1;
+	Fri, 30 May 2025 22:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KL4sA+P3"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Cc8+WuBv";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fU1pMUYi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658A328C03D
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 22:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890192367CA;
+	Fri, 30 May 2025 22:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748644850; cv=none; b=h80e63x8thdgC68EiNUYScxfbR5Uu49pys8LfPHxoWGdQAydF80fYiZqNl9wgpx27IVWrukEKokhFujWi2mWnnMhgZKrFCx0RDv2f4dRm/A9g8x37osw9vtcd8acPcy9JWZrMANlMCbzQJ5SW5/zTt61WuE09CL4+XfOrGo/Cas=
+	t=1748645751; cv=none; b=I2U1VonEWY2BF+pp4ueP4O9FUXuy5a7D4foaXLhZNgG6WzEkItegl3+/8vsm3wnQCFMS+32KGJtB9ZXUP2eejtoiQS9nDBkaDJPek+XwtaC9MDbkrGORwVXorzlCJkQEngW8bdOVzbR7fwta/eNbd+HpqtNCWyzwzgqfNccxE/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748644850; c=relaxed/simple;
-	bh=BGvgbn1BZa2sYB+McU5CilQTpp9thj8nlJpUAkHvvj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aclOq/MSxq6NJmz3jUJ81cZZoWhSTLfKzonaBdoWlX5olFFDbmL0rrMkWiLhL4n2CHU9ifsRzGiwMCknpYmvlLKnOExQza0vqpIWFSf8LfjCQfAqvg3XG+70X1MnckCefOft+bMBHsIdgzCU/DtMfimPK+LK0xW5tI7i6n3+aY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KL4sA+P3; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234b9dfb842so25045605ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 15:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748644848; x=1749249648; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=meW30IDDO+azkqeYGaD+b0CQRVW934zmu7s9bUahNtU=;
-        b=KL4sA+P3BA3y5VWJ+T58sFUDlaPxR/njNqDm8lMORDIfjHEvnr7ITHWJ0h0KqpOhiZ
-         qlcJCWQduGtQPyV+ZH6EwX1ErSO1LD2ByO4YAN1EgUu/MGqricAraSv6BIoLhnXCvkRA
-         HsEzeMXpH7EAqQ1PV25xRdb61mD2ITb2cb+Ms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748644848; x=1749249648;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=meW30IDDO+azkqeYGaD+b0CQRVW934zmu7s9bUahNtU=;
-        b=pibPqamu7w/nIBxozLLd+8CGhuaGzMYNwi88iRhAAWgU6sLZgORqKsuCR+ptfsdZGO
-         PF/FiXI/5z2Up8npvwaYEIkFlvRSYWy5nmevygRTZRpmH6hyehFEo/RocBGaRGftuDFT
-         fIuXyEQBSCjDKxeqTgx/bLzjXhAvQk7Xc6d/uZmEy3WWUhcWpShAnrV41fO4UI4kZaPu
-         KVgU6B6YL4aOh+XxOndZmy0Tw6oaYmpalNvdloyIQgaygi/LQ/QnxEAI9crYN3KfZxLZ
-         6m+vI65GyBjCwLLTyNg4T2KUQgeULDY4izm5n7QUaNH2ZCQ9iOu+DNLs8ET/M203Cweq
-         /Lig==
-X-Gm-Message-State: AOJu0Yw9GAU+heWQ5Xf8TsMyW07h7KbLU+KEjSEY7XOnlFuWU1dDKPC0
-	lhHTBQPt/Hvrvux5qyO4RxO/7Esw30KAL7MS4IiZROJxLBqvlynLMQk3XTaemOASk53FhNAMBbO
-	4OzhRktf9wRU9uutSnBA3l9FSJ8qjcerIcqQHxVZVYGUqMxMrV8u5pN9szSM6tMuupJupmJ5V6d
-	bl/E0nze3qum9ziW4YIxLRyl/TLDJGxXYK3o8A3XlbezpTR7FZTrWT
-X-Gm-Gg: ASbGncsuZ8Vo3AnjmH2RQ2efEDUQZGCC4AVrOhSkD9pmoNxMFIBL3hjmpBgoiB8m7Hf
-	XANOyOCm30lsR3BqO4oWlH4YnCp5o7B4ckcs8I5LP3q56ymI9HaBvSPDpuXbcGG5z9ypbyNhcbZ
-	1sanXw8lrGFczobOBcyoWLET0ueXRZiRZWH8DcgapLhP5Vzllr6cdIIzw69rDSC8AwIEGrcy2rY
-	e8SjDhdCbSltcZbfXPcsI3E7MXHRTbZlpJ23SMdjiEtvT4fdACPkXxdRNF2jp7NyHX3Qj2ehi6S
-	BLDSpe0E7pQUQGIsn3XIQXyB7i7dKw/Lr4+1/GMum3MaG1zwodq4gFWiAqLpWG0AUchzXfEywlD
-	lAr3fUTBYgF9p4Hb4BzfcRlGF2XKbGyNtZYoMX4P8RA==
-X-Google-Smtp-Source: AGHT+IGL4F0Y7fvmsQ/3UEqROCzrPd3eOAG4Vh0WKC1WvYBSk1U1yO1TsWce/E4di6e9o+pfZ3ki5g==
-X-Received: by 2002:a17:902:d4c1:b0:234:8eeb:d82d with SMTP id d9443c01a7336-23528de8f60mr78383255ad.19.1748644848195;
-        Fri, 30 May 2025 15:40:48 -0700 (PDT)
-Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf523esm33109385ad.170.2025.05.30.15.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 15:40:47 -0700 (PDT)
-From: Jim Quinlan <james.quinlan@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	jim2101024@gmail.com,
-	james.quinlan@broadcom.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	s=arc-20240116; t=1748645751; c=relaxed/simple;
+	bh=uJJuwZ6PBbIIWxoaccWNMJvc1de/B6IihV8ioH7Ho3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kt8whFYHztdMZkY8yvxAu9Ytri7/y5fkvMjBUtO6BzGVbXDbJQKIhbxmCCRUDfL9AWd6C3MGj2WaTja9eKN6FHCk1zbp8ouSLH3l97TwL9Jk2+PXSOniLwubRZOJgUnbleaRZKc6Yp64c7JVUpAufuDW6a49sJL0dPfkf73ZkY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Cc8+WuBv; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fU1pMUYi; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b8JVq2wnmz9tVV;
+	Sat, 31 May 2025 00:55:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1748645747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+XJoie9AEBmbqAgRJsukKa8ozih8Y1Wspy5pUrpo3Yo=;
+	b=Cc8+WuBvUV7GDfqiD3oaC4MXKZzLaCbhehQRRGC3LvMoTOnMCvZelp3n0gO9Lvl0tIjYT2
+	udXJ4PAfWCVooCp1cXugYZoMGckiStwp4RYj8ScAhCO5Uwlg7gPzO0pxfilxCprCOLdP9M
+	MfwfYz0vCuNlFfNr4/F1pdNpVIWLn25FiL7DW9IVyvDxAMKEnc8rswdPnGxDbupzhQ9TIO
+	fNE3ur+gpLjCTJpMgegG/UVEroZHi/BFy6Z/laIutQ3QrQXyK6iMqVA9zDqFoyCQuxvwB7
+	sk0Yz6G4gY6niZsNgA2qsDaqabrd21hHyTPwol7OltI+UkFGbrlekBA2RtSFOg==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1748645745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+XJoie9AEBmbqAgRJsukKa8ozih8Y1Wspy5pUrpo3Yo=;
+	b=fU1pMUYiLd852k/Jf4hqU0aVVnYpuvq2UTDF7f6qzHb3GDiA0BwTQkBchsQL9zS+gMB37J
+	/2otq3YSfwAtE798cSn+CS+TQRArWj0y4DR6vQ34kBRXjTOgDHtxkAHAWIz/4K2cANV9Ng
+	Mb9hdju7ITDbmaylIL08ltHJzmGl6yIO5mJsZmmH/+lVySFjNa4eZdSJnrfpzwR3cRTeM0
+	W7ubSTPculK9RHKmSHn7Xri1brYYa7qpihMTorAulAdDYSGAKyT7IcoyAwZknFZGP0+nVP
+	Gn/1lUxa5r7nwjymr1jnKhZOqbpdFvxoVyuqDM4BnZVcv8vYeDxebmmyI3T8Bw==
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Anand Moon <linux.amoon@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
 	Rob Herring <robh@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
-Date: Fri, 30 May 2025 18:40:33 -0400
-Message-ID: <20250530224035.41886-3-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250530224035.41886-1-james.quinlan@broadcom.com>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl driver for PCI slots
+Date: Sat, 31 May 2025 00:53:19 +0200
+Message-ID: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,76 +86,111 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: d7ac0f4db81ab4704d4
+X-MBO-RS-META: f9zc6z889u3c4k9su4x5hdhkphnw59fm
+X-Rspamd-Queue-Id: 4b8JVq2wnmz9tVV
 
-By default, we use automatic HW negotiation to ascertain the number of
-lanes of the PCIe connection.  If the "num-lanes" DT property is present,
-assume that the chip's built-in capability information is incorrect or
-undesired, and use the specified value instead.
+Add the ability to enable optional slot clock into the pwrctrl driver.
+This is used to enable slot clock in split-clock topologies, where the
+PCIe host/controller supply and PCIe slot supply are not provided by
+the same clock. The PCIe host/controller clock should be described in
+the controller node as the controller clock, while the slot clock should
+be described in controller bridge/slot subnode.
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Example DT snippet:
+&pcicontroller {
+    clocks = <&clk_dif 0>;             /* PCIe controller clock */
+
+    pci@0,0 {
+        #address-cells = <3>;
+        #size-cells = <2>;
+        reg = <0x0 0x0 0x0 0x0 0x0>;
+        compatible = "pciclass,0604";
+        device_type = "pci";
+        clocks = <&clk_dif 1>;         /* PCIe slot clock */
+        vpcie3v3-supply = <&reg_3p3v>;
+        ranges;
+    };
+};
+
+Example clock topology:
+ ____________                    ____________
+|  PCIe host |                  | PCIe slot  |
+|            |                  |            |
+|    PCIe RX<|==================|>PCIe TX    |
+|    PCIe TX<|==================|>PCIe RX    |
+|            |                  |            |
+|   PCIe CLK<|======..  ..======|>PCIe CLK   |
+'------------'      ||  ||      '------------'
+                    ||  ||
+ ____________       ||  ||
+|  9FGV0441  |      ||  ||
+|            |      ||  ||
+|   CLK DIF0<|======''  ||
+|   CLK DIF1<|==========''
+|   CLK DIF2<|
+|   CLK DIF3<|
+'------------'
+
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Fold PTR_ERR() into dev_err_probe()
+    - Add RB from Anand and Manivannan
+---
+ drivers/pci/pwrctrl/slot.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index e19628e13898..79fc6d00b7bc 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -46,6 +46,7 @@
- #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 18becc144913e..dac1ae854f72e 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -4,6 +4,7 @@
+  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  */
  
- #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-+#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
- #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
++#include <linux/clk.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+@@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ {
+ 	struct pci_pwrctrl_slot_data *slot;
+ 	struct device *dev = &pdev->dev;
++	struct clk *clk;
+ 	int ret;
  
- #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
-@@ -55,6 +56,9 @@
- #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
- #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+ 	slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
+@@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 		goto err_regulator_free;
+ 	}
  
-+#define PCIE_RC_PL_REG_PHY_CTL_1			0x1804
-+#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK	0x8
-+
- #define PCIE_RC_PL_PHY_CTL_15				0x184c
- #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK		0x400000
- #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK	0xff
-@@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	void __iomem *base = pcie->base;
- 	struct pci_host_bridge *bridge;
- 	struct resource_entry *entry;
--	u32 tmp, burst, aspm_support;
-+	u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
- 	u8 num_out_wins = 0;
- 	int num_inbound_wins = 0;
- 	int memc, ret;
-@@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
- 	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
- 
-+	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
-+	num_lanes_cap = u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK);
-+	num_lanes = 0;
-+	/*
-+	 * Use automatic num-lanes HW negotiation by default.  If the
-+	 * "num-lanes" DT property is present, assume that the chip's
-+	 * built-in link width capability information is
-+	 * incorrect/undesired and use the specified value instead.
-+	 */
-+	if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
-+	    num_lanes && num_lanes <= 4 && num_lanes_cap != num_lanes) {
-+		u32p_replace_bits(&tmp, num_lanes,
-+			PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK);
-+		writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+		tmp = readl(base + PCIE_RC_PL_REG_PHY_CTL_1);
-+		u32p_replace_bits(&tmp, 1,
-+			PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK);
-+		writel(tmp, base + PCIE_RC_PL_REG_PHY_CTL_1);
++	clk = devm_clk_get_optional_enabled(dev, NULL);
++	if (IS_ERR(clk)) {
++		ret = dev_err_probe(dev, PTR_ERR(clk),
++				    "Failed to enable slot clock\n");
++		goto err_regulator_disable;
 +	}
 +
- 	/*
- 	 * For config space accesses on the RC, show the right class for
- 	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+ 	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
+ 				       slot);
+ 	if (ret)
 -- 
-2.43.0
+2.47.2
 
 
