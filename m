@@ -1,235 +1,178 @@
-Return-Path: <linux-pci+bounces-28700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F4DAC8B6F
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 11:49:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 394DFAC8CBD
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 13:19:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38EF33B67D4
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 09:48:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89BBA4E5AD8
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 11:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0D9221F24;
-	Fri, 30 May 2025 09:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00F5121FF45;
+	Fri, 30 May 2025 11:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jx2Tk+lM"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jWorY0ZH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAAF204866
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 09:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AA21D3D2
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 11:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598543; cv=none; b=fekIVBt/sJ+K0s9LYntAk15S0KCqjfKzBIGFYJEYC9ynMLJRMrQWX8o4zEjmtpeZhart57D0ayK3VyAzKSoGfdl/j0SNHpHl3ofvVlqxjwlsiQH0UDuroQc5wu/3nLJQH+0FnG3pzVGhQxc+b/h0t6ZNUevdc/BtKfwnjp87HHA=
+	t=1748603988; cv=none; b=jiTqTUwr1G3aYHXhVfovpwCNpxrz2KPsqzbtjm5anBvB4UGjl2Iyh5tstk7EpQQuK9+ZBDBzWusfpi5SKthxuW5kNBAdJoZQmos2ppqQkonFpt6mj5WMzPVswhbagH6gfRQCUMi1nJhYAgV46OrfgIu9eCYpEIFUSaUxmu+clZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598543; c=relaxed/simple;
-	bh=b0TFhFz66sFrGEwBpP8D9ETS2sHd7pzb9TO/YyI/+/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZBZ70pQFGrrtdW0ADJhG0cF0EvZFYy7xxg2ipdWq7EbgDaTjRG571jWDIft6AFAYfFJh5MciBQEVphKWpUDEqCaWFBCm6E5B9Qkc8XAbTqHyzqEilBWRWYUOUmH8gW40xGRGY92UxcRhCsCm+f4FjO4MHVg+UANAj9H1jwrm+c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jx2Tk+lM; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52d9a275c27so1191771e0c.0
-        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 02:49:01 -0700 (PDT)
+	s=arc-20240116; t=1748603988; c=relaxed/simple;
+	bh=63UqaY8eo1/+MF5TIlcrSnoAO41a1hgwgM6ht8qQvFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Om9ukwNfqln6yvLQjh5E77IwL9Tm6mmNeMvnjsnBJrzcWq5bRIIQEpsetNrh19+p6eDe7EHi6A10zno50jkNMjt5bYVc0egxPN8wjE9oz7K3NpYkWbQ9idJXAguIPQE0i8TRUbKAlw23mNIc3LZgXlybb4Y3TAcZEaUrAtzELMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jWorY0ZH; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so10536535e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 04:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748598540; x=1749203340; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
-        b=jx2Tk+lM3g9vqnFPZ1EcVbWeoM1sSBlFthcULa+r7zTtIJR3fTRqssvQqIGQ0kOFTm
-         x5ig6ZXEMBXl4FwM56HnRBCNcN+Q4iTpAg7fia/pjF+S3KcZduzAbHp+BuUTi4NEUMs9
-         wIPMQdPl/Fx6U4Th79fdWaWEIG3l08NheyFvVkNpVhbtqKG/+Ywck45omAFdAIPj9wu2
-         AE0lOzG1/W6RWQyBP0BPA6IUkmgsfuKwjwWBlxy6p8ezHOLR/eOr7bjd+OxG/trARuo0
-         ZVGTP/CEfHgAVWcT7/zMAzytHbQ6Ibrl1lZARv8a2qIwXjhRcw4i8Mqmfzj89GUdNij7
-         WETA==
+        d=tuxon.dev; s=google; t=1748603984; x=1749208784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=USDzPWtwfClWp+wqP7p23s9TnEvWK9VkLl4tGpc0TUk=;
+        b=jWorY0ZH/zS8Ls/jGVG9FKanOq/kN3EEFQ5Qf6XhS1aIsAXzecnH7jrfPVWv+QzHaS
+         GVWPYEAEeTM3a6im1jZPzfJfCkDQbjFG/BIuESEa4WHCg1Q11mDhX35Zl9tyXR0aKM70
+         zE9dWcYuPrMinVQqb4cWWoQIvstYJNZ+eKgFampZ0ZToRJi45TfaarCG3XneIAAbzEtu
+         1YnkZvKUKxImO1PkU3QIU1LcSQDEW6gA97BypyLY1fUAtNQpKoxIE4sploUguyiNyuE8
+         tuFIdbT41K56KKo+AzKGMIK6Nqw1sRiffd8sC1meEnOm6lH4LDWRl8UMWxlI0nfoWfxS
+         4+7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598540; x=1749203340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1748603984; x=1749208784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
-        b=vxDN3ytQhPznpB5Pmm7PGiTcQHVZwIEyYGtUblZDU4UPyv1379/V7qoNC91q+sJhju
-         1XIurEyGBydIMxs+3xBtPDBMmL9bkERpYek42G46waeNLT2FJdG5wtqxOW/1LK83W+Vf
-         bY4uA7e3QBYmng3D0WYfhJMG+YDY1ld8LxnSY/KTPC+BKAVJmYpuhdPES6t/f8F4TjR2
-         bss76Fd7OBCTur3Ifn0M+GZ5+4ilzpXcC9MhojR2DxhiKs60ITAqjuB5vcIPysstfyJ+
-         quKvR626DkoY5w1cx0I3MTIz9y9/QElfHQ5raqz/qXPrrN3eVBjg70wxXdpN9zV5BlAc
-         93pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUovZP1IygFNnJE/sVV41ow1D40dehHRH8wxBL6NkLpxkbaSEdMGiJQg+wRryUiFwS+RcsLBZi/s50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx89gttLErJv+Eg+P9pDO2CadMQ8A1/A/lBCXFmdTMljRgsa26a
-	C2gxuWkwIwu0REKWSstuCpbyXPmARz6tHnVl/io1AsgMJ67eliT2yQBnAIlEv4/p6c6o+/pQX/9
-	4oPbr80cnQY2iTiVjOb+8we8KEeEk5IXnKR6ZNHOMSA==
-X-Gm-Gg: ASbGnctPyyqfJVCCQpNftBavoKX3vGbxN8XunVGXK8OYLwsQxtsSQjvRho2Pqh6yzdA
-	kxdarms4HRQs2QOZsqX/Zf/TcpJsU8HJHg50wZ5x73zFaw6vJ8Kb0SgKouU5FFp7M0HNlVWA2LF
-	3S2lVYfKXQPNoXfMX+L855Ts+SGZp22MFHP0UfZOt3rABK
-X-Google-Smtp-Source: AGHT+IFCDzCsC18lIEI9eoPRpN1VBwQuWtrYeQzK5FfBQTEKVxOjXzBK+FhiElxrVAbMsJjHyUqfWwTNH+a+X8F2fyY=
-X-Received: by 2002:a05:6102:4b08:b0:4e5:8eb6:e8dd with SMTP id
- ada2fe7eead31-4e6e40d655dmr2670174137.5.1748598540530; Fri, 30 May 2025
- 02:49:00 -0700 (PDT)
+        bh=USDzPWtwfClWp+wqP7p23s9TnEvWK9VkLl4tGpc0TUk=;
+        b=aHar90HCZMSu09dwsS6wyuSb0164ziC0E2Z2uz21FOyQDZcheb0WlTzmBi6kNYtfnf
+         7gwALuK5W20izrvbDIeZdpBcm/+loPD+UY9fLfCxV3a0kJtx94IjdVx1Et2Wq8oG0r7b
+         4+yx23s61G0ciXP28YUvQxsJVMCLiyHbHt8J5Brh1mCvH5ggeTR2v0DLt7pxfmWn3eXB
+         Xch2TUPziVTm2x+ktjWSKfgWr/7saEFU4nMfk7gGJmUm2UZAgjPjrvoQnaPwxPRvxbkR
+         YCZFoOwaYg352uZEdunfGaq9sEyKVxEsXLh+iCa20VriGEK4A7mxWAc2kKhOHUxjmb7K
+         Bjvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWCzJeT8F0OdJVw3puek6JvqvR/1XvaV15A5zsdKNW9Z86EvovdPKwbDxhEYrSddaVF++8ffJUisc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx74YsARg+Hnj/j5GzQtMUxdUVpqRFx8cIrLJ7be/xysC02xYJL
+	vDGWePenCI+n0AI3u0CybUq1PRKfUu982VnOhzf4q6sAJMQ4UoaRH+sZcdjcojBaqUc=
+X-Gm-Gg: ASbGncte7EJqPftuCvDgP3sk/zH2g7Gl2OKk0eS5QPxNWQhDr7za1vo94eGfFgxJDMY
+	Ny09VciMWljrfjc2GpUdTvpBs1lcw7bS5Q1mElfsWGBDjlKauQVZE+ihiFzDG39Vc3fGrWI6Kzy
+	rB+7a3qIBk68ByGHMgsbfuORp5Mjq7RLYcbJ/AcDV101RtnLp+T7u+pvsD5BcH/dt4tdCYoDLq1
+	JJw0lUjeOIquao0TkWbZoTrUHhzlA0bDbZpMfHq0HxiVg0p0cRRdAaLEXig3QHw6386Y0BJ24fl
+	Fu2HKTRhseNU03hyqPV+yMQecauF8efW2aN1Kb0v0dVgZM/EJ3bH2ZcQ7Xi/JtqtSi0ujrBOWM6
+	LUORxUQ==
+X-Google-Smtp-Source: AGHT+IEbp0QcHOdy/Wep78m1G3gFrb9KOos/vWXOjVVBlX3y+lsRN5K2Os1MzG3FOYd4Bwb4BIL7Jw==
+X-Received: by 2002:a05:600c:1c96:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-450d64d63d1mr31026995e9.9.1748603983832;
+        Fri, 30 May 2025 04:19:43 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.126])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450dc818f27sm3986435e9.18.2025.05.30.04.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 04:19:42 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de
+Cc: claudiu.beznea@tuxon.dev,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 0/8] PCI: rzg3s-host: Add PCIe driver for Renesas RZ/G3S SoC
+Date: Fri, 30 May 2025 14:19:09 +0300
+Message-ID: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
- <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com> <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
- <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com> <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
- <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
-In-Reply-To: <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 30 May 2025 15:18:49 +0530
-X-Gm-Features: AX0GCFuc1bDuO-IvLHLzjp596VNTvH9_C6fgPX5wyzKbvtGEon1kLQjQtXhQSq4
-Message-ID: <CA+G9fYuroDkk3qrd7yJJG7twZV0sM=t3mDjhrBMm==q2MjS41A@mail.gmail.com>
-Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Robin,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On Fri, 25 Apr 2025 at 20:48, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 11/04/2025 8:11 pm, Robin Murphy wrote:
-> [...]
-> > OK, I found it, but I'm still not sure what exactly to make of it - it's
-> > the pci_request_acs() in of_iommu_configure(), now being called early
-> > enough to actually have an effect. Booting with EDK2 already using PCI
-> > prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl`
+Hi,
 
+Series adds a PCIe driver for the Renesas RZ/G3S SoC.
+It is split as follows:
+- patch 1/8:		updates the max register offset for RZ/G3S SYSC;
+			this is necessary as the PCIe need to setup the
+			SYSC for proper functioning
+- patch 2/8:		adds clock, reset and power domain support for
+			the PCIe IP
+- patches 3-4/8:	add PCIe support for the RZ/G3S SoC
+- patches 5-8/8:	add device tree support and defconfig flag
 
-Linux version 6.14.9-rc1
-# lscpi
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
-ATA Raid II Controller (rev 01)
-08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
-PCI-E Gigabit Ethernet Controller
+Please provide your feedback.
 
+Merge strategy, if any:
+- patches 1-2,5-8/8 can go through the Renesas tree
+- patches 3-4/8 can go through the PCI tree
 
-Linux version 6.15.0
-# lscpi
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+Thank you,
+Claudiu Beznea
 
-> > with 6.15-rc1:
-> >
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >
-> > whereas with the 6.14 behaviour they are all '-'. I don't have a working
-> > root filesystem with the U-Boot setup, but if I boot it with
-> > "pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge
-> > windows and discover the ethernet/SATA endpoints again. I can spend some
-> > time getting NFS working next week, but if you're able to get lspci
-> > output off a machine in the "broken" state easily that would be handy to
-> > compare.
+Changes in v2:
+- dropped "of/irq: Export of_irq_count()" as it is not needed anymore
+  in this version
+- added "arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe"
+  to reflect the board specific memory constraints
+- addressed review comments
+- updated patch "soc: renesas: rz-sysc: Add syscon/regmap support"
+- per-patch changes are described in each individual patch
 
+Claudiu Beznea (7):
+  clk: renesas: r9a08g045: Add clocks, resets and power domain support
+    for the PCIe
+  dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add documentation for the
+    PCIe IP on Renesas RZ/G3S
+  PCI: rzg3s-host: Add Initial PCIe Host Driver for Renesas RZ/G3S SoC
+  arm64: dts: renesas: r9a08g045s33: Add PCIe node
+  arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe
+  arm64: dts: renesas: rzg3s-smarc: Enable PCIe
+  arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
 
-On the 6.15, After adding this into Kernel boot args
-pci=config_acs=000000@pci:0:0
+John Madieu (1):
+  soc: renesas: rz-sysc: Add syscon/regmap support
 
-The SSD was detected and mounted successfully.
+ .../pci/renesas,r9a08g045s33-pcie.yaml        |  202 ++
+ MAINTAINERS                                   |    8 +
+ arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi |   60 +
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |    5 +
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi  |   11 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/clk/renesas/r9a08g045-cpg.c           |   19 +
+ drivers/pci/controller/Kconfig                |    7 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-rzg3s-host.c      | 1686 +++++++++++++++++
+ drivers/soc/renesas/Kconfig                   |    1 +
+ drivers/soc/renesas/r9a08g045-sysc.c          |   10 +
+ drivers/soc/renesas/r9a09g047-sys.c           |   10 +
+ drivers/soc/renesas/r9a09g057-sys.c           |   10 +
+ drivers/soc/renesas/rz-sysc.c                 |   17 +-
+ drivers/soc/renesas/rz-sysc.h                 |    3 +
+ 16 files changed, 2050 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+ create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
 
-Linux version 6.15.0 +  pci=config_acs=000000@pci:0:0
-# lspci
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
-ATA Raid II Controller (rev 01)
-08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
-PCI-E Gigabit Ethernet Controller
+-- 
+2.43.0
 
-> >
-> > So at this point it would seem to be something about how Linux
-> > configures ACS when doing it from scratch. What I don't really know is
-> > where to go from there. I do know Juno's possibly a bit odd in that the
-> > switch supports ACS, but both the root port and endpoints either side of
-> > it don't. Could this be tickling some subtle bug in the PCI layer, and
-> > what is EDK2 doing that makes it not happen?
->
-> Just following up on where I ran out of ideas. I poked at things a
-> little more, and from a process of elimination, the culprit appears to
-> be is that we enable ACS source validation on the downstream port while
-> its secondary bus is still 0, *then* we get to the "bridge configuration
-> invalid" bit and reconfigure the bus numbers, but after that, config
-> space accesses to the secondary bus still apparently fail to work as
-> expected.
->
-> What's now beyond me is whether this is just an ACS quirk of this
-> particular switch, and/or whether there's something we could or should
-> be doing in the PCI layer.
->
-> All I can suggest a this point is that you could at least sidestep the
-> problem on the LKFT boards by updating them to a less-ancient version of
-> U-Boot which supports PCIe for Juno (looks like that landed in 2020.10),
-> which should then configure the switch at boot such that the bus
-> numbering doesn't need to change when Linux probes it - that appears to
-> be the only "magic" thing that EDK2 is doing.
-
-I will work with my team to address these issues.
-Thanks for your suggestions.
-
->
-> Thanks,
-> Robin.
-
-- Naresh
 
