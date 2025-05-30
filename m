@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-28736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 180B2AC97CC
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:41:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BCDDAC97CE
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 00:41:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18E5E1BC5D72
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:41:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94491BC6AD3
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 22:41:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5B128B7FD;
-	Fri, 30 May 2025 22:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE77028C2C8;
+	Fri, 30 May 2025 22:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G7+a6VQU"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KL4sA+P3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE4C28B514
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 22:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658A328C03D
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 22:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748644847; cv=none; b=jQbbensqyBSeEhUd8XGF2HDYJ092BWqm9GGAmWQWoqneNxJmzdJsOvUEVsuCddKXKsGrMM5hdr5hDiSm5ZO8j0sLp487D55b8lUmOv7I64G9WGwSQPMZYmVwtKT3sVamq/edYB/oeaQ47d1JnidzYOllC3Dp+oxbQ5e/NpbSqgY=
+	t=1748644850; cv=none; b=h80e63x8thdgC68EiNUYScxfbR5Uu49pys8LfPHxoWGdQAydF80fYiZqNl9wgpx27IVWrukEKokhFujWi2mWnnMhgZKrFCx0RDv2f4dRm/A9g8x37osw9vtcd8acPcy9JWZrMANlMCbzQJ5SW5/zTt61WuE09CL4+XfOrGo/Cas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748644847; c=relaxed/simple;
-	bh=Qf+Qmgh8tSH8l3tRCxJRHfcUpVw8PKgjOxu7KbxC3gg=;
+	s=arc-20240116; t=1748644850; c=relaxed/simple;
+	bh=BGvgbn1BZa2sYB+McU5CilQTpp9thj8nlJpUAkHvvj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e9QBzCbRLLvIUURJzxtiHD8+55mo+Y4e8umiQ6RxbZLHrL0/Z3fPN27ieK0NvecIIozdA1/uDhMSXKpoUm97ZvWsDDl3nckcFQNGDzxWxs8ZvFwUyGVExW7Qv7nLrAMC61s03TGqploeR0HlcFJvIHPEf6VQTiPYVOI8A7QsLZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=G7+a6VQU; arc=none smtp.client-ip=209.85.216.49
+	 MIME-Version; b=aclOq/MSxq6NJmz3jUJ81cZZoWhSTLfKzonaBdoWlX5olFFDbmL0rrMkWiLhL4n2CHU9ifsRzGiwMCknpYmvlLKnOExQza0vqpIWFSf8LfjCQfAqvg3XG+70X1MnckCefOft+bMBHsIdgzCU/DtMfimPK+LK0xW5tI7i6n3+aY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KL4sA+P3; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso2031105a91.0
-        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 15:40:46 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234b9dfb842so25045605ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 15:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748644845; x=1749249645; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1748644848; x=1749249648; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BJg1iKEfpql7pmZdjoA3uh10wUEns6L8IYOErZtWpmM=;
-        b=G7+a6VQUw8Ui5tJtGA43josfZ4zltPHZ7x1d8NIO8ynruhDEIX0oQaj6YLRu2Ap8LO
-         IBJr19O5UQ8MP9Fsv3qRplMnze8ozkK+QRyLO4IkmlAqdkICfR21J9dWFOdjV2EqIx6+
-         7+RaC12cPKORYxTC84VUKK4yOppN7CHhQwtyE=
+        bh=meW30IDDO+azkqeYGaD+b0CQRVW934zmu7s9bUahNtU=;
+        b=KL4sA+P3BA3y5VWJ+T58sFUDlaPxR/njNqDm8lMORDIfjHEvnr7ITHWJ0h0KqpOhiZ
+         qlcJCWQduGtQPyV+ZH6EwX1ErSO1LD2ByO4YAN1EgUu/MGqricAraSv6BIoLhnXCvkRA
+         HsEzeMXpH7EAqQ1PV25xRdb61mD2ITb2cb+Ms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748644845; x=1749249645;
+        d=1e100.net; s=20230601; t=1748644848; x=1749249648;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BJg1iKEfpql7pmZdjoA3uh10wUEns6L8IYOErZtWpmM=;
-        b=Em++6c3ZvwoMxC41A7iB7POqzt2SmOTkz3wTHc4VCjkuUQTE2asj8kQZLbAyL1E54c
-         WpiwY3jYd+6u1spYOBbE81faotx02AWPA9hCHPIWTqpSSoN6Svob3Ymd/DTxnjgoq39N
-         VL3I8VT9JpAiWmfRfkdifkkc2RJbZzeAOROjDfpNJtTYEAfSX466+1oheYJ09w4NY9FA
-         boE0mU/2Q1mQbzLf4TWS6AdXsmtQlyGW835R4A+r7l9usM17sAizfYhaC9hJuu5zu1Kg
-         F6szzYohJhN2RI5ubyOtg/+quNg4q0A6UbzX0z+i+PLzQ29nH3Z+2b79iv/R0QZU05XR
-         174w==
-X-Gm-Message-State: AOJu0Yw6BpALOFdhbd0GCEL7hfwXZUICZR4T2qw52uq/d1iP+Hlu6jmz
-	0AqkzrDJ9jvX0e2dRe9aSw60S3c7fAUUS/iN1+qOJmTNONt+yObb6Kxqylxgm+gifr5uynZkbJe
-	6W0iAjaO6nun+Koe5RdONNtopS2Y4qjEYPwB8kYG3Q54DNTzs0smAaciWFTmuEMQJ3lcPg86gcQ
-	/LLnntimKo2rjMtHu8nVbT0urieG6BkW4vfW5H0sk41ADKQfuAMyDn
-X-Gm-Gg: ASbGncuvDemmtaiP77+4rMEvgsuA10HMcmJnU8uodizVzFz+rpqHLXwU6P+ZA6hvDbJ
-	lOLZ7C38A9Lb4XSRsq12CgEjANWyXVZh8Lqo4sWmF9XpdwvDdeUiqoRuCgdyOBFdH6LJEtek+Zs
-	rRbktm870tVM2zGBGMiTmd0WQCQeV6PIiEpPa0Za/IldwXgQtFhG+z2NidYR/qT9JKt+zeaZv1E
-	ddXQxiBosNB8M5+g7OgrjwHK7fZQutl+FKT2AahEnNnnLzt2Z4ti0Pt1nIfFIHmGNM0xk21IlTr
-	vSWXylWdvSjbYQVL8nVurOPiihMOlfQJsHuL82iPxqtVhFYI/4xJeUgkuqzt5TREyGVMQdIKA5/
-	DentNARg6Xvz7f3dmfGNgavCHhaCyfuw=
-X-Google-Smtp-Source: AGHT+IElfUcYdQ8CoYjYpd7MA+ZJeD62ouTASylM9JxPUzOpYGTly9yflZmPOUZsxhdConGhlD1Qxg==
-X-Received: by 2002:a17:90b:5344:b0:301:9f62:a944 with SMTP id 98e67ed59e1d1-31241e9846dmr7600834a91.33.1748644845052;
-        Fri, 30 May 2025 15:40:45 -0700 (PDT)
+        bh=meW30IDDO+azkqeYGaD+b0CQRVW934zmu7s9bUahNtU=;
+        b=pibPqamu7w/nIBxozLLd+8CGhuaGzMYNwi88iRhAAWgU6sLZgORqKsuCR+ptfsdZGO
+         PF/FiXI/5z2Up8npvwaYEIkFlvRSYWy5nmevygRTZRpmH6hyehFEo/RocBGaRGftuDFT
+         fIuXyEQBSCjDKxeqTgx/bLzjXhAvQk7Xc6d/uZmEy3WWUhcWpShAnrV41fO4UI4kZaPu
+         KVgU6B6YL4aOh+XxOndZmy0Tw6oaYmpalNvdloyIQgaygi/LQ/QnxEAI9crYN3KfZxLZ
+         6m+vI65GyBjCwLLTyNg4T2KUQgeULDY4izm5n7QUaNH2ZCQ9iOu+DNLs8ET/M203Cweq
+         /Lig==
+X-Gm-Message-State: AOJu0Yw9GAU+heWQ5Xf8TsMyW07h7KbLU+KEjSEY7XOnlFuWU1dDKPC0
+	lhHTBQPt/Hvrvux5qyO4RxO/7Esw30KAL7MS4IiZROJxLBqvlynLMQk3XTaemOASk53FhNAMBbO
+	4OzhRktf9wRU9uutSnBA3l9FSJ8qjcerIcqQHxVZVYGUqMxMrV8u5pN9szSM6tMuupJupmJ5V6d
+	bl/E0nze3qum9ziW4YIxLRyl/TLDJGxXYK3o8A3XlbezpTR7FZTrWT
+X-Gm-Gg: ASbGncsuZ8Vo3AnjmH2RQ2efEDUQZGCC4AVrOhSkD9pmoNxMFIBL3hjmpBgoiB8m7Hf
+	XANOyOCm30lsR3BqO4oWlH4YnCp5o7B4ckcs8I5LP3q56ymI9HaBvSPDpuXbcGG5z9ypbyNhcbZ
+	1sanXw8lrGFczobOBcyoWLET0ueXRZiRZWH8DcgapLhP5Vzllr6cdIIzw69rDSC8AwIEGrcy2rY
+	e8SjDhdCbSltcZbfXPcsI3E7MXHRTbZlpJ23SMdjiEtvT4fdACPkXxdRNF2jp7NyHX3Qj2ehi6S
+	BLDSpe0E7pQUQGIsn3XIQXyB7i7dKw/Lr4+1/GMum3MaG1zwodq4gFWiAqLpWG0AUchzXfEywlD
+	lAr3fUTBYgF9p4Hb4BzfcRlGF2XKbGyNtZYoMX4P8RA==
+X-Google-Smtp-Source: AGHT+IGL4F0Y7fvmsQ/3UEqROCzrPd3eOAG4Vh0WKC1WvYBSk1U1yO1TsWce/E4di6e9o+pfZ3ki5g==
+X-Received: by 2002:a17:902:d4c1:b0:234:8eeb:d82d with SMTP id d9443c01a7336-23528de8f60mr78383255ad.19.1748644848195;
+        Fri, 30 May 2025 15:40:48 -0700 (PDT)
 Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf523esm33109385ad.170.2025.05.30.15.40.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf523esm33109385ad.170.2025.05.30.15.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 15:40:44 -0700 (PDT)
+        Fri, 30 May 2025 15:40:47 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -84,15 +84,12 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE),
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
-Date: Fri, 30 May 2025 18:40:32 -0400
-Message-ID: <20250530224035.41886-2-james.quinlan@broadcom.com>
+Subject: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
+Date: Fri, 30 May 2025 18:40:33 -0400
+Message-ID: <20250530224035.41886-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250530224035.41886-1-james.quinlan@broadcom.com>
 References: <20250530224035.41886-1-james.quinlan@broadcom.com>
@@ -104,28 +101,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add optional num-lanes property Broadcom STB PCIe host controllers.
+By default, we use automatic HW negotiation to ascertain the number of
+lanes of the PCIe connection.  If the "num-lanes" DT property is present,
+assume that the chip's built-in capability information is incorrect or
+undesired, and use the specified value instead.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 29f0e1eb5096..cba227b19a5f 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -107,6 +107,10 @@ properties:
-       - const: bridge
-       - const: swinit
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index e19628e13898..79fc6d00b7bc 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -46,6 +46,7 @@
+ #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
  
-+  num-lanes:
-+    default: 1
-+    maximum: 4
+ #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
++#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
+ #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
+ 
+ #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
+@@ -55,6 +56,9 @@
+ #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+ #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+ 
++#define PCIE_RC_PL_REG_PHY_CTL_1			0x1804
++#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK	0x8
 +
- required:
-   - compatible
-   - reg
+ #define PCIE_RC_PL_PHY_CTL_15				0x184c
+ #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK		0x400000
+ #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK	0xff
+@@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	void __iomem *base = pcie->base;
+ 	struct pci_host_bridge *bridge;
+ 	struct resource_entry *entry;
+-	u32 tmp, burst, aspm_support;
++	u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
+ 	u8 num_out_wins = 0;
+ 	int num_inbound_wins = 0;
+ 	int memc, ret;
+@@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+ 	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+ 
++	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
++	num_lanes_cap = u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK);
++	num_lanes = 0;
++	/*
++	 * Use automatic num-lanes HW negotiation by default.  If the
++	 * "num-lanes" DT property is present, assume that the chip's
++	 * built-in link width capability information is
++	 * incorrect/undesired and use the specified value instead.
++	 */
++	if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
++	    num_lanes && num_lanes <= 4 && num_lanes_cap != num_lanes) {
++		u32p_replace_bits(&tmp, num_lanes,
++			PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK);
++		writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++		tmp = readl(base + PCIE_RC_PL_REG_PHY_CTL_1);
++		u32p_replace_bits(&tmp, 1,
++			PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK);
++		writel(tmp, base + PCIE_RC_PL_REG_PHY_CTL_1);
++	}
++
+ 	/*
+ 	 * For config space accesses on the RC, show the right class for
+ 	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
 -- 
 2.43.0
 
