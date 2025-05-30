@@ -1,92 +1,96 @@
-Return-Path: <linux-pci+bounces-28694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28695-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12510AC86EE
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 05:16:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 656BEAC8706
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 05:47:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDA8E4E03A9
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 03:16:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 257B27A2246
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 03:46:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370AF78F52;
-	Fri, 30 May 2025 03:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C6D188CCA;
+	Fri, 30 May 2025 03:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sxEH+XKz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y5ZTjYkU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F931182BC
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 03:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6D7A92E
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 03:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748575000; cv=none; b=WBWDKl+GalreAhNyma3/tAWOZ+E54BjQkhCghIRxDOxSlr0BmdpnqxKHOt6MMAuDx2+6fpMlThoDUk79xAQF6sqruLLcI7YbVwmrMtSW+QsOcY+iQ2HH6C3W8LlYuox8hV3drBVunDS32KPp7JpFUQ8h5w1kDwnaUIx4CBYfVe4=
+	t=1748576830; cv=none; b=h42zTZuFP06AJ+UWD2Txc1rJ17EaLiCq98LQxFe1k8fpO4HVcnR4dQeh0sqpwKeczhaCUwMaDASuJ18EO3JUL+lTFrsHW02VxoUIhs+edKPyW7Xq022ojRweXSRKJsGPa7ImB08sCKW8wMTjANE42crOG/lN5WiKBbT1vrpa2Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748575000; c=relaxed/simple;
-	bh=XVANWFhgXMv40Jkl6FJe26HKPUpKGq1GAb0fbWJTo0g=;
+	s=arc-20240116; t=1748576830; c=relaxed/simple;
+	bh=c3oROZAnmot2cTBZHDWM/GZvhkiifzhaYpmj0YJf/qQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0Z7rp3Fy5f34h5GQ1dNOtPGDNZQGzqT/MRo/uTQrN7q3LNfhVhsnMBBnZBb+S/2485mx9mNrZ3HsYWofEO1Hf4Rr1u3B1rxECYeRMgmdPADIH+5By4BU6wO2O/X0QxOGgcpTOmlKFBmi5AlCo3p29azwAZyNB7ZXR0vlblj+qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sxEH+XKz; arc=none smtp.client-ip=209.85.216.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=KfBEnkDDDBGMHcsofxVzObaBcfFrJWVs+K4KpLUVO1m66LgcX9SOd/jOT8iO9lw1AWuY80+fTymop1KCj5Q9t2skgjvIch7smvkvwJiHnCOcQ2Jj44aIz49+YyJ9gvpBVR3bWDYIR8oObf9KiDFzQ4WXBFd/46bAJgEu/HPpHqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y5ZTjYkU; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-312150900afso1520777a91.1
-        for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 20:16:38 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231e8553248so16019745ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 29 May 2025 20:47:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748574998; x=1749179798; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748576828; x=1749181628; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=hG2cMyUqEG6RKX+zXxbm5GFZDNa/fK0gHsKi+Pje0cY=;
-        b=sxEH+XKzJEKHZm0P6h5RQS63CoSgTtrMbEm+J+20svx1J+1i6UpiiRIeqf89fBT2kO
-         KYiarMEnw+5Sz00oOlCqoy2Z1xgc/8urVNRk1xqlFGbUvwqyHa5OR7TRbRAQjWfclhpC
-         WGNdqwEo66R5JiW5hazmQFv1c/MvRjIqBLAAcJ2yopLTCNgWR+WIB+wLEAhIqT54xQUG
-         dLt5xYmdmA3U5Tiiqv8E2FejE8KcWqwei9A3yBc2k9o8QKcWlIo+O05SCWoeps0EhvGQ
-         6Uq745VVgRxYkcPv+U0BscwoC7WRNC1gBtExEsDNPyMFDKa1V5DpAldcJGw9xz80tin4
-         IVbg==
+        bh=zYT+yS9DtEtNjftxWM62aj+gh1F4QDHmOM8kYqFz3TY=;
+        b=Y5ZTjYkUqM0sAka0QBTlw1e8PjTchvMbArvtvC0NNzlyiZ6jHLkxfeN+wKPMpCZbyv
+         DD0/88ISc8ZrIJdG5C+waHncCkxBa5UMlk1a5XEnRjbivugUXzw2QZgx0RepPtawrrfO
+         0ws9MBOJp5mrsfO//q/dxDHDEfL/6vnLQszggjRcr5J8KUpp5RZjuIXZKb5fiC80UGoY
+         7zxlnvBjrccpZPGmiApSxBtn5vjDPMJuxBBExgj2vq1LsyjkBmr1bIs9s89hvurJHktZ
+         SftkG0XEhrJSaSlRelwAsHWphRmPuThhaVlsJZQb8BiAywEytE0uD5p6M73RY1g2ZlTM
+         0/Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748574998; x=1749179798;
+        d=1e100.net; s=20230601; t=1748576828; x=1749181628;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hG2cMyUqEG6RKX+zXxbm5GFZDNa/fK0gHsKi+Pje0cY=;
-        b=ee8z0YlJpspOFjHPUs/KFBb/eP5fj6s1q2b/X6bEKqU7mXAFNeIk8Dmdl/zsZ1XlwE
-         2J4xiNhGO4c55mkvKGmU6GsCoCnxt0piodVAbB59h2rNaQsRSIAZdGGXqgDAAaZb/OWz
-         vTBVk0pr8+l0yvdA67xKK7lQTcSbd1ecIF5fxOv3AG28qk5ZZ8eFubUHiwUeQ4VSC2Tc
-         RdGZyb6SVEl6VeAVaGDcwqA7KtparUq3gfM1Q0EmhEoWFMp1RzZVwegbgtBtknXfClng
-         jLfEuddA3mschUnmVY7aMxt0joieCWkf+JBFC2jTfk/WX41Y7yZ5fDxjzuzHgA6Ucl5W
-         CpHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrmqM5oFHi11qUN1dC7GBE0jHwTCOFDzsgSr5wY2TuoS2re++GhhHUmxUlhJo3+bzsUFyVXARcvRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjwMdLFsmEmiwnILrJ4YujX4oDwH2cQkoEdJx9zCMIJwYSL+GP
-	M/QLvpx8YRCl7aasjwHMu+pa1JRAyt73xm9V4ZmlGgnUOuskF7KAiJNDveZpPUSbGA==
-X-Gm-Gg: ASbGnct/JcX7pIiyrPfUbhZ1dpbMrSN5jfT3k6mKu882se3s8v7yNguOKxNutbX9yBM
-	+hI7NupGDOUrYE/N+cU57p4hDOorr/d0jPR9f5vI1K251luS/NMyaSmWMcGBCB2gmqNNz/JTNqw
-	YGFCe+VCPTIaRPN2Qckbzjw4Exo5velxRY/3zCgVagNtZt9zFIc5kC2tf3rxh52KujALvC8lcg2
-	DPJSY4jAAt32zULzjDwhyjBOUBcIarXie2UACITOqJYbkffGa0UqJAk+f9cKwJuzLNYkHXvbhv5
-	DiwO5H9cdR5/nP+FF2ApGTx04ADt575mJ/BrXm+t64z2iZNtCCtCdJg+8IKCqA==
-X-Google-Smtp-Source: AGHT+IEEn8LVklbjuJd3wJMpBvcIz8GKfwJW4nlD2EaqRmi/httRb+A8B1jCr1nfQUSFXjBRRKtNHA==
-X-Received: by 2002:a17:90b:3f10:b0:312:639:a064 with SMTP id 98e67ed59e1d1-3124198adefmr2623680a91.28.1748574997839;
-        Thu, 29 May 2025 20:16:37 -0700 (PDT)
+        bh=zYT+yS9DtEtNjftxWM62aj+gh1F4QDHmOM8kYqFz3TY=;
+        b=HLduCwoK1c/y0+d4L4lD1qiY0s7wRPC5MIQKREnizMg6S4jzV09JLHEmKYlZIK3mnO
+         7HpShmuBvdBMr273snyVTFNDQa+zJc8dhvJmAMu9aDba0PsH7KXMe4pAIDSVOKeGfKJx
+         kCO6dd0ibxFzrDsjlwJAqThI7tRON5UuCvfwP/6btcYnL7UtIR8D3XKB8+Vk1ERo2rZl
+         V+CXSCnk8yTCtJKbpffZCaI+LTxjxgGFoc3dc1S+MeTfc53FkZjHI7aCyMTGsHXlkd3F
+         DHoMh9Bawn7QmN4U9n+T0mlMMMs5yoi/uqbl+B25I/01VxtRqpnK844maB11w2M4kfkW
+         dVXA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+yU77YarwHnTETfLhcuUiu3n5qKF5YNaTslspEhU4q179sie9ktSntikIppvVn0F88l7aYL591Y4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTp9zvIkF5+lvc2kSyqXGj45szgy9krFInDsZMgTeRSlS/ikK8
+	R5t82bBc/mU1CSOBRsD8SZ001Ao5k3p6ekyntI6pndJ1RllNIMcKr7HpmbbpPeXA3g==
+X-Gm-Gg: ASbGncviUcyJrY8hO/VrRP0KAMCIkW8lrXBq0cj+3aDb7IwAp3JAIR7LyPm0mukD401
+	wa2KKcUXiBldKr2wyeQSTJcHq3/c779li/+YErekFwD26+1OU4NJScszqMaaIikoFuwqKuSEGL8
+	PqqeSGLgcGcl7ZXiMuDjdSvYuet/UKnoKG7/gUkH3shXuhXAZX1H5z18VATH60NPmG8P6p73TWf
+	lohaYy8aRGI6ziyBxTpmvNG8GkdB7ufdIt66qOsug1NdlpgP676CgGoFmEWp1L0ZxGQyxAtNfJD
+	mQNS5A2oSbpfMLbI7QSpOX4s5iqy/QR8TbVZRYwQrkx4ttpAJjbvhmPkRY7Upw==
+X-Google-Smtp-Source: AGHT+IHUystiPvDn8wtXmAxatZwAwM/wyWA7RAF5uIDmvCTdpWPCHf/AgW9Un8RMnzAXGJkMNGGi/A==
+X-Received: by 2002:a17:902:f711:b0:235:1962:1c13 with SMTP id d9443c01a7336-23539563146mr10695205ad.14.1748576828510;
+        Thu, 29 May 2025 20:47:08 -0700 (PDT)
 Received: from thinkpad ([120.60.139.33])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e1e9103sm267399a91.0.2025.05.29.20.16.34
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3c236asm327042a91.42.2025.05.29.20.47.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 20:16:37 -0700 (PDT)
-Date: Fri, 30 May 2025 08:46:30 +0530
+        Thu, 29 May 2025 20:47:08 -0700 (PDT)
+Date: Fri, 30 May 2025 09:16:59 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	linux-pci@vger.kernel.org, Cyril Brulebois <kibi@debian.org>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
- CONFIG_PCI_PWRCTL enabled
-Message-ID: <otrstq3g55ddtlbelzgyirpt5ahfirgkhrrietyrgbhxbueiwp@hyu4pgj6m4eo>
-References: <nt2e4gqhefkqqhce62chepz7atytai2anymrn6ce47vcgubwsq@a6baualpdmty>
- <20250527222522.GA12969@bhelgaas>
- <CA+-6iNwo54tp4pvUGHXYjbV8sT6FWhSrd2k4pDJgtUGQWYhGXg@mail.gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
+References: <20250508-pcie-reset-slot-v4-4-7050093e2b50@linaro.org>
+ <20250528223500.GA58129@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,52 +100,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNwo54tp4pvUGHXYjbV8sT6FWhSrd2k4pDJgtUGQWYhGXg@mail.gmail.com>
+In-Reply-To: <20250528223500.GA58129@bhelgaas>
 
-On Thu, May 29, 2025 at 03:23:29PM -0400, Jim Quinlan wrote:
-> On Tue, May 27, 2025 at 6:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Sat, May 24, 2025 at 02:21:04PM +0530, Manivannan Sadhasivam wrote:
-> > > On Sat, May 24, 2025 at 08:29:46AM +0200, Lukas Wunner wrote:
-> > > > On Fri, May 23, 2025 at 09:42:07PM -0500, Bjorn Helgaas wrote:
-> > > > > What I would prefer is something like the first paragraph in that
-> > > > > section: the #ifdef in a header file that declares the function and
-> > > > > defines a no-op stub, with the implementation in some pwrctrl file.
-> > > >
-> > > > pci_pwrctrl_create_device() is static, but it is possible to #ifdef
-> > > > the whole function in the .c file and provide the stub in an #else
-> > > > branch.  That's easier to follow than #ifdef'ing portions of the
-> > > > function.
-> > > >
-> > >
-> > > +1
-> >
-> > I dropped the ball here and didn't get any fix for this in v6.15.
+On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
+> On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> > The PCI link, when down, needs to be recovered to bring it back. But that
+> > cannot be done in a generic way as link recovery procedure is specific to
+> > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > called by the host bridge drivers when the link goes down.
+> > 
+> > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > execution of the AER Fatal error handling code. Since the link down
+> > recovery is pretty much the same as AER Fatal error handling,
+> > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > callback will be triggered for the bridge and the downstream devices. Then,
+> > pci_host_reset_slot() will be called for the slot, which will reset the
+> > slot using 'reset_slot' callback to recover the link. Once that's done,
+> > resume message will be broadcasted to the bridge and the downstream devices
+> > indicating successful link recovery.
 > 
-> :-(
-> 
-> >
-> >
-> > Why do we need pci_pwrctrl_create_device() in drivers/pci/probe.c?
-> > The obvious thing would have been to put the implementation in
-> > drivers/pci/pwrctrl with a stub in drivers/pci/pci.h, so I assume
-> > there's some reason we can't do that?
-> 
-> I was wondering if we could confine PWRCTL/_SLOT to work on a per PCIe
-> controller basis.  For example, if we allow the port DT node to have
-> boolean "pwrctrl;" property, it would direct the PWRCTL code to
-> operate on the regulators within that node.  This would allow
-> CONFIG_PWRCTL/_SLOT and the pcie-brcmstb.c way of controlling
-> regulators to happily coexist.
-> 
-> One could argue that "pwrctrl;" does not describe the HW as a DT
-> property should, but I think it should be considered nevertheless.
-> 
+> Link down is an event for a single Root Port.  Why would we iterate
+> through all the Root Ports if the link went down for one of them?
 
-No. There were a lot of attempts previously before the advent of pwrctrl
-framework to add a DT property for powering the devices, but DT maintainer
-clearly said that there should be no DT property for this purpose. So we came up
-with this approach.
+Because on the reference platform (Qcom), link down notification is not
+per-port, but per controller. So that's why we are iterating through all ports.
+The callback is supposed to identify the ports that triggered the link down
+event and recover them.
 
 - Mani
 
