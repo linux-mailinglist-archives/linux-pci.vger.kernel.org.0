@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-28742-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28743-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E09ADAC9826
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:33:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BFECAC9829
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:33:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9C4A4A4516
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:33:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A2651BA3A6D
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E4228B51F;
-	Fri, 30 May 2025 23:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2D728467B;
+	Fri, 30 May 2025 23:33:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fCNwhGWt"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Gfxsjuh2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1722750E5
-	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765AB219A71
+	for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748647983; cv=none; b=JMyjisgcnpcqRgDxRynfAdhmaWHAD6yM8ohrG8WXYWNSr3be5sYKoEmI6Xk7bYipON9eMF+IZGkzPY+YI7bcc5IDmPi9J4Bq7hjW8OP5qwB/rSYUm5ThpD7ir2XUSIuzIVx0oYJyMOhGut3ngC+67Dfv6BzavYez18Dmr3nN+Bw=
+	t=1748648011; cv=none; b=i4axFUbYukNjc2VdHDZU16nHqJ1KjvBbxTSfzl6TYS22d3qo5piTTWudwtIW/PcVo0f3jk6rv50vHFXWROHTcRMi7y/Hh0CqhswUbDIvihozjmiFJcn54fOzItSIIO0VNoBbTYeW9EZJLtB03wfgigZg1jAoUDOC/l3fz8w1Sjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748647983; c=relaxed/simple;
-	bh=0Kx5fdeO9kkEbPY5HTMbK9SIDlW+EZkZvQurAeicY58=;
+	s=arc-20240116; t=1748648011; c=relaxed/simple;
+	bh=pn4QFCV3CHfh3+7x/m/9a4a7XF04y5DcT06zSHWRrH8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oZUiL2wrN22lTGj+Rv1IzssMjeiyBSSMwa3gntR0cNKpzoxdvf4uKTr9MATsal6c5iM3Kv1/4Ssn+jfbGzbhiTlN5J1/G47aq1gTOrvSHNWC7H2ruQY7qxnJQpsdMhwuON7CwHke1ohRZiscsDeRxUdfLJgcMbMAWvyCCYeiJSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fCNwhGWt; arc=none smtp.client-ip=209.85.214.172
+	 In-Reply-To:Content-Type; b=jMa+HDKt4yKG1iSHfvnl2+cD+oEfrXm5wCqCA33+ljULXRDp6wQOSRScqpLMiPbrLhCoT6suOB6/fBroNgkXcuSD+ASMCIDkzTxS690uqIvjZaGdmriftXNw6yTwUxcQ4VDimPDuvahhsv+5SJMv/iJQhvEIzMLlCq48B0P4L3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Gfxsjuh2; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234f17910d8so25628455ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 16:33:01 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2347012f81fso33868765ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 16:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748647981; x=1749252781; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1748648010; x=1749252810; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=fO/4KVyqLd7BgsoaaqAUu12+AA5eN8Wk8zQzu+oUQLU=;
-        b=fCNwhGWtkj8qNIR5MbVaquaZvpgpVs9Rbya5tG5DyDOLzWJii4BdCywrIwNbUuOL1h
-         APEb1mNymjsfAtSTS4//bzigQtUnBhQeyzP1bVW2Gueho1UdtzXkPj+ze/QGmUdG6A6u
-         Kb0/w9pQQ/cwz/r9sQh17RhP+euzs41UIv7+M=
+        bh=DvYBu1zMyFcdvaUSF433JILDGe1kYh6174QKF4dubts=;
+        b=Gfxsjuh2MOAPdfoGd2UNa4NTRHIW+iGOdovQC+N6VzU65l8JoSoMcjGJhCX6uD+y+K
+         7HCr87yHtEYG9K1gAHMl1Sq/0VIkK1CiOcsFGNMYDlya/hsKUKXQdpW4qDvA6K1Iu/X3
+         J/oSkowVSrrZ3c6YJ80ua82uhhEFbxdu+eYRA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748647981; x=1749252781;
+        d=1e100.net; s=20230601; t=1748648010; x=1749252810;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fO/4KVyqLd7BgsoaaqAUu12+AA5eN8Wk8zQzu+oUQLU=;
-        b=PhMcIID4Ib+quDrrqVL7bGV20IRuJJWDq7mUZ8KrFpbgokR0FoUH8QMxadoAgAh49e
-         uo6ORefE7QQm1K1okmGF0NFrCy64oFBZYEOaEuiamEDAoRQ9TNpt9POqrmLTFsenDUJw
-         JrdQMJN5+mLQnGwit9QmnkfYdqJSDHNMCdJL3zlklFA/2YqwlPNmlfbKHkJQWSucbo/0
-         pY9atBJYZAMGTxiQANk0NAu5pBI+BmCr1SR//OcPoWqiEUlEOUiYNzz/iBQLKZa3YJ7i
-         wLB2fAzBKaUUTsFKYvxInvMSrre6CygBvzf/w8DrVYd8kCEkkqQMiWCcpzLb1BQH3352
-         OnDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaxH2qOK38R+o4yKzmfBx0PivISRyaWGpA6j1PbPZfmgfanrDRMwH9F9wKEDxYaE1yuqfX+w7sX5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD55gAsO4MGznO8uW0X7LergYxEIxpg/ioFRcIWa+lCd/5ytBN
-	LS7jh7kYqeWn+2aEPe9RoCNQT+nhDdbIwf9r3+NQhx4c6O+UY8A7/t1MHNtGB3ljiw==
-X-Gm-Gg: ASbGncvJjMQVkI2t7Mr9CFclLgiCgVbLY2F7mb2yo44I7+uSlmoSJL1HVnaNo0lMLsp
-	FuiQgrn5RyqvAbsQ4FAyFGmanBtIpMUOAoN6CnOCd2SpO3wulohx5SZLmj+r//mb8QxvpnwWM5w
-	Kv5zoQWehnfZVsR2Wb3ca9FJRrHi+KzrFEiXIGfKrF+vWuiZbtZ1HdWiX94cvOFB4NvtQoPazBv
-	VmiHjbuzPWFauO4rZTpEnTebt4rHF1JDWIweyqBLDdsVBByI6n5VxOvGXw3MImSHb00ktircwqG
-	xXE5taDRf4KdiTUgPdODArE7R3YOXFeTXFYLSnGW95SmOVnoVWKGbj2nqfVMf6KHncqGQlIPFLr
-	YpatCRFjsoCj/3RAF+Vvg6TCJDg==
-X-Google-Smtp-Source: AGHT+IF9TsYKCXhHP+BKtTXbH09zwj1ypcFvEuEq452X4UyJrKl9DCN8BMUbAtxtyBD0jYmN+eERjQ==
-X-Received: by 2002:a17:902:ba85:b0:234:909b:3da9 with SMTP id d9443c01a7336-235395b1dcbmr39401845ad.27.1748647981175;
-        Fri, 30 May 2025 16:33:01 -0700 (PDT)
+        bh=DvYBu1zMyFcdvaUSF433JILDGe1kYh6174QKF4dubts=;
+        b=scKuf2wjTc0ttyOXdSoUJlNZnOsxsBcW3o/0HJqey9FQWp9q2sX2ksWOLHX1jodVNM
+         vz+eSt61vE59YPCcb/RlFtwWxNUPuQ5W7gQhJuxgrW5mC4Ko8dWO8J4D0BRR+9CJp5LC
+         oaBTygYwk9WiJwRsnhs9CNilrxCx+x0a/yVsUyrPrWw0I5//Ii6H1nbIMbCXbQvuT2/t
+         5yuBTJMZo/csDe+G08S6GnwKNyeYOmCd2ua/QuyQ/9R2F4+xAqFBrwSTsodTsQu1mVAT
+         KF7jGmrtDbq62PU+5rmTRl5iHTMFUS8kiZ/ckMedqG530rd7j9xzZAhZeKNo4RnxpjRJ
+         4R1w==
+X-Forwarded-Encrypted: i=1; AJvYcCW6EH5j9yBpjSt8X7239aIqmzYR4zVIhM+XHGttJmL2yf7MT9PJF/LtNFkQk9vcQqNKswQWMLUldss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4uHez0/oe5XNeEh6wXpS/gDLYIycUWAYbNEVlVJwskISdo+RS
+	gBqZdTWKb9anjkDGW0dPcTYX67jk/XUUA6OdHjwFZYziQ9gNLsSvJxK4fNJHXO3TFQ==
+X-Gm-Gg: ASbGncuI2rBJ9fqf1VowFxGXSLW2YxAiic6CldHzxhQLn5VgOBDBjq1yfMJ0VHEjgX8
+	Q8fe2MipmdjYwJFOSOE+wEy7G6ys5rjgNFi3IpZJEgm4/J7OXvQ7a5emp9Jq5EfxGkgi248Z4Kg
+	+lB2H30JRJ6VhmXgy95MVEWv//QUr9dmy8cmFOZljgIhc9tTQy2heNI12GYYvJBRBNwX05UfvHL
+	ATp1ADvBoTEVYufD/1f36QwTHeQ2fMrvmcOdDbP8v9Nt1ijTmGer68VGsq+vZJR+al7xMEi1AMy
+	IAv/LTAhBExkF7kkuTMdhnTcDceN96J4Q3RhbkN/P09IFD6pq7Uojk56nFlUaPZl4/h9siW89DG
+	cREIa4jeGneBULb0=
+X-Google-Smtp-Source: AGHT+IEvSKsPxXesvS90MDpaHZgCv5Cx6Qzx3uPDHbElMUWPPIWKm/guAjLLmyBVXKbR6GLBqOyEaA==
+X-Received: by 2002:a17:902:d4cd:b0:234:f4da:7eef with SMTP id d9443c01a7336-2353968853dmr52579665ad.52.1748648009734;
+        Fri, 30 May 2025 16:33:29 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd7618sm33196345ad.152.2025.05.30.16.32.58
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14adfsm33352075ad.219.2025.05.30.16.33.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 16:33:00 -0700 (PDT)
-Message-ID: <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
-Date: Fri, 30 May 2025 16:32:58 -0700
+        Fri, 30 May 2025 16:33:28 -0700 (PDT)
+Message-ID: <8ee3f021-a706-42d5-b916-ef2786de2150@broadcom.com>
+Date: Fri, 30 May 2025 16:33:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,8 +80,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes
- property
+Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -90,16 +89,14 @@ To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
+ Rob Herring <robh@kernel.org>,
  "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
  <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
 References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-2-james.quinlan@broadcom.com>
+ <20250530224035.41886-3-james.quinlan@broadcom.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -134,12 +131,15 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250530224035.41886-2-james.quinlan@broadcom.com>
+In-Reply-To: <20250530224035.41886-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/30/25 15:40, Jim Quinlan wrote:
-> Add optional num-lanes property Broadcom STB PCIe host controllers.
+> By default, we use automatic HW negotiation to ascertain the number of
+> lanes of the PCIe connection.  If the "num-lanes" DT property is present,
+> assume that the chip's built-in capability information is incorrect or
+> undesired, and use the specified value instead.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
