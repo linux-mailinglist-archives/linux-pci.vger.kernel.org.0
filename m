@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-28749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE6E0AC984D
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:41:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DD76AC984F
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 01:41:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5461E7B532F
-	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:40:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1ACBA47104
+	for <lists+linux-pci@lfdr.de>; Fri, 30 May 2025 23:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB0328CF53;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9034B28D823;
 	Fri, 30 May 2025 23:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JJA2jZUC"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gyIo1ZEH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8C321772B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB36224B09;
 	Fri, 30 May 2025 23:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648461; cv=none; b=tPh5zRwCX3cu9K90oINFdeyArb5Bqs0GbptZk1Uw5PGQkcgzVLOyfyFuvU4wCBSpI0g8SghHeTH/gm/XEssDZ1ZHUHP4uLbU+scs035JaX830JSaZhdGjEeqv75POvk0FcJwHsz2GHGwEp8d7kH14Pd+Tj19aW2wBW52u881T8M=
+	t=1748648461; cv=none; b=Vo+ez+ccp4puInspnQUtqOS66EvfVlsXIBkY2QADA3M8SgBdVhhEitkKMyOM3uJTOjhuD6ca2au6XbDuKEYlQvPfXvFICxOSpTj5FU9z2c4eWQI60Qcv9jvXfalCm0U+4M8JrmsdhAnWLIlFNv7TehM5XIC+qFTkhuZhFsG9RwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748648461; c=relaxed/simple;
-	bh=D4QcDPea5XYtBJWDOg5IiEHbc6+seukZ74zzCSld5Hg=;
+	bh=7c5ORw1eWWTRRUGMIhCqOmRuTbQBG607lVg1WeSPPRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=keopQ9R+bcX7xPrhEMsqkVRbVd7ru+VpSQ1l843m3+KiAWOLDCdz5+yZSwpd++tX1x1xT7Ht5OCKipbJ13EAJtsSRUOx8zXJYyuCEQTnKorpI2fR17GE1fsYVQM9nNm6BNOlYrZrSAD9edSzkMcWVdR14blwejMHQjYT7bZ+qlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JJA2jZUC; arc=none smtp.client-ip=192.19.144.205
+	 MIME-Version; b=IOIXNVNOpkyDTNWUIyChEEOyPzZscSL64HnfFnRjKJt9DBoMSMdrjL0QRqjannf/BWD0V2419QII0faA2JsIZCYE2O2fIp5ZkTFppHZSM0KCQICTz8/cO25sHf2Iz0VYnsu9rwVisUj6vyh3GL+kdPPE1OOZ7fkSJ/Xb96e13xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gyIo1ZEH; arc=none smtp.client-ip=192.19.166.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 25C59C003DE0;
-	Fri, 30 May 2025 16:40:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 25C59C003DE0
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 2F2DBC00054D;
+	Fri, 30 May 2025 16:40:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 2F2DBC00054D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1748648452;
-	bh=D4QcDPea5XYtBJWDOg5IiEHbc6+seukZ74zzCSld5Hg=;
+	s=dkimrelay; t=1748648459;
+	bh=7c5ORw1eWWTRRUGMIhCqOmRuTbQBG607lVg1WeSPPRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JJA2jZUCWp5m/OhAeLrqJjrDv19ZmyF+sz+3y7xuWzjVlG9yl2oTRsf03co/K8Uw+
-	 p7A/vNcUc6zK5mHLza5lvG3mefiihuuC/PgCE7LndLfUwClrD6yAe08RebUFLWu6wZ
-	 gZEXpoK+8MDfKjSaSzCQDQtPAI5ySYm0CHqDYPiI=
+	b=gyIo1ZEHQ7/xqVmX95HIC6Rtczvsgpila3eiiuvAhiqShaqVsayc5Gu7IN1uAbllK
+	 SjnClPcFvla+GO1NDhyMwUNLc7CM0caR3CpogY57ZNWbLCh2HSluS5lPhtJxEuwnq9
+	 5qT2/qUBCASVGV5nfxqWzS3hPzTJ+HOeAxq6HMsA=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 82BC6180008FB;
-	Fri, 30 May 2025 16:40:51 -0700 (PDT)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id C513F180008FB;
+	Fri, 30 May 2025 16:40:58 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: bcm-kernel-feedback-list@broadcom.com,
 	Andrea della Porta <andrea.porta@suse.com>,
@@ -87,12 +87,12 @@ To: bcm-kernel-feedback-list@broadcom.com,
 	kernel-list@raspberrypi.com,
 	Matthias Brugger <mbrugger@suse.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v12 04/13] clk: rp1: Add support for clocks provided by RP1
-Date: Fri, 30 May 2025 16:40:51 -0700
-Message-ID: <20250530234051.465593-1-florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v12 05/13] pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+Date: Fri, 30 May 2025 16:40:58 -0700
+Message-ID: <20250530234058.465687-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250529135052.28398-4-andrea.porta@suse.com>
-References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-4-andrea.porta@suse.com>
+In-Reply-To: <20250529135052.28398-5-andrea.porta@suse.com>
+References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-5-andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,12 +103,15 @@ Content-Transfer-Encoding: 8bit
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-On Thu, 29 May 2025 15:50:41 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> clock generators and PLLs that drives the sub-peripherals.
-> Add the driver to support the clock providers.
+On Thu, 29 May 2025 15:50:42 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
+> Add minimum support for the gpio only portion. The driver is in
+> pinctrl folder since upcoming patches will add the pinmux/pinctrl
+> support where the gpio part can be seen as an addition.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 > ---
 
 Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, thanks!
