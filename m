@@ -1,90 +1,93 @@
-Return-Path: <linux-pci+bounces-28760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F3BDAC9996
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 08:34:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89832AC99AF
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 08:48:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F2173A6D0D
-	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 06:34:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99F0A16EF3C
+	for <lists+linux-pci@lfdr.de>; Sat, 31 May 2025 06:47:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE9622CBC0;
-	Sat, 31 May 2025 06:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1911D63F0;
+	Sat, 31 May 2025 06:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ylc+03+K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YBrMvwJt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF8DEAD0
-	for <linux-pci@vger.kernel.org>; Sat, 31 May 2025 06:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5039E2111
+	for <linux-pci@vger.kernel.org>; Sat, 31 May 2025 06:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748673280; cv=none; b=e5qfmCpUt78O1WBQBs2toGSCVgY9Y8ufGRe2mqzy+yw9+h8qPVY1y+WZ13N4ol5sHPEq3DCsMNqlLOoGsTugnICZRtqKvPMA4t3n7L+ph8WITZk9Z5Ofraj4YZ/Mxa6wzsAR/ZH2qOD6q01S6x93jurbrJoNYlnNZ3whJEdBJF4=
+	t=1748674073; cv=none; b=U3Lo0RCEBYPa8mu2DAtMOx97wdxq8GPbYbzKH2urZHF1DWl5uD0BXlJgglsfZ85StHiPivl7w9temojr6vSpuf317t+7kH4xIy8HVp3BvWwU1Fd26FpPsAMpYjN+dsoWX3DTPg/9sYYwD5CrZ2yBhF0E+UPT51PQKJeDtOskJKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748673280; c=relaxed/simple;
-	bh=PxqLSl97DPtvTPB898IUtAJwGFBFE77MDz7ZltuLPxI=;
+	s=arc-20240116; t=1748674073; c=relaxed/simple;
+	bh=AP+8l/VrWj5dM2p5TLYSBWT/LoH7peXQg3wUcRM7Zoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tIamdbvFgvKkLnYDMmt9vkTEIIqWmMPvWEm0AQpevRDDD77uU8bzfIZmWYi2WpWJwX2bxVSC9v0UzRvG1vC91mVwQz+6F6B0+2lkauGy7RbcS/KxkDPTMtuD0V1hbBwxM8HMeZeNj6Ir5fS3ESn7BE9kmt0P+mZu3eluigrjEGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ylc+03+K; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=a45D7taudZm+TCI+G2vTHTfmJABIn2/hMqk8mVisrtaKEDL2dnnHPj0cqHsnDwYx2RK+s642tsbMc9JJE55QA5+F4k+u2XxUClrszXIwG+WeHBDuXQETJTbPGAqDd+UDA+IHo8No9h+eMm/ioOYpqPk3pRw4Y/fvYsb4PWN0sFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YBrMvwJt; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23539a1a421so9361145ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:34:37 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso2557233b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 30 May 2025 23:47:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748673277; x=1749278077; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748674071; x=1749278871; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=G+/uxe3dxQ0IvY8GTZXqERCIfLVfCSKGis8G08eVtFY=;
-        b=ylc+03+KiScnkk50XNtkecrT3Fu7ptKFYavhAF2OjsuBFoOo7PpDVY1NDw1AXtjZda
-         jMrGxE2zP72BvB+JStmRHsJoNQKwo8HsyF0KH0BfjEyIhIv4gdHELCKas/a+qqyLLlzh
-         gLorVV8IGNWwpGOStSDUW/6b+N335kbIMGd+iJuS3y1mV7ikruocOfpQeVr6zoFzva0n
-         MhaWgPoe7/XNv6rEWCazMD9vfMO7FXrs8jwtJbh/pSHILhHx/l0CImCSLPTQa+LG2/Eb
-         1UXhhkF3G20aOPPUG+RaCsyCUZp5d0MPABezn3bSZRubz2KOcxaRwNOu1oMahun4L6Mb
-         V4QA==
+        bh=a5ZWLH4632Zz40l3FU4iRpheZh29+AsfRRhpH0NFHZY=;
+        b=YBrMvwJtnk7LmESqfGrsJYckYjJ3nbbhzEljU3yxZKw3Jm8lnLcUE2ZSpm8dr3fu0U
+         t1ucBnKVMSHn6Ai4OMrYVhQ8usiePEcYN2/pxhsHCsvfckUhG4qucFhVuHvopt/Unxq/
+         CadnNMKPY88zkOLFfIVadApMDP5xpyf57y8O5beegLMxZ/ijukJa03MlNJKqGHE5Lgk7
+         e17MvEfCpco7iDh8g8YMw8rco86EyBkIid3Sx1f/uvJd2DBdqkmT/L/H9pJm5lxZtyUL
+         BZiESwE5OGG+dp2kDbvpeLC7R7JtKLDR2wYqeOkNbVLK0+4wVVNCYrHaRAseA6RNF7Hn
+         lj5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748673277; x=1749278077;
+        d=1e100.net; s=20230601; t=1748674071; x=1749278871;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+/uxe3dxQ0IvY8GTZXqERCIfLVfCSKGis8G08eVtFY=;
-        b=aX6twqzCSsCry8k273N3Lkon/9bqrtGtOgkRzenzqEbYbbrZLHmLN0tjM/wCzgkeGU
-         cBxnVeZMFDEOmLQEkrRM/0O29iAUzyDVuTPQEmdokCqW4cG93YH7COcafWjN9mM0irAy
-         WxuywO7xx+aCkfCzvPAWWVWATXIsou7xhtmOcyKbJ5WBasfFfo66qi7MvmjfKqE6RQOt
-         pPQJi4DpiQpi2itRGVUXTYsJqiu7t9oyWmdGL2L7684MycxZB03vPkU9jgeyaVxmcMJn
-         uJK27AfJ9oR6ot+qaso2/ebIhTXHeNezj4sDhDB7POVpxFrVtC9HTj7Xc/DzVnGFP20S
-         OL9Q==
-X-Gm-Message-State: AOJu0YyWO3EcKKIceqmObH7BpmC409YoK/I74XRlml2ngfH+Durc8I3u
-	N+l3S5mVrt7AuVpFBPBKylr/hti6KiAcoO2KwwPgn4Of/BBFUoEf4FGZ2NJEgAHWJA==
-X-Gm-Gg: ASbGncuNX0WcDqIjNh/9v6CwnH3+FMPhx7NAWC06Y0QgEkwW6zzeXhDO/H9SrAfHycL
-	JffMszGrWfifg3l9PKC/KNwkPBVeMn1xJi/1mKHA1RVO5LTqwu81xuJ4Qn1b3shXsO1T5oJyEs7
-	2XRPR+rJ9b63S7576V/C6scsg2Vq03nPxGjFZSOMBLKbdDnsApFKe66clZEgEGP30anSYmVEoLa
-	1SvSPTOcSDro1a11qpnnTTXmBGMcUfGiZ0kvUgBX6jzGal0Gs/Ef4MM6z70xiNGxQknKKmMti98
-	uEy1qC7nmSLq6EKrsO54uTlZcHAePITPc/YYeWuTw7zZ7pBpkOOSZkoKsOh0TA==
-X-Google-Smtp-Source: AGHT+IFsJ4Pr1gW54/1Cl9dqqBQZUvBXxBB0vHhUwcZ3GY3SQHAiNtVzM3wVxEN3AgJfUEaw7hdMIA==
-X-Received: by 2002:a17:903:19c3:b0:234:c5c1:9b70 with SMTP id d9443c01a7336-2355f6de0edmr14474355ad.17.1748673276944;
-        Fri, 30 May 2025 23:34:36 -0700 (PDT)
+        bh=a5ZWLH4632Zz40l3FU4iRpheZh29+AsfRRhpH0NFHZY=;
+        b=hHvSR2EwBZBFBHf123B6N3x+nyDTO2wrnKaBqw+Zzb6xcPV9yuAFFmUOcjnO+4Ck9K
+         Fs08hLYqVyGcnFlZvFQHpyjoEhSF2vMz7T0vd7B1wnBYaeZPJRnJ//GjQ5BI0QDTLuPD
+         YVA6nBebmR6oNfSecBexhNjDout8QEo0tt+iSNRdGmG/Cxbah4k+0ru+74am/RI7Cn4a
+         rQIRb7R/quu+j2Yx6OgLQljd38nM2Y79ZzLh2lNW84mhGG4K9tPZTnpYhvKDXjXQP1MK
+         9+yaFfHuppIaFmur0ipYytgZeXA9fIhl+2B05XdpghqbCyPCD5tEEwTCPEFQ/PlV+URb
+         41iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAhTkmnFSVAhAIsK3cGMrbOLZOR+PCq+zsX1UicNuIYxPbv4CkcfaaGWeLXcu4ctcYHsVQWZLl/ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNMHjdYIXY3HDB/L6Ymqz7t/Yv48vH5ctGlEQ9mKHNyqtJjc07
+	V3fNmfuKdxDBf8dfYYtDKE68Az0XZF88q03nY6pDXx1U6npbfhzAU5qWXgi9SQrrYA==
+X-Gm-Gg: ASbGncuVXrmY/8aW+FKZDk2UQaVmjd1InJV2bf8Dm6a5wXmdIo8DHzaDYU1avsQmX+R
+	uBtf5TYTzMxKSWkBa3sjaB8Zow1BjK0frh6kEUMi0K/jGoxy1jybtjffVXSWcPGPSSUYE4UWngP
+	mVn2/9kEag6w3uj5os7uYaniiZZrCpBU/to7F9T+PRmsomDJefkfdmb2BOwHHdaba3sEv3BLQFO
+	NnsyHXVdDu6MN2lRQENfn8q3GCwF3hxovHhJiG2ML47smcxP0o5mVBCcGLOEuzUGx8E3LuRORxO
+	Xr+sp9jjvr97ngl+YQK4zisParhPg2PBq+rBO0fVtP2c6XTINJMHXJrXS20yuA==
+X-Google-Smtp-Source: AGHT+IEKL4fPM3xoNxSzuxpYqv6nyVtXsn84i+gad0ylQKNT3LCGJ0g2SDcStXdW+/7FoA7i3aHggA==
+X-Received: by 2002:a05:6a00:179b:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-747bdd85a07mr9014475b3a.8.1748674071613;
+        Fri, 30 May 2025 23:47:51 -0700 (PDT)
 Received: from thinkpad ([120.56.204.95])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bdd0e9sm37348675ad.74.2025.05.30.23.34.31
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe966easm4032172b3a.4.2025.05.30.23.47.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 23:34:36 -0700 (PDT)
-Date: Sat, 31 May 2025 12:04:29 +0530
+        Fri, 30 May 2025 23:47:51 -0700 (PDT)
+Date: Sat, 31 May 2025 12:17:43 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
-Message-ID: <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-3-james.quinlan@broadcom.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Hans Zhang <18255117159@163.com>, 
+	Laszlo Fiat <laszlo.fiat@proton.me>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] PCI: dw-rockchip: Do not enumerate bus before
+ endpoint devices are ready
+Message-ID: <domwxd2beelpnuuzgbxuizqnfo24aekhtxsahodsbfkpc3n6fd@rahjejxklr47>
+References: <76F22449-6A2D-4F64-BF23-DF733E6B9165@kernel.org>
+ <20250530194347.GA217284@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,72 +97,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530224035.41886-3-james.quinlan@broadcom.com>
+In-Reply-To: <20250530194347.GA217284@bhelgaas>
 
-On Fri, May 30, 2025 at 06:40:33PM -0400, Jim Quinlan wrote:
-> By default, we use automatic HW negotiation to ascertain the number of
-> lanes of the PCIe connection.  If the "num-lanes" DT property is present,
-> assume that the chip's built-in capability information is incorrect or
-> undesired, and use the specified value instead.
+On Fri, May 30, 2025 at 02:43:47PM -0500, Bjorn Helgaas wrote:
+> On Fri, May 30, 2025 at 07:24:53PM +0200, Niklas Cassel wrote:
+> > On 30 May 2025 19:19:37 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > >I think all drivers should wait PCIE_T_RRS_READY_MS (100ms) after exit
+> > >from Conventional Reset (if port only supports <= 5.0 GT/s) or after
+> > >link training completes (if port supports > 5.0 GT/s).
+> > >
+> > >> So I don't think this is a device specific issue but rather
+> > >> controller specific.  And this makes the Qcom patch that I dropped a
+> > >> valid one (ofc with change in description).
+> > >
+> > >URL?
+> > 
+> > PATCH 4/4 of this series.
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index e19628e13898..79fc6d00b7bc 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -46,6 +46,7 @@
->  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
->  
->  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
->  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
->  
->  #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
-> @@ -55,6 +56,9 @@
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
->  
-> +#define PCIE_RC_PL_REG_PHY_CTL_1			0x1804
-> +#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK	0x8
-> +
->  #define PCIE_RC_PL_PHY_CTL_15				0x184c
->  #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK		0x400000
->  #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK	0xff
-> @@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	void __iomem *base = pcie->base;
->  	struct pci_host_bridge *bridge;
->  	struct resource_entry *entry;
-> -	u32 tmp, burst, aspm_support;
-> +	u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
->  	u8 num_out_wins = 0;
->  	int num_inbound_wins = 0;
->  	int memc, ret;
-> @@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
->  	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
->  
-> +	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
-> +	num_lanes_cap = u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK);
-> +	num_lanes = 0;
-> +	/*
-> +	 * Use automatic num-lanes HW negotiation by default.  If the
+> If you mean
+> https://lore.kernel.org/r/20250506073934.433176-10-cassel@kernel.org,
+> that patch merely replaces "100" with PCIE_T_PVPERL_MS, which doesn't
+> fix anything and is valid regardless of this Plextor-related patch
+> ("PCI: dw-rockchip: Do not enumerate bus before endpoint devices are
+> ready").
 
-"Use hardware negotiated Max Link Width value by default."
-
-> +	 * "num-lanes" DT property is present, assume that the chip's
-> +	 * built-in link width capability information is
-> +	 * incorrect/undesired and use the specified value instead.
-> +	 */
-> +	if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
-> +	    num_lanes && num_lanes <= 4 && num_lanes_cap != num_lanes) {
-
-I think you should drop the 'num_lanes && num_lanes <= 4' check since the DT
-binding should take care of that. Otherwise, once link width gets increased, you
-need to update both binding and the driver, which is redundant.
+It is patch 2/4:
+https://lore.kernel.org/all/20250506073934.433176-8-cassel@kernel.org
 
 - Mani
 
