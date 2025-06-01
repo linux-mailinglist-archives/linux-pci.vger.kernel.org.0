@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-28774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3316AC9DF1
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Jun 2025 09:05:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ACA0AC9DF5
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Jun 2025 09:10:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFF997A7BF9
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Jun 2025 07:04:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E86CC1781B3
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Jun 2025 07:10:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E62B158545;
-	Sun,  1 Jun 2025 07:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B392319ADA2;
+	Sun,  1 Jun 2025 07:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXC/rtIA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMj4kdWx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FC917A305
-	for <linux-pci@vger.kernel.org>; Sun,  1 Jun 2025 07:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A8F18BC2F
+	for <linux-pci@vger.kernel.org>; Sun,  1 Jun 2025 07:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748761541; cv=none; b=js66zBtkFdzrZCYxgkGSID3gZJ0LNooJ1z49TYo1JGbtEERfrpcX4nr1wcruvPuWrcIIHQq+QvBeQbaTyw/lnz78RwfDy1jUY4mv7wlsHc1yr82HKqE4UjQBOy2FeOjC/by0Tm6DDMf2IWXzALpoG52S0F2cMfepElXuzadePw0=
+	t=1748761801; cv=none; b=tvzmDESGg3lk00fjeyCkZGpDcaTL3w0dKjgVMwRYJY1zwmtrTC0AU8y+LrDwIAVARkiilK7fZx5kjM0f/XDGKcpJATLwwLDUrpa594pBrm76qPiL0WbSMp8fUbfCPNOO2qbZMOm3t3SQtbM4jjROhKgn6SI/olB+156DxtBFFLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748761541; c=relaxed/simple;
-	bh=b5TBNVn7AFtnC8283/oMyrwCoOBsBN6iBn6q0WoWmzs=;
+	s=arc-20240116; t=1748761801; c=relaxed/simple;
+	bh=BniQGKHAkLgDLs2FRxY0HczHo95+U/WuBwu2R5kKruU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJwbB13DHHIVSpF2K9iBGHKo5ptCy/ds593L0FBTRKvMt5QOKJ4RTN5DSqYiIa6JRMjAiUNZ3j/frZaTl4XTgh2daqP9N1Pl9+QMFS2jCLvz7ZAqHqIRZMjQ5wURTromh0R+MIQyvB783ZnvTuQrFc+A/+3p/3HcIjGBXGRNEgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXC/rtIA; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCoHbD4ZuFWZwCs4uGvLN+UDPsmoNkE8OZF9zDYuhmpdy23IXnq53IRqEANrxeK2z9t2sQDVqKF74QUC8Qsm4HZj55975fpHgESHOSJUYqmm6eZ4AivDTG5SF1HqGnLxqCN8yFavMYz0CJATq2/krPWsUeSoydgjuCXoB2Tmiy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VMj4kdWx; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2301ac32320so30755025ad.1
-        for <linux-pci@vger.kernel.org>; Sun, 01 Jun 2025 00:05:38 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234488c2ea6so35620305ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 01 Jun 2025 00:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748761538; x=1749366338; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748761798; x=1749366598; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tP4cIEQvwMPVrEztoI29giGwTzVH1fjQVhB02Bph62w=;
-        b=xXC/rtIA7ES0SNr01OfeoDa4mrx4CJVRZCsLMsuKiB2bEBAGMfihLTScGL0CAsbmLl
-         fMRhvcTiGXA3FjfD0bds7iBfe5DuJ8l80jLiHPXtIdDAwNu2twC1ke+OTKH6EDjHXcj4
-         wanmh85FyEOzfq+aN/SHrar+maZ8pq9RRW37kkaglM2ESKFNeOgM8ikD5hp8q3JkyJoP
-         nb4Obn5BVQu8apvvClkpNo7rJ9+exasY8ZVjRcj6w1c37E5b/ZgVdc8XXLkRb26ps9Bm
-         uSLMY1Q1piTTGAGhXzVVyLKNbTbFUPYeXZnSXMN3RLDKf3uz5Eg9OOZb2peRD37zQMrV
-         uI3A==
+        bh=Vx64ENds9yNKxmsf1fRcMvm79dh+K1dbdQlS0bVKK0Y=;
+        b=VMj4kdWx9y4g1LAPRyWPA36Cni5v9Y2d+fm/dwEjbLK936N0BfG85lwxWIYm3R3uLe
+         AitAket0Bl/RDG6snGcwNFW+y5ayNv0X6TDFJZhtefgp0Co8hgzY4JkR3iS8nv0heo2V
+         v2mmHpaztpkrF6bRZjRPZrmHOZ1ehrP8wBH037kBqM/MrrQcZzpYmF8rh+m2Yk3K+Tjd
+         sK0gVDd8An7AJybdt52hsDN7I7asu68drErcQe11RMRw5s2kSR93T48izY5MUsiYOFJk
+         FVXly+9pCqNZtH5M9JeCdJ4dEMGFb4sFxywlzJPlGY3pdl5R4P/JizVq7UfdRQ3xIIXs
+         6+nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748761538; x=1749366338;
+        d=1e100.net; s=20230601; t=1748761798; x=1749366598;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tP4cIEQvwMPVrEztoI29giGwTzVH1fjQVhB02Bph62w=;
-        b=TzbTP8AKDUlFIjaS5RsMpRmSHN9eCm25uuduZxPGDuHHFwk7DYD3cpsIuuG4pG+tLY
-         OSWmfUWuygklcDN1XC/dY55aeTZMRdJ8FFF6hEFqXLn4BExGXPPcW1gM6UVgpr1auShe
-         P0ES6PJKULvvp+Xq409jk0WwE8Dfyl6qJGMlKnDOnH15svmbEaHQs55gxyGlCN7iWWhg
-         G/TPGOpusF89XoCib1+IK8vA2LexWxuSDdaTy4lkvF9Viu9KRjT+2XEb154nx80oBOB7
-         IybjDezPJdRw9StIp4oaJtmH3JOKL76Cb29PCjMezD2CNFYub+1C4A8W6QMx7fOZSvhj
-         gBSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPQKVQGfU/H5zBhfw1LHvzOJazeT9qKc4eCU58auEpMBetNONULFrvFLWnjjCQvN7TovhBAip/lBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyez2nMkpdIn0TEEaLZTGIl9/yDJV3QTUkjLZMODkhjA8gt8hol
-	ROvLQO4OlErA+4kjesAHn/lt5mzwuxfnjlpHOWwxJ52uN+8l7QWRWObBH+npMAmjwQ==
-X-Gm-Gg: ASbGncvQwC0TC5HUb4rtdHQz1RDu7oRZaAu/SLn11EQtg6tNQsK2FjQsNRKCjryajWx
-	oQi3uV2LK1cP+iEU7J57HZSa5S/bpIAKD5prVhlMhRTOgGEtk1gZfjLye36EUZ4NzsSG0gQFSNy
-	keC9ZdzZZr2AMUj+kCfd5aoFl8FfqB+d16LYrkB3k+zLZnLSfygbuu68OKKRNezURoDnTWdhVQw
-	ozOG5YjtbBZ2H5kTPG2zfLPL7VDOQWC4PJmopu3PFPo38a74BdGDefgXguqIg0rywEJSXr+u0V8
-	rr7eLuIjGnQOUDcYI+2D40L45T+2LEXmcerPiLALNpQOuC9q1yWE73y3ltussTk=
-X-Google-Smtp-Source: AGHT+IE247uLd/iBzphkxeKxftAlRKgNkFf6A4iG4K2SNJInbQbWVZdn+4gqUSzoyj78p796a0CT5w==
-X-Received: by 2002:a17:902:74c6:b0:234:a44c:18d with SMTP id d9443c01a7336-235290e435emr124157195ad.22.1748761538281;
-        Sun, 01 Jun 2025 00:05:38 -0700 (PDT)
+        bh=Vx64ENds9yNKxmsf1fRcMvm79dh+K1dbdQlS0bVKK0Y=;
+        b=uNssMPFUqZ1ukMVnhoV6PPWUV7btVHFz8LoQDbs6xpmInedNRsAUTxuIAVhOKkbbut
+         r69XOU+nz7WQ7fDps+B4scb0UQUGJL5FnWcngpSPQHVkKEpa93V+haAsmUkLbhhLPPPz
+         oxC2Q9f4yJ03QD+fDq4oJUf1hPrYev667pfAFygzpn96qgcCWgeb9U5tGk2kNIAtrV3Q
+         YRTRqVF0DdUtl5hU6+X7Css3am60ajX2ggqmLuyWRlroPGByOy0pu6PCBcuNLYyTHrXd
+         2goyUceub5MvxU2Ps068MOkjoU2uegCu0/enYx8qi09PRD03WKVCj3KI+E0NmEpkvV9M
+         utgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPfjJQDDGa3kEjOMA92i+wH3b1SlAyKzFAyNXRmmgAfU+9yln+vM3+IJlFG5TtiKgy9HBFQw1awyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpblWLL7piJKRdvVsFZM6r2/urKbBgpOkHwhjIsNz/0sansN2K
+	Bj2q1/EMaiRDOmxVEBnqAT5GJfstr84UWtxdVmq2N60VQeo9PpEmQFV5ablgCkJ16A==
+X-Gm-Gg: ASbGncvhXJdXGRsccUcD9ac43oB5rmte1gJC60c8f8A9p8U9ub1QCg2e6DmXZ+v4XVQ
+	qWJRfZ1nTOy5PW1yxlxZjmIy8W+zIsvL74z982v2FCIXP7sUyDGLFQCnu+NkCMgwiexL68tdt8A
+	gpxyLCbH0bzUvNmGeNlK/7Rmr6U2Vr7tjXSWjXrY54q+1JpIoE/aUYN9OPaDMEGW8Ix1oCnJQ8h
+	Wo3sC8GkHWFSG60c4ICavdWloCDPDKYC7HiyY8faSo/z8jwe8ghMrNUaYnnD2+Guf3TjqkRzJ/M
+	rbVPK5FYekaXUNyIqNf9QWnjW//cEwPfsRPA6Itpbk0ItwxfIT6SzpBNAv8qHgQ=
+X-Google-Smtp-Source: AGHT+IFeYi8cJujL8lmRCRg0ji+GV01N7Bx5JV9UOdvwJpxWWnAeTgjUtUNQwBUxCPsrEyGjoG+KDA==
+X-Received: by 2002:a17:902:d4c8:b0:235:799:eca5 with SMTP id d9443c01a7336-2353961b5bemr123129935ad.44.1748761798352;
+        Sun, 01 Jun 2025 00:09:58 -0700 (PDT)
 Received: from thinkpad ([120.56.205.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf47edsm51491055ad.161.2025.06.01.00.05.33
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc884dsm51805195ad.21.2025.06.01.00.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jun 2025 00:05:37 -0700 (PDT)
-Date: Sun, 1 Jun 2025 12:35:31 +0530
+        Sun, 01 Jun 2025 00:09:58 -0700 (PDT)
+Date: Sun, 1 Jun 2025 12:39:47 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -82,11 +82,10 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
- node
-Message-ID: <r4mtndc6tww6eqfumensnsrnk6j6dw5nljgmiz2azzg2evuoy6@hog3twb22euq>
+Subject: Re: [PATCH v3 0/3] PCI: qcom: Move PERST# GPIO & phy retrieval from
+ controller to PCIe bridge node
+Message-ID: <7vw5pftnbiixxkokaebidfnjfs3nk6xoa7yaxxwmsssilfqnua@5qlbhqsiuojv>
 References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,51 +95,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+In-Reply-To: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
 
-On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+On Sat, Apr 19, 2025 at 10:49:23AM +0530, Krishna Chaitanya Chundru wrote:
+> The main intention of this series is to move wake# to the root port node.
+> After this series we will come up with a patch which registers for wake IRQ
+> from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+> the host from D3cold. The driver change for wake IRQ is posted here[1].
+> 
 > There are many places we agreed to move the wake and perst gpio's
-> and phy etc to the pcie root port node instead of bridge node[1].
-
-Same comment as binding patch applies here.
-
+> and phy etc to the pcie root port node instead of bridge node[2] as the
+> these properties are root port specific and does not belongs to
+> bridge node.
 > 
 > So move the phy, phy-names, wake-gpio's in the root port.
-
-You are not moving any 'wake-gpios' property.
-
 > There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
 > start using that property instead of perst-gpio.
 > 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> For backward compatibility, don't remove any existing properties in the
+> bridge node.
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
->  arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
->  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
->  arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
->  4 files changed, 14 insertions(+), 7 deletions(-)
+> There are some other properties like num-lanes, max-link-speed which
+> needs to be moved to the root port nodes, but in this series we are
+> excluding them for now as this requires more changes in dwc layer and
+> can complicate the things.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -709,8 +709,11 @@ &mdss_edp_phy {
->  	status = "okay";
->  };
->  
-> +&pcie1_port0 {
-> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +};
-> +
->  &pcie1 {
-> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
->  
->  	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
->  	pinctrl-names = "default";
+> Once this series gets merged all other platforms also will be updated
+> to use this new way.
+> 
+> Note:- The driver change needs to be merged first before dts changes.
+> Krzysztof Wilczyński or Mani can you provide the immutable branch with
+> these PCIe changes.
+> 
 
-What about the pinctrl properties? They should also be moved.
+Since there could be other patches for Qcom driver in the PCI tree, I don't
+prefer immutable branch. Let's first merge the driver and binding patches
+through PCI tree and you can submit the dts changes for rest of the platforms
+for the next cycle.
 
 - Mani
 
