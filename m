@@ -1,83 +1,69 @@
-Return-Path: <linux-pci+bounces-28823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A0C9ACBB4B
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 20:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 082BCACBC9F
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 23:13:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D505517505B
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 18:58:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB1031722D1
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 21:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6547B22331C;
-	Mon,  2 Jun 2025 18:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 495A0170A26;
+	Mon,  2 Jun 2025 21:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="giDb07Om"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4m/SaHE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC4D9478
-	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 18:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14733165F16;
+	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748890700; cv=none; b=OFku2TRSl7oNXkf9E1GpmsrQTdLolt2zg84SGOv5p6QjNabbZYfpxxW0Bc/8UBNj15qNYiiM9VssRrPm+486rTdAk5Pzn7UiY5cX/yDbs0EsMTyLhHKbSyr1PFNfgDbkLGur0bvRrfEEuowWqqzcOJiJpAWU1p6JwdYQNkSO5xc=
+	t=1748898827; cv=none; b=NUCgdzZOVahDaUDUD/Qz73r67Sl6584QT+q14ROLVWS5hFSdp/VGGTUqLCjYF9+2k+Xz08yWybMD1lzTjlXVNGTAszteUngs3Wx7okrw3/4Pak/YK8+zhnlVvsr7qWAAgrwFq0AJsc3q0Ijy94LdeaWtKLXgSkG3GOrAtO2ljB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748890700; c=relaxed/simple;
-	bh=v2x3I7vJUp8Nn4sz3nlD9/N+0W37+LyoFXHCrYC2P3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPkWldWc4n3Cl9UvFf7c9pNnf2dWRv5QDc3Nqi8FLWDkCk1wQ9Vz4wG/x7NHgGJDBDBCNcBpkOV+yENnogiiGDe7hn4Bz8Ne5yz5uvVh8Z3B9XPJSvepr/s1GyAhIVCrtyI/eNpO1i7SRaEQofG6+Hy2/2gfAp5KN/lVijCvny8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=giDb07Om; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748890699; x=1780426699;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v2x3I7vJUp8Nn4sz3nlD9/N+0W37+LyoFXHCrYC2P3U=;
-  b=giDb07Om84Hu4BokRQY1Xb2g/OJNefgHcZl9Soyoo+PuVl6F4FRYKhvP
-   LdA/+hNlKolTJI/9Co2dz1c4wViVg18i+tzh6QiMelg7pPsdYQJJbNEEE
-   gL9jYFfDn3E6iRqlw5KuW0kXFX7VemCpqtDLzcbBEV7hn/ns/S/vHUaYs
-   BUEf8GiFBYjdC99VRKZM3MJ2TGzyikVVbnrN6YUNAYflQlBx/v4dM0QyS
-   7hMmas7TKKgJ8IiWlrRHNheWCS0m0yRhxtQypXxK8iXX+SnIflL+Cduih
-   1bfnCVIQlEDicMFKp4BieGN/Vcww30WWop+glXMYMgq9dW1o9sf3NUwmn
-   w==;
-X-CSE-ConnectionGUID: CjQ1R+AdRL239qElNncuJA==
-X-CSE-MsgGUID: 4h2lii7fRMW2SH7roCPOrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="53537158"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="53537158"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:58:18 -0700
-X-CSE-ConnectionGUID: HTfw4oFzRVe13jt5NYBKKg==
-X-CSE-MsgGUID: St/FPc1BSvmxKKoSe/ONGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="145556404"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 02 Jun 2025 11:58:15 -0700
-Date: Tue, 3 Jun 2025 02:51:44 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-	lukas@wunner.de, aneesh.kumar@kernel.org, suzuki.poulose@arm.com,
-	sameo@rivosinc.com, jgg@nvidia.com, zhiw@nvidia.com
-Subject: Re: [PATCH v3 12/13] PCI/TSM: support TDI related operations for
- host TSM driver
-Message-ID: <aD3ywEQuFMIEng8T@yilunxu-OptiPlex-7050>
-References: <20250516054732.2055093-1-dan.j.williams@intel.com>
- <20250516054732.2055093-13-dan.j.williams@intel.com>
- <153d5223-169d-4379-bc2c-6ad279489560@amd.com>
- <682ce21c17363_1626e1004e@dwillia2-xfh.jf.intel.com.notmuch>
- <aC2c1SggkqKSO1st@yilunxu-OptiPlex-7050>
- <2fb2de7a-efc2-4ab0-8303-833dd2471d9f@amd.com>
- <aDhtLn2ySm/pgeab@yilunxu-OptiPlex-7050>
- <4b3621d7-4bed-44c7-8139-57de5825e968@amd.com>
- <aDsfmJpUqy53dans@yilunxu-OptiPlex-7050>
- <80277929-ce8d-4cef-98ed-c5280fdfa543@amd.com>
+	s=arc-20240116; t=1748898827; c=relaxed/simple;
+	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cxEca7mC8CYAXRIwohECes1hmdIg/TVfZjZF8mbcKoeTHbRlodeAN5ShQ5eaFHMWQb72wkrYZMOqyuvP70t88q6orCtRdHa2zB35lASViRYg826kYgjqBUOwtfJmSYaCEiqxJSuIxQJbGpd9v0F/xKk2UhZcq5mnpMqtCEdLuL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4m/SaHE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39042C4CEEB;
+	Mon,  2 Jun 2025 21:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748898826;
+	bh=8USxg6SA8nGz3BAkEuYuS+4+eTJ3BHPZ/Z14aMgD5Vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=m4m/SaHE8iFG6uTm85JTtjtTJIE+XALUYhiJDLcsNKo6erXpfFaE2eoftIUOtZb2i
+	 2kGm4VUL7Ua/7F6a5U5aUqNink/ou4zhQ4Or1Zu7AYGVnh/ZWeSI0pyfMn30WRcQ31
+	 EE7y5jSxfu0sLgGiQqM9pTqNQCecm9dKrsuKXEXhC3Td41Cj2aNiNv4pF6GrK5lFa1
+	 EfDIsfRClEIUokRxgztxTyzmeHqtr5VVVhoTie87u7ngMqCcxERT0Ht1Aso+2l0gf8
+	 q5ypX9vO9UXttxSnq3oiYxYVfj8lsLtaHE1ephK+mkINFt6bB+xtQFBwk5k3E3s4sO
+	 ZFsT1JqbxJN6A==
+Date: Mon, 2 Jun 2025 16:13:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <20250602211344.GA444082@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,151 +72,65 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <80277929-ce8d-4cef-98ed-c5280fdfa543@amd.com>
+In-Reply-To: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
 
-On Mon, Jun 02, 2025 at 02:51:53PM +1000, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 1/6/25 01:26, Xu Yilun wrote:
-> > On Fri, May 30, 2025 at 12:54:44PM +1000, Alexey Kardashevskiy wrote:
-> > > 
-> > > 
-> > > On 30/5/25 00:20, Xu Yilun wrote:
-> > > > > > > 
-> > > > > > > > > + * struct pci_tsm_guest_req_info - parameter for pci_tsm_ops.guest_req()
-> > > > > > > > > + * @type: identify the format of the following blobs
-> > > > > > > > > + * @type_info: extra input/output info, e.g. firmware error code
-> > > > > > > > 
-> > > > > > > > Call it "fw_ret"?
-> > > > > > > 
-> > > > > > > Sure.
-> > > > > > 
-> > > > > > This field is intended for out-of-blob values, like fw_ret. But fw_ret
-> > > > > > is specified in GHCB and is vendor specific. Other vendors may also
-> > > > > > have different values of this kind.
-> > > > > > 
-> > > > > > So I intend to gather these out-of-blob values in type_info, like:
-> > > > > > 
-> > > > > > enum pci_tsm_guest_req_type {
-> > > > > >      PCI_TSM_GUEST_REQ_TDXC,
-> > > > > >      PCI_TSM_GUEST_REQ_SEV_SNP,
-> > > > > > };
+On Fri, May 30, 2025 at 09:39:28PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
+> > On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> > > > > The PCI link, when down, needs to be recovered to bring it back. But that
+> > > > > cannot be done in a generic way as link recovery procedure is specific to
+> > > > > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > > > > called by the host bridge drivers when the link goes down.
 > > > > > 
-> > > > > 
-> > > > > The pci_tsm_ops hooks already know what they are - SEV or TDX.
+> > > > > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > > > > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > > > > execution of the AER Fatal error handling code. Since the link down
+> > > > > recovery is pretty much the same as AER Fatal error handling,
+> > > > > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > > > > callback will be triggered for the bridge and the downstream devices. Then,
+> > > > > pci_host_reset_slot() will be called for the slot, which will reset the
+> > > > > slot using 'reset_slot' callback to recover the link. Once that's done,
+> > > > > resume message will be broadcasted to the bridge and the downstream devices
+> > > > > indicating successful link recovery.
 > > > > 
-> > > > I think this is for type safe check to some extend. The tsm driver hook
-> > > > assumes the blobs are for its known format, but userspace may pass in
-> > > > another format ...
+> > > > Link down is an event for a single Root Port.  Why would we iterate
+> > > > through all the Root Ports if the link went down for one of them?
 > > > 
-> > > The blobs are guest_request blobs, they enter the kernel via iommufd's viommu ioctl and viommu already has  iommu_viommu_type which is (in my tree):
-> > > 
-> > > enum iommu_viommu_type {
-> > >          IOMMU_VIOMMU_TYPE_DEFAULT = 0,
-> > >          IOMMU_VIOMMU_TYPE_ARM_SMMUV3 = 1,
-> > >         IOMMU_VIOMMU_TYPE_AMD_TSM = 2,
-> > >         IOMMU_VIOMMU_TYPE_AMD = 3,
-> > >   };
+> > > Because on the reference platform (Qcom), link down notification is
+> > > not per-port, but per controller. So that's why we are iterating
+> > > through all ports.  The callback is supposed to identify the ports
+> > > that triggered the link down event and recover them.
 > > 
-> > That's a good point. So I think we don't have to use a 'type' field for
-> > ioctl(IOMMUFD_VDEVICE_GUEST_REQUEST). But I didn't see these viommu_type
-> > would be passed to TSM driver.So for this pci_tsm_guest_req kAPI, is it
-> > still good we keep the 'type' for type safe check in TSM driver?
-> This means that we somehow make it possible to create an Intel vdevice for the AMD TSM and now have to catch such situation  in runtime which seems wrong, we should not allow the mix in the first place. IOMMUFD is going to call the platform IOMMU code and that guy will just refuse creating a wrong viommu type.
-
-That's good point, seems we should check if viommu type matches TSM ...
-Need more investigations on it
-
+> > Maybe I'm missing something.  Which callback identifies the port(s)
+> > that triggered the link down event?
 > 
+> I was referring to the host_bridge::reset_root_port() callback that resets the
+> root ports.
 > 
-> > > 
-> > > > > 
-> > > > > 
-> > > > > > /* SEV SNP guest request type info */
-> > > > > > struct pci_tsm_guest_req_sev_snp {
-> > > > > > 	s32 fw_err;
-> > > > > > };
-> > > > > > 
-> > > > > > Since IOMMUFD has the userspace entry, maybe these definitions should be
-> > > > > > moved to include/uapi/linux/iommufd.h.
-> > > > > > 
-> > > > > > In pci-tsm.h, just define:
-> > > > > > 
-> > > > > > struct pci_tsm_guest_req_info {
-> > > > > > 	u32 type;
-> > > > > > 	void __user *type_info;
-> > > > > > 	size_t type_info_len;
-> > > > > > 	void __user *req;
-> > > > > > 	size_t req_len;
-> > > > > > 	void __user *resp;
-> > > > > > 	size_t resp_len;
-> > > > > > };
-> > > > > > 
-> > > > > > BTW: TDX Connect has no out-of-blob value, so should set type_info_len = 0
-> > > > > 
-> > > > > 
-> > > > > No TDX Connect fw error handling on the host OS whatsoever, always return to the guest?
-> > > > 
-> > > > Always return to guest. The fw error info (not raw fw error code) is
-> > > > embedded in response blob.
-> > > > 
-> > > > For QEMU/IOMMUFD, Guest Request doesn't care blob data, so don't have
-> > > > to judge fw_error either. Alway return to the guest and let the guest
-> > > > decide what to do.
-> > > 
-> > > So whatever is inside such requests, the host is not told about it ever? How does DOE bouncing work on Intel then if the fw cannot ask the host to do DOE? Thanks,
-> > > 
+> >  I see that
+> > pci_host_handle_link_down() is called by
+> > rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
+> > but I don't see the logic that identifies a particular Root Port.
 > > 
-> > No, I just say QEMU/IOMMUFD don't care about the execution, so no need
-> > an explicit fw_err return to them. Platform TSM driver should definitely
-> > know about fw_err and handle it (to do DOE or anything else) internally,
-> > but don't have to EXPLICITLY propagate these error code to up layers (TSM
-> > core/QEMU/IOMMUFD).
+> > Per-controller notification of per-port events is a controller
+> > deficiency, not something inherent to PCIe.  I don't think we should
+> > build common infrastructure that resets all the Root Ports just
+> > because one of them had an issue.
 > 
-> On AMD, the host has to provide certain handles along with the guest request/response buffers and the host can get it wrong so the host may want to know if the host did a wrong call. Say, we are killing a guest and by the same time making a guest request - will the Intel fw still say "that's ok, forward the response to the guest", even if it knows it is not possible?
-
-For Intel, there is no 'guest_request' fw_call. Every GHCI call has
-clear meaning to host (TSM driver) and host uses exact fw_calls to
-complete each GHCI call.
-
-Intel fw doesn't fill GHCI buffer, it just executes fw_call and
-returns fw_err to host. Intel fw will not decide forwarding anything to
-guest or not. It is the TSM driver's job to fill GHCI buffer according
-to fw_call execution status.
-
-That said, guest_request is just a QEMU selected set of GHCI commands.
-
-For guest_request, a GHCI OK only means host has filled the response
-buffer, host fills fw_err to the response buffer and guest should look
-into the response buffer to see what really happened.
-
-> Or SPDM session broke - the host OS won't be told until it specifically make a call other than guest request? Seems weird but okay. Thanks,
+> Hmm, fair enough.
 > 
+> > I think pci_host_handle_link_down() should take a Root Port, not a
+> > host bridge, and the controller driver should figure out which port
+> > needs to be recovered, or the controller driver can have its own loop
+> > to recover all of them if it can't figure out which one needs it.
+> 
+> This should also work. Feel free to drop the relevant commits for
+> v6.16, I can resubmit them (including dw-rockchip after -rc1).
 
-The TDX TSM driver knows every detail of the execution of a fw_calls.
-
-Thanks,
-Yilun
-
-> 
-> > Thanks,
-> > Yilun
-> > 
-> > > > > oookay, do not use it but the fw response is still a generic thing. Whatever is specific to AMD can be packed into req/resp and QEMU/guest will handle those.
-> > > > 
-> > > > But for out-of-blob data, it is the same effort as packing into type_info.
-> > > > At least we could have a clear idea, which blob is SW defined, which blob
-> > > > is GHCI/GHCB defined.
-> > > > 
-> > > > Thanks,
-> > > > Yilun
-> > > 
-> > > -- 
-> > > Alexey
-> > > 
-> 
-> -- 
-> Alexey
-> 
-> 
+OK, I kept "PCI: host-common: Make the driver as a common library for
+host controller drivers" (renamed to "PCI: host-common: Convert to
+library for host controller drivers") on pci/controller/dw-rockchip
+for v6.16 and deferred the rest until later.
 
