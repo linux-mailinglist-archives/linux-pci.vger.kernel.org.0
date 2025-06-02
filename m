@@ -1,159 +1,123 @@
-Return-Path: <linux-pci+bounces-28818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C8FACBA11
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 19:12:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56230ACBA2C
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 19:24:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84F47169F2A
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 17:12:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFCD63A979B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 17:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03994221FDD;
-	Mon,  2 Jun 2025 17:12:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E46F22541B;
+	Mon,  2 Jun 2025 17:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kz4DQavJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C241155C87
-	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 17:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD12221FD0
+	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 17:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748884345; cv=none; b=qW5s1ar6LJ0FHYXM+06hzQKHiHlZpzqqeAWekxkWdw3z9L+IAmCcd1i6DoN+54Vk240NrurlE7kguBPnlX8mWjvA6Ay7LiIg6m1KjjrPBHqWjNBNz+zgfVDYcmIMccGnnaMAidb67LWRZJCJWIJ98W4bzUful2x1oHqphS3Km9U=
+	t=1748885022; cv=none; b=bP38+NWToxUFo1HJyJA1LJTolXd14cNQTWBUsVDADK+vM/h5L53ltNBn7aAlGOg1ovv/4+df84PLvdsymddsfhK4JRW84h0Ai0gIVBE1DQiyGTh4N2JSUyaej5/D+3+2VDLaieecvQfUBT0pgiizZ/2svBKLsRxR1sVtjWUtqkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748884345; c=relaxed/simple;
-	bh=/Jq2Au0s6fmBmRE16l0X+42zzlVoPRij/zoKI3mlRZs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eIirhWEhaQjqPP9yAV0WuhBjevaaxfz0K7qmyzGxnERxjN7waWlNyak1j9vo+HHpgHMOrFqFGIc4SxiCwX1ljBsqKjKo5AfIHSxW8SVk3G+dUFjvSYTPKqsSiTKlUksjFvHx2hfjla8pNammtwB4O7pUaKuq7DPAHxU4v0Dxiwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so22933475ab.1
-        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 10:12:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748884343; x=1749489143;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kHzhGuS7OmKWz0RpyD6VrrayG8eHyU4NQV9hRrNlOmA=;
-        b=b41LOfc3qyodb3YsUEuHwl9wLuSflTYWqQiEW1kfG1Lc6UWx3tA61RzUc/d5pR4BgX
-         oWP9Zg+69fCJZRl+xkH0AC1xlMHhL+7ew7AO9+njKZWi2MOPfmYEd1/gAVctr6ikdREl
-         /pwul4fYH7kL+s2KgpkDZ4jbEDEDUw4c27oBgDbp6ovlu3IVGs9FbvZDPz+U5TXKaiF+
-         K0r4VWDjuFISkrNC6PHxB8gqCoXeJDsihaFH2tzGmFsPVELkbQIMnpid6ilWwFu1RzKL
-         OwZcpQY1mnf3w0f4BECVYrlSomR+zrXB1AcgGargirH9IIClJ8FpS5c2mcOQuiqwd1cY
-         maTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtWwIa+btxvVCKfjBtrgvnLHRdWAQE4Sew76G/O5fINbh7FNBcchmcvDJsyJZkxPaO1zExkrpdH1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydTDbRVVAbaqU0Ook/K0Mm5NRuuRz7KpG4rTcgbaZfudOro5RR
-	vSIKNa3Or8AkWmNprW1+Bw1AGkQNwXdndEuUEuD+5pn3scCMZlbxTxgPKz6xRNvbeqYmiUW+xpJ
-	Gj8fImQKG9aIea3zwRvME10K9e9NRhdl9M4/z5PpVKKWcjroUd1yxcHKR1Ms=
-X-Google-Smtp-Source: AGHT+IFe750uJ1jt4MmrE/oZGvz4+q+a2QNMcu/itzZhjuaY5EIRfkPeXtgrIYtg89ZkSVJ6WNSc63iLorEb60LyNyCtfKfORbhL
+	s=arc-20240116; t=1748885022; c=relaxed/simple;
+	bh=tKtj8c+Xr13Z1eRDH4LWyZEPx1ZPPsV6VpEfJ4Azgdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T31H1plLrXBp5GERwtw5jhP3SwZtDdHtAnqtx1N2EFwRraevRbyH7bae8zqS1WvFVwQS0RSY9u4kAp8Fyn6fdInjWYkpyvZ+7iFAuN/+PXYBTuwF/o7V0Q79Alav3AezUrOmddKYA/k/E6gDUSTTxRHUmw89hxz9qUzzC/j+oXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kz4DQavJ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748885021; x=1780421021;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tKtj8c+Xr13Z1eRDH4LWyZEPx1ZPPsV6VpEfJ4Azgdg=;
+  b=Kz4DQavJ3iCb9eSiHiYlmyYwE9l8iuGenslOHOYlxXE7CVtm4Qmn0hiV
+   GCuzNKjDGXWWtMsKj2jFJ8/0DkzEFczNs7oW0oykdlvfF8X2dLHdUfFbF
+   E04kMesInY0eF/JZy15L7WB47SdzTBT+Q+IsluKZBToav+uprNjc87hyu
+   aUetlPxYKHMh1EQ652ux0CXRTUPt52vOYfvkrz7SvIviICM/aJCuSndHB
+   zSEUHhWKW8gJdCUjVnocCGfSPH5EnkdzZ7IpAPfKcsDIOIkK29SmtKMA9
+   4VW0nDPaVS26SjoqcpaCayWA9R346n0bh0s6L5nITyx8SmlnAirdc0bzQ
+   A==;
+X-CSE-ConnectionGUID: WHbEaIWCQbC/59qR9NIuSw==
+X-CSE-MsgGUID: x9yeyR+dRNWbXIfzJsEEgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61159331"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="61159331"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 10:23:40 -0700
+X-CSE-ConnectionGUID: XLiBA8M7RUabxRhhRC1sSA==
+X-CSE-MsgGUID: 6Ddq33vzTi+AZlIFbXgeYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="149433990"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 02 Jun 2025 10:23:38 -0700
+Date: Tue, 3 Jun 2025 01:17:08 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
+	jgg@nvidia.com, zhiw@nvidia.com
+Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
+Message-ID: <aD3clPC8QfL1/XYF@yilunxu-OptiPlex-7050>
+References: <yq5a5xhj5yng.fsf@kernel.org>
+ <20250529133757.462088-1-aneesh.kumar@kernel.org>
+ <20250529133757.462088-3-aneesh.kumar@kernel.org>
+ <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050>
+ <668b023e-d299-42e1-87fc-ec83c514374e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0f:b0:3db:6fb2:4b95 with SMTP id
- e9e14a558f8ab-3dd9cbd60dfmr143242855ab.18.1748884343382; Mon, 02 Jun 2025
- 10:12:23 -0700 (PDT)
-Date: Mon, 02 Jun 2025 10:12:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683ddb77.050a0220.55ceb.0001.GAE@google.com>
-Subject: [syzbot] [pci?] WARNING in pci_scan_single_device
-From: syzbot <syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <668b023e-d299-42e1-87fc-ec83c514374e@amd.com>
 
-Hello,
+On Mon, Jun 02, 2025 at 02:52:52PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 1/6/25 02:25, Xu Yilun wrote:
+> > > + * struct iommu_vdevice_id - ioctl(IOMMU_VDEVICE_TSM_BIND/UNBIND)
+> > > + * @size: sizeof(struct iommu_vdevice_id)
+> > > + * @vdevice_id: Object handle for the vDevice. Returned from IOMMU_VDEVICE_ALLOC
+> > > + */
+> > > +struct iommu_vdevice_id {
+> > > +	__u32 size;
+> > > +	__u32 vdevice_id;
+> > > +} __packed;
+> > > +#define IOMMU_VDEVICE_TSM_BIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE_TSM_BIND)
+> > > +#define IOMMU_VDEVICE_TSM_UNBIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE_TSM_UNBIND)
+> > 
+> > Hello, I see you are talking about the detailed implementation. But
+> > could we firstly address the confusing whether this TSM Bind/Unbind
+> > should be a VFIO uAPI or IOMMUFD uAPI?
+> > 
+> > In this thread [1], I was talking about TSM Bind/Unbind affects VFIO
+> > behavior so they cannot be iommufd uAPIs which VFIO is not aware of.
+> 
+> 
+> What will the host VFIO-PCI driver do differently? I only remember "stop mmaping to the userspace", is that all?
 
-syzbot found the following issue on:
+And do unbind before zapping MMIO.
 
-HEAD commit:    90b83efa6701 Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=152307f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fbd871027e10b130
-dashboard link: https://syzkaller.appspot.com/bug?extid=3385a151582cae2a4b39
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> Or, more to the point, what is that exact thing which cannot be done from QEMU? Thanks,
 
-Unfortunately, I don't have any reproducer for this issue yet.
+But kernel don't want incorrect userspace calls crash kernel, e.g. VFIO
+zaps MMIO on TDI bound then KVM just crashes. So you need to check if
+zapping MMIOs are allowed in VFIO, that means VFIO still needs to know
+if device is bound.  Scatter BIND/UNBIND & other device controls in both
+IOMMUFD & VFIO makes life harder.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7b23158542c6/disk-90b83efa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fe77cd0d7150/vmlinux-90b83efa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fdddbd2ed303/bzImage-90b83efa.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3385a151582cae2a4b39@syzkaller.appspotmail.com
-
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
- </TASK>
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 15983 at drivers/pci/probe.c:2716 pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
-Modules linked in:
-CPU: 1 UID: 0 PID: 15983 Comm: syz.5.1707 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:pci_device_add+0xf53/0x1390 drivers/pci/probe.c:2716
-Code: 84 c0 74 06 0f 8e ae 03 00 00 0f b6 83 c0 00 00 00 c1 e5 02 83 e0 e3 09 e8 88 83 c0 00 00 00 e9 de f3 ff ff e8 0e 96 aa fc 90 <0f> 0b 90 e9 81 f8 ff ff e8 00 96 aa fc 90 0f 0b 90 90 0f 0b 90 e9
-RSP: 0018:ffffc9001058f918 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000fffffff4 RCX: ffffffff85104754
-RDX: ffff88805524da00 RSI: ffffffff85104ed2 RDI: 0000000000000005
-RBP: ffff88801b483400 R08: 0000000000000005 R09: 0000000000000000
-R10: 00000000fffffff4 R11: ffffffff81000130 R12: ffff888143aa3028
-R13: ffff888143aa3000 R14: 0000000000000001 R15: ffff888143abc000
-FS:  00007fbab74736c0(0000) GS:ffff888124a82000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f67143b1d58 CR3: 0000000035620000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- pci_scan_single_device drivers/pci/probe.c:2737 [inline]
- pci_scan_single_device+0x325/0x470 drivers/pci/probe.c:2723
- pci_scan_slot+0x1c0/0x790 drivers/pci/probe.c:2820
- pci_scan_child_bus_extend+0x66/0x730 drivers/pci/probe.c:3039
- pci_scan_child_bus drivers/pci/probe.c:3153 [inline]
- pci_rescan_bus+0x18/0x40 drivers/pci/probe.c:3444
- dev_rescan_store+0x11b/0x140 drivers/pci/pci-sysfs.c:479
- dev_attr_store+0x58/0x80 drivers/base/core.c:2440
- sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
- kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x6c7/0x1150 fs/read_write.c:686
- ksys_write+0x12a/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbab658e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fbab7473038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007fbab67b5fa0 RCX: 00007fbab658e969
-RDX: 0000000000000004 RSI: 0000200000000440 RDI: 0000000000000005
-RBP: 00007fbab6610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbab67b5fa0 R15: 00007fff54b11b18
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Yilun
 
