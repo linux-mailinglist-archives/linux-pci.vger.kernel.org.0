@@ -1,196 +1,248 @@
-Return-Path: <linux-pci+bounces-28788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D44AACA8CA
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 07:10:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C925ACA91B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 07:50:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECB931781AB
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 05:10:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7D4117AA475
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 05:49:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FA7114885B;
-	Mon,  2 Jun 2025 05:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F2B158538;
+	Mon,  2 Jun 2025 05:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PvWliMUS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5Sd2nst"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FA05695;
-	Mon,  2 Jun 2025 05:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B82B65C;
+	Mon,  2 Jun 2025 05:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748841054; cv=none; b=oOZmZMfMAg5JgnzWIYgpA6c9L8KmPl9FeQjY9JlX33xLzqp0biGtsYKGvtNipHNpmPEnfLrDZBE33RWcHp1+w/nAh/gcpKFnHkifTCQAeLXvfurPLqHfjyf16eniEocoi8+LbRs4AXKtXxH0rFHo0AKYciaFZHPLbBwXqXYCh0o=
+	t=1748843417; cv=none; b=l5SH4oYBVewRRragluhLnAcKVsrsp6jNv9Swfzs/Ogm4zZnOGNgTcozP1/YBjaYbRHC61aKhag6LHGs7CBbouGtsip9uiZFlmMaydriKhILBfQLWfdiU6CqPdIVXl4QcD1cyLgn94+JL9TTne8fH/gGuFF4exM/N5w+69bgpKys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748841054; c=relaxed/simple;
-	bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LAA9xatP8Ppwplogz1Sio1Skf91eZUwYmzznW2kP41DZJiyzIGP2fBLDA/yL7xcHZNW1Kz0uKzXC9ZG4a1Kx0dFUqfpwUog9wH5/Ymb+noc/oziAs1qKiyEaLAkstCv14A416c2r7Nn20AxGQEQbJEhanQuQ0jbZH7Qf4UB3eks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PvWliMUS; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748841052; x=1780377052;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fxDosPY8Wny75hKwXSp7HiD2ycgAdMQx1mnEg0e7Xco=;
-  b=PvWliMUSA3lGVmY1/4f8QFrjQxu963ILr4lXLPS+GJHjsYnqXyC40D7y
-   omPrY0tnHcBDQOiyJgcOmpfNRrT0csNWjoxf2ki4ro8AutWv2N9bUbp5O
-   iPk7PJ2EXk8khvXDjVpV+0gay54szolJDR90Fq3Iz70bXHVmACseRXDi/
-   mfmohLDDYXpHZZDKduAGQs37PbUuHjxlNBBWSxwQHchK2o0GLUKeWjrZO
-   WKjFM4pt487+KJoWxBe7EyaOjs9beoBhYKEoh9u1quK+BJgcdecOAtsXG
-   navSoSb+ItaM3qFc2bgosWsSsiaeAsoQCt4xX4BbDEEW1G3UMQXHxnxIs
-   A==;
-X-CSE-ConnectionGUID: FX9W3Kn9Q9mc0zL4t69Akw==
-X-CSE-MsgGUID: BkCCyqZiQOmUZbXFAq2vYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="68396905"
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="68396905"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:51 -0700
-X-CSE-ConnectionGUID: cCOHNwErSH+NtylyeCcbaQ==
-X-CSE-MsgGUID: b99YSdCfQQO4vQ0vfIUCVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="181622455"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.134])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 22:10:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Jun 2025 08:10:42 +0300 (EEST)
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-    "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-In-Reply-To: <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
-Message-ID: <45809733-1e02-0109-a929-3cdd6c960646@linux.intel.com>
-References: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com> <xwcoamcgyprdiru3z3qyamqxjmolis23vps4axzkpesgjrag4p@wnp63ospijyw>
+	s=arc-20240116; t=1748843417; c=relaxed/simple;
+	bh=dhCKdaNGVDVa0JTWjU+OMRG/7HWBCYhvLNRz1AVVfXE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Nd6QOPe/BUlSpZF5WgJpDN8AhhP+G2tN9KLLDsR9OqjJ18gB++9svNGu2XQxqbE3zbkqx3RzkeJTOlK7pvomaabv2xZgKlNwe2NVjsqYPYAuSiZthY4YLlmxPCw0igyHD1zFU8dv/uiOPi8hsUiaSf8nO2OTjgrFRpuXSoF2Fug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5Sd2nst; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44666C4CEEB;
+	Mon,  2 Jun 2025 05:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748843416;
+	bh=dhCKdaNGVDVa0JTWjU+OMRG/7HWBCYhvLNRz1AVVfXE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=G5Sd2nstABBUN5D1nIItdFgV+88+1UPejyKervnRfy9iyIoVp/dv1N7AW4iwLkkRq
+	 9Eaaml3nHfPK1UNp1BNYzXmIcjmoirTwXw8t9nerrBwlWIWg9YJCgVbWITI15QZdMD
+	 bwGsYls8TnqnHrr04C2Suw2oQm16OycxnhpeYbkvRO+ByiC8T618kZzC59zz4MXo9H
+	 3TEefc7NGVkny+vE1KqLfupzE09RfLCTPXhTnpdNVEbeikKzA5ycSQZnGmumbAG1z3
+	 lzzGIWiZdry/9Lom+86S8+B7hlr5uZ4IRzUOl8kSR1VdzaSVTOxAbWTZuye6KCHguS
+	 AgRkt5LjU0ATw==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 Q)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
+In-Reply-To: <20250529053513.1592088-21-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-21-yilun.xu@linux.intel.com>
+Date: Mon, 02 Jun 2025 10:50:11 +0530
+Message-ID: <yq5a34cilnxw.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1642513350-1748841042=:1085"
+Content-Type: text/plain
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
---8323328-1642513350-1748841042=:1085
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> When device is TSM Bound, some of its MMIO regions are controlled by
+> secure firmware. E.g. TDX Connect would require these MMIO regions
+> mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
+> irrespective of TSM Bound state may cause unexpected secure firmware
+> errors. It is always safe to do TSM Unbind first, transiting the device
+> to shared, then do whatever needed as before.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_config.c |  4 +++
+>  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
+>  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
+>  3 files changed, 33 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 7ac062bd5044..4ffe661c9e59 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
+>  
+>  		if (!new_mem) {
+> +			vfio_pci_tsm_unbind(vdev);
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  			vfio_pci_dma_buf_move(vdev, true);
+>
 
-On Sun, 1 Jun 2025, Manivannan Sadhasivam wrote:
+Don't we need to re-bind the vdev with tsm_bind for the continued use of TDI?
 
-> On Tue, Apr 22, 2025 at 04:02:07PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-> > configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bi=
-t
-> > Tag Requester (note: there is currently no 10-Bit Tag support in the
-> > kernel). While those can be configured to the recommended values by FW,
-> > kernel may decide to overwrite the initial values.
-> >=20
-> > Unfortunately, there is no mechanism for FW to indicate OS which parts
-> > of PCIe configuration should not be altered. Thus, the only option is
-> > to add such logic into the kernel as quirks.
-> >=20
-> > There is a pre-existing quirk flag to disable Extended Tags. Depending
-> > on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-> > kernel thinks is the best for performance (the largest supported
-> > value), resulting in performance degradation instead with these Root
-> > Ports. (There would have been a pre-existing quirk to disallow
-> > increasing MRRS but it is not identical to rejecting >128B MRRS.)
-> >=20
-> > Add a quirk that disallows enabling Extended Tags and setting MRRS
-> > larger than 128B for devices under Xeon 6 Root Ports if the Root Port i=
-s
-> > bifurcated to x2. Reject >128B MRRS only when it is going to be written
-> > by the kernel (this assumes FW configured a good initial value for MRRS
-> > in case the kernel is not touching MRRS at all).
-> >=20
-> > It was first attempted to always write MRRS when the quirk is needed
-> > (always overwrite the initial value). That turned out to be quite
-> > invasive change, however, given the complexity of the initial setup
-> > callchain and various stages returning early when they decide no change=
-s
-> > are necessary, requiring override each. As such, the initial value for
-> > MRRS is now left into the hands of FW.
-> >=20
-> > Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >=20
-> > v2:
-> > - Explain in changelog why FW cannot solve this on its own
-> > - Moved the quirk under arch/x86/pci/
-> > - Don't NULL check value from pci_find_host_bridge()
-> > - Added comment above the quirk about the performance degradation
-> > - Removed all setup chain 128B quirk overrides expect for MRRS write
-> >   itself (assumes a sane initial value is set by FW)
-> >=20
-> >  arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.c    | 15 ++++++++-------
-> >  include/linux/pci.h  |  1 +
-> >  3 files changed, 39 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> > index efefeb82ab61..aa9617bc4b55 100644
-> > --- a/arch/x86/pci/fixup.c
-> > +++ b/arch/x86/pci/fixup.c
-> > @@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI=
-_DEVICE_ID_INTEL_MCH_PB1,=09pcie_r
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
-_PC,=09pcie_rootport_aspm_quirk);
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_MCH=
-_PC1,=09pcie_rootport_aspm_quirk);
-> > =20
-> > +/*
-> > + * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have =
-slower
-> > + * performance with Extended Tags and MRRS > 128B. Workaround the perf=
-ormance
-> > + * problems by disabling Extended Tags and limiting MRRS to 128B.
-> > + *
-> > + * https://cdrdv2.intel.com/v1/dl/getContent/837176
-> > + */
-> > +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-> > +{
-> > +=09struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->bus);
-> > +=09u32 linkcap;
-> > +
-> > +=09pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-> > +=09if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) !=3D 0x2)
-> > +=09=09return;
-> > +
-> > +=09bridge->no_ext_tags =3D 1;
-> > +=09bridge->only_128b_mrrs =3D 1;
->=20
-> My 2 cents here. Wouldn't it work if you hardcode MRRS to 128 in PCI_EXP_=
-DEVCTL
-> here and then set pci_host_bridge::no_inc_mrrs to 1? This would avoid
-> introducing an extra flag and also serve the same purpose.
+>  		} else {
+> @@ -712,6 +713,7 @@ static void vfio_lock_and_set_power_state(struct vfio_pci_core_device *vdev,
+>  					  pci_power_t state)
+>  {
+>  	if (state >= PCI_D3hot) {
+> +		vfio_pci_tsm_unbind(vdev);
+>  		vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  		vfio_pci_dma_buf_move(vdev, true);
+>  	} else {
+> @@ -907,6 +909,7 @@ static int vfio_exp_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  						 &cap);
+>  
+>  		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
+> +			vfio_pci_tsm_unbind(vdev);
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  			vfio_pci_dma_buf_move(vdev, true);
+>  			pci_try_reset_function(vdev->pdev);
+> @@ -992,6 +995,7 @@ static int vfio_af_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  						&cap);
+>  
+>  		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
+> +			vfio_pci_tsm_unbind(vdev);
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  			vfio_pci_dma_buf_move(vdev, true);
+>  			pci_try_reset_function(vdev->pdev);
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 92544e54c9c3..a8437fcecca1 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -286,6 +286,7 @@ static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev,
+>  	 * The vdev power related flags are protected with 'memory_lock'
+>  	 * semaphore.
+>  	 */
+> +	vfio_pci_tsm_unbind(vdev);
+>  	vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  	vfio_pci_dma_buf_move(vdev, true);
+>  
+> @@ -693,11 +694,7 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+>  	eeh_dev_release(vdev->pdev);
+>  #endif
+>  
+> -	if (vdev->is_tsm_bound) {
+> -		vfio_iommufd_tsm_unbind(&vdev->vdev);
+> -		pci_release_regions(vdev->pdev);
+> -		vdev->is_tsm_bound = false;
+> -	}
+> +	__vfio_pci_tsm_unbind(vdev);
+>  
+>  	vfio_pci_core_disable(vdev);
+>  
+> @@ -1222,6 +1219,7 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
+>  	if (!vdev->reset_works)
+>  		return -EINVAL;
+>  
+> +	vfio_pci_tsm_unbind(vdev);
+>  	vfio_pci_zap_and_down_write_memory_lock(vdev);
+>  
+>  	/*
+> @@ -1491,12 +1489,32 @@ static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
+>  	return ret;
+>  }
+>  
+> +void __vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev)
+> +{
+> +	struct pci_dev *pdev = vdev->pdev;
+> +
+> +	lockdep_assert_held(&vdev->vdev.dev_set->lock);
+> +
+> +	if (!vdev->is_tsm_bound)
+> +		return;
+> +
+> +	vfio_iommufd_tsm_unbind(&vdev->vdev);
+> +	pci_release_regions(pdev);
+> +	vdev->is_tsm_bound = false;
+>
 
-Hi Mani,
+Do we really need to check vdev->is_tsm_bound? The tsm_ops lock already
+ensures that concurrent TSM operations can't happen, and repeated calls
+to bind()/unbind() seem to be handled safely by pci_tsm_bind and pci_tsm_unbind.
 
-Thanks for the suggestion but it won't work because this is the Root Port.=
-=20
-The devices underneath it need this setting so we cannot set them to 128B=
-=20
-reliable here (is there anything that guarantees those devices have been=20
-enumerated at this point?).
+> +}
+> +
+> +void vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev)
+> +{
+> +	mutex_lock(&vdev->vdev.dev_set->lock);
+> +	__vfio_pci_tsm_unbind(vdev);
+> +	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +}
+>
 
-I've v3 already prepared which uses the enable device hook as suggested by=
-=20
-Lukas. I'll send it soon.
+If is_tsm_bound is no longer needed, and pci_release_regions /
+request_region_exclusive are now handled within pci_tsm_unbind / bind,
+do we still need mutex_lock() to guard this path?
 
---=20
- i.
-
---8323328-1642513350-1748841042=:1085--
+> +
+>  static int vfio_pci_ioctl_tsm_unbind(struct vfio_pci_core_device *vdev,
+>  				     void __user *arg)
+>  {
+>  	unsigned long minsz = offsetofend(struct vfio_pci_tsm_unbind, flags);
+>  	struct vfio_pci_tsm_unbind tsm_unbind;
+> -	struct pci_dev *pdev = vdev->pdev;
+>  
+>  	if (copy_from_user(&tsm_unbind, arg, minsz))
+>  		return -EFAULT;
+> @@ -1504,15 +1522,7 @@ static int vfio_pci_ioctl_tsm_unbind(struct vfio_pci_core_device *vdev,
+>  	if (tsm_unbind.argsz < minsz || tsm_unbind.flags)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&vdev->vdev.dev_set->lock);
+> -
+> -	if (!vdev->is_tsm_bound)
+> -		return 0;
+> -
+> -	vfio_iommufd_tsm_unbind(&vdev->vdev);
+> -	pci_release_regions(pdev);
+> -	vdev->is_tsm_bound = false;
+> -	mutex_unlock(&vdev->vdev.dev_set->lock);
+> +	vfio_pci_tsm_unbind(vdev);
+>  
+>  	return 0;
+>  }
+> @@ -2526,6 +2536,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  			break;
+>  		}
+>  
+> +		__vfio_pci_tsm_unbind(vdev);
+>  		/*
+>  		 * Take the memory write lock for each device and zap BAR
+>  		 * mappings to prevent the user accessing the device while in
+> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+> index 6f3e8eafdc35..e5bf27f46a73 100644
+> --- a/drivers/vfio/pci/vfio_pci_priv.h
+> +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> @@ -130,4 +130,7 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
+>  }
+>  #endif
+>  
+> +void __vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev);
+> +void vfio_pci_tsm_unbind(struct vfio_pci_core_device *vdev);
+> +
+>  #endif
+> -- 
+> 2.25.1
 
