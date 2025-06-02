@@ -1,141 +1,176 @@
-Return-Path: <linux-pci+bounces-28802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2635ACAE6F
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 15:01:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A7B92ACAE9A
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 15:09:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FB7117E59D
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 13:02:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EC4E160B0D
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 13:08:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D34019049B;
-	Mon,  2 Jun 2025 13:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9427821C176;
+	Mon,  2 Jun 2025 13:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRsWUbgq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TawVPv/t"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEA3C8CE;
-	Mon,  2 Jun 2025 13:01:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E6F21C171;
+	Mon,  2 Jun 2025 13:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748869314; cv=none; b=rGnXpaDPDj6cwcsCd/sVrzoBJcTnFe69zmOEc4cuCsqU3P+uH6kqxDV5uvsBQK/rJutby3hhS4p/9mbqWDYyhkvMzX+idheiNFe7FNVeFs/p5+GOdDwtWQFu+86Pb4+YV3+j1TG7fQc9t1gOi6noC/xqNuMcO3wPws3g4ABg+ho=
+	t=1748869609; cv=none; b=oXBnYQtVO1yUtRyFKB4HaCnaM6VhQLcNmJWa3GHUiiFLwRNqZKM1pALbb/Pi9Jn9lKJeozoz9huYxnsOXuCBuwbtTCrldCQTe/z1oNk2ULC749Qw6H5LMFOVYnXmbEDS8bHKV5Wfy8FdOtgq+PIy7dQVoakMS8mDpopSR2eehOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748869314; c=relaxed/simple;
-	bh=Sbcuk083nXaGHK3PAlrnD8RXFqO6Co/oGxGk/SQGokw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHngehGnsuXBajy5Thzjju/Z0u8p5E08uco7Ro0x7x2yZQ5y7rNzJEm91fG+ecM0CSaWufb+aG0yrlTHr8amr/YOk2oiGi+dgvdS/RqRAsPQhEQh4kSUjdTZ8wkpgLM5yBrMlKbeuza1fni97F5weOE/a7P+BqCNYiA3aB8cFSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRsWUbgq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FAEC4CEEB;
-	Mon,  2 Jun 2025 13:01:50 +0000 (UTC)
+	s=arc-20240116; t=1748869609; c=relaxed/simple;
+	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ca0GwhgPXuNZH3crDNTJ9/xHn5mj0O+qQK3lntMVQDP8CsWlVtu76LeMXSRzY32LAaoLB+UfkxsGjcZDMajFY9fPllcCB1zQ//FwJjdPQ940nrotx80kQa4JOqsgxHt561vEwWxwIuX1Krl39KigJoImPCB+eVSfLUKnpiGlYAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TawVPv/t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324FBC4CEEB;
+	Mon,  2 Jun 2025 13:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748869314;
-	bh=Sbcuk083nXaGHK3PAlrnD8RXFqO6Co/oGxGk/SQGokw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hRsWUbgq5umrmahSeV9iJR4TvrEHGa4HcqpUHNjjEXKeU+XXt9V0Xb5DPIOqEW2td
-	 VDBRZ746dtnEh0elZnqd8DiSkJfkXn/heqffsSiA94Wnn2DdXiYKbdfZwNXdsOcXHX
-	 C0hVjgPsga/xWu7rFltfA0C3UYLSHwsLcA6gRjLi6S+QJ5Z5mROFQ1e2SmSUvcv9kb
-	 deXnmBWGeb19DMuVuQOaeriEDTnDQ4Q/qcIPsAOOGk4QnZUUWwkHJpWlkOzDeYsghD
-	 wE5Wj9sM53ixDCqaLetTJuAISvzAyWHygXW0xysjhLx+efpW68flbtSdNwLA8kHBmA
-	 QBElGRBa3w0Pw==
-Message-ID: <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
-Date: Mon, 2 Jun 2025 15:01:48 +0200
+	s=k20201202; t=1748869608;
+	bh=4W5iJT4qvv4gvMCawcbl0T+06lxem7eK5CvC/5B+TB4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=TawVPv/tvXjNYu/rpoIY0xKb56cIrEzo/Xi15r9UhZm6ST7F8uZRggpBglucfv0OU
+	 fsHecQy2i+3R6StrqiyZ6+WbK1fBuyOOfDjuRY+qZdGcuTMpMU4V3iBvt8C7YOe9Fk
+	 AeANcDJVE2xFX5rVcndQarTYonhfBLoOLXf16W5fpWDJYWAdrVcH/jUkt/x4gjBZ3H
+	 8eqmpd4LBkQa2/ePs8uEuA7RgwViEilepLeNbKnD3qSfjvAj/4Bu32knsaAXXkmcNd
+	 64KU6I9drm5O9owkC0XB56VL5w4W7x2IWVrg/7h3WWu9rhR8qXoNZIaQy1nzyYO7gm
+	 5pbeIcOww2Sxg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 27/30] PCI/TSM: Add PCI driver callbacks to handle
+ TSM requirements
+In-Reply-To: <20250529053513.1592088-28-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-28-yilun.xu@linux.intel.com>
+Date: Mon, 02 Jun 2025 18:36:37 +0530
+Message-ID: <yq5att4yjns2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
- node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
- <20250423153747.GA563929-robh@kernel.org>
- <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 08/05/2025 16:26, Konrad Dybcio wrote:
-> On 4/23/25 5:37 PM, Rob Herring wrote:
->> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
->>> There are many places we agreed to move the wake and perst gpio's
->>> and phy etc to the pcie root port node instead of bridge node[1].
->>>
->>> So move the phy, phy-names, wake-gpio's in the root port.
->>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
->>> start using that property instead of perst-gpio.
->>
->> Moving the properties will break existing kernels. If that doesn't 
->> matter for these platforms, say so in the commit msg.
-> 
-> I don't think we generally guarantee *forward* dt compatibility though, no?
-We do not guarantee, comment was not about this, but we expect. This DTS
-is supposed and is used by other projects. There was entire complain
-last DT BoF about kernel breaking DTS users all the time.
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-Best regards,
-Krzysztof
+> Add optional PCI driver callbacks to notify TSM events. For now, these
+> handlers may be called during pci_tsm_unbind(). By calling these
+> handlers, TSM driver askes for external collaboration to finish entire
+> TSM unbind flow.
+>
+> If platform TSM driver could finish TSM bind/unbind all by itself, don't
+> call these handlers.
+>
+> Host may need to configure various system components according to
+> platform trusted firmware's requirements. E.g. for Intel TDX Connect,
+> host should do private MMIO mapping in S-EPT, trusted DMA setup, device
+> ownership claiming and device TDISP state transition. Some operations are
+> out of control of PCI TSM, so need collaboration by external components
+> like IOMMU driver, KVM.
+>
+> Further more, trusted firmware may enforce executing these operations
+> in a fixed sequence. E.g. Intel TDX Connect enforces the following
+> sequences for TSM unbind:
+>
+>   1. STOP TDI via TDISP message STOP_INTERFACE
+>   2. Private MMIO unmap from Secure EPT
+>   3. Trusted Device Context Table cleanup for the TDI
+>   4. TDI ownership reclaim and metadata free
+>
+> PCI TSM could do Step 1 and 4, but need KVM for Step 2 and IOMMU driver
+> for Step 3. While it is possible TSM provides finer grained APIs like
+> tdi_stop() & tdi_free(), and the caller ensures the sequence, it is
+> better these specific enforcement could be managed in platform TSM
+> driver. By introducing TSM handlers, platform TSM driver controls the
+> operation sequence and notify other components to do the real work.
+>
+> Currently add 3 callbacks for TDX Connect. disable_mmio() is for
+> VFIO to invalidate MMIO so that KVM could unmap them from S-EPT.
+> recover_mmio() is to re-validate MMIO so that KVM could map them
+> again for shared assigned device. disable_trusted_dma() is to cleanup
+> trusted IOMMU setup.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> ---
+>  include/linux/pci-tsm.h | 7 +++++++
+>  include/linux/pci.h     | 3 +++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> index 737767f8a9c5..ed549724eb5b 100644
+> --- a/include/linux/pci-tsm.h
+> +++ b/include/linux/pci-tsm.h
+> @@ -157,6 +157,13 @@ struct pci_tsm_ops {
+>  	int (*accept)(struct pci_dev *pdev);
+>  };
+>  
+> +/* pci drivers callbacks for TSM */
+> +struct pci_tsm_handlers {
+> +	void (*disable_mmio)(struct pci_dev *dev);
+> +	void (*recover_mmio)(struct pci_dev *dev);
+> +	void (*disable_trusted_dma)(struct pci_dev *dev);
+> +};
+> +
+>  enum pci_doe_proto {
+>  	PCI_DOE_PROTO_CMA = 1,
+>  	PCI_DOE_PROTO_SSESSION = 2,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 5f37957da18f..4f768b4658e8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -545,6 +545,7 @@ struct pci_dev {
+>  #endif
+>  #ifdef CONFIG_PCI_TSM
+>  	struct pci_tsm *tsm;		/* TSM operation state */
+> +	void *trusted_dma_owner;
+>  #endif
+>  	u16		acs_cap;	/* ACS Capability offset */
+>  	u8		supported_speeds; /* Supported Link Speeds Vector */
+> @@ -957,6 +958,7 @@ struct module;
+>   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
+>   *              MSI-X vectors available for distribution to the VFs.
+>   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
+> + * @tsm_handler: Optional driver callbacks to handle TSM requirements.
+>   * @groups:	Sysfs attribute groups.
+>   * @dev_groups: Attributes attached to the device that will be
+>   *              created once it is bound to the driver.
+> @@ -982,6 +984,7 @@ struct pci_driver {
+>  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+>  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+>  	const struct pci_error_handlers *err_handler;
+> +	struct pci_tsm_handlers *tsm_handler;
+>  	const struct attribute_group **groups;
+>  	const struct attribute_group **dev_groups;
+>  	struct device_driver	driver;
+> -- 
+> 2.25.1
+
+It looks like the TSM feature is currently interacting with several
+components: struct pci_driver, VFIO, iommufd, and pci_tsm_ops.
+
+Should we consider limiting this scattering? Would it make sense to
+encapsulate this logic within pci_tsm_ops?
+
+-aneesh
 
