@@ -1,219 +1,221 @@
-Return-Path: <linux-pci+bounces-28810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F396ACB4F4
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 16:58:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD2B6ACB582
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 17:05:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70C2E1BA43F3
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 14:45:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF50E4C2C8D
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 14:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7813122ACF2;
-	Mon,  2 Jun 2025 14:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DDF238D22;
+	Mon,  2 Jun 2025 14:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypb4bw7B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAxGSIiR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E15D22A807
-	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 14:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394D2231C87;
+	Mon,  2 Jun 2025 14:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875224; cv=none; b=buqh/FW3YG6O1xr/QzJyJbWkbJ18p/0cTl4UDA4rpUXtZyobhGt11wA8/SFRp6wzpdZ0R1MGzvjbaPpuqWrgDBxtlwUlqqafDRTyhFuh1UYHOwbs6CLnUi5EqDqgSK1gyDZxGnWwl7bjp90tzZw7Qatu293laaeyyzaiVqOjoGY=
+	t=1748875839; cv=none; b=QugAXskoUdlVX0Zok5GPAbic1uABWipBpraotpqsXFUcheSrB8heSRMm9bBemhbfcaxQNj1czC/lpfgPWZplQVtxBM4TAidkGFPG3tj1+t3AyF8O57LJ3YxHYzAPr9Jtoa1Sfi56ufhGJyZbRWPsK/vaRR9V0JSNF/EjjE7c7OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875224; c=relaxed/simple;
-	bh=UbnBn8tfT8ZcbdT68ZGxa26CWg9/x3KXlIYEipLgrI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YF/CJVbs6cFLSXqKQo45WhfnGmSXWbkP7Jw8S0kD/PppiUmd4+7O8Gf4xdf+a6JMW7U3ZE6KEvd4CPgFUU2I80R8mqb2jUpkL1m5CyAwhCSpBc4j92AnlzH/o0JVgJXbJzdiquk1Gnt3/7aWSWFbkna949KOfDoQ4oULtbMxWKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ypb4bw7B; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d51dso7548052a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 07:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748875220; x=1749480020; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=17rjv0YNoJkKo4gi7+hBtlZzTO2nh7fXG9npkl5iBe0=;
-        b=ypb4bw7BDk5lod1eAVVXHhi66xQnNoJrLueg/if97h4MqWAA4bUkSpIYYTC5ckZSJK
-         sov3vK+k2RLlZ7Lr8MYEYuk9xibZPogERiBIKn9h6yvuCooK5eymr8kdUJPYlhQ5k3N1
-         bmzQ6i6gLMx7iYRRTHZQqJGjlFXvzUIA8GpPkkIqg3go4z24esDuj9yBmbw1YVlhp1zP
-         BiRujM5ClKzTm/kAFMUgx0kJ5oQvQoZZMSEsAS3JRZT+/Q75U9CbUnf2YG9SFJIlKxsC
-         aabXg1Bu8atu6kvIoWG7ZJxtm/JRELjc8/xC+DzjSZZnbdV0cgUp8unfLm0xO5Pe90Pg
-         NCWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748875220; x=1749480020;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=17rjv0YNoJkKo4gi7+hBtlZzTO2nh7fXG9npkl5iBe0=;
-        b=T7hkcKkdWGAN6PBuW4hy0+n4WdGRk0oc0JqiNpZrOb7sZcCJa6Lib7y8TWGfSoPnKb
-         zGkxHXwUIBBrHZeGKj+J7WT6Njcc8CqhjCDuro5FPXUVLBaXnjccIqicxnntCoAwjCWC
-         UZMwv5woYAWtXMC3BOlAjGjE2ik3cDTXCbyHrtlipEJpkhQyTNAOcFhJl9WrGK10KNgI
-         OtrqVB82oD8eMrc/ZM9za+srskb+0MR2I4LAqCgYTmGyhC4OfffX0odZK1YSvEaQkWoC
-         dYMBuaZWs7DWUblSV72lPFysAYCmtS6+IJ42RtQgNavI9JequKsvVj3wABU5dSpFYd1O
-         MMqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxH6VX3E/UxSfBxLLNM69fImu3JCNfSGgw1nrgUdBwTu6ZRZFEVBsRq6IIJctlZN08KaS6i/kBQCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6lEu/17l9quLOoXSbXqlVXbGU55FOzt/Ed/JqivwM33KiUjMU
-	leNRNZBLaJuPSwYI7dLpHlEm2aApwSRHbHL+k5go6Ai7m1KCfGmJ7D3kLXLdp0IUUAs=
-X-Gm-Gg: ASbGnctfxM/MtoIqPndkkT0WCPzz4yyf01jievKsEErxXz3Fs2FOQtVLfZ6ZU0c8gN4
-	HQIKcuvfWTy8eUcdgUGDTKz9Px7fvlCedz2shXr7COYCXEuUF0Ui4UcAg0SQixAWTZkFPUoyKpS
-	KrXwzC18W2MStcunlJqhqRXIwKJDE/ke/6mMVm9pJ2q5vXH7SCE6oCAARodbqUiLQp59eXPQyQa
-	Da9f6It8RIzNNUyFi03O9ryB9VvwX1+yli+IRXhSjCAQrI3brPgzkzz/lynW/biMdh2jw8T5WE4
-	SmU9h5aHL5D9CpuBN67P5lPtNLrq0VJmnE63ItZ/NMUrpbunFkFUhmwXjL3oLonL3jGxwg==
-X-Google-Smtp-Source: AGHT+IEyvvmQFAXI+47qMTgwD54rEnxkNOV+WVE+6umaVq7qvzVjKK+BHzDrSujJ8RzHfqtedkxN2Q==
-X-Received: by 2002:a05:6402:13cb:b0:604:d739:614a with SMTP id 4fb4d7f45d1cf-6056dd3b514mr11273412a12.12.1748875220460;
-        Mon, 02 Jun 2025 07:40:20 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.75])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c75aebsm6269024a12.46.2025.06.02.07.40.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 07:40:20 -0700 (PDT)
-Message-ID: <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
-Date: Mon, 2 Jun 2025 15:40:18 +0100
+	s=arc-20240116; t=1748875839; c=relaxed/simple;
+	bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKCfVUdZiMe18+TtAoepz4+Ug90Zc+TeLuL4VOT5f3BuNGTh5tqa+g9dULfPxvBbszwje2XpGCI/KRwje75CHNm2q7ONU53ts1TuD9A+rvzxYiVaIhGISjQwAtTf2LFOOdDsnaU1YuSu/2yUHCnpULiT9IIeg8GCVHHkFmwCOhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAxGSIiR; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748875837; x=1780411837;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gvltXEjxatA7cwXbM1ySU6qvzw0guFizH5e5rJ906Jg=;
+  b=gAxGSIiRmPNfF74z2v8p2uVMdrDvB4Jsrq8ai5zQsR3qVdx0+/uPq/Mt
+   GBDj5QJNgPR2vrvyfmggDnZrV9zJODB3shZWed6D32t/XVl55+bhylPaZ
+   wZAp1xnOOe8qMqLneoPW9lZKWGCQ2/25KeRXi5lUMrvSUGe4/vCuTkJtR
+   xQGaXzZAvA8LjKP+0mEu1VF1gviAgLn6FwJGrTD/w2tViWVAjMYLq0O/b
+   zqOiH82efqUBRaFhBUCWqbU/8sZE07+rrXcMSpAPvT2B17Yi3Y45FNLt5
+   BW2ok61D1J1aIyKeh0xaXPF2N8lL/l3wRGnzU1MKiOZdget/V+kKInIRP
+   A==;
+X-CSE-ConnectionGUID: bONEmGf5SUC+7oJCVuxPAw==
+X-CSE-MsgGUID: u2QuODLRRcCkredeVqk/lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68435605"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="68435605"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 07:50:36 -0700
+X-CSE-ConnectionGUID: bSyumsRCQFaHieW5WnNEIw==
+X-CSE-MsgGUID: ORB/JHGpRB2A/q6o48Pqug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="144592177"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 02 Jun 2025 07:50:30 -0700
+Date: Mon, 2 Jun 2025 22:43:59 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+Message-ID: <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
- <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
- <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
- <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5aplfn210z.fsf@kernel.org>
 
-
-
-On 5/30/25 3:48 PM, Ilpo Järvinen wrote:
->>> I added the suggested prints
->>> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
->>> the downstream PCIe pixel driver and I obtain the following. Note that
->>> all added prints contain "tudor" for differentiation.
->>>
->>> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
->>> 0x000000 PCIe Endpoint
->>> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
->>> 0x00000000-0x000fffff 64bit]
->>> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
->>> pref]
->>> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
->>> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
->>> D3cold
->>> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
->>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
->>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->>> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
->>> [mem 0x00000000-0x000fffff 64bit] list empty? 1
->>> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
->>> [mem 0x00000000-0x0000ffff pref] list empty? 1
->>> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
->>> [mem 0x00000000-0x0000ffff pref] list empty? 0
->>> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
->>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->>>
->>> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
->>> before __pci_bus_assign_resources -> list empty? 0
->>> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
->>> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
->>> added in head list
->>> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
->>> 0x40000000-0x401fffff]: assigned
->> So here it ends up assigning the resource here I think.
->>
->>
->> That print isn't one of yours in reassign_resources_sorted() so the 
->> assignment must have been made in assign_requested_resources_sorted(). But 
->> then nothing is printed out from reassign_resources_sorted() so I suspect 
->> __assign_resources_sorted() has short-circuited.
->>
->> We know that realloc_head is not empty, so that leaves the goto out from 
->> if (list_empty(&local_fail_head)), which kind of makes sense, all 
->> entries on the head list were assigned. But the code there tries to remove 
->> all head list resources from realloc_head so why it doesn't get removed is 
->> still a mystery. assign_requested_resources_sorted() doesn't seem to 
->> remove anything from the head list so that resource should still be on the 
->> head list AFAICT so it should call that remove_from_list(realloc_head, 
->> dev_res->res) for it.
->>
->> So can you see if that theory holds water and it short-circuits without 
->> removing the entry from realloc_head?
-> I think I figured out more about the reason. It's not related to that 
-> bridge window resource.
+On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
 > 
-> pbus_size_mem() will add also that ROM resource into realloc_head 
-> as it is considered (intentionally) optional after the optional change
-> (as per "tudor: 2:" line). And that resource is never assigned because 
-
-right, the ROM resource is added into realloc_head here:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n1202
-
-Then in the failing case, and extra resource is added:
-[   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
-0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-
-The above extra print happens just in the failing case. Here's where the
-extra resource is added:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n1285
-
-It seems that in the failing case 2 resources are added into
-realloc_head at the pbus_size_mem() time, whereas with the patch
-reverted - none.
-
-Also, in the failing case a smaller resource is added into the list:
-pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff]
-compared to the working case:
-pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff]
-
-Can this make a difference?
-
-> pdev_sort_resources() didn't pick it up into the head list. The next 
-> question is why the ROM resource isn't in the head list.
+> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> > command to VMM. Specifically for TDX Connect, these commands are some
+> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> > Interface).
+> >
+> > The TSM TDI bind/unbind operations are expected to be initiated by a
+> > running CoCo VM, which already have the legacy assigned device in place.
+> > The TSM bind operation is to request VMM make all secure configurations
+> > to support device work as a TDI, and then issue TDISP messages to move
+> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+> >
+> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> > device to TDISP ERROR state.
+> >
 > 
+> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
 
-It seems the ROM resource is skipped at:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/pci/setup-bus.c#n175
+A general reason is, the device driver - VFIO should be aware of the
+bound state, and some operations break the bound state. VFIO should also
+know some operations on bound may crash kernel because of platform TSM
+firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
+in secure page tables cannot be unmapped before TDI STOP [1].
 
-tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
-skipped due to !(r->flags) || r->parent
+Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
+S-EPT would fail if TDI is bound. For AMD there seems also some
+requirement about this but I need Alexey's confirmation.
+
+[1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
 
 > 
-> While it is not necessarily related to issue, I think the bridge sizing 
-> functions too should consider pdev_resources_assignable() so that it
-> won't ever add resources from such devices onto the realloc_head. This is 
-> yet another small inconsistency within all this fitting/assignment logic.
+> >
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  drivers/vfio/iommufd.c           | 22 ++++++++++
+> >  drivers/vfio/pci/vfio_pci_core.c | 74 ++++++++++++++++++++++++++++++++
+> >  include/linux/vfio.h             |  7 +++
+> >  include/linux/vfio_pci_core.h    |  1 +
+> >  include/uapi/linux/vfio.h        | 42 ++++++++++++++++++
+> >  5 files changed, 146 insertions(+)
+> >
+> > diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
+> > index 3441d24538a8..33fd20ffaeee 100644
+> > --- a/drivers/vfio/iommufd.c
+> > +++ b/drivers/vfio/iommufd.c
+> > @@ -297,3 +297,25 @@ void vfio_iommufd_emulated_detach_ioas(struct vfio_device *vdev)
+> >  	vdev->iommufd_attached = false;
+> >  }
+> >  EXPORT_SYMBOL_GPL(vfio_iommufd_emulated_detach_ioas);
+> > +
+> > +int vfio_iommufd_tsm_bind(struct vfio_device *vdev, u32 vdevice_id)
+> > +{
+> > +	lockdep_assert_held(&vdev->dev_set->lock);
+> > +
+> > +	if (WARN_ON(!vdev->iommufd_device))
+> > +		return -EINVAL;
+> > +
+> > +	return iommufd_device_tsm_bind(vdev->iommufd_device, vdevice_id);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_bind);
+> > +
+> > +void vfio_iommufd_tsm_unbind(struct vfio_device *vdev)
+> > +{
+> > +	lockdep_assert_held(&vdev->dev_set->lock);
+> > +
+> > +	if (WARN_ON(!vdev->iommufd_device))
+> > +		return;
+> > +
+> > +	iommufd_device_tsm_unbind(vdev->iommufd_device);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_iommufd_tsm_unbind);
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 116964057b0b..92544e54c9c3 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -692,6 +692,13 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+> >  #if IS_ENABLED(CONFIG_EEH)
+> >  	eeh_dev_release(vdev->pdev);
+> >  #endif
+> > +
+> > +	if (vdev->is_tsm_bound) {
+> > +		vfio_iommufd_tsm_unbind(&vdev->vdev);
+> > +		pci_release_regions(vdev->pdev);
+> > +		vdev->is_tsm_bound = false;
+> > +	}
+> > +
+> >  	vfio_pci_core_disable(vdev);
+> >  
+> >  	vfio_pci_dma_buf_cleanup(vdev);
+> > @@ -1447,6 +1454,69 @@ static int vfio_pci_ioctl_ioeventfd(struct vfio_pci_core_device *vdev,
+> >  				  ioeventfd.fd);
+> >  }
+> >  
+> > +static int vfio_pci_ioctl_tsm_bind(struct vfio_pci_core_device *vdev,
+> > +				   void __user *arg)
+> > +{
+> > +	unsigned long minsz = offsetofend(struct vfio_pci_tsm_bind, vdevice_id);
+> > +	struct vfio_pci_tsm_bind tsm_bind;
+> > +	struct pci_dev *pdev = vdev->pdev;
+> > +	int ret;
+> > +
+> > +	if (copy_from_user(&tsm_bind, arg, minsz))
+> > +		return -EFAULT;
+> > +
+> > +	if (tsm_bind.argsz < minsz || tsm_bind.flags)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&vdev->vdev.dev_set->lock);
+> > +
+> > +	/* To ensure no host side MMIO access is possible */
+> > +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+> > +	if (ret)
+> > +		goto out_unlock;
+> >
 > 
-> pbus_size_mem() seems to consider IORESOURCE_PCI_FIXED so that cannot 
-> explain it as the ROM resource wouldn't be on the realloc_head list in 
-> that case.
-> 
-> 
-> Just wanted to let you know early even if I don't fully understand 
-> everything so you can hopefully avoid unnecessary debugging.
+> This should be part of pci_tsm_bind() ? 
 
-Thanks! Would adding some prints in pbus_size_mem() to describe the code
-paths in the working and non-working case help?
+I'm not quite sure. My feelig is this method is specific for VFIO
+driver. Many other drivers just request regions on probe(), they can
+never bind successfully if pci tsm hide this implementation internally.
 
-Cheers,
-ta
-
+Thanks,
+Yilun
 
