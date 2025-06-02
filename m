@@ -1,254 +1,270 @@
-Return-Path: <linux-pci+bounces-28812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 025B9ACB79E
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 17:29:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD0CACB8A6
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 17:44:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C3064C79EB
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 15:16:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CBC14A08E0
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 15:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E693C22579E;
-	Mon,  2 Jun 2025 15:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE011C245C;
+	Mon,  2 Jun 2025 15:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UqoM80dH"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YxKhCmUA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027BF225775;
-	Mon,  2 Jun 2025 15:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9F813D2B2
+	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 15:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877113; cv=none; b=ELBvI2FPGh1Sk+QgSomOayrSGuqNB80FuSLvfDLsAuF91AUkD5WZ9yM748W47gceEyvRT+fAJh/m/BWG9jbR2r5/17rT4p+6HgDhR7eNSgR+jdptKr/w7bDQXuQcbmOI66QN2yN6MWfTFD5NEOmYf2l7ENsHyxcRp6cnRUbrcPw=
+	t=1748878621; cv=none; b=M4PRV6Afjk7sthFQ1cUN26ECmiSpgkYu7tvI7C+xOkl8KsAQ9lnTlVWvG7A4VGI0KRh5iPngUfJDDjEzI337xmFO7GfmOy5YpH82GvWh8J3PlSW0KV9W0eIu236e+VnLDnXdd4A4qVvZnuNZa4/CrMvqaQhk1mCANMixqSloKg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877113; c=relaxed/simple;
-	bh=gOC2oQ++Swveh6brUl7iUTCyEWI+ofh0dQSLOoBJnw4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gohJ104lXecEbH6OgqY8QXRo6Obm45s/eqMK5w0UZi209o76hO7IewYSNJ1xvuQcTn8OYbm7pgdYJaXCOkGxFvD+T1SrYlDqVpPs+7gADX95SpN1QZDvxPGKSkZRzCyk1OAq4rZRBqsZ0zYdydTLAceP1O/k9F6APcsSj6Q/tWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UqoM80dH; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748877112; x=1780413112;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=gOC2oQ++Swveh6brUl7iUTCyEWI+ofh0dQSLOoBJnw4=;
-  b=UqoM80dHqbWkujwN+jgPVIssMCI34WqO0f3vxg6udu3aGLt+red9s0e9
-   AYknydxSnbXCa6SvX47cQ/X1agDW2klUtYA9maWj1kh6K5VnXaJTcH5qm
-   2Fhn8XYzpZw6oclyYKCLYNnFdHezRTZf9Rf/htWSJx43mTtpAOeAe1dqD
-   2IKfz4BrCvk6gIedrsneTiNJMJOe9pNqXHQMMg0XfRqgoRaJaKaex9kb8
-   VyfUhQWONLFwxQDwVoNHMO7/kz2tqjOEydoFiBI2VXrEpWutrzcBJB9LN
-   yJXwg0M06o6i9yEFoRCLaaE0b5goYL+hCkT5xOjqMINLLMX3rZ8vD0Y9G
-   g==;
-X-CSE-ConnectionGUID: LAbF9qfbTZSF83WNWATLHw==
-X-CSE-MsgGUID: t0VLIX9kRh6CVfxV72Agmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="54684113"
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="54684113"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 08:11:51 -0700
-X-CSE-ConnectionGUID: peeS8xo4RwK9GtFPtfZYjA==
-X-CSE-MsgGUID: arKZnO/9TtiHykYN7+Ldpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
-   d="scan'208";a="144396599"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.134])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 08:08:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Jun 2025 18:08:40 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
-Message-ID: <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+	s=arc-20240116; t=1748878621; c=relaxed/simple;
+	bh=46awchPSedqTPgpRrSUtfyWehi5YGz3Mb4cGAP+zrjk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GmrTa1Q3bMTo+8TyMCiK7ETdZvwo4nohYCWc6oEvlvJcVCLr6MkndBRl6N4EzyiU1o1aZYp2znLdLpiurwUJ5VnDP8TdW7spm5oapmLlO7x7SeUd37gSxD2mE6pSPsRA5O4BJcA+DJejjSO2OD8RRC/K/QRyACmSbxR4GWUFkBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YxKhCmUA; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3105ef2a071so52235061fa.1
+        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 08:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748878618; x=1749483418; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gpyua58bHx7LuQA9SLc/cduTBsL1sfVI5A9Bc9qEjSU=;
+        b=YxKhCmUA+0GIaPLSArGP9xulQYZx4tQJkGMYNbOq7lmfcH+KBh1BrMSHe2jUOEIk+D
+         bqySHETZD8DRkTuRiy6fDyj+89aixqGXiKDWZIPI5/2UuPAifcBGdP5Yi9BISmFEvj5B
+         FnartXmzLUGhtN1KHWvzqACaoyZUjiz8MRWI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748878618; x=1749483418;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gpyua58bHx7LuQA9SLc/cduTBsL1sfVI5A9Bc9qEjSU=;
+        b=Jn0RJVpPxCr420B1EaqQ7PsaAGMFnyKCenjMQR6o0veMI39tlejUoBhzp1XS6OME5c
+         pqooeQDHhEtJOvTHvzeGZrhRTOgsy3PIuXZck2lEuXgq/izeeysBb/GymByN9Dcy3plV
+         G55ISL4DmV/xyosjy5v+ZzhBdXD9yxU0sl6e0PqTLuqhP+5z6B+dseuqAmQ3ZmhJIROt
+         dAaK+zzDVIwLDF6GSMNIdvdyCDEkMJxIZzBLs6VYAXFJyNUuxigb121SyX3TUmESAnb8
+         +9WdBydrupbFyXNqRRfwrVaPfzkN7wrMrgwLVUuqbZym758l1PxhZaGpvWdO5j1lCBvp
+         6n2Q==
+X-Gm-Message-State: AOJu0Yz9/8fVS6jXoDbKtSGEcRIRVUDZI8byHyT8Gxvu3cPbycPEFT7d
+	0rhenKQYAd8PQ9Ni4pNZ0ntr9Jwe9jb0u1jbkybGrqXx7aoafzRHcsO8xeYNqoaCL24J3VodjUS
+	YnlQgfljgrHqA8fRGrjKvWIdLVA358TQHgYYRhn1m
+X-Gm-Gg: ASbGnct58IYHJbPPnwLmuTAfpm7RcUeqJ0KOc+0HVLZlevo/mfT8vYlUf99yjahcFpZ
+	TfPCirO8MT+H3Sg6KPFRrnNse0of+Gb+V/NJ9bp3KDnegfnLmDAjMmTwreOHGnoUbP4uOVbnw3u
+	8pIhvztnKIWcpmSOtn9jLP+AXt1DWgPmBXMg==
+X-Google-Smtp-Source: AGHT+IGVdqEkKnUyCTSFT+9+5Aa03z5mtKupyjnf1plFynTemOAfSu/8mZNsQ15tprQhbCLpstHUfH+3BYqpCdCELEM=
+X-Received: by 2002:a2e:a9a7:0:b0:32a:885b:d0f with SMTP id
+ 38308e7fff4ca-32a907b5ffemr33324241fa.24.1748878617891; Mon, 02 Jun 2025
+ 08:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-355235006-1748875598=:1043"
-Content-ID: <e205ed44-c96b-ccf5-666f-4f2120125496@linux.intel.com>
+References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+ <20250530224035.41886-3-james.quinlan@broadcom.com> <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
+In-Reply-To: <g5rhfbvlx77imub6nn2bx2q6zest3hgsmssjdjrpwqhs2wuan5@uo2ca5asxbpe>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Mon, 2 Jun 2025 11:36:45 -0400
+X-Gm-Features: AX0GCFvQM320POU3IkAr8ibVY9VrUJrRaRz6J6JSXGjCiwYnJUu3TuOgVjnkxwo
+Message-ID: <CA+-6iNxioAQH8vsdPxhjP6gHzhzy3EAKtgOCMncCqgMSMZNRPg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000cd249406369888df"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--000000000000cd249406369888df
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---8323328-355235006-1748875598=:1043
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <b63b28f9-f1f1-8cb0-5842-49ba9210c574@linux.intel.com>
+On Sat, May 31, 2025 at 2:34=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Fri, May 30, 2025 at 06:40:33PM -0400, Jim Quinlan wrote:
+> > By default, we use automatic HW negotiation to ascertain the number of
+> > lanes of the PCIe connection.  If the "num-lanes" DT property is presen=
+t,
+> > assume that the chip's built-in capability information is incorrect or
+> > undesired, and use the specified value instead.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
+> >  1 file changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index e19628e13898..79fc6d00b7bc 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -46,6 +46,7 @@
+> >  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK   0xffffff
+> >
+> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
+> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK       0=
+x1f0
+> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
+> >
+> >  #define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
+> > @@ -55,6 +56,9 @@
+> >  #define PCIE_RC_DL_MDIO_WR_DATA                              0x1104
+> >  #define PCIE_RC_DL_MDIO_RD_DATA                              0x1108
+> >
+> > +#define PCIE_RC_PL_REG_PHY_CTL_1                     0x1804
+> > +#define  PCIE_RC_PL_REG_PHY_CTL_1_REG_P2_POWERDOWN_ENA_NOSYNC_MASK   0=
+x8
+> > +
+> >  #define PCIE_RC_PL_PHY_CTL_15                                0x184c
+> >  #define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK               0x400000
+> >  #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK    0xff
+> > @@ -1072,7 +1076,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie=
+)
+> >       void __iomem *base =3D pcie->base;
+> >       struct pci_host_bridge *bridge;
+> >       struct resource_entry *entry;
+> > -     u32 tmp, burst, aspm_support;
+> > +     u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
+> >       u8 num_out_wins =3D 0;
+> >       int num_inbound_wins =3D 0;
+> >       int memc, ret;
+> > @@ -1180,6 +1184,26 @@ static int brcm_pcie_setup(struct brcm_pcie *pci=
+e)
+> >               PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> >       writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> >
+> > +     /* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
+> > +     num_lanes_cap =3D u32_get_bits(tmp, PCIE_RC_CFG_PRIV1_LINK_CAPABI=
+LITY_MAX_LINK_WIDTH_MASK);
+> > +     num_lanes =3D 0;
+> > +     /*
+> > +      * Use automatic num-lanes HW negotiation by default.  If the
+>
+> "Use hardware negotiated Max Link Width value by default."
+>
+> > +      * "num-lanes" DT property is present, assume that the chip's
+> > +      * built-in link width capability information is
+> > +      * incorrect/undesired and use the specified value instead.
+> > +      */
+> > +     if (!of_property_read_u32(pcie->np, "num-lanes", &num_lanes) &&
+> > +         num_lanes && num_lanes <=3D 4 && num_lanes_cap !=3D num_lanes=
+) {
+>
+> I think you should drop the 'num_lanes && num_lanes <=3D 4' check since t=
+he DT
+> binding should take care of that. Otherwise, once link width gets increas=
+ed, you
+> need to update both binding and the driver, which is redundant.
+Not all Linux release configuration systems run a comprehensive DT
+validator  before execution.  Our bootloader modifies the DT blob on
+the fly and also permits -- with restrictions -- customers to modify
+the DT at the bootloader command line.  Yes, we can do partial a
+priori DT validation, but there is still value to checking the params
+in the driver code, at least for us.
 
-On Mon, 2 Jun 2025, Tudor Ambarus wrote:
-> On 5/30/25 3:48 PM, Ilpo J=E4rvinen wrote:
-> >>> I added the suggested prints
-> >>> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 wit=
-h
-> >>> the downstream PCIe pixel driver and I obtain the following. Note tha=
-t
-> >>> all added prints contain "tudor" for differentiation.
-> >>>
-> >>> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
-> >>> 0x000000 PCIe Endpoint
-> >>> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
-> >>> 0x00000000-0x000fffff 64bit]
-> >>> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ff=
-ff
-> >>> pref]
-> >>> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
-> >>> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
-> >>> D3cold
-> >>> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
-> >>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable =
-of
-> >>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-> >>> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR=
- 0
-> >>> [mem 0x00000000-0x000fffff 64bit] list empty? 1
-> >>> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
-> >>> [mem 0x00000000-0x0000ffff pref] list empty? 1
-> >>> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
-> >>> [mem 0x00000000-0x0000ffff pref] list empty? 0
-> >>> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
-> >>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 10000=
-0
-> >>>
-> >>> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
-> >>> before __pci_bus_assign_resources -> list empty? 0
-> >>> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
-> >>> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resour=
-ce
-> >>> added in head list
-> >>> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
-> >>> 0x40000000-0x401fffff]: assigned
-> >> So here it ends up assigning the resource here I think.
-> >>
-> >>
-> >> That print isn't one of yours in reassign_resources_sorted() so the=20
-> >> assignment must have been made in assign_requested_resources_sorted().=
- But=20
-> >> then nothing is printed out from reassign_resources_sorted() so I susp=
-ect=20
-> >> __assign_resources_sorted() has short-circuited.
-> >>
-> >> We know that realloc_head is not empty, so that leaves the goto out fr=
-om=20
-> >> if (list_empty(&local_fail_head)), which kind of makes sense, all=20
-> >> entries on the head list were assigned. But the code there tries to re=
-move=20
-> >> all head list resources from realloc_head so why it doesn't get remove=
-d is=20
-> >> still a mystery. assign_requested_resources_sorted() doesn't seem to=
-=20
-> >> remove anything from the head list so that resource should still be on=
- the=20
-> >> head list AFAICT so it should call that remove_from_list(realloc_head,=
-=20
-> >> dev_res->res) for it.
-> >>
-> >> So can you see if that theory holds water and it short-circuits withou=
-t=20
-> >> removing the entry from realloc_head?
-> > I think I figured out more about the reason. It's not related to that=
-=20
-> > bridge window resource.
-> >=20
-> > pbus_size_mem() will add also that ROM resource into realloc_head=20
-> > as it is considered (intentionally) optional after the optional change
-> > (as per "tudor: 2:" line). And that resource is never assigned because=
-=20
->=20
-> right, the ROM resource is added into realloc_head here:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
-ree/drivers/pci/setup-bus.c#n1202
->=20
-> Then in the failing case, and extra resource is added:
-> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
-> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-> The above extra print happens just in the failing case. Here's where the
-> extra resource is added:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
-ree/drivers/pci/setup-bus.c#n1285
->=20
-> It seems that in the failing case 2 resources are added into
-> realloc_head at the pbus_size_mem() time, whereas with the patch
-> reverted - none.
->=20
-> Also, in the failing case a smaller resource is added into the list:
-> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff]
-> compared to the working case:
-> pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff]
->=20
-> Can this make a difference?
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
-I don't think the bridge window resource different matters, that bridge=20
-resource got assigned just fine so it is a red herring. The code just=20
-calculates optional sizes in different place after the rework than before=
-=20
-it. The successful assignment itself is for the same size so there's=20
-nothing wrong there AFAICT.
+--000000000000cd249406369888df
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> > pdev_sort_resources() didn't pick it up into the head list. The next=20
-> > question is why the ROM resource isn't in the head list.
-> >=20
->=20
-> It seems the ROM resource is skipped at:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
-ree/drivers/pci/setup-bus.c#n175
->=20
-> tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
-> skipped due to !(r->flags) || r->parent
-
-I don't see the device in this print, hope it is for the same device.
-
-In any case, I don't understand what reset resource's flags in between=20
-pbus_size_mem() and pdev_sort_resources(), or alternative, why type=20
-checking in pbus_size_mem() matches if flags =3D=3D 0 at that point.
-
-Those two functions should work on the same resources, if one skips=20
-something, the other should too. Disparity between them can cause issues,=
-=20
-but despite reading the code multiple times, I couldn't figure out how=20
-that disparity occurs (except for the !pdev_resources_assignable() case).
-
-> > While it is not necessarily related to issue, I think the bridge sizing=
-=20
-> > functions too should consider pdev_resources_assignable() so that it
-> > won't ever add resources from such devices onto the realloc_head. This =
-is=20
-> > yet another small inconsistency within all this fitting/assignment logi=
-c.
-> >=20
-> > pbus_size_mem() seems to consider IORESOURCE_PCI_FIXED so that cannot=
-=20
-> > explain it as the ROM resource wouldn't be on the realloc_head list in=
-=20
-> > that case.
-> >=20
-> >=20
-> > Just wanted to let you know early even if I don't fully understand=20
-> > everything so you can hopefully avoid unnecessary debugging.
->=20
-> Thanks! Would adding some prints in pbus_size_mem() to describe the code
-> paths in the working and non-working case help?
-
-It is of interest to know why the same resource is treated differently.
-So what were the resource flags, type* args when it's processed by
-pbus_size_mem()? If resource's flags are zero at that point but it matches=
-=20
-one of the types, that would be a bug.
-
---=20
- i.
---8323328-355235006-1748875598=:1043--
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
+AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCB7fVqOARSYGFt2JOOBULuds9u54j59
+wPH4/m0Ve3sFcTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
+MDIxNTM2NThaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
+AQEFAASCAQAcSVt7SZZrW+HiQeZds/0lPTeAtCri8ow40DfjvJbKFB1/fjYMndPw4T/ZnxD5tfeI
+aFVUUta6+mKhmy6lUr/q94j9tZYnwtDOjy85kH+C3HqvSCgwia+gcDaWqrbitA1rcCO9Yga+8oXV
+0nITDsnxVcaMDQjJDk8JBsPW+XBITPk7KKo5WA6+zgB6UWEihgnp458SJuc7zsu28sEVHX2cuKS8
+R8CtOELzXAlvn3Ge0Et9isrNGpLd6eMMgSn9NhuI3fm/DzH5Sm5nSO2vlBqGQKr8td1hI2pazqPp
+LzlVN6EvXb9toNIu7AwvADS1BgdSWGiPfbJy+Mc7IfI4NULN
+--000000000000cd249406369888df--
 
