@@ -1,217 +1,155 @@
-Return-Path: <linux-pci+bounces-28820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE324ACBAD7
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 20:11:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00E9AACBB29
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 20:43:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09331189585F
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 18:11:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B05321621FF
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 18:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84EB9227B9A;
-	Mon,  2 Jun 2025 18:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0110225768;
+	Mon,  2 Jun 2025 18:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmSQW/5Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uYHS+K1o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E166EAF9;
-	Mon,  2 Jun 2025 18:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DEA218EA2
+	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 18:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887872; cv=none; b=Iw1PfzlIpbWW2nq5xiVxGssu64okMRlooilb/nE7/vGv8CS1a13VMVVdwP2cKQyB27G4Y5/08p/DxJ6gjnVvu6wW9dySlaLjemU5rkZKCVJctHYelYv6Lz7hZn+lWqPSF1F2tN+yzUgchAVXDIqnx+E1oNy/eHMIqD41bmOcpqM=
+	t=1748889784; cv=none; b=nRLM9zCTLVO7n0KSCrQULHGWeiU0PtjnAV44LXKhb0b9FQ+wpLLSim/oXwK/BFanlKMPt0RZ2yH4zthnWkz3eCi98XMVSpdSzr+DdKRVjHdJ7qZM5aoZMa4IyWyMynBzFcB+Je/VCENTN6U9EhNm75tR7puEqeS0As5CkOf0Ac8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887872; c=relaxed/simple;
-	bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FV1qs+I8v7408En5xYve6KejJtMYw+9+POj8dNFMRQW4y6WF9pyoo1N5DCYVvjOMcA0ny2OjXaJNUPhWubN/QcCiDXj3ECj34ZrtUSKChyUfRZkkABwPd/I2xJ7WE12BT22832FNpYWPY0Xv4XA+dx60MEmMf/6GvCUYdvI1o0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmSQW/5Z; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748887871; x=1780423871;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
-  b=fmSQW/5ZVmnMp5slep4QinOaqcZjzpm4c4TKX1SinJezIVG/Z/aOJJZW
-   C3k0xzSKuvArrDK70JCWs4AXwUdRd7GGqCULxHnjs0xzX5+a+DvbegBuC
-   JpK1tTojevQjKbi070x6IXBqxLcD7ZMmWqWQ+53Nn/BVjj/+CrRo4KRp9
-   lZGHi0Bbn5z8viq+1BsxZQhNXck99FQ8heEvzyL6CAV9itYegZ74l1JR3
-   zDZfHc7rqhBdmu2DUEXd7jxZQ7W0cG75UWk/baTbLBHhNegXoIeW757mx
-   O/MH/BCtyYsSnAO7m+XOanmOt2M9XkWSxvqe9HDWLjgnZKUzHNji3zH8j
-   g==;
-X-CSE-ConnectionGUID: DFLFctPOQiSFkgCBQxHYnA==
-X-CSE-MsgGUID: X6wdajwUS/yz3qxThmtmtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50770704"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="50770704"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:10 -0700
-X-CSE-ConnectionGUID: rmcKHSDgT8WBm+xG+YxC8w==
-X-CSE-MsgGUID: OZrs+IS/S4yOMpwDesH9+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="148467703"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:04 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
-Date: Mon, 02 Jun 2025 20:06:28 +0200
-Message-ID: <2947754.vYhyI6sBWr@fdefranc-mobl3>
-In-Reply-To: <20250429182055.GB76257@yaz-khff2.amd.com>
-References:
- <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
- <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
- <20250429182055.GB76257@yaz-khff2.amd.com>
+	s=arc-20240116; t=1748889784; c=relaxed/simple;
+	bh=p+wD3zMTOWI0HISbGROLTVC+KJOh+kfgMSn79zqvOmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgzFIQRtr6/u3AuwW7LVBhXTnV8dp1jpPff+Zu1SqZll5yog+X0lNVTmcnpxnWzt5LKuUnPFnA/GrqB1D/cLYZqYVEJ3jr8napjvqRj/jY8KqBGMkFcxqtkq3bW2BIWEiqR0yEmq6PX6lR9VSIxLMA1vql7xOJlUZgD5ZeaYnOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uYHS+K1o; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-604e2a2f200so9167410a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 11:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748889780; x=1749494580; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vnvUjNE/+RVrDDbHkhezYePJuDWmPp+oybHgIE8H+Rg=;
+        b=uYHS+K1oj0WgCIk3e8h0ncTbqM/HGd7x87OL/eqkSN4YZxLu5FFKF5qhbv4F12f7VN
+         oozntXURwdyt56jNvro+rTuLDlYnqQ1Cl3tSwvvsZEcsqcaQDX9pD9KsEDv4V1zfid2r
+         SrQakZkxhUczy3nKekQwv96mFQ1lm2iXOtXF7+KJZRm3D47+GLyW1RLtlGsGOmdQuxig
+         G60I4VxRmNEMiGtg9p7zTSw52jsAMGwShefVjDgSYrV/vVkcyXwQ2VTiXivJC4iDNhvQ
+         LyAjTiIXWuk/jn2wPAf5ePTlXSZVIf6zb8wlrtgt++ayO2Yle4Q0GDnGIYlOLrzsuzXB
+         3dAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748889780; x=1749494580;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vnvUjNE/+RVrDDbHkhezYePJuDWmPp+oybHgIE8H+Rg=;
+        b=Ix2FVjEsTII38E8iWGGqkbZNwgcpNNLm0NkLs8yXL1D0Pq4qt5zntAq0+088o8BlUT
+         o+SWFfc7NmFFTbfy2DSAyNu6HmL9cSjnyALbAygg8aKh11cfRuYZ370tuK9E2Ck6pxm/
+         GtJYZ5wyLQYE4Pm8Qgo9xGc7A9zPl0SKkjsLTbZI6OGXnjfAPilAsUDbAZSRo0T5+zK8
+         vMMXMmOJ08BpTvEkeyGMEDA2oTn5uXovmHWlKFs+ZdMsB8EVhZ3z3kvmkmBahX85nN2c
+         wAuw1u6VOtYYeX7w+Dgr0eRr62ApyMfNHC+Z+8ME00dWgkc8PA5bbFetiVQ0mErad9Wn
+         Rb+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUzPfv7FwjtAY4Ss2XxHr7lf8gJob34CtmIRItAzZfGB+esdu0EZZAu8WvWsu9U/pjYxM80ZdBeyrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3CF/iSaK73N0UP44Bex4JJDmtzDQR1FbgMFtWEmzXV/vxzbm/
+	rKLsTO9DszaxmOS2X4u1LcixwD4CYDneF5JqeesirCCGWy585DCcPbo/3FKJyIthNXA=
+X-Gm-Gg: ASbGncvJ2+4dHbNWZPfcK85Buzbl9p8wPmC6yNmJBty9iphbFSq/gTUllH6sNL+TIYp
+	F477Vbq8yam7tt94ZgBtCR8987zOqo2FsOjTEob1wmkrPqYAqbX7zF9uVs1cFtWr62usz7QTwu+
+	2UHLfI/1ElDtogQoeRgtu2193WEngwC5LDeUSHAh5nwi1QBhvP7HRqESCR7/NX57rEfaPrSyQT1
+	uLHw2cxwdS9MDnOsMujQ4kYkVWHrAT5VJRlgemx1GNTFhrJVn2C2L3+vgiW2NWBBaC/IV5VQ7R4
+	s2ArP9aeHBXa64WQzkWFiZ9+QZq8DHZkPXKrGVQmCIv4NDw9zQ6pLFsfwlfuwWH7f4kDlSxQZk/
+	huQWj
+X-Google-Smtp-Source: AGHT+IFJ/fmPqlLI1xs1kQIdWrguQXYZLNV4oahPunuD+7Yh+pew/6do8m1nbzlvPSYYP3h1lQd2KQ==
+X-Received: by 2002:a05:6402:26c9:b0:602:3e4:54de with SMTP id 4fb4d7f45d1cf-605b751ac19mr9468088a12.10.1748889780341;
+        Mon, 02 Jun 2025 11:43:00 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.75])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d84e76csm828077866b.86.2025.06.02.11.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 11:42:59 -0700 (PDT)
+Message-ID: <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+Date: Mon, 2 Jun 2025 19:42:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-
-On Tuesday, April 29, 2025 8:20:55=E2=80=AFPM Central European Summer Time =
-Yazen Ghannam wrote:
-> On Tue, Apr 29, 2025 at 07:21:09PM +0200, Fabio M. De Francesco wrote:
-> > When Firmware First is enabled, BIOS handles errors first and then it
-> > makes them available to the kernel via the Common Platform Error Record
-> > (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-> > via one of two similar paths, either ELOG or GHES.
-> >=20
-> > Currently, ELOG and GHES show some inconsistencies in how they report to
-> > userspace via trace events.
-> >=20
-> > Therfore make the two mentioned paths act similarly by tracing the CPER
-> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
-> > I/O Machine Check Architecture and reported by BIOS in FW-First.
-> >=20
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/ras.c     |  6 ++++
-> >  include/cxl/event.h        |  2 ++
-> >  3 files changed, 68 insertions(+)
-> >=20
-> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> > index 7d7a813169f1..8f2ff3505d47 100644
-> > --- a/drivers/acpi/acpi_extlog.c
-> > +++ b/drivers/acpi/acpi_extlog.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/ratelimit.h>
-> >  #include <linux/edac.h>
-> >  #include <linux/ras.h>
-> > +#include <cxl/event.h>
-> >  #include <acpi/ghes.h>
-> >  #include <asm/cpu.h>
-> >  #include <asm/mce.h>
-> > @@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
- *pcie_err,
-> >  	}
-> >  }
-> > =20
-> > +static void
-> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> > +				int severity)
-> > +{
-> > +#ifdef CONFIG_ACPI_APEI_PCIEAER
->=20
-> Why not apply this check on the function prototype?
->=20
-This function is static.
->
-> Reference: Documentation/process/coding-style.rst
-> 	   Section 21) Conditional Compilation
->=20
-> > +	struct cxl_cper_prot_err_work_data wd;
-> > +	u8 *dvsec_start, *cap_start;
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> > +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> > +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
-> > +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> > +				   prot_err->err_len);
-> > +		return;
-> > +	}
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> > +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
->=20
-> Is this a requirement (in the spec) that we should warn users about?
->=20
-> The UEFI spec says that serial number is only used if "CXL agent" is a
-> "CXL device".
->=20
-> "CXL ports" won't have serial numbers. So this will be a false warning
-> for port errors.
->=20
-I'll add a test and print that warning only if agent is a device (RCD,
-DEVICE, LD, FMLD).
->
-> > +
-> > +	switch (prot_err->agent_type) {
-> > +	case RCD:
-> > +	case DEVICE:
-> > +	case LD:
-> > +	case FMLD:
-> > +	case RP:
-> > +	case DSP:
-> > +	case USP:
-> > +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> > +
-> > +		dvsec_start =3D (u8 *)(prot_err + 1);
-> > +		cap_start =3D dvsec_start + prot_err->dvsec_len;
-> > +
-> > +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> > +		wd.severity =3D cper_severity_to_aer(severity);
-> > +		break;
-> > +	default:
-> > +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
->=20
-> "invalid" is too harsh given that the specs may be updated. Maybe say
-> "reserved" or "unknown" or "unrecognized" instead.
->=20
-> Hopefully things will settle down to where a user will be able to have a
-> system with newer CXL "agents" without *requiring* a kernel update. :)
->
-I'll replace "invalid" with "unknown".
->=20
-> Thanks,
-> Yazen
->=20
-Thanks,
-
-=46abio
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+ <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+ <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
+On 6/2/25 4:08 PM, Ilpo Järvinen wrote:
+>>> I think I figured out more about the reason. It's not related to that 
+>>> bridge window resource.
+>>>
+>>> pbus_size_mem() will add also that ROM resource into realloc_head 
+>>> as it is considered (intentionally) optional after the optional change
+>>> (as per "tudor: 2:" line). And that resource is never assigned because 
+
+cut
+
+>>> pdev_sort_resources() didn't pick it up into the head list. The next 
+>>> question is why the ROM resource isn't in the head list.
+>>>
+>> It seems the ROM resource is skipped at:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-
+>> next.git/tree/drivers/pci/setup-bus.c#n175
+>>
+>> tudor: pdev_sort_resources: ROM [??? 0x00000000 flags 0x0] resource
+>> skipped due to !(r->flags) || r->parent
+> I don't see the device in this print, hope it is for the same device.
+> 
+> In any case, I don't understand what reset resource's flags in between 
+> pbus_size_mem() and pdev_sort_resources(), or alternative, why type 
+> checking in pbus_size_mem() matches if flags == 0 at that point.
+> 
+> Those two functions should work on the same resources, if one skips 
+> something, the other should too. Disparity between them can cause issues, 
+> but despite reading the code multiple times, I couldn't figure out how 
+> that disparity occurs (except for the !pdev_resources_assignable() case).
+
+cut
+
+> It is of interest to know why the same resource is treated differently.
+> So what were the resource flags, type* args when it's processed by
+> pbus_size_mem()? If resource's flags are zero at that point but it matches 
+
+This is the full output: https://termbin.com/mn1x
+for the following prints: https://termbin.com/q57h
+
+It seems ROM resource is of type 2 at pbus_size_mem() time.
+
+> one of the types, that would be a bug.
+
+I'll give another try tomorrow. Thanks,
+ta
 
