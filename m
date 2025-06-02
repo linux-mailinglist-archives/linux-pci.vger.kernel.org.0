@@ -1,181 +1,121 @@
-Return-Path: <linux-pci+bounces-28791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3198ACA981
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 08:30:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93404ACA9C9
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 09:16:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C35893B37BF
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 06:29:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1CBA189C331
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 07:16:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB9029CE6;
-	Mon,  2 Jun 2025 06:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86C5513AD1C;
+	Mon,  2 Jun 2025 07:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghNO+zd7"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="gKpj/VTD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71C530100;
-	Mon,  2 Jun 2025 06:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A13D4CB5B
+	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 07:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748845813; cv=none; b=pMaHqrDsuryZbVlZonYqqJ1wgrIh1GeWB0T8ccr5XPTVwJ+Uco3M7ENOIcoB506Z3/4vjWcuCGPgq3URQ3339+oWrlmaLSeCkFgK7EHCY0aUxefWRYyQxXAp6WiRKl7duC/B2mQelxrjvGdUd0UdprbZvf8zlVXdHduviFdAQ4Q=
+	t=1748848596; cv=none; b=rU6H96SVw6LYFvZMFNIekD/C8BvGJg4GEw+PCX51GRKBX6ig5lzussBzaxFGa+4dwgZomGs9DjNclnxtoKSqCi5okwLFHc3v5sZkR9lelRU5VVtpU0KVMq+hmdCSAF+kpwMUeCwrfl8Z7rOWAg0ovtpk0P0ta/+vvvw0LcZ3v8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748845813; c=relaxed/simple;
-	bh=iZsdRW2eWSM0CYYMYUe4/FaSLJwa7Tu9tmz6E/97JQk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ziz/BAXwufPlm3bdl5QqbAbtVfRo+6rLjR83doobZHaAB+2vF2erJEMqo5EPQ/TesnsKgRw4qcdZegB7gSUEGjkg0IwJPnMUgtB6wM4OINnuePU2cUGRsPfsRgzDbxC2N+AaQZbLUJ85L1xPh6FivwZ7TC8EQpzTGW2Tpey5L2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghNO+zd7; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748845811; x=1780381811;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iZsdRW2eWSM0CYYMYUe4/FaSLJwa7Tu9tmz6E/97JQk=;
-  b=ghNO+zd7jVDDqu1yBMm0dbh4cbzt4zB99WgaK4ui2xFo0xYEnMauQVXW
-   v7W3nwKQwFKmABajit/IGmMdR4sz3XNUG1o6zvVl0VO1LDA8CoSupYu1g
-   POISsCHry0FrPFGNxcT3oMRC75cSjIetm+sMFM0V66qhVsonyrLY5B8wl
-   ofYvecHSXzofhSQtcmEAi3j557m7WJT/31A9ogpff1iJ3M63OynyJMUCc
-   umsh43HEzG8+/2WfhtNg0aWI6CX7M0LKwxIg0fYsV+4pP9ZikgjaMrc+D
-   tbbiwfmWscs5hsK7slaYjSWLYkPHgy+Qc5oh78QKzz4glIlQiMB1spwyD
-   g==;
-X-CSE-ConnectionGUID: 5d/Hi8DpS8W4SUteUzNyzA==
-X-CSE-MsgGUID: dRWGdx/2SICtO+xm4sXiLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="49973213"
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="49973213"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 23:30:10 -0700
-X-CSE-ConnectionGUID: Ta+mIcmBS6Ss9Ett8EMblg==
-X-CSE-MsgGUID: E9sDq5bRTMuFqCtiVhAY/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,202,1744095600"; 
-   d="scan'208";a="144422014"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.134])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2025 23:30:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Jun 2025 09:30:02 +0300 (EEST)
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Lukas Wunner <lukas@wunner.de>
-cc: rostedt@goodmis.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, 
-    bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, 
-    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com, 
-    naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com, 
-    mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-In-Reply-To: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
-Message-ID: <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1748848596; c=relaxed/simple;
+	bh=4ts3ILevWOPYqx+gXJKBFw80Ij8IEjysS1Tj+hCyd9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uqLVYbN8aCRJHAPFLt7lG/bnuJ+eJQF0TdIE125ClCccfVm0ouEU81bwzGH7WvHR84N7k9oQiqUB3ZpqdDr4M6WHrmk9lYEczz8671fF0Nrd+oyNIn6Z48BYrvM/pCuTwpDA0g3hsvm3pwOODlSBwXavZ/KAO+ZKjtt2NSh5lFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=gKpj/VTD; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=4ts3
+	ILevWOPYqx+gXJKBFw80Ij8IEjysS1Tj+hCyd9E=; b=gKpj/VTDWEUb0RdiAHS/
+	ax63fKQeGg2XTYEIm1BeN1RwE1lI6Q587Mra4bC8y8vgIP/IRrQHmnaisEtkSqsl
+	tS+S3VLIkjcYapmcmYRoMSM5UCNJhl3X89Vpk007lmHUTi5a2EKgeMTtoVPvq4Bx
+	k4MjPWFpEVEzvySiQq7YSaTkHDtjs8Vib4HH0smMMYjYy6nRXA/uQC7LWzfEM5yH
+	6oN+zq4kqL5nszFnTlJRPdK/K+oxHhswwyva8xLvMRHcZ9R76KsPjNYQ/tnRJwBM
+	8cTyApmfsBvVlf6O3+SK4V0FTUabO+bo+0MdY1OtHp/IhHcypCeGlPE/K9EZ3f+h
+	Gg==
+Received: (qmail 3287185 invoked from network); 2 Jun 2025 09:16:24 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2025 09:16:24 +0200
+X-UD-Smtp-Session: l3s3148p1@mkeYipE2bTltKPDF
+Date: Mon, 2 Jun 2025 09:16:23 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 0/8] PCI: rzg3s-host: Add PCIe driver for Renesas
+ RZ/G3S SoC
+Message-ID: <aD1Px6zvXnan3rq6@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Claudiu <claudiu.beznea@tuxon.dev>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+ZEsolx7UMbGHb56"
+Content-Disposition: inline
+In-Reply-To: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
 
-On Mon, 12 May 2025, Shuai Xue wrote:
 
-> Hotplug events are critical indicators for analyzing hardware health,
-> particularly in AI supercomputers where surprise link downs can
-> significantly impact system performance and reliability.
-> 
-> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-> tracepoint for hotplug event to help healthy check, and generate
-> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
-> include/uapi/linux/pci.h so applications like rasdaemon can register
-> tracepoint event handlers for it.
-> 
-> The output like below:
-> 
-> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> $ cat /sys/kernel/debug/tracing/trace_pipe
->     <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
-> 
->     <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
-> 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> changes since v7:
-> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
-> - pick up Reviewed-by from Lukas Wunner
-> ---
->  drivers/pci/hotplug/Makefile      |  3 ++
->  drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
->  drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
->  include/uapi/linux/pci.h          |  7 ++++
->  4 files changed, 105 insertions(+), 6 deletions(-)
->  create mode 100644 drivers/pci/hotplug/trace.h
-> 
-> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
-> index 40aaf31fe338..a1a9d1e98962 100644
-> --- a/drivers/pci/hotplug/Makefile
-> +++ b/drivers/pci/hotplug/Makefile
-> @@ -3,6 +3,9 @@
->  # Makefile for the Linux kernel pci hotplug controller drivers.
->  #
->  
-> +# define_trace.h needs to know how to find our header
-> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
-> +
->  obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
->  obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
->  obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index d603a7aa7483..f9beb4d3a9b8 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -23,6 +23,9 @@
->  #include "../pci.h"
->  #include "pciehp.h"
->  
-> +#define CREATE_TRACE_POINTS
-> +#include "trace.h"
+--+ZEsolx7UMbGHb56
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
 
-Instead of spreading tracepoint creating into subdriver code like this, 
-should we place it into one place, e.g., drivers/pci/pci-trace.c (which is 
-what I seem to have used in my yet to be submitted patch that adds 
-tracepoints into bwctrl link speed events)?
+> Please provide your feedback.
 
-> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-> new file mode 100644
-> index 000000000000..21329c198019
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/trace.h
+Don't have bandwidth for a review, but I did test this series on my
+G3S/SMARC with a x1 PCIe USB controller. Worked fine, I could access USB
+devices with it.
 
-Perhaps in include/trace/events/pci.h (or 
-include/trace/events/pci-hotplug.h)?
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I don't know what is the general rule having them inside drivers/ vs 
-include/trace/events, Documentation/trace/tracepoints.rst only mentions 
-the latter, but there seems to be plenty under drivers/ too.
 
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_HW_EVENT_PCI_HP_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM pci
-> +
-> +#define PCI_HOTPLUG_EVENT					\
+--+ZEsolx7UMbGHb56
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
- i.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg9T8IACgkQFA3kzBSg
+KbYrDw//fVqzg9qvc/j2in3DmuPNolbFXSgSdXbnHeaP64s7ZMvP1VjP7lm2xRXV
+mnnKbzEvCpQqJusArmqUVao96p/Sr/PKfWLK5P+bVreIOp4JHL6B4/n3GGgWB4gY
+W+pXg2OSSLXUUn84eIfR9q4ExE5NJ67LH0FucGCE2MLf69mR8JemaIOzsjcArKme
+XWJwwlQ3O+VmBtOM3vbw8FPOOsh9lGyxS2Euc26Si36zsQGuKKNCAR+DumFKCTXm
+cJa9heoLi/Tse5sUAXVSn1fxLkyLx5NFJNY8NtIzO8AvP3ZymGZdEH3fLVc7e0T5
+CVGvrh39mKJFFWsTaEe2cazD910SmVIvHvAt7H9WOpkhxDk0Qn2Xx1KKyctO2Ktf
+qwa4liCYjx7aE+Kf2zoZTc+XaAUad/rG47vIZSb7dNThe/x31LOCStVXcwbFX53i
+zYGUGZ64uj4I8x7+Cv9Key/mPrwMOqtsKmc0p7jS72WrXzRpSIyMxFbYCthpEKBO
+ueJFNcA/xDkCsjTW1tY2+VitZe0OL4Zi3IGunkNk2X3VL931ONqNvFe84uBcOQ2q
+Ktm8IvF6zWCwBKGjuOe+DsrRA8DnSiScFvA3tlPOy0jkDFkNSL9aVrG0dH9+OLrK
+oApyRKwdLFyMjCyoKyV1WOjwOv8IE5WzXCpIOrWBjj189aJMp+0=
+=bmYM
+-----END PGP SIGNATURE-----
+
+--+ZEsolx7UMbGHb56--
 
