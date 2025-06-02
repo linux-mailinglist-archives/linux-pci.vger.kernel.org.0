@@ -1,164 +1,149 @@
-Return-Path: <linux-pci+bounces-28795-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28796-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97432ACAACF
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 10:46:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68525ACAC53
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 12:17:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE6F47A7F30
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 08:45:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A00A17AA3F
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Jun 2025 10:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357851C8FB5;
-	Mon,  2 Jun 2025 08:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0204F1DE4FF;
+	Mon,  2 Jun 2025 10:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zh5H11YE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S0cEX5zt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1C41537C8
-	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 08:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C561624E1
+	for <linux-pci@vger.kernel.org>; Mon,  2 Jun 2025 10:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748853992; cv=none; b=e7DQ9/qXvUwcktvH1PBKSACv+zm5duso66Kf6PLHiVH/kmbrygPDKGdW8DT7SO7fKApTcuyRvAVUGhfsgcfohu+TtrFYHvmthx/R1yqQqCAgE1L9lPluwGSju9poHhvYeEEXb2wiAwRmPd4TrLM1VxRKaWxSfUKRrZyGGuAlBqs=
+	t=1748859435; cv=none; b=hsEVRw0wJWupZo6NPliaXkfgBe+FFl/HbzcBa/JhV/tX3FW5nMqo0SEVXO9oUDorkIERCKi10ilkFjjSQovlMX33JzIeSQqY7Meja6C7Emem6X5Os8N8lrY1QHExEiA9akvAMyUnpniA2Tt2m+T/XAssPpfIvZyzGj0LC6PLFWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748853992; c=relaxed/simple;
-	bh=jMbUYSpsToA7O3te9eApd0pFDpdOD0eqFMFbPLpvW2I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XIitUbiuh0mS3iQauLdL9a5rjJfR0BsYDVJaYBUiA3CsxFi2DamXMgm5FGRWIKasFJ9MrKSZE3uMAE4CRqJVFb2FmjShmCN+vVIQGwDjvC2rKBazML/staDmJD/2UevmrUKGlSMK8tt2tRs0/L8wy9J7s1i74ekls+bHdSat7KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zh5H11YE; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-451d30992bcso10657395e9.2
-        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 01:46:30 -0700 (PDT)
+	s=arc-20240116; t=1748859435; c=relaxed/simple;
+	bh=pEyblw1ZF05CXEYNgROXAcVImF3tve5gvGba+f35nQg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XTMz949XA0W+XPwZIFI6l6c9+VXrxPMwQ1VvGXei+pEiPtpZrKT5rjjVF8+IBi3kgXgvk5J0Aj/3Cksm+NpSyRxE5BmIirl4NOKmtxhzXJnK+BYtBbp+FKHF/b9JQLaNJ1D3AiA44BIAN0GnPevOxTm33RnoBYkqwcOPssMtV9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S0cEX5zt; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5532a30ac45so4267773e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 02 Jun 2025 03:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748853989; x=1749458789; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktsVoxepsNTrdCKxowANypGkEb6jHKbHJKn1XhGy1Uw=;
-        b=zh5H11YEjyHf/ZrGbGCtt0Ram36PTgfDVCpkP50fPzhGYifYz56NsRHr1SJDNOLkQ/
-         K0iIa1gQLeNm/fTQQs/czGTGqMofzLe2kIGZYtnEa+BEwPMN7UyWN1IEcthJNN3RVcUy
-         0Z7P2OkpuUPlOXy/X0P85wCgLYOEdFcCBqAJHOTcb4wGIUzFx63gWOmKA8CdR7tnTkj/
-         Zz70blfHTTQpuj78I9t7GOjB5Mf744L7BHpQJkQhGqV18HSQgzt5WvCsdmR4R1upBO/A
-         9MPR8B2tW4PgVrYLjVzx81Q6Bbx4p4HWo6rlttExAAA3/ib3ASiiG4OPZWaLzyvHrXdy
-         ebLQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748859432; x=1749464232; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pGO9sUY+r7vqr6gLOI6qlkiYKXTKtTQAWLD2mIokncE=;
+        b=S0cEX5ztlLK808ycniXZr1H9/H7xNzCtX79FukKmhSGvEttA+EdcE3SDTfdS8Zj0sB
+         5SOfwONgUcs2rN/dw/TXR28w9tQhrHu1cTDJ7HkWV3pmX8YSOgCn8aDoExkeGy+fdysi
+         KpzUEZ7ueCuTdaVapPm52Kddsv1TxUEqc+JzEgHEUwBOls/FdWq54+kXPBJothd236d5
+         s3scgXi0NpyCT+yWPy1esu1uUeZ8h7oo2iYtJCobVBDMZb2ouMDQQw0bSTwn8b26Ttm+
+         NTzfB85nlVtY4bL0kVtRuD++jUbb8W2MVlWJ3djL5caCERGjNBYExhS+rfPH7oB38S7L
+         5hjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748853989; x=1749458789;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktsVoxepsNTrdCKxowANypGkEb6jHKbHJKn1XhGy1Uw=;
-        b=AEiwUPED4CGc99pGfpK63UkhOnwUAATmWXNvI+JEFYR261gLe4OFwTVdHlJl3jnoec
-         IFekqh3/rfTbjSakNm8aSZv6lYl2KgErVfcQBAILX3KK8Hs7zATVLPeZ67XvTWbfYaVK
-         CCvwelHFb1vZ0H0FU6xuf8OpTzWFkyWIU9v4luCjJclHNlbTWIkoSpskfc0DDt5Ve+cb
-         RhWf8I3LY6Xan2HBmQgeR3cF52yCpT688osam1yfIKu0FTr4ZuqR7kaoQu6L8yYNa/bD
-         iRRCLufN2b77gwEI+JG41yWk52Rz2lDVJZEnMTn0FmHHQRw5U6yoWJHjY+0r3/Sw5uNc
-         y4gw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1LKrHw2BUg4Zq99RZuKTrUF5kvC441ACQVsxS/e3L7awDE9r8nyJTmn57WAUk+f//bGdbQibRlXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywAfFMdz1RckZK4AyCNkU2YMk8W9OHYX5DD232G942JrVHSw4U
-	XkUTFYTt2kAGRUkxbWqPqp5xlfxjPJnJZiBKqkVK5vyCcCTlkh8eruSDRuhjhS8cEDDaxBF5srt
-	/gNQ7bUTkeWim0+h1wQ==
-X-Google-Smtp-Source: AGHT+IEN8wW1H0RTzFbTdIlqYAJYXEVRMaA4cvq7c8CG74BNxW0QzTAmaWpfyWc/gO5HljzZUpfF3+rdjR1DcgY=
-X-Received: from wmbhc27.prod.google.com ([2002:a05:600c:871b:b0:450:d422:69f9])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4ec9:b0:442:ccfa:fa with SMTP id 5b1f17b1804b1-45121fb9373mr61377385e9.27.1748853988668;
- Mon, 02 Jun 2025 01:46:28 -0700 (PDT)
-Date: Mon, 2 Jun 2025 08:46:26 +0000
-In-Reply-To: <20250530-cstr-core-v11-3-cd9c0cbcb902@gmail.com>
+        d=1e100.net; s=20230601; t=1748859432; x=1749464232;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pGO9sUY+r7vqr6gLOI6qlkiYKXTKtTQAWLD2mIokncE=;
+        b=TE/m00y+xGQvI09DAtMY50ejiXenJCwuB8i6y+l0VL5EVY0Pn6goXyDNxfI/lSiSL5
+         7tBFHGYdveRMH1ISGCdmqkSPQSG4va9p1murN0ZI5aNGPTPIrkcZCkqJF8xBUvT3723z
+         8Qb+5gQ7l47EDrlGNDTpWYwhsPdehHzmYAGY0jp59eQ41Henio5iL8m0L2kotsp9VuLT
+         aw4VvHEeBOWV6TDXRDDrtJ/YkykI8Hsf6YwUR9SeTpSQR1iaEXrRVPpTaRf113qXWXKW
+         ZNSID5n5h97DpHeU+YfVU7q+V768ffxQ7pVVaxH9EFdy3Ymk2PN1TdppTHNSjtdcD6XK
+         Ep4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUCLSlsfHu7QKDnuGHhbVdviaV+OkUpcoy9xrX969kJicPkqK0hPrCdcBfIXaySnYRwFe3Dbfi97PM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT7tDJCD00pWCZF9d0sCUFyw4Gi+ka1Ko0IS1kCGvDEVZu0SfR
+	37dMD1reudnwBuCNflddp5HmS26a98oQWkdjFQFhpKKuug/euzNi9m+xl0/jJHCE7WVI9IQ5zM0
+	YqmILe5lRK2pWcLtABuHQsAVIn7fpggdH1T079gSemg==
+X-Gm-Gg: ASbGncuIdQezTZmkUZ7MbI0rxroq7OrKVFSMaMAq3kTfxbcV7B/+ai84eUNHk88w59V
+	sXW8REwKDgsWVKoN3B8b4L+lanT5uMhNka+83LlqCE1XqlCNcW7nsnjh9KSoDV0PDhxpaf4LHW0
+	6dQdCH+4vWWbzqZPT1rMesmXcS61Z+p7a2u6mZuH+eXUXDOgwroQYcXG4jmY+jdGNS
+X-Google-Smtp-Source: AGHT+IE2ScFlgSOO/jzGpylrUkqPYvdmuNlMMD0/AntL/Q/1ICr4QgrhpUxX3vIEoEkKGY8aofftc7B/+e+Cne9Hayk=
+X-Received: by 2002:a05:6512:1108:b0:553:2927:9864 with SMTP id
+ 2adb3069b0e04-5533ba23ab1mr3564157e87.6.1748859432178; Mon, 02 Jun 2025
+ 03:17:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com> <20250530-cstr-core-v11-3-cd9c0cbcb902@gmail.com>
-Message-ID: <aD1k4rRK8Pt5Tkva@google.com>
-Subject: Re: [PATCH v11 3/5] rust: replace `CStr` with `core::ffi::CStr`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	linux-block@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 2 Jun 2025 12:17:01 +0200
+X-Gm-Features: AX0GCFsfGl-iahXc2ZEy1lSOQx3uH8u4YrEEg6MXx4A4twZNi28c07s79G74fwQ
+Message-ID: <CAMRc=MckQhB4diiWc+Rtk84PtwaKqr34At3heT0vyAgJ9VA7Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
+ driver for PCI slots
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, Anand Moon <linux.amoon@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 08:27:44AM -0400, Tamir Duberstein wrote:
-> `kernel::ffi::CStr` was introduced in commit d126d2380131 ("rust: str:
-> add `CStr` type") in November 2022 as an upstreaming of earlier work
-> that was done in May 2021[0]. That earlier work, having predated the
-> inclusion of `CStr` in `core`, largely duplicated the implementation of
-> `std::ffi::CStr`.
-> 
-> `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64 in
-> September 2022. Hence replace `kernel::str::CStr` with `core::ffi::CStr`
-> to reduce our custom code footprint, and retain needed custom
-> functionality through an extension trait.
-> 
-> C-String literals were added in Rust 1.77, while our MSRV is 1.78. Thus
-> opportunistically replace instances of `kernel::c_str!` with C-String
-> literals where other code changes were already necessary or where
-> existing code triggered clippy lints; the rest will be done in a later
-> commit.
-> 
-> Link: https://github.com/Rust-for-Linux/linux/commit/faa3cbcca03d0dec8f8e43f1d8d5c0860d98a23f [0]
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Sat, May 31, 2025 at 12:55=E2=80=AFAM Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+>
+> Add the ability to enable optional slot clock into the pwrctrl driver.
+> This is used to enable slot clock in split-clock topologies, where the
+> PCIe host/controller supply and PCIe slot supply are not provided by
+> the same clock. The PCIe host/controller clock should be described in
+> the controller node as the controller clock, while the slot clock should
+> be described in controller bridge/slot subnode.
+>
+> Example DT snippet:
+> &pcicontroller {
+>     clocks =3D <&clk_dif 0>;             /* PCIe controller clock */
+>
+>     pci@0,0 {
+>         #address-cells =3D <3>;
+>         #size-cells =3D <2>;
+>         reg =3D <0x0 0x0 0x0 0x0 0x0>;
+>         compatible =3D "pciclass,0604";
+>         device_type =3D "pci";
+>         clocks =3D <&clk_dif 1>;         /* PCIe slot clock */
+>         vpcie3v3-supply =3D <&reg_3p3v>;
+>         ranges;
+>     };
+> };
+>
+> Example clock topology:
+>  ____________                    ____________
+> |  PCIe host |                  | PCIe slot  |
+> |            |                  |            |
+> |    PCIe RX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>PCI=
+e TX    |
+> |    PCIe TX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>PCI=
+e RX    |
+> |            |                  |            |
+> |   PCIe CLK<|=3D=3D=3D=3D=3D=3D..  ..=3D=3D=3D=3D=3D=3D|>PCIe CLK   |
+> '------------'      ||  ||      '------------'
+>                     ||  ||
+>  ____________       ||  ||
+> |  9FGV0441  |      ||  ||
+> |            |      ||  ||
+> |   CLK DIF0<|=3D=3D=3D=3D=3D=3D''  ||
+> |   CLK DIF1<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D''
+> |   CLK DIF2<|
+> |   CLK DIF3<|
+> '------------'
+>
+> Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> ---
 
-> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-> index 2494c96e105f..582ab648b14c 100644
-> --- a/rust/kernel/firmware.rs
-> +++ b/rust/kernel/firmware.rs
-> @@ -4,7 +4,14 @@
->  //!
->  //! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h)
->  
-> -use crate::{bindings, device::Device, error::Error, error::Result, ffi, str::CStr};
-> +use crate::{
-> +    bindings,
-> +    device::Device,
-> +    error::Error,
-> +    error::Result,
-> +    ffi,
-> +    str::{CStr, CStrExt as _},
-> +};
-
-Did you not add CStrExt to the prelude?
-
-> --- a/rust/kernel/error.rs
-> +++ b/rust/kernel/error.rs
-> @@ -164,6 +164,8 @@ pub fn name(&self) -> Option<&'static CStr> {
->          if ptr.is_null() {
->              None
->          } else {
-> +            use crate::str::CStrExt as _;
-> +
->              // SAFETY: The string returned by `errname` is static and `NUL`-terminated.
->              Some(unsafe { CStr::from_char_ptr(ptr) })
->          }
-
-Ditto here.
-
-Alice
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
