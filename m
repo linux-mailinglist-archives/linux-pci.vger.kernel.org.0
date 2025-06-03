@@ -1,217 +1,147 @@
-Return-Path: <linux-pci+bounces-28895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 730F7ACCC03
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 19:26:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDB50ACCCAD
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 20:12:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B2F01722A9
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:26:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 582241890140
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 18:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D403123E33A;
-	Tue,  3 Jun 2025 17:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF78B24A069;
+	Tue,  3 Jun 2025 18:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cUkgHpC7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTRLQ9RA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24FE1C8629
-	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 17:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CAB1E570D
+	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 18:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748971463; cv=none; b=N5DYmPpk4OOUosPnet3eXB3jL2MTZk3lCtrH0JKUpRir7gzSSCW5r8DQiNbCDffZ/u+aGR0iBoypYgms3iT86IfFsvFH7T6uA5zWvySs20k8Kqu015QAuKKXdF0kyinQgmAraNf2Nxn0/TlyDs2cePiwDnYQDO2JUcf4rhuQOUM=
+	t=1748974372; cv=none; b=EXFJJGyZtaDGQEPjYzlhKMK5RTyL9q+psLcZ3sQfSR4NZW5uKsL1ZmbUUmk1lZg3hHWqsr1CjRpMpgsEZGMNf6xwzzN8VBd3a8Ds/Z7an2+loYlIZqP75myeRbhybuNG2xHfxdeFykLicJsXbzdF6JreKuWZxDWEj/08vD2M0WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748971463; c=relaxed/simple;
-	bh=k8q+rbo9io8N79WBCybham0XbdTZZDClMkHhBsn2vZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GyYJytG+t1TacPGLTTghJ2XUzrS+r9S5k2Z66/CadgENGznKSTpl0DU0BNWtxKBvyn7A9/JBmW37i23mZ4sZoomcBfaP7n8K2hJXiqUhX8Cbcb/AUcURmflLh2j+uZZUkVDCawyVJqJu2BOAZHMlT5BplINVkFYrIcryL0chYMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cUkgHpC7; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so7804370e87.1
-        for <linux-pci@vger.kernel.org>; Tue, 03 Jun 2025 10:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748971460; x=1749576260; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmE/krvGZLBMSI7EnC+bmvklqnZ/rK+9P8nJ8O6FNLo=;
-        b=cUkgHpC72Wp4O7Zor9Xbm6a2qU3qD6ibzByF9XwugoykkyJo1akRP16zDrB3La934l
-         WtclxN/RspcavBIcRJhZTfGoh0jAFbnZf+AJ90y6PqJLYo3f38v0FaTgyu34ewikomFF
-         G5EHRjD7FKKJU7ZTl3qbpAIeX0Cex30zqKsxA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748971460; x=1749576260;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jmE/krvGZLBMSI7EnC+bmvklqnZ/rK+9P8nJ8O6FNLo=;
-        b=THyhg5o9B11xVzhg/aQ2m0OklgFu5bN0QvaiodFqb7mQoue36V27kvDAQ9XChMSb91
-         YGPuQN7hNd/0PkvGFBj7DCq9TvlSNFlCUANx4uv9wZ9sTJOrp9xGhNX5Kxjml+N8kBRk
-         wk+HXsYwQ5UlG5tfQunyylFAIISBI1H+DOKPQZ6JbYkJ/ZDDXAQIg4SJSIb0rVqM5/J2
-         pKZKWNR4ftUcjpkt2B829FEpe3qAXM9MxV7iJuU4Ow5GQu8oFDnTdeVvd8nhiJ5RwfvE
-         nPGEkl8OC4OZlYPGrWxZ+iEbPEMjQ5IlPdLliei2PpV/3exlVg1FEuJbDio+RrlIbSR7
-         4YOg==
-X-Gm-Message-State: AOJu0YwHcYulEbmzZKSvVQ9e7uLRjblV9qrGRx9R05l55ZKsfW9aQiDE
-	tvPcve6QLQLS2Aak5hLiSj7tVpioMRV00oEa6jUAvLuFfc35VkwGYtvcJgARs34VREWKYKaDkZw
-	5Ab+AxexyoScmi8v9y0Go4r2oBOAzjlRFmpxMJrFQ
-X-Gm-Gg: ASbGnctZxb2lfsPmbQXjSRRst98FX+GedY817Keud3uhfRBIpR34T9k5zGaoK7Iv/Ri
-	5LA7bK0oQU+phAd/sU5iTIFi4p+Xyqt0VjevtnwEPRunpOpRVN4/sU/H03tlF9k2IzxkJNLpRxy
-	Uso4ePfIUwNBNGrHXskaxLRYOgdLs4HMLPM2w4FRec54Ru
-X-Google-Smtp-Source: AGHT+IGzARlkmsLFe8IqifErjr36YJNusxpoOqBW1A5UcBCuiSPU7FVgDsrE4hxxtGGh6FMFux63RqWxMjpfY9CpgHk=
-X-Received: by 2002:a2e:9a0d:0:b0:32a:6a85:f294 with SMTP id
- 38308e7fff4ca-32a9ea8fcabmr35140791fa.35.1748971459910; Tue, 03 Jun 2025
- 10:24:19 -0700 (PDT)
+	s=arc-20240116; t=1748974372; c=relaxed/simple;
+	bh=l7hazKp9x8Xzw0tllu2vo2pbAlO+wqbtKbXlvyCvQbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=F6vZXHFzjWWmh7ClGH2vJ1GYQIc0yW5gEiBZthujJDGgOdPpT0eY9vLj4H8oLFTwhXoav0DG2mXQg7y4PIn86tslVeIF0ukh4FQwfsoZgPzyWDo+GG8W68KC0T3DWOpg+hzSKsrrCndPSckK/tKm6rT+RBj/B37zDjMB7iYc6LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTRLQ9RA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F5CC4CEED;
+	Tue,  3 Jun 2025 18:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748974371;
+	bh=l7hazKp9x8Xzw0tllu2vo2pbAlO+wqbtKbXlvyCvQbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lTRLQ9RAjg2032UQ3WcGEkJraC27pGea5D0O1+9saGh01CsKarRaOhO9GnaSzW7RP
+	 dBT90A1Stsb5fvRCythAVMy/raiTRdQYEYlTZJ7H+h/NaeO+R67lbnVxJ8JpWLz5dG
+	 /Mymjs1NOGHedhNSaGEWGa/C/gADuBZivMkFjPyts10XrpDw/q8Tvafx+xHWOpn9zQ
+	 PhAvcHi85CaYsiu8h2nt1/1VYHmf7f9AFoySdft6nwylSsvej1uO0WDsK9wtAqAIna
+	 Ve0W6oOVQLByKO22AfW6bq4bpJ9RkWkOQv/MGcWKQNTyhZVbV5iub6Md3L/Fw+HHx3
+	 H+nELnSQSBctQ==
+Date: Tue, 3 Jun 2025 13:12:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] PCI: dw-rockchip: Do not enumerate bus before
+ endpoint devices are ready
+Message-ID: <20250603181250.GA473171@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-2-james.quinlan@broadcom.com> <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
- <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com> <CA+-6iNz48EFUGUOiHCSaqgsU_tKGV1=Xvw4fjoUS_AMhUHAi6w@mail.gmail.com>
- <3037cd65-89e8-4029-9ee2-4695db5987ad@broadcom.com>
-In-Reply-To: <3037cd65-89e8-4029-9ee2-4695db5987ad@broadcom.com>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Tue, 3 Jun 2025 13:24:07 -0400
-X-Gm-Features: AX0GCFvvKARwyaQBtcR5532V8B0V3nmib9n4bHN1lPiHgsNf2FZJwPQTx4BT8v8
-Message-ID: <CA+-6iNwfxDMd5wpYZP3Ti6G6tdqHsJi2mFYTMOO0wH55CC_YQQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000009d847a0636ae26ae"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD8Bz4CkdnAd8Col@ryzen>
 
---0000000000009d847a0636ae26ae
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 03, 2025 at 04:08:15PM +0200, Niklas Cassel wrote:
+> On Sat, May 31, 2025 at 12:17:43PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, May 30, 2025 at 02:43:47PM -0500, Bjorn Helgaas wrote:
+> > > On Fri, May 30, 2025 at 07:24:53PM +0200, Niklas Cassel wrote:
+> > > > On 30 May 2025 19:19:37 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >
+> > > > >I think all drivers should wait PCIE_T_RRS_READY_MS (100ms) after exit
+> > > > >from Conventional Reset (if port only supports <= 5.0 GT/s) or after
+> > > > >link training completes (if port supports > 5.0 GT/s).
+> > > > >
+> > > > >> So I don't think this is a device specific issue but rather
+> > > > >> controller specific.  And this makes the Qcom patch that I dropped a
+> > > > >> valid one (ofc with change in description).
+> > > > >
+> > > > >URL?
+> > > > 
+> > > > PATCH 4/4 of this series.
+> > > 
+> > > If you mean
+> > > https://lore.kernel.org/r/20250506073934.433176-10-cassel@kernel.org,
+> > > that patch merely replaces "100" with PCIE_T_PVPERL_MS, which doesn't
+> > > fix anything and is valid regardless of this Plextor-related patch
+> > > ("PCI: dw-rockchip: Do not enumerate bus before endpoint devices are
+> > > ready").
+> > 
+> > It is patch 2/4:
+> > https://lore.kernel.org/all/20250506073934.433176-8-cassel@kernel.org
+> 
+> Hello all,
+> 
+> I'm getting some mixed messages here.
+> 
+> If I understand Bjorn correctly, he would prefer a NVMe quirk, and looking
+> at pci/next, PATCH 1/4 has been dropped.
 
-On Tue, Jun 3, 2025 at 1:17=E2=80=AFPM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
+Hmmm, sorry, I misinterpreted both 1/4 and 2/4.  I read them as "add
+this delay so the PLEXTOR device works", but in fact, I think in both
+cases, the delay is actually to enforce the PCIe r6.0, sec 6.6.1,
+requirement for software to wait 100ms before issuing a config
+request, and the fact that it makes PLEXTOR work is a side effect of
+that.
+
+The beginning of that 100ms delay is "exit from Conventional Reset"
+(ports that support <= 5.0 GT/s) or "link training completes" (ports
+that support > 5.0 GT/s).
+
+I think we lack that 100ms delay in dwc drivers in general.  The only
+generic dwc delay is in dw_pcie_host_init() via the LINK_WAIT_SLEEP_MS
+in dw_pcie_wait_for_link(), but that doesn't count because it's
+*before* the link comes up.  We have to wait 100ms *after* exiting
+Conventional Reset or completing link training.  
+
+We don't know when the exit from Conventional Reset was, but it was
+certainly before the link came up.  In the absence of a timestamp for
+exit from reset, starting the wait after link-up is probably the best
+we can do.  This could be either after dw_pcie_wait_for_link() finds
+the link up or when we handle the link-up interrupt.
+
+Patches 1 and 2 would fix the link-up interrupt case.  I think we need
+another patch for the dwc core for dw_pcie_wait_for_link().
+
+I wish I'd had time to spend on this and include patches 1 and 2, but
+we're up against the merge window wire and I'll be out the end of this
+week, so I think they'll have to wait.  It seems like something we can
+still justify for v6.16 though.
+
+This also means I don't think we should need an NVMe quirk.
+
+> If I understand Mani correctly, he thinks that we should queue up PATCH 1/4
+> and PATCH 2/4 (although with modified commit messages).
 >
-> On 6/3/25 10:16, Jim Quinlan wrote:
-> > On Tue, Jun 3, 2025 at 12:24=E2=80=AFPM Florian Fainelli
-> > <florian.fainelli@broadcom.com> wrote:
-> >>
-> >> On 5/30/25 16:32, Florian Fainelli wrote:
-> >>> On 5/30/25 15:40, Jim Quinlan wrote:
-> >>>> Add optional num-lanes property Broadcom STB PCIe host controllers.
-> >>>>
-> >>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> >>>
-> >>> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> >>
-> >> Sorry I take that back, I think this should be:
-> >>
-> >> num-lanes:
-> >>     enum: [ 1, 2, 4 ]
-> >>
-> >> We are basically documenting the allowed values, not specifying that w=
-e
-> >> can repeat the num-lames property between 1 and 4 times.
-> >
-> > num-lanes is already defined as
-> >
-> >      enum: [ 1, 2, 4, 8, 16, 32 ]
->
-> Right, but then we need to re-define it with our own specific
-> constraints, still, don't we?
-We do; there is the provided enum and we provide the maximum and minimum.
-The AND-ing of all constraints yields [1, 2, 4].
-Also, I'm not sure one can redefine an existing property or would want to.
-
-> --
-> Florian
-
---0000000000009d847a0636ae26ae
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIQYQYJKoZIhvcNAQcCoIIQUjCCEE4CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBU0wggQ1oAMCAQICDEjuN1Vuw+TT9V/ygzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE3MTNaFw0yNTA5MTAxMjE3MTNaMIGO
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
-FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBAKtQZbH0dDsCEixB9shqHxmN7R0Tywh2HUGagri/LzbKgXsvGH/LjKUjwFOQwFe4EIVds/0S
-hNqJNn6Z/DzcMdIAfbMJ7juijAJCzZSg8m164K+7ipfhk7SFmnv71spEVlo7tr41/DT2HvUCo93M
-7Hu+D3IWHBqIg9YYs3tZzxhxXKtJW6SH7jKRz1Y94pEYplGQLM+uuPCZaARbh+i0auVCQNnxgfQ/
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
-AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCCQn8zLYS8ad93KTWQeG1c/QL/F8/28
-Jvxa+2VBSAYofjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
-MDMxNzI0MjBaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
-AQEFAASCAQAjl6X1xHlcZTJs8Jad8bYR3wItkJgEYWGxnJ5jbOOrR7tRfBvbt2bl1dnD/PvcnbOA
-e+qL9Q1dNVjOQpxdwdPqEhT/GS5zVNCG/n3jFcNp2sK5pfoa71roUU86bi8NMj+PtRFsQXNUtqwo
-vCeIPfkFcY3v/MSGUwfaDPA0i1gb7jOhhBQviNUu4fEenC5IMn2/ZmfICnJsZLvZAQoPIYKTyt2v
-xtHreyC4xM1JjtqTUi0iVlqFghge/l+mMyRsv4jiCowfUemMZGmfe61jhZJLV+HJR7twWhuPgdI6
-OTvoxUjWmU9B87bPk0hD2xiIT3XL6VqtsG83FfxuHlBQtelN
---0000000000009d847a0636ae26ae--
+> As you know, I do not have the (problematic) Plextor drive, so we go with
+> the quirk option, then we would need to ask Laszlo nicely to retest.
+> (And to provide the PCI device and PCI vendor ID of his NVMe device so we
+> can write a quirk.)
 
