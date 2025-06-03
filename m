@@ -1,242 +1,391 @@
-Return-Path: <linux-pci+bounces-28873-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36413ACCAC9
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:56:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 353C5ACCACF
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:57:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50A597A9017
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 15:55:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2C063A4C26
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 15:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3E22405F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67A3240604;
 	Tue,  3 Jun 2025 15:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xmqt/TEf"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eqbtvJoM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E710823E330;
-	Tue,  3 Jun 2025 15:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E87523F419;
+	Tue,  3 Jun 2025 15:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748966175; cv=none; b=JiC/ggNVOXqnN9APCfHUMTla7HdV6pudMT/tpx0PqqNHKDUSyPo+/519sdkk4+FAG1f5psv/dGkiC5fuzy8DCj8dNG/9Lp3chxX2kLWhcGc9+YWwE4wMdS8PB7qx7BbBWAoy4S3ZplvZ2K2TZg2A/FtKH7nh0XMsvLd0d+vTG8E=
+	t=1748966175; cv=none; b=r9moW7FWZpd6ooAwC7Qxj8EqLQkuCa4XSc58Qo7GRlG6w9tVbgO/ildd1UGDu5dmewWSEygf6PBixjvMr68Z9jHzOMaw5u/CVqWAbmOENFWTuH/2fz7rxnXONbBEBm5jEhosBHWg5wAX76mXOlZJ4Y8rmi3qiLu89AkHydkMRAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748966175; c=relaxed/simple;
-	bh=tLFQ3kVxzUzxXmQTAy1M8ebof8zWsDJS26kUyGumKgk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rnCVK2faEfwUZo8445VRkemnyeZbRCWedy85/lM3PAWS2o54Qw4k5oFb3J9LYM7Llg8XMBqRWbs+KY+mMQcNHdH+/9O26RcNWk2Xv9P5O06Bedr/D0wJrYVPsQNnQsNXbPeT6N9vffD4teMuWRg1vJujG6cI2m1OpyIATX5Pg+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xmqt/TEf; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748966174; x=1780502174;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tLFQ3kVxzUzxXmQTAy1M8ebof8zWsDJS26kUyGumKgk=;
-  b=Xmqt/TEfBPxtjXxEHIEs6akywlo605QtbHVMQcnPmh3AzG7j1Uu9uKwI
-   1vxfnlRvSyeBGmU3ofzCtm9CWE33mR/u79uxTjPKKlGpKhOnAWHLvKobl
-   osivgIr0d67nHqW6qKeWTiWc7jTuITzpW8+I4PNzCaNN0QMdHhhpC5kwl
-   rEDeipJvyYK/D5e+F1yd8y422lLCy/p/9IlyMxw+4gsNuB3SG1ywG3P+b
-   6J3nVT2+FIjkV2bOQyRazyy+c4e6GESnjaW6O4xg6rT9fkadeAJOenpdr
-   6baL1J/pQeU5c9hwBohb2EGf8hVdi/2mz0tSawWn5ZT1Qp8MFvssJUeLP
-   w==;
-X-CSE-ConnectionGUID: h1kIhW0VS9K7BSwTXFRRVA==
-X-CSE-MsgGUID: 4xQe+a8JS7y9o/5WP7FOrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62067022"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="62067022"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 08:56:14 -0700
-X-CSE-ConnectionGUID: 2UTVEQ4QSR6Ao15adFtvCg==
-X-CSE-MsgGUID: vuyu3xn3TBepnkxNsBoUHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="175766136"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.29])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 08:56:07 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 4/4 v3] ACPI: extlog: Trace CPER CXL Protocol Error Section
-Date: Tue,  3 Jun 2025 17:54:39 +0200
-Message-ID: <20250603155536.577493-5-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
+	bh=FSdx0jgVmlGQHfR6McdT0UC6fg/m3xH9/Ng932OThRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LtKx2wvaVWHVyUwla+zqONNq/LoB5ZPGvZwRWJn+IeB7+IUK3RetbslqrvoJhLcVSpU/hR50gLAJNbELOKMLADegkNb///VxZTsdgMwkXl8sIcnGVIn+az23/D5veHUbzLwnb7+EgYU8BWm4ohEgBI5MCdFRh6i8mZltf5aJFf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eqbtvJoM; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=g8w0GihKn9TF4gRbxN/DHUKGmxq5uy9Aj7RG/b62tDY=;
+	b=eqbtvJoMeWIlOgPGP6e8jTUUFS+Cc9pkU0551OA+d8g0dG0oOL4vfEtCpmwB/c
+	3XSAHC6OCrqgsS1aoo6h6wb6Ah6il1Wcs2KcSlcubAl9FvriPvragVdZjI6z+xsU
+	ZiD4SGrhkvkFEBD64lxoNdr8KISNYGo+JaM6a8eL7o5XQ=
+Received: from [192.168.71.94] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgD3Hz_vGj9o3hriBA--.18789S2;
+	Tue, 03 Jun 2025 23:55:28 +0800 (CST)
+Message-ID: <62b35061-ca77-40ce-b10b-709dd862285e@163.com>
+Date: Tue, 3 Jun 2025 23:55:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 3/6] PCI: Refactor capability search into common
+ macros
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250514161258.93844-1-18255117159@163.com>
+ <20250514161258.93844-4-18255117159@163.com>
+ <cb70dfc1-d576-110b-66f2-173e9bdf86dd@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <cb70dfc1-d576-110b-66f2-173e9bdf86dd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgD3Hz_vGj9o3hriBA--.18789S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3WFyUWF4xtr1UXrW8JFyrJFb_yoWfCFW5pr
+	y5A3WayrWUJF12gwnFqa1Uta4aqan7JFWxurW7Gwn8XFyqkFn7KFyFkr1agFy2yrZ7uF1x
+	Xan0qF93C3Z0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgdho2g-EXSq6AABsO
 
-When Firmware First is enabled, BIOS handles errors first and then it makes
-them available to the kernel via the Common Platform Error Record (CPER)
-sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one of
-two similar paths, either ELOG or GHES. The errors managed by ELOG are
-signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
 
-Currently, ELOG and GHES show some inconsistencies in how they report to
-userspace via trace events.
 
-Therefore, make the two mentioned paths act similarly by tracing the CPER
-CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
+On 2025/6/3 17:38, Ilpo Järvinen wrote:
+> On Thu, 15 May 2025, Hans Zhang wrote:
+> 
+>> The PCI Capability search functionality is duplicated across the PCI core
+>> and several controller drivers. The core's current implementation requires
+>> fully initialized PCI device and bus structures, which prevents controller
+>> drivers from using it during early initialization phases before these
+>> structures are available.
+>>
+>> Move the Capability search logic into a header-based macro that accepts a
+>> config space accessor function as an argument. This enables controller
+>> drivers to perform Capability discovery using their early access
+>> mechanisms prior to full device initialization while sharing the
+>> Capability search code.
+>>
+>> Convert the existing PCI core Capability search implementation to use this
+>> new macro. Controller drivers can later use the same macros with their
+>> early access mechanisms while maintaining the existing protection against
+>> infinite loops through preserved TTL checks.
+>>
+>> The ttl parameter was originally an additional safeguard to prevent
+>> infinite loops in corrupted config space.  However, the
+>> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
+> 
+> PCI_FIND_NEXT_CAP_TTL()
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/acpi_extlog.c | 64 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/ras.c     |  6 ++++
- include/cxl/event.h        |  2 ++
- 3 files changed, 72 insertions(+)
+Dear Ilpo,
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index b2928ff297eda..de4f617f32d49 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -12,6 +12,7 @@
- #include <linux/ratelimit.h>
- #include <linux/edac.h>
- #include <linux/ras.h>
-+#include <cxl/event.h>
- #include <acpi/ghes.h>
- #include <asm/cpu.h>
- #include <asm/mce.h>
-@@ -160,6 +161,62 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 	pci_dev_put(pdev);
- }
- 
-+static void
-+extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-+				int severity)
-+{
-+#ifdef CONFIG_ACPI_APEI_PCIEAER
-+	struct cxl_cper_prot_err_work_data wd;
-+	u8 *dvsec_start, *cap_start;
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-+		pr_err_ratelimited("CXL CPER invalid agent type\n");
-+		return;
-+	}
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-+		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-+		return;
-+	}
-+
-+	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-+		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-+				   prot_err->err_len);
-+		return;
-+	}
-+
-+	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
-+	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
-+	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-+		pr_warn(FW_WARN "CXL CPER no device serial number\n");
-+
-+	switch (prot_err->agent_type) {
-+	case RCD:
-+	case DEVICE:
-+	case LD:
-+	case FMLD:
-+	case RP:
-+	case DSP:
-+	case USP:
-+		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-+
-+		dvsec_start = (u8 *)(prot_err + 1);
-+		cap_start = dvsec_start + prot_err->dvsec_len;
-+
-+		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-+		wd.severity = cper_severity_to_aer(severity);
-+		break;
-+	default:
-+		pr_err_ratelimited("CXL CPER reserved agent type: %d\n",
-+				   prot_err->agent_type);
-+		return;
-+	}
-+
-+	cxl_cper_ras_handle_prot_err(&wd);
-+
-+#endif
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -211,6 +268,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err =
-+				acpi_hest_get_payload(gdata);
-+
-+			extlog_cxl_cper_handle_prot_err(prot_err,
-+							gdata->error_severity);
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-@@ -378,3 +441,4 @@ module_exit(extlog_exit);
- MODULE_AUTHOR("Chen, Gong <gong.chen@intel.com>");
- MODULE_DESCRIPTION("Extended MCA Error Log Driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("CXL");
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index 485a831695c70..56db290c88d35 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -98,6 +98,12 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- 		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
- }
- 
-+void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd)
-+{
-+	cxl_cper_handle_prot_err(wd);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cper_ras_handle_prot_err, "CXL");
-+
- static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- {
- 	struct cxl_cper_prot_err_work_data wd;
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index f9ae1796da85f..aef906e260330 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -285,4 +285,6 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
- }
- #endif
- 
-+void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-+
- #endif /* _LINUX_CXL_EVENT_H */
--- 
-2.49.0
+Will change.
+
+> 
+>> Removing redundant ttl handling simplifies the interface while maintaining
+>> the safety guarantee. This aligns with the macro's design intent of
+>> encapsulating TTL management.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>> Changes since v11:
+>> - Add #include <linux/bitfield.h>, solve the compilation warnings caused by the subsequent patch calls.
+>>
+>> Changes since v10:
+>> - Remove #include <uapi/linux/pci_regs.h>.
+>> - The patch commit message were modified.
+>>
+>> Changes since v9:
+>> - None
+>>
+>> Changes since v8:
+>> - The patch commit message were modified.
+>> ---
+>>   drivers/pci/pci.c | 69 +++++--------------------------------
+>>   drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 95 insertions(+), 60 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 27d2adb18a30..271d922abdcc 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -9,7 +9,6 @@
+>>    */
+>>   
+>>   #include <linux/acpi.h>
+>> -#include <linux/align.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/dmi.h>
+>> @@ -425,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
+>>   }
+>>   
+>>   static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>> -				  u8 pos, int cap, int *ttl)
+>> +				  u8 pos, int cap)
+>>   {
+>> -	u8 id;
+>> -	u16 ent;
+>> -
+>> -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+>> -
+>> -	while ((*ttl)--) {
+>> -		if (pos < PCI_STD_HEADER_SIZEOF)
+>> -			break;
+>> -		pos = ALIGN_DOWN(pos, 4);
+>> -		pci_bus_read_config_word(bus, devfn, pos, &ent);
+>> -
+>> -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+>> -		if (id == 0xff)
+>> -			break;
+>> -		if (id == cap)
+>> -			return pos;
+>> -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+>> -	}
+>> -	return 0;
+>> +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
+>> +				     devfn);
+>>   }
+
+Will delete __pci_find_next_cap_ttl function.
+
+>>   
+>>   static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+>>   			      u8 pos, int cap)
+>>   {
+>> -	int ttl = PCI_FIND_CAP_TTL;
+>> -
+>> -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+>> +	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+>>   }
+> 
+> Please just get rid of the ttl variant, use PCI_FIND_NEXT_CAP_TTL()
+> directly here, and adjust the other callers of the ttl variable to call
+> this one instead.
+> 
+
+Will change.
+
+>>   
+>>   u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+>> @@ -554,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+>>    */
+>>   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+>>   {
+>> -	u32 header;
+>> -	int ttl;
+>> -	u16 pos = PCI_CFG_SPACE_SIZE;
+>> -
+>> -	/* minimum 8 bytes per capability */
+>> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+>> -
+>>   	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+>>   		return 0;
+>>   
+>> -	if (start)
+>> -		pos = start;
+>> -
+>> -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+>> -		return 0;
+>> -
+>> -	/*
+>> -	 * If we have no capabilities, this is indicated by cap ID,
+>> -	 * cap version and next pointer all being 0.
+>> -	 */
+>> -	if (header == 0)
+>> -		return 0;
+>> -
+>> -	while (ttl-- > 0) {
+>> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+>> -			return pos;
+>> -
+>> -		pos = PCI_EXT_CAP_NEXT(header);
+>> -		if (pos < PCI_CFG_SPACE_SIZE)
+>> -			break;
+>> -
+>> -		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+>> -			break;
+>> -	}
+>> -
+>> -	return 0;
+>> +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
+>> +					    dev->bus, dev->devfn);
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>>   
+>> @@ -649,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>>   
+>>   static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   {
+>> -	int rc, ttl = PCI_FIND_CAP_TTL;
+>> +	int rc;
+>>   	u8 cap, mask;
+>>   
+>>   	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+>> @@ -658,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   		mask = HT_5BIT_CAP_MASK;
+>>   
+>>   	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+
+Will use PCI_FIND_NEXT_CAP_TTL().
+
+>> -				      PCI_CAP_ID_HT, &ttl);
+>> +				      PCI_CAP_ID_HT);
+>>   	while (pos) {
+>>   		rc = pci_read_config_byte(dev, pos + 3, &cap);
+>>   		if (rc != PCIBIOS_SUCCESSFUL)
+>> @@ -669,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   
+>>   		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+
+Will use PCI_FIND_NEXT_CAP_TTL().
+
+>>   					      pos + PCI_CAP_LIST_NEXT,
+>> -					      PCI_CAP_ID_HT, &ttl);
+>> +					      PCI_CAP_ID_HT);
+>>   	}
+>>   
+>>   	return 0;
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 5e1477d6e254..f9cf45026e6e 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -2,6 +2,8 @@
+>>   #ifndef DRIVERS_PCI_H
+>>   #define DRIVERS_PCI_H
+>>   
+>> +#include <linux/align.h>
+>> +#include <linux/bitfield.h>
+>>   #include <linux/pci.h>
+>>   
+>>   struct pcie_tlp_log;
+>> @@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>>   int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>>   			u32 *val);
+>>   
+>> +/* Standard Capability finder */
+>> +/**
+>> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+>> + * @read_cfg: Function pointer for reading PCI config space
+>> + * @start: Starting position to begin search
+>> + * @cap: Capability ID to find
+>> + * @args: Arguments to pass to read_cfg function
+>> + *
+>> + * Iterates through the capability list in PCI config space to find
+>> + * the specified capability. Implements TTL (time-to-live) protection
+> 
+> to find @cap.
+
+Will change.
+
+> 
+>> + * against infinite loops.
+>> + *
+>> + * Returns: Position of the capability if found, 0 otherwise.
+>> + */
+>> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+>> +({									\
+>> +	int __ttl = PCI_FIND_CAP_TTL;					\
+>> +	u8 __id, __found_pos = 0;					\
+>> +	u8 __pos = (start);						\
+>> +	u16 __ent;							\
+>> +									\
+>> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+>> +									\
+>> +	while (__ttl--) {						\
+>> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+>> +			break;						\
+>> +									\
+>> +		__pos = ALIGN_DOWN(__pos, 4);				\
+>> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+>> +									\
+>> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+>> +		if (__id == 0xff)					\
+>> +			break;						\
+>> +									\
+>> +		if (__id == (cap)) {					\
+>> +			__found_pos = __pos;				\
+>> +			break;						\
+>> +		}							\
+>> +									\
+>> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+>> +	}								\
+>> +	__found_pos;							\
+>> +})
+>> +
+>> +/* Extended Capability finder */
+>> +/**
+>> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+>> + * @read_cfg: Function pointer for reading PCI config space
+>> + * @start: Starting position to begin search (0 for initial search)
+>> + * @cap: Extended capability ID to find
+>> + * @args: Arguments to pass to read_cfg function
+>> + *
+>> + * Searches the extended capability space in PCI config registers
+>> + * for the specified capability. Implements TTL protection against
+> 
+> for @cap.
+
+Will change.
+
+Best regards,
+Hans
+
+> 
+>> + * infinite loops using a calculated maximum search count.
+>> + *
+>> + * Returns: Position of the capability if found, 0 otherwise.
+>> + */
+>> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
+>> +({										\
+>> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
+>> +	u16 __found_pos = 0;							\
+>> +	int __ttl, __ret;							\
+>> +	u32 __header;								\
+>> +										\
+>> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
+>> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
+>> +		__ret = read_cfg(args, __pos, 4, &__header);			\
+>> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
+>> +			break;							\
+>> +										\
+>> +		if (__header == 0)						\
+>> +			break;							\
+>> +										\
+>> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
+>> +			__found_pos = __pos;					\
+>> +			break;							\
+>> +		}								\
+>> +										\
+>> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
+>> +	}									\
+>> +	__found_pos;								\
+>> +})
+>> +
+>>   /* Functions internal to the PCI core code */
+>>   
+>>   #ifdef CONFIG_DMI
+>>
+> 
 
 
