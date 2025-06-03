@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-28846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B87C5ACC30C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 11:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E2E3ACC346
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 11:38:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 825E71629E0
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 09:31:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDB4A16BC81
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 09:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E10F25D213;
-	Tue,  3 Jun 2025 09:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77E627262D;
+	Tue,  3 Jun 2025 09:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSzE5wEI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KuUcRoka"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F24C1F4289;
-	Tue,  3 Jun 2025 09:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A8728150E;
+	Tue,  3 Jun 2025 09:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748943054; cv=none; b=ZRhdWLm2mPhEdxnGZl5p/FwFINMmN5qkTw0NLFwmt6+TwuYiLKgcm+0rDqnXidF4oUY6hFxfWkMpSXjq8wBAGoYm/q8F5JDJmOXzc1lvH8dO/Ud5J065mfix7g3rjJuS4wBSjJM8sy/6zhQXEISM80XGcZHQFPyp8gFb2wB0RDo=
+	t=1748943518; cv=none; b=Krs/ehSMdPkKLdG80hBLeUc9swttnknW3OJkHcrqIpiJ8D4ROwSKdFdYwUukUXnlTG5HWevWz+Jthh2xJtikQllCWA+P7rE4Nx7bvvKKVh5Y4SNettBhAPY4VoH+gwPxE2KGpriC8MZY6IAg0IGHW4dfX19VyNckIfJ8QD+sJhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748943054; c=relaxed/simple;
-	bh=/1i9ZYWp3klV4pFiYytXoQo5aHEEJ7NwFK1134MFvqU=;
+	s=arc-20240116; t=1748943518; c=relaxed/simple;
+	bh=hw3MRVfKLIS2l/PXiDtZ7wSrs1MFRdIk2FoiKj7CJmg=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KkFDnhypZCg2bk/rseo156BjvLE1F31ppNPJrotSig9x49wGQEi7gNWQ9a+ldWVwA2Iczg5dWXfQwcn1UfDJXRw1911Gs4kCcC34PP/syxa1a1xYPWloAKCpeig4q0SW8aSXuEz93HdINZk8lm+medXEKohRfv31GHzj+d3bd3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSzE5wEI; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=jq3UjCCHmKjuzWnBqaLIuEBZxem/Q+6ousdzMlBnfZiFOFznKYiFGKC+6bYS+wTY8I68hkb9lroWHbF2DF1cyJU4XBu9UzU56qd2ZyBGRqaFXed8DRzy97giep31qlcMkoY5e+Hfkk7WeDYT5o4pFLdjVEx7UxXv2lVhk11dZ2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KuUcRoka; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748943053; x=1780479053;
+  t=1748943517; x=1780479517;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/1i9ZYWp3klV4pFiYytXoQo5aHEEJ7NwFK1134MFvqU=;
-  b=PSzE5wEIQk7/H9Xlve7qFHQSFHBxKMKPRe8ilNTi2WD6Al2qZqm27tSK
-   5Raom60wcpmhG6AC/VCky9C9JiyFmU/FPIV2iwUJUgTsM7vlAF1aiTOqG
-   4b2He6t1MDJWr9wn32SedwKF82Auw93rANAQR6NwoEOaDMn3dsdN+duUM
-   rZce5EJGXtObOodNksKFqif50bAHyRpHDlvRa8PLdIipNbn7LNSWkcN4+
-   KniZU2a1Pv/ypwXqjw27KqixjAtp6DmpGwuhuM12mtA5M4lRqWrbdAk1c
-   0Fdqok76HKa4+wwL7KOCtoGIgXDDNTYzPtGdTL+ml/f7UsKpRQPRSV44F
-   A==;
-X-CSE-ConnectionGUID: 7WqsUtMNQAeYkvAaSqcGJA==
-X-CSE-MsgGUID: cjhf9wbrRBKU0phzKd8QXw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="61635809"
+  bh=hw3MRVfKLIS2l/PXiDtZ7wSrs1MFRdIk2FoiKj7CJmg=;
+  b=KuUcRokazUv3h7NqXd337KjMIAxdPKAUZMa+LFlQ4C2rCMilWU5tIoh0
+   OCmcAYwesox5owxjpBHKJNrZ+V4dHmmBHOTwGi7WtUykPqKcJR5skGqBb
+   1jpHjzOLpWyDxz+gPjVyXqTI//ADX7xM5wao+6hvt5itO3//zSV8RRvwc
+   Pgnh2GyM0Tztk5Mxwe6FiPlpb2dxLBwOoG0gP7W4ph44LSX56LsoCY8vr
+   ahDMO8+qAhyw+KB/1hgYk8qANsPERhsxGx+SBSW1P8l2nbfgGS3hBYhNc
+   7Q7wnBc4mSz0kXf4d7WBrzHSMsdAuFnm9zZ/sjV6CCA7Q5h8GdWx7CJNh
+   g==;
+X-CSE-ConnectionGUID: nm1e6oHzQ7qS3TocnsIALQ==
+X-CSE-MsgGUID: 1t4t7MRFSCGpfH2LKuAJiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68528818"
 X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="61635809"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:30:53 -0700
-X-CSE-ConnectionGUID: dsjSgBcWTKq25N+n8Qbvfw==
-X-CSE-MsgGUID: KPzy5toeTCKIcMQy2nGD0A==
+   d="scan'208";a="68528818"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:38:35 -0700
+X-CSE-ConnectionGUID: V4xPetfKSA6ncuCBv3q+ag==
+X-CSE-MsgGUID: BnXyzXw5RB6bqxCKeWAd7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="175668150"
+   d="scan'208";a="144689312"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:30:20 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:38:31 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 12:30:16 +0300 (EEST)
+Date: Tue, 3 Jun 2025 12:38:27 +0300 (EEST)
 To: Hans Zhang <18255117159@163.com>
 cc: lpieralisi@kernel.org, bhelgaas@google.com, 
     manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
     robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 2/6] PCI: Clean up __pci_find_next_cap_ttl()
- readability
-In-Reply-To: <20250514161258.93844-3-18255117159@163.com>
-Message-ID: <987609ec-7a1b-057c-1e3b-8bf564965036@linux.intel.com>
-References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-3-18255117159@163.com>
+Subject: Re: [PATCH v12 3/6] PCI: Refactor capability search into common
+ macros
+In-Reply-To: <20250514161258.93844-4-18255117159@163.com>
+Message-ID: <cb70dfc1-d576-110b-66f2-173e9bdf86dd@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,90 +80,291 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 15 May 2025, Hans Zhang wrote:
 
-> Refactor the __pci_find_next_cap_ttl() to improve code clarity:
-> - Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
-> - Use ALIGN_DOWN() for position alignment instead of manual bitmask.
-> - Extract PCI capability fields via FIELD_GET() with standardized masks.
-> - Add necessary headers (linux/align.h).
+> The PCI Capability search functionality is duplicated across the PCI core
+> and several controller drivers. The core's current implementation requires
+> fully initialized PCI device and bus structures, which prevents controller
+> drivers from using it during early initialization phases before these
+> structures are available.
 > 
-> The changes are purely non-functional cleanups, ensuring behavior remains
-> identical to the original implementation.
+> Move the Capability search logic into a header-based macro that accepts a
+> config space accessor function as an argument. This enables controller
+> drivers to perform Capability discovery using their early access
+> mechanisms prior to full device initialization while sharing the
+> Capability search code.
+> 
+> Convert the existing PCI core Capability search implementation to use this
+> new macro. Controller drivers can later use the same macros with their
+> early access mechanisms while maintaining the existing protection against
+> infinite loops through preserved TTL checks.
+> 
+> The ttl parameter was originally an additional safeguard to prevent
+> infinite loops in corrupted config space.  However, the
+> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
 
-If you want a simpler wording for this, this is often used:
+PCI_FIND_NEXT_CAP_TTL()
 
-No functional changes intended.
-
+> Removing redundant ttl handling simplifies the interface while maintaining
+> the safety guarantee. This aligns with the macro's design intent of
+> encapsulating TTL management.
 > 
 > Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
 > Changes since v11:
-> - None
+> - Add #include <linux/bitfield.h>, solve the compilation warnings caused by the subsequent patch calls.
 > 
 > Changes since v10:
-> - Remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+> - Remove #include <uapi/linux/pci_regs.h>.
+> - The patch commit message were modified.
 > 
 > Changes since v9:
 > - None
 > 
 > Changes since v8:
-> - Split into patch 1/6, patch 2/6.
-> - The
+> - The patch commit message were modified.
 > ---
->  drivers/pci/pci.c             | 9 +++++----
->  include/uapi/linux/pci_regs.h | 2 ++
->  2 files changed, 7 insertions(+), 4 deletions(-)
+>  drivers/pci/pci.c | 69 +++++--------------------------------
+>  drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 95 insertions(+), 60 deletions(-)
 > 
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0ce..27d2adb18a30 100644
+> index 27d2adb18a30..271d922abdcc 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -9,6 +9,7 @@
+> @@ -9,7 +9,6 @@
 >   */
 >  
 >  #include <linux/acpi.h>
-> +#include <linux/align.h>
+> -#include <linux/align.h>
 >  #include <linux/kernel.h>
 >  #include <linux/delay.h>
 >  #include <linux/dmi.h>
-> @@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
->  	pci_bus_read_config_byte(bus, devfn, pos, &pos);
->  
->  	while ((*ttl)--) {
-> -		if (pos < 0x40)
-> +		if (pos < PCI_STD_HEADER_SIZEOF)
->  			break;
-> -		pos &= ~3;
-> +		pos = ALIGN_DOWN(pos, 4);
->  		pci_bus_read_config_word(bus, devfn, pos, &ent);
->  
-> -		id = ent & 0xff;
-> +		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
->  		if (id == 0xff)
->  			break;
->  		if (id == cap)
->  			return pos;
-> -		pos = (ent >> 8);
-> +		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
->  	}
->  	return 0;
+> @@ -425,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
 >  }
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index ba326710f9c8..35051f9ac16a 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -206,6 +206,8 @@
->  /* 0x48-0x7f reserved */
 >  
->  /* Capability lists */
-> +#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
-> +#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
+>  static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+> -				  u8 pos, int cap, int *ttl)
+> +				  u8 pos, int cap)
+>  {
+> -	u8 id;
+> -	u16 ent;
+> -
+> -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> -
+> -	while ((*ttl)--) {
+> -		if (pos < PCI_STD_HEADER_SIZEOF)
+> -			break;
+> -		pos = ALIGN_DOWN(pos, 4);
+> -		pci_bus_read_config_word(bus, devfn, pos, &ent);
+> -
+> -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+> -		if (id == 0xff)
+> -			break;
+> -		if (id == cap)
+> -			return pos;
+> -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+> -	}
+> -	return 0;
+> +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
+> +				     devfn);
+>  }
 >  
->  #define PCI_CAP_LIST_ID		0	/* Capability ID */
+>  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+>  			      u8 pos, int cap)
+>  {
+> -	int ttl = PCI_FIND_CAP_TTL;
+> -
+> -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+> +	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+>  }
 
-I'd add those here with the extra space before name and add empty line in 
-between them and the capability id list.
+Please just get rid of the ttl variant, use PCI_FIND_NEXT_CAP_TTL() 
+directly here, and adjust the other callers of the ttl variable to call 
+this one instead.
 
->  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+>  
+>  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+> @@ -554,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+>   */
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+>  {
+> -	u32 header;
+> -	int ttl;
+> -	u16 pos = PCI_CFG_SPACE_SIZE;
+> -
+> -	/* minimum 8 bytes per capability */
+> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> -
+>  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+>  		return 0;
+>  
+> -	if (start)
+> -		pos = start;
+> -
+> -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+> -		return 0;
+> -
+> -	/*
+> -	 * If we have no capabilities, this is indicated by cap ID,
+> -	 * cap version and next pointer all being 0.
+> -	 */
+> -	if (header == 0)
+> -		return 0;
+> -
+> -	while (ttl-- > 0) {
+> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> -			return pos;
+> -
+> -		pos = PCI_EXT_CAP_NEXT(header);
+> -		if (pos < PCI_CFG_SPACE_SIZE)
+> -			break;
+> -
+> -		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+> -			break;
+> -	}
+> -
+> -	return 0;
+> +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
+> +					    dev->bus, dev->devfn);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>  
+> @@ -649,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>  
+>  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  {
+> -	int rc, ttl = PCI_FIND_CAP_TTL;
+> +	int rc;
+>  	u8 cap, mask;
+>  
+>  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+> @@ -658,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  		mask = HT_5BIT_CAP_MASK;
+>  
+>  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> -				      PCI_CAP_ID_HT, &ttl);
+> +				      PCI_CAP_ID_HT);
+>  	while (pos) {
+>  		rc = pci_read_config_byte(dev, pos + 3, &cap);
+>  		if (rc != PCIBIOS_SUCCESSFUL)
+> @@ -669,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>  
+>  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+>  					      pos + PCI_CAP_LIST_NEXT,
+> -					      PCI_CAP_ID_HT, &ttl);
+> +					      PCI_CAP_ID_HT);
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5e1477d6e254..f9cf45026e6e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -2,6 +2,8 @@
+>  #ifndef DRIVERS_PCI_H
+>  #define DRIVERS_PCI_H
+>  
+> +#include <linux/align.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/pci.h>
+>  
+>  struct pcie_tlp_log;
+> @@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>  int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>  			u32 *val);
+>  
+> +/* Standard Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search
+> + * @cap: Capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Iterates through the capability list in PCI config space to find
+> + * the specified capability. Implements TTL (time-to-live) protection
+
+to find @cap.
+
+> + * against infinite loops.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+> +({									\
+> +	int __ttl = PCI_FIND_CAP_TTL;					\
+> +	u8 __id, __found_pos = 0;					\
+> +	u8 __pos = (start);						\
+> +	u16 __ent;							\
+> +									\
+> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+> +									\
+> +	while (__ttl--) {						\
+> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+> +			break;						\
+> +									\
+> +		__pos = ALIGN_DOWN(__pos, 4);				\
+> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+> +									\
+> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+> +		if (__id == 0xff)					\
+> +			break;						\
+> +									\
+> +		if (__id == (cap)) {					\
+> +			__found_pos = __pos;				\
+> +			break;						\
+> +		}							\
+> +									\
+> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+> +	}								\
+> +	__found_pos;							\
+> +})
+> +
+> +/* Extended Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search (0 for initial search)
+> + * @cap: Extended capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Searches the extended capability space in PCI config registers
+> + * for the specified capability. Implements TTL protection against
+
+for @cap.
+
+> + * infinite loops using a calculated maximum search count.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
+> +({										\
+> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
+> +	u16 __found_pos = 0;							\
+> +	int __ttl, __ret;							\
+> +	u32 __header;								\
+> +										\
+> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
+> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
+> +		__ret = read_cfg(args, __pos, 4, &__header);			\
+> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
+> +			break;							\
+> +										\
+> +		if (__header == 0)						\
+> +			break;							\
+> +										\
+> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
+> +			__found_pos = __pos;					\
+> +			break;							\
+> +		}								\
+> +										\
+> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
+> +	}									\
+> +	__found_pos;								\
+> +})
+> +
+>  /* Functions internal to the PCI core code */
+>  
+>  #ifdef CONFIG_DMI
 > 
 
 -- 
