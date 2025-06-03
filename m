@@ -1,128 +1,190 @@
-Return-Path: <linux-pci+bounces-28911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A08ACCE3A
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 22:32:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65EDDACCE81
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 22:53:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EDEE73A4954
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 20:32:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54A203A773E
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 20:52:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1DF1BA34;
-	Tue,  3 Jun 2025 20:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1522E22539F;
+	Tue,  3 Jun 2025 20:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XG+z2k9q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P0vL7EPH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDC0AD23
-	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 20:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5794821C16D;
+	Tue,  3 Jun 2025 20:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748982762; cv=none; b=sycdfeZl1Akrmn7mOGQa5zr3E0IXzNq0WYGIr7qcnkcHVRru+JI/0+AwBCXL2CCc0HwkE+YyfF0X+7QiRqS2tuDV3nHe/TnRzJGx0GdlJhB0SWJvRMyXtrzcxYqhAIlftxeyHj5QAfqJwXy+KQuQUxVGVX93vLqmNqBSX743iBo=
+	t=1748983884; cv=none; b=hR3T79QXOIT99sshQkOY03Lc6Mv3o9Ey4JS3Bp6lLpH/NoLvmyDul0sOsc+Nbb4wYiODdzIJuRkddC9AVl5k7UzDSRAoHYnaQ4sY+DnhH28zfikl9pwPVSpYyytT2qOKFQtzQcECXK1QI5T7kj1JrWX5USHO+ogM5qAaj3mqrfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748982762; c=relaxed/simple;
-	bh=X5TxqNBZXZo4clDgi67spW5gHlzYYn5IT5bd5nTI3U0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NfYURm9hHYmnjJSYGYDuu5CDF1TF0i3vg+k79pHtL0Sr3F3v7i+fwb5qNMSf3xQOegJ1qnoHk2j0XEwxGhm7yaCEik+te2cEKO28Qbb+od3sAx320b6ufOahk06m9E4risFxMLL5qn2IOdJ8i9VGLrdaIKLtQJqGaST8pGX65Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XG+z2k9q; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748983884; c=relaxed/simple;
+	bh=o4zOLvZFW8pO4zLwuxYUFfk4IAFaKCqbEJ5gNrQFVOg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q5TEiN/6pENiawsSglAXRp4znGbXsmr6HgnMPmnPlvLiXnc2Fz6D7wKqNA5ZuKuzdt86w93CZ/eDdnI3uEaoKjWOApdcD+jI+BfdjxkCp3O3fr2/+7NZ2iIyvgmNl317vPjwEKqjGPPmjUqdUUEgbAApNHDANuE94ovHOiTzaqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P0vL7EPH; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748982762; x=1780518762;
-  h=date:from:to:cc:subject:message-id;
-  bh=X5TxqNBZXZo4clDgi67spW5gHlzYYn5IT5bd5nTI3U0=;
-  b=XG+z2k9qlzrLOjuZ/CtSBHn8KnUNpKy6v9j4lROS5op24PM97+VZBTub
-   mxeGFKJP4CnHS9sFQsgpZk04B06JbgqmZUnBc6/4ThA5b5qIObTCj3zAM
-   I6kphYvyNU6Qv2V8IYvTCimllEhJkBl53syCkUKzBUl/rEqYD16Y7eMGn
-   Cy757tpT5hN9YkkXimL4ekd6HsZP56lxPKNGwk4srClbBMB74MTssvRDB
-   dAg8WHT5zg+hGRVQjPwJt7FEsZ8viPSkapOl4oBr4xmmRc9sIPAzHEttG
-   QRBLyHwYVFwj//NSus/tfzF2HBlM26MnKst7ZRoSixTQu21SJnJTDqaQ0
-   w==;
-X-CSE-ConnectionGUID: sb5qGISARU+ze38ZfJJUpQ==
-X-CSE-MsgGUID: ahE7ITFHT5eTfhxwzxSwNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54704959"
+  t=1748983882; x=1780519882;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=o4zOLvZFW8pO4zLwuxYUFfk4IAFaKCqbEJ5gNrQFVOg=;
+  b=P0vL7EPHuDiqV0+XpZFrTN28HFBGtrV8NqT1FN+9a/q52H1cn/yv6k6w
+   buELJecZD3C9nttH0QG7aUmFBR5Z+CCaDJRalv/IOoJU550tfektYp2KT
+   UIYj1eNbkGnJLeus3QQHIrVux7qlwHNx+50LgBJ1omD6ay389VzGBvDTH
+   QcZLko/wzF9/z+WSU+bigGDzAcnEyNWP8XSIAcjZhehfyv1JRdyeol5Jc
+   QgEZ3+cHZg093GH7Q/DaShfM6MXnC4MRqygAtHAn32jUfqEHlPhsiSqDX
+   zEr82rgePoo/KeZ0U33Zo0BSBtmRi+MbZTgbfk0sF6B2mAvsiQ36U6XGY
+   A==;
+X-CSE-ConnectionGUID: Z+CpDmTXQLyaH/ID6G3HwA==
+X-CSE-MsgGUID: d/YSKdpnTQ+aIj0Knww0mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="53668521"
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="54704959"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:32:41 -0700
-X-CSE-ConnectionGUID: Rusz74J8QeKsec6qKUOKnQ==
-X-CSE-MsgGUID: wcA2pJeCTeet3qfbRTS4yw==
+   d="scan'208";a="53668521"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:51:21 -0700
+X-CSE-ConnectionGUID: AGrOcP48Te6x84iR91XP2w==
+X-CSE-MsgGUID: wCO6PN/LQnmJUW2Bw83T/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="148803810"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 03 Jun 2025 13:32:40 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uMYJJ-0002i9-1Z;
-	Tue, 03 Jun 2025 20:32:37 +0000
-Date: Wed, 04 Jun 2025 04:32:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 8fb7bccf507dcf6f5bc03bb7a7533a68c89785ff
-Message-ID: <202506040410.97In0ZIQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="175839494"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:51:21 -0700
+Received: from [10.124.221.22] (unknown [10.124.221.22])
+	by linux.intel.com (Postfix) with ESMTP id B7E6620B58A2;
+	Tue,  3 Jun 2025 13:51:19 -0700 (PDT)
+Message-ID: <220323bb-ebe1-41f8-aca2-53bb9885ea0a@linux.intel.com>
+Date: Tue, 3 Jun 2025 13:51:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4 v3] PCI/AER: Modify pci_print_aer() to take log level
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
+ <20250603155536.577493-3-fabio.m.de.francesco@linux.intel.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603155536.577493-3-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 8fb7bccf507dcf6f5bc03bb7a7533a68c89785ff  Merge branch 'pci/misc'
 
-elapsed time: 1025m
+On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
+> Modify pci_print_aer() to take a printk() log level in preparation of a
+> patch that logs PCIe Components and Link errors from ELOG.
 
-configs tested: 35
-configs skipped: 1
+I think you need to rebase this patch on top of latest PCI changes. A patch to
+consolidate the AER error logging is pushed for v6.16 merge.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> ---
+>   drivers/cxl/core/pci.c |  2 +-
+>   drivers/pci/pcie/aer.c | 16 ++++++++--------
+>   include/linux/aer.h    |  4 ++--
+>   3 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 3b80e9a76ba86..ad8d7939c2e1c 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -885,7 +885,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>   	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
+>   		return;
+>   
+> -	pci_print_aer(pdev, severity, &aer_regs);
+> +	pci_print_aer(KERN_ERR, pdev, severity, &aer_regs);
+>   
+>   	if (severity == AER_CORRECTABLE)
+>   		cxl_handle_rdport_cor_ras(cxlds, dport);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628a..d0ebf7c15afa9 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -760,7 +760,7 @@ int cper_severity_to_aer(int cper_severity)
+>   EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>   #endif
+>   
+> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+>   		   struct aer_capability_regs *aer)
+>   {
+>   	int layer, agent, tlp_header_valid = 0;
+> @@ -785,14 +785,15 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	info.mask = mask;
+>   	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>   
+> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> +	pci_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
+> +		   status, mask);
+>   	__aer_print_error(dev, &info);
+> -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+> -		aer_error_layer[layer], aer_agent_string[agent]);
+> +	pci_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
+> +		   aer_error_layer[layer], aer_agent_string[agent]);
+>   
+>   	if (aer_severity != AER_CORRECTABLE)
+> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
+> -			aer->uncor_severity);
+> +		pci_printk(level, dev, "aer_uncor_severity: 0x%08x\n",
+> +			   aer->uncor_severity);
+>   
+>   	if (tlp_header_valid)
+>   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> @@ -1146,8 +1147,7 @@ static void aer_recover_work_func(struct work_struct *work)
+>   			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+>   			continue;
+>   		}
+> -		pci_print_aer(pdev, entry.severity, entry.regs);
+> -
+> +		pci_print_aer(KERN_ERR, pdev, entry.severity, entry.regs);
+>   		/*
+>   		 * Memory for aer_capability_regs(entry.regs) is being
+>   		 * allocated from the ghes_estatus_pool to protect it from
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 02940be66324e..45d0fb2e2e759 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -64,8 +64,8 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>   #endif
+>   
+> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -		    struct aer_capability_regs *aer);
+> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+> +		   struct aer_capability_regs *aer);
+>   int cper_severity_to_aer(int cper_severity);
+>   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>   		       int severity, struct aer_capability_regs *aer_regs);
 
-tested configs:
-alpha        allyesconfig    gcc-15.1.0
-arc          allmodconfig    gcc-15.1.0
-arc          allyesconfig    gcc-15.1.0
-arm          allmodconfig    gcc-15.1.0
-arm          allyesconfig    gcc-15.1.0
-arm64        allmodconfig    clang-19
-hexagon      allmodconfig    clang-17
-hexagon      allyesconfig    clang-21
-i386         allmodconfig    gcc-12
-i386          allnoconfig    gcc-12
-i386         allyesconfig    gcc-12
-i386            defconfig    clang-20
-loongarch    allmodconfig    gcc-15.1.0
-m68k         allmodconfig    gcc-15.1.0
-m68k         allyesconfig    gcc-15.1.0
-microblaze   allmodconfig    gcc-15.1.0
-microblaze   allyesconfig    gcc-15.1.0
-openrisc     allyesconfig    gcc-15.1.0
-parisc       allmodconfig    gcc-15.1.0
-parisc       allyesconfig    gcc-15.1.0
-powerpc      allmodconfig    gcc-15.1.0
-powerpc      allyesconfig    clang-21
-riscv        allmodconfig    clang-21
-riscv        allyesconfig    clang-16
-s390         allmodconfig    clang-18
-s390         allyesconfig    gcc-15.1.0
-sh           allmodconfig    gcc-15.1.0
-sh           allyesconfig    gcc-15.1.0
-sparc        allmodconfig    gcc-15.1.0
-um           allmodconfig    clang-19
-um           allyesconfig    gcc-12
-x86_64        allnoconfig    clang-20
-x86_64       allyesconfig    clang-20
-x86_64          defconfig    gcc-11
-x86_64      rhel-9.4-rust    clang-18
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
