@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-28865-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28866-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28D94ACCA41
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:33:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDA2AACCA55
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:41:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DE231893934
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 15:33:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E30516C2D0
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 15:41:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2087723C512;
-	Tue,  3 Jun 2025 15:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50A9A1DF258;
+	Tue,  3 Jun 2025 15:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YTiSAETJ"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ee+c2usy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AF81537DA;
-	Tue,  3 Jun 2025 15:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 314D4140E34;
+	Tue,  3 Jun 2025 15:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748964744; cv=none; b=Mgppa724eIALZFrxw3TP6Cdc/u+JIYnyQGiI4gPWa8qauPX8BO7ml27jrm9OeDbA/JfeWkhgydfqwT3Wbrseeuh8ILGovmvf5LLq4EQo/MFgSPxPLqYrzhoVtGmVQYFzFXFsl38c96L+gNBGXDzEwNBzM8ZDsNf2/NWedffvgMs=
+	t=1748965286; cv=none; b=DTpTIeeEc7kGa0CLtFEyIDsblWXDoQpntj5kDZEaT22fQyuAFpmKstkd3q0oD9VY8ygJOwWI3c/dXgIiAcXgJuT1vfIXLYLqbHoIc2uf0jXPJnXFVJUEk0okfisOrKe/LrfQ8F5fj1//dOnQgf3QxUuUx4nQhDCu3YlBZ0vTSS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748964744; c=relaxed/simple;
-	bh=n2G3L/1cppZUNXCPoJuyAcelWsbwiVmnTyGSvW/NvHM=;
+	s=arc-20240116; t=1748965286; c=relaxed/simple;
+	bh=pXZeYSGxUIzQB00Kk+nSuewsBJ1+A8jLycmkwTd//ss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aTss5P3dMJAJj39BfUpaodSvSeqAssIJ9U/uFR18fCq9ZnaAYuzxxyjzPJOdGoN5KjUsTBYQHG+/hWE3b7lo4pY4+beLjm7l8rY3ov8gxupXXXShsW0x8LE1TJQcLu2No5I3KKoXlqX5ay5tHeFs3eudeFDVPU1Zo+cJ8ibnV1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YTiSAETJ; arc=none smtp.client-ip=117.135.210.4
+	 In-Reply-To:Content-Type; b=Lu0ULC3iixsmvsu5k+iMKjI9NARWLQzFPboFCmnd0UwCGKTPJS67eIqmJiEyITX04GQ4JydMFA430TCnPGlugLKH84Znk2qg/kadTPSKpnn5ca/kh484DV+GrywK9ak+jv9s0nkxCXjX8AUUk+R6Y5JrSp5LZWcFquS9RPzsuCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ee+c2usy; arc=none smtp.client-ip=220.197.31.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=hURbiKG9dQjvo1z7louEbs80FaEACCtaK1pYxGcQybk=;
-	b=YTiSAETJcwDb5JB6n2x1gSB0GLykGqtbhOEyae8cLdqkA3sCPvL7QaXjpuDEQl
-	kpk3oeA4NJkUluZLUKGArxRxtpMoUiMWb4YIYi1zPGu8U7MTbhqGjZg1ul3RbmQG
-	Ghgxpc/Z8EaMQkPiblSJH+EYw4RcCkz8ufRo3XpWcQRCE=
+	Content-Type; bh=g4OPY/PyEn6wqrGBcT5BIWfztE8z18k+cpHeuPX1le0=;
+	b=Ee+c2usySGMRt1p955PtpgLHyg+0jh4Lq+ZZPpMocbnPenOGgbahrcqslXnnMH
+	aRYESCqj2EYhqVE9CN/DFhtEVV3JcOk4hXKa6jJ8BPTgZS5sy1baSY3xWWHlM4oX
+	j9uii3HjqdbWQpQR6wEpA0NVCHJiSJ4NWZPt5uCmTELI8=
 Received: from [192.168.71.94] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgBnxyxTFT9oBzsNBw--.483S2;
-	Tue, 03 Jun 2025 23:31:32 +0800 (CST)
-Message-ID: <7191e865-4aa1-4de3-aa50-f32ea2786b5f@163.com>
-Date: Tue, 3 Jun 2025 23:31:31 +0800
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDnX957Fz9oEfqnFw--.7670S2;
+	Tue, 03 Jun 2025 23:40:43 +0800 (CST)
+Message-ID: <016e1a37-ca63-4ecb-9e55-eb701f789e9d@163.com>
+Date: Tue, 3 Jun 2025 23:40:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,83 +47,118 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] PCI: Add PCIE_SPEED2LNKCTL2_TLS_ENC conversion macro
+Subject: Re: [PATCH v12 1/6] PCI: Introduce generic bus config read helper
+ function
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, jingoohan1@gmail.com,
- robh@kernel.org, linux-pci@vger.kernel.org,
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
  LKML <linux-kernel@vger.kernel.org>
-References: <20250519163156.217567-1-18255117159@163.com>
- <20250519163156.217567-2-18255117159@163.com>
- <9bc475b4-4924-1b0f-af3e-ec4fa8140765@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com>
+ <20250514161258.93844-2-18255117159@163.com>
+ <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <9bc475b4-4924-1b0f-af3e-ec4fa8140765@linux.intel.com>
+In-Reply-To: <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgBnxyxTFT9oBzsNBw--.483S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KFyfuF1rGFWfCF1UAr4rAFb_yoW8CrW3pa
-	43CFy5AFW8Ww13Cas0gas2qa4FqFs3WF4UuF47Wr98XFyft3Z5Gr12yFWUKr9rZr4vkrW0
-	va17trWUCF12kFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRAsqXUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwRho2g-AT4TzgABs9
+X-CM-TRANSID:_____wDnX957Fz9oEfqnFw--.7670S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZFyxCw1rGw43Cr4xWrWDXFb_yoW5Wr4xpF
+	WUAF13Cr48JFy7CFsYvay8WFyYgFs7tFyUGrWfJ3sxZF13CF95CFy3K345ury2gr4DZr10
+	vw4rWa4DC3Z8AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxFho2g-Ev5r3AABsF
 
 
 
-On 2025/6/3 17:08, Ilpo Järvinen wrote:
-> On Tue, 20 May 2025, Hans Zhang wrote:
+On 2025/6/3 17:18, Ilpo Järvinen wrote:
+> On Thu, 15 May 2025, Hans Zhang wrote:
 > 
->> Introduce PCIE_SPEED2LNKCTL2_TLS_ENC macro to standardize the conversion
+>> The primary PCI config space accessors are tied to the size of the read
+>> (byte/word/dword). Upcoming refactoring of PCI capability discovery logic
+>> requires passing a config accessor function that must be able to perform
+>> read with different sizes.
+>>
+>> Add any size config space read accessor pci_bus_read_config() to allow
+>> giving it as the config space accessor to the upcoming PCI capability
+>> discovery macro.
+>>
+>> Reconstructs the PCI function discovery logic to prepare for unified
+>> configuration of access modes. No function changes are intended.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>> Changes since v9 ~ v11:
+>> - None
+>>
+>> Changes since v8:
+>> - The new split is patch 1/6.
+>> - The patch commit message were modified.
+>> ---
+>>   drivers/pci/access.c | 17 +++++++++++++++++
+>>   drivers/pci/pci.h    |  2 ++
+>>   2 files changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index b123da16b63b..603332658ab3 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+>>   EXPORT_SYMBOL(pci_bus_write_config_word);
+>>   EXPORT_SYMBOL(pci_bus_write_config_dword);
+>>   
+>> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>> +			u32 *val)
+>> +{
+>> +	struct pci_bus *bus = priv;
+>> +	int ret;
+>> +
+>> +	if (size == 1)
+>> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+>> +	else if (size == 2)
+>> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+>> +	else
+>> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
 > 
-> Use () parenthesis like you'd use them in C so functions and macros in
-> changelog should have them appended.
+> Perhaps this should check also size == 4 and return
+> PCIBIOS_BAD_REGISTER_NUMBER in case size is wrong.
 > 
 
 Dear Ilpo,
 
-Thank you very much for your reply and reminder. Will change.
+Thank you very much for your reply. Will change.
 
->> between PCIe speed enumerations and LNKCTL2_TLS register values. This
->> centralizes speed-to-register mapping logic, eliminating duplicated
->> conversion code across multiple drivers.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/pci.h | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index f92928dadc6a..b7e2d08825c6 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -415,6 +415,15 @@ void pci_bus_put(struct pci_bus *bus);
->>   	 (lnkctl2) == PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
->>   	 PCI_SPEED_UNKNOWN)
->>   
->> +#define PCIE_SPEED2LNKCTL2_TLS_ENC(speed) \
-> 
-> I'm not a big fan of including that _ENC there, it just makes the long
-> name even longer and doesn't really provide added value, IMO.
-> 
-
-Will delete _ENC.
+I will send the next version after v6.16.
 
 Best regards,
 Hans
 
-> Other than those, this change logs fine.
-> 
->> +	((speed) == PCIE_SPEED_2_5GT ? PCI_EXP_LNKCTL2_TLS_2_5GT : \
->> +	 (speed) == PCIE_SPEED_5_0GT ? PCI_EXP_LNKCTL2_TLS_5_0GT : \
->> +	 (speed) == PCIE_SPEED_8_0GT ? PCI_EXP_LNKCTL2_TLS_8_0GT : \
->> +	 (speed) == PCIE_SPEED_16_0GT ? PCI_EXP_LNKCTL2_TLS_16_0GT : \
->> +	 (speed) == PCIE_SPEED_32_0GT ? PCI_EXP_LNKCTL2_TLS_32_0GT : \
->> +	 (speed) == PCIE_SPEED_64_0GT ? PCI_EXP_LNKCTL2_TLS_64_0GT : \
->> +	 0)
 >> +
->>   /* PCIe speed to Mb/s reduced by encoding overhead */
->>   #define PCIE_SPEED2MBS_ENC(speed) \
->>   	((speed) == PCIE_SPEED_64_0GT ? 64000*1/1 : \
+>> +	return ret;
+> 
+> 
+>> +}
+>> +EXPORT_SYMBOL_GPL(pci_bus_read_config);
+> 
+> Does this even need to be exported? Isn't the capability search always
+> built in?
+> 
+>>   int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+>>   			    int where, int size, u32 *val)
+>>   {
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index b81e99cd4b62..5e1477d6e254 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -88,6 +88,8 @@ extern bool pci_early_dump;
+>>   bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>>   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>>   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>> +			u32 *val);
+>>   
+>>   /* Functions internal to the PCI core code */
+>>   
 >>
 > 
 
