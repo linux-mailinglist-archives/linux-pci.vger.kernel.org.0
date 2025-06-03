@@ -1,141 +1,163 @@
-Return-Path: <linux-pci+bounces-28843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB005ACC2B4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 11:11:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1C0FACC2C5
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 11:18:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC9B91891FD5
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 09:11:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B14EC170634
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 09:18:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4176328152B;
-	Tue,  3 Jun 2025 09:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74DB318DB29;
+	Tue,  3 Jun 2025 09:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lliJDhkg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PhkqckiJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AE628151C;
-	Tue,  3 Jun 2025 09:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC792C327A;
+	Tue,  3 Jun 2025 09:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748941874; cv=none; b=oV5ZckrrA3HYXqDBig1mphGgygw9a3HB/5gXQaCBvrUAmIRH/KdhXJDwtZKxTSZQLRBZ1mP5ulIW+YnLuiw0C4Uv+5eDPmvXWcvcCLhi8UHe5nsFDWY/dZF+sJU9yPBky4Ijo+x2jWGOJ9PF7c480m4HXOXwmlqhYz5X2RdGK48=
+	t=1748942329; cv=none; b=YAdCkskWqB1gaQmlYgSDXumLC6tv1hFmwo5N7gJwSm1q2GoXA2gLqUzIFxqV/7JzYfwDFisMmdcJIfdmsUWhDssNB+RAFngMH0zI++7lQIeyVfP0kBW+1/lTGY9LMkdj2QiFhDYFRPEWm68LEKc/5xccy+pSIs3hvJ3q4B6IUDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748941874; c=relaxed/simple;
-	bh=gVK42G4dFjcGNb5SBkOPqqLEKwkFEd8sBXqVtBc+jKI=;
+	s=arc-20240116; t=1748942329; c=relaxed/simple;
+	bh=6QEcL01YpnCqvbTuBXO0Xe3eoIxPT1gt6bMAM3bpvdk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Hi8mhGrfnWG4zH4H0LZOF2LdaLQCeMsaEzY03RZzU0pQAGYHH4ZH5MI3Oit/yI6fcO+XrLeorpapJgMm1YzFaJIEsib8y9hiZNGGtZCUKI/2neUKZiXNUsGn3ILtRGErSSTSF3wj8LdguCOYvMyVW32vLMMCxtrxw860QE6tEWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lliJDhkg; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=fB/D9O7PPjfjNbvTjJHZGLuWuXcRKrUmTNPjmkc2wcOXh5N9z/f3v1KViczdaComspfhPFRkbAyh+00tG+YpARoXO58NMeK8V9i2KVR95AEngDZqClHgcgfyhSC3XJKiwiox4TT21+uDZ/cIHOztrsVel4GjOF2dsW/mpGCE7+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PhkqckiJ; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748941872; x=1780477872;
+  t=1748942328; x=1780478328;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=gVK42G4dFjcGNb5SBkOPqqLEKwkFEd8sBXqVtBc+jKI=;
-  b=lliJDhkgkh59mAOeJaQkRgeJyoY0+uLssR8C+T36WoDFgy/YFgURa4g7
-   LCW4XAUduqkgVf4Ay6bgBF6Y6BihPDmWDyB61QDVl/OdKen2YVP9HfZth
-   WpdUckl0Fmx+59k+XYOzh3SPbXQXTVoP4OULWZkhtf7ASztip0+jQ90dW
-   xJd/Iaz/wJ3htyDtjiffV0h6zKLQ+Ngb8JZcT0SosfTN1YrgHUy8s3Fuq
-   kDRbsq9PxhRth6+f+vVuF46gxiuVLg/JzqAN8AReJXJ3TjX0aF//w6xmG
-   ILg0T40nU1tfAx09/gsiERe31iz/1sD7eX4/6wJhFzEm0zVLgmYQtLTmK
-   w==;
-X-CSE-ConnectionGUID: 2Ppsz6sMTee2Hwxd/Fl53w==
-X-CSE-MsgGUID: aIqTSQErT1KF+tts4023Gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="68404116"
+  bh=6QEcL01YpnCqvbTuBXO0Xe3eoIxPT1gt6bMAM3bpvdk=;
+  b=PhkqckiJY6vnSY446mZF1Gd4uX/3oKWDDHQ8cSwtYY8O963YIAq17qsl
+   iokuq5a3KE/ff0aSbUTJhpYW6FxfGzs07shgj7hMej0i41OIlDy3Cg8Dk
+   jHUNFq5PSN7zgwEXH74RPKV4/k6dFPrPbgaA7EHIxsd56644IS1ftCA9T
+   4+SitXstjFrfm6SuvE35C1lGXu4n4UOrfXsGjywDKWikCBrArRSGa+n5r
+   ra9C4afF96wnxtviD0gELCM7qv2dAXakgNeyk2I18mlYvr7OuaLdechIv
+   aFQpiwpavXLLh/F+yWDerw5j10qZ7vBmjWFPAqMHQp27vyRUFXKZmDDzI
+   g==;
+X-CSE-ConnectionGUID: 2bOkv3h+TCWaUerzlztUQw==
+X-CSE-MsgGUID: 8YNgsErbRpiP8F5G8KVrlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="38600390"
 X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="68404116"
+   d="scan'208";a="38600390"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:11:10 -0700
-X-CSE-ConnectionGUID: 1pVQX+tgQjKDUXRxXr9kQw==
-X-CSE-MsgGUID: ITOxGlMwRRePsXOFXoUkvw==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:18:47 -0700
+X-CSE-ConnectionGUID: nEIonyeOSYKEDWSoQw2zlQ==
+X-CSE-MsgGUID: a00KUzj8R+mGwBWPoiFS3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="145428441"
+   d="scan'208";a="145429410"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:11:07 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 02:18:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 12:11:04 +0300 (EEST)
+Date: Tue, 3 Jun 2025 12:18:39 +0300 (EEST)
 To: Hans Zhang <18255117159@163.com>
-cc: bhelgaas@google.com, kwilczynski@kernel.org, 
-    manivannan.sadhasivam@linaro.org, jhp@endlessos.org, 
-    daniel.stodden@gmail.com, ajayagarwal@google.com, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/ASPM: Use boolean type for aspm_disabled and
- aspm_force
-In-Reply-To: <20250517154939.139237-1-18255117159@163.com>
-Message-ID: <b363ab02-a2b4-9c5d-42ea-feb208d32c5d@linux.intel.com>
-References: <20250517154939.139237-1-18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, 
+    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 1/6] PCI: Introduce generic bus config read helper
+ function
+In-Reply-To: <20250514161258.93844-2-18255117159@163.com>
+Message-ID: <d6eeb0b5-53b3-5c40-00df-f79aa2619711@linux.intel.com>
+References: <20250514161258.93844-1-18255117159@163.com> <20250514161258.93844-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1210779517-1748941864=:937"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 15 May 2025, Hans Zhang wrote:
 
---8323328-1210779517-1748941864=:937
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Sat, 17 May 2025, Hans Zhang wrote:
-
-> The aspm_disabled and aspm_force variables are used as boolean flags.
-> Change their type from int to bool and update assignments to use
-> true/false instead of 1/0. This improves code clarity.
->=20
+> The primary PCI config space accessors are tied to the size of the read
+> (byte/word/dword). Upcoming refactoring of PCI capability discovery logic
+> requires passing a config accessor function that must be able to perform
+> read with different sizes.
+> 
+> Add any size config space read accessor pci_bus_read_config() to allow
+> giving it as the config space accessor to the upcoming PCI capability
+> discovery macro.
+> 
+> Reconstructs the PCI function discovery logic to prepare for unified
+> configuration of access modes. No function changes are intended.
+> 
 > Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
->  drivers/pci/pcie/aspm.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 29fcb0689a91..98b3022802b2 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -245,7 +245,7 @@ struct pcie_link_state {
->  =09u32 clkpm_disable:1;=09=09/* Clock PM disabled */
->  };
-> =20
-> -static int aspm_disabled, aspm_force;
-> +static bool aspm_disabled, aspm_force;
->  static bool aspm_support_enabled =3D true;
->  static DEFINE_MUTEX(aspm_lock);
->  static LIST_HEAD(link_list);
-> @@ -1712,11 +1712,11 @@ static int __init pcie_aspm_disable(char *str)
+> Changes since v9 ~ v11:
+> - None
+> 
+> Changes since v8:
+> - The new split is patch 1/6.
+> - The patch commit message were modified.
+> ---
+>  drivers/pci/access.c | 17 +++++++++++++++++
+>  drivers/pci/pci.h    |  2 ++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index b123da16b63b..603332658ab3 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+>  EXPORT_SYMBOL(pci_bus_write_config_word);
+>  EXPORT_SYMBOL(pci_bus_write_config_dword);
+>  
+> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+> +			u32 *val)
+> +{
+> +	struct pci_bus *bus = priv;
+> +	int ret;
+> +
+> +	if (size == 1)
+> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> +	else if (size == 2)
+> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> +	else
+> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
+
+Perhaps this should check also size == 4 and return 
+PCIBIOS_BAD_REGISTER_NUMBER in case size is wrong.
+
+> +
+> +	return ret;
+
+
+> +}
+> +EXPORT_SYMBOL_GPL(pci_bus_read_config);
+
+Does this even need to be exported? Isn't the capability search always 
+built in?
+
+>  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+>  			    int where, int size, u32 *val)
 >  {
->  =09if (!strcmp(str, "off")) {
->  =09=09aspm_policy =3D POLICY_DEFAULT;
-> -=09=09aspm_disabled =3D 1;
-> +=09=09aspm_disabled =3D true;
->  =09=09aspm_support_enabled =3D false;
->  =09=09pr_info("PCIe ASPM is disabled\n");
->  =09} else if (!strcmp(str, "force")) {
-> -=09=09aspm_force =3D 1;
-> +=09=09aspm_force =3D true;
->  =09=09pr_info("PCIe ASPM is forcibly enabled\n");
->  =09}
->  =09return 1;
-> @@ -1734,7 +1734,7 @@ void pcie_no_aspm(void)
->  =09 */
->  =09if (!aspm_force) {
->  =09=09aspm_policy =3D POLICY_DEFAULT;
-> -=09=09aspm_disabled =3D 1;
-> +=09=09aspm_disabled =3D true;
->  =09}
->  }
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62..5e1477d6e254 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -88,6 +88,8 @@ extern bool pci_early_dump;
+>  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+> +			u32 *val);
+>  
+>  /* Functions internal to the PCI core code */
+>  
+> 
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
+-- 
  i.
 
---8323328-1210779517-1748941864=:937--
 
