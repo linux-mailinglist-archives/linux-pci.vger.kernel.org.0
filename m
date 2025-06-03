@@ -1,76 +1,83 @@
-Return-Path: <linux-pci+bounces-28829-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28830-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0411ACBF27
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 06:17:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCE05ACBF69
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 06:56:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7718316856D
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 04:17:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 903F11890EB7
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 04:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5261C1F0E20;
-	Tue,  3 Jun 2025 04:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8BE1F3D54;
+	Tue,  3 Jun 2025 04:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BqSpttGb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4uLpHRZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5ACB1AA786;
-	Tue,  3 Jun 2025 04:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0EF139B;
+	Tue,  3 Jun 2025 04:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924257; cv=none; b=b4LELm8xKIq9zXyMeJFVY8InJGpeuTmugGHne/sBlH5J8IHApy6U4jw5UmCL6t2gXPFvAXmsH67K5DQdn399gPnrklXhco6Aq16cyTaj3aQUow7bV1bnCnGyvRG5zMF3OLfcUxj3PMBSxc2jjdV8QsFeh4qE8cjHEqaRslLC9ro=
+	t=1748926612; cv=none; b=U/MpZxWWjsbbJgiJ83y4UTudxnGXzAC2mzM3D/VEmi6+Ap2mJTdExrpE7HEO+dc2oNMzgPMw/cGdmz9ihxVpyXivKRzGpJtj4pAGpW7sNk3NJ6ffB9/8s5emWM0LZ0Bco5c4PJVZAzPKuRCs77q+aIza399C/AeYZiBEv718EOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924257; c=relaxed/simple;
-	bh=ycGo7RzzC7vhYYPN9z63/zrBeE40PUT+akrPoMnS4fI=;
+	s=arc-20240116; t=1748926612; c=relaxed/simple;
+	bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2v4ePWfPIRy70fI75ln1qYOjza9Xlhg7zc13k3ysqdfUieJEStwHEhCjtIXXok2CySwBQdPSF+T8BbVfz107160+5FLMWOncf3q1+CgtgW+H4eJDhMbmjmW2nos3xufD8o0wMr/gHdQfe+Ffn7FCRlaCk2SPt4iqbA+hCA4Gno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BqSpttGb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 4DC7C203EE28; Mon,  2 Jun 2025 21:17:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DC7C203EE28
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748924255;
-	bh=wpy1isVRElmxhOZ0MSIsbH5dkq0/w80DUem5S1do/2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BqSpttGbtUI0KwodL1lXJxMJXFmNqPo/CS3ICqASbqfgHxAFD8UJ280KY6kCJ3FUs
-	 pwI5KPD4DRJkVemJkvdn7PYvN5CdswE12aCR3OdEiwosFQDP+mokl9Pyb3DHhpWHdL
-	 dzMoGZzXcg/+YgtfpqaD5M9TxuusLg8/DprV616c=
-Date: Mon, 2 Jun 2025 21:17:35 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250603041735.GA8300@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <83244641-8fab-4f05-9d31-c5881fa1660c@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=enXiSjK5j8pUSneOuFqVMgNKsI+wnh4OudDfWQDPw701ZiF3EdBCpOrjRMgKJWfcBmpERNWCL19M5lI82qlWEdLOrlx6CDAsPPGlVgBh0DEkRQcfe4k4+qzwTmzFd1NsCxJ3rGB1B57FOXF31nvdt8QZ/STB0J//c2+HB2LRELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4uLpHRZ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748926609; x=1780462609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p6Uliwjeb9aiPXavhCVIq0Xv1uYAO1wNjq9ELL7jF9s=;
+  b=Q4uLpHRZu/t0o7QfJOdhDhV6k/mFl3qIOzhhkyWbZxaZ34sx1pVIXwB9
+   j0wyzqnhM1W5Ry+uYaPGz8bxBKEzLUy3Gy/1eB8Ol1ou2aRat3itAMMLN
+   rAj87AJfHTFylEuLUsIV+CqdPNKUnVUPXCKu1iWc1TeYyqg4wtPIl0iz4
+   AxDRKdtdoNfSXxHn08T2L8Ahfn4HBixK/ODtOh4UyVAtG5zjQ0jR9iPp7
+   7YPC07LgXHPhu3qAWXQn0QF7tGwjGXFRrbbWl/gY/be8fYRiO7SLAowS4
+   vZGqhfW5OG7Dp+S1/jjY7LO1NvUlFRO5JY0kKem2BYUkQdNgVPi1nBEL9
+   g==;
+X-CSE-ConnectionGUID: 2B4IGweST1Snt6Qjn5bTgA==
+X-CSE-MsgGUID: QYbOKG0KT7i0KBVsbntu2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="62004247"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="62004247"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 21:56:48 -0700
+X-CSE-ConnectionGUID: +R3KxD5fSay5O/7fDmdhSg==
+X-CSE-MsgGUID: JbKyM8ULSPaqs7NuuQafDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="175593681"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa001.fm.intel.com with ESMTP; 02 Jun 2025 21:56:43 -0700
+Date: Tue, 3 Jun 2025 12:50:10 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 20/30] vfio/pci: Do TSM Unbind before zapping bars
+Message-ID: <aD5/AjaQQOKydUWz@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-21-yilun.xu@linux.intel.com>
+ <yq5ar002jlao.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,105 +86,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <83244641-8fab-4f05-9d31-c5881fa1660c@linux.dev>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <yq5ar002jlao.fsf@kernel.org>
 
-On Sun, Jun 01, 2025 at 04:53:31PM +0200, Zhu Yanjun wrote:
-> ??? 2025/5/27 17:57, Shradha Gupta ??????:
-> >In this patchset we want to enable the MANA driver to be able to
-> >allocate MSI-X vectors in PCI dynamically.
+On Mon, Jun 02, 2025 at 07:30:15PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> 
+> > When device is TSM Bound, some of its MMIO regions are controlled by
+> > secure firmware. E.g. TDX Connect would require these MMIO regions
+> > mappeed in S-EPT and never unmapped until device Unbound. Zapping bars
+> > irrespective of TSM Bound state may cause unexpected secure firmware
+> > errors. It is always safe to do TSM Unbind first, transiting the device
+> > to shared, then do whatever needed as before.
 > >
-> >The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> >correctly prepare descriptors for dynamically added MSI-X vectors.
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_config.c |  4 +++
+> >  drivers/vfio/pci/vfio_pci_core.c   | 41 +++++++++++++++++++-----------
+> >  drivers/vfio/pci/vfio_pci_priv.h   |  3 +++
+> >  3 files changed, 33 insertions(+), 15 deletions(-)
 > >
-> >The second patch adds the support of dynamic vector allocation in
-> >pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> >flag and using the pci_msix_prepare_desc() exported in first patch.
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index 7ac062bd5044..4ffe661c9e59 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -590,6 +590,7 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+> >  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
+> >  
+> >  		if (!new_mem) {
+> > +			vfio_pci_tsm_unbind(vdev);
+> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> >  			vfio_pci_dma_buf_move(vdev, true);
 > >
-> >The third patch adds a detailed description of the irq_setup(), to
-> >help understand the function design better.
-> >
-> >The fourth patch is a preparation patch for mana changes to support
-> >dynamic IRQ allocation. It contains changes in irq_setup() to allow
-> >skipping first sibling CPU sets, in case certain IRQs are already
-> >affinitized to them.
-> >
-> >The fifth patch has the changes in MANA driver to be able to allocate
-> >MSI-X vectors dynamically. If the support does not exist it defaults to
-> >older behavior.
-> >---
-> >  Change in v4
-> >  * add a patch describing the functionality of irq_setup() through a
-> >    comment
-> >  * In irq_setup(), avoid using a label next_cpumask:
-> >  * modify the changes in MANA patch about restructuring the error
-> >    handling path in mana_gd_setup_dyn_irqs()
-> >  * modify the mana_gd_setup_irqs() to simplify handling around
-> >    start_irq_index
-> >  * add warning if an invalid gic is returned
-> >  * place the xa_destroy() cleanup in mana_gd_remove
-> >---
-> >  Changes in v3
-> >  * split the 3rd patch into preparation patch around irq_setup() and
-> >    changes in mana driver to allow dynamic IRQ allocation
-> >  * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
-> >    controller
-> >---
-> >  Changes in v2
-> >  * split the first patch into two(exporting the preapre_desc
-> >    func and using the function and flag in pci-hyperv)
-> >  * replace 'pci vectors' by 'MSI-X vectors'
-> >  * Change the cover letter description to align with changes made
-> >---
-> >
-> >Shradha Gupta (5):
-> >   PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
-> >   PCI: hv: Allow dynamic MSI-X vector allocation
-> >   net: mana: explain irq_setup() algorithm
-> >   net: mana: Allow irq_setup() to skip cpus for affinity
-> >   net: mana: Allocate MSI-X vectors dynamically
 > 
-> In this patchset, base-commit seems missing.
-> 
-> Please see this link:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.15#n868
-> 
-> "
-> When you open ``outgoing/0000-cover-letter.patch`` for editing, you will
-> notice that it will have the ``base-commit:`` trailer at the very
-> bottom, which provides the reviewer and the CI tools enough information
-> to properly perform ``git am`` without worrying about conflicts::
-> "
-> 
-> When creating patches:
-> "
-> git format-patch --base=main origin/main
-> "
-> 
-> This will include a base-commit: line in each patch file:
-> 
-> "
-> base-commit: abcdef1234567890...
-> "
-> 
-> This is useful when submitting patches to mailing lists or other tooling.
-> 
-> Please follow the submitting-patches.rst to add base-commit.
-> 
-> Best Regards,
-> Zhu Yanjun
->
+> For a secure device mmio range instead of vfio_pci_zap_and_down_write_memory_lock()
+> -> unmap_mapping_range() we want the vfio_pci_dma_buf_move right?
 
-Thank you, I will make the necessary changes in the next version.
+Yes.
 
-Regards,
-Shradha. 
-> >
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 356 ++++++++++++++----
-> >  drivers/pci/controller/pci-hyperv.c           |   5 +-
-> >  drivers/pci/msi/irqdomain.c                   |   5 +-
-> >  include/linux/msi.h                           |   2 +
-> >  include/net/mana/gdma.h                       |   8 +-
-> >  5 files changed, 293 insertions(+), 83 deletions(-)
-> >
+> Also is that expected to get called twice as below?
+
+Yes for TDX Connect. First time zap the private MMIOs during unbind.
+Second time block all mmio mapping.
+
+Other platforms don't need these tsm handlers. They don't have this
+awkwardness.
+
+Thanks,
+Yilun
+
+> 
+> vfio_pci_tsm_unbind-> pci_tsm_unbind -> tdx_tsm_unbind ->
+> tsm_handler->disable_mmio() -> vfio_pci_core_tsm_disable_mmio -> vfio_pci_dma_buf_move(vdev, true);
+> 
+> -aneesh
 
