@@ -1,159 +1,163 @@
-Return-Path: <linux-pci+bounces-28863-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28864-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE773ACC96C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 16:43:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C79A5ACCA18
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:25:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A885716D25E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 14:43:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D29A3A4346
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 15:25:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F29239561;
-	Tue,  3 Jun 2025 14:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3D323BCFD;
+	Tue,  3 Jun 2025 15:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cr/R559a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IXc9I7UM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D687E17A2EA;
-	Tue,  3 Jun 2025 14:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7090A70838
+	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 15:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748961817; cv=none; b=MkKOn5/pN0m/EjUIhM1J//3eDVi93LS7WraDIDJi5M/qYLljG0QbU7rEky1Ez9sxA7LhFhii/JiwJtvRjOHhKM0QLw97BLoxZqtdSIBXSxah1ZZ86da+lqQQG2P4YY5ElMi1m9wEA8aGopMB1f/Qpk6V8mwEt7B9hSnhdFVCHvo=
+	t=1748964336; cv=none; b=uNDj2VNDWxetEfGLnbaM8q2XCtI3cUo4LFQCL5Xw6hp8lHXKZ22VhUOLuVoJmfloq/OYXABP6PbdI/ES1jGuN3ONWEvrBVlhDXX63hBGCTBxvnpGHo4q+8Ew27+ulZBeNCG/nh8P/F5kF+jImyYlVexm87EIVRTezuwm1q3R7XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748961817; c=relaxed/simple;
-	bh=z2Ey+9eAkrxDyJHcYoeI+VcGZ12BalGXWl8qfdHCsBg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ma5/xw9+ukne1ZET7/MFcNI/QsTngdpaDwtBUpOLb0Ir55UgbdEUNCDOYhZgns1YlN+hq0bjIwAc37gFJomrMCUYWA2ZAzTfY+pfhOQlGBljarE9fg8DnnBxSC4Pn0m/5qR4AGcydJ0mNb1UNM7J14PunMskZgJW9XFmv354IuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cr/R559a; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748961816; x=1780497816;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=z2Ey+9eAkrxDyJHcYoeI+VcGZ12BalGXWl8qfdHCsBg=;
-  b=Cr/R559aKBXNvhsI/UE0N6qWz5UjK7s3owxfcTWJ/q+WMOZXs4/ZSZ6L
-   X2o3eF91crySmLb4yu51Wgt33iA7K+wrSse1OZgAPDbzt0R9Aq0abF+Am
-   2K7YCrpEhjNtNFtB/DPlxTUERztzkEM5U1QM+5YGlKba5z1O3FBuA6UsO
-   2uemE7917xy/O3v28EmY/FVE/P3o7EsaAtcVBf/eXcZcuB9pktOlC8HfH
-   zuqx+zzKQI4K0UsMbybr7Yl1wac+nXKWifNld/e4hqHhq8x4E97fE/zP/
-   NSr2Rwpmeiir4ORyd4K9QdVnKsm9ek3QPgCpAlYvxcXw9deyf0oAwph0c
-   g==;
-X-CSE-ConnectionGUID: X7OCtacMRMybL+VZt2lRWA==
-X-CSE-MsgGUID: jOmHPviIQHa3qhAedUUIUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61626356"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="61626356"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:43:14 -0700
-X-CSE-ConnectionGUID: TA6fL8yGTyauOPwLCs93aA==
-X-CSE-MsgGUID: pOTNvgFKSNW+O4/B1v8E2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="145373523"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:43:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 17:43:02 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
-Message-ID: <765f092e-10e9-6ac0-5aa4-964cdf3e60ad@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <f8f15489-8b31-4672-9fb9-161c7c4599dc@linaro.org> <a4a5855c-6d58-4fc5-85d7-4727d27efbe0@linaro.org>
- <e0833d0d-cf1c-b036-c9f4-d27b933330f0@linux.intel.com>
+	s=arc-20240116; t=1748964336; c=relaxed/simple;
+	bh=GRF3f1LYqvxYkJuZ98Z2f/j5mjNLlD7tN5Zlj+pTDSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZN2ztAZduhYgZR25cJIo2VZf/WrlrEPk8lP9O4NYhYZZJsFhTtGmzg7AGYV7uraPxx9Ez/tuZH8esrFd5CLW63V4yRMfnsEnNWGvyCrRjZUKi/ZYghEY/RWivNeMZvysUJbbzNDxnHyj1XjAS2Xmh5yhi+b7fSiIvFA8fuUy6n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IXc9I7UM; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad89ee255easo1050421266b.3
+        for <linux-pci@vger.kernel.org>; Tue, 03 Jun 2025 08:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748964333; x=1749569133; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5wW03XFrUSVeu8mwtKJy+rZxza/kHZKA3kHeUE/Zbf4=;
+        b=IXc9I7UMGwULlXle4M1pHakGg2RCwwWylEH3t2tt6wqaKqt+LTEO6cm8+TTTM2dmtm
+         lnaF6EjQqG8MVKlVcF5pJEJ0kbkkxkWi+TOVG4zweb390Zrvi/u3B7tapRJxBdEzF0yD
+         HeprDxYaYMjwtRtY5j5Fqtb4eHTM7hmjrRGamIasjzTzIl0X69n/quNKWYMCqAhVrPAA
+         bY7CGAB0FB/lH8dpAnfoBnuYlzSByVgv111+cMhK0XEmCQk56olnzPpNi5PO1heyQbDq
+         2J9AM8FQ+C81jRkePJEYo6Ex/1e0izqLO9IE391WnM/p7WElcOfA9/qtNbXrITmcmRwt
+         dBNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748964333; x=1749569133;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5wW03XFrUSVeu8mwtKJy+rZxza/kHZKA3kHeUE/Zbf4=;
+        b=iECx/O72BU4aFSIvIdeIUCqG1YjCputOYMwN5rp/Hs1cHOb+G7JVujWT4RToyy6WFQ
+         wxvvc7TvWgyRa67VVEDo8o/UMwjgFhAUTH2wfVqYczOW7qe8EfgaIrNSYnT9cR2hEsXs
+         W95d2532VdIfgtMQpDJNbQxiOFuMi17W7CmZrozuo6MBKKaugfvVUvUzoKNnoEE/ZhND
+         2JkQqPOR4Pfbts8OA3VlkTzYJEjW+7LCn7uW8fhaoTvKLUUmmr56MYJq5dByxbXPUPiF
+         zJr7Nebz6gYbn0A/48CRlIlSO4hO86rThdgjL3SUCagRNyVPDsMzIjtvCUzg3AB5HcJX
+         ekzg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Neud12SsIX2IQC12k9Gg5wdeYr7QLEME+p+Z5brvCw4e74VTKd/wvIHvdryX+LI9FhcV8MjpfWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfOwOXbcC381dufw7mXv2k5gXIUfsHRcRZ0slGwtQODFMA5J9F
+	O2XNSBeurdYDPCdX8N82pwxTTZNubZiOql8wVhVlFf4J6qXsEHtbRT35Nk6ai5ZCeyA=
+X-Gm-Gg: ASbGnctpNRqIyx3PsM6idp/pE8G5AE79vWpKk91QGOjvCCR1A0pUlOWhgz2XssaIOxE
+	xjx6upPFvSUaXvI+vqrf0buFt5svv3Czp//2NGhto8Mmc0tULie9GB3KWCC5lIBrPJLipvn7mD1
+	NgLsASQfp9PQXrhJeRzN4WWxm3SGrjmlAVFSimyq9Y4KtfbdBhyBRF7hnO2aTv8z6KfRp8mnxIL
+	FmmYAJIicfFuXM4WkisWbTkwSuCUeW/67EnbuRB+sjxMVH5IJ86Tb9CKwOQNG/f1y159VyNddVa
+	iXtzrD4oHTdJhKvyo16xVz+46WgsqRrR3i+CZpeEfLFwKLzIfwV7a+2h8nW3
+X-Google-Smtp-Source: AGHT+IENJ5hA+onG71OWUo/WB8VWtaRrN2gxUzJbh00nrZECX8zCpqavdRYFahZC7MMqM6VHbK/Bgw==
+X-Received: by 2002:a17:906:f58c:b0:ad8:9041:7706 with SMTP id a640c23a62f3a-adb36c18b0emr1655179266b.56.1748964332581;
+        Tue, 03 Jun 2025 08:25:32 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.247])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-added7edf9asm51930166b.152.2025.06.03.08.25.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 08:25:31 -0700 (PDT)
+Message-ID: <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
+Date: Tue, 3 Jun 2025 16:25:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1106287541-1748961782=:937"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com>
+ <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com>
+ <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org>
+ <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com>
+ <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com>
+ <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org>
+ <fc611a93-1f5f-a86d-f3ca-cb737ed5fa4a@linux.intel.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <fc611a93-1f5f-a86d-f3ca-cb737ed5fa4a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1106287541-1748961782=:937
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Tue, 3 Jun 2025, Ilpo J=E4rvinen wrote:
-
+On 6/3/25 3:13 PM, Ilpo Järvinen wrote:
 > On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> > On 6/3/25 11:48 AM, Tudor Ambarus wrote:
-> > > On 6/3/25 11:36 AM, Tudor Ambarus wrote:
-> > >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
-> > >>> So please test if this patch solves your problem:
-> > >>
-> > >> It fails in a different way, the bridge window resource never gets
-> > >> assigned with the proposed patch.
-> > >>
-> > >> With the patch applied: https://termbin.com/h3w0
-> > >=20
-> > > above is no revert and with the proposed fix. It also contains the
-> > > prints https://termbin.com/g4zn
-> > >=20
-> > > It seems the prints in pbus_size_mem are not longer hit, likely becau=
-se
-> > > of the new condition added: ``!pdev_resources_assignable(dev) ||``,
-> > > pci_dev_for_each_resource() finishes without doing anything.
-> > >=20
-> > >> With the blamed commit reverted: https://termbin.com/3rh6
-> > >=20
-> >=20
-> > I think I found the inconsistency.
-> >=20
-> > __pci_bus_assign_resources()
-> > =09pbus_assign_resources_sorted()
-> > =09=09pdev_sort_resources(dev, &head);
-> >=20
-> > But pdev_sort_resources() is called with a newly LIST_HEAD(head), not
-> > with realloc_head, thus the resources never get sorted.
->=20
-> pdev_sort_resources() is not supposed to add resources into realloc_head=
-=20
-> but just collects all the relevant resources in the descending order by
-> size.
+>> On 6/3/25 9:13 AM, Ilpo Järvinen wrote:
+>>> So please test if this patch solves your problem:
+>>
+>> It fails in a different way, the bridge window resource never gets
+>> assigned with the proposed patch.
+> 
+> Is that a failure? I was expecting that to occur. It didn't assign 
+> any resources into that bridge window.
 
-Small correction, they're ordered by alignment, not by size. For other=20
-than iov resources and bridge window, alignment order effectively the same=
-=20
-as size order.
+It leads to a watchdog interrupt on my pixel6. Last print I see on my
+console is related to the modem booting status. My wild guess is that
+that modem accesses something from the unassigned bridge window.
 
-> There are two main lists here. The head list contains all relevant=20
-> resources we're going to process and realloc_head keeps track which of=20
-> them are optional (or optional in part, that is, some resources have the=
-=20
-> base size and the optional size).
->=20
-> __assign_resources_sorted() will apply the optional sizes from=20
-> realloc_head and re-sorts the head list while changing the sizes.
-> If not all resources can be assigned, rollback happens and base sizes are=
-=20
-> assigned first, and then reassign_resources_sorted() handles the=20
-> realloc_head ones afterwards for as many resources as possible.
->=20
-> > pdev_sort_resources() exits early at
-> > =09``if (!pdev_resources_assignable(dev))``
->=20
-> Yes it does, for 0001:01:00.0.
->=20
->=20
+In the working case I see the bridge window printed:
+[   15.457310][ T1083] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
+tmp rsc : [mem 0x40000000-0x401fffff]
 
---=20
- i.
+[   15.457683][ T1083] cpif: s51xx_pcie_probe: Set Doorbell register
+address.
 
---8323328-1106287541-1748961782=:937--
+In the failing case I see:
+[   15.623270][ T1113] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
+tmp rsc : [??? 0x00000000 flags 0x0]
+
+[   15.623638][ T1113] cpif: s51xx_pcie_probe: Set Doorbell register
+address.
+> 
+> If there's nothing to be assigned into the bridge window, the bridge 
+> window itself is not created, that is the expected behavior (working as 
+> designed). So you're comparing to the bridge window that was made too 
+> large due to the disparity (and left unused, AFAICT).
+> 
+> It would be possible to put the condition inside the block which adds 
+> the resource to the realloc_head, I initially put it there but then 
+> decided to remove the disparity completely because why keep it if no 
+> resource is going to be placed into the bridge window.
+> 
+Thanks for the educative answers.
+
+> What's that class 0 device anyway? Why it has class 0?
+>
+I don't know yet, it's the first time I'm dealing with a PCI driver. Any
+idea where is the class typically assigned?
+
+>> With the patch applied: https://termbin.com/h3w0
+>> With the blamed commit reverted: https://termbin.com/3rh6
+> 
+
 
