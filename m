@@ -1,205 +1,281 @@
-Return-Path: <linux-pci+bounces-28832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28836-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F40A6ACBFF4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 07:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C10DEACC042
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 08:34:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A92D617189B
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 05:59:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 898AD16ECB8
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 06:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE651FBEA9;
-	Tue,  3 Jun 2025 05:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F87188907;
+	Tue,  3 Jun 2025 06:34:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJZp+y+T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdTO2Z3z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FC4AD23;
-	Tue,  3 Jun 2025 05:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5841F948;
+	Tue,  3 Jun 2025 06:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748930348; cv=none; b=h+UQFNJcV+EF/5Ot/rc0rMXUT62si+gWuq+9NASrOI0XOOs+8+lJM8y0Wf1K4FqmU/dq5AH0nliijnA/GhGp9HfXH4e218CMKgQjpNyK7RM7do+FvS36XU74JYcAxXnwemv9ewO0r8RwIBYs1zHARq2EH45I3v4ovVQBdM88uiY=
+	t=1748932468; cv=none; b=M5IJwTqSMmVjo94ZFWDGujWpFCgmRl990aToM3QHXNI5JsAbUQrRqVWmnlrlyYr3yVW+s2WAFb4Szi2DpnL2ozYnil+KI7ZiiPfbJCt4gNWoGY+oIazUbCBoMroDq5uF4tuc85+6rFsqdPepKDSdJmuUU80aTW51Z0P84F1S6Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748930348; c=relaxed/simple;
-	bh=0SZMc9RMAD3OL6AmtIwhsT0nSCxX2GAwLNNSSQsvmVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OihkIAVqqIQAyL8+T2B9Urj3ZXxdHyjEGPuoowRqm3fFIaTe6U6NAYvdGSWbWIssZHNipTU9ASqnNlfngAAhXVhM8o6O8fYVkx99nJGy0kUykF3rqAkM0DY1t6jwZpg7wjfctU52yVdDZckPBJWIff780EzFA4DQR9wQCjp5gbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QJZp+y+T; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748930346; x=1780466346;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0SZMc9RMAD3OL6AmtIwhsT0nSCxX2GAwLNNSSQsvmVE=;
-  b=QJZp+y+TuD6DioW1ZnNJN+Vv5LTYFg30TbcYOLPkw4SVaKvavKo3wuMN
-   vDTeu72cK+lb2igvCsmaAmoBbohx8STE58XW+FXJimD8MfhIxf+nQYru5
-   xVAQmfcVOjx9gFuYFINdU335rJcR5PQ/uPwEvE1ArWB9dOiGnFYt8766J
-   g2YEtDKMXkoASqJcZJkK4q9WE7/amQaak9u74+GbkAfs2b6JSCfnZ0cQS
-   TJbEqL3t12h9KVXEQrJ/h3SytEWsPMnA/VFKoa5+vbTR1nXCUOYZ3JgCA
-   LA1loEizQJmBtJXB4TpLP3HWgViDasokrziWhSH7fEjZYcDzfR4gdXM+z
-   w==;
-X-CSE-ConnectionGUID: X8aoT0lzRAGRUHs6oRWDRQ==
-X-CSE-MsgGUID: 1rAQj+B6Qf64D/uuccvPeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="73485490"
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="73485490"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 22:59:05 -0700
-X-CSE-ConnectionGUID: YBlVT30SRWmnzwryX2WviQ==
-X-CSE-MsgGUID: Ve/oAFGISO6sRzGF6gBGcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
-   d="scan'208";a="149801571"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 02 Jun 2025 22:58:59 -0700
-Date: Tue, 3 Jun 2025 13:52:27 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 27/30] PCI/TSM: Add PCI driver callbacks to handle
- TSM requirements
-Message-ID: <aD6Nm7bBGddTc+pr@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-28-yilun.xu@linux.intel.com>
- <yq5att4yjns2.fsf@kernel.org>
+	s=arc-20240116; t=1748932468; c=relaxed/simple;
+	bh=9MqeMHm6uVNpV12j4bBrWMR3B7MZ9HzuTUZPD+xW7OA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S0QqpHFAwmnRC2kHsyulSmeBvGbhkxyGvog5NVGka+TNSba0dICJmX+RzSGbDd0F0Waghu76KlQxA7J+az2fkFZfuIsUZnSF9TRCQ9gIsYaUksL3Oa7qD2ex0apI6FEg4Wtl1hmU0zEhWbX98RHIBt7TJzYsEKDKKr0A4RZ3Kko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdTO2Z3z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA03C4CEEF;
+	Tue,  3 Jun 2025 06:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748932468;
+	bh=9MqeMHm6uVNpV12j4bBrWMR3B7MZ9HzuTUZPD+xW7OA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=SdTO2Z3zlf4UgR6DKp0eB+pBme9bxC3X2Q9H/Hkk3h/RDIQKrWiKPdzFO6JdLE0C6
+	 OVTCID8QmWPVUccMVrs74qj0rCVS/mqMr+UaFIUa34VEWFfqXxuxsYdBJu4oHgpyku
+	 BeTk69Ek/HQodm2jOeSDmuCzZv54jb+DLWObZJf7c/PwOPZbDi4PzQwYyhbZMw4h2d
+	 p+ztFxZ+j/Um1ZYC6N7myThDmtQnrbfmWPG/if+I4GMXS9bC6mthENHJP1Q2pB8G5w
+	 3Jy4tiM/uFmjm2hUoWMPxF0E6t21WWvJvOvNz3eJO9/f/CMpo0kL58i7qguJCBRwMR
+	 LNkz0B/atY/Dg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 Q)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
+	jgg@nvidia.com, zhiw@nvidia.com
+Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
+In-Reply-To: <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050>
+References: <yq5a5xhj5yng.fsf@kernel.org>
+ <20250529133757.462088-1-aneesh.kumar@kernel.org>
+ <20250529133757.462088-3-aneesh.kumar@kernel.org>
+ <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050> <yq5azfeqjt9i.fsf@kernel.org>
+ <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050>
+Date: Tue, 03 Jun 2025 10:30:30 +0530
+Message-ID: <yq5ao6v5ju6p.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5att4yjns2.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 06:36:37PM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> 
-> > Add optional PCI driver callbacks to notify TSM events. For now, these
-> > handlers may be called during pci_tsm_unbind(). By calling these
-> > handlers, TSM driver askes for external collaboration to finish entire
-> > TSM unbind flow.
-> >
-> > If platform TSM driver could finish TSM bind/unbind all by itself, don't
-> > call these handlers.
-> >
-> > Host may need to configure various system components according to
-> > platform trusted firmware's requirements. E.g. for Intel TDX Connect,
-> > host should do private MMIO mapping in S-EPT, trusted DMA setup, device
-> > ownership claiming and device TDISP state transition. Some operations are
-> > out of control of PCI TSM, so need collaboration by external components
-> > like IOMMU driver, KVM.
-> >
-> > Further more, trusted firmware may enforce executing these operations
-> > in a fixed sequence. E.g. Intel TDX Connect enforces the following
-> > sequences for TSM unbind:
-> >
-> >   1. STOP TDI via TDISP message STOP_INTERFACE
-> >   2. Private MMIO unmap from Secure EPT
-> >   3. Trusted Device Context Table cleanup for the TDI
-> >   4. TDI ownership reclaim and metadata free
-> >
-> > PCI TSM could do Step 1 and 4, but need KVM for Step 2 and IOMMU driver
-> > for Step 3. While it is possible TSM provides finer grained APIs like
-> > tdi_stop() & tdi_free(), and the caller ensures the sequence, it is
-> > better these specific enforcement could be managed in platform TSM
-> > driver. By introducing TSM handlers, platform TSM driver controls the
-> > operation sequence and notify other components to do the real work.
-> >
-> > Currently add 3 callbacks for TDX Connect. disable_mmio() is for
-> > VFIO to invalidate MMIO so that KVM could unmap them from S-EPT.
-> > recover_mmio() is to re-validate MMIO so that KVM could map them
-> > again for shared assigned device. disable_trusted_dma() is to cleanup
-> > trusted IOMMU setup.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  include/linux/pci-tsm.h | 7 +++++++
-> >  include/linux/pci.h     | 3 +++
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
-> > index 737767f8a9c5..ed549724eb5b 100644
-> > --- a/include/linux/pci-tsm.h
-> > +++ b/include/linux/pci-tsm.h
-> > @@ -157,6 +157,13 @@ struct pci_tsm_ops {
-> >  	int (*accept)(struct pci_dev *pdev);
-> >  };
-> >  
-> > +/* pci drivers callbacks for TSM */
-> > +struct pci_tsm_handlers {
-> > +	void (*disable_mmio)(struct pci_dev *dev);
-> > +	void (*recover_mmio)(struct pci_dev *dev);
-> > +	void (*disable_trusted_dma)(struct pci_dev *dev);
-> > +};
-> > +
-> >  enum pci_doe_proto {
-> >  	PCI_DOE_PROTO_CMA = 1,
-> >  	PCI_DOE_PROTO_SSESSION = 2,
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 5f37957da18f..4f768b4658e8 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -545,6 +545,7 @@ struct pci_dev {
-> >  #endif
-> >  #ifdef CONFIG_PCI_TSM
-> >  	struct pci_tsm *tsm;		/* TSM operation state */
-> > +	void *trusted_dma_owner;
-> >  #endif
-> >  	u16		acs_cap;	/* ACS Capability offset */
-> >  	u8		supported_speeds; /* Supported Link Speeds Vector */
-> > @@ -957,6 +958,7 @@ struct module;
-> >   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
-> >   *              MSI-X vectors available for distribution to the VFs.
-> >   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
-> > + * @tsm_handler: Optional driver callbacks to handle TSM requirements.
-> >   * @groups:	Sysfs attribute groups.
-> >   * @dev_groups: Attributes attached to the device that will be
-> >   *              created once it is bound to the driver.
-> > @@ -982,6 +984,7 @@ struct pci_driver {
-> >  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
-> >  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
-> >  	const struct pci_error_handlers *err_handler;
-> > +	struct pci_tsm_handlers *tsm_handler;
-> >  	const struct attribute_group **groups;
-> >  	const struct attribute_group **dev_groups;
-> >  	struct device_driver	driver;
-> > -- 
-> > 2.25.1
-> 
-> It looks like the TSM feature is currently interacting with several
-> components: struct pci_driver, VFIO, iommufd, and pci_tsm_ops.
-> 
-> Should we consider limiting this scattering? Would it make sense to
-> encapsulate this logic within pci_tsm_ops?
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-I'm keeping on trying which is a better solution. Encapsulating all in
-pci_tsm_ops is the most attactive one from SW POV, but only if the TSM
-operations has no impact/dependency to other components. Unfortunately
-it is not true, e.g. the private MMIO mapping/unmapping is actually
-a writting to leaf S-EPT entry, but it requires non-leaf page-table-page
-management in KVM.
+> On Mon, Jun 02, 2025 at 04:38:09PM +0530, Aneesh Kumar K.V wrote:
+>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>>=20
+>> >> + * struct iommu_vdevice_id - ioctl(IOMMU_VDEVICE_TSM_BIND/UNBIND)
+>> >> + * @size: sizeof(struct iommu_vdevice_id)
+>> >> + * @vdevice_id: Object handle for the vDevice. Returned from IOMMU_V=
+DEVICE_ALLOC
+>> >> + */
+>> >> +struct iommu_vdevice_id {
+>> >> +	__u32 size;
+>> >> +	__u32 vdevice_id;
+>> >> +} __packed;
+>> >> +#define IOMMU_VDEVICE_TSM_BIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE=
+_TSM_BIND)
+>> >> +#define IOMMU_VDEVICE_TSM_UNBIND _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVI=
+CE_TSM_UNBIND)
+>> >
+>> > Hello, I see you are talking about the detailed implementation. But
+>> > could we firstly address the confusing whether this TSM Bind/Unbind
+>> > should be a VFIO uAPI or IOMMUFD uAPI?
+>> >
+>> > In this thread [1], I was talking about TSM Bind/Unbind affects VFIO
+>> > behavior so they cannot be iommufd uAPIs which VFIO is not aware of.
+>> > At least TDX Connect cares about this problem now. And the conclusion
+>> > seems to be "have a VFIO_DEVICE_BIND(iommufd vdevice id), then have
+>> > VFIO reach into iommufd".
+>> >
+>> > And some further findings [2] indicate this problem may also exist on
+>> > AMD when p2p is involved.
+>> >
+>> > [1]: https://lore.kernel.org/all/20250515175658.GR382960@nvidia.com/
+>> > [2]: https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-705=
+0/
+>> >
+>>=20
+>> Looking at your patch series, I understand the reason you need a vfio
+>> ioctl is to call pci_request_regions_exclusive=E2=80=94is that correct?
+>
+> The immediate reason is to unbind the TDI before unmapping the BAR.
+>
+>>=20
+>> In another thread, I asked whether this might be better handled by
+>> pci_tsm instead of vfio. I'd be interested in your thoughts on that.
+>>=20
+>> I also noticed you want to unbind the TDI before unmapping the BAR in
+>> vfio. From what I understand, this should still be possible if we use an
+>> iommufd ioctl.
+>
+> I'm not sure how is that possible.
+>
 
-Thanks,
-Yilun
+IIUC, what you need is the below interface
+int iommufd_device_tsm_unbind(struct iommufd_device *idev) so that vfio
+can use vfio_iommufd_tsm_unbind() -> 	iommufd_device_tsm_unbind(vdev->iommu=
+fd_device);
 
-> 
-> -aneesh
+The below iommufd changes can get that
+
+static struct mutex *vdev_lock(struct iommufd_vdevice *vdev)
+{
+	if (mutex_lock_interruptible(&vdev->mutex) !=3D 0)
+		return NULL;
+	return &vdev->mutex;
+}
+DEFINE_FREE(vdev_unlock, struct mutex *, if (_T) mutex_unlock(_T))
+
+static struct mutex *idev_lock(struct iommufd_device *idev)
+{
+	if (mutex_lock_interruptible(&idev->igroup->lock) !=3D 0)
+		return NULL;
+	return &idev->igroup->lock;
+}
+DEFINE_FREE(idev_unlock, struct mutex *, if (_T) mutex_unlock(_T))
+
+int iommufd_vdevice_tsm_bind_ioctl(struct iommufd_ucmd *ucmd)
+{
+	struct iommu_vdevice_tsm_bind *cmd =3D ucmd->cmd;
+	struct iommufd_vdevice *vdev;
+	struct iommufd_device *idev;
+	struct mutex *ilock __free(idev_unlock) =3D NULL;
+	struct mutex *vlock __free(vdev_unlock) =3D NULL;
+	struct kvm *kvm;
+	int rc =3D 0;
+
+	if (cmd->flags)
+		return -EOPNOTSUPP;
+
+	idev =3D iommufd_get_device(ucmd, cmd->dev_id);
+	if (IS_ERR(idev))
+		return PTR_ERR(idev);
+
+	vdev =3D container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
+					       IOMMUFD_OBJ_VDEVICE),
+			    struct iommufd_vdevice, obj);
+	if (IS_ERR(vdev)) {
+		rc =3D PTR_ERR(vdev);
+		goto out_put_idev;
+	}
+
+	ilock =3D idev_lock(idev);
+	if (!ilock) {
+		rc =3D -EINTR;
+		goto out_put_vdev;
+	}
+
+	if (idev->vdev) {
+		/* if it is already bound */
+		rc =3D -EINVAL;
+		goto out_put_vdev;
+	}
+
+	vlock =3D vdev_lock(vdev);
+	if (!vlock) {
+		rc =3D -EINTR;
+		goto out_put_vdev;
+	}
+
+	if (WARN_ON(vdev->idev)) {
+		rc =3D -EINVAL;
+		goto out_put_vdev;
+	}
+
+	kvm =3D vdev->viommu->kvm_filp->private_data;
+	if (kvm) {
+		/*
+		 * tsm layer will make take care of parallel calls to tsm_bind/unbind
+		 */
+		rc =3D tsm_bind(vdev->dev, kvm, vdev->id);
+		if (rc) {
+			rc =3D -ENODEV;
+			goto out_put_vdev;
+		}
+	} else {
+		rc =3D -ENODEV;
+		goto out_put_vdev;
+	}
+	idev->vdev =3D vdev;
+	vdev->idev =3D idev;
+	rc =3D iommufd_ucmd_respond(ucmd, sizeof(*cmd));
+
+out_put_idev:
+	iommufd_put_object(ucmd->ictx, &idev->obj);
+out_put_vdev:
+	iommufd_put_object(ucmd->ictx, &vdev->obj);
+	return rc;
+}
+
+static int iommufd_vdevice_tsm_unbind(struct iommufd_vdevice *vdev)
+{
+	int rc =3D -EINVAL;
+	struct mutex *lock __free(vdev_unlock) =3D vdev_lock(vdev);
+	if (!lock)
+		return -EINTR;
+
+	if (!vdev->idev) {
+		tsm_unbind(vdev->dev);
+		vdev->idev =3D NULL;
+		rc =3D 0;
+	}
+	return rc;
+}
+
+/**
+ * iommufd_device_tsm_unbind - Move a device out of TSM bind state
+ * @idev: device to detach
+ *
+ * Undo iommufd_device_tsm_bind(). This removes all Confidential Computing
+ * configurations, Once this completes the device is unlocked (TDISP
+ * CONFIG_UNLOCKED).
+ */
+int iommufd_device_tsm_unbind(struct iommufd_device *idev)
+{
+	struct mutex *lock __free(idev_unlock) =3D idev_lock(idev);
+	if (!lock)
+		return -EINTR;
+
+	if (!idev->vdev)
+		return -EINVAL;
+
+	iommufd_vdevice_tsm_unbind(idev->vdev);
+	idev->vdev =3D NULL;
+	return 0;
+}
+EXPORT_SYMBOL_NS_GPL(iommufd_device_tsm_unbind, "IOMMUFD");
+
+int iommufd_vdevice_tsm_unbind_ioctl(struct iommufd_ucmd *ucmd)
+{
+	struct iommu_vdevice_tsm_unbind *cmd =3D ucmd->cmd;
+	struct iommufd_vdevice *vdev;
+	int rc =3D 0;
+
+	vdev =3D container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
+					       IOMMUFD_OBJ_VDEVICE),
+			    struct iommufd_vdevice, obj);
+	if (IS_ERR(vdev))
+		return PTR_ERR(vdev);
+
+	rc =3D iommufd_device_tsm_unbind(vdev->idev);
+	if (rc) {
+		rc =3D -ENODEV;
+		goto out_put_vdev;
+	}
+	rc =3D iommufd_ucmd_respond(ucmd, sizeof(*cmd));
+
+out_put_vdev:
+	iommufd_put_object(ucmd->ictx, &vdev->obj);
+	return rc;
+}
+
 
