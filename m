@@ -1,200 +1,205 @@
-Return-Path: <linux-pci+bounces-28883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02CC8ACCBB9
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 19:10:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FDA3ACCBD4
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 19:16:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CE601890968
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:10:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 192D03A3461
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41ED1A256E;
-	Tue,  3 Jun 2025 17:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B43F35464D;
+	Tue,  3 Jun 2025 17:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h331Tqlt"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="C7hF230M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11407155C82;
-	Tue,  3 Jun 2025 17:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5630611E
+	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 17:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748970597; cv=none; b=jxqUgBy8wuasT14arrIStwv8q8Mc6WR8ATzFvL3DIgYv4ruhSyhh9yMMtnHtGtEXKrj3CsEDghDHRUdetOuuOZCingPIH1lgv4ym0f183DpipvV3N/R+UpiFVQifxx6+pZ1k/gP3sihZgMoCT0mZjNsoVUwflykrjZEYKVH0EcQ=
+	t=1748970978; cv=none; b=ZACmoZtDqH+TDFEX9Jsc1Ru93T5mLzd5wuQzo9eFKZ9ndvWMF9hN1/gFpyPAdqMbXag7noVlVeIsFTsFSPOdcHKLOFsbCwXvE0A9C5gpuSch8SrdRyJYEbrCfKVPIWeg/GEq7i03ECcXhuBHkHJS9RRoB2OEEHsoZ4ALdlIORDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748970597; c=relaxed/simple;
-	bh=xnKsYymRbXGa0LSn7YAZAlc8guuGA+k8iCPbSMNG4rA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O8HfJUgOp1YtsLbpaO8T8+8qNWGWoqSH9HoNsHnDJdrBcqN4BBi6qLj85IZF8xnUcp3wBEHv8U2UmQY71nQYshBbv50iJkdjCBGmyZH2RVHKC+CEiLVcuxinLkAOk41UXF0MSIz+7O70kq0+QAzOVfzYuVDTPCCij88Os/WlbB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h331Tqlt; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748970596; x=1780506596;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xnKsYymRbXGa0LSn7YAZAlc8guuGA+k8iCPbSMNG4rA=;
-  b=h331Tqltlq7VFB7T0W/ABedqQfPpwBbQm7y1MrJi7f3bmsUoxow1LnoP
-   5jFyxJ9chWbV/gq1O6p4s7tz8dWDVnq3rc+zmdCukIGFMjrUx04ktdsYe
-   k8+m4uPGldvDkh/0YNFqwrY7fHsbzYycuc+3UKLNhGSTSBdWvLOSvCNCe
-   4nFRJ5Yeqjnf3HiCJ3ZoU8BKlNAO0ZKAzY1Rp82oM7s9Rbl6F2WjfbJ14
-   rBbpFs8QwKRVRG2FH/FuDg26onXzwo60//mhRQJ35mWFDLCzR9q3iHAA7
-   /St7IQftDUGGAZolBuQDtGlqOrUTT/MIqjwb8seCmjzo20GP4f1ysvmRc
-   w==;
-X-CSE-ConnectionGUID: Zp8v0b15TzqJAA7LDgWNoQ==
-X-CSE-MsgGUID: ES2q7KDmSZ6rUNkc4zkvEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="73555397"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="73555397"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:09:55 -0700
-X-CSE-ConnectionGUID: VpzspcPMRbG1hz/zJ4yAsQ==
-X-CSE-MsgGUID: EQWme7gmSbWv56mXA2DfMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="145543777"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:09:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Jun 2025 20:09:49 +0300 (EEST)
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-In-Reply-To: <8df02df4-243e-fbbc-aa00-2da7affde4a0@linux.intel.com>
-Message-ID: <6b4f3e14-a3b1-db7e-52c0-0eca7350fc93@linux.intel.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
- <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <fc611a93-1f5f-a86d-f3ca-cb737ed5fa4a@linux.intel.com> <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
- <8df02df4-243e-fbbc-aa00-2da7affde4a0@linux.intel.com>
+	s=arc-20240116; t=1748970978; c=relaxed/simple;
+	bh=0dbFtmVTleLo8aV5Z82QBA8vgTp1NQpXuG3/98RhCLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aRher0CVpo+j9OYTNmZqq+cr9PTUGuNV7atbkyyUyNHdQTQyA7/zbt0Nob+coMyrf9A9t1pLsmL0j8XAfDyGOGfu/uXQstxnLdu4znFz90XP9RVtZSDeffPTpSrBZgR9/H1xYgG41zo1YbKr6QXGQF61V241/IBCXqI16ZXWUD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=C7hF230M; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32a61af11ffso855421fa.1
+        for <linux-pci@vger.kernel.org>; Tue, 03 Jun 2025 10:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748970975; x=1749575775; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tXTj+CF50WK91xEe8iXeDXDfymmgElgb2N2auZ/QKMM=;
+        b=C7hF230MN87SKtibpvI7wl7Fjjj+/i5PTOgkYdpll1OOg/nK1zWKk8nyHe8MzKMZOU
+         VWI8p0i/kzX5smwY8NwmqFitXRnLe1OZQDNyyjsUS8j5nRLJBpJW4m5Za07H/y38TeP4
+         QSn1EeYau/EgtxvW+zSVxN0oT0/OKy7MjXVzE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748970975; x=1749575775;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tXTj+CF50WK91xEe8iXeDXDfymmgElgb2N2auZ/QKMM=;
+        b=qRkmfy50tzhlNcKeKJSEnpDjOf6KkKRplKwIirOPWV6tUrGy5ec+qDUABGi9SeKHu2
+         QoZ6Mhjt+tA/pi+K6EXrBveYqx7z6PO8QNd7jHm3ToBxyfJuWL1bq/fANH86PfgQN8wz
+         kviChyDVRbPurq3Jj94AbZky99wuvCuybUsCcGIRKabVhFUV5L5kny5m92CXZivrxzDJ
+         2WBIXpJ528e0h7H79XbtudhNuq7NjSQ/6M9z8B0nRLHPu2CBsAuHnM0PpLAVYrOwmiwu
+         uGMhD+7hWt213q7ZXw/pD+Gx25WtW0uHQNs37wD+121X88Gy3W306ohxmZ3zoBV832XY
+         /F6g==
+X-Gm-Message-State: AOJu0YxW0iqpeMsF55h0TbMD1I7RK9S2Qhzs85rNUHmolOdwCPCIkInj
+	lqtlQXnjtvgL966JtLQZHQuDWbIzM5zGfBS/aMQDTnRCEfZCUEdeGr33Ew8ggHeSUaS0ZayCQaE
+	9CmAbdzC/5vuZum44g7/5KeJl7Y5jJUmJ8mGBlg12
+X-Gm-Gg: ASbGnct4pn4pF7Xv8wXEfk53Yg5l5XvyyCBuh7XEBEG6RIYrtN+9Nh/2Dc6DVZ6nD1D
+	PQdONMSUhzUz71irm8LlKcZPRD7c9UGD8zsOe3Z/yRmkUapvQZsxrvxS1h8l9962W/6IvrOCPnS
+	/uykP0hJDVVombtZ/WZircMy0zrkCmYkDRUA==
+X-Google-Smtp-Source: AGHT+IHC5MaJhuUr9dZqasvsj+fh2q185qHbCW+3JZRLncO7qv1RlkyM+Lq2FRBLKOWAHt1twqmBnEzlgGBMAofZkiw=
+X-Received: by 2002:a2e:b889:0:b0:329:1916:967f with SMTP id
+ 38308e7fff4ca-32abf222922mr12806311fa.3.1748970974998; Tue, 03 Jun 2025
+ 10:16:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-627129416-1748970589=:937"
+References: <20250530224035.41886-1-james.quinlan@broadcom.com>
+ <20250530224035.41886-2-james.quinlan@broadcom.com> <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
+ <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com>
+In-Reply-To: <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Tue, 3 Jun 2025 13:16:02 -0400
+X-Gm-Features: AX0GCFsDcLbPD2iXqutq-Yok2XwwAq3uTg8lwBkeVKPuzyjEX1Iy3qoGqUHjKtA
+Message-ID: <CA+-6iNz48EFUGUOiHCSaqgsU_tKGV1=Xvw4fjoUS_AMhUHAi6w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000b5d2e80636ae09c1"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--000000000000b5d2e80636ae09c1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---8323328-627129416-1748970589=:937
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Tue, Jun 3, 2025 at 12:24=E2=80=AFPM Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+>
+> On 5/30/25 16:32, Florian Fainelli wrote:
+> > On 5/30/25 15:40, Jim Quinlan wrote:
+> >> Add optional num-lanes property Broadcom STB PCIe host controllers.
+> >>
+> >> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> >
+> > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>
+> Sorry I take that back, I think this should be:
+>
+> num-lanes:
+>    enum: [ 1, 2, 4 ]
+>
+> We are basically documenting the allowed values, not specifying that we
+> can repeat the num-lames property between 1 and 4 times.
 
-On Tue, 3 Jun 2025, Ilpo J=E4rvinen wrote:
+num-lanes is already defined as
 
-> On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> > On 6/3/25 3:13 PM, Ilpo J=E4rvinen wrote:
-> > > On Tue, 3 Jun 2025, Tudor Ambarus wrote:
-> > >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
-> > >>> So please test if this patch solves your problem:
-> > >>
-> > >> It fails in a different way, the bridge window resource never gets
-> > >> assigned with the proposed patch.
-> > >=20
-> > > Is that a failure? I was expecting that to occur. It didn't assign=20
-> > > any resources into that bridge window.
-> >=20
-> > It leads to a watchdog interrupt on my pixel6. Last print I see on my
-> > console is related to the modem booting status. My wild guess is that
-> > that modem accesses something from the unassigned bridge window.
->=20
-> The bridge window is not for the bridge device itself. It's as the name=
-=20
-> says, a window into where subordinate busses can assign their resources.
-> The bridge knows it must forward that window address range to the=20
-> subordinate bus.
->=20
-> > In the working case I see the bridge window printed:
-> > [   15.457310][ T1083] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14=
-:
-> > tmp rsc : [mem 0x40000000-0x401fffff]
-> >=20
-> > [   15.457683][ T1083] cpif: s51xx_pcie_probe: Set Doorbell register
-> > address.
-> >=20
-> > In the failing case I see:
-> > [   15.623270][ T1113] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14=
-:
-> > tmp rsc : [??? 0x00000000 flags 0x0]
-> >=20
-> > [   15.623638][ T1113] cpif: s51xx_pcie_probe: Set Doorbell register
-> > address.
->=20
-> Oh, is it this one?
->=20
-> https://github.com/oberdfr/google-modules_radio_samsung_s5300/blob/11a10f=
-955a267a45a1997f65671d7054adf1a33a/s51xx_pcie.c#L366
->=20
-> There are number of crazy things going on there... Probe shouldn't be=20
-> messing resources like that. If it wants to change resources, a quirk=20
-> would be more appropriate place I guess but I'm very unsure what that=20
-> even tries to achieve with all that craziness ("Disable BAR resources" by=
-=20
-> assigning them :-/).
+    enum: [ 1, 2, 4, 8, 16, 32 ]
 
-Or maybe DT, I'm not very familiar with DT things.
+> --
+> Florian
 
---
- i.
+--000000000000b5d2e80636ae09c1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> But yes, it seems to take the bridge window's address and assumes=20
-> something is there (which isn't there as we know). So this driver code is=
-=20
-> plain wrong.
->=20
-> Perhaps it would want to use the address of some endpoint device resource=
-=20
-> instead of the bridge window address (e.g., that device with class 0?).
->=20
-> > > If there's nothing to be assigned into the bridge window, the bridge=
-=20
-> > > window itself is not created, that is the expected behavior (working =
-as=20
-> > > designed). So you're comparing to the bridge window that was made too=
-=20
-> > > large due to the disparity (and left unused, AFAICT).
-> > >=20
-> > > It would be possible to put the condition inside the block which adds=
-=20
-> > > the resource to the realloc_head, I initially put it there but then=
-=20
-> > > decided to remove the disparity completely because why keep it if no=
-=20
-> > > resource is going to be placed into the bridge window.
-> > >=20
-> > Thanks for the educative answers.
-> >=20
-> > > What's that class 0 device anyway? Why it has class 0?
-> > >
-> > I don't know yet, it's the first time I'm dealing with a PCI driver. An=
-y
-> > idea where is the class typically assigned?
->=20
-> https://pcisig.com/sites/default/files/files/PCI_Code-ID_r_1_12__v9_Jan_2=
-020.pdf
->=20
-> Perhaps try a quirk which changes the class of the device underneath the=
-=20
-> bridge to something else than 0, it should make the resource fitting and=
-=20
-> allocation to assign its resources.
->=20
-> But honestly, that s51xx_pcie_probe() has more than one thing wrong.
->=20
-> > >> With the patch applied: https://termbin.com/h3w0
-> > >> With the blamed commit reverted: https://termbin.com/3rh6
-> > >=20
-> >=20
->=20
->=20
---8323328-627129416-1748970589=:937--
+MIIQYQYJKoZIhvcNAQcCoIIQUjCCEE4CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
+MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
+rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
+aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
+e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
+cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
+MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
+KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
+/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
+TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
+YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
+b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
+CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
+BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
+jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
+9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
+/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
+jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
+AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
+dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
+MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
+IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
+XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
+J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
+nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBU0wggQ1oAMCAQICDEjuN1Vuw+TT9V/ygzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE3MTNaFw0yNTA5MTAxMjE3MTNaMIGO
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
+FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAKtQZbH0dDsCEixB9shqHxmN7R0Tywh2HUGagri/LzbKgXsvGH/LjKUjwFOQwFe4EIVds/0S
+hNqJNn6Z/DzcMdIAfbMJ7juijAJCzZSg8m164K+7ipfhk7SFmnv71spEVlo7tr41/DT2HvUCo93M
+7Hu+D3IWHBqIg9YYs3tZzxhxXKtJW6SH7jKRz1Y94pEYplGQLM+uuPCZaARbh+i0auVCQNnxgfQ/
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
+AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCDMCgZL1v+zG1QwtENyEYyScz+zjqGC
+m9F0BtC8jHRsZzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
+MDMxNzE2MTVaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
+AQEFAASCAQB+4v8i4s4Xx8AxsTwdjEtW95PZ/uUMuMSPzLvBDNr6K/dRB7/0AvmYTlNcV/Oc469y
+pMDk+QbZBCBxY6OhlT7gF6d8WFA/9i6SaEFIBFt2v2H19AGV9izV9u2iGCdA+uO3tH1bhwIfE9sA
+RSnrFRwVkKuCp91lFNZhj+hkJCiuCIPNrZIiwWqNK8ijEgAEMk5AtkDwpbphSMRuWfTV9tm50VAR
+sesXhkaurFbxu4sD9JzJKMno9euP9QnJXddvUfg7BSHQPU0wsXNOjPTaaddbAVy2wbhYGAGCvFHH
+6pBdAeVJjiH9wBMKlstOX8ajSugFRtZG/pCRAnx6um1Cw4eS
+--000000000000b5d2e80636ae09c1--
 
