@@ -1,159 +1,186 @@
-Return-Path: <linux-pci+bounces-28877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23F02ACCB33
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 18:24:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B5DDACCBA6
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 19:03:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56BD31891D5C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 16:24:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D55F3A7362
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jun 2025 17:02:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B6E22F767;
-	Tue,  3 Jun 2025 16:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDDBE1A3160;
+	Tue,  3 Jun 2025 17:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Frdbpzwg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ObMCOIWb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597844B5AE
-	for <linux-pci@vger.kernel.org>; Tue,  3 Jun 2025 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12BB155C82;
+	Tue,  3 Jun 2025 17:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748967856; cv=none; b=mQV/UbeJUtpAsUuJD/597wbrcCl+Hw9FsVqhegsg99bikRVQp8am+1lc4vp1StGDN9WdhBEjZP4w5MMIKYt+MzDHlR22mPvUimnEz4BI6IEWWuc1orm+T8w5s4h83vIeSNq/IutbEarzqjWQbevEdN5/kMK/o4NWU9Jsye453Xo=
+	t=1748970191; cv=none; b=u0MP3/T6itO4CplIB/EGwTqinv0dIvFpWp10pRa2wPuFuTyyNZ+fggi5XXjkle46FNLnKTpd2DH1bo1COmG3jrHfeZJXGV+86XIP8ic6QRC1MdxhaLePs7jzkYmoq91T/pPzciDakTt52rR/5FR+7XE0JU0jL+rOlvTPD/rqoXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748967856; c=relaxed/simple;
-	bh=N7BCQ3oqAnCjFSJnJmZX5Dctlb/sTvgV4iyi3FNvIgM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=V7MJpuBnQe+jrMw+o/VAG2+lh4nA6vzM/kJlAyMIYRNczbePDJxEJfDsrLEzgt2IW+tVrGFdnGgtImLom+G/mSrTS1vXaVmBJVrXXqrpk9urhoQyZYgmfXUOJKOeD11womXO3n5GA8GLrLYkJOTTyydf0qP7qgfNpAuYvV5/tvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Frdbpzwg; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso6411490b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 03 Jun 2025 09:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748967854; x=1749572654; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=PsTtB+z1bvDl4NGrrXN+rO6t/978g31yCeEcylF7R2E=;
-        b=FrdbpzwgDBWEn3irvUPXUHH7YYdy2zc+s2m8OhB1WvvOHxTCHZfwFWFdfOnQJC4cQg
-         /K3GdgLZ/cpFusd6EAivhwfGnGPCDoNT3YCBE+cqM7LEBDhfuSsseBxueequc675nkGz
-         VyePX0v5s1y1jAYZJnhqnlAZ72Dce/EqrHdwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748967854; x=1749572654;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PsTtB+z1bvDl4NGrrXN+rO6t/978g31yCeEcylF7R2E=;
-        b=Nnmdzop+z+X8HqToFvhuKUlsZ27mWrVHPo5D13IkePQdGTANynBXiT6w/PiJVGGMwM
-         d2fgAx2ZSA+yfnLIh1vBNfRkE3wL2vPptwiir5/zyNpBXyh3QPhjOyIQjG3YJQlF88+o
-         mVXRzXT91kKqDylcrD2EkTAqRXms37lvgR1FlGhTnULX4oMwu8suAspWfjsKkGDIccK/
-         nWaO1GT80lwvb6XuSL8A1uvsdNtxj+6xxS2mpN3beC2Ru5y88ftAVSxENONaHxE0Lnxz
-         PcDXpQMJT688WwEY5IGIAsBGSDmOXNcAPykdTxbuEbqIMiV2AWYqLZquEyx5FSVPDZw9
-         zdvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ50OaPfmhZNotgrWIP5h+ulIe9OLgPXCPJPdkNmjsHb8rTYWHDQS4qQgSPPrBacP9A9eaEojrtSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0EwX3/FWdB3OyWXJx1tfcu5Htuo6Vohnc0HBTf5BMGACmZCC+
-	ODvOwk7c51vQW/T9FhrP5gznC6sVY9iYyqRV3puLRkbAa9vrgNSJ1SS7ZTtH/a3r1w==
-X-Gm-Gg: ASbGncsSOFXPIMZo1KYxSY5VhgFXFpr6YYXR3+ECwNCm+7f6+G+iKX1AGj8XM/43Hmz
-	hh/Z9RgvlVOLmIAWdClM0OHPafpPWW7cbKPZYuGWtPVA5BOSlYcH7ZP5KSOc0gfxwhZ4Z1tS5yD
-	z6K1VI2z//KT3s2DsyfahF5ctj1e3U+RZAVSqCzBykLBPy5VsYlYpsImLyFtRq6F98Q4JbmKi9R
-	afpq/L8Jjy30nhCwPnEM1mdKyqXKS+5Dyt0tgN915cwzl8Hq5YFeEII5qUeugcivoQmpYbTxu7s
-	SF57arDw3SMMfrJm0IIAcPiNFCwFYIKWX4cRMaZ3e4IWejMomcsgArmWxdrl811wr6mP4p8qrg2
-	/DzhuAuzSI1XcOmk=
-X-Google-Smtp-Source: AGHT+IFKXHZ6CeWKl/ulfOEKEnune82cj+P2dFCkcmW9aLp6lK2qD/Lt2Jxz06XEpxzVljkgg6VJ0A==
-X-Received: by 2002:a05:6a00:b49:b0:736:6043:69f9 with SMTP id d2e1a72fcca58-747bd9e6d31mr25070378b3a.19.1748967854532;
-        Tue, 03 Jun 2025 09:24:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeadda3sm9579151b3a.71.2025.06.03.09.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 09:24:13 -0700 (PDT)
-Message-ID: <2f79ae4e-6349-472c-b0cc-ea774b8ac7cf@broadcom.com>
-Date: Tue, 3 Jun 2025 09:24:11 -0700
+	s=arc-20240116; t=1748970191; c=relaxed/simple;
+	bh=TRM77rUDHAB4m63wuszm/af252clkJ3m7pLdueQYJvU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ODunuovgDvc7NTJN8+wOLfKAtWnpKlKAophV9fjyIFJm6i4Paqg/qj4xUb5NgPmOLDYh/u2XlWIRZAiIc0i4bSGa1k+6u0CWzVZrkY1GypQxDW/kwSnXZk9sqkrglwja7H/XwAD7K1QnCgcWiK1T53vv/G0FFjKZ3AH/yhonQ2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ObMCOIWb; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748970190; x=1780506190;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=TRM77rUDHAB4m63wuszm/af252clkJ3m7pLdueQYJvU=;
+  b=ObMCOIWbjIRmpgAg6KILXH0cQk62p/chQ42Ry5a9tJXi5OKKHdRsMdhm
+   kwtHy7QqLP3cf68rHI6nXxijqZhqQKXi5iub9cy9LPXzPvSkFJEbLpBef
+   Zi8auincccGzk9h4DUpw+qt6Zk4cTa25BxVhYrxbHyu55M9YHmiEWukG3
+   OXHq9NGM5KCB9nkWOAopGCVD3fIx0cZh6nnC3Y5bLuo7rmUulOnCFHgKW
+   IA/ltGkuPz5PBZ+6nAScNVcxPIc0VBYA2GaTK1zS2MvjebuTWkr+p44zp
+   2NEXmKpzNZOnWRT4//7ljPFD97d3p2XfvGU60mFnSpTxthK+9JhsAlojc
+   A==;
+X-CSE-ConnectionGUID: baLkccmdQ66uiuUgw8/k2A==
+X-CSE-MsgGUID: Vw5HSXD/TPK+RsdJ0pynKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61287730"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="61287730"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:03:09 -0700
+X-CSE-ConnectionGUID: zcEwYNqjQc+waIKAYZFRQA==
+X-CSE-MsgGUID: NU1Z8OqeTQCvx/gLS2TDZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="144803125"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 10:03:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 3 Jun 2025 20:03:02 +0300 (EEST)
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    William McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
+Message-ID: <8df02df4-243e-fbbc-aa00-2da7affde4a0@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org> <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com> <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+ <f6ee05f7-174b-76d4-3dbe-12473f676e4d@linux.intel.com> <867e47dc-9454-c00f-6d80-9718e5705480@linux.intel.com> <a56284a4-755d-4eb4-ba77-9ea30e18d08f@linaro.org> <7e882cfb-a35a-bab0-c333-76a4e79243b6@linux.intel.com> <f2d149c6-41a4-4a9a-9739-1ea1c4b06f4b@linaro.org>
+ <19ccc09c-1d6b-930e-6ed6-398b34020ca1@linux.intel.com> <c1c0bacd-7842-4e9e-aec4-66eb481aa43f@linaro.org> <fc611a93-1f5f-a86d-f3ca-cb737ed5fa4a@linux.intel.com> <bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes
- property
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
- <20250530224035.41886-2-james.quinlan@broadcom.com>
- <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
-Content-Language: en-US
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <6c3ec1c3-8f62-4d76-86d3-c1bbe3e1418f@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1144988712-1748968017=:937"
+Content-ID: <52a0b719-2ea7-4622-cb85-1d872f1eb4d6@linux.intel.com>
 
-On 5/30/25 16:32, Florian Fainelli wrote:
-> On 5/30/25 15:40, Jim Quinlan wrote:
->> Add optional num-lanes property Broadcom STB PCIe host controllers.
->>
->> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Sorry I take that back, I think this should be:
+--8323328-1144988712-1748968017=:937
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <cdb1ba6d-ce3a-9525-202b-9d2d3bb82a8d@linux.intel.com>
 
-num-lanes:
-   enum: [ 1, 2, 4 ]
+On Tue, 3 Jun 2025, Tudor Ambarus wrote:
+> On 6/3/25 3:13 PM, Ilpo J=E4rvinen wrote:
+> > On Tue, 3 Jun 2025, Tudor Ambarus wrote:
+> >> On 6/3/25 9:13 AM, Ilpo J=E4rvinen wrote:
+> >>> So please test if this patch solves your problem:
+> >>
+> >> It fails in a different way, the bridge window resource never gets
+> >> assigned with the proposed patch.
+> >=20
+> > Is that a failure? I was expecting that to occur. It didn't assign=20
+> > any resources into that bridge window.
+>=20
+> It leads to a watchdog interrupt on my pixel6. Last print I see on my
+> console is related to the modem booting status. My wild guess is that
+> that modem accesses something from the unassigned bridge window.
 
-We are basically documenting the allowed values, not specifying that we 
-can repeat the num-lames property between 1 and 4 times.
--- 
-Florian
+The bridge window is not for the bridge device itself. It's as the name=20
+says, a window into where subordinate busses can assign their resources.
+The bridge knows it must forward that window address range to the=20
+subordinate bus.
+
+> In the working case I see the bridge window printed:
+> [   15.457310][ T1083] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
+> tmp rsc : [mem 0x40000000-0x401fffff]
+>=20
+> [   15.457683][ T1083] cpif: s51xx_pcie_probe: Set Doorbell register
+> address.
+>=20
+> In the failing case I see:
+> [   15.623270][ T1113] pcieport 0000:00:00.0: [s51xx_pcie_probe] BAR 14:
+> tmp rsc : [??? 0x00000000 flags 0x0]
+>=20
+> [   15.623638][ T1113] cpif: s51xx_pcie_probe: Set Doorbell register
+> address.
+
+Oh, is it this one?
+
+https://github.com/oberdfr/google-modules_radio_samsung_s5300/blob/11a10f95=
+5a267a45a1997f65671d7054adf1a33a/s51xx_pcie.c#L366
+
+There are number of crazy things going on there... Probe shouldn't be=20
+messing resources like that. If it wants to change resources, a quirk=20
+would be more appropriate place I guess but I'm very unsure what that=20
+even tries to achieve with all that craziness ("Disable BAR resources" by=
+=20
+assigning them :-/).
+
+But yes, it seems to take the bridge window's address and assumes=20
+something is there (which isn't there as we know). So this driver code is=
+=20
+plain wrong.
+
+Perhaps it would want to use the address of some endpoint device resource=
+=20
+instead of the bridge window address (e.g., that device with class 0?).
+
+> > If there's nothing to be assigned into the bridge window, the bridge=20
+> > window itself is not created, that is the expected behavior (working as=
+=20
+> > designed). So you're comparing to the bridge window that was made too=
+=20
+> > large due to the disparity (and left unused, AFAICT).
+> >=20
+> > It would be possible to put the condition inside the block which adds=
+=20
+> > the resource to the realloc_head, I initially put it there but then=20
+> > decided to remove the disparity completely because why keep it if no=20
+> > resource is going to be placed into the bridge window.
+> >=20
+> Thanks for the educative answers.
+>=20
+> > What's that class 0 device anyway? Why it has class 0?
+> >
+> I don't know yet, it's the first time I'm dealing with a PCI driver. Any
+> idea where is the class typically assigned?
+
+https://pcisig.com/sites/default/files/files/PCI_Code-ID_r_1_12__v9_Jan_202=
+0.pdf
+
+Perhaps try a quirk which changes the class of the device underneath the=20
+bridge to something else than 0, it should make the resource fitting and=20
+allocation to assign its resources.
+
+But honestly, that s51xx_pcie_probe() has more than one thing wrong.
+
+> >> With the patch applied: https://termbin.com/h3w0
+> >> With the blamed commit reverted: https://termbin.com/3rh6
+> >=20
+>=20
+
+--=20
+ i.
+--8323328-1144988712-1748968017=:937--
 
