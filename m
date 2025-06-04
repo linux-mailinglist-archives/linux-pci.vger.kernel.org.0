@@ -1,81 +1,82 @@
-Return-Path: <linux-pci+bounces-28969-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28970-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC27ACDDE5
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:29:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BBD8ACDDEB
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:29:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7711F188E989
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:29:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 325FA7A8019
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:28:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5551B28ECDF;
-	Wed,  4 Jun 2025 12:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86DD28ECCD;
+	Wed,  4 Jun 2025 12:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/4E5nk3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8voyw2u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025ED28EA69
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D760528ECCE
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749040157; cv=none; b=uN6n+IEnRpuA128cLjgG4ys0xDXMuXho4use9hpDwf3uBdlKY2FbIL1iy4wnEXvSngcVyAzmAMhGu305zhInE0mS6OT/uVqHN5oA1NcdRVVU5e1pt/KG88TfF4Sox30HuOkzAFgGKRa6IJtim+LFKHyIVDNQMsH0X3fM4x+77nA=
+	t=1749040174; cv=none; b=eoxvW6+zGQ2hpzMzFCZW/iEDyNAICoAwG/32FADNj0LaAIIEeToxSBcPTvuNwY6FerhwPuB0TTgOGo/fr7s1vZAmnOjucEi35kokhrfO9OIP/NOJkXnb307XBWmo7T94u1awDyUU71Sm296Dhn3HoBKaOH12fcAwh8WMnsGyNZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749040157; c=relaxed/simple;
-	bh=ULFNDPnm3+qsry1f77pFQpUZJmv8SW+h00LKUdNxlGY=;
+	s=arc-20240116; t=1749040174; c=relaxed/simple;
+	bh=jJAJ2zNRS4Mcm3SBhX/rRP1UzssTd1Y00hBueZo4LTs=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ft6BtApn6OzH43zW5mtsPLREW+MAjR5cxg9Wxg0arjS2cOyxLMNufHpiATLE5xU87hjvpGSxt1ycomHCFk0Lm6tpQuWsloknHcc/DO1d+tS7EOoUkTdMNKWMXScNKocMI7YT72FTqe5OD9+aNxcQAzbl1QXLyMTDuNOekBqZOAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K/4E5nk3; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:Content-Type; b=gClM2+uBJOL1Iro24ez3jHAr+X9a8wa4zceLWjjGycDNOSVpJAjjeUywecnEOYr2jhG6y7l7FZ/AmKncS+qn8cPjvvFEPgJWk/zCM6Yyd/bfOQabpBkOECZSgkD3VDsbEhJDrhx/BCxIccbjzXjKdhQFnb/DsVW+GM8qm5LmZgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G8voyw2u; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so5422993f8f.2
-        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 05:29:14 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so2484562f8f.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 05:29:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749040153; x=1749644953; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749040170; x=1749644970; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QVfy2CpvBk3MsiLsYhxYE+mgkyJuV5n7k3uqs9AC104=;
-        b=K/4E5nk3yOF0ml3ljPfRlvXWzb1u2FwfWABju3Pg4foTdGiv5wSA/NW+44bSgldlDR
-         cjDMZ3Z0Mg+3LpyT709R3EZcR+X7QVnrj4EnY9tje/tvNz8MoGJjOGzu/NREJOilNREm
-         YxX2UeWv7Z58OZ3QYkl0YkzTza9Y6wS8C4laJZt8nDMPN3QzGt0f2+bNMJ2FALH55bSk
-         /tNKqZmbcmiGUcEVO39exdBxIRgRu7iDpw4CPXMkfUdL0/SzDSydnPwujWdKld/j1Ebf
-         y6OCyfCV/pc8Zj6z5t11OLjdFMWcBBGyd4O65L4z6IG6zZr1Ql4g9vH2rjRVZ81U9Non
-         kpRw==
+        bh=rlUevRnkRKcLl384cvLF8laETHh3L8+aAG0Z3FSxUTk=;
+        b=G8voyw2ucePadkaSRs17pdS+esFxGSwCoQ7WwvdU/jDbAEiYmy8A2j0L9us4J4TTt6
+         kwl2BGgcisj7bQGx/ok+U7hkK6+pYDLpXHm0MTdR9IcO/c785JBamvelVyscVSgJRC8G
+         +nWv5+TvTX/S4u390QcD8/RHgh79WKxWOgWhZpIinXA0Hwuup2RFFkndgbN2vAH90KcB
+         +Ix7nglPjjixuXUyl/4NUo4CZXk5LT/kD8+4tk+h2ZUsb+BKRuQE8+obBboZR/T0p0M7
+         5dnxxOMjb/J/G/BwL/6y/yzr4K+uqw2vy5YYvDxNFbrlCdZMvJ7yGur2PHld7JbyASsk
+         ASjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749040153; x=1749644953;
+        d=1e100.net; s=20230601; t=1749040170; x=1749644970;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=QVfy2CpvBk3MsiLsYhxYE+mgkyJuV5n7k3uqs9AC104=;
-        b=F5qKkz9amEhhn/IgcHKbZAWuYRJakyBc+nLNUWdnFCD1TxnwBIGHntS+t2Dkn8Z1Nk
-         yB4uvPdcKeiqNrYjnitRqCq0kMRZsCtJwNUlhRROzy/sU8NuvrDBeRyV7xIcSd6jxzmd
-         6aKT/e2E8h7yzq+yJQ//odFVnfgDB9/QHzG2Ty4fMrw0bUgsH5uf83/IuCRrzEoC/CjR
-         xS/IgdXNk8FUF3nPfVCOEbq3iEL80IdvgZwAHK+nLatMNCUr5ox7r94+sGs4Yd60CDxE
-         2CJ9CFbIMLv2OmiuzdMt83Xh4dk1aNrNjH5893vHlXSPkbLR9fM36ZX0BziPkJty/fH5
-         TzCg==
-X-Gm-Message-State: AOJu0YxDIFKmJX62QOu0vQCMnsrI125Ro/AzlUMCzORe3Bouumgc1WB9
-	VgIMpyxHgtctsyAv9Zk85pldUsxxt5yi165vvHT1K5YWwrEuY9/9UTTFWI0htxWJvL4=
-X-Gm-Gg: ASbGncullhfE6MQ/32CorXIuM27bhR4Z8+NLuUlkkLT8j5bskIXuOmSl3+taRWG2Rew
-	twmNuEI8GQQFOsyxw9SvMdalnFJG4atd60NKdOEO6kYiVeDfLoEWbAIbHT2FwvPbtCF87ghI83R
-	9nIpe3DBnNM9uZpuAAqcmZUkt/2tsvZstJZ5sdk4JyvdQxB8wYUTldu3lLHMW1E+TTWesEAJRn7
-	TSHCpY/GDL1b+AtVx45gNoFqBvwrhn9wY2b6l4tzYsOBPb3xhjo9AM5OF5smTRkm+9JZS5y361A
-	D1cTpSv8DGwmQRC+rii2Wx4/Ec2rH53bsmq8cDU8djx8HRrK4PUALHevxxDAcof+8U+YSeCjqJb
-	VSP/7CH/e6WvXkYRJikZws0EVQ/f+qyFaRrrY
-X-Google-Smtp-Source: AGHT+IFbZzzXIZYRmNVttFy6UZkVLmONQDN5/oxjc1R4rO6jeaovt23EuVBiRT3lHV9syJ/ZBBw/dg==
-X-Received: by 2002:a5d:5f54:0:b0:3a4:cb4f:ac2a with SMTP id ffacd0b85a97d-3a51d935a05mr2296824f8f.21.1749040153247;
-        Wed, 04 Jun 2025 05:29:13 -0700 (PDT)
+        bh=rlUevRnkRKcLl384cvLF8laETHh3L8+aAG0Z3FSxUTk=;
+        b=CKDKpcUGPheDyWk6jLTSNvPKXUI97gMAi53ovSeyX3wQtS64ZdyLixt4rhmC1NF6IM
+         XfTTkF2VDmdQMrGIXcWniFZWzf8Exs+nDVW6xANS/Vnyu/nJHMJ4M1yHRRmGU/E1gviK
+         GtfjlZ0NEyGWtmqmGbGOpDKdiT4nq5k46I1U//LjmZNVQ37WxIPmLcQJV11v/sc813qw
+         VJcpJ7+CULq2mzJUTuNKNSDsc/EidwkvvPECSBQG5zMeKqIBOBKa3oPOm6DpFHP6xQGf
+         109SgIrXdrjB1MAXwM/GIMLsKRN3Y4gjbyLtIBXQu2rhlKD7BAErjnxbbVZnpaP5it7T
+         2g0g==
+X-Gm-Message-State: AOJu0YzhJY6982KMEI+OE7HmkWEQz0aNTtBBNJ5sop0V0FCgLfb/Q/rJ
+	4kmXJNeSbxXp4eaPcjJnXsHJTqFR9Q5M8LIA+Uag3ECwN1I/8SqGiOJJtHJqzjxgrvPqZlFSKkW
+	E2wSP
+X-Gm-Gg: ASbGnctIYDXMUiBYry9luxgJHo8yTfuZ7yMSdR/cmDCS14xRnXqIXrizv0OdZzKT/dz
+	/kbimJv28m5C6y5q3WkwTPJYoaOvZwwwxK4ZQc49ScwWH+n+fd0kPGvDlGpi14Gnvr5IxzDEaXl
+	g71pjbUKLVXeqeVnmxn+jeLf62RhStRxj1m8p0ltGm9Wbl+2MItDiapdlRUkrdtZDKLHLfHYv7C
+	4EZN1zjKABOFI8PGOlwP6G2CHpMMQyKodN4ys/6lJvHVFwkgn2jGbu7f5y26LBpbRFKwDCEuQmh
+	M6bLqI9jJ684p9ZFUry2MuS9UFU7x50fmtzfNu16mlzfxqCGLXbv2e/JE33ZNAtw54RsEHDoZOQ
+	tZDzCDiUcenIaETTXlkM535V7ug==
+X-Google-Smtp-Source: AGHT+IFAqt37X/nVv/2RwOdCdcs4UXjT/VL/HCTdp4l4p06zsedWg/2pZgay4ZmFeC40lhzrgmbAuw==
+X-Received: by 2002:a05:6000:1a8d:b0:3a4:cbc6:9db0 with SMTP id ffacd0b85a97d-3a51dc49afcmr2088240f8f.51.1749040170100;
+        Wed, 04 Jun 2025 05:29:30 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8? ([2a01:e0a:3d9:2080:fef9:cf1c:18f:2ab8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8ed32sm196056845e9.1.2025.06.04.05.29.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb7e41sm194312145e9.26.2025.06.04.05.29.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 05:29:12 -0700 (PDT)
-Message-ID: <1f6bcfb1-80f4-4ff0-8dcc-8fc9c3b9d2fd@linaro.org>
-Date: Wed, 4 Jun 2025 14:29:12 +0200
+        Wed, 04 Jun 2025 05:29:29 -0700 (PDT)
+Message-ID: <6976052f-a3b8-48b8-97f5-4fea7538e976@linaro.org>
+Date: Wed, 4 Jun 2025 14:29:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,14 +86,13 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 1/2] MAINTAINERS: Update the e-mail address of Manivannan
- Sadhasivam
+Subject: Re: [PATCH 2/2] mailmap: Add a new entry for Manivannan Sadhasivam
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  bhelgaas@google.com
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-msm@vger.kernel.org
 References: <20250604120833.32791-1-manivannan.sadhasivam@linaro.org>
- <20250604120833.32791-2-manivannan.sadhasivam@linaro.org>
+ <20250604120833.32791-3-manivannan.sadhasivam@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -119,193 +119,31 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250604120833.32791-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20250604120833.32791-3-manivannan.sadhasivam@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 04/06/2025 14:08, Manivannan Sadhasivam wrote:
-> My Linaro email is going to bounce soon, so switch to the kernel.org alias.
+> Map my Linaro e-mail address is going to bounce soon. So remap it to my
+> kernel.org alias.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->   MAINTAINERS | 38 +++++++++++++++++++-------------------
->   1 file changed, 19 insertions(+), 19 deletions(-)
+>   .mailmap | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 690e48c20fb5..f39b6fca3ab8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2102,7 +2102,7 @@ F:	arch/arm/plat-*/
->   
->   ARM/ACTIONS SEMI ARCHITECTURE
->   M:	Andreas Färber <afaerber@suse.de>
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   L:	linux-actions@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
-> @@ -2354,7 +2354,7 @@ F:	arch/arm/boot/dts/intel/axm/
->   F:	arch/arm/mach-axxia/
->   
->   ARM/BITMAIN ARCHITECTURE
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
->   F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-> @@ -3022,7 +3022,7 @@ F:	include/linux/soc/qcom/
->   F:	include/soc/qcom/
->   
->   ARM/RDA MICRO ARCHITECTURE
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
-> @@ -3725,7 +3725,7 @@ F:	Documentation/admin-guide/aoe/
->   F:	drivers/block/aoe/
->   
->   ATC260X PMIC MFD DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   M:	Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
->   L:	linux-actions@lists.infradead.org
->   S:	Maintained
-> @@ -6730,7 +6730,7 @@ S:	Orphan
->   F:	drivers/mtd/nand/raw/denali*
->   
->   DESIGNWARE EDMA CORE IP DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	dmaengine@vger.kernel.org
->   S:	Maintained
->   F:	drivers/dma/dw-edma/
-> @@ -8546,7 +8546,7 @@ S:	Maintained
->   F:	drivers/edac/pnd2_edac.[ch]
->   
->   EDAC-QCOM
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-msm@vger.kernel.org
->   L:	linux-edac@vger.kernel.org
->   S:	Maintained
-> @@ -14702,7 +14702,7 @@ F:	drivers/hid/hid-mcp2221.c
->   
->   MCP251XFD SPI-CAN NETWORK DRIVER
->   M:	Marc Kleine-Budde <mkl@pengutronix.de>
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   R:	Thomas Kopp <thomas.kopp@microchip.com>
->   L:	linux-can@vger.kernel.org
->   S:	Maintained
-> @@ -15849,7 +15849,7 @@ F:	arch/arm64/boot/dts/marvell/armada-3720-eDPU.dts
->   F:	arch/arm64/boot/dts/marvell/armada-3720-uDPU.*
->   
->   MHI BUS
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	mhi@lists.linux.dev
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
-> @@ -18752,7 +18752,7 @@ F:	drivers/pci/controller/dwc/pci-exynos.c
->   
->   PCI DRIVER FOR SYNOPSYS DESIGNWARE
->   M:	Jingoo Han <jingoohan1@gmail.com>
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-pci@vger.kernel.org
->   S:	Maintained
->   F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-> @@ -18787,7 +18787,7 @@ F:	Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
->   F:	drivers/pci/controller/pcie-xilinx-cpm.c
->   
->   PCI ENDPOINT SUBSYSTEM
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   M:	Krzysztof Wilczyński <kw@linux.com>
->   R:	Kishon Vijay Abraham I <kishon@kernel.org>
->   L:	linux-pci@vger.kernel.org
-> @@ -18840,7 +18840,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
->   PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
->   M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
->   M:	Krzysztof Wilczyński <kw@linux.com>
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   R:	Rob Herring <robh@kernel.org>
->   L:	linux-pci@vger.kernel.org
->   S:	Supported
-> @@ -18997,7 +18997,7 @@ F:	Documentation/devicetree/bindings/pci/microchip*
->   F:	drivers/pci/controller/plda/*microchip*
->   
->   PCIE DRIVER FOR QUALCOMM MSM
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-pci@vger.kernel.org
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
-> @@ -19033,7 +19033,7 @@ F:	Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
->   F:	drivers/pci/controller/plda/pcie-starfive.c
->   
->   PCIE ENDPOINT DRIVER FOR QUALCOMM
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-pci@vger.kernel.org
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
-> @@ -20154,7 +20154,7 @@ F:	drivers/iommu/arm/arm-smmu/arm-smmu-qcom*
->   F:	drivers/iommu/msm_iommu*
->   
->   QUALCOMM IPC ROUTER (QRTR) DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
->   F:	include/trace/events/qrtr.h
-> @@ -20162,7 +20162,7 @@ F:	include/uapi/linux/qrtr.h
->   F:	net/qrtr/
->   
->   QUALCOMM IPCC MAILBOX DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Supported
->   F:	Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-> @@ -20196,7 +20196,7 @@ F:	Documentation/devicetree/bindings/media/qcom,*-iris.yaml
->   F:	drivers/media/platform/qcom/iris/
->   
->   QUALCOMM NAND CONTROLLER DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-mtd@lists.infradead.org
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
-> @@ -22731,7 +22731,7 @@ F:	Documentation/devicetree/bindings/media/i2c/sony,imx283.yaml
->   F:	drivers/media/i2c/imx283.c
->   
->   SONY IMX290 SENSOR DRIVER
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-media@vger.kernel.org
->   S:	Maintained
->   T:	git git://linuxtv.org/media.git
-> @@ -22740,7 +22740,7 @@ F:	drivers/media/i2c/imx290.c
->   
->   SONY IMX296 SENSOR DRIVER
->   M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-media@vger.kernel.org
->   S:	Maintained
->   T:	git git://linuxtv.org/media.git
-> @@ -25041,7 +25041,7 @@ S:	Maintained
->   F:	drivers/ufs/host/ufs-mediatek*
->   
->   UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER QUALCOMM HOOKS
-> -M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Manivannan Sadhasivam <mani@kernel.org>
->   L:	linux-arm-msm@vger.kernel.org
->   L:	linux-scsi@vger.kernel.org
->   S:	Maintained
+> diff --git a/.mailmap b/.mailmap
+> index a885e2eefc69..1e87b388f41b 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -458,6 +458,7 @@ Maheshwar Ajja <quic_majja@quicinc.com> <majja@codeaurora.org>
+>   Malathi Gottam <quic_mgottam@quicinc.com> <mgottam@codeaurora.org>
+>   Manikanta Pubbisetty <quic_mpubbise@quicinc.com> <mpubbise@codeaurora.org>
+>   Manivannan Sadhasivam <mani@kernel.org> <manivannanece23@gmail.com>
+> +Manivannan Sadhasivam <mani@kernel.org> <manivannan.sadhasivam@linaro.org>
+>   Manoj Basapathi <quic_manojbm@quicinc.com> <manojbm@codeaurora.org>
+>   Marcin Nowakowski <marcin.nowakowski@mips.com> <marcin.nowakowski@imgtec.com>
+>   Marc Zyngier <maz@kernel.org> <marc.zyngier@arm.com>
 
 Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
 
