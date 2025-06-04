@@ -1,143 +1,216 @@
-Return-Path: <linux-pci+bounces-28953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F35D3ACDAF3
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:24:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 281D7ACDB94
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:02:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4CF8177220
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 09:24:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C1481894AD5
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 10:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3DB6204C2F;
-	Wed,  4 Jun 2025 09:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E987C28D8C3;
+	Wed,  4 Jun 2025 10:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KQ3jDaEv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53C628A709;
-	Wed,  4 Jun 2025 09:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C4F28C2CC;
+	Wed,  4 Jun 2025 10:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749029087; cv=none; b=Klz8s5CJfSHlTu3INNKsNUdfST2KGMWISgcLD68OMbSDKVODuDIpBVV46PLlXlwPjjDv+DcK6+xS0ZVagunzibNtrIaW8NDJAjtnx9bTa8tN1/z1mYQVZIjmfRqUuPyMxsQ+/SphKzZE09Hfn/DZgVQ9ak01t3lUveROAu0dKp4=
+	t=1749031367; cv=none; b=qHBZqGnCrWIzo9Skd76rdXZwMtnW3KFJBc5q1yJjj5wUjNdUfEPzp/7pSdlT3pGNjdrQRRdcvUBFzHlgTgfpjITz4uaZUBN9RsFAwr5m8lmAmGLc49tqhcRGqNHj9TB2AC6+1BjHgKJoWae2+qBfjXDjXS2rhCm6VcxZWH5q7Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749029087; c=relaxed/simple;
-	bh=UMOTjEqzvMvXx72TG2/egrmI/Vb+dCYfjfnRgDycRW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i8ZMcNK10V0Sj6ZCFeC2ns4o3cmQzpEyZTityIJnnzYayPt9GgsqZU5Wk61Sy0K/TlJBCFo9SZU4r+n7emyUATgri5ncGxSWheHiYNXzRo3K2fgWXtegcW3UMVlqZ5aR7ew3INUNwtQ7vEVbRie/YkglQHuqDcapBrSH/ytAw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fac1c60e19so8207906d6.1;
-        Wed, 04 Jun 2025 02:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749029082; x=1749633882;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nsYVl2hdQ/guAvtcE43mR4izrkYEpK8YkARVgLSUAJs=;
-        b=DEIkI+24sS0K227ot5XGHU0kdo8CyZIOFsKsSIUb0VHUL3VpCfzAS2xwJzPWBqECr8
-         nxZOqfWVo3f8zq6o/9oJJJZW5j+GWE9DTqbHQ550DB+O1HvFT+9qayRO2/rsU9qUEISs
-         BxlVRWUaAF1BTnSqCWVS/p/t7+7p7LBRsfGZoBj0E5rBO1fRKRpjAGMsXIau++wR/LNb
-         OtFof2peTs8kFaPycN5ryskPT/FQvKhpxKPN5CMBZIE8sOW5kPnes89tGrEjNQXwOMhi
-         Rw3yj96FDgtCATOe86zovQ6doi6U9EhFLioQfcn7mg4CUPsH3dQKaUbZHUVVT7ccMIBP
-         +bWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6wmeojyo4tn3eDsPuU+pir4ISUzFslxcIhNoXtJfQ+kZ2PssydgDUHz3sS0tnGl2bGXs8GdEPJGWW@vger.kernel.org, AJvYcCVC8x8RtY6UGd4JWw81WlLQCdHcTLP6saJJglqfsCxGvM60pjkaS1cieKgVy7aigJxky4hVkcM1f0Wy@vger.kernel.org, AJvYcCVmYC+LP0/m8xeIyGRL9baoR6a04fSt/oDzWiHDH4ezfegln44ZlxVbe1mUqFJb++X0NsbXrN+2WYL37UQ/CCf4UcA=@vger.kernel.org, AJvYcCX+e+PQFvexGvBatzY87KzJQX4dVIya0G56kcGYzwH236B+rwQL5j3Kp3iMR2nhapc/kB1pQpHdlxTdVukw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzjyhn4c4dnmIUonTiSiqBM67skCcb1N6XtOqEJDAyArbVubTjN
-	LvZmDk3UVsvKAJWFpC/AfBscN7wa7fsIpMCzc6M+T8Xy34t6Fs7W/Y53OQLNuT42
-X-Gm-Gg: ASbGncv1yY72zDEEay8AH2cNH8tLOFSUizKoAh0uIHfpjx2fWN1h0cFkrWg9bF82YTz
-	UQID1R4dUqAYci6ftwpH1fWqBFSeME7aCzueSyjHroKnZQt9HLCuq7PtmyXjgjhRAET6cWIm9ic
-	4c9mCUxIV+FUnw6BoUFt6OVuMi6IdYvqjK4GwMKyyA7NqeJphAxUmjKEduDbuqe8zman9ArXnkg
-	lLbEjZtrvERf4WAwePMOqZc8vDLrtO+DYPbyAUeu3Fo1j0f0jXuN7Vfl8EybR8WSvzjgRraljyw
-	sGkncjQ0HJ+a6WKBcYdfJjgDltY1z9G0BPqj2k+zhYUyGq/sGZUE05RgX5cduPWECsIwsUhAosG
-	HeptixP62y1iLHNLQSxASVkZ0
-X-Google-Smtp-Source: AGHT+IGT3OP0+rx5WJQBf3W0DGO+OAn7Enf3/ZUlZVtRwieI6nS9s+tdM1/nvwscq+eIsAnMSw0s8g==
-X-Received: by 2002:a05:6214:e4b:b0:6fa:ae40:3023 with SMTP id 6a1803df08f44-6faf6a6c333mr33366836d6.7.1749029082559;
-        Wed, 04 Jun 2025 02:24:42 -0700 (PDT)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com. [209.85.219.43])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fadf67f797sm61657096d6.17.2025.06.04.02.24.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 02:24:42 -0700 (PDT)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f8b2682d61so8107596d6.0;
-        Wed, 04 Jun 2025 02:24:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrP1okLPOIHDZafZHTBWztRzOwpyESJWNmHyteO9VqxXbIWF0FqXiWEQjmrkthoGjRw1KXohIPhnhG@vger.kernel.org, AJvYcCWU0spBZBplT4jDoV8fnY8kj4SglwGKv+mAJ1lq0hiyqGcwEtlleBltKL5KwWdaahK7ptyJ5hKSM5SxOmtr@vger.kernel.org, AJvYcCWquaDkLOLRlyLpxtm/y5ka8O187DMzqDKv+HEEGNLFvs6jL8+JGZ9PD4nc6CLrn99kdem59B3d9Lo8@vger.kernel.org, AJvYcCXOfkwpO3t4Cd5pxrX5BsEo0essd27qC5g36sOgFLMeGsISe9Wn6q+4OP3cYdGXhG1tGSWqF54VGGJkQqpYAm/bti8=@vger.kernel.org
-X-Received: by 2002:a05:6102:b08:b0:4df:9aed:3114 with SMTP id
- ada2fe7eead31-4e73612362amr4782752137.8.1749029071180; Wed, 04 Jun 2025
- 02:24:31 -0700 (PDT)
+	s=arc-20240116; t=1749031367; c=relaxed/simple;
+	bh=hHfwX93Z1LNoyiAbTbrxQDAYuvLkrymMo+5mny2wZDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LeJCUTVe06PidsrYchuiCrCaiRIc3XbDeu3twpHYQlWtgZVWpANEAHpN6ciL6xjLfAeaePC9Bq8r6hSPHTsfgkbWP+X4+qw6Q4AAp0TZyX5tQoHeU81zUXFGd4ywAAMFto589z6KmebH2m6H8JfmGJYBjHScKaTmVX/UNSOhd7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KQ3jDaEv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 554875DU013521;
+	Wed, 4 Jun 2025 10:02:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XMWU8a/DXCAez/wWFLWi1bCf9nSDlbvC+BavkR9SOYM=; b=KQ3jDaEvx5GGJ8o4
+	m5n+AGbafDd5oOq98rJZgBZknQLd+eBkzYNJLIt8I7YuRe/IRyE+to8KoufHmDKp
+	mzx3szcPwOkjKSy8tCQw641WLwcoBP4bP06bmek8LEpUv34/oqGl+6I70F/MsZjQ
+	AdVfEQAUAtZAcBvVHUMZqtxr5+9lvRTwM9sL5ir3VnoEBke78OlAVMKS1CfWdllo
+	rBEZRPHFHRJA5MECQatsw+0N0jn2cMvrtrcui96p5U63imNpsdvenDxRg0M7OwH3
+	MmhDZDwUZNDrjtXoIPMtATRoxwqF31he6qowg6hJXPt77tepnHp8DqO0WqJwG8f4
+	mI58IQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8nnmx7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Jun 2025 10:02:32 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 554A2Wh6005912
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Jun 2025 10:02:32 GMT
+Received: from [10.239.31.134] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Jun 2025
+ 03:02:27 -0700
+Message-ID: <772f5e33-5040-4a68-84f4-25e048aa4432@quicinc.com>
+Date: Wed, 4 Jun 2025 18:02:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org> <20250530225504.55042-3-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250530225504.55042-3-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 4 Jun 2025 11:24:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUVYzaUyP=OUOST8SK66_BpubOh0WCXcaVWBy=RxBrquA@mail.gmail.com>
-X-Gm-Features: AX0GCFtylgjPOc_MFC3oHf3t5Dztq8GFmxVQy74EOxxbbt3KzH-GIiIRW1TtAWg
-Message-ID: <CAMuHMdUVYzaUyP=OUOST8SK66_BpubOh0WCXcaVWBy=RxBrquA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a779g3: Describe split PCIe
- clock on V4H Sparrow Hawk
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Ziyue Zhang
+	<quic_ziyuzhan@quicinc.com>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>, <kw@linux.com>,
+        <conor+dt@kernel.org>, <vkoul@kernel.org>, <kishon@kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_krichai@quicinc.com>,
+        <quic_vbadigan@quicinc.com>
+References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
+ <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
+ <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
+ <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
+ <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: M78myJrI6CB7Jy1T4BD-DqDvxKB0H3iT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA3NSBTYWx0ZWRfX5qxemDmXAipZ
+ ZahAIbqzRnKjfSdtDOq9GBm9FSXMjDmVOsVEqjI0FJsT/CgS4CZyo33r37vFQ4sojv5JaIO8aJD
+ XIbVLAx/5mkc2FTZMWqRgeAjA0p5+a/zI2+jKSOEU+jFjxMQubv4GrwfoSpbXmx2AtduwrPs1eL
+ xMTUM2aahi+KZ+tb8qvhqM/hfyOdmbL3qNvPOL/LsjwjfmbjVcKmrR2lC2gxv/60ROjQEnvXBcI
+ fLMvbfg6YgHI+cMZlxcDN1vFv4XvLuNN3ox4HW6aPELt7iommu0ThBOwgGpBcNH7YvyzZ8CBj7W
+ 2tPwUbXlhkHoPCUrfrwhcqwqDKiUs/7OiXLL2co7KY3ZW8UCzIUm9q2D+y6xNRfBmtlsw0g6Lqh
+ oPM2XNdFd25s/sfIBC+NquMVzeNMDi3yKeD3TszK8WUNguXEqdKZjuLSuSFfM/rdPjC4hq9T
+X-Proofpoint-ORIG-GUID: M78myJrI6CB7Jy1T4BD-DqDvxKB0H3iT
+X-Authority-Analysis: v=2.4 cv=UphjN/wB c=1 sm=1 tr=0 ts=684019b8 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=JfrnYn6hAAAA:8
+ a=COk6AnOGAAAA:8 a=gDmLj3BAQhsnJV4uteAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1011 malwarescore=0 adultscore=0
+ bulkscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040075
 
-Hi Marek,
 
-On Sat, 31 May 2025 at 00:55, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> The V4H Sparrow Hawk board supplies PCIe controller input clock and PCIe
-> bus clock from separate outputs of Renesas 9FGV0441 clock generator chip.
-> Describe this split bus configuration in the board DT. The topology looks
-> as follows:
+On 6/4/2025 5:15 PM, Dmitry Baryshkov wrote:
+> On Wed, Jun 04, 2025 at 03:58:33PM +0800, Ziyue Zhang wrote:
+>> On 6/3/2025 9:11 PM, Dmitry Baryshkov wrote:
+>>> On Thu, May 29, 2025 at 11:54:14AM +0800, Ziyue Zhang wrote:
+>>>> Each PCIe controller on sa8775p supports 'link_down'reset on hardware,
+>>>> document it.
+>>> I don't think it's possible to "support" reset in hardware. Either it
+>>> exists and is routed, or it is not.
+>> Hi Dmitry,
+>>
+>> I will change the commit msg to
+>> 'Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
+>> document it.'
+>> "Supports" implies that the PCIe controller has an active role in enabling
+>> or managing the reset functionality—it suggests that the controller is designed
+>> to accommodate or facilitate this feature.
+>>  "Includes" simply states that the reset functionality is present in the
+>> hardware—it exists, whether or not it's actively managed or configurable.
+>> So I think change it to includes will be better.
+>>
+>> BRs
+>> Ziyue
+>>
+>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>>>> ---
+>>>>   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
+>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> index e3fa232da2ca..805258cbcf2f 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>> @@ -61,11 +61,14 @@ properties:
+>>>>         - const: global
+>>>>     resets:
+>>>> -    maxItems: 1
+>>>> +    minItems: 1
+>>>> +    maxItems: 2
+>>> Shouldn't we just update this to maxItems:2 / minItems:2 and drop
+>>> minItems:1 from the next clause?
+>> Hi Dmitry,
+>>
+>> link_down reset is optional. In many other platforms, like sm8550
+>> and x1e80100, link_down reset is documented as a optional reset.
+>> PCIe will works fine without link_down reset. So I think setting it
+>> as optional is better.
+> You are describing a hardware. How can a reset be optional in the
+> _hardware_? It's either routed or not.
 >
->  ____________                    _____________
-> | R-Car PCIe |                  | PCIe device |
-> |            |                  |             |
-> |    PCIe RX<|==================|>PCIe TX     |
-> |    PCIe TX<|==================|>PCIe RX     |
-> |            |                  |             |
-> |   PCIe CLK<|======..  ..======|>PCIe CLK    |
-> '------------'      ||  ||      '-------------'
->                     ||  ||
->  ____________       ||  ||
-> |  9FGV0441  |      ||  ||
-> |            |      ||  ||
-> |   CLK DIF0<|======''  ||
-> |   CLK DIF1<|==========''
-> |   CLK DIF2<|
-> |   CLK DIF3<|
-> '------------'
+> I feel a bit confused. According to the theory above, everything seems to
+> be non-optional when describing hardware, such as registers, clocks,
+> resets, regulators, and interrupts—all of them either exist or do not.
 >
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-
-Thanks for your patch!
-
-> V2: Use pciec0_rp/pciec1_rp phandles to refer to root port moved to core r8a779g0.dtsi
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-I understand this has a hard dependency on [PATCH v2 1/3] (and on
-enabling CONFIG_PCI_PWRCTRL_SLOT), so I cannot apply this before that
-patch is upstream?
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> Seems like I misunderstand the concept of 'optional'? Is 'optional' only
+> used for compatibility across different platforms?
+>
+> Additionally, we have documented the PCIe global interrupt as optional. I
+> was taught that, in the PCIe driver, this interrupt is retrieved using the
+> platform_get_irq_byname_optional API, so it can be documented as optional.
+> However, this still seems to contradict the theory mentioned earlier.
+>> BRs
+>> Ziyue
+>>
+>>>>     reset-names:
+>>>> +    minItems: 1
+>>>>       items:
+>>>> -      - const: pci
+>>>> +      - const: pci # PCIe core reset
+>>>> +      - const: link_down # PCIe link down reset
+>>>>   required:
+>>>>     - interconnects
+>>>> @@ -161,8 +164,10 @@ examples:
+>>>>               power-domains = <&gcc PCIE_0_GDSC>;
+>>>> -            resets = <&gcc GCC_PCIE_0_BCR>;
+>>>> -            reset-names = "pci";
+>>>> +            resets = <&gcc GCC_PCIE_0_BCR>,
+>>>> +                     <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
+>>>> +            reset-names = "pci",
+>>>> +                          "link_down";
+>>>>               perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>>               wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>>
+>>>> -- 
+>>>> linux-phy mailing list
+>>>> linux-phy@lists.infradead.org
+>>>> https://lists.infradead.org/mailman/listinfo/linux-phy
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With best wishes
+Qiang Yu
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
