@@ -1,206 +1,253 @@
-Return-Path: <linux-pci+bounces-28967-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28968-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD513ACDDBF
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:19:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16F47ACDDD9
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:26:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5ED90178F9A
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:18:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D900E7A94AF
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:24:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3021256C79;
-	Wed,  4 Jun 2025 12:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97B128E575;
+	Wed,  4 Jun 2025 12:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MAUaZx5q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EhXTjvaC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550411DFF8
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749039502; cv=fail; b=Laj8v+pWIYtUpoUHcKvBzXbD0CGJ0SR0LGeSMUBOqpAJ5iV1xRKpZtBpyPfkl1HbCy0e+JLyHq3d7khdYlRyBYiwd5jYYBNP/qBpKeJBxZxCzJRRm/ogrFysNExulPcOEcMV6aGnmywGk2+dDV6oQr8IOw6tSbY6tv22kvWNwpw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749039502; c=relaxed/simple;
-	bh=tdfwtBL2kH29AUVjHFrbL7szMKe31dM0dDuWSgyFntM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o4v3uT08tS1WEY5Q2L/k90YLDEdbvEZZWfwqEOwhry8s1iOm0W9/mjtfCwDxhtDmSmbxLLqfeg8k7o4pxEGfi86E4Mlozj7E2eyKOYOyH1Zmc+a/fiMOLhBEaNbQDkXp/S1ooFM4M9JJmunJlDmdbXmgRfTK7AXz0zTnb91V/hE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MAUaZx5q; arc=fail smtp.client-ip=40.107.237.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gsy3tJccbD7iyFWANG1m4Qo5CT0U1BQg1oVC0thrm9VslFKvqJXQaoplgGDNkQ8uzpJMG8oWIgLzcolsZotQv44xdEoBEj9/3kLCZ6mAv6xVwPBrXln/Y8bwzBHnjaUoSAbN/DUrFBs1Dezh5E6jCVVl/QQohbBLJ2HhgJVTt9GpoC9wPf2tie5pA0WITbC4bU2tQVGF5HnqJ6I3n0WFxKJU0aYa/abIUAYto0iSpkzzstBXdU7ixf60zyD57yoDTr+CTQInEJiOgx3mnUThgke6Bgs/+Xm5q6IZ8tr88UExpHpZqfy525xjpnyoJcnU5LNIUEO70Qxbs48T0958Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XxMmuHycknI3N0ZDW8UuDzLRUmaWFHZPAg6Uv5PuzTQ=;
- b=KnsFXWtvym0r3pnSfCEO4pMK8stf3KhB6z6ZQofxHVqnruwkucFSbnGhL7DtUKvh9ZLlZ5GQUlBpUF/cZlFDQcWdAstKyO/IUVHe9WFNnZl9sC0LbtrLypDKvNJ27WgQu3w6egw37DmFJbofODu61VMDFRENoyGT1FMWcQorQ2jinh+CWBQCRf+f4s6ft05QURxx0mknNBFBXW/m5bZCMfDsGkLdOReOFs2oFYu1DB0lapmlfQSvq/OtbP9hqG/bEsKPlDEQPR6Ux/8V/jOyfFIAfkcMgUdd8DGSH7EhhXkHPA3PAha170tMaZlJWXPgr1j4ZWoNiPFOECjT4KyyqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XxMmuHycknI3N0ZDW8UuDzLRUmaWFHZPAg6Uv5PuzTQ=;
- b=MAUaZx5qr6NJ4A/9nDQOwyHceLxGI3O00P3J+MhD2FrGVxozW83qVHvhddrWAjcVr41N99kOoU4CF38DeNjW5YBANQ7Ql+vUrvYvMkZQaI21els+AyDYVRuaouod+VKYQIXEBV2pPkquy4Gt3m3rLyqFsNSkCu5JIpI/1JOgVvRu8ocFzM8PbIWJSnFYhWqZfrFJlxY71v9MxsYpVtrcdYVLJ8S3wA+OFXkYI928z7/OsuL/7JsAJgyIHHtp5rsWgtrPRCJ5vqSShKc3GDcQ8uHsh3QETnsByw/4F+6YVG/RkKXEFK6lyHSr3eJrqsqUl4WGxCDJrrrsH0ihnmhpbw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by PH8PR12MB6889.namprd12.prod.outlook.com (2603:10b6:510:1c9::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Wed, 4 Jun
- 2025 12:18:17 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 12:18:17 +0000
-Date: Wed, 4 Jun 2025 09:18:16 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
-	zhiw@nvidia.com
-Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
-Message-ID: <20250604121816.GD5028@nvidia.com>
-References: <yq5a5xhj5yng.fsf@kernel.org>
- <20250529133757.462088-1-aneesh.kumar@kernel.org>
- <20250529133757.462088-3-aneesh.kumar@kernel.org>
- <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050>
- <yq5azfeqjt9i.fsf@kernel.org>
- <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050>
- <yq5ao6v5ju6p.fsf@kernel.org>
- <20250603121858.GG376789@nvidia.com>
- <683f9c0019be3_1626e100e8@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <683f9c0019be3_1626e100e8@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: YT1P288CA0031.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01::44)
- To CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D8479F2;
+	Wed,  4 Jun 2025 12:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749039964; cv=none; b=UCeCBhcGUqROL924r0vICVLDVCubPw/n0mNnJ/a4CxWhMfGh7aQcfCddXLxGpwoAWtGJ0rU9RBv0Cqce7nRR5FApcnkhIvCO48fWJQP67gcUFcRe5ImlYR1Hk+yUaVopgv8qg7/ev/sinY1o+X/XoJKyqzkVu1kjbEfEkNMNMl4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749039964; c=relaxed/simple;
+	bh=EFkzfqm1FA/pnUlUVk4/tkPBvTq7nP68gf7IeW/2B0w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UG89XT2Bw6lIDS3BslQkDDoYiPKNX4NXWQwqyXJqUy0gdsNQjEKpOh4ElQQs/CyS4JAMoA4DPpo6t3hZ/gAIqJ2k8VzwqBTBnZHIpZS9cfh2iA7KlIKofs/muOJ/r7MjpqOebMeaNDPMr32Uf1Q9r02+qhU2edMgSab/HSdCbf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EhXTjvaC; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749039963; x=1780575963;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=EFkzfqm1FA/pnUlUVk4/tkPBvTq7nP68gf7IeW/2B0w=;
+  b=EhXTjvaCdoJe9SUD5eQ4XyGVolhq4qgixu37m1PL4IJMWTod9TUmUCwU
+   DWGarE/CrPzfe9EZ95lOkVSw62jiiWiDjYHAY/UllnxvKtM/9XtKCY5Yd
+   gOajgiS4U5gr/ZxM4wCwrQvgQhyTMJj65pzf+iRO83NaTdHZZ21sOna1P
+   p9H3gErjAY/fonh68MVHxMD7+/ze3fgKc3sKhW3IeWAZkfpKMQtbritgf
+   anRoN9vtYtkVYZgXWYHVM0vNIYtz2N++toROl0YiOVWlOYNRa/u8Uf+yz
+   YRaQL+iUqa2yva/aSq5SLIDhiJzXlafCJQ9DcK5NeSkZ7tsNY2TDryW7a
+   g==;
+X-CSE-ConnectionGUID: jcoZAIqSTn+BhpTBx2+JbQ==
+X-CSE-MsgGUID: pARAJ2wITsOF+G5YykbbxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="53745738"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="53745738"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:26:02 -0700
+X-CSE-ConnectionGUID: lH/3sueOTVeh6pK8IT9H7Q==
+X-CSE-MsgGUID: 4OTG5hFBSAutbZbNmejlmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="145133647"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.124])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 05:25:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 4 Jun 2025 15:25:52 +0300 (EEST)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v9 5/6] PCI: Allow drivers to control VF BAR size
+In-Reply-To: <20250527120637.665506-6-michal.winiarski@intel.com>
+Message-ID: <a6dd1c15-7c0c-bb60-9784-f3a18bc8b765@linux.intel.com>
+References: <20250527120637.665506-1-michal.winiarski@intel.com> <20250527120637.665506-6-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH8PR12MB6889:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8af50cba-8e20-457b-8b6c-08dda361e30e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cgV3jnGQdM/5BgzxCqCPW/0Q6qgS0r5Q7RUk/MxhO1V693mb4/6HVQIw94G4?=
- =?us-ascii?Q?ubxxK4IAyMiNlZdi7PQTnNZwqfuC/OPDhOEXvPdI7cmsFOQcHbG7N4M1bU8w?=
- =?us-ascii?Q?cSwmJlH7uyT6mfsmDPboIlEPJMuH8xPnj7bN82K/pEP++4MIJWVlontxwX9p?=
- =?us-ascii?Q?oDd7lIWF7ulkSx7rbtdLM/pk05j+PZBGeJtZaLoWCjXI4MrR2Qs+Ms/oTSHy?=
- =?us-ascii?Q?tfANokzky1+katbjmK8cy9H3ECgo62RhZW2yGzAumq4GP34Llt1KtHyUwn0r?=
- =?us-ascii?Q?GFSZ+4GE/7XnGnNmMPGWCh0VYuWDwKgYphoX8A3O5qHBzdcswW5BgFlWKjNW?=
- =?us-ascii?Q?tvZZhgda14E7K9sQuDK182sfxVmJij2/KPFDIcKOmhtSaGLfoGvIRg2FML1v?=
- =?us-ascii?Q?AZKgBykPJMphtzp1fx8rvNvU5Oak7R8rk8pVn51AoljnMtO8UtB1jvEe6/k3?=
- =?us-ascii?Q?prsrqvkXlktr2fgCFcXxkQILQSPX17Xa/NIRM+9C4mfwit28KP0gfWB0JKPe?=
- =?us-ascii?Q?WUkvFt856bzwaQvIt6Vk/EUxGz5pmRrhW42D7r5rqGUkoshMUd25c9JMvDFn?=
- =?us-ascii?Q?oMm/coe/plaBDzzL0lh3KrgVwPzGTOHUCey3Oo+XzIGrm3eDtYfIG31UFROq?=
- =?us-ascii?Q?lkqFwAK8RQJtD6KLG9WyEpiBsUqquVnyPU1/6ncK7OWl10WJcZIVysi9Fs4h?=
- =?us-ascii?Q?kIlMLveexwtjMS8q1zh9NeLzLhYLwcQkagYgO2RHPAbe1/o7Quv+Lvlxph68?=
- =?us-ascii?Q?iuKBYusTUEsGasOCysK95KR+voi6/tXs7ShPkTqdsq69FuGsoC7i6v95XSTk?=
- =?us-ascii?Q?Fd8wM2RBOzBvKYy4fptjBSb/JtlSR47nFZPSIqXMyECwVuX9akhiAKQbY/R0?=
- =?us-ascii?Q?DTiJcZr+GuAuGB5wUxGjxiweSDjAQic0XDWqGNTJ0+2zy3Z3O+sLuo8UDLk1?=
- =?us-ascii?Q?7e3U9cuZnU/tqHZMJHkaiM/X5UWoviWmQLTvXUd3ycV5TpV2KrHUQMTc0uUm?=
- =?us-ascii?Q?+6XYzjblGuG1vas+S9Bg1V1cek1qord71TyMXXjU4fCQ1VNo+Hstfl/yioD8?=
- =?us-ascii?Q?92zHqPKGHe/ZGU7ozj7PaT/22tfXNWLD70+bbHX2SCe2OqdC83h2AsWxtnIm?=
- =?us-ascii?Q?T0QHUVcYUErHU3JrdXyv8MwVWPa3ZLrzCXF7jOOdNsU9yS9WnNUD6Pj9ZqMt?=
- =?us-ascii?Q?f047zCDYy6ktEF4DecxmH0pWtr9HUFhwGFQd/PwpmREXC+McQRy+We6ZN/K3?=
- =?us-ascii?Q?ljlo1A+/CEVDzEDn0Fh7il7UdkL7BP260+C1hSn+7QMrWiTLteHjhQVD/D7y?=
- =?us-ascii?Q?n4OQRaAE7163MlLSAHjBkOqCcXGyInKMx2VwH9GUJWEyXRpKa4wfS+ep6G0P?=
- =?us-ascii?Q?+9VAnm9j4gb2V+K/g4nl1/pCJc3+A/gcPPCzvbUsNs9ORa8JTLUOvmYaTxmB?=
- =?us-ascii?Q?zssWQ2nZtOw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HW34iOBagU3AMF6s2x6b5ISiGoRWg76TlXdaQVScNVyA3TPXhwIs2DQg954g?=
- =?us-ascii?Q?O3bG+ujdCAD9g3sBr4Hkf6eiYQomjDqolONW0FxjndABWS9HJD0U6rpCDifb?=
- =?us-ascii?Q?gT9jScDKyq34+SlZKdPzpd32HComc2i7Apiq7SGS3LvzCrwhJd91CwOJvQga?=
- =?us-ascii?Q?VjAv8lBLmdWCIgFkB/++dqj3LU1NxWDIaZcVgNGY5276NhwmKvIenu5yDkOF?=
- =?us-ascii?Q?pz8VnMoQv3Cy+fDTSh7Fxq8NRWCMntv2uNkhvOEMA8mGAPdqkrfi96y22UEM?=
- =?us-ascii?Q?/rJ8y+oRhkprv6WwTigyk9CkkjfTTkte7tdHsf0EMUluSnsUpdVt69XD/MV8?=
- =?us-ascii?Q?4/lm89oYT1hUxNGaucUhF+/gNZqozxs+dLLCBkrlG3xeHv1P1ILlO2xrTGYf?=
- =?us-ascii?Q?zis1OQR2tWO0qGVYX0UBVeRGdLYm7rx3hrfQuomMK6xxxIFmNJYiCTqLc0aO?=
- =?us-ascii?Q?id2HrOtcVFHTtRQScmUgf1+SivGgbA0JGkmTwClSGPQM6DhhKP52ugo0rT/5?=
- =?us-ascii?Q?6B56qAzfVdInbx9VcmzlMJtDqKbaP5C0nzeFcqBNPTAEnWcYLexlOmybXdbf?=
- =?us-ascii?Q?fOu5JL4ZcAMC5uvH8YF39oHrJZ2HuOwUj/eRRxgTgnEaPTS+JAcvyJfzoin2?=
- =?us-ascii?Q?LA3QqytXt3Cf+mug7zLznyWt4/tM1aqIQMd4jhFzD4Ols4204LwlXLd2jSrb?=
- =?us-ascii?Q?JniVT4/jpXBBI6iSpO+Q1KFGTyWoIbh45C//bokRDES9ouMXzWH3uUHBZxrD?=
- =?us-ascii?Q?9K0tCNENXs+X4olTRbrFCkpNtj9NArQ0pIRfkdS3jxjQJpUYd9pu6Mknr68F?=
- =?us-ascii?Q?MkY3OtUneOhQqojsxq/HELz4zvKyWRtTCIqS9/Ixqn5pTFs6vJATRjyIlkvX?=
- =?us-ascii?Q?ltwu+t1nADTcwfxrkkCIq84tEEbVBHyUq+gIWaI8UMF6HVkJZGgY1qE3+IID?=
- =?us-ascii?Q?9gzyVKkWWJ5YX5A95k4qYPUmfsnXO6DhVrxL6LZ8ELFizXtKH/8xlRLJXLaG?=
- =?us-ascii?Q?N4xlDKNvb3n1cCKg7JzbHZY09nFh1a/HuC0Ld9u61P/7v6hIzIPwZMtg6fiU?=
- =?us-ascii?Q?1VaCOM0Obnj6eZKNTX06Q9X+7hRt/v6gwi7SXCkJD3cH5B79dsUJlVm+kADG?=
- =?us-ascii?Q?bwux7nef9HHeERTrdxNTF/COeqUQBjmpi2TK8mQ6W4Ae+zfUFJbde7pnfn3y?=
- =?us-ascii?Q?+PaTUW1RtM9Rvieyk8iPo8PH6hGEvsSaX9mzWvfKrvkcdvhCyAdUOblr7kXm?=
- =?us-ascii?Q?KSeYaWba6eXDBP7KGAKgmeYKPBFn5g61iAP6SzS9dCXEWkZq80jXXBs9TR3I?=
- =?us-ascii?Q?sIhHhJSE6IqkFu7RTNb+u8Ky1fnWJ6B5QDfuLTr2BoYZpZQ9tETXJ0ecqiBT?=
- =?us-ascii?Q?mSeshc5z0XuNrpmGK2xtFAXddB/F8zj6CjT34an0E8nJcc2cu5m8W2HcMeEH?=
- =?us-ascii?Q?FAreXyz7x8rRSWDfYrNl322/VP3AuKqDJfcyKcLIQaNuH/q/GBzb6fYx1zOw?=
- =?us-ascii?Q?jub+omh+/zsEQWxWXGcNERRvzjXA+FoOTrEuya3ODcfI6hO/GUBV0OMfF+6t?=
- =?us-ascii?Q?oGQbU+YqCzWjV6XivGFzwh2NOF8p3b7dI5yvGAZR?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8af50cba-8e20-457b-8b6c-08dda361e30e
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 12:18:17.4703
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +YnBW8+e4YEgC/zzhqEa9x5sUu/0A53afFxVbu1ChxbqsD6I4pHdotXIMKM7a/4B
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6889
+Content-Type: multipart/mixed; boundary="8323328-318291348-1749039952=:979"
 
-On Tue, Jun 03, 2025 at 06:06:08PM -0700, Dan Williams wrote:
-> Jason Gunthorpe wrote:
-> > On Tue, Jun 03, 2025 at 10:30:30AM +0530, Aneesh Kumar K.V wrote:
-> > 
-> > > static struct mutex *vdev_lock(struct iommufd_vdevice *vdev)
-> > > {
-> > > 	if (mutex_lock_interruptible(&vdev->mutex) != 0)
-> > > 		return NULL;
-> > > 	return &vdev->mutex;
-> > > }
-> > > DEFINE_FREE(vdev_unlock, struct mutex *, if (_T) mutex_unlock(_T))
-> > 
-> > Dn't do things like this.
-> > 
-> > We already have scoped_cond_guard(mutex_intr) for this pattern and
-> > there was a big debate about its design.
-> 
-> The work in progress proposal to improve upon the ergonomics of
-> scoped_cond_guard() is the ACQUIRE() + ACQUIRE_ERR() proposal [1]. I
-> need to circle back with Peter about moving that forward:
-> 
-> https://lore.kernel.org/all/20250512185817.GA1808@noisy.programming.kicks-ass.net/
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yeah, maybe if you can get people to agree..
+--8323328-318291348-1749039952=:979
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> > It doesn't make alot of sense to use that here, this is a place where
-> > you should not use cleanup.h.
-> 
-> What are those situations in your mind? We can capture that in
-> include/linux/cleanup.h doc.
+On Tue, 27 May 2025, Micha=C5=82 Winiarski wrote:
 
-I wouldn't indent the whole function, for instance :)
+> Drivers could leverage the fact that the VF BAR MMIO reservation is
+> created for total number of VFs supported by the device by resizing the
+> BAR to larger size when smaller number of VFs is enabled.
+>=20
+> Add a pci_iov_vf_bar_set_size() function to control the size and a
+> pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
+> allow up to num_vfs to be successfully enabled with the current
+> underlying reservation size.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/iov.c   | 73 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  6 ++++
+>  2 files changed, 79 insertions(+)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index f34173c70b32a..ac4375954c947 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -8,11 +8,15 @@
+>   */
+> =20
+>  #include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/log2.h>
+>  #include <linux/pci.h>
+> +#include <linux/sizes.h>
+>  #include <linux/slab.h>
+>  #include <linux/export.h>
+>  #include <linux/string.h>
+>  #include <linux/delay.h>
+> +#include <asm/div64.h>
+>  #include "pci.h"
+> =20
+>  #define VIRTFN_ID_LEN=0917=09/* "virtfn%u\0" for 2^32 - 1 */
+> @@ -1313,3 +1317,72 @@ int pci_sriov_configure_simple(struct pci_dev *dev=
+, int nr_virtfn)
+>  =09return nr_virtfn;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+> +
+> +/**
+> + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
+> + *
+> + * Set the new size of a VF BAR that supports VF resizable BAR capabilit=
+y.
+> + * Unlike pci_resize_resource(), this does not cause the resource that
+> + * reserves the MMIO space (originally up to total_VFs) to be resized, w=
+hich
+> + * means that following calls to pci_enable_sriov() can fail if the reso=
+urces
+> + * no longer fit.
+> + *
+> + * Return: 0 on success, or negative on failure.
+> + */
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+> +{
+> +=09u32 sizes;
+> +=09int ret;
+> +
+> +=09if (!pci_resource_is_iov(resno))
+> +=09=09return -EINVAL;
+> +
+> +=09if (pci_iov_is_memory_decoding_enabled(dev))
+> +=09=09return -EBUSY;
+> +
+> +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
+> +=09if (!sizes)
+> +=09=09return -ENOTSUPP;
+> +
+> +=09if (!(sizes & BIT(size)))
+> +=09=09return -EINVAL;
+> +
+> +=09ret =3D pci_rebar_set_size(dev, resno, size);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
+> +
+> +=09return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
+> +
+> +/**
+> + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to =
+num_vfs
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @num_vfs: number of VFs
+> + *
+> + * Get the sizes of a VF resizable BAR that can accommodate @num_vfs wit=
+hin
+> + * the currently assigned size of the resource @resno.
+> + *
+> + * Return: A bitmask of sizes in format defined in the spec (bit 0=3D1MB=
+,
+> + * bit 31=3D128TB).
+> + */
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+)
+> +{
+> +=09u64 vf_len =3D pci_resource_len(dev, resno);
+> +=09u32 sizes;
+> +
+> +=09if (!num_vfs)
+> +=09=09return 0;
+> +
+> +=09do_div(vf_len, num_vfs);
+> +=09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+> +
+> +=09return sizes & pci_rebar_get_possible_sizes(dev, resno);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index ab62bcb5f99c6..cc633b1a13d51 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2437,6 +2437,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16=
+ numvfs);
+>  int pci_sriov_get_totalvfs(struct pci_dev *dev);
+>  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+>  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+);
+>  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> =20
+>  /* Arch may override these (weak) */
+> @@ -2489,6 +2491,10 @@ static inline int pci_sriov_get_totalvfs(struct pc=
+i_dev *dev)
+>  #define pci_sriov_configure_simple=09NULL
+>  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev,=
+ int resno)
+>  { return 0; }
+> +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno=
+, int size)
+> +{ return -ENODEV; }
+> +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resn=
+o, int num_vfs)
+> +{ return 0; }
+>  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool pr=
+obe) { }
+>  #endif
+> =20
+>=20
 
-And I think I saw some agreement you shouldn't do tricky things to the
-holder variable, like nulling it or whatnot.. 
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-cleanup.h seems to be generally accepted for very simple direct
-non-clever things.
+--=20
+ i.
 
-Jason
+--8323328-318291348-1749039952=:979--
 
