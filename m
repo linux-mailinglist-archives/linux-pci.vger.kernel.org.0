@@ -1,96 +1,48 @@
-Return-Path: <linux-pci+bounces-28958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28959-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6FDEACDC1E
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DAA3CACDCC0
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 13:37:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E08C2189841D
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 10:48:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4739718977BB
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A10128C5B6;
-	Wed,  4 Jun 2025 10:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFED28ECC0;
+	Wed,  4 Jun 2025 11:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PdL6S8A1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hTpPWh2Q";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PdL6S8A1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hTpPWh2Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIoi8EPi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4F53FE4
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 10:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2A520F063;
+	Wed,  4 Jun 2025 11:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749034103; cv=none; b=n2lDFXIVvDIwXKaOloqkLYZhXZTJGXgQ5QP9masyt+npuydke3m9H/5eGWWQMCyyMD/ucyrHNJmzJXns/u4SiZRsRIPn0isF6wTuhDfZ+0DLyutbj6vjkOjXm7+5Z/KrdyQ1eOyapUw7A+gtu9Dij/h+MogmBQlmgLf++WlXRls=
+	t=1749037046; cv=none; b=W+WVekBfxm4fTxYVU0VKJVTzokDEnX4H+i9XINx/QBrtmXv8su2InRFFsKc4p0cGHmfMeYKyJqNzxOefJdlWBROPQtPhmMXzZfG6bM5n3AsOBkkWNWh5RIbztjE9mWFUhk3lcsA9oa0+VDzNPKb1TXbIy7x4DGkT5OBHGJh60Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749034103; c=relaxed/simple;
-	bh=eMc3z7LPDhbTS1cXhdXmgOby4F0SIeeE/EzWk2butk8=;
+	s=arc-20240116; t=1749037046; c=relaxed/simple;
+	bh=/03g7ApDlfWnALDbvW9C24ZKhfHyWDmZKHy+HvjP5Qk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d5OqjsururgXzz5xJD+TTlZev5Re27wsy7ogi4QEIvfh9daEwiONcKtb8KRy1LkzTf5CwJ1CMBwxaYCNRvxMn0BravDWk71JAUkyx5ReBMbDxqB+DgP37W2M1CvGMRm8jNr2zGxNT3jHhDvUYDkpCcRoXxvmLWlMCgSqCpLqRpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PdL6S8A1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hTpPWh2Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PdL6S8A1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hTpPWh2Q; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0433B5D230;
-	Wed,  4 Jun 2025 10:37:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749033465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
-	b=PdL6S8A1HR0YLCczXMQr2/ylJ52KHDwo1+2T+xu4jus22SIvnS+luFeImg/lixedpXH/+M
-	QUJedn1xXjavUA4x/XwVr1dcz4c2U5I4p6nkFr6g4WikVzY+AtTAirlPHyb5KCqCoaK2iO
-	4+HBvt6QtnXC2fm2d9Kc1o95NaKEo3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749033465;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
-	b=hTpPWh2Qw7dQiWZ/xlVXJ6x5fsYNr0SF3PZ2aJo8C1sw84qcxR+qwcrl9J5+Ykq85KYlU3
-	SYNJMOZjZ4YPLFAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PdL6S8A1;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hTpPWh2Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749033465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
-	b=PdL6S8A1HR0YLCczXMQr2/ylJ52KHDwo1+2T+xu4jus22SIvnS+luFeImg/lixedpXH/+M
-	QUJedn1xXjavUA4x/XwVr1dcz4c2U5I4p6nkFr6g4WikVzY+AtTAirlPHyb5KCqCoaK2iO
-	4+HBvt6QtnXC2fm2d9Kc1o95NaKEo3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749033465;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
-	b=hTpPWh2Qw7dQiWZ/xlVXJ6x5fsYNr0SF3PZ2aJo8C1sw84qcxR+qwcrl9J5+Ykq85KYlU3
-	SYNJMOZjZ4YPLFAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C558A13A63;
-	Wed,  4 Jun 2025 10:37:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oDTfLvghQGg9KgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 10:37:44 +0000
-Message-ID: <6f2c8516-98e4-4a83-83fd-5e0891de535f@suse.de>
-Date: Wed, 4 Jun 2025 12:37:44 +0200
+	 In-Reply-To:Content-Type; b=d0c6VFgo7OpT6whP9TWjuzbk97lM/3aiX6nJiePM3RH2dO6b7mvwatzKRwbCWC0j9DW7ciikBMVSaElwycg1TXu+jMldwHKVrrsq6m3aXEDtnKxCRvm0JWb+JE9glNV/wMDHBOBmNP/cX5OJWOov1IRGc1jEYOxaend+jWm/gWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIoi8EPi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A2A2C4CEE7;
+	Wed,  4 Jun 2025 11:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749037046;
+	bh=/03g7ApDlfWnALDbvW9C24ZKhfHyWDmZKHy+HvjP5Qk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qIoi8EPiVCeeIexPhQzxhsbNDeV5+YFZeBaPeV5UumRWr9GtbNhTLbr9C+wydFENz
+	 kx1Bk1bq4zm83ioW3wVCZbXsRa/AYyJkrpcbkofIxaV046FsBlVCVOjG5zwuKxrKWg
+	 Q5cnbbIsYHeuBgqgka3xaqIVpWszSXMkEPElqYHtNpWDN0oAqYRV2zQQqjHmC/Oinu
+	 gwQMU127tE9uAPWBsqyLdBF8+gmyjO691efkCoiH40kMf9V2xONBIvoYmeX0Y+ZlQp
+	 hul+qlP+DDye4hqg1yMLE80B0qUja2/ms3Y2DZROrh4Nuih5iF1v2mi6VgvT4PsDK6
+	 4Ww672m79RfYg==
+Message-ID: <9089f618-0df1-4710-8158-36f58c94a0c6@kernel.org>
+Date: Wed, 4 Jun 2025 13:36:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,244 +50,122 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] video: screen_info: Relocate framebuffers behind PCI
- bridges
-To: javierm@redhat.com, bhelgaas@google.com, iivanov@suse.de, tiwai@suse.de
-Cc: dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250528080234.7380-1-tzimmermann@suse.de>
+Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+To: Qiang Yu <quic_qianyu@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
+ krzk+dt@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+ kw@linux.com, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
+ <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
+ <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
+ <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
+ <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
+ <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250528080234.7380-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,suse.com:url];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 0433B5D230
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-If there are no further comment, I'll merge this patch via drm-misc-fixes.
+On 04/06/2025 12:05, Qiang Yu wrote:
+>>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>>>>> ---
+>>>>>   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
+>>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> index e3fa232da2ca..805258cbcf2f 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> @@ -61,11 +61,14 @@ properties:
+>>>>>         - const: global
+>>>>>     resets:
+>>>>> -    maxItems: 1
+>>>>> +    minItems: 1
+>>>>> +    maxItems: 2
+>>>> Shouldn't we just update this to maxItems:2 / minItems:2 and drop
+>>>> minItems:1 from the next clause?
+>>> Hi Dmitry,
+>>>
+>>> link_down reset is optional. In many other platforms, like sm8550
+>>> and x1e80100, link_down reset is documented as a optional reset.
+>>> PCIe will works fine without link_down reset. So I think setting it
+>>> as optional is better.
+>> You are describing a hardware. How can a reset be optional in the
+>> _hardware_? It's either routed or not.
+> 
+> I feel a bit confused. According to the theory above, everything seems to
+> be non-optional when describing hardware, such as registers, clocks,
+> resets, regulators, and interrupts—all of them either exist or do not.
 
-Am 28.05.25 um 10:02 schrieb Thomas Zimmermann:
-> Apply PCI host-bridge window offsets to screen_info framebuffers. Fixes
-> invalid access to I/O memory.
->
-> Resources behind a PCI host bridge can be relocated by a certain offset
-> in the kernel's CPU address range used for I/O. The framebuffer memory
-> range stored in screen_info refers to the CPU addresses as seen during
-> boot (where the offset is 0). During boot up, firmware may assign a
-> different memory offset to the PCI host bridge and thereby relocating
-> the framebuffer address of the PCI graphics device as seen by the kernel.
-> The information in screen_info must be updated as well.
->
-> The helper pcibios_bus_to_resource() performs the relocation of the
-> screen_info's framebuffer resource (given in PCI bus addresses). The
-> result matches the I/O-memory resource of the PCI graphics device (given
-> in CPU addresses). As before, we store away the information necessary to
-> later update the information in screen_info itself.
->
-> Commit 78aa89d1dfba ("firmware/sysfb: Update screen_info for relocated
-> EFI framebuffers") added the code for updating screen_info. It is based
-> on similar functionality that pre-existed in efifb. Efifb uses a pointer
-> to the PCI resource, while the newer code does a memcpy of the region.
-> Hence efifb sees any updates to the PCI resource and avoids the issue.
->
-> v3:
-> - Only use struct pci_bus_region for PCI bus addresses (Bjorn)
-> - Clarify address semantics in commit messages and comments (Bjorn)
-> v2:
-> - Fixed tags (Takashi, Ivan)
-> - Updated information on efifb
->
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-> Reported-by: "Ivan T. Ivanov" <iivanov@suse.de>
-> Closes: https://bugzilla.suse.com/show_bug.cgi?id=1240696
-> Tested-by: "Ivan T. Ivanov" <iivanov@suse.de>
-> Fixes: 78aa89d1dfba ("firmware/sysfb: Update screen_info for relocated EFI framebuffers")
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: <stable@vger.kernel.org> # v6.9+
-> ---
->   drivers/video/screen_info_pci.c | 79 +++++++++++++++++++++------------
->   1 file changed, 50 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
-> index 6c5833517141..66bfc1d0a6dc 100644
-> --- a/drivers/video/screen_info_pci.c
-> +++ b/drivers/video/screen_info_pci.c
-> @@ -7,8 +7,8 @@
->   
->   static struct pci_dev *screen_info_lfb_pdev;
->   static size_t screen_info_lfb_bar;
-> -static resource_size_t screen_info_lfb_offset;
-> -static struct resource screen_info_lfb_res = DEFINE_RES_MEM(0, 0);
-> +static resource_size_t screen_info_lfb_res_start; // original start of resource
-> +static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
->   
->   static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
->   {
-> @@ -31,7 +31,7 @@ void screen_info_apply_fixups(void)
->   	if (screen_info_lfb_pdev) {
->   		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
->   
-> -		if (pr->start != screen_info_lfb_res.start) {
-> +		if (pr->start != screen_info_lfb_res_start) {
->   			if (__screen_info_relocation_is_valid(si, pr)) {
->   				/*
->   				 * Only update base if we have an actual
-> @@ -47,46 +47,67 @@ void screen_info_apply_fixups(void)
->   	}
->   }
->   
-> +static int __screen_info_lfb_pci_bus_region(const struct screen_info *si, unsigned int type,
-> +					    struct pci_bus_region *r)
-> +{
-> +	u64 base, size;
-> +
-> +	base = __screen_info_lfb_base(si);
-> +	if (!base)
-> +		return -EINVAL;
-> +
-> +	size = __screen_info_lfb_size(si, type);
-> +	if (!size)
-> +		return -EINVAL;
-> +
-> +	r->start = base;
-> +	r->end = base + size - 1;
-> +
-> +	return 0;
-> +}
-> +
->   static void screen_info_fixup_lfb(struct pci_dev *pdev)
->   {
->   	unsigned int type;
-> -	struct resource res[SCREEN_INFO_MAX_RESOURCES];
-> -	size_t i, numres;
-> +	struct pci_bus_region bus_region;
->   	int ret;
-> +	struct resource r = {
-> +		.flags = IORESOURCE_MEM,
-> +	};
-> +	const struct resource *pr;
->   	const struct screen_info *si = &screen_info;
->   
->   	if (screen_info_lfb_pdev)
->   		return; // already found
->   
->   	type = screen_info_video_type(si);
-> -	if (type != VIDEO_TYPE_EFI)
-> -		return; // only applies to EFI
-> +	if (!__screen_info_has_lfb(type))
-> +		return; // only applies to EFI; maybe VESA
->   
-> -	ret = screen_info_resources(si, res, ARRAY_SIZE(res));
-> +	ret = __screen_info_lfb_pci_bus_region(si, type, &bus_region);
->   	if (ret < 0)
->   		return;
-> -	numres = ret;
->   
-> -	for (i = 0; i < numres; ++i) {
-> -		struct resource *r = &res[i];
-> -		const struct resource *pr;
-> -
-> -		if (!(r->flags & IORESOURCE_MEM))
-> -			continue;
-> -		pr = pci_find_resource(pdev, r);
-> -		if (!pr)
-> -			continue;
-> -
-> -		/*
-> -		 * We've found a PCI device with the framebuffer
-> -		 * resource. Store away the parameters to track
-> -		 * relocation of the framebuffer aperture.
-> -		 */
-> -		screen_info_lfb_pdev = pdev;
-> -		screen_info_lfb_bar = pr - pdev->resource;
-> -		screen_info_lfb_offset = r->start - pr->start;
-> -		memcpy(&screen_info_lfb_res, r, sizeof(screen_info_lfb_res));
-> -	}
-> +	/*
-> +	 * Translate the PCI bus address to resource. Account
-> +	 * for an offset if the framebuffer is behind a PCI host
-> +	 * bridge.
-> +	 */
-> +	pcibios_bus_to_resource(pdev->bus, &r, &bus_region);
-> +
-> +	pr = pci_find_resource(pdev, &r);
-> +	if (!pr)
-> +		return;
-> +
-> +	/*
-> +	 * We've found a PCI device with the framebuffer
-> +	 * resource. Store away the parameters to track
-> +	 * relocation of the framebuffer aperture.
-> +	 */
-> +	screen_info_lfb_pdev = pdev;
-> +	screen_info_lfb_bar = pr - pdev->resource;
-> +	screen_info_lfb_offset = r.start - pr->start;
-> +	screen_info_lfb_res_start = bus_region.start;
->   }
->   DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_BASE_CLASS_DISPLAY, 16,
->   			       screen_info_fixup_lfb);
+Can you construct a DTS being fully complete and correct picture of
+hardware without these? If not, they are not optional, because correct
+hardware representation would need them.
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+> 
+> Seems like I misunderstand the concept of 'optional'? Is 'optional' only
+> used for compatibility across different platforms?
+> 
+> Additionally, we have documented the PCIe global interrupt as optional. I
+> was taught that, in the PCIe driver, this interrupt is retrieved using the
+> platform_get_irq_byname_optional API, so it can be documented as optional.
+> However, this still seems to contradict the theory mentioned earlier.
 
+ABI is just one side of the required properties.
+
+
+
+Best regards,
+Krzysztof
 
