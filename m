@@ -1,131 +1,198 @@
-Return-Path: <linux-pci+bounces-28999-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29000-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37BACACE479
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 20:44:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B193ACE49E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 21:06:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B42B1895F12
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 18:45:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E078C3A48E7
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 19:06:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C036C149C55;
-	Wed,  4 Jun 2025 18:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A30041F4262;
+	Wed,  4 Jun 2025 19:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjzuDRyF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YhQ3lyi+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990CD17548
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 18:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF2B42A87;
+	Wed,  4 Jun 2025 19:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749062687; cv=none; b=hJlyowid0A2Jt9d6YGo+EdlNVAaQWsX11NAjFxg/oM/PJDUMTUmzefo181zKbE253zX8IsZN5RXhcDiYJZLnJFd/agBTFnbXiHIC/n9h4E8ZYCVg4FN9mmq4mGGTQrahr85DEhZqqhqka3XUf7lowbiIdjPJT/F1fNVfNgOdje0=
+	t=1749063994; cv=none; b=Gp7vEcSPa0ng9uaea3uGBIooNX1UDtMJLLZf7zGL1DUJ+T5azHnLciJshxUKlTRcroczu13Uf/da2xvTnPc0CSzADKWwMaaG0560LtP67d8u1VF4N4TV+htOKddbC8fxc5k+OKfA5hWVYqbnVqILD39T0gBUHzWgtAF8gYo74LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749062687; c=relaxed/simple;
-	bh=EcqIEu76v+ExmEM3HZKzLHuCykcVPoooykubp6BZ/ZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Bh2SqQI95wHwsokeRavCuGYTyCCQSMRKN5hAkNewrmHt9/vM2bI0yQRbEc8TIk9zXTlQ5mjrmNSck5sXmoOoGlv/MLKYcYggvWLdpz9A+vOgZgtWfmrMajiURxh8Cw3p9Er3VBsEt8FsWZJ2IBTJNbQD7sySxui/cveBR7eCxGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjzuDRyF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFED0C4CEE4;
-	Wed,  4 Jun 2025 18:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749062687;
-	bh=EcqIEu76v+ExmEM3HZKzLHuCykcVPoooykubp6BZ/ZE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AjzuDRyFDhGTPH+X9h2Ta/0pCqmctmhSUIprVyPMBEqgy2MQOwKw2j2ZEindiLvD+
-	 6uoQoM5wj74hm3gdfCVATatJnv9j0I9bgM2ukVJFU7csL83JjCmxfkI+ayLPjTPm8v
-	 qX+egtay6PWa1zCxMmpcHbCThv51rh9XGZhDm5g6nAkJA0/RVlVR71BoOvmTvDArec
-	 tYu58pfh+sVFLTjfT21fHfcTRwslgv6bnol52OOE93VhUpuFkc6pd6vGmICW6rRhhy
-	 jqN9X1GGhlCakLtpheFNDOlAIrtM8MS+O/e8Ntxl2yVPJMJi+3xxHJmGO5EOIrZ4Q6
-	 kz92/sUS4lnhg==
-Date: Wed, 4 Jun 2025 13:44:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hans Zhang <18255117159@163.com>,
-	Laszlo Fiat <laszlo.fiat@proton.me>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] PCI: dw-rockchip: Do not enumerate bus before
- endpoint devices are ready
-Message-ID: <20250604184445.GA567382@bhelgaas>
+	s=arc-20240116; t=1749063994; c=relaxed/simple;
+	bh=oTJQbjZdKSQ2DkZeSh/a6PJn+voxYBOhyKY16f4KEks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=udwqLDX5z1HbugEcUgnCj/KXZ8o64QWhQgEWoROuc0usip6JBBEFQGc2GXKB79XcshmPUE5GPPrbt4yh2q2gZrRVGq1SMbQuxlOSkuteSP+NNNkIkH4JYn0ymZ3XpvsQegbRdyXj76aNbkL3SaDGu5pSSPIWZ9z6+dNj2PX1Mbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YhQ3lyi+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749063993; x=1780599993;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=oTJQbjZdKSQ2DkZeSh/a6PJn+voxYBOhyKY16f4KEks=;
+  b=YhQ3lyi+eNNtv0hKbNy4K1vc60HXbPKs6uZdRIpoJauKx2Vo9+RirNVq
+   BdJ/Rgsco1BS+26Flc8pc9zn7jtMaSJOvo7ey2IMv155iI6M3ByjRNtDm
+   bsx6XXs2k8kmepFzzPy5XxlBhT0XwyyS6ZxSETStSxeMKt6Td8iWsGp4V
+   9m7YNL2nJfQUqOJq+bV3ktJFgKHlKO/7TG+e3PGqJPnUugjOEOaTQH6m4
+   f3+fA74qYrA/4Nk5xigU9pJdjPgknjsGuO21jQanygCPmNC8qRFd8yL/v
+   uxLVAW/xO2d4tMeWXl6B6JSRjmjapbJ7GjGIH2kg2UveAnWc+57IN08BK
+   g==;
+X-CSE-ConnectionGUID: 3/s/nXOKRYWEDwrjNjasCw==
+X-CSE-MsgGUID: E7prVIuNQYiS7VHg2svZgA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51082830"
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="51082830"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:06:30 -0700
+X-CSE-ConnectionGUID: PlLh5Hz0TLSt9BwHxLTB9A==
+X-CSE-MsgGUID: jOI0W7EqQPibvWrZQtrURg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
+   d="scan'208";a="182480307"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 12:06:30 -0700
+Received: from [10.124.221.106] (unknown [10.124.221.106])
+	by linux.intel.com (Postfix) with ESMTP id 7844B20B5736;
+	Wed,  4 Jun 2025 12:06:28 -0700 (PDT)
+Message-ID: <bd3d4af2-aeff-4135-87e9-60b18f290d0e@linux.intel.com>
+Date: Wed, 4 Jun 2025 12:06:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <rrtrcwajj4vjvbqzosskdnroqnijzaafncgckoh2dlk3c4njvs@twop3vyidmh7>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 01/16] PCI/CXL: Add pcie_is_cxl()
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-2-terry.bowman@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 10:40:09PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jun 04, 2025 at 01:40:52PM +0200, Niklas Cassel wrote:
-> > On Tue, Jun 03, 2025 at 01:12:50PM -0500, Bjorn Helgaas wrote:
-> > > 
-> > > Hmmm, sorry, I misinterpreted both 1/4 and 2/4.  I read them as "add
-> > > this delay so the PLEXTOR device works", but in fact, I think in both
-> > > cases, the delay is actually to enforce the PCIe r6.0, sec 6.6.1,
-> > > requirement for software to wait 100ms before issuing a config
-> > > request, and the fact that it makes PLEXTOR work is a side effect of
-> > > that.
-> > 
-> > Well, the Plextor NVMe drive used to work with previous kernels,
-> > but regressed.
-> > 
-> > But yes, the delay was added to enforce "PCIe r6.0, sec 6.6.1"
-> > requirement for software to wait 100ms, which once again makes
-> > the Plextor NVMe drive work.
-> > 
-> > > The beginning of that 100ms delay is "exit from Conventional Reset"
-> > > (ports that support <= 5.0 GT/s) or "link training completes" (ports
-> > > that support > 5.0 GT/s).
-> > > 
-> > > I think we lack that 100ms delay in dwc drivers in general.  The only
-> > > generic dwc delay is in dw_pcie_host_init() via the LINK_WAIT_SLEEP_MS
-> > > in dw_pcie_wait_for_link(), but that doesn't count because it's
-> > > *before* the link comes up.  We have to wait 100ms *after* exiting
-> > > Conventional Reset or completing link training.
-> > 
-> > In dw_pcie_wait_for_link(), in the first iteration of the loop, the link
-> > will never be up (because the link was just started),
-> > dw_pcie_wait_for_link() will then sleep for LINK_WAIT_SLEEP_MS (90 ms),
-> > before trying again.
-> > 
-> > Most likely the link training took way less than 100 ms, so most of those
-> > 90 ms will probably be after link training has completed.
-> > 
-> > That is most likely why Plextor worked on older kernels (which does not
-> > use the link up IRQ).
 
-Definitely seems plausible.
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> CXL and AER drivers need the ability to identify CXL devices.
+>
+> Add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC presence. The
+> CXL Flexbus DVSEC presence is used because it is required for all the CXL
+> PCIe devices.[1]
+>
+> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+> Flexbus presence.
+>
+> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
+>
+> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
+>      Capability (DVSEC) ID Assignment, Table 8-2
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> ---
 
-> > If we add a 100 ms sleep after wait_for_link(), then I suggest that we
-> > also reduce LINK_WAIT_SLEEP_MS to something shorter.
-> 
-> No. The 900ms sleep is to make sure that we wait 1s before erroring out
-> assuming that the device is not present. This is mandated by the spec. So
-> irrespective of the delay we add *after* link up, we should try to detect the
-> link up for ~1s.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-I think it would be sensible for dw_pcie_wait_for_link() to check for
-link up more frequently, i.e., reduce LINK_WAIT_SLEEP_MS and increase
-LINK_WAIT_MAX_RETRIES.
+>   drivers/pci/probe.c           | 10 ++++++++++
+>   include/linux/pci.h           |  6 ++++++
+>   include/uapi/linux/pci_regs.h |  8 +++++++-
+>   3 files changed, 23 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 364fa2a514f8..aa29b4b98ad1 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1691,6 +1691,14 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>   		dev->is_thunderbolt = 1;
+>   }
+>   
+> +static void set_pcie_cxl(struct pci_dev *dev)
+> +{
+> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+> +					      PCI_DVSEC_CXL_FLEXBUS);
+> +	if (dvsec)
+> +		dev->is_cxl = 1;
+> +}
+> +
+>   static void set_pcie_untrusted(struct pci_dev *dev)
+>   {
+>   	struct pci_dev *parent = pci_upstream_bridge(dev);
+> @@ -2021,6 +2029,8 @@ int pci_setup_device(struct pci_dev *dev)
+>   	/* Need to have dev->cfg_size ready */
+>   	set_pcie_thunderbolt(dev);
+>   
+> +	set_pcie_cxl(dev);
+> +
+>   	set_pcie_untrusted(dev);
+>   
+>   	if (pci_is_pcie(dev))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 51e2bd6405cd..bff3009f9ff0 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -455,6 +455,7 @@ struct pci_dev {
+>   	unsigned int	is_hotplug_bridge:1;
+>   	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
+>   	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+> +	unsigned int	is_cxl:1;               /* Compute Express Link (CXL) */
+>   	/*
+>   	 * Devices marked being untrusted are the ones that can potentially
+>   	 * execute DMA attacks and similar. They are typically connected
+> @@ -746,6 +747,11 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+>   	return false;
+>   }
+>   
+> +static inline bool pcie_is_cxl(struct pci_dev *pci_dev)
+> +{
+> +	return pci_dev->is_cxl;
+> +}
+> +
+>   #define for_each_pci_bridge(dev, bus)				\
+>   	list_for_each_entry(dev, &bus->devices, bus_list)	\
+>   		if (!pci_is_bridge(dev)) {} else
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ba326710f9c8..c50ffa75d5fc 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1215,9 +1215,15 @@
+>   /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
+>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+>   
+> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
+> +/* Compute Express Link (CXL r3.2, sec 8.1)
+> + *
+> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
+> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
+> + * registers on downstream link-up events.
+> + */
+>   #define PCI_DVSEC_CXL_PORT				3
+>   #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>   #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> +#define PCI_DVSEC_CXL_FLEXBUS				7
+>   
+>   #endif /* LINUX_PCI_REGS_H */
 
-If LINK_WAIT_SLEEP_MS * LINK_WAIT_MAX_RETRIES is for the 1.0s
-mentioned in sec 6.6.1, seems like maybe we should make a generic
-#define for it so we could include the spec reference and use it
-across all drivers.  And resolve the question of 900ms vs 1000ms.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Bjorn
 
