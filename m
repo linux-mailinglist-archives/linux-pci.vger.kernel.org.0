@@ -1,171 +1,143 @@
-Return-Path: <linux-pci+bounces-28959-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28960-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAA3CACDCC0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 13:37:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5CF4ACDCD0
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 13:41:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4739718977BB
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:37:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FF61175B25
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFED28ECC0;
-	Wed,  4 Jun 2025 11:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F50F28D8D4;
+	Wed,  4 Jun 2025 11:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIoi8EPi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCGwShIJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2A520F063;
-	Wed,  4 Jun 2025 11:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA6628C030
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 11:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037046; cv=none; b=W+WVekBfxm4fTxYVU0VKJVTzokDEnX4H+i9XINx/QBrtmXv8su2InRFFsKc4p0cGHmfMeYKyJqNzxOefJdlWBROPQtPhmMXzZfG6bM5n3AsOBkkWNWh5RIbztjE9mWFUhk3lcsA9oa0+VDzNPKb1TXbIy7x4DGkT5OBHGJh60Gs=
+	t=1749037259; cv=none; b=pj1Eujy+l/QOzzYho477ZNtatRjwCq50y3c/FdU09WqUTZe1e0K7vBVTkhx4/ifKh6xbs4AubbL4LRn1CFeKgq453ysnfJM/NLlSxmBc5BeWaLaVRBxxOrQ40rDlq0y9Rqj5gv21SE7R5+SP/upiHDMM2ZExfE54Cjq2x+y21tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037046; c=relaxed/simple;
-	bh=/03g7ApDlfWnALDbvW9C24ZKhfHyWDmZKHy+HvjP5Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0c6VFgo7OpT6whP9TWjuzbk97lM/3aiX6nJiePM3RH2dO6b7mvwatzKRwbCWC0j9DW7ciikBMVSaElwycg1TXu+jMldwHKVrrsq6m3aXEDtnKxCRvm0JWb+JE9glNV/wMDHBOBmNP/cX5OJWOov1IRGc1jEYOxaend+jWm/gWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIoi8EPi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A2A2C4CEE7;
-	Wed,  4 Jun 2025 11:36:11 +0000 (UTC)
+	s=arc-20240116; t=1749037259; c=relaxed/simple;
+	bh=na+e7iAyIdNEOxA/Fo3/lMjI298SPFA0QzS+xSDF0Mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNpO1npl00/5wxJyeuK3i84bO3VMLFfZSRD3D7n00G109ikLuRNcT4lx27dA6c0T6bY3c4PLjCk2LjjCJNS7v7d3uf+k2syIceOtYq4Ip+IxHvciRlGJy6as92lERNRJHV3+gk+MxrMGPw4Yx6ZIiRikNIzZH0FR9JtpfFbJIGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCGwShIJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844CEC4CEEF;
+	Wed,  4 Jun 2025 11:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749037046;
-	bh=/03g7ApDlfWnALDbvW9C24ZKhfHyWDmZKHy+HvjP5Qk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qIoi8EPiVCeeIexPhQzxhsbNDeV5+YFZeBaPeV5UumRWr9GtbNhTLbr9C+wydFENz
-	 kx1Bk1bq4zm83ioW3wVCZbXsRa/AYyJkrpcbkofIxaV046FsBlVCVOjG5zwuKxrKWg
-	 Q5cnbbIsYHeuBgqgka3xaqIVpWszSXMkEPElqYHtNpWDN0oAqYRV2zQQqjHmC/Oinu
-	 gwQMU127tE9uAPWBsqyLdBF8+gmyjO691efkCoiH40kMf9V2xONBIvoYmeX0Y+ZlQp
-	 hul+qlP+DDye4hqg1yMLE80B0qUja2/ms3Y2DZROrh4Nuih5iF1v2mi6VgvT4PsDK6
-	 4Ww672m79RfYg==
-Message-ID: <9089f618-0df1-4710-8158-36f58c94a0c6@kernel.org>
-Date: Wed, 4 Jun 2025 13:36:05 +0200
+	s=k20201202; t=1749037258;
+	bh=na+e7iAyIdNEOxA/Fo3/lMjI298SPFA0QzS+xSDF0Mw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SCGwShIJtYiAjjl7xwa4EpbS0L6ohuJBWlnfXSAmmC1FMtZYotGyitscDbYVcRxYV
+	 ynLCuyn2fuaSVssZAmNVKe/M67ECh6gQK3n9/kbHgo2cydL1gZMnxO/01nbd3IuOca
+	 dGhbgEwisZyg0PvqjkiyLrHvPeM7tOZzvINjYZEbISW6bvuqu2dRPDzd7b2Kej8Dar
+	 jpAZSD2kPPfJFtwDNCaLuTzAPGmXLbw+FvDbBu8cIGTeOBeJvcrpnWNPnB561F7zrw
+	 /ykTtbx2u+vOHOb6T/krUbRg4fNruJYeOTYP8PUtu1dLEGayEwWmNplfM2Bd+qZa4C
+	 TJYXhYCpyp/SQ==
+Date: Wed, 4 Jun 2025 13:40:52 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] PCI: dw-rockchip: Do not enumerate bus before
+ endpoint devices are ready
+Message-ID: <aEAwxFysCgdJCD54@ryzen>
+References: <aD8Bz4CkdnAd8Col@ryzen>
+ <20250603181250.GA473171@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
- link_down reset
-To: Qiang Yu <quic_qianyu@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
- krzk+dt@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
- kw@linux.com, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
- <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
- <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
- <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
- <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
- <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <43a6e141-adab-42e9-9966-ec54cb91a6de@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603181250.GA473171@bhelgaas>
 
-On 04/06/2025 12:05, Qiang Yu wrote:
->>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->>>>> ---
->>>>>   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
->>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> index e3fa232da2ca..805258cbcf2f 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> @@ -61,11 +61,14 @@ properties:
->>>>>         - const: global
->>>>>     resets:
->>>>> -    maxItems: 1
->>>>> +    minItems: 1
->>>>> +    maxItems: 2
->>>> Shouldn't we just update this to maxItems:2 / minItems:2 and drop
->>>> minItems:1 from the next clause?
->>> Hi Dmitry,
->>>
->>> link_down reset is optional. In many other platforms, like sm8550
->>> and x1e80100, link_down reset is documented as a optional reset.
->>> PCIe will works fine without link_down reset. So I think setting it
->>> as optional is better.
->> You are describing a hardware. How can a reset be optional in the
->> _hardware_? It's either routed or not.
+On Tue, Jun 03, 2025 at 01:12:50PM -0500, Bjorn Helgaas wrote:
 > 
-> I feel a bit confused. According to the theory above, everything seems to
-> be non-optional when describing hardware, such as registers, clocks,
-> resets, regulators, and interrupts—all of them either exist or do not.
+> Hmmm, sorry, I misinterpreted both 1/4 and 2/4.  I read them as "add
+> this delay so the PLEXTOR device works", but in fact, I think in both
+> cases, the delay is actually to enforce the PCIe r6.0, sec 6.6.1,
+> requirement for software to wait 100ms before issuing a config
+> request, and the fact that it makes PLEXTOR work is a side effect of
+> that.
 
-Can you construct a DTS being fully complete and correct picture of
-hardware without these? If not, they are not optional, because correct
-hardware representation would need them.
+Well, the Plextor NVMe drive used to work with previous kernels,
+but regressed.
+
+But yes, the delay was added to enforce "PCIe r6.0, sec 6.6.1"
+requirement for software to wait 100ms, which once again makes
+the Plextor NVMe drive work.
+
 
 > 
-> Seems like I misunderstand the concept of 'optional'? Is 'optional' only
-> used for compatibility across different platforms?
+> The beginning of that 100ms delay is "exit from Conventional Reset"
+> (ports that support <= 5.0 GT/s) or "link training completes" (ports
+> that support > 5.0 GT/s).
 > 
-> Additionally, we have documented the PCIe global interrupt as optional. I
-> was taught that, in the PCIe driver, this interrupt is retrieved using the
-> platform_get_irq_byname_optional API, so it can be documented as optional.
-> However, this still seems to contradict the theory mentioned earlier.
+> I think we lack that 100ms delay in dwc drivers in general.  The only
+> generic dwc delay is in dw_pcie_host_init() via the LINK_WAIT_SLEEP_MS
+> in dw_pcie_wait_for_link(), but that doesn't count because it's
+> *before* the link comes up.  We have to wait 100ms *after* exiting
+> Conventional Reset or completing link training.
 
-ABI is just one side of the required properties.
+In dw_pcie_wait_for_link(), in the first iteration of the loop, the link
+will never be up (because the link was just started),
+dw_pcie_wait_for_link() will then sleep for LINK_WAIT_SLEEP_MS (90 ms),
+before trying again.
+
+Most likely the link training took way less than 100 ms, so most of those
+90 ms will probably be after link training has completed.
+
+That is most likely why Plextor worked on older kernels (which does not
+use the link up IRQ).
+
+If we add a 100 ms sleep after wait_for_link(), then I suggest that we
+also reduce LINK_WAIT_SLEEP_MS to something shorter.
 
 
+> 
+> We don't know when the exit from Conventional Reset was, but it was
+> certainly before the link came up.  In the absence of a timestamp for
+> exit from reset, starting the wait after link-up is probably the best
+> we can do.  This could be either after dw_pcie_wait_for_link() finds
+> the link up or when we handle the link-up interrupt.
+> 
+> Patches 1 and 2 would fix the link-up interrupt case.  I think we need
+> another patch for the dwc core for dw_pcie_wait_for_link().
 
-Best regards,
-Krzysztof
+I agree, sounds like a plan.
+
+
+> 
+> I wish I'd had time to spend on this and include patches 1 and 2, but
+> we're up against the merge window wire and I'll be out the end of this
+> week, so I think they'll have to wait.  It seems like something we can
+> still justify for v6.16 though.
+
+I think it sounds good to target this as fixes for v6.16.
+
+Do you plan to send out something after -rc1, or do you prefer me to do it?
+
+
+Kind regards,
+Niklas
 
