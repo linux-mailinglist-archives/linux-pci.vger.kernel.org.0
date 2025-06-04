@@ -1,118 +1,127 @@
-Return-Path: <linux-pci+bounces-28963-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28964-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BE0BACDD85
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:09:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5CBCACDD91
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:10:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86CD03A5E0B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:08:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13CD5188082D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:10:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E594528F518;
-	Wed,  4 Jun 2025 12:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7345828ECCA;
+	Wed,  4 Jun 2025 12:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBHP5Tl6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ydSWUQ/K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A04A28F500
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E381E5B99
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749038931; cv=none; b=UbT0ztWpAdiZ6P1a+3C1dmzU9W7MuKnKhffffvPhg6FOFp8CJKm5Z/nMZE8cNPfXTSJfD2wUMgZ2CihRzCAE8yMFWbY/xSlADlt3eISrwPAjYs1rRupFm+Tl13MS9iGGxIV9KGwYYTq7ZDELL7+oLk3o9RfI2Z5hzfd8DPYADa0=
+	t=1749039028; cv=none; b=FmazrD6risId9kuEYKchmou57xyLbfSJx8pmiKUYbIyoKOainXcvV+g0opxGtfI4Z2WjnJGnR2i4tYpmua44pbgSoNOzTgPGLLbbPasFV+UPn/h2+/vMwyjvaB8sOBGZvJql9n7o/zBo0wpocTLJl7zVDfZHjYajVRvEVK01ELY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749038931; c=relaxed/simple;
-	bh=JN0Vgk9KPnL+EATlO51MQ+wdhcln9wimpUD//DwZ7Pw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GzUWuQYlxi46ePcOFXqt4q6ah9bxUQA7ocARfzGODNgO58DajaE7wHVYBNO9j5Z1idL6MBKsfr+njNk+GGUl29lK14kH6FhDuedKgGbpCev0ybUeD04qRTyRlSanSwwXEj9/EyvzWXy0Skw8QDP4mLUfUc9MqD2oiTWkjFg4SRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XBHP5Tl6; arc=none smtp.client-ip=209.85.210.176
+	s=arc-20240116; t=1749039028; c=relaxed/simple;
+	bh=2qRhj+8PaD7KbS+ePJC+FIyfrnTKwmRG37BmkAjQGxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NoorJXEEdNRrxnyP4mJA9A4SCpwR0SfBjQVzjE/jBSJ7nTMe6U3Xfjw8dbfXjGPHYwLiZmr6yH3HbkIRe6owmXv5wKg4IsJkWckbAwkbaDJJrfvL/Nzv4QZMJZrzZcYW5TzNxTVeEtKGzYecss9Rd6/8XJNsZX4HGOZkJSozONA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ydSWUQ/K; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5099911b3a.2
-        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 05:08:50 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234d3261631so45756315ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 05:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749038930; x=1749643730; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63gUF31R/njodbawtioVjbMgNLq35VUnPeZiigQnoG4=;
-        b=XBHP5Tl62ppMUCi92qAnrBB2yXKx/oKJPBhoW1Cab3BcRBPibXkh/4nVs/8YBgLOul
-         u8JNgbvJlj1vJm6xyIGjCWXfAyOG2S2Splbit86SmQuikb97QYExH5dM/bwd1FXAsQIc
-         zQamA5y1Rljz3Q+X2DGaeFXzB99VGenVMSSwXcmumGJHdurSNFAfDipkBvp/tewDFyb2
-         nYvA1LUK3bpW2bjsu8JQVVU2mIYzIMSxr3ciPuzExbqQ5OqQnJlS3FiAgthIbK5TFslM
-         3hEXx7k+OXWOM2pw99QrOfsd0HbNenC7f6hUvmI4A6Xheu6sR36s5Gw45sf6BSMkpb8V
-         YtJA==
+        d=linaro.org; s=google; t=1749039025; x=1749643825; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pWB1gx1mno0s7eFeJEUn/nD76wT6cl2IYjc+kN6JYkw=;
+        b=ydSWUQ/KtPdi38pFMGjiNI8vQAz1YrJGjTRYBMNh3lVcpKha+82Tjs8ieW1iO4QAXG
+         rPsWxto21L/+D8WL+0hSrZwIZ8DOA4Ye5cjiaiasXD4i2MdYwu3KES33K3zT28/j/WMF
+         OvSASVFNITGd9SKvtrrqFbIqtlmQi1jkxIRGnEzq0LBs2CXIdPx4J2iPb2dKxGacN8ul
+         leSWL/EuTtK5bp366e/pvE3r5vC3soT7R8s5SRBUngxxRSGLgDaEqi2IMWQDly4mr3Nm
+         4LEkqu0KfyTcfWAGQX8Zf1zaqqUMqIMuXx954eL2+yiHMG1Q0HNU6dhY+tBWRn94K5FG
+         BzsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749038930; x=1749643730;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=63gUF31R/njodbawtioVjbMgNLq35VUnPeZiigQnoG4=;
-        b=hkK/1VAhT3RV3DHXVd39W8zXnuSmtE25LdppKC3Bi+FVBQA6SYUkKHck3z1tMeruYt
-         oW77O59pmyKVLiGAOtMBXGxjL1XxO3T6cTDP4942pqbD5KKBldPgLtl1HIfe+Kqbbr/0
-         XtU9bM605ULxQhebwAlDb0XKvpB0Sd5p6mUy4lEBCJIef5kdGeKI3TmhzRMY6hTKQh6g
-         cGjaNnnZ4bp9DODl4KD/qykIY4jZZULpce8/5xX5Qn8qJGMP5OlCaUhU7dqYg+cb9Y39
-         G1xvIJloNle6jTNQ3MBWC8OH1cMkrjLigtJlo7usYesOFeeyIul8n1VY6WOxc2jHh+zG
-         1mwA==
-X-Gm-Message-State: AOJu0YxdCw5SdZ23gqyULeER/Z9i9mLoe0jPPmLOfQNcVwQT773+Ldkl
-	YPHjNmMwgKOteydPucZEuO+EU5xZ58daASQZPIFqBTxBtcCh+hM5Jvq5G18AlmaIfA==
-X-Gm-Gg: ASbGncvz6M0tIaldGFtuCwN6kzwkw3hWCVWc861c2jQOpOjwo8Ins0cx1QiV7wu4xmi
-	/kbOiDWJAKnve1JXODXT5voDWf0FEzLsAgJMPhirzzAbjEFlwCC/SUgcPKMPaDUJReIH7tNC7NZ
-	tQ65P952wC9KTia88NatOd0GgZDedeUaB/NQ6SSBb1AVXUB/x0BRYkHBO1sHGfgjweCKKySmtx7
-	9a5BNZn9IZWFvrQqPAajcydqQ97xaJnrMXK++6YdBdfFhDDZacBiSwQa6Yg6VrbY8SDa4jSdH+X
-	K43nVKqonTWxK1cK/MOL6SkU/q8nXE6rUSEUfAv5l+QcVCDCNpVG5i8AYCNT/cb+tbbkbp4Zty4
-	=
-X-Google-Smtp-Source: AGHT+IEI24fmQiYs+KkyGzQenyiA9iVsVnj+bFctMQWy7u0aVJs7US/+jOggPfA1S66IRlVRaTETtA==
-X-Received: by 2002:a05:6a21:1:b0:1f5:8dea:bb93 with SMTP id adf61e73a8af0-21d22a6d45dmr4274308637.7.1749038929697;
-        Wed, 04 Jun 2025 05:08:49 -0700 (PDT)
-Received: from thinkpad.. ([120.60.60.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafaebsm11034942b3a.87.2025.06.04.05.08.47
+        d=1e100.net; s=20230601; t=1749039025; x=1749643825;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pWB1gx1mno0s7eFeJEUn/nD76wT6cl2IYjc+kN6JYkw=;
+        b=dWtluWWGkghHmi8elndmRHH74iK5mySW7fBd2x37ligoiP5X3bCoDi84Q1wsgTwYLj
+         sJUOy41I9pu6VTTEMwbRcVz+keIe1tmVCW/xdDJue01IeiFG6ViPrX/9maJ1SZcnejMi
+         VP6hYcAZIn2ICfdf0Dc30sAguhe82OyZydib6jcay7ZjWqgCdzIpk8nUzl6z0PFT91lj
+         wi9AwAgi2re2ev2hujbLlmg3aqkG/MjayAL+O9EZa4BsZnXdUwW5sBOfSmn+i3+BIsFZ
+         MXmZWSstrnfrDCGpUP0CNntVZ6NdD/Ulg+TjTaKqft92YCbfI1wjqXDgk1/WXK0yp9Q5
+         nk0w==
+X-Gm-Message-State: AOJu0Yz5beczpRWJXSq/eH9fQ4X+N/E7II/c34FJ1IpiGg/87oSv1B2O
+	+49I71fgItlT7rixmMpucwn4eL4s5bwRYMZna4YXuScUgcN6RjeON9R2asCa9BUhFhidk/rhfIj
+	1tbA=
+X-Gm-Gg: ASbGncutoMx+zgyEtMLsk41mO22QGDespSERI+Trc1g7G+ZqJSHcc208JFibeK/QIbq
+	aJeYQOYCaY2BcaWwxhUV+Y2YG8garol7j3wIiIBxC4X/NkRRa5q//1ldK+b3IQpmwiK9NIij+OU
+	CkLanKjmqgJV2lse7dAMDlUYSUR6PmQLfWIhurUvZZeLiGgGx7+MQB9tOVntrAMVWEzInRrJEyo
+	DNyGLsHANkmZU21AT5+JFbfR4K9gcurmSpDtBbXJ5MNrVawwnCqpDDwDEIHYK2mzmIYzA2bJamo
+	PpFMbrnSdyRtY8WKJcQ24GyZXmiR2CiY3Ff0g4PLanIodgp3AbF5sty8NPU9RQ==
+X-Google-Smtp-Source: AGHT+IG57XGK+U+lVqYG/JIjQeIC5Z3vtLCeEP/XJOi9Tpj75vDY8Loup1Fc3OWKbmi7pysssKLxpw==
+X-Received: by 2002:a17:90b:4a10:b0:312:26d9:d5a7 with SMTP id 98e67ed59e1d1-3130cd2b40emr3886359a91.20.1749039025081;
+        Wed, 04 Jun 2025 05:10:25 -0700 (PDT)
+Received: from thinkpad ([120.60.60.253])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3c0db6sm9661015a91.34.2025.06.04.05.10.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 05:08:49 -0700 (PDT)
+        Wed, 04 Jun 2025 05:10:24 -0700 (PDT)
+Date: Wed, 4 Jun 2025 17:40:20 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] mailmap: Add a new entry for Manivannan Sadhasivam
-Date: Wed,  4 Jun 2025 17:38:31 +0530
-Message-ID: <20250604120833.32791-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250604120833.32791-1-manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/2] mailmap: Add a new entry for Manivannan Sadhasivam
+Message-ID: <ejg4ds3igm3njxfhtjx7uoh557tzh3tw2ig3srixlvlyaj5man@rs3gx46dahmk>
 References: <20250604120833.32791-1-manivannan.sadhasivam@linaro.org>
+ <20250604120833.32791-3-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250604120833.32791-3-manivannan.sadhasivam@linaro.org>
 
-Map my Linaro e-mail address is going to bounce soon. So remap it to my
-kernel.org alias.
+On Wed, Jun 04, 2025 at 05:38:31PM +0530, Manivannan Sadhasivam wrote:
+> Map my Linaro e-mail address is going to bounce soon. So remap it to my
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- .mailmap | 1 +
- 1 file changed, 1 insertion(+)
+Err... s/Map my/My
 
-diff --git a/.mailmap b/.mailmap
-index a885e2eefc69..1e87b388f41b 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -458,6 +458,7 @@ Maheshwar Ajja <quic_majja@quicinc.com> <majja@codeaurora.org>
- Malathi Gottam <quic_mgottam@quicinc.com> <mgottam@codeaurora.org>
- Manikanta Pubbisetty <quic_mpubbise@quicinc.com> <mpubbise@codeaurora.org>
- Manivannan Sadhasivam <mani@kernel.org> <manivannanece23@gmail.com>
-+Manivannan Sadhasivam <mani@kernel.org> <manivannan.sadhasivam@linaro.org>
- Manoj Basapathi <quic_manojbm@quicinc.com> <manojbm@codeaurora.org>
- Marcin Nowakowski <marcin.nowakowski@mips.com> <marcin.nowakowski@imgtec.com>
- Marc Zyngier <maz@kernel.org> <marc.zyngier@arm.com>
+- Mani
+
+> kernel.org alias.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .mailmap | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/.mailmap b/.mailmap
+> index a885e2eefc69..1e87b388f41b 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -458,6 +458,7 @@ Maheshwar Ajja <quic_majja@quicinc.com> <majja@codeaurora.org>
+>  Malathi Gottam <quic_mgottam@quicinc.com> <mgottam@codeaurora.org>
+>  Manikanta Pubbisetty <quic_mpubbise@quicinc.com> <mpubbise@codeaurora.org>
+>  Manivannan Sadhasivam <mani@kernel.org> <manivannanece23@gmail.com>
+> +Manivannan Sadhasivam <mani@kernel.org> <manivannan.sadhasivam@linaro.org>
+>  Manoj Basapathi <quic_manojbm@quicinc.com> <manojbm@codeaurora.org>
+>  Marcin Nowakowski <marcin.nowakowski@mips.com> <marcin.nowakowski@imgtec.com>
+>  Marc Zyngier <maz@kernel.org> <marc.zyngier@arm.com>
+> -- 
+> 2.43.0
+> 
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
