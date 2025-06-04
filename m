@@ -1,116 +1,341 @@
-Return-Path: <linux-pci+bounces-28957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FE1ACDBEE
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:25:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6FDEACDC1E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:48:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3EDC176094
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 10:25:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E08C2189841D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 10:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1339B2236F0;
-	Wed,  4 Jun 2025 10:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A10128C5B6;
+	Wed,  4 Jun 2025 10:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBjigJuM"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PdL6S8A1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hTpPWh2Q";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PdL6S8A1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hTpPWh2Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0C6223DC1;
-	Wed,  4 Jun 2025 10:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4F53FE4
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 10:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032718; cv=none; b=a910ksE/hxe4IKmRrbuiPF3Y8C8eeVwK46KJCv1WbqKsmuOS5OXZB+6BgE+KVoEi6IjX0fTukP8ldSj2x9Em1jJ4bwjXZR2i36w/89ouzHm0XRLdShT0ORNhsDvr7MsLIdDAtKvpDUXP2VQWTDtfX9wzTTLXHDDNyLVIAgdT6GE=
+	t=1749034103; cv=none; b=n2lDFXIVvDIwXKaOloqkLYZhXZTJGXgQ5QP9masyt+npuydke3m9H/5eGWWQMCyyMD/ucyrHNJmzJXns/u4SiZRsRIPn0isF6wTuhDfZ+0DLyutbj6vjkOjXm7+5Z/KrdyQ1eOyapUw7A+gtu9Dij/h+MogmBQlmgLf++WlXRls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032718; c=relaxed/simple;
-	bh=BNG3k2EZnzx3U0v7bx3XO6iS4R70EkPOxvqtIZ8NH5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUVyLjBQQ9OB0iJzbukF7+BPYETVVZ/Bxv5byYLFFwgJfjODqzjR/QI0iWzfPvE0d4/PUlmV7fimyPfYRXtCM5b7/j8t9TWiJ92AEO6q0HNHwCEDgfQpJKHl/c132xQWENCBj8woH7GwVd14uJ3v+00sNZVMlKscUkuC/COOe8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBjigJuM; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2f0dc1424aso1058791a12.0;
-        Wed, 04 Jun 2025 03:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749032716; x=1749637516; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QBZorERfZGVAeB4b9MQwohizAQ7RVji7qJz8RExp9pY=;
-        b=OBjigJuM+TBFoL14Ls2dFluDiRsB9lpB0stdbpVE3O+KLi43qwAJf6+SkFLqf8wtrh
-         z4E8Hrp2utOJPa6ZcPc3szHkwmUchc+rJXlKKIMfh2IxF+l/xXSFulGcXHql4cZ9801d
-         T2eJJoP9gW6iP8ADUWbKs6re3YFt3QMI988YxodWoMBM/5WKZ/cCcXXrrVCkvXmSUUn7
-         VP/8NC9MAH21irCgftqeFgCa7dkugQcmr8l5TxyzpiHBgB6MCtwrFHikujFDU9WXQAnp
-         frav6voCNGHfKf3fLdAq5DLdNDib+IceOfOBegVPZkaWnNWXjzOFf6FtIiSgraVcxN5G
-         7xGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749032716; x=1749637516;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QBZorERfZGVAeB4b9MQwohizAQ7RVji7qJz8RExp9pY=;
-        b=pm/1KrGB/h9ESD+J88lHyVzUPBxPte3JkkM+RkExvnfauF6gOB/A3fu03BaatkjdwC
-         sGvAvQclJ1f/oLnG/cq5GQrnikin8IxlF2LhxVTBWo7yvOtstVZO5uNXzboDgbOfsZN/
-         hkeqjoMe2EFtQOs6a/QEOuGPYGur2mJ60ZTjhc94Hqk8Z/C/gcrzbvZgPPFYOyyCZS1B
-         1RkClGSfw0qz4d0F592l16urYUDSmR/HsQNt//lSfJhz/HHg5oKkaTH+3qHpjPtVkTRc
-         +jndPa8BVwPmJd7FQGE1PcHddYulnlrMtJ51ReTXFGLe0aXsMx3sfwM/Pam6I0R4mJsx
-         7JCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWTLexuRBaIreLohn9I0vD3DcnifIAbEl3ni3LpXXGMBFCKbEtMnF2x1cFcOLQKRNZIeDChQNX/pKL@vger.kernel.org, AJvYcCW24ioTtwjPRHwn8tsQUvi9QZWyRUua3gL5nI0xD5vGkZPmdV7j5VOcjA0nkCuds6eSAE/XZIDqFRkapfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9id+wA9qn7Wb9QeAoFoUuhjaotJhoEUYwrhdS5Zx10x8yJNNQ
-	WjLrxpdxYH724mhIU7IhGICBQ28K2RdTt0pdlnBFmWuDWaPnuANBPL1z
-X-Gm-Gg: ASbGncsVnX5MUGbvBz+IqYRMhiMkcKeoqmYff8Zc8r/yutjES7lPQCAeMg6eFd0WlqC
-	on8iQKqjyc0T2pSWDH0wrXrCyJmlHjTjACC7BK+v7ZOvF4r6eLa/N0RjUkyYPCpDmXelIiq3RGo
-	zlzj8NOffh9MuxzXkOWRZbQVbmmvl0CIT0utvyLo7O7Fo/wMAP10rED9DlJwUk/ocw5+4nrYOau
-	PpU6Uq+oRP0cC02vvLgtNrxNdIbqrhOvUp/TS7KJ0KrspNwZS8CKddC3+sWC1Glu7iZxBkogolw
-	n71Ji7kbu6NmKEtCP1X8YyQdRctjFldZJgw+bIOmv0dOGG5g
-X-Google-Smtp-Source: AGHT+IEKyQ32HiyWlJskTxRYL8AQnVG4qWWHt6Qqr3ywr5giPCq3wD9L9VKOqjgiM8Sod4EwUE2ZGQ==
-X-Received: by 2002:a17:90b:38c4:b0:312:959:dc45 with SMTP id 98e67ed59e1d1-3130cca4fdbmr3399852a91.3.1749032715722;
-        Wed, 04 Jun 2025 03:25:15 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:7b3::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2c2fa3sm9473906a91.19.2025.06.04.03.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 03:25:15 -0700 (PDT)
-Date: Wed, 4 Jun 2025 07:25:09 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Hugh Cole-Baker <sigmaris@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <aEAfBc3gsVTmkCyE@geday>
-References: <aEAOiO_YIqWH9frQ@geday>
- <317943F7-8658-436D-9E3C-05CB6404F122@gmail.com>
+	s=arc-20240116; t=1749034103; c=relaxed/simple;
+	bh=eMc3z7LPDhbTS1cXhdXmgOby4F0SIeeE/EzWk2butk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d5OqjsururgXzz5xJD+TTlZev5Re27wsy7ogi4QEIvfh9daEwiONcKtb8KRy1LkzTf5CwJ1CMBwxaYCNRvxMn0BravDWk71JAUkyx5ReBMbDxqB+DgP37W2M1CvGMRm8jNr2zGxNT3jHhDvUYDkpCcRoXxvmLWlMCgSqCpLqRpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PdL6S8A1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hTpPWh2Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PdL6S8A1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hTpPWh2Q; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0433B5D230;
+	Wed,  4 Jun 2025 10:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749033465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
+	b=PdL6S8A1HR0YLCczXMQr2/ylJ52KHDwo1+2T+xu4jus22SIvnS+luFeImg/lixedpXH/+M
+	QUJedn1xXjavUA4x/XwVr1dcz4c2U5I4p6nkFr6g4WikVzY+AtTAirlPHyb5KCqCoaK2iO
+	4+HBvt6QtnXC2fm2d9Kc1o95NaKEo3s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749033465;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
+	b=hTpPWh2Qw7dQiWZ/xlVXJ6x5fsYNr0SF3PZ2aJo8C1sw84qcxR+qwcrl9J5+Ykq85KYlU3
+	SYNJMOZjZ4YPLFAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PdL6S8A1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hTpPWh2Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749033465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
+	b=PdL6S8A1HR0YLCczXMQr2/ylJ52KHDwo1+2T+xu4jus22SIvnS+luFeImg/lixedpXH/+M
+	QUJedn1xXjavUA4x/XwVr1dcz4c2U5I4p6nkFr6g4WikVzY+AtTAirlPHyb5KCqCoaK2iO
+	4+HBvt6QtnXC2fm2d9Kc1o95NaKEo3s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749033465;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kxO8WDSe490cbHdHnEXd3fqWy18pk7jWUod9HuQdJns=;
+	b=hTpPWh2Qw7dQiWZ/xlVXJ6x5fsYNr0SF3PZ2aJo8C1sw84qcxR+qwcrl9J5+Ykq85KYlU3
+	SYNJMOZjZ4YPLFAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C558A13A63;
+	Wed,  4 Jun 2025 10:37:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oDTfLvghQGg9KgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 10:37:44 +0000
+Message-ID: <6f2c8516-98e4-4a83-83fd-5e0891de535f@suse.de>
+Date: Wed, 4 Jun 2025 12:37:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <317943F7-8658-436D-9E3C-05CB6404F122@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] video: screen_info: Relocate framebuffers behind PCI
+ bridges
+To: javierm@redhat.com, bhelgaas@google.com, iivanov@suse.de, tiwai@suse.de
+Cc: dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250528080234.7380-1-tzimmermann@suse.de>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250528080234.7380-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,suse.com:url];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 0433B5D230
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On Wed, Jun 04, 2025 at 02:20:20PM +0400, Christian Hewitt wrote:
-> I think you have me confused with another Christian (or auto-complete
-> scored a new victim). Sadly I have no clue about PCI and not a lot of
-> knowledge on RK3399 matters :)
-> 
-> CH.
+If there are no further comment, I'll merge this patch via drm-misc-fixes.
 
-Hi Christian,
+Am 28.05.25 um 10:02 schrieb Thomas Zimmermann:
+> Apply PCI host-bridge window offsets to screen_info framebuffers. Fixes
+> invalid access to I/O memory.
+>
+> Resources behind a PCI host bridge can be relocated by a certain offset
+> in the kernel's CPU address range used for I/O. The framebuffer memory
+> range stored in screen_info refers to the CPU addresses as seen during
+> boot (where the offset is 0). During boot up, firmware may assign a
+> different memory offset to the PCI host bridge and thereby relocating
+> the framebuffer address of the PCI graphics device as seen by the kernel.
+> The information in screen_info must be updated as well.
+>
+> The helper pcibios_bus_to_resource() performs the relocation of the
+> screen_info's framebuffer resource (given in PCI bus addresses). The
+> result matches the I/O-memory resource of the PCI graphics device (given
+> in CPU addresses). As before, we store away the information necessary to
+> later update the information in screen_info itself.
+>
+> Commit 78aa89d1dfba ("firmware/sysfb: Update screen_info for relocated
+> EFI framebuffers") added the code for updating screen_info. It is based
+> on similar functionality that pre-existed in efifb. Efifb uses a pointer
+> to the PCI resource, while the newer code does a memcpy of the region.
+> Hence efifb sees any updates to the PCI resource and avoids the issue.
+>
+> v3:
+> - Only use struct pci_bus_region for PCI bus addresses (Bjorn)
+> - Clarify address semantics in commit messages and comments (Bjorn)
+> v2:
+> - Fixed tags (Takashi, Ivan)
+> - Updated information on efifb
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reported-by: "Ivan T. Ivanov" <iivanov@suse.de>
+> Closes: https://bugzilla.suse.com/show_bug.cgi?id=1240696
+> Tested-by: "Ivan T. Ivanov" <iivanov@suse.de>
+> Fixes: 78aa89d1dfba ("firmware/sysfb: Update screen_info for relocated EFI framebuffers")
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: <stable@vger.kernel.org> # v6.9+
+> ---
+>   drivers/video/screen_info_pci.c | 79 +++++++++++++++++++++------------
+>   1 file changed, 50 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
+> index 6c5833517141..66bfc1d0a6dc 100644
+> --- a/drivers/video/screen_info_pci.c
+> +++ b/drivers/video/screen_info_pci.c
+> @@ -7,8 +7,8 @@
+>   
+>   static struct pci_dev *screen_info_lfb_pdev;
+>   static size_t screen_info_lfb_bar;
+> -static resource_size_t screen_info_lfb_offset;
+> -static struct resource screen_info_lfb_res = DEFINE_RES_MEM(0, 0);
+> +static resource_size_t screen_info_lfb_res_start; // original start of resource
+> +static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
+>   
+>   static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
+>   {
+> @@ -31,7 +31,7 @@ void screen_info_apply_fixups(void)
+>   	if (screen_info_lfb_pdev) {
+>   		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+>   
+> -		if (pr->start != screen_info_lfb_res.start) {
+> +		if (pr->start != screen_info_lfb_res_start) {
+>   			if (__screen_info_relocation_is_valid(si, pr)) {
+>   				/*
+>   				 * Only update base if we have an actual
+> @@ -47,46 +47,67 @@ void screen_info_apply_fixups(void)
+>   	}
+>   }
+>   
+> +static int __screen_info_lfb_pci_bus_region(const struct screen_info *si, unsigned int type,
+> +					    struct pci_bus_region *r)
+> +{
+> +	u64 base, size;
+> +
+> +	base = __screen_info_lfb_base(si);
+> +	if (!base)
+> +		return -EINVAL;
+> +
+> +	size = __screen_info_lfb_size(si, type);
+> +	if (!size)
+> +		return -EINVAL;
+> +
+> +	r->start = base;
+> +	r->end = base + size - 1;
+> +
+> +	return 0;
+> +}
+> +
+>   static void screen_info_fixup_lfb(struct pci_dev *pdev)
+>   {
+>   	unsigned int type;
+> -	struct resource res[SCREEN_INFO_MAX_RESOURCES];
+> -	size_t i, numres;
+> +	struct pci_bus_region bus_region;
+>   	int ret;
+> +	struct resource r = {
+> +		.flags = IORESOURCE_MEM,
+> +	};
+> +	const struct resource *pr;
+>   	const struct screen_info *si = &screen_info;
+>   
+>   	if (screen_info_lfb_pdev)
+>   		return; // already found
+>   
+>   	type = screen_info_video_type(si);
+> -	if (type != VIDEO_TYPE_EFI)
+> -		return; // only applies to EFI
+> +	if (!__screen_info_has_lfb(type))
+> +		return; // only applies to EFI; maybe VESA
+>   
+> -	ret = screen_info_resources(si, res, ARRAY_SIZE(res));
+> +	ret = __screen_info_lfb_pci_bus_region(si, type, &bus_region);
+>   	if (ret < 0)
+>   		return;
+> -	numres = ret;
+>   
+> -	for (i = 0; i < numres; ++i) {
+> -		struct resource *r = &res[i];
+> -		const struct resource *pr;
+> -
+> -		if (!(r->flags & IORESOURCE_MEM))
+> -			continue;
+> -		pr = pci_find_resource(pdev, r);
+> -		if (!pr)
+> -			continue;
+> -
+> -		/*
+> -		 * We've found a PCI device with the framebuffer
+> -		 * resource. Store away the parameters to track
+> -		 * relocation of the framebuffer aperture.
+> -		 */
+> -		screen_info_lfb_pdev = pdev;
+> -		screen_info_lfb_bar = pr - pdev->resource;
+> -		screen_info_lfb_offset = r->start - pr->start;
+> -		memcpy(&screen_info_lfb_res, r, sizeof(screen_info_lfb_res));
+> -	}
+> +	/*
+> +	 * Translate the PCI bus address to resource. Account
+> +	 * for an offset if the framebuffer is behind a PCI host
+> +	 * bridge.
+> +	 */
+> +	pcibios_bus_to_resource(pdev->bus, &r, &bus_region);
+> +
+> +	pr = pci_find_resource(pdev, &r);
+> +	if (!pr)
+> +		return;
+> +
+> +	/*
+> +	 * We've found a PCI device with the framebuffer
+> +	 * resource. Store away the parameters to track
+> +	 * relocation of the framebuffer aperture.
+> +	 */
+> +	screen_info_lfb_pdev = pdev;
+> +	screen_info_lfb_bar = pr - pdev->resource;
+> +	screen_info_lfb_offset = r.start - pr->start;
+> +	screen_info_lfb_res_start = bus_region.start;
+>   }
+>   DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_BASE_CLASS_DISPLAY, 16,
+>   			       screen_info_fixup_lfb);
 
-I did not confuse you. I thought your work with LibreElec partially
-involved getting the ol' hand dirty with RK3399 patches. But if it's not
-the case, I'll drop you from future Cc: on this subject.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Thanks!
-Geraldo Nascimento
 
