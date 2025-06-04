@@ -1,310 +1,223 @@
-Return-Path: <linux-pci+bounces-28947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33560ACDAB4
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:15:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE721ACDAB6
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:15:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E989D167305
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 09:15:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B27B1745C0
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 09:15:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1289128C843;
-	Wed,  4 Jun 2025 09:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8331DAC92;
+	Wed,  4 Jun 2025 09:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNo7eyc5"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fYQVe0Cs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB2428C5DA;
-	Wed,  4 Jun 2025 09:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BCA1804A
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 09:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028503; cv=none; b=cGgz0O9U9P9zXiA1FKKJbnyChnJxymoqsrhNE2oVlqIs7e3j4VHWwHSu/0759eQC334RQiifDBT5cAleEe1DxvhOc9dvHN7/3LyLze0NkWzBzJ3v/uTN8iFyJJzdJ7hVhl5XdtsF1tGyosqwcUE+UPo/AJeAbAd+RH/8mpojE/g=
+	t=1749028546; cv=none; b=onEe4dPQFBuTnkUbRUKkxprFTg/t2ebHBM4VGBBJJ/gTnWtiWCaexMGm6PnKHx/xl/jyWjyJNY1K/+n8grPbrRCY4RHcEZa2IOWPwLKoMeh9VV2toq34E54FzFxRb8LIycQujorHGek052skAC17AHs7zMIA7OVHmIc9DXCoSq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028503; c=relaxed/simple;
-	bh=a2orjQgpwIVrSbmo8TyGeBeS8WVo+nKKnBihpx1g/94=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jQjFEkp4gmq2cWfT+RLBeSekJoWP0Tjm7gkq7192jZer7+Hp07nPLLjjf+hPr7aFvtJYqRQGi9yLWa1rtuZUfNU8gUG5CYbpuQlpBF9r017NdVq2wa++inI91xrZnwBRNfl5B9fqnT9T+NVVErMsWl36QngCvpQkwYCg/cEXQ2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNo7eyc5; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2351227b098so46015315ad.2;
-        Wed, 04 Jun 2025 02:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749028500; x=1749633300; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wXKUp0jLGdtp7D5Cr5HTNVyQxHB2C0Ds7jpfGQp1h+c=;
-        b=aNo7eyc5R1Rabdp3drKV1TZ9K/ZDiYMyDIKNdVOyBsxOGHnwqbeo5PiiAYQYJm/wnQ
-         1GmasSzmUm+wJOSy9OY4ow8ex+KhtIHkYZWVNjg06uzh0XrnuNuQ0oIUo1zXbm3XUebW
-         kUTNXDkyIYDmMHzp6tAp4To+3PHQEkkv9731N2KLe+2wgMzgK5E1JTBaDRE0Dyv/5uHK
-         SM6xX/8s2hyjVCb7hBr+o53WPRP1qY0hZiuKxTk9Nk+PZIkpt6KF7hxmGe29ZeALCFmY
-         Ph5yUuMf1vqma/KTEL069R9RWwoujBwN35XG8OImgrJ/a0fLC7K6FBdhKO2o9Hg5fFA5
-         aSMw==
+	s=arc-20240116; t=1749028546; c=relaxed/simple;
+	bh=wtbK/c960FCVkZdDZijesw0w08Lsk96bzznoaXRvUIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IP1YNYAf77Zr00sWC64lCAP9UWuEiIxbsVLcAWK1xWV8K4hyg65KUDdvVgX8wbQSSiPpuDFGzFyX8VtWmPEW7UofePrikpHIigtAjH25ldXFPKwMrUX7cRJ1Zr+jd3AwaieeexZDHY2bNRIfjczZouFjo7I1ubaRqoAQU7/HcdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fYQVe0Cs; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5540FTDb014030
+	for <linux-pci@vger.kernel.org>; Wed, 4 Jun 2025 09:15:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zPPFsiJy+20CJQxcYQxqsy1auSOoSM4WU5ICkQfU8Ik=; b=fYQVe0CsdVilowuY
+	OtobuCzUw+CnRbC++SF4DuU9Va9Eu+OTxOXcS1buG/gbWuKVbWLUZNBDZpoRrG61
+	VBbThzHVe4eMuCLToa1ss9SwSCZ6IPDpEsyT+oK5Y48SF6Uj8Y8NeAjj59IuzOyb
+	1RDxtYkOnmC3Pz3blrt/1yJ94cQec+uH4OQT+kmwD4vXnKFzOULi8ySf5nFsh0L3
+	IOuWN5w0wEoTFf9u2Bsk6QmHZZOnszQNkbjsthCIQkgF3aZpM7Zy14lukLAAQdhn
+	mbThkmyZurTUl7r4Ce8lCbviLw7gnIFrn2DA0aCedQGL86UXsc2jOm7CS7d5sZUA
+	Co5tIw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 472be817sv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 09:15:44 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6face1d593bso110196026d6.3
+        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 02:15:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749028501; x=1749633301;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1749028543; x=1749633343;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wXKUp0jLGdtp7D5Cr5HTNVyQxHB2C0Ds7jpfGQp1h+c=;
-        b=B6Q+iOvqVYhB6hVrgZ0vk7rXjCL9TQY4gEj+glpwSbaV44w3bafJQHAIbAzFFl7DqM
-         tdVa4+fvmf9uD5aQ5Zj389Z2d55F3rEU6+Nc/DAUAim7MvmsubcVPbP9eWBG5QtdKtRT
-         5fDJNGlyVlEKouIblmxJ2paPNvcxmbDfPr0PGxOEqxISpy+hYAETwag+4OWoWRu1zx7z
-         /kwS1RX3BPesMFfliI36JjrafuRylsc3WbLHKXxWXBCdHmhCUQtbvvtkFu3j7KvojcLt
-         sUEGivBs0OXHlOgA5f/nV4ROLiA5wo670CqVjoJqLfpPQELIjESbmy67H/UQ2eb8ypOL
-         dILg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMTlmiLO9YcRu4y2x6RqfEA0tQHUFA73CFT4+JlQ73mqi3aWjjbztetgeatZSVodsP6EyVZ6Y/cagS@vger.kernel.org, AJvYcCXnwY7E5ENtvEmvxL3N04cyxrShrIoiGAaVDyIUtsp4CyhHOHVchy3JgLbChJXSCvg/IKc5CrVrVDIFakw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhCOU5ThYR++bSWPSPMDxHnXNElfNSbq2R5zppzsoJFf787HV8
-	WCvEtDDQ6OuW0lneWmX6ERYjJskLBg8+AWN6frMiOdDY243CzVqyMFDt
-X-Gm-Gg: ASbGnctfxtQXw6TomewsLh/YAJXDUut7FOvu981n1NAxp8ZLYWIo5bzwfW3me/0opj9
-	Py/qLllmjOikw9sZXDHmykN/jwWBk6YZGB7YSvNLK4fZBfXwfFhBLigWfmR0GKwwrtgEI1JB3GL
-	XHGNP1Ty2cofAmzWRpj+vRw0mR074NahgBYS1/fHSeeMzExDnQe1CTzjNnzIPJxTOjDtEh35aHy
-	zB6TpsnFQH8zGb+yr0eqlVOC3SPs8ZShdwutM2g7cbn68oIgxeFn9F4uNNQk4hF9UwRsP8OUm2Z
-	HAZnk6kyduk0t+rvJ843VzW0nSFXkNYWis4Nlg==
-X-Google-Smtp-Source: AGHT+IGrWh8jmJojKSu+BSXj2AcIBuAIpGQv28Yb3WscoCmm5H1KpgPvyci17orjrFIZ1IdDZFdaZA==
-X-Received: by 2002:a17:902:dad0:b0:234:e655:a618 with SMTP id d9443c01a7336-235e11cb8f1mr29637965ad.25.1749028500499;
-        Wed, 04 Jun 2025 02:15:00 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:6be::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bdd0e9sm99762975ad.74.2025.06.04.02.14.56
+        bh=zPPFsiJy+20CJQxcYQxqsy1auSOoSM4WU5ICkQfU8Ik=;
+        b=NB1xCCpp2cryb0/4vLM003c0B4AyZmJvdH3UyrVG8nS69ClnxDz36MUDPFAqSqoiLq
+         sP8h26tySk5lb0QMCo/NWLo8oOniPJmamSg+Ub8sQhrV5y1HlVP7s0rlNgM+rk1pwjtY
+         EsLEPNvWWgndVvztp3tNDaCUoG/RlrLbW0V9IvAS+mBowEpkA7+F5eJ92xcT2AKDsJLT
+         K0xLO6qND2IuTNgQ1BhNNDJFrurr30aI010vqqLqOdnrykO0a/enX2trk9hhKLHRCXbh
+         sE8iT7kgIqn2BTwtQlbmQY+WYrQaH+yJYUBzljD3dR2/ueZulY2c00U2pAhESqlspjoh
+         74sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvhEI6nRuzPeZ+Bb/Tx/EFsC3STloOQqseHcB36gt/kVoRKYEXtjhIEopSjYy4XXYjhdY83MHDJ9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4VcRJfh7JN5ZWGQJ1Ol7SfpwoqwmbzEsKNyymm+SvTyzVI83l
+	rKOhvgjyx1IJFrlSyARytrQgOgQjzV97c+sd+3UYmCHUzbrSWzajev7MB2n9T434kAtAeVWdhPY
+	goxGcVT06Fko+Buo8q+7dMtVLtKkNc3a4hjt+hf4azxn/2340wWHhKxBo4ncXTSE=
+X-Gm-Gg: ASbGncto0JYe6uMFLSbT6IK9WiRijLksvBBuhymUjGYDgLZxEpAZV99/zSPBbp/iS2w
+	+qkcyBESyA4XKCeXufwyMlLtSlYT5e+XxhEKmVmoGIhC45PPiK6xrhN21FRWF3EY2HPSQYl47Ij
+	Vn1rgD/eZBGGMR9IJ+vc7FQwESdwiLzDAwdRW7/h/PDDPAPfNLCMO+tu/ShAf+zDvApu++IZGqL
+	bsyXH91c3rp6x6/TTqM2imfLoc2USCKfd2hNmSxQSNp40MyPzXCPFEEGAXAg1Cn+UeyTguKDh+E
+	+4Eq6vZJNNUTsMeFXtxxxirzrHOKQQuTku2zl2+DbZdjpkY9xXRQdknN66bWWEFVE1cpPq9/Wnc
+	=
+X-Received: by 2002:a05:6214:2a48:b0:6f4:b876:5fb8 with SMTP id 6a1803df08f44-6faf6fd1defmr26946296d6.1.1749028542955;
+        Wed, 04 Jun 2025 02:15:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHAy3lVFCTyFps38PYh4Cu1wvRMN2LoHwLW+6LfbUHP84/5730hlAgclrnqK6LGU+oqn6V+sA==
+X-Received: by 2002:a05:6214:2a48:b0:6f4:b876:5fb8 with SMTP id 6a1803df08f44-6faf6fd1defmr26945926d6.1.1749028542461;
+        Wed, 04 Jun 2025 02:15:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85b55f88sm21033831fa.55.2025.06.04.02.15.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 02:14:59 -0700 (PDT)
-Date: Wed, 4 Jun 2025 06:14:48 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] PCI: rockchip-host: Retry link training on failure
- without PERST#
-Message-ID: <aEAOiO_YIqWH9frQ@geday>
+        Wed, 04 Jun 2025 02:15:41 -0700 (PDT)
+Date: Wed, 4 Jun 2025 12:15:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org,
+        manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
+        krzk+dt@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+Message-ID: <34dnpaz3gl5jctcohh5kbf4arijotpdlxn2eze3oixrausyev3@4qso3qg5zn4t>
+References: <20250529035416.4159963-1-quic_ziyuzhan@quicinc.com>
+ <20250529035416.4159963-3-quic_ziyuzhan@quicinc.com>
+ <drr7cngryldptgzbmac7l2xpryugbrnydke3alq5da2mfvmgm5@nwjsqkef7ypc>
+ <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e8d1b60c-97fe-4f50-8ead-66711f1aa3a7@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=bNYWIO+Z c=1 sm=1 tr=0 ts=68400ec0 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=JfrnYn6hAAAA:8 a=COk6AnOGAAAA:8 a=nH4wTwwcQCLCZoaC2lgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+ a=1CNFftbPRP8L7MoqJWF3:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qKw03B--OWR3-hUxl0vQdFrzO5ZqX3pW
+X-Proofpoint-ORIG-GUID: qKw03B--OWR3-hUxl0vQdFrzO5ZqX3pW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2OCBTYWx0ZWRfX782QNWkh4nmI
+ GBSStoLS3Z7NQbdnh04P7l7tqr7dRnnOgt350+9uDtB5GUC7I3jN43FtqsxfPvq9bugisfpYflr
+ xYA5LCNUBPw21QpiMRtOb6liSVc4O0Cz/Q5ilDpaKAk1yOUhtcTHs5u9iMAVm7IWcrcWAyZcDu4
+ 9nS0jnfZftyWTrUvbJoFkUvUWGpXGDa6PBoDU4v/YMplWZA1mtc0Y3syBc0gJAaDgm/UyjYbV3b
+ gGpw+of1l5djVDYWoo9okT/FRbkVhJu8Upd0apZyYlx0f9GkbNAFVTEv71OWgsXhwCFYBsHmjRi
+ VyaW42wbQ0exwXe4wvpqpFvUGFhmViNPmbyg65sAzugf+4okCZabnciH/yqOvOX69Yl3WjfhoBk
+ 70Iw7wj5khA8+Wn8KbxosbTKmZ73Ni46YRHDUjdQVYVJLKeXNdC/YHJ5hhT59GxHVWQSRT4A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=999 adultscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506040068
 
-Hi,
+On Wed, Jun 04, 2025 at 03:58:33PM +0800, Ziyue Zhang wrote:
+> 
+> On 6/3/2025 9:11 PM, Dmitry Baryshkov wrote:
+> > On Thu, May 29, 2025 at 11:54:14AM +0800, Ziyue Zhang wrote:
+> > > Each PCIe controller on sa8775p supports 'link_down'reset on hardware,
+> > > document it.
+> > I don't think it's possible to "support" reset in hardware. Either it
+> > exists and is routed, or it is not.
+> 
+> Hi Dmitry,
+> 
+> I will change the commit msg to
+> 'Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
+> document it.'
+> "Supports" implies that the PCIe controller has an active role in enabling
+> or managing the reset functionality—it suggests that the controller is designed
+> to accommodate or facilitate this feature.
+>  "Includes" simply states that the reset functionality is present in the
+> hardware—it exists, whether or not it's actively managed or configurable.
+> So I think change it to includes will be better.
+> 
+> BRs
+> Ziyue
+> 
+> > > Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> > > ---
+> > >   .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
+> > >   1 file changed, 9 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+> > > index e3fa232da2ca..805258cbcf2f 100644
+> > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+> > > @@ -61,11 +61,14 @@ properties:
+> > >         - const: global
+> > >     resets:
+> > > -    maxItems: 1
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > Shouldn't we just update this to maxItems:2 / minItems:2 and drop
+> > minItems:1 from the next clause?
+> 
+> Hi Dmitry,
+> 
+> link_down reset is optional. In many other platforms, like sm8550
+> and x1e80100, link_down reset is documented as a optional reset.
+> PCIe will works fine without link_down reset. So I think setting it
+> as optional is better.
 
-After almost 30 days of battling with RK3399 buggy PCIe on my Rock Pi
-N10 through trial-and-error debugging, I finally got positive results
-with enumeration on the PCI bus for both a Realtek 8111E NIC and a
-Samsung PM981a SSD.
+You are describing a hardware. How can a reset be optional in the
+_hardware_? It's either routed or not.
 
-The NIC was connected to a M.2->PCIe x4 riser card and it would get
-stuck on Polling.Compliance, without breaking electrical idle on the
-Host RX side. The Samsung PM981a SSD is directly connected to M.2
-connector and that SSD is known to be quirky (OEM... no support)
-and non-functional on the RK3399 platform.
+> 
+> BRs
+> Ziyue
+> 
+> > >     reset-names:
+> > > +    minItems: 1
+> > >       items:
+> > > -      - const: pci
+> > > +      - const: pci # PCIe core reset
+> > > +      - const: link_down # PCIe link down reset
+> > >   required:
+> > >     - interconnects
+> > > @@ -161,8 +164,10 @@ examples:
+> > >               power-domains = <&gcc PCIE_0_GDSC>;
+> > > -            resets = <&gcc GCC_PCIE_0_BCR>;
+> > > -            reset-names = "pci";
+> > > +            resets = <&gcc GCC_PCIE_0_BCR>,
+> > > +                     <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
+> > > +            reset-names = "pci",
+> > > +                          "link_down";
+> > >               perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > >               wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
+> > > -- 
+> > > linux-phy mailing list
+> > > linux-phy@lists.infradead.org
+> > > https://lists.infradead.org/mailman/listinfo/linux-phy
 
-The Samsung SSD was even worse than the NIC - it would get stuck on
-Detect.Active like a bricked card, even though it was fully functional
-via USB adapter.
-
-It seems both devices benefit from retrying Link Training if - big if
-here - PERST# is not toggled during retry. This patch does exactly that.
-I find the patch to be ugly as hell but it works - every time.
-
-I added Hugh Cole-Baker and Christian Hewitt to Cc: as both are
-experienced on RK3399 and hopefully at least one of them has faced
-the non-working SSD experience on RK3399 and will be able to test this.
-
----
- drivers/pci/controller/pcie-rockchip-host.c | 141 ++++++++++++--------
- 1 file changed, 87 insertions(+), 54 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 6a46be17aa91..6a465f45a09c 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -284,6 +284,53 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
- 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
- }
- 
-+static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->dev;
-+	int err;
-+
-+	if (!IS_ERR(rockchip->vpcie12v)) {
-+		err = regulator_enable(rockchip->vpcie12v);
-+		if (err) {
-+			dev_err(dev, "fail to enable vpcie12v regulator\n");
-+			goto err_out;
-+		}
-+	}
-+
-+	if (!IS_ERR(rockchip->vpcie3v3)) {
-+		err = regulator_enable(rockchip->vpcie3v3);
-+		if (err) {
-+			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
-+			goto err_disable_12v;
-+		}
-+	}
-+
-+	err = regulator_enable(rockchip->vpcie1v8);
-+	if (err) {
-+		dev_err(dev, "fail to enable vpcie1v8 regulator\n");
-+		goto err_disable_3v3;
-+	}
-+
-+	err = regulator_enable(rockchip->vpcie0v9);
-+	if (err) {
-+		dev_err(dev, "fail to enable vpcie0v9 regulator\n");
-+		goto err_disable_1v8;
-+	}
-+
-+	return 0;
-+
-+err_disable_1v8:
-+	regulator_disable(rockchip->vpcie1v8);
-+err_disable_3v3:
-+	if (!IS_ERR(rockchip->vpcie3v3))
-+		regulator_disable(rockchip->vpcie3v3);
-+err_disable_12v:
-+	if (!IS_ERR(rockchip->vpcie12v))
-+		regulator_disable(rockchip->vpcie12v);
-+err_out:
-+	return err;
-+}
-+
- /**
-  * rockchip_pcie_host_init_port - Initialize hardware
-  * @rockchip: PCIe port information
-@@ -291,11 +338,14 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
- static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- {
- 	struct device *dev = rockchip->dev;
--	int err, i = MAX_LANE_NUM;
-+	int err, i = MAX_LANE_NUM, is_reinit = 0;
- 	u32 status;
- 
--	gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
-+	if (!is_reinit) {
-+		gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
-+	}
- 
-+reinit:
- 	err = rockchip_pcie_init_port(rockchip);
- 	if (err)
- 		return err;
-@@ -322,16 +372,46 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
- 			    PCIE_CLIENT_CONFIG);
- 
--	msleep(PCIE_T_PVPERL_MS);
--	gpiod_set_value_cansleep(rockchip->perst_gpio, 1);
--
--	msleep(PCIE_T_RRS_READY_MS);
-+	if (!is_reinit) {
-+		msleep(PCIE_T_PVPERL_MS);
-+		gpiod_set_value_cansleep(rockchip->perst_gpio, 1);
-+		msleep(PCIE_T_RRS_READY_MS);
-+	}
- 
- 	/* 500ms timeout value should be enough for Gen1/2 training */
- 	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
- 				 status, PCIE_LINK_UP(status), 20,
- 				 500 * USEC_PER_MSEC);
--	if (err) {
-+
-+	if (err && !is_reinit) {
-+		while (i--)
-+			phy_power_off(rockchip->phys[i]);
-+		i = MAX_LANE_NUM;
-+		while (i--)
-+			phy_exit(rockchip->phys[i]);
-+		i = MAX_LANE_NUM;
-+		is_reinit = 1;
-+		dev_dbg(dev, "Will reinit PCIe without toggling PERST#");
-+		if (!IS_ERR(rockchip->vpcie12v))
-+			regulator_disable(rockchip->vpcie12v);
-+		if (!IS_ERR(rockchip->vpcie3v3))
-+			regulator_disable(rockchip->vpcie3v3);
-+		regulator_disable(rockchip->vpcie1v8);
-+		regulator_disable(rockchip->vpcie0v9);
-+		rockchip_pcie_disable_clocks(rockchip);
-+		err = rockchip_pcie_enable_clocks(rockchip);
-+		if (err)
-+			return err;
-+		err = rockchip_pcie_set_vpcie(rockchip);
-+		if (err) {
-+			dev_err(dev, "failed to set vpcie regulator\n");
-+			rockchip_pcie_disable_clocks(rockchip);
-+			return err;
-+		}
-+		goto reinit;
-+	}
-+
-+	else if (err) {
- 		dev_err(dev, "PCIe link training gen1 timeout!\n");
- 		goto err_power_off_phy;
- 	}
-@@ -613,53 +693,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
- 	return 0;
- }
- 
--static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
--{
--	struct device *dev = rockchip->dev;
--	int err;
--
--	if (!IS_ERR(rockchip->vpcie12v)) {
--		err = regulator_enable(rockchip->vpcie12v);
--		if (err) {
--			dev_err(dev, "fail to enable vpcie12v regulator\n");
--			goto err_out;
--		}
--	}
--
--	if (!IS_ERR(rockchip->vpcie3v3)) {
--		err = regulator_enable(rockchip->vpcie3v3);
--		if (err) {
--			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
--			goto err_disable_12v;
--		}
--	}
--
--	err = regulator_enable(rockchip->vpcie1v8);
--	if (err) {
--		dev_err(dev, "fail to enable vpcie1v8 regulator\n");
--		goto err_disable_3v3;
--	}
--
--	err = regulator_enable(rockchip->vpcie0v9);
--	if (err) {
--		dev_err(dev, "fail to enable vpcie0v9 regulator\n");
--		goto err_disable_1v8;
--	}
--
--	return 0;
--
--err_disable_1v8:
--	regulator_disable(rockchip->vpcie1v8);
--err_disable_3v3:
--	if (!IS_ERR(rockchip->vpcie3v3))
--		regulator_disable(rockchip->vpcie3v3);
--err_disable_12v:
--	if (!IS_ERR(rockchip->vpcie12v))
--		regulator_disable(rockchip->vpcie12v);
--err_out:
--	return err;
--}
--
- static void rockchip_pcie_enable_interrupts(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_write(rockchip, (PCIE_CLIENT_INT_CLI << 16) &
 -- 
-2.49.0
-
+With best wishes
+Dmitry
 
