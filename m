@@ -1,193 +1,140 @@
-Return-Path: <linux-pci+bounces-28943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28945-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2920ACDA10
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 10:40:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D46DCACDA6B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:00:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83C3216EC03
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 08:40:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75EE73A3FD0
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 08:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F5728A3EF;
-	Wed,  4 Jun 2025 08:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78EC028C5D1;
+	Wed,  4 Jun 2025 09:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNMi0PRV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43499248878;
-	Wed,  4 Jun 2025 08:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3300A247296;
+	Wed,  4 Jun 2025 09:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749026443; cv=none; b=tZTjaEq2vDQGlQwJ7Z9/6fmhGnXtQqD95jYwtX6XqAji66DAOpMMBBmuiumGOFSF2TvQ5i7hwYURnaZFOf78HRhYebtlCJFZYPVY/kzg0xk+yfzhGLOP5PReWjSj7jvn+BlP6bYcmbzi771TVqWZNvQ00sotrnyU9PfqbkkXfrI=
+	t=1749027609; cv=none; b=kzJnhu96Ual3fFRk8OmzEgOs5p+5E2k0gWXxz+JY0EGZld+Oys32PRbTkkb+q7sV1QLtE12xVKMtVTXj90/MfM/HzPUfZ+mLOEJ2+4jUU5GmAd2nMD0uSehIyvnOgILdoKnzeu0Ee1K7d+R145YRjSbublToOxfY3jAcMX1y7UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749026443; c=relaxed/simple;
-	bh=yqaLRaFfT6O9njZap+NVHAgsBEggTlcJqgOFYRpiOGY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=luHKnIiZp+LKu7VhaAELhnsdCsoA72ImG+qaHE8C9TqBrp1TZZNTOUngBo1QM4Binay5Z/rZSzCQtLaDzEMwNnAWKd7VilqmTDY6t98jiVvHpoCJWN0LTKHDNjuIzkeoAcKI3H+0fSTmjIxrfE9cMRlFnzbWKURMPqU7l9Y41Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e58a9bb8fcso2115503137.2;
-        Wed, 04 Jun 2025 01:40:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749026438; x=1749631238;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qhxUNZMk782m8rVDbncnLrWZuVZ5QZ3Bs0hyS8RTdoM=;
-        b=D3zwPGC2mE+FcGohESlLy0ziK08wVJPGnMx4kppk0UGhGa6ARbfcMCcDaQizbaRsOP
-         h1c9h15N6VQjfmwWSEXzMcowpsyOR1TKZWArokCZ4FyBlme2vV6105MEyh362f/2NgBM
-         jhtpkxL2Utl7yidrbzBkWPeaXH5nsPNgGyBndYRn5LBnrSpcoDMDnJh3TSi1yCYxXgjp
-         hF4ulaZFKd1UWsuHL7TrGcNNSlLGMRtl7TTGCFYKOly9gR+gjFOeID51Au2kZEqRQZwm
-         uJbBox8KCQNUCerYsi2XPFFk3/zVmzaN6fo+07bpGl+89LS1RVKUUoCZ3mScDB6l2JEz
-         VruQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTalFYOGWbXtEgxiXIdvQp6PNDjgEV9PPK8WelmYSfKEKXSSFn4GFfwR16ZR0uJ54Ojl2vfaawY7i0@vger.kernel.org, AJvYcCVk00CmKbeYSLT57jeqF9nJqZi0G6SkmPKO8QBxl5FWREnclsLGgKMrEEqp8NJRsz0sPod6p00Wxy6cbiU6rTWsZmI=@vger.kernel.org, AJvYcCXrRANGKz0TcdS98UmmmCRhG19lI/qCJo1h0tHxNSyGdGV8EkTTg7LjxBS3OVo/mjnqC3QGdEyRA2rW@vger.kernel.org, AJvYcCXv20CnwJhWNEP57PkwrPSiahDb27OjyIdLwkXyGdjIgU1pPa0NMCEIvgewUmPyqUl11505snMXvqRo5pZs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/k4yCvpvSktpaDUoLSEbJIyO3Eot/RiLQ3GchpW+LQwOhK/Mv
-	XKhfQewOxu7SAKMLGhA4jZjh8ismNzfNp41G7aLDzF0uDznAz0/P7kjAurTQbVpc
-X-Gm-Gg: ASbGncsRQqxUGNkpcp9T+uFB2V85kJHQY8Ps45/kn5OABq/4nWaxrlpvfhoAOv0zQ6R
-	Fy/ERpBOyF8/xmi7R3duisPceJXlssSSUsSehAjwTtjzL437tPEMRzjZIjrm+j/oj4saz8V42oM
-	W6VF/g4aXNL0dAnZfBQxfEMWC5d9wpDtlAm0e3ZFShaxL4XOAh31Cl/h5sxL9CKFihp5F/mHEy9
-	z23J5AK0iMG/d8AxY4gcC5j0D1qoEI/LfRA+6aTOfF7suz7hRkO/tuJkt2tICXeAz6Nfa340UnF
-	y9TIZiZZh3eTv0DaxfEbCFEtkV96OZVcBK96niNOcKX+fWSimbURaZlTBVFaUJctL70FW0OitBr
-	JsS1kiqkWXMsGQrNmihMglHxili4lR7OgUycxYm0=
-X-Google-Smtp-Source: AGHT+IGVatC1Iqvgzujcx8ydhnlS44fmHGXRdNf6IfeUytgJaXe51vk+62XXPQOgM31wQ1tWrce6dg==
-X-Received: by 2002:a05:6102:688d:b0:4df:93e0:fb3 with SMTP id ada2fe7eead31-4e746e0cc4cmr850976137.20.1749026438519;
-        Wed, 04 Jun 2025 01:40:38 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87ea70e5ac1sm395553241.17.2025.06.04.01.40.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 01:40:38 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-530bdd90964so562558e0c.1;
-        Wed, 04 Jun 2025 01:40:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsyRvfIQoNHnioKyws3oevNL+oQf++MCMCjpZExAD/iVRz5QCtd9Wi6x6nYXkJzXJUAuTxXAQD8E3t@vger.kernel.org, AJvYcCVV+nZSFXbICl73UlKRQ80QsNcEqF26H7QEIkrCQtlaFhve4MS/Q3JmOisn48Cjk8fiyV/mmdRfh75Z2/x5@vger.kernel.org, AJvYcCWGb5wvH5MjqOKoh+Zn7E8qDSf5k1UTKV90Pg0mKPC2K7befzd8nn0ZiXTkiR1jOJFfPSOdMKbefsO5oFNhZzAC3x8=@vger.kernel.org, AJvYcCWOdu06J/WdKCE1In4JIX9iKe5h14yhbu/lUfCyxuUThnCeLIOfMwicrzROgsXlCYkT8z3lfqbb2whi@vger.kernel.org
-X-Received: by 2002:a05:6102:26ca:b0:4e4:5e11:6832 with SMTP id
- ada2fe7eead31-4e746d02e4bmr961072137.7.1749026437616; Wed, 04 Jun 2025
- 01:40:37 -0700 (PDT)
+	s=arc-20240116; t=1749027609; c=relaxed/simple;
+	bh=JHeR87LeBvTOD+NcJ7rkJFug+cKe5v03755b/Yn77RY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lz/eGM2TwjyWWDbV6xTtZmVpGcl+Ru5AsbNtPLW+ggOtnNpF6njm8yCHBRVn+d4gWcCer6270B69fVNHk7ALS4MnN8b05UWQkAd+3NyvJ7jBV1u/6/KEHFSXmNA+2N1l5y5mPMKf5zrPFNvgvuhshHyPnFIeT6SnDqp6dE7MwvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNMi0PRV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67319C4CEE7;
+	Wed,  4 Jun 2025 08:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749027608;
+	bh=JHeR87LeBvTOD+NcJ7rkJFug+cKe5v03755b/Yn77RY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=YNMi0PRVBrQL7TUZfEAggFUQ4cYerIUDHHQvXVQ4Ql7w6vrNZ2Q+4XcAYwCt1QDYw
+	 1eJo1GcCdFQI/aDuDsgi7yZqP3ooz5vQOCtHW2UFhSnYtVDbartpf//xtFic2nNvGc
+	 7Hy3/KWhXsNA3huwmTLjAG9GPwRMsIkjND6zyKaDnmxnpA0YbF6/XoFTSudZgMh/HG
+	 7r/WM6InNriNEyLQ6Ll4pfLVhKjCZfNR0v2Z968XGgwjSPXzMonP2yIIVDKKgMSkRr
+	 nRkrE+KcTPlA2UsqKlOe4qOUYuQLLwY4Z5+bEf2vVmovEaqg8begmD8Ec3aY3eqyF5
+	 K39U0EXJ7q5Gg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 Q)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>, Xu Yilun <yilun.xu@linux.intel.com>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO
+ support
+In-Reply-To: <20250603122149.GH376789@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-18-yilun.xu@linux.intel.com>
+ <yq5awm9ujouz.fsf@kernel.org> <aD6UQy4KwKcdSvVE@yilunxu-OptiPlex-7050>
+ <20250603122149.GH376789@nvidia.com>
+Date: Wed, 04 Jun 2025 14:10:43 +0530
+Message-ID: <yq5aplfj99x0.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 4 Jun 2025 10:40:25 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
-X-Gm-Features: AX0GCFt2fyoFoIK_LxeiOZfQp_iroUz4k9ILNbeuJExEwejZlhTah3i6hKjIVnU
-Message-ID: <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, Anand Moon <linux.amoon@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marek,
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
-Thanks for your patch!
-
-On Sat, 31 May 2025 at 00:55, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> Add the ability to enable optional slot clock into the pwrctrl driver.
-> This is used to enable slot clock in split-clock topologies, where the
-> PCIe host/controller supply and PCIe slot supply are not provided by
-> the same clock. The PCIe host/controller clock should be described in
-> the controller node as the controller clock, while the slot clock should
-> be described in controller bridge/slot subnode.
+> On Tue, Jun 03, 2025 at 02:20:51PM +0800, Xu Yilun wrote:
+>> > Wouldn=E2=80=99t it be simpler to skip the reference count increment a=
+ltogether
+>> > and just call tsm_unbind in the virtual device=E2=80=99s destroy callb=
+ack?
+>> > (iommufd_vdevice_destroy())
+>>=20
+>> The vdevice refcount is the main concern, there is also an IOMMU_DESTROY
+>> ioctl. User could just free the vdevice instance if no refcount, while V=
+FIO
+>> is still in bound state. That seems not the correct free order.
 >
-> Example DT snippet:
-> &pcicontroller {
->     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+> Freeing the vdevice should automatically unbind it..
 >
->     pci@0,0 {
->         #address-cells = <3>;
->         #size-cells = <2>;
->         reg = <0x0 0x0 0x0 0x0 0x0>;
->         compatible = "pciclass,0604";
->         device_type = "pci";
->         clocks = <&clk_dif 1>;         /* PCIe slot clock */
 
-I assume this should be documented in
-dtschema/schemas/pci/pci-bus-common.yaml, too?
+One challenge I ran into during implementation was the dependency of
+vfio on iommufd_device. When vfio needs to perform a tsm_unbind,
+it only has access to an iommufd_device.
 
->         vpcie3v3-supply = <&reg_3p3v>;
->         ranges;
->     };
-> };
->
-> Example clock topology:
->  ____________                    ____________
-> |  PCIe host |                  | PCIe slot  |
-> |            |                  |            |
-> |    PCIe RX<|==================|>PCIe TX    |
-> |    PCIe TX<|==================|>PCIe RX    |
-> |            |                  |            |
-> |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> '------------'      ||  ||      '------------'
->                     ||  ||
->  ____________       ||  ||
-> |  9FGV0441  |      ||  ||
-> |            |      ||  ||
-> |   CLK DIF0<|======''  ||
-> |   CLK DIF1<|==========''
-> |   CLK DIF2<|
-> |   CLK DIF3<|
-> '------------'
->
-> Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+However, TSM operations like binding and unbinding are handled at the
+iommufd_vdevice level. The issue? There=E2=80=99s no direct link from
+iommufd_device back to iommufd_vdevice.
 
-> --- a/drivers/pci/pwrctrl/slot.c
-> +++ b/drivers/pci/pwrctrl/slot.c
+To address this, I modified the following structures:
 
-> @@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
->  {
->         struct pci_pwrctrl_slot_data *slot;
->         struct device *dev = &pdev->dev;
-> +       struct clk *clk;
->         int ret;
->
->         slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
-> @@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
->                 goto err_regulator_free;
->         }
->
-> +       clk = devm_clk_get_optional_enabled(dev, NULL);
-> +       if (IS_ERR(clk)) {
-> +               ret = dev_err_probe(dev, PTR_ERR(clk),
-> +                                   "Failed to enable slot clock\n");
-> +               goto err_regulator_disable;
-> +       }
+modified   drivers/iommu/iommufd/iommufd_private.h
+@@ -428,6 +428,7 @@ struct iommufd_device {
+ 	/* protect iopf_enabled counter */
+ 	struct mutex iopf_lock;
+ 	unsigned int iopf_enabled;
++	struct iommufd_vdevice *vdev;
+ };
+=20
+ static inline struct iommufd_device *
+@@ -613,6 +614,7 @@ struct iommufd_vdevice {
+ 	struct iommufd_object obj;
+ 	struct iommufd_ctx *ictx;
+ 	struct iommufd_viommu *viommu;
++	struct iommufd_device *idev;
+ 	struct device *dev;
+ 	struct mutex	mutex;	/* mutex to synchronize updates to tsm_bound */
+ 	u64 id; /* per-vIOMMU virtual ID */
 
-You are adding this block in the middle of the regulator handling.
-Please move it below, under the devm_add_action_or_reset() call
-(which is handled wrong, I have sent a patch[1]).
+These fields are updated during tsm_bind and tsm_unbind, so they must be
+protected by the appropriate locks:
 
-> +
->         ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
->                                        slot);
->         if (ret)
+Updating vdevice->idev requires holding vdev->mutex (vdev_lock).
+Updating device->vdev requires idev->igroup->lock (idev_lock).
 
-[1] https://lore.kernel.org/f60c445e965ba309f08c33de78bd62f358e68cd0.1749025687.git.geert+renesas@glider.be
+tsm_unbind in vdevice_destroy:
 
-Gr{oetje,eeting}s,
+vdevice_destroy() ends up calling tsm_unbind() while holding only the
+vdev_lock. At first glance, this seems unsafe. But in practice, it's
+fine because the corresponding iommufd_device has already been destroyed
+when the VFIO device file descriptor was closed=E2=80=94triggering
+vfio_df_iommufd_unbind().
 
-                        Geert
+I=E2=80=99ve added an in-code comment to explain why tsm_unbind() is safe h=
+ere
+without acquiring the idev_lock. Hope that is ok.
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-aneesh
 
