@@ -1,158 +1,140 @@
-Return-Path: <linux-pci+bounces-28989-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28990-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC0D6ACE398
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 19:27:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29A1EACE399
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 19:27:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E7853A8B30
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 17:26:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37CB318926D3
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 17:27:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF601FF1C4;
-	Wed,  4 Jun 2025 17:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3F801FFC5D;
+	Wed,  4 Jun 2025 17:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K16Xu1EQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AMzyjRze"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B991FDA82
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 17:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2DF141987
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 17:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749057813; cv=none; b=bP/p+J6Jrakwbd/zUZb+SvX5dhZObnpoHd+XRapBQq9ze7Ly+CYYL1EgyyHNTSiiv3GhYRdEfHBmgwukwG+4HcslBWjw98k4jhL1Fo+VepAlERv1WOzalygb6O3wk8pFr3XioI8AxZqvrFLwYKiZqj07ltVIeZLRoR1dEoErYBw=
+	t=1749057873; cv=none; b=IiOqo4Ew6UwnPm4Pjq81xKvOjDgaBbJOdmhf519xmfoQlC3gU7ru8qNhM60rWs9a0n4szE+kIU2s9lB/dpmdCCaKRm219U+Fd0N7BUEVwoCPZJWlZ69KqE47H2XoqIAwUygQtjZqjzBEi++Fzk8SMMLY513TOXs58TPgaF/+lBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749057813; c=relaxed/simple;
-	bh=gZSXx3AMeT4oZP2iB0iJUp1MZzfV5OppJkNcfJLcdDs=;
+	s=arc-20240116; t=1749057873; c=relaxed/simple;
+	bh=YI5mFLWc53VgL5FQ8bsi7skJV4Aik/gLWAIifjuXyD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rphqPfONC8B6suvP960kuaiSj+IIW8mSf2dG7qtbpG/oKiQ/A21OwnUA5fcbrS1NNaordpxJ2yZCTIst8OQ/VtMVkP7ssPdqu5GQAGELHoSlzs7Whm9NITBYxIhPAqsqS+TvfqIAu5D03FY48gRu73xT1fTeQevD60T0+MkqSNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K16Xu1EQ; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=VVmdhe69jnXBh26cAZQulyXDfmsByFrsyCfJupsmNGofCPIWqUha0SOj2yBngBWNHibdXJ5kig865xDdfV+QPcbal0yeZ8uvrOqTmikF9ldboWq+NilIbRifZFxAqLpEveQzCC694LGo/MeuOcPePpMAZAPwmtsaA4s5tl0vQNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AMzyjRze; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-234b9dfb842so1078365ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 10:23:31 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad574992fcaso13224166b.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 10:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749057811; x=1749662611; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QHono2++O4fr0FrSH5Q5xobqEyxv94ONXS/va49k4Z8=;
-        b=K16Xu1EQarnOLYxZ+KxOUwiFUrFPGthEsvvxo/KFVx5wyedFw+0ShZrfd1GX7uOeRl
-         nMs4/3Zpt5j35wnkexKWWtw0NXaDY7k74k9KJQOUc52KV3zFlhMBymJKibaIsDyEiJAB
-         NoJZKxo5U4yjG/E/rIXoQ32/kmDvRR9WsfKQH0Gw2/oe3nrUpYdSYSnrKQNd1RJ//dYB
-         ALIyjQT1lJ8LK4+g/Ai0QCiFyVNf0pBf1wSFSIg5SNLHs7vKTSyBhXFLrna07wmfxxUk
-         3h5ZcPm9kD0B/FChnixl4mnEEiAYiE33WWjaysWE+JKtP37+Tx5muYElQdEntbfQ9Kkw
-         oT2A==
+        d=linaro.org; s=google; t=1749057870; x=1749662670; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Rx6gG3qsE4+StDVhI8Ouf35YkFJYK0JatY+uS2ZTLI=;
+        b=AMzyjRze6N+CdUwAkkXRMLQyhnHh9VDOOuZs+j+q4uiq3s6KdS9GFEJq21qhfvtPbT
+         fIWXNFaXLOTxIwjTCNkfIvXcpEosYQQPg5iJzgep+ehIulc0V+bVRYGCnkBxwHkMDqqB
+         bqwXc7EHXMYSqAccUPKt6OAqNcatvCVEbAxbEjlEajeTA+LU1c29uD9TusSxu+t7bPkY
+         R9iG7DILGEi3VM/KXvE1u565yUR7oWFZXWikYkBf0VF9Vd2sh16GqmUi0UcvdC7N1wQ0
+         5kGY9jSP8ABtAdXSTZbucGAFCNzT4cj92axqg3sGplWAFRYqluAkGP7o3TQ+dDlxmpFP
+         x60w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749057811; x=1749662611;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QHono2++O4fr0FrSH5Q5xobqEyxv94ONXS/va49k4Z8=;
-        b=lxdG+JzVRFZU2r6/jonD1S0LPeuPXkCpv342nGh4/98jODH9KK7iQJuWXXLA02XiJ1
-         ppe6HRVQvJlR+la2FnG9cPUiFMZLHdY/1D5j7WXUTDOgFgDr2xEyJ/p9X9gbfM3qdjuz
-         VV/xnJ0Cd+plAiD3f/wyalx8kDBSLLtoP5gqOWQ34spseT409yxphOkJpHvrk3bFbaFe
-         vn+iNHaJlFvVjrX9J8ULZoMk94u8Yyat6vxuZ6UBCfqa9lK4KPj90QI0s1i6lskco7LP
-         fASZdrKkRZ0+tpBvk7Zehiq59489HRsqhPtja0yRn/2tEvDs/oXJxA897bBFcc4ki3M+
-         +2IA==
-X-Forwarded-Encrypted: i=1; AJvYcCUd/KD7X9XTTpjc35eXftd5WoRWoWVCpZgJoS8NOHnde1W176ZizbKVma2hPD6Qql/e4YT4xGNjxU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXbo08ev+8kw0k7kXCxzX187mxT1iv2sQkjklOhSjTVj5oXqJX
-	cULgScfHbbBO37ggYtmm5L+LGLWnwBt/2yufOkNmgJLKBNiSGGIedEZ1z8T+T8NQD4gilCzUKSC
-	il4k=
-X-Gm-Gg: ASbGncsglKHzvCkmKXnmh4L/LhIx9NLWaaYxn8S0my5OaNwrMjhKWrCcKBC4IHFOIWs
-	krmWNQ+3Rxh0l/ylZWX6sn54lbQeS+ybcPpuZFyXkLbn4kPhoP+NYk2xxW/V78xOD2cHOgPF7LU
-	J6I0CTNo8LjpLzZ+BhqI75PuBREhJXHn3gmWe+E5OziglWH88r87N/JTZFdAj9ICcUoffzio+Ml
-	wmAofLrYjKxSr0Jk5uV0uwDG8urnxDr7x3pmJaQ9KxZhiq6U/dv8aAjEdKScrFCeZszFhmuVeIg
-	oWuIwKxXwf5Eyaed3C5iGejY7G0Ad0in25BYMexKQC8uHktuiIIee881C+aV2Q==
-X-Google-Smtp-Source: AGHT+IGwgeJyFDpkWLW3KBe5vXSpgr0D7NF/b6JqvGw4nc8XALIL1xWj89jgG04Uup6TALuRObzniQ==
-X-Received: by 2002:a17:902:c94f:b0:234:ef42:5d69 with SMTP id d9443c01a7336-235e112337emr48387725ad.13.1749057811256;
-        Wed, 04 Jun 2025 10:23:31 -0700 (PDT)
-Received: from thinkpad ([120.60.60.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-235caa81c24sm30776725ad.200.2025.06.04.10.23.28
+        d=1e100.net; s=20230601; t=1749057870; x=1749662670;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Rx6gG3qsE4+StDVhI8Ouf35YkFJYK0JatY+uS2ZTLI=;
+        b=g/FP8YiERRhUQibaRR2ULje93z+7qZ80s4hC+5FJ+tK6tlPzY4A3YCf3aHfwevk1tn
+         kf239GocuWUnFzutfaKsRg8dT53ITyh8CQwr+zxZlinBgXunN2514yybO5ZoC9gCC4y0
+         CSOzjYHAqJCosp/8/tgfCNOkR+k547tMw25PR4UUBIAOPoeL4xSlpD1cocAqEFiBLz00
+         5b4gYzCGxaHFIjL8cG9YBTqec/FH5HwydCQI4WTJUqFkto7MGaQErVvsQ61Jk2/vMza8
+         yoy+ZlEiUM5wloaXRdwDub/5AmibNL1gobosQu9g6ZRGxa01lfpPgjl4fb3T78sjNJef
+         zjnA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/6DBt+b9fBQV88F6LVbe5VQ0ZmEIA1wKIE8AqzjkvRJZ/vlBcv5ojoNdr9aRj5ZS+3CORoB13K7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqhjnjrWxoSEUzmFkQBmkp/StmP2BtpQK1oFdU24nLxNOPcvw1
+	IqGR3Y6KHzzTjW0tDAQFnCoEgHYCtyA+IwRhpB/SXrt4aLQurc1FRt4RxAZFECJBloQ=
+X-Gm-Gg: ASbGncvfpUPsvO7h9Z4gUnf2I3ByxFkGz+yFZDjeA+SR0tRjxpP1kFYsbteE4wja4GA
+	EHjGdK5aTuu+2LwqyX07ni5WYEoK2R3l/NKgfWVFXv8aHQ5qwdNkx/oc8uZtFrq5soBzKyXDeUt
+	gvEFQ2JDriqIhH/FDecPWHH8saUiVHQxBMb6RpVzU8dQ7HE0IEDy2YlT8rPiBP5UVw2LCB6r8+9
+	BGPYWvqCLMVm9fgteJaWCTaYo2Bn6Pwjk3qFTcfMdzZraxry7HAnifgyxLwPDjdq7S85vH5sf6b
+	xkdeqZhA80HH6+oSZ29uTdYqfAb/YeD7RRJozyRokJmBLkwoYgsWr48=
+X-Google-Smtp-Source: AGHT+IH+P0WeybYhDtQX0mOthiBD4sJUH0iS4YBwLkOkmeksTa502is8e50CYha9Oj5de4xARn23DA==
+X-Received: by 2002:a17:907:3e11:b0:ad8:89f8:3f66 with SMTP id a640c23a62f3a-addf8cd2118mr358479966b.21.1749057869894;
+        Wed, 04 Jun 2025 10:24:29 -0700 (PDT)
+Received: from localhost ([41.210.155.222])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ada5d7fef72sm1127136966b.34.2025.06.04.10.24.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 10:23:30 -0700 (PDT)
-Date: Wed, 4 Jun 2025 22:53:26 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/pwrctrl: Fix double cleanup on
- devm_add_action_or_reset() failure
-Message-ID: <tghehtcxc45rtdnt4mj6td4zziebckwfclbu665mtmcwvz562u@q24eds5pn4bn>
-References: <f60c445e965ba309f08c33de78bd62f358e68cd0.1749025687.git.geert+renesas@glider.be>
+        Wed, 04 Jun 2025 10:24:29 -0700 (PDT)
+Date: Wed, 4 Jun 2025 20:24:23 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
+	Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+	yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org,
+	colyli@suse.de, uaisheng.ye@intel.com,
+	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <aECBR79lhlj7SPUV@stanley.mountain>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-4-terry.bowman@amd.com>
+ <aD_hQ7sKu-s7Yxiq@stanley.mountain>
+ <1f719cfd-2c2b-4431-a370-290a865b0bf2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f60c445e965ba309f08c33de78bd62f358e68cd0.1749025687.git.geert+renesas@glider.be>
+In-Reply-To: <1f719cfd-2c2b-4431-a370-290a865b0bf2@amd.com>
 
-On Wed, Jun 04, 2025 at 10:38:33AM +0200, Geert Uytterhoeven wrote:
-> When devm_add_action_or_reset() fails, it calls the passed cleanup
-> function.  Hence the caller must not repeat that cleanup.
+On Wed, Jun 04, 2025 at 09:37:02AM -0500, Bowman, Terry wrote:
 > 
-> Replace the "goto err_regulator_free" by the actual freeing, as there
-> will never be a need again for a second user of this label.
 > 
-> Fixes: 75996c92f4de309f ("PCI/pwrctrl: Add pwrctrl driver for PCI slots")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
-> ---
-> Compile-tested only.
-> ---
->  drivers/pci/pwrctrl/slot.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
+> On 6/4/2025 1:01 AM, Dan Carpenter wrote:
+> > On Tue, Jun 03, 2025 at 12:22:26PM -0500, Terry Bowman wrote:
+> >> +static struct work_struct cxl_prot_err_work;
+> >> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+> >> +
+> >>  int cxl_ras_init(void)
+> >>  {
+> >> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> >> +	int rc;
+> >> +
+> >> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> >> +	if (rc)
+> >> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+> > This shouldn't return rc;?
 > 
-> diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
-> index 18becc144913e047..26b21746da50baa4 100644
-> --- a/drivers/pci/pwrctrl/slot.c
-> +++ b/drivers/pci/pwrctrl/slot.c
-> @@ -47,13 +47,14 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
->  	ret = regulator_bulk_enable(slot->num_supplies, slot->supplies);
->  	if (ret < 0) {
->  		dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
-> -		goto err_regulator_free;
-> +		regulator_bulk_free(slot->num_supplies, slot->supplies);
-> +		return ret;
->  	}
->  
->  	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
->  				       slot);
->  	if (ret)
-> -		goto err_regulator_disable;
-> +		return ret;
->  
->  	pci_pwrctrl_init(&slot->ctx, dev);
->  
-> @@ -62,13 +63,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, ret, "Failed to register pwrctrl driver\n");
->  
->  	return 0;
-> -
-> -err_regulator_disable:
-> -	regulator_bulk_disable(slot->num_supplies, slot->supplies);
-> -err_regulator_free:
-> -	regulator_bulk_free(slot->num_supplies, slot->supplies);
-> -
-> -	return ret;
->  }
->  
->  static const struct of_device_id pci_pwrctrl_slot_of_match[] = {
-> -- 
-> 2.43.0
-> 
+> This was implemented to allow for native CXL handling initialization even if
+> FW-first (CPER) initialization fails. This can be changed to return rc.
 
--- 
-மணிவண்ணன் சதாசிவம்
+No no.  I'm fine with it either way so long as it's deliberate.  But
+maybe add a comment if we can continue.
+
+	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+	if (rc) {
+		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+		/* Continuing regardless.  Thanks. */
+	}
+
+	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
+
+regards,
+dan carpenter
+
 
