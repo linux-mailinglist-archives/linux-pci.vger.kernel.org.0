@@ -1,143 +1,111 @@
-Return-Path: <linux-pci+bounces-28960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5CF4ACDCD0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 13:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA3CACDD81
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 14:09:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FF61175B25
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 11:41:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5633E17838E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jun 2025 12:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F50F28D8D4;
-	Wed,  4 Jun 2025 11:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC3A28E5EF;
+	Wed,  4 Jun 2025 12:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCGwShIJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G2RlP4WX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA6628C030
-	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 11:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CBF1E501C
+	for <linux-pci@vger.kernel.org>; Wed,  4 Jun 2025 12:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749037259; cv=none; b=pj1Eujy+l/QOzzYho477ZNtatRjwCq50y3c/FdU09WqUTZe1e0K7vBVTkhx4/ifKh6xbs4AubbL4LRn1CFeKgq453ysnfJM/NLlSxmBc5BeWaLaVRBxxOrQ40rDlq0y9Rqj5gv21SE7R5+SP/upiHDMM2ZExfE54Cjq2x+y21tU=
+	t=1749038927; cv=none; b=lpEkBe/Wn+zVv8LrGCWReZzvHSfs77GVLFSDYm4IGVuwG74YBVDh000CVyTpPUS/nv2XPJu3CyREW/KaSK0EpZBVKw1RCxmOGWsluQLT9t1K9F8vETY5COb9Lc6jUV0ZvHac2Uny6/GDEP+1VwrXfA160W1TfJLZHjBN4NmDs58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749037259; c=relaxed/simple;
-	bh=na+e7iAyIdNEOxA/Fo3/lMjI298SPFA0QzS+xSDF0Mw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNpO1npl00/5wxJyeuK3i84bO3VMLFfZSRD3D7n00G109ikLuRNcT4lx27dA6c0T6bY3c4PLjCk2LjjCJNS7v7d3uf+k2syIceOtYq4Ip+IxHvciRlGJy6as92lERNRJHV3+gk+MxrMGPw4Yx6ZIiRikNIzZH0FR9JtpfFbJIGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCGwShIJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844CEC4CEEF;
-	Wed,  4 Jun 2025 11:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749037258;
-	bh=na+e7iAyIdNEOxA/Fo3/lMjI298SPFA0QzS+xSDF0Mw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCGwShIJtYiAjjl7xwa4EpbS0L6ohuJBWlnfXSAmmC1FMtZYotGyitscDbYVcRxYV
-	 ynLCuyn2fuaSVssZAmNVKe/M67ECh6gQK3n9/kbHgo2cydL1gZMnxO/01nbd3IuOca
-	 dGhbgEwisZyg0PvqjkiyLrHvPeM7tOZzvINjYZEbISW6bvuqu2dRPDzd7b2Kej8Dar
-	 jpAZSD2kPPfJFtwDNCaLuTzAPGmXLbw+FvDbBu8cIGTeOBeJvcrpnWNPnB561F7zrw
-	 /ykTtbx2u+vOHOb6T/krUbRg4fNruJYeOTYP8PUtu1dLEGayEwWmNplfM2Bd+qZa4C
-	 TJYXhYCpyp/SQ==
-Date: Wed, 4 Jun 2025 13:40:52 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hans Zhang <18255117159@163.com>,
-	Laszlo Fiat <laszlo.fiat@proton.me>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] PCI: dw-rockchip: Do not enumerate bus before
- endpoint devices are ready
-Message-ID: <aEAwxFysCgdJCD54@ryzen>
-References: <aD8Bz4CkdnAd8Col@ryzen>
- <20250603181250.GA473171@bhelgaas>
+	s=arc-20240116; t=1749038927; c=relaxed/simple;
+	bh=tB3Ex4WI5fJpbmaniueAkEOhEZ2gbuotRgFgHTCZSVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rCr1KFCx0qwn0iNC+U2LAgDwbPf+huVS0RNBpDrVWcpPmdBgkzOfjR6gd1v9qBJckaaFaVoBSoJu4lxvqya0Xi4S/whIcdYBBKXtjgq4OdPZGVQ8YJ+Ln2iYmltRLb8QWaGhtbtvAsJpvUf0Pt/l03ZNiTz7zsk4vdrMSInDJ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G2RlP4WX; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5099860b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 04 Jun 2025 05:08:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749038925; x=1749643725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nkln9+TL3dVzqnRHny1SDfLruPjSMpepjUfV+2UY4FY=;
+        b=G2RlP4WX/N/oRzrmNLh5wE0Ab5/oiYAK2vnVQFciTHMBJXaXHBQVdAJ8HSZ+BbSEhJ
+         WA77AfIFiWGzHQKlYeNtz7N5PIOyRbP5rASR7wo518lUNoq23RwbcvqIKWgNW75o22Q4
+         cJws1sflBnyBBvoYJ0/+rRSVaIWJlRyXS92PXyPIAH5mJkRmmsgCrH+mG2+TIqYvrMJY
+         YprRTV6H+pcWiLM2pi/oacKoiJDxxzr1vMiw/pjRFl6j+lYnV/3mNm2tcx1Z99oAV63n
+         SkmtKGce7W/DKLC80DAlSqrdnUITDUao5NpblojeMWQSdxjzRtdhT1VwQSryw+CEaxHn
+         vHfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749038925; x=1749643725;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nkln9+TL3dVzqnRHny1SDfLruPjSMpepjUfV+2UY4FY=;
+        b=p/tXw2veIZqTjXk8EIdmI7PdEpN/O0Sb8WLgaD5oh0rFgzNx8khTXGorMJifG7QWtO
+         U+b2wcoq5nTUQ555I8XjEwHh7aYU1tJ2ekVbxhHaUTauJqxyjYCQ6HUDPzQ4Fclfc0/y
+         Z6CPEmKg6NWSgmPiHvNxSYTZwTGkF3FMzWbHQZE392u/UIqeczRpJa5k98vvHPi2CpUs
+         KvR9jjgzcB38LYxeR36lbU4jfi86RwlAMnJQY4NkxyDa3nanpyswtwyTSFa7TUf4u9W6
+         XS8pvuQhIyiCEBXMuTtEJD2ZcTKT9fmQzoOOYaOopw8gKOpDIxH656Al99EY6Tjfwm8L
+         hupg==
+X-Gm-Message-State: AOJu0Yw5uivs+IK+QdrnQM5g1HdrosXvojBfT6CxIwMhI4KBaZAZzn+Y
+	3HZnIFpDisotk2ajjU/dolvp932DefzY3POc51vmH8Kxpg6EPqEvbv00V7QZxo7Tqw==
+X-Gm-Gg: ASbGncsM51NULc6dHYTF4bppcggOj4rNeAAfA57e5I2+FARTfDKXKZa7fSUNYUajKXb
+	NYsWVzV44KtERs8A/zWW48GYvLSy/wVMixw97yKr4RN8RrV3c1t8yFMIfXc9o6TqNWTP0rz99jG
+	FFOW5HmqEYNGE2hmHCSJMxD2Q5kNOVuKBuPRzBbxIt6347iLtfW86RFpC0u7GOjlNd9HtCNsdU8
+	+KlXxoV1uFyfWYTO6xxSdgIe2tBel6/noskmdpycv+stVWVBUXbsOBC1Svw4qCoQzOpI6wWOqYC
+	JyyqCMwGf69Yluf/Tjk5lXmZdZ9TbqfvfSGaUKFZrM43O/2vVT/L1+1sULiHQB0u
+X-Google-Smtp-Source: AGHT+IEklUjzZitqK/mgd1QYNqhN2rQnnl8mC2rRk3Ch1E2YSkU7gd9atQTFVTrlEn5riosDI1nryQ==
+X-Received: by 2002:a05:6a00:238d:b0:746:2ad2:f38d with SMTP id d2e1a72fcca58-7480b401442mr3535067b3a.13.1749038924694;
+        Wed, 04 Jun 2025 05:08:44 -0700 (PDT)
+Received: from thinkpad.. ([120.60.60.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafaebsm11034942b3a.87.2025.06.04.05.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 05:08:44 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Update my e-mail address
+Date: Wed,  4 Jun 2025 17:38:29 +0530
+Message-ID: <20250604120833.32791-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603181250.GA473171@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 01:12:50PM -0500, Bjorn Helgaas wrote:
-> 
-> Hmmm, sorry, I misinterpreted both 1/4 and 2/4.  I read them as "add
-> this delay so the PLEXTOR device works", but in fact, I think in both
-> cases, the delay is actually to enforce the PCIe r6.0, sec 6.6.1,
-> requirement for software to wait 100ms before issuing a config
-> request, and the fact that it makes PLEXTOR work is a side effect of
-> that.
+Hi,
 
-Well, the Plextor NVMe drive used to work with previous kernels,
-but regressed.
+My Linaro e-mail is going to bounce soon. So update the MAINTAINERS file to use
+my kernel.org alias and also add a mailmap entry to map the Linaro email to the
+same.
 
-But yes, the delay was added to enforce "PCIe r6.0, sec 6.6.1"
-requirement for software to wait 100ms, which once again makes
-the Plextor NVMe drive work.
+@Bjorn H: Could you please merge this series via PCI tree?
 
+- Mani
 
-> 
-> The beginning of that 100ms delay is "exit from Conventional Reset"
-> (ports that support <= 5.0 GT/s) or "link training completes" (ports
-> that support > 5.0 GT/s).
-> 
-> I think we lack that 100ms delay in dwc drivers in general.  The only
-> generic dwc delay is in dw_pcie_host_init() via the LINK_WAIT_SLEEP_MS
-> in dw_pcie_wait_for_link(), but that doesn't count because it's
-> *before* the link comes up.  We have to wait 100ms *after* exiting
-> Conventional Reset or completing link training.
+Manivannan Sadhasivam (2):
+  MAINTAINERS: Update the e-mail address of Manivannan Sadhasivam
+  mailmap: Add a new entry for Manivannan Sadhasivam
 
-In dw_pcie_wait_for_link(), in the first iteration of the loop, the link
-will never be up (because the link was just started),
-dw_pcie_wait_for_link() will then sleep for LINK_WAIT_SLEEP_MS (90 ms),
-before trying again.
+ .mailmap    |  1 +
+ MAINTAINERS | 38 +++++++++++++++++++-------------------
+ 2 files changed, 20 insertions(+), 19 deletions(-)
 
-Most likely the link training took way less than 100 ms, so most of those
-90 ms will probably be after link training has completed.
+-- 
+2.43.0
 
-That is most likely why Plextor worked on older kernels (which does not
-use the link up IRQ).
-
-If we add a 100 ms sleep after wait_for_link(), then I suggest that we
-also reduce LINK_WAIT_SLEEP_MS to something shorter.
-
-
-> 
-> We don't know when the exit from Conventional Reset was, but it was
-> certainly before the link came up.  In the absence of a timestamp for
-> exit from reset, starting the wait after link-up is probably the best
-> we can do.  This could be either after dw_pcie_wait_for_link() finds
-> the link up or when we handle the link-up interrupt.
-> 
-> Patches 1 and 2 would fix the link-up interrupt case.  I think we need
-> another patch for the dwc core for dw_pcie_wait_for_link().
-
-I agree, sounds like a plan.
-
-
-> 
-> I wish I'd had time to spend on this and include patches 1 and 2, but
-> we're up against the merge window wire and I'll be out the end of this
-> week, so I think they'll have to wait.  It seems like something we can
-> still justify for v6.16 though.
-
-I think it sounds good to target this as fixes for v6.16.
-
-Do you plan to send out something after -rc1, or do you prefer me to do it?
-
-
-Kind regards,
-Niklas
 
