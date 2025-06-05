@@ -1,70 +1,69 @@
-Return-Path: <linux-pci+bounces-29042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19B97ACF3C3
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 18:10:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8AA8ACF3F0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 18:17:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C05251655BE
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 16:10:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A82A1898E58
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 16:17:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1823F1EB5E1;
-	Thu,  5 Jun 2025 16:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE481E1E12;
+	Thu,  5 Jun 2025 16:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mt8Kf7vA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RETF9+Fi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CCC1DEFDA;
-	Thu,  5 Jun 2025 16:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3813D521;
+	Thu,  5 Jun 2025 16:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139796; cv=none; b=Ebf21blotdsd3dfti3EFsi/plWAk1k8afaVSYkEyNhhsmQILSsE6IOZ41nsHSn7PstBvkXntshd0FgcBAFes32yqyGUT05jX/oq2ce1KobUFa05XZ8Z88KNkZjL7nzsyGLqLdo5wZlX6CcpaT1al7foYq4kcjmtlAO6bd45xJXo=
+	t=1749140236; cv=none; b=qK5rzNF18w+p1z7HesnExjKyBuro/mLPXyDs8oQ1GNJPDxT5JbYdDMN1ydQQG/aFennPykyT3dZSGB+1D4j5Fz/4XjcRr43VNdpKzdF/r4xfdPd5AVzYcZgRV5IDTDDWkW/j7xMmkJproxNz12THO/bZE+FUq/hH4q6qQ9ADaRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749139796; c=relaxed/simple;
-	bh=CTM8hK4DPUsyLCKuJs9/clats4UlsJ4BFyQlJsZkE4A=;
+	s=arc-20240116; t=1749140236; c=relaxed/simple;
+	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=L9WWVHWum4l/Frk6K27Yb2ifuQ0/QyKEUr1DkQJZXxnUHVB2Cvb/HWdJYANuqemJkUSAza2ijbh0yvsrfwlGETrsy4nPbCZmVwwxu+dhmhgkTW7mqX2R2eKWhz0EJogvrToQHdPbqv8ULgkkoycc37hQgeAz3TQk9i+TWWbjtG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mt8Kf7vA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81E4C4CEE7;
-	Thu,  5 Jun 2025 16:09:45 +0000 (UTC)
+	 MIME-Version:Content-Type; b=FDFlcGiu2DbyDIH2TwWaJgHGXbS9fJ5sszrFo9zLCMovKYCzC+en5WNWiTD1iCmBIyAolcVz+y21tjOfJ1Q5+srV/ds8t0qUUpyLXtTF9lrMShKMVST8/4ZaaVcw9GrskvYXUGXkf6xgq1KlIFluCHkpNX0OGRo/AYZnJv+aM30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RETF9+Fi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC90C4CEE7;
+	Thu,  5 Jun 2025 16:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749139795;
-	bh=CTM8hK4DPUsyLCKuJs9/clats4UlsJ4BFyQlJsZkE4A=;
+	s=k20201202; t=1749140234;
+	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=mt8Kf7vAV+zkn2awGZ24xb0ECg4ieOT3gFVCeC2Kq2kyndoQci3TnZsjJZZgHYbaT
-	 rnAuLy69ZTS8Ff+LQ0XOEscDDQPPxpTqyeJFik8R0Y0Uls5IkqKOC+h7m/TbsE1VYE
-	 52sjjGjYV17KNiJBT7a0sIpOdaVUayXN/hrOIov0VwpL0P5VjgiLSq5ykWgUUm7Ako
-	 hY3kogHozNErPER2FpJGkFqJIXF5ObXrUw0a80FFDNY7KbZdJ8lWWBXhXeKCrTg6LB
-	 Bwiquu0bR8fSGf5KRbaejLloB/fWS8Q/mbTybWlRnRo6Q5z8a5AmdtVdjNcVfMSKxR
-	 de2O34au0IjRg==
+	b=RETF9+Fi566neb4lJUpVLBOnK1Q0DHWFqA422TSAoXhbf7GHEODVktjFPnGcb07Ta
+	 kOlF0aK90BS+b+AiPwJxUZiKLwsNJSzbqIMH42/smRXUEP0vOXRwuknlk5wdLLeW0X
+	 jIbGv8yAN7a3R2ZoA88CWDALpE4x2Hc1YB0rjkJFARh1FZeoVrNpwlGikvihjETTSP
+	 KXwkqG5+CDCEtGNNOBQc0ZvWP+VDLDFfEFVXV33nSylK2zNa8UhKAWecCyrrk7YCml
+	 vfFtmhR4/MsoPIJvEBUXUVHFKjeoo5YlWkVygaoZdiWeYvBMVE4qpU22KNIjjoPy8f
+	 eFQS4zumEsmpw==
 X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
 From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
 	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
 Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
  TEE-IO support
-In-Reply-To: <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+In-Reply-To: <20250605151029.GC19710@nvidia.com>
 References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
  <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5aplfn210z.fsf@kernel.org> <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
- <yq5ajz5r8w6p.fsf@kernel.org> <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
-Date: Thu, 05 Jun 2025 21:39:42 +0530
-Message-ID: <yq5aa56m8915.fsf@kernel.org>
+ <yq5ah60u8kev.fsf@kernel.org> <20250605151029.GC19710@nvidia.com>
+Date: Thu, 05 Jun 2025 21:47:01 +0530
+Message-ID: <yq5a7c1q88oy.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,130 +73,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Xu Yilun <yilun.xu@linux.intel.com> writes:
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
-> On Wed, Jun 04, 2025 at 07:07:18PM +0530, Aneesh Kumar K.V wrote:
->> Xu Yilun <yilun.xu@linux.intel.com> writes:
->>=20
->> > On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
->> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
->> >>=20
->> >> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
->> >> > expected to be called by userspace when CoCo VM issues TDI bind/unb=
-ind
->> >> > command to VMM. Specifically for TDX Connect, these commands are so=
-me
->> >> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
->> >> > Interface).
->> >> >
->> >> > The TSM TDI bind/unbind operations are expected to be initiated by a
->> >> > running CoCo VM, which already have the legacy assigned device in p=
-lace.
->> >> > The TSM bind operation is to request VMM make all secure configurat=
-ions
->> >> > to support device work as a TDI, and then issue TDISP messages to m=
-ove
->> >> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestat=
-ion.
->> >> >
->> >> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
->> >> > device to TDISP ERROR state.
->> >> >
->> >>=20
->> >> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
->> >> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.ku=
-mar@kernel.org/
->> >
->> > A general reason is, the device driver - VFIO should be aware of the
->> > bound state, and some operations break the bound state. VFIO should al=
-so
->> > know some operations on bound may crash kernel because of platform TSM
->> > firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
->> > in secure page tables cannot be unmapped before TDI STOP [1].
->> >
->> > Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
->> > S-EPT would fail if TDI is bound. For AMD there seems also some
->> > requirement about this but I need Alexey's confirmation.
->> >
->> > [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+> On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
+>
+>> > +
+>> > +	/* To ensure no host side MMIO access is possible */
+>> > +	ret =3D pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+>> > +	if (ret)
+>> > +		goto out_unlock;
+>> > +
 >> >
 >>=20
->> According to the TDISP specification (Section 11.2.6), clearing either
->> the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
->> the TDI to transition to an error state. To handle this gracefully, it
->> seems necessary to unbind the TDI before modifying the BME or MSE bits.
+>> I am hitting failures here with similar changes. Can you share the Qemu
+>> changes needed to make this pci_request_regions_exclusive successful.
+>> Also after the TDI is unbound, we want the region ownership backto
+>> "vfio-pci" so that things continue to work as non-secure device. I don't
+>> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate in
+>> userspace which will result in vfio_unmap()/vfio_map(). But that doesn't
+>> release the region ownership.
 >
-> Yes. But now the suggestion is never let VFIO do unbind, instead VFIO
-> should block these operations when device is bound.
+> Again, IMHO, we should not be doing this dynamically. VFIO should do
+> pci_request_regions_exclusive() once at the very start and it should
+> stay that way.
 >
->>=20
->> If I understand correctly, we also need to unmap the Stage-2 mapping due
->> to the issue described in commit
->> abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
->> reasons we would want to unmap the Stage-2 mapping for the BAR (as done
->> in vfio_pci_zap_and_down_write_memory_lock)?
+> There is no reason to change it dynamically.
 >
-> I think no more reason.=20
->
->>=20
->> Additionally, with TDX, it appears that before unmapping the Stage-2
->> mapping for the BAR, we should first unbind the TDI (ie, move it to the
->> "unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
->> or is it driven by a different requirement?
->
-> No, this is not device side TDISP requirement. It is host side
-> requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
-> with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
-> unmap IOMMU S2 PT.
->
-> If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
-> guest by just unmap some PT entry and suppress the fault event. Guest
-> thought a DMA writting is successful but it is not and may cause
-> data integrity issue.
->
-> This is not a TDX specific problem, but different vendors has different
-> mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
-> AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
-> how ARM handles this?
->
-> https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
->
+> The only decision to make is if all vfio should switch to exclusive
+> mode or if we need to make it optional for userspace.
 
-MMIO/BAR Unmapping:
-If the stage-2 mapping is removed while the device is in a locked state=E2=
-=80=94a
-scenario that ARM permits=E2=80=94the granule transitions to the RIPAS_DEST=
-ROYED and
-HIPAS_UNASSIGNED states. Any MMIO or CPU access to such a granule will trig=
-ger a
-non-emulatable data abort, which is forwarded to the non-secure hypervisor
-(e.g., KVM).
-
-However, at this point, the system cannot make further progress. The unmapp=
-ing
-was initiated by the host without coordination from the guest, leaving the
-granule in a broken state.
-
-A more robust workflow would involve the guest first transitioning the gran=
-ule
-to RIPAS_EMPTY, followed by the host unmapping the stage-2 entry.
-
-IOMMU Page Table Unmap:
-Both the CPU and the SMMU can share the stage-2 page table. If the non-secu=
-re
-host unmaps an entry from this shared page table, the affected granule again
-transitions to RIPAS_DESTROYED and HIPAS_UNASSIGNED.
-
-In this case, a DMA transaction=E2=80=94(SMMU is configured by the Realm Ma=
-nagement
-Monitor,RMM)=E2=80=94can be terminated. This typically results in an event =
-being
-recorded in the event queue which can be read by RMM.
-
-However, interrupt delivery remains under non-secure host control, and
-the guest may not be immediately aware that the DMA transaction was
-terminated. I am currently confirming this behavior with the design team
-and will follow up once I have clarity.
+We only need the exclusive mode when the device is operating in secure
+mode, correct? That suggests we=E2=80=99ll need to dynamically toggle this
+setting based on the device=E2=80=99s security state.
 
 -aneesh
 
