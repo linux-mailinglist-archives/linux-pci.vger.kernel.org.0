@@ -1,195 +1,250 @@
-Return-Path: <linux-pci+bounces-29037-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83C19ACF2C2
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 17:15:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48EFCACF2DE
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 17:19:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD6F23AFDA6
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 15:12:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D3123B1C63
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 15:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 325031C6FEC;
-	Thu,  5 Jun 2025 15:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC3C199FBA;
+	Thu,  5 Jun 2025 15:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r+Dek4k5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H4cnHgZD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2086.outbound.protection.outlook.com [40.107.92.86])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907901E519;
-	Thu,  5 Jun 2025 15:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749136236; cv=fail; b=niKKS08e/5qLN+wJJWZdU7aeAOs6+gEO36esnGD5rx0pyluDtbcmMbegFDHyK8dClKAuYX9wuLKZSd44hDvG+Q/g7fpUosAx+beQYWgvgMt0os8fsVUmKDtP53dkN62O6JX31sLbw2Upv3i+O1k3g4FZjBCZ73ize70daNJtN1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749136236; c=relaxed/simple;
-	bh=1Sb1XpYjDECKUUN3Iv9p3MPeTH4lNKQgLfXFQ6UsNNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YneMHXS91TbhhyCP2tckAM4iRCEUPdrEzk5+f+qXJp931SzvOVm0Epc0a+IXyUGCtFje8m/IOVPjhgIr/XHHSgeRALuLZ9OdDkYxgfk4GQpn9BiAvS9wY1iN7hOR2XK7Pu09ntI35KLJrmNLRtv00d86MzL+tNbBlkejm1c1Rpw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r+Dek4k5; arc=fail smtp.client-ip=40.107.92.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=One5hzuPoxfdrRSC0jZoQpVbAzSVUQE+4H2oab61a5blancCv8rjU+b4uAr+le7XlD182pl4TxdFzUGbaxSOJDXEyRnj4VYmmMqdzmGnUL0oIgwOvqQKGctmFoi27ToLwQVK22nvQcNiycF5sVAXiPmdPCdamgIZG+8SGFZCJ5089Ri6UG0C42LLHkicNpyy7cYv004a0+iUW94E7KJ0j6r2vn5Bby+q93SNH42ah3LS7sUzRsiSIAAcrptIsz+C7Pt4VUzCLpZHv/B+Hn6o5wFDJ56tGYizDWdAXM03GYW9/V0xNBzvdkWdV2MChCLbSMxEdw8p9DLIHoXUil4IZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sq5BBXoM8W602IWL88Q0nT3aeD/x47Dsd+4p6D638PY=;
- b=wKiHh4Dew3JjWWYe7BJQ2kk6GaxQDBlkoRlQ0q3tR1S3S8Ih4CqOq36r5nB2yIeBebrsS4Leg+2EGktAm8fdse9j+oUszVLvwHsR1803HKOVuH+2UILPF1kv9+uvZ9Bp+pemhdDCZWw6DPllPB3596UgH5CaMwg6zXhiSOekWo+vvXyCDH440sVF341pYISiS6dykJ0yOrIMn/czOZStZMZgeglR/tXPGLfqCW+Bh8ZNH0cmbcNK8vmvnU4siE2MgPkxoLPRh99ncvsf8QBED+jL3U/QzXhj/H9G3wBMuA0nLSyNP2mTm8LpexVl4lm47hO/tzIih8mS6PrjW4zxzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sq5BBXoM8W602IWL88Q0nT3aeD/x47Dsd+4p6D638PY=;
- b=r+Dek4k5y5qcJWUDbVYieCFNr2cY+xIhwJDr5U0wLCoSO0vFCcQBFt2FUIZCU+qTbyqIu+WMIvI6bDKFqRcg8uORFkcbr5Ru6KW08j/L2Ecfq0UdaeikrB8F0aOmISx+LuJXV3TV97OCLJR3tNz+ZYFpIM/uKTj5XklQpzQpQN2YyXsHkG4Td1cwx5LFl3mXAcq3TOAVxYlG3TCGLxdGqpspIEp+A+NmAB9BY4sCwJD3QDUEqBnknl+sa7jUT7/CfFk/Z4rhzuKktyj4kmPOG3uAgCLXMfygMXuns4xsHdJvh9gYgSwhoz0j4ntHkDQGMC3VUdQe8GI2ey2rNje8tQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by BL1PR12MB5993.namprd12.prod.outlook.com (2603:10b6:208:399::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Thu, 5 Jun
- 2025 15:10:31 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.034; Thu, 5 Jun 2025
- 15:10:31 +0000
-Date: Thu, 5 Jun 2025 12:10:29 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
-	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
-	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
-	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
-	iommu@lists.linux.dev, kevin.tian@intel.com
-Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
- TEE-IO support
-Message-ID: <20250605151029.GC19710@nvidia.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5ah60u8kev.fsf@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5ah60u8kev.fsf@kernel.org>
-X-ClientProxiedBy: YT3PR01CA0112.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:85::30) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F269F18C031;
+	Thu,  5 Jun 2025 15:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749136469; cv=none; b=Rmy7FlcmVphnPF4S0R+z1HphQ3iTNB7V0ELJrvbuYrL5HOTY4UKQ+ZOtwv7nlv4lIdcOC+hyXuaU00LxzEFQxW2g8eNfKmm8gJjeGwIoKs0WC1+gNoC2UD3xi7fK6hxO0DdfvKsoPxPNeODu8b3kLQ07DxJnNRPfZVw67dzdnA4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749136469; c=relaxed/simple;
+	bh=v//kuvDRjkFsJodmvNXp9EqacxYN/MOn2NutkMRidaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hPJIVndC/oVZ7g5aF0AoD1fmlbncn55kVdv//j7wMED14TzU776cfxDI2BZVHq/tnVGVNq/soVWyyOcoNf/uzE6KzRS8Em/Z5BocEhyr0iPGsdLMvgaF12ad8wig0uwCWTlZKTtWnjpQy+WYuqJYlIxYi0+Wksg1ACx1SfITfJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H4cnHgZD; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749136467; x=1780672467;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=v//kuvDRjkFsJodmvNXp9EqacxYN/MOn2NutkMRidaU=;
+  b=H4cnHgZDWQMz4CehaOL0gaDU73zegjpvcLXf8u90YJNSw9AHBYGaPutV
+   rlxGMU9VfJ/8wheUT8tIsog7sL+8j0Xu9Ny33bpyTsK190DunCdPKnnxt
+   RgUN0fFR3umjrKu4iDYHYZoVFKZ6QXDhhKNU2nqn5pSy6ern7oeETbJei
+   efAk2gBUUq6CEBDa0pYeFxO//K97YIUUEJspwYIo1LK1l5Vdo0nNwnERe
+   tZbLqrWByC47D9JmUjwRACvHJP7xfL2JXCXy7Rv/xitlSC3Wu35yIpjJw
+   NwJJYGxq3KWdxAs/UWWUrCi/AvIERTbAfh6khfuR8/LLXHOUvr95nkIIP
+   w==;
+X-CSE-ConnectionGUID: rO/6xjBeQ9SYqv5wEUEeJw==
+X-CSE-MsgGUID: gkTjivUJR8m+GgpRWLiDxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="53890522"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="53890522"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 08:14:26 -0700
+X-CSE-ConnectionGUID: irVC1Tu9Q02tHxhaQcFhkQ==
+X-CSE-MsgGUID: Hz/YMQ/4TpGO75h9LdCLnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="150421107"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 08:14:25 -0700
+Received: from [10.124.222.23] (unknown [10.124.222.23])
+	by linux.intel.com (Postfix) with ESMTP id E7AF220B5736;
+	Thu,  5 Jun 2025 08:14:23 -0700 (PDT)
+Message-ID: <4ceb5bef-d5f2-4552-a1aa-c282286bf10f@linux.intel.com>
+Date: Thu, 5 Jun 2025 08:14:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|BL1PR12MB5993:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3a09373-8ae6-4193-25da-08dda4431cc8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jZt0TaGoBwgG5ls9yVYzgNt/LaSYXqtKqGWPul3Cv0keOImZzcKuE9abDggF?=
- =?us-ascii?Q?ghfrjIzsFVMlgSR1JFYxkjOneeLY6zUGOiJNH+ljQdtN2jTXVafTQ3D2KyrG?=
- =?us-ascii?Q?+uDSq5Wb3GkEiK74144CIcFciHXmTT2yKu9G0y7UA39Rc6Ii77SRzp2czfJl?=
- =?us-ascii?Q?iLxMpshFD+DI+F8HxuWIvcWJ9/4OnWS8lZ/LNl0aV2ZVZyGWgShXuBa/rW4P?=
- =?us-ascii?Q?/9UKe9RmLJglQRBAhZKtVKEJVjfNwUrcTYgQ+t7ePqt3/gDAZUNjfB+Ctv/K?=
- =?us-ascii?Q?rU1j5rCPWbDqfI+ZAUQ60LEWgUI9pZdmxYIM+T9v5m0PTfS7WHSaX/nO82kD?=
- =?us-ascii?Q?8ZG5PPI8IwoTx7/KQ0E96bEHGKIjik8e9uKBPqrLHIWs8lpdqAMu6KJ8ZDlg?=
- =?us-ascii?Q?GAXVUWLMHjnI75tJD1AvoJvEZkDVBnWMDxCeQ4VLFZAneO6fgCM4GhthndJl?=
- =?us-ascii?Q?saO4I+Oo4cnUJXZIaAnSWjhMyPx2fISrKzSCUkC04UDQiPj2Hv0dIzLjoL7l?=
- =?us-ascii?Q?wHnNKrKYloHZUR3f2yvLR/75v9E88Bv9GsMAQCQHveE16EzyzFVkPGOxqEAs?=
- =?us-ascii?Q?2PIXA5d7JBmXg1koLT9ZreOSTpB5+PEstgH83MoL1gYE40VKOTGinn9dVGBP?=
- =?us-ascii?Q?Ip4pBpPkTOtqTMliJhhhLCAuRfN9eZOPejzKWZP3ReZcocXADi+adZgCF3Q2?=
- =?us-ascii?Q?UGIb72y9O39LE7V/uUDU7Y9jI6dHjSrvAYnaZsxYB8YuqRK23aGDAp8GHPVo?=
- =?us-ascii?Q?qD17NsrsHNSKSSH4EouX+jip5q4EGU6B30e3Oa5V9vjFr7r2vbywiY6fTU2B?=
- =?us-ascii?Q?uuzqVbbIopET3s18ZyFw8ypZu7tXOmWBCEcpv8liwe4UE9jzGmZ4/dkxwy27?=
- =?us-ascii?Q?iz5ji51KbX6XcMhlxDXfxNc2jIUNW18BJapkGbLm5G/KjjzHF8hS3a3LQ1EV?=
- =?us-ascii?Q?fZI/dDteE7/wjIoRfg7bkmvV/9iuV1KL7IX7ZMyZTni8FJmliM3K6E9rcUrN?=
- =?us-ascii?Q?ckycPxQH90tHWou1pevUVU0M1PtecC7Iyr23p3tnusLqXSDanFQvdw40Y5Wv?=
- =?us-ascii?Q?RTUC8bT6ZZ6RYnUkf4pcrLzabfQY5tngGokDaP5T2msfjmzsBB/fRuCRBnm9?=
- =?us-ascii?Q?WFdctwYDcnaksBtYl/JuPhCVeLJjnVY6V0P6IiUJs7AtL30HcFqZWZLaq2HL?=
- =?us-ascii?Q?xsaX2RX7xXsYyh7vhcqqWMsJNPo0el7THA+MJb42tx8hPpSs56lrz/D84BFL?=
- =?us-ascii?Q?7e8XIf4AXXJ5ruLHmTRy15559hqcTbcpUTSX+yH1lneQLcEs5yzMqMWgBtI5?=
- =?us-ascii?Q?Psgpx2dUpbaIPCKMMhMxsm0tc2KNAp9yushVdCP3q4Bz7EPcyait+avktJAS?=
- =?us-ascii?Q?s5REsAYkuBPKhvUnzfzuAzhuu/dOtlOkdYNf+cWwPbqnZ87IvQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yGteoiXrdfCRUBqJFZKMIrFIhfR7FAPFRP6d93wKuN21AE715xNmLaG0Sa0b?=
- =?us-ascii?Q?9hnG6Z6RxtYGKixV7GZ3dOZUi6ox3gX77GbYNncO2ImVXNEDBKQrZBo72+Um?=
- =?us-ascii?Q?CKq5iGMRPgILDwZyQUUXN++oPFWZnrYJso2YgX2BGXMm73F9MqX/o/gl4Zu3?=
- =?us-ascii?Q?KvgljXcSWFbZ5hr6Z4uHp4qlTiAwClifdwfvZ3B41KD2/JUFZQquzUGxkCH6?=
- =?us-ascii?Q?EJEwA+AsbXsgGGejSQtoLX0AjRkQZ3XM7mc66AnvXBhqNbKz9Jx2c+9P/ytu?=
- =?us-ascii?Q?Z4pPUoHCR7B/I1q4XKZIxtrOO+/bpq2Ijh39MuUG0GzvHjSeDQrwfCqaLVst?=
- =?us-ascii?Q?iT0h2azt6tVWZ87KmVsqZmdEUoAwCpYND6yZed3A4H0MJ1D17UN/B0+ldae0?=
- =?us-ascii?Q?UWjutLGC8twmRcLsQ0JOh0Gj4uls2ssWWz6wmJT4U9OV+WF52cnFMKfzwb0G?=
- =?us-ascii?Q?TCyvU87NoV6j7b9wDZKKEbsS/y2LTTkiIaY0uoSYLhJyZVKBfDr9PuhBDGk1?=
- =?us-ascii?Q?3+5GR2JwC6MjPcj9TVNQGOx5mefp8WZjvTaY91v8knvaGylxGbn5rttMCNEc?=
- =?us-ascii?Q?mogdNuAVDGXARl/5ujbfew3+FXi6yT3amo3uvC+fAmeTFp0Aw15bdKWVjFrW?=
- =?us-ascii?Q?ySSyRGKaP/qUWKebiTxM02zxXrUMkyvfJz/xgcVp10BOqaH/Jh43/2+T5ZtE?=
- =?us-ascii?Q?Qu6Rn4OqsxxL8XuoZUNW3dmRICsb2pWQEE0zRkELi9OlbQJXCHG9fMUiQoRJ?=
- =?us-ascii?Q?BrhwEnvXS6rqruoJEzFPgRnZ4BSLeEjwCb/4O2L+RWZgmhqXq/akHBzUN3V9?=
- =?us-ascii?Q?YZf3TU7aV5kHkwX56zOhBJRZr2KbLETKa4LhLbyC4YglkqCuSmdEyckOKmNa?=
- =?us-ascii?Q?Hu/tK5DOZa5ZDQSZn+3lsQl85HK494BAeQWRJxjvMmQA93BjI5oac7Anza/M?=
- =?us-ascii?Q?Lc+xdgv0gUNgRvJTg26ZMgfLa/JRgiGvqxXjxkSNbo+EoXH3lZ3Qa3RW9kJi?=
- =?us-ascii?Q?U2XkW6OLmQNDx/9+ObCG1U5zYwXP/3BN8gs/+4H0criKe32bFFJSuH62PZTk?=
- =?us-ascii?Q?3PDPzqlSCJEJzGNGVLoqzD55ox7+qxcvL6dCg0ps0S8sb+VRixsZLWn6+fv9?=
- =?us-ascii?Q?+N503AQUxTsSgSaEN1wnHDyD8tL7I7YTwZHfx+sI1/hFI5/MzHaTR146dWK6?=
- =?us-ascii?Q?pPcOL1dfPSDTZMQmV2GcSW8nz/sEr39uvqGPJf8tJlXQ5wKwladeH9M4G/zu?=
- =?us-ascii?Q?bWt6shl8recAbr6Mb2aPTEeNZMXLdBDKVS/nyoYMqfFc4VYrNaPCz2NdRLw/?=
- =?us-ascii?Q?VZnJSOpQtoUBfCRxkQDk3Io+oYl/l5gxOcnZywQwDrQSKOnKeqXMC5jCnpFc?=
- =?us-ascii?Q?OzW35gtvBOMIlkkHd3eQaKO/8HHxlDzHkeO1dV2pumWScmkmMaQEGnnXpvtF?=
- =?us-ascii?Q?dH8BQFFZn1LFAn9e+fO0jpkGLIRIE0My4GfdFGSiFsv9W4fHcLBnMm7TQVyb?=
- =?us-ascii?Q?lnsnjcqWTeJhvLNneCi4mjTg4G76TaMj1HJU6aWOlzkRdV918nBnEQF2dsTp?=
- =?us-ascii?Q?IN+U8tCi6H6IGG1dDypX40iwU5em2l/eIReLPPq1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3a09373-8ae6-4193-25da-08dda4431cc8
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 15:10:31.0713
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9EQiPkEgXPRFVmuuyh1hYrmFZWuB+EB4Oh++6BBEEXIq3lhlZUjUVjTgdali5Uaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5993
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 05/16] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-6-terry.bowman@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-6-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
 
-> > +
-> > +	/* To ensure no host side MMIO access is possible */
-> > +	ret = pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
-> > +	if (ret)
-> > +		goto out_unlock;
-> > +
-> >
-> 
-> I am hitting failures here with similar changes. Can you share the Qemu
-> changes needed to make this pci_request_regions_exclusive successful.
-> Also after the TDI is unbound, we want the region ownership backto
-> "vfio-pci" so that things continue to work as non-secure device. I don't
-> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate in
-> userspace which will result in vfio_unmap()/vfio_map(). But that doesn't
-> release the region ownership.
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
+> handling. Follow similar design as found in PCIe error driver,
+> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
+> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
+>
+> Copy the PCI error driver's merge_result() and rename as cxl_merge_result().
+> Introduce PCI_ERS_RESULT_PANIC and add support in the cxl_merge_result()
+> routine.
+>
+> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
+> first device in all cases.
+>
+> Copy the PCI error driver's report_error_detected() to cxl_report_error_detected().
+> Note, only CXL Endpoints are currently supported. Add locking for PCI
+> device as done in PCI's report_error_detected(). Add reference counting for
+> the CXL device responsible for cleanup of the CXL RAS. This is necessary
+> to prevent the RAS registers from disappearing before logging is completed.
+>
+> Call panic() to halt the system in the case of uncorrectable errors (UCE)
+> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
+> if a UCE is not found. In this case the AER status must be cleared and
+> uses pci_aer_clear_fatal_status().
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>   drivers/cxl/core/ras.c | 79 ++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/pci.h    |  3 ++
+>   2 files changed, 82 insertions(+)
+>
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 9ed5c682e128..715f7221ea3a 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -110,8 +110,87 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>   
+>   #ifdef CONFIG_PCIEAER_CXL
+>   
+> +static pci_ers_result_t cxl_merge_result(enum pci_ers_result orig,
+> +					 enum pci_ers_result new)
+> +{
+> +	if (new == PCI_ERS_RESULT_PANIC)
+> +		return PCI_ERS_RESULT_PANIC;
+> +
+> +	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
+> +		return PCI_ERS_RESULT_NO_AER_DRIVER;
+> +
+> +	if (new == PCI_ERS_RESULT_NONE)
+> +		return orig;
+> +
+> +	switch (orig) {
+> +	case PCI_ERS_RESULT_CAN_RECOVER:
+> +	case PCI_ERS_RESULT_RECOVERED:
+> +		orig = new;
+> +		break;
+> +	case PCI_ERS_RESULT_DISCONNECT:
+> +		if (new == PCI_ERS_RESULT_NEED_RESET)
+> +			orig = PCI_ERS_RESULT_NEED_RESET;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return orig;
+> +}
+> +
+> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
+> +{
+> +	pci_ers_result_t vote, *result = data;
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END))
+> +		return 0;
+> +
+> +	cxlds = pci_get_drvdata(pdev);
+> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +
+> +	device_lock(&pdev->dev);
+> +	vote = cxl_error_detected(pdev, pci_channel_io_frozen);
+> +	*result = cxl_merge_result(*result, vote);
+> +	device_unlock(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	if (cb(bridge, userdata))
+> +		return;
+> +
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +}
+> +
+>   static void cxl_do_recovery(struct pci_dev *pdev)
+>   {
+> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
+> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +
+> +	cxl_walk_bridge(pdev, cxl_report_error_detected, &status);
+> +	if (status == PCI_ERS_RESULT_PANIC)
+> +		panic("CXL cachemem error.");
+> +
+> +	/*
+> +	 * If we have native control of AER, clear error status in the device
+> +	 * that detected the error.  If the platform retained control of AER,
+> +	 * it is responsible for clearing this status.  In that case, the
+> +	 * signaling device may not even be visible to the OS.
+> +	 */
+> +	if (host->native_aer) {
 
-Again, IMHO, we should not be doing this dynamically. VFIO should do
-pci_request_regions_exclusive() once at the very start and it should
-stay that way.
+You don't need to check for pcie_ports_native ?
 
-There is no reason to change it dynamically.
+> +		pcie_clear_device_status(pdev);
+> +		pci_aer_clear_nonfatal_status(pdev);
+> +		pci_aer_clear_fatal_status(pdev);
+> +	}
 
-The only decision to make is if all vfio should switch to exclusive
-mode or if we need to make it optional for userspace.
+Since you want to clear all AER error status, what about correctable status?
 
-Jason
+> +
+> +	pci_info(pdev, "CXL uncorrectable error.\n");
+
+pci_errr?
+
+>   }
+>   
+>   static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd53715d53f3..b0e7545162de 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -870,6 +870,9 @@ enum pci_ers_result {
+>   
+>   	/* No AER capabilities registered for the driver */
+>   	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic  */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+
+Since this error state is specific to CXL, add it part of the comment. Otherwise,
+other PCIe drivers may also use it.
+
+
+>   };
+>   
+>   /* PCI bus error event callbacks */
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
