@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-29009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00EF2ACE892
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 05:12:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42F0EACE89F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 05:32:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A7053AA28C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 03:12:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3A791770CC
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 03:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68FF71F4174;
-	Thu,  5 Jun 2025 03:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FEF31CD0C;
+	Thu,  5 Jun 2025 03:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SUD/3y8K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ch1dPMSt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2A71C5F06
-	for <linux-pci@vger.kernel.org>; Thu,  5 Jun 2025 03:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE29F9EC
+	for <linux-pci@vger.kernel.org>; Thu,  5 Jun 2025 03:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749093149; cv=none; b=jVHEur8dP1h31Bx4M42PmBo0pA838kiuzgOfBU6JRC5OutQKGrmdS55GRsrCq8VbuLx4NpMI1R6FvIIqnof6G4q3G7Lkwn/EsdPqdWdxQ3bOqH43DhhDCp/Xd58T9F7+E45VEHLaBdvWJdbwd1QkBeY0ro1ufQFShpbUkehpyDk=
+	t=1749094331; cv=none; b=gt+2RoxGP8o/ZOhSOCE6l0AXm7aDZdDuddvxkpUTanx4OKtvniVAGdoL7+lQI/JRaM0h3gLVkXp/LjYuRpvjOm/gR6pvnUudFdnYDBHhCEHkJgY/LueqnJ2epZzjgHwi4ifJy7uWRJ4qqDFzk2xhlDzA++1viWrQP6QEbOdOmME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749093149; c=relaxed/simple;
-	bh=RARMEFCKxo44B6B9+nY4zeTF4gfaDoIOpQB1M1i8Uvo=;
+	s=arc-20240116; t=1749094331; c=relaxed/simple;
+	bh=NTzExKa8fqEYOeus71pd5GRU/DgCO0gufM9JYFooOZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwErYBe/02BmVKRk3CFvqx9eGcnTt3vynrHbsxTdxF42OZ70PA169cpppaP7ey+pswoa135HFOlZYQgu0iO4TtOTtW95neWhXmMJiy3Ow+WoGOjggHHS+RAiHat2bf2KBhH+m5ea0T9899bo/nb72VyERPmEn+EVU1Uppe3+bUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SUD/3y8K; arc=none smtp.client-ip=192.198.163.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=EB675aH2BfndSILPfdw1x0Pkft/DfExbOi6L62vNWR3dQAil0yD/0fzcd8qE3jGAEZwLfPemAYrGvVIdCSU0rhlQK33x0ZnoD9EVouwxXPJHboESafzc4p6A+ndYdjIdDXAEWFfEmWNSsGhOOKuc1IxFgLqWFLFDfuj+wtJOVGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ch1dPMSt; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749093147; x=1780629147;
+  t=1749094330; x=1780630330;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=RARMEFCKxo44B6B9+nY4zeTF4gfaDoIOpQB1M1i8Uvo=;
-  b=SUD/3y8Kx/QaLNcPJ22upcDWsqdt9/b624hx/h6knetkZVczXICPwmBx
-   a/HV/biziw/lcznk85Gi35Z8X49d06cK/h3qRYA4z238DtS8bDXZWtQht
-   3+2NHhOYLeABV7lG8EV/qMh/WiulFZy+wSjbiQQcqiOfF6m3xPVmvl9E+
-   9CnJQzqSF5jWjiDi6bu7nXR8nuSt0q8QANDuew89hvfm98zc+VKaEOEv4
-   MEgK9fMYRnSAgs2DM+/GUVqwnp51OGdp3uSFEilWrUKt7bnxBJfcRlYf2
-   0xUFBkqpOJvRkUf8TLMkbk395IIyGmDjFiM1BMSykhlb2vmET9cLJCZ4G
+  bh=NTzExKa8fqEYOeus71pd5GRU/DgCO0gufM9JYFooOZ0=;
+  b=ch1dPMStXOUFR1rfq9ZfIvELpyee4oMjnaFzJ5G/5ASA38fJxKai6swU
+   e8UcVTaoZGBuiHUr16drkNwE7wKGuCgUmwAfpMJPdYgURk5RAkKJQOWg2
+   PmhdP3c1Qk+1OrbIdA/P+DhWChbkgf6iRvsXoiqor/aN7zvkbKkym15Fa
+   FHqdzCV0nrgGGB+STCX2wvTNoBvhfRKVcBr+pyaC+2wDYrHP+cGzfww+W
+   AgFlZT2AUK/I4BboE+fWj7U5F/vIOIjAXRvdAKmFaJKwmzevWvlE9f7Tz
+   a/NcqmSbbdGFXRdtxTPPJBekTI162cVrGu0k8lx8U6/8wNQblH3kLFrVh
    A==;
-X-CSE-ConnectionGUID: a3YVBuoUT7G/BqiGv0ILCQ==
-X-CSE-MsgGUID: TgW1eZbNRr6+FeUFDfcytg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="62552436"
+X-CSE-ConnectionGUID: KX7tEHFKSzeiYWshHSrAKg==
+X-CSE-MsgGUID: vRwfr4juTHCw5J9jR74BAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51292047"
 X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="62552436"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 20:12:26 -0700
-X-CSE-ConnectionGUID: C5PXCXUOS/+c3vtwOhbX6w==
-X-CSE-MsgGUID: RjtxRQntQZSpQS3S98MQLg==
+   d="scan'208";a="51292047"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 20:32:09 -0700
+X-CSE-ConnectionGUID: 3QcT0micRqWNOasLI6en1g==
+X-CSE-MsgGUID: FFU8mQQdQ8624jTIOoe2Ww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="150649663"
+   d="scan'208";a="145413620"
 Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa005.jf.intel.com with ESMTP; 04 Jun 2025 20:12:24 -0700
-Date: Thu, 5 Jun 2025 11:05:47 +0800
+  by orviesa009.jf.intel.com with ESMTP; 04 Jun 2025 20:32:06 -0700
+Date: Thu, 5 Jun 2025 11:25:29 +0800
 From: Xu Yilun <yilun.xu@linux.intel.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
@@ -68,17 +68,17 @@ Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
 	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
 	zhiw@nvidia.com
 Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
-Message-ID: <aEEJi6ZLQUetiwWA@yilunxu-OptiPlex-7050>
+Message-ID: <aEEOKXxTuUifYxJY@yilunxu-OptiPlex-7050>
 References: <20250529133757.462088-1-aneesh.kumar@kernel.org>
  <20250529133757.462088-3-aneesh.kumar@kernel.org>
  <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050>
  <yq5azfeqjt9i.fsf@kernel.org>
  <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050>
- <20250602164857.GE233377@nvidia.com>
- <aD50lpgJ+9XMJE/4@yilunxu-OptiPlex-7050>
- <20250603121142.GE376789@nvidia.com>
- <aD/gn2tb+HfZU29D@yilunxu-OptiPlex-7050>
- <20250604123637.GF5028@nvidia.com>
+ <yq5ao6v5ju6p.fsf@kernel.org>
+ <aD7TZRnFualizeXk@yilunxu-OptiPlex-7050>
+ <20250603121456.GF376789@nvidia.com>
+ <aD/aOk9jHryygiRG@yilunxu-OptiPlex-7050>
+ <20250604123118.GE5028@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,71 +87,58 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604123637.GF5028@nvidia.com>
+In-Reply-To: <20250604123118.GE5028@nvidia.com>
 
-On Wed, Jun 04, 2025 at 09:36:37AM -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 04, 2025 at 01:58:55PM +0800, Xu Yilun wrote:
-> 
-> > But the p2p case may impact AMD, AMD have legacy IOMMUPT on its secure
-> > DMA path. And if you invalidate MMIO (in turn unmaps IOMMUPT) when
-> > bound, may trigger HW protection mechanism against DMA silent drop.
-> 
-> As I understand AMD it sort of has a single translation and relies on
-> its RMP for security. So I think the MMIO remains mapped always in
-> the iommufd IOAS on AMD?
-
-Depends on how IOMMUFD/IOMMU driver reacts to VFIO's MMIO invalidation
-when bound. Legacy IOMMUPT is not controlled by firmware, but it's part
-of AMD's secure DMA path, so we have to do something on VMM side.
-
-In legacy case I assume IOMMUFD should unmap MMIO range in response to
-MMIO invalidation (via DMABUF move notify), is it? Will do something
-different when bound?
-
-Anyway, seems we all agreed VFIO should ensure device unbound first,
-or no MMIO invalidation. This blocks the issue from happening.
-
-> 
-> > SEV-TIO Firmware Interface SPEC, Section 2.11
+On Wed, Jun 04, 2025 at 09:31:18AM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 04, 2025 at 01:31:38PM +0800, Xu Yilun wrote:
+> > On Tue, Jun 03, 2025 at 09:14:56AM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Jun 03, 2025 at 06:50:13PM +0800, Xu Yilun wrote:
+> > > 
+> > > > I see. But I'm not sure if it can be a better story than ioctl(VFIO_TSM_BIND).
+> > > > You want VFIO unaware of TSM bind, e.g. try to hide pci_request/release_region(),
+> > > > but make VFIO aware of TSM unbind, which seems odd ...
+> > > 
+> > > request_region does not need to be done dynamically. It should be done
+> > > once when the VFIO cdev is opened. If you need some new ioctl to put
+> > > VFIO in a CC compatible mode then it should do all this stuff once. It
+> > > doesn't need to be dynamic.
 > > 
-> > "If a bound TDI sends a request to the root complex, and the IOMMU detects a fault caused by host
-> > configuration, the root complex fences the ASID from all further I/O to or from that guest. A host
-> > fault is either a host page table fault or an RMP check violation. ASID fencing means that the
-> > IOMMU blocks all further I/O from the root complex to the guest that the TDI was bound, and the
-> > root complex blocks all MMIO accesses by the guest. When a guest writes to MMIO, the write is
-> > silently dropped. When a guest reads from MMIO, the guest reads 1s."
+> > But the unbind needs to be dynamic.
 > 
-> Sounds to me like the guest has to do things properly or the guest
-> gets itself killed. I wonder how feasible this really is..
-
-I think both guest & host. If host unmaps some legacy IOMMUPT entry
-delibrately or accidently, the issue happens.
-
+> That has nothing to do with request_region.
 > 
-> > BTW: What is ARM's secure DMA path, does it goes through independent
-> > Secure IOPT? So for p2p when VFIO invalidates MMIO, how the Secure IOPT
-> > react? How to avoid DMA slient drop?
+> > > I think all you want is to trigger VFIO to invalidate its MMIOs when
+> > > bind/unbind happens.
+> >
+> > Trigger VFIO to passively invalidate MMIOs during unbind is a TDX
+> > specific requirement.
 > 
-> On ARM T=1/0 traffic goes to two different iommu instances.
-> 
-> As I understand it the T=1 traffic will go through an TSM controlled
-> IOMMU that uses the ARM equivalent of the S-EPT for translation. Ie
-> the CPU and IOMMU translation are enforced to be identical.
+> I still think TDX is making this too hard, the S-EPT is controled by
+> the TSM right? Why doesn't it do the map/unmap of the MMIO as part of
+> the bind/unbind instead of this weird thing where the vPCI function
+> creation is split up between KVM and iommufd?
 
-We are on the same boat... I need to check how ARM operates on this
-S-EPT equivalent, also in KVM?
-
-Based on this I doubt ARM also has the immediate DMA silent drop issue.
-
-Anyway, unbind the device first.
+That's good point, thanks. S-EPT is controlled by TSM, but the fact is,
+unlike RMP it needs too much help from VMM side, and now KVM is the
+helper. I will continue to investigate if TDX TSM driver could opt in to
+become another helper and how to coordinate with KVM.
 
 > 
-> T=0 traffic will go through an iommufd controlled iommu and it will
-> use the IOAS for translation.
+> > Another more general requirement is, VFIO needs to trigger unbind when
+> > VFIO wants to actively invalidate MMIOs. e.g. before VFIO resets device.
+> > That is the dynamic unbind thing.
 > 
-> I've also understood this is quite similar to Intel.
-> 
-> (IMHO this design is a mistake, but oh well)
+> Alexey is right here, this is a userspace problem. VFIO should block
+> FLR on an bound device.
+
+That means VFIO should know the bound state. if VFIO cannot receive the
+initial bind/unbind request from userspace, VFIO needs a callback from
+IOMMUFD. I think that's what you recently suggest.
+
+Thanks,
+Yilun
+
+> Userspace has to unbind as part of its FLR flow.
 > 
 > Jason
 
