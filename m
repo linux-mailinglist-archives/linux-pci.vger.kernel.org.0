@@ -1,110 +1,83 @@
-Return-Path: <linux-pci+bounces-29043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8AA8ACF3F0
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 18:17:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7190AACF404
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 18:19:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A82A1898E58
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 16:17:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7EF2188044E
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 16:19:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE481E1E12;
-	Thu,  5 Jun 2025 16:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3559E1E5B64;
+	Thu,  5 Jun 2025 16:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RETF9+Fi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8svjUn+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3813D521;
-	Thu,  5 Jun 2025 16:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE71E9B3D;
+	Thu,  5 Jun 2025 16:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140236; cv=none; b=qK5rzNF18w+p1z7HesnExjKyBuro/mLPXyDs8oQ1GNJPDxT5JbYdDMN1ydQQG/aFennPykyT3dZSGB+1D4j5Fz/4XjcRr43VNdpKzdF/r4xfdPd5AVzYcZgRV5IDTDDWkW/j7xMmkJproxNz12THO/bZE+FUq/hH4q6qQ9ADaRo=
+	t=1749140377; cv=none; b=MgnFv4R8ufLZlCMuKjbjLUE7JZQFN2ZFMZDRvmqvBzgLypKXTDXEh5xnVgJ2R57aLdBsNfbWTzBfDjbbPhrqkkmHiKiecUKMhlUDlXc5r0YPZ071blVcODaZEQHt5k6QwiiB9HOq7H6tY5Do4hjiW86vLjPX31JXQ/3orvYUACw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140236; c=relaxed/simple;
-	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FDFlcGiu2DbyDIH2TwWaJgHGXbS9fJ5sszrFo9zLCMovKYCzC+en5WNWiTD1iCmBIyAolcVz+y21tjOfJ1Q5+srV/ds8t0qUUpyLXtTF9lrMShKMVST8/4ZaaVcw9GrskvYXUGXkf6xgq1KlIFluCHkpNX0OGRo/AYZnJv+aM30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RETF9+Fi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC90C4CEE7;
-	Thu,  5 Jun 2025 16:17:05 +0000 (UTC)
+	s=arc-20240116; t=1749140377; c=relaxed/simple;
+	bh=MI0R8HITcFNmNRtLwaJ0PFb0ELfhM/iVB8q75aYrQgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D8QGnqwQX5OGVtltOWcBpltUA/76QhPjTj9S+1cgzBEIMNrvzpc0F3vkiLK+yFonxXZ22GGXqGrXWdQ56hSNf6FqO7+K7GUHmfYmSqKbrIbe/V9CRtkmwQ2mjYlChHQLWlZD4Pq4SBIQxSksUH2lyaJPjJHeEqjfnmesYFED+EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8svjUn+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39781C4CEE7;
+	Thu,  5 Jun 2025 16:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749140234;
-	bh=R2kAT8sgTVzEg0Z9dPF3UmifglniI93iuJxDsKCUq4E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=RETF9+Fi566neb4lJUpVLBOnK1Q0DHWFqA422TSAoXhbf7GHEODVktjFPnGcb07Ta
-	 kOlF0aK90BS+b+AiPwJxUZiKLwsNJSzbqIMH42/smRXUEP0vOXRwuknlk5wdLLeW0X
-	 jIbGv8yAN7a3R2ZoA88CWDALpE4x2Hc1YB0rjkJFARh1FZeoVrNpwlGikvihjETTSP
-	 KXwkqG5+CDCEtGNNOBQc0ZvWP+VDLDFfEFVXV33nSylK2zNa8UhKAWecCyrrk7YCml
-	 vfFtmhR4/MsoPIJvEBUXUVHFKjeoo5YlWkVygaoZdiWeYvBMVE4qpU22KNIjjoPy8f
-	 eFQS4zumEsmpw==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
-	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
-	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
-	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
-	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
-	iommu@lists.linux.dev, kevin.tian@intel.com
-Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
- TEE-IO support
-In-Reply-To: <20250605151029.GC19710@nvidia.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5ah60u8kev.fsf@kernel.org> <20250605151029.GC19710@nvidia.com>
-Date: Thu, 05 Jun 2025 21:47:01 +0530
-Message-ID: <yq5a7c1q88oy.fsf@kernel.org>
+	s=k20201202; t=1749140376;
+	bh=MI0R8HITcFNmNRtLwaJ0PFb0ELfhM/iVB8q75aYrQgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k8svjUn+D82cm2fDjyL39hf6xuk8KOEe9fjwlDFtLNpudguls4VUaVNY2N8ifEp3n
+	 ciuGTkJBbxbqs9zpPW8EnJ5q+KAh1N9V2xpfi9ikAuAsrJJJt0WI2YUzPZY4Acn5q7
+	 6Q70sD9QO8FvJEW9sFoEQR8jng1ZtP+lk4qgN0HSxDNZdbFHk6FlUSf7NRf/GkNmyf
+	 mxPg3+eDRX/qpwcvmuJEMZk1GplieqaB6bzDaPuYcFqlXtX/4bD6sLiIUfNkHmRrAk
+	 8sGZxGGC1Wt/7mKxwLUMHleHn+znIhtg7lsJhwrIrCTQU+ij0t0BiKj+oTt0F54bd4
+	 wcO7QlXQ26IXQ==
+Date: Thu, 5 Jun 2025 11:19:34 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
+	kwilczynski@kernel.org, kw@linux.com, vkoul@kernel.org,
+	linux-phy@lists.infradead.org, krzk+dt@kernel.org,
+	andersson@kernel.org, linux-pci@vger.kernel.org,
+	konradybcio@kernel.org, lpieralisi@kernel.org, abel.vesa@linaro.org,
+	neil.armstrong@linaro.org, quic_qianyu@quicinc.com,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	conor+dt@kernel.org, bhelgaas@google.com, quic_krichai@quicinc.com,
+	kishon@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] dt-bindings: PCI: qcom,pcie-sm8150: document
+ qcs615
+Message-ID: <174914037222.2791589.7402731623467975644.robh@kernel.org>
+References: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
+ <20250527072036.3599076-3-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527072036.3599076-3-quic_ziyuzhan@quicinc.com>
 
-Jason Gunthorpe <jgg@nvidia.com> writes:
 
-> On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
->
->> > +
->> > +	/* To ensure no host side MMIO access is possible */
->> > +	ret =3D pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
->> > +	if (ret)
->> > +		goto out_unlock;
->> > +
->> >
->>=20
->> I am hitting failures here with similar changes. Can you share the Qemu
->> changes needed to make this pci_request_regions_exclusive successful.
->> Also after the TDI is unbound, we want the region ownership backto
->> "vfio-pci" so that things continue to work as non-secure device. I don't
->> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate in
->> userspace which will result in vfio_unmap()/vfio_map(). But that doesn't
->> release the region ownership.
->
-> Again, IMHO, we should not be doing this dynamically. VFIO should do
-> pci_request_regions_exclusive() once at the very start and it should
-> stay that way.
->
-> There is no reason to change it dynamically.
->
-> The only decision to make is if all vfio should switch to exclusive
-> mode or if we need to make it optional for userspace.
+On Tue, 27 May 2025 15:20:34 +0800, Ziyue Zhang wrote:
+> Add compatible for qcs615 platform, with sm8150 as the fallback.
+> 
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml          | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
 
-We only need the exclusive mode when the device is operating in secure
-mode, correct? That suggests we=E2=80=99ll need to dynamically toggle this
-setting based on the device=E2=80=99s security state.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
--aneesh
 
