@@ -1,684 +1,232 @@
-Return-Path: <linux-pci+bounces-29022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24CD4ACEDD1
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 12:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BEBFACEE2F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 12:56:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 718C9188B537
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 10:38:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDB7A18938FF
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 10:56:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CBBE217F24;
-	Thu,  5 Jun 2025 10:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB928217651;
+	Thu,  5 Jun 2025 10:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="guBQAQiw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nWT1WMCl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490BB217664
-	for <linux-pci@vger.kernel.org>; Thu,  5 Jun 2025 10:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749119853; cv=none; b=rdOR+sRPn0v7z5RWvvfsRj6vc7IMgPI1qWoUrjuk0lUINOTK3eZsfRGdV0aIhnZvdQ/MKGZ3GcodLiP61Ldbe5REJyfAsoevlyI4GLICa+3XTI8OZtUeLcVbsb7nwyL2EiHH/XLX2iVhvbf85iMt1qgub+yimJ7qwCXdmD1osXE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749119853; c=relaxed/simple;
-	bh=5W99aD1HPPU70uFrXi4wd3DyADurA3SSuHBr+b7XjMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c/L73Nv/W48ShBArT4y7o/e0VfkNwYC1Si0GclPygsKGz9suGxQDq8N+ahOi5isei7eGLqWJWBuLpsxqodl6G5JS5FhK/WrmwOQWZ5hlAqGygKhRk/cFncnpqcBZxUGmZV0jdAn0Rdl9IQXyUuw45dJFhgv8gBurlLox1Nx5caA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=guBQAQiw; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad8826c05f2so154965966b.3
-        for <linux-pci@vger.kernel.org>; Thu, 05 Jun 2025 03:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749119848; x=1749724648; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eXn3QIeAiS3fNUutBHTej2gUQDr8syUYYLvUu5jnOQ0=;
-        b=guBQAQiwmdYT4eEHKn+dQvdO04rkq7BfuOwAFr4J+G8COQ31SjnXVO9JKX8AoimP7S
-         fxDIJaEsFTO7XdTxhOORhW+XcjI1L+4/V2V/TaC6GuxTnHy+kN7Pd11choC/Jho9hfwt
-         TX8xsauoJMRmSZXxXXP+iNWQlmJVLT+NDaEV0tH+GjKDSPussK93sWUCSQWiNbeIFO+2
-         EXAi+X7CpnzRAjXvN4OldzCOclARYDEt1xWGGXTfl7FUVmE6eD47oh8DrYr1cm02XyqC
-         z9hQ0mW9QOx2LEpYoneOLKegacvJsaZ+6gWuFTbjiYwzoPCGcwe/Uh0AfI7H/QDj0ZOP
-         Je4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749119848; x=1749724648;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eXn3QIeAiS3fNUutBHTej2gUQDr8syUYYLvUu5jnOQ0=;
-        b=PAO+ZA9TaYWMLwC70IbGQiyAuMwFJ6gVUGTVAJl+uBKCuAIGAPz3MTJIepXiuCl8ky
-         20oHfARTGSvgC3+FGtR0gMCu9MjdZ5BxQQV41gECVDUGJmGmKEmbJaVXF2g1V4rdRb6y
-         xBOURZxDeAzKPHvfI7gFfpO1SMrjiultm1KBwOR1f3i1L26sgb4wKexo1/hZ7CwkX1zE
-         c/vXl7cWEHpIC5zO8vbGc8NzWd1ZSw9uhkwRjTmekg5ibtLYXVFXaKPHkupGiotzvZnQ
-         yzmqR9YnPlG7jhtU9W8o0JniN2vLNg2NmP6dqb2SxLUMvXtB5nOLhUCIeocmGCwiOzGP
-         hTZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXZYnqFBOvGwCh0RNGnOXotVTNdxPmhDaWJavMWMzNDRpu29WKXpUhLp/r3XB5wjbvtsRTEb4x13M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTKZjWGmUCG4iR/VZdyApdzVjMUZ7I2bNeOUmwZwk8w+0JVdBq
-	Iwyc5ZGM1E3ExedShW0dIQG6JG7tPxG7O/n2sW7zCsfHe/W68P9nRQNc3yQtqiHOyLc=
-X-Gm-Gg: ASbGncuux0LIcq88c3tPy4IzUfGn74VzlFlAaPSY/un40mTHzEdbYkztjUQHo5OGN7s
-	pvu0ccGeJ+RzCLndEleIyTHIpyYJdNst+4U7jJnlWk29yd2OUSNLbCCnPr2tsuP+IIKsIN51nlw
-	svomYjJj4k5jncebyE5yY9yINFIvFzg/dF/0H15GTHoXTJt4aWrP4LifEo/f+9YbV3/JSZCeWCk
-	JgGtl2oQ5Th/f6mdcf9jqW+XhPC4m5KtQD+1Sbxy0dO0lb9p9X7kb7kcdVKeo8mqyfsOoj6+g6+
-	DWy7RJs93llMdb51E3S9lsbjNj5SkQ1IG+8+KTXoite44Sj9TZtj8MpIoIGA
-X-Google-Smtp-Source: AGHT+IG4imuIKem/lacSZ6kswTIN1P3NtX5m21Xzl748xyEppt8Z7hqNmdhVquPXd1dCij8MnG6lzA==
-X-Received: by 2002:a17:907:980f:b0:ad4:f517:ca3 with SMTP id a640c23a62f3a-addf8d27228mr582111566b.20.1749119848014;
-        Thu, 05 Jun 2025 03:37:28 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e760sm1253095066b.52.2025.06.05.03.37.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 03:37:27 -0700 (PDT)
-Message-ID: <7b8ae87e-f733-45f9-bf45-302d755ebbf6@tuxon.dev>
-Date: Thu, 5 Jun 2025 13:37:25 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EB3218AC1
+	for <linux-pci@vger.kernel.org>; Thu,  5 Jun 2025 10:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749120987; cv=fail; b=s9bDGpzxEv91jGv6c8jC7F1eL/UmQrfEtqTVHIyth5BIsJf4gy+sokS7M1nTxQn8vHK9PDO765cWfqJ5ZAt/S6UOaofrSFeCnW2o3C9ER9C3eZmB9UPIvl1kgQn5uyBJRIiHiKkLtOZY6rU7INE8HDvfFQUkeJKW9jbPPFr+hm4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749120987; c=relaxed/simple;
+	bh=68IiBEUM2Ik/AKB87dmxzhT/HN3NBuwGZWA63SHLNtY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D7w+Ui1daIWwO6Yh2QF0ZVtu8GsZmf1dd9mT1DHcpcZ8VMjSG1w1MK++wk7de0GpYMQb+btKfrC/tilqcksM3tysrAFC0LRn34aSOcMbdxyyghEz9gVD/MAKgQWkV/qIkh7dBkfngDBxx77+0DCnHnv5DLkW81NbrqVTDX9l1hA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nWT1WMCl; arc=fail smtp.client-ip=40.107.223.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U+turdDGAR++r2bhiPHOL5ovevgM0DFZpeZ7CLq0LdAj2QAnPVl0irrzK3VcNku+VoIcD5a13NpxhEUHVBtDVAfz9vSTAvyG4hxNVnSs9+MmiTfnDfWjD2z+6hWDsEwPMmEpFRPE7mfmGUfoSacWPNhlrgbB2eIfs85wuEWj9TcU3JJ5g0wbhigRABvIi8GMLRpHHeRzh5OswyFLo8Yr7FLM2yOzGLXZ0fbrR3HijwfAQSRhBQVb+IAY1FpSb+gzYopVr2/n82jYimGh3XRCsh9FEd1rW8D3P5fkJCrBhdz35ayxxHXc42pl+TiD99IKfLGFdxY7u1RqbW0I3YC8kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xRv1EBy3Dp15u6mm34bHNlC4m2p7c7IcDrBMrwKLBVM=;
+ b=pzisofdA+O45i4eI7QtViqfVmcSIPpKovfRdovI9f0WC1tezR5WWYioBVXy7PWCWRgiTek+Gncj+30ixqOjOPJUrIDK/mpsz3LG75Joyyr3dD81PyewDYjPG+3AP/LYu4K9+XyLFMsaEkbd7CbkjCD1L7yyTKuTpZt2Kg8WdcGe8xygMIBiNnO98S00Fjivf54iUXEFruIZUIYdh8KU8EBIJg0fHLO/4nS5yMS5Hhc0mMiNL64MjdqWyccW9WW41Q7QKrT0ymeNh9bOnrRFR/qVynzooGEeAn0XStLniYEiNL9vM0Zx6Z0WHl7FTLI/5J0YIuGL97SPsTSNfUvdM0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xRv1EBy3Dp15u6mm34bHNlC4m2p7c7IcDrBMrwKLBVM=;
+ b=nWT1WMClkbQRCNzC9w+1huNl0w548PqqDPAwnsxW0IX4IP1eBHAQRDZZ1f7+deqUccRjxZIbR8s6HgXZ7f4onDghzHdCEiActXzyKy31oer7LY7y1hnPkW7CokgDPBjxjzNlcG5kFuaUCRbk7lS3Gve8ZMsbK37IXuyB+ysV2rY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by MN2PR12MB4469.namprd12.prod.outlook.com (2603:10b6:208:268::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 5 Jun
+ 2025 10:56:23 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8769.037; Thu, 5 Jun 2025
+ 10:56:23 +0000
+Message-ID: <60812b1e-d01b-40ef-9e59-c6ab970e17e2@amd.com>
+Date: Thu, 5 Jun 2025 20:56:17 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v3 12/13] PCI/TSM: support TDI related operations for host
+ TSM driver
+To: Dan Williams <dan.j.williams@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Xu Yilun <yilun.xu@linux.intel.com>
+Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
+ gregkh@linuxfoundation.org, lukas@wunner.de, sameo@rivosinc.com,
+ jgg@nvidia.com, zhiw@nvidia.com
+References: <aCbglieuHI1BJDkz@yilunxu-OptiPlex-7050>
+ <yq5awmab4uq6.fsf@kernel.org> <aC2eTGpODgYh7ND7@yilunxu-OptiPlex-7050>
+ <yq5aa570dks9.fsf@kernel.org> <1bcf37cd-0fc4-40fa-bcd1-e499619943bd@amd.com>
+ <yq5ah617s7fs.fsf@kernel.org> <5d8483bb-ceb7-4ef3-920c-d6286a7de85d@arm.com>
+ <683f7b6fec30f_1626e100ab@dwillia2-xfh.jf.intel.com.notmuch>
+ <53c7523b-5cf3-4047-831f-12e0422cdf5d@amd.com>
+ <683fa6f622abb_1626e100e0@dwillia2-xfh.jf.intel.com.notmuch>
+ <683fa76214ebf_1626e100e1@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <683fa76214ebf_1626e100e1@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY6PR01CA0018.ausprd01.prod.outlook.com
+ (2603:10c6:10:e8::23) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
- <20250530111917.1495023-5-claudiu.beznea.uj@bp.renesas.com>
- <a58abc2a-6583-d4be-aea2-b2178b2acf60@linux.intel.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <a58abc2a-6583-d4be-aea2-b2178b2acf60@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|MN2PR12MB4469:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60a1b463-6141-4d10-4859-08dda41f9c72
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NW9HbjhVc1cvQnZreGFTSnY5ajQrZW4wMVZaVkR0S2t1RHZpKzRaMWY5OEQz?=
+ =?utf-8?B?Z3lNTUlIZGhnR0E2azBTM25HME9ocGdDbXVwUVFtUlg5QlpWenc1Y0oxaWNC?=
+ =?utf-8?B?dld6UkI2a3hCbjVwYUhQZnc1YmIyeHhBOFQwSENGSTk4M1gwc0UzTXFHWGVK?=
+ =?utf-8?B?NDdNdEtHMWFNZzQ2MHNZVFU3Zngwa0psWXFnWlByTDJZUFYxd0JxUVBuemsy?=
+ =?utf-8?B?RVpScUVmYUdBQ1ZXSFpsUndYMkQ4KzNRWDdYZmJ4Ynl6eXA1VzMvVk9MZTZv?=
+ =?utf-8?B?VHpDYnF4MTZ4QThaL0pEcTFhTE85dmc4WEJyM1R3ZitBbEtlWjVpZjB4L0tX?=
+ =?utf-8?B?WVFwY2xHNkQ1RlJGendycTdBSGJGL2xDSTZjcVFPb2RtNTRBbjdsdFFFWGUv?=
+ =?utf-8?B?ci9hWUVTVStPSUpwdnRkK1Y4eGZUOTlySjZ0OXIyVEVUaUtxRWY2T1JvdnBo?=
+ =?utf-8?B?R1VHenN1S2VPSllmU3d1czQySndmakhnNkdhZCtDdDVDeW9tMHZJajZ4K0Fl?=
+ =?utf-8?B?L1hhc2Y1d0J4N2U3QmZaeUQ3RU9zUDBqZmdSc2dDdm9vbitVOGpzaHJUSVVJ?=
+ =?utf-8?B?bTlQS2JxL3hBL1UrWjkyS0Q3T3A3cllvWnUrV3QwS09JajYwWjRXL3A1Rkds?=
+ =?utf-8?B?bGpMYUlxVllSdWVPY1dhczA4LzlnK1gxNFF2ZElFRC9yTW5YOU1sM0txUDRL?=
+ =?utf-8?B?WHUraDJPVXAvR3hrL0oxUm1rTnU0Z0REeS9Zb3hCc002eHBRR2pzeWV2YUxz?=
+ =?utf-8?B?WXpuN09ZVEpna255VWE5bVZzMys5RUtMejNvZFVrN08zd3AyUFhsaytFNGRs?=
+ =?utf-8?B?dGEvSFFTY3hPRDBxT2F0RzUvei9lMGJHcVhsRCtRWGx1VnZOOWoxM1VieWxs?=
+ =?utf-8?B?aVBJekRUeUIzYTFzU1FMSDdTNTdkekRvNzg4SHZKNnpVa0ZpL3dmbzBMN3dq?=
+ =?utf-8?B?WUZNMkxtYndmaldsdGxKbzIwRDZKcmRqWmVwQlFwNVF3NHBiMFRLNE4yMDlR?=
+ =?utf-8?B?a015VHlUNExaY0p0VS9iY1U5Qi9wSCtkVkozMWNsUWNzWUFicmpKVEd1WDFQ?=
+ =?utf-8?B?cHhndDNBUzA1b2s0L3dwMjA2RE5aemxlTnluZHlCK2w2OFROYjVUMWpBRWtO?=
+ =?utf-8?B?eW5XMUN4bGF0RlluUVhUQ3lnYW8yWUhiaFpCSy9CWGZyRzhrNXdmZGZxRmIv?=
+ =?utf-8?B?UUFxVUdpcnpFaFh1WHdFU0pXTUd5Y3VXTVRTWFMxeFFwSE5MdElSa3VvUzha?=
+ =?utf-8?B?eVBYTzk5Q2ZaRGovQWd0dm5Vb2QrQ2Z0dXdpZTdlSU1aaE4reWZRdUFuSXpw?=
+ =?utf-8?B?dTNLcDJoNVNVRmZ0emlIN1dsd245OUl3NVNFR0I3RnF0Z1VuUkR3aDU1OERS?=
+ =?utf-8?B?Q0k5aWdXejUvWk5MNVRDN2ZmeitiMnJxYnoyVXBoYUw5OGd6YllmbkhhN290?=
+ =?utf-8?B?ZzdBRmFXTEFoRVRmbDBxQzRTcTV5L0syS0cyaDBrRmZMYWUzUHNEak5VcnUz?=
+ =?utf-8?B?ODh5Vm9mcUhvTHp2TWhJRm41YXRjUnBRTVIrRTZwN1F0NGh5K2cxNEkvR2V5?=
+ =?utf-8?B?VXZSYkJ0TThPRUhFR09nbk5QZjZDZG94ODEwc1ZpWE1zSUZqamM1RUhUbm5S?=
+ =?utf-8?B?QWl1WVlVQlFYNzM2YnF5Rjk0emUwaFJXOW9KeXI4MTVlUHhpRFk0ZWJUTEVm?=
+ =?utf-8?B?bklveDZaYVBCR05RS0RPQlM1Sms5R1Yrd0FPWDlzNEs0Y3c4MTI1czBsNDVG?=
+ =?utf-8?B?SmhWOXM2VmxCUytxbHJRY2JPdWFCWlFrek1VMXE1OWk2ZGhHbGdSS3VYRC9x?=
+ =?utf-8?B?dUtIR0dlTUVlZkJrZGhUS0wyQjl6ZVRLQSs5cm5QWEJhbHZIdmptOTh0ZEY5?=
+ =?utf-8?B?OXVuT3c3SFpBa2xhVUpTMURiSlpidFIvZnFqSktPL3VHRFBzS1lnL09mdWdH?=
+ =?utf-8?Q?mGjYutimLtc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?djlOZE1xRG1jTGRJVEhHN1Z3Y0Q3Lzd2UXRDdzNnekJmYzdXbFVyMGhvLzdy?=
+ =?utf-8?B?dTNia2JIczRJVGtGRTB6SFRUTTh1LzFtTktDZEhRd0liRzNZODN3aHEwdyt0?=
+ =?utf-8?B?R29VV1NyV2RsbnRURkRWdmtRNEFmWnhWc2ZuV2JVbUZybzdabGc2VHF4TWVo?=
+ =?utf-8?B?SktyNFlIM1dZZ0R3ZTYwTnRoZG13bmFYOHBVaXUzdkpJK3NCeEEvMEw3c0Vq?=
+ =?utf-8?B?RzNPQ2VjNHd5Nk1mbzBCcXFhNkJsZlNFWWgvTEtKbkJpSUI4U1JkQUI1UnMx?=
+ =?utf-8?B?YjVLUFhUZXJVcFpzd2s3NU9ibytOTHM5L1E5cktIa1h5MGpRTmpCZDZKZTJ5?=
+ =?utf-8?B?YitDNmtmQ0JCS1RHSm1EbEppSXo1M1E3YlI4R3VZSUZDQXZGb0d0ZFlMZFVD?=
+ =?utf-8?B?Wk42Z1AxWmVNeUlxcm1TL0dFUE9HVzcwcEJkVTM4WVNlWi9va3V2WTNzbzRE?=
+ =?utf-8?B?L0VFQ1pFNU81dXhvVk1vMWVyakI0eVN5WXpSRXRodXo1ZzlHMGh5dEJ5NHZ3?=
+ =?utf-8?B?KzAzK2JrSDMzdVdnbnJhTEQ3ZEZOZmhzWituWUQ0WmtvQ0E2K1NnNGJwT0g0?=
+ =?utf-8?B?Z0g2Nm9ocDdRalEzTHJCYUU2dHUrT0k5T3YxaGhnK2RPVDEwclNodHdvYkYy?=
+ =?utf-8?B?cVZRNzdRdk9Wb0ZOMGcrVzd0WFpvVkE0M2FSMTJUZ1FsZlR3bFdySENiMnRK?=
+ =?utf-8?B?NWswRHVSS2VwMkpQYTU4dlp0ZGtDNFpyV2ZrSitqMERlVnBMTGJUTEo3djZw?=
+ =?utf-8?B?bHJldVJBRmlzQWFnSHNHUFF6ajB2aCtHaVpNU05SYWR0dG94S3RlTmg4Qzc0?=
+ =?utf-8?B?Um5mOVZRQW9lZFpubTBlS1ZrSkRRcFI1SXRKWW5BZ21CS1E0QnNYVXhQbk42?=
+ =?utf-8?B?aElwSU03allFSCs1TWJ6SEhucVYyMDY3cmdXSElBNXBBNHFaSlVFMXhFYThw?=
+ =?utf-8?B?V3Q0M295K1BHMkpOaENFY1dwZVBqM0R3M0gxWGoySEhsOFh6eUJPSnY3RzhG?=
+ =?utf-8?B?NXZBZWhOZHkvUXRqN3ErRDRzSm1VWHIrT242U295U21RYXFhVmJjZDJxdkxF?=
+ =?utf-8?B?MzNGaGV3dWlraWIrRmRaSzJYR3Z1STZ6MkUxY1dzeWNZTUtFK05INC8vQ0ov?=
+ =?utf-8?B?clNFRjhSTFJTaWVQMWRLNU5FbEllcWVCZTFKMm5RblQ2UzdDZzhwNjRURDFl?=
+ =?utf-8?B?dHpqRFlwL0Z6Zk9lTnhSMWs2THV0SWd4NHJBQkw4OWYyRmtxU0gybzdCVHFl?=
+ =?utf-8?B?MXpMSXo1d0hHVkVBLzZ1OFJLOVdXQ0ZYcUZaTWlPT015VTZTK3pmZ0hWRys5?=
+ =?utf-8?B?WmRpMU5WRFNCemhVSStsMTFwQXRXRFhoQS9IY3Mwb0xhRk9SejNZVnBUOFZD?=
+ =?utf-8?B?eVRXSUQ5MHhGaHEvaExOVFp0d0FxNzhrak9USWl6UG5iMkZyQ2x2L25sSVc2?=
+ =?utf-8?B?VmQ0M1AvUFpFVncyN0JCR2pWTldkM0VHN0E5NURJN2p0QmRjQlJSWXdpbG1k?=
+ =?utf-8?B?R3ZoTGpYZnFObllvUGZMQVplb08wTys0Z01RcXNxcGt5OEN4WXo4K1VZMDZ3?=
+ =?utf-8?B?Snk4S1V5UkFpM1ZSR0lxeDJzYkpaejU4a216bU02Z3dZbzVKcFlUaGtDcEJS?=
+ =?utf-8?B?UXJSWCtDN1NSRUlmclA4Szllby9LY0pVQ1lzSzIwSlU4TVhad1dZNXdkb0JO?=
+ =?utf-8?B?MmxWTTBXZXRFbU11MzlBT0p2dlhSRkFxK3pqWnJkdWdPSWUvcnNhUjZjS0kv?=
+ =?utf-8?B?SjVTcU1VbldiUlJ3N0FYWXNld2NNQ29rcythN0ZDK2dwMUJVTGZTMDBEQWRz?=
+ =?utf-8?B?YUpWdHhqL0lMMlZ5NEtWb1pwMWR2RlhQTlVqSXBXZjBmZzduaEhGNzN3UTR0?=
+ =?utf-8?B?Tk9CUGtlTHlKbCs5d0ZITDcxYkJscmk3K085cUVxRDNuUzBqZ0tLUFVGajgz?=
+ =?utf-8?B?NGk4emJETTBwdlZvbmtYSXh0OGpJdjdRbGduRitUbEV3Y2N1Z2QxTm1mWWtl?=
+ =?utf-8?B?d3JacWJQaXRpWE9JVWtvbVU0SzdCMnJsZ2hsalpTWEd5bkJmZ3RsNDhHWVFn?=
+ =?utf-8?B?UFo0UVQ5T3d6aEVraXZ2S2w0SDUybFFHYXRyVVlYQ0RPRThueHdrNERNWHVy?=
+ =?utf-8?Q?Qlr+IIisq8wnjXMZRvbnDZSEU?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60a1b463-6141-4d10-4859-08dda41f9c72
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2025 10:56:23.5297
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9A/7ufb2P/QvR4en9QeLZJq3t/BsVgh71704DxD1jFaryFsYys0z3VRgF5HW4Y28ZLDG2euqHles4cQe12zkRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4469
 
-Hi, Ilpo,
 
-On 02.06.2025 19:18, Ilpo Järvinen wrote:
-> On Fri, 30 May 2025, Claudiu wrote:
-> 
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+On 4/6/25 11:54, Dan Williams wrote:
+> Dan Williams wrote:
+>> Alexey Kardashevskiy wrote:
+>>>
+>>>
+>>> On 4/6/25 08:47, Dan Williams wrote:
+>>>> Suzuki K Poulose wrote:
+>>>> [..]
+>>>>>> Ok, something like this? and iommufd will call tsm_bind()?
+>>>>>
+>>>>> Remember that there may be other devices, AMBA CHI based devices
+>>>>> being assigned. Not sure if they pretend to be PCI or not.
+>>>>
+>>>> I have been thinking about this especially with the relative ease of
+>>>> creating samples/devsec/ given the existing Linux infrastructure
+>>>> emulating PCI host bridges.
+>>>>
+>>>> Why not require PCI emulation for non-PCI devices? The tipping point is
+>>>> whether the relative maintenance burden of not needing to maintain
+>>>> multi-bus Device Security infrastructure outweighs the complexity of
+>>>> impedance matching those other buses to PCI.
+>>>>
+>>>> Make "PCI" the lingua franca of Device Security.
+>>>
+>>> This is how virtio started, and now it has to behave like a proper PCI
+>>> device, i.e. use DMA API. Or ivshmem which maps memory as "PCI" (which
+>>> it is not PCI but the guest does not know it) and is deprecated now.
+>>> Not the best idea to enforce PCI from day1 imho.
 >>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> ---
->>
->> Changes in v2:
->> - dropped the references to other RZ SoCs from patch description
->> - dropped the dot at the end of single line comments that are not a
->>   sentence
->> - as a result of v2 rework removed unused macros and definitions
->>   (e.g. RZG3S_PCI_REQISS_TR_TP1_RD, RZG3S_PCI_REQISS_TR_TP1_WR,
->>   enum rzg3s_pcie_cfg_access_type)
->> - dropped driver specific defines that are for generic PCI
->>   register offsets and used the generic ones
->> - updated the value of RZG3S_PCI_MSI_INT_NR as on RZ/G3S there
->>   are no more than 32 MSIs (v1 value was due to mistake in the
->>   HW manual)
->> - added timeout macros to be used by read_poll_timeout() specific
->>   functions
->> - re-worked the reset handling part by using reset subsystem specific
->>   functions only; with this the struct rzg3s_pcie_soc_data was
->>   added; reference to PHY initialization function was added to this
->>   structure as well
->> - dropped devres_group_id as the issue it tried to address will
->>   now be fixed in platform bus code (v2 posted [2])
->> - use 80 columns alignment
->> - updated function name in the idea of using names similar to
->>   what is used in other drivers
->> - added rzg3s_pcie_root_ops and rzg3s_pcie_child_ops and populate
->>   bridge->ops, bridge->child_ops with it; from probe:
->> +	bridge->ops = &rzg3s_pcie_root_ops;
->> +	bridge->child_ops = &rzg3s_pcie_child_ops;
->> - print a warning for 32 bit accesses (based on the value of
->>   bus->unsafe_warn as done in the common code)
->> - dropped dev_dbg() in read/write functions
->> - added HW manual revision identifier in comments that points to the
->>   statements from manual
->> - reworked the rzg3s_pcie_intx_setup() as the legacy interrupt DT
->>   node is not used anymore
->> - in rzg3s_pcie_config_init() do not hardcode anymore the
->>   primary bus, secondary bus, subordinate bus but get this information
->>   from device tree and update HW registers accordingly
->> - dropped rzg3s_pcie_remove() and added rzg3s_pcie_host_remove_action()
->>   to be used as a devm action or reset function
->> - s/rzg3s_pcie_suspend/rzg3s_pcie_suspend_noirq,
->>   s/rzg3s_pcie_resume/rzg3s_pcie_resume_noirq
->> - dropped DEFINE_NOIRQ_DEV_PM_OPS()
->> - updated driver name (rzg3s-pcie-host) to reflect it is for RZ/G3S 
->>
->> [2] https://lore.kernel.org/all/20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com
->>
->>  MAINTAINERS                              |    8 +
->>  drivers/pci/controller/Kconfig           |    7 +
->>  drivers/pci/controller/Makefile          |    1 +
->>  drivers/pci/controller/pcie-rzg3s-host.c | 1686 ++++++++++++++++++++++
->>  4 files changed, 1702 insertions(+)
->>  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 0d59a5910e63..3076065955f0 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -19286,6 +19286,14 @@ S:	Maintained
->>  F:	drivers/pci/controller/dwc/pcie-qcom-common.c
->>  F:	drivers/pci/controller/dwc/pcie-qcom.c
->>  
->> +PCIE DRIVER FOR RENESAS RZ/G3S SERIES
->> +M:	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> +L:	linux-pci@vger.kernel.org
->> +L:	linux-renesas-soc@vger.kernel.org
->> +S:	Supported
->> +F:	Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
->> +F:	drivers/pci/controller/pcie-rzg3s-host.c
->> +
->>  PCIE DRIVER FOR ROCKCHIP
->>  M:	Shawn Lin <shawn.lin@rock-chips.com>
->>  L:	linux-pci@vger.kernel.org
->> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
->> index 886f6f43a895..76fa5f330105 100644
->> --- a/drivers/pci/controller/Kconfig
->> +++ b/drivers/pci/controller/Kconfig
->> @@ -258,6 +258,13 @@ config PCI_RCAR_GEN2
->>  	  There are 3 internal PCI controllers available with a single
->>  	  built-in EHCI/OHCI host controller present on each one.
->>  
->> +config PCIE_RENESAS_RZG3S_HOST
->> +	tristate "Renesas RZ/G3S PCIe host controller"
->> +	depends on ARCH_RENESAS || COMPILE_TEST
->> +	select MFD_SYSCON
->> +	help
->> +	  Say Y here if you want PCIe host controller support on Renesas RZ/G3S SoC.
->> +
->>  config PCIE_ROCKCHIP
->>  	bool
->>  	depends on PCI
->> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
->> index 038ccbd9e3ba..229929a945c2 100644
->> --- a/drivers/pci/controller/Makefile
->> +++ b/drivers/pci/controller/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
->>  obj-$(CONFIG_PCI_RCAR_GEN2) += pci-rcar-gen2.o
->>  obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
->>  obj-$(CONFIG_PCIE_RCAR_EP) += pcie-rcar.o pcie-rcar-ep.o
->> +obj-$(CONFIG_PCIE_RENESAS_RZG3S_HOST) += pcie-rzg3s-host.o
->>  obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->>  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
->>  obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
->> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
->> new file mode 100644
->> index 000000000000..7649674bf72d
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
->> @@ -0,0 +1,1686 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PCIe driver for Renesas RZ/G3S SoCs
->> + *
->> + * Copyright (C) 2025 Renesas Electronics Corp.
->> + *
->> + * Based on:
->> + *  drivers/pci/controller/pcie-rcar-host.c
->> + *  Copyright (C) 2009 - 2011  Paul Mundt
->> + */
->> +
->> +#include <linux/bitmap.h>
->> +#include <linux/bitops.h>
->> +#include <linux/cleanup.h>
->> +#include <linux/delay.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/msi.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
+>> VFIO is a Linux convention. PCIe TDISP is an industry standard protocol.
 > 
-> Do you need to select something REGMAP related in Kconfig?
+> Oh, sorry you said "virtio" not "vfio", 
 
-I haven't selected it explicitly as Kconfig selects MFD_SYSCON which
-selects REGMAP_MMIO which selects REGMAP.
+"virtio" is just not a Linux convention, Windows (at least guests) uses it, and there were even punks developing physical devices implementing virtio, hence the recommendation of iommu_platform=on in QEMU command line for virtio devices.
 
-> 
->> +#include <linux/reset.h>
->> +#include <linux/slab.h>
->> +
->> +/* AXI registers */
->> +#define RZG3S_PCI_REQDATA(id)			(0x80 + (id) * 0x4)
->> +#define RZG3S_PCI_REQRCVDAT			0x8c
->> +#define RZG3S_PCI_REQADR1			0x90
->> +#define RZG3S_PCI_REQADR1_BUS			GENMASK(31, 24)
->> +#define RZG3S_PCI_REQADR1_DEV			GENMASK(23, 19)
->> +#define RZG3S_PCI_REQADR1_FUNC			GENMASK(18, 16)
->> +#define RZG3S_PCI_REQADR1_REG			GENMASK(11, 0)
-> 
-> Consider adding new lines into this long list of defines. E.g., when there 
-> are reg + it's fields which naturally form a group that could have empty 
-> lines around it.
+> but the point is still that we
+> have not even got one implementation of a bus Device Security protocol
+> upstream, let alone multiple.
 
-Ok, I'll consider it but it will lead to some inconsistencies accross
-different defines in this list as there will be new lines after some
-defines only. If I understood correctly your proposal, the result will be
-something like this:
-
-+#define RZG3S_PCI_REQISS			0x9c
-+#define RZG3S_PCI_REQISS_REQ_ISSUE		BIT(0)
-+#define RZG3S_PCI_REQISS_TR_TYPE		GENMASK(11, 8)
-+#define RZG3S_PCI_REQISS_TR_TP0_RD		FIELD_PREP(RZG3S_PCI_REQISS_TR_TYPE, 0x4)
-+#define RZG3S_PCI_REQISS_TR_TP0_WR		FIELD_PREP(RZG3S_PCI_REQISS_TR_TYPE, 0x5)
-+#define RZG3S_PCI_REQISS_MOR_STATUS		GENMASK(18, 16)
-
-+#define RZG3S_PCI_MSIRCVWADRL			0x100
-+#define RZG3S_PCI_MSIRCVWADRL_ENA		BIT(0)
-+#define RZG3S_PCI_MSIRCVWADRL_MSG_DATA_ENA	BIT(1)
-
-+#define RZG3S_PCI_MSIRCVWADRU			0x104
-+#define RZG3S_PCI_MSIRCVWMSKL			0x108
-+#define RZG3S_PCI_MSIRCVWMSKU			0x10c
-+#define RZG3S_PCI_PINTRCVIE			0x110
-+#define RZG3S_PCI_PINTRCVIE_INTX(i)		BIT(i)
-+#define RZG3S_PCI_PINTRCVIE_MSI			BIT(4)
-
-+#define RZG3S_PCI_PINTRCVIS			0x114
-+#define RZG3S_PCI_PINTRCVIS_INTX(i)		BIT(i)
+And my point is that TSM does not actually do anything with PCI except SPDM/DOE which can happily live in a library or DOE (and called from CCP or TDX drivers) and the rest can be just "device", not "pci_dev". I wonder if+how nailing TSM to PCI makes your life somehow easier, it is not going to help my case. Thanks,
 
 
-> 
->> +#define RZG3S_PCI_REQBE				0x98
->> +#define RZG3S_PCI_REQBE_BYTE_EN			GENMASK(3, 0)
->> +#define RZG3S_PCI_REQISS			0x9c
->> +#define RZG3S_PCI_REQISS_REQ_ISSUE		BIT(0)
->> +#define RZG3S_PCI_REQISS_TR_TYPE		GENMASK(11, 8)
->> +#define RZG3S_PCI_REQISS_TR_TP0_RD		FIELD_PREP(RZG3S_PCI_REQISS_TR_TYPE, 0x4)
->> +#define RZG3S_PCI_REQISS_TR_TP0_WR		FIELD_PREP(RZG3S_PCI_REQISS_TR_TYPE, 0x5)
->> +#define RZG3S_PCI_REQISS_MOR_STATUS		GENMASK(18, 16)
->> +#define RZG3S_PCI_MSIRCVWADRL			0x100
->> +#define RZG3S_PCI_MSIRCVWADRL_ENA		BIT(0)
->> +#define RZG3S_PCI_MSIRCVWADRL_MSG_DATA_ENA	BIT(1)
->> +#define RZG3S_PCI_MSIRCVWADRU			0x104
->> +#define RZG3S_PCI_MSIRCVWMSKL			0x108
->> +#define RZG3S_PCI_MSIRCVWMSKU			0x10c
->> +#define RZG3S_PCI_PINTRCVIE			0x110
->> +#define RZG3S_PCI_PINTRCVIE_INTX(i)		BIT(i)
->> +#define RZG3S_PCI_PINTRCVIE_MSI			BIT(4)
->> +#define RZG3S_PCI_PINTRCVIS			0x114
->> +#define RZG3S_PCI_PINTRCVIS_INTX(i)		BIT(i)
->> +#define RZG3S_PCI_PINTRCVIS_MSI			BIT(4)
->> +#define RZG3S_PCI_MSGRCVIE			0x120
->> +#define RZG3S_PCI_MSGRCVIE_MSG_RCV		BIT(24)
->> +#define RZG3S_PCI_MSGRCVIS			0x124
->> +#define RZG3S_PCI_MSGRCVIS_MRI			BIT(24)
->> +#define RZG3S_PCI_PEIE0				0x200
->> +#define RZG3S_PCI_PEIS0				0x204
->> +#define RZG3S_PCI_PEIS0_DL_UPDOWN		BIT(9)
->> +#define RZG3S_PCI_PEIS0_RX_DLLP_PM_ENTER	BIT(12)
->> +#define RZG3S_PCI_PEIE1				0x208
->> +#define RZG3S_PCI_PEIS1				0x20c
->> +#define RZG3S_PCI_AMEIE				0x210
->> +#define RZG3S_PCI_AMEIS				0x214
->> +#define RZG3S_PCI_ASEIE1			0x220
->> +#define RZG3S_PCI_ASEIS1			0x224
->> +#define RZG3S_PCI_PCSTAT1			0x408
->> +#define RZG3S_PCI_PCSTAT1_DL_DOWN_STS		BIT(0)
->> +#define RZG3S_PCI_PCSTAT1_LTSSM_STATE		GENMASK(14, 10)
->> +#define RZG3S_PCI_PCCTRL2			0x410
->> +#define RZG3S_PCI_PCCTRL2_LS_CHG_REQ		BIT(0)
->> +#define RZG3S_PCI_PCCTRL2_LS_CHG		GENMASK(9, 8)
->> +#define RZG3S_PCI_PCSTAT2			0x414
->> +#define RZG3S_PCI_PCSTAT2_STATE_RX_DETECT	GENMASK(15, 8)
->> +#define RZG3S_PCI_PCSTAT2_SDRIRE		GENMASK(7, 0)
->> +#define RZG3S_PCI_PCSTAT2_LS_CHG_DONE		BIT(28)
->> +#define RZG3S_PCI_PERM				0x300
->> +#define RZG3S_PCI_PERM_PIPE_PHY_REG_EN		BIT(1)
->> +#define RZG3S_PCI_PERM_CFG_HWINIT_EN		BIT(2)
->> +#define RZG3S_PCI_MSIRE(id)			(0x600 + (id) * 0x10)
->> +#define RZG3S_PCI_MSIRE_ENA			BIT(0)
->> +#define RZG3S_PCI_MSIRM(id)			(0x608 + (id) * 0x10)
->> +#define RZG3S_PCI_MSIRS(id)			(0x60c + (id) * 0x10)
->> +#define RZG3S_PCI_AWBASEL(id)			(0x1000 + (id) * 0x20)
->> +#define RZG3S_PCI_AWBASEL_WIN_ENA		BIT(0)
->> +#define RZG3S_PCI_AWBASEU(id)			(0x1004 + (id) * 0x20)
->> +#define RZG3S_PCI_AWMASKL(id)			(0x1008 + (id) * 0x20)
->> +#define RZG3S_PCI_AWMASKU(id)			(0x100c + (id) * 0x20)
->> +#define RZG3S_PCI_ADESTL(id)			(0x1010 + (id) * 0x20)
->> +#define RZG3S_PCI_ADESTU(id)			(0x1014 + (id) * 0x20)
->> +#define RZG3S_PCI_PWBASEL(id)			(0x1100 + (id) * 0x20)
->> +#define RZG3S_PCI_PWBASEL_ENA			BIT(0)
->> +#define RZG3S_PCI_PWBASEU(id)			(0x1104 + (id) * 0x20)
->> +#define RZG3S_PCI_PDESTL(id)			(0x1110 + (id) * 0x20)
->> +#define RZG3S_PCI_PDESTU(id)			(0x1114 + (id) * 0x20)
->> +#define RZG3S_PCI_PWMASKL(id)			(0x1108 + (id) * 0x20)
->> +#define RZG3S_PCI_PWMASKU(id)			(0x110c + (id) * 0x20)
->>
->> +/* PHY control registers */
->> +#define RZG3S_PCI_PHY_XCFGD(id)			(0x2000 + (id) * 0x10)
->> +#define RZG3S_PCI_PHY_XCFGD_NUM			39
->> +#define RZG3S_PCI_PHY_XCFGA_CMN(id)		(0x2400 + (id) * 0x10)
->> +#define RZG3S_PCI_PHY_XCFGA_CMN_NUM		16
->> +#define RZG3S_PCI_PHY_XCFGA_RX(id)		(0x2500 + (id) * 0x10)
->> +#define RZG3S_PCI_PHY_XCFGA_RX_NUM		13
->> +#define RZG3S_PCI_PHY_XCFGA_TX			0x25d0
->> +#define RZG3S_PCI_PHY_XCFG_CTRL			0x2a20
->> +#define RZG3S_PCI_PHY_XCFG_CTRL_PHYREG_SEL	BIT(0)
->> +
->> +/* PCIe registers */
->> +#define RZG3S_PCI_CFG_BASE			0x6000
->> +#define RZG3S_PCI_CFG_BARMSK00L			0xa0
->> +#define RZG3S_PCI_CFG_BARMSK00U			0xa4
->> +#define RZG3S_PCI_CFG_LINKCS			0x70
->> +#define RZG3S_PCI_CFG_LINKCS_CUR_LS		GENMASK(19, 16)
->> +#define RZG3S_PCI_CFG_LINCS2			0x90
->> +#define RZG3S_PCI_CFG_LINCS2_TARGET_LS		GENMASK(3, 0)
-> 
-> Are these duplicating offsets / fields in the PCI Express Capability?
-> If yes, you should use include/uapi/linux/pci_regs.h defines and not add 
-> duplicates.
+-- 
+Alexey
 
-OK, I'll double check include/uapi/linux/pci_regs.h again.
-
-> 
->> +
->> +/* System controller registers */
->> +#define RZG3S_SYS_PCIE_RST_RSM_B		0xd74
->> +#define RZG3S_SYS_PCIE_RST_RSM_B_MASK		BIT(0)
->> +
->> +/* Maximum number of windows */
->> +#define RZG3S_MAX_WINDOWS			8
->> +
->> +/* Number of MSI interrupts per register */
->> +#define RZG3S_PCI_MSI_INT_PER_REG		32
->> +/* The number of MSI interrupts */
->> +#define RZG3S_PCI_MSI_INT_NR			RZG3S_PCI_MSI_INT_PER_REG
->> +
->> +/* Timeouts */
->> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
->> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
->> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
->> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
->> +
->> +/**
->> + * enum rzg3s_pcie_link_speed - RZ/G3S PCIe available link speeds
->> + * @RZG3S_PCIE_LINK_SPEED_2_5_GTS: 2.5 GT/s
->> + * @RZG3S_PCIE_LINK_SPEED_5_0_GTS: 5.0 GT/s
->> + */
->> +enum rzg3s_pcie_link_speed {
->> +	RZG3S_PCIE_LINK_SPEED_2_5_GTS = 1,
->> +	RZG3S_PCIE_LINK_SPEED_5_0_GTS
->> +};
-> 
-> Use include/uapi/linux/pci_regs.h defines instead?
-
-Will do it.
-
-[ ... ]
-
->> +static int rzg3s_pcie_msi_enable(struct rzg3s_pcie_host *host)
->> +{
->> +	struct platform_device *pdev = to_platform_device(host->dev);
->> +	struct rzg3s_pcie_msi *msi = &host->msi;
->> +	struct device *dev = host->dev;
->> +	const char *devname;
->> +	int irq, ret;
->> +
->> +	mutex_init(&msi->map_lock);
-> 
-> Use devm_mutex_init() + remember error handling.
-
-OK.
-
-> 
->> +
->> +	irq = platform_get_irq_byname(pdev, "msi");
->> +	if (irq < 0)
->> +		return dev_err_probe(dev, irq ? irq : -EINVAL,
->> +				     "Failed to get MSI IRQ!\n");
->> +
->> +	devname = devm_kasprintf(dev, GFP_KERNEL, "%s-msi", dev_name(dev));
->> +	if (!devname)
->> +		return -ENOMEM;
->> +
->> +	ret = rzg3s_pcie_msi_allocate_domains(msi);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = devm_request_irq(dev, irq, rzg3s_pcie_msi_irq, 0, devname, host);
->> +	if (ret) {
->> +		dev_err_probe(dev, ret, "Failed to request IRQ: %d\n", ret);
->> +		goto free_domains;
->> +	}
->> +
->> +	ret = rzg3s_pcie_msi_setup(host);
->> +	if (ret) {
->> +		dev_err_probe(dev, ret, "Failed to setup MSI!\n");
->> +		goto free_domains;
->> +	}
->> +
->> +	return 0;
->> +
->> +free_domains:
->> +	rzg3s_pcie_msi_free_domains(msi);
-> 
-> I'm a bit worried about tear down order here as you seem to be mixing 
-> devm* and non-devm*. All devres based teardown will occur only after the 
-> probe returns error.
-
-I added it here to avoid adding a new devres helper for irq_domain_remove()
-in case this failure happens. I can add a new devres helper for it, as well.
-
-[ ...]
-
->> +static int rzg3s_pcie_resets_prepare(struct rzg3s_pcie_host *host)
->> +{
->> +	const struct rzg3s_pcie_soc_data *data = host->data;
->> +	int ret;
->> +
->> +	host->power_resets = devm_kmalloc_array(host->dev,
->> +						data->num_power_resets,
->> +						sizeof(*host->power_resets),
->> +						GFP_KERNEL);
->> +	if (!host->power_resets)
->> +		return -ENOMEM;
->> +
->> +	for (unsigned int i = 0; i < data->num_power_resets; i++)
->> +		host->power_resets[i].id = data->power_resets[i];
->> +
->> +	host->cfg_resets = devm_kmalloc_array(host->dev,
->> +					      data->num_cfg_resets,
->> +					      sizeof(*host->cfg_resets),
->> +					      GFP_KERNEL);
-> 
-> For these 2 allocs, devm_kcalloc() to init it to zero?
-
-I considered it unnecessary to init it to zero as the the id member is
-initialized below in this function and the rstc member is initialized through:
-
-devm_reset_control_bulk_get_exclusive() ->
-  __devm_reset_control_bulk_get() ->
-    __reset_control_bulk_get()
-
-[ ... ]
-
->> +static int rzg3s_pcie_set_inbound_windows(struct rzg3s_pcie_host *host,
->> +					  struct resource_entry *entry,
->> +					  int *index)
->> +{
->> +	u64 pci_addr = entry->res->start - entry->offset;
->> +	u64 cpu_addr = entry->res->start;
->> +	u64 cpu_end = entry->res->end;
->> +	u64 size_id = 0;
->> +	int id = *index;
->> +	u64 size;
->> +
->> +	while (cpu_addr < cpu_end) {
->> +		if (id >= RZG3S_MAX_WINDOWS)
->> +			return dev_err_probe(host->dev, -EINVAL,
->> +					     "Failed to set inbound windows!\n");
->> +
->> +		size = resource_size(entry->res) - size_id;
->> +
->> +		/*
->> +		 * According to the RZ/G3S HW manual (Rev.1.10,
->> +		 * section 34.3.1.71 AXI Window Mask (Lower) Registers) the min
->> +		 * size is 4K.
->> +		 */
->> +		size = max(size, 4096);
-> 
-> SZ_4K + remember to add the #include for it if not there yet.
-
-OK
-
-> 
->> +
->> +		/*
->> +		 * According the RZ/G3S HW manual (Rev.1.10, sections:
->> +		 * - 34.3.1.69 AXI Window Base (Lower) Registers
->> +		 * - 34.3.1.71 AXI Window Mask (Lower) Registers
->> +		 * - 34.3.1.73 AXI Destination (Lower) Registers)
->> +		 * the CPU addr, PCIe addr, size should be 4K alined and be a
-> 
-> aligned
-
-OK
-
-> 
->> +		 * power of 2.
->> +		 */
->> +		size = ALIGN(size, 4096);
-> 
-> SZ_4K
-
-OK
-
-> 
->> +
->> +		/*
->> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
->> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
->> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
->> +		 */
->> +		size = roundup_pow_of_two(size) - 1;
->> +
->> +		cpu_addr = ALIGN(cpu_addr, 4096);
->> +		pci_addr = ALIGN(pci_addr, 4096);
-> 
-> Ditto.
-
-OK
-
-> 
->> +
->> +		rzg3s_pcie_set_inbound_window(host, cpu_addr, pci_addr, size,
->> +					      id);
->> +
->> +		pci_addr += size;
->> +		cpu_addr += size;
->> +		size_id = size;
->> +		id++;
->> +	}
->> +	*index = id;
->> +
->> +	return 0;
->> +}
->> +
->> +static int rzg3s_pcie_parse_map_dma_ranges(struct rzg3s_pcie_host *host)
->> +{
->> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(host);
->> +	struct resource_entry *entry;
->> +	int i = 0, ret;
->> +
->> +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->> +		ret = rzg3s_pcie_set_inbound_windows(host, entry, &i);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void rzg3s_pcie_set_outbound_window(struct rzg3s_pcie_host *host,
->> +					   struct resource_entry *win,
->> +					   int id)
->> +{
->> +	struct resource *res = win->res;
->> +	resource_size_t size = resource_size(res);
->> +	resource_size_t res_start;
->> +
->> +	if (res->flags & IORESOURCE_IO)
->> +		res_start = pci_pio_to_address(res->start) - win->offset;
->> +	else
->> +		res_start = res->start - win->offset;
->> +
->> +	/*
->> +	 * According to the RZ/G3S HW manual (Rev.1.10, section 34.3.1.75 PCIe
->> +	 * Window Base (Lower) Registers) the window base address need to be 4K
->> +	 * aligned.
->> +	 */
->> +	res_start = ALIGN(res_start, 4096);
->> +
->> +	size = ALIGN(size, 4096);
-> 
-> Ditto.
-
-OK
-
-[ ... ]
-
->> +
->> +static int rzg3s_pcie_resume_noirq(struct device *dev)
->> +{
->> +	struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
->> +	const struct rzg3s_pcie_soc_data *data = host->data;
->> +	struct regmap *sysc = host->sysc;
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(sysc, RZG3S_SYS_PCIE_RST_RSM_B,
->> +				 RZG3S_SYS_PCIE_RST_RSM_B_MASK,
->> +				 FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 1));
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * According to the RZ/G3S HW manual (Rev.1.10, section
->> +	 * 34.5.1.2 De-asserting the Reset) the PCIe IP needs to wait 5ms from
->> +	 * power on to the de-assertion of reset.
->> +	 */
->> +	usleep_range(5000, 5100);
-> 
-> Please make a define out of this since you're using it in multiple places.
-
-OK
-
-> 
->> +	ret = reset_control_bulk_deassert(data->num_power_resets,
->> +					  host->power_resets);
->> +	if (ret)
->> +		goto assert_rst_rsm_b;
-> 
-> Maybe add a helper for the wait + bulk_deassert().
-
-OK.
-
-Thank you for your review,
-Claudiu
 
