@@ -1,144 +1,191 @@
-Return-Path: <linux-pci+bounces-29063-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29064-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73DEBACF9E0
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 00:57:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24DA5ACF9FD
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 01:24:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4714189B0EE
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 22:57:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 818FE3B0286
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 23:24:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EF0A27E7D9;
-	Thu,  5 Jun 2025 22:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 773CA274FFB;
+	Thu,  5 Jun 2025 23:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7J4N7AR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ey8u7pF3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67A628E17;
-	Thu,  5 Jun 2025 22:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99984218AD1;
+	Thu,  5 Jun 2025 23:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749164253; cv=none; b=N3z6Wp2+daDDtjxx+NtE3nsHUQLB8IhGFpYf47FWkOM1PB+ZnWj63F3+HsM9ZwHZMtI9jkhPVRslEALdPLVw4oQ8mZp1NawqhdwfzhZT5V2t5p44Zd+kCtDd+nmKLorXZG8e2plRCmg05uFpdvxmY10osYYY6boQ57eMU7NVQPM=
+	t=1749165872; cv=none; b=ESkoJMY33nv8T+NoDl7U6Dj07gh3H4NXhrJUMs1hYF7eNxz/NsyALnUKoLCm8wsRonGi5UWVF4pkP0T3n1z0B5mbzPiQz5WryIKfqeQtMNozJhV3aFtaLGOJCyQq4Oxqp4r/yj8GApERcLtBkmXjQC8lvoAkeYjAhGpOoKxOy4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749164253; c=relaxed/simple;
-	bh=ttq74J8zgl/CqPTmFPHRqNeX1HBQ5yWBTsGcAVjdt5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nqDKZD1dx/NzCe1jsLqRmiVdhKTyPVSwa2LGHxN9I/TqlrLetliPViGU62J6ajYEQsddgEw50XTZJBFGrn3GSY31VmV2JgDKMRfE45UcQyuHT6M+6B5l8jbRj/rXCnUdbrSF45uKe7vffqHrFlTEabyaYMYUlI2HYHARKw8kOS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7J4N7AR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30293C4CEE7;
-	Thu,  5 Jun 2025 22:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749164252;
-	bh=ttq74J8zgl/CqPTmFPHRqNeX1HBQ5yWBTsGcAVjdt5U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=F7J4N7AROXpSNCIcWVGENA6Qg3/33Ich5ukiqOms+VM42I5Zq1EHSHryln5/6ji+/
-	 bvlS2Ffc/4RS8aVyTKpO7Wc83areCxJzQ3L/Evs3CG9vuC+Tk6fYcvJT8O+90wjHnb
-	 F8cJlAE+J6PzkZjQzSCI+jPvUWCJGbPf1MiGlZNDgD3mxKIxzmFCLvpT3kFBcvpgyI
-	 RXvFQPh6UYp7n7DG0YI6U1PdH7I1oTrkbfVLZYKi9Ajk6rLWDdKavUoB2rf05X4Hwk
-	 hYmDWxDGxGWYve2Iy+Tm6lzEYHj8Y/ZNW7StUx+lCwF4wRcJV1tPYGObRoxY8PiQOD
-	 wW3m6rV4OlNMw==
-Date: Thu, 5 Jun 2025 17:57:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
-	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
-	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org, john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-Message-ID: <20250605225730.GA625963@bhelgaas>
+	s=arc-20240116; t=1749165872; c=relaxed/simple;
+	bh=D4qDQmRcYChj0MTBJgVUzbnY7abBbwgrW4Z1X2oM1Gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KHt0BjRmI9VqQxFuXKcsK2dt/kzsUUyEEMKRTUF7J7eFMeou9ZnCNYr09l+MexLIt2eQHjL0hNqrJ0+ntFI2Jmc0tmfrZRRRCv56SPigMZnIqH7Y/mTAqD5PT8/QA7jaNpzJFbO20qQ5b5OLwBUeHMwC9e5znhL4qMl91973GMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ey8u7pF3; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749165871; x=1780701871;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=D4qDQmRcYChj0MTBJgVUzbnY7abBbwgrW4Z1X2oM1Gk=;
+  b=ey8u7pF3+sA7M6c1TCH+MFRciOjqO09JLptV1LLM3QH26DarWg6+qDHR
+   gm88S6Qr3ocExXyXAdWKBGNJdP3Dc8vMoW8bRTpaoBL+4IQfKuWxEjxbG
+   IE0S1htbBPTp51OpJR/WqqdXpFjL0gagbsLRRyVQhF8UM5sxLrRtDnGli
+   aNeKI9tvwx8A5D4oMnowlU9Jd+KT9JAOFk/b6nWZYpaiCadFsMu2q5MHx
+   Sk4jffG7dnxv7rCmhC9OYgdssNOHc1sBOQYdhsBev80HRiqzNSXGAM54d
+   slzz48XzZDz9xcRAthWLXdObbyKcXT2pBY0/goObQaqap+V6OCyTD2yjH
+   w==;
+X-CSE-ConnectionGUID: ZZkJZLqvQ8i0sRDraficFw==
+X-CSE-MsgGUID: bBaLBVaJRUCH8EymuKiS1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51187289"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="51187289"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:24:30 -0700
+X-CSE-ConnectionGUID: iDDBsxE8Rb69QEJX8IDtdA==
+X-CSE-MsgGUID: p10WynqrR+uqOPqalLRJZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="146021420"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.7]) ([10.125.111.7])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 16:24:27 -0700
+Message-ID: <fb895685-9e73-49e5-b8e6-224b87110892@intel.com>
+Date: Thu, 5 Jun 2025 16:24:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530111917.1495023-5-claudiu.beznea.uj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 01/16] PCI/CXL: Add pcie_is_cxl()
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-2-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603172239.159260-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> CXL and AER drivers need the ability to identify CXL devices.
 > 
-> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> only as a root complex, with a single-lane (x1) configuration. The
-> controller includes Type 1 configuration registers, as well as IP
-> specific registers (called AXI registers) required for various adjustments.
+> Add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC presence. The
+> CXL Flexbus DVSEC presence is used because it is required for all the CXL
+> PCIe devices.[1]
+> 
+> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+> Flexbus presence.
+> 
+> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
+> 
+> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
+>     Capability (DVSEC) ID Assignment, Table 8-2
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> +/* Timeouts */
-> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
-> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
-> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
-> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
-
-Are any of these timeouts related to values in the PCIe spec?  If so,
-use #defines from drivers/pci/pci.h, or add a new one if needed.
-
-If they come from the RZ/G3S spec, can you include citations?
-
-> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/pci/probe.c           | 10 ++++++++++
+>  include/linux/pci.h           |  6 ++++++
+>  include/uapi/linux/pci_regs.h |  8 +++++++-
+>  3 files changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 364fa2a514f8..aa29b4b98ad1 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1691,6 +1691,14 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>  		dev->is_thunderbolt = 1;
+>  }
+>  
+> +static void set_pcie_cxl(struct pci_dev *dev)
 > +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	/* Initialize the PCIe related registers */
-> +	ret = rzg3s_pcie_config_init(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Initialize the interrupts */
-> +	rzg3s_pcie_irq_init(host);
-> +
-> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
-> +					  host->cfg_resets);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Wait for link up */
-> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
-> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000,
-> +				 RZG3S_LINK_UP_TIMEOUT_US);
-
-Where do we wait for PCIE_T_RRS_READY_MS before pci_host_probe()
-starts issuing config requests to enumerate devices?
-
-> +	if (ret) {
-> +		reset_control_bulk_assert(host->data->num_cfg_resets,
-> +					  host->cfg_resets);
-> +		return ret;
-> +	}
-> +
-> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
-> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
-> +
-> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
-> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
-> +
-> +	if (probe) {
-> +		ret = devm_add_action_or_reset(host->dev,
-> +					       rzg3s_pcie_cfg_resets_action,
-> +					       host);
-> +	}
-> +
-> +	return ret;
+> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+> +					      PCI_DVSEC_CXL_FLEXBUS);
+> +	if (dvsec)
+> +		dev->is_cxl = 1;
 > +}
+> +
+>  static void set_pcie_untrusted(struct pci_dev *dev)
+>  {
+>  	struct pci_dev *parent = pci_upstream_bridge(dev);
+> @@ -2021,6 +2029,8 @@ int pci_setup_device(struct pci_dev *dev)
+>  	/* Need to have dev->cfg_size ready */
+>  	set_pcie_thunderbolt(dev);
+>  
+> +	set_pcie_cxl(dev);
+> +
+>  	set_pcie_untrusted(dev);
+>  
+>  	if (pci_is_pcie(dev))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 51e2bd6405cd..bff3009f9ff0 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -455,6 +455,7 @@ struct pci_dev {
+>  	unsigned int	is_hotplug_bridge:1;
+>  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
+>  	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+> +	unsigned int	is_cxl:1;               /* Compute Express Link (CXL) */
+>  	/*
+>  	 * Devices marked being untrusted are the ones that can potentially
+>  	 * execute DMA attacks and similar. They are typically connected
+> @@ -746,6 +747,11 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+>  	return false;
+>  }
+>  
+> +static inline bool pcie_is_cxl(struct pci_dev *pci_dev)
+> +{
+> +	return pci_dev->is_cxl;
+> +}
+> +
+>  #define for_each_pci_bridge(dev, bus)				\
+>  	list_for_each_entry(dev, &bus->devices, bus_list)	\
+>  		if (!pci_is_bridge(dev)) {} else
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ba326710f9c8..c50ffa75d5fc 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1215,9 +1215,15 @@
+>  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
+>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+>  
+> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
+> +/* Compute Express Link (CXL r3.2, sec 8.1)
+> + *
+> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
+> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
+> + * registers on downstream link-up events.
+> + */
+>  #define PCI_DVSEC_CXL_PORT				3
+>  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> +#define PCI_DVSEC_CXL_FLEXBUS				7
+>  
+>  #endif /* LINUX_PCI_REGS_H */
 
-> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
-> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
-> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
-
-s/Extract/Subtract/
-
-> +		 */
-> +		size = roundup_pow_of_two(size) - 1;
 
