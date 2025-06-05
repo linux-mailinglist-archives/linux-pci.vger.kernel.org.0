@@ -1,73 +1,87 @@
-Return-Path: <linux-pci+bounces-29025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93A9EACEE90
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 13:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25F7EACEEAA
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 13:45:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62E25172354
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 11:27:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6C12164B4D
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jun 2025 11:45:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B70E1D88AC;
-	Thu,  5 Jun 2025 11:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D1CF214818;
+	Thu,  5 Jun 2025 11:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hTcSmnsR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FM/khJLQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B1619E971;
-	Thu,  5 Jun 2025 11:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E741C27;
+	Thu,  5 Jun 2025 11:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749122827; cv=none; b=LaJjI51qe1vVGmqUx0NO8mgyDoHi5k4RHckTe1GmOsqJMgtqoZ31mPAjEazVgJuoczEzi7VVR80tDpwlFWtvjBnHqMvHmCuqJ1/f4egbsmLbU8Uq6iSt9Ey6iFmy5KXKVjGpdRkV9bpqtsEOjiXL/f328uroP4ubEA7bcA5PHkc=
+	t=1749123896; cv=none; b=AsDEfd7XqdUM/fUc/XfJMVbkkUnW7eLEhndmZiAuFULBTEU2criZNnjRdWoatL8EeAmz2rsviKrhme/LuvsFFL5PfWTqUATz0psYGxOzJ+PzSURza9oiDusgYfuMZZtbqBhRlZem1TPbpailaxb0b9CLq8D2+2PgF1FXmNiD21E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749122827; c=relaxed/simple;
-	bh=EcT+oDKu4Lz64E2epDrPkU6dtYYFKU/5/AB8XI5u05Y=;
+	s=arc-20240116; t=1749123896; c=relaxed/simple;
+	bh=NzPkbUkN3Txeqet1Im5YkbvnKI7AuzMxCQo+dJH86v4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYiYtl/vDYYF/FV7Bo2ZOmARdihAljrXOn2Fa2iYZ8PuLFOC8CQagG01awCcnWZ+wCcNsNUDgnCcknM2rt/Q/2X7t7ToUdsqzOTmG38n6Y3gjtZrGWf57089F0cTPa8EwR0e2I1vJqbHlFGomZidu1fmzgPsfkOM3NA45juDFhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hTcSmnsR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0D16C4CEE7;
-	Thu,  5 Jun 2025 11:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749122826;
-	bh=EcT+oDKu4Lz64E2epDrPkU6dtYYFKU/5/AB8XI5u05Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hTcSmnsRYfxMMi5x3FbPZ/LKIgrtH5cGD/GqM5w6D8ciFd/AkIjgmsUzz7iiTjy2G
-	 7ddFxssFJ8MYmXH+khwJsbg60t94dlsw0sKsQJAQTB4r1VAsVAnB2KJXiAuHqjQbyE
-	 zHen9AI/zMXwSjLJdLCNOF9rly7zKlSq0PejV6wE=
-Date: Thu, 5 Jun 2025 13:27:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Macpaul Lin =?utf-8?B?KOael+aZuuaWjCk=?= <Macpaul.Lin@mediatek.com>
-Cc: Deren Wu =?utf-8?B?KOatpuW+t+S7gSk=?= <Deren.Wu@mediatek.com>,
-	Johnny-CC Chang =?utf-8?B?KOW8teaZi+WYiSk=?= <Johnny-CC.Chang@mediatek.com>,
-	Mingyen Hsieh =?utf-8?B?KOisneaYjuiruik=?= <Mingyen.Hsieh@mediatek.com>,
-	Yenchia Chen =?utf-8?B?KOmZs+W9peWYiSk=?= <Yenchia.Chen@mediatek.com>,
-	Pablo Sun =?utf-8?B?KOWtq+avk+e/lCk=?= <pablo.sun@mediatek.com>,
-	"helgaas@kernel.org" <helgaas@kernel.org>,
-	Jieyy Yang =?utf-8?B?KOadqOa0gSk=?= <Jieyy.Yang@mediatek.com>,
-	"ajayagarwal@google.com" <ajayagarwal@google.com>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Bear Wang =?utf-8?B?KOiQqeWOn+aDn+W+tyk=?= <bear.wang@mediatek.com>,
-	"david.e.box@linux.intel.com" <david.e.box@linux.intel.com>,
-	"johan+linaro@kernel.org" <johan+linaro@kernel.org>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"sdalvi@google.com" <sdalvi@google.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	Hanson Lin =?utf-8?B?KOael+iBluWzsCk=?= <Hanson.Lin@mediatek.com>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"xueshuai@linux.alibaba.com" <xueshuai@linux.alibaba.com>,
-	"manugautam@google.com" <manugautam@google.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"vidyas@nvidia.com" <vidyas@nvidia.com>
-Subject: Re: [PATCH v3] PCI/ASPM: Disable L1 before disabling L1ss
-Message-ID: <2025060543-arrest-facecloth-89e6@gregkh>
-References: <20241022223018.GA893095@bhelgaas>
- <8a7897f69c6347833c8e37ca5991ab051933de6e.camel@mediatek.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0uIXGZst+KJmOw3RH3wjPcLur7mwa1bhBfV/ibv8Gs5rJrS9fkRYbonskMDNhYmFfa43I0nktUEBDitIEO0l5B3j9juKqouftqVwCOMz+KJOXsdHoSle3qeV/O7a+76krtLsseamY71sg1y7yc15BoQFYwECkkMGzTjyyZXbhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FM/khJLQ; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749123895; x=1780659895;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=NzPkbUkN3Txeqet1Im5YkbvnKI7AuzMxCQo+dJH86v4=;
+  b=FM/khJLQHIadGMPscHNFU/UMCrboF5PePZ/4vt5R5HPVb3NRiJ238S01
+   kLsho65Jb14+7q+gmUS6QXi03hwhVkVkUy9QPd0eWr70A26G+VJ+MuF0b
+   l4HtUa61TUK66UZPe5DcvoFlXG8SXZdoapT5X7vYqWmEaxtqH0Ftr3kVj
+   XCCYszd3QgDrrKQgU3/5AtiPH2kHI0JoSkAKtbS2z9qNx3Y4+2Pop93MD
+   kMHvwAebpGgPwK5IjBUQOP3oB0dQ4/ZcGPEsMFX0RG5q/3VU0bTDkpajs
+   ooL2tDPscMBF/LaKvblq1gx6vmGtEk/bun4/Oxm0vkyqTaeAd2pIPNcCP
+   Q==;
+X-CSE-ConnectionGUID: v1jwG2eQSz2SMVMSW7Qdvg==
+X-CSE-MsgGUID: A16MX5bfTuqTQgOM7dxPbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51236299"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="51236299"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 04:44:54 -0700
+X-CSE-ConnectionGUID: i+dOHlE1SJqrKaX++mLgSQ==
+X-CSE-MsgGUID: rOi131nVRQSOXbJb9D8/vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="145364817"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 04:44:51 -0700
+Date: Thu, 5 Jun 2025 14:44:47 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Denis Benato <benato.denis96@gmail.com>, mahesh@linux.ibm.com,
+	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
+	aravind.iddamsetty@linux.intel.com,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aEGDL0IF10QX3Abr@black.fi.intel.com>
+References: <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
+ <aCzNL9uXGbBSdF2S@black.fi.intel.com>
+ <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
+ <aC2UzG-eycjqYQep@black.fi.intel.com>
+ <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+ <CAJZ5v0h9--jFVBtQ5F7Gee3Cy8P3TeSLdiHEWykQ=EsZdoffmg@mail.gmail.com>
+ <aDnpfKvLwRZsKxhH@black.fi.intel.com>
+ <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+ <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
+ <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,49 +91,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a7897f69c6347833c8e37ca5991ab051933de6e.camel@mediatek.com>
+In-Reply-To: <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
 
-On Thu, Jun 05, 2025 at 11:23:02AM +0000, Macpaul Lin (林智斌) wrote:
-> On Tue, 2024-10-22 at 17:30 -0500, Bjorn Helgaas wrote:
-> > On Mon, Oct 07, 2024 at 08:59:17AM +0530, Ajay Agarwal wrote:
-> > > The current sequence in the driver for L1ss update is as follows.
-> > > 
-> > > Disable L1ss
-> > > Disable L1
-> > > Enable L1ss as required
-> > > Enable L1 if required
-> > > 
-> > > With this sequence, a bus hang is observed during the L1ss
-> > > disable sequence when the RC CPU attempts to clear the RC L1ss
-> > > register after clearing the EP L1ss register. It looks like the
-> > > RC attempts to enter L1ss again and at the same time, access to
-> > > RC L1ss register fails because aux clk is still not active.
-> > > 
-> > > PCIe spec r6.2, section 5.5.4, recommends that setting either
-> > > or both of the enable bits for ASPM L1 PM Substates must be done
-> > > while ASPM L1 is disabled. My interpretation here is that
-> > > clearing L1ss should also be done when L1 is disabled. Thereby,
-> > > change the sequence as follows.
-> > > 
-> > > Disable L1
-> > > Disable L1ss
-> > > Enable L1ss as required
-> > > Enable L1 if required
-> > > 
-> > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> > 
-> > Applied to pci/aspm for v6.13, thank you, Ajay!
+On Wed, Jun 04, 2025 at 08:19:34PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jun 4, 2025 at 5:43 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > On Fri, May 30, 2025 at 07:49:26PM +0200, Rafael J. Wysocki wrote:
+> > > On Fri, May 30, 2025 at 7:23 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > On Fri, May 23, 2025 at 05:23:10PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Wed, May 21, 2025 at 1:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > On Wed, May 21, 2025 at 10:54 AM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > > On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wrote:
+> > > > > > > > On 5/20/2025 1:42 PM, Raag Jadav wrote:
+> > > > > > > > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
+> >
+> > ...
+> >
+> > > > > > > > From the driver perspective it does have expectations that the parts outside
+> > > > > > > > the driver did the right thing.  If the driver was expecting the root port
+> > > > > > > > to be powered down at suspend and it wasn't there are hardware components
+> > > > > > > > that didn't power cycle and that's what we're seeing here.
+> > > > > > >
+> > > > > > > Which means the expectation set by the driver is the opposite of the
+> > > > > > > purpose of this patch, and it's going to fail if any kind of error is
+> > > > > > > detected under root port during suspend.
+> > > > > >
+> > > > > > And IMV this driver's expectation is questionable at least.
+> > > > > >
+> > > > > > There is no promise whatsoever that the device will always be put into
+> > > > > > D3cold during system suspend.
+> > > > >
+> > > > > For instance, user space may disable D3cold for any PCI device via the
+> > > > > d3cold_allowed attribute in sysfs.
+> > > > >
+> > > > > If the driver cannot handle this, it needs to be fixed.
+> > > >
+> > > > Thanks for confirming. So should we consider this patch to be valid
+> > > > and worth moving forward?
+> > >
+> > > It doesn't do anything that would be invalid in principle IMV.
+> > >
+> > > You need to consider one more thing, though: It may be necessary to
+> > > power-cycle the device in order to kick it out of the erroneous state
+> > > and the patch effectively blocks this if I'm not mistaken.
+> > >
+> > > But admittedly I'm not sure if this really matters.
+> >
+> > Wouldn't something like bus reset (SBR) be more predictable?
 > 
-> Thanks! MediaTek also found this issue will happen on some old kernel,
-> for example 6.11 or 6.12. would you please pick this patch also to some
-> stable tree?
+> Maybe.
 > 
-> LINK:https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/pci/pcie/aspm.c?id=7447990137bf06b2aeecad9c6081e01a9f47f2aa
+> The device state is most likely inconsistent in that case, so it depends.
 
-Please submit it properly, with your signed-off-by and we will be glad
-to consider it.
+My limited understanding is that if SBR doesn't help, at that point all
+bets are off including PMCSR configuration and probably a cold boot is
+needed.
 
-thanks,
+Please correct me if I've misunderstood.
 
-greg k-h
+Raag
 
