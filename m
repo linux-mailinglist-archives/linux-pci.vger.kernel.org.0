@@ -1,232 +1,276 @@
-Return-Path: <linux-pci+bounces-29071-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29072-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F5E7ACFA82
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 02:52:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3DB5ACFAF4
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 03:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FCAE179E4E
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 00:52:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F33601890053
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 01:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A8D83B2A0;
-	Fri,  6 Jun 2025 00:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 067B9199E9D;
+	Fri,  6 Jun 2025 01:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yx7m+AUb"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XpvsXfYe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AF0219ED;
-	Fri,  6 Jun 2025 00:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBDD136672;
+	Fri,  6 Jun 2025 01:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749171148; cv=none; b=LSFz2KHFAENVPGAeTevgU0GKsXSvuzHZhuL/gyRIK3BtiSAGtrIkR87fay8Ls27BZ2BlwdNXbjsvw1egRauyDmHxNFZNAYCm0YmqxqZEWAaQO+vUeDFJWvvZfVxhYVoxoM69McSZJxTlag3HpYlQcnCTwaJ3ViAH6zyXiWlNOZQ=
+	t=1749175058; cv=none; b=bVrPvCM29aBGwmcYtbGs6AXpKMjDDcHqfwO3mNtz2YFe5EnTKT/3CKMwut8zZaNChAJKl+8ctLRd4ofbZnnNXrV1fIp2kymcl86QAg1aRknNT89dUMTCXXbWZU80CrIxzQNWPgkACDhfmBDEQ0dC9UZt30sZ1aW875ckAkP5UPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749171148; c=relaxed/simple;
-	bh=3DRvx+lFIAOZUmOucYVxB4j4OKPo1Gg9f4hnHA6H340=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GE+xqq4x3TI3d4aAZar5NeFco8sKizdlOAXk3kv2MEgbZkO4oMBgSBGFE0RTSuUQSyF//aIO4jpdDFnC91GBqIondf91x+Oi/TEswJF5HWLViiLsmhcrB8mKhp0O64cJ5dR1DLF8qLCEC/EtBT4TDh9TbNRS7sXiqSSTgYOqKV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yx7m+AUb; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749171146; x=1780707146;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=3DRvx+lFIAOZUmOucYVxB4j4OKPo1Gg9f4hnHA6H340=;
-  b=Yx7m+AUb7Z5P5RCPswvbZBxNuE1gngFwmACLr4bB8BjpwIJ2b2TTuFqy
-   p9PMUJqO9pRbK/hO2MSIjiDsN0144yCFOn41/yC+udmiK7hWaO0eaQUo4
-   Sv2pfvx1VAceEK2paNsfRrhacpT1zmId9rg35H2qBVbEH32cq+qiA44sy
-   2uA7dxXGGT0maQIy+GDgOmxunHRwEOssEtRJgVs8/gnYGOUDTD4xDgCGV
-   jfYxOtJMyoosKecp0hCbKISF54L9fqT3+cA+3NaCZWtiNfixsGKbLqIxK
-   hu9H2ppzPyX6n3JiwgybCYYLSPBAL7ZSabk3zB9rE8LLO2DGNnBbxs/ok
-   w==;
-X-CSE-ConnectionGUID: JQZI+8+xT0aVDQxBAj/HMw==
-X-CSE-MsgGUID: V043/yQDTeKCWkYcY4LryA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51174765"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51174765"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:52:25 -0700
-X-CSE-ConnectionGUID: 8D7J7V8NQMyRfqOFCZYrIg==
-X-CSE-MsgGUID: UStmp1LVSa+xLhpZ9WOv5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="146636598"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:52:25 -0700
-Received: from [10.124.222.132] (unknown [10.124.222.132])
-	by linux.intel.com (Postfix) with ESMTP id 7934D20B5736;
-	Thu,  5 Jun 2025 17:52:23 -0700 (PDT)
-Message-ID: <a8d687e4-03d3-4d08-9149-757349704207@linux.intel.com>
-Date: Thu, 5 Jun 2025 17:52:23 -0700
+	s=arc-20240116; t=1749175058; c=relaxed/simple;
+	bh=9A2cIopavtwlQ+4n7uHt1ROc1cBNKluPvLq6PQi2TmY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hgvC+mGOkYf/P6ptHsdYbQNnhFOO15ZyMOyzZMhW1Zm6JNXRNiXLiE+XgP4jUyKIROTjcsTKlt7e+Dm/Xjls3pLCq/3suhJUoNDc0aZCcMbDG2IoEgAR3HgFjcwIQP1a9LGyd83BMBtRynCmmQYtSyVXmSp+ZPao1MMEi0j88VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XpvsXfYe; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 9bcfa3e8427911f0b33aeb1e7f16c2b6-20250606
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=zvqyrk8kJ2uCb2GN+GGEe5HFwqiqtZruRDoufvNL+rA=;
+	b=XpvsXfYeD1uF/vfENodM+iWWdAiwHuPyj+WeYPdLPxVKcFmOH1IWved2s9kaPofZPIvdgpmpCYxSsSSo3sWCugb6vGUFaii0Sxr09lPXlrVRUt7htqA66FMqcFITBwelB4CyTs5Xryr8Rx+DOT7sHyxm94BvviLJXB3FO1iouFQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:8eb72bb4-6d7c-4bb3-8677-25622725bee0,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:1731edf1-fe3f-487e-8db5-d099c876a5c3,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 9bcfa3e8427911f0b33aeb1e7f16c2b6-20250606
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <macpaul.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1248338795; Fri, 06 Jun 2025 09:57:32 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 6 Jun 2025 09:57:30 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 6 Jun 2025 09:57:30 +0800
+From: Macpaul Lin <macpaul.lin@mediatek.com>
+To: <patches@lists.linux.dev>, <stable@vger.kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Ajay Agarwal
+	<ajayagarwal@google.com>, Daniel Stodden <daniel.stodden@gmail.com>, "Macpaul
+ Lin" <macpaul.lin@mediatek.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kwilczynski@kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Deren Wu <Deren.Wu@mediatek.com>,
+	"Ramax Lo" <ramax.lo@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
+	"MediaTek Chromebook Upstream"
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Johnny-CC Chang
+	<Johnny-CC.Chang@mediatek.com>
+Subject: [PATCH 6.12 1/1] PCI/ASPM: Disable L1 before disabling L1 PM Substates
+Date: Fri, 6 Jun 2025 09:57:03 +0800
+Message-ID: <20250606015703.2724092-1-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 16/16] CXL/PCI: Disable CXL protocol error interrupts
- during CXL Port cleanup
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
- ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-17-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603172239.159260-17-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
+From: Ajay Agarwal <ajayagarwal@google.com>
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> During CXL device cleanup the CXL PCIe Port device interrupts remain
-> enabled. This potentially allows unnecessary interrupt processing on
-> behalf of the CXL errors while the device is destroyed.
->
-> Disable CXL protocol errors by setting the CXL devices' AER mask register.
->
-> Introduce pci_aer_mask_internal_errors() similar to pci_aer_unmask_internal_errors().
->
-> Introduce cxl_mask_prot_interrupts() to call pci_aer_mask_internal_errors().
-> Add calls to cxl_mask_prot_interrupts() within CXL Port teardown for CXL
-> Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
-> Endpoints. Follow the same "bottom-up" approach used during CXL Port
-> teardown.
->
-> Implement cxl_mask_prot_interrupts() in a header file to avoid introducing
-> Kconfig ifdefs in cxl/core/port.c.
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
+[ Upstream commit 7447990137bf06b2aeecad9c6081e01a9f47f2aa ]
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+PCIe r6.2, sec 5.5.4, requires that:
 
->   drivers/cxl/core/port.c |  6 ++++++
->   drivers/cxl/cxl.h       |  8 ++++++++
->   drivers/pci/pcie/aer.c  | 21 +++++++++++++++++++++
->   include/linux/aer.h     |  1 +
->   4 files changed, 36 insertions(+)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 07b9bb0f601f..6aaaad002a7f 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1433,6 +1433,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
->    */
->   static void delete_switch_port(struct cxl_port *port)
->   {
-> +	cxl_mask_prot_interrupts(port->uport_dev);
-> +	cxl_mask_prot_interrupts(port->parent_dport->dport_dev);
-> +
->   	devm_release_action(port->dev.parent, cxl_unlink_parent_dport, port);
->   	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
->   	devm_release_action(port->dev.parent, unregister_port, port);
-> @@ -1446,6 +1449,7 @@ static void reap_dports(struct cxl_port *port)
->   	device_lock_assert(&port->dev);
->   
->   	xa_for_each(&port->dports, index, dport) {
-> +		cxl_mask_prot_interrupts(dport->dport_dev);
->   		devm_release_action(&port->dev, cxl_dport_unlink, dport);
->   		devm_release_action(&port->dev, cxl_dport_remove, dport);
->   		devm_kfree(&port->dev, dport);
-> @@ -1476,6 +1480,8 @@ static void cxl_detach_ep(void *data)
->   {
->   	struct cxl_memdev *cxlmd = data;
->   
-> +	cxl_mask_prot_interrupts(cxlmd->cxlds->dev);
-> +
->   	for (int i = cxlmd->depth - 1; i >= 1; i--) {
->   		struct cxl_port *port, *parent_port;
->   		struct detach_ctx ctx = {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 2c1c00466a25..2753db3d473e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -12,6 +12,7 @@
->   #include <linux/node.h>
->   #include <linux/io.h>
->   #include <linux/pci.h>
-> +#include <linux/aer.h>
->   
->   extern const struct nvdimm_security_ops *cxl_security_ops;
->   
-> @@ -771,9 +772,16 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->   #ifdef CONFIG_PCIEAER_CXL
->   void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
->   void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-> +static inline void cxl_mask_prot_interrupts(struct device *dev)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(to_pci_dev(dev));
-> +
-> +	pci_aer_mask_internal_errors(pdev);
-> +}
->   #else
->   static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
->   						struct device *host) { }
-> +static inline void cxl_mask_prot_interrupts(struct device *dev) { }
->   #endif
->   
->   struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 2d202ad1453a..69230cf87d79 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -979,6 +979,27 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->   }
->   EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
->   
-> +/**
-> + * pci_aer_mask_internal_errors - mask internal errors
-> + * @dev: pointer to the pcie_dev data structure
-> + *
-> + * Masks internal errors in the Uncorrectable and Correctable Error
-> + * Mask registers.
-> + *
-> + * Note: AER must be enabled and supported by the device which must be
-> + * checked in advance, e.g. with pcie_aer_is_native().
-> + */
-> +void pci_aer_mask_internal_errors(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-> +				       0, PCI_ERR_UNC_INTN);
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-> +				       0, PCI_ERR_COR_INTERNAL);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(pci_aer_mask_internal_errors, "CXL");
-> +
->   static bool is_cxl_mem_dev(struct pci_dev *dev)
->   {
->   	/*
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 74600e75705f..41167ad3797a 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -108,5 +108,6 @@ int cper_severity_to_aer(int cper_severity);
->   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->   		       int severity, struct aer_capability_regs *aer_regs);
->   void pci_aer_unmask_internal_errors(struct pci_dev *dev);
-> +void pci_aer_mask_internal_errors(struct pci_dev *dev);
->   #endif //_AER_H_
->   
+  If setting either or both of the enable bits for ASPM L1 PM Substates,
+  both ports must be configured as described in this section while ASPM L1
+  is disabled.
 
+Previously, pcie_config_aspm_l1ss() assumed that "setting enable bits"
+meant "setting them to 1", and it configured L1SS as follows:
+
+  - Clear L1SS enable bits
+  - Disable L1
+  - Configure L1SS enable bits as required
+  - Enable L1 if required
+
+With this sequence, when disabling L1SS on an ARM A-core with a Synopsys
+DesignWare PCIe core, the CPU occasionally hangs when reading
+PCI_L1SS_CTL1, leading to a reboot when the CPU watchdog expires.
+
+Move the L1 disable to the caller (pcie_config_aspm_link(), where L1 was
+already enabled) so L1 is always disabled while updating the L1SS bits:
+
+  - Disable L1
+  - Clear L1SS enable bits
+  - Configure L1SS enable bits as required
+  - Enable L1 if required
+
+Change pcie_aspm_cap_init() similarly.
+
+Link: https://lore.kernel.org/r/20241007032917.872262-1-ajayagarwal@google.com
+Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+[bhelgaas: comments, commit log, compute L1SS setting before config access]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+---
+ drivers/pci/pcie/aspm.c | 92 ++++++++++++++++++++++-------------------
+ 1 file changed, 50 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index cee2365e54b8..e943691bc931 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -805,6 +805,15 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &parent_lnkctl);
+ 	pcie_capability_read_word(child, PCI_EXP_LNKCTL, &child_lnkctl);
+ 
++	/* Disable L0s/L1 before updating L1SS config */
++	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) ||
++	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl)) {
++		pcie_capability_write_word(child, PCI_EXP_LNKCTL,
++					   child_lnkctl & ~PCI_EXP_LNKCTL_ASPMC);
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL,
++					   parent_lnkctl & ~PCI_EXP_LNKCTL_ASPMC);
++	}
++
+ 	/*
+ 	 * Setup L0s state
+ 	 *
+@@ -829,6 +838,13 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 
+ 	aspm_l1ss_init(link);
+ 
++	/* Restore L0s/L1 if they were enabled */
++	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) ||
++	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl)) {
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_lnkctl);
++		pcie_capability_write_word(child, PCI_EXP_LNKCTL, child_lnkctl);
++	}
++
+ 	/* Save default state */
+ 	link->aspm_default = link->aspm_enabled;
+ 
+@@ -845,25 +861,28 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ }
+ 
+-/* Configure the ASPM L1 substates */
++/* Configure the ASPM L1 substates. Caller must disable L1 first. */
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+-	u32 val, enable_req;
++	u32 val;
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 
+-	enable_req = (link->aspm_enabled ^ state) & state;
++	val = 0;
++	if (state & PCIE_LINK_STATE_L1_1)
++		val |= PCI_L1SS_CTL1_ASPM_L1_1;
++	if (state & PCIE_LINK_STATE_L1_2)
++		val |= PCI_L1SS_CTL1_ASPM_L1_2;
++	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
++		val |= PCI_L1SS_CTL1_PCIPM_L1_1;
++	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
++		val |= PCI_L1SS_CTL1_PCIPM_L1_2;
+ 
+ 	/*
+-	 * Here are the rules specified in the PCIe spec for enabling L1SS:
+-	 * - When enabling L1.x, enable bit at parent first, then at child
+-	 * - When disabling L1.x, disable bit at child first, then at parent
+-	 * - When enabling ASPM L1.x, need to disable L1
+-	 *   (at child followed by parent).
+-	 * - The ASPM/PCIPM L1.2 must be disabled while programming timing
++	 * PCIe r6.2, sec 5.5.4, rules for enabling L1 PM Substates:
++	 * - Clear L1.x enable bits at child first, then at parent
++	 * - Set L1.x enable bits at parent first, then at child
++	 * - ASPM/PCIPM L1.2 must be disabled while programming timing
+ 	 *   parameters
+-	 *
+-	 * To keep it simple, disable all L1SS bits first, and later enable
+-	 * what is needed.
+ 	 */
+ 
+ 	/* Disable all L1 substates */
+@@ -871,26 +890,6 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
+ 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+ 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
+-	/*
+-	 * If needed, disable L1, and it gets enabled later
+-	 * in pcie_config_aspm_link().
+-	 */
+-	if (enable_req & (PCIE_LINK_STATE_L1_1 | PCIE_LINK_STATE_L1_2)) {
+-		pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
+-					   PCI_EXP_LNKCTL_ASPM_L1);
+-		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
+-					   PCI_EXP_LNKCTL_ASPM_L1);
+-	}
+-
+-	val = 0;
+-	if (state & PCIE_LINK_STATE_L1_1)
+-		val |= PCI_L1SS_CTL1_ASPM_L1_1;
+-	if (state & PCIE_LINK_STATE_L1_2)
+-		val |= PCI_L1SS_CTL1_ASPM_L1_2;
+-	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+-		val |= PCI_L1SS_CTL1_PCIPM_L1_1;
+-	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+-		val |= PCI_L1SS_CTL1_PCIPM_L1_2;
+ 
+ 	/* Enable what we need to enable */
+ 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+@@ -937,21 +936,30 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 		dwstream |= PCI_EXP_LNKCTL_ASPM_L1;
+ 	}
+ 
++	/*
++	 * Per PCIe r6.2, sec 5.5.4, setting either or both of the enable
++	 * bits for ASPM L1 PM Substates must be done while ASPM L1 is
++	 * disabled. Disable L1 here and apply new configuration after L1SS
++	 * configuration has been completed.
++	 *
++	 * Per sec 7.5.3.7, when disabling ASPM L1, software must disable
++	 * it in the Downstream component prior to disabling it in the
++	 * Upstream component, and ASPM L1 must be enabled in the Upstream
++	 * component prior to enabling it in the Downstream component.
++	 *
++	 * Sec 7.5.3.7 also recommends programming the same ASPM Control
++	 * value for all functions of a multi-function device.
++	 */
++	list_for_each_entry(child, &linkbus->devices, bus_list)
++		pcie_config_aspm_dev(child, 0);
++	pcie_config_aspm_dev(parent, 0);
++
+ 	if (link->aspm_capable & PCIE_LINK_STATE_L1SS)
+ 		pcie_config_aspm_l1ss(link, state);
+ 
+-	/*
+-	 * Spec 2.0 suggests all functions should be configured the
+-	 * same setting for ASPM. Enabling ASPM L1 should be done in
+-	 * upstream component first and then downstream, and vice
+-	 * versa for disabling ASPM L1. Spec doesn't mention L0S.
+-	 */
+-	if (state & PCIE_LINK_STATE_L1)
+-		pcie_config_aspm_dev(parent, upstream);
++	pcie_config_aspm_dev(parent, upstream);
+ 	list_for_each_entry(child, &linkbus->devices, bus_list)
+ 		pcie_config_aspm_dev(child, dwstream);
+-	if (!(state & PCIE_LINK_STATE_L1))
+-		pcie_config_aspm_dev(parent, upstream);
+ 
+ 	link->aspm_enabled = state;
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.45.2
 
 
