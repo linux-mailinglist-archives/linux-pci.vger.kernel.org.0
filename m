@@ -1,206 +1,236 @@
-Return-Path: <linux-pci+bounces-29078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F9E8ACFDD9
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 09:59:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD025ACFDDC
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 10:00:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FC9A1704D0
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 07:59:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F2DE1891D94
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 08:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0860284B50;
-	Fri,  6 Jun 2025 07:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0E5284B5F;
+	Fri,  6 Jun 2025 08:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="N9Mle23s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqhLkbKM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013022.outbound.protection.outlook.com [40.107.159.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC33284B20;
-	Fri,  6 Jun 2025 07:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749196768; cv=fail; b=ivnaRvMDlccGjJiARH10eFL55772FDJctWONb4K5Toas+uygAys63dZtbWBaztoooaPPLLCq8rfg/9swWO0Dw3O9rlMSLIP94toe0DgVmZMo2/ug3lL2dJpFkgYujCKjpmwYy5IeMB2zwR+Jo/+ubJhTGqYg8m49FKH5G6Dxs2Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749196768; c=relaxed/simple;
-	bh=fFQhwQGl6lJgycxDXF0ZzeIIk8XMsx4tASoMkOX9BdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dJ+8f0cl6rrp9LsQBRZoY78074coeVtPdvdmd743xCl+vRMegj7zMdAQCrvB8g+ndoe+uIYKvQy0HELs6HOitFLE+45aJ6F6T6CNPIlV4MV3J+/DzpANEEQ6SqeHGLPh+b+LRSjekYptq4g9N/Wkk12hJ1T1HG745e/ULyV2qto=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=N9Mle23s; arc=fail smtp.client-ip=40.107.159.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TbdtpdEKE+uDd1x0PDQLhQqEOtjDZnncUi5iH2Kq0xcncTVuYEBPVR/09vtzLpi5Mn7um6KLq39sEav88RgN7kN3UjUQwjc0Ipdt/GmsC9fCABokLt6HgT90kY9w42W6xGHzkoImaCRMkm1aKqxXDfc/6vTySZW8bY1yg6Ar+GqTN8hK9m7Y3Kp/BIQXpnuO5cc3IoBFb+DLPfCjvtZs4AdAShtEOpFQ5vTYB4xqjnrkJhwpLTY/CI8eJczwz+2+/jHgOJ8H0yK/fBXAMxXv1LbImFMWPb4tR5F8jy0jD/FpnZQFZErAyJ1E9FlvYIBVtMPeDUaIiZPKKz+QBuRbwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bsGFLonY0CFbqF6N7MSgoDgXhUyVrzodYvAiUNCte9w=;
- b=VXblqBsSZc+jiHw8YdERgxAmTvb9ZcsBtM8nNvo+RX57TcvbvegPMFjsg8lpJ/eXOrRPxMxAmoJLkZ4GgTx0StVjx/SsL6cHcr/lUJR4EUzxaGp6CZqrDQ8Ku9v8Hc19HF2/yxH2riXi3Y1Ba9bz58ozgkQ+15xkDIEzTyPkdwL+hBEswx+bXu1R1gMDfcnzJ2cBmXk3hnzkpln0Z6Iq5zWARL8zk7R3WwjLAVnUkeSDtjgzbvrfS6CT4DE2wbJb/EORZXG1y94gqvBukpxvB+AwR3xnw1dpxeKs9ybPTL9IMN/yKwa9chAPXDx0/fTwE94akFCJanMw/Zge2tsp1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bsGFLonY0CFbqF6N7MSgoDgXhUyVrzodYvAiUNCte9w=;
- b=N9Mle23sdrJ8UJsVNVYyEJzKimWzFrpiTOIEUfYFb1cFTGnEjU/6sX3YuLavt/SDmrEJO/1CTGtTEf9zgPCvx7ygzkf29bKMcmMjP62AZnFU2ziMzEmFx+gS1ph2rh3VOb9Q40OCWX6JRRY/Roe1eXJANj9jdo4NJ1U58HeedoReCIgxDNXf8qRUbBZVtiCyqYiWgeQ24QeuULwHmZwNu0diaUKfwKIuK5NkURX0EOsrA4bCbLCy/Fvmtpd3VumCnL7nzOXObAhraPNqZrs5ckAHIsx4zDndjOvaA6U3M2d0GBHWGLjs9N9BGxPAMjoSrKNgQLof9XMQYH2AX3vZAg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by VI2PR04MB10666.eurprd04.prod.outlook.com (2603:10a6:800:27f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Fri, 6 Jun
- 2025 07:59:23 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8813.021; Fri, 6 Jun 2025
- 07:59:23 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v1] PCI: imx6: Align EP link start behavior with documentation
-Date: Fri,  6 Jun 2025 15:57:29 +0800
-Message-Id: <20250606075729.3855815-1-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0029.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::16)
- To AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27733284B46;
+	Fri,  6 Jun 2025 08:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749196802; cv=none; b=hjqNXIAKG8fOrTBTzpGlgHAgeAcqRb5rAUt64uDNw0iSMtCNhN6Kl7mD+XH0sFXYhrZO1PLxzHkZ3ftXQckm9b5zsV431NRU67Ltx69Yq9dilAgc2Hyw2orMPNkrpNehXb5WDM6QNckk+tG7HBZzFwKoY5MkKiXYGIgxcAespF0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749196802; c=relaxed/simple;
+	bh=KfrhofsOFofV4Yxp9rI2KSMcovauU9GJjmAbXeaDSsg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JjCUHq9Ft9kCyTE6GP08o4vpTeXJ3kalbhC9wID8v6sU/6TcunrDe7fSxqFNuazVhB+NHi9cr8XaYm/rkCNbJFBTCUllqsNiYlO+TRTOg+V0vFSE1fnRLT8eSF9r7rYlv7233Gie2iZoR2UsFqtEe9K8SjO5qbQRrHYX80fnh+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqhLkbKM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA779C4CEEB;
+	Fri,  6 Jun 2025 07:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749196801;
+	bh=KfrhofsOFofV4Yxp9rI2KSMcovauU9GJjmAbXeaDSsg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pqhLkbKMkWlh09VG2BUFsVfs6NK4OKZbNwioszl4dtm7v6FQc/Us4v9H8idPC/YAZ
+	 R9D+pS+mxBdOKoDLgqtqaLdXdLYDHR597Gg2BMYpada9SrbtQR4t7wJ6ImnWZzHOGF
+	 5gnEw5tKPIaK4Qhwzw0wHveRseXshANV2N2aXKDZSBLnFRNaJV0E6A9mAQ3TDfvhAW
+	 nq1UgqiGf25d7D2QCO1dYHLdR3DKyUk5gBrQSU/DXnxiQOQSAcqvdEmw/eUcLOA38h
+	 uMHfd3tmg5iZSInah3S9vB1cxcIVwyIczZWhxfCIK6FtpP8QL5Pdy+ytPlW1pxl4sd
+	 CpZ9A7pZeYAkw==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO
+ support
+In-Reply-To: <20250604132403.GJ5028@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-18-yilun.xu@linux.intel.com>
+ <yq5awm9ujouz.fsf@kernel.org> <aD6UQy4KwKcdSvVE@yilunxu-OptiPlex-7050>
+ <20250603122149.GH376789@nvidia.com> <yq5aplfj99x0.fsf@kernel.org>
+ <20250604132403.GJ5028@nvidia.com>
+Date: Fri, 06 Jun 2025 13:29:46 +0530
+Message-ID: <yq5a4iwt8fm5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|VI2PR04MB10666:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19297ef9-73a2-4c48-ed5f-08dda4d00c96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xIKaOs9Uj5JZU43LJAEmZLJBgWiv3A4G5TF1X8vvRrtTD3Cuj8ikfN0KGMRU?=
- =?us-ascii?Q?aPnvakoRQYitrrg098udhSgCO4Xa6R6m16QacnH56HIhdj8UeS3Bgb1n8jJi?=
- =?us-ascii?Q?56FS5lMDYq0jqQxGQfqaJoea2GRtDU57KvVR9T53/J4A8+foFaz5Bhj3UXvW?=
- =?us-ascii?Q?vI8k9Dr2tatzw77ekr4kBoxIs0+zowKmHM/tE9eGB0ukgEeNvWNXO4/vtD3d?=
- =?us-ascii?Q?A/hJN3cjovc5o6ifoWQUixEIm0B+Z3HVpIw1nbBoTB2TBLLtvL8sUjLto8KZ?=
- =?us-ascii?Q?8v9SDvSvYqaO26gnCKpbEsrKL+ADSwjZf8Tp1E2HU5969qP0bfFLuiiw7ioH?=
- =?us-ascii?Q?INfieuUBwWHMZgX16g0gux4FY6HgIiBqjZg2Iz8ZhT/IZIUSpjODAitH+IyL?=
- =?us-ascii?Q?eSo1vP4x5u3N8rdW7BoMlBrZzKylGZpGwp3bUS2hK9IM0w+aKyS7GPwjdeXU?=
- =?us-ascii?Q?p4i2xlBOWv8kje9imj0DhY5zZj2NTZ75bf3oLEzUFd4UERZIU1rSb6sWhxRj?=
- =?us-ascii?Q?lhIxqCpyBM3q7C0SR8XDKsSflyNBe8ZizWidue+IAMOXWt7H6OvNSenEr0wO?=
- =?us-ascii?Q?cW74mpToKrboOjxVc5rOlPPA4yIdf+7iNL7dWA4o6saHa0eX7VVbJ0czhSFH?=
- =?us-ascii?Q?IZ9Hi40Ia2pdA7bRfGX8I1eEYYAG+0UAEdo45etdiWIIQA2xm6VSV73E9N2v?=
- =?us-ascii?Q?JJkWYyfKN1aIvFwDMEhI1vjGTAXOXMjOhMDtiiTygX7a7hz+fVB2CDmGkrYH?=
- =?us-ascii?Q?PWHlkaNAqDWHpksXn8f23Qyg+T2RUqBuxX/aBE6poKAcOqFT5fWJ050TeN0P?=
- =?us-ascii?Q?sVXK4nthwYzf617KaIOOWlh4yt3aMd6/bT5LaLJ3c//WjntjpZP9Q2uBOLJN?=
- =?us-ascii?Q?vSnRn8Xc1XtHj9h+W5CDxZzDMsJNN0GTYIYkq99Aub7XD1WaseJqUQ6LjuD0?=
- =?us-ascii?Q?jqyLxbMGjld2Pc1J8Vi2Lzq52MB1+SGkzSKpjVPMrPD4mcZG+cdm8a5zMbZh?=
- =?us-ascii?Q?Dy3zOnQuNkZAYdgE6ADqI58bruAUdgrbv/IkSglAgHcH7Oc+IYeRmFGOrGEr?=
- =?us-ascii?Q?EKhBeICLexj4AM4s6sqzXSaqQruHf4COtg4GHecUHkICo/YDvD+BQrqXYGbM?=
- =?us-ascii?Q?zFa0q/Bi7osWBx+LVaVL8fV9QGNSx7k9j0HS6nw4WpXi4/IzX51oBOHs+Fu5?=
- =?us-ascii?Q?YIJytrmNcrwRI6SC/6fx0ZO6zcslaSaq+vhwtTI0SD5GHDWv5OQGaECagRi7?=
- =?us-ascii?Q?zYRvg55od0FV9hXwB6dGw3nXkRgv1zgpFjJVsd36Rz/lB3Z0z+nAuzoDRAcB?=
- =?us-ascii?Q?encW6KUFnlIywYnt3LuHi+bQQc6l4axqjvd4om6eF3t8yDNYSqxjy9n3DsHg?=
- =?us-ascii?Q?SsHyrAfdvyv06XLuyQi9/dNWMsMXLilZ1NjV46CmvG2KfMrRB+aAysfY+AuV?=
- =?us-ascii?Q?IJQr2D/PHBJkwtydZUMz6YD5A/zicDXPk2eLOTkDM7FFjyGdM1qGVLrEfoZV?=
- =?us-ascii?Q?L8X06DcK2486Q4Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Jjv+nAmEhX5qF5nNBJgkIgecD6iFPMLuKSzatP6/iXwp2CL34S46ZcgX7R/Y?=
- =?us-ascii?Q?yTK2rVnDfYhLAG1Y8aZe0ql/qXL2N39rbVexZP5zmoHsezTFR+aHqIj63KYg?=
- =?us-ascii?Q?wE7Nvlnis5+1R42M+Lml3YbX4J3luKHaubkcdmAd4xS9NOIBJa4SeLf1PrrY?=
- =?us-ascii?Q?AQeZH992dej/nTP+TK+xfrabYV4SCTMnACUcJ7Yd8GUUYJAcrOCuBZern/sH?=
- =?us-ascii?Q?yR8+r5VUlxrlUdAKzE/MGjdn3dS9GX3xbd012IWlO+X/O6cxq9tZHgIe/u1s?=
- =?us-ascii?Q?0G4RrF3VxuJwNXSLmh6GtaHogar7wfSo2vq9XuY2DX3bZO6kKWcHfLsATWH3?=
- =?us-ascii?Q?ou+FzEX46UFAsREjhtbMK68WrKq3lUb1uZ77EV0vDQ1V9LsxNNPz375FqpA8?=
- =?us-ascii?Q?GpYRibq99wiW+KXAul0AjHS0zC9it4fNBGOj2onYVh5AZZYEfGNdJ7QizG1m?=
- =?us-ascii?Q?vNgKhfFTJW6glJvkfy1sL0RPdYdOVWdXFfzmXOWQH9zDYUL/a9evMgkqr3ac?=
- =?us-ascii?Q?XPJFngyNswH/7Ker7pZscppanwmQIbnzlR+Pds9PbQt0tyNS0AEpipWZD4vD?=
- =?us-ascii?Q?IZBBnc3lEN+9xqxChyaTqCtUDFrxj/CFPDm/DVNlTLIZKnqmbNacQmEutBWz?=
- =?us-ascii?Q?BybwJNAaaPciempv61Etnx0UH077VvAI6cja2srGbQG/LryTM41oaxSqPZRW?=
- =?us-ascii?Q?hhP61ifeJlpvo0WaoLE07rgbahVqEDkx09iIIt1BLpCcXuOqOzj7szWTkUK8?=
- =?us-ascii?Q?RwFGGLAnChQHXF+xWTzwxNx0y8mUiFHulGipT69j7wBxIIQZjlcoVAnyx1V0?=
- =?us-ascii?Q?ZzYY7tDte9eTPVihfBE8K7CGnTH4bM5v2FUWA322G5kodK0HiFtSoujvGjWn?=
- =?us-ascii?Q?3+9wqkfYSE6Z589vOf/8OWx7+0kMrLitlyq2SAxMkAP37ZzwwKq1wS4rpW8B?=
- =?us-ascii?Q?VG8tiU0Pk/bVbz3GG//r1evH6Ul5v5uCVDKli5wl5YrIN61AhBwwVVHXUjQF?=
- =?us-ascii?Q?4jE8snLodshdzlamthGOmx22ZbjFibolMrTwrjZLPR2al/SjcTR6p5n7NMe6?=
- =?us-ascii?Q?6IQNOgmtNcNalJFDqAhKzPTCeMqGwiA8anrr4rSTVRmfMhsl6OYAzEUKP4WP?=
- =?us-ascii?Q?kFBoNfBo5XOBUl3QcD+k+5Du6aFY/clalRBc+OVWG1gVNQIO4pr3UmHjXmVq?=
- =?us-ascii?Q?OeZnupBFy5Fba9ETKGWByaxgW122WGig3HoxAfai9ZBfYQez6B8UjbO7JGSd?=
- =?us-ascii?Q?+RAe1+gCcfH6Kh1FWrt99UhUiWOc6+3Rd4NsB4nff0MyEjPggI2xLK7l7kS0?=
- =?us-ascii?Q?yAMrj9QECNuip2XIun5Q/PijgU8Q0uChjbLtQ/R6+zL1ZJjNuB5+qLO33U20?=
- =?us-ascii?Q?wbP7E8hOmyIO2yo0wnNPBKBucMhmom26OB1kjL72S+m9wLeUC7AkIzYP0Y5e?=
- =?us-ascii?Q?WfKqc0frdQ4fbSNktCa7XTbmilAJOf2PGQGZZPgqZDlslpAMLHsP5vkyZdrO?=
- =?us-ascii?Q?RCZR4SAZY0pXMthiVrGYYkcCtBeXFys7Zh/HBiEsWYld0UMyS4pH36F5zvI0?=
- =?us-ascii?Q?CogDXZNGbjqX2F2jGncQGjrmSIt8We38W51R3kVA?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19297ef9-73a2-4c48-ed5f-08dda4d00c96
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 07:59:23.1007
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fWvMtw/AAgeIw0JLSjVNcl6lqt8yFqYyWOR2BKVxg1qMP6LU1RhyibxIDvRz6vOK258brHrsG6lJZtQnM+MFLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10666
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-According to PCI/endpoint/pci-endpoint-cfs.rst, the endpoint (EP) should
-only link up after `echo 1 > start` is executed.
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
-To match the documented behavior, do not start the link automatically
-when adding the EP controller. Ensure the LTSSM_EN bit is not asserted
-to 1'b1 by default.
+....
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+>> tsm_unbind in vdevice_destroy:
+>>=20
+>> vdevice_destroy() ends up calling tsm_unbind() while holding only the
+>> vdev_lock. At first glance, this seems unsafe. But in practice, it's
+>> fine because the corresponding iommufd_device has already been destroyed
+>> when the VFIO device file descriptor was closed=E2=80=94triggering
+>> vfio_df_iommufd_unbind().
+>
+> This needs some kind of fixing the idevice should destroy the vdevices
+> during idevice destruction so we don't get this out of order where the
+> idevice is destroyed before the vdevice.
+>
+> This should be a separate patch as it is an immediate bug fix..
+>
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 5f267dd261b5..69825e47d2d4 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1337,6 +1337,10 @@ static int imx_add_pcie_ep(struct imx_pcie *imx_pcie,
- 	struct device *dev = pci->dev;
- 
- 	imx_pcie_host_init(pp);
+Something like below?
+
+diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+index 86244403b532..a49b293bd516 100644
+--- a/drivers/iommu/iommufd/device.c
++++ b/drivers/iommu/iommufd/device.c
+@@ -221,6 +221,8 @@ struct iommufd_device *iommufd_device_bind(struct iommu=
+fd_ctx *ictx,
+ 	refcount_inc(&idev->obj.users);
+ 	/* igroup refcount moves into iommufd_device */
+ 	idev->igroup =3D igroup;
++	idev->vdev   =3D NULL;
++	mutex_init(&idev->lock);
+=20
+ 	/*
+ 	 * If the caller fails after this success it must call
+@@ -282,6 +284,12 @@ EXPORT_SYMBOL_NS_GPL(iommufd_ctx_has_group, "IOMMUFD");
+  */
+ void iommufd_device_unbind(struct iommufd_device *idev)
+ {
++	/* this will be unlocked while destroying the idev obj */
++	mutex_lock(&idev->lock);
 +
-+	/* Make sure that PCIe LTSSM is cleared */
-+	imx_pcie_ltssm_disable(dev);
-+
- 	ep = &pci->ep;
- 	ep->ops = &pcie_ep_ops;
- 
-@@ -1360,9 +1364,6 @@ static int imx_add_pcie_ep(struct imx_pcie *imx_pcie,
- 
- 	pci_epc_init_notify(ep->epc);
- 
--	/* Start LTSSM. */
--	imx_pcie_ltssm_enable(dev);
--
- 	return 0;
++	if (idev->vdev)
++		/* extra refcount taken during vdevice alloc */
++		iommufd_object_destroy_user(idev->ictx, &idev->vdev->obj);
+ 	iommufd_object_destroy_user(idev->ictx, &idev->obj);
  }
- 
--- 
-2.37.1
-
+ EXPORT_SYMBOL_NS_GPL(iommufd_device_unbind, "IOMMUFD");
+diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommuf=
+d/iommufd_private.h
+index 9ccc83341f32..d85bd8b38751 100644
+--- a/drivers/iommu/iommufd/iommufd_private.h
++++ b/drivers/iommu/iommufd/iommufd_private.h
+@@ -425,6 +425,10 @@ struct iommufd_device {
+ 	/* always the physical device */
+ 	struct device *dev;
+ 	bool enforce_cache_coherency;
++	/* to protect the following members*/
++	struct mutex lock;
++	/* if there is a vdevice mapping the idev */
++	struct iommufd_vdevice *vdev;
+ };
+=20
+ static inline struct iommufd_device *
+@@ -606,6 +610,7 @@ struct iommufd_vdevice {
+ 	struct iommufd_ctx *ictx;
+ 	struct iommufd_viommu *viommu;
+ 	struct device *dev;
++	struct iommufd_device *idev;
+ 	u64 id; /* per-vIOMMU virtual ID */
+ };
+=20
+diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+index 3df468f64e7d..c38303df536f 100644
+--- a/drivers/iommu/iommufd/main.c
++++ b/drivers/iommu/iommufd/main.c
+@@ -172,6 +172,11 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
+ 		ictx->vfio_ioas =3D NULL;
+ 	xa_unlock(&ictx->objects);
+=20
++	if (obj->type =3D=3D IOMMUFD_OBJ_DEVICE) {
++		/* idevice should be freed with lock held */
++		struct iommufd_device *idev =3D container_of(obj, struct iommufd_device,=
+ obj);
++		mutex_unlock(&idev->lock);
++	}
+ 	/*
+ 	 * Since users is zero any positive users_shortterm must be racing
+ 	 * iommufd_put_object(), or we have a bug.
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 01df2b985f02..17f189bc9e2c 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -84,15 +84,24 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucm=
+d)
+ 	return rc;
+ }
+=20
++/* This will be called from iommufd_device_unbind  */
+ void iommufd_vdevice_destroy(struct iommufd_object *obj)
+ {
+ 	struct iommufd_vdevice *vdev =3D
+ 		container_of(obj, struct iommufd_vdevice, obj);
+ 	struct iommufd_viommu *viommu =3D vdev->viommu;
++	struct iommufd_device *idev =3D vdev->idev;
++
++	/*
++	 * since we have an refcount on idev, it can't be freed.
++	 */
++	lockdep_assert_held(&idev->lock);
+=20
+ 	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
+ 	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
+ 	refcount_dec(&viommu->obj.users);
++	idev->vdev =3D NULL;
++	refcount_dec(&idev->obj.users);
+ 	put_device(vdev->dev);
+ }
+=20
+@@ -124,10 +133,15 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *=
+ucmd)
+ 		goto out_put_idev;
+ 	}
+=20
++	mutex_lock(&idev->lock);
++	if (idev->vdev) {
++		rc =3D -EINVAL;
++		goto out_put_idev_unlock;
++	}
+ 	vdev =3D iommufd_object_alloc(ucmd->ictx, vdev, IOMMUFD_OBJ_VDEVICE);
+ 	if (IS_ERR(vdev)) {
+ 		rc =3D PTR_ERR(vdev);
+-		goto out_put_idev;
++		goto out_put_idev_unlock;
+ 	}
+=20
+ 	vdev->id =3D virt_id;
+@@ -147,10 +161,18 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *=
+ucmd)
+ 	if (rc)
+ 		goto out_abort;
+ 	iommufd_object_finalize(ucmd->ictx, &vdev->obj);
+-	goto out_put_idev;
++	/* don't allow idev free without vdev free */
++	refcount_inc(&idev->obj.users);
++	vdev->idev =3D idev;
++	/* vdev lifecycle now managed by idev */
++	idev->vdev =3D vdev;
++	refcount_inc(&vdev->obj.users);
++	goto out_put_idev_unlock;
+=20
+ out_abort:
+ 	iommufd_object_abort_and_destroy(ucmd->ictx, &vdev->obj);
++out_put_idev_unlock:
++	mutex_unlock(&idev->lock);
+ out_put_idev:
+ 	iommufd_put_object(ucmd->ictx, &idev->obj);
+ out_put_viommu:
 
