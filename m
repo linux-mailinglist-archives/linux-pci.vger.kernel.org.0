@@ -1,41 +1,42 @@
-Return-Path: <linux-pci+bounces-29072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3DB5ACFAF4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 03:57:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 904EBACFAFB
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 03:58:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F33601890053
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 01:58:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D0353B0C85
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 01:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 067B9199E9D;
-	Fri,  6 Jun 2025 01:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4947D19D071;
+	Fri,  6 Jun 2025 01:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XpvsXfYe"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c451iHvU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBDD136672;
-	Fri,  6 Jun 2025 01:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F04199924;
+	Fri,  6 Jun 2025 01:57:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749175058; cv=none; b=bVrPvCM29aBGwmcYtbGs6AXpKMjDDcHqfwO3mNtz2YFe5EnTKT/3CKMwut8zZaNChAJKl+8ctLRd4ofbZnnNXrV1fIp2kymcl86QAg1aRknNT89dUMTCXXbWZU80CrIxzQNWPgkACDhfmBDEQ0dC9UZt30sZ1aW875ckAkP5UPw=
+	t=1749175072; cv=none; b=tN4r+Xc2pVj6dvL6c2eEEkBXBHtoo+pjiQncBIgcKBB1twQyh4AEy6MHzwF1+HljYl9odukCGPVy0nOAKROj/15VYUhnjR4X+bUCV4tVSlNVvTunpaEGwd7uo6kbWYm9qwNRuaFonmDL4O2r+VjwMAqcrRVE4sc3QsTlLjd/IyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749175058; c=relaxed/simple;
+	s=arc-20240116; t=1749175072; c=relaxed/simple;
 	bh=9A2cIopavtwlQ+4n7uHt1ROc1cBNKluPvLq6PQi2TmY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hgvC+mGOkYf/P6ptHsdYbQNnhFOO15ZyMOyzZMhW1Zm6JNXRNiXLiE+XgP4jUyKIROTjcsTKlt7e+Dm/Xjls3pLCq/3suhJUoNDc0aZCcMbDG2IoEgAR3HgFjcwIQP1a9LGyd83BMBtRynCmmQYtSyVXmSp+ZPao1MMEi0j88VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XpvsXfYe; arc=none smtp.client-ip=210.61.82.184
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FGkrQb/mSnlwo29k5L6Sza26xIKw+uPkLi9T7iIwRZX+2jJT5RD/cwr0JGp4xbd41I87Tm1pNWci1za2xKkneGA9a/wMfsYBgZY9fFywEHLz/IdOctHUOKTcC2M+xkZg/DRJXtBAUY9hw7plF8/Y35IkSGqf9fpmUKxu4tsB7z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=c451iHvU; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 9bcfa3e8427911f0b33aeb1e7f16c2b6-20250606
+X-UUID: a1e514c0427911f0b33aeb1e7f16c2b6-20250606
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
 	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=zvqyrk8kJ2uCb2GN+GGEe5HFwqiqtZruRDoufvNL+rA=;
-	b=XpvsXfYeD1uF/vfENodM+iWWdAiwHuPyj+WeYPdLPxVKcFmOH1IWved2s9kaPofZPIvdgpmpCYxSsSSo3sWCugb6vGUFaii0Sxr09lPXlrVRUt7htqA66FMqcFITBwelB4CyTs5Xryr8Rx+DOT7sHyxm94BvviLJXB3FO1iouFQ=;
+	b=c451iHvUFND2MP+owIGUkc9BGH0qXO8kJu99ot/PPbkgqA+FocHFZNG5Dxh8X9vEM8JoRmQ9h8WeJaS+NL+cwwNn6TY96nAmiF2hctt3Fa1dpMIrHj70PvZ6O6Viwmmz3oBxlV4LysFBiBTFyYwstXhwO8OQ0M5HY+G+rtsI1VE=;
+X-CID-CACHE: Type:Local,Time:202506060957+08,HitQuantity:2
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:8eb72bb4-6d7c-4bb3-8677-25622725bee0,IP:0,UR
+X-CID-O-INFO: VERSION:1.2.1,REQID:ecb30f98-578c-4d17-9181-4e5146851721,IP:0,UR
 	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:-5
 X-CID-META: VersionHash:0ef645f,CLOUDID:1731edf1-fe3f-487e-8db5-d099c876a5c3,B
@@ -44,36 +45,35 @@ X-CID-META: VersionHash:0ef645f,CLOUDID:1731edf1-fe3f-487e-8db5-d099c876a5c3,B
 	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 9bcfa3e8427911f0b33aeb1e7f16c2b6-20250606
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-UUID: a1e514c0427911f0b33aeb1e7f16c2b6-20250606
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
 	(envelope-from <macpaul.lin@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1248338795; Fri, 06 Jun 2025 09:57:32 +0800
+	with ESMTP id 1513382290; Fri, 06 Jun 2025 09:57:42 +0800
 Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 6 Jun 2025 09:57:30 +0800
+ 15.2.1258.39; Fri, 6 Jun 2025 09:57:40 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
  mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 6 Jun 2025 09:57:30 +0800
+ 15.2.1258.39 via Frontend Transport; Fri, 6 Jun 2025 09:57:40 +0800
 From: Macpaul Lin <macpaul.lin@mediatek.com>
 To: <patches@lists.linux.dev>, <stable@vger.kernel.org>
 CC: Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger
 	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>, Ajay Agarwal
-	<ajayagarwal@google.com>, Daniel Stodden <daniel.stodden@gmail.com>, "Macpaul
- Lin" <macpaul.lin@mediatek.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<ajayagarwal@google.com>, Daniel Stodden <daniel.stodden@gmail.com>, Macpaul
+ Lin <macpaul.lin@mediatek.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
 	<kwilczynski@kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Deren Wu <Deren.Wu@mediatek.com>,
-	"Ramax Lo" <ramax.lo@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
-	"MediaTek Chromebook Upstream"
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Johnny-CC Chang
-	<Johnny-CC.Chang@mediatek.com>
-Subject: [PATCH 6.12 1/1] PCI/ASPM: Disable L1 before disabling L1 PM Substates
-Date: Fri, 6 Jun 2025 09:57:03 +0800
-Message-ID: <20250606015703.2724092-1-macpaul.lin@mediatek.com>
+	<linux-mediatek@lists.infradead.org>, Deren Wu <Deren.Wu@mediatek.com>, Ramax
+ Lo <ramax.lo@mediatek.com>, Macpaul Lin <macpaul@gmail.com>, MediaTek
+ Chromebook Upstream <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+Subject: [PATCH 6.11 1/1] PCI/ASPM: Disable L1 before disabling L1 PM Substates
+Date: Fri, 6 Jun 2025 09:57:38 +0800
+Message-ID: <20250606015738.2724220-1-macpaul.lin@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
