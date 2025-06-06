@@ -1,127 +1,129 @@
-Return-Path: <linux-pci+bounces-29112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E77FAD084F
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 20:51:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5107AD0916
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 22:30:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CC843B3DD6
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 18:51:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C7A316906D
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 20:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 221E91EFFB7;
-	Fri,  6 Jun 2025 18:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8926E21B196;
+	Fri,  6 Jun 2025 20:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mYCsI3+T"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AhdGzNHa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B42D1E8335
-	for <linux-pci@vger.kernel.org>; Fri,  6 Jun 2025 18:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6242153ED;
+	Fri,  6 Jun 2025 20:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235879; cv=none; b=NthuZzaojuQuwIwsAQW5iR4uDYgABMTJjVydyQzXIUmBTDC0OyL93KL8sE/U+llt62IRa+gemExxurwEURlZ0IzXcsZzKNnNeDy2oIpuTw9XIRiSFxENxA5IUEtzYM6IxrqE1p9HiXWzi6jlAGb6y17EFJcS65H5E5MUNYeI0Ns=
+	t=1749241819; cv=none; b=RFnfdYGQTC2CI1dnuBmQqyobI8+LznhGc7Ux5mhh4Ybp0gDUm+jATeFw6YvoFcwwZESXCW0FtGvQSrRhk9Vj21pWPu7Eo/QE7TkeDwCbtaA0oIE6Me5gOOuLxmv1GRxKF8RY397DGVnrxqRdWoKW9PpSMdPixFDx4naOX3g9FC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235879; c=relaxed/simple;
-	bh=PUAPLa3487RHYqMiFCzyrtOAoZwcBvZ7g/Lmtgq+14A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b+low0N2DpLd2vzo8OlgtAz+LUI1OGIWjiEVqCXebXNNJUmjz+nDeOqdcU6oaFD8mGuNmsgzz+QOUrMplqhkfWIAv7t9ujd3k2ZLAc1ioyZQM/m10b+gVf4VHq3Z6ktUVIIhF9WppGCDazilasZxWbB5r1PnvDsqbxqHlW4kzJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=mYCsI3+T; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 556H2dIS007862
-	for <linux-pci@vger.kernel.org>; Fri, 6 Jun 2025 11:51:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=facebook; bh=P
-	UAPLa3487RHYqMiFCzyrtOAoZwcBvZ7g/Lmtgq+14A=; b=mYCsI3+Tk/CRzOuW8
-	1vUprUWZtfdM4T2UI8+UCST/azvVsdBuYpm159TGG0BdCgEE8twg0E018LtQxM2z
-	xsOtlNc6/pNbnqX8mXc61GWOShootylNed/ESt+NJTZaPZLW6y9UCTkPmt8L3H46
-	ySM4KZpfIHWAHu58s8bsYkkeE8=
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 473v76vbsf-7
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 06 Jun 2025 11:51:16 -0700 (PDT)
-Received: from twshared18532.02.prn5.facebook.com (2620:10d:c0a8:1c::1b) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Fri, 6 Jun 2025 18:51:13 +0000
-Received: by devgpu007.eag1.facebook.com (Postfix, from userid 199522)
-	id B899240453C; Fri,  6 Jun 2025 11:51:06 -0700 (PDT)
-From: Alex Mastro <amastro@fb.com>
-To: <jgg@nvidia.com>
-CC: <linux-pci@vger.kernel.org>, <alex.williamson@redhat.com>,
-        <peterx@redhat.com>, <kbusch@kernel.org>, <linux-mm@kvack.org>,
-        <leon@kernel.org>, <vivek.kasireddy@intel.com>, <wguay@meta.com>,
-        <yilun.xu@linux.intel.com>
-Subject: Re: [BUG?] vfio/pci: VA alignment sensitivity of VFIO_IOMMU_MAP_DMA which target MMIO
-Date: Fri, 6 Jun 2025 11:49:46 -0700
-Message-ID: <20250606184946.4175252-1-amastro@fb.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250530131050.GA233377@nvidia.com>
-References: <20250530131050.GA233377@nvidia.com>
+	s=arc-20240116; t=1749241819; c=relaxed/simple;
+	bh=9BNxksxWK2vMFzy4qfOBSxFnl8Y+JSZ8Hr5tlJXIV7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bFDtCQo5ehi0Xk8VtIoumjFzfi3tEPiqP5ZDAbw+SwARu4A0BLo/7uAMY90Lt3/qOqM185spgvLSAUAoRnNTzmX5fKCwf5nErw2eWeFNgi67MsaYpxKAz3L2ZTgcmEBzZtZelu3ukw663yWb2vdQ/nPS/ycZNa12W/ZacGyrsMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AhdGzNHa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749241818; x=1780777818;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=9BNxksxWK2vMFzy4qfOBSxFnl8Y+JSZ8Hr5tlJXIV7s=;
+  b=AhdGzNHaqPoiAQZ6GAI74Gt/7zeTxnjML31vWX+97HUwMtdZFgBVaUAC
+   kz+D4TY3axOUMsGGLEEKqV7w8QFwgkOcHTNqAMmV5Hpwq9QNBFpTtK/bs
+   W9h4zUFLNjPT4XLjZbkm4W8MwwIQak2QyN4t9aA80GUHCqAQ70vk+aKut
+   jPjUSWJQZQj8J+V+A62uRXE3t/nmENvPH7pYO7US38NE3csIU80q5GKJ3
+   Jj5Y5aqPc21v4+EyJHFT1PWH9MEzUGNX7f/5tP1u75MT4/ALU2fYNiJUi
+   BlFSo1bA4SSd8F9GyXT4yVzJtLFT//mSf0vrU+tGp+uzibN2w8UTd9510
+   A==;
+X-CSE-ConnectionGUID: 8qS7N8frQUid2DFMRzjz8Q==
+X-CSE-MsgGUID: wHu2zNhaSsq30Rw58S9r8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="39036828"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="39036828"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 13:30:17 -0700
+X-CSE-ConnectionGUID: TqXLZvvRQVu8Z2DbWDclJw==
+X-CSE-MsgGUID: zPmIUBj+TYO9RPvUWlHRAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="150932447"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 13:30:11 -0700
+Message-ID: <e2d30ea5-1b9a-4e11-9065-3b30582de09a@intel.com>
+Date: Fri, 6 Jun 2025 13:30:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=BOOzrEQG c=1 sm=1 tr=0 ts=684338a4 cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=4ehY1fKBMCqGZ9VsUN4A:9
-X-Proofpoint-ORIG-GUID: 9BnLzHJMzmbWnJzgRzK8eh3mXZeSU4ZX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDE2MiBTYWx0ZWRfX62NOV52IYFSn I0OrnOhUXm3aVs6MQy64l8Nv5NKyz6NUudvDmPr2mwVVdsZdGY4ZFypp3KyvSpQZfME1HE4Ethh UShjvJ7r0GEqYyNGWuRWpfRPCNWOnQMu/aQupzYMOac9MKf36rsaS9W/upjJVfgmYvsEfJV2OdF
- tnQugPu9KYaJeH57b4Aas4wlYdJIWGro+Nu5/xoBOsXL43SkhwgT+R2Vu3tnlr7thtxcoYNenMN dC+/CGbKf2Gkq3OU6sSnNBcZxJa52suStkYvz50WJn8ENY1npHuaLgM3Ko7StroEopVWvuf7TJL +SOV7Xx2Q1RbuCyPSH3luNwUI7qLTNiLnsUkPe9VVHnq2Z3xZf+5SvAzL6TnNWxyH5l+Y9+fFOr
- xMnwbru9vmoV3yHiKi1fkk1VkpZ1IlmiXhs03ShAAtFEa0qhi48McHYNC1WHfDTIzVrlBosW
-X-Proofpoint-GUID: 9BnLzHJMzmbWnJzgRzK8eh3mXZeSU4ZX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_07,2025-06-05_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 11/16] cxl/pci: Update __cxl_handle_cor_ras() to return
+ early if no RAS errors
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-12-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603172239.159260-12-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jason,
 
-By the way, we have been following progress on IOMMUFD, and would be inte=
-rested
-in dogfooding it for our use case when ready. The main blocker is IOMMUFD=
-'s
-current lack of P2P support (IOMMU_IOAS_MAP fails when the VA range is ba=
-cked
-by MMIO).
 
-dma-buf as a less ambiguous semantic for communicating this intent (rathe=
-r than
-the struggles of inferring what kind of memory is behind some VA range) m=
-akes a
-lot of sense.
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> __cxl_handle_cor_ras() is missing logic to leave the function early in the
+> case there is no RAS error. Update __cxl_handle_cor_ras() to exit early in
+> the case there is no RAS errors detected after applying the mask.
 
-Based on tidbits we have gleaned, IOMMUFD P2P support intends to be built=
- on
-top of "Provide a new two step DMA mapping API" [1] and "vfio/pci: Allow =
-MMIO
-regions to be exported through dma-buf" [2].
+This change is small enough that I would just fold it into the patch that introduces this function.
 
-Item [2] appears to have been picked up by "Host side (KVM/VFIO/IOMMUFD) =
-support
-for TDISP using TSM" [3].
+DJ
 
-Is the above understanding correct?
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 0f4c07fd64a5..f5f87c2c3fd5 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -677,10 +677,11 @@ static void __cxl_handle_cor_ras(struct device *dev, u64 serial,
+>  
+>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> -		trace_cxl_aer_correctable_error(dev, serial, status);
+> -	}
+> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
+> +		return;
+> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> +
+> +	trace_cxl_aer_correctable_error(dev, serial, status);
+>  }
+>  
+>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
 
-On top of this, there would need to be a new IOMMUFD uapi, or extension t=
-o
-existing, which would accept an input dma-buf to map. Are there any patch=
-es in
-progress which include this?
-
-[1] https://lore.kernel.org/all/cover.1746424934.git.leon@kernel.org/
-[2] https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@i=
-ntel.com
-[3] https://lore.kernel.org/all/20250529053513.1592088-1-yilun.xu@linux.i=
-ntel.com
-
-Thanks,
-Alex
 
