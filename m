@@ -1,191 +1,153 @@
-Return-Path: <linux-pci+bounces-29082-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29083-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1565FACFEEE
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 11:12:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB731ACFF58
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 11:33:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64CDF189A95A
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 09:12:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BDF817236A
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jun 2025 09:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D25DD286437;
-	Fri,  6 Jun 2025 09:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DC61DE4D2;
+	Fri,  6 Jun 2025 09:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TxvA3+vc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHjUGbiM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D006A28642D
-	for <linux-pci@vger.kernel.org>; Fri,  6 Jun 2025 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2F4191F7E;
+	Fri,  6 Jun 2025 09:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201147; cv=none; b=WZRllAubu5rILdht8g8ydDg8N+20Ni2/a/xKIkRDi9bWz4vdQv4sU3LrIf7bBi6QiVlPN9zqXTieSK3SKtCV3OW71y4QuzdZjYY5jAEWe1WGA/O9+KBaJq2CHToBvApwS0HSR3b11KetR15LtByDDfWhegFfNTyRUcs2HgZy9Qw=
+	t=1749202383; cv=none; b=LfHZDB+fQPJwoA+b8NW67ziOGXUaLRd92/uHTIlhDcxHHzf2FugevwwC9MBWkihTmji3OfWjH1IJvvGB8LNpSW5VSfYolRzajMcHLHNF4so7OH6Dau/wmcRXe4FijHcdxYE7QH7Y0MV9TkBnxZeNGVsG+swMY9iz4OBJEW7dbD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201147; c=relaxed/simple;
-	bh=HmRNUwvFUl/hdKoO4B1dgc6/Hw5mGyFSqMWv/NJQVWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uH+gizAI5bNev/gHcJxu1gUHAM5ifFeebMcifX3Me0NHxZbAIVu9oFxcK1vEZppAtx0jkaYVvUhEQDMjnhdjS8wKE1CXxfYt2k+5f8XS5zebxD/Idz22t2fNO3AYsJxwCDjnRsHMpvHPFnSRyHuP2ELtX9WK1m4OLKkeZ0gtKrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TxvA3+vc; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-addda47ebeaso367306166b.1
-        for <linux-pci@vger.kernel.org>; Fri, 06 Jun 2025 02:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749201144; x=1749805944; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
-        b=TxvA3+vcesJZKqLdzgVo3evL9gOZzhwlcXroGLLBq+G8ahix5MAMLbKqLE35JLUHF2
-         VAvfkrrzKMTNT1Er2AEEtR0GK5Jklbeh4SDj//wLvZ+MXHqpuLHP1y8+Ew37iDNJ/ELB
-         zGhVek5Cu05m1W0oBuGylGglcngGZP80EfUkifMT7AU6RLF4+uduuyt1BPRz3coEAQtq
-         SW9pJJVof/RhUpHQVgMQkGdxLiu/xtLDer20WNPoe3nsqhMdclVAfEwnrx7puRF3IKrA
-         3xZthlRqDnC+BfNnrav3UnkwCkSEWUZ9QA8rf88C/gzcD6VYUSmeu6f9qbBQ1uH4nfQi
-         3eoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749201144; x=1749805944;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
-        b=Ea4Ph7Oy19zddXNJ6IvjeCdMFkmRgKapIwe9GMAOVPaWjOQJNISnFHK9+CWcAG6kTb
-         RSfF1LY9wgD74Qumk9yrgpf0PATxjuG5Gzc5tHwTShvBFONIdVRCeq3owVgWQHRqAx8m
-         p9n3pHzIBv7uu+OBCibnBeFJjIxA5X4nt0AMlmqM3WLj2j9L4jAQocywwccV1zMhHwrn
-         hmvsoJhP7aKuQPXw18snSR3H831DcjFZwaM9t/Stv7OQtQRyrPStWo/J/aWhTPETHHBb
-         T8wyVIPK/eZkZkboBX13XuuqVbT+1FMf9u80RySbdALZtrcMAHpVD9DpcTVSEx7RRI+6
-         OkEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaR77TbGrFsdzTU3M1JUFI39Vv6nL75HvW6O81ClEW9ZRfKKncwlQ93P2CtD2SmwjzaedL2zubyzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj3MIV8Gr8tv3DxF8nTxy2mKHoYKKwSxSSTuJvwEBs33MPuhz1
-	6Cwpf3WffG+pmgZaqiNFQsnuNyf7uG/qfmatW6uOxDw6flgtX5m6R8BC3kUtoebGmpY=
-X-Gm-Gg: ASbGncuw2RYGFsK3JtBcS5GAScUwRCV3pGsYYJtGy9eBbnCmPAYHRWJkMDjhkXDzTa7
-	NQz3Xso8j7vXIb71Cd93mwKP2Xfg8ot+3+6q46KllaUHMd+Y5GuuB5fwPYl5GL0LKBQAWgeYHEA
-	67wZ74ASRT+IJtklIDNh3cZUiNqz5xI1BeiXKHBOZypWxHk2S3H/zzl18ibPWYesdJAxQOQtnAe
-	cEeVaPNEjQ1gaUBwAy1zt8/UZ2//UCc+CQRFL/F252UtRM18861956dIWdI5O6dG8dfxHeWWMeK
-	Ro8f80agLkB2YFNz40ShdVuI67VNt/TSVyiEroEATDA5+GSrRa4EB4dX15Ve
-X-Google-Smtp-Source: AGHT+IEjDHiLE7sMo+a12s7VFlD8SjfCEiBfxxMF3QVGmJjKfSvQI7x7ZEGc6pDRlowYGNhvaszk6A==
-X-Received: by 2002:a17:907:bb49:b0:adb:428f:f748 with SMTP id a640c23a62f3a-ade1aa06c95mr206620466b.21.1749201143788;
-        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7d300sm85900566b.179.2025.06.06.02.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
-Message-ID: <53921bd9-6ac9-49fb-8c9d-2c439ec8cd5b@tuxon.dev>
-Date: Fri, 6 Jun 2025 12:12:21 +0300
+	s=arc-20240116; t=1749202383; c=relaxed/simple;
+	bh=a/cSRPXXvWMntEronSsbDihFTabNg3hkGiuEn4chUIA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hDNEX4h/T4/K0Kd2eW1x3SUGBGrBOchYEjhs3Z+onwhEMhZhAnS78kMSvRMZpz5yKlnwxhO1FMNsY7RTBCDr8UsC6r2XueIhDuyH6hCTZ4Xg6PeF2KpKWLADSBt9mvCnfMKbVgtJCsRqdNwyPkfBGpaHJYQHKS7hNsjIntBxfxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHjUGbiM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A5FC4CEEB;
+	Fri,  6 Jun 2025 09:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749202382;
+	bh=a/cSRPXXvWMntEronSsbDihFTabNg3hkGiuEn4chUIA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aHjUGbiMRTgqmKBI5/NKSytER+wD+f8xtIQAG9im9jNLtdG0Euimvzu7mf27OGY9+
+	 02d4tGq5I3JSdFyRFuprtiwxviESlUW+rjOju0gNhU9O+51pPm9ArY1Jb4zZ9+iaFL
+	 4+tfVM5CGBw9LbksFk0KUh5/3IXXkhxjz3MX4gFhNP8vwp4S3zppGj+T6jvzfDfI3b
+	 mC65zomebElguFf6DZbQwXmqg3dRm2SZQ7UVQMkAS0eZMMVEXIPjCElKMlyC9MjPDR
+	 1CanswgBu1tw1VRmrDvt8/qS2s2JGvUgF4Q+c893ZONew80RB7FZKa7htzlP+zA8/a
+	 BvOmCaJ/eEw3w==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>, kvm@vger.kernel.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	dan.j.williams@intel.com, aik@amd.com, linux-coco@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, vivek.kasireddy@intel.com,
+	yilun.xu@intel.com, linux-kernel@vger.kernel.org, lukas@wunner.de,
+	yan.y.zhao@intel.com, daniel.vetter@ffwll.ch, leon@kernel.org,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com, linux-pci@vger.kernel.org, zhiw@nvidia.com,
+	simona.vetter@ffwll.ch, shameerali.kolothum.thodi@huawei.com,
+	iommu@lists.linux.dev, kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <20250605163339.GE19710@nvidia.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5ah60u8kev.fsf@kernel.org> <20250605151029.GC19710@nvidia.com>
+ <yq5a7c1q88oy.fsf@kernel.org> <20250605163339.GE19710@nvidia.com>
+Date: Fri, 06 Jun 2025 15:02:49 +0530
+Message-ID: <yq5a1prx8bb2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250605225730.GA625963@bhelgaas>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250605225730.GA625963@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Bjorn,
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
-On 06.06.2025 01:57, Bjorn Helgaas wrote:
-> On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
-> 
->> +/* Timeouts */
->> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
->> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
->> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
->> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
-> 
-> Are any of these timeouts related to values in the PCIe spec?  If so,
-> use #defines from drivers/pci/pci.h, or add a new one if needed.
-> 
-> If they come from the RZ/G3S spec, can you include citations?
+> On Thu, Jun 05, 2025 at 09:47:01PM +0530, Aneesh Kumar K.V wrote:
+>> Jason Gunthorpe <jgg@nvidia.com> writes:
+>>=20
+>> > On Thu, Jun 05, 2025 at 05:33:52PM +0530, Aneesh Kumar K.V wrote:
+>> >
+>> >> > +
+>> >> > +	/* To ensure no host side MMIO access is possible */
+>> >> > +	ret =3D pci_request_regions_exclusive(pdev, "vfio-pci-tsm");
+>> >> > +	if (ret)
+>> >> > +		goto out_unlock;
+>> >> > +
+>> >> >
+>> >>=20
+>> >> I am hitting failures here with similar changes. Can you share the Qe=
+mu
+>> >> changes needed to make this pci_request_regions_exclusive successful.
+>> >> Also after the TDI is unbound, we want the region ownership backto
+>> >> "vfio-pci" so that things continue to work as non-secure device. I do=
+n't
+>> >> see we doing that. I could add a pci_bar_deactivate/pci_bar_activate =
+in
+>> >> userspace which will result in vfio_unmap()/vfio_map(). But that does=
+n't
+>> >> release the region ownership.
+>> >
+>> > Again, IMHO, we should not be doing this dynamically. VFIO should do
+>> > pci_request_regions_exclusive() once at the very start and it should
+>> > stay that way.
+>> >
+>> > There is no reason to change it dynamically.
+>> >
+>> > The only decision to make is if all vfio should switch to exclusive
+>> > mode or if we need to make it optional for userspace.
+>>=20
+>> We only need the exclusive mode when the device is operating in secure
+>> mode, correct? That suggests we=E2=80=99ll need to dynamically toggle th=
+is
+>> setting based on the device=E2=80=99s security state.
+>
+> No, if the decision is that VFIO should allow this to be controlled by
+> userspace then userspace will tell iommufd to run in regions_exclusive
+> mode prior to opening the vfio cdev and VFIO will still do it once at
+> open time and never change it.
+>
 
-The values here were retrieved by experimenting. They are not present in
-RZ/G3S specification. I'll look though the header you pointed and use any
-defines if they match.
+So this will be handled by setting
+vdevice::flags =3D IOMMUFD_PCI_REGION_EXCLUSIVE in
+iommufd_vdevice_alloc_ioctl()? And we set this flag when starting a
+secure guest, regardless of whether the device is TEE-capable or not
 
-> 
->> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
->> +{
->> +	u32 val;
->> +	int ret;
->> +
->> +	/* Initialize the PCIe related registers */
->> +	ret = rzg3s_pcie_config_init(host);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Initialize the interrupts */
->> +	rzg3s_pcie_irq_init(host);
->> +
->> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
->> +					  host->cfg_resets);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Wait for link up */
->> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
->> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000,
->> +				 RZG3S_LINK_UP_TIMEOUT_US);
-> 
-> Where do we wait for PCIE_T_RRS_READY_MS before pci_host_probe()
-> starts issuing config requests to enumerate devices?
+and vfio_pci_core_mmap() will do
 
-I missed adding it as RZ/G3S manual don't mention this delay.
+	if (!vdev->barmap[index]) {
 
-> 
->> +	if (ret) {
->> +		reset_control_bulk_assert(host->data->num_cfg_resets,
->> +					  host->cfg_resets);
->> +		return ret;
->> +	}
->> +
->> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
->> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
->> +
->> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
->> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
->> +
->> +	if (probe) {
->> +		ret = devm_add_action_or_reset(host->dev,
->> +					       rzg3s_pcie_cfg_resets_action,
->> +					       host);
->> +	}
->> +
->> +	return ret;
->> +}
-> 
->> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
->> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
->> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
-> 
-> s/Extract/Subtract/
+		if (core_vdev->iommufd_device &&
+		    iommufd_vdevice_region_exclusive(core_vdev->iommufd_device))
+			ret =3D pci_request_selected_regions_exclusive(pdev,
+							1 << index, "vfio-pci");
+		else
+			ret =3D pci_request_selected_regions(pdev,
+						1 << index, "vfio-pci");
 
-OK.
 
-Thank you for your review,
-Claudiu
+
+
+>
+> The only thing request_regions does is block other drivers outside
+> vfio from using this memory space. There is no reason at all to change
+> this dynamically. A CC VMM using VFIO will never use a driver outside
+> VFIO to touch the VFIO controlled memory.
+>
+> Jason
+
+-aneesh
 
