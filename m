@@ -1,158 +1,120 @@
-Return-Path: <linux-pci+bounces-29138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29141-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 559C6AD0E55
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 18:00:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D51BAAD0E5B
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 18:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 183D91690FA
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 16:00:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 544367A66C0
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 16:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B501E834E;
-	Sat,  7 Jun 2025 16:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6AE202F71;
+	Sat,  7 Jun 2025 16:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PAreezaA"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CPi7pqzN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BDBF3594C;
-	Sat,  7 Jun 2025 15:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA2F71F540F;
+	Sat,  7 Jun 2025 16:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749312001; cv=none; b=CoH/igl2REXeNXqu7MuqZAKE7sWpVndom2pqoYiD1T/aTqlLGhznJqsW12Xl1mOC5o+pcv85qCSVJrp1JahhrmX3Z+ftg9IQDE7ZSFxjQPUywe7fxgn6IA9jY/opWXwVCsctvuHl8iX2YPKmPs3SyvGGaWQNvhnxUHEowwjiEVY=
+	t=1749312165; cv=none; b=tM4OT0h4tJbG4wSW24KcaCliJdqikB3Rv32ZjtVgBAf7/+kuC2mbLqzHZGVxRbNtmYjk5yepzVdsbmqOOmkN/Ps9C7w7n1ydLWiHW+JMxzKIZqf0+/yUs+sbGhACc3cBjoRrz57/5AMRwRYL2aC7RV4anzL/898McCwIvd3vEvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749312001; c=relaxed/simple;
-	bh=dB8BFMQaVi6LuvJFzp48EvNFV+o/fdmEM0ODMkSZNL0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W1KdxaVSl+XQD6QnJpad/Q2MCo8hw2sUpLBo47Ap+Kj/EoZrkl2twn4QWbaBVxi2FevB+WNdiVJ8yQX6YAu2BeRs4q6aewuMhKBOHFx3dZnTfsOaGp9dHyi7FT7vmoLJrDuGZ53AFFK8+qXgWXxksUVyqmk36Ff1Ypt185Ac0Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PAreezaA; arc=none smtp.client-ip=117.135.210.2
+	s=arc-20240116; t=1749312165; c=relaxed/simple;
+	bh=r6gDx6f11bVEjlUv5uJa6UiNPN3q7jZ2fNiTgfwe2D0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cnLUqoSStIkaCacORnrBAV0pJTfBW8UF0B7WCEG9e3vmQiK5ubQiqf4QN/iSMLSzTUMNAtjhoBHBDiEsLEfG4MNb0iinx9/0qe6uk0idHyIaKvz1xk/9tfUVPFfj+U7nZ95+6nd9PLvo7NU9kQAwSLQ7xE1cLHTIF8XjUWGj60o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CPi7pqzN; arc=none smtp.client-ip=220.197.31.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=WqPXzQfOBkSg6Wxyj4Ie76iGWRDRnm01njaAWfiUy1s=;
-	b=PAreezaAcUZNwAn/lFfbdBkcDVhCD6jqD1LO+N7g/y7lvtN/OCnoG/3B6jJCOW
-	ErhnhFrUCHGJG9h9AI2NFjr6kWwYinn6toHcULvCiUwUm898ucdmAA8T0OFYv5e9
-	0beL1IbezcPdwWrbHiN15X+nGrAA14cDK/rAIazOFJv3w=
-Received: from [192.168.71.94] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wAHzn3cYURotOR+Gw--.10086S2;
-	Sat, 07 Jun 2025 23:59:24 +0800 (CST)
-Message-ID: <f2e49d66-ac97-4502-abe7-c02f560637e6@163.com>
-Date: Sat, 7 Jun 2025 23:59:24 +0800
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=eo
+	Av3IDLdY0ltTR+dHrxsqkIT8E3OgEA8g+uP4y5wzc=; b=CPi7pqzNAmNJauEeUy
+	aY0Z52nHnDiOSG8xQV6M0rJfqgiMSf2Aj988kc0YnUaiw5OuZSoscnPtFvDBMnyq
+	meNIq3bEirDFo0MFdhcS9WMwyTbSmbI8ygwvsZco2sx2ThTwsV6Y2RC2yTjcsDH5
+	mWdH3kkwjyquOcXRlHGkOrKBg=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wBnk_V6YkRoJ9qHGg--.28203S2;
+	Sun, 08 Jun 2025 00:02:03 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: shawn.lin@rock-chips.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de,
+	mani@kernel.org
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v3 0/3] Fix interrupt log message
+Date: Sun,  8 Jun 2025 00:01:58 +0800
+Message-Id: <20250607160201.807043-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI/AER: Use pci_clear_and_set_config_dword() to
- simplify mask updates
-To: mahesh@linux.ibm.com, bhelgaas@google.com
-Cc: oohall@gmail.com, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Manivannan Sadhasivam <mani@kernel.org>
-References: <20250607155159.805679-1-18255117159@163.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250607155159.805679-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAHzn3cYURotOR+Gw--.10086S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGry3ury3CF1kWw1Dtw1fJFb_yoW5Zw43pr
-	ZxAFyrArWUJF1Y9rWUWaykAr1rZas7tay0gr93Gwn5XF4xZFZrJr9avw17J345KFZ7Xw4f
-	Jws5Ka1ruF4UtaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmZXrUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx1lo2hEWUbMvgAAsV
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBnk_V6YkRoJ9qHGg--.28203S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw43JFy8ZryDCw4kJFyrJFb_yoW8Xry7pF
+	9xG3ZFyr4DJr4Sy3WvkwsYk3W5Xan8JFWUGr12qw1fX3WavF10gr9IqF1rWryYgayvq3Wa
+	vrWjyw15Gw1qvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEuc_hUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgtlo2hEXNqC1QAAsK
 
-Add Mani's new email address.
+Dear Maintainers,
 
-On 2025/6/7 23:51, Hans Zhang wrote:
-> Replace manual read-modify-write sequences in multiple functions with
-> pci_clear_and_set_config_dword() to ensure atomic operations and reduce
-> code duplication.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
-> Changes for v2:
-> - The patch commit message were modified.
-> - New optimizations for the functions disable_ecrc_checking, aer_enable_irq, and aer_disable_irq have been added.
-> ---
->   drivers/pci/pcie/aer.c | 30 +++++++++++-------------------
->   1 file changed, 11 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 70ac66188367..86cbd204a73f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -176,14 +176,13 @@ static int enable_ecrc_checking(struct pci_dev *dev)
->   static int disable_ecrc_checking(struct pci_dev *dev)
->   {
->   	int aer = dev->aer_cap;
-> -	u32 reg32;
->   
->   	if (!aer)
->   		return -ENODEV;
->   
-> -	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
-> -	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
-> -	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_CAP,
-> +				       PCI_ERR_CAP_ECRC_GENE |
-> +				       PCI_ERR_CAP_ECRC_CHKE, 0);
->   
->   	return 0;
->   }
-> @@ -1101,15 +1100,12 @@ static bool find_source_device(struct pci_dev *parent,
->   static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->   {
->   	int aer = dev->aer_cap;
-> -	u32 mask;
->   
-> -	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> -	mask &= ~PCI_ERR_UNC_INTN;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-> +				       PCI_ERR_UNC_INTN, 0);
->   
-> -	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> -	mask &= ~PCI_ERR_COR_INTERNAL;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-> +				       PCI_ERR_COR_INTERNAL, 0);
->   }
->   
->   static bool is_cxl_mem_dev(struct pci_dev *dev)
-> @@ -1555,23 +1551,19 @@ static irqreturn_t aer_irq(int irq, void *context)
->   static void aer_enable_irq(struct pci_dev *pdev)
->   {
->   	int aer = pdev->aer_cap;
-> -	u32 reg32;
->   
->   	/* Enable Root Port's interrupt in response to error messages */
-> -	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> -	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
-> +				       0, ROOT_PORT_INTR_ON_MESG_MASK);
->   }
->   
->   static void aer_disable_irq(struct pci_dev *pdev)
->   {
->   	int aer = pdev->aer_cap;
-> -	u32 reg32;
->   
->   	/* Disable Root Port's interrupt in response to error messages */
-> -	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> -	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
-> +				       ROOT_PORT_INTR_ON_MESG_MASK, 0);
->   }
->   
->   /**
-> 
-> base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+Detailed descriptions of interrupts can be seen from RK3399 TRM doc.
+I found two errors and cleaned up the driver by the way.
+
+This patch series improves the logging accuracy and code cleanliness of
+the Rockchip PCIe host controller driver:
+
+Log Message Clarifications
+
+Patch 1 fixes a misleading debug message for the PCIE_CORE_INT_UCR
+interrupt, replacing a duplicated "malformed TLP" message with "Unexpected
+Completion" to reflect the actual error condition.
+
+Patch 2 corrects the terminology for non-fatal errors, renaming "no fatal
+error" to "non fatal error interrupt received" to align with PCIe interrupt
+semantics.
+
+Code Cleanup
+
+Patch 3 removes redundant header includes (e.g., unused clock/reset
+headers) to streamline the driver and reduce build dependencies.
+
+These changes enhance debug log reliability, eliminate ambiguity for
+developers.
+
+---
+Changes for v3:
+- Add Reviewed-by: Manivannan Sadhasivam <mani@kernel.org> (Mani's new email address.)
+
+Changes for v2:
+- Drop patch [v1 3/4].
+- The other patches have not been modified.
+---
+
+Hans Zhang (3):
+  PCI: rockchip-host: Fix "Unexpected Completion" log message
+  PCI: rockchip-host: Correct non-fatal error log message
+  PCI: rockchip-host: Remove unused header includes
+
+ drivers/pci/controller/pcie-rockchip-host.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+
+base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+
+-- 
+2.25.1
 
 
