@@ -1,61 +1,55 @@
-Return-Path: <linux-pci+bounces-29132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86E98AD0E3E
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 17:50:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70CA9AD0E43
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 17:52:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DECBE7A5B79
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 15:48:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 624B316244F
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 15:52:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465791865EE;
-	Sat,  7 Jun 2025 15:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E8B1B4248;
+	Sat,  7 Jun 2025 15:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K/TjeYsG"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GhXVN+L7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494EFE55B;
-	Sat,  7 Jun 2025 15:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07AAA13AD05;
+	Sat,  7 Jun 2025 15:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749311400; cv=none; b=h5umZXt2DUa59Nvgc7h94k2XFoZce9gcBYQU72QbHMWuY3hu1ys7MnrGBxjkNvf55ht3v3AT6+72lLhgQh3lElIAqtGRV6byIra0fInJa1scvXWsVCehei02IqOjm0HGWJTsuLu8eDiIJqJ2gsczEiP/MSKd2ADSTkMnYTz+Mp4=
+	t=1749311562; cv=none; b=Wa57WqhXgB/aDlXM3zGWhZCEcxiODfQ8Hl0ojSEBJHUuMiwYW9NyWeja5zTaqdtRzdkkuPi19/Rqlwyd46Zgbj4zIIGP3aLniNWvBDEAiydBh1ohhsk08wSHDphINDrjfrBzCF2f6bors6ioEQJPHl8Ggya6UizaRzwM+30qx6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749311400; c=relaxed/simple;
-	bh=uQ7s/v2AjGsOc05HnX/jIvUmXGAQx9UeU4+auFghVDo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j9nP9nemP/MehENfhQixXUijsSfQd0MoGUa/TN8K4eHc46vj078GiNnSK4/NDIcgZKNaTJU2KcFX9aDCrgr/Fh1t0VfTTYOnFD5PnpyJPXeYoOG7sXNCvt2ILK8KMTzDu1jv7M2AwCbvRfrh3lNJwZCroBpBV5GXO5FQ077g+3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=K/TjeYsG; arc=none smtp.client-ip=220.197.31.5
+	s=arc-20240116; t=1749311562; c=relaxed/simple;
+	bh=TXILFu9/mk5P8ay7BUtsp1FAJk1pZTISkb8vZbLV3Ts=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sXuAwgyBV13+Yse4B4lXEEmhO5c0izG+fB1kaU9tGA6/qYfR/VdUMId0jbDexQSflU3uXmpxP0nfpOiGj52vh8rBX6xrIGJxMv21EpTj+380bAqt2XFh8qXxwoM81TOdGYjWe3DQAah/tILY7y4bXfzn7L4AWIDAKT3g9QcUXHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GhXVN+L7; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3x
-	nUcdBvnWiNCp7yTgWXorfhoxPJD3su6at4f5v/ffw=; b=K/TjeYsGv5+JF6ifSW
-	Y3cHhH10l1uRzkq9k0XbVNyqRhDbAME4pjnZwgcNcjl5kt+RNDu9ROLYEWr7sZyp
-	o6SdkzBGtn1OguVZhAB8ZUI/hdo082wOniDojQAaB20Pic+sJMx37UmZh/wVBYQk
-	zTAiFsGXeOxFdk26sc89kUeRQ=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=UK
+	Da40I0u1fLgDBEqwi9HdVUgYBePD5D6X2Frp4VUjc=; b=GhXVN+L7/RTx1R9Z60
+	yyriw21vGGe4kF9td2SU3KTuR3r97iwbUVXHCmeBzpam9B5ChUnHk3rKdMMBjrF0
+	eyKxfDATDtbC30bVWLWKDwZTt96TQ0756D+Er37SOIPllQqfB9xJ5kzgcAFuYF4H
+	XNswf7L/m8R3RB5N5HVUz0brQ=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzz17X0RoTZo8Gw--.4221S3;
-	Sat, 07 Jun 2025 23:49:16 +0800 (CST)
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wBXM_kjYERoFeepHA--.4808S2;
+	Sat, 07 Jun 2025 23:52:03 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	shawn.lin@rock-chips.com,
-	heiko@sntech.de
-Cc: robh@kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+To: mahesh@linux.ibm.com,
+	bhelgaas@google.com
+Cc: oohall@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 1/2] PCI: cadence: Replace private message routing enums with PCI core definitions
-Date: Sat,  7 Jun 2025 23:49:12 +0800
-Message-Id: <20250607154913.805027-2-18255117159@163.com>
+Subject: [PATCH v2] PCI/AER: Use pci_clear_and_set_config_dword() to simplify mask updates
+Date: Sat,  7 Jun 2025 23:51:59 +0800
+Message-Id: <20250607155159.805679-1-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250607154913.805027-1-18255117159@163.com>
-References: <20250607154913.805027-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,72 +57,98 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnzz17X0RoTZo8Gw--.4221S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWxXF4xXw4UKF1ktr1DZFb_yoW8KF4fpF
-	W7KryfCF1fXrW5u3Z5Za4UGr13XasxC34xtw4vkw1xZF17CF15GFy29FyrGrW3GrZFqr12
-	9398tr9rGF4ayFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE-BMJUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhNlo2hEXNoO6QACsg
+X-CM-TRANSID:_____wBXM_kjYERoFeepHA--.4808S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWr4fXF1Uuw13Cr1rZr4DCFg_yoW5CFyrpr
+	W3AFWfArWUJF15urWDWaykJr1rAas7t3ySgryfKwn5XF4UuFZrJr9avw1UJ345KFZ3Xw4f
+	Jws5Ka1ruF4UJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pKYLkZUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhVlo2hEXNpMQQAAsO
 
-The Cadence driver previously defined its own message routing enums (e.g.,
-MSG_ROUTING_LOCAL) and message codes, which duplicated existing PCI core
-macros (PCIE_MSG_TYPE_R_LOCAL, PCIE_MSG_CODE_ASSERT_INTA, etc.) in
-drivers/pci/pci.h. These core definitions align with the PCIe r6.0 spec.
-
-Remove the driver-specific enums and switch to the centralized PCI core
-macros. This eliminates redundancy, ensures consistency, and simplifies
-future updates. No functional changes are introduced.
+Replace manual read-modify-write sequences in multiple functions with
+pci_clear_and_set_config_dword() to ensure atomic operations and reduce
+code duplication. 
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- .../pci/controller/cadence/pcie-cadence-ep.c  |  2 +-
- drivers/pci/controller/cadence/pcie-cadence.h | 20 -------------------
- 2 files changed, 1 insertion(+), 21 deletions(-)
+Changes for v2:
+- The patch commit message were modified.
+- New optimizations for the functions disable_ecrc_checking, aer_enable_irq, and aer_disable_irq have been added.
+---
+ drivers/pci/pcie/aer.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 8ab6cf70c18e..77c5a19b2ab1 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -353,7 +353,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
- 	}
- 	spin_unlock_irqrestore(&ep->lock, flags);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 70ac66188367..86cbd204a73f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -176,14 +176,13 @@ static int enable_ecrc_checking(struct pci_dev *dev)
+ static int disable_ecrc_checking(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
+-	u32 reg32;
  
--	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
-+	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(PCIE_MSG_TYPE_R_LOCAL) |
- 		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
- 	writel(0, ep->irq_cpu_addr + offset);
+ 	if (!aer)
+ 		return -ENODEV;
+ 
+-	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
+-	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
+-	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_CAP,
++				       PCI_ERR_CAP_ECRC_GENE |
++				       PCI_ERR_CAP_ECRC_CHKE, 0);
+ 
+ 	return 0;
  }
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a149845d341a..1d81c4bf6c6d 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -250,26 +250,6 @@ struct cdns_pcie_rp_ib_bar {
+@@ -1101,15 +1100,12 @@ static bool find_source_device(struct pci_dev *parent,
+ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
+-	u32 mask;
  
- struct cdns_pcie;
+-	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
+-	mask &= ~PCI_ERR_UNC_INTN;
+-	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
++				       PCI_ERR_UNC_INTN, 0);
  
--enum cdns_pcie_msg_routing {
--	/* Route to Root Complex */
--	MSG_ROUTING_TO_RC,
--
--	/* Use Address Routing */
--	MSG_ROUTING_BY_ADDR,
--
--	/* Use ID Routing */
--	MSG_ROUTING_BY_ID,
--
--	/* Route as Broadcast Message from Root Complex */
--	MSG_ROUTING_BCAST,
--
--	/* Local message; terminate at receiver (INTx messages) */
--	MSG_ROUTING_LOCAL,
--
--	/* Gather & route to Root Complex (PME_TO_Ack message) */
--	MSG_ROUTING_GATHER,
--};
--
- struct cdns_pcie_ops {
- 	int	(*start_link)(struct cdns_pcie *pcie);
- 	void	(*stop_link)(struct cdns_pcie *pcie);
+-	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
+-	mask &= ~PCI_ERR_COR_INTERNAL;
+-	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
++				       PCI_ERR_COR_INTERNAL, 0);
+ }
+ 
+ static bool is_cxl_mem_dev(struct pci_dev *dev)
+@@ -1555,23 +1551,19 @@ static irqreturn_t aer_irq(int irq, void *context)
+ static void aer_enable_irq(struct pci_dev *pdev)
+ {
+ 	int aer = pdev->aer_cap;
+-	u32 reg32;
+ 
+ 	/* Enable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+-	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
++				       0, ROOT_PORT_INTR_ON_MESG_MASK);
+ }
+ 
+ static void aer_disable_irq(struct pci_dev *pdev)
+ {
+ 	int aer = pdev->aer_cap;
+-	u32 reg32;
+ 
+ 	/* Disable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+-	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
++				       ROOT_PORT_INTR_ON_MESG_MASK, 0);
+ }
+ 
+ /**
+
+base-commit: ec7714e4947909190ffb3041a03311a975350fe0
 -- 
 2.25.1
 
