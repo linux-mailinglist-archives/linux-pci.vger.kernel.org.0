@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-29128-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29129-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BDACAD0CEC
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 13:01:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B12AAD0CF1
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 13:01:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69CD016F9B7
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 11:01:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D6131892688
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 11:02:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C4D1E5B88;
-	Sat,  7 Jun 2025 11:01:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F2E219319;
+	Sat,  7 Jun 2025 11:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdbNx8ik"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JF8FCWSx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B431EF09D;
-	Sat,  7 Jun 2025 11:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593954769;
+	Sat,  7 Jun 2025 11:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749294087; cv=none; b=PRkrGZbdn7OWDSwm/7AE35+NY6lZFgPklDBpylu2YSsp9Ljjkkzke14n62M6ETLIj0Px3kjSnKFPkfwSJ7dZHnFFmUYEZ8oe99TcmOm4c6yjfAA09cTsAC4ViR6FMQdEpatbDfwuR6OMVEz0oUpAWzlLN47ZPCNEXN6Iyk3aCMQ=
+	t=1749294105; cv=none; b=poBm2mcP1ezpf7g905Va6Qyto0K4wRzAkGVUDxYVwmLrxhqlUpT8t00T2VEGxSvRyLJVOSENs5XOF+YPWQCtKD4TPWhrBprlsCIPXZDW43QLfjwRauaaGL28qHVKVP/UxzI2D+QK1DSbj/4ogJjKsSIuVxKwQFdAmtjCffMMfEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749294087; c=relaxed/simple;
-	bh=R0Diu8FdNpsonij9FRi296bJDC7EXdWN7iyi2qRRg20=;
+	s=arc-20240116; t=1749294105; c=relaxed/simple;
+	bh=zOPTHm6uizkBP61BfOqG12krMiI1LexjfXuTxcaJzNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mBZgEqEtljbDPCFBs1sCSYlmzoQTCELGllSmH8R4RvKXxAHabSBfcIGYJhW1jbT3+9v7Dq5bVaaACXaPZ0LmWrooHID0oK6Kw70T+bsdneVtfpuBseP517E2MiK3Hvz9WAsBHWLv9PBl+TQXHuOi2cLGK4jrtJxObkFJ6snF378=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hdbNx8ik; arc=none smtp.client-ip=209.85.210.181
+	 Content-Disposition; b=Z7pnIMV5k5dTu1Nq9jqRlQ+JkMWkyz4mXZAox0gOu5HvbSbr6Lc4WqN3Ik51b1zqcC0xBZnsbvXGpM7BFakvsggbXvr21ulGPIYh2bgBAf94osciHkMD2FtiGBkPUMCJ4AKlyjptBi4LN/FEEHxFUaV+h+5fJuQHlioTWHETf74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JF8FCWSx; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-745fe311741so3376276b3a.0;
-        Sat, 07 Jun 2025 04:01:25 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7481600130eso3004411b3a.3;
+        Sat, 07 Jun 2025 04:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749294085; x=1749898885; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749294103; x=1749898903; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JsBR+3ZaCX2OHnpXjm2aWoB1xEksOSX5f66Opu4aP6U=;
-        b=hdbNx8ikm0H/6KMV8n3cLB3ILopWwVEoMzOcZlB/XkkzJj9LUdt095zBjAhdIYj74f
-         9CQaVYuKNczAQnbMlfRe5wGjlrRpySaz16dCa1bqOs00fGnJXBU0XclBUMZR4x1w1PO8
-         Qx+XJlXAu+tI81Fervyfk+S000I98ABXvvHzsEjdQ7aAzqTngAUr7LHUYXOkwJRrhErK
-         ydex+9L5CEnuJBtO4Prp5uH4gYsodRwEUwXlQIg3LQpTwA4PXUqk1Yw+D/NOd5L2dZ9z
-         C7gbAFlnDaSS8qcfT/WZ0ZO5SxgXfiPsi5/k73u/BpU2wGdG95gzsei+BJSXJxbgU4Vp
-         cU1Q==
+        bh=4zSu1izb4tWJDTxLhqSImmpcJMMSBIL+shCUHw2Xsjs=;
+        b=JF8FCWSxOODWUaLZksdtMQVDU3iMZYnWsdcFnC1kJzqRU5UAnLwQKBldy+PRLet0uN
+         GnXXfP4qqEl58kAfH1yUx17WeyQaXcPbQhydbQMHxnwlWJlzBNObr7vgi2QmInv1HDes
+         0g6cUiJWUmIDRWX5gWwbrjK/UJvvcOAhwXWJlmIuBg5miaBbeEsxAoTF/e6+ir7coaOm
+         p4faE/PvYW4+xONv8jorpHIuDXy1/iDlpGK1O6i00ZVfEA4iiwoyqO0kRDB1apRWsboE
+         dZwQH+CIiqyULIe5hebyQVMn7M+Ng6JA1ANmXuIJlPfPlS1qIKftCTNJJjZgbaqSRFyr
+         9LcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749294085; x=1749898885;
+        d=1e100.net; s=20230601; t=1749294103; x=1749898903;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsBR+3ZaCX2OHnpXjm2aWoB1xEksOSX5f66Opu4aP6U=;
-        b=Ov4i1oQ2n1P9cPullTEFIcHFioK8DklYKn/Qdwj6LYOZTo9oF44f4ycAFcQFHjgpKo
-         TYaQW+XwOSQsTspGy5YgAqSeJYJ+kh10GxC7DUjXeOP/1Yh624mexVNtCQ2VQP7fywMf
-         NLSPZTv1aSqHYlBX0qe8DBuvkvsoFXy5GyQf5RfI1mgu4La8Bc1FSoLqc6aoN2ps4Zg6
-         7rt2F0bL769sDANyRxxLJ05SZDpdFj3oNIYPUs7O8f4M4x4vsQQYRjogj3PsmSeODttB
-         vb8peqFHrxzjdjVjZrSSZalOpUXtYNNQDKWej4RuYW5ea7eFy+j+QIxuw6g1ShRIpg/J
-         g7qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFDGpVO99OjFjwqAtNCTU/OXN9DKx4jDwX987mNJoVS5LdiyWEzCgbS99Y+cUda0wlZbvzIEnQCwptrDE=@vger.kernel.org, AJvYcCVYE5Bpdl6swRLG7N33iwF6ExghI5F8UfU6F3OFHaRg/KYMy5Pa9LSoV7WL3iAD1xWIxoXeNzhZgdt5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJuw75DM4fWxcpJDbj39ESvuBSQsT7ynLOHRkSkoBEC5J4mxOU
-	yjDoJRyPslKolxlONnBq5cOhlW5bzJbT8IgCYOI6abJCz9oF/iib80emiMwE7ivk
-X-Gm-Gg: ASbGnct/kOfOa8ZhaLn5CNKX3VDLE48Y9dbLZVk/53QqkJ0z4fv5UIZzfRGJSdXVnzO
-	ykmCSkbGS1m2mDSJGv2CkNL1+SoKeiAoMTdmUCXwX/vsj4cf4LuwlDOdIkMQLbTz+Fqi/whl+I0
-	fs8nW+gR9j6bew6RyrOg/UHDzNY1RJs7TghLRIKeozXf/ZCkhWCxyHEbOmAIAU+vcXEzUi5O6Ok
-	nxLuXehtUw6T9sSeyAc6oJBqlYisK/VdMbHYxrg6DTe+fFbQ3NiyZLuxjm7rtYr+hNEytZ/K8cv
-	V8ZhQBzYaNmQEbysOKIAsXyl8sohpDDPXSlF3/OOk6O+430wkw==
-X-Google-Smtp-Source: AGHT+IHNpZUdZlSIJX40FGVrU5jxa9k7R1/SXc2BmovlQlqrVQqzsarwJuqHOBXzdPDbIs0BFD5RsA==
-X-Received: by 2002:a05:6a21:68a:b0:21a:ede2:2ea3 with SMTP id adf61e73a8af0-21ee250ce0dmr8734059637.17.1749294085231;
-        Sat, 07 Jun 2025 04:01:25 -0700 (PDT)
+        bh=4zSu1izb4tWJDTxLhqSImmpcJMMSBIL+shCUHw2Xsjs=;
+        b=HZ150v5Cx0E2J+b/osrY+ZS469/iNhTNemzeRHnVAXlBnIXR4k+DqhyIOFI/sNbYyO
+         disua2qX+NvE+kxnMIAmveuIXZGzJcMwWiN6cgU49ROcikSNrSBg2LmFDDnN8cYoaXa3
+         yl0mYXYCbnZIvoF00DlnF+/4qM53rlqLS9bc1Sz6AgURJADApzP+AiiOMYlIKc8jK7Hs
+         9W+6dnYPFhXv7wve3z56NX4YcixOlQuysC7YZrqDe5KQ9A1W/s14/+Ab/i3cP4JtQFwk
+         lVZcaS03LQFHV0N/F1P2pIWL/53knleffgeDfnssl4XgmJBOFp1b+5KE7qVxOBkX7Cxk
+         gShA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+lfJKm1X7K6wHaaSBSJ9kd58uxYSLYxMcfzyTb4Xt8IzwDaC6hFeFhvXTewOBtsSdJP5QrNfVRcC+@vger.kernel.org, AJvYcCVxau7XFKLm9q7kHMKomjeYDOjIIMHlvLkMz5M+bbKQtR4etQXboFapCpG+YnuEhRNsYJeP5zfhLsvV1q8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGOHqOvqE+O7kLYQ7cO8pueU8xkuEPyk+veXkw9XNlLkncwv+N
+	74/uVjYCPaZmSPu6fxxha37wvV4+e6dwSyX+sCViCb688VDvlMhSnvS3
+X-Gm-Gg: ASbGnctuzhFyQqNXz6fir4o4qvqhRru7Sl+77ZLFPoKuqV2YzltYgYqyqHVY2HxyeMT
+	yzD5noGaBXSmj7/FmJigHwjogH7IQTocNGqrKEMH1N28yN90XMKbB7OouS1qgNYPbn1hHR+mPtn
+	yemBDrg37+Qo7fGvhWCjVKOH3WmR8PhaRjhqAMXdAoWPLeYA/GcyF5GiH0vY4oBAfkqt8aW8jlK
+	sDlQ6BReJR5zKpGPwhTS0L8WTTDM5W2IuR7XStlui+Jg1AQkNbbQyVx4Rk52tpm48L2gREqXFuX
+	NEBsYK7HYaaMC4tyzkbGg769+psGvxXcNYAjv/UCHVLbxuBO5A==
+X-Google-Smtp-Source: AGHT+IG92XPX/rE2LJZk4TUNKBW2ws8nFw7IMuK4bikAYNrgsCpmBPTBH5f+Tfm01lqMfPjIBc4FJg==
+X-Received: by 2002:a05:6a00:4884:b0:748:3385:a4a with SMTP id d2e1a72fcca58-74833850decmr3053128b3a.23.1749294103248;
+        Sat, 07 Jun 2025 04:01:43 -0700 (PDT)
 Received: from geday ([2804:7f2:800b:2bc9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748391f7391sm959612b3a.45.2025.06.07.04.01.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0847aesm2611189b3a.105.2025.06.07.04.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 04:01:24 -0700 (PDT)
-Date: Sat, 7 Jun 2025 08:01:19 -0300
+        Sat, 07 Jun 2025 04:01:42 -0700 (PDT)
+Date: Sat, 7 Jun 2025 08:01:37 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: linux-rockchip@lists.infradead.org
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -82,9 +82,8 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/4] PCI: rockchip-host: Set Target Link Speed before
- retraining
-Message-ID: <aEQb_xUwC0gk97y1@geday>
+Subject: [RFC PATCH 3/4] phy: rockchip-pcie: enable all four lanes
+Message-ID: <aEQcEbfF05JwZVKs@geday>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,30 +93,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Current code may fail Gen2 retraining if Target Link Speed
-is set to 2.5 GT/s in Link Control and Status Register 2.
-Set it accordingly.
+Current code enables only Lane 0 because pwr_cnt will be incremented
+on first access. Use for-loop to enable all 4 lanes through GRF
+register.
 
 Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
- drivers/pci/controller/pcie-rockchip-host.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 6a46be17aa91..55b3289fb70f 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -341,6 +341,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 		 * Enable retrain for gen2. This should be configured only after
- 		 * gen1 finished.
- 		 */
-+		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS_2);
-+		status &= ~PCIE_RC_CONFIG_LCS_2_TLS_25;
-+		status |= PCIE_RC_CONFIG_LCS_2_TLS_50;
-+		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS_2);
- 		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
- 		status |= PCI_EXP_LNKCTL_RL;
- 		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index bd44af36c67a..48bcc7d2b33b 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -176,11 +176,13 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 				   PHY_CFG_ADDR_MASK,
+ 				   PHY_CFG_ADDR_SHIFT));
+ 
+-	regmap_write(rk_phy->reg_base,
+-		     rk_phy->phy_data->pcie_laneoff,
+-		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+-				   PHY_LANE_IDLE_MASK,
+-				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++	for (int i=0; i < PHY_MAX_LANE_NUM; i++) {
++		regmap_write(rk_phy->reg_base,
++			     rk_phy->phy_data->pcie_laneoff,
++			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
++					   PHY_LANE_IDLE_MASK,
++					   PHY_LANE_IDLE_A_SHIFT + i));
++	}
+ 
+ 	/*
+ 	 * No documented timeout value for phy operation below,
 -- 
 2.49.0
 
