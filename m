@@ -1,126 +1,135 @@
-Return-Path: <linux-pci+bounces-29131-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29132-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27536AD0CF8
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 13:02:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86E98AD0E3E
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 17:50:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25D073A3406
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 11:01:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DECBE7A5B79
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 15:48:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D872220CCCA;
-	Sat,  7 Jun 2025 11:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465791865EE;
+	Sat,  7 Jun 2025 15:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFS9Bvfm"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K/TjeYsG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6046F20B81D;
-	Sat,  7 Jun 2025 11:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494EFE55B;
+	Sat,  7 Jun 2025 15:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749294128; cv=none; b=sZt/ow2nOgzMtZ9JTB44gEOKlGapuT9rwe+wOWCO+89blwXiw0s6//RiTjItneoDSnyjjxI6pp8OJ8j6JepJU6TinVdynOFdVVCmFyQPPQ6GzQ0aX5jB6uu7ydqhSV46kQu7Nz1vq/UbQ1gfCM0wScKmbQJ8e1HALJls3Kg5yLE=
+	t=1749311400; cv=none; b=h5umZXt2DUa59Nvgc7h94k2XFoZce9gcBYQU72QbHMWuY3hu1ys7MnrGBxjkNvf55ht3v3AT6+72lLhgQh3lElIAqtGRV6byIra0fInJa1scvXWsVCehei02IqOjm0HGWJTsuLu8eDiIJqJ2gsczEiP/MSKd2ADSTkMnYTz+Mp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749294128; c=relaxed/simple;
-	bh=DzWuE22vL1YP8zSHbfP7Qpjs9nzrUqlrq34nmlb01RA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ihA6QgMlxCReV7s4FvdtZOVTI7ejAMRlSB9bbZob/aVvUGlMbuV8uw4MHS3FhF2WERkQn9SDscMX0o1pQonO52g5nob2kyoXfIGFEoDfZAZNg9NFok/3mbRehk8bpOfKz5INvJeefR2QQBZficAyL8il0H9H5QypiKrCNTbUS0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFS9Bvfm; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso2366226b3a.2;
-        Sat, 07 Jun 2025 04:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749294125; x=1749898925; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4uBBexglmDg860eeLxvF6Ft+pxKPH1DbiU+A4sUq4Hk=;
-        b=nFS9BvfmJWJ3+9HzNWOBbeCflTQrffA7KJE3KK7wZZTjfmk1+eNbrtBVFrZ1nvV8wk
-         VhqzO1R+/gFY/26r51FTAOSYK/8Ziez6LMYvuKxoQegL2XPY7f/Bg9bCz1bZSmWe7c6K
-         g7cBhuEEAy/1MS5/slJcSP5zSRrngzl4A/onlatPnh7xBoNcUdS7GzPya+FQTVXKyEG4
-         2it+Dv9/jK03RBft/9pIhK3K9dBTf+sRuFHop9A3yK0dYZsvvnXwCfrZtX8dMwBmABQG
-         7DLadhggVIrYblBk9VmdTo85wKCyvlLQden+0RQFPD+ZEdtRmGsjMuUDzIChjN2H+o6T
-         kNzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749294125; x=1749898925;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4uBBexglmDg860eeLxvF6Ft+pxKPH1DbiU+A4sUq4Hk=;
-        b=hgVE5XQ/NtCKYafVJzY/dJGacDFs3EWYv6OV9AOqvVg90SGenqNPX12FD8Ynt2PwI6
-         /ivcH33crgkIJ1a492MlAAbAxZtVXyGlPYoVrIQ0igfSMWSLf2zFdzVkaRcWn79WPSX6
-         SJZKv4GpTbqxYQO8tgrtHJ/Rx0ZepyAeZmUqg5Q81foYicFKHffvd75fBP/1nGm/o066
-         S0zf8X8RyxEHF1xqxopQaqrSV3B1VB2CKPZDvyU86EESMLj66f+saKWdDI2HOyEir6z4
-         mB54uukHZLQ+BDBGwE4sVPyqrXb02MBszI6O9D1aNwe8nwAO9m4yCpI9Scx5Fy5L/BBL
-         QL1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUz77H33b5/GHiCBnGvmMy7jFX8HgVPJmJ8SJLpjbkyx5kwAv31dwdgWpL+U/d+jbj5G+SvAZj0JevQ@vger.kernel.org, AJvYcCW7TF+U7r5guYED7md9yQWQsaeqLzZNE08qXNC3GW1rNw3UXS6SV6OfhQMY7vNFc8qJxFChPdiXuIUCHHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM8B28IqIdZfcYCaYdqFXh3V2JJM815AfUularmO2PCc8PiGUu
-	6x82ihmrBuu4rYdKMvdjhh3AK66lBc78vFzC3fOXIrJVaF0TNpa2Q/8A
-X-Gm-Gg: ASbGncvUitPZN0boyl6FggV4gqCNwbHAXTrN9KrCBM371rVnj4ejOF7sNJogcAIL2oC
-	xQNKUkotEFviy0wTrsxkpCWyI2V/StD6ceA+NOc+xvQhX2O2RCOzEkM6EgeuyOxYIxzycN1ujXz
-	O+7El0ul0nbLbOnD+YvSnFU2fmDO7svyXQFigbBeohVfVrB9sYlIzJYuvd/Ol4jLrFYq2cXfsfl
-	MNTXFg3+PVJDIkClbWrxKE9R8wSjqe1ht79BGzFpfSu7PZLQGRySsT+su9t3hH77zWs45Of7NkG
-	RW+lQx8RMmXBGaRQU58EJNJrGknPkpU1469PbzE9nENcyCw+MA==
-X-Google-Smtp-Source: AGHT+IFYL9anMnNxKV2ckcM3gDwV1GsmgLUpZL8PFIBko5cIs/9IiYHRWTIxEtw+MUY9myL9CJHr3Q==
-X-Received: by 2002:a05:6a00:2e07:b0:746:2c7f:b271 with SMTP id d2e1a72fcca58-74827e7f485mr8075913b3a.9.1749294125519;
-        Sat, 07 Jun 2025 04:02:05 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:2bc9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c6649sm2538048b3a.113.2025.06.07.04.02.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 04:02:05 -0700 (PDT)
-Date: Sat, 7 Jun 2025 08:01:59 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 4/4] phy: rockchip-pcie: adjust read mask and write
- strobe disable
-Message-ID: <aEQcJ7L5AlxP2Z6w@geday>
+	s=arc-20240116; t=1749311400; c=relaxed/simple;
+	bh=uQ7s/v2AjGsOc05HnX/jIvUmXGAQx9UeU4+auFghVDo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j9nP9nemP/MehENfhQixXUijsSfQd0MoGUa/TN8K4eHc46vj078GiNnSK4/NDIcgZKNaTJU2KcFX9aDCrgr/Fh1t0VfTTYOnFD5PnpyJPXeYoOG7sXNCvt2ILK8KMTzDu1jv7M2AwCbvRfrh3lNJwZCroBpBV5GXO5FQ077g+3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=K/TjeYsG; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3x
+	nUcdBvnWiNCp7yTgWXorfhoxPJD3su6at4f5v/ffw=; b=K/TjeYsGv5+JF6ifSW
+	Y3cHhH10l1uRzkq9k0XbVNyqRhDbAME4pjnZwgcNcjl5kt+RNDu9ROLYEWr7sZyp
+	o6SdkzBGtn1OguVZhAB8ZUI/hdo082wOniDojQAaB20Pic+sJMx37UmZh/wVBYQk
+	zTAiFsGXeOxFdk26sc89kUeRQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzz17X0RoTZo8Gw--.4221S3;
+	Sat, 07 Jun 2025 23:49:16 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	shawn.lin@rock-chips.com,
+	heiko@sntech.de
+Cc: robh@kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 1/2] PCI: cadence: Replace private message routing enums with PCI core definitions
+Date: Sat,  7 Jun 2025 23:49:12 +0800
+Message-Id: <20250607154913.805027-2-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250607154913.805027-1-18255117159@163.com>
+References: <20250607154913.805027-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnzz17X0RoTZo8Gw--.4221S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWxXF4xXw4UKF1ktr1DZFb_yoW8KF4fpF
+	W7KryfCF1fXrW5u3Z5Za4UGr13XasxC34xtw4vkw1xZF17CF15GFy29FyrGrW3GrZFqr12
+	9398tr9rGF4ayFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE-BMJUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhNlo2hEXNoO6QACsg
 
-Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
-defines asynchronous strobe TEST_WRITE which should be enabled then
-disabled and seems to have been copy-pasted as of current. Adjust it.
-While at it, adjust read mask which should be the same as write mask.
+The Cadence driver previously defined its own message routing enums (e.g.,
+MSG_ROUTING_LOCAL) and message codes, which duplicated existing PCI core
+macros (PCIE_MSG_TYPE_R_LOCAL, PCIE_MSG_CODE_ASSERT_INTA, etc.) in
+drivers/pci/pci.h. These core definitions align with the PCIe r6.0 spec.
 
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+Remove the driver-specific enums and switch to the centralized PCI core
+macros. This eliminates redundancy, ensures consistency, and simplifies
+future updates. No functional changes are introduced.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/phy/rockchip/phy-rockchip-pcie.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  2 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 20 -------------------
+ 2 files changed, 1 insertion(+), 21 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index 48bcc7d2b33b..35d2523ee776 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -30,9 +30,9 @@
- #define PHY_CFG_ADDR_SHIFT    1
- #define PHY_CFG_DATA_MASK     0xf
- #define PHY_CFG_ADDR_MASK     0x3f
--#define PHY_CFG_RD_MASK       0x3ff
-+#define PHY_CFG_RD_MASK       0x3f
- #define PHY_CFG_WR_ENABLE     1
--#define PHY_CFG_WR_DISABLE    1
-+#define PHY_CFG_WR_DISABLE    0
- #define PHY_CFG_WR_SHIFT      0
- #define PHY_CFG_WR_MASK       1
- #define PHY_CFG_PLL_LOCK      0x10
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 8ab6cf70c18e..77c5a19b2ab1 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -353,7 +353,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+ 	}
+ 	spin_unlock_irqrestore(&ep->lock, flags);
+ 
+-	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
++	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(PCIE_MSG_TYPE_R_LOCAL) |
+ 		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+ 	writel(0, ep->irq_cpu_addr + offset);
+ }
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index a149845d341a..1d81c4bf6c6d 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -250,26 +250,6 @@ struct cdns_pcie_rp_ib_bar {
+ 
+ struct cdns_pcie;
+ 
+-enum cdns_pcie_msg_routing {
+-	/* Route to Root Complex */
+-	MSG_ROUTING_TO_RC,
+-
+-	/* Use Address Routing */
+-	MSG_ROUTING_BY_ADDR,
+-
+-	/* Use ID Routing */
+-	MSG_ROUTING_BY_ID,
+-
+-	/* Route as Broadcast Message from Root Complex */
+-	MSG_ROUTING_BCAST,
+-
+-	/* Local message; terminate at receiver (INTx messages) */
+-	MSG_ROUTING_LOCAL,
+-
+-	/* Gather & route to Root Complex (PME_TO_Ack message) */
+-	MSG_ROUTING_GATHER,
+-};
+-
+ struct cdns_pcie_ops {
+ 	int	(*start_link)(struct cdns_pcie *pcie);
+ 	void	(*stop_link)(struct cdns_pcie *pcie);
 -- 
-2.49.0
+2.25.1
 
 
