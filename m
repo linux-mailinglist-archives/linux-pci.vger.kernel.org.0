@@ -1,42 +1,43 @@
-Return-Path: <linux-pci+bounces-29143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DAB3AD0E61
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 18:05:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55411AD0E63
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 18:05:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA9423A3B90
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 16:04:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C66F71890E13
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 16:05:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBCF113AD05;
-	Sat,  7 Jun 2025 16:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C7A13AD05;
+	Sat,  7 Jun 2025 16:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Bd7bhc4U"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Yoq6TCtq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36800184F;
-	Sat,  7 Jun 2025 16:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB4B184F;
+	Sat,  7 Jun 2025 16:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749312310; cv=none; b=U37k1ECCN3VdOZr+mmt2lMHQ8vk9MUjQTUaWN+E42GQj62nTAbIoPunkZswljaspqSR3+gMzEnncS0WoB6e4PenZ82XN3bE1QWXDHyPtbPsjdKIXql5BzyiZ6rs4cszC71PpK6Ry7sC3djBlpnLxCe+XCdsP5XWSOEaB0pBUkdI=
+	t=1749312316; cv=none; b=n2qJwJ+ba3yH3XgN9zYbVa92ZJ4byAck47ZeT0rdg0Z2zMEm/REngY+lKUqSzFE95cKOTHOt7WrcL3Q8uFTyAfTrq675WtnFHsl9Luq4oMnCp+bRkupmTs0jue9rynBNNuUDJ+QtYsV6u0WCt7kezn38ygmY/7Lup6wKCOSydJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749312310; c=relaxed/simple;
-	bh=6leJmzYy9qYX+PS1PoEw39SWzakrUethGO16mt5pYaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=entvfs0iBVQ9Xns2shyCQRMvIYe78UoPuvGpmKtHM9Mpqs0eKu2EQ6p0eTvsf0Q8LrBnHEi1ExSUCE34+uZtJEqaqXu3khPnkFsMu3EP7uGkp0jiviJ+mXBLleRzpGZbFlP3mnz+24W8bqij3wCJ/zbqEcQDMowZIc6zvTBV8Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Bd7bhc4U; arc=none smtp.client-ip=220.197.31.3
+	s=arc-20240116; t=1749312316; c=relaxed/simple;
+	bh=TdjSTlUdgP4LXrNuClt9rd2nGipjznUd5ZXNwClX9iY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uyLoInV/GK+eNa/CPbCfKzDaw9iJaxaaZq5AvvnqSyoCrUqQ9ZoHtURJfbx644W/h7YcqNQ9xJqlwz93fghj2BQQ77sWsj687zFWadap821lP/426uW5lRK1bzVurKrnFQ4QyUnUXjfOthHNzZWGtaiuER2sbDSHb/nISewZeGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Yoq6TCtq; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=k0
-	A/8eOa3/qxuN6ibHKqnIXti28+I3rQhaeeIBTeaok=; b=Bd7bhc4UH4kUYHYnrT
-	xuxQYoU8OouzKeeiwGx8rhHFRdD7g1HX+EW0UAnO6tWcDaTrk80HEEpOcv5jl8TC
-	WhhoX+arHMFZaav1G7KREzvM1WyFYzcNR3bPYWrHCremOblaqZmYTMdks8q4FwI6
-	jL2mQNq2ZPjrJRK65HRbJQ2qM=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Q5
+	Ms93Khz/oAEynWixPmT3I+2jyhZg/bPBQtyT4UV60=; b=Yoq6TCtqv3swQV5HpA
+	43HND+U/e1hn+2zn94r44R5j5TG2Qv6yWIWfdRI6ZOY8fxLlA/1oDhsGFKuMt2R3
+	n/7G6nM+ZoOsRGOpd4M7l0D38ctOBsiGsXOIAmHcxZhBsQxeVOsm9RLIbDpmgQSm
+	XFTUsjll2M+cMT8XDtrIZvHqM=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzz17X0RoTZo8Gw--.4221S2;
-	Sat, 07 Jun 2025 23:49:15 +0800 (CST)
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzz17X0RoTZo8Gw--.4221S4;
+	Sat, 07 Jun 2025 23:49:17 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	bhelgaas@google.com,
@@ -49,10 +50,12 @@ Cc: robh@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 0/2] PCI: Consolidate PCIe message routing definitions and remove driver-specific duplicates
-Date: Sat,  7 Jun 2025 23:49:11 +0800
-Message-Id: <20250607154913.805027-1-18255117159@163.com>
+Subject: [PATCH 2/2] PCI: rockchip: Remove redundant PCIe message routing definitions
+Date: Sat,  7 Jun 2025 23:49:13 +0800
+Message-Id: <20250607154913.805027-3-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250607154913.805027-1-18255117159@163.com>
+References: <20250607154913.805027-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,32 +63,53 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnzz17X0RoTZo8Gw--.4221S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jry7Wr1xuF4fWF1fCF4xtFb_yoWfArcE9F
-	y8Xa9FvF1UGryayr4YyrW3JF95Z3yUZrn8Gan5tF45AFyfArn5XF98CrW8XFyrWF4rtF13
-	Kr1DZw13CF4xAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRZNVkUUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhNlo2hEXNoO6QABsj
+X-CM-TRANSID:_____wDnzz17X0RoTZo8Gw--.4221S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJr48KFWxXr1xtFWfXFWDurg_yoW8Zry8pr
+	WUJ3y0yF4xKw43u3W3XF4fXa17Xa9rtF4qvrn29a13KF1fW34rGa4UZF43Grn8JrW8Xrn2
+	k390kayDtrZ8GrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEWrWrUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxRlo2hEXgkg6gAAs4
 
-This series consolidates PCIe message routing definitions into the common
-PCI core header, eliminating redundant enums in the Cadence and Rockchip
-drivers. By using standardized macros (PCIE_MSG_TYPE_R_* and
-PCIE_MSG_CODE_*) from drivers/pci/pci.h, we ensure alignment with the PCIe
-r6.0 specification, reduce code duplication, and improve maintainability
-across the PCI subsystem.
+The Rockchip driver contained duplicated message routing and INTx code
+definitions (e.g., ROCKCHIP_PCIE_MSG_ROUTING_TO_RC,
+ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA). These are already provided by the
+PCI core in drivers/pci/pci.h as PCIE_MSG_TYPE_R_RC and
+PCIE_MSG_CODE_ASSERT_INTA, respectively.
 
-Hans Zhang (2):
-  PCI: cadence: Replace private message routing enums with PCI core
-    definitions
-  PCI: rockchip: Remove redundant PCIe message routing definitions
+Remove the driver-specific definitions and use the common PCIe macros
+instead. This aligns the driver with the PCIe specification and reduces
+maintenance overhead.
 
- .../pci/controller/cadence/pcie-cadence-ep.c  |  2 +-
- drivers/pci/controller/cadence/pcie-cadence.h | 20 -------------------
- drivers/pci/controller/pcie-rockchip.h        | 14 -------------
- 3 files changed, 1 insertion(+), 35 deletions(-)
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/pcie-rockchip.h | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-
-base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 5864a20323f2..12bc8da59d73 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -215,20 +215,6 @@
+ #define RC_REGION_0_TYPE_MASK			GENMASK(3, 0)
+ #define MAX_AXI_WRAPPER_REGION_NUM		33
+ 
+-#define ROCKCHIP_PCIE_MSG_ROUTING_TO_RC		0x0
+-#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ADDR		0x1
+-#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ID		0x2
+-#define ROCKCHIP_PCIE_MSG_ROUTING_BROADCAST		0x3
+-#define ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX		0x4
+-#define ROCKCHIP_PCIE_MSG_ROUTING_PME_ACK		0x5
+-#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA		0x20
+-#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTB		0x21
+-#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTC		0x22
+-#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTD		0x23
+-#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA		0x24
+-#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTB		0x25
+-#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTC		0x26
+-#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTD		0x27
+ #define ROCKCHIP_PCIE_MSG_ROUTING_MASK			GENMASK(7, 5)
+ #define ROCKCHIP_PCIE_MSG_ROUTING(route) \
+ 	(((route) << 5) & ROCKCHIP_PCIE_MSG_ROUTING_MASK)
 -- 
 2.25.1
 
