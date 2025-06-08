@@ -1,199 +1,106 @@
-Return-Path: <linux-pci+bounces-29169-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29170-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1930AAD1251
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 14:56:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 212A3AD1278
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 15:44:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9157B188C356
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 12:56:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24DA2169674
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 13:44:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0B5215F72;
-	Sun,  8 Jun 2025 12:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 684C520FA98;
+	Sun,  8 Jun 2025 13:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObV75UiX"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="LoZYQdkC";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="KrMKRpNQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0385C205E3E;
-	Sun,  8 Jun 2025 12:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7708C28F5;
+	Sun,  8 Jun 2025 13:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749387355; cv=none; b=BIyGU7wIyFKmhcpMkorNGrGds5TNZk7oO4aqKSDgTmZHsjkQ4oo6gAJkFkjJUEHc8qFdjwI7wX6rpeIjoy+30GcYWFPMsY8FiKtQRcEvB46G9r7IcKmzB3P12HucHHN0+/sOk0EeBuGV6fYFug/jf4tIZbDefXfnJJa8vMAsKz8=
+	t=1749390240; cv=none; b=KiRysHEf8rL4D13Mm2xakE3fL5Y/XTEMTsCQfZO1IfaB7yOhH44DX7nsgpgcb5UP059fgsND1GucQTuEUduQbwTC+m3wGFCHbhBOJvvJVZD89l1wleMyWDKA3QtlysPl2ZJ2PnOZdZqqc6D8zZptOxTDqlLj8JH0+RdVZO56S94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749387355; c=relaxed/simple;
-	bh=crMeZCHjEq5TihqLKJxwFs4ZwkJYL8VE5NSuCStvvpY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lErwlqyKuF5AmR+I+s9osyK6dvhPX3i4QxTFwoV/5hiipGBxOb3Lq0uJlQczavfC4wU7Sta8Knb4lXe2dKhJAAC3D5QNqZg2YpWIakTLO/8CJ18IgIBTpNcRyCq2OPdJq6YtEN1x/bwFvU2NvEMPI98PIlVhZpUjlPWhIVEeNJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObV75UiX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5D4C4CEF2;
-	Sun,  8 Jun 2025 12:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749387354;
-	bh=crMeZCHjEq5TihqLKJxwFs4ZwkJYL8VE5NSuCStvvpY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ObV75UiXGJmgztuJZnD4BssKonvlW2/WSfTvgNY/AySoEQdIJ5MJSE7Ph6o3yxZdY
-	 TfjwFR4z/sF7QLu5w12ZMoq6Ow2vTMR+pl+Y0V/Q3zjDqUvJ1Hu3VUfXfIke+phZ1A
-	 zqdRIRoUUtxBBkfweqXJvKdzhcAu57mcZTXeIxG07OOw25jEtxQ4cYZlgzFo1iCEVU
-	 S6u6tbaDAxEw/Wot8AYCRbTRmUUYxKsJakcqiBLegX0ASTd0fEYnAgN6EOpdF+4bFD
-	 i8DY5tbUE/baKbh59qCC7MoCzL5EzF3DPkR1drDvr7wXq2Zq15xG09z+3fnCfN08Mw
-	 WbIf52hhuHEUw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Janne Grunau <j@jannau.net>,
-	Rob Herring <robh@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 5/5] PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-Date: Sun,  8 Jun 2025 08:55:43 -0400
-Message-Id: <20250608125543.934436-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250608125543.934436-1-sashal@kernel.org>
-References: <20250608125543.934436-1-sashal@kernel.org>
+	s=arc-20240116; t=1749390240; c=relaxed/simple;
+	bh=oDuz/z5LlZRZpaTjhzgz+X1f65Mj/eD3ZtAEzlBUKg0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EjF0SdOYBiavoOS2owJBtD0PAj4pG+q1EZkKLp6cMzMiQAgIc6iPM/sGsHwb2Q12a+0PCn+a1YEtcMlSAf65Pb3eBGfYYyOgzH2pbeNAYASSVug0Jh1cfrqpCZu3oar7JHziVVI7c9fYB0IJ/c2aDsk5WdDE18sD7Obwieiy+zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=LoZYQdkC; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KrMKRpNQ; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bFbqw2Sq6z9sSQ;
+	Sun,  8 Jun 2025 15:43:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749390236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lMN6Z9J6jhZFiusb8bVANtIUUu6PEMf6Cx193x6RDXY=;
+	b=LoZYQdkCjuzH1R8XYJZpDsAL7cv4rdZ+6gpOmEfxC0uWC1vy/qSQ5jNKQbrobFGIM2n6He
+	IHZ9hLEjZve3Jn2/lmEY12WCe8yX2zNMN4Hm/Ekw3N0eGgpfmuIAb21oUZifjEPgDLDg5y
+	paEconR+nPv7B5ZRP6KwCa1yzq2mSkiwA6xbZN0bs7GQWnzxzKA36fV2ld2T9P7qEQr2cT
+	/geTTiUiayiIu0GPjTvcyyW/+xjr3QzmsTFEEsBtvNxzAEhCiyZLNGuHHLS32k11Q3Q/xF
+	4GHhCcad8o35MpNMZZzc2m3tOqPrwxAnQ5G6IG9sErfNgYflgqdUNIuUflIIng==
+Message-ID: <bf1be30c-da2f-4e1e-be39-e96ffc3d2079@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749390234;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lMN6Z9J6jhZFiusb8bVANtIUUu6PEMf6Cx193x6RDXY=;
+	b=KrMKRpNQB5viW0yOOHU9Qzn4BPWNu9Ig2yyYoJhi9jb2ixG1CxMyDiOZEbepGRfmP7Hfj0
+	p4NktB+BfKjUxvoZcoP5Tg6iaUerlof4aJV8c38z281J0QOi5myYlViSpEpzPvwqAnrxn7
+	n7xt+98yStKjMuOI3QEK5ZnomNWhuJ1tLaa0pB4/0UKVAPbZM1RTbaGCkYNpdQyWJT+lE/
+	fkbZwnl2HpD9afOsww6ErmZyoi4L2ZDsHw5I/W26hdZP3sHMjG1f2ibXsZlOU9pw4rcBUH
+	iR+8f5wbQ90Rj3qROAhXXMoswMBbC4QM0NU1NM9+ziHJfnk+ewc/3qgcdrsEFw==
+Date: Sun, 8 Jun 2025 15:43:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.141
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] PCI/pwrctrl: Fix double cleanup on
+ devm_add_action_or_reset() failure
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <f60c445e965ba309f08c33de78bd62f358e68cd0.1749025687.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <f60c445e965ba309f08c33de78bd62f358e68cd0.1749025687.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: a975acc8e4c3cc6345f
+X-MBO-RS-META: nff8ta19ws7gi9e1wef11u38kgjhgfg3
+X-Rspamd-Queue-Id: 4bFbqw2Sq6z9sSQ
 
-From: Hector Martin <marcan@marcan.st>
+On 6/4/25 10:38 AM, Geert Uytterhoeven wrote:
+> When devm_add_action_or_reset() fails, it calls the passed cleanup
+> function.  Hence the caller must not repeat that cleanup.
+> 
+> Replace the "goto err_regulator_free" by the actual freeing, as there
+> will never be a need again for a second user of this label.
+> 
+> Fixes: 75996c92f4de309f ("PCI/pwrctrl: Add pwrctrl driver for PCI slots")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Compile-tested only.
+Reviewed-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Tested-by: Marek Vasut <marek.vasut+renesas@mailbox.org> # V4H Sparrow Hawk
 
-[ Upstream commit 7fa9fbf39116b061f8a41cd84f1884c545f322c4 ]
-
-In the success path, we hang onto a reference to the node, so make sure
-to grab one. The caller iterator puts our borrowed reference when we
-return.
-
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Tested-by: Janne Grunau <j@jannau.net>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Link: https://patch.msgid.link/20250401091713.2765724-9-maz@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-Based on my analysis of the commit and the Apple PCIe driver code, here
-is my assessment:
-
-**YES**
-
-This commit should be backported to stable kernel trees. Here's my
-detailed analysis:
-
-## Analysis of the Bug Fix
-
-### Nature of the Bug
-The commit fixes a **use-after-free vulnerability** in the Apple PCIe
-driver's device tree node reference handling. The specific issue is:
-
-1. **Missing Reference Count**: In `apple_pcie_setup_port()`, the
-   function stores a device tree node pointer (`port->np = np`) without
-   calling `of_node_get()` to increment its reference count.
-
-2. **Automatic Cleanup Conflict**: The caller uses
-   `for_each_child_of_node_scoped()` which automatically calls
-   `of_node_put()` when the scoped variable goes out of scope, making
-   the stored pointer invalid.
-
-3. **Later Usage**: The stored node pointer is used in interrupt
-   handlers and other functions that execute after the setup function
-   returns, creating a use-after-free condition.
-
-### Code Change Analysis
-The fix adds a single line:
-```c
-+ /* In the success path, we keep a reference to np around */
-+ of_node_get(np);
-```
-
-This increment to the node's reference count ensures the device tree
-node remains valid for the lifetime of the port structure.
-
-### Why This Should Be Backported
-
-**1. Critical Bug Type**: Use-after-free vulnerabilities are serious
-memory safety issues that can lead to:
-   - System crashes when accessing freed memory
-   - Memory corruption if freed memory is reused
-   - Potential security exploits in kernel space
-
-**2. Minimal Risk Fix**: The change is:
-   - **Small and contained**: Only one line added
-   - **Well-understood**: Standard device tree reference counting
-     pattern
-   - **No architectural changes**: Doesn't modify driver logic or
-     behavior
-   - **Low regression risk**: Following established kernel patterns
-
-**3. User Impact**: Apple Silicon Mac users experience:
-   - PCIe device crashes during interrupt handling
-   - System instability when PCIe devices are accessed
-   - Potential data corruption from memory safety violations
-
-**4. Stable Tree Criteria Alignment**:
-   - ✅ **Important bugfix**: Fixes memory safety issue affecting real
-     users
-   - ✅ **Minimal scope**: Change confined to single function in one
-     driver
-   - ✅ **Low risk**: Standard reference counting fix with established
-     patterns
-   - ✅ **No new features**: Pure bug fix with no functional changes
-
-**5. Comparison with Similar Commits**: Looking at the provided
-examples:
-   - Similar to commit #2 (Xilinx PCIe `of_node_put()` fix) which was
-     marked **YES** for backporting
-   - Similar to commit #5 (pata_macio `of_node_put()` fix) which was
-     also a reference counting fix
-   - These device tree reference counting fixes are consistently
-     backported due to their memory safety implications
-
-### Conclusion
-This commit fixes a genuine use-after-free bug in a critical driver
-subsystem with minimal risk and clear benefit to users. The fix follows
-established kernel patterns and meets all criteria for stable tree
-backporting. The Apple PCIe driver is used by all Apple Silicon Mac
-systems, making this fix important for a significant user base.
-
- drivers/pci/controller/pcie-apple.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 2340dab6cd5bd..f380b0595768b 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -585,6 +585,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 	list_add_tail(&port->entry, &pcie->ports);
- 	init_completion(&pcie->event);
- 
-+	/* In the success path, we keep a reference to np around */
-+	of_node_get(np);
-+
- 	ret = apple_pcie_port_register_irqs(port);
- 	WARN_ON(ret);
- 
--- 
-2.39.5
-
+Thanks !
 
