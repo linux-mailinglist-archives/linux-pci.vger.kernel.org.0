@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-29168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8BFEAD124E
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 14:56:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1930AAD1251
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 14:56:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDB5516A7DF
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 12:56:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9157B188C356
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 12:56:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B69420FAAB;
-	Sun,  8 Jun 2025 12:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0B5215F72;
+	Sun,  8 Jun 2025 12:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dg6sCmSU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObV75UiX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AEA171D2;
-	Sun,  8 Jun 2025 12:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0385C205E3E;
+	Sun,  8 Jun 2025 12:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749387343; cv=none; b=GJtzZuAVjf+TWAFXfGfyzhsY46PKf59xEYsPsfXkx+P2w6/jEFZ/1YdE7+ikstrA9EM2RgsilCuhmbmX8zGuKyP+wtjJefGtlNS4Ruvvub1gi/7OD7ZP4l7Ka/cZTe6gEx8lUkKBpqdmc1O75GG58nQU951oh890iZka6iPDlvk=
+	t=1749387355; cv=none; b=BIyGU7wIyFKmhcpMkorNGrGds5TNZk7oO4aqKSDgTmZHsjkQ4oo6gAJkFkjJUEHc8qFdjwI7wX6rpeIjoy+30GcYWFPMsY8FiKtQRcEvB46G9r7IcKmzB3P12HucHHN0+/sOk0EeBuGV6fYFug/jf4tIZbDefXfnJJa8vMAsKz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749387343; c=relaxed/simple;
-	bh=oEKlVkDK7k/FSzMnTljXN/Zm2luF3f2KX4HrACyExkY=;
+	s=arc-20240116; t=1749387355; c=relaxed/simple;
+	bh=crMeZCHjEq5TihqLKJxwFs4ZwkJYL8VE5NSuCStvvpY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QpH2/RnvWTYcArG9ezfCCDEHoYJSj7PjXPdTsA99fj9KGXqkPHfC0RLId9UAJibWMWJILRkk3qsUPZcAcDmtmDLabo5mGtjFoh/WNsLZLCBC1HyhOQRdp1LPAXsUqm/ic5hMJegTvvPMwiDEQlYMZOBbRS2j+pCxmQJK7eUcKlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dg6sCmSU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC8BC4CEEE;
-	Sun,  8 Jun 2025 12:55:41 +0000 (UTC)
+	 MIME-Version:Content-Type; b=lErwlqyKuF5AmR+I+s9osyK6dvhPX3i4QxTFwoV/5hiipGBxOb3Lq0uJlQczavfC4wU7Sta8Knb4lXe2dKhJAAC3D5QNqZg2YpWIakTLO/8CJ18IgIBTpNcRyCq2OPdJq6YtEN1x/bwFvU2NvEMPI98PIlVhZpUjlPWhIVEeNJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObV75UiX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5D4C4CEF2;
+	Sun,  8 Jun 2025 12:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749387343;
-	bh=oEKlVkDK7k/FSzMnTljXN/Zm2luF3f2KX4HrACyExkY=;
+	s=k20201202; t=1749387354;
+	bh=crMeZCHjEq5TihqLKJxwFs4ZwkJYL8VE5NSuCStvvpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dg6sCmSUM7NMKAP8UdT62vSH6S29SYE/cn0gl8AQl9o2u/n90QKBXwH0mqY4cF4SU
-	 rHHYwhzia2CQ9TLkNaLQzkhz6KbQjMgdXplASJh6RX/qHkXFHeTejE8iFM3RfQ5CRh
-	 JG3Jla52PYMHgfLkrD4VUzG1FBCqrUPzuWznPdlrbnAG01R8TlObWDNqIyV4L2lh7A
-	 wVQ05jmZtVo2ezvntaYm08wIZ1lyKJrBp8Pky9gEGG1hqjWyJ4DgL0OgQ8yOlW4wdR
-	 zwo6psOUeryNEoE2iDyKJ/P8aY8Xg251JQeWvhQgL4yQDT9boASS/MQ+GjhJcR3p9Z
-	 /vzhL3KvyJUEA==
+	b=ObV75UiXGJmgztuJZnD4BssKonvlW2/WSfTvgNY/AySoEQdIJ5MJSE7Ph6o3yxZdY
+	 TfjwFR4z/sF7QLu5w12ZMoq6Ow2vTMR+pl+Y0V/Q3zjDqUvJ1Hu3VUfXfIke+phZ1A
+	 zqdRIRoUUtxBBkfweqXJvKdzhcAu57mcZTXeIxG07OOw25jEtxQ4cYZlgzFo1iCEVU
+	 S6u6tbaDAxEw/Wot8AYCRbTRmUUYxKsJakcqiBLegX0ASTd0fEYnAgN6EOpdF+4bFD
+	 i8DY5tbUE/baKbh59qCC7MoCzL5EzF3DPkR1drDvr7wXq2Zq15xG09z+3fnCfN08Mw
+	 WbIf52hhuHEUw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -55,12 +55,12 @@ Cc: Hector Martin <marcan@marcan.st>,
 	kwilczynski@kernel.org,
 	mani@kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 8/8] PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-Date: Sun,  8 Jun 2025 08:55:27 -0400
-Message-Id: <20250608125527.934264-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 5/5] PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
+Date: Sun,  8 Jun 2025 08:55:43 -0400
+Message-Id: <20250608125543.934436-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250608125527.934264-1-sashal@kernel.org>
-References: <20250608125527.934264-1-sashal@kernel.org>
+In-Reply-To: <20250608125543.934436-1-sashal@kernel.org>
+References: <20250608125543.934436-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.93
+X-stable-base: Linux 6.1.141
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -180,7 +180,7 @@ systems, making this fix important for a significant user base.
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index f7a248393a8f1..694cfa3cbb2ea 100644
+index 2340dab6cd5bd..f380b0595768b 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
 @@ -585,6 +585,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
