@@ -1,131 +1,93 @@
-Return-Path: <linux-pci+bounces-29156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FEDEAD0F31
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 21:48:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A46DAD10E4
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 05:33:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CD6C16B46E
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jun 2025 19:48:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 893627A5F92
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Jun 2025 03:32:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC32A1F09A5;
-	Sat,  7 Jun 2025 19:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="i2ZLDNBY";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="FtQDDBJb"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 774962CCC5;
+	Sun,  8 Jun 2025 03:33:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3425210E0;
-	Sat,  7 Jun 2025 19:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B591372;
+	Sun,  8 Jun 2025 03:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749325693; cv=none; b=SHWwOjKinFaDaAzowCW7hJzPsv4i5/8kmPUD96KpGoL5kpvHuhFclQadjJSUI/zdHsYwmrIHFaapqBmX+5Z2p0CHjc5FIXYGi8sGh7o1yAzwwvYZqTqewwRj2cUrWaRbSrE5+IuGPPtY3Uz7e11DgrFKyWYEWNCk0/c4iFREpNQ=
+	t=1749353598; cv=none; b=KXrSCQ4eT2woaz7My2iwmgpkPYa3Hq2Q4/N4BOuWU2ANaxp7G0Q9AjbpwHOwIQLBJW8GITdE1+KipHb64ky/j/5LdfxTUpdt/NhPFslssxOb6BBlNaQuDl/UCKBJWSqPmhIxR6LOeM1I2wKSr4JVq1MONrE/Yd0ZQtcJtSpjdj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749325693; c=relaxed/simple;
-	bh=NzbY2kpDrJH5m/WTJDJontOJDrPmXG/zsRgbkPywQ20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O1UFSIyuSC01S3o3gx06UcsZc+QX3tsTc+ZzZxWgpqOKJzdx41uo63VDe2x7jeZJGjMPhQmtZ1PPt7RN1piIyerA3/JFrcc21FGJuKf410CXZCKP38B4Rl7tgkMlAKlI0xGa5WKXl6KjqLUWBm+ObfPShvmiXoueLC6SCt7nK6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=i2ZLDNBY; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=FtQDDBJb; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bF7yd193xz9swm;
-	Sat,  7 Jun 2025 21:48:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749325689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a4+qbg4VKKcEc0U3nC8xRMAhLd7TNg+KH4tpuBORnbA=;
-	b=i2ZLDNBY1FSdzQ7WiIVlTi80r8Kand1Bsafh7lhSzIHZGhRGfKrB6nJRRsgt+ksHpDS7hu
-	Q6uHJD/DGV0wFKAByH2iTHYFGhHZJPPA0EZB9K/cEVQFRbCWBFCHLFOb5tB/qJYkBhZXdk
-	hhHTk76ZFB7zb2JawNrsHBoVI7oPGe3MVCvIdi8dRmfJCSKVOEK5cYOnt3GfgJy/+R03UX
-	enrkB7uOcrn002ilwboYukEGncNag0DvP/dI3ELXRr1DsP3Y8uH6dHtIN8h/6FcqMsB5mt
-	6xGpeqYN6qm17rMAlUYeAWq+B0NP3kfDoilFT/sMZFMsWFjS6s/7NngzSZSZ6w==
-Message-ID: <e4d82284-d6e3-49d0-856e-e347d9d0de55@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749325687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a4+qbg4VKKcEc0U3nC8xRMAhLd7TNg+KH4tpuBORnbA=;
-	b=FtQDDBJbyUx0DnsjfGj2R/gJQ0dkSH0uBzfzH+8LZ2MvlReSEiXB7UtFq5d+8nIBgGgx+x
-	oKD2VpFvk1ty3eNwtJ6OsUNg7GoalmXglRr8MvmNaAPBm1LqYguRH/G1RwjLbzFgz/d0vC
-	9i2g92fqqxgcYOxyrErHPCTvFBCF2JhdxBJnwM/y/9jywPNwzvW5kGn53BU/rH7xC4/fhc
-	jv7XclbHudvrC9pvV+OCGg4xND+QEceR9o3potBdaTmmhLhmnh/YEEPElmKh5UeTmlL4iv
-	WvYFArsoCMhDF5qmO2XViQ3/DgtGQLp6EPUbjlJvoK8y+V8z2eLmtRRGmNAVsw==
-Date: Sat, 7 Jun 2025 21:48:03 +0200
+	s=arc-20240116; t=1749353598; c=relaxed/simple;
+	bh=eht5tDWbXFu4zrv3T3ChtN5Vz7TQI86f13AacKXOrVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RNANMZk0EpOSNoZxsesxiePhaEmtDwGup4HgWpyAMAnFCelfjCIRGgCJZ7ubHhGfuPwQHfOAV57GFk05QFNywX47ioFDNB4rtFzqxtNDjmpMANMeKJMAp8faNQSWtAv3UQ7Di8JKw+TRVWmQuXtmLNXZlkUCNJfbpRjemS/Sb3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD8FC4CEEF;
+	Sun,  8 Jun 2025 03:33:15 +0000 (UTC)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is enabled
+Date: Sun,  8 Jun 2025 09:03:05 +0530
+Message-ID: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, Anand Moon <linux.amoon@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
- <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: cjoza8k9ukqsd8hthc6b9ic7ttf1k4tp
-X-MBO-RS-ID: dff85be7c5192f8ee3e
+Content-Transfer-Encoding: 8bit
 
-On 6/4/25 10:40 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
+Otherwise, the following build error will happen for CONFIG_DEBUG_FS=n &&
+CONFIG_PCIE_PTM=y.
 
-Hi,
+    drivers/pci/pcie/ptm.c:498:25: error: redefinition of 'pcie_ptm_create_debugfs'
+      498 | struct pci_ptm_debugfs *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+          |                         ^
+    ./include/linux/pci.h:1915:2: note: previous definition is here
+     1915 | *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+          |  ^
+    drivers/pci/pcie/ptm.c:546:6: error: redefinition of 'pcie_ptm_destroy_debugfs'
+      546 | void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
+          |      ^
+    ./include/linux/pci.h:1918:1: note: previous definition is here
+     1918 | pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs) { }
+          |
 
-> Thanks for your patch!
-> 
-> On Sat, 31 May 2025 at 00:55, Marek Vasut
-> <marek.vasut+renesas@mailbox.org> wrote:
->> Add the ability to enable optional slot clock into the pwrctrl driver.
->> This is used to enable slot clock in split-clock topologies, where the
->> PCIe host/controller supply and PCIe slot supply are not provided by
->> the same clock. The PCIe host/controller clock should be described in
->> the controller node as the controller clock, while the slot clock should
->> be described in controller bridge/slot subnode.
->>
->> Example DT snippet:
->> &pcicontroller {
->>      clocks = <&clk_dif 0>;             /* PCIe controller clock */
->>
->>      pci@0,0 {
->>          #address-cells = <3>;
->>          #size-cells = <2>;
->>          reg = <0x0 0x0 0x0 0x0 0x0>;
->>          compatible = "pciclass,0604";
->>          device_type = "pci";
->>          clocks = <&clk_dif 1>;         /* PCIe slot clock */
-> 
-> I assume this should be documented in
-> dtschema/schemas/pci/pci-bus-common.yaml, too?
-Patch posted:
+Fixes: 132833405e61 ("PCI: Add debugfs support for exposing PTM context")
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Closes: https://lore.kernel.org/linux-pci/20250607025506.GA16607@sol
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/pcie/ptm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-https://lore.kernel.org/all/20250607194353.79124-1-marek.vasut+renesas@mailbox.org/
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index ee5f615a9023..4bd73f038ffb 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -254,6 +254,7 @@ bool pcie_ptm_enabled(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pcie_ptm_enabled);
+ 
++#if IS_ENABLED(CONFIG_DEBUG_FS)
+ static ssize_t context_update_write(struct file *file, const char __user *ubuf,
+ 			     size_t count, loff_t *ppos)
+ {
+@@ -552,3 +553,4 @@ void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
+ 	debugfs_remove_recursive(ptm_debugfs->debugfs);
+ }
+ EXPORT_SYMBOL_GPL(pcie_ptm_destroy_debugfs);
++#endif
+-- 
+2.43.0
 
-The rest is fixed in V3, thanks.
 
