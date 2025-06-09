@@ -1,92 +1,92 @@
-Return-Path: <linux-pci+bounces-29258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29257-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDFAAAD25F7
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 20:46:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDE60AD25F4
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 20:46:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43DF5188443F
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 18:46:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9190D1886121
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 18:46:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E280F21FF24;
-	Mon,  9 Jun 2025 18:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B4321D594;
+	Mon,  9 Jun 2025 18:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gnVhvZVg"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CpRelVoT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2078.outbound.protection.outlook.com [40.107.212.78])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2061.outbound.protection.outlook.com [40.107.223.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2948F21D581;
-	Mon,  9 Jun 2025 18:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943F221CA03;
+	Mon,  9 Jun 2025 18:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749494746; cv=fail; b=ceZ024LADU1b/MA6k/ygFIA2erVHCzu4iA9ADBW9/05OYHobmwDssMti2QNWw6yovgPdFz37Vscei8jbZXrFtBUtc1XzyreCLlJQuH3RDcRsutDgDPpESXBnIAmh4Npzp+oHaNxNyznyv18sVHgdS2tEU562xEtb0j7peHR1Iu0=
+	t=1749494745; cv=fail; b=LSXRhaGkSPkDvuDDZqkKUQaxklVMCKWK279pk3gxkQ7yhXEyK8OP0Iroz6fbGnRAst/cCgkUHTEfMKy8RKUeQxQrbB5VPm37klT71BucxAofU6AWc+a2RNVOAmGchB2DQ5SRdDG/w7prdV84qReQILp/UNnfQEsipep3AwcELZQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749494746; c=relaxed/simple;
-	bh=aRyup2AXGnBBeMGUP5oDORPrO3M2Dg6xdO31PE02zf4=;
+	s=arc-20240116; t=1749494745; c=relaxed/simple;
+	bh=6U5QNa0Xrcib71Izlg6sKM63hgi/WE9yyeM9DfuaF/s=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BlXHqkpKePahwJHS0al3Ehelm8/jcqsyj8oVxsbdO9Hz5k0imUIaDY368PKReP8Q2d6v/2koD6FSRI+rvw78FwJZ4cuvxNwvde77rZBNCObcLETJiqZyk37twyzyrj1WeYbfBP3HPddvuLxkB5pgVvTljMU9LLxShFxay6JJjMQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gnVhvZVg; arc=fail smtp.client-ip=40.107.212.78
+	 MIME-Version:Content-Type; b=D+vEC+HkgZujtq2IOrJPrEr00wZ9G+FjtVSS7+5H5YsalAWa/Q+mWgTSlSb4oELpMt/If+XQqcWZ3dIA+7zg41nNG+Q+1G1UHMIqi8nDu3VGcqWPZMv76wlPp5WkpgPsN93p3w+Lp5Ejrx/BDyq978/Vq8emIEqzgFH4Fo4W6J4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CpRelVoT; arc=fail smtp.client-ip=40.107.223.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aNVJleDu4DWhA0TTf4xZzKm+GtB+/4AC2kXp6WNNqPp62tshWDwXCJO1o+Jz8UzmeRZ/Dnu2HiSTiwpxjJYCarEUm+Ha8ympacfngYWq8CwUN7OCU8VcVwEpblCjIP0qq/Edk1ijpl5U6vrsdKI3Mk1+X057LcsyZfIo5+i3f9jnxWuRdk3IXZLS3GcXOS3s8AMdbh3XqXFr9CicazbybewwfpVy4tLioQ2hV2kefSlw0wrnGh1BMGpY1rbm2BQ7/asn/ip1LhIEIA8CEDTzBFHL1k5j6UuIk9X/TwCBApHejCiq5U4x7ARpIW8ST72aMguBP4CUrMRtCUwIEtTk2A==
+ b=tLjvZ/RnDDNafnYqys3tLOYxjY6nhA5xdMElFvEg5agmm4U2MjIoyMq0f2I4JvRX0h7niLOXg5ybYKl5Wu4LN4H4pNBIjM6vKojYC3gjDmQYYf12cr4XNVwEixnA1rylD+ZGGN18eWqh1ADMV9th3/iAR1/6b9kU1p1mYWyXO41OojiboW4CCUm2QZGRfdEViSh+jJBX3YCT11oN1b4TyO8oGnySPYuisCz8Wg3I46RjaL5X6R5AIAOSM5I9GLGnLfydVn9oyn4IORGtpgbFY3gtchwdY1PcJfPwCoPgWICm/YbE/aAI5/+sEuUM5hmVV3TpgH7K1dV5Aaa7cTL/nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FL5dOOTLLPQaxOj6vypBxQbFM19fVrPBTc0ANlQPQ5Q=;
- b=aIiXwWtdqydY1IL2FGSFuioo4ZuzQoQ7gYQMTY6ziWhNAm2m598GtKBiBVSMwvJczbEQ8EfFmm2n5Gb7Rw++K7V+hjN1VmFsANBGTyWuLGJGMmhRRCSWxwD3Rwc/1nkq5GxXYQvvTvIcJvzbyiSIzRjlSavUNyw5Hw6/q93g4FOC/7i7J/BnzLD71PdswgU+bpYdkyTUnwR2PWtLqDRwmEtTYvsW4/0Fa9zIcPdLgo9i326fbVvWdnyEhgP/OeNZLEK17tQFJ6yf2NioGNuS8jkDKAxISHXX+4+dlfe+00Q9QEokpxkvkodu7xtauevERb2neuxRiAnT0c0hWDjh6A==
+ bh=9t0BH9eU6WdnU8eixRvduEm9VpWFHxof6qktJDjSsm4=;
+ b=WjBe0uOzvh75RR4JiLanxjj7OhdCoyZZnSfrPgG7bmAHTU5iBNJWo9OiTF+mBG8JRAzN68+tyOQSS7lut00WZK1qrHaXcpYoKNtQKequdsN4WvBH7bsIyk9a+Nuo5vAX1kyNbawC+zBrABjP4WCgfpNFjTZlMbPGpcnv2biuB9bsiAs/s2yVGaXoU/TRNPGdgQhU5ixio9hLz4526xu1UbyWOo12s3NfkIls0q9uw+ZuS/yDeMLnV/RT2g9txTrjC12GzYhn7Yv/CI3H0DKBbklu8U5Av1jC6NqyGatEDW+t21dlYWxi8s4tXVSkiyQIdVsepJhsEIZrJ+jnzAViUQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=8bytes.org smtp.mailfrom=nvidia.com;
+ 216.228.118.233) smtp.rcpttodomain=8bytes.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FL5dOOTLLPQaxOj6vypBxQbFM19fVrPBTc0ANlQPQ5Q=;
- b=gnVhvZVgYv/LlnmmSzXvm/1jAVqvm058GP2axk19Nmo4BwodN2+0hqlFB6fre4O82e8BKja2y9dikqhrn1Qb1krsZkKpTfGLJS+/18RtNuvv7fF+AUnK+hBouzXXmBinEQ85uhAK+ywJKsrfUSQSBohXfM4/EeeDcM5jkqMD3szw+TQCACf7dix/hgH2HEYS25WAEMt6SNKcAPrOsbsGi1YsG7LNcM2FGHkWNHVc/Am1dV0yBrixXK/a4cZ+r3WBQzYZiAKnAHkIACeCubC9kBm+KnXqAHRVnFIjuyLVgy+U/zDM/4SQuZa8602MpGu6aREsbhh7fvJm0v3A3bu8TA==
-Received: from BN0PR02CA0027.namprd02.prod.outlook.com (2603:10b6:408:e4::32)
- by BL1PR12MB5923.namprd12.prod.outlook.com (2603:10b6:208:39a::22) with
+ bh=9t0BH9eU6WdnU8eixRvduEm9VpWFHxof6qktJDjSsm4=;
+ b=CpRelVoTmOrcYLyUIM0kLrAoSTGDlTwCzxg09Zr9zonqXzIEOIwXxEbg0gn6TNB1PbSPyGSim6fRY0bxnPDz5nhhQ9ftJNQ1Wkd5mOULTU6OKNIfaUj+7dOLMfY9PnkLqQGMlK7FYBgj+l6vqAYt09W3/lZjYWqfkJjGXWOBTCtrvP2lGAMVXGWWvRc2mz5GDyfxLfZ8auRqVynjSk6R0tn0SGCNiJaDQUBBF3LdD1knf5XKBOJC/YTa2C0Ns9MiGQdZyl2RH5Ii/DIvSdpLnPglB6HxE9SrY3ax4uZDCJQ/wakoi7FFTpm+lxF4QY1WpSQvbxev62xc5dMWZSsUcw==
+Received: from BN9PR03CA0864.namprd03.prod.outlook.com (2603:10b6:408:13d::29)
+ by DM6PR12MB4385.namprd12.prod.outlook.com (2603:10b6:5:2a6::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
- 2025 18:45:41 +0000
-Received: from BL02EPF0001A105.namprd05.prod.outlook.com
- (2603:10b6:408:e4:cafe::a1) by BN0PR02CA0027.outlook.office365.com
- (2603:10b6:408:e4::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Mon, 9 Jun
+ 2025 18:45:38 +0000
+Received: from BL6PEPF0001AB4F.namprd04.prod.outlook.com
+ (2603:10b6:408:13d:cafe::71) by BN9PR03CA0864.outlook.office365.com
+ (2603:10b6:408:13d::29) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
- 9 Jun 2025 18:45:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ 9 Jun 2025 18:45:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- BL02EPF0001A105.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BL6PEPF0001AB4F.mail.protection.outlook.com (10.167.242.73) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 18:45:41 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 18:45:38 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
- 11:45:21 -0700
+ 11:45:22 -0700
 Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 9 Jun 2025 11:45:21 -0700
+ 15.2.1544.14; Mon, 9 Jun 2025 11:45:22 -0700
 Received: from Asurada-Nvidia.nvidia.com (10.127.8.14) by mail.nvidia.com
  (10.126.190.181) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Mon, 9 Jun 2025 11:45:20 -0700
+ Transport; Mon, 9 Jun 2025 11:45:21 -0700
 From: Nicolin Chen <nicolinc@nvidia.com>
 To: <jgg@nvidia.com>, <joro@8bytes.org>, <will@kernel.org>,
 	<robin.murphy@arm.com>, <bhelgaas@google.com>
 CC: <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
 	<linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
 	<pjaroszynski@nvidia.com>, <vsethi@nvidia.com>
-Subject: [PATCH RFC v1 1/2] iommu: Introduce iommu_dev_reset_prepare() and iommu_dev_reset_done()
-Date: Mon, 9 Jun 2025 11:45:13 -0700
-Message-ID: <4153fb7131dda901b13a2e90654232fe059c8f09.1749494161.git.nicolinc@nvidia.com>
+Subject: [PATCH RFC v1 2/2] pci: Suspend ATS before doing FLR
+Date: Mon, 9 Jun 2025 11:45:14 -0700
+Message-ID: <29cc1268dfdae2a836dbdeaa4eea3bedae564497.1749494161.git.nicolinc@nvidia.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1749494161.git.nicolinc@nvidia.com>
 References: <cover.1749494161.git.nicolinc@nvidia.com>
@@ -101,234 +101,166 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: AnonymousSubmission
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A105:EE_|BL1PR12MB5923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0353f65a-3bc6-4b25-b3f6-08dda785d5a2
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4F:EE_|DM6PR12MB4385:EE_
+X-MS-Office365-Filtering-Correlation-Id: edb7308f-ded0-47ea-8aff-08dda785d3e8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?M4SabehC9aO0LkFGW0v7bR1wFA341E/AjWJMj03IkEd2QckXwgKYlBBqWhnu?=
- =?us-ascii?Q?pKmtEeYsxMDrNiTg2Hrzq79aK7hAT6xBu5pDB9Ou5hM3eSjXXz+XlAXf5iYi?=
- =?us-ascii?Q?0aasjv6YuPymvh8OuQAI9YMLj/z83J8wq3rAayZyPnXHIQtTxcvpMV2m0SFj?=
- =?us-ascii?Q?WGdXzzR8iMxYAoc0Qf8GCQFXd9UFE1NxruMJifTeHePIDhE5DIN2Bn5AiNxS?=
- =?us-ascii?Q?4tMqd/QMlxtyUWMICRINbvhmSuEJGUQg6zn1B81LgPDZNYtymDCigJVn/kTX?=
- =?us-ascii?Q?SNcZ/f96lgD0TFdHMHLD83AZ9e1vxgnY/UGPUNlw4o5dmVjhHG6OTMW6Wpn6?=
- =?us-ascii?Q?5vYgWPoRJJrErzywMRmFJxFo5itLclVhF4f5HTCuZCSv3I849rfua/cKkPhl?=
- =?us-ascii?Q?FQQcGB+cYxkho48W6dXYDlCJeYa7dPyICP78S3nwyTp+m8mBra3fGPRwfWj6?=
- =?us-ascii?Q?/WxCtTmmd4m4GM0q0k7MAE3dv5LuWWoE93tGUUe6ncqGFbUMQzn3XVpTmSpL?=
- =?us-ascii?Q?jEsRlSTGFzSDarzsSYsyqBFM9UEybkSQSfIwio35Y/wLgIMx/pVWip/hNZut?=
- =?us-ascii?Q?TsdD0WL97E7kTQeLd/Xh7WhkqLgE1iXBPX1efVSRMhXPo4IlR2cZtDISi/km?=
- =?us-ascii?Q?QojTKDet2pTCbNnm/THn35paxl1hoVvKKUnmB+nGpXKJmkUm4E85iZbaGpdf?=
- =?us-ascii?Q?XOZDAzvymSx0eCOfWiKx7w+SXIYNWmBIIjARGgzUWLHgMjaDKYOrJmQqTCTH?=
- =?us-ascii?Q?HzP11SxOYOIh6saKlQwxEdgXmcdcMlT80iiAf3m23VrOsDiWCGuNe+UftGEK?=
- =?us-ascii?Q?Z5XYsO0T+AH5EVgQ0eDvCL+EG9+H5ifaxM47KJEdr67LIzKVRcXsLKy1mauV?=
- =?us-ascii?Q?JJ9MSVeOQkVQrK4Go8y+gPMaRlsuQqBV1ayVsMEs27oUgqcDfStij+IJvvHv?=
- =?us-ascii?Q?qZpDt5fTWOh5MX8vK7mYXSRQmjAfpJJIUYwIXXeossJwp1Z4TXqx4NiK1P4R?=
- =?us-ascii?Q?zNmqSYwEzqbBplhY1k0eV43CmJ5Arh3qt1JDXBgSTY7RGY3z4jwN10HvZ9Pz?=
- =?us-ascii?Q?RL/XXjWFQ3CeeQPhWoUv9tXrcqIsY1yyvOgnaRE6vbA/CiOsMPN9paKCzAw2?=
- =?us-ascii?Q?HFHS2fmyEMZUKoKnqGyyia+Q8pBO7gb0OxeBpYDQU5HtiCyXMpZoEWkhVPQf?=
- =?us-ascii?Q?TV3HtD01ou//YJtMlNTH0sbtTGXjlAccwh8vexKMi7B1GouTrcCV1iBZHH7t?=
- =?us-ascii?Q?XQWDtL9K0mMS7iYlP4/91/roZb6vsO2f/IUaSmn5EHRIBTrZARlke3353wRo?=
- =?us-ascii?Q?N5KvuW9M+Gcjbh3iJjaxkjpr0/ThVFBXDPp6iODQwsRX2YvbresA8HkfsXSH?=
- =?us-ascii?Q?oSPjd6R06lI0fZIDsv45I/kVLl+p+TLDPoS99nWZeERdT3CuKs/rmlU+3UwP?=
- =?us-ascii?Q?eiRJritHwPQyhpJo7ooxNp0cBb9TEQZeHuPwDqdN99aisjiPyN/wwH7XjZwU?=
- =?us-ascii?Q?y5W4p5290/k7x53zFWCka5k1YWAXZ24bfPLp?=
+	=?us-ascii?Q?BMcuLIU23VKoB29OUdYuwZiFzjVwikhbI8aNZHfyM9y6Lf6SDO2JrHaRauKX?=
+ =?us-ascii?Q?o5dZKm162G64dzvlaqKFSoAHVqxIjgD7t+pDPbXufm99ZMRiRXUme+MF1FZy?=
+ =?us-ascii?Q?EPUAT12UhCitz9zAXq+P2LEA+ysuzXdbCBjQUgC66kLfaYMO9B3bb9QekvI9?=
+ =?us-ascii?Q?EAVI5/sxUlrBwaIcMMO4DG+5shxmsQU9pbVD/TGP+hGe7VMz+U+GWprVPsDM?=
+ =?us-ascii?Q?NaX5VhfgeSnkJeFq6ZxIuCjq76VLnqQbAXYIiSnqGiz2TuSk2fHCWRgJ2XLY?=
+ =?us-ascii?Q?+a5n3QTwbMCiR/sgFjVyekSNBUfZoK3B9alvIigDFwb9j/RLpDxTEnTm7MDb?=
+ =?us-ascii?Q?GQLH6mp1CKXCXoiKHqQbio6wvBEru2Z/ARQ8wNVWmph3IilwUvfoiREjKorw?=
+ =?us-ascii?Q?OOdqtQCdtQIwgRdWNsVWLyVBr9AIkFxBodiNo5WzYCvJY7QFuyXhC4jvY4E7?=
+ =?us-ascii?Q?UVFB979RSanlWCtoFACFr4LsawhKkwm/DllfcGyST6rqt5dD6rkdb+F7s9YX?=
+ =?us-ascii?Q?hLLZi3e2uqGjtQtooCozFDq6TPWKjWUPF602O7WQpELRMGLidvz2GWu8g+OX?=
+ =?us-ascii?Q?rEHmZOrZWSQlTgxzrzPaH45eNmJfOF1KFe+PyU93tOO3r+NEnui9LMDXB+10?=
+ =?us-ascii?Q?RlKsejZjC2NKzyomOFHgIkrvmOu9ysgdN7VlaQmelU3R/Gl3n9gL+f+ZJsiS?=
+ =?us-ascii?Q?L2EijvlYXl6YpyJIZVJIgSBpCm0ouf7GeplRnu5hpEz+/VOXso/T3k/5B963?=
+ =?us-ascii?Q?20l/2tR0KRmpScUr/mPseq2qy7qc/YvKm0S0HjCwkXtQzfNvGgOhuAwdv7uX?=
+ =?us-ascii?Q?WzWP8iEyeIyLdmbGRiy6dPHiKEdRGbLX5idDR2T5JLF9uUUWCDepwLW1t7sc?=
+ =?us-ascii?Q?3lvvzoO+uRzDyR+d2xQOKTqYL74hIjqSJzK+SYm2nz3/ljvX/LtwiFE0UAIM?=
+ =?us-ascii?Q?utf6rpv0/HEkdDWRqc0L/VqtaGXcThC35F5CV/RZOO9T4Rc8wSq7X3QwT02n?=
+ =?us-ascii?Q?nR8IJtmI13DdLUSLH1dCJw1LnME2kOGfY/xWsFRAEG/H4YfJQx9RAkjDdlsZ?=
+ =?us-ascii?Q?F0e/zYIyFPFoWPnyTMluJpXTd46v8Si2GlsTxcO3Ab+w8ljD+MuPlD/fAPE5?=
+ =?us-ascii?Q?yBmX1dN/WLB/hTHroRs4af8t12Z0J9F4bIcwr+A3IAeQUKFLUTa+XI4ywTJw?=
+ =?us-ascii?Q?IGsuEuxYovqtfCXzN4SwKmx3LKSMoScNThn6uCKXiOzhNUvq54vsjyF8o3CP?=
+ =?us-ascii?Q?oTCJSkHv/Qz5P/hsr+NeXtB7b20Ds4fHQEkK34wpLGi0a5f+UL9We57cpCfz?=
+ =?us-ascii?Q?ob74ML/JHEIP9iSd0wTuTGGunQqaDGVk11PeT7jWojzeFb88a3k9Qroz2qxx?=
+ =?us-ascii?Q?C+DyzulASp3x9ErlUJ74o+fJrpdQdc8M4LJC/NhTzqTWDEUnh6dZ3UdCt1wF?=
+ =?us-ascii?Q?69Q/z87BZOe0hHrQlv8zTTd4evDo4bqqgC+zTJ48eLX5LW4b99HfyoOL/3d7?=
+ =?us-ascii?Q?zj7lUJTUlOneat6Qk/VePHnULa/4aaSjftvR?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 18:45:41.1258
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 18:45:38.2374
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0353f65a-3bc6-4b25-b3f6-08dda785d5a2
+X-MS-Exchange-CrossTenant-Network-Message-Id: edb7308f-ded0-47ea-8aff-08dda785d3e8
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A105.namprd05.prod.outlook.com
+	BL6PEPF0001AB4F.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5923
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4385
 
 Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software should disable ATS
-before initiating a Function Level Reset, and then ensure no invalidation
-requests being issued to a device when its ATS capability is disabled.
+before initiating a Function Level Reset.
 
-Since pci_enable_ats() and pci_disable_ats() are called by an IOMMU driver
-while an unsolicited FLR can happen at any time in the PCI layer, PCI code
-has to notify the IOMMU subsystem about the ongoing FLR. Add a pair of new
-IOMMU APIs that will be called by the PCI reset functions before&after the
-reset routines.
+Call iommu_dev_reset_prepare() before FLR and iommu_dev_reset_done() after,
+in the two FLR Functions. This will dock the device at IOMMU_DOMAIN_BLOCKED
+during the FLR function, which should allow the IOMMU driver to pause DMA
+traffic and invode pci_disable_ats() and pci_enable_ats() respectively.
 
-However, if there is a domain attachment/replacement happening during an
-ongoing reset, the ATS might be re-enabled between the two function calls.
-So the iommu_dev_reset_prepare() has to hold the group mutex to avoid this
-race condition, unitl iommu_dev_reset_done() is finished. Thus, these two
-functions are a strong pair that must be used together.
-
-Inside the mutex, these two functions will dock all RID and PASID domains
-to an IOMMU_DOMAIN_BLOCKED. This would further disable ATS by two-fold: an
-IOMMU driver should disable ATS in its control bits (e.g. SMMU's STE.EATS)
-and an IOMMU driver should call pci_disable_ats() as well.
-
-Notes:
- - This only works for IOMMU drivers that implemented ops->blocked_domain
-   correctly with pci_disable_ats().
- - This only works for IOMMU drivers that will not issue ATS invalidation
-   requests to the device, after it's docked at ops->blocked_domain.
-Driver should fix itself to align with the aforementioned notes.
+Add a warning if ATS isn't disabled, in which case IOMMU driver should fix
+itself to disable ATS following the design in iommu_dev_reset_prepare().
 
 Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 ---
- include/linux/iommu.h |  12 +++++
- drivers/iommu/iommu.c | 106 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 118 insertions(+)
+ drivers/pci/pci.c | 42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 156732807994..a17161b8625a 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -1123,6 +1123,9 @@ void dev_iommu_priv_set(struct device *dev, void *priv);
- extern struct mutex iommu_probe_device_lock;
- int iommu_probe_device(struct device *dev);
- 
-+int iommu_dev_reset_prepare(struct device *dev);
-+void iommu_dev_reset_done(struct device *dev);
-+
- int iommu_device_use_default_domain(struct device *dev);
- void iommu_device_unuse_default_domain(struct device *dev);
- 
-@@ -1407,6 +1410,15 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
- 	return -ENODEV;
- }
- 
-+static inline int iommu_dev_reset_prepare(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static inline void iommu_dev_reset_done(struct device *dev)
-+{
-+}
-+
- static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e9448d55113b..61535435bde1 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/init.h>
++#include <linux/iommu.h>
+ #include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/pci.h>
+@@ -4518,13 +4519,26 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+  */
+ int pcie_flr(struct pci_dev *dev)
  {
- 	return NULL;
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index a4b606c591da..3c1854c5e55e 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -3795,6 +3795,112 @@ int iommu_replace_group_handle(struct iommu_group *group,
- }
- EXPORT_SYMBOL_NS_GPL(iommu_replace_group_handle, "IOMMUFD_INTERNAL");
++	int ret = 0;
++
+ 	if (!pci_wait_for_pending_transaction(dev))
+ 		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
  
-+/*
-+ * Deadlock Alert
-+ *
-+ * Caller must use iommu_dev_reset_prepare() and iommu_dev_reset_done() together
-+ * before/after the core-level reset routine, as iommu_dev_reset_prepare() holds
-+ * the group->mutex that will be only released in iommu_dev_reset_done().
-+ */
-+int iommu_dev_reset_prepare(struct device *dev)
-+{
-+	struct iommu_group *group = dev->iommu_group;
-+	const struct iommu_ops *ops;
-+	unsigned long pasid;
-+	void *entry;
-+	int ret;
-+
-+	/* Before locking */
-+	if (!dev_has_iommu(dev))
-+		return 0;
-+
-+	if (dev->iommu->require_direct) {
-+		dev_warn(dev,
-+			 "Firmware has requested this device have a 1:1 IOMMU mapping, rejecting configuring the device without a 1:1 mapping. Contact your platform vendor.\n");
-+		return -EINVAL;
-+	}
-+
-+	ops = dev_iommu_ops(dev);
-+	if (!ops->blocked_domain) {
-+		dev_warn(dev,
-+			 "IOMMU driver doesn't support IOMMU_DOMAIN_BLOCKED\n");
-+		return -EOPNOTSUPP;
-+	}
-+
 +	/*
-+	 * group->mutex starts
-+	 *
-+	 * This has to hold the group mutex until the reset is done, to prevent
-+	 * any RID or PASID domain attachment/replacement, which otherwise might
-+	 * re-enable the ATS during the reset cycle.
++	 * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software disables ATS
++	 * before initiating a Function Level Reset. So notify the iommu driver
++	 * that actually enabled ATS. Have to call it after waiting for pending
++	 * DMA transaction.
 +	 */
-+	mutex_lock(&group->mutex);
++	if (iommu_dev_reset_prepare(&dev->dev))
++		pci_err(dev, "failed to stop IOMMU\n");
++	if (dev->ats_enabled)
++		pci_err(dev, "failed to stop ATS\n");
 +
-+	/* Device is already attached to the blocked_domain. Nothing to do */
-+	if (group->domain->type == IOMMU_DOMAIN_BLOCKED)
-+		return 0;
+ 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
+ 
+ 	if (dev->imm_ready)
+-		return 0;
++		goto done;
+ 
+ 	/*
+ 	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
+@@ -4533,7 +4547,11 @@ int pcie_flr(struct pci_dev *dev)
+ 	 */
+ 	msleep(100);
+ 
+-	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
++	ret = pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
 +
-+	/* Dock RID domain to blocked_domain while retaining group->domain */
-+	ret = __iommu_attach_device(ops->blocked_domain, dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Dock PASID domains to blocked_domain while retaining pasid_array */
-+	xa_lock(&group->pasid_array);
-+	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
-+		iommu_remove_dev_pasid(dev, pasid,
-+				       pasid_array_entry_to_domain(entry));
-+	xa_unlock(&group->pasid_array);
-+
-+	/* group->mutex is held. Caller must invoke iommu_dev_reset_done() */
-+
++done:
++	iommu_dev_reset_done(&dev->dev);
 +	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iommu_dev_reset_prepare);
+ }
+ EXPORT_SYMBOL_GPL(pcie_flr);
+ 
+@@ -4561,6 +4579,7 @@ EXPORT_SYMBOL_GPL(pcie_reset_flr);
+ 
+ static int pci_af_flr(struct pci_dev *dev, bool probe)
+ {
++	int ret = 0;
+ 	int pos;
+ 	u8 cap;
+ 
+@@ -4587,10 +4606,21 @@ static int pci_af_flr(struct pci_dev *dev, bool probe)
+ 				 PCI_AF_STATUS_TP << 8))
+ 		pci_err(dev, "timed out waiting for pending transaction; performing AF function level reset anyway\n");
+ 
++	/*
++	 * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software disables ATS
++	 * before initiating a Function Level Reset. So notify the iommu driver
++	 * that actually enabled ATS. Have to call it after waiting for pending
++	 * DMA transaction.
++	 */
++	if (iommu_dev_reset_prepare(&dev->dev))
++		pci_err(dev, "failed to stop IOMMU\n");
++	if (dev->ats_enabled)
++		pci_err(dev, "failed to stop ATS\n");
 +
-+/*
-+ * This is the resume routine of iommu_dev_reset_prepare(). It unlocks the group
-+ * mutex at end, after all RID/PASID domains are re-attached.
-+ *
-+ * Note that, although unlikely, there is a risk that re-attaching domains might
-+ * fail due to some unexpected happening like OOM.
-+ */
-+void iommu_dev_reset_done(struct device *dev)
-+{
-+	struct iommu_group *group = dev->iommu_group;
-+	const struct iommu_ops *ops;
-+	unsigned long pasid;
-+	void *entry;
+ 	pci_write_config_byte(dev, pos + PCI_AF_CTRL, PCI_AF_CTRL_FLR);
+ 
+ 	if (dev->imm_ready)
+-		return 0;
++		goto done;
+ 
+ 	/*
+ 	 * Per Advanced Capabilities for Conventional PCI ECN, 13 April 2006,
+@@ -4600,7 +4630,11 @@ static int pci_af_flr(struct pci_dev *dev, bool probe)
+ 	 */
+ 	msleep(100);
+ 
+-	return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
++	ret = pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
 +
-+	/* Previously unlocked */
-+	if (!dev_has_iommu(dev))
-+		return;
-+	ops = dev_iommu_ops(dev);
-+	if (!ops->blocked_domain)
-+		return;
-+
-+	/* group->mutex held in iommu_dev_reset_prepare() continues from here */
-+	WARN_ON(!lockdep_is_held(&group->mutex));
-+
-+	if (group->domain->type == IOMMU_DOMAIN_BLOCKED)
-+		goto unlock;
-+
-+	/* Shift RID domain back to group->domain */
-+	WARN_ON(__iommu_attach_device(group->domain, dev));
-+
-+	/* Shift PASID domains back to domains retained in pasid_array */
-+	xa_lock(&group->pasid_array);
-+	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
-+		WARN_ON(__iommu_set_group_pasid(
-+			pasid_array_entry_to_domain(entry), group, pasid,
-+			ops->blocked_domain));
-+	xa_unlock(&group->pasid_array);
-+
-+unlock:
-+	mutex_unlock(&group->mutex);
-+}
-+EXPORT_SYMBOL_GPL(iommu_dev_reset_done);
-+
- #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
++done:
++	iommu_dev_reset_done(&dev->dev);
++	return ret;
+ }
+ 
  /**
-  * iommu_dma_prepare_msi() - Map the MSI page in the IOMMU domain
 -- 
 2.43.0
 
