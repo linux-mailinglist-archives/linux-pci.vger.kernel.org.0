@@ -1,609 +1,235 @@
-Return-Path: <linux-pci+bounces-29230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 628D2AD2061
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 15:59:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C00F1AD20C8
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 16:23:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0D6F3B32F5
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 13:53:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 577A8188909F
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6C4525D8FD;
-	Mon,  9 Jun 2025 13:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E607C25CC69;
+	Mon,  9 Jun 2025 14:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HBj0UMnc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=r26.me header.i=@r26.me header.b="XQAIh+u2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2EDB25C6E8;
-	Mon,  9 Jun 2025 13:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-10625.protonmail.ch (mail-10625.protonmail.ch [79.135.106.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EB3253F31
+	for <linux-pci@vger.kernel.org>; Mon,  9 Jun 2025 14:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476996; cv=none; b=ZqNgbIhEIN6KVL8G97Bhcxmj9+goV+9as/o+truGEILHFW+4KiwVsEBdPIxH7I7rkkkJweIjLR9buiNOwulQ0kev1AI/K1TgNfnVXZIMrJRJKBPAnpTlhuvcFuOdFvA+8gXozgpT2kXcOneBPcxvSKqQHsrBhJIQQtEYG2PIFSg=
+	t=1749478991; cv=none; b=evrwTlG/Zu472nZzERyUuScm9GlseeFWYcXnJakwpd2kbAfzl/502m9N8ih2P1GxQUqkdccemsZYArs7SHugeOm4NDSpXUZSnsg5yhg2TAS50fi617PmryRoGwn/Dr29mMqsFOYiwxHZXmZqsElXsZx6lwjHQfW5ujSM+fAYptQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476996; c=relaxed/simple;
-	bh=HtrfnEH8vHE104nyHi3GEdOSWY/+yUggSmr7Xpna8gI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PITFlZV2YloeDSWZR/R/KBQGwmFHk6HwIS2yj3f5Y5uN69fCiFNdWYdrDnhofoSYa5TslTA+Q3nf04kSHoMqcsYWNJCEZyZIiBAs0NagUoPtFsf606lqYiGI8hugfnGJFiudC5FZDES34JQaVSCGxCkbv5dKAM8LpTFzDnN8ycw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HBj0UMnc; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 676362117472; Mon,  9 Jun 2025 06:49:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 676362117472
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749476994;
-	bh=6rxO+RT9qVqEwzs6mc+cQ3o9mHp2NbylGH8ZC8cUDwQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HBj0UMncO/J8kV6uN3ZiE7yDIu5VstFDg3+UAW1WcVkzk7niUkyBmFtomzgBCl5r6
-	 aYswLGCQmggloGiGKhMec4rrD4WbRw91m8f9YGIfCJ5Io9vwkBSb2qQpFRdX+uToda
-	 Ocdom1WrqTrGAvkV1A51rKtKRgbc4bZkmuKKFYLs=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v5 5/5] net: mana: Allocate MSI-X vectors dynamically
-Date: Mon,  9 Jun 2025 06:49:52 -0700
-Message-Id: <1749476992-27786-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1749478991; c=relaxed/simple;
+	bh=JQSxPuSgebu8ngU9w0fbtaPNsN1gzZlPt15SLF4hvf4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XGN64wCI5xgNn8SnpPHSTekGRD1mI1RH0xpy46/agPwWWjRmzhcyL6NgNsTyxkAlrwM6VgMzOIVgbCuytDWZQlEVYqsEAu4x2+2QC/lIA29urGPJCB+a/zVYlDVYnCB5eWmszVb3TY4VuqSdK5jxfv8tMl9Yy/GuG+miyoG3Oe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=XQAIh+u2; arc=none smtp.client-ip=79.135.106.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
+	s=protonmail3; t=1749478981; x=1749738181;
+	bh=JQSxPuSgebu8ngU9w0fbtaPNsN1gzZlPt15SLF4hvf4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=XQAIh+u2WdmTWrdVozzGrqHM0fzEeqw3KYJcnwJOqCl9oit4MkOjRsfZ/ZlmmPSEb
+	 B2rsNhQsOYpc4P6b7htniepsKAGvdHS7JKFrBs8VkQMrEtZ7Gxb/DsnjijvccwJGmU
+	 joOaaJlA6o8pejq8QE0SWVh22W5TB3kc8zyEdVPMX0Re7H5L+iV7HR2tlWXwUt4I96
+	 WLnfgkQ7h2Cko+TVb+F1apq2iIQKEQqX1CKX0Y7r43H+9TVCNR4AVPYLJMWVVn67p2
+	 YAnhuUIauz5ZLH1SFVMy6M4IZ103fw8QyveXPVX8vnIKcrAkHtiGSKMvHoMgL/jA1y
+	 VedWy3z4w1bMg==
+Date: Mon, 09 Jun 2025 14:22:55 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Rio Liu <rio@r26.me>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+Subject: Re: [REGRESSION] amdgpu fails to load external RX 580 since PCI: Allow relaxed bridge window tail sizing for optional resources
+Message-ID: <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
+In-Reply-To: <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
+References: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me> <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
+Feedback-ID: 77429777:user:proton
+X-Pm-Message-ID: 9e591caaea3c8cdf34da3a0674d87646d7d67758
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the MANA driver allocates MSI-X vectors statically based on
-MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-up allocating more vectors than it needs. This is because, by this time
-we do not have a HW channel and do not know how many IRQs should be
-allocated.
+On Monday, June 9th, 2025 at AM 5:09, Ilpo J=C3=A4rvinen <ilpo.jarvinen@lin=
+ux.intel.com> wrote:
 
-To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-after getting the value supported by hardware, dynamically add the
-remaining MSI-X vectors.
+>=20
+>=20
+> On Mon, 9 Jun 2025, rio@r26.me wrote:
+>=20
+> > Hello,
+> >=20
+> > I have an external Radeon RX580 on my machine connected via Thunderbolt=
+, and
+> > since upgrading from 6.14.1 the setup stopped working. Dmesg showed war=
+ning from
+> > resource sanity check, followed by a stack trace https://pastebin.com/n=
+jR55rQW.
+> > Relevant snippet:
+> >=20
+> > [ 12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff =
+64bit pref]: releasing
+> > [ 12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] ERROR Problem r=
+esizing BAR0 (-16).
+> > [ 12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff =
+64bit pref]: assigned
+> > [ 12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F40000000=
+0 - 0x000000F5FFFFFFFF (8192M used)
+> > [ 12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF00000000=
+ - 0x000000FF0FFFFFFF
+> > [ 12.135536] resource: resource sanity check: requesting [mem 0x0000000=
+000000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem 0=
+x000a0000-0x000bffff window]
+> > [ 12.135542] ------------[ cut here ]------------
+> > [ 12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:721 =
+memtype_reserve_io+0xfc/0x110
+> > [ 12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek ...
+> > [ 12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S 6.=
+15.0-13743-g8630c59e9936 #16 PREEMPT(full) 3b462c924b3ffd8156fc3b77bcc8ddbf=
+7257fa57
+> > [ 12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
+> > [ 12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX Se=
+ries, BIOS 1.07.08TCOP3 03/27/2020
+> > [ 12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
+> > [ 12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89 e=
+e 48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff <=
+0f> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
+> >=20
+> > Bisecting the stable branch pointed me to the following commit:
+> >=20
+> > commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
+> > Author: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
+> > Date: Mon Dec 16 19:56:11 2024 +0200
+> >=20
+> > PCI: Allow relaxed bridge window tail sizing for optional resources
+> >=20
+> > [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
+> >=20
+> > I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd92=
+64), and
+> > the issue persists. Reverting the offending commit via `git revert -n 2=
+2df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
+> > Dmesg: https://pastebin.com/xd76rDsW.
+> >=20
+> > Additional information
+> > - Distribution: Artix
+> > - Arch: x86_64
+> > - Kernel config: https://pastebin.com/DWSERJL5
+> > - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
+> > - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmiop=
+refsize=3D1G
+> >=20
+> > I'm reporting here as these are the contacts from the commit message.
+> > Please let me know if there's a more appropriate place for this, as wel=
+l
+> > as any more information I can provide.
+>=20
+>=20
+> Hi Rio,
+>=20
+> Thanks for the report and I'm sorry about causing this issue. Could you
+> please try if the patch below solves the issue.
+>=20
+> --
+> From b94823a193032b5f87114cff9e8edc5c67e4ef40 Mon Sep 17 00:00:00 2001
+> From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D ilpo.jarvinen@linux.inte=
+l.com
+>=20
+> Date: Mon, 9 Jun 2025 12:05:20 +0300
+> Subject: [PATCH 1/1] PCI: Relaxed alignment should never increase min_ali=
+gn
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=3DUTF-8
+> Content-Transfer-Encoding: 8bit
+>=20
+> When using relaxed tail alignment for the bridge window,
+> pbus_size_mem() also tries to minimize min_align, which can under
+> certain scenarios end up increasing min_align from that found by
+> calculate_mem_align().
+>=20
+> Ensure min_align is not increased by the relaxed tail alignment.
+>=20
+> Eventually, it would be better to add calculate_relaxed_head_align()
+> similar to calculate_mem_align() which finds out what alignment can be
+> used for the head without introducing any gaps into the bridge window
+> to give flexibility on head address too. But that looks relatively
+> complex algorithm so it requires much more testing than fixing the
+> immediate problem causing a regression.
+>=20
+> Reported-by: Rio rio@r26.me
+>=20
+> Signed-off-by: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
+>=20
+> ---
+> drivers/pci/setup-bus.c | 11 +++++++----
+> 1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 07c3d021a47e..f90d49cd07da 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1169,6 +1169,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
+ned long mask,
+> resource_size_t children_add_size =3D 0;
+> resource_size_t children_add_align =3D 0;
+> resource_size_t add_align =3D 0;
+> + resource_size_t relaxed_align;
+>=20
+> if (!b_res)
+> return -ENOSPC;
+> @@ -1246,8 +1247,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
+ned long mask,
+> if (bus->self && size0 &&
+>=20
+> !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+> size0, min_align)) {
+> - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> - min_align =3D max(min_align, win_align);
+> + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> + relaxed_align =3D max(relaxed_align, win_align);
+> + min_align =3D min(min_align, relaxed_align);
+> size0 =3D calculate_memsize(size, min_size, 0, 0, resource_size(b_res), w=
+in_align);
+> pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment =
+rules\n",
+>=20
+> b_res, &bus->busn_res);
+>=20
+> @@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
+ned long mask,
+> if (bus->self && size1 &&
+>=20
+> !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+> size1, add_align)) {
+> - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> - min_align =3D max(min_align, win_align);
+> + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> + relaxed_align =3D max(min_align, win_align);
+> + min_align =3D min(min_align, relaxed_align);
+> size1 =3D calculate_memsize(size, min_size, add_size, children_add_size,
+> resource_size(b_res), win_align);
+> pci_info(bus->self,
+>=20
+>=20
+> base-commit: 3719a04a80caf660f899a462cd8f3973bcfa676e
+> --
+> 2.39.5
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v5:
- * Correctly initialized start_irqs, so that it is cleaned properly
- * rearranged the cpu_lock to minimize the critical section
----
- Changes in v4:
- * added BUG_ON at appropriate places
- * moved xa_destroy to mana_gd_remove()
- * rearragned the cleanup logic in mana_gd_setup_dyn_irqs()
- * simplified processing around start_irq_index in mana_gd_setup_irqs()
- * return 0 instead of return err as appropriate
----
- Changes in v3:
- * implemented irq_contexts as xarrays rather than list
- * split the patch to create a perparation patch around irq_setup()
- * add log when IRQ allocation/setup for remaining IRQs fails
----
- Changes in v2:
- * Use string 'MSI-X vectors' instead of 'pci vectors'
- * make skip-cpu a bool instead of int
- * rearrange the comment arout skip_cpu variable appropriately
- * update the capability bit for driver indicating dynamic IRQ allocation
- * enforced max line length to 80
- * enforced RCT convention
- * initialized gic to NULL, for when there is a possibility of gic
-   not being populated correctly
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 311 +++++++++++++-----
- include/net/mana/gdma.h                       |   8 +-
- 2 files changed, 235 insertions(+), 84 deletions(-)
+Hello Ilpo,
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 6e468c0f2c40..d0040c12b8a2 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -6,6 +6,8 @@
- #include <linux/pci.h>
- #include <linux/utsname.h>
- #include <linux/version.h>
-+#include <linux/msi.h>
-+#include <linux/irqdomain.h>
- 
- #include <net/mana/mana.h>
- 
-@@ -80,8 +82,15 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 		return err ? err : -EPROTO;
- 	}
- 
--	if (gc->num_msix_usable > resp.max_msix)
--		gc->num_msix_usable = resp.max_msix;
-+	if (!pci_msix_can_alloc_dyn(pdev)) {
-+		if (gc->num_msix_usable > resp.max_msix)
-+			gc->num_msix_usable = resp.max_msix;
-+	} else {
-+		/* If dynamic allocation is enabled we have already allocated
-+		 * hwc msi
-+		 */
-+		gc->num_msix_usable = min(resp.max_msix, num_online_cpus() + 1);
-+	}
- 
- 	if (gc->num_msix_usable <= 1)
- 		return -ENOSPC;
-@@ -483,7 +492,9 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
- 	}
- 
- 	queue->eq.msix_index = msi_index;
--	gic = &gc->irq_contexts[msi_index];
-+	gic = xa_load(&gc->irq_contexts, msi_index);
-+	if (WARN_ON(!gic))
-+		return -EINVAL;
- 
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_add_rcu(&queue->entry, &gic->eq_list);
-@@ -508,7 +519,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
- 	if (WARN_ON(msix_index >= gc->num_msix_usable))
- 		return;
- 
--	gic = &gc->irq_contexts[msix_index];
-+	gic = xa_load(&gc->irq_contexts, msix_index);
-+	if (WARN_ON(!gic))
-+		return;
-+
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
- 		if (queue == eq) {
-@@ -1366,47 +1380,108 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
- 	return 0;
- }
- 
--static int mana_gd_setup_irqs(struct pci_dev *pdev)
-+static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
--	unsigned int max_queues_per_port;
- 	struct gdma_irq_context *gic;
--	unsigned int max_irqs, cpu;
--	int start_irq_index = 1;
--	int nvec, *irqs, irq;
--	int err, i = 0, j;
-+	bool skip_first_cpu = false;
-+	int *irqs, irq, err, i;
- 
--	cpus_read_lock();
--	max_queues_per_port = num_online_cpus();
--	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
--		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-+	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-+	if (!irqs)
-+		return -ENOMEM;
-+
-+	/*
-+	 * While processing the next pci irq vector, we start with index 1,
-+	 * as IRQ vector at index 0 is already processed for HWC.
-+	 * However, the population of irqs array starts with index 0, to be
-+	 * further used in irq_setup()
-+	 */
-+	for (i = 1; i <= nvec; i++) {
-+		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
-+		}
-+		gic->handler = mana_gd_process_eq_events;
-+		INIT_LIST_HEAD(&gic->eq_list);
-+		spin_lock_init(&gic->lock);
- 
--	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
--	max_irqs = max_queues_per_port + 1;
-+		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-+			 i - 1, pci_name(pdev));
- 
--	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
--	if (nvec < 0) {
--		cpus_read_unlock();
--		return nvec;
-+		/* one pci vector is already allocated for HWC */
-+		irqs[i - 1] = pci_irq_vector(pdev, i);
-+		if (irqs[i - 1] < 0) {
-+			err = irqs[i - 1];
-+			goto free_current_gic;
-+		}
-+
-+		err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
-+		if (err)
-+			goto free_current_gic;
-+
-+		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
- 	}
--	if (nvec <= num_online_cpus())
--		start_irq_index = 0;
- 
--	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
--	if (!irqs) {
--		err = -ENOMEM;
--		goto free_irq_vector;
-+	/*
-+	 * When calling irq_setup() for dynamically added IRQs, if number of
-+	 * CPUs is more than or equal to allocated MSI-X, we need to skip the
-+	 * first CPU sibling group since they are already affinitized to HWC IRQ
-+	 */
-+	cpus_read_lock();
-+	if (gc->num_msix_usable <= num_online_cpus())
-+		skip_first_cpu = true;
-+
-+	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-+	if (err) {
-+		cpus_read_unlock();
-+		goto free_irq;
- 	}
- 
--	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
--				   GFP_KERNEL);
--	if (!gc->irq_contexts) {
--		err = -ENOMEM;
--		goto free_irq_array;
-+	cpus_read_unlock();
-+	kfree(irqs);
-+	return 0;
-+
-+free_current_gic:
-+	kfree(gic);
-+free_irq:
-+	for (i -= 1; i > 0; i--) {
-+		irq = pci_irq_vector(pdev, i);
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
-+
-+		irq_update_affinity_hint(irq, NULL);
-+		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
-+	kfree(irqs);
-+	return err;
-+}
-+
-+static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	struct gdma_irq_context *gic;
-+	int *irqs, *start_irqs, irq;
-+	unsigned int cpu;
-+	int err, i;
-+
-+	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-+	if (!irqs)
-+		return -ENOMEM;
-+
-+	start_irqs = irqs;
- 
- 	for (i = 0; i < nvec; i++) {
--		gic = &gc->irq_contexts[i];
-+		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
-+		}
-+
- 		gic->handler = mana_gd_process_eq_events;
- 		INIT_LIST_HEAD(&gic->eq_list);
- 		spin_lock_init(&gic->lock);
-@@ -1418,69 +1493,128 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
- 				 i - 1, pci_name(pdev));
- 
--		irq = pci_irq_vector(pdev, i);
--		if (irq < 0) {
--			err = irq;
--			goto free_irq;
-+		irqs[i] = pci_irq_vector(pdev, i);
-+		if (irqs[i] < 0) {
-+			err = irqs[i];
-+			goto free_current_gic;
- 		}
- 
--		if (!i) {
--			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
--			if (err)
--				goto free_irq;
--
--			/* If number of IRQ is one extra than number of online CPUs,
--			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
--			 * same CPU.
--			 * Else we will use different CPUs for IRQ0 and IRQ1.
--			 * Also we are using cpumask_local_spread instead of
--			 * cpumask_first for the node, because the node can be
--			 * mem only.
--			 */
--			if (start_irq_index) {
--				cpu = cpumask_local_spread(i, gc->numa_node);
--				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
--			} else {
--				irqs[start_irq_index] = irq;
--			}
--		} else {
--			irqs[i - start_irq_index] = irq;
--			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
--					  gic->name, gic);
--			if (err)
--				goto free_irq;
--		}
-+		err = request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
-+		if (err)
-+			goto free_current_gic;
-+
-+		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
- 	}
- 
--	err = irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
--	if (err)
-+	/* If number of IRQ is one extra than number of online CPUs,
-+	 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-+	 * same CPU.
-+	 * Else we will use different CPUs for IRQ0 and IRQ1.
-+	 * Also we are using cpumask_local_spread instead of
-+	 * cpumask_first for the node, because the node can be
-+	 * mem only.
-+	 */
-+	cpus_read_lock();
-+	if (nvec > num_online_cpus()) {
-+		cpu = cpumask_local_spread(0, gc->numa_node);
-+		irq_set_affinity_and_hint(irqs[0], cpumask_of(cpu));
-+		irqs++;
-+		nvec -= 1;
-+	}
-+
-+	err = irq_setup(irqs, nvec, gc->numa_node, false);
-+	if (err) {
-+		cpus_read_unlock();
- 		goto free_irq;
-+	}
- 
--	gc->max_num_msix = nvec;
--	gc->num_msix_usable = nvec;
- 	cpus_read_unlock();
--	kfree(irqs);
-+	kfree(start_irqs);
- 	return 0;
- 
-+free_current_gic:
-+	kfree(gic);
- free_irq:
--	for (j = i - 1; j >= 0; j--) {
--		irq = pci_irq_vector(pdev, j);
--		gic = &gc->irq_contexts[j];
-+	for (i -= 1; i >= 0; i--) {
-+		irq = pci_irq_vector(pdev, i);
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
- 
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
- 
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
--free_irq_array:
--	kfree(irqs);
--free_irq_vector:
--	cpus_read_unlock();
--	pci_free_irq_vectors(pdev);
-+	kfree(start_irqs);
- 	return err;
- }
- 
-+static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	unsigned int max_irqs, min_irqs;
-+	int nvec, err;
-+
-+	if (pci_msix_can_alloc_dyn(pdev)) {
-+		max_irqs = 1;
-+		min_irqs = 1;
-+	} else {
-+		/* Need 1 interrupt for HWC */
-+		max_irqs = min(num_online_cpus(), MANA_MAX_NUM_QUEUES) + 1;
-+		min_irqs = 2;
-+	}
-+
-+	nvec = pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
-+	if (nvec < 0)
-+		return nvec;
-+
-+	err = mana_gd_setup_irqs(pdev, nvec);
-+	if (err) {
-+		pci_free_irq_vectors(pdev);
-+		return err;
-+	}
-+
-+	gc->num_msix_usable = nvec;
-+	gc->max_num_msix = nvec;
-+
-+	return 0;
-+}
-+
-+static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	struct msi_map irq_map;
-+	int max_irqs, i, err;
-+
-+	if (!pci_msix_can_alloc_dyn(pdev))
-+		/* remain irqs are already allocated with HWC IRQ */
-+		return 0;
-+
-+	/* allocate only remaining IRQs*/
-+	max_irqs = gc->num_msix_usable - 1;
-+
-+	for (i = 1; i <= max_irqs; i++) {
-+		irq_map = pci_msix_alloc_irq_at(pdev, i, NULL);
-+		if (!irq_map.virq) {
-+			err = irq_map.index;
-+			/* caller will handle cleaning up all allocated
-+			 * irqs, after HWC is destroyed
-+			 */
-+			return err;
-+		}
-+	}
-+
-+	err = mana_gd_setup_dyn_irqs(pdev, max_irqs);
-+	if (err)
-+		return err;
-+
-+	gc->max_num_msix = gc->max_num_msix + max_irqs;
-+
-+	return 0;
-+}
-+
- static void mana_gd_remove_irqs(struct pci_dev *pdev)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
-@@ -1495,19 +1629,21 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
- 		if (irq < 0)
- 			continue;
- 
--		gic = &gc->irq_contexts[i];
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
- 
- 		/* Need to clear the hint before free_irq */
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
- 
- 	pci_free_irq_vectors(pdev);
- 
- 	gc->max_num_msix = 0;
- 	gc->num_msix_usable = 0;
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
- }
- 
- static int mana_gd_setup(struct pci_dev *pdev)
-@@ -1522,9 +1658,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (!gc->service_wq)
- 		return -ENOMEM;
- 
--	err = mana_gd_setup_irqs(pdev);
-+	err = mana_gd_setup_hwc_irqs(pdev);
- 	if (err) {
--		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
-+		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
-+			err);
- 		goto free_workqueue;
- 	}
- 
-@@ -1540,6 +1677,12 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (err)
- 		goto destroy_hwc;
- 
-+	err = mana_gd_setup_remaining_irqs(pdev);
-+	if (err) {
-+		dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
-+		goto destroy_hwc;
-+	}
-+
- 	err = mana_gd_detect_devices(pdev);
- 	if (err)
- 		goto destroy_hwc;
-@@ -1620,6 +1763,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	gc->is_pf = mana_is_pf(pdev->device);
- 	gc->bar0_va = bar0_va;
- 	gc->dev = &pdev->dev;
-+	xa_init(&gc->irq_contexts);
- 
- 	if (gc->is_pf)
- 		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
-@@ -1654,6 +1798,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 */
- 	debugfs_remove_recursive(gc->mana_pci_debugfs);
- 	gc->mana_pci_debugfs = NULL;
-+	xa_destroy(&gc->irq_contexts);
- 	pci_iounmap(pdev, bar0_va);
- free_gc:
- 	pci_set_drvdata(pdev, NULL);
-@@ -1679,6 +1824,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
- 
- 	gc->mana_pci_debugfs = NULL;
- 
-+	xa_destroy(&gc->irq_contexts);
-+
- 	pci_iounmap(pdev, gc->bar0_va);
- 
- 	vfree(gc);
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 3ce56a816425..87162ba96d91 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -388,7 +388,7 @@ struct gdma_context {
- 	unsigned int		max_num_queues;
- 	unsigned int		max_num_msix;
- 	unsigned int		num_msix_usable;
--	struct gdma_irq_context	*irq_contexts;
-+	struct xarray		irq_contexts;
- 
- 	/* L2 MTU */
- 	u16 adapter_mtu;
-@@ -578,12 +578,16 @@ enum {
- /* Driver can handle holes (zeros) in the device list */
- #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
- 
-+/* Driver supports dynamic MSI-X vector allocation */
-+#define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
- 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
--	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-+	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.34.1
+I've tested the patch and it seems to fix the issue. Thank you!
 
+Rio Liu
 
