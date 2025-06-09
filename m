@@ -1,56 +1,54 @@
-Return-Path: <linux-pci+bounces-29186-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29187-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48591AD16A3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 04:05:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF33AD16CA
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 04:24:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0415E168C17
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 02:05:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F40C8168987
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 02:24:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E7631FC3;
-	Mon,  9 Jun 2025 02:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A47319D8BE;
+	Mon,  9 Jun 2025 02:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/XOrh9S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0kBymWW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793441624DF
-	for <linux-pci@vger.kernel.org>; Mon,  9 Jun 2025 02:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C9117C21C
+	for <linux-pci@vger.kernel.org>; Mon,  9 Jun 2025 02:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749434733; cv=none; b=YmG1mZtaK8+MvY6d1rPtcLAZC/0+FMLhBIkOnp60hxem4aXEuaX0K1wGHMyZC7gLSAEzXd8jgOqMS2hxfKiW93VWA3F1WS1MSrBhg6cwbIwl5V3VlOuDAS45JZ06VGlV6m5gKhhmLgkkESq0oQmaxl7vW2PTHEAPhwfAdsqX2KM=
+	t=1749435895; cv=none; b=YczOI1wK9sOuvrHQazQcqf2KcihoKHshVEQ+WH58yT31H0z1EmlTA8S+PqTWdffeXeHY2v2N6sng/KKHDwhUCRU+s1jPzRH3KbBfru1tAi8aA9va3Uo8riDElg5A8GrzzLbNS7GBZ58w5VPxD3OlNYa/0bl+WWa2TyvMU1xbPX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749434733; c=relaxed/simple;
-	bh=SWQT8sENw4NwT9lDBHuUxJ8UaAXCQ1R60yGTayrXJwc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=txPmD1bt2iMD6mD4M8IvW4gsC7qmHMmBoCgHiP56Cp3HHc26/yOlo5CirHij6KNwPT19PJCj8DmHP39W+kwCk3sZFd+w6xSPcaCPeM2WHWXHtSixc59wZRIdAlbZsSYjudqnxgc5WmktamH3xBYPnzwIsgmZEDk2p1IdHMUdCpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/XOrh9S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82ECCC4CEF2;
-	Mon,  9 Jun 2025 02:05:32 +0000 (UTC)
+	s=arc-20240116; t=1749435895; c=relaxed/simple;
+	bh=JikvJDoUGRQoKS5a6Vqsu5jIrpZBcJJsqsOrm0ocGrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ABA4cD8WILKiW+GCchtLPZTKdNcTl8gw9bKPFFLPjoNiyyC88egNqdRGq3v2Ub+hn8/VegY6FxkV0GA3DFT83nBrQpNfXVxoZS9sl1ezIYAflNQgxYj+QESfsBb52CA4kTwFAk1/x7jXdsR4h/ly/5U9J4C9rHMjGjfK0ZBrwcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0kBymWW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFA7C4CEEE;
+	Mon,  9 Jun 2025 02:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749434732;
-	bh=SWQT8sENw4NwT9lDBHuUxJ8UaAXCQ1R60yGTayrXJwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K/XOrh9SHcIiG0yELowmGUZ8ijMU4aU40kTi45jbekPylyiriBvsGQ+CTC+Tslq7s
-	 dhLQeru98aVSbiwZlssldKHNQlZzCl6LVMFctWrHPM0XOSIGujfdqOs5StAbd/JOqK
-	 sFKbhoX1kloNi2zp+91Bnj8g5JcKq+jiMdlBubkqwBc1JU2eQn1FbgFn2o7wKz3uVA
-	 IB52d6zp5zuRf0JzOYzipOrc1BI/eSx5IxJ7O/cZ+EC9kIyykWOUoGi3rYBtiD8WQI
-	 w6Heo71h6UdNEc3d5C7yksrN119KNzxaYfOG8kwCm7axUf7mhRAe2B9U8GaClZUHCL
-	 sqDr22wzf8/Gg==
+	s=k20201202; t=1749435895;
+	bh=JikvJDoUGRQoKS5a6Vqsu5jIrpZBcJJsqsOrm0ocGrw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=c0kBymWWTh7UD9q9569esGrA+9QcPEo29In+ln9201+NdDWT6lX1mktfh2pJBFmS9
+	 y8EBbtDr9jOhVPacbjXTFgCjEivQa0ql7p1MuoO8FnwXFtYZu00grXhB5qet1eLLgi
+	 pqD3gGD3rxW8qIXNoQd9IE+pYwvmYb1MVa5eTFTdWvlgV1Q2EitgfeihgCiXAppaTn
+	 KN/oPjorbi27qMhvoPzVztIAA5c/2fPnTVaflKAdpYwCeSwmXZcB1oPO8LzNSzFVhj
+	 eCDZ+IWP+wjrfLjq1W6jpX3iaXrSjbo8G1l2kKyD3xfNDO2tMWmDeHIn7VwgETQdmr
+	 l8QWsZNByCILw==
 From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com
-Cc: bhelgaas@google.com,
+To: mario.limonciello@amd.com,
+	bhelgaas@google.com
+Cc: dri-devel@lists.freedesktop.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 4/4] usb: xhci: Avoid showing warnings for dying controller
-Date: Sun,  8 Jun 2025 21:05:18 -0500
-Message-ID: <20250609020518.289812-2-superm1@kernel.org>
+Subject: [RFC PATCH] PCI/VGA: Look at all PCI display devices in VGA arbiter
+Date: Sun,  8 Jun 2025 21:24:21 -0500
+Message-ID: <20250609022435.348589-1-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609020518.289812-1-superm1@kernel.org>
-References: <20250609020518.289812-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,44 +59,185 @@ Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
 
-When a USB4 dock is unplugged from a system it won't respond to ring
-events. The PCI core handles the surprise removal event and notifies
-all PCI drivers. The XHCI PCI driver sets a flag that the device is
-being removed, and when the device stops responding a flag is also
-added to indicate it's dying.
+On an A+N mobile system the APU is not being selected by some desktop
+environments for any rendering tasks. This is because the neither GPU
+is being treated as "boot_vga" but that is what some environments use
+to select a GPU [1].
 
-When that flag is set don't bother to show warnings about a missing
-controller.
+The VGA arbiter driver only looks at devices that report as PCI display
+VGA class devices. Neither GPU on the system is a display VGA class
+device:
 
+c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+
+So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
+function already has some handling for integrated GPUs by looking at the
+ACPI HID entries, so if all PCI display class devices are looked at it
+actually can detect properly with this device ordering.  However if there
+is a different ordering it could flag the wrong device.
+
+Modify the VGA arbiter code and matching sysfs file entries to examine all
+PCI display class devices. After every device is added to the arbiter list
+make a pass on all devices and explicitly check whether one is integrated.
+
+This will cause all GPUs to gain a `boot_vga` file, but the correct device
+(APU in this case) will now show `1` and the incorrect device shows `0`.
+Userspace then picks the right device as well.
+
+Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/usb/host/xhci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/pci-sysfs.c |  2 +-
+ drivers/pci/vgaarb.c    | 53 ++++++++++++++++++++++++++---------------
+ include/linux/pci.h     | 15 ++++++++++++
+ 3 files changed, 50 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 4e6dbd2375c3f..86d4bcc5faaf0 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -144,7 +144,8 @@ int xhci_halt(struct xhci_hcd *xhci)
- 	ret = xhci_handshake(&xhci->op_regs->status,
- 			STS_HALT, STS_HALT, XHCI_MAX_HALT_USEC);
- 	if (ret) {
--		xhci_warn(xhci, "Host halt failed, %d\n", ret);
-+		if (!(xhci->xhc_state & XHCI_STATE_DYING))
-+			xhci_warn(xhci, "Host halt failed, %d\n", ret);
- 		return ret;
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 268c69daa4d57..c314ee1b3f9ac 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 
+-	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
++	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+ 		return a->mode;
+ 
+ 	return 0;
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 78748e8d2dbae..8281144747487 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -139,7 +139,7 @@ void vga_set_default_device(struct pci_dev *pdev)
+ {
+ 	if (vga_default == pdev)
+ 		return;
+-
++	vgaarb_info(&pdev->dev, "selecting as VGA boot device\n");
+ 	pci_dev_put(vga_default);
+ 	vga_default = pci_dev_get(pdev);
+ }
+@@ -676,9 +676,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
  	}
  
-@@ -203,7 +204,8 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
- 	state = readl(&xhci->op_regs->status);
+ 	/*
+-	 * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+-	 * other VGA devices, it is the best candidate so far.
+-	 */
++	* Vgadev has neither IO nor MEM enabled.  If we haven't found any
++	* other VGA devices, it is the best candidate so far.
++	*/
+ 	if (!boot_vga)
+ 		return true;
  
- 	if (state == ~(u32)0) {
--		xhci_warn(xhci, "Host not accessible, reset failed.\n");
-+		if (!(xhci->xhc_state & XHCI_STATE_DYING))
-+			xhci_warn(xhci, "Host not accessible, reset failed.\n");
- 		return -ENODEV;
+@@ -751,6 +751,31 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
+ 		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
+ }
+ 
++static
++void vga_arbiter_select_default_device(void)
++{
++	struct pci_dev *candidate = vga_default_device();
++	struct vga_device *vgadev;
++
++	list_for_each_entry(vgadev, &vga_list, list) {
++		if (vga_is_boot_device(vgadev)) {
++			/* check if one is an integrated GPU, use that if so */
++			if (candidate) {
++				if (vga_arb_integrated_gpu(&candidate->dev))
++					break;
++				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
++					candidate = vgadev->pdev;
++					break;
++				}
++			} else
++				candidate = vgadev->pdev;
++		}
++	}
++
++	if (candidate)
++		vga_set_default_device(candidate);
++}
++
+ /*
+  * Currently, we assume that the "initial" setup of the system is not sane,
+  * that is, we come up with conflicting devices and let the arbiter's
+@@ -816,13 +841,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+ 		bus = bus->parent;
  	}
  
+-	if (vga_is_boot_device(vgadev)) {
+-		vgaarb_info(&pdev->dev, "setting as boot VGA device%s\n",
+-			    vga_default_device() ?
+-			    " (overriding previous)" : "");
+-		vga_set_default_device(pdev);
+-	}
+-
+ 	vga_arbiter_check_bridge_sharing(vgadev);
+ 
+ 	/* Add to the list */
+@@ -833,6 +851,7 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+ 		vga_iostate_to_str(vgadev->owns),
+ 		vga_iostate_to_str(vgadev->locks));
+ 
++	vga_arbiter_select_default_device();
+ 	spin_unlock_irqrestore(&vga_lock, flags);
+ 	return true;
+ fail:
+@@ -1499,8 +1518,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+ 
+ 	vgaarb_dbg(dev, "%s\n", __func__);
+ 
+-	/* Only deal with VGA class devices */
+-	if (!pci_is_vga(pdev))
++	/* Only deal with display devices */
++	if (!pci_is_display(pdev))
+ 		return 0;
+ 
+ 	/*
+@@ -1548,12 +1567,8 @@ static int __init vga_arb_device_init(void)
+ 
+ 	/* Add all VGA class PCI devices by default */
+ 	pdev = NULL;
+-	while ((pdev =
+-		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+-			       PCI_ANY_ID, pdev)) != NULL) {
+-		if (pci_is_vga(pdev))
+-			vga_arbiter_add_pci_device(pdev);
+-	}
++	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
++		vga_arbiter_add_pci_device(pdev);
+ 
+ 	pr_info("loaded\n");
+ 	return rc;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 05e68f35f3923..e77754e43c629 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -744,6 +744,21 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+ 	return false;
+ }
+ 
++/**
++ * pci_is_display - Check if a PCI device is a display controller
++ * @pdev: Pointer to the PCI device structure
++ *
++ * This function determines whether the given PCI device corresponds
++ * to a display controller. Display controllers are typically used
++ * for graphical output and are identified based on their class code.
++ *
++ * Return: true if the PCI device is a display controller, false otherwise.
++ */
++static inline bool pci_is_display(struct pci_dev *pdev)
++{
++	return (pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY;
++}
++
+ #define for_each_pci_bridge(dev, bus)				\
+ 	list_for_each_entry(dev, &bus->devices, bus_list)	\
+ 		if (!pci_is_bridge(dev)) {} else
 -- 
 2.43.0
 
