@@ -1,75 +1,96 @@
-Return-Path: <linux-pci+bounces-29235-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29236-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67B59AD2244
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 17:21:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05490AD22DA
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 17:46:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEB5316205D
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 15:21:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62604165B52
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 15:46:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACBFE14B959;
-	Mon,  9 Jun 2025 15:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F7B215779;
+	Mon,  9 Jun 2025 15:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1cl5UOA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960792AE6F;
-	Mon,  9 Jun 2025 15:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346CE215767
+	for <linux-pci@vger.kernel.org>; Mon,  9 Jun 2025 15:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749482446; cv=none; b=V5P80Ncw6jUQDybk/qlPOuGquNgSjXqht0hL2d4g1zJP1gNEigneY55hpZh2NJEtbODmN7OnFvxCFFB1+TuFqViTSZazhmQUnzLoYGeqaRbbAagEPEtxpnB+wNHh0QYt4t8mVqb83n8S2nA7rXPEjCSCiJSZ/aIgGTHpU2QnYkw=
+	t=1749483941; cv=none; b=oR8Agi3C/Jwqj6Iajzq88dVKVeEv0nb7lUm4esc2Np46/ywSU+ciYYNyX6uEqwUlaeCoBZowQQIsDGCjYk3PS8G5RooL9Cbkiaomk7+Oe3j5u1z40gZehoWY5U+ert2CUSujcKVcfNXKdQB1bLEgVZFHCR4qkbIA8hPEvwFiASU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749482446; c=relaxed/simple;
-	bh=S5MjouzVBEYiroMvzZ+UMTs/GRMi3u/J/p9JiNcVoNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G6RV0ZWbNRhrtJ9ny0aZ7NMygao4wfh/1oTxDUujWi+fgHmjcGEPsqSvQAK7knBuF/QWIHPu1qctCFk83AL/aTZEdmEQe4xhm8NOpcDmNHWSjK9a6xKPDLS+Cuj5EAO1atkNU7CsiaulfUE1dOIFAzEMzpezJgY8G3uUfTbUAnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 19E932009D01;
-	Mon,  9 Jun 2025 17:20:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 0618F364197; Mon,  9 Jun 2025 17:20:37 +0200 (CEST)
-Date: Mon, 9 Jun 2025 17:20:37 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com,
-	gregkh@linuxfoundation.org, mathias.nyman@intel.com,
-	linux-pci@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 0/4] Don't make noise about disconnected USB4 devices
-Message-ID: <aEb7xcvNl0MX-Tem@wunner.de>
-References: <20250609020223.269407-1-superm1@kernel.org>
+	s=arc-20240116; t=1749483941; c=relaxed/simple;
+	bh=nfyzHKIc34sbDcFeXhBqW6mxzi85ePCarzAsLlEaHkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s06Jphs+SIRXQeo0Z8D4u4BG3/R7e2dQlWvskmUC0FHNIXhrdPigFQAYj5tCpNP/4k3kidWxSDiiywstEJY6QwtsL+K/eckuNUO+stw0+OOg884Eg5DzxWFyWF095+dGQNAQosY7UVwlJxx1yqEzp6InPO4X0p5/mCNLPzoncCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1cl5UOA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B654C4CEEB;
+	Mon,  9 Jun 2025 15:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749483940;
+	bh=nfyzHKIc34sbDcFeXhBqW6mxzi85ePCarzAsLlEaHkg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X1cl5UOAXlK6KC8flqgHNR+OHuav/C4G1KPQVujbODeeziltHNCfMbKDmewQN259F
+	 1q8o5aT7wGvrfY4sqIv/qlwk9uy+yuhPprg9EWHAPmtEaNzeXYkEA/aGgM6xup62M6
+	 Vr2UD4oKbPALspEAg8HwdGh8vIICTmTAtJ6XBEtECwM3O5VfuIdUUkFE7TYMeI4M88
+	 KhylEPV4D4+1yTAcfWlAQJyoavcKb0aGvd6tEWQGq+ZX++bcifFcMRQbKoDarYHv4x
+	 p2pBhlTHE6rs5tz0U1sog5jiBXQDf+aKPPPe7l0ywScpObUEl1rur9BCf85UNKisn6
+	 S2PB9fOh2m7KA==
+Message-ID: <8a45bf3f-5f30-4aed-85d5-b93d38d47a92@kernel.org>
+Date: Mon, 9 Jun 2025 10:41:00 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609020223.269407-1-superm1@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] PCI: Don't show errors on inaccessible PCI devices
+To: Lukas Wunner <lukas@wunner.de>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20250609020223.269407-1-superm1@kernel.org>
+ <20250609020223.269407-2-superm1@kernel.org> <aEb5HjRQ6OHZj_hS@wunner.de>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <aEb5HjRQ6OHZj_hS@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 08, 2025 at 08:58:00PM -0500, Mario Limonciello wrote:
-> Mario Limonciello (4):
->   PCI: Don't show errors on inaccessible PCI devices
->   PCI: Fix runtime PM usage count underflow
->   usb: xhci: Avoid showing errors during surprise removal
->   usb: xhci: Avoid showing warnings for dying controller
+On 6/9/2025 10:09 AM, Lukas Wunner wrote:
+> [cc += Rafael, Mika]
+> 
+> On Sun, Jun 08, 2025 at 08:58:01PM -0500, Mario Limonciello wrote:
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -1376,8 +1376,9 @@ int pci_power_up(struct pci_dev *dev)
+>>   
+>>   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>>   	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>> -		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+>> -			pci_power_name(dev->current_state));
+>> +		if (dev->error_state != pci_channel_io_perm_failure)
+>> +			pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+>> +				pci_power_name(dev->current_state));
+>>   		dev->current_state = PCI_D3cold;
+>>   		return -EIO;
+>>   	}
+> 
+> Instead of merely silencing the error message, why not bail out early on
+> in the function, i.e.
+> 
+> 	if (pci_dev_is_disconnected(dev)) {
+> 		dev->current_state = PCI_D3cold;
+> 		return -EIO;
+> 	}
+> 
 
-Patches [3/4] and [4/4] (which touch xhci) were only cc'ed to Bjorn.
-You may want to resend these two to Mathias and Greg.
-You might also want to split the series in two separate ones
-for PCI and xhci if/when respinning.
+Thanks for the suggestion.  That sounds good to me, I'll have a try.
 
-Thanks,
-
-Lukas
 
