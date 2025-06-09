@@ -1,145 +1,125 @@
-Return-Path: <linux-pci+bounces-29222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29223-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7295CAD1E28
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:54:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EFFFAD1E76
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 15:05:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E0847A4293
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 12:52:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFD63188499A
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 13:05:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E02A2571BF;
-	Mon,  9 Jun 2025 12:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7442571A2;
+	Mon,  9 Jun 2025 13:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4spZsG9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZvYuiHw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EECD1F4C85;
-	Mon,  9 Jun 2025 12:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B3219EB;
+	Mon,  9 Jun 2025 13:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749473644; cv=none; b=qDUAta10/CkNMzJL61bi4n6OAPVO+ybI5u2OaF8ED4lFUwBBcHbN3jHnVUddYoYfLZiDQ2XQcpyX6rJ7rE3A5OCoYqTJHspinA3FzQRKEX28AM1K3gJqyWJ6/EZSQb/Y9XqNY554y9PYnYQt7dISgKx4+RYf7cCqkJCUy8Ss2ag=
+	t=1749474339; cv=none; b=j7jACwvJ3xpGllpjVAZ8GARuBCduLe/nuPeG6Ea2/2nwnz9aUwAnlg1Q7JweP78Mu/0ET+nhHpBEWxQBWQCtSkY0RywG7ECfHxAYupl1FgxEXQOdvEBagoAjRYEI8a/dfcRJ/hPOf+W7cz0uMWomqIDp7s9RPsgciQvsJvXTTJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749473644; c=relaxed/simple;
-	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=igC5Tr/Ci90nkON/qY+O3FkvRQlgmgR/Ztq8pzZoTK5k9ESXBoRRzFAvMZHDRI/vBYPQ/c7FTShtaIFTCbLG3bsC3/HU7ClTvssDipA1QSFS24WryaZpJsTOEUZQmqT1n1mM5ycKlrODQuLuIZ+HnljMHz7168D/09mO+ZL9LZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4spZsG9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16141C4CEEB;
-	Mon,  9 Jun 2025 12:53:59 +0000 (UTC)
+	s=arc-20240116; t=1749474339; c=relaxed/simple;
+	bh=W9d4gGhqmdjRGgPe3a3yXcLH/Le19acpI+RDsCAl7IE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EOSQkoGuFPpWtfcJkA/Ie/ol3t5hB3cF0fQ9Zj1FZZfiAvaqBZQLaBlGfeyoHh5D3vdYHWtmRL11+s/0igwCodGUoRNPxgb8qVUrrzOe/rGwpKUwhXvqkG1wXqXebxWZoduv4rXdkjTGlI/7pSuicoQfutHzI6Mzg/ai/JAQBFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZvYuiHw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F41C4CEEB;
+	Mon,  9 Jun 2025 13:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749473643;
-	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R4spZsG9iao/qhmYKPIIF8aAtXKEbbs/6V453Fp4u+JZ8q/QmjTgTGSt22/8TiyzU
-	 1Iyz9dOF4U1J3nsw4cHGY6MihNjWx5FlJQ5qw2vVbVDqG8L+wBS0yYJIoVYthTEmNA
-	 /ZEM41Riel8ZUEtbiZLmClbHblgNk7Bw35BeW0kJnyc00yLLhWcC4MGTwRTqw0IhY6
-	 YyYWo4PNV+HzO+pHUbKn5x17J9gx1V9aDFafOYQZP70d6+7KPQjhDt7ocwCLWhSB2N
-	 WyhPzWI4669M95YMrti9QDkDg5sGDlrhLg3sK47x9kJADPjNJ3YFJfwSBeu0MGeeP6
-	 +Cnc9duhR5aYg==
-Date: Mon, 9 Jun 2025 14:53:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] rust: pci: add irq accessors
-Message-ID: <aEbZZTx99Tu1Zsd4@pollux>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
+	s=k20201202; t=1749474338;
+	bh=W9d4gGhqmdjRGgPe3a3yXcLH/Le19acpI+RDsCAl7IE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AZvYuiHw15bYABLU2Z8b+zmmn8K1WjQjPO8GZ3qAIqwcSwBkGgHUeR3i9RCFA7GuZ
+	 El4hXmUF2UFmeIpjM2Wt98YRx2Pik0kMQwEimWlLvUN6fYAXq/w6ObHM+dFVIsmJsT
+	 cb7Qa36FhKQccdM0RgImdzsA5PYWJAXMb+ptjm+5uDaQAZQ8TuyxjMbmmye7S4pTGg
+	 seQUCid3aXuHWFYmZmxnE4tlP80nBd4j2PwjqIPyzSHvQr/IkEgcd12fhJrqDC++hK
+	 l7qyKpnbR343Em6HNxqHyxuwoYj9w98kDP7iISzqtHeUuVBfnXTKdifb0nHeBqCHhf
+	 vvNChfPsmvBQQ==
+Message-ID: <18e93f06-ad5f-4335-8646-ce51cbdb783c@kernel.org>
+Date: Mon, 9 Jun 2025 08:05:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Don't make noise about disconnected USB4 devices
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+ gregkh@linuxfoundation.org, mathias.nyman@intel.com,
+ linux-pci@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250609020223.269407-1-superm1@kernel.org>
+ <20250609111913.55153009@foxbook>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250609111913.55153009@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 08, 2025 at 07:51:11PM -0300, Daniel Almeida wrote:
-> These accessors can be used to retrieve a irq::Registration or a
-> irq::ThreadedRegistration from a pci device.
+On 6/9/2025 4:19 AM, Michał Pecio wrote:
+> Hi,
 > 
-> These accessors ensure that only valid IRQ lines can ever be registered.
-> 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
->  rust/kernel/pci.rs | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 8435f8132e38129ccc3495e7c4d3237fcaa97ad9..c690fa1c739c937324e902e61e68df238dbd733b 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -395,6 +395,32 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
->      }
->  }
->  
-> +macro_rules! gen_irq_accessor {
-> +    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident) => {
-> +        $(#[$meta])*
-> +        pub fn $fn_name<T: crate::irq::$handler_trait + 'static>(
-> +            &self,
-> +            index: u32,
-> +            flags: crate::irq::flags::Flags,
-> +            name: &'static crate::str::CStr,
-> +            handler: T,
-> +        ) -> Result<impl PinInit<crate::irq::$reg_type<T>, crate::error::Error> + '_> {
-> +            // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-> +            let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
-> +            if irq < 0 {
-> +                return Err(crate::error::Error::from_errno(irq));
-> +            }
-> +            Ok(crate::irq::$reg_type::<T>::register(
-> +                self.as_ref(),
-> +                irq as u32,
-> +                flags,
-> +                name,
-> +                handler,
-> +            ))
-> +        }
-> +    };
-> +}
+> General remarks:
+> - broken threading on 1/2 and 2/2
+> - some Cc missing on individual patch emails
 
-Given that we only have two invocations below, please implement them in-place. I
-don't think it's worth having the macro indirection.
+Yeah; sorry about that.  I got bit by 
+https://github.com/kworkflow/kworkflow/issues/1207 once again.  Once I 
+realized that happened I figured unthreaded was better than missing so I 
+ended off sending the missing ones to each of the lists that missed them.
 
->  impl Device<device::Bound> {
->      /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
->      /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-> @@ -413,6 +439,15 @@ pub fn iomap_region_sized<const SIZE: usize>(
->      pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
->          self.iomap_region_sized::<0>(bar, name)
->      }
-> +
-> +    gen_irq_accessor!(
-> +        /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given index.
-> +        irq_by_index, Registration, Handler
-> +    );
-> +    gen_irq_accessor!(
-> +        /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at the given index.
-> +        threaded_irq_by_index, ThreadedRegistration, ThreadedHandler
-> +    );
->  }
->  
->  impl Device<device::Core> {
+If I send a v2 with them together again I'll just manually do to/cc for 
+everything.
+
 > 
-> -- 
-> 2.49.0
+> On Sun,  8 Jun 2025 20:58:00 -0500, Mario Limonciello wrote:
+>> When a USB4 or TBT3 dock is disconnected a lot of warnings and errors
+>> are emitted related to the PCIe tunnels and XHCI controllers in th
+>> dock.
 > 
+> These patches will probably also trigger on any loss of PCIe link for
+> any reason: badly seated card, worn connector, EMI, etc.
+> 
+> Will there be any remaining message about dead PCIe links, or just
+> a silent disappearence? Like dev_info("USB disconnect ...") in USB.
+> 
+
+Good point on the PCIe patches with other failures.  Those wouldn't have 
+any "hotplug event" though would they?  This all stems from the hotplug 
+event, so would it be worth storing the state on the struct pci_dev to 
+conditionally show these PCIe messages?
+
+>> The messages are loud, but it's mostly because the functions that
+>> emit the messages don't check whether the device is actually alive.
+>> The PCIe hotplug services mark the device as perm dead, so that
+>> can be used to hide some of the messsages.
+>>
+>> In the XHCI driver the device is marked as dying already, so that
+>> can also be used to hide messages.
+> 
+> Are PCI drivers expected to stay silent on sudden removal mid operation?
+> Is there no "safe ejection" procedure for those Thunderbolt devices?
+> 
+
+With docking surprise hot removal is a standard operation.
+Userspace doesn't offer anything for a clean removal event of PCIe like 
+USB storage does.
+
+>> Mario Limonciello (4):
+>>    PCI: Don't show errors on inaccessible PCI devices
+>>    PCI: Fix runtime PM usage count underflow
+>>    usb: xhci: Avoid showing errors during surprise removal
+>>    usb: xhci: Avoid showing warnings for dying controller
+> 
+> Regards,
+> Michal
+
 
