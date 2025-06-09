@@ -1,131 +1,114 @@
-Return-Path: <linux-pci+bounces-29188-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29189-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFAE3AD16D5
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 04:34:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D021AD1711
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 04:47:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A02663AA6B0
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 02:34:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42ACF16932E
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 02:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75302157A67;
-	Mon,  9 Jun 2025 02:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6794E224254;
+	Mon,  9 Jun 2025 02:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=r26.me header.i=@r26.me header.b="mGPh25wP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQ6X/3HY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968922459C9
-	for <linux-pci@vger.kernel.org>; Mon,  9 Jun 2025 02:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F471459F6;
+	Mon,  9 Jun 2025 02:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749436460; cv=none; b=Q6Kgfr2ToCtVQuz4+o5qc7PI1+5rpICsl97XZfvEe8ilUEnrRv4LW8S6gBQtuvx+WvtbwkHEuPxdKZyiJCswq5oSed/cx9iEmtyUUMz8iGc8z62oikrRxM5pJtWHPrRZJsT+JrJO2mCi2DJZPAhuYN0uk2zJu0MkrLfVizSmZzw=
+	t=1749437196; cv=none; b=im9st3VKZK9bxxjJepu1VoA3LFqAiD6FiZ3vIu61K2X29Q6D0vpnRGmbrDEno7dwcQJGoiGu1BdvXo8YHeb/DC0RDNhF45eIPQvCjEs9eAnSeAba3gycbIbUNGxR3WE6Pm+BB0kA0MN/lvzLte8jlPZsT7p8NzKeOtJxi0hIpuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749436460; c=relaxed/simple;
-	bh=cF91nALyo98uqnpCdLscnnoeoPwnYEha9V/7Ylv8reU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bqwqbeGOqFuNKOSob+Ae99GrZuwCNSlABjqj6d1QOqDkVjJuv0UAb+xViR+t86fvhRAnPRZ0ZeFEjcnY8EGtX4CxYIRp9FY1XyhNdpcj9sY6sd7yTOfoSWhQOyu/WgsDR6hBmY2WBpt4Xjlr5xhik2BQNw4NDgfY1FadRINS4q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=mGPh25wP; arc=none smtp.client-ip=109.224.244.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
-	s=protonmail3; t=1749436448; x=1749695648;
-	bh=E4/0V+ScOCL1YWcOZGl7HNDKRjUxzVbzYhoKPTQdams=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=mGPh25wPJfJTplQIWmRv7Nv/GcvxOl5TKzK7dyZXG1+6qY4bot6UP9/vsa1+qA8K/
-	 xAGRD/ATtBExc2HLBbbkXMOW7V7ESd9jtTjiV7mZLSnLglbXUXC3D5XW5VUCLaHz1h
-	 89cY798xsjTf5lQS/sbEEBbCgb2HMFb8SLoFsJ63+NCAWCjeNkub8o8ekvfKaK8umK
-	 7bm/fF686Cc95ThQrAPw/1I6hYzKuCM32PXVl5IjZVmfuqUqMNcNR+iNm6TycERDUs
-	 WLtnNkv1fQ0e03vfnuAlqhvaQewjr2vMs3QhvDXHLWw04+NUdkXZ0RvweXSEjBJY9v
-	 DamKbrP+eAHIg==
-Date: Mon, 09 Jun 2025 02:34:02 +0000
-To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: rio@r26.me
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: [REGRESSION] amdgpu fails to load external RX 580 since PCI: Allow relaxed bridge window tail sizing for optional resources
-Message-ID: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me>
-Feedback-ID: 77429777:user:proton
-X-Pm-Message-ID: a555cdadbafdaf62f831901f8970a7dd72bc3e2f
+	s=arc-20240116; t=1749437196; c=relaxed/simple;
+	bh=jM8wdEwNXLFrk2Eu5Cqxd8tWg9JnaEJ9FmQA4RrL0lg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L/2Fp4Yk4BSph4QdKGzjyfojqNdQfs2EP3ej1Ue6cXRsZeM4IQuFnHI7TOnndUiCetqx4KwXmYVlPPAyBxFJixtKmdIycGXB1TQhfonM6lYxeYz7zN4DrHgusWxxQqRNESakeEcJmNKlQXSe6qhqsTQ9yob0ymE5zF2G/gK4axc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQ6X/3HY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D56C113CF;
+	Mon,  9 Jun 2025 02:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749437196;
+	bh=jM8wdEwNXLFrk2Eu5Cqxd8tWg9JnaEJ9FmQA4RrL0lg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fQ6X/3HYQ36F34pys39KIOh3hRdYubeC8dJnN6E3MgHSdrz6VAAMLBeuG52nFdRC6
+	 ClXEk2iN+NY7tneTNnsxl38Mn60H1ailCD797tocWFSQdvQvDA+WQTK2QAGFBnLhwM
+	 CKs6zwhpgqB3SoqPKYoCc/jJILf50jUnLIfbjpd7Nmge9axRvzjes/EJ4kSjbOWNJl
+	 r06GlIIgDkWhUqg10E4Vk4Kvr64uFkEJsFPcwCnucdna0PXkvJpxhpNn6x+13jeoMi
+	 T/iB3idBZeMypjeF79wn52M8iqkRbKF4pSauFlSjket1PcUu4V+43BLIWCI2mbRefP
+	 uv9OPfuRYqbiQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list),
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v3 0/5] Improvements to S5 power consumption
+Date: Sun,  8 Jun 2025 21:46:14 -0500
+Message-ID: <20250609024619.407257-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-I have an external Radeon RX580 on my machine connected via Thunderbolt, an=
-d
-since upgrading from 6.14.1 the setup stopped working. Dmesg showed warning=
- from
-resource sanity check, followed by a stack trace https://pastebin.com/njR55=
-rQW.
-Relevant snippet:
+A variety of issues both in function and in power consumption have been
+raised as a result of devices not being put into a low power state when
+the system is powered off.
 
-[   12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff 64=
-bit pref]: releasing
-[   12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] *ERROR* Problem r=
-esizing BAR0 (-16).
-[   12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff 64=
-bit pref]: assigned
-[   12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F400000000 =
-- 0x000000F5FFFFFFFF (8192M used)
-[   12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF00000000 -=
- 0x000000FF0FFFFFFF
-[   12.135536] resource: resource sanity check: requesting [mem 0x000000000=
-0000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem 0x0=
-00a0000-0x000bffff window]
-[   12.135542] ------------[ cut here ]------------
-[   12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:721 me=
-mtype_reserve_io+0xfc/0x110
-[   12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek ...
-[   12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S     =
-             6.15.0-13743-g8630c59e9936 #16 PREEMPT(full)  3b462c924b3ffd81=
-56fc3b77bcc8ddbf7257fa57
-[   12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
-[   12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX Seri=
-es, BIOS 1.07.08TCOP3 03/27/2020
-[   12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
-[   12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89 ee =
-48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff <0f=
-> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
+There have been some localized changes[1] to PCI core to help these issues,
+but they have had various downsides.
 
-Bisecting the stable branch pointed me to the following commit:
+This series instead tries to use the S4 flow when the system is being
+powered off.  This lines up the behavior with what other operating systems
+do as well.  If for some reason that fails or is not supported, unwind and
+do the previous S5 flow that will wake all devices and run their shutdown()
+callbacks.
 
-commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
-Author: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Date:   Mon Dec 16 19:56:11 2024 +0200
+Previous submissions [1]:
+Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcXSYc5kkL=6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f4906225d2
+Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/ (v1)
+Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@kernel.org/ (v2)
 
-    PCI: Allow relaxed bridge window tail sizing for optional resources
-   =20
-    [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
+Mario Limonciello (5):
+  PM: Use hibernate flows for system power off
+  PCI: Put PCIe ports with downstream devices into D3 at hibernate
+  drm/amd: Avoid evicting resources at S5
+  scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+  usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
 
-I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd9264),=
- and
-the issue persists. Reverting the offending commit via `git revert -n
-22df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
-Dmesg: https://pastebin.com/xd76rDsW.
+ drivers/base/power/main.c                  |  7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+ drivers/pci/pci-driver.c                   | 92 ++++++++++++++--------
+ drivers/scsi/mesh.c                        |  1 +
+ drivers/scsi/stex.c                        |  1 +
+ drivers/usb/host/sl811-hcd.c               |  1 +
+ include/linux/pm.h                         |  3 +
+ include/trace/events/power.h               |  3 +-
+ kernel/reboot.c                            |  6 ++
+ 9 files changed, 84 insertions(+), 34 deletions(-)
 
-Additional information
-   - Distribution: Artix
-   - Arch: x86_64
-   - Kernel config: https://pastebin.com/DWSERJL5
-   - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
-   - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmiopr=
-efsize=3D1G
-
-I'm reporting here as these are the contacts from the commit message. Pleas=
-e let me know if there's a more appropriate place for this, as well as any =
-more information I can provide.
-
-Thanks,
-Rio
+-- 
+2.43.0
 
 
