@@ -1,188 +1,266 @@
-Return-Path: <linux-pci+bounces-29218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F74EAD1CC4
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:00:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA44AAD1DD3
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:33:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3F7C3AC9C3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 11:59:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBFBA16CA24
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 12:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA35256C7E;
-	Mon,  9 Jun 2025 12:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC0912580CA;
+	Mon,  9 Jun 2025 12:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGDxMeRS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEZuzpCB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16ACC2561DD;
-	Mon,  9 Jun 2025 12:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3390257AF2;
+	Mon,  9 Jun 2025 12:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749470404; cv=none; b=cM6/oXrZFvXB66lU/5NLksI2XQzjBp5wFNyPrqIW5kyLL/sxIQaD9sZQh9NrJ+Vr4BnyN1Vpoyj4Xtv1d3EaJoBB6oO56ijK/tlyYEM2Tew1FrL/cwtY5Qtzv0a1DOv5VIo35MkfwIRS+kVp7rltj7E/X4FFePZ17uKJ/vFOqk8=
+	t=1749472066; cv=none; b=tOoPdpBrZI+/+Bwr2z+o+3DpKd884cuhfIwC/Fk5fT41402lVfBvpGpVWwCHc0nlDhAwLqmebmVwCkd6bJuDIa0amQxuugW/KbRI3fcTK6s/MrcOMC9xSxYwaWcSDOECkRyTa52NmunccgwKHhE0pjw8CRUxqG+223jBxINq0iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749470404; c=relaxed/simple;
-	bh=VNK7VVJAP9oDuurE8SbOZP1RRIA6lunMWbNPz7CoQK0=;
+	s=arc-20240116; t=1749472066; c=relaxed/simple;
+	bh=TF0Lt8AnKHFIOMaW6x2e/lAW4/Cndmz2TrxEid2Il2Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCqnySx6Fia2lMssna9NSvTOzTCjZVEPjqQknu+P9GOUa6XPWxzoxO7lTmYQq3nMKCP/kgebsngvz7Tr+FXojxAfkigQCzPze3VYjYnjT3PiHdsnBVqCZvqYrAGrJvK36SfC9VcSseNFGt8g1rGDkls+ISOWyUMF3oxVq0K5Ug8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGDxMeRS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC77EC4CEEB;
-	Mon,  9 Jun 2025 11:59:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=qn0ffQzUKHpGeAfYkmcK5SbuuqpUCD2Itkus2kjV1E+rNRh51DJ+F1Ev5H+L40YP4uub4E5NX/pUiErkqIIWZa2/W3k0x5W0/2dIwDGZA0WlugCc2vU9JfQrCML9uY1x+FLJxdJPnKvN3o4PC0a+GqIyw1c4GBPIeyHHuBk/sT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEZuzpCB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F41C4CEEB;
+	Mon,  9 Jun 2025 12:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749470403;
-	bh=VNK7VVJAP9oDuurE8SbOZP1RRIA6lunMWbNPz7CoQK0=;
+	s=k20201202; t=1749472065;
+	bh=TF0Lt8AnKHFIOMaW6x2e/lAW4/Cndmz2TrxEid2Il2Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGDxMeRSJQgWr64RvYpWptgDuS+BnnL2RArQjG8mPIQz/xCBtEL5LNYHhp7XYpy7J
-	 32imV7as7Kp9xPH3K5fSdcbQTPbO4Y3GSCIHI22pDlECEBOXuZyYIUAWrXmmyTT3hd
-	 qo19bfTzFdwIGfFTzhmCdKdRJY9NDJiHUV0C5xBnchSoMYe02XEddCeFLWIg/IOJvq
-	 Y03cIJEzI/Ncqg3WolDtVL48R1vm+1h8PJLnCa1lMuLtkBkNgY3+2XVsGrOJCHy7bj
-	 I+plPPDx4TJpwrbbE1gxc2oDCa9dm9Ee+8b4SxOX/AjOOfT9HyRBd6YAtybrGb8pgE
-	 DD3HtH4RaFopA==
-Date: Mon, 9 Jun 2025 17:29:49 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Brian Norris <briannorris@chromium.org>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, 
-	JeffyChen <jeffy.chen@rock-chips.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, 
-	Sherry Sun <sherry.sun@nxp.com>
-Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
-Message-ID: <pl262pfxe5mjtxzvr4qcsxwt4cyrdjzncd3ztsqpb6zuc7gi5b@hu6njospevgk>
-References: <20250605202630.GA622231@bhelgaas>
- <7b91b725-6b47-bf8f-e6e5-e4584f274ec4@oss.qualcomm.com>
+	b=DEZuzpCBafD0g9kI5LVLV4dVO6iVQUURLLUZwqRWGNmODmzdRM8Cjf9mywTsT8edf
+	 bz7Yl9rKwR2Cm4wr7gUG+dTuqQmBmjBLDYlv4yUDFga//1BxFIkNIBefPFmqVn7dl5
+	 FW1xRGuHOe6vfQg7dY6fIfAcpBo5cNbsdY99vOj87QhBCZDqHDd2yH6XdMdjWbbQyk
+	 HErRmDRrPAZfmbykXON4zUOyY2EDBCokY8R1V8JITv5x94/gxeu0Ln8VItC5aWDCzz
+	 gDFknVcavuXjp8TuqvE7T8+sxTlgJiumJ+4TOnuK73Ya/TEXCsUT7wJyXLRau9ruaX
+	 K/Ci5wstAormg==
+Date: Mon, 9 Jun 2025 14:27:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+Message-ID: <aEbTOhdfmYmhPiiS@pollux>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b91b725-6b47-bf8f-e6e5-e4584f274ec4@oss.qualcomm.com>
+In-Reply-To: <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
 
-+ Brian, Rafael, Tony, Jeffy (who were part of the previous attempt to add WAKE#
-GPIO/interrupt support:
-https://lore.kernel.org/linux-pci/20171225114742.18920-1-jeffy.chen@rock-chips.com
+On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+> +/// Callbacks for a threaded IRQ handler.
+> +pub trait ThreadedHandler: Sync {
+> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
+> +    /// context.
+> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+> +
+> +    /// The threaded handler function. This function is called from the irq
+> +    /// handler thread, which is automatically created by the system.
+> +    fn thread_fn(&self) -> IrqReturn;
+> +}
+> +
+> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
+> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> +        T::handle_irq(self)
+> +    }
+> +
+> +    fn thread_fn(&self) -> IrqReturn {
+> +        T::thread_fn(self)
+> +    }
+> +}
 
-On Mon, Jun 09, 2025 at 11:27:49AM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 6/6/2025 1:56 AM, Bjorn Helgaas wrote:
-> > On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
-> > > PCIe wake interrupt is needed for bringing back PCIe device state
-> > > from D3cold to D0.
-> > 
-> > Does this refer to the WAKE# signal or Beacon or both?  I guess the
-> > comments in the patch suggest WAKE#.  Is there any spec section we can
-> > cite here?
-> > 
-> we are referring only WAKE# signal, I will add the PCIe spec r6.0, sec
-> 5.3.3.2 in next patch version.
-> > > Implement new functions, of_pci_setup_wake_irq() and
-> > > of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
-> > > using the Device Tree.
-> > > 
-> > >  From the port bus driver call these functions to enable wake support
-> > > for bridges.
-> > 
-> > What is the connection to bridges and portdrv?  WAKE# is described in
-> > PCIe r6.0, sec 5.3.3.2, and PCIe CEM r6.0, sec 2.3, but AFAICS neither
-> > restricts it to bridges.
-> > 
+In case you intend to be consistent with the function pointer names in
+request_threaded_irq(), it'd need to be handler() and thread_fn(). But I don't
+think there's a need for that, both aren't really nice for names of trait
+methods.
 
-You are right. WAKE# is really a PCIe slot/Endpoint property and doesn't
-necessarily belong to a Root Port/Bridge. But the problem is with handling the
-Wake interrupt in the host. For instance, below is the DT representation of the
-PCIe hierarchy:
+What about irq::Handler::handle() and irq::Handler::handle_threaded() for
+instance?
 
-	PCIe Host Bridge
-		|
-		v
-	PCIe Root Port/Bridge
-		|
-		|
-		v
-PCIe Slot <-------------> PCIe Endpoint
+Alternatively, why not just
 
-DTs usually define both the WAKE# and PERST# GPIOs ({wake/reset}-gpios property)
-in the PCIe Host Bridge node. But we have decided to move atleast the PERST# to
-the Root Port node since the PERST# lines are per slot and not per host bridge.
+	trait Handler {
+	   fn handle(&self);
+	}
+	
+	trait ThreadedHandler {
+	   fn handle(&self);
+	}
 
-Similar interpretation applies to WAKE# as well, but the major difference is
-that it is controlled by the endpoints, not by the host (RC/Host Bridge/Root
-Port). The host only cares about the interrupt that rises from the WAKE# GPIO.
-The PCIe spec, r6.0, Figure 5-4, tells us that the WAKE# is routed to the PM
-controller on the host. In most of the systems that tends to be true as the
-WAKE# is not tied to the PCIe IP itself, but to a GPIO controller in the host.
+and then we ask for `T: Handler + ThreadedHandler`.
 
-In this case, the PCI core somehow needs to know the IRQ number corresponding to
-the WAKE# GPIO, so that it can register an IRQ handler for it to wakeup the
-endpoint when an interrupt happens. Previous attempts [1], tried to add a new DT
-property for the interrupts:
-https://lore.kernel.org/linux-pci/20171225114742.18920-2-jeffy.chen@rock-chips.com
+> +
+> +impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<T, A> {
+> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> +        T::handle_irq(self)
+> +    }
+> +
+> +    fn thread_fn(&self) -> IrqReturn {
+> +        T::thread_fn(self)
+> +    }
+> +}
+> +
+> +/// A registration of a threaded IRQ handler for a given IRQ line.
+> +///
+> +/// Two callbacks are required: one to handle the IRQ, and one to handle any
+> +/// other work in a separate thread.
+> +///
+> +/// The thread handler is only called if the IRQ handler returns `WakeThread`.
+> +///
+> +/// # Examples
+> +///
+> +/// The following is an example of using `ThreadedRegistration`. It uses a
+> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
+> +///
+> +/// ```
+> +/// use core::sync::atomic::AtomicU32;
+> +/// use core::sync::atomic::Ordering;
+> +///
+> +/// use kernel::prelude::*;
+> +/// use kernel::device::Bound;
+> +/// use kernel::irq::flags;
+> +/// use kernel::irq::ThreadedIrqReturn;
+> +/// use kernel::irq::ThreadedRegistration;
+> +/// use kernel::irq::IrqReturn;
+> +/// use kernel::platform;
+> +/// use kernel::sync::Arc;
+> +/// use kernel::sync::SpinLock;
+> +/// use kernel::alloc::flags::GFP_KERNEL;
+> +/// use kernel::c_str;
+> +///
+> +/// // Declare a struct that will be passed in when the interrupt fires. The u32
+> +/// // merely serves as an example of some internal data.
+> +/// struct Data(AtomicU32);
+> +///
+> +/// // [`handle_irq`] takes &self. This example illustrates interior
+> +/// // mutability can be used when share the data between process context and IRQ
+> +/// // context.
+> +///
+> +/// type Handler = Data;
+> +///
+> +/// impl kernel::irq::request::ThreadedHandler for Handler {
+> +///     // This is executing in IRQ context in some CPU. Other CPUs can still
+> +///     // try to access to data.
+> +///     fn handle_irq(&self) -> ThreadedIrqReturn {
+> +///         self.0.fetch_add(1, Ordering::Relaxed);
+> +///
+> +///         // By returning `WakeThread`, we indicate to the system that the
+> +///         // thread function should be called. Otherwise, return
+> +///         // ThreadedIrqReturn::Handled.
+> +///         ThreadedIrqReturn::WakeThread
+> +///     }
+> +///
+> +///     // This will run (in a separate kthread) if and only if `handle_irq`
+> +///     // returns `WakeThread`.
+> +///     fn thread_fn(&self) -> IrqReturn {
+> +///         self.0.fetch_add(1, Ordering::Relaxed);
+> +///
+> +///         IrqReturn::Handled
+> +///     }
+> +/// }
+> +///
+> +/// // This is running in process context.
+> +/// fn register_threaded_irq(handler: Handler, dev: &platform::Device<Bound>) -> Result<Arc<ThreadedRegistration<Handler>>> {
+> +///     let registration = dev.threaded_irq_by_index(0, flags::SHARED, c_str!("my-device"), handler)?;
 
-But that doesn't seem to fly. So Krishna came with the proposal to reuse the
-WAKE# GPIO defined in the Root Port node (for DTs that have moved the properties
-out of the Host Bridge node) and extract the IRQ number from it using
-gpiod_to_irq() API.
+This doesn't compile (yet). I think this should be a "raw" example, i.e. the
+function should take an IRQ number.
 
-And he used portdrv as the placeholder for the irq setup code, because the WAKE#
-GPIO is going to be defined in the Root Port node irrespective of a PCIe Slot or
-an endpoint is connected to the Root Port. And the portdrv driver is the one
-controlling the Root Port. Though, this placeholder part can be subject to
-discussion.
+The example you sketch up here is for platform::Device::threaded_irq_by_index().
 
-But from the previous discussions, I could infer that the PCIe Root Port/Bridge
-DT node is going to be the placeholder for the WAKE# GPIOs:
-https://lore.kernel.org/linux-pci/2806186.IK6EZBC0cX@aspire.rjw.lan
+> +///
+> +///     // You can have as many references to the registration as you want, so
+> +///     // multiple parts of the driver can access it.
+> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
+> +///
+> +///     // The handler may be called immediately after the function above
+> +///     // returns, possibly in a different CPU.
+> +///
+> +///     {
+> +///         // The data can be accessed from the process context too.
+> +///         registration.handler().0.fetch_add(1, Ordering::Relaxed);
+> +///     }
 
-It also sounds sensible to me since we do not want to define the wake-gpios
-property in the endpoint node as that would mean that for each device connected,
-a separate DT endpoint node needs to be created just for defining the WAKE#
-GPIO. Also, if there is only a PCIe slot in the board, then the property has to
-be defined in the PCIe Root Port node itself as there is no separate DT node for
-PCIe slot.
+Why the extra scope?
 
-> The wake# is used by the endpoints to wake host to bring PCIe device
-> state to D0 again, in direct attach root port wake# will be connected
-> to the root port and in switch cases the wake# will connected to the
-> switch Downstream ports and switch will consolidate wake# from different
-> downstream ports and sends to the root port. The wake# will be used by
-> root port bridges only. portdrv is the driver for root port.
+> +///
+> +///     Ok(registration)
+> +/// }
+> +///
+> +///
+> +/// # Ok::<(), Error>(())
+> +///```
+> +///
+> +/// # Invariants
+> +///
+> +/// * We own an irq handler using `&self` as its private data.
+> +///
+> +#[pin_data]
+> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+> +    inner: Devres<RegistrationInner>,
+> +
+> +    #[pin]
+> +    handler: T,
+> +
+> +    /// Pinned because we need address stability so that we can pass a pointer
+> +    /// to the callback.
+> +    #[pin]
+> +    _pin: PhantomPinned,
+> +}
 
-This is not correct. Root Port doesn't have anything to do with the WAKE#
-interrupt. We are just merely trying to reuse the Root Port driver because of
-how the WAKE# GPIO is wired up in the DT. It might not be applicable for ACPI as
-the FW raises GPE for the Wake interrupt and kernel doesn't parse WAKE#, afaik.
+Most of the code in this file is a duplicate of the non-threaded registration.
 
-> > Unless there's some related functionality in a Root Port, RCEC, or
-> > Switch Port, maybe this code should be elsewhere, like
-> > set_pcie_port_type(), so we could set this up for any PCIe device that
-> > has a WAKE# description?
-> > 
+I think this would greatly generalize with specialization and an HandlerInternal
+trait.
 
-I think it should work if we tie the Wake interrupt to the PCI device instead of
-the Root Port/Bridge in the kernel, even though the DT representation is
-different. In that case, PCI core should parse the Root Port node for each
-device to get the WAKE# GPIO and setup an IRQ handler for it. When the Wake
-interrupt happens, the PCI core should power ON the PCI hierarchy starting from
-the host bridge, till the endpoint (top down approach).
+Without specialization I think we could use enums to generalize.
 
-I think we all agree that the WAKE# GPIO should be handled by the PCI core
-instead of the PCI controller or client drivers. We should agree on the best
-possible place though.
+The most trivial solution would be to define the Handler trait as
 
-- Mani
+	trait Handler {
+	   fn handle(&self);
+	   fn handle_threaded(&self) {};
+	}
 
--- 
-மணிவண்ணன் சதாசிவம்
+but that's pretty dodgy.
+
+> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
+> +    /// Registers the IRQ handler with the system for the given IRQ number.
+> +    pub(crate) fn register<'a>(
+> +        dev: &'a Device<Bound>,
+> +        irq: u32,
+> +        flags: Flags,
+> +        name: &'static CStr,
+> +        handler: T,
+> +    ) -> impl PinInit<Self, Error> + 'a {
+
+What happens if `dev`  does not match `irq`? The caller is responsible to only
+provide an IRQ number that was obtained from this device.
+
+This should be a safety requirement and a type invariant.
 
