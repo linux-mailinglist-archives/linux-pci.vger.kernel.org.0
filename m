@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-29221-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E305FAD1E21
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:51:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7295CAD1E28
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 14:54:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD9BF16B2B6
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 12:52:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E0847A4293
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jun 2025 12:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E68FA255E34;
-	Mon,  9 Jun 2025 12:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E02A2571BF;
+	Mon,  9 Jun 2025 12:54:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBz5dMPV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4spZsG9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EEE10E3;
-	Mon,  9 Jun 2025 12:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EECD1F4C85;
+	Mon,  9 Jun 2025 12:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749473514; cv=none; b=HgvNm9JYdrQgp/nGZc34lxohUIx2Ahh1V/skSWjDo2iqX2H7RQrkew3pb8SzRs61shAHF0vDj/GHBHQYmX62B11X/7mkBtZT4AWDTdHIdhyYTqH7EgUKgkSxtXkCCJ6MRKk1EzeYAoFcrlF/rrB2k+A7OJ2eoAe6zaU9P6nKENk=
+	t=1749473644; cv=none; b=qDUAta10/CkNMzJL61bi4n6OAPVO+ybI5u2OaF8ED4lFUwBBcHbN3jHnVUddYoYfLZiDQ2XQcpyX6rJ7rE3A5OCoYqTJHspinA3FzQRKEX28AM1K3gJqyWJ6/EZSQb/Y9XqNY554y9PYnYQt7dISgKx4+RYf7cCqkJCUy8Ss2ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749473514; c=relaxed/simple;
-	bh=C7g6IkUaAnFKUAqlv0oijHXBJSuQkmiZUwfkcYEAqT0=;
+	s=arc-20240116; t=1749473644; c=relaxed/simple;
+	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTIjT/wdk5ihNqLg5jJbIqHhwtqw8OM2gFk2fjBKrt17DUEPkWX1cc7foC4C6/xwpsYC/z9Obft9mIF0Wgkd3twuGk9oTpfo4U8r9XCpMKqJ75Lo2//BYWWt6i/j5G1hjznQc8oTa7lpbqXfGHehXwe4ECEyRl5ssGtzh1WnoUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBz5dMPV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3C7C4CEEB;
-	Mon,  9 Jun 2025 12:51:50 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=igC5Tr/Ci90nkON/qY+O3FkvRQlgmgR/Ztq8pzZoTK5k9ESXBoRRzFAvMZHDRI/vBYPQ/c7FTShtaIFTCbLG3bsC3/HU7ClTvssDipA1QSFS24WryaZpJsTOEUZQmqT1n1mM5ycKlrODQuLuIZ+HnljMHz7168D/09mO+ZL9LZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4spZsG9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16141C4CEEB;
+	Mon,  9 Jun 2025 12:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749473514;
-	bh=C7g6IkUaAnFKUAqlv0oijHXBJSuQkmiZUwfkcYEAqT0=;
+	s=k20201202; t=1749473643;
+	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MBz5dMPVknKxqr0cExJ931ERpZNK00CWEmYY8OmCP9obB96lk8t/zZ9MSovaIe7Td
-	 JbL73T5nvu243sk9T37YJMGdfnOqR4tNN1KdwGpjy1Ol6PUdH8EYNzDlsbZA+aa7Am
-	 IXA/6++xWbGBKuJW4HyaPQGO/qPb1jNM5ftD2HGBvnihS803JgYwlrRnbdskt98RRE
-	 QG5UyAapYM2YqHZPIX8+ukFFaTeBZ5rq3wuXHgxATHFzAtymUhcQCnace8q3+sfTtv
-	 qNcDdu+ZD8j9DBSlDgzWnKww4lUVCzO6QI1Povbwb1zjkMNxu56cjy3Sk13D4Hn1He
-	 0kXEJQUJ9zFGw==
-Date: Mon, 9 Jun 2025 14:51:48 +0200
+	b=R4spZsG9iao/qhmYKPIIF8aAtXKEbbs/6V453Fp4u+JZ8q/QmjTgTGSt22/8TiyzU
+	 1Iyz9dOF4U1J3nsw4cHGY6MihNjWx5FlJQ5qw2vVbVDqG8L+wBS0yYJIoVYthTEmNA
+	 /ZEM41Riel8ZUEtbiZLmClbHblgNk7Bw35BeW0kJnyc00yLLhWcC4MGTwRTqw0IhY6
+	 YyYWo4PNV+HzO+pHUbKn5x17J9gx1V9aDFafOYQZP70d6+7KPQjhDt7ocwCLWhSB2N
+	 WyhPzWI4669M95YMrti9QDkDg5sGDlrhLg3sK47x9kJADPjNJ3YFJfwSBeu0MGeeP6
+	 +Cnc9duhR5aYg==
+Date: Mon, 9 Jun 2025 14:53:57 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Daniel Almeida <daniel.almeida@collabora.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
@@ -57,10 +57,10 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] rust: platform: add irq accessors
-Message-ID: <aEbY5GWyXI3OEZOa@pollux>
+Subject: Re: [PATCH v4 6/6] rust: pci: add irq accessors
+Message-ID: <aEbZZTx99Tu1Zsd4@pollux>
 References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-5-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,69 +69,77 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250608-topics-tyr-request_irq-v4-5-81cb81fb8073@collabora.com>
+In-Reply-To: <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
 
-On Sun, Jun 08, 2025 at 07:51:10PM -0300, Daniel Almeida wrote:
+On Sun, Jun 08, 2025 at 07:51:11PM -0300, Daniel Almeida wrote:
+> These accessors can be used to retrieve a irq::Registration or a
+> irq::ThreadedRegistration from a pci device.
+> 
+> These accessors ensure that only valid IRQ lines can ever be registered.
+> 
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> ---
+>  rust/kernel/pci.rs | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 8435f8132e38129ccc3495e7c4d3237fcaa97ad9..c690fa1c739c937324e902e61e68df238dbd733b 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -395,6 +395,32 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+>      }
+>  }
+>  
 > +macro_rules! gen_irq_accessor {
-> +    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident, index, $irq_fn:ident) => {
+> +    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident) => {
 > +        $(#[$meta])*
-> +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
+> +        pub fn $fn_name<T: crate::irq::$handler_trait + 'static>(
 > +            &self,
 > +            index: u32,
-> +            flags: irq::flags::Flags,
-> +            name: &'static CStr,
+> +            flags: crate::irq::flags::Flags,
+> +            name: &'static crate::str::CStr,
 > +            handler: T,
-> +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-> +            // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-> +            let irq = unsafe { bindings::$irq_fn(self.as_raw(), index) };
-> +
+> +        ) -> Result<impl PinInit<crate::irq::$reg_type<T>, crate::error::Error> + '_> {
+> +            // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
+> +            let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
 > +            if irq < 0 {
-> +                return Err(Error::from_errno(irq));
+> +                return Err(crate::error::Error::from_errno(irq));
 > +            }
-> +
-> +            Ok(irq::$reg_type::<T>::register(
+> +            Ok(crate::irq::$reg_type::<T>::register(
 > +                self.as_ref(),
 > +                irq as u32,
 > +                flags,
 > +                name,
-> +                handler,
-> +            ))
-> +        }
-> +    };
-> +
-> +    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident, name, $irq_fn:ident) => {
-> +        $(#[$meta])*
-> +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
-> +            &self,
-> +            name: &'static CStr,
-> +            flags: irq::flags::Flags,
-> +            handler: T,
-> +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-> +            // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
-> +            let irq = unsafe { bindings::$irq_fn(self.as_raw(), name.as_char_ptr()) };
-
-Do we always want to force that this name is the same name as...
-
-> +
-> +            if irq < 0 {
-> +                return Err(Error::from_errno(irq));
-> +            }
-> +
-> +            Ok(irq::$reg_type::<T>::register(
-> +                self.as_ref(),
-> +                irq as u32,
-> +                flags,
-> +                name,
-
-...this name?
-
 > +                handler,
 > +            ))
 > +        }
 > +    };
 > +}
 
-Please split this in two macros, define_request_irq_by_index!() and
-define_request_irq_by_name!() and keep the order of arguments the same between
-the two.
+Given that we only have two invocations below, please implement them in-place. I
+don't think it's worth having the macro indirection.
+
+>  impl Device<device::Bound> {
+>      /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
+>      /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
+> @@ -413,6 +439,15 @@ pub fn iomap_region_sized<const SIZE: usize>(
+>      pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
+>          self.iomap_region_sized::<0>(bar, name)
+>      }
+> +
+> +    gen_irq_accessor!(
+> +        /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given index.
+> +        irq_by_index, Registration, Handler
+> +    );
+> +    gen_irq_accessor!(
+> +        /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at the given index.
+> +        threaded_irq_by_index, ThreadedRegistration, ThreadedHandler
+> +    );
+>  }
+>  
+>  impl Device<device::Core> {
+> 
+> -- 
+> 2.49.0
+> 
 
