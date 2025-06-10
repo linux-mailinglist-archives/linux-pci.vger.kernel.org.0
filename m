@@ -1,76 +1,77 @@
-Return-Path: <linux-pci+bounces-29369-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29370-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FB63AD44AB
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 23:20:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08B51AD44AF
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 23:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 419E7178FA3
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 21:20:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 334EA189D0F8
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 21:20:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 861BF283FC9;
-	Tue, 10 Jun 2025 21:19:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99944283FC5;
+	Tue, 10 Jun 2025 21:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSHUFZvh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhJ2xPQJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50F428469D;
-	Tue, 10 Jun 2025 21:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34E228314C;
+	Tue, 10 Jun 2025 21:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749590384; cv=none; b=u6FyOS9DUl/TtmqJ/1q2G+MHZljob0xR0ZtXunYobf6gD1tfEEq6OD8or2RxozPdX9/jIXrL0KShbUGSxbz0fKirymvck6XgjpNIWF+GREL/O6HWdMYQvJimJNQvCQUchpt4lhkmAdS9yXDfW0HOJDNRwR9fuU1I8LmvvsGRL4A=
+	t=1749590398; cv=none; b=NNP/eYTQu0Bh0hhDP5I7UM+//oWdU0sSCFcPOS/wF9rO9hYUX6A54yTcifaVr3WBUywphr3lR28uXgECGWujHbt6tQHyiM3nV9mJLqtqJ8BF2y2a5B765sdUt6/xq2sTPp8XXjsaGzyiXjigFPtahQMo18wFBvLEcb/VRMO/ie0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749590384; c=relaxed/simple;
-	bh=o3j7N+lW9p53Qr1N/xuODCFVMulol2SV643RxfFVSxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Joe8OIgsbyGVrYT8iMbd1wHl89/4FDq9OvbMZIPaSmFhhc6VeXw+cJkhCHc8S7QXjAhnFXmCwck/fcbM7y+L+qZV05mJCLgbl0f1lG2hO0r0gGaTht/2xqFaXEhkhl8TbAzqNn/YuRRc6LA7y7/8pAzCw4tEA/GJuzHQa1dIdK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSHUFZvh; arc=none smtp.client-ip=209.85.222.50
+	s=arc-20240116; t=1749590398; c=relaxed/simple;
+	bh=psl2yGFKwIeajZS8qg8mt/cUrID+Wsj3xhRh7GlCvFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3WPCI/W96DDx4oVHBVKakp0xNzk0bZ5+Vg4huVIiWoEfbYR1Y7SJ0N9zt9G9tmWB4I6nfKjwyVtckWqL8Je7+QKN8ro7q5aqmzxZrg2exwQSmcRgmsx2YxI0/UTogXcKU0Ifn75fMJvS7kMlOLSNeZnvKaIBwe3eaZh+7O5qBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JhJ2xPQJ; arc=none smtp.client-ip=209.85.217.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87eeca0d038so405264241.0;
-        Tue, 10 Jun 2025 14:19:42 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e7b69c1efcso234870137.2;
+        Tue, 10 Jun 2025 14:19:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749590382; x=1750195182; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VTlGqNZZG2nk5U6PtVHAFn03jhmY0zJz2faCvEujVB0=;
-        b=KSHUFZvhH59Ht18n/hamWzDnbAMhCji8lf8/cStYzjz8GyPEVOR9bzReq3Czu99ViX
-         z/4j1Fyn8+NC4vJ247dEMY5Jadd8xQ8LqhpusTBAhNdt0A79P2WNadBB0Ycz1ZuN1YjG
-         9rohbCOY4Mx4+BZFZ3o9rnSdlMBEypNnqVVB7lrZSdrEbg0QMKtwpbHoyVXEVAvvhjy0
-         2X70E8++Sw01ZbXRPJ3eBbTZa3vt9DdZX8aaMEOQV4GTlgclYAFisHlcsvKIIo8GPCsw
-         0SuMpwULecSO/sK0D9wFk8iyg2uUqVyhZHPJulZPKbQN7WSa19CBt3M70eSbDUTCeZ8r
-         yHog==
+        d=gmail.com; s=20230601; t=1749590396; x=1750195196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bW+KcteMx3KUNTcvwakQQLo/YUGvViEhrbAatOOYWoE=;
+        b=JhJ2xPQJYNq8gwxP9O2sCbI/jIGQ3SVGKLa6oKyhSZvR08CjZqjqa8mW2oOiSxBBAt
+         mP/vhYdh+bzdtjarQ5BgEsexq5+vY75uHz4AgMGlCN443Nzfhlsjzab+yVHN5t/ppcGN
+         qmPJXPaTVqf9yEwioCdwjJ/k4fBLyF054Gzd617MGdHJv6gNpRQ1YHOvF/T8x6uqHFjy
+         r6IqQQEgLD5LClB+XCpHOGFf3VsUPaAuLQiP9VqdqRMamYqz52x6q7yDKgjYFUYyF9c6
+         2ESgkpKhO+Cm6tzj7EnZTidiGhyEDo8J3yydGZl4QXUkmaw4APRagEiTYzAjxbwY+cX+
+         cp+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749590382; x=1750195182;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VTlGqNZZG2nk5U6PtVHAFn03jhmY0zJz2faCvEujVB0=;
-        b=LUdUIoBMDL7zkSrRDHjwgZTfxWaZ09l4JWEg+hmVi1Blj+5iQOrsS8Axp6XeY/Eyia
-         5Yj1UZqwH3f4LCNf0HQRMuTE/tb7wNJvzXl1r5sCkmFUSTYKDqZc98WpUvRwJoIUU5Xh
-         aFjix5B+s2XRih5MWd44KewaRWjnSmFHSZoBOVEMpiOliFxPpiEloZvwvcYwBiWGEuZF
-         J6AkpbYy1Ba3I8tk29tV1bQYGEsjw/pwv9+7rhyPqJ84l1rPJ4tSQxufy21YFmifcngA
-         qs3vM/oelPOS1wzia1ERNfIjfEnPk5aQuhDsPxKfAPnFNtboP+7a4jbUr7Tpbfjj0AMP
-         yXDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYJr24KPXYmEAfDPdXsAVpdyxzX3ZcGzRZ1jomKLeSUxFyECc6V03AWyyY3Bdxb6iYrsOrNajeA83i@vger.kernel.org, AJvYcCUj4RKU1q/b25wa99omOICjJmLtFBylB4geCBGXSiOqZrzTlk1638faPwAuW8kaKX43OTlTwH7dhQv6sBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1b1L+Eu7ZFAOY4VPi07dXGRJRiP7G6jH+L2CEvlie8v02/qzD
-	mH04ANctPXAsfxzZDTXj1QF8MopV8XuI/duSpkYC0qVTRQ1+g0iv3nq6
-X-Gm-Gg: ASbGncsa+OCnuYTyfNbHrwxs+upyInyH/pdhkkQo1PlIxmQNDxka8blaNeDyeaTR07Y
-	YpW1gT4ayyRQfN23oOiAvMyS7MpQ4O7W40zugVsvpGn0asFD6eGV8p4IQ7hdxx1uP5WJF24RxvG
-	kDfPRLlI2/R9DAwzKWZKjYxiyJRmxK59MMr1CqqgLIWLGwOVZFieNp9Li9u120U3naJGcZV0HKw
-	aMTNODmJIi0nWADnBw9cpl5fdjKxcIoNFP6YEWhD5BT+tilMoFb5Ll/u1Fyn3CaBwtLdKsSECNi
-	rKOb60X/p1jFqJ+j0Lym9VkJIsZRpLinfNjSJbbD75DqRnKhBg==
-X-Google-Smtp-Source: AGHT+IEc8tayspwhyZzHQNxg9nAlirC8xTvZilA/RPHMja+AJaaRaWniixRITKIg88b7BD1jFLaxvA==
-X-Received: by 2002:a05:6102:3e18:b0:4e5:8eb6:e8f5 with SMTP id ada2fe7eead31-4e7bba3689cmr949646137.3.1749590381691;
-        Tue, 10 Jun 2025 14:19:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749590396; x=1750195196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bW+KcteMx3KUNTcvwakQQLo/YUGvViEhrbAatOOYWoE=;
+        b=C0GHgxriSD2afUYvfMJIqIjCEMVJi8BWpWgsIwHKp4Sgajm44H26Boq0wSVRgAERFV
+         VSmj6yb5MtZ9JpCGDvlrJ2h806Lg9EMYmE1OMzVDQT9phHozipbnHXPwPy4O1EPxNOw8
+         Xb0p64377RilHMWhD+PoXlmrqALjqfcmf5KzAUxsOxtijSmJPk9qtX/wh0LI39+O9znO
+         G56lO7oyMD+Dmb4ZkxxSpMVZajHCuJWg6+4d5Q50yfWBzu0mVTIeTcFHXpuiPQYTex9W
+         uiC4ak4pCN/H8iob4XknsgUUd3zWAbyTkfDCfKtBVERHQe9BNE1M4K6Wjavs7kPyCqqS
+         sfBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtFw8cPARGbXh/JS3jcLM5jSFgvF3AbJA2nmjxQpZU8PwLNvrMonEkaTj7xwkplrnlIfeayjQ6Efxkk2k=@vger.kernel.org, AJvYcCWvGPYEPuzQ0yahJhO8+jKHkMR7rnQKn6JE5c/HeqVOEIwkv4jJ2uI13qC3Pw7VHjEs23kKEnPkM7h7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9cyvv83MwpeF4k90HJLlSZKeBzK0FIhLKVbStx6adCzNOwrLh
+	SWOIb+1e5dmLQnFQmOepB5iVHNccvHDtd0w77VG4wC4Y7XI8k5vQM/Z9
+X-Gm-Gg: ASbGncsUKocrYumIXIdyQWDaPNI9zCtMfxj83EUBVAX9efaa4OsizZvWhRX/H3g+zPg
+	FF4yYE9UERAFmYCSpeieX/IKX7tVghRM4ZQJTMCeugH1nIQzyJHM1f1Ao9e5u5pAxfkujG+6vuW
+	LD9nHAA6zE8JOioqfvhDiwHdsqFTLt9CZF6NVxg9QSpMxGwTuaSpwqVFAqbpk9t8toUbBzPEca0
+	XxKAbigNutfYA6kA7+BV4bRJJOCwHtywyIeDkCyKBdqOg/+nxDT4wmG6NFHkqtEv7P/vSBWdVgg
+	gU2MK6AvN8nXEmQzvCGmSoq+PpGNHMxHRNjTdSlK6YIYbfoKVQ==
+X-Google-Smtp-Source: AGHT+IFUKOR2IsRTBdY8aOGnyv438Gl/440UbjAA3/JAat2G2nQmpyhEiA+RhR87ZqQsV+IyUokALA==
+X-Received: by 2002:a05:6102:4b1c:b0:4e5:918b:5321 with SMTP id ada2fe7eead31-4e7bafde5b6mr1050769137.25.1749590395586;
+        Tue, 10 Jun 2025 14:19:55 -0700 (PDT)
 Received: from geday ([2804:7f2:800b:5ce9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87eeae7722bsm1880161241.12.2025.06.10.14.19.37
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7baeb6337sm382957137.3.2025.06.10.14.19.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 14:19:41 -0700 (PDT)
-Date: Tue, 10 Jun 2025 18:19:35 -0300
+        Tue, 10 Jun 2025 14:19:55 -0700 (PDT)
+Date: Tue, 10 Jun 2025 18:19:49 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: linux-rockchip@lists.infradead.org
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -82,8 +83,10 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 0/4] Quality Improvements for Rockchip-IP PCIe
-Message-ID: <cover.1749588810.git.geraldogabriel@gmail.com>
+Subject: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and Status
+ Register 2
+Message-ID: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
+References: <cover.1749588810.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,29 +95,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1749588810.git.geraldogabriel@gmail.com>
 
-During a 30-day debugging-run fighting quirky PCIe devices on RK3399
-some quality improvements began to take form and this is my attempt
-at upstreaming it. It will ensure maximum chance of retraining to Gen2
-5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
-they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
-without risk of locking up kernel like with present broken async
-strobe TEST_WRITE.
+Link Control and Status Register 2 is not present in current
+pcie-rockchip.h definitions. Add it in preparation for
+setting it before Gen2 retraining.
 
+While at it, also reference other registers from offset at
+Capabilities Register through standard PCI definitions. Only
+RC registers have been touched, although in principle there's
+no functional change.
+
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
-V1 -> V2: use standard PCIe defines as suggested by Bjorn
+ drivers/pci/controller/pcie-rockchip.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Geraldo Nascimento (4):
-  PCI: pcie-rockchip: add Link Control and Status Register 2
-  PCI: rockchip-host: Set Target Link Speed before retraining
-  phy: rockchip-pcie: enable all four lanes
-  phy: rockchip-pcie: adjust read mask and write strobe disable
-
- drivers/pci/controller/pcie-rockchip-host.c |  4 ++++
- drivers/pci/controller/pcie-rockchip.h      | 10 ++++++----
- drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 +++++++++-------
- 3 files changed, 19 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 5864a20323f2..90d98aa8830e 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -155,17 +155,19 @@
+ #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+ #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+ #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+-#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
++#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
++#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP)
+ #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+ #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+ #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+-#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
++#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL)
+ #define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+ #define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+-#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
++#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP)
+ #define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+-#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
++#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL)
+ #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
++#define PCIE_RC_CONFIG_LCS_2		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2)
+ #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+ #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+ #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
 -- 
 2.49.0
 
