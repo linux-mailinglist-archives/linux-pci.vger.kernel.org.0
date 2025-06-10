@@ -1,88 +1,95 @@
-Return-Path: <linux-pci+bounces-29324-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29325-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C00AD38DC
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:22:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3547AD397D
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:39:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6C1616E156
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:17:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 719BD172DB8
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EB0D19B3CB;
-	Tue, 10 Jun 2025 13:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE08B23ABA1;
+	Tue, 10 Jun 2025 13:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ijXudvW+"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lEIYMhku";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d1B5y5vs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lEIYMhku";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d1B5y5vs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7D317A305
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 13:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E362246BB8
+	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 13:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561350; cv=none; b=NPEpOwcSIRj0D1iXW5xvetIINZXmY54AZY9X5hKJuQFHztIolTK2wP35X7UIZU9N5Ff1N27r1oqPDZwo4d0HkzS4fHksDkwIq8EuLgpXFzgAkLGZt6X4SbuA6vvSK1zfq3L1KafKIFnNi5xtCXpxgjgmLMgzxAvNN5X9NQPOKW8=
+	t=1749562541; cv=none; b=Ky5+6PSWpC/TN+S5R24OVfNIKSdClYvbSfhFUcAHyeUiVnlb2BgG/SuPM4oF0Fk42ha7wW5LVaOdvr8KDaXithmhXwqpjMdUtcO4pToJGcxKWxCCsxZYehKkHi+29N+OJIxISkwU/OES1cYgiM4uPjnQp0RI+wOK61rkvMnP/qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561350; c=relaxed/simple;
-	bh=5KHtsypxTOEwH2hoppvEko6q+MsIdk4Z+d5NAh05LDI=;
+	s=arc-20240116; t=1749562541; c=relaxed/simple;
+	bh=5F7vJ8h/6PZ2s5+sI75817chK+P4wfFBXvfGGvWqoCM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JESnGDAJTlU4yaj33+scuYjyGgSyxWklhoIagABubkmeq0liXhrWQut9KI2jxwey8bt7E+m0FZ7cH9jpdkn55341O1nEGPojbrXStKRgnd3bCXRjIQqvhMeDd+ane4EsiTuYyHo1zAUzR6o+Ci7kOgCLINAipqIi1L6BSPXXzWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ijXudvW+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8N3me016705
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 13:15:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EwAmNEgz2U5R+Js4hjnEnVcfF/36zo6RLHZeqTJsg0s=; b=ijXudvW+2QCLsfen
-	AvCbBi9I3LSakxmN0oAsNGHvKAGVW4Mg/6zczjaVLxk64Xdc3TyE6+DaEkCzUqSy
-	Qxh8xhAbg+Xxx+6WkKkR+7MdWTJKxpp80fp9J4eJp8K3O9sVulnnNQ0MdHyuZa7f
-	b1ZuD7t7BriHB2U25cWUblM6kbMrT/Y31FxGkiBcRo9/PVm1kMeI9MbgAcAHikCs
-	0JFekTXbYZKXxCwGrdYWoxq/fprh7c1KqtIAJoRMCWNnynHFuQuGa08mrS9inTtH
-	14l1CKq+edM3PLL5IM07eS8Zf5WGtOZ0ghVvbU05ekFqR38s8jx39P8XE/SPeibo
-	wbT85g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn69ffh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 13:15:48 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c76062c513so99122285a.3
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 06:15:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749561347; x=1750166147;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EwAmNEgz2U5R+Js4hjnEnVcfF/36zo6RLHZeqTJsg0s=;
-        b=RaRsh1BaqEp0LZmcTgAhBeGijcZttHxuQK1/tSQ053Q5qiDR0QUM/ijJKu2YeSMcm+
-         DvbyJBhCx4Nce9xzeTRvTEqsBC3KtX7pUhTRKsl1odCzHTzo7SPrsV5OWZVYcPj0TbH4
-         JkgZr5Yo02zlH7qMJwtnULOWGrg2dMmmVbr6mmbrUHQKV/hWDJTup2ySc3kSzgujS3rv
-         B1YDOwQNcat6lk0Rj5q2RswKHZuFouie0WDMK3zudkVyIvlrt/iqdlJQZcY7boR7vH4s
-         Yjo/You3XDhVjEHKtkkz9MdY7ubukzVTIBGCLTxHJV+lt7vJuBATrwlA751ckeyUHi/F
-         fU5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXrWun+eCgrOlLiRHZMO+hRZxu8FmysmxwYtN4LQAUYE3rx28nQkdspLDRlkja02yWtYBgkNRLaBag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymjD8DWQHRt1f9Rse53HM1hJZl41I4Ojcdmys2XUp+9j5VCUrh
-	oT/cbFjWv6cDaSPOy4/MptihuRJsVpKNA0l0VeG3BgKNTTsopgkeUO/i2wdIWaV3N/Rs5uhD2OY
-	r0TnYMuxpeclGCyOVo7m0SsZ2KTnPagtWjE6rgNmZlcfn40lAU+8X9Jqd9rbhQMY=
-X-Gm-Gg: ASbGnctHbnh/b1wOAjo8sBEIOP4aHcbcoNBii5rSlBuCCuoUAY65YKSUt0vvfcYsChi
-	qTcFw+PZ9M6pjXfcpS9QILisa5J2O3t89+/Q+faZBXnD8FkXfv+MyIA49m8e8FtXT6AC3lTxkzr
-	T00d5wIhBUd+Gx7K01mK9CpbQTl4Mksw3ZGPKwzlpdJefv9mvm4lPnxpF0TyMrCXIs43xZrfVRP
-	l7UeDU4Mglw8Em90NwQeLVA4xWfX2XhwsuCYgmaMchD+6rKx7lXi3U8VuyTk5Zhtc/2rFjY/SnV
-	almmf91yQ8OhSMoRoxBmtdeLcXH68yJAYh9gPF4FmidazO6vBX4UrOxsa54EQlxoVeyRoGv83Cp
-	Y
-X-Received: by 2002:a05:620a:288d:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d33df39118mr853770485a.14.1749561346916;
-        Tue, 10 Jun 2025 06:15:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtqxF7J4fX5ZWQs38R17ip9jUcljtcIHttrdjrmoxx/VmubjbCQ1iXaj4T2zV2SHyjyVpQ1w==
-X-Received: by 2002:a05:620a:288d:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d33df39118mr853767185a.14.1749561346394;
-        Tue, 10 Jun 2025 06:15:46 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783dd48esm6072351a12.56.2025.06.10.06.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 06:15:45 -0700 (PDT)
-Message-ID: <56eccdb0-c877-431d-9833-16254afa1a0c@oss.qualcomm.com>
-Date: Tue, 10 Jun 2025 15:15:43 +0200
+	 In-Reply-To:Content-Type; b=IPnUKIyEUb583OmdSySg6277KWfDunGZU0TS1CpAderYC7jKGEvm5soNlAqPOIAIPONraBKLhIOg6dfRG1HzCRo+rGBE5j4bykSpEHidW5HepeDkDdEylhmpvpXqFWoORSy7HU0RD1xGeED91Hm4SDfsFXvxeb3OC1uRGvhLaps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lEIYMhku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d1B5y5vs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lEIYMhku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d1B5y5vs; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6E95421235;
+	Tue, 10 Jun 2025 13:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749562537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
+	b=lEIYMhkudkp/tFDSR5YhMaZuY2Iho+keNu2F6wJ0xYPxAqoUI1DG1bh7Yi7SZ98nBMghkL
+	IICPv4JDU/tTREFSfvt8gMe1o7ooZxkb0jBKER98IuEMf2m3OC3DzFogYMJfpRfQeK+p1W
+	hkRW7y/LiBj2tHO7TlU+IIu9RlngDpA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749562537;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
+	b=d1B5y5vsY6V/S96rQfoD3HKryygGOF8EGUIq+/9EsknhDg5hAu2vkKABm/Zd+oIivzwLRf
+	KXz54wz+CAgyLoBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749562537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
+	b=lEIYMhkudkp/tFDSR5YhMaZuY2Iho+keNu2F6wJ0xYPxAqoUI1DG1bh7Yi7SZ98nBMghkL
+	IICPv4JDU/tTREFSfvt8gMe1o7ooZxkb0jBKER98IuEMf2m3OC3DzFogYMJfpRfQeK+p1W
+	hkRW7y/LiBj2tHO7TlU+IIu9RlngDpA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749562537;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
+	b=d1B5y5vsY6V/S96rQfoD3HKryygGOF8EGUIq+/9EsknhDg5hAu2vkKABm/Zd+oIivzwLRf
+	KXz54wz+CAgyLoBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2156B13964;
+	Tue, 10 Jun 2025 13:35:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sy4KBqk0SGhNKAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 10 Jun 2025 13:35:37 +0000
+Message-ID: <9350317a-b6dc-4ba5-9bd5-2a63066cc460@suse.de>
+Date: Tue, 10 Jun 2025 15:35:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,88 +97,276 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
- node
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
- <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
- <20250423153747.GA563929-robh@kernel.org>
- <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
- <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
+Subject: Re: [RFC PATCH] PCI/VGA: Look at all PCI display devices in VGA
+ arbiter
+To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
+ bhelgaas@google.com
+Cc: dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20250609022435.348589-1-superm1@kernel.org>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250609022435.348589-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwNCBTYWx0ZWRfX0/Yvierr+uZL
- +UyShlPo+ZFPDdevKoMlMgkMRasDq22lTd4DculOVhCuF+q44DLOVL/izMtIQ2nJmhht8w9KUgC
- 93JBwBpKOpW1wVwTYMKJC8r0cVj9tYe5kXhLsrfvO9kLd5jjWsRhGoM2IFxR9t3yQQWK4MH42sk
- uAlhareD2hwyRwLfDgvad0ZeEgSPCNo8641g5NLL8O94gyfsIKm1+YKK+oezXfSdVL5W/oXvogU
- Px49sZ9F3B4V7wB+rViZTldCGO+hxQBVrk7e8neyl8q5TZ6beEWRk/pbT3FH3cEG2MLjawad5a2
- tdmQeOBHRfvhal57dRe7Hdes7sjWfRqcjASeA5I4W5DTezxkXIIkXy6uL6XYVKV5DABYy79UURs
- Tn5oc/MGUoLrAOp5lNE3+PSJNOKlx64EK3dm9onrPd0KYxcuCYaQlLIiBmFR5Nve5SSwtHhk
-X-Proofpoint-GUID: LcnszdniXjOJaYyWkHzzEAIhGk-ACLsH
-X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=68483004 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=IJG2AnB_qZu2HhMjgm4A:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: LcnszdniXjOJaYyWkHzzEAIhGk-ACLsH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100104
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[5]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On 6/2/25 3:01 PM, Krzysztof Kozlowski wrote:
-> On 08/05/2025 16:26, Konrad Dybcio wrote:
->> On 4/23/25 5:37 PM, Rob Herring wrote:
->>> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
->>>> There are many places we agreed to move the wake and perst gpio's
->>>> and phy etc to the pcie root port node instead of bridge node[1].
->>>>
->>>> So move the phy, phy-names, wake-gpio's in the root port.
->>>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
->>>> start using that property instead of perst-gpio.
->>>
->>> Moving the properties will break existing kernels. If that doesn't 
->>> matter for these platforms, say so in the commit msg.
->>
->> I don't think we generally guarantee *forward* dt compatibility though, no?
-> We do not guarantee, comment was not about this, but we expect. This DTS
-> is supposed and is used by other projects. There was entire complain
-> last DT BoF about kernel breaking DTS users all the time.
+Hi
 
-Yeah I get it.. we're in a constant cycle of adding new components and
-later coming to the conclusion that whoever came up with the initial
-binding had no clue what they're doing..
+Am 09.06.25 um 04:24 schrieb Mario Limonciello:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> On an A+N mobile system the APU is not being selected by some desktop
+> environments for any rendering tasks. This is because the neither GPU
+> is being treated as "boot_vga" but that is what some environments use
+> to select a GPU [1].
+>
+> The VGA arbiter driver only looks at devices that report as PCI display
+> VGA class devices. Neither GPU on the system is a display VGA class
+> device:
+>
+> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
 
-That said, "absens carens".. if users or developers of other projects
-don't speak up on LKML (which serves as the de facto public square for
-DT development), we don't get any feedback to take into account when
-making potentially breaking changes (that may have a good reason behind
-them). We get a patch from OpenBSD people every now and then, but it's
-a drop in the ocean.
+My understanding of vgaarb is that it manages concurrent usage of the 
+fixed VGA I/O ports. So are these actually VGA devices? I'm concerned 
+about vgaarb handling devices that aren't VGA and possible side effects 
+of that.
 
-Konrad
+As a side note, there's also video_is_primary_device(), which we use for 
+fbcon and which also uses vga_default_device() on x86. [1] This helper 
+should likely return the same value as sysfs' boot_vga attribute.
+
+[1] https://elixir.bootlin.com/linux/v6.15.1/C/ident/video_is_primary_device
+
+>
+> So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
+> function already has some handling for integrated GPUs by looking at the
+> ACPI HID entries, so if all PCI display class devices are looked at it
+> actually can detect properly with this device ordering.  However if there
+> is a different ordering it could flag the wrong device.
+>
+> Modify the VGA arbiter code and matching sysfs file entries to examine all
+> PCI display class devices. After every device is added to the arbiter list
+> make a pass on all devices and explicitly check whether one is integrated.
+>
+> This will cause all GPUs to gain a `boot_vga` file, but the correct device
+> (APU in this case) will now show `1` and the incorrect device shows `0`.
+> Userspace then picks the right device as well.
+>
+> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/pci/pci-sysfs.c |  2 +-
+>   drivers/pci/vgaarb.c    | 53 ++++++++++++++++++++++++++---------------
+>   include/linux/pci.h     | 15 ++++++++++++
+>   3 files changed, 50 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d57..c314ee1b3f9ac 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct pci_dev *pdev = to_pci_dev(dev);
+>   
+> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+>   		return a->mode;
+>   
+>   	return 0;
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dbae..8281144747487 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -139,7 +139,7 @@ void vga_set_default_device(struct pci_dev *pdev)
+>   {
+>   	if (vga_default == pdev)
+>   		return;
+> -
+> +	vgaarb_info(&pdev->dev, "selecting as VGA boot device\n");
+
+vgaarb_dbg() please.
+
+>   	pci_dev_put(vga_default);
+>   	vga_default = pci_dev_get(pdev);
+>   }
+> @@ -676,9 +676,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>   	}
+>   
+>   	/*
+> -	 * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+> -	 * other VGA devices, it is the best candidate so far.
+> -	 */
+> +	* Vgadev has neither IO nor MEM enabled.  If we haven't found any
+> +	* other VGA devices, it is the best candidate so far.
+> +	*/
+
+This should be a separate patch.
+
+Best regards
+Thomas
+
+>   	if (!boot_vga)
+>   		return true;
+>   
+> @@ -751,6 +751,31 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
+>   		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
+>   }
+>   
+> +static
+> +void vga_arbiter_select_default_device(void)
+> +{
+> +	struct pci_dev *candidate = vga_default_device();
+> +	struct vga_device *vgadev;
+> +
+> +	list_for_each_entry(vgadev, &vga_list, list) {
+> +		if (vga_is_boot_device(vgadev)) {
+> +			/* check if one is an integrated GPU, use that if so */
+> +			if (candidate) {
+> +				if (vga_arb_integrated_gpu(&candidate->dev))
+> +					break;
+> +				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
+> +					candidate = vgadev->pdev;
+> +					break;
+> +				}
+> +			} else
+> +				candidate = vgadev->pdev;
+> +		}
+> +	}
+> +
+> +	if (candidate)
+> +		vga_set_default_device(candidate);
+> +}
+> +
+>   /*
+>    * Currently, we assume that the "initial" setup of the system is not sane,
+>    * that is, we come up with conflicting devices and let the arbiter's
+> @@ -816,13 +841,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+>   		bus = bus->parent;
+>   	}
+>   
+> -	if (vga_is_boot_device(vgadev)) {
+> -		vgaarb_info(&pdev->dev, "setting as boot VGA device%s\n",
+> -			    vga_default_device() ?
+> -			    " (overriding previous)" : "");
+> -		vga_set_default_device(pdev);
+> -	}
+> -
+>   	vga_arbiter_check_bridge_sharing(vgadev);
+>   
+>   	/* Add to the list */
+> @@ -833,6 +851,7 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+>   		vga_iostate_to_str(vgadev->owns),
+>   		vga_iostate_to_str(vgadev->locks));
+>   
+> +	vga_arbiter_select_default_device();
+>   	spin_unlock_irqrestore(&vga_lock, flags);
+>   	return true;
+>   fail:
+> @@ -1499,8 +1518,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>   
+>   	vgaarb_dbg(dev, "%s\n", __func__);
+>   
+> -	/* Only deal with VGA class devices */
+> -	if (!pci_is_vga(pdev))
+> +	/* Only deal with display devices */
+> +	if (!pci_is_display(pdev))
+>   		return 0;
+>   
+>   	/*
+> @@ -1548,12 +1567,8 @@ static int __init vga_arb_device_init(void)
+>   
+>   	/* Add all VGA class PCI devices by default */
+>   	pdev = NULL;
+> -	while ((pdev =
+> -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+> -			       PCI_ANY_ID, pdev)) != NULL) {
+> -		if (pci_is_vga(pdev))
+> -			vga_arbiter_add_pci_device(pdev);
+> -	}
+> +	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
+> +		vga_arbiter_add_pci_device(pdev);
+>   
+>   	pr_info("loaded\n");
+>   	return rc;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 05e68f35f3923..e77754e43c629 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -744,6 +744,21 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+>   	return false;
+>   }
+>   
+> +/**
+> + * pci_is_display - Check if a PCI device is a display controller
+> + * @pdev: Pointer to the PCI device structure
+> + *
+> + * This function determines whether the given PCI device corresponds
+> + * to a display controller. Display controllers are typically used
+> + * for graphical output and are identified based on their class code.
+> + *
+> + * Return: true if the PCI device is a display controller, false otherwise.
+> + */
+> +static inline bool pci_is_display(struct pci_dev *pdev)
+> +{
+> +	return (pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY;
+> +}
+> +
+>   #define for_each_pci_bridge(dev, bus)				\
+>   	list_for_each_entry(dev, &bus->devices, bus_list)	\
+>   		if (!pci_is_bridge(dev)) {} else
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
 
