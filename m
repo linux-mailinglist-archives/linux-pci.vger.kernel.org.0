@@ -1,129 +1,201 @@
-Return-Path: <linux-pci+bounces-29290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACAEAAD3127
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 11:05:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88147AD314B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 11:11:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27516172B2F
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 09:05:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36E117A76DD
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 09:10:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9C828A40D;
-	Tue, 10 Jun 2025 09:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C6528A71E;
+	Tue, 10 Jun 2025 09:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WxskI7jB"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bFql7YiF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5323D280A35
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 09:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F5928A705;
+	Tue, 10 Jun 2025 09:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546311; cv=none; b=WWo8mVmvhWspF5iYCVVjlU2Hq9KQ7v5pJZcRHas0FwmlM8XfG2K08JnScRKAU1jHcSDa6uqmJnY2L8RqWcmOEo0gIGuqkoGPGyfoMaRsi9ZEowSTxtTIsBXokppguMNnlgtt7DdcVpbkXMmbWDffg4V+R/dmRFSE9BUYlxu14wQ=
+	t=1749546673; cv=none; b=dD+zEQt+EOAdGHLm2i/FP8HI0xcq64oZFnm3rz95Ub8TjWubVj/U7fZO7M+SrCL92k+ZhO7hVP8vCs2niduu12FQojJRJnsStzgb8DfBkHPmjbMAni7DNYNsH4cfBuieqlDCLFFS7PQ8tiHUxdbeN33yWo/GqyiT+n306qGmUjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546311; c=relaxed/simple;
-	bh=3GM1WRqVYQXAazSmtHqVXUifnN2sHGlrFP+6YGCoYhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJUBPKBWbAqGoMe43jgvzp76KYDhQ4AhM1M0pmjIU9TpzT7OiZjc8WMVUmxWrOi51tG+JcugkkWvAiF+Sja/biNMFvOBa4PaWFHgRHCNj1XOWi6vVD2Cc09KTnJ/1dWssyntEpdTFQt61pNp2zBN+MXSlp13/DkNTYhbo1NUiQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WxskI7jB; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so1754814a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 02:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749546309; x=1750151109; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MxpjoO2mYPkQZpQAdh6mmcVEOjQK1F3ewQIY1Y/f3Y4=;
-        b=WxskI7jBlYVLJXQyulu04qcMectt4Trgg6Nk4LjbJt8g2h4vWZ2GRPeEbsmOrPi9JK
-         YzpstdZ950QKrKYmEb6VAFH5/XcyWkq0D5hYAxGC+2N6UXouQqFZbh7exahs7xADUNo/
-         H5AOZ/Uy+OtzFM/s3xyj3Wxj04nKze2tL5UyrltR1DgAmto64ZIIHYNOfqXQ1ayGthau
-         VjO13WMzgd9v0SskStzsNi2JiKSzS0n0zBv+g0y9PnLNTM6M2yKDleYrtixyehpz6rFW
-         vSCtNnVh7A2jdytMVmH/3xK44kzS7w52aPZpNi+4o40I+WhfQeeG0EyNZ0QyW+Ovdm0y
-         vnVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749546309; x=1750151109;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MxpjoO2mYPkQZpQAdh6mmcVEOjQK1F3ewQIY1Y/f3Y4=;
-        b=ujx0tNeYbQS/moLWmX0TkeIYsFq/RCaakau4IPnqlA1PO+uPUPgYCQjcBvEodG8uq/
-         epeBG0SOuMSyyhzQUbzdniugmS/SKmcP2ALYJSUpCXac190MQgKOMzkg/dKBAV2VKLVC
-         8m9yrZTMc+DyqTvZ1epiYpQALRqhGTiCC+jVsfrWnCWgiZBCf0tuQVRbD99bjXpWLrF+
-         9sLn08gapPk6Ey91xcXR1F1qlJ0VE/97fhs9IUL3LgNUxSts2c1FgSndamjkk5y6FHkV
-         qQgN45CQcaU5YxLcqiNhZN4XigQnwt8BWKZCUDZk27rhXrtVRh3irZv/GXrSC/Z0kGus
-         8TrA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8CEgO7VMlYsQ4mU1cejK9Ji7QcXS/f8P3Wf8fJY7X02Uh4xeapttI1HVqRKYYCF2R2fwcdzkVSUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS+dR5Dlvne3n6cdIg0YTjlm2ywh1uizXY3BKi5CTrG9YOaXl8
-	reRXLQFW9qCaIt0KJl7TOrdSuocqYAPsyA27yBzuA0dgMBYPmGYOS4mcOXKtggqsO7c=
-X-Gm-Gg: ASbGncuYXCnGbNDGabENcJ85MaSMR6gcon93VyKzox8ijcCW665sGi3OboP3X8lm65W
-	PyfpsqrJ1oUE7SGVz7OpuSq0LyEAohnhS5uMi3+mrk/r6piJYX4ZCSz3O2+tkqGDcBI2+ou+xiu
-	hayjK3HbBqmK9qcypNijNCJuFINVs6zPLlkxrvjUN/OMbkgq8ICvR8npcxWViWlSQUkL7XpsLA8
-	4/i2FH9OZAYtRjgN1GypvgxOYmlm529VjZ4xsTmbewHAq+6tCobjppoE9Q7RVGD3MMFIf6w2TOJ
-	diGWUDVRRwkgvfsfFw6aaA+jpjNxpnY4BJZ1fic5cxh0a7Id62DdwbOwhDTZ68Q=
-X-Google-Smtp-Source: AGHT+IHHYZrKaT/gzmS9tsVK3hFeYuSn3Ec8BLsyZRN7hNdemDEI/1VCu0avcGXTkJj/JdBACM9Kxg==
-X-Received: by 2002:a17:90b:53c8:b0:311:d3a5:572a with SMTP id 98e67ed59e1d1-313a15739ecmr2416667a91.8.1749546308712;
-        Tue, 10 Jun 2025 02:05:08 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fc373esm6863637a91.32.2025.06.10.02.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:05:08 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:35:06 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] rust: Use consistent "# Examples" heading style in
- rustdoc
-Message-ID: <20250610090506.24lmdltnqldsra6a@vireshk-i7>
-References: <70994d1b172b998aa83c9a87b81858806ddfa1bb.1749530212.git.viresh.kumar@linaro.org>
- <DAIQ4GUF8JGO.2EL4XVGRV06R0@kernel.org>
+	s=arc-20240116; t=1749546673; c=relaxed/simple;
+	bh=+KSZuNsvYqqgj2q1pcCsABuRQ9g9JJvOtUVc1NBAQQQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GYqo/F3KqG92/AGA9le5yAuNh7G7KeoErTt6ulCIHBenfsLBRLOBcG8pSVjonGbz13vJzrUqDKdLqo+kTTt33tEH2e7snQE5w39MIqHauZ3/ATeqH3LQWsy04gHA5w8gxADugybbNR2bLrf9bagBFnUjDJ80KVYmV3nR9wbbcEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bFql7YiF; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8Bhap030186;
+	Tue, 10 Jun 2025 11:10:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=gXPNgQ8R4em34zlLDlZZ+0
+	eTK9mlCISpwFo17g9ndzA=; b=bFql7YiFA77Z/Em78XCZZihmsqEvC4dIueNQDK
+	ZBfGObSJfxjWOhY6RnK6aCkSitigJ4TMjohCGAG3k9jyCCCaa4rSymi5pZsBmOBQ
+	bRv8amW+We7g4kaLUeZITVaFkfAx8wc5kkCBlqPUlrZ2j37HBTa7zO/UlYO5qO4L
+	9az7PuIJ/tSdYBbIxpNcHTs9f4WMcKMX3/o8iMp9KznVEJFDX5d9U2E+VAlGKyTj
+	zdUhUfyWTHdHOuQP8Qde+9kF2W6qTH22yWilG8ZAaNoxnlRtyPjzSjPYBnoc4zVP
+	bDfi9AhJZTZ5gSFBpOuR9G51ljQavG50EvcyttnJNGLFK+qg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs2kx41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 11:10:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 535D740050;
+	Tue, 10 Jun 2025 11:09:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7C0A4210227;
+	Tue, 10 Jun 2025 11:07:36 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 11:07:36 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
+        <cassel@kernel.org>, <shradha.t@samsung.com>,
+        <thippeswamy.havalige@amd.com>, <quic_schintav@quicinc.com>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v12 0/9] Add STM32MP25 PCIe drivers
+Date: Tue, 10 Jun 2025 11:07:05 +0200
+Message-ID: <20250610090714.3321129-1-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAIQ4GUF8JGO.2EL4XVGRV06R0@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
 
-On 10-06-25, 10:51, Benno Lossin wrote:
-> @Miguel, if you take this, then:
-> 
-> Acked-by: Benno Lossin <lossin@kernel.org>
+Changes in v12;
+   Fix warning reported by kernel test robot <lkp@intel.com>
 
-Thanks Benno.
+Changes in v11;
+   Address comments from Manivanna:
+   - RC driver: Do not call pm_runtime_get_noresume in probe
+                More uses of dev_err_probe
+   - EP driver: Use level triggered PERST# irq
 
-> For such a small change I don't mind upstreaming it myself, but if
-> Viresh wants to have a merged GitHub PR in pin-init, then we can take it
-> that route.
+Changes in v10;
+   - Update pcie_ep bindings with dbi2 and atu regs,
+     thus remove Reviewed-by and Acked-by.
+   
+Changes in v9:
+   - Describe atu and dbi2 shadowed registers in pcie_ep node
+   Address RC and EP drivers comments from Manivanna:
+   - Use dev_error_probe() for pm_runtime_enable() calls
+   - Reword Kconfig help message
+   - Move pm_runtime_get_noresume() before devm_pm_runtime_enable()
 
-I am fine with anyone picking it up.
+Changes in v8:
+   - Whitespace in comment
+   
+Changes in v7:
+   - Use device_init_wakeup to enable wakeup
+   - Fix comments (Bjorn)
 
-FWIW, I have sent a V2 now with your Ack.
+Changes in v6:
+   - Call device_wakeup_enable() to fix WAKE# wakeup.
+   Address comments from Manivanna:
+   - Fix/Add Comments
+   - Fix DT indents
+   - Remove dw_pcie_ep_linkup() in EP start link
+   - Add PCIE_T_PVPERL_MS delay in RC PERST# deassert
+   
+Changes in v5:
+   Address driver comments from Manivanna:
+   - Use dw_pcie_{suspend/resume}_noirq instead of private ones.
+   - Move dw_pcie_host_init() to probe
+   - Add stm32_remove_pcie_port cleanup function
+   - Use of_node_put in stm32_pcie_parse_port
+   - Remove wakeup-source property
+   - Use generic dev_pm_set_dedicated_wake_irq to support wake# irq
+   
+Changes in v4:
+   Address bindings comments Rob Herring
+   - Remove phy property form common yaml
+   - Remove phy-name property
+   - Move wake_gpio and reset_gpio to the host root port
+   
+Changes in v3:
+   Address comments from Manivanna, Rob and Bjorn:
+   - Move host wakeup helper to dwc core (Mani)
+   - Drop num-lanes=<1> from bindings (Rob)
+   - Fix PCI address of I/O region (Mani)
+   - Moved PHY to a RC rootport subsection (Bjorn, Mani)
+   - Replaced dma-limit quirk by dma-ranges property (Bjorn)
+   - Moved out perst assert/deassert from start/stop link (Mani)
+   - Drop link_up test optim (Mani)
+   - DT and comments rephrasing (Bjorn)
+   - Add dts entries now that the combophy entries has landed
+   - Drop delaying Configuration Requests
 
+Changes in v2:
+   - Fix st,stm32-pcie-common.yaml dt_binding_check	
+
+Changes in v1:
+   Address comments from Rob Herring and Bjorn Helgaas:
+   - Drop st,limit-mrrs and st,max-payload-size from this patchset
+   - Remove single reset and clocks binding names and misc yaml cleanups
+   - Split RC/EP common bindings to a separate schema file
+   - Use correct PCIE_T_PERST_CLK_US and PCIE_T_RRS_READY_MS defines
+   - Use .remove instead of .remove_new
+   - Fix bar reset sequence in EP driver
+   - Use cleanup blocks for error handling
+   - Cosmetic fixes
+
+Christian Bruel (9):
+  dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
+  PCI: stm32: Add PCIe host support for STM32MP25
+  dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
+  PCI: stm32: Add PCIe Endpoint support for STM32MP25
+  MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
+  arm64: dts: st: add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
+  arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
+  arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
+  arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
+
+ .../bindings/pci/st,stm32-pcie-common.yaml    |  33 ++
+ .../bindings/pci/st,stm32-pcie-ep.yaml        |  73 ++++
+ .../bindings/pci/st,stm32-pcie-host.yaml      | 112 +++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |  20 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        |  59 +++
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |  21 +
+ drivers/pci/controller/dwc/Kconfig            |  24 ++
+ drivers/pci/controller/dwc/Makefile           |   2 +
+ drivers/pci/controller/dwc/pcie-stm32-ep.c    | 384 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-stm32.c       | 368 +++++++++++++++++
+ drivers/pci/controller/dwc/pcie-stm32.h       |  16 +
+ 12 files changed, 1119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+
+
+base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
 -- 
-viresh
+2.34.1
+
 
