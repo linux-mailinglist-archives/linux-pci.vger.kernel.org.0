@@ -1,149 +1,97 @@
-Return-Path: <linux-pci+bounces-29319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29320-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16400AD355B
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:56:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C4AAD3563
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:58:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E42807A7246
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 11:54:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFFDF3B5176
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 11:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351B8229B0E;
-	Tue, 10 Jun 2025 11:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8722222B8BC;
+	Tue, 10 Jun 2025 11:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfcfegyw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8W3FB3a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BB3226170;
-	Tue, 10 Jun 2025 11:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0B822B8B8;
+	Tue, 10 Jun 2025 11:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749556566; cv=none; b=TDqLmEEHSexXgEm462rRAjf/ZeQp290vZjsFqUpb+wEBh1cO1RC89bmjHSjvaJM5AQBGlaXddTKg+qTY3+NGOOTu9zwJSMEws7sOLjwXZeer7AxVOUVZLsoTpSBHQ230CLMKXLZZPSQ7DCNIbIwKjPnfOYSPq0ph5QtFlYL0J1I=
+	t=1749556696; cv=none; b=dPI1j1so08sz0NTNa7IKA+6hJ6pZE5+HkF2d/5/rTLFt3dd8NoXBqrUmE6IbVDF0j6LIiHwqmq+Flr8+3MrHogSfJVcGKIwdS26pjzEvGrTDBXjNykmqffU1G0YkiZwzh9toHEMJ7W5mNWvWKQJCvKsUpS3vyMTZFeQoq8a9CIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749556566; c=relaxed/simple;
-	bh=kF35YuumCAOOlSxyUic3qGn/Tp0TbpMuTJpI1D4h1u8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=r1tP2hsobkT2X9FRcd4/bNkpceH64VUe69WosWhebaaQ4olC/JqQpx7oBlm4qTW+SpZABwQqQP/04Dot53Py/ujxhMBKPehV/OIKhO8DlIJly8s1vdXtI6gPNS/e3aGAbl42WoFd+4eZXdxvvtUmwaVemWbmLMFwZ+JwMDCvU/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfcfegyw; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749556564; x=1781092564;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kF35YuumCAOOlSxyUic3qGn/Tp0TbpMuTJpI1D4h1u8=;
-  b=bfcfegywr8b4nDx0W+wOiu/44OXVQMxZ9cbMcwEEY25e/hFya/eiiDsx
-   6bAJqczocKHIyIDktkG/aagKv7UJ5IPGP+sNQX0tAtKcwnkBlAWeTK9Ft
-   f/WtmP6NeUImVzigb4SnH+10KSSZ1TKbbKoFp+3NL56PxfnlRYCoee4Mp
-   NW17YmPFJi5w20dEzOMVYI/ES2Xb1JUE96uTNLibdJAohB/9oMDABkSny
-   V/RxlgIEiC2TLEgQd7O8byfHBl9XX0CuwH0yS0Jj8+u8StKH6wu912WQ1
-   amb/gOXvm+CIHRf0dS++lZQbZi8iKNTRAESjskfBzgzsMDgQ1/+gIYYN7
-   w==;
-X-CSE-ConnectionGUID: DO8noWLJS32yk8NEoZglNQ==
-X-CSE-MsgGUID: 6tdevFNlQO6amhmJvf7l5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51539594"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51539594"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:55:45 -0700
-X-CSE-ConnectionGUID: kvvumaLWTIOYtdkvKwroeQ==
-X-CSE-MsgGUID: CFv12QXwTn6Q9fAP0xHthQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="147388557"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:55:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI: Fix secondary bus wait return value when D3cold delay = 0
-Date: Tue, 10 Jun 2025 14:55:31 +0300
-Message-Id: <20250610115532.7591-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1749556696; c=relaxed/simple;
+	bh=eMS2F2tvzjR9NHy0MJLKrY8BTnZRB2PUODIxvpPm3c8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mz4UCK5MC8IXwr6qosjazlI31NRWp8MKVRIn6mH/+wxir6jaBRM2x/sYd60FvP6Aj+2W/jkq1k5iVBoXAOVjXXHIVCPTnJKIEJEJ/0OFFpa8e+jpSRubYFdXWTBPSpULlcwMoRXJLA6DNW44eSOH+5W31Vki/LhQFVDqEcr/st0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8W3FB3a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA00C4CEED;
+	Tue, 10 Jun 2025 11:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749556696;
+	bh=eMS2F2tvzjR9NHy0MJLKrY8BTnZRB2PUODIxvpPm3c8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=D8W3FB3a90bmJyfCeS1dkwvE95gdVpuAVt+LPfzRDvBAFgoI93ijGCTGNfN2mk4bR
+	 L1CvQGj4f4lgPrZ+QWn0f/tAm3yhBStFQF8S4iE3od9BZqknP7eRJFGpEqU807PBdS
+	 otzCFpI5LnwF5naPm5Gno/r6M/acj2LQRyyK5puiwK9wgMWineDeCy1l7bi9gFcOCZ
+	 9mUEdBmCXwDKKGjqpbMKDRBDcShmLdQiz+EBJR5NSTagecNbvW/JXgr3bI4aHdpuIA
+	 M0fY5RMN9aAtDWw/KeKl9oOT/cIOyZRzG9bEe3yZnuI7yCjzQ5fvhli+P3a7HNUmHo
+	 e0D/nZCHJ+5dA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <lossin@kernel.org>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,  "Bjorn
+ Helgaas" <bhelgaas@google.com>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
+  =?utf-8?Q?Ma=C3=ADra?=
+ Canal <mcanal@igalia.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+In-Reply-To: <CANiq72kYdtozcN1U1yGhi_orh-OVO2xp3=wQPAhwgx=wTi-neA@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Tue, 10 Jun 2025 13:37:02 +0200")
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+	<ABpacmV2zqpdR5tk6NDHTg9kbssxZOay4JLvHJWs6pS0swz_krftwuUN8k_SABP04TF1k1Z4uW4IH29D2Qb5OA==@protonmail.internalid>
+	<CANiq72kYdtozcN1U1yGhi_orh-OVO2xp3=wQPAhwgx=wTi-neA@mail.gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 10 Jun 2025 13:58:05 +0200
+Message-ID: <871prr24he.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-If D3cold delay is zero, pci_bridge_wait_for_secondary_bus()
-immediately returns 0 which is inconsistent with the rest of the
-function.
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
-When D3cold delay is 0, infer the return value like in the other cases.
-With link_active_reporting, use Data Link Layer Link Active (PCIe spec
-r6.2 sec. 7.5.3.8) and otherwise call pci_dev_wait() with zero delay.
+> On Tue, Jun 10, 2025 at 1:32=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
+el.org> wrote:
+>>
+>> - Replace qualified path with `use` for `crate::ffi::c_void`.
+>
+> Hmm... I think parts of the patch still use the qualified path?
 
-Fixes: ad9001f2f411 ("PCI/PM: Add missing link delays required by the PCIe spec")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Yea, sorry. I just changed the kbox file where Benno pointed this out. I
+can change the rest of the places as well.
 
-I've not seen this to cause issue anywhere, it's just the inconsistency
-that caught my eye while trying to figure an entirely unrelated issue.
 
- drivers/pci/pci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Best regards,
+Andreas Hindborg
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e9448d55113b..a6182261b433 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4848,6 +4848,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- {
- 	struct pci_dev *child __free(pci_dev_put) = NULL;
- 	int delay;
-+	u16 status;
- 
- 	if (pci_dev_is_disconnected(dev))
- 		return 0;
-@@ -4870,15 +4871,19 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 
- 	/* Take d3cold_delay requirements into account */
- 	delay = pci_bus_max_d3cold_delay(dev->subordinate);
--	if (!delay) {
--		up_read(&pci_bus_sem);
--		return 0;
--	}
- 
- 	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
- 					     struct pci_dev, bus_list));
- 	up_read(&pci_bus_sem);
- 
-+	if (!delay) {
-+		if (dev->link_active_reporting) {
-+			pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-+			return status & PCI_EXP_LNKSTA_DLLLA ? 0 : -ENOTTY;
-+		}
-+		return pci_dev_wait(child, reset_type, 0);
-+	}
-+
- 	/*
- 	 * Conventional PCI and PCI-X we need to wait Tpvrh + Trhfa before
- 	 * accessing the device after reset (that is 1000 ms + 100 ms).
-@@ -4908,8 +4913,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		return 0;
- 
- 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		u16 status;
--
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
- 
 
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.39.5
 
 
