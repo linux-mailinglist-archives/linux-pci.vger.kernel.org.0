@@ -1,131 +1,97 @@
-Return-Path: <linux-pci+bounces-29302-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29303-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEDAAAD32EF
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 11:59:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB795AD3375
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 12:21:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 960FC3B5349
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 09:57:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE119174A7B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 10:21:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5925B28BA90;
-	Tue, 10 Jun 2025 09:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B521A28D8D0;
+	Tue, 10 Jun 2025 10:21:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCglwtz2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2p6GTTh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C44E28B4FD;
-	Tue, 10 Jun 2025 09:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC6528C2C2;
+	Tue, 10 Jun 2025 10:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549493; cv=none; b=lmdPNz8Lqasz3YKDlh4hQszgRE7mMBbMuADyRTSrnj44Umo+u6hoL3FnfGFMcukZ/V7eTjBqYoHkNnyeNATenkKL6zA4cA1EFM/ICcViz65eb0ybpqbqA8uQ4OHewb/prTk8wc83GZ4kUdrXOAszlX+cYYB4/3E3O9w9RtBynAQ=
+	t=1749550872; cv=none; b=q1fR4HjIfo+0ka9vA8lU319ajLbmOgYfq9nDgEWGX1e4Nx1JjxQ5QtODjodpaWQp009udDYpTU7roiHg3BdNH5NpFh9CkUPicIOV8vlGl1XUpZQuuPFm6rE+4BkCeWjeuXLHFm50jh8B6YAOQjJisX+OO1nYnpgUu4ceTsR44wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549493; c=relaxed/simple;
-	bh=LvjZWTxkoJjdq6mNR3PqdVpVlqtMMxO1dSyjw1hqIEc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SC1sbrIPm/hi6FD/Mw/boTOLIgMc/slQRtRU8iXvACpFvPY+HxaKjdi4O4kSEQv48ft4o5vd4vM8V55KGRApx2L5XalAuTN/04Q9NNQDGEeJtcaKHJQV1jNNNy/GEqTiMM+cZ6eHkvrGWRSEOGgamKu9haPMby+ujTuO1xBp3P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCglwtz2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D04C4CEEF;
-	Tue, 10 Jun 2025 09:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749549492;
-	bh=LvjZWTxkoJjdq6mNR3PqdVpVlqtMMxO1dSyjw1hqIEc=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=FCglwtz2hrf8dzbUZ8iQ9kWAncwhQ/PaJYnGSUAll7aI/78jgYWgUJt3+Pnn6+RD/
-	 oUqFmjn3ylB4L14cUtnVVn5HZnkXTr3CDOw60R2qMfIOtzTiZGKAs0+TbvuYMWCNJ6
-	 NqsPL8Xk2ochKmB3Jg5Ikm4Gyq7hEjOnWZfEWrsQXoa2mkRm3X2MaeaIxAeoWOorsx
-	 KlWSxtMoJKPZ0fKBnihQ/3giYj+jZ2O5l2A6qB1C5VXawJobp/lIcHjNRAAP+2t/kt
-	 RjUNR06X4x1qVDxBGl0yNbxDrxJDBGXn/eAmGC/QH0UijSppwY0bCDYm1Y+L9T8NZQ
-	 Pw6LnMQJVqMIw==
+	s=arc-20240116; t=1749550872; c=relaxed/simple;
+	bh=5N56gxd7eiTVDu0e1+YTiAnXkuv2TmMh68XjUz4UO9w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SNW3tvVP8i4AjMXPn+lhgq8+U/rJaFU8qFfenQYqK4zxtjugBqSq16V4oGljnt7Flwfgeqvp9MkCrU6+kXs0V82oQR4als8VDCcjHxqcsZkRQ9MX6GqswS1Ult7GT7Y9KlNJaKA7pmcNYkRo66mgcdwBVDkOpAxWILRWlF+xg6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2p6GTTh; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749550871; x=1781086871;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5N56gxd7eiTVDu0e1+YTiAnXkuv2TmMh68XjUz4UO9w=;
+  b=E2p6GTThZFGFEIp7wbQLwuaINL8EQz+gZ52wttcwGGm3gPd4B5X4R2Cl
+   Ba7l/ctdzQsbK/kOvwhl2ZCgFegrPEIAnjZeOrbtDSo+C+vkwYFnhgWiW
+   Mbj2F7QfrPZZSj9qgaeQghQDQzw9io6+cnjMbub1y1pSyUZdIuu3A9PeG
+   Br0bm2c7yhT96V4xtECoeosItoCrErxvWn2Qbkrb+ioIh9L7T2v1apH2y
+   xnx1ir59Gi//yEagQLth1N4ydndGfNBoWPb+EaiWwXEPJ2F2PwZznvlwg
+   3bMsy9yzSPyFaXtrkP9SdUF0Ji3KC/S/EFkDm/9oARrDD/L7wssFi/N0O
+   w==;
+X-CSE-ConnectionGUID: 8IWWDbozRJu1Lsx2n4593g==
+X-CSE-MsgGUID: vaQ4YP6/RCSdVVM5lblV2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51739072"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="51739072"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:21:11 -0700
+X-CSE-ConnectionGUID: llqcJ675TmCXQrUZXfdEcg==
+X-CSE-MsgGUID: qHytsrJ/RVCsSYEIi/QkXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="147370164"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:21:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Rio <rio@r26.me>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 0/2] PCI: Two resource fitting algorith fixes
+Date: Tue, 10 Jun 2025 13:20:59 +0300
+Message-Id: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 10 Jun 2025 11:58:07 +0200
-Message-Id: <DAIRJ71UP655.2NF13FJSA0G68@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
- <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
- <WubHJPtx9Uu0qugeELZ2ooYWKq4KDj7r8P7k4i_QhgOP53MWk1V3XHH4Ztmzp42zMwHSntslAbfpLFY9AhjfxQ==@protonmail.internalid> <DAFB0GKSGPSF.24BE695LGC28Z@kernel.org> <87sek82bgf.fsf@kernel.org>
-In-Reply-To: <87sek82bgf.fsf@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue Jun 10, 2025 at 11:27 AM CEST, Andreas Hindborg wrote:
-> Hi Benno,
->
-> "Benno Lossin" <lossin@kernel.org> writes:
->
->> The title should probably also mention that it removes `PointedTo`.
+Thanks to reporters bisecting their issues into the recent PCI
+resource fitting and assignment rework changes, I've located two
+issues in the algorithm which are addressed by this series.
 
-Just making sure that you saw this.
+Ilpo Järvinen (2):
+  PCI: Relaxed tail alignment should never increase min_align
+  PCI: Fix pdev_resources_assignable() disparity
 
->> On Thu Jun 5, 2025 at 9:55 PM CEST, Andreas Hindborg wrote:
->>>  pub unsafe trait ForeignOwnable: Sized {
->>> -    /// Type used when the value is foreign-owned. In practical terms =
-only defines the alignment of
->>> -    /// the pointer.
->>> -    type PointedTo;
->>> +    /// The alignment of pointers returned by `into_foreign`.
->>> +    const FOREIGN_ALIGN: usize;
->>>
->>>      /// Type used to immutably borrow a value that is currently foreig=
-n-owned.
->>>      type Borrowed<'a>;
->>> @@ -39,18 +35,17 @@ pub unsafe trait ForeignOwnable: Sized {
->>>
->>>      /// Converts a Rust-owned object to a foreign-owned one.
->>>      ///
->>> -    /// # Guarantees
->>
->> Why remove this section? I think we should streamline it, (make it use
->> bullet points, shorten the sentences etc). We can keep the paragraph you
->> wrote below as normal docs.
->
-> Not sure exactly what you are going for here. How is this:
->
->
->   Converts a Rust-owned object to a foreign-owned one.
->
->   The foreign representation is a pointer to void.
->
->   # Guarantees
->
->   - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
->
->   There are no other guarantees for this pointer. For example, it might b=
-e invalid, dangling
->   or pointing to uninitialized memory. Using it in any way except for [`f=
-rom_foreign`],
->   [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result in undef=
-ined behavior.
+ drivers/pci/setup-bus.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Maybe even move this paragraph above the `Guarantees` section and change
-the beginning of it to "Aside from the guarantees listed below, there
-are no other..."?
 
-Otherwise looks good!
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.39.5
 
----
-Cheers,
-Benno
 
