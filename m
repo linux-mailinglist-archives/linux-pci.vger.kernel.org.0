@@ -1,93 +1,155 @@
-Return-Path: <linux-pci+bounces-29337-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29338-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76BC2AD3B78
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 16:44:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8047AD3BDC
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 16:56:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E28AE1BA0E9F
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:43:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA5F2176C98
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:56:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 173FC1A8419;
-	Tue, 10 Jun 2025 14:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 616EA22B8AA;
+	Tue, 10 Jun 2025 14:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b="StwO6p1z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635B91D9663;
-	Tue, 10 Jun 2025 14:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from borehabit.cfd (ip160.ip-51-81-179.us [51.81.179.160])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95E22CBC4
+	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 14:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.179.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749566446; cv=none; b=GSoyop82NFW1iCI64ql7eFUE0h5595yXxVkpQvUh4PWuIKga6QCw/euC8D9x/lfli2HXytPTZe/BY+YqFYGdSlAHfy7dhdowxpDeTVT8vTtzd8rlDivAAsmDtliLNQL4531Wx4+jU6rCI0Adjk3xt5/0E4NqQTl7XAJsNfhSuyw=
+	t=1749567372; cv=none; b=cOyhbesrQbcz6HnhqiZS/DQ+GKHuLzghAuzbooktaAMn9Jfz6xKTOdQ0LHyH2Dvpl5rXMUCjyKi5qcM1fMrnsLpHXklhuhN0drRywAuHrrLBRjTS+YAteTF/g2j01xq3cE8d2who6+I/gL/MNoNhr+nfZcISYrNymQHgoO5/i90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749566446; c=relaxed/simple;
-	bh=DzZVmglec9q7k00c2GslMflWVP8EzyraC82JMED2rUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObHQUvTKQTeuYA4f/i/q+PLFlsrhk8dcmP3Lp8+9+JEPJHreg0NXX2oXPKU1WkEWX8QrPvY+QoODiV/IgELIxjVdbXLIFqaXrIlUuqUD+FMPLINuAR7TwfDqu7SkT8WxWEXLxkq7tq0HnAJzM9QVdXvUpZhF343E8kLeuW/U/AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8946214BF;
-	Tue, 10 Jun 2025 07:40:24 -0700 (PDT)
-Received: from [10.57.79.109] (unknown [10.57.79.109])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 215FD3F673;
-	Tue, 10 Jun 2025 07:40:42 -0700 (PDT)
-Message-ID: <d22320dd-2695-4f9b-bd72-38eabc1d934f@arm.com>
-Date: Tue, 10 Jun 2025 15:40:40 +0100
+	s=arc-20240116; t=1749567372; c=relaxed/simple;
+	bh=j/qZ6nCFDOcbnwIbag40JF9HDzOLw0n9TJz9U1mz3X8=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=fZyHRsifyKhRjvCnZulhtuBXmWFiVOhsKr1GibUdxfV8KEgtE+LQ3Dudo3i0W9Zi27VhYSHCRUtJStKColwAlAQK19HowOy8MepnYQxo2CH2mK90R2GCljJj2YdcTsiQjuEwZgD0ly4nWD8BVaJYWrN+QsYO3ExJK8K7tT0JRwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd; spf=pass smtp.mailfrom=borehabit.cfd; dkim=pass (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b=StwO6p1z; arc=none smtp.client-ip=51.81.179.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=borehabit.cfd
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=borehabit.cfd; s=mail; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CFYjPvEUim5mD5QwWelE+Axpgk7p2gwnF2M5gpb++Rg=; b=StwO6p1zH5FWDwq70BUXvznDRy
+	LbtOQoElQ78CeiiQNVoa62flqLRlpqU88XMevKtlZDurrBZNzmXA1ZPLjRfPWk6Nmxh1sLg0W4Lsx
+	EHAYM37MeAD7d8x7QtNoDUj+eWyrbpC2ZLxlqczUiI2liNxk56QRNAWF1gs3wfPvapGc=;
+Received: from admin by borehabit.cfd with local (Exim 4.90_1)
+	(envelope-from <support@borehabit.cfd>)
+	id 1uP0OY-000WDZ-3P
+	for linux-pci@vger.kernel.org; Tue, 10 Jun 2025 21:56:10 +0700
+To: linux-pci@vger.kernel.org
+Subject: WTS Available laptops and Memory
+Date: Tue, 10 Jun 2025 14:56:10 +0000
+From: Exceptional One PC <support@borehabit.cfd>
+Reply-To: info@exceptionalonepc.com
+Message-ID: <5fbeb834929eba9fb0c50a700d9c67d0@borehabit.cfd>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v1 1/2] iommu: Introduce iommu_dev_reset_prepare() and
- iommu_dev_reset_done()
-To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>, joro@8bytes.org, will@kernel.org,
- bhelgaas@google.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, patches@lists.linux.dev, pjaroszynski@nvidia.com,
- vsethi@nvidia.com
-References: <cover.1749494161.git.nicolinc@nvidia.com>
- <4153fb7131dda901b13a2e90654232fe059c8f09.1749494161.git.nicolinc@nvidia.com>
- <183a8466-578c-4305-a16b-924b41b97322@linux.intel.com>
- <aEfZlKNk4xfb41RR@nvidia.com> <20250610130416.GC543171@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250610130416.GC543171@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-10 2:04 pm, Jason Gunthorpe wrote:
-> On Tue, Jun 10, 2025 at 12:07:00AM -0700, Nicolin Chen wrote:
->> On Tue, Jun 10, 2025 at 12:26:07PM +0800, Baolu Lu wrote:
->>> On 6/10/25 02:45, Nicolin Chen wrote:
->>>> +	ops = dev_iommu_ops(dev);
->>>
->>> Should this be protected by group->mutext?
->>
->> Not seemingly, but should require the iommu_probe_device_lock I
->> think.
-> 
-> group and ops are not permitted to change while a driver is attached..
-> 
-> IIRC the FLR code in PCI doesn't always ensure that (due to the sysfs
-> paths), so yeah, this looks troubled. iommu_probe_device_lock perhaps
-> would fix it.
+Hello,
 
-No, iommu_probe_device_lock is for protecting access to dev->iommu in 
-the probe path until the device is definitively assigned to a group (or 
-not). Fundamentally it defends against multiple sources triggering a 
-probe of the same device in parallel - once the device *is* probed it is 
-no longer relevant, and the group mutex is the right thing to protect 
-all subsequent operations.
+Looking for a buyer to move any of the following Items located in USA.
 
-Also I'm still working towards getting rid of iommu_probe_device_lock as 
-soon as I can because it's horrid... I now have most of a plan for 
-making it safe to rely on device_lock() for probe, which should nicely 
-solve the dev->driver races as well.
 
-Thanks,
-Robin.
+Used MICRON SSD 7300 PRO 3.84TB 
+U.2 HTFDHBE3T8TDF SSD 2.5" NVMe 3480GB
+Quantity 400, price $100 EACH 
+
+
+ 005052112 _ 7.68TB HDD -$200 PER w/ caddies refurbished 
+ Quantity 76, price $100
+
+
+
+Brand New CISCO C9300-48UXM-E
+Available 5
+$2000 EACH
+
+
+Brand New C9200L-48T-4X-E
+$1,200 EACH
+QTY4
+
+HP 1040G3 Elite Book Folio Processor :- Intel Core i5
+◻Processor :- Intel Core i5
+◻Generation :- 6th
+◻RAM :- 16GB
+◻Storage :- 256G SSD
+◻Display :- 14 inch" Touch Screen 
+QTY 340 $90 EA
+
+
+
+SK HYNIX 16GB 2RX4 PC4 - 2133P-RAO-10
+HMA42GR7AFR4N-TF TD AB 1526
+QTY560 $20 EA
+
+
+Xeon Gold 6442Y (60M Cache, 2.60 GHz)	
+ PK8071305120500	 
+ QTY670 700 each 
+
+
+SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
+M386A8K40BM2-CTD60 S
+QTY 320 $42 each
+
+
+
+Brand New CISCO C9300-48UXM-E
+Available 5
+$2500 EACH
+
+
+Core i3-1315U (10M Cache, up to 4.50 GHz)	
+ FJ8071505258601
+QTY50  $80 EA
+
+Intel Xeon Gold 5418Y Processors
+QTY28 $780 each
+
+
+Brand New C9200L-48T-4X-E  
+$1000 EACH
+QTY4
+
+
+Brand New Gigabyte NVIDIA GeForce RTX 5090 AORUS
+MASTER OC Graphics Card GPU 32GB GDDR7
+QTY50 $1,300
+
+
+ Brand New N9K-C93108TC-FX-24 Nexus
+9300-FX w/ 24p 100M/1/10GT & 6p 40/100G
+Available 4
+$3000 each
+
+
+
+Brand New NVIDIA GeForce RTX 4090 Founders
+Edition 24GB - QTY: 56 - $700 each
+
+
+
+
+Charles Lawson
+Exceptional One PC
+3645 Central Ave, Riverside
+CA 92506, United States
+www.exceptionalonepc.com
+info@exceptionalonepc.com
+Office: (951)-556-3104
+
 
