@@ -1,454 +1,212 @@
-Return-Path: <linux-pci+bounces-29275-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29276-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50A6AD2CC9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 06:38:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5A50AD2CDE
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 06:47:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83A0E7A45AF
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 04:36:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96DE67A7AF6
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 04:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B0425C807;
-	Tue, 10 Jun 2025 04:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4DCE20FAB9;
+	Tue, 10 Jun 2025 04:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIMqDYsW"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sr+7qzJm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B1E21883F
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 04:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749530289; cv=none; b=Om7hsrYO1QS67qEeiP9dNHUgXybagLCToXVFVuKEiUk1ng2ai6d6RlTRluOQHZ9shiJE3fN25ZP4ErbxxCLxmDoJN1I+RB3/plKHQ35JyPE0WYCVKaXoiaVg8s2KC1t/smXSPVnpOeLq8oI0acjFCG+KA5BdjVfpJEc1BMwYnKg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749530289; c=relaxed/simple;
-	bh=NmhdJ/ddA04MjThhtcZDld1AI0fRvypZGx6pPho3sSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DXNHwY07BGXdDFEFdRRnnj+O8Ifl86049qKNT+MrZFv1quDU6zyB57ZDATcvB6o10FM6Pl1oVbAfKp/x0z/Z+913cVlpmSnE1eplX/TGyj2Sy5T4KQEZ0Z8d5V/pIQ7ewHLlXHt6ikNgc6n2gVicIwGqrEzvQqAwp6+AZ4dLWrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cIMqDYsW; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7485bcb8b7cso799888b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 09 Jun 2025 21:38:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749530287; x=1750135087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EOmEa242izJ9/bhxzxxZ9yeRYv/F/pcNvQXgz4tu4ME=;
-        b=cIMqDYsW/MNnkUcAnjUMe48ozWdlkFWFYC6Q6aFVS8Ig/g+XiRrBP3NI/YR3svEx2M
-         ZRTr1/ol/gRxZKRPMDFfwsr3tSnCxYoBlkTDTb7ED+HJLVHegGiUKsyxnt5wCbIbrMEH
-         IxvIxwQqBIAY314UTS4lYB1DzkD9gYq6QhwLoA1Ik/YaXpk56ux9yBKKsT4VM0/FJCWA
-         00a7Jttt7eK90T/Fx4QwegIwylVCiT1/1OJxJ5fwKKVsHo1t0R/ToqQYIhV6ATWNsZXw
-         /U0tci3MDRixdyTchdDsrZKTp1COXmMYTV7CqY3927DhOma+0ddWp5OnF2kfyUJ2FHQi
-         x6OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749530287; x=1750135087;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EOmEa242izJ9/bhxzxxZ9yeRYv/F/pcNvQXgz4tu4ME=;
-        b=b+yr4uPuDVVk/Yr2Pkrir4hHmDSFa4XNmTXYM5NSAvJA7IchwUbJc+Z8rwrevEqGpg
-         W6fbKUaVyxva1lZRnyt9FkjNb3ZLzekWT+dR72fHdCUMyFRlzSymlWrOXYMjtDINMtA4
-         rjIZq9Gti7Dmgv5p8CMgOv63WvidpX7wbBNajPEMppuRP6iQZBBgkqQerLFJwaUl14v/
-         6kcqpw3Fvg81s7mx5rIM8vwT3h7XTUUYvlc7QpW1Lkhqij0SMPYxDIc84aBYBbLzizt7
-         jlslbGl7E+7gqt/nv7tAHR2VthsckIeRxlJwTf7NliMPBer0UDb6ORqRoK0spyLLkdCS
-         PeBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZuW5m8Iwumr/0knHS1aCvB0h9jS1LYY/sUYzQry4Y2dinBJr1mbLB1IB0iT+UP3Hf4NMPTZzfuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQyDeHRfzQLz0giHD6GKnNWb47dmOqS/A6c/1fAjqkRSzpWKb6
-	ldnjex+vu/n3c+2BK+giVO6BikqqR88G+UDRvPYBQJiRNsMcPvPRpsP9KaT7ufUywO8=
-X-Gm-Gg: ASbGncuVkteBbVm8JcsO8U1vot7E2SQ5Da9n00yxhCV4MR00obDSk0Dzz5l4XBse71z
-	pxPDFn8O00IiZeKKEly1NoXUVxtCjvQjgskXbeFFOADyNlGq2sl6xPZ0Qs63+sFwdwXhW6R94Qj
-	pFc2A1Gv4AVHj2AQ8CMW+/R1VULbyz8xOqoZimLwdrMxhgjEAgLpmHj90Dr7q5B+jzugJSdvhyt
-	aBZNGgA8EJqh3NXfO8hguotHcoojcFmstTnW2b+yU45x1aOsDumYMTpQBdUOq9ky7fR2DaHgIu7
-	4JAz0jASyH8/NH7YMH//aemT9NVm1ioJg94xfhJniYA1yg9Vn2Zi+dHqUS+eg84=
-X-Google-Smtp-Source: AGHT+IFnumFN5YrH9SMLJGmJpHdBIrELYFHIVkETeYy9y2eyxYkz9cRqU/nNBhslMEsPJdrH40v3PA==
-X-Received: by 2002:a05:6a00:228c:b0:746:31d1:f7d0 with SMTP id d2e1a72fcca58-74861845fabmr1441742b3a.9.1749530286574;
-        Mon, 09 Jun 2025 21:38:06 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c0635sm6520120b3a.123.2025.06.09.21.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 21:38:05 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Nishanth Menon <nm@ti.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-block@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] rust: Use consistent "# Examples" heading style in rustdoc
-Date: Tue, 10 Jun 2025 10:07:46 +0530
-Message-Id: <70994d1b172b998aa83c9a87b81858806ddfa1bb.1749530212.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDF11DE88C
+	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 04:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749530861; cv=fail; b=IXe5q+rWIPCnyLO3WBvlQI1c5AHLxOm9OVaE1CMzbdw5GI3QA9VAVxK0xfvloHQsbxI5cbsuILm0xoytmgVcaW8WppUPQmBmEbbR/+/qJ2H7ekaWoJLEtZIEEYKvu6phVah+dM7mCiQieLxA378OngB/Zx/PonJ4Dc5PZV9Cncs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749530861; c=relaxed/simple;
+	bh=dm903k1n/uGalWXhGNJVy2pEZ8iDc2HrAmFKmE+n/gs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=p3I7AN4IT0o8B0BctO6lIMdc4wC6pVUJlEQYlyJGXxFWqyV0+aeiB/LTqajv7hkXMxVQSx/78ivXwtVSWuIcP65FGJNO2cs/qhhtQecSDyIpanxZnFxgmaJIdPRTpiSogMkSXla3VsqTjvRjzJ/3whLseQLuBOeAY9ME1def4I4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sr+7qzJm; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gu046j2PR5XEas/UKCNexjPrkyOtTEjhROhVVVj4ALYuNrHrrztfHtOeNWwYvyQIvNUOHqF1+LfUSg9DM84jaukYRBayR5crLRvruUTgd9N1Jm45EN0n04oRZKBuWYrmSgxj1w48iL7IqLge3PfoVbI0QScBN0JxZSULBMUa2BTSQ0ev5MbFM3ravWKs2N64TyrL73bUhd9bpwd4Dc+o5eUX6bTyxsgQ6HhWeILF+yADVIg2UUV2fpaPSqvuLIceCWIfDGDdQOnNLCJQSClb9OdJrYt8reHf8mPCMXqZVBHBXsxFLZh57/7ZAbiLZeBCVcWGPS9lGthkdLEV32EfCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wMysf0go4cNqWVjPeaSbhMRgvp7x/3UAu/qUVshAn70=;
+ b=K/ULchdhsciJHaGDh9K10w2GZkhvJBQ2mn5LBrfFUnib/AXDsViNnkhnB7CpthEkovvumA10jFy3ACeOZ70u/OrGJ8ImQn++7/SqWqHUwfOMTS6rxEejw15CX68QXuuAFMl1gF9sJkXI+JaKbNwzYJLD44ldThN/8847NZ3TN4el9oEmwBq7pP54D2Fe6z54dMRiiQA10hRp7Lpqw473wYOJZq8GD9FRljeXpED/w9Xxcz1EmBUEvSFG5+2WOZcPnTrdA8Dkc6TrxSmmxZWG8jmdNnEws8ucYkOqDyVogMCRu7GUpWgqoy+5DPk8GlE8w578GijtYIwDarsgDWvTLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wMysf0go4cNqWVjPeaSbhMRgvp7x/3UAu/qUVshAn70=;
+ b=sr+7qzJmY5fuqw9RwxEz40OZjGLX113OD+0+qLeAbVU1gA5A4TGb6wPA9vEIF0j2FoGfpYPeRtdPFs7BJ0Y6FYINzf8Z5R2jIOlbGUdw4Q59cm7JWXesQza1G9eybLewCAOJ9zYuPhfPqRp4Bsk4WLfjQrwG5/sB+rHX3aQGFM4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by CY8PR12MB7196.namprd12.prod.outlook.com (2603:10b6:930:58::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.42; Tue, 10 Jun
+ 2025 04:47:38 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8792.038; Tue, 10 Jun 2025
+ 04:47:38 +0000
+Message-ID: <efd630b0-d08d-46a6-a5ef-8a448eb19993@amd.com>
+Date: Tue, 10 Jun 2025 14:47:32 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
+To: Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org, gregkh@linuxfoundation.org, lukas@wunner.de,
+ suzuki.poulose@arm.com, sameo@rivosinc.com, zhiw@nvidia.com
+References: <yq5a5xhj5yng.fsf@kernel.org>
+ <20250529133757.462088-1-aneesh.kumar@kernel.org>
+ <20250529133757.462088-3-aneesh.kumar@kernel.org>
+ <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050> <yq5azfeqjt9i.fsf@kernel.org>
+ <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050> <20250602164857.GE233377@nvidia.com>
+ <aD50lpgJ+9XMJE/4@yilunxu-OptiPlex-7050>
+Content-Language: en-US
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <aD50lpgJ+9XMJE/4@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SY6PR01CA0093.ausprd01.prod.outlook.com
+ (2603:10c6:10:111::8) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CY8PR12MB7196:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f5c8eda-09a6-4c2d-ebd8-08dda7d9ecdc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NER0Sk1XZDVhVVIzQTd4VmJqMVk5OFQyN2JEYUtpajJVQW9iM2hpdzZxR1JY?=
+ =?utf-8?B?RnF0ZS9VUnEwSWhWUHF1QjFzeE4wbERSb1VKNmZ4LytPMG5kRHR2eXpuOEt0?=
+ =?utf-8?B?eTM2T2JBekxmUmY0TnhUeURsOWlKQUsrQ3NRQUozN1dQMVBEaTh5TnJtUE1K?=
+ =?utf-8?B?Vmx6YmVqRm16M1UrWnpGVnpjNVJSYit1cGV3TGNXcTNHSUdIQUN0S1ozVFZN?=
+ =?utf-8?B?anBTcE1Gem1NVVZaVDg5M0lYUG1IOG80UEZ1a1RUNEMzOTVuUjZKa1NiamVN?=
+ =?utf-8?B?c2JLTFlYSHJteTNpaHcrQlVoT0dabmh0bGFqYTAzNUhqRjNzT1AwMGprUllM?=
+ =?utf-8?B?VHY2dTFCU3QzVHRyUDIzbDJiUUJ4Qk5rOEtEZXk1Z01RZTVvR1REaGtNS3FR?=
+ =?utf-8?B?Sk5mQ2Qxd0ppb3JmUDg1UXMzYnBHdm5nWnFIbzN5L08yOVJrYTVkQWtyeG4y?=
+ =?utf-8?B?SnNGQ0Z3UENZRWFlcWNNK20veVpPcnJkZDdubWxVOWZPZzlGOFBNWnlyczhH?=
+ =?utf-8?B?U1k3S1VtRTJldU9McG1STjJMWWZNNmxCT1NoUUJXNVRhVThjbzBxZUluZjU1?=
+ =?utf-8?B?cGcvVDhYMXVlSzkwTituV092WExiSFhYUElONTg2dHBJUUd0aEZjYkpWcWZp?=
+ =?utf-8?B?NHJqR3JTVEJOQmtsS2g5ZE40T2ErY0NRUzFUN2svd045QWxDbWkrLzJjaFg5?=
+ =?utf-8?B?ZnFaK1gyMXRhc3NRMnR2RzIvaEs3ZjYxbm4xZjVPa3QzeEtxdHVBbnRtMXhO?=
+ =?utf-8?B?VHVEUkdyODZtVDBWQ3MwSC85TW9YdGd2L2NlNlNUNVVyVFpEbGhhRVRSZDhC?=
+ =?utf-8?B?VFRoMEZTTTNJOTNIdVZVMFVWdmVUNjkzZzhKTjl4Yjl3OFl1eFBUbEU2dTdD?=
+ =?utf-8?B?VjVoR2ludEZEb080UjJHY1BkT3cremY3blE2ZlhXT0FQMDZZajNkdzZ0MXJU?=
+ =?utf-8?B?TXd3elpueXlXN3QvT1NNOUREaWZvK21hWE16RlZrNGZnZkczM2dPUjhRZU9W?=
+ =?utf-8?B?NGkzaW51ZURXVjFyQUlDeEYxaDBxNmpnMFZPeUYzcEJEZFhSSk1FdHQwZ1BI?=
+ =?utf-8?B?cVdmczdwelVSOE9uV3Y2Q0ZocFlmbmUxaFRrOU5ybk1nLzNWL3pHRWNvTjho?=
+ =?utf-8?B?YXZ3UUVNejJ3RUxjYUpSSm9DRlYvUUR3MkZhWlpZMjN5SENCL0hKTWFoY3lp?=
+ =?utf-8?B?Z1J4OHV5eGd5VjJ5a1dyZE5mQlJ2T1lMM0xoeEMyeGUxQ2RSYTdRZU5HWDFR?=
+ =?utf-8?B?cmJEcCtoMjV2STk4RW1LTTRadU1aY0dSRkJuV245TGM2QWQyTThrUFJ5V2RQ?=
+ =?utf-8?B?Y2pNRzd0enQvTVBHdWxLS2RzNnU5Lzh2eHlsWUhoVDFyREV6V3BueDJwdTNa?=
+ =?utf-8?B?aUJCRVNDVGhCaEVwakFMT0U4ckxQcjNDRWUvM1dUbFBIaHVWK0ZtZ1ZiR3Rl?=
+ =?utf-8?B?UDFwbXNtbDFBbXlUMVZ2aWNmbUdyNG9HdGJibDhOWC9yaHBKcXEyODU1eXUx?=
+ =?utf-8?B?cXdDeDBvdjNlemYzallzbEViY0d4L25va0ppRXV0YWdkODdyMytyenhrVFBB?=
+ =?utf-8?B?cG9rVFlrT3NQUitzK2hiTDJWV3B3cXB4bjYwWnlXRm1PRFphOXZwY2IrZGlX?=
+ =?utf-8?B?MldEOHNaTnlQUHp6ZjVSOWptN0ZCSlNFN01QSE5vSjFRZGZTcUZKSGtiV2ht?=
+ =?utf-8?B?WlhNK3FKOWdLdTBsSXQ1eldQUU9lVjkxMW5PZlJHSlU1QXg1K1BVZHBYYm40?=
+ =?utf-8?B?TS9vSlBHOW5NWWNZUjdlYUcrbVJwOGhLL0VxRjJyUkp5aFFUUGlLOHNNOGh3?=
+ =?utf-8?B?a3Y3THBLU1FUZVp1eG96WjhDTm9RYTA0WGhkUERFa1MvTnlvRk56SXd3aUkz?=
+ =?utf-8?B?VE10eko4VXpTS3pkdHd3Yjk2QlcyZEl2dytxK2JaYnI1QlVnVGpTNFNGQ0dy?=
+ =?utf-8?Q?lTSy8ABsMZY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U2xYb25uQjFDd05oMnhQYUtiLzBCMmxvVkpGY3RrRTV0ajZBQWx1MFNtY1k4?=
+ =?utf-8?B?dzhPdEZhK2w4dmNaMXpuZE5IQk1NeGV2THFMYWVrd1ArRTZwSmhBK1RJeTU2?=
+ =?utf-8?B?QVp1TVZVelNEak1CbUd3dmJyei9KcHlyVXJjWEo2VjhobG1kVlJXbmFMcmU4?=
+ =?utf-8?B?cG9Ja2tTaUkxNk9lUFo1TDNWMjZyMDdBVzJhZzRSb3RTVG1OeTFZYVJIZ1FF?=
+ =?utf-8?B?eUo4Y2k0SVY4aUc3azRDNVpIdkx5cW9jVUNWMFZIUFdCclhpNFBqd1IxYzRN?=
+ =?utf-8?B?UHBBSHhsMTNpYktQbWJpRnVFeEtBaDFyY0wzbzJRaDNXanlGMWY5YVFRMlB5?=
+ =?utf-8?B?Q2hrakNITzVrejhNRmhhTUhxM3JQRkdmSzhMR2FYS3lzOWZCWU9uUlg5eVFk?=
+ =?utf-8?B?Z2kxQmNKRDJtTWlYelQ2anJUZGQ0YkZZbTYrSmhwbFBQTFVvdko1V0lKeFNW?=
+ =?utf-8?B?VkxZclZ3eHpUTkJQQmxXOG5uSTMydXREc292SGUzdzFpRGliK0V2OWY4Q25N?=
+ =?utf-8?B?OGpCZ29lT1VYVldLYTFpcG83WGZJU3FGdmJ2bk5rSUhybUlTQk5uakdzR3JT?=
+ =?utf-8?B?M3B2eDdFRG9WUm1lbTdiRWVGVTFkYnpFdjhBSlg0a3d6UWk1aG5LTkxVZXlT?=
+ =?utf-8?B?WXpseTBJbEkwWkdScDJ1YXFkL2FheTlTTEtBSGM0YXp4aGU2VUhEbTlLRVRr?=
+ =?utf-8?B?TFhYeGFaaXA0d3hUcGlPSDZVaTJubGNWWE1EVjZqVnJlNUVtYVkyVEhHMGhQ?=
+ =?utf-8?B?eWpkSUptYytGMXJBdW5wQXdFZmU1Q2VtVEpMUHl4bnJHNnRidW43TmpwaTdV?=
+ =?utf-8?B?MjIrcitLV0tNMWxZSzE0MkdNa3ZVL3B2bXIvK0dOTlRzK1lNVVN2ejd1Ry9x?=
+ =?utf-8?B?aFpkOHZNaktwRXpFZjNHZ21jalhVY3N4YmJpQTlFakErL1hrQWp5VW1GSXdl?=
+ =?utf-8?B?Z21GNFJoUjZpb2NDaW5RbnJrcVhOK1BORC90N0dGYUtNR1gvWDVYMzJVcEJm?=
+ =?utf-8?B?dHBhVnZqRlpCR21oeUkzaUdFY0VoeVpqSGRiSmovN0FxdWZ4SDQrbE9FbGo4?=
+ =?utf-8?B?b0RSd0RPeGl6RkYwZXNnWnlyOHRzNjRqaGNrRzFDK2RKamswK25yVTBNdVBw?=
+ =?utf-8?B?R21jYi9GVFY4bzBMRDF1akRYY1lSMGMxV2E0K3IzV3hTOGJ3RE1UOEoxa3ZQ?=
+ =?utf-8?B?cGg3eStvRC9oWFpoWFBGYk1xRjNTcDZkdEo5WlprN3FUNEx0RHZDVGNxSDVD?=
+ =?utf-8?B?SzJ6YWN6bUJadUFNM05wckpSdVhWTStGNkhwRXNNb2t4b2RFU1Zwb1d1MjI4?=
+ =?utf-8?B?QUN3aTNsUUcydlN3TjYrbXpxMzJCcWZYK2N6UTJpUit4TTZsU3VIKy9UbWxm?=
+ =?utf-8?B?OU90b2tVWXd6dWZ0K2FwbldPZklldlArOGk1SWxINHREZG95ei81YlBERlFk?=
+ =?utf-8?B?RE1rOGlscjY0UDBrKy9xaWxyUlRQQVlrRjZIRFdhbFNBR3BsYzMzSGlxYzRr?=
+ =?utf-8?B?Ym83OG1PMXl3NHE1RHpXNlZUYkM1TXcvdlJMZVlEUWZWRUY2TDVOM1A1SXpw?=
+ =?utf-8?B?V1hNUGlmS3pKaTVyVVMwMTFqYUFvS3lYNWYraEtkbWNtZytaOG5zS1EyVlp0?=
+ =?utf-8?B?SHA5VnVLYlJBU3lONnZiSHAzR3JUU3FJaVZ5dlFIbGRjNVd4cUJhd1dEdEI1?=
+ =?utf-8?B?RmV2dE0ydHdKVTJIV1dFcUYvQjRoWCt0eUoxemlTVGJqSE5LN1dLTmVCQ2hW?=
+ =?utf-8?B?K2s0c21iWTl0UHhwQjVwc0lUNmNjQ0xXaWlxa09aeEM2NkFpcXc3anJHbTZu?=
+ =?utf-8?B?dTNHR0lRdWxQQ1MzQkpUUzBhZlFyS01EVlpaSUVFK1RZaVRNRG5DMnA5ekRx?=
+ =?utf-8?B?a1pOYzd5eEZ4c0NpNFdrWGtGRTBHL2tkNk1RVkYxUUxORkdTY1Nwb2daQnIz?=
+ =?utf-8?B?b1FFdHpqMGppbURFV1Q1RW9kTFlZcWlpYmxKUzZEQzQvcE80ZmhXQTBaZ2wy?=
+ =?utf-8?B?VWMwZit6WnphV2pXOFpqUmpnNExTZGIvbjg3Q1hITlBZTnV2V3Z1TDM2TVh4?=
+ =?utf-8?B?M3l2Q0U1WU5ZTGtxTEFOaGF1dFRyNFJVNFlZaTNEQTdtN2l6ZXE4cStSdGtp?=
+ =?utf-8?Q?5q69RKtosQeKthWlt4QyM422M?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f5c8eda-09a6-4c2d-ebd8-08dda7d9ecdc
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 04:47:38.3993
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IByl+Lu1yePItKwq+gbaWenjqWOMu5zPjuSqKXJhbl+lcFmpFj0o951bPQz1XY0k04U983ZUDjzw5Jmi6AUIHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7196
 
-Use a consistent `# Examples` heading in rustdoc across the codebase.
 
-Some modules previously used `## Examples` or `# Example`, which deviates
-from the preferred `# Examples` style.
 
-Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- rust/kernel/block/mq.rs  |  2 +-
- rust/kernel/clk.rs       |  6 +++---
- rust/kernel/configfs.rs  |  2 +-
- rust/kernel/cpufreq.rs   |  8 ++++----
- rust/kernel/cpumask.rs   |  4 ++--
- rust/kernel/devres.rs    |  4 ++--
- rust/kernel/firmware.rs  |  4 ++--
- rust/kernel/opp.rs       | 16 ++++++++--------
- rust/kernel/pci.rs       |  4 ++--
- rust/kernel/platform.rs  |  2 +-
- rust/kernel/sync.rs      |  2 +-
- rust/kernel/workqueue.rs |  2 +-
- rust/pin-init/src/lib.rs |  2 +-
- 13 files changed, 29 insertions(+), 29 deletions(-)
+On 3/6/25 14:05, Xu Yilun wrote:
+> On Mon, Jun 02, 2025 at 01:48:57PM -0300, Jason Gunthorpe wrote:
+>> On Tue, Jun 03, 2025 at 12:25:21AM +0800, Xu Yilun wrote:
+>>
+>>>> Looking at your patch series, I understand the reason you need a vfio
+>>>> ioctl is to call pci_request_regions_exclusive—is that correct?
+>>>
+>>> The immediate reason is to unbind the TDI before unmapping the BAR.
+>>
+>> Maybe you should just do this directly, require the TSM layer to issue
+>> an unbind if it gets any requests to change the secure EPT?
+> 
+> The TSM layer won't touch S-EPT, KVM manages S-EPT.
 
-diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
-index fb0f393c1cea..831445d37181 100644
---- a/rust/kernel/block/mq.rs
-+++ b/rust/kernel/block/mq.rs
-@@ -53,7 +53,7 @@
- //! [`GenDiskBuilder`]: gen_disk::GenDiskBuilder
- //! [`GenDiskBuilder::build`]: gen_disk::GenDiskBuilder::build
- //!
--//! # Example
-+//! # Examples
- //!
- //! ```rust
- //! use kernel::{
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 6041c6d07527..34a19bc99990 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -12,7 +12,7 @@
- ///
- /// Represents a frequency in hertz, wrapping a [`c_ulong`] value.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// ```
- /// use kernel::clk::Hertz;
-@@ -95,7 +95,7 @@ mod common_clk {
-     /// Instances of this type are reference-counted. Calling [`Clk::get`] ensures that the
-     /// allocation remains valid for the lifetime of the [`Clk`].
-     ///
--    /// ## Examples
-+    /// # Examples
-     ///
-     /// The following example demonstrates how to obtain and configure a clock for a device.
-     ///
-@@ -266,7 +266,7 @@ fn drop(&mut self) {
-     /// Instances of this type are reference-counted. Calling [`OptionalClk::get`] ensures that the
-     /// allocation remains valid for the lifetime of the [`OptionalClk`].
-     ///
--    /// ## Examples
-+    /// # Examples
-     ///
-     /// The following example demonstrates how to obtain and configure an optional clock for a
-     /// device. The code functions correctly whether or not the clock is available.
-diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
-index 34d0bea4f9a5..92cc39a2f7ca 100644
---- a/rust/kernel/configfs.rs
-+++ b/rust/kernel/configfs.rs
-@@ -17,7 +17,7 @@
- //!
- //! C header: [`include/linux/configfs.h`](srctree/include/linux/configfs.h)
- //!
--//! # Example
-+//! # Examples
- //!
- //! ```ignore
- //! use kernel::alloc::flags;
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index b0a9c6182aec..944814b1bd60 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -201,7 +201,7 @@ fn from(index: TableIndex) -> Self {
- /// The callers must ensure that the `struct cpufreq_frequency_table` is valid for access and
- /// remains valid for the lifetime of the returned reference.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to read a frequency value from [`Table`].
- ///
-@@ -317,7 +317,7 @@ fn deref(&self) -> &Self::Target {
- ///
- /// This is used by the CPU frequency drivers to build a frequency table dynamically.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to create a CPU frequency table.
- ///
-@@ -394,7 +394,7 @@ pub fn to_table(mut self) -> Result<TableBox> {
- /// The callers must ensure that the `struct cpufreq_policy` is valid for access and remains valid
- /// for the lifetime of the returned reference.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to create a CPU frequency table.
- ///
-@@ -832,7 +832,7 @@ fn register_em(_policy: &mut Policy) {
- 
- /// CPU frequency driver Registration.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to register a cpufreq driver.
- ///
-diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
-index c90bfac9346a..0f2dd11d8e6a 100644
---- a/rust/kernel/cpumask.rs
-+++ b/rust/kernel/cpumask.rs
-@@ -29,7 +29,7 @@
- /// The callers must ensure that the `struct cpumask` is valid for access and
- /// remains valid for the lifetime of the returned reference.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to update a [`Cpumask`].
- ///
-@@ -173,7 +173,7 @@ pub fn copy(&self, dstp: &mut Self) {
- /// The callers must ensure that the `struct cpumask_var_t` is valid for access and remains valid
- /// for the lifetime of [`CpumaskVar`].
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to create and update a [`CpumaskVar`].
- ///
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 0f79a2ec9474..3644c604d4a7 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -42,7 +42,7 @@ struct DevresInner<T> {
- /// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
- /// [`Drop`] implementation.
- ///
--/// # Example
-+/// # Examples
- ///
- /// ```no_run
- /// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
-@@ -192,7 +192,7 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-     /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
-     /// has been created with.
-     ///
--    /// # Example
-+    /// # Examples
-     ///
-     /// ```no_run
-     /// # #![cfg(CONFIG_PCI)]
-diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-index 2494c96e105f..e209b5af297c 100644
---- a/rust/kernel/firmware.rs
-+++ b/rust/kernel/firmware.rs
-@@ -139,7 +139,7 @@ unsafe impl Sync for Firmware {}
- /// Typically, such contracts would be enforced by a trait, however traits do not (yet) support
- /// const functions.
- ///
--/// # Example
-+/// # Examples
- ///
- /// ```
- /// # mod module_firmware_test {
-@@ -261,7 +261,7 @@ const fn push_internal(mut self, bytes: &[u8]) -> Self {
-     /// Append path components to the [`ModInfoBuilder`] instance. Paths need to be separated
-     /// with [`ModInfoBuilder::new_entry`].
-     ///
--    /// # Example
-+    /// # Examples
-     ///
-     /// ```
-     /// use kernel::firmware::ModInfoBuilder;
-diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
-index a566fc3e7dcb..5f404c4181ad 100644
---- a/rust/kernel/opp.rs
-+++ b/rust/kernel/opp.rs
-@@ -103,7 +103,7 @@ fn to_c_str_array(names: &[CString]) -> Result<KVec<*const u8>> {
- ///
- /// Represents voltage in microvolts, wrapping a [`c_ulong`] value.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// ```
- /// use kernel::opp::MicroVolt;
-@@ -128,7 +128,7 @@ fn from(volt: MicroVolt) -> Self {
- ///
- /// Represents power in microwatts, wrapping a [`c_ulong`] value.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// ```
- /// use kernel::opp::MicroWatt;
-@@ -153,7 +153,7 @@ fn from(power: MicroWatt) -> Self {
- ///
- /// The associated [`OPP`] is automatically removed when the [`Token`] is dropped.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to create an [`OPP`] dynamically.
- ///
-@@ -202,7 +202,7 @@ fn drop(&mut self) {
- /// Rust abstraction for the C `struct dev_pm_opp_data`, used to define operating performance
- /// points (OPPs) dynamically.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to create an [`OPP`] with [`Data`].
- ///
-@@ -254,7 +254,7 @@ fn freq(&self) -> Hertz {
- 
- /// [`OPP`] search options.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// Defines how to search for an [`OPP`] in a [`Table`] relative to a frequency.
- ///
-@@ -326,7 +326,7 @@ fn drop(&mut self) {
- ///
- /// Rust abstraction for the C `struct dev_pm_opp_config`.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to set OPP property-name configuration for a [`Device`].
- ///
-@@ -569,7 +569,7 @@ extern "C" fn config_regulators(
- ///
- /// Instances of this type are reference-counted.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to get OPP [`Table`] for a [`Cpumask`] and set its
- /// frequency.
-@@ -1011,7 +1011,7 @@ fn drop(&mut self) {
- ///
- /// A reference to the [`OPP`], &[`OPP`], isn't refcounted by the Rust code.
- ///
--/// ## Examples
-+/// # Examples
- ///
- /// The following example demonstrates how to get [`OPP`] corresponding to a frequency value and
- /// configure the device with it.
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 8435f8132e38..2c2ed347c72a 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -100,7 +100,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
- 
- /// Declares a kernel module that exposes a single PCI driver.
- ///
--/// # Example
-+/// # Examples
- ///
- ///```ignore
- /// kernel::module_pci_driver! {
-@@ -194,7 +194,7 @@ macro_rules! pci_device_table {
- 
- /// The PCI driver trait.
- ///
--/// # Example
-+/// # Examples
- ///
- ///```
- /// # use kernel::{bindings, device::Core, pci};
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5b21fa517e55..f8c0d79445fa 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -120,7 +120,7 @@ macro_rules! module_platform_driver {
- ///
- /// Drivers must implement this trait in order to get a platform driver registered.
- ///
--/// # Example
-+/// # Examples
- ///
- ///```
- /// # use kernel::{bindings, c_str, device::Core, of, platform};
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index 36a719015583..a38ea4419758 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -39,7 +39,7 @@ impl LockClassKey {
-     /// Initializes a dynamically allocated lock class key. In the common case of using a
-     /// statically allocated lock class key, the static_lock_class! macro should be used instead.
-     ///
--    /// # Example
-+    /// # Examples
-     /// ```
-     /// # use kernel::c_str;
-     /// # use kernel::alloc::KBox;
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index d092112d843f..8c27786dc8f0 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -26,7 +26,7 @@
- //!  * The [`WorkItemPointer`] trait is implemented for the pointer type that points at a something
- //!    that implements [`WorkItem`].
- //!
--//! ## Example
-+//! # Examples
- //!
- //! This example defines a struct that holds an integer and can be scheduled on the workqueue. When
- //! the struct is executed, it will print the integer. Since there is only one `work_struct` field,
-diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index 9ab34036e6bc..c5f395b44ec8 100644
---- a/rust/pin-init/src/lib.rs
-+++ b/rust/pin-init/src/lib.rs
-@@ -953,7 +953,7 @@ macro_rules! try_init {
- /// Asserts that a field on a struct using `#[pin_data]` is marked with `#[pin]` ie. that it is
- /// structurally pinned.
- ///
--/// # Example
-+/// # Examples
- ///
- /// This will succeed:
- /// ```
+Is not it the TDX fw which manages _S_-EPT? And the TDX host driver (what is it called btw? Intel's "CCP") registers itself as TSM in the TSM core so it is somewhere near S-EPT logic? Thanks,
+
+> 
+> Similarly IOMMUFD/IOMMU driver manages IOMMUPT. When p2p is
+> involved, still need to unbind the TDI first then unmap the BAR for
+> IOMMUPT.
+> 
+> Thanks,
+> Yilun
+> 
+>>
+>> Jason
+
 -- 
-2.31.1.272.g89b43f80a514
+Alexey
 
 
