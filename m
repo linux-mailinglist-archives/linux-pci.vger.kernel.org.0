@@ -1,119 +1,115 @@
-Return-Path: <linux-pci+bounces-29356-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29357-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68254AD422D
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 20:48:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8954AAD4255
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 20:57:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AC623A4D12
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 18:47:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B6FF189E9B5
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 18:57:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B892472A8;
-	Tue, 10 Jun 2025 18:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6C824679D;
+	Tue, 10 Jun 2025 18:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCBRTcB8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QV0k40cI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F81242D90;
-	Tue, 10 Jun 2025 18:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0439451022;
+	Tue, 10 Jun 2025 18:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581292; cv=none; b=iuzg2BNzKoxFD+A+bHThP/CynT7/vQjqTTOXiAtKYZAS1PjlC2Vju0VLs0BZRbzlUPwRn/24lZ0UA1MPNckMx0gxHV0v+8TbD5sylTC0PEvkOGgVmueWa8BGafZ4IzrCQNEIqPE8B/W2pS7032YMvhXuNnrS1/XANd/kJ1T7hhY=
+	t=1749581858; cv=none; b=aS5oBTGxMih4X7QJ8fv6lqGvk9sFgkY6/ieBdOEg01dCotMoEnyAPT9W8PAKwz57crA98vSg1wBPMB2qh5X30JQzJoCyUE7XPJsdp6qAN8KkPSAlEOggelTSrbleH/1PzAwzL9vJM+jxl9Rex+JTWZnoyJzBoMOBkji3eA/X1Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581292; c=relaxed/simple;
-	bh=JX4mrNACU5QqiYMm/oWkTJ9YOn7pmJRNtKmkF02gE2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ih6ln+VxQqVgijvH0k92EUopnXEaRElE7Mc07jK/1HIL2ZAWVHwnIRklm9ccNQZwseZfFtK9NFodQH/wheYcQ2mDoSWPi4elQMyq55PbL0XYBMpWxI0J/mogYF0NVD84s1BVuv/3salgxp/qNaYSFim6CvbHTJglDFPN/xK4TNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XCBRTcB8; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-530807a856fso78909e0c.0;
-        Tue, 10 Jun 2025 11:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749581289; x=1750186089; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JX4mrNACU5QqiYMm/oWkTJ9YOn7pmJRNtKmkF02gE2o=;
-        b=XCBRTcB8+aan9m2kfZIbbYM6I/NQpx0ui1c7NPkczX6Qd75030T0GZKaWxkEO0qUUR
-         gJLlmYIwQuy2ibQ99pljBgSBlIj7W9CjEDOX/Jyr6vIfokaT+HOvWF+Xm9GviawYot05
-         59wfsOl8RLUno1xNYEaQFX8vFtgeK57ZD7lx6IJ/zSWiV84UKCh38zshud3g3yuOwSnF
-         PZxHNRFutrexyorZ8JNrxoUdfpMH86KLOatKbZcdKjuqctBWtVCXHcfF+1BlJl96e5pl
-         zm70zpueyRwmfA2yJCNyhD8OcnhDNEWTjj7tp49maCaSEDuumDzSBGRnoOirelTO7cst
-         d0Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749581289; x=1750186089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JX4mrNACU5QqiYMm/oWkTJ9YOn7pmJRNtKmkF02gE2o=;
-        b=V/8jzxufuUKL+lBN2QLzmUYj56iPy5EaWa0V0GeeKdf0KFl0Py3pZF72LAk85v6CHf
-         gJRmKAlmmcCyt+C8k07ul9phBjm7pxSWg6TH0da0hwQ9ciORXFb15bdGP4lYYaEM2nRI
-         LIkiJFJLyOCGMDPKN0CzQDTC1OgU8B9Dl1Fqoeo+x8uVH/7khOq1beTcSgKPzpEJezS5
-         APwNCEqyiq7VBOvzb9fSJpUp6xyBXYngOqht8bXcTBBZAQj/DwAkhAXQKcNqNOTAliH0
-         vk9GJJbY2fP37qs54YMmgRLpd4lJuwG4tvSThrugTcb4w+tg4f1bmrWRlcXdfS882AxJ
-         XUnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa/7xJWq2EGrJr/QIA7cV/7AsV8VCnGKxUqXFW4MgkRvTT3D4Q8gAZZBfl54jT3rhzbJObqNx3JgT6IuE=@vger.kernel.org, AJvYcCXqT3l9pM++G5qWKyJN7vNXoB0Y7CqeKZWxTgyYgda5oGH6weCl+0Ekha84tfUEE8hFRAXlI/kPKOyT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyohmHwVMrgoQ/kdltiOTwhoki2GNLl4S1djobLOJfBbrXxtCs8
-	o0TWSyx9prn42e9ofIbmblui05u8eEZn7qG3kI2GoH0KCDwovCx6UquB
-X-Gm-Gg: ASbGncsoAxeTCTiizB2mjn1f/t7HhXGAM5v4xH10SSuhZ32lp5Xg5M2lE0dk/XeGxg7
-	6AlwWdirujdtx2VR2ma/RZJFUJqkQYYm13tH+YpjouJwbSuNe28fgDi/1cQiIi9JzcGtXOV95M4
-	RrNOq1R6hHX8tNSapplQljwhVJV4fwhj+WvQ3PaZgahwvm7ewFp59fuQhgpFMYnjm5LnjX0+fpb
-	JuwLEzwZIvwxhiNT1BzKzTk7f3L/l4b1ied2tB1HCuo6oLiUHoMu+fyQc+ItPO8UxXAcAq5LiwB
-	7WVLXawEs5IimPr+BAFYK5zk36oRHWbFIPPTDYRCsa8oUZhaNg==
-X-Google-Smtp-Source: AGHT+IGmT7wJcDq68+XcDGJVWcLx9IDfGN4qKAUL1yE3GxYgT8Php+JzMKRe6suO938HurboJxs2ZQ==
-X-Received: by 2002:a05:6122:4598:b0:530:2c65:5bb8 with SMTP id 71dfb90a1353d-53121d524f0mr973900e0c.1.1749581289454;
-        Tue, 10 Jun 2025 11:48:09 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5a56::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-531224b91aesm162867e0c.8.2025.06.10.11.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 11:48:09 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:48:03 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Hugh Cole-Baker <sigmaris@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
+	s=arc-20240116; t=1749581858; c=relaxed/simple;
+	bh=OIqP5Jyjh/Zt9q5rwTEUSZK+gMMSTXEdZyQY0v11QIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=H1uCe9ysNZ3a8onA1suZUPHUsksaRU3BTe5I8YUJkznOAXerUtxLNfmjnrbhAJDWlp9xDbBmlBMo5ZH7qPcHkXhUWq76CbNijCjcwZzHrPlDJR4xZJ/3uFW5iVOCqptSHuf4k1CquZU1l0kVwtV5SRR9WLbL7iHv6bfSd/rZU3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QV0k40cI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F16C4CEED;
+	Tue, 10 Jun 2025 18:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749581856;
+	bh=OIqP5Jyjh/Zt9q5rwTEUSZK+gMMSTXEdZyQY0v11QIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QV0k40cIaAJN23wkamzSxqlueLdARxjZKy8rxwv2854Oh1h115PUGcDuu6BM3zgMJ
+	 spw476G6878zTXSN0E+1aW8qP2lncOpTnABxuIp0aN+0ZMl8Y8Z/xOp+H0DOMMzQsT
+	 d3pm2xfNePcu9Dzo1F/UiVapHpvnW5HHhHn0ba3MyAR9KzF69sAg1O4UKp+O3O4i45
+	 iVYPQS+W4zkZNscu97+OrYDgOZHpFSfqPIPfMRh+JzNjExkDeyRy08qDdThBuyzFEx
+	 G4A+nx6VAbAcu4uA2Ax+N/tZHV+VZgXuI+VG8K4O0T/gPfLYRtgtAv1or3Q1H3eJBC
+	 CDPXb2EFpwl5Q==
+Date: Tue, 10 Jun 2025 13:57:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/2] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <aEh949r9mwY-R0XD@geday>
-References: <810f533e9e8f6844df2f9f2eda28fdbeb11db05e.1749572238.git.geraldogabriel@gmail.com>
- <20250610184449.GA819185@bhelgaas>
+Subject: Re: [PATCH v4 1/2] PCI: xilinx: Wait for link-up status during
+ initialization
+Message-ID: <20250610185734.GA819344@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610184449.GA819185@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610143919.393168-1-mike.looijmans@topic.nl>
 
-On Tue, Jun 10, 2025 at 01:44:49PM -0500, Bjorn Helgaas wrote:
-> This *looks* like it could be strictly a move of
-> rockchip_pcie_set_vpcie(), without changing it at all.
+On Tue, Jun 10, 2025 at 04:39:03PM +0200, Mike Looijmans wrote:
+> When the driver loads, the transceiver and endpoint may still be setting
+> up a link. Wait for that to complete before continuing. This fixes that
+> the PCIe core does not work when loading the PL bitstream from
+> userspace. Existing reference designs worked because the endpoint and
+> PL were initialized by a bootloader. If the endpoint power and/or reset
+> is supplied by the kernel, or if the PL is programmed from within the
+> kernel, the link won't be up yet and the driver just has to wait for
+> link training to finish.
+> 
+> As the PCIe spec allows up to 100 ms time to establish a link, we'll
+> allow up to 200ms before giving up.
 
-Hi Bjorn,
+> +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	/*
+> +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
+> +	 * fabric, we're more lenient and allow 200 ms for link training.
+> +	 */
+> +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
+> +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
+> +			2 * PCIE_T_RRS_READY_MS * USEC_PER_MSEC);
+> +}
 
-yes, a move of rockchip_pcie_set_vpcie() is needed for re-enabling
-power rails, considering patch 2/2 was also applied and the regulator
-is not always-on anymore.
+I don't think this is what PCIE_T_RRS_READY_MS is for.  Sec 6.6.1
+requires 100ms *after* the link is up before sending config requests:
 
-> If that's the case, please make the move a separate patch so it's more
-> obvious what the interesting changes that actually make a difference
-> are.
+  For cases where system software cannot determine that DRS is
+  supported by the attached device, or by the Downstream Port above
+  the attached device:
 
-Good idea, I'll send v3.
+    ◦ With a Downstream Port that does not support Link speeds greater
+      than 5.0 GT/s, software must wait a minimum of 100 ms following
+      exit from a Conventional Reset before sending a Configuration
+      Request to the device immediately below that Port.
 
-Thank you!
-Geraldo Nascimento
+    ◦ With a Downstream Port that supports Link speeds greater than
+      5.0 GT/s, software must wait a minimum of 100 ms after Link
+      training completes before sending a Configuration Request to the
+      device immediately below that Port. Software can determine when
+      Link training completes by polling the Data Link Layer Link
+      Active bit or by setting up an associated interrupt (see §
+      Section 6.7.3.3).  It is strongly recommended for software to
+      use this mechanism whenever the Downstream Port supports it.
+
+Bjorn
 
