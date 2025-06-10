@@ -1,372 +1,162 @@
-Return-Path: <linux-pci+bounces-29325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3547AD397D
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:39:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3083AAD39AC
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:45:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 719BD172DB8
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:35:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11845188B7C1
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 13:45:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE08B23ABA1;
-	Tue, 10 Jun 2025 13:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C72929A9ED;
+	Tue, 10 Jun 2025 13:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lEIYMhku";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d1B5y5vs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lEIYMhku";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d1B5y5vs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3uX39r3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E362246BB8
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 13:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0CB298262;
+	Tue, 10 Jun 2025 13:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562541; cv=none; b=Ky5+6PSWpC/TN+S5R24OVfNIKSdClYvbSfhFUcAHyeUiVnlb2BgG/SuPM4oF0Fk42ha7wW5LVaOdvr8KDaXithmhXwqpjMdUtcO4pToJGcxKWxCCsxZYehKkHi+29N+OJIxISkwU/OES1cYgiM4uPjnQp0RI+wOK61rkvMnP/qo=
+	t=1749563079; cv=none; b=rrXaxXhHgkf/ra1u++Y1RzQ1w74kKSQR0kKLdGWU6qlvWXgN4Jc/TpMqdhQrRZNQG7XVTKktyqVpSUCqzhPOtNQ6dXAd/ejFIDx/3kf1iKHflUy5OjDH05FHApDRgc7npBt7ZOyNNubmRfi8aE/3hX4w2SsNeAjafobqd6NICIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562541; c=relaxed/simple;
-	bh=5F7vJ8h/6PZ2s5+sI75817chK+P4wfFBXvfGGvWqoCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IPnUKIyEUb583OmdSySg6277KWfDunGZU0TS1CpAderYC7jKGEvm5soNlAqPOIAIPONraBKLhIOg6dfRG1HzCRo+rGBE5j4bykSpEHidW5HepeDkDdEylhmpvpXqFWoORSy7HU0RD1xGeED91Hm4SDfsFXvxeb3OC1uRGvhLaps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lEIYMhku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d1B5y5vs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lEIYMhku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d1B5y5vs; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6E95421235;
-	Tue, 10 Jun 2025 13:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749562537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
-	b=lEIYMhkudkp/tFDSR5YhMaZuY2Iho+keNu2F6wJ0xYPxAqoUI1DG1bh7Yi7SZ98nBMghkL
-	IICPv4JDU/tTREFSfvt8gMe1o7ooZxkb0jBKER98IuEMf2m3OC3DzFogYMJfpRfQeK+p1W
-	hkRW7y/LiBj2tHO7TlU+IIu9RlngDpA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749562537;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
-	b=d1B5y5vsY6V/S96rQfoD3HKryygGOF8EGUIq+/9EsknhDg5hAu2vkKABm/Zd+oIivzwLRf
-	KXz54wz+CAgyLoBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749562537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
-	b=lEIYMhkudkp/tFDSR5YhMaZuY2Iho+keNu2F6wJ0xYPxAqoUI1DG1bh7Yi7SZ98nBMghkL
-	IICPv4JDU/tTREFSfvt8gMe1o7ooZxkb0jBKER98IuEMf2m3OC3DzFogYMJfpRfQeK+p1W
-	hkRW7y/LiBj2tHO7TlU+IIu9RlngDpA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749562537;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gTmEhdoHVb6uY0oY0vbTC4f5IiJdu+a6VqnidlGOLi4=;
-	b=d1B5y5vsY6V/S96rQfoD3HKryygGOF8EGUIq+/9EsknhDg5hAu2vkKABm/Zd+oIivzwLRf
-	KXz54wz+CAgyLoBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2156B13964;
-	Tue, 10 Jun 2025 13:35:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id sy4KBqk0SGhNKAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 10 Jun 2025 13:35:37 +0000
-Message-ID: <9350317a-b6dc-4ba5-9bd5-2a63066cc460@suse.de>
-Date: Tue, 10 Jun 2025 15:35:36 +0200
+	s=arc-20240116; t=1749563079; c=relaxed/simple;
+	bh=QG2no251uN9UOUAEGMrzI+i0kO5ytw3rD+Js5QWuDq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mooSZeCjNMYMDHJ1UezxNPkMbqLqiEjlsw0/eFF5FABS4pAeewI7l39GT9Mndd+H/8Du/uvjx9pFnqa8RirOxtVnpmP5mlo2EYXfsK5c/3Ba+yquKJHv5qx+B42cJrp5Mprd7bGLSehABA2ygmBOHieCCfa47bWu1NNDz2cCYM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3uX39r3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749563077; x=1781099077;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=QG2no251uN9UOUAEGMrzI+i0kO5ytw3rD+Js5QWuDq0=;
+  b=l3uX39r3o8ipO/VRR/y7QRzJ9ygJYhNrTydDbJ0ykAyOjDvx1FfjEsrt
+   t0gF+wADNAwGrd3C1Y5LL7UBm6vve+I30AcQq1mJ+t+FZkBtOVrHuN3vm
+   imzFxrPkzmD5WVioLaGG94Ik7yXPdPDtPUOeWRc+X84VWZBMLw6qOE9mh
+   yq115p/Xsf/kQLpdjJdGO1QjQohBPNRTzf4Mk616CQao3X9FJ+pHZ1k/q
+   fRJcD1AwyT/PWw3M1LalEG7KPUj0Fcv85o9D+c0XANY/Haq3EOJCBmSEJ
+   VfJWIy99FuYbrTPPajWIPpdqw5f/N5F5uzPiwx1LSJ6gmR5a59mBoCQ/v
+   g==;
+X-CSE-ConnectionGUID: O+QF4IW3THiixk1osAcz4w==
+X-CSE-MsgGUID: VjmBtRqvRjGwt8h0GT8WwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51766910"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51766910"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:44:37 -0700
+X-CSE-ConnectionGUID: ZbQ7PVNPSlCNNLiZJ8AA3w==
+X-CSE-MsgGUID: VuwpZ/3IRGGugqatbVXsWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="151982804"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:44:34 -0700
+Date: Tue, 10 Jun 2025 16:44:31 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Denis Benato <benato.denis96@gmail.com>, mahesh@linux.ibm.com,
+	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
+	aravind.iddamsetty@linux.intel.com,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aEg2vzf6tn4j96LG@black.fi.intel.com>
+References: <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
+ <aC2UzG-eycjqYQep@black.fi.intel.com>
+ <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+ <CAJZ5v0h9--jFVBtQ5F7Gee3Cy8P3TeSLdiHEWykQ=EsZdoffmg@mail.gmail.com>
+ <aDnpfKvLwRZsKxhH@black.fi.intel.com>
+ <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+ <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
+ <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
+ <aEGDL0IF10QX3Abr@black.fi.intel.com>
+ <CAJZ5v0hJbKEJKRKv67bcQaHbL7h5e_WDGNPg4BA_P4JY-mk_nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] PCI/VGA: Look at all PCI display devices in VGA
- arbiter
-To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
- bhelgaas@google.com
-Cc: dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-References: <20250609022435.348589-1-superm1@kernel.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250609022435.348589-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hJbKEJKRKv67bcQaHbL7h5e_WDGNPg4BA_P4JY-mk_nw@mail.gmail.com>
 
-Hi
+On Thu, Jun 05, 2025 at 02:26:05PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 5, 2025 at 1:44 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > On Wed, Jun 04, 2025 at 08:19:34PM +0200, Rafael J. Wysocki wrote:
+> > > On Wed, Jun 4, 2025 at 5:43 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > On Fri, May 30, 2025 at 07:49:26PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Fri, May 30, 2025 at 7:23 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > On Fri, May 23, 2025 at 05:23:10PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > On Wed, May 21, 2025 at 1:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > > > On Wed, May 21, 2025 at 10:54 AM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > > > > On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wrote:
+> > > > > > > > > > On 5/20/2025 1:42 PM, Raag Jadav wrote:
+> > > > > > > > > > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > > > > > From the driver perspective it does have expectations that the parts outside
+> > > > > > > > > > the driver did the right thing.  If the driver was expecting the root port
+> > > > > > > > > > to be powered down at suspend and it wasn't there are hardware components
+> > > > > > > > > > that didn't power cycle and that's what we're seeing here.
+> > > > > > > > >
+> > > > > > > > > Which means the expectation set by the driver is the opposite of the
+> > > > > > > > > purpose of this patch, and it's going to fail if any kind of error is
+> > > > > > > > > detected under root port during suspend.
+> > > > > > > >
+> > > > > > > > And IMV this driver's expectation is questionable at least.
+> > > > > > > >
+> > > > > > > > There is no promise whatsoever that the device will always be put into
+> > > > > > > > D3cold during system suspend.
+> > > > > > >
+> > > > > > > For instance, user space may disable D3cold for any PCI device via the
+> > > > > > > d3cold_allowed attribute in sysfs.
+> > > > > > >
+> > > > > > > If the driver cannot handle this, it needs to be fixed.
+> > > > > >
+> > > > > > Thanks for confirming. So should we consider this patch to be valid
+> > > > > > and worth moving forward?
+> > > > >
+> > > > > It doesn't do anything that would be invalid in principle IMV.
+> > > > >
+> > > > > You need to consider one more thing, though: It may be necessary to
+> > > > > power-cycle the device in order to kick it out of the erroneous state
+> > > > > and the patch effectively blocks this if I'm not mistaken.
+> > > > >
+> > > > > But admittedly I'm not sure if this really matters.
+> > > >
+> > > > Wouldn't something like bus reset (SBR) be more predictable?
+> > >
+> > > Maybe.
+> > >
+> > > The device state is most likely inconsistent in that case, so it depends.
+> >
+> > My limited understanding is that if SBR doesn't help, at that point all
+> > bets are off including PMCSR configuration and probably a cold boot is
+> > needed.
+> 
+> I'm not talking about PMCSR, I'm talking about power removal (D3cold).
+> This should be equivalent to a cold boot for the particular device
+> except that cold boot would also reset the hierarchy above it.
 
-Am 09.06.25 um 04:24 schrieb Mario Limonciello:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> On an A+N mobile system the APU is not being selected by some desktop
-> environments for any rendering tasks. This is because the neither GPU
-> is being treated as "boot_vga" but that is what some environments use
-> to select a GPU [1].
->
-> The VGA arbiter driver only looks at devices that report as PCI display
-> VGA class devices. Neither GPU on the system is a display VGA class
-> device:
->
-> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
-> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+Sure. But for D3cold we rely on everything else under root port to also
+be suspended, which we can't predict while in endpoint suspend path. And
+with that we're back to "no guarantees" problem, which was the case either
+way. The patch might just prevent any further damage than what's already
+done.
 
-My understanding of vgaarb is that it manages concurrent usage of the 
-fixed VGA I/O ports. So are these actually VGA devices? I'm concerned 
-about vgaarb handling devices that aren't VGA and possible side effects 
-of that.
-
-As a side note, there's also video_is_primary_device(), which we use for 
-fbcon and which also uses vga_default_device() on x86. [1] This helper 
-should likely return the same value as sysfs' boot_vga attribute.
-
-[1] https://elixir.bootlin.com/linux/v6.15.1/C/ident/video_is_primary_device
-
->
-> So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
-> function already has some handling for integrated GPUs by looking at the
-> ACPI HID entries, so if all PCI display class devices are looked at it
-> actually can detect properly with this device ordering.  However if there
-> is a different ordering it could flag the wrong device.
->
-> Modify the VGA arbiter code and matching sysfs file entries to examine all
-> PCI display class devices. After every device is added to the arbiter list
-> make a pass on all devices and explicitly check whether one is integrated.
->
-> This will cause all GPUs to gain a `boot_vga` file, but the correct device
-> (APU in this case) will now show `1` and the incorrect device shows `0`.
-> Userspace then picks the right device as well.
->
-> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/pci/pci-sysfs.c |  2 +-
->   drivers/pci/vgaarb.c    | 53 ++++++++++++++++++++++++++---------------
->   include/linux/pci.h     | 15 ++++++++++++
->   3 files changed, 50 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 268c69daa4d57..c314ee1b3f9ac 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
->   	struct device *dev = kobj_to_dev(kobj);
->   	struct pci_dev *pdev = to_pci_dev(dev);
->   
-> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
-> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
->   		return a->mode;
->   
->   	return 0;
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index 78748e8d2dbae..8281144747487 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -139,7 +139,7 @@ void vga_set_default_device(struct pci_dev *pdev)
->   {
->   	if (vga_default == pdev)
->   		return;
-> -
-> +	vgaarb_info(&pdev->dev, "selecting as VGA boot device\n");
-
-vgaarb_dbg() please.
-
->   	pci_dev_put(vga_default);
->   	vga_default = pci_dev_get(pdev);
->   }
-> @@ -676,9 +676,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
->   	}
->   
->   	/*
-> -	 * Vgadev has neither IO nor MEM enabled.  If we haven't found any
-> -	 * other VGA devices, it is the best candidate so far.
-> -	 */
-> +	* Vgadev has neither IO nor MEM enabled.  If we haven't found any
-> +	* other VGA devices, it is the best candidate so far.
-> +	*/
-
-This should be a separate patch.
-
-Best regards
-Thomas
-
->   	if (!boot_vga)
->   		return true;
->   
-> @@ -751,6 +751,31 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
->   		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
->   }
->   
-> +static
-> +void vga_arbiter_select_default_device(void)
-> +{
-> +	struct pci_dev *candidate = vga_default_device();
-> +	struct vga_device *vgadev;
-> +
-> +	list_for_each_entry(vgadev, &vga_list, list) {
-> +		if (vga_is_boot_device(vgadev)) {
-> +			/* check if one is an integrated GPU, use that if so */
-> +			if (candidate) {
-> +				if (vga_arb_integrated_gpu(&candidate->dev))
-> +					break;
-> +				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
-> +					candidate = vgadev->pdev;
-> +					break;
-> +				}
-> +			} else
-> +				candidate = vgadev->pdev;
-> +		}
-> +	}
-> +
-> +	if (candidate)
-> +		vga_set_default_device(candidate);
-> +}
-> +
->   /*
->    * Currently, we assume that the "initial" setup of the system is not sane,
->    * that is, we come up with conflicting devices and let the arbiter's
-> @@ -816,13 +841,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
->   		bus = bus->parent;
->   	}
->   
-> -	if (vga_is_boot_device(vgadev)) {
-> -		vgaarb_info(&pdev->dev, "setting as boot VGA device%s\n",
-> -			    vga_default_device() ?
-> -			    " (overriding previous)" : "");
-> -		vga_set_default_device(pdev);
-> -	}
-> -
->   	vga_arbiter_check_bridge_sharing(vgadev);
->   
->   	/* Add to the list */
-> @@ -833,6 +851,7 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
->   		vga_iostate_to_str(vgadev->owns),
->   		vga_iostate_to_str(vgadev->locks));
->   
-> +	vga_arbiter_select_default_device();
->   	spin_unlock_irqrestore(&vga_lock, flags);
->   	return true;
->   fail:
-> @@ -1499,8 +1518,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->   
->   	vgaarb_dbg(dev, "%s\n", __func__);
->   
-> -	/* Only deal with VGA class devices */
-> -	if (!pci_is_vga(pdev))
-> +	/* Only deal with display devices */
-> +	if (!pci_is_display(pdev))
->   		return 0;
->   
->   	/*
-> @@ -1548,12 +1567,8 @@ static int __init vga_arb_device_init(void)
->   
->   	/* Add all VGA class PCI devices by default */
->   	pdev = NULL;
-> -	while ((pdev =
-> -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> -			       PCI_ANY_ID, pdev)) != NULL) {
-> -		if (pci_is_vga(pdev))
-> -			vga_arbiter_add_pci_device(pdev);
-> -	}
-> +	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
-> +		vga_arbiter_add_pci_device(pdev);
->   
->   	pr_info("loaded\n");
->   	return rc;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f3923..e77754e43c629 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -744,6 +744,21 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
->   	return false;
->   }
->   
-> +/**
-> + * pci_is_display - Check if a PCI device is a display controller
-> + * @pdev: Pointer to the PCI device structure
-> + *
-> + * This function determines whether the given PCI device corresponds
-> + * to a display controller. Display controllers are typically used
-> + * for graphical output and are identified based on their class code.
-> + *
-> + * Return: true if the PCI device is a display controller, false otherwise.
-> + */
-> +static inline bool pci_is_display(struct pci_dev *pdev)
-> +{
-> +	return (pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY;
-> +}
-> +
->   #define for_each_pci_bridge(dev, bus)				\
->   	list_for_each_entry(dev, &bus->devices, bus_list)	\
->   		if (!pci_is_bridge(dev)) {} else
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Raag
 
