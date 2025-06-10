@@ -1,155 +1,146 @@
-Return-Path: <linux-pci+bounces-29338-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29339-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8047AD3BDC
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 16:56:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 971D4AD3CFA
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 17:27:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA5F2176C98
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:56:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DFEF17D5B5
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 616EA22B8AA;
-	Tue, 10 Jun 2025 14:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B0B242D88;
+	Tue, 10 Jun 2025 15:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b="StwO6p1z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ELSNAJq9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from borehabit.cfd (ip160.ip-51-81-179.us [51.81.179.160])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95E22CBC4
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 14:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.179.160
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19923A9AE
+	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 15:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567372; cv=none; b=cOyhbesrQbcz6HnhqiZS/DQ+GKHuLzghAuzbooktaAMn9Jfz6xKTOdQ0LHyH2Dvpl5rXMUCjyKi5qcM1fMrnsLpHXklhuhN0drRywAuHrrLBRjTS+YAteTF/g2j01xq3cE8d2who6+I/gL/MNoNhr+nfZcISYrNymQHgoO5/i90=
+	t=1749568783; cv=none; b=Ev1mCn7VXCjr+LUG4pDXJUQ3ehnV+FM93GLRc2O6CW/a35759LwoKAAte2XjdSby+fL9HJ82lV77ACPWVzfMCVWVPyRKdfzmWPFbmka3WyPN3e6PO3yEQ4a+2omnZTXPgNfUupNGoiDtvHBBizKs46w8TREZdutgAttPNKreUJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567372; c=relaxed/simple;
-	bh=j/qZ6nCFDOcbnwIbag40JF9HDzOLw0n9TJz9U1mz3X8=;
-	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=fZyHRsifyKhRjvCnZulhtuBXmWFiVOhsKr1GibUdxfV8KEgtE+LQ3Dudo3i0W9Zi27VhYSHCRUtJStKColwAlAQK19HowOy8MepnYQxo2CH2mK90R2GCljJj2YdcTsiQjuEwZgD0ly4nWD8BVaJYWrN+QsYO3ExJK8K7tT0JRwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd; spf=pass smtp.mailfrom=borehabit.cfd; dkim=pass (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b=StwO6p1z; arc=none smtp.client-ip=51.81.179.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=borehabit.cfd
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=borehabit.cfd; s=mail; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CFYjPvEUim5mD5QwWelE+Axpgk7p2gwnF2M5gpb++Rg=; b=StwO6p1zH5FWDwq70BUXvznDRy
-	LbtOQoElQ78CeiiQNVoa62flqLRlpqU88XMevKtlZDurrBZNzmXA1ZPLjRfPWk6Nmxh1sLg0W4Lsx
-	EHAYM37MeAD7d8x7QtNoDUj+eWyrbpC2ZLxlqczUiI2liNxk56QRNAWF1gs3wfPvapGc=;
-Received: from admin by borehabit.cfd with local (Exim 4.90_1)
-	(envelope-from <support@borehabit.cfd>)
-	id 1uP0OY-000WDZ-3P
-	for linux-pci@vger.kernel.org; Tue, 10 Jun 2025 21:56:10 +0700
-To: linux-pci@vger.kernel.org
-Subject: WTS Available laptops and Memory
-Date: Tue, 10 Jun 2025 14:56:10 +0000
-From: Exceptional One PC <support@borehabit.cfd>
-Reply-To: info@exceptionalonepc.com
-Message-ID: <5fbeb834929eba9fb0c50a700d9c67d0@borehabit.cfd>
+	s=arc-20240116; t=1749568783; c=relaxed/simple;
+	bh=KNTwNJojHFp5A5rIHcOYYIryWECnrSG2W6CYmT9Fd0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pm/JB9QRUH4LO1Of0/GONS/+J6l086zVxtvS3RKZS58eS6jOMBEXld7iywryXdFXvweKnuLAizw4ShXrZ/jXiuN3s78P2lpvWLln/gNeSgx3/F3mKOHspzRjWuJXM1CmXqAeF/F32tsrjdEfVqbHUsMPsnKEgvTVsy0897KjTvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ELSNAJq9; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so43911985e9.1
+        for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 08:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749568780; x=1750173580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
+        b=ELSNAJq9msr3C2HcHQeJtkPo9oyxbAeoIZwdpIChfbrXLYMsNHC73ijV4wAlP578ZF
+         GZCwTySz0zRuqUeRBQw8RPCmNWpinIQXFL+92J1Mws9x97nEv0zHhmVPhVRP8w+xldI+
+         lyS+oE50xzq6znL2iGXcpldL8odWnUJAFHEH6YmFDbWzYIitlHqVXvuJ6kHO97/nCI7M
+         CcO8ZJP2lLckjy3IO+1csJsEIA31L4GaTaK9bVlbhsgw7WReCd7M3vpoYGSEXllhGHle
+         AAwyhAQh09/Z7SG8ilQJgDg4HX4pdqbKkv+eHY/hjWai7XGD0mJPBOm2u+ikWrtryauO
+         wM1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749568780; x=1750173580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
+        b=lvDeFjXJH6mFKSHozDiM6+douvt5VOr/33FjR+AWYhs/osAOon1LsNWHneUioNc9EF
+         Jzq155h1kUDBkph6iUNWBTHGRAfBdS9JNi/EG/vGE8IGaAchoYDQGSE8BENrumFR8jbM
+         rFssBALCSYnaiGwrpqU0zoOHxRravNyXeYjsgRt02axZ9BPFJlOX2Ln37GWUr5QjbCGJ
+         7axZHyZJFPMKOXoqD2Yk9rPmpngMejxWf6v1R7cFWwglIk35VLZSOmE0t5bVN9FsBFfZ
+         c3PplA6LGmjjJ1Avl3uCi9aFuRnIneaVRdL5s99YGNGMdVEu8Ko9Xv+cfz5LP+yLlaqr
+         Cztw==
+X-Forwarded-Encrypted: i=1; AJvYcCWH4bxv01dzL+JouOdzwq+NSml+cKWgjrMKO32c8Tv80Tb3FIS88xmRGkVrI5hfQP9oAa03NetrgTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyj7vu14q91AKA08vnQrSgxtxcMZp2hc5I39XgoXNTVQEkDAtm
+	V6JYMuj39e1EbulKcKegy2brYE4DyvHOA/Ltr3V56vmUK7xufqo0FYLNqVtZMPaSZZjNtJoiBYq
+	Vm6Gc9qJJu+9IQZaIu7dsZLCHrEuuACOKJIRuHMO7
+X-Gm-Gg: ASbGncv3+PaARqY/h27uUjocrQ+M5AMYFsumvP74APmwQfau6IyRGUm/DAwks/8MdHo
+	9RO2Haz5a4LvjYyFtqC5wqnGYiQZBwTiRiXPMRMocBQTz8w2uCWfmNbP4tLjUuXMQHmWRC+lkr6
+	pOo8KOw5hntCByi7JufzBu8pJAuQfGxr0sRfa0qYklt0vqm8lUmQSlRVA=
+X-Google-Smtp-Source: AGHT+IFqGxKvYzEDcfYdT/8Vzy9FGlaa7n2tG2xFHxGeuwx+nr4DrKPv7MAiiXUDiWkmUEyc+5fF/UA1OqkjuA0VaTY=
+X-Received: by 2002:a05:600c:8b6f:b0:439:4b23:9e8e with SMTP id
+ 5b1f17b1804b1-4531ceb5dffmr42177575e9.3.1749568780013; Tue, 10 Jun 2025
+ 08:19:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+In-Reply-To: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 10 Jun 2025 17:19:28 +0200
+X-Gm-Features: AX0GCFtMwZY3Rr1XgWSXhrl7W6naEtd1_FQhRlmJt3qwR55UCc9vpUuFbY5gFKs
+Message-ID: <CAH5fLggzYQcMhcscuODR7cu__LLKAXhZ0A-tsBGc7gGyAA6Ofg@mail.gmail.com>
+Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Jun 5, 2025 at 10:00=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> The current implementation of `ForeignOwnable` is leaking the type of the
+> opaque pointer to consumers of the API. This allows consumers of the opaq=
+ue
+> pointer to rely on the information that can be extracted from the pointer
+> type.
+>
+> To prevent this, change the API to the version suggested by Maira
+> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
+> constant, which specifies the alignment of the pointers returned by
+> `into_foreign`.
+>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Suggested-by: Ma=C3=ADra Canal <mcanal@igalia.com>
+> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.com
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Looking for a buyer to move any of the following Items located in USA.
+One nit below. With that and things other folks mentioned fixed, you may ad=
+d:
 
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-Used MICRON SSD 7300 PRO 3.84TB 
-U.2 HTFDHBE3T8TDF SSD 2.5" NVMe 3480GB
-Quantity 400, price $100 EACH 
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 22985b6f6982..025c619a2195 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -21,15 +21,11 @@
+>  ///
+>  /// # Safety
+>  ///
+> -/// Implementers must ensure that [`into_foreign`] returns a pointer whi=
+ch meets the alignment
+> -/// requirements of [`PointedTo`].
+> -///
+> -/// [`into_foreign`]: Self::into_foreign
+> -/// [`PointedTo`]: Self::PointedTo
+> +/// Implementers must ensure that [`Self::into_foreign`] return pointers=
+ with alignment that is an
+> +/// integer multiple of [`Self::FOREIGN_ALIGN`].
 
+We should require non-null:
 
- 005052112 _ 7.68TB HDD -$200 PER w/ caddies refurbished 
- Quantity 76, price $100
+Implementers must ensure that [`Self::into_foreign`] returns pointers
+that are non-null and with alignment that is an integer multiple of
+[`Self::FOREIGN_ALIGN`].
 
-
-
-Brand New CISCO C9300-48UXM-E
-Available 5
-$2000 EACH
-
-
-Brand New C9200L-48T-4X-E
-$1,200 EACH
-QTY4
-
-HP 1040G3 Elite Book Folio Processor :- Intel Core i5
-◻Processor :- Intel Core i5
-◻Generation :- 6th
-◻RAM :- 16GB
-◻Storage :- 256G SSD
-◻Display :- 14 inch" Touch Screen 
-QTY 340 $90 EA
-
-
-
-SK HYNIX 16GB 2RX4 PC4 - 2133P-RAO-10
-HMA42GR7AFR4N-TF TD AB 1526
-QTY560 $20 EA
-
-
-Xeon Gold 6442Y (60M Cache, 2.60 GHz)	
- PK8071305120500	 
- QTY670 700 each 
-
-
-SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
-M386A8K40BM2-CTD60 S
-QTY 320 $42 each
-
-
-
-Brand New CISCO C9300-48UXM-E
-Available 5
-$2500 EACH
-
-
-Core i3-1315U (10M Cache, up to 4.50 GHz)	
- FJ8071505258601
-QTY50  $80 EA
-
-Intel Xeon Gold 5418Y Processors
-QTY28 $780 each
-
-
-Brand New C9200L-48T-4X-E  
-$1000 EACH
-QTY4
-
-
-Brand New Gigabyte NVIDIA GeForce RTX 5090 AORUS
-MASTER OC Graphics Card GPU 32GB GDDR7
-QTY50 $1,300
-
-
- Brand New N9K-C93108TC-FX-24 Nexus
-9300-FX w/ 24p 100M/1/10GT & 6p 40/100G
-Available 4
-$3000 each
-
-
-
-Brand New NVIDIA GeForce RTX 4090 Founders
-Edition 24GB - QTY: 56 - $700 each
-
-
-
-
-Charles Lawson
-Exceptional One PC
-3645 Central Ave, Riverside
-CA 92506, United States
-www.exceptionalonepc.com
-info@exceptionalonepc.com
-Office: (951)-556-3104
-
+Alice
 
