@@ -1,159 +1,119 @@
-Return-Path: <linux-pci+bounces-29331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C758CAD3AEA
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 16:15:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53C91AD3B15
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 16:26:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CFB93A3318
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:15:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1445317ABB7
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:26:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F67299AB1;
-	Tue, 10 Jun 2025 14:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1CC29ACE5;
+	Tue, 10 Jun 2025 14:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ST3VQig"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lHpoivDl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EF728D8FE
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 14:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD9323ABAB;
+	Tue, 10 Jun 2025 14:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564933; cv=none; b=L35xKtQAeVwphm7h3GIZWEM5TXqbMN7qhinbWp6mjyCIJW46jTOwY7aY3vSbXY0GzqVrJ/MEyylyTEds9g3Uu2GFXo3Kdv4CV/3Y3fFgCP7VHSECHYPjAY5GPh740m6F7y5e8Pv+eH7MwTfK6kAwlMolYgwbLVfjOfhGJ+96SqQ=
+	t=1749565610; cv=none; b=I6DjbVZmB3dwt6jh3Z2Wm1GhVOZgP7bl1pV+Elyj04Wt2NHEgMRM0WK9b5D6TMy+W8gp7rFUVNB3f6+Pojh5KJakvv6aIKM7irXu+1fIzA42uJeNKtY7naQ2WivEM/EANuT4jCInVgdGsZ85GHEhr7W0mmigQv4kH84mBHAEhVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564933; c=relaxed/simple;
-	bh=ge3yCP/EpuKpuiy4jzTLuqiWaqL/+und+D884iis2JA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T+34Y7AMkCh/i6HqaoPuQr8c7OPG1YdaxbVxUv2O6Kq3iu9qakYd7F9YvVxSFXWqvZYSMd562CkLIOfnlXwAasI4kr8EXdycJgN32ZHE4SSBkOzsfLWPCmv7P84AMyJKU64HC1lToTwBfPrPcagZazaObVvdgeDaayOHf30soVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ST3VQig; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so29858645e9.0
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 07:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749564929; x=1750169729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ywuko/Vi2Gb4rS+WbwhLfqtlhHLHm9Z1txYypp0EudE=;
-        b=4ST3VQigNEJANw8ZH3fjbHaSjqYWRpIdbmVPFIyAnsh12X9vop6tee19tz2fKiZudw
-         4WFLvDac/UnuX/2zOnchPHU/dJfDJ9Tq4Xt7szeNENa+vZeupD38VYkPC69vPMRQtUBP
-         U8hwMqsdj3i9IsNu6szpl3rlzsK76oYDuijxvl2NrkkmAoyQYfOc8gKtwHirN9MGoP6Y
-         wwvy76nNnM5mO/0sqHixK8XtaU8Tj/yMeRNDVOkt/sncYatQM7tXbsRUmjZi2A3qRnPw
-         QdFkGeNtioFEpU5z3ISvTJ5ayDfglyysuHXhjAaSUpBoQFU6ugOt6iIhhrruJgG1g9et
-         2Hnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749564929; x=1750169729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ywuko/Vi2Gb4rS+WbwhLfqtlhHLHm9Z1txYypp0EudE=;
-        b=wfymEb7N7wI8L78FfZpXBaI2yBgiZNJbuW8lOtyyHM6uE/laLYPYA7wTZ6/N73C9h7
-         33vkwSFVz2Ep2/GS08/m9fJ2v4Owb8PyNHhUDehUmI9h2QvddZF96PEKCCUbF6BxtcPU
-         ufmSlM3q5QhveI8Kuc9n25xXR0aCAnWhdJpqgiiPfNCGpf5pFGm3JAB77jOJHcK/d08J
-         +fHJ4ytTc1nSY3F+Z00AQqZ3qiaZbSkZCYKhIvjHOkf+rvER+cRAnOloFmdPmY6VuHOu
-         T6MmE4UO6b9+AAobSUsEFduJtcDqJhFU10JAGBu8JhUiaNjB3mCFRwZSLZaxWBZ4hYm5
-         5Q8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVAe3sR3IZEzya/2FNw2tLRI7CBEjeW59ZGw1GMWYjdWaoqdyeBGxV8/H+ITdWjqY3xbabaIHASUr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTJ1VMFrACyjFzX8VHWGMspe0REZxXMkM8qGedWzb8dfNpwe8g
-	ECt9Fqzz37BXQJPG3/d5A4DfNz6lpGtHguYLxLZ/xGp7FOlEXOzPgvrxeBL6vYdCDNiGfenTCUm
-	2ecC8t87Ozg7+Rof09yGN/Cl6PotWrQvBSNf8L7IH
-X-Gm-Gg: ASbGnctslM3rzxnua1jHezC0cUo2Vs2zV5mE+Qh6ovfCQXOwRZ4ObGGsfZO8C/IK8td
-	dDr3k/rVvkWQSe7TTX56Or1n6B+ceXyhIgTqANVI4Jyx3VOErMSSd0BDakYhYr6prHRapK3UJ9F
-	XC4j4rWRdXHqsovlpE4hcxeyRE3EQ/nG6wgyF4SnLowWYu
-X-Google-Smtp-Source: AGHT+IHEZWxT8vLb5epoa72haZQMQGOIBDRZJX7TGh1VU1y65oHmN2JLqqZBnn/8FKnCdVfpWAZ8D/yHCKiE8e1W1SU=
-X-Received: by 2002:a05:600c:c087:b0:43b:c592:7e16 with SMTP id
- 5b1f17b1804b1-4531ce8c02emr28577645e9.3.1749564929419; Tue, 10 Jun 2025
- 07:15:29 -0700 (PDT)
+	s=arc-20240116; t=1749565610; c=relaxed/simple;
+	bh=vz1nAUweOsDg+/9C202unoGCbmjQh4vHOai/zYujLsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ONX9K2ZKUzZGO2CGIZB5sRJrZnuHJi8ewtj468j8UQb1xtLirdarmCO/0LUDavC0nIKb83lFOtk+d32mD/FP6D+nyFvWlN5RM5VOyHeR4Ve40jYjqfKZiFfrH0t05gpQ4z6xfGSUfyg2FwCf+bJvCrQdc6RRw4Vlctt5Utxm9YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lHpoivDl; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749565609; x=1781101609;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=vz1nAUweOsDg+/9C202unoGCbmjQh4vHOai/zYujLsc=;
+  b=lHpoivDlYFLOFDGipohnetziNcbbPshSRxnzy8RH4dFp6XuSdt3GmHpX
+   p4KWANNfPpFUB2xumcumMO8uWplfYeHLRbrrkolUuNiKRy6w19a5Q8BeX
+   7PwKo+WwIapUZk6WRnQr/Nkb826eCNaWg9DiJ0NFXc/0zrllRBjUKa71Q
+   TC2ohTDXJbaqM6FRYJlbi6yIFYvTwT4pNto7ASmeZljkSLPNOsFF9x8v4
+   OqxXMuizpEL6qYeHCRtCJs5PzbitIKRSD1DYKt2QfFzxXsBXu2C+9YhsQ
+   X8ILlhxJaId9xolHABpFSvX7wBIR2sl2pu5RDcD8co9Ck/1PbOMqBWgJl
+   Q==;
+X-CSE-ConnectionGUID: uyEt1HE2QruZRwM13BgUkA==
+X-CSE-MsgGUID: eEayWQtxRDywWomVFNFDnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51819952"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51819952"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:26:49 -0700
+X-CSE-ConnectionGUID: UeWs0NXfSjGsmMwagVEc+g==
+X-CSE-MsgGUID: fZfMCgGjTCiAoRdXez3fJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="152101705"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:26:48 -0700
+Received: from [10.124.220.93] (unknown [10.124.220.93])
+	by linux.intel.com (Postfix) with ESMTP id B420B20B5736;
+	Tue, 10 Jun 2025 07:26:47 -0700 (PDT)
+Message-ID: <00847d0e-d231-45df-83b3-8a6f5db4d008@linux.intel.com>
+Date: Tue, 10 Jun 2025 07:26:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
- <HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
- <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
-In-Reply-To: <87v7p3znz6.fsf@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 10 Jun 2025 16:15:17 +0200
-X-Gm-Features: AX0GCFuqgtB8tzHReseQOluZ2wIpAgQISZzJ6tdMFaABhvsx6guDSPD_zbdtZu8
-Message-ID: <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] PCI: Use header type defines in pci_setup_device()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610105820.7126-1-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250610105820.7126-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Benno Lossin" <lossin@kernel.org> writes:
->
-> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
-> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> >> index 22985b6f6982..0ccef6b5a20a 100644
-> >> --- a/rust/kernel/types.rs
-> >> +++ b/rust/kernel/types.rs
-> >> @@ -21,15 +21,11 @@
-> >>  ///
-> >>  /// # Safety
-> >>  ///
-> >> -/// Implementers must ensure that [`into_foreign`] returns a pointer =
-which meets the alignment
-> >> -/// requirements of [`PointedTo`].
-> >> -///
-> >> -/// [`into_foreign`]: Self::into_foreign
-> >> -/// [`PointedTo`]: Self::PointedTo
-> >> +/// Implementers must ensure that [`Self::into_foreign`] returns poin=
-ters aligned to
-> >> +/// [`Self::FOREIGN_ALIGN`].
-> >>  pub unsafe trait ForeignOwnable: Sized {
-> >> -    /// Type used when the value is foreign-owned. In practical terms=
- only defines the alignment of
-> >> -    /// the pointer.
-> >> -    type PointedTo;
-> >> +    /// The alignment of pointers returned by `into_foreign`.
-> >> +    const FOREIGN_ALIGN: usize;
-> >>
-> >>      /// Type used to immutably borrow a value that is currently forei=
-gn-owned.
-> >>      type Borrowed<'a>;
-> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
-> >>
-> >>      /// Converts a Rust-owned object to a foreign-owned one.
-> >>      ///
-> >> +    /// The foreign representation is a pointer to void. Aside from t=
-he guarantees listed below,
-> >
-> > I feel like this reads better:
-> >
-> > s/guarantees/ones/
-> >
-> >> +    /// there are no other guarantees for this pointer. For example, =
-it might be invalid, dangling
-> >
-> > We should also mention that it could be null. (or is that assumption
-> > wrong?)
->
-> It is probably not going to be null, but it is allowed to. I can add it.
->
-> The list does not claim to be exhaustive, and a null pointer is just a
-> special case of an invalid pointer.
 
-We probably should not allow null pointers. If we do, then
-try_from_foreign does not make sense.
+On 6/10/25 3:58 AM, Ilpo Järvinen wrote:
+> Replace literals with PCI_HEADER_TYPE_* defines in pci_setup_device().
+>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> ---
 
-Alice
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>   drivers/pci/probe.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4b8693ec9e4c..c00634e5a2ed 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1985,8 +1985,8 @@ int pci_setup_device(struct pci_dev *dev)
+>   	dev->sysdata = dev->bus->sysdata;
+>   	dev->dev.parent = dev->bus->bridge;
+>   	dev->dev.bus = &pci_bus_type;
+> -	dev->hdr_type = hdr_type & 0x7f;
+> -	dev->multifunction = !!(hdr_type & 0x80);
+> +	dev->hdr_type = FIELD_GET(PCI_HEADER_TYPE_MASK, hdr_type);
+> +	dev->multifunction = FIELD_GET(PCI_HEADER_TYPE_MFD, hdr_type);
+>   	dev->error_state = pci_channel_io_normal;
+>   	set_pcie_port_type(dev);
+>   
+>
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
