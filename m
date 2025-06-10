@@ -1,118 +1,150 @@
-Return-Path: <linux-pci+bounces-29321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6D95AD362E
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:29:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30875AD3795
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 14:59:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFE791749A9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 12:29:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BC711899912
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 12:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508732918E8;
-	Tue, 10 Jun 2025 12:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 581C529A9FA;
+	Tue, 10 Jun 2025 12:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqXFtLY7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwUg6wmW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C718828F503;
-	Tue, 10 Jun 2025 12:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCD12980BC;
+	Tue, 10 Jun 2025 12:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558544; cv=none; b=i4FAmXUIevhjQCKMrs0wPsTvMxvuxc1bs2MeSb7ZF6ohCl4qBjI26d1DDol8Qi/mLQgHzJ50tQj0tGxl8BrPLWfbNt8lMsoUirIqVRxTKlK49QcA/26Gdf8LNvM/I79xt/usS9vqwGTsWkClbhaMjtltvIG4a36ztz3Cbsqjd40=
+	t=1749559792; cv=none; b=iozG9rQUxKEGaRCstt1DPE6yfMbkNQw81F16DbZkwVNJRxFqVErIip6ds0COfJSq98XcjQHLu/TOJqsiFo0AS8DEapR8EE84GUtHSzQX6aJDEocQCAVtbcxNZdxlBaEMORtRbUouizFsBGUY78kgqsALRLZ5vEhOqPI2G11462w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558544; c=relaxed/simple;
-	bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpERMqeefHJ9OHHHssrTmmAT0dls984l8JE8Wy8udoY6L6UMDOJNomXe8wbqFtdSlnzvm/FkbyAOAK9mOynI+p7lOiC5EX6148GIbG1FSC46ewvRkXe6JOaKyOc++FC+1xw3L2SJnAbR8OqWJa5rHoGvXLDwtqVjuodKorhxXKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqXFtLY7; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313290ea247so796561a91.3;
-        Tue, 10 Jun 2025 05:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749558542; x=1750163342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-        b=fqXFtLY74Fe3HLxwrSUeUv1xQdLX8JoFsCoj2qXezKhexfg2pVcPGcLrGXtgD8l980
-         FvqLxvPPQ8W/A7Ped3TklzHRAWoiocGC4zpE7Irih56I9SKEpBdq9Y4u0/WvUhWKI2xU
-         tJiH6d4fdUPfQA7xTg/qUiDeKvGmOO5AbtrimJ3J/SuQgM7ylN9uuj/tcjasuP2bvf7K
-         ci4uDT0dE4sNAaj0jGUydWDErvL0viF6hq334JQNubUQOCPnlQoDBkVDmt1bO4rAx0P6
-         Dy5P2bsvUfyX3lpeYBRIA7r0SzSIk+aPA0DzJ0Ut7E/Otttg2oDNNGkffgnqNN4/G+su
-         ubpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749558542; x=1750163342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-        b=mXvWEq8Gcj8fV7Z0xvXxO1AGbzvTs1fWZg3Ji+j/gm36XKo9h1OdQ2G4FbwR4uD3+a
-         SwdlQRU3t+BYFM5E7zugMj1WD83UPTM9Mwhpym6GPmmR6Typm9MZP2gtMp40VRkBBmk9
-         aSZe1uuYw3aIZ76CzGtiywnCJhq0YUsDPYPwbHuBo8cHMDdJr+7EEnhr4Yr3FtiMRLEp
-         Uk+fGgmXHrkRxSBsxlttJiZ0n4zQKSbUC5MD1HJN3raxjZtKDCsrwhSvx/KwniKXHeRe
-         enQ1FuGFa9Nk2TB2SrhkDT9iaBUBZUp82UYtyn0BYekLblD4vm+Cs1A/6Sfc+xJ+0tHJ
-         WGIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4/He7tT2vND9UWu4Gx5Zu7s+tFWtxpoVFssGxonsgLgMYXpW/cMQjr1UUYw9CRSSmmEe5cx7TSFj0VEwcO24=@vger.kernel.org, AJvYcCV+Mz1r6wvTWuD+/i5vxBWAVqJ8tnR9MCPYiKnli4MM4cc7Hkjh2sv+iWAopT6tJaAcFk1XhY93xjky@vger.kernel.org, AJvYcCXKXxTRKCimEnM8ZI5pKK1Dy+aOFKIFOSG5o3yWAt4/8H8MbVX0mgIFzd7ZQiOTMNP856Daw5NNJD35DVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNglMIfelzUGtPuzKvAuujtkg7jeOI67lVACzIXi8x7zMgibg8
-	z6iTyUQ8pnIEwf/4YoMS7vG4lnpBG3JqNs2w5AA84Oe7x/oinRbqtAg5sVW2R7YyVpSyjG69oBV
-	jurrShsAkj6GGVN+jJAmLB4xcCC0gRo8=
-X-Gm-Gg: ASbGnctZgVAhD1vehpXpAMZO0raMhYNYmT1TGWu2Oo9nfy1U02LhD8jnnb9XQr4U5wZ
-	TJBtLMWPas77g3o54go0qy25UvE4lf3/tvjp4eOtgC33qgPQhg9dA1rfEIE1CHg/4wW3Rf/SfcI
-	rgRlLyiYFYnApkcMSknS5fp6SFHy4EVKqNqX+EJC2izAI=
-X-Google-Smtp-Source: AGHT+IGKJQK2v6FM0o5IGKEscQY3VpiTZYOi6jXZ0deKyklBQPXuPdbcZh/CoYwKmI+Zc2LZCYY1j8Z4rnonUI10r5A=
-X-Received: by 2002:a17:90b:53cf:b0:312:e9d:3fff with SMTP id
- 98e67ed59e1d1-3134e2da3c9mr8566788a91.1.1749558541925; Tue, 10 Jun 2025
- 05:29:01 -0700 (PDT)
+	s=arc-20240116; t=1749559792; c=relaxed/simple;
+	bh=W25gwF8YLypX00uVpfkkP6wlbnXPxSb2jvfHBAnd+vY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=lJubkXEyRNO7jdi++gHu7bfUrSJGBBAnGd+BIolsmEnUK1XWrW6BFB3HDkL61aGyOjiEXk+ILt+dKI1t8ujKVARDfxPZmNs5egQXCzBFza/AWBJZakZp5QZzueSe1Ptyb6J8ihdFI5DePMllyGFCV90VKxwjlfmBvr3T845AUK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwUg6wmW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF2F3C4CEED;
+	Tue, 10 Jun 2025 12:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749559792;
+	bh=W25gwF8YLypX00uVpfkkP6wlbnXPxSb2jvfHBAnd+vY=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=VwUg6wmWcuTukn6x1MQGWJPG+DKhnF59n+5X7dRAFpNe9wLyOZUORUruold83pPJB
+	 bj9cUFcdGcwRTmqRe1QJrvcNaGpT4Th/3mWc72HdtaMPxBjuw3O5XQblI2i2oY8nXT
+	 L3taybLarOHsO/T1+5z3pIpkQdsF4ZnOF8zKXn8BaNBkC7oX6XCBQYxvLxoPp9NhLy
+	 1nk/dp4mTL8TcPpEScGuJW6VI+BWDrvXhKEfsxcmbs7RzsSBqetC126UdT5W2iZFMp
+	 gdfi9PFgSsMe3rNi1AC5u9W0TCBRza9ek1otV993a1VUp7GYyGo2rrL+0+2dXcG4YJ
+	 8EDLEncuDDzvg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
- <ABpacmV2zqpdR5tk6NDHTg9kbssxZOay4JLvHJWs6pS0swz_krftwuUN8k_SABP04TF1k1Z4uW4IH29D2Qb5OA==@protonmail.internalid>
- <CANiq72kYdtozcN1U1yGhi_orh-OVO2xp3=wQPAhwgx=wTi-neA@mail.gmail.com> <871prr24he.fsf@kernel.org>
-In-Reply-To: <871prr24he.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 14:28:48 +0200
-X-Gm-Features: AX0GCFsUeLNISdH1VBrQM4vnuNs7e3EdSLQvU8l0WJ9OFeQ0M33QThRkcxjaYO4
-Message-ID: <CANiq72kxN45+U9VA8mrPtzYG0xdomehO5A==CX+79iJFJ0edeg@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 14:49:47 +0200
+Message-Id: <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, =?utf-8?q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
+ Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>
+X-Mailer: aerc 0.20.1
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+In-Reply-To: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
 
-On Tue, Jun 10, 2025 at 1:58=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> Yea, sorry. I just changed the kbox file where Benno pointed this out. I
-> can change the rest of the places as well.
+On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 22985b6f6982..0ccef6b5a20a 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -21,15 +21,11 @@
+>  ///
+>  /// # Safety
+>  ///
+> -/// Implementers must ensure that [`into_foreign`] returns a pointer whi=
+ch meets the alignment
+> -/// requirements of [`PointedTo`].
+> -///
+> -/// [`into_foreign`]: Self::into_foreign
+> -/// [`PointedTo`]: Self::PointedTo
+> +/// Implementers must ensure that [`Self::into_foreign`] returns pointer=
+s aligned to
+> +/// [`Self::FOREIGN_ALIGN`].
+>  pub unsafe trait ForeignOwnable: Sized {
+> -    /// Type used when the value is foreign-owned. In practical terms on=
+ly defines the alignment of
+> -    /// the pointer.
+> -    type PointedTo;
+> +    /// The alignment of pointers returned by `into_foreign`.
+> +    const FOREIGN_ALIGN: usize;
+> =20
+>      /// Type used to immutably borrow a value that is currently foreign-=
+owned.
+>      type Borrowed<'a>;
+> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
+> =20
+>      /// Converts a Rust-owned object to a foreign-owned one.
+>      ///
+> +    /// The foreign representation is a pointer to void. Aside from the =
+guarantees listed below,
 
-No worries!
+I feel like this reads better:
 
-If they are new cases, then I would use the unqualified ones (which
-are also in the prelude now), since we are trying to more towards that
-(commit 3d5bef5d47c3 ("rust: add C FFI types to the prelude")).
+s/guarantees/ones/
 
-That way we have fewer to clean later on.
+> +    /// there are no other guarantees for this pointer. For example, it =
+might be invalid, dangling
 
-Thanks!
+We should also mention that it could be null. (or is that assumption
+wrong?)
 
+---
 Cheers,
-Miguel
+Benno
+
+> +    /// or pointing to uninitialized memory. Using it in any way except =
+for [`from_foreign`],
+> +    /// [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result i=
+n undefined behavior.
+> +    ///
+>      /// # Guarantees
+>      ///
+> -    /// The return value is guaranteed to be well-aligned, but there are=
+ no other guarantees for
+> -    /// this pointer. For example, it might be null, dangling, or point =
+to uninitialized memory.
+> -    /// Using it in any way except for [`ForeignOwnable::from_foreign`],=
+ [`ForeignOwnable::borrow`],
+> -    /// [`ForeignOwnable::try_from_foreign`] can result in undefined beh=
+avior.
+> +    /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN=
+`].
+>      ///
+>      /// [`from_foreign`]: Self::from_foreign
+>      /// [`try_from_foreign`]: Self::try_from_foreign
+>      /// [`borrow`]: Self::borrow
+>      /// [`borrow_mut`]: Self::borrow_mut
+> -    fn into_foreign(self) -> *mut Self::PointedTo;
+> +    fn into_foreign(self) -> *mut crate::ffi::c_void;
+> =20
+>      /// Converts a foreign-owned object back to a Rust-owned one.
+>      ///
 
