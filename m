@@ -1,49 +1,79 @@
-Return-Path: <linux-pci+bounces-29364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ACC7AD4377
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 22:07:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D792BAD437A
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 22:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 231AF189D292
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 20:08:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DBA23A514A
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 20:09:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 735E726561E;
-	Tue, 10 Jun 2025 20:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8757C228CBE;
+	Tue, 10 Jun 2025 20:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UX23vM6J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZ64FALV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BA2265611;
-	Tue, 10 Jun 2025 20:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E411026461F;
+	Tue, 10 Jun 2025 20:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749586066; cv=none; b=n+lwYv5XcwFNQI2Qcn/PqoW2Au5Cbb6cxVsQdrwCKRrll/uB7xjAjq8M8XC9ytd3qOSskeTYJwAmh5pvjdNAruTmewx1cGi9iTe6vf0hGfBq2RvoCWsWWkDi9tLZAv8owrztQ1D6z8aXcgJ4NiKJTIFwQu1hW8ISBJjgJAoUHeA=
+	t=1749586188; cv=none; b=FS3HYN7VzWv9737a+nvpnTRiPrs6zm5X8an6dqJF4rTBmZfd+X10v4z1zSQQ8Qm2o3ndbgQ38OnoItQCGgKcCGvPTgP2lhyTr2WxnscQUMlb/nQmgtYcZcGWiPOLyaLgJvEXi+wtEnAVr4Ox/udbcwdsa0Ak0Va6insBniJnhkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749586066; c=relaxed/simple;
-	bh=lbQngPJAmS13ljvDR/pW0TUmUN4LkzEaZLuRBDXzcOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Wz+2Rfuao/It889dMHnj4+xSizGORgUoznTWklUxrHzIdikLoVsuZ/1DdpMfZpBwv4S3bv+muUjy4Kp/B08IMAhDC2lDJee4vzOx44p5YCLbhE23Lywps3/sQlVcp+uK6/QpyP16BwoWBEC1CQCvSWLpEPwcML5x//1f1wm01l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UX23vM6J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A72C4CEF2;
-	Tue, 10 Jun 2025 20:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749586065;
-	bh=lbQngPJAmS13ljvDR/pW0TUmUN4LkzEaZLuRBDXzcOA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UX23vM6JvgwxNd+hm0flKLu2Gy/D5qE1UszYiy05r2Sijxti8K1ynp3VaVnhsCZA6
-	 JYZe5h5y+BbJGaLMAxH5JKZU+SiYRDdwTmmnbvIKpn+t2Od+NM3zIYZqKdMO5MQUBs
-	 e1fYFuo8olSap0530IHf+HcZhXaRniOgAQrXqo7aEEuSbYOBndyF85vB13sHqDmIYL
-	 p11s1hOoKcQGHfIZsNIcRR7GZZVJde8N3shq69QJ5k2iDt+mWKBylX4NH1m6CN13dL
-	 d/gCPIi/SfHvWJ/76MxPCnHIcNKLWyFjzEuBrwLuNw2utGdEk46pL7BGLr89T2adKR
-	 cqjULovPTEttw==
-Date: Tue, 10 Jun 2025 15:07:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
+	s=arc-20240116; t=1749586188; c=relaxed/simple;
+	bh=BF4ebzE5J02kfpo+7LYdZQLJRLcOjwrSS7LrYUuSOow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppmX3OcLlvpZ2Xah71td9ouwCImyenXuAA8SORfCdZhrU+bhAWsTIMrITucTeRG/DNukNP3TaW2TjWEVAOckiXT0IzB3Tar3m6uGqKPbvTKyoL0B4+A2752Y7aCvik6lIaQkEBf3MaPk70F06K/TZrjB4JgBovWWf9uYEvrf6bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZ64FALV; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4e77d1333aeso1294148137.0;
+        Tue, 10 Jun 2025 13:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749586186; x=1750190986; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=onIW15zIgWh9y4m8I19gLR8x0h7nD9fwx7MT+3ezukQ=;
+        b=GZ64FALV3etEzHmKLyFwAL0/xaM6Tq5cMd/saTZlxmnhMuRfZzMYBgOX8T6JwpPR7j
+         tzQa9MNmPLMAIp63nqwg8HVnPsKW9mKyNZ/AjSQlVnGdAB8IEk7rO+hgwSutaLbUzW2R
+         tnokfG5b69LV5VdYmS/lLRhi7dHS07CjvN/bSc/CNACpYDrYe8qIVD9+UoYUBSJE3HLI
+         7TfFbqaBvhioWRiRLV7FwvGS7U91QSYlU30bYV2njh3Wcg/z2k+zzhjTUy1agRXxtgsg
+         BHmJMQiiD2KUh+8+l876IYZPoaZBiGrIKglJn0Q8zAz2NgDO8PtSjq5qgHZEmNRYx1yF
+         s78w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749586186; x=1750190986;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=onIW15zIgWh9y4m8I19gLR8x0h7nD9fwx7MT+3ezukQ=;
+        b=mgUWi3g0b6UOggjAMPu+OeMEzfwwqaOVl6DadbJ3TXCxOTVkztC9QmbYXxue7sO27V
+         sNxZjO1tLQw59prqbq4apniGaU3eG2OcD6QUXeNestwX96F05KhvD2I7x4Sg/Z1LepBf
+         2Hm6wPCgi6jbd57nuMaXv0/irxUNixQXqmkc9Z8MCm86vGSroac0VFwh+mwB5WGv45US
+         gilqeJLOTEF81G2hRrGU4VyL3Af9Q2mIirwZWYGMsZQPHGCpkLrgNTtIn0Kh7nXqaY/F
+         Dak+KBYPvyRMAo8SVwHSVw3ZNOOiUNZs9n1fiiPoL3x1soeW0FCEvdTiNqcFMsIxg9js
+         bjPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTZSWoz71/YZsTMVXyEGgvbhkAkXJ7q26GjzuZ17s2TgfeJ7W1vVGqGxQxFsFlcKGgAEao9/RRFdTtYfA=@vger.kernel.org, AJvYcCVwSyHBXvWz5aUoLY9IrH7S6UzfDy6vE6pJoFwYu6M16gr01NIS7GjNmNQEmQVxm78uaqw/fuzn8PXk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTMUJ//KF12iacS/uC743k9WmCbJOEPXxrGH2Oy/MJRuyRMmm1
+	uIxh0KbDWu7Tr+thGeJhSY8dlsydODG4gturjEmDesRBDGHRw+8Sw+Ne03SwdakB
+X-Gm-Gg: ASbGncstxmr36RVQb4gaoPq133DnnNrmWpsZ0EC/ZGDJo8lsj6h1GFlUM8rCsLaMMLj
+	vhZO90lxJXtkEz/flziX86azZnYJhz0HiUBAYpJvHnRZHmBf5q/RTgwn6lOVz8Gq7mpTHj2m1PL
+	9iiq/XB7nKfwwk2FVuvkptKgi9e8SrMM+DNKPSYra39EMQ7Mz1JTsvH+JANRQF4BD3FetieKpGv
+	5E6NWhjVEjii3wAcsD5Z8uGr/jEQmorpNqP12FrCcBQmo5vxcc/tgTzBskD+0YMkSJhEJ8GQy8C
+	34BG+hl1881LJ2W6ud9wa63lwjRmx0YBpD7o5r/8K8byzzL7aw==
+X-Google-Smtp-Source: AGHT+IHUV0h6pUokxy2glzd7NxnrUeGLDfesDcxJume/7YrS3hfExuee3amFE7vpuIxwPxM1+Rw3pw==
+X-Received: by 2002:a05:6102:5087:b0:4e5:9149:7cb3 with SMTP id ada2fe7eead31-4e7bbae5e67mr513405137.13.1749586185785;
+        Tue, 10 Jun 2025 13:09:45 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5a56::dead:c001])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87eeaf97af8sm1835615241.33.2025.06.10.13.09.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 13:09:45 -0700 (PDT)
+Date: Tue, 10 Jun 2025 17:09:39 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-rockchip@lists.infradead.org,
 	Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -56,7 +86,9 @@ Cc: linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH 1/4] PCI: pcie-rockchip: add bits for Target Link
  Speed in LCS_2
-Message-ID: <20250610200744.GA820589@bhelgaas>
+Message-ID: <aEiRA2u3Dh8F6Ie0@geday>
+References: <aEQb5kEOCJNQJMin@geday>
+ <20250610200744.GA820589@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,55 +97,34 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEQb5kEOCJNQJMin@geday>
+In-Reply-To: <20250610200744.GA820589@bhelgaas>
 
-On Sat, Jun 07, 2025 at 08:00:54AM -0300, Geraldo Nascimento wrote:
-> Link Control and Status Register 2 is not present in current
-> pcie-rockchip.h definitions. Add it in preparation for
-> setting it before Gen2 retraining.
+On Tue, Jun 10, 2025 at 03:07:44PM -0500, Bjorn Helgaas wrote:
+> This stuff:
 > 
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
->  drivers/pci/controller/pcie-rockchip.h | 3 +++
->  1 file changed, 3 insertions(+)
+>   #define PCIE_RC_CONFIG_DCR              (PCIE_RC_CONFIG_BASE + 0xc4)
+>   #define PCIE_RC_CONFIG_DCSR             (PCIE_RC_CONFIG_BASE + 0xc8)
+>   #define PCIE_RC_CONFIG_LINK_CAP         (PCIE_RC_CONFIG_BASE + 0xcc)
+>   #define PCIE_RC_CONFIG_LCS              (PCIE_RC_CONFIG_BASE + 0xd0)
+>   #define PCIE_RC_CONFIG_LCS_2            (PCIE_RC_CONFIG_BASE + 0xf0)
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index 14954f43e5e9..7a84899d3812 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -166,6 +166,9 @@
->  #define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
->  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
->  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
-> +#define PCIE_RC_CONFIG_LCS_2		(PCIE_RC_CONFIG_BASE + 0xf0)
-> +#define   PCIE_RC_CONFIG_LCS_2_TLS_25	BIT(0)
-> +#define   PCIE_RC_CONFIG_LCS_2_TLS_50	BIT(1)
-
-This stuff:
-
-  #define PCIE_RC_CONFIG_DCR              (PCIE_RC_CONFIG_BASE + 0xc4)
-  #define PCIE_RC_CONFIG_DCSR             (PCIE_RC_CONFIG_BASE + 0xc8)
-  #define PCIE_RC_CONFIG_LINK_CAP         (PCIE_RC_CONFIG_BASE + 0xcc)
-  #define PCIE_RC_CONFIG_LCS              (PCIE_RC_CONFIG_BASE + 0xd0)
-  #define PCIE_RC_CONFIG_LCS_2            (PCIE_RC_CONFIG_BASE + 0xf0)
-
-*Looks* like it might be duplicates of:
-
-  #define PCI_EXP_DEVCAP          0x04    /* Device capabilities */
-  #define PCI_EXP_DEVCTL          0x08    /* Device Control */
-  #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
-  #define PCI_EXP_LNKCTL          0x10    /* Link Control */
-  #define PCI_EXP_LNKCTL2         0x30    /* Link Control 2 */
-
-where the PCIe Capability is at (PCIE_RC_CONFIG_BASE + 0xc0).
-
-If so, can you please rework these to use the existing PCI_EXP_*
-definitions, including the fields inside?
-
->  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
->  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
->  #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
-> -- 
-> 2.49.0
+> *Looks* like it might be duplicates of:
 > 
+>   #define PCI_EXP_DEVCAP          0x04    /* Device capabilities */
+>   #define PCI_EXP_DEVCTL          0x08    /* Device Control */
+>   #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
+>   #define PCI_EXP_LNKCTL          0x10    /* Link Control */
+>   #define PCI_EXP_LNKCTL2         0x30    /* Link Control 2 */
+> 
+> where the PCIe Capability is at (PCIE_RC_CONFIG_BASE + 0xc0).
+> 
+> If so, can you please rework these to use the existing PCI_EXP_*
+> definitions, including the fields inside?
+
+Hi Bjorn,
+
+I'll look into it, good catch indeed.
+
+Thank you for your help!
+Geraldo Nascimento
 
