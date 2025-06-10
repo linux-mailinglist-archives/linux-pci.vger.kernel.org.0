@@ -1,146 +1,135 @@
-Return-Path: <linux-pci+bounces-29339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 971D4AD3CFA
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 17:27:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B56CEAD3D55
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 17:35:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DFEF17D5B5
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:24:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16ACC3AACDA
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jun 2025 15:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B0B242D88;
-	Tue, 10 Jun 2025 15:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B560B248F5A;
+	Tue, 10 Jun 2025 15:23:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ELSNAJq9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTpMfumv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19923A9AE
-	for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 15:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A3D248F50;
+	Tue, 10 Jun 2025 15:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568783; cv=none; b=Ev1mCn7VXCjr+LUG4pDXJUQ3ehnV+FM93GLRc2O6CW/a35759LwoKAAte2XjdSby+fL9HJ82lV77ACPWVzfMCVWVPyRKdfzmWPFbmka3WyPN3e6PO3yEQ4a+2omnZTXPgNfUupNGoiDtvHBBizKs46w8TREZdutgAttPNKreUJA=
+	t=1749569017; cv=none; b=TGOE5DId7AzW1+LGCN+Z6xNjPOyHfhjnR2ydxKpo0jpt/mpgeQrpbMsucdQ2Cwnu0UKXhuZ7A4smQAV0BYxhh1nvdqhEV0q9EbxyYXew25WJpMNA+RAL137n+Ju2tkqK8KduA4YflGpkC47s1GrjFAWipIfUj/cIH3lUOSjSO/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568783; c=relaxed/simple;
-	bh=KNTwNJojHFp5A5rIHcOYYIryWECnrSG2W6CYmT9Fd0Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pm/JB9QRUH4LO1Of0/GONS/+J6l086zVxtvS3RKZS58eS6jOMBEXld7iywryXdFXvweKnuLAizw4ShXrZ/jXiuN3s78P2lpvWLln/gNeSgx3/F3mKOHspzRjWuJXM1CmXqAeF/F32tsrjdEfVqbHUsMPsnKEgvTVsy0897KjTvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ELSNAJq9; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so43911985e9.1
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jun 2025 08:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749568780; x=1750173580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
-        b=ELSNAJq9msr3C2HcHQeJtkPo9oyxbAeoIZwdpIChfbrXLYMsNHC73ijV4wAlP578ZF
-         GZCwTySz0zRuqUeRBQw8RPCmNWpinIQXFL+92J1Mws9x97nEv0zHhmVPhVRP8w+xldI+
-         lyS+oE50xzq6znL2iGXcpldL8odWnUJAFHEH6YmFDbWzYIitlHqVXvuJ6kHO97/nCI7M
-         CcO8ZJP2lLckjy3IO+1csJsEIA31L4GaTaK9bVlbhsgw7WReCd7M3vpoYGSEXllhGHle
-         AAwyhAQh09/Z7SG8ilQJgDg4HX4pdqbKkv+eHY/hjWai7XGD0mJPBOm2u+ikWrtryauO
-         wM1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749568780; x=1750173580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
-        b=lvDeFjXJH6mFKSHozDiM6+douvt5VOr/33FjR+AWYhs/osAOon1LsNWHneUioNc9EF
-         Jzq155h1kUDBkph6iUNWBTHGRAfBdS9JNi/EG/vGE8IGaAchoYDQGSE8BENrumFR8jbM
-         rFssBALCSYnaiGwrpqU0zoOHxRravNyXeYjsgRt02axZ9BPFJlOX2Ln37GWUr5QjbCGJ
-         7axZHyZJFPMKOXoqD2Yk9rPmpngMejxWf6v1R7cFWwglIk35VLZSOmE0t5bVN9FsBFfZ
-         c3PplA6LGmjjJ1Avl3uCi9aFuRnIneaVRdL5s99YGNGMdVEu8Ko9Xv+cfz5LP+yLlaqr
-         Cztw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH4bxv01dzL+JouOdzwq+NSml+cKWgjrMKO32c8Tv80Tb3FIS88xmRGkVrI5hfQP9oAa03NetrgTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyj7vu14q91AKA08vnQrSgxtxcMZp2hc5I39XgoXNTVQEkDAtm
-	V6JYMuj39e1EbulKcKegy2brYE4DyvHOA/Ltr3V56vmUK7xufqo0FYLNqVtZMPaSZZjNtJoiBYq
-	Vm6Gc9qJJu+9IQZaIu7dsZLCHrEuuACOKJIRuHMO7
-X-Gm-Gg: ASbGncv3+PaARqY/h27uUjocrQ+M5AMYFsumvP74APmwQfau6IyRGUm/DAwks/8MdHo
-	9RO2Haz5a4LvjYyFtqC5wqnGYiQZBwTiRiXPMRMocBQTz8w2uCWfmNbP4tLjUuXMQHmWRC+lkr6
-	pOo8KOw5hntCByi7JufzBu8pJAuQfGxr0sRfa0qYklt0vqm8lUmQSlRVA=
-X-Google-Smtp-Source: AGHT+IFqGxKvYzEDcfYdT/8Vzy9FGlaa7n2tG2xFHxGeuwx+nr4DrKPv7MAiiXUDiWkmUEyc+5fF/UA1OqkjuA0VaTY=
-X-Received: by 2002:a05:600c:8b6f:b0:439:4b23:9e8e with SMTP id
- 5b1f17b1804b1-4531ceb5dffmr42177575e9.3.1749568780013; Tue, 10 Jun 2025
- 08:19:40 -0700 (PDT)
+	s=arc-20240116; t=1749569017; c=relaxed/simple;
+	bh=GdC3hbu2lBWJrq1c5FNhywQS8uf44LJI+yaHMwNtUZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhvA2Ic36b8XOJdGzMUvfBG2YvnChzeZPfJPPJG4f17Fn/vHJty+FpU25WoWxeS/wvO/ulUCktyboLu5TA6mpLkPtWlyhm0IMj5zkCrAnMMzNEXn3+Hfnn2Ess5mU0hp9miZ0TmnYbQ8jvnO7N7eGrl0IEFTvdVBG/ly93/38aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTpMfumv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBF9C4CEED;
+	Tue, 10 Jun 2025 15:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749569017;
+	bh=GdC3hbu2lBWJrq1c5FNhywQS8uf44LJI+yaHMwNtUZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YTpMfumv//WkKeU1pjfa4/ARYTp4er7sYZcbWH7Qgd06JSTvoaaIHYhvfyV+OsRxe
+	 KlD8ovmvs9jUneKVjEbQDT47TlVjrD+OWWBAXgl/QLAhgxu8jpyrQgIYSNb/AYIfVo
+	 j9kLNX5UZ4TTUVtAn9cBmjIK4UTTWyT6FbUjk7eodk0Hmks8lKuGonOfGsOotLGu9J
+	 4Ch1Rc44Zy/t9sG0UhEZ5Sjqoc9R33EQ5+n9c0p6RuhlUZ+jylbx/+TgiM5Xv33iPO
+	 WhT/r9Ntl0xzsZVZUR2PCoYdHhCLAdkUAFJZlAflyHLada9PrrTsc7zQNzdTumIozf
+	 1fPqbyu51psrQ==
+Date: Tue, 10 Jun 2025 16:23:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt bindings: PCI: brcmstb: Include cable-modem SoCs
+Message-ID: <20250610-satin-wages-2ae29a2a3520@spud>
+References: <20250609221710.10315-1-james.quinlan@broadcom.com>
+ <20250609221710.10315-2-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-In-Reply-To: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 10 Jun 2025 17:19:28 +0200
-X-Gm-Features: AX0GCFtMwZY3Rr1XgWSXhrl7W6naEtd1_FQhRlmJt3qwR55UCc9vpUuFbY5gFKs
-Message-ID: <CAH5fLggzYQcMhcscuODR7cu__LLKAXhZ0A-tsBGc7gGyAA6Ofg@mail.gmail.com>
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZDyAQUps/4oIxyh6"
+Content-Disposition: inline
+In-Reply-To: <20250609221710.10315-2-james.quinlan@broadcom.com>
+
+
+--ZDyAQUps/4oIxyh6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 10:00=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> The current implementation of `ForeignOwnable` is leaking the type of the
-> opaque pointer to consumers of the API. This allows consumers of the opaq=
-ue
-> pointer to rely on the information that can be extracted from the pointer
-> type.
->
-> To prevent this, change the API to the version suggested by Maira
-> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
-> constant, which specifies the alignment of the pointers returned by
-> `into_foreign`.
->
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Ma=C3=ADra Canal <mcanal@igalia.com>
-> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.com
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+On Mon, Jun 09, 2025 at 06:17:04PM -0400, Jim Quinlan wrote:
+> Add four Broadcom Cable Modem SoCs to the compatibility list.
 
-One nit below. With that and things other folks mentioned fixed, you may ad=
-d:
+In your commit messages, you should mention why these devices are not
+capable of using fallbacks.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>=20
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/D=
+ocumentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index c4f9674e8695..5a7b0ed9464d 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -15,6 +15,9 @@ properties:
+>        - enum:
+>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+>            - brcm,bcm2712-pcie # Raspberry Pi 5
+> +          - brcm,bcm3162-pcie # Broadcom DOCSIS 4.0 CMTS w/ 64b ARM
+> +          - brcm,bcm3390-pcie # Broadcom DOCSIS 3.1 CM w/ 32b ARM
+> +          - brcm,bcm3392-pcie # Broadcom DOCSIS 3.1 CM w/ 64b ARM
+>            - brcm,bcm4908-pcie
+>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> @@ -23,6 +26,7 @@ properties:
+>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+>            - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>            - brcm,bcm7712-pcie # Broadcom STB sibling of Rpi 5
+> +          - brcm,bcm33940-pcie # Broadcom DOCSIS 4.0 CM w/ 64b ARM
+> =20
+>    reg:
+>      maxItems: 1
+> --=20
+> 2.43.0
+>=20
 
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 22985b6f6982..025c619a2195 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -21,15 +21,11 @@
->  ///
->  /// # Safety
->  ///
-> -/// Implementers must ensure that [`into_foreign`] returns a pointer whi=
-ch meets the alignment
-> -/// requirements of [`PointedTo`].
-> -///
-> -/// [`into_foreign`]: Self::into_foreign
-> -/// [`PointedTo`]: Self::PointedTo
-> +/// Implementers must ensure that [`Self::into_foreign`] return pointers=
- with alignment that is an
-> +/// integer multiple of [`Self::FOREIGN_ALIGN`].
+--ZDyAQUps/4oIxyh6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We should require non-null:
+-----BEGIN PGP SIGNATURE-----
 
-Implementers must ensure that [`Self::into_foreign`] returns pointers
-that are non-null and with alignment that is an integer multiple of
-[`Self::FOREIGN_ALIGN`].
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEhN8wAKCRB4tDGHoIJi
+0tmAAQDHXwi683jRmX1Bx3NVDFjzYk9W0gkH+7s8QG2OnV8LrAEA133Af6pObKAg
+bs044xuxHkN8aohFLG72Xi6Q3IdYyQ0=
+=Bkpe
+-----END PGP SIGNATURE-----
 
-Alice
+--ZDyAQUps/4oIxyh6--
 
