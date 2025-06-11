@@ -1,159 +1,137 @@
-Return-Path: <linux-pci+bounces-29430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29431-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A94AAD535A
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 13:12:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36725AD5393
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 13:17:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CF2B3B31D2
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 11:09:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C51261888C67
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 11:12:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5522E6119;
-	Wed, 11 Jun 2025 11:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28672E611E;
+	Wed, 11 Jun 2025 11:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E9eGK7eA"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rlhglbRt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A7C2E6109
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 11:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B992E6106;
+	Wed, 11 Jun 2025 11:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640109; cv=none; b=CeJCnLmd/t6j/gtezb28sz80PK8kOInf39XFcvZH1M90qU9An6RQNGi5OvM3QimGh5CMx/YQ1gBUnSli7aEBDrpaatXkxD2X5tLcMHlU+VMwBVVeJ7XZNWw0QNk4e9rLZrfAMBlTuXZq4OnkhKlH+cHDSZUPhkE1hFcIJcLEIf0=
+	t=1749640359; cv=none; b=A2xwUOwgHKSWRy+DGUPS3UwDl19IvL6Q5Zq9KPM2R2c6JCnS58qIvbGpazxERVSRktkIfMj6bvtIDI+zRRQgGRW4ewArulBdgKfIEW9lI381+WrBZHZ0Vn/6j4VHbjfZi22DGtgmxvFxpjpb5gBaiU6ceZtbKe8RmCI+OtbnML8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640109; c=relaxed/simple;
-	bh=nQJgpmtv7zcgAGtn8AlbcuWRPUUGIKAGBeLfuWQzNng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hmzSTeUC3MWuu8gwyZG1M3gyjBrms0ZZqqtlJOHBJZvF6Ppfsju7LRp14hvi+GNBjma/JA9JVxahH74YIek/ZOfW0Sb4EFUiLicc8j+6IfbBC5hIhp29UAtIPPWGQnLmI0Ep8yVczvJZ2FypoGyQihHUYSH7O72Kkl7WvxUuGVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E9eGK7eA; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so546211f8f.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 04:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749640105; x=1750244905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fltmcdJR5+uSFB/BOttsMheYiBXzeebgxnOpmYcK9IM=;
-        b=E9eGK7eA9VjjXtaaehngukszalr0LpFIRCtLfrNKmqPb01GtBKeGBNdeNJvohjQIyX
-         0WAsnJ/M8z8bg9ipmahD5NKeRlcqL+Asb6621D41MHW3hF/9ik9S/wO8nrCnf4ea7eVi
-         pom9YEuB8BaRj6rHwN0Fr4xWWzwNw+3GARTpKHKXhC53nGR8n2i/zMgASFF7n6Dtt4CY
-         pe7xbir/Y8TRCeVUBcPENZNcaafws3DoZmep8Aw/48cUC29SXEpCh/ZnmDW0d4kisBcO
-         GZ4jRTcS+KbFiWL+9Vf042lsFPrYZ0wCSJukFoYgRQhwJZC1h097h6RVEoMZDUCz7Loi
-         JuTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749640105; x=1750244905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fltmcdJR5+uSFB/BOttsMheYiBXzeebgxnOpmYcK9IM=;
-        b=PbCJWn0kZCad3dPNMzk67+n7PeD7UHr4iMQC0EvW9w6hTHAZORd5kWdwcpnsXEC/lZ
-         kZzmXgMN7txhvhVlrWbQd7AR9S7Jo+1FHPc116pKBBp7aLyHMdf8eRatN5TU4glXL00j
-         ID32etYYJmxWSMZ0KUz7W2eGrD6iVHcStTPveKUN9qIu9dlZVz37dDrbjhA4TZ+i9aog
-         dfEFN9w41/at3CtI2BBAQfPiGqSNafwoX92iteE75QBeIA2wTVmthke7hQysVsobkGrk
-         i6Y9H3gwaKDQiQ4OBSmOjgqGFwsNP7Ydlc/8GRsPTJKPCK2nk11lpVw00eGiBXRi6DRL
-         UcgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZyitjUlGta6S3tHswThjZJhV2NfqxNu5ZX9DXMamJtYkYQmZsm77kjTwR1bxIqrXZKODFdGXBlus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI1FiO7VL+V0TT+XxBWpqAAe9VOONd7xqoln/K7UPbxobn/HL6
-	vfS8BoQuXcNj1RNQuSbHvgdvDKL9Orrk9awhqSryUQF8OSH9kqlEPt4k/mcYzBxm/k5L0q++Gbc
-	RAjpS2pV8N+e6F5Snq95g7EcJf5UfqCITeVdJpijk
-X-Gm-Gg: ASbGncui9z//G5sJgpCUti1EzwSU4fT8P9uJnCqkVVu1G9m17UyY/bzmL7vsBj38Eek
-	Ne6PA9wqHJuWFy3kbBx+uXWgyVoFnvzos0vIGxWJgRkA8pUyc+L/It57aa1zrQqCxPz0sJWTD9D
-	OBC88mcVgGAdGFy/60BDIJ/z1mdAvjDBBz+Jlu3ezqYiAtn4jYxPi864yzJ9YWXo7mOb0qzvUXB
-	mdMDyVwFR8S
-X-Google-Smtp-Source: AGHT+IGbgTDC9R5k+26NNyosxwCjQqzml5rbQBFSYZpq9MUeODCnOy4mDCQ40C2g4MXpjTSoeBZdpdGGzwYy9Bv8Tos=
-X-Received: by 2002:a05:6000:230f:b0:3a4:e63d:2f2d with SMTP id
- ffacd0b85a97d-3a5581e7502mr2734468f8f.6.1749640105328; Wed, 11 Jun 2025
- 04:08:25 -0700 (PDT)
+	s=arc-20240116; t=1749640359; c=relaxed/simple;
+	bh=wOLHNC3mM1hvT6HYztFKZ2PDx4KcHzQ0D5Kk5tU14B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMrYtLGuqYL6Dh/wznWfwEwAqG55qOkyKSupuoh3REf9NAsaTWpCqBgOcPoO2xCjFGFIseHg2eARy5W1h5N9nnBFYKAMu6tfn7vlyuA+/mZSebiRI7WkovgD4KEclIDtlCzi4ljFJ0CGiYTbF9tvHrdn/3lzIZunSnGKR86qnbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rlhglbRt; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 9DA822115190; Wed, 11 Jun 2025 04:12:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DA822115190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749640355;
+	bh=qWcwbrk1B9AwSLw+kibnueNoD1DZ6goIu7GiCM6Qlu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rlhglbRtbt0Hbe+n51t1Jn72RUoWF3RpnwuZftUvtNku2mGleh3PsB7Ete2wnwVQX
+	 totONy0JEUXLVQ9Ik1KKGghpirw600tO8i8259mmKIVjMKnnA4WPgd/mExswV1pxYR
+	 18e7gfJe3yFADKmvYLOa41ksZ4zFzNef8IiwfWCA=
+Date: Wed, 11 Jun 2025 04:12:35 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/6] Fix warning for missing export.h in Hyper-V drivers
+Message-ID: <20250611111235.GB31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250611100459.92900-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
- <Was3UIiWcTBx58JEfoXMB908QEUOWeRMrekA9TD0VWTsA5KU20VwFE9Vo_xefwi_U4UOa5BggjbBby92lP96pg==@protonmail.internalid>
- <CAH5fLggzYQcMhcscuODR7cu__LLKAXhZ0A-tsBGc7gGyAA6Ofg@mail.gmail.com> <87ecvqzhcr.fsf@kernel.org>
-In-Reply-To: <87ecvqzhcr.fsf@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 11 Jun 2025 13:08:11 +0200
-X-Gm-Features: AX0GCFum2Poedya3OpC0KXmOTz2XUTZUwzK2xJUUdfTin56X1ZcOGgOs4wrlE0A
-Message-ID: <CAH5fLgjRd5S4owRrZS7ONeb=-Tzq+xQDtWtqii1tCgEoqzr+bw@mail.gmail.com>
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jun 11, 2025 at 12:46=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
+On Wed, Jun 11, 2025 at 03:34:53PM +0530, Naman Jain wrote:
+> When the kernel is compiled with W=1 option, a warning is reported
+> if a .c file exports a symbol but does not include export.h header
+> file. This warning was added in below patch, which merged recently:
+> commit a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
+> 
+> Fix this issue in Hyper-V drivers. This does not bring any
+> functional changes.
+> 
+> The one in drivers/hv/vmbus_drv.c is going to be fixed with 
+> https://lore.kernel.org/all/20250611072704.83199-2-namjain@linux.microsoft.com/
+> so it is not included in this series.
+> 
+> Naman Jain (6):
+>   Drivers: hv: Fix warnings for missing export.h header inclusion
+>   x86/hyperv: Fix warnings for missing export.h header inclusion
+>   KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
+>   clocksource: hyper-v: Fix warnings for missing export.h header
+>     inclusion
+>   PCI: hv: Fix warnings for missing export.h header inclusion
+>   net: mana: Fix warnings for missing export.h header inclusion
+> 
+>  arch/x86/hyperv/hv_init.c                       | 1 +
+>  arch/x86/hyperv/irqdomain.c                     | 1 +
+>  arch/x86/hyperv/ivm.c                           | 1 +
+>  arch/x86/hyperv/nested.c                        | 1 +
+>  arch/x86/kvm/hyperv.c                           | 1 +
+>  arch/x86/kvm/kvm_onhyperv.c                     | 1 +
+>  drivers/clocksource/hyperv_timer.c              | 1 +
+>  drivers/hv/channel.c                            | 1 +
+>  drivers/hv/channel_mgmt.c                       | 1 +
+>  drivers/hv/hv_proc.c                            | 1 +
+>  drivers/hv/mshv_common.c                        | 1 +
+>  drivers/hv/mshv_root_hv_call.c                  | 1 +
+>  drivers/hv/ring_buffer.c                        | 1 +
+>  drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
+>  drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
+>  drivers/pci/controller/pci-hyperv-intf.c        | 1 +
+>  16 files changed, 16 insertions(+)
+> 
+> 
+> base-commit: 475c850a7fdd0915b856173186d5922899d65686
+> -- 
+> 2.34.1
 >
-> "Alice Ryhl" <aliceryhl@google.com> writes:
->
-> > On Thu, Jun 5, 2025 at 10:00=E2=80=AFPM Andreas Hindborg <a.hindborg@ke=
-rnel.org> wrote:
-> >>
-> >> The current implementation of `ForeignOwnable` is leaking the type of =
-the
-> >> opaque pointer to consumers of the API. This allows consumers of the o=
-paque
-> >> pointer to rely on the information that can be extracted from the poin=
-ter
-> >> type.
-> >>
-> >> To prevent this, change the API to the version suggested by Maira
-> >> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
-> >> constant, which specifies the alignment of the pointers returned by
-> >> `into_foreign`.
-> >>
-> >> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> >> Suggested-by: Ma=C3=ADra Canal <mcanal@igalia.com>
-> >> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.=
-com
-> >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> >
-> > One nit below. With that and things other folks mentioned fixed, you ma=
-y add:
-> >
-> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> >
-> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> >> index 22985b6f6982..025c619a2195 100644
-> >> --- a/rust/kernel/types.rs
-> >> +++ b/rust/kernel/types.rs
-> >> @@ -21,15 +21,11 @@
-> >>  ///
-> >>  /// # Safety
-> >>  ///
-> >> -/// Implementers must ensure that [`into_foreign`] returns a pointer =
-which meets the alignment
-> >> -/// requirements of [`PointedTo`].
-> >> -///
-> >> -/// [`into_foreign`]: Self::into_foreign
-> >> -/// [`PointedTo`]: Self::PointedTo
-> >> +/// Implementers must ensure that [`Self::into_foreign`] return point=
-ers with alignment that is an
-> >> +/// integer multiple of [`Self::FOREIGN_ALIGN`].
-> >
-> > We should require non-null:
->
-> What is your rationale for this?
 
-The rationale is that the implementation of XArray assumes that the
-pointers are non-null. If we allow null pointers, we will need to fix
-the XArray.
-
-Alice
+For the series,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com> 
 
