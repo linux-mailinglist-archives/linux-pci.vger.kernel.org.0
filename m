@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-29390-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29391-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A0E1AD499C
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 05:46:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39FCCAD49DD
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 06:00:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCA55189CEF3
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 03:46:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1324C3A69CB
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 03:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACD420ADEE;
-	Wed, 11 Jun 2025 03:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9741C75E2;
+	Wed, 11 Jun 2025 03:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqEk1F2X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AluZbev8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570B1182B4;
-	Wed, 11 Jun 2025 03:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9170C8FE;
+	Wed, 11 Jun 2025 03:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613573; cv=none; b=OkCT6/PH4EF7P9b7VFbRyR6zZZz6FiFpx+7tQhaVEium2EqkQoO/+YjKSy8ZyK2P7PRqBrGl/XgVCa6DVUH/hvcxMumjjUaC/A1wY3SeduWSVzXGqIKtqbtkL4Tjs13wwKBLhRL6sqnAEzLrcN0S8Rtv3IqojyqGFmwbuJiI4QQ=
+	t=1749614399; cv=none; b=oInLwA4/Hn4MHNHXYMElENngffNy2B1CemH2LW2uXeTx4NyWF+satmMk1LvZLHvA4yPCwSCs6OomXg+njyfhSJDD4zUI4CXFlRf2Lb2/QC7Ce0WUg33lZYiLo/ShwJ2W9lA4+hFsOKSFDRfSy7oYkHYH1tBHu1EjR/R+upls5Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613573; c=relaxed/simple;
-	bh=SHCpUqf2sFrc2v6xjkUcGwxYgt9+plH2+LRllrC+TUQ=;
+	s=arc-20240116; t=1749614399; c=relaxed/simple;
+	bh=6Bv1xt+Ulsxs3ZANi+lB4WzocuIuNfvDq3Y/oLo/j/0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Urh8iCGIasLIt84dgjxQ8yWZCgbrbhrxUwP6BH1SopBdf7rGfkrS7v6ytvyRM/SCQ+gaIRj//R7xNbRQdnQQAz2yjaqX2SQEbS54Keg+5rbdM1V1Z0AyLls4JFfJi4IWIHEeYVFm3f8m753fczT4SWJ71VfyasYh3K7SEAPUlhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqEk1F2X; arc=none smtp.client-ip=209.85.217.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPEJk88d0K4n00K5iA9ZJ42mAazhmElXPy3RGG04xuBJCWe9GLZOEVliYs2HWZAfzzvod+g4fU0wVLjhWxFb4VFMNoAG/uvVnkRYH5CMSDZTcq5CCxnXFoCg+1CladGgZGo7d4QQP1nHYL7dT6emIWTDmdnyn+Ge8UMTcL+iOrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AluZbev8; arc=none smtp.client-ip=209.85.221.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7971effd6so1015582137.1;
-        Tue, 10 Jun 2025 20:46:11 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5311cfb975aso311959e0c.1;
+        Tue, 10 Jun 2025 20:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749613570; x=1750218370; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749614396; x=1750219196; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rg2tjw16mCCTcrpO92M+BgLFDyQbF8JC1z2OQxCbfIM=;
-        b=UqEk1F2X2UoSCMVfXth9I4GGZ1VHcwPqryh9yiYfNB6QvvxpWaCLIDjbhNve2EmPro
-         uU1wODfWhkOXNXDckvOplhYK1KJyCrZ2YYDXwOQ9FgAjv5tuILL89/1CFOriWnJVFHi/
-         eLsip6dLgy+OwP0ht3m7i8S2E8VSuPlsyG/6/uA9Ea6JFO9j3SY8wn3fAxG4+cCHTRAe
-         ZlNcPsOnf8Cf5EGjqMU9s3IfWx/IiNRNn1yWatmE+X/bU51GTmklv3AimiPf7+24NOla
-         y9TbJWN464Z4syByhGWAL7MHzVwf7r2n5Zk/8tYgH9juNB034YRDWDjCS5wK/dlkckC7
-         Pejg==
+        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
+        b=AluZbev8p6LHon9Qi8g0JjsjoqMaio4KkXWWEOvLm+3dPNmNNDIDXXbrYVtRkMlSlI
+         6eovcKpfloO/PZX6jvC7TJ+4Tb3YXUBpqOwLEtiBVfdlu6qAxOrcssDnTCuJFXs+ZSrC
+         9hBlMhw25gxTpZYN0U17tlFADOdxfA+VffGsx3j5wiquURSKDFuRb+a60JDi+4ju3Kt9
+         5TiafS5iPCe/GaRNWthVof8zHht76GMuOS0431JFazLjwGdMA1Gm7YZjfhYjHSK+BIIa
+         a2KiMqZ3HSaXxZoRC2K0uYMa15inEfr2cq+SSN9jy7KHMxHtTsgIhaj+tjXGHEs7/QMe
+         pufw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749613570; x=1750218370;
+        d=1e100.net; s=20230601; t=1749614396; x=1750219196;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rg2tjw16mCCTcrpO92M+BgLFDyQbF8JC1z2OQxCbfIM=;
-        b=xHR21gzsEcGOXg/Vg8Ygpjh0hZWP+JoWBPKGJPX6A8X7rR5yKooCwbHEGUUIPmj9rN
-         Kp0Hgz/jLlzEaC8CWI/dxrNZ257j3A6YZyJLGw6tXGY0k7EHU5DpJBsyujy14TJsznPr
-         ApRZ+bJ9GejntnzwvoZsUnfjSqqWhhOEzQG7H08kx6lbopNFkiWR5Jl19Ovw4vpoqsQf
-         OvyjN87v58ZjTOOPEJz89Yx7/4KPIq/WdT0JLkkPa9CME4UJfzwhC1TnBtBrQaaV8I4D
-         eV0woN7v90s4S/mlwU2S6w6ZKfqU3abrZkQg0kbhkV/CUc6swR4y++dSF0DN5vX2hjW5
-         Ze0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVZsfpKFUsjkvz3DCJHq91Z26BdB/g9vJcnjbtfBhDEcCX4yp9gI4h0/gVj330nJAbmYGNwykx+8kAs@vger.kernel.org, AJvYcCW8iUe12STIxTHVH4KQClw6/dfFR9y+3CirYJ4u0Iwpx6oUfz7EHtuilRLQ3emVhJ/i7nbVbguxiK6xp9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQaLB/IEMHSna9XZVkSprO9b+sQOwefkVcspbdZwuf09F5Ow/H
-	Tq7s9eBOOPeAnCVIIvWm08Mv6bDpHCnFJq7QhTAKAl2eQ3xjO3BlsBQn
-X-Gm-Gg: ASbGncsCvGdg9Tuzyh7WOmxMvZ6pyc3EWjsg3fBrUy0Hvik+euI7R665LZOL+Z9hs/y
-	tU4lP9lmxUiO3BEn8/iR3uyIodlOVcEh2W9EFh+VCwGP8Huzw3/kVBeh2cgWAp/546zOdNSERDL
-	9NHapb12PQ+HOfRUp4eqH87ipSf+Pbr8ZAnEtNgT2Yjl6wOWjxdoz/w9MTj3mkdNzORp9D/cwih
-	MBJX52l8k1dDDE6UKYhUukbJ4WIvBn8ira96LdAH8B6f+BBRG9mcCtLJ78W084MZf4U+GVziPL2
-	ajXCBqQWf0C6vcZk4LkUCsILFV5bNFpOWjiZnBQEdzIHOh0xlg==
-X-Google-Smtp-Source: AGHT+IEjJ0BsROh1VIAfqNoWerdFkJh/8W2zLPk0S0XAU/Gcu0vW6QlsW9Odcrm98+pKp5HWoPp/zw==
-X-Received: by 2002:a05:6102:f95:b0:4e7:3efd:ac76 with SMTP id ada2fe7eead31-4e7bba13384mr1443026137.8.1749613570087;
-        Tue, 10 Jun 2025 20:46:10 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5ecc::dead:c001])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87eeae8551dsm2251922241.14.2025.06.10.20.46.06
+        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
+        b=X/qghanupnh5YQFNMQBzRKC60w65zmAXqBsg56RVYHeDT/ccAQZJTC4al058FJUSJe
+         lo6SrX9juEzJclTFPubamy83OsCib22xEkxA+8NuLyL4Q69/dbfoK/D7kEknun2suLiJ
+         orMJY+kqWOdevDkK/7g/4/Cfg9rZbVL/KLMMGUy8LYSzpys+S4BqsGv+RcRzsZo2RV9C
+         Lk98thJy8zSaqDxm/QhBCqE4F5T9F8urkayBgqG3wf0ruKLkuJXEKTaneAmPfk1F4Rqb
+         5pUz7rtKERplnM88hdEjr2edZhBgRbqZJQpk0d+jjb6jeRddvhR4uTQWHa95rGpF2xWw
+         6iAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1veIsgzOZIYqfSJL6QiLttJKJFD+YQzwqKVS3WumeT0Z/uqPYrKagfjfds++n72Az87bZKmWuoROc6gg=@vger.kernel.org, AJvYcCVi/lus0nmY2/LuZYDzhQW0l0cdUegaiPuuF/a85qzLd/Om8li+oHJ0D8oxiURXZ3MC8ar07B5JLkzH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmAkyvo6gT9e36XstEBy225u0OsspojkdG3wyeXjeAoPivdi/F
+	6mALoSGTTqyTprjb6pWkvplUSI4f1VpKXFVp3aEdh8aSFDRwsoCaGXoL
+X-Gm-Gg: ASbGnct2WW9s+pTkdzWJofwd6ZXT+P4x+9Obrzuv1rULD83kUiJhB9pjnbYGxbuqyMu
+	enUSzai8jJWLAGwQcq4SZFPVyVvSHM572orlnqUUYfZ7wVVL6q+inLCmwz2miM7XjZ6Piw2TGRx
+	3mJaz5G5ooxY3U+sP9p2wEjkD9QfbUxbKpuDFomClRv/ZSqd+29s/Kki5vJLge9LITYTUk3Rs4D
+	Wbnu6ElpDY/z5OxvKsjR8O6rHzlbs8Qb/PFXR777IHw/SfXKTVXrXZBZMCpLMma8t9FjP3ZOwhg
+	5qtD8qiz6idVGzq/1HlpOLGVqLj7IDGeeONUPajrYa+RGDgHDgT7kp+ih/V5
+X-Google-Smtp-Source: AGHT+IGUDa7JtBq2dvoPFRpR8Ucsyx6ySznxILJ7IulGOvVCBM169/ICR1GV4mTL56zEZimS2JYQug==
+X-Received: by 2002:a05:6122:119c:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-53121e8cdeamr1223105e0c.6.1749614396582;
+        Tue, 10 Jun 2025 20:59:56 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113c0ee7fsm2411261e0c.41.2025.06.10.20.59.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 20:46:09 -0700 (PDT)
-Date: Wed, 11 Jun 2025 00:46:03 -0300
+        Tue, 10 Jun 2025 20:59:55 -0700 (PDT)
+Date: Wed, 11 Jun 2025 00:59:48 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-rockchip@lists.infradead.org,
@@ -86,9 +86,10 @@ Cc: linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH 1/4] PCI: pcie-rockchip: add bits for Target Link
  Speed in LCS_2
-Message-ID: <aEj7-6fMGKSXQb3J@geday>
+Message-ID: <aEj_NDgaFJT-oceR@geday>
 References: <aEQb5kEOCJNQJMin@geday>
  <20250610200744.GA820589@bhelgaas>
+ <aEj7-6fMGKSXQb3J@geday>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,38 +98,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610200744.GA820589@bhelgaas>
+In-Reply-To: <aEj7-6fMGKSXQb3J@geday>
 
-On Tue, Jun 10, 2025 at 03:07:44PM -0500, Bjorn Helgaas wrote:
-> On Sat, Jun 07, 2025 at 08:00:54AM -0300, Geraldo Nascimento wrote:
-> This stuff:
+On Wed, Jun 11, 2025 at 12:46:10AM -0300, Geraldo Nascimento wrote:
+> Hi again Bjorn,
 > 
->   #define PCIE_RC_CONFIG_DCR              (PCIE_RC_CONFIG_BASE + 0xc4)
->   #define PCIE_RC_CONFIG_DCSR             (PCIE_RC_CONFIG_BASE + 0xc8)
->   #define PCIE_RC_CONFIG_LINK_CAP         (PCIE_RC_CONFIG_BASE + 0xcc)
->   #define PCIE_RC_CONFIG_LCS              (PCIE_RC_CONFIG_BASE + 0xd0)
->   #define PCIE_RC_CONFIG_LCS_2            (PCIE_RC_CONFIG_BASE + 0xf0)
+> Your message reminded me of something that may be important.
 > 
-> *Looks* like it might be duplicates of:
+> During my debugging I had the mild impression L0s capability is not
+> being cleared from Link Capabilities Register in the presence of
+> "aspm-no-l0s" DT property.
 > 
->   #define PCI_EXP_DEVCAP          0x04    /* Device capabilities */
->   #define PCI_EXP_DEVCTL          0x08    /* Device Control */
->   #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
+> I can't confirm it right now but I might revisit this later on. From
+> what I've seen it can only be cleared from inside the port init
+> in pcie-rockchip.c and does nothing in present form.
+> 
+> Not a clear, confirmable report but something to watch out for...
 
-Hi again Bjorn,
+Not correct. ASPM bit for L0s is being properly cleared according
+to my printk's.
 
-Your message reminded me of something that may be important.
-
-During my debugging I had the mild impression L0s capability is not
-being cleared from Link Capabilities Register in the presence of
-"aspm-no-l0s" DT property.
-
-I can't confirm it right now but I might revisit this later on. From
-what I've seen it can only be cleared from inside the port init
-in pcie-rockchip.c and does nothing in present form.
-
-Not a clear, confirmable report but something to watch out for...
-
-Regards,
+Should have checked before creating noise. Sorry.
 Geraldo Nascimento
+
+> 
+> Regards,
+> Geraldo Nascimento
 
