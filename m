@@ -1,104 +1,116 @@
-Return-Path: <linux-pci+bounces-29485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 837CBAD5D60
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 19:43:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64440AD5D8C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 19:55:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C15E3A7F90
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 17:42:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B37191894742
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 17:56:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 641D41B21AD;
-	Wed, 11 Jun 2025 17:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FC326A0A8;
+	Wed, 11 Jun 2025 17:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4FPfz0a"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cjF2ILhl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E93E2F41
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 17:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCFB25EF94;
+	Wed, 11 Jun 2025 17:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749663791; cv=none; b=SIf9eYoO4wpTFS+4k5vscfYRkYW5oTTnfsjb7Lx6fItj/8BdMOsKR+tZ4p2aBli2lOVcCSby0u+3Et+62VLkav0L9f1Y7rCPLmRRezHCYjPY4/ZUluLNv9SSIDzmD2+Ka6HNiegmYb9kSAZCX5GAdgpTwBZd/BgYYae86NxcoMk=
+	t=1749664538; cv=none; b=OwxCKs9X9nvsoxiw3uSIBkAVI66PQ0urS6sRARFRZKfthR36qzvE0n911l2tDoipTUINedYjr8eKVOic+c3t9JjSuYDHXRTn5xhQQ+HtRDv2XOPlP8Q5Tqeu2w6LXgWHdlc9uSkJ78NY/aIihzbnUfq8au1y3Uecrn5msbhlQN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749663791; c=relaxed/simple;
-	bh=v2PtpQkliuh4rOAtp1Bp9/gC7C3c53XQKvEH6vU71a4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dDE/wmr5VmTDV1nWRnazH0g5VVD9frjR2EDpcRxVVPOuLltDkryeAnJfHedfkbmzBxNhdHK1e4koII5/DdENk14RG7g6F42QkgAtUqRRVO56ZpRMEOymDMkR9SnmPWLdbkLDacVloKFK4fKGWv3JTwbmfHH6//f+405QHz3nES8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4FPfz0a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF93C4CEE3;
-	Wed, 11 Jun 2025 17:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749663789;
-	bh=v2PtpQkliuh4rOAtp1Bp9/gC7C3c53XQKvEH6vU71a4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z4FPfz0ayYi2zHXN+L8lYmg2BF02i/aKDXBOdKDeERH/7N3jqIPEiXbOc0B4PEYT9
-	 hgNUGKF5iX6O/xHXj0uMDcmdV0oABlYYaomt1SI/g3DA7GJkJz7jbPhbD9Npct5OKq
-	 dcfTk1J+X6fbXzya1EBoACYSO89VMeNR5RiS4otPVfGGpcQ41iQfeT/NVYszvlMIvl
-	 XLwJEnOb0k7zHrmWPudYqAEfVlLCdqUzxLSETn/NQ7mtvn0sbVwk6Q7nuzswcHgPO7
-	 KeJzbhKqbrG6QGk+t/EF3DIg7OzkzxmxkNc730UQ6pPxVZ3ifG+mOaAU8aUfNOF3qz
-	 /cQ2+txwYUk4A==
-Date: Wed, 11 Jun 2025 23:13:03 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Vidya Sagar <vidyas@nvidia.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: Subject: [v2 PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable windows.
-Message-ID: <obwqe4etp2cccwsnwiucgqptgcxkufjg3ryy5pdpgqrtzpets4@4nrtnghxgubf>
-References: <PA4PR07MB8838163AF4B32E0BF74BDFD3FDD62@PA4PR07MB8838.eurprd07.prod.outlook.com>
+	s=arc-20240116; t=1749664538; c=relaxed/simple;
+	bh=BVVzexcYLJkxpQIX3fIaNYt0G1r4djbiE0jciYNbgLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwGoAez5sR02WhennGMvfz5yId8TAyvxJ4iH0WumVMqWGO5Asi/MNBLqWZkdd1EXPpIAhCSy1e+g9OvIllPTr82hjlRB1rHES3ArfcibGwjQbaoOoRGrvrNpR8X4MjMvEe7F+bkHsTp8463ZiocIIm1QiavVr931nGLVTQSruKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cjF2ILhl; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6008C2115196;
+	Wed, 11 Jun 2025 10:55:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6008C2115196
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749664535;
+	bh=dotjx06SWmrVjPB7Z2CaqcDqgv/mNIYEKk1xOmc6KOo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cjF2ILhlABGfqzXOL8i/Inel2VXBacL66m3r5jCIXFlyPhYhWrN4VVsqd2tFGUKXI
+	 jF88qXNWtH88d9gPYf5vtHAfDc8PWhbKIkRSclxSRH4KTwZW3vugN2D2HTBAYneopq
+	 ycI7z13UXKktCQ5PwqqxhVnX1vZskifni4JlDQaY=
+Message-ID: <2c8d534b-02c5-4149-882b-40eb27671614@linux.microsoft.com>
+Date: Wed, 11 Jun 2025 10:55:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PA4PR07MB8838163AF4B32E0BF74BDFD3FDD62@PA4PR07MB8838.eurprd07.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Nested virtualization fixes for root partition
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+ will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, lpieralisi@kernel.org,
+ kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ bhelgaas@google.com, jinankjain@linux.microsoft.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 09:51:03AM +0000, Wannes Bouwen (Nokia) wrote:
-> Subject: [v2 PATCH 1/1] PCI: of: avoid warning for 4 GiB non-prefetchable windows.
+
+
+On 6/10/2025 4:52 PM, Nuno Das Neves wrote:
+> Fixes for running as nested root partition on the Microsoft Hypervisor.
+> 
+> The first patch prevents the vmbus driver being registered on baremetal, since
+> there's no vmbus in this scenario.
+> 
+> The second patch changes vmbus to make hypercalls to the L0 hypervisor instead
+> of the L1. This is needed because L0 hypervisor, not the L1, is the one hosting
+> the Windows root partition with the VMM that provides vmbus.
+> 
+> The 3rd and 4th patches fix interrupt unmasking on nested. In this scenario,
+> the L1 (nested) hypervisor does the interrupt mapping to root partition cores.
+> The vectors just need to be mapped with MAP_DEVICE_INTERRUPT instead of
+> affinitized with RETARGET_INTERRUPT.
+> 
+> Mukesh Rathor (1):
+>    PCI: hv: Do not do vmbus initialization on baremetal
+> 
+> Nuno Das Neves (1):
+>    Drivers: hv: Use nested hypercall for post message and signal event
+> 
+> Stanislav Kinsburskii (2):
+>    x86: hyperv: Expose hv_map_msi_interrupt function
+>    PCI: hv: Use the correct hypercall for unmasking interrupts on nested
+> 
+>   arch/arm64/include/asm/mshyperv.h   | 10 ++++++
+>   arch/x86/hyperv/irqdomain.c         | 47 +++++++++++++++++++++--------
+>   arch/x86/include/asm/mshyperv.h     |  2 ++
+>   drivers/hv/connection.c             |  3 ++
+>   drivers/hv/hv.c                     |  3 ++
+>   drivers/pci/controller/pci-hyperv.c | 21 +++++++++++--
+>   6 files changed, 71 insertions(+), 15 deletions(-)
 > 
 
-There should be no 'Subject' prefix.
+Very cool stuff :) LGTM.
 
-Also, the subject is not accurate. This patch fixes the check that is supposed
-to check the PCI address range of the non-prefetchable region to be within 32bit
-boundary, but it was checking the size.
-
-> According to the PCIe spec (PCIe r6.3, sec 7.5.1.3.8), non-prefetchable memory
-> supports only 32-bit host bridge windows (both base address as limit address).
-> 
-> In the kernel there is a check that prints a warning if a
-> non-prefetchable resource's size exceeds the 32-bit limit.
-> 
-> The check currently checks the size of the resource, while actually the
-> check should be done on the PCIe end address of the non-prefetchable
-> window.
-> 
-> Move the check to devm_of_pci_get_host_bridge_resources() where the PCIe
-> addresses are available and use the end address instead of the size of
-> the window to avoid warnings for 4 GiB windows.
-> 
-
-'to avoid warnings for 4 GiB windows' doesn't really matter here, though that
-was your intention of patch v1.
-
-I think a fixes tag pointing to commit, fede8526cc48 is also needed.
-
-> Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
-> ---
-
-You should include the changelog for v2->v1 here.
-
-- Mani
+For the patch series:
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Thank you,
+Roman
+
 
