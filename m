@@ -1,137 +1,153 @@
-Return-Path: <linux-pci+bounces-29431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36725AD5393
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 13:17:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29AFCAD54A3
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 13:52:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C51261888C67
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 11:12:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEE4E17B7CE
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 11:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28672E611E;
-	Wed, 11 Jun 2025 11:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9094127C87E;
+	Wed, 11 Jun 2025 11:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rlhglbRt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1ON1W7n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B992E6106;
-	Wed, 11 Jun 2025 11:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A1927C145;
+	Wed, 11 Jun 2025 11:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640359; cv=none; b=A2xwUOwgHKSWRy+DGUPS3UwDl19IvL6Q5Zq9KPM2R2c6JCnS58qIvbGpazxERVSRktkIfMj6bvtIDI+zRRQgGRW4ewArulBdgKfIEW9lI381+WrBZHZ0Vn/6j4VHbjfZi22DGtgmxvFxpjpb5gBaiU6ceZtbKe8RmCI+OtbnML8=
+	t=1749642690; cv=none; b=kr6aU262sfJT0jS1KnI4o5FI6erb4CwUJVjHTxUGeBUeOCxjmuNDUUA2Sf2DfkXzB3ux4G2BygxY8vOO7h277bG0sT8HhkCaWzd8xTUCiAi8q1bmeXhwZvWvoFmv/sMRXIa627OL5KN/ZCgPoQQd7V2no3Lp+yArrcP2iGJfX74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640359; c=relaxed/simple;
-	bh=wOLHNC3mM1hvT6HYztFKZ2PDx4KcHzQ0D5Kk5tU14B4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMrYtLGuqYL6Dh/wznWfwEwAqG55qOkyKSupuoh3REf9NAsaTWpCqBgOcPoO2xCjFGFIseHg2eARy5W1h5N9nnBFYKAMu6tfn7vlyuA+/mZSebiRI7WkovgD4KEclIDtlCzi4ljFJ0CGiYTbF9tvHrdn/3lzIZunSnGKR86qnbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rlhglbRt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 9DA822115190; Wed, 11 Jun 2025 04:12:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DA822115190
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749640355;
-	bh=qWcwbrk1B9AwSLw+kibnueNoD1DZ6goIu7GiCM6Qlu0=;
+	s=arc-20240116; t=1749642690; c=relaxed/simple;
+	bh=UntChnF5TiA3QQXJoWwoKNQ5Ir99qkBbzql/YHxX4gQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=fEEpI/UbOcPgVx18yXSHj75oCWFxzBO9uDyVvz3rRDVJvY0nAGvrPlDpNb6Fjmtf1V/qTafn03FD7TFN0zXQc6mIvsozbaq15lCt9BcUL50L+f8LZwRcj01e1Ar4DAGGJ1s6WhApDbt2jBzjX9Pf5LFDGH1yX2l8KY1LXHzU6BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1ON1W7n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F05DC4CEF1;
+	Wed, 11 Jun 2025 11:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749642689;
+	bh=UntChnF5TiA3QQXJoWwoKNQ5Ir99qkBbzql/YHxX4gQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rlhglbRtbt0Hbe+n51t1Jn72RUoWF3RpnwuZftUvtNku2mGleh3PsB7Ete2wnwVQX
-	 totONy0JEUXLVQ9Ik1KKGghpirw600tO8i8259mmKIVjMKnnA4WPgd/mExswV1pxYR
-	 18e7gfJe3yFADKmvYLOa41ksZ4zFzNef8IiwfWCA=
-Date: Wed, 11 Jun 2025 04:12:35 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/6] Fix warning for missing export.h in Hyper-V drivers
-Message-ID: <20250611111235.GB31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
+	b=b1ON1W7nmk2q9a+Sy1guAfKKNVdJERx8Xfk2riNPkvD+SpVHLr5ONi28DQHQ3cyim
+	 K0Sd8xd3fNR7VI9QpEQyNNyc73p20nNh9O42ME1aQHNr3lRl4FS4x5BKpCNM8YZam0
+	 5dTQ+I/mzElbkdulywvtWKdzDnTd3puG8wBhxFBYxqb7+Dli5DIs+6mfBvxGT0d+Qo
+	 UOO8HlMHI9aKXxQwEqdMv9/BdYV4ISJZVvfXS5faxs2komCAyJVsZJlxRdEV2sU8wu
+	 +ldnQY7ll2GN55FfhXL+XXKNP9QrXNEcEVTHLeJJYMv1rOXm8B9Opasy5h6qY+Ae5J
+	 zosPd5HxaiOIA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 11 Jun 2025 13:51:21 +0200
+Message-Id: <DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Trevor Gross" <tmgross@umich.edu>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+X-Mailer: aerc 0.20.1
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+ <HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid> <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org> <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com> <GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid> <DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> <87jz5izhg3.fsf@kernel.org>
+In-Reply-To: <87jz5izhg3.fsf@kernel.org>
 
-On Wed, Jun 11, 2025 at 03:34:53PM +0530, Naman Jain wrote:
-> When the kernel is compiled with W=1 option, a warning is reported
-> if a .c file exports a symbol but does not include export.h header
-> file. This warning was added in below patch, which merged recently:
-> commit a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
-> 
-> Fix this issue in Hyper-V drivers. This does not bring any
-> functional changes.
-> 
-> The one in drivers/hv/vmbus_drv.c is going to be fixed with 
-> https://lore.kernel.org/all/20250611072704.83199-2-namjain@linux.microsoft.com/
-> so it is not included in this series.
-> 
-> Naman Jain (6):
->   Drivers: hv: Fix warnings for missing export.h header inclusion
->   x86/hyperv: Fix warnings for missing export.h header inclusion
->   KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
->   clocksource: hyper-v: Fix warnings for missing export.h header
->     inclusion
->   PCI: hv: Fix warnings for missing export.h header inclusion
->   net: mana: Fix warnings for missing export.h header inclusion
-> 
->  arch/x86/hyperv/hv_init.c                       | 1 +
->  arch/x86/hyperv/irqdomain.c                     | 1 +
->  arch/x86/hyperv/ivm.c                           | 1 +
->  arch/x86/hyperv/nested.c                        | 1 +
->  arch/x86/kvm/hyperv.c                           | 1 +
->  arch/x86/kvm/kvm_onhyperv.c                     | 1 +
->  drivers/clocksource/hyperv_timer.c              | 1 +
->  drivers/hv/channel.c                            | 1 +
->  drivers/hv/channel_mgmt.c                       | 1 +
->  drivers/hv/hv_proc.c                            | 1 +
->  drivers/hv/mshv_common.c                        | 1 +
->  drivers/hv/mshv_root_hv_call.c                  | 1 +
->  drivers/hv/ring_buffer.c                        | 1 +
->  drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
->  drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
->  drivers/pci/controller/pci-hyperv-intf.c        | 1 +
->  16 files changed, 16 insertions(+)
-> 
-> 
-> base-commit: 475c850a7fdd0915b856173186d5922899d65686
-> -- 
-> 2.34.1
+On Wed Jun 11, 2025 at 12:43 PM CEST, Andreas Hindborg wrote:
+> "Benno Lossin" <lossin@kernel.org> writes:
 >
+>> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
+>>> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@ke=
+rnel.org> wrote:
+>>>>
+>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>
+>>>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
+>>>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>>>> >> index 22985b6f6982..0ccef6b5a20a 100644
+>>>> >> --- a/rust/kernel/types.rs
+>>>> >> +++ b/rust/kernel/types.rs
+>>>> >> @@ -21,15 +21,11 @@
+>>>> >>  ///
+>>>> >>  /// # Safety
+>>>> >>  ///
+>>>> >> -/// Implementers must ensure that [`into_foreign`] returns a point=
+er which meets the alignment
+>>>> >> -/// requirements of [`PointedTo`].
+>>>> >> -///
+>>>> >> -/// [`into_foreign`]: Self::into_foreign
+>>>> >> -/// [`PointedTo`]: Self::PointedTo
+>>>> >> +/// Implementers must ensure that [`Self::into_foreign`] returns p=
+ointers aligned to
+>>>> >> +/// [`Self::FOREIGN_ALIGN`].
+>>>> >>  pub unsafe trait ForeignOwnable: Sized {
+>>>> >> -    /// Type used when the value is foreign-owned. In practical te=
+rms only defines the alignment of
+>>>> >> -    /// the pointer.
+>>>> >> -    type PointedTo;
+>>>> >> +    /// The alignment of pointers returned by `into_foreign`.
+>>>> >> +    const FOREIGN_ALIGN: usize;
+>>>> >>
+>>>> >>      /// Type used to immutably borrow a value that is currently fo=
+reign-owned.
+>>>> >>      type Borrowed<'a>;
+>>>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
+>>>> >>
+>>>> >>      /// Converts a Rust-owned object to a foreign-owned one.
+>>>> >>      ///
+>>>> >> +    /// The foreign representation is a pointer to void. Aside fro=
+m the guarantees listed below,
+>>>> >
+>>>> > I feel like this reads better:
+>>>> >
+>>>> > s/guarantees/ones/
+>>>> >
+>>>> >> +    /// there are no other guarantees for this pointer. For exampl=
+e, it might be invalid, dangling
+>>>> >
+>>>> > We should also mention that it could be null. (or is that assumption
+>>>> > wrong?)
+>>>>
+>>>> It is probably not going to be null, but it is allowed to. I can add i=
+t.
+>>>>
+>>>> The list does not claim to be exhaustive, and a null pointer is just a
+>>>> special case of an invalid pointer.
+>>>
+>>> We probably should not allow null pointers. If we do, then
+>>> try_from_foreign does not make sense.
+>>
+>> That's a good point. Then let's add that as a safety requirement for the
+>> trait.
+>
+> I disagree. It does not matter for the safety of the trait.
+>
+> From the point of the user, the pointer is opaque and can be any value.
+> In fact, one could do a safe implementation where the returned value is
+> a key into some mapping structure. Probably not super fast, but the user
+> should not care.
 
-For the series,
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com> 
+Then we'll have to remove `try_from_foreign`.
+
+---
+Cheers,
+Benno
 
