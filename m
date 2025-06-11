@@ -1,167 +1,211 @@
-Return-Path: <linux-pci+bounces-29499-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED31AD6349
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 00:59:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7A57AD63B4
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:11:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E1FD188323C
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 22:58:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5217B3AF644
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 23:08:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6122E2F01;
-	Wed, 11 Jun 2025 22:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4A3219FC;
+	Wed, 11 Jun 2025 23:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBB/rgfh"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gXrB+rKs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010013.outbound.protection.outlook.com [52.103.20.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4C72D660E
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 22:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682077; cv=none; b=Ozk1odXTYJG32+CVEDdP8rod82LOa/brsLp+0vWGnEWL3AVnVmc7Q8sXpHYRD1xtWqNcPaA6Zx8yH/Z/YV+1nKt79HClpafSfiLhpzbjz1grnwDB3XGw6SYfPU47OKEyZhzlWPCPOXtYDvX/Vv7LozIs/Jj67cacok2vKo5pBnE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682077; c=relaxed/simple;
-	bh=sIpzRkdTxsbHJgrut6pwJ6tRTox9gduNk6XpJW9lr4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cD7gRLE+h9f7cqxkiVxKGz63vffcNPcFa6GrieR4mIw8+dyCXHSl4V0GHLeRB608RwJAEh1ldSHjtyEcdptVJTk3/XXuasAF/6YwoBwJm/Tbuwm1Xk1eR5jbahGDZucf8/TD4fiIsus/mO2QWeDX7JkIM2Ncm1Vq2Ab1QRB9IM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QBB/rgfh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749682074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kBt/kG3nbyh/rysySP4pwHeZzwQNZPCiCCde+Rjc0O4=;
-	b=QBB/rgfhrXbqflvb//VpaZFBhxSvZAhCc7A8cMpq253Um83PfbGhFdqj/JQTKASQGFV2NC
-	FX9k9kNbA2NUsY1dWgRBxK3rjW3balPAcKOYyzY6I0iD2htVOuTI9N47yb3gXbzFInJxxt
-	objsU0l0rOl7SWTmw/BMsGVwtQHjq28=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-PNrBIbN9PzSDQfeRn1f88Q-1; Wed, 11 Jun 2025 18:47:53 -0400
-X-MC-Unique: PNrBIbN9PzSDQfeRn1f88Q-1
-X-Mimecast-MFC-AGG-ID: PNrBIbN9PzSDQfeRn1f88Q_1749682072
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86cab5d8ccaso8788139f.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 15:47:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749682072; x=1750286872;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kBt/kG3nbyh/rysySP4pwHeZzwQNZPCiCCde+Rjc0O4=;
-        b=nzwejs2AdSzPKt09HiuVDX7N1BG/psHd+b5Kbcsru/lSdkYpU0h6JpwxsXlmD8wmgG
-         oCyVFm3XBLo+8X/AP/g16B/ofr0Gex3OjS0c+ahEK9VVC86VEJpgR9/iwd1tufWaUa2b
-         f0SmFIa3rc0TWj2Twu1NqRxldK1uZruiggaufkpWR6zXybbTZfpc2dRN54qq1x6Q6MXm
-         TR4vXz2Ch10VjlDivTJRLMN/bjsHp5bCDJ8xjil0JT9Q6pfNRghy79/eC1jhXAEJzjTX
-         3IaMt/tRUWq+iN8sjeB+Wp8cHRpZWaA40IUVIM8rYB44eDQoWsUxOrwp4r8bbcJWEVLx
-         4Ubg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4vA5doTJE4p0wyOYVLrlhMsjEAcRtbY8l2gPTId682uFWvHBlAAk2lhdp99FOJ81QxdN3E4pCMtc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw45zLLEla2qhHY/3fiT2kJ31htectyh7yNwYH4Su3PyJ8drVgP
-	5X4h2SFuRz+T7rvTKwzBHr9zwM0PXhsyAemFhy6FeHGj+CS/6oRkmDSI+GayAirsdqtRUoAfEEw
-	8MxwH1dvXp6p+4Hv6+Xhq/IakSgK3gGQJIxUPfrHmWtDQE7nmbaFItcOVYv0SVA==
-X-Gm-Gg: ASbGncvVYqw+PlQ8bkiMAOOhN/1n/zsIT4+KFtvt1hKXkS9K3wgakz51883KzQBo8xq
-	cfs2zUG2nXKHkB6msKmW8JL6c9TBH3i5esi0JQDqNrZLAqNm53Z0R+pXijQ4Od7/gvYvoB2vx/L
-	vm6xvSc5bIKT8Y0TqcWfq81fz2xBxE2hidiozmIKPKhv4LKtRiBgjbUX1zkC2aDVwmu+tpVUUcO
-	6mvy5WhRvs4QRobdOQjoqTKttDalD02TPIGGy3Cpef8buc4LiJa96nzmOeVIWkAsmVk/RLOisai
-	sn1g/ASLUTSUCRIVr4io4f5nmw==
-X-Received: by 2002:a05:6e02:190a:b0:3dd:b7da:5254 with SMTP id e9e14a558f8ab-3ddf433db79mr16363235ab.7.1749682072269;
-        Wed, 11 Jun 2025 15:47:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY9a6wD35TVkF8MOc9XWu0FMxi+spYWw9qJpcyVefsf+HWS6rquTNFxHZXjMPwL0rOAVr0Nw==
-X-Received: by 2002:a05:6e02:190a:b0:3dd:b7da:5254 with SMTP id e9e14a558f8ab-3ddf433db79mr16363155ab.7.1749682071873;
-        Wed, 11 Jun 2025 15:47:51 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ddfbace90fsm600085ab.40.2025.06.11.15.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 15:47:51 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:47:49 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com, rafael@kernel.org,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Nicolas Dichtel
- <nicolas.dichtel@6wind.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Set up runtime PM on devices that don't support
- PCI PM
-Message-ID: <20250611164749.6262b0c7.alex.williamson@redhat.com>
-In-Reply-To: <20250611222832.4067200-1-superm1@kernel.org>
-References: <20250611222832.4067200-1-superm1@kernel.org>
-Organization: Red Hat
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E590185B61;
+	Wed, 11 Jun 2025 23:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749683190; cv=fail; b=j/3YYdFLKwDmJK8nq0Ds1GBw4UNnqSTt8Pd4BCX91kJe8blmxCANNa1VnfeUyenWLdu0p98sMzqB1WFq9QSTiKvombh0+xpdE+j5QLA/s6DclPTK9tOIgXB27Mlm1djjcUIARZi5cxzRnw8DZufmltDCvv3PH+A9+AzH/1+zMTs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749683190; c=relaxed/simple;
+	bh=eXxAMpu63RKObhhAsda9lGKys48XGJ5eIBi87bTS2ZY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ovcku8clvbgCQN1yfQxBWEsmadVfZhh3+HvU+P0QYCc4s/5SiiDbT69fpN3OID7dB4hAguBu9zZ2rN951DYur5l60Ri4FNCaBwtrVOWl3H2ThFHfKhAwQRk0DKJ8ctdMYSgvqj0V5ZIxNkVK9OoIgmP0U3pFNUk+Ythn1phv31I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gXrB+rKs; arc=fail smtp.client-ip=52.103.20.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Oz7qQ+Dc5+sWZ/GRNYrateKWsIP6cv/qBOKVrLMWSoC/PVDMc0GlWBB5029TPpWHkDM0mg+oStlWWiPW3AlOR3IUO8zVeTOxSXXnabhQFb0m0WJUkD3WswI/zkvEiPjV1XsNXir6WCp6qCJ1g0J0e8fMzTk1vQ3GldyFPxs4SWwPzS57u7CdJM98rCpYAMZfk0gHaczMtMPqaiO3B1nbyAlvtuW9XVKgHRZrS3pvBlCvYNGJWB5zSElPqgmH7Jq2Xl0EVTLRRVx02Kmj71Z1lHrMOyAgSJxV69VwjZRt/CO5UhnYCaYXVoRkKg9CVezejZu5j/g4OAriTbjgOM8RKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0QHtX1cddaqH3j/8skVF2/ggDdvjPFWaFsy8Q+t/4e4=;
+ b=ZSLr1hYWlFl9p8kQfW7qjnVHCAOa8hJsVDSz4JnEDSHgQ5AfFguV1hivzC68yglqAi2q+ftQympiuxEf+NmwaeBaDv8ZcbZjoO+c35QWtpXGuCRdx0gCxcw0eczkRJE4yZYmYisQ9il7RNMFgVrDUV++cSJO6GWyeB7HlcQXEoXYTS8zXioFQQfOqGClODlVincavKo2t6hTBApQ6cCjce5RDdZPPhjSljMHuhJp854Zwr+kYl4UTNxnFLnR7GE7ZlVVrkgRC44m2x7p1Qe0jRZqk4xucOaq8gQdMV0oIJgo1bG1TCCFyfqrpoDTjybIufvtdO0UJxAzXTP9kZKbMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0QHtX1cddaqH3j/8skVF2/ggDdvjPFWaFsy8Q+t/4e4=;
+ b=gXrB+rKsVTCSpHWoNhzJu44I+eTmw4Ql8Hk+rpa3HB1d2ltZ1j3Le0o7k8zkadIt+ATYCKqRWtH/Rjw9xoJehsIa8f3d7kuv/28OJDvMXSFODwGMVouB0c4VHhGSdEhGCZpcfMeCDZ+NTOeaTn2yTdASyBihkezTbqA5HYp6FPR7g8sxPhCuuXx3R/0D0/iw1RiwAoeG3Lc4fKFPNTCB88jDHoxysCgfkSxTeGTN0b7IyFv6zotv0yCxgPi89vrUQrUeSXdfWTpRRKAsQ1POSlyFn5ZlmfTmi5M85DNvy92qx8pllVNoyJUTEIKJWGewi5te8H7u6nraOgpaNZ/NDw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB8488.namprd02.prod.outlook.com (2603:10b6:510:105::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 11 Jun
+ 2025 23:06:24 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 23:06:24 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "jinankjain@linux.microsoft.com"
+	<jinankjain@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
+	<skinsburskii@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+	<mrathor@linux.microsoft.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+Thread-Topic: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+Thread-Index: AQHb2mKwkhWK8nhiHEutwLk7bVwxgLP9adOw
+Date: Wed, 11 Jun 2025 23:06:23 +0000
+Message-ID:
+ <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To:
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8488:EE_
+x-ms-office365-filtering-correlation-id: ac4aec50-39d9-4f48-f1fc-08dda93c9647
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799006|461199028|41001999006|8060799009|15080799009|8062599006|3412199025|440099028|52005399003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Wucyl29bX7aANrNgMMz47a6mvey6mO2tVjiJjl+ggBbvybK6Ktbu+RdId1vK?=
+ =?us-ascii?Q?FJ1w3Ew2oKHGpS798uJc4TGJxTOV48Tunj9r+hENrBU4aJHtmpoIYYS/Z9ph?=
+ =?us-ascii?Q?XgInTkVTkCk8b3W5px5xwonMHwjuX7fV7ecss346DGLqbZ14Kwp2jkUfkfCW?=
+ =?us-ascii?Q?ZAurX18K2YzEttsuDsHuytsYCoIadamESovssg8Z4kCNGdV80ls707gD1sWH?=
+ =?us-ascii?Q?wTkhaBk7r8vBNZzlEMNJKu7ecyivPKdGqTfU9fthgo4xIYJao/flE8k0hsBb?=
+ =?us-ascii?Q?JR1+ihcn120qk256EXq0/4XDBxtOj/XWX6zbc2GUfgvAFEZWzQm1/I7dqBEa?=
+ =?us-ascii?Q?ERRZlUk9dh1lZZ9y9Fz9LXH/ZmKgWzh5Of7IrvUuGsrr6i/Ul+kOY8oRRnYE?=
+ =?us-ascii?Q?EMruZRgP25Jip8MZjv5WM/BvLy8dGRf5NVEifmD4RMhqx7vKvQkRiVFWAPGe?=
+ =?us-ascii?Q?InJXKn/zAvAwDRWvOZpsrUxYCEtWfjCLAaz5ZXZhKKEWiRgdNukaECH/DKQp?=
+ =?us-ascii?Q?W/0UFIaJpWr1UsQdflZ+/OFoIPkKye1Y5XSRpA6GMpN8zFo20sy1bpFS4GuC?=
+ =?us-ascii?Q?2YKOUExRDpLbey5DwDMAZu/4THOII3AzJVp0c1ijO3+aa7+rcOUwID+IARmg?=
+ =?us-ascii?Q?hZoLsZNCy6J/Jn5vRQoJYCQZK54OnCVR3uo/gegZ/P+5rYSNTcVqtjFBpIQq?=
+ =?us-ascii?Q?u2hgEKgKkmuWJ1RiA3SqZ5zcffb4Z+9MH0nWUcx4pGfwm+5lfSiPTVlRs01i?=
+ =?us-ascii?Q?H4bte/1mmyqSLY0cRtuWVBViPyrcDMha/mjkX68DSb5WMJB13DWidvgaiHvT?=
+ =?us-ascii?Q?coP6hWx7LqiHcSVooi4fEwaM5K2e+IaWp8bX6Q+nVUx9bLZNwlxEURx0A3Bm?=
+ =?us-ascii?Q?LRuJxtOoiLFfd8zh8pJhc2Ss5KD8+E9yWO7hpv++cxYFXqQG3HZJ74WcYfXq?=
+ =?us-ascii?Q?MUUt3wXRxkjCRd0t7ge/fRaFpo/ECpYGQXoWAyarrsbRoPO+j8Fg3F05pP1j?=
+ =?us-ascii?Q?utcJrAfqjaotpP+J8lzhsLPDCJXdJthZp7dazjshJkmQAugti6loyj4f7jlF?=
+ =?us-ascii?Q?fVnpD4YPJ54ZV88169bjNpgSydR9E44irlzwiHX2Kp/ZbNksvtddoTBtecOO?=
+ =?us-ascii?Q?lPKOIl10Wp5oyHt1LgI+cs7vLUx78SiKbg=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?tfjsxlNIurCJO+0F9M/OufRkv9J1WQ0tay7vpKKVEJK7j1fbJqHU8672cmHX?=
+ =?us-ascii?Q?i8amx8VPAxU3VfxacV6j9uGEAFArr8exF5V81OWiUt5E1HiZ39b6SKUH6mFr?=
+ =?us-ascii?Q?1BJzXz6ckhNPpR7GKg/Evzcqspb2XXFi50sWFzVXEJFixOWt6fQvK5VjH/so?=
+ =?us-ascii?Q?1RVUF+Nb2r3Q0gA9bqmEv00eF4HEiwfStF5ZLIdniWNM1VmkGdwvk5+pvvZ+?=
+ =?us-ascii?Q?vOXtNCND0QM2EYPV+Ha4+NEJGQGK0bpeGRP/t4OT6It83MLhG3ESJ7tVLMIr?=
+ =?us-ascii?Q?iblXT/pQuueSIFSW5BDsu4GczeBEWo3eGNzlV2ccuP0uVsJkHZYxU1l4NrJs?=
+ =?us-ascii?Q?4lyHnrUqFzc7l3W5Wa3ssNgpfxoI9uc0CnbNd8rHUJwm35gj0G438r0NNRWI?=
+ =?us-ascii?Q?ccZEyuRExN7NXGroTB6Yvo6m5c+b1XMrhROHXhhMXoreuoF+3quK9Z8s542/?=
+ =?us-ascii?Q?d3mZ0OurAZn8nwcoG4Zzm2OdeJUKGx5niHpXUb8l9L0ZN2J9biZg0BOr75in?=
+ =?us-ascii?Q?enJRNsljJYSI5aFbNqiMkulwrM9Pwl/w7frlb7YclgYQWRmFx4EwkpjS8MnA?=
+ =?us-ascii?Q?kOTdEkdQ5iKPQQzZ+ZYgjePwEnnQ+jXpyZRsmJ3+dGpE8oCOnVpFzj18Rc9z?=
+ =?us-ascii?Q?GbmktvOvLYFv5ZbTKjVYYsnXeAOJ7R1BML2yZ/qk3rzcZwZO+UitGM1KTPT9?=
+ =?us-ascii?Q?ZwUqIWp+KF51YKGyXJtINiwqvlOaPBbFp2CJGRK9DjUZ/6i2/7jLt4n5vx1P?=
+ =?us-ascii?Q?Os+1liv87LgUoPcG39TLSlqBOrwMWaxRbEl+um3Y763AxTLI94d0W7ZTlT5V?=
+ =?us-ascii?Q?hP0pokvjGE2JQnrz8FvpGJw96/gyhPqul0x32nKO9nSAHEnkgxaIAAeu5HvR?=
+ =?us-ascii?Q?M66RC5veCX53W7nsDIdF7gGqtWxyfk9wk4hpMQr0rFeQWqoMD0mjeel5V8Ui?=
+ =?us-ascii?Q?9LmVV8p2TcGAZUJ687Sz57kMD+G21SOWi1/SF99aFXgBLzWU2KZCtkqu97Qa?=
+ =?us-ascii?Q?P+T1u+Ug71uti9QS+pr+UKyj7pKbR2A1gd4ZJXLGErO3rsPZKacZMFKCnkUL?=
+ =?us-ascii?Q?2uJwjI8R55+2m484SWHnrDAwpAU4DdUHtQ0EfyyS08/bPQIft2Std0aOR1g+?=
+ =?us-ascii?Q?20TiRri3iEp5osGT3cXMj4jTKdzqULdY7I4mrgEhIoi2CxOH7n41IBmQmS8D?=
+ =?us-ascii?Q?KKrEodb0Q43vU9wYxPBgIIhdAAFWXqphXNf1BrOQrWTiUZbymJ7XkWk+UwE?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac4aec50-39d9-4f48-f1fc-08dda93c9647
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:06:24.0533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8488
 
-On Wed, 11 Jun 2025 17:28:28 -0500
-Mario Limonciello <superm1@kernel.org> wrote:
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June=
+ 10, 2025 4:52 PM
+>=20
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> commit 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-> initializing") intended to put PCI devices into D0, but in doing so
-> unintentionally changed runtime PM initialization not to occur on
-> devices that don't support PCI PM.  This caused a regression in vfio-pci
-> due to an imbalance with it's use.
-> 
-> Adjust the logic in pci_pm_init() so that even if PCI PM isn't supported
-> runtime PM is still initialized.
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Reported-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m7e8929d6421690dc8bd6dc639d86c2b4db27cbc4
-> Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m40d277dcdb9be64a1609a82412d1aa906263e201
-> Tested-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Fixes: 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+The patch Subject line is confusing to me. Perhaps this better captures
+the intent:
+
+ "PCI: hv: Don't load the driver for the root partition on a bare-metal hyp=
+ervisor"
+
+>=20
+> init_hv_pci_drv() is not relevant for root partition on baremetal as ther=
+e
+> is no vmbus. On nested (with a Windows L1 root), vmbus is present.
+
+This needs more precision. init_hv_pci_drv() isn't what is
+"not relevant". It's the entire driver that doesn't need to be loaded
+because the root partition on a bare-metal hypervisor doesn't use
+VMBus. It's only when the root partition is running on a nested
+hypervisor that it uses VMBus, and hence may need the Hyper-V
+PCI driver to be loaded.
+
+>=20
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  drivers/pci/pci.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3dd44d1ad829b..c495c3c692f5f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3221,15 +3221,17 @@ void pci_pm_init(struct pci_dev *dev)
->  
->  	/* find PCI PM capability in list */
->  	pm = pci_find_capability(dev, PCI_CAP_ID_PM);
-> -	if (!pm)
-> +	if (!pm) {
-> +		goto poweron;
->  		return;
-
-Unreachable return.  Thanks,
-
-Alex
-
-> +	}
->  	/* Check device's ability to generate PME# */
->  	pci_read_config_word(dev, pm + PCI_PM_PMC, &pmc);
->  
->  	if ((pmc & PCI_PM_CAP_VER_MASK) > 3) {
->  		pci_err(dev, "unsupported PM cap regs version (%u)\n",
->  			pmc & PCI_PM_CAP_VER_MASK);
-> -		return;
-> +		goto poweron;
->  	}
->  
->  	dev->pm_cap = pm;
-> @@ -3274,6 +3276,7 @@ void pci_pm_init(struct pci_dev *dev)
->  	pci_read_config_word(dev, PCI_STATUS, &status);
->  	if (status & PCI_STATUS_IMM_READY)
->  		dev->imm_ready = 1;
-> +poweron:
->  	pci_pm_power_up_and_verify_state(dev);
->  	pm_runtime_forbid(&dev->dev);
->  	pm_runtime_set_active(&dev->dev);
+>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index b4f29ee75848..4d25754dfe2f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+>=20
+> +	if (hv_root_partition() && !hv_nested)
+> +		return -ENODEV;
+> +
+>  	ret =3D hv_pci_irqchip_init();
+>  	if (ret)
+>  		return ret;
+> --
+> 2.34.1
 
 
