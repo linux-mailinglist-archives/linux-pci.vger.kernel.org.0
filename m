@@ -1,269 +1,497 @@
-Return-Path: <linux-pci+bounces-29454-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29456-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D44BCAD58C4
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:30:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33EB0AD595E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:56:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0E9816DE56
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 14:30:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7BBF3A57EC
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 14:56:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C5B287515;
-	Wed, 11 Jun 2025 14:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2355A2857CF;
+	Wed, 11 Jun 2025 14:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pro0Tm0F"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fJiSPjmy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090B518DF89;
-	Wed, 11 Jun 2025 14:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652238; cv=fail; b=spnB6c2Kq++Y78Thef77z6+YimYIcaa0QL6qd6732+0/F4n6n6ksWzz1w/Vi1ir3dKLbvy2u7slRI2L27iYLtXpTc8HY8H8NqW2PZV5NXwRDFNruUNLrF6Fv7HZ0kAS91yPj8W1MluvdceD/KgcSISTYMuVeS2NEL6bzfJMvcP8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652238; c=relaxed/simple;
-	bh=tkn8zhAspJjLxwm0ZGQC06dSiJnsWsNCcqNF8Arjm/c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=D6mLGS+Rs/x0cOlhMYsEjA7UmEoBnwwTjbeiFy14NfQTrWL2KD9T7d3Uw7Q/mFmlxXLhAVvMoZFZ22QilWHPjc9pUuoN26HNTo8erRSfTxpDwdSbiqPqkjf2Zr7B9hd0wM+JBewOkAHzuE+4tqrUF/sY7GoGDwJ2E2KtUovAiak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pro0Tm0F; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749652237; x=1781188237;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=tkn8zhAspJjLxwm0ZGQC06dSiJnsWsNCcqNF8Arjm/c=;
-  b=Pro0Tm0FINgb9Ex5ddZM8Poc08IeveR7MTcGpzU9/7zJwk/DMH3p+AR3
-   aDrK+3hOwocVi+2ReRvkTlbD7I43bJQ0BCEvFZutYYI71H7W1USELH90y
-   scKnoKtSXBOT95ciFPyjKWR4++hAqVPGe6yO5VJmshioxL/SwXZba6viY
-   PtjMqkWc8cXq7b0EpOTart4mZynOfHKzGzvTX3qkg5HGWQ4rnYEl08P9G
-   X7mfrDYRko27cfxI1kB+csO3dLEES+cUvSp7xcNXxE6GqnBeV7TYWdl1X
-   Fx4A+egZfk9MdE0RozcQV/qaHOxNVbmCl1BYkWdd3aufjiTm1tsJFH2hG
-   Q==;
-X-CSE-ConnectionGUID: siYFf0ZQR2O11Kapjek11Q==
-X-CSE-MsgGUID: 07VRbsF4RtK2kdDCI2eHNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62408896"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="62408896"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:30:36 -0700
-X-CSE-ConnectionGUID: wg4W2B83RmuOhlrNBi9OyA==
-X-CSE-MsgGUID: 5wAcdUUmQ96WL1g57BKBrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147094762"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:30:36 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 07:30:35 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 07:30:35 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.50)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 07:30:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Znb2uAg1Q7tuJ4D4BE1Y7axkzZrHqs6ChMtTVfLxE07t2SYq5b0DLr/urDiYYmE96WyClpZC4DXAJPvRii/l/oX6HPndtVGuOqBckomVreTcck1D/7RXtkZXOWkL+F5apSjAv5caKEctGEiKgf+XXpI6tYyDP0d5HFMWDp5u1YyUreebLEP2tHpmNZJAvAr/e4MuuLsm6DLVuOIXDalc1gDq+g6BPlU1CzM5Y9csydXHnBanMlGyIvunNdskLc61ZZxtF/xmaCaoUOpiAIe4UEyvTK3wk8acW2BDxXI1GESlvwaoj4RhLC/Urw0Y1pIX2CVF3Q2FZ4I4A6qKu/DOiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pE2hQ0xWLtgKLtRpks1Q4pzobmKj1YKeNfXBjDro2aw=;
- b=Af6TIrP3s1+lTr4a8b7iQEGmpueOft6hY8Z/mPgnDzbKQ4mvDOnJZHuC7FwSxKdI9TGil8xYwyc7qZ/EOUZxrYOwWrH6fh+Iy21MiQaMgJVOUdJJLvOP6lrTJd3c0SnP/zRgC+TvG17vmtd++G3HjpP/GIW95G+bRMPI+9VEcPfKXV4X7BJaLJ/VEyPWMbMGKDQb1ddJeScaGNOvSJoxERRSWb8wrj3RXStpwl4nKdiLvgpSux1Oa3ZzIhXxS0a59QcsIrdMPWcpeX1oKSqwg+yZyHecTidKY78IewsyXr1QL5NRuj/DUYAEbBpMXy7eBVGeYBSv3q2g+42Ct08dcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
- by DM6PR11MB4530.namprd11.prod.outlook.com (2603:10b6:5:2a4::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.25; Wed, 11 Jun
- 2025 14:30:24 +0000
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778%3]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 14:30:24 +0000
-Date: Wed, 11 Jun 2025 15:30:16 +0100
-From: "Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>
-To: Mario Limonciello <superm1@kernel.org>
-CC: <bhelgaas@google.com>, <alex.williamson@redhat.com>,
-	<mario.limonciello@amd.com>, <rafael.j.wysocki@intel.com>,
-	<huang.ying.caritas@gmail.com>, <stern@rowland.harvard.edu>,
-	<linux-pci@vger.kernel.org>, <mike.ximing.chen@intel.com>,
-	<ahsan.atta@intel.com>, <suman.kumar.chakraborty@intel.com>,
-	<kvm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: Explicitly put devices into D0 when initializing
- - Bug report
-Message-ID: <aEmS+OQL7IbjdwKs@gcabiddu-mobl.ger.corp.intel.com>
-References: <aEl8J3kv6HAcAkUp@gcabiddu-mobl.ger.corp.intel.com>
- <56d0e247-8095-4793-a5a9-0b5cf2565b88@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <56d0e247-8095-4793-a5a9-0b5cf2565b88@kernel.org>
-Organization: Intel Research and Development Ireland Ltd - Co. Reg. #308263 -
- Collinstown Industrial Park, Leixlip, County Kildare - Ireland
-X-ClientProxiedBy: DU2PR04CA0009.eurprd04.prod.outlook.com
- (2603:10a6:10:3b::14) To CY5PR11MB6366.namprd11.prod.outlook.com
- (2603:10b6:930:3a::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB24B26A1D0;
+	Wed, 11 Jun 2025 14:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749653786; cv=none; b=BuYNjuok1RDZaTbHBVc6YW8uKUj/5iaepUtVxiXvDtlEov/AWeFe4PETHVNyJrOl43I15LhyqY7xwKVwZpcS5KZ/lQKy+0P8oozUMNRaP1n9kLcIE/2gN1MWJO7nbpXrLmU6wmGr2aABkNfauGyAs9hvg978uov6fseNG7QXFQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749653786; c=relaxed/simple;
+	bh=HbAVgJzxmHytKJ+Ywh2WokGuTgri+HoqWdPmSJduIFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V5wmdSTJlKtnG5jzLmLDqBI33BfLyZB54LRA7t62ElS0bLr+NVCMTda/VjJV5baGbXYI7ro0xS2dOjBekZ8DSWxTzAV7zXTiADBcsgrhsFbF+MyIj4B/kIzFTXNIwj4OcDrSdNxTt+WDrru2SEQT5aF+v73bb2a3bFwyh58Aa9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fJiSPjmy; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CE3B7441C6;
+	Wed, 11 Jun 2025 14:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749653779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v3Z+3u2W7PA87RlVTUWiVQeMe8kPAuxHo6SLi0E3GsA=;
+	b=fJiSPjmyGi+Iy5+NQAIWyyC1tNAKCU8Rqyg48JpDWGFg0R2M5dDhXFvyjQeKOWtkpWhgeH
+	1LkXXa0wLyVWqXHkf1fUO8EmZViyW5Rx9shiipJ2QKVN5dRpPsCGeTJR1tCXsb/E2kEAaR
+	IPCu8cJ3kFza46ffqDj+o1+5LPutUPDJoCpzbzYNke02TukqkebDa+RFyzjo4KFADTB+0T
+	00b8OtuLYfR3WZncs/SjcJsVtQumbhhS2CDXzVVZPIOtPdDo2XCPCzzueeqTSkPnyO9Q6j
+	TcSWhbZ1bAWxH7+I8i0ckzZ2ALnlScS1w1PnqvVLT6Q1SuQzbJRrgqkBM6UWZw==
+Date: Wed, 11 Jun 2025 16:56:17 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
+Message-ID: <20250611165617.641c7c09@bootlin.com>
+In-Reply-To: <594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
+References: <20250224141356.36325-1-herve.codina@bootlin.com>
+	<20250224141356.36325-6-herve.codina@bootlin.com>
+	<594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6366:EE_|DM6PR11MB4530:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65eb3fc0-c579-4fa1-237e-08dda8f480c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?jQVCLV+grmds3HdYUcz2EDSTcd6I3eQ4uodXZioLMdWZ6FgYfwbLVWBC8r3w?=
- =?us-ascii?Q?N2/HBEN5AQ9tp5pWiarj0tNNqebEFUlTHbOx/UCLOTNMU35KSth71mFh1rIC?=
- =?us-ascii?Q?sHSuDKhARQO7tbUgrFaWmols2Sl5sPbz3+lcKOWrnH+EA2CTxc+m9sUbaEBY?=
- =?us-ascii?Q?h42dtyk0m/JWBOMciWIvg9pb0Xt0NPHTvVTq/cwyrZ430mDAGjUJQp8EM0AA?=
- =?us-ascii?Q?cmHUhhz3nJAX8bT2uHytXiCQRLc6Su2al9nLIUMQLrsXNaN7DxntwsDLmGKA?=
- =?us-ascii?Q?LaBc/nP+KSG0y8h1gy+QP+uQNzyW49eGReGp47oAXj8GVOn8htOR+NxAig37?=
- =?us-ascii?Q?K2cBmW6o0+eyHAS9bbZsmc66sIXrSiicn91IXM9yaKr7CQYJN+n0p5L9nYrd?=
- =?us-ascii?Q?dCqaM6+CuNjqABXBhKLtWk1rofw3QFRPECn+8FKUSooQOXJJQm3K4F4kr7UZ?=
- =?us-ascii?Q?gCvxElULYE5iALTxfSn9j8e5sYVryP6osA9rcfLhVzJit/5naWZiY2ewrBLP?=
- =?us-ascii?Q?ardd0PJ4lbMIiaZ6C0KJozZzdIM5tJdDHxV6CBXxWK8E6arRa4gdovWfFCFY?=
- =?us-ascii?Q?zLH4AHL4AuPW4rs4UGcVWk+HksVOTB+Go00GtL8ig1E+y5OXnilz3d1Q5PDt?=
- =?us-ascii?Q?FTwV2FKH5LOtyJDMb9KhnnMhoYV3ZsIPAwgvwnTHgM9tEzamb/xH9JrkNxdX?=
- =?us-ascii?Q?RvmEl31zv9l9fWJkeJqv4QxUCTFJu7pLmaX7DtYKy+EavCoasvpLPHFfl8/9?=
- =?us-ascii?Q?gM6C0w65oG1zySm53RiG8PT9d6yARnx+s0VRU4tmLE5eF4tTzNKmAiCly2Xc?=
- =?us-ascii?Q?p1e/VgxofMEjpNPj2GIOlp2OK1sRzeeJ/9cAdjgshcgtEH0AoHHe1HPIi3z+?=
- =?us-ascii?Q?7j3HL2NXuvKHkFHcJ4L9XAqWcxHlGRG0nP7DT4rF3Lrm8zLgfJ1udVv9iFCA?=
- =?us-ascii?Q?IPe8GB40dMxdpPh/jpBVJgv8BRtwtqZvEQCogFjETAxSpRxjHSnH0sB1BYNV?=
- =?us-ascii?Q?CrlfeJ8bri/Pz0mWAFBhwbpbXS0xMtqFj0Jari7eQawI12ve5AIWTEN10vmP?=
- =?us-ascii?Q?8crAjkfTG2PlO+x/diJ10q8Y1x3pL8s0BtxdhfVmaYUPIWwbXqx77tWqIk55?=
- =?us-ascii?Q?cnhe1gxtiFMoUkjSUQ0qnYKYimnxei2KterxhyLUSms+FP3QnsEt2/Rk/p5k?=
- =?us-ascii?Q?J/CSLmoP//hPc2Wk2TLa+4Pwc7fvveypGrNokpAcGXHw2FyEKOyjb1xFiC9o?=
- =?us-ascii?Q?qilADeLOTtitJqkYmR4hBQ/iqAn6JXPqhanhSUPI4T977MUQJk6Y2yFPf7vF?=
- =?us-ascii?Q?pKPUxsqeHveQOjdVbBroKaQbJrhJiO+G07J7qnuNljWxnmN+Yy7xjoLUK8NE?=
- =?us-ascii?Q?DdsHFjacrfDwBg2GzBTydKO9N7TiZVN1kgaKhVBF3JslbGZBvTWW5sBmL9b9?=
- =?us-ascii?Q?hIgv3PvX5Jc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1jWtnXKf0JuSfqYpU1TJxqDkucOMM27+StjQF2OlF4pf67PG/USENOd302L+?=
- =?us-ascii?Q?mYNmAo98+O/hqMu8NI7oyO/V1OvdeHdLkFFo0FHTHVkYOHBgTQtTT1WmN6wV?=
- =?us-ascii?Q?1nZFvSteH32CrLCmIq6QGR4jLMPy4XvUPlbgoe+6NTQItGhfNR+xhHB4hjqZ?=
- =?us-ascii?Q?YMmYUUEsB4xMvPfNDLeDYKlZLBEQNyYfn0kEDGypeC6wX8V24AQtdRVXym1P?=
- =?us-ascii?Q?8opiOEPWcXz8tlssaNy2t+NeihOXICa6MNxxO+60LUYY+48sR7dGGWk5Hkuo?=
- =?us-ascii?Q?AXebkhOFUWqjmxuJ/KqvvwpXSDpggdBg+iEB3aleAf7uFXKT/9EFH5MzGt7W?=
- =?us-ascii?Q?+HEAnRuxmCUAB/3fd70bLlkzgiHTR3Vx6g6PACcpXgWcQ6rt8qRo+nka3yBQ?=
- =?us-ascii?Q?VJ7SR1uTgWOj7/rmyPufRT1QMXtliSW4Vob4EHAa/eisvMSw2Ed1RZOt5jNa?=
- =?us-ascii?Q?zLnm0E1wAGEnsnhAZqa2o/aHpFHBr8umdENSzA69psGVD1FLmTG8cv1Jz15F?=
- =?us-ascii?Q?guzFxLHTbTRoSfDY+zJHLGlEfs2phMHPNsqNgBaw5vgWHCpUu+Kd4MZs5HYr?=
- =?us-ascii?Q?lIEClS3QgTkU/upye30H9WWk3sEoV5xELeYmY4wGHSDXDJMvK7tk0lSrrJx3?=
- =?us-ascii?Q?Kw65dCGb02ziETB2Aubv5S4XSpiGvNbwVAXrLFOBGslFFdmoByzpSpDo3NXb?=
- =?us-ascii?Q?9a8jPFhVu5Xo8VQU1BcJdq7V8uwJ7kU41KqHks7d/yf8gmRjuRlwm56S9dOZ?=
- =?us-ascii?Q?hy6c55jp0Ly6CZJZYEbX0RIXC08KMmCW5YTSMm/kihgrZHIPyivW1bKMLRch?=
- =?us-ascii?Q?4Y684sSO/3no77i2QCLvQT5PsnIoTmVyHaDH7QWxLpkp+6at2EINRYKbe5OT?=
- =?us-ascii?Q?H2Wkg6m8KnXCnI9heQwb5dPFs8Ul8s/89+YDl5O4/5cp1OLJyktxRjsRjAZ6?=
- =?us-ascii?Q?IGZa4kboHhRor2YF6bJirhqR2lcxCTmoJrfiN4cLdU1IX5fJBc9RtiWQjA9d?=
- =?us-ascii?Q?X8sQpiG/xS4GBWWTKakagr0+k0iMjV+kINdIIlIOrw/XcD1Cmff4Y2Q2R2w6?=
- =?us-ascii?Q?HvgMU1XVn2oJfuNRakQTNM4rpsKSn0I7Mp+KWj5lXii7YaRk4K+RrQBz/+eD?=
- =?us-ascii?Q?rWhAPqLSzI0t18wSSmBYqVyglfkCXMd7/et0z/3XKh0uGx0rlip5c5IvLn6Z?=
- =?us-ascii?Q?8Chg9RlMgn5mIIdoo/XjzDYchn9di8fB//CYp2AvOmsJ7y4vDqE1PKPmpKPs?=
- =?us-ascii?Q?n6giPWCGAID+zas4hhfLVereQMnvHSET+8yOFvej5UouZxiPjTbwaW5E4fZK?=
- =?us-ascii?Q?rFE90Qif2TUidFMwSr2tfFMA+aVoFCWF4tVGyX/WWb8JdQmaN+GxWbJ3+B6g?=
- =?us-ascii?Q?QZSS3sqwWBZtal9ea771dhV/Y73umpF5H7x+p/YlWtar6LEC9wULoXdU0/6s?=
- =?us-ascii?Q?mWRx18fu+E3xkwy/T5QdJByScghtHPfB3sZ4JFvi5N3pCmhgfGovp1LmtQHF?=
- =?us-ascii?Q?O1PetbNIZlWciBNF/COdCX4fjCChd5VJbH/nt5+4+IMD+1vCfouRivx0ReJI?=
- =?us-ascii?Q?6G7jxq4+fgJ6AQNk/Y7T67Q58iE1ior9MMcHTR632aJ6pPXGoAuKZeL4D4eZ?=
- =?us-ascii?Q?Eg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65eb3fc0-c579-4fa1-237e-08dda8f480c9
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:30:24.3913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DrtsA7kXIu8x1oJU9kV4zitCZ3vTBSB1TaoWt/0cQNqH9znh8yOUmum6BRcqy63k4deFdUd2QuN3/yoaZ9U7RMGHL9nOJj1g0EgnZ0qu/kc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4530
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdeglecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejffelhfeiudetgeffieefgefgffdvuedvuedtvdefudduueekffelheehffekteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheptghlrghuughiuhdrsggviihnvggrsehtuhigohhnrdguvghvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvl
+ hdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, Jun 11, 2025 at 06:50:59AM -0700, Mario Limonciello wrote:
-> On 6/11/2025 5:52 AM, Cabiddu, Giovanni wrote:
-> > Hi Mario, Bjorn and Alex,
-> > 
-> > On Wed, Apr 23, 2025 at 11:31:32PM -0500, Mario Limonciello wrote:
-> > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > 
-> > > AMD BIOS team has root caused an issue that NVME storage failed to come
-> > > back from suspend to a lack of a call to _REG when NVME device was probed.
-> > > 
-> > > commit 112a7f9c8edbf ("PCI/ACPI: Call _REG when transitioning D-states")
-> > > added support for calling _REG when transitioning D-states, but this only
-> > > works if the device actually "transitions" D-states.
-> > > 
-> > > commit 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI
-> > > devices") added support for runtime PM on PCI devices, but never actually
-> > > 'explicitly' sets the device to D0.
-> > > 
-> > > To make sure that devices are in D0 and that platform methods such as
-> > > _REG are called, explicitly set all devices into D0 during initialization.
-> > > 
-> > > Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > ---
-> > Through a bisect, we identified that this patch, in v6.16-rc1,
-> > introduces a regression on vfio-pci across all Intel QuickAssist (QAT)
-> > devices. Specifically, the ioctl VFIO_GROUP_GET_DEVICE_FD call fails
-> > with -EACCES.
-> > 
-> > Upon further investigation, the -EACCES appears to originate from the
-> > rpm_resume() function, which is called by pm_runtime_resume_and_get()
-> > within vfio_pci_core_enable(). Here is the exact call trace:
-> > 
-> >      drivers/base/power/runtime.c: rpm_resume()
-> >      drivers/base/power/runtime.c: __pm_runtime_resume()
-> >      include/linux/pm_runtime.h: pm_runtime_resume_and_get()
-> >      drivers/vfio/pci/vfio_pci_core.c: vfio_pci_core_enable()
-> >      drivers/vfio/pci/vfio_pci.c: vfio_pci_open_device()
-> >      drivers/vfio/vfio_main.c: device->ops->open_device()
-> >      drivers/vfio/vfio_main.c: vfio_df_device_first_open()
-> >      drivers/vfio/vfio_main.c: vfio_df_open()
-> >      drivers/vfio/group.c: vfio_df_group_open()
-> >      drivers/vfio/group.c: vfio_device_open_file()
-> >      drivers/vfio/group.c: vfio_group_ioctl_get_device_fd()
-> >      drivers/vfio/group.c: vfio_group_fops_unl_ioctl(..., VFIO_GROUP_GET_DEVICE_FD, ...)
-> > 
-> > Is this a known issue that affects other devices? Is there any ongoing
-> > discussion or fix in progress?
-> > 
-> > Thanks,
-> > 
+Hi Claudiu,
+
+On Wed, 11 Jun 2025 11:26:37 +0300
+Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+
+> Hi, Herve,
 > 
-> This is the first I've heard about an issue with that patch.
+> On 24.02.2025 16:13, Herve Codina wrote:
+> > PCI devices device-tree nodes can be already created. This was
+> > introduced by commit 407d1a51921e ("PCI: Create device tree node for
+> > bridge").
+> > 
+> > In order to have device-tree nodes related to PCI devices attached on
+> > their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
+> > root bus device-tree node is needed. This root bus node will be used as
+> > the parent node of the first level devices scanned on the bus. On
+> > device-tree based systems, this PCI root bus device tree node is set to
+> > the node of the related PCI host bridge. The PCI host bridge node is
+> > available in the device-tree used to describe the hardware passed at
+> > boot.
+> > 
+> > On non device-tree based system (such as ACPI), a device-tree node for
+> > the PCI host bridge or for the root bus does not exist. Indeed, the PCI
+> > host bridge is not described in a device-tree used at boot simply
+> > because no device-tree are passed at boot.
+> > 
+> > The device-tree PCI host bridge node creation needs to be done at
+> > runtime. This is done in the same way as for the creation of the PCI
+> > device nodes. I.e. node and properties are created based on computed
+> > information done by the PCI core. Also, as is done on device-tree based
+> > systems, this PCI host bridge node is used for the PCI root bus.
+> > 
+> > With this done, hardware available in a PCI device that doesn't follow
+> > the PCI model consisting in one PCI function handled by one driver can
+> > be described by a device-tree overlay loaded by the PCI device driver on
+> > non device-tree based systems. Those PCI devices provide a single PCI
+> > function that includes several functionalities that require different
+> > driver. The device-tree overlay describes in that case the internal
+> > devices and their relationships. It allows to load drivers needed by
+> > those different devices in order to have functionalities handled.
+> > 
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  drivers/pci/of.c          | 104 +++++++++++++++++++++++++++++++++++++-
+> >  drivers/pci/of_property.c | 102 +++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/pci.h         |   6 +++
+> >  drivers/pci/probe.c       |   2 +
+> >  drivers/pci/remove.c      |   2 +
+> >  5 files changed, 215 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index fb5e6da1ead0..c59429e909c0 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -731,7 +731,109 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+> >  out_free_name:
+> >  	kfree(name);
+> >  }
+> > -#endif
+> > +
+> > +void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
+> > +{
+> > +	struct device_node *np;
+> > +
+> > +	np = pci_bus_to_OF_node(bridge->bus);
+> > +	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> > +		return;
+> > +
+> > +	device_remove_of_node(&bridge->bus->dev);
+> > +	device_remove_of_node(&bridge->dev);
+> > +	of_changeset_revert(np->data);
+> > +	of_changeset_destroy(np->data);
+> > +	of_node_put(np);
+> > +}
+> > +
+> > +void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> > +{
+> > +	struct device_node *np = NULL;
+> > +	struct of_changeset *cset;
+> > +	const char *name;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * If there is already a device-tree node linked to the PCI bus handled
+> > +	 * by this bridge (i.e. the PCI root bus), nothing to do.
+> > +	 */
+> > +	if (pci_bus_to_OF_node(bridge->bus))
+> > +		return;
+> > +
+> > +	/* The root bus has no node. Check that the host bridge has no node too */
+> > +	if (bridge->dev.of_node) {
+> > +		dev_err(&bridge->dev, "PCI host bridge of_node already set");
+> > +		return;
+> > +	}
+> > +
+> > +	/* Check if there is a DT root node to attach the created node */
+> > +	if (!of_root) {
+> > +		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
+> > +		return;
+> > +	}
+> > +
+> > +	name = kasprintf(GFP_KERNEL, "pci@%x,%x", pci_domain_nr(bridge->bus),
+> > +			 bridge->bus->number);  
 > 
-> Does setting the VFIO parameter disable_idle_d3 help?
-
-It does, ... a bit. With disable_idle_d3=1 the ioctl() is successful, but a
-subsequent read on that file descriptor fails with -EIO.
-
-    ioctl(5, VFIO_GROUP_GET_DEVICE_FD, 0x7ffd2b38abf0) = 6
-    pread64(6, 0x7ffd2b38ab06, 2, 7696581394436) = -1 EIO (Input/output error)
-
+> After testing series [1] on next-20250528 I noticed the INTx are not
+> working anymore. Debugging it, I found it is related to the creation of a
+> node with this name.
 > 
-> If so; this feels like an imbalance of runtime PM calls in the VFIO stack
-> that this patch exposed.
+> On [1], the interrupt-map points to the pcie node itself. If I activate the
+> debug messages in of_irq_parse_raw() I'm getting this output:
 > 
-> Alex, any ideas?
+> [    0.466542] rzg3s-pcie-host 11e40000.pcie: PCIe link status [0x100014e]
+> [    0.466571] rzg3s-pcie-host 11e40000.pcie: PCIe x1: link up
+> [    0.571095] rzg3s-pcie-host 11e40000.pcie: PCI host bridge to bus 0000:00
+> [    0.571161] pci_bus 0000:00: root bus resource [bus 00-ff]
+> [    0.571198] pci_bus 0000:00: root bus resource [mem 0x30000000-0x37ffffff]
+> [    0.571289] pci 0000:00:00.0: [1912:0033] type 01 class 0x060400 PCIe
+> Root Port
+> [    0.571355] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    0.571393] pci 0000:00:00.0:   bridge window [mem 0xfff00000-0xffffffff]
+> [    0.571433] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff
+> 64bit pref]
+> [    0.571533] pci 0000:00:00.0: PME# supported from D0 D3hot
+> [    0.574149] pci 0000:01:00.0: [1d79:2263] type 00 class 0x010802 PCIe
+> Endpoint
+> [    0.574223] pci_bus 0000:01: 2-byte config write to 0000:01:00.0 offset
+> 0x4 may corrupt adjacent RW1C bits
+> [    0.574775] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+> [    0.575722] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth,
+> limited by 5.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 15.752 Gb/s
+> with 8.0 GT/s PCIe x2 link)
+> [    0.576434] pci 0000:00:00.0: bridge window [mem 0x30000000-0x300fffff]:
+> assigned
+> [    0.576491] pci 0000:01:00.0: BAR 0 [mem 0x30000000-0x30003fff 64bit]:
+> assigned
+> [    0.576618] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    0.576654] pci 0000:00:00.0:   bridge window [mem 0x30000000-0x300fffff]
+> [    0.576697] pci_bus 0000:00: resource 4 [mem 0x30000000-0x37ffffff]
+> [    0.576730] pci_bus 0000:01: resource 1 [mem 0x30000000-0x300fffff]
+> [    0.576800] of_irq_parse_raw:  /soc/pcie@11e40000:00000001
+> [    0.576864] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
+> [    0.576904] OF:  -> addrsize=3
+> [    0.576936] OF:  -> match=1 (imaplen=32)
+> [    0.576962] OF:  -> intsize=1, addrsize=3
+> [    0.576984] OF:  -> imaplen=31
+> [    0.577009] OF: /soc/pcie@11e40000 interrupt-map entry to self
+> [    0.577044] of_irq_parse_raw:  /soc/pcie@11e40000:00000002
+> [    0.577089] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
+> [    0.577126] OF:  -> addrsize=3
+> [    0.577153] OF:  -> match=0 (imaplen=32)
+> [    0.577177] OF:  -> intsize=1, addrsize=3
+> [    0.577198] OF:  -> imaplen=31
+> [    0.577220] OF:  -> imaplen=27
+> [    0.577238] OF:  -> match=1 (imaplen=23)
+> [    0.577261] OF:  -> intsize=1, addrsize=3
+> [    0.577282] OF:  -> imaplen=22
+> [    0.577303] OF: /soc/pcie@11e40000 interrupt-map entry to self
+> [    0.577337] of_irq_parse_raw:  /soc/pcie@11e40000:00000003
+> [    0.577382] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
+> [    0.577419] OF:  -> addrsize=3
+> [    0.577445] OF:  -> match=0 (imaplen=32)
+> [    0.577469] OF:  -> intsize=1, addrsize=3
+> [    0.577490] OF:  -> imaplen=31
+> [    0.577511] OF:  -> imaplen=27
+> [    0.577530] OF:  -> match=0 (imaplen=23)
+> [    0.577553] OF:  -> intsize=1, addrsize=3
+> [    0.577573] OF:  -> imaplen=22
+> [    0.577595] OF:  -> imaplen=18
+> [    0.577613] OF:  -> match=1 (imaplen=14)
+> [    0.577637] OF:  -> intsize=1, addrsize=3
+> [    0.577657] OF:  -> imaplen=13
+> [    0.577678] OF: /soc/pcie@11e40000 interrupt-map entry to self
+> [    0.577712] of_irq_parse_raw:  /soc/pcie@11e40000:00000004
+> [    0.577758] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
+> [    0.577794] OF:  -> addrsize=3
+> [    0.577820] OF:  -> match=0 (imaplen=32)
+> [    0.577844] OF:  -> intsize=1, addrsize=3
+> [    0.577865] OF:  -> imaplen=31
+> [    0.577886] OF:  -> imaplen=27
+> [    0.577905] OF:  -> match=0 (imaplen=23)
+> [    0.577928] OF:  -> intsize=1, addrsize=3
+> [    0.577948] OF:  -> imaplen=22
+> [    0.577969] OF:  -> imaplen=18
+> [    0.577987] OF:  -> match=0 (imaplen=14)
+> [    0.578010] OF:  -> intsize=1, addrsize=3
+> [    0.578031] OF:  -> imaplen=13
+> [    0.578052] OF:  -> imaplen=9
+> [    0.578070] OF:  -> match=1 (imaplen=5)
+> [    0.578092] OF:  -> intsize=1, addrsize=3
+> [    0.578113] OF:  -> imaplen=4
+> [    0.578133] OF: /soc/pcie@11e40000 interrupt-map entry to self
+> [    0.578609] pci_assign_irq(): pin=0
+> [    0.578641] assign IRQ: got 0
+> [    0.578677] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+> [    0.579095] pci_assign_irq(): pin=1
+> [    0.579124] pci_assign_irq(): swizzle_irq=806c2ad8, map_irq=806daa90
+> [    0.579154] pci_common_swizzle(): pin=1
+> [    0.579177] pci_assign_irq(): slot=0, pin=1
+> [    0.579209] of_irq_parse_raw:  /soc/pcie@11e40000/pci@0,0:00000001
+> [    0.579271] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000/pci@0,0, size=1
+> [    0.579314] OF:  -> addrsize=3
+> [    0.579339] OF:  -> match=1 (imaplen=32)
+> [    0.579365] OF:  -> intsize=1, addrsize=3
+> [    0.579386] OF:  -> imaplen=31
+> [    0.579409] OF:  -> new parent: /soc/pcie@11e40000
+> [    0.579452] OF:  -> match=0 (imaplen=32)
+> [    0.579476] OF:  -> intsize=1, addrsize=3
+> [    0.579497] OF:  -> imaplen=31
+> [    0.579520] OF:  -> imaplen=27
+> [    0.579538] OF:  -> match=0 (imaplen=23)
+> [    0.579562] OF:  -> intsize=1, addrsize=3
+> [    0.579583] OF:  -> imaplen=22
+> [    0.579604] OF:  -> imaplen=18
+> [    0.579622] OF:  -> match=0 (imaplen=14)
+> [    0.579645] OF:  -> intsize=1, addrsize=3
+> [    0.579666] OF:  -> imaplen=13
+> [    0.579688] OF:  -> imaplen=9
+> [    0.579706] OF:  -> match=0 (imaplen=5)
+> [    0.579728] OF:  -> intsize=1, addrsize=3
+> [    0.579749] OF:  -> imaplen=4
+> [    0.579769] OF:  -> imaplen=0
+> [    0.580473] nvme 0000:01:00.0: of_irq_parse_pci: failed with rc=-22
+> [    0.580952] assign IRQ: got 0
+> [    0.581718] nvme nvme0: pci function 0000:01:00.0
+> [    0.581811] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+> [    0.585447] nvme nvme0: missing or invalid SUBNQN field.
+> [    0.592193] nvme nvme0: 1/0/0 default/read/poll queues
+> [    0.600035]  nvme0n1: p1
 > 
+> 
+> I currently managed to fix it by applying the following diff on top of [1]:
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> index f1d642c70436..aac917f0b143 100644
+> --- a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> @@ -54,13 +54,6 @@ pcie: pcie@11e40000 {
+>                                   "intb", "intc", "intd", "msi",
+>                                   "link_bandwidth", "pm_pme", "dma",
+>                                   "pcie_evt", "msg", "all";
+> -               #interrupt-cells = <1>;
+> -               interrupt-controller;
+> -               interrupt-map-mask = <0 0 0 7>;
+> -               interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INT A */
+> -                               <0 0 0 2 &pcie 0 0 0 1>, /* INT B */
+> -                               <0 0 0 3 &pcie 0 0 0 2>, /* INT C */
+> -                               <0 0 0 4 &pcie 0 0 0 3>; /* INT D */
+>                 device_type = "pci";
+>                 num-lanes = <1>;
+>                 #address-cells = <3>;
+> @@ -70,5 +63,20 @@ pcie: pcie@11e40000 {
+>                 device-id = <0x0033>;
+>                 renesas,sysc = <&sysc>;
+>                 status = "disabled";
+> +
+> +               port0: pci@0,0 {
+> +                       device_type = "pci";
+> +                       reg = <0x0 0x0 0x0 0x0 0x0>;
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+> +                       #interrupt-cells = <1>;
+> +                       interrupt-controller;
+> +                       interrupt-map-mask = <0 0 0 7>;
+> +                       interrupt-map = <0 0 0 1 &port0 0 0 0 0>, /* INT A */
+> +                                       <0 0 0 2 &port0 0 0 0 1>, /* INT B */
+> +                                       <0 0 0 3 &port0 0 0 0 2>, /* INT C */
+> +                                       <0 0 0 4 &port0 0 0 0 3>; /* INT D */
+> +               };
+>         };
+>  };
+> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c
+> b/drivers/pci/controller/pcie-rzg3s-host.c
+> index 39140183addf..affbf4f79f23 100644
+> --- a/drivers/pci/controller/pcie-rzg3s-host.c
+> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+> @@ -431,7 +431,24 @@ static int rzg3s_pcie_root_write(struct pci_bus *bus,
+> unsigned int devfn,
+>         return PCIBIOS_SUCCESSFUL;
+>  }
+> 
+> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host, struct
+> device_node *port);
+> +
+> +static int rzg3s_pcie_root_add_bus(struct pci_bus *bus)
+> +{
+> +       struct device_node *of_port;
+> +
+> +       for_each_child_of_node(bus->dev.of_node, of_port) {
+> +               int ret = rzg3s_pcie_intx_setup(bus->sysdata, of_port);
+> +
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static struct pci_ops rzg3s_pcie_root_ops = {
+> +       .add_bus        = rzg3s_pcie_root_add_bus,
+>         .read           = pci_generic_config_read,
+>         .write          = rzg3s_pcie_root_write,
+>         .map_bus        = rzg3s_pcie_root_map_bus,
+> @@ -895,7 +912,7 @@ static void rzg3s_pcie_intx_teardown(void *data)
+>         irq_domain_remove(host->intx_domain);
+>  }
+> 
+> -static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host)
+> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host, struct
+> device_node *port)
+>  {
+>         struct device *dev = host->dev;
+> 
+> @@ -918,7 +935,7 @@ static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host
+> *host)
+>                                                  host);
+>         }
+> 
+> -       host->intx_domain = irq_domain_add_linear(dev->of_node, PCI_NUM_INTX,
+> +       host->intx_domain = irq_domain_add_linear(port, PCI_NUM_INTX,
+>                                                   &rzg3s_pcie_intx_domain_ops,
+>                                                   host);
+>         if (!host->intx_domain)
+> @@ -1542,7 +1559,7 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+> 
+>         raw_spin_lock_init(&host->hw_lock);
+> 
+> -       ret = rzg3s_pcie_host_setup(host, rzg3s_pcie_intx_setup,
+> +       ret = rzg3s_pcie_host_setup(host, NULL,
+>                                     rzg3s_pcie_msi_enable, true);
+>         if (ret)
+>                 return ret;
+> 
+> 
+> With this, of_irq_parse_pci() no longer fails with -22:
+> 
+> 
+> [    0.564106] pci 0000:00:00.0: [1912:0033] type 01 class 0x060400 PCIe
+> Root Port
+> [    0.564173] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    0.564212] pci 0000:00:00.0:   bridge window [mem 0xfff00000-0xffffffff]
+> [    0.564252] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff
+> 64bit pref]
+> [    0.564355] pci 0000:00:00.0: PME# supported from D0 D3hot
+> [    0.564999] /soc/pcie@11e40000/pci@0,0: Fixed dependency cycle(s) with
+> /soc/pcie@11e40000/pci@0,0
+> [    0.567407] pci 0000:01:00.0: [1d79:2263] type 00 class 0x010802 PCIe
+> Endpoint
+> [    0.567483] pci_bus 0000:01: 2-byte config write to 0000:01:00.0 offset
+> 0x4 may corrupt adjacent RW1C bits
+> [    0.567922] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+> [    0.568870] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth,
+> limited by 5.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 15.752 Gb/s
+> with 8.0 GT/s PCIe x2 link)
+> [    0.569599] pci 0000:00:00.0: bridge window [mem 0x30000000-0x300fffff]:
+> assigned
+> [    0.569657] pci 0000:01:00.0: BAR 0 [mem 0x30000000-0x30003fff 64bit]:
+> assigned
+> [    0.569785] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    0.569822] pci 0000:00:00.0:   bridge window [mem 0x30000000-0x300fffff]
+> [    0.570056] pci_bus 0000:00: resource 4 [mem 0x30000000-0x37ffffff]
+> [    0.570095] pci_bus 0000:01: resource 1 [mem 0x30000000-0x300fffff]
+> [    0.570311] pci_assign_irq(): pin=0
+> [    0.570338] assign IRQ: got 0
+> [    0.570373] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+> [    0.570775] pci_assign_irq(): pin=1
+> [    0.570805] pci_assign_irq(): swizzle_irq=806c2b70, map_irq=806dab28
+> [    0.570834] pci_common_swizzle(): pin=1
+> [    0.570855] pci_assign_irq(): slot=0, pin=1
+> [    0.570888] of_irq_parse_raw:  /soc/pcie@11e40000/pci@0,0:00000001
+> [    0.570954] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000/pci@0,0, size=1
+> [    0.570997] OF:  -> addrsize=3
+> [    0.571028] OF:  -> match=1 (imaplen=32)
+> [    0.571053] OF:  -> intsize=1, addrsize=3
+> [    0.571075] OF:  -> imaplen=31
+> [    0.571095] OF: /soc/pcie@11e40000/pci@0,0 interrupt-map entry to self
+> [    0.571270] assign IRQ: got 46
+> [    0.571998] nvme nvme0: pci function 0000:01:00.0
+> [    0.572082] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+> [    0.575619] nvme nvme0: missing or invalid SUBNQN field.
+> [    0.584554] nvme nvme0: 1/0/0 default/read/poll queues
+> [    0.592958]  nvme0n1: p1
+> 
+> 
+> Could you please let me know if this is how the PCIe controller should now
+> be described in DT with your patch?
 
-Regards,
+In my series, no node should be created if a node is already existing.
+  https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L764
+  https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L771
 
--- 
-Giovanni
+The idea is to create the missing node which can be used as PCI device node
+parent.
+
+On my side, I have performed tests using an Armada 3720 board and so, I used
+this DT:
+  https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+and more precisely, this PCIe controller node description:
+  https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/marvell/armada-37xx.dtsi#L495
+
+On this system, I didn't observed any issues but of course, the PCIe drivers are
+different.
+Also, on my system, no node were created by of_pci_make_host_bridge_node().
+
+To be honest, I didn't re-test recently to see if something has been broken.
+I can do that on my side with my system.
+
+On your side, maybe you can have look at the Armada PCIe driver and see if
+something could explain your behavior. I am not sure that you need to add the
+pci@0,0 node in your DT.
+
+Best regards,
+Hervé
 
