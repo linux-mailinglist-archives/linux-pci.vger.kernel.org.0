@@ -1,90 +1,63 @@
-Return-Path: <linux-pci+bounces-29413-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29414-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EB0BAD514D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 12:15:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19ECAAD5171
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 12:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03E357AE247
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 10:14:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4628C3A438C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 10:19:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F0926A0AB;
-	Wed, 11 Jun 2025 10:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FF322620D2;
+	Wed, 11 Jun 2025 10:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PHHyZWPV"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lyltZpWw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE42269B07;
-	Wed, 11 Jun 2025 10:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC15282FA
+	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 10:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749636369; cv=none; b=WlVL0U1xS1gBlI/IR1FnECCBZYenXG+7YmUk8oB4TA1NK4XPZHjb50YYFBy5FsuBxGeSBluoOXOtiR+psDsWEtYv1dPIqj5VNIZ314SJLBM3G+cMKV8lBpaKRjRXUWbLwk6OO4FMuRV7NbyvttOrFh6pgnlhJ6oEfJ+COUtOpK0=
+	t=1749637208; cv=none; b=TEBE6nLS8fZWP+KJu/v7H6IaXArEZTwF8Dj1yDX/mUOEVypi5AwVS+FjVp7864CVS203lYR3euqg7uvJAYzlFkfHL7psnz6iPyNX0UU2GI/kVvqJEH5rk7yL65IiLVA7z140hq0R/neRnrUedhtr2ZhsCgkYrYEO4Tx24b+5oGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749636369; c=relaxed/simple;
-	bh=VPToYgHTheKgSk91dnwnpEWxu/iIsLz1NQjpp/HoK9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T51hUPL3JQRGSiAq1WSG2PQssSJYdNg0VO9cwVR5N/dEinW6iIG603bA6Das66aq3Z1wJiadJGJxPCk9a+il/33gVGQrfyorK1emZM+Ue5+cDnCQtmHATdxQ6lMxJ0ZSAIh6nG6eglEZgeNmorWEtjMzOt1Cq0VUDsE5a6w/wUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PHHyZWPV; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from DESKTOP-RSFL4TU.corp.microsoft.com (unknown [167.220.238.139])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 39C1C2115195;
-	Wed, 11 Jun 2025 03:05:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39C1C2115195
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749636368;
-	bh=l9DJH+HH91jPT4Tylpz4H2GjnE02AKAT2ubUE2pzEro=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PHHyZWPVtEmfXi5vOF5F/eDDCnYGlmDYvN+YWlxT44TjhYZYGjibB/xPd/AxQy/gZ
-	 7ued2Ffk4pZ7jRhTeZ3Cx1mY3bNmcTNh04KOwmlKSbYDve8rHliQ1INHILM79AaJDZ
-	 mwaExEMIafpFxHeCbw1w2uxSdPURtYOmR5S6JimA=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Long Li <longli@microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH 6/6] net: mana: Fix warnings for missing export.h header inclusion
-Date: Wed, 11 Jun 2025 15:34:59 +0530
-Message-Id: <20250611100459.92900-7-namjain@linux.microsoft.com>
+	s=arc-20240116; t=1749637208; c=relaxed/simple;
+	bh=OBR9KbUQhCInu5VqSHbM9ZKj5vELiNdLmaCyADUlZfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dwBj0sI7d+bVUt714dFhxiJAEd8ONwjAHu7vPFIy9NOPhcS3feHHrWU/0VnqBon2Z7qkW3WPLnJ1NreIOcBTaoJuM0IUMj5AG6c1dGjvJY3o5encW5+lh16T5kkkSjVTWC3pk0J9dUOWc8stGoP693oGIOBLU50L/PGdHorYfEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lyltZpWw; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from hwang4-ThinkPad-T14s-Gen-2a.conference (unknown [123.112.65.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id A8FB13FF71;
+	Wed, 11 Jun 2025 10:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1749636889;
+	bh=JmUcqxCFm+hpf3JzQy1Rf1CurmZTKEqtPHw8Xq/px2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=lyltZpWwgzdOApQGlpmcG7holpGVgQPM3F2ynYC2IA7QDUaCZYkHVUMDHg4PzXwps
+	 W0t0XPlaViH2pHZTWRdcriKDWJXpOdgNRm7h3pCeo/Torp/8Lsy3r6CyHv7Gexz7id
+	 qmoynliv7jFkIcqb3XnJQ4MAilK2UEaFQnAFGFePZbVu9GoPjLpU3SgCvMg840gtdt
+	 ojnIQgi6xwNn3ztsdw7lencZiqtQ6AzShw0lw2ANNMEfxO1UUMV++7OVxxfmKqeXWZ
+	 o2C12g9VQQGVpvVOiLaJLtIRS7FJqJnbiq+Szjz6jNrWPAJ8AZ+myWECtZ8MBTKUP3
+	 GioYK1OU4O6oA==
+From: Hui Wang <hui.wang@canonical.com>
+To: linux-pci@vger.kernel.org,
+	bhelgaas@google.com
+Cc: raphael.norwitz@nutanix.com,
+	alay.shah@nutanix.com,
+	suresh.gumpula@nutanix.com,
+	ilpo.jarvinen@linux.intel.com,
+	hui.wang@canonical.com
+Subject: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
+Date: Wed, 11 Jun 2025 18:14:42 +0800
+Message-Id: <20250611101442.387378-1-hui.wang@canonical.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,41 +66,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix below warning in Hyper-V's MANA drivers that comes when kernel is
-compiled with W=1 option. Include export.h in driver files to fix it.
-* warning: EXPORT_SYMBOL() is used, but #include <linux/export.h>
-is missing
+Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
+Configuration RRS"), this Intel nvme [8086:0a54] works well. Since
+that patch is merged to the kernel, this nvme stops working.
 
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+Through debugging, we found that commit introduces the RRS polling in
+the pci_dev_wait(), for this nvme, when polling the PCI_VENDOR_ID, it
+will return ~0 if the config access is not ready yet, but the polling
+expects a return value of 0x0001 or a valid vendor_id, so the RRS
+polling doesn't work for this nvme.
+
+Here we add a pci quirk to disable the RRS polling for the device.
+
+Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
+Link: https://bugs.launchpad.net/bugs/2111521
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 ---
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
- drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/pci/probe.c  |  3 ++-
+ drivers/pci/quirks.c | 18 ++++++++++++++++++
+ include/linux/pci.h  |  2 ++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 3504507477c6..019e32b60043 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -6,6 +6,7 @@
- #include <linux/pci.h>
- #include <linux/utsname.h>
- #include <linux/version.h>
-+#include <linux/export.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..848fa0e6cf60 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1270,7 +1270,8 @@ static void pci_enable_rrs_sv(struct pci_dev *pdev)
+ 	if (root_cap & PCI_EXP_RTCAP_RRS_SV) {
+ 		pcie_capability_set_word(pdev, PCI_EXP_RTCTL,
+ 					 PCI_EXP_RTCTL_RRS_SVE);
+-		pdev->config_rrs_sv = 1;
++		if (!(pdev->dev_flags & PCI_DEV_FLAGS_NO_RRS_SV))
++			pdev->config_rrs_sv = 1;
+ 	}
+ }
  
- #include <net/mana/mana.h>
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index cf483d82572c..519e48ff6448 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6336,3 +6336,21 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
+ #endif
++
++/*
++ * Although the root port device claims to support RRS, some devices don't work
++ * with RRS polling, when reading the Vendor ID, they just return ~0 if config
++ * access is not ready, this will break the pci_dev_wait(). Here disable the RRS
++ * forcibly for this type of device.
++ */
++static void quirk_no_rrs_sv(struct pci_dev *dev)
++{
++	struct pci_dev *root;
++
++	root = pcie_find_root_port(dev);
++	if (root) {
++		root->dev_flags |= PCI_DEV_FLAGS_NO_RRS_SV;
++		root->config_rrs_sv = 0;
++	}
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0a54, quirk_no_rrs_sv);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 05e68f35f392..f4dd9ada12e4 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -247,6 +247,8 @@ enum pci_dev_flags {
+ 	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
+ 	/* Device requires write to PCI_MSIX_ENTRY_DATA before any MSIX reads */
+ 	PCI_DEV_FLAGS_MSIX_TOUCH_ENTRY_DATA_FIRST = (__force pci_dev_flags_t) (1 << 13),
++	/* Do not use Configuration Request Retry Status polling in pci_dev_wait() */
++	PCI_DEV_FLAGS_NO_RRS_SV = (__force pci_dev_flags_t) (1 << 14),
+ };
  
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ccd2885c939e..faad1cb880f8 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -10,6 +10,7 @@
- #include <linux/filter.h>
- #include <linux/mm.h>
- #include <linux/pci.h>
-+#include <linux/export.h>
- 
- #include <net/checksum.h>
- #include <net/ip6_checksum.h>
+ enum pci_irq_reroute_variant {
 -- 
 2.34.1
 
