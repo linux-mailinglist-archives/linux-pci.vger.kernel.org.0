@@ -1,57 +1,83 @@
-Return-Path: <linux-pci+bounces-29504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22DF2AD63DB
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:31:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1664AD63F6
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:42:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC8C67A5DAE
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 23:30:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D830B166305
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 23:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01DC424503C;
-	Wed, 11 Jun 2025 23:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2776624BD1A;
+	Wed, 11 Jun 2025 23:42:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM4rTPBU"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="a/RmTaz3";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="B2iSSqA2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D062923ABB7
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 23:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8EA2F4301;
+	Wed, 11 Jun 2025 23:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749684684; cv=none; b=uA0KMMfBtJii+OazraQ4DP6QGb8RLVD8Lwtsd21AmFRWMfAJNvxWn84ItfnU2YrAs9+AedRYYOFd3wmJDvgUR8s/1snCpaUJZOq/shrnDSuSd60l+jHOxWZQ74tPQFa5bUBIZ85/wZvOYli+iO26SGvunZSF/NBmSc9/4umWy0Y=
+	t=1749685364; cv=none; b=dpWkstmaoUuJAq5NbEdWTtj8atlxEkfZlIsWSqSiq6TFwAXSnlNVIyberqFyrrgk+/aJ8sYVF3XWwJ5EC8XAJBpxQNkocXROoIrlbayh14Bx3tOakkqf3e+0MB5vmhw1Bxr4KxHW7C2bi6vApi+phnZ3cguMmqnEJ7I8XH4Q3MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749684684; c=relaxed/simple;
-	bh=moJ7A+Gs9j7N4diOKAMLmESYdOC9ZLaIWS82x7Na5Q8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AsP3Uha+wJHGSYpztszqkwuJbtNxrMrSMSWlV1+tmD6TYdbgPLRAR7HtVUxn1W2amjzY3DAxoiTOw03kRgKi4iljvM7H5a/TdHr0/yU5Hbq8y5SIUxlCiphjesr99T+8vYgD7t+JzjQIQS26j10nY0u9le4G7UWo+3BBbs1LBp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM4rTPBU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95384C4CEE3;
-	Wed, 11 Jun 2025 23:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749684682;
-	bh=moJ7A+Gs9j7N4diOKAMLmESYdOC9ZLaIWS82x7Na5Q8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZM4rTPBUbJilXZHlL6DD67bm9OQpewoVEoeqv39rg78pg4meihp+XKuW39iWpsY1G
-	 V5usSkifPki1YJYivvLjgxHlKkGBBnDs7N7lhV+NMldAFcrYdEj9OZ+/gkkVHzaXdt
-	 DDEw9ryhKkp06m8r6LDr9FLveyph0ye9mHgaUIS9Undljq1P4AlZ8XGCPV7jamzYv5
-	 1/6+K/i2WOVt3kzdIZYGUbpWDZnqsaQLFBYDc7QrPvYzGxhMqD9jSVkhJgwmsABaT0
-	 159KB4TwwMH4iGJPu/yxj7yMW3Byv1NTojtW0IcXEE+r+vyZoG2SQFndhjH6NJH1wi
-	 BBGEkalSwyhCg==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	bhelgaas@google.com,
-	rafael@kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2] PCI: Set up runtime PM on devices that don't support PCI PM
-Date: Wed, 11 Jun 2025 18:31:16 -0500
-Message-ID: <20250611233117.61810-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749685364; c=relaxed/simple;
+	bh=0Lqc05MJtF78yK+jzAavYAe3CiAx4jlNnkKQn6Lv8No=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDiPOxC6VDBBzEAYRn65Q+mwmZv3B4kpSwApabAptjqdiERVwl1fBaZhuU5NkYkwLOyNcYn83EIN2NNMdcqaMKvjzvg+g+Cy9oG/FLXFVlJ/xPWUI7kNY7ERw7daCO866kgT16Eo3mPx0ITChbIJ8u3rX/S+4e4F+Ie+BsJfrCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=a/RmTaz3; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=B2iSSqA2; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bHhzM73Hdz9tNc;
+	Thu, 12 Jun 2025 01:42:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749685360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
+	b=a/RmTaz3YfWVVWjzZArFwfkmO5NC2U5WzxmKcsMKd3U6l4ZgezdAN8KP0jRVfpL7g25t33
+	J8EGbqMZOS6T4QgbR2kFxBRyixqIRpurcqrdgCHOj9+skydAhT4dmwp/iXkyNEhyEkMyMD
+	/ejbjaAIUzAMFvOcwikq/xhffGYQ7+5WSO8BZyuG3tPoXVqzyFsVZYztd6k6guYbAY5nRd
+	CAAbg2amqLuyafMiMBq+oyb7r2B5VSsOFs72OFGR2TrdaVY0SJaGNEEaMPYPnExYD/W+RB
+	AdKd5OvLyb07PMHY95ePBah3ZbjxgxFdiflJlW8g0l4ePETYMF1CQtr9xC/kIA==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749685357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
+	b=B2iSSqA2/FTGSOZmIvAH+X87Dq/xrDgQB1e2YPUH80LbhoEWLEUb3Hhj+jQbKDatdhoPzt
+	K4Vo/9f/JQXhUzu07/Yrg+KmEM43q7qTCOgc9GvevJqzOcOJXqmNVlVSfoU1lzdSfpvIHs
+	qwY5TIf/SeEl/L8txo1b3UySb5IJnB6J1gIjiBqOmBr13PqXfbkSxNZs4gPw9J3Ckyrxyl
+	JEwdOoxOCbldFbj1ndhcV1/+Dk82+wHyEnTbAgzO+gw1jvusKsgwW1K9u1mbTT1pHaKcVw
+	fgl6+rE8ydcdelnZ7EqpVrzA6kHl3+K+XdtDyEDHdsYCbEpOP6TKfnKDZfcMgg==
+To: devicetree@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2] schemas: pci: bridge: Document REFCLK slot clocks
+Date: Thu, 12 Jun 2025 01:41:41 +0200
+Message-ID: <20250611234206.159695-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,63 +85,52 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: uwekucmigtd6pg4quuu68o8z5fztjfrb
+X-MBO-RS-ID: 859cbe2a96078a63047
+X-Rspamd-Queue-Id: 4bHhzM73Hdz9tNc
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+The PCIe slot may have 'REFCLK' clocks which are explicitly
+controlled by the OS, describe the clocks property.
 
-commit 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-initializing") intended to put PCI devices into D0, but in doing so
-unintentionally changed runtime PM initialization not to occur on
-devices that don't support PCI PM.  This caused a regression in vfio-pci
-due to an imbalance with it's use.
-
-Adjust the logic in pci_pm_init() so that even if PCI PM isn't supported
-runtime PM is still initialized.
-
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Reported-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m7e8929d6421690dc8bd6dc639d86c2b4db27cbc4
-Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m40d277dcdb9be64a1609a82412d1aa906263e201
-Tested-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Fixes: 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
-v2:
- * remove pointless return
+Related to https://lore.kernel.org/all/CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com/
 ---
- drivers/pci/pci.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Update commit message
+    - Add AB from Manivannan
+---
+ dtschema/schemas/pci/pci-bus-common.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3dd44d1ad829b..160a9a482c732 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3222,14 +3222,14 @@ void pci_pm_init(struct pci_dev *dev)
- 	/* find PCI PM capability in list */
- 	pm = pci_find_capability(dev, PCI_CAP_ID_PM);
- 	if (!pm)
--		return;
-+		goto poweron;
- 	/* Check device's ability to generate PME# */
- 	pci_read_config_word(dev, pm + PCI_PM_PMC, &pmc);
+diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+index ca97a00..3c512cf 100644
+--- a/dtschema/schemas/pci/pci-bus-common.yaml
++++ b/dtschema/schemas/pci/pci-bus-common.yaml
+@@ -82,6 +82,8 @@ properties:
+     items:
+       maximum: 255
  
- 	if ((pmc & PCI_PM_CAP_VER_MASK) > 3) {
- 		pci_err(dev, "unsupported PM cap regs version (%u)\n",
- 			pmc & PCI_PM_CAP_VER_MASK);
--		return;
-+		goto poweron;
- 	}
- 
- 	dev->pm_cap = pm;
-@@ -3274,6 +3274,7 @@ void pci_pm_init(struct pci_dev *dev)
- 	pci_read_config_word(dev, PCI_STATUS, &status);
- 	if (status & PCI_STATUS_IMM_READY)
- 		dev->imm_ready = 1;
-+poweron:
- 	pci_pm_power_up_and_verify_state(dev);
- 	pm_runtime_forbid(&dev->dev);
- 	pm_runtime_set_active(&dev->dev);
++  clocks: true
++
+   external-facing:
+     description:
+       When present, the port is externally facing. All bridges and endpoints
 -- 
-2.43.0
+2.47.2
 
 
