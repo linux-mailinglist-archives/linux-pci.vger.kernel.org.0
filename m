@@ -1,97 +1,177 @@
-Return-Path: <linux-pci+bounces-29479-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29481-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0E83AD5C7D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 18:41:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBECAD5CAC
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 18:50:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE72A3A9325
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:40:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FC911888AD8
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:50:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C930210F53;
-	Wed, 11 Jun 2025 16:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7544F2040B0;
+	Wed, 11 Jun 2025 16:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+5vncWg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n5VnOf12"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2859820FA86
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 16:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45412E610F;
+	Wed, 11 Jun 2025 16:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660014; cv=none; b=pO6mPUO3cPcFu7ZcUJ09GztMmZn/llCArjloZjLDOdf/b/RN6o8HtbFSd/njNPio9TGdYPo9GCD4V8ZJorkwW08VqxZxfxM2sB0nM57kuqFSW1WKmj4HruWAb13gOa3ZqYS/ZI06cMxJxbifkRPyYteuUQA42+mzxXgj2cLJnA4=
+	t=1749660634; cv=none; b=YYQ04DlVtDDKYK/9oZBnlvc9gevSkTDZM1lO5/PmTOTyqqRIffaj5vRFUQRt1FpSOkxBe00NqD3rjY/TqWj/QGWho6DL0zjYRx3VZGZ9WLpOeUjn0rUHl8UxtEGaB7WfBVhRdE8KL6NrBbLuqiHSinTTCz2H1omr04FvWEpuVQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660014; c=relaxed/simple;
-	bh=l+mxvvSJje3rc/DPsMuR4oUJwj6tIwV3YLlupNT2q8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rps9Alw1AcS8BNJCuCj7la3JWg0T12BMySvpBm+gm/LCtxa+TnjFNCG89y+XnSpB8T538KMCMfBZgwRRNoHJMKRDy1FaJ07o/hR6AX7Xc/iixBre2vTXRLTPlwZlzmLKZmo2RfRHdEpCe6h7x+f6N2qQO0GcisYEGGLdRQuPvW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+5vncWg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DA6C4CEE3;
-	Wed, 11 Jun 2025 16:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749660013;
-	bh=l+mxvvSJje3rc/DPsMuR4oUJwj6tIwV3YLlupNT2q8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P+5vncWgNfib6yxkAr1RxTaTjnMuqitybv2gULgmuHIbiIBIUgEXxsV00uheNo2HJ
-	 QbNY9PIcZAR6DazSrJN3pvNlD6sgvDZl7Fp/PdiBYScy3HjsUUEziKtOymJFwO9jU8
-	 dsY5C478XZ2HAto2KPkkEOv8ne/8klqAJ2Ra6JeJdI/PkL26QfyIP/3xMj1psOmFj2
-	 WArqJgMAewIuSKIJlDesNTIhLAtHKguUzOZPB1qorRPJmt7QzTxCFmbINvDgtQ83r/
-	 AKiMtYGgZtLjgHPgqFJtnXY9ennu9EUmI+10aLiUbctNUa4p7HSst6wonKFfjAhZcj
-	 jjQHnaJrJT7zQ==
-Date: Wed, 11 Jun 2025 10:40:10 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	lukas@wunner.de
-Subject: Re: [PATCHv2] pci: allow user specifiy a reset poll timeout
-Message-ID: <aEmxanDmx6f_5aZX@kbusch-mbp>
-References: <20250218165444.2406119-1-kbusch@meta.com>
- <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com>
- <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5>
+	s=arc-20240116; t=1749660634; c=relaxed/simple;
+	bh=pKeHfuJCvibCVUEiijmqIbl2R3U0gwLuy7BlutemhL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J0upvQa3pjZdK9cz1rA56qs+1sD8iFs51Rw3HzdYCHMT3zfpumF9RKNF/iOR1jzLoDVxZRstbAOqzkB9MMdgKO4BBeRFqDWAUd0B8e8ynipz6TaTzhDj0TbVf2S+7g4EGAAhd8y7VP2vcEk9y6VSLatvh/dU2TES0onTevlZRE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n5VnOf12; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.208.185] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3DB1F21151A2;
+	Wed, 11 Jun 2025 09:50:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3DB1F21151A2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749660632;
+	bh=FPPX7YYZ8XcYflcrWTpvoOffBT2d5LZYxQ3qxbCqh4s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n5VnOf12XqDy1EJXmNidNMRRrGTiqAP2sCXq0CDii1u/gxSlrbHUUBZNbDVvNlzvG
+	 pC+FRSOjFzu21Z8Be5lz4e77cvw2ht+jbnG0a00v68Sx9350zHovrdMvXRywTy104j
+	 vnSsJY80Za2jPuW6uSY5Flm3KJYdI4MpQcqyg7fc=
+Message-ID: <789d1112-020f-402e-9fd2-aa6e061879ff@linux.microsoft.com>
+Date: Wed, 11 Jun 2025 09:50:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] Drivers: hv: Fix warnings for missing export.h header
+ inclusion
+To: Naman Jain <namjain@linux.microsoft.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Konstantin Taranov <kotaranov@microsoft.com>,
+ Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
+ Shiraz Saleem <shirazsaleem@microsoft.com>,
+ Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Maxim Levitsky <mlevitsk@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+ Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250611100459.92900-1-namjain@linux.microsoft.com>
+ <20250611100459.92900-2-namjain@linux.microsoft.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250611100459.92900-2-namjain@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 09:58:59PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Apr 14, 2025 at 06:11:44PM -0600, Keith Busch wrote:
-> > On Tue, Feb 18, 2025 at 08:54:44AM -0800, Keith Busch wrote:
-> > > From: Keith Busch <kbusch@kernel.org>
-> > > 
-> > > The spec does not provide any upper limit to how long a device may
-> > > return Request Retry Status. It just says "Some devices require a
-> > > lengthy self-initialization sequence to complete". The kernel
-> > > arbitrarily chose 60 seconds since that really ought to be enough. But
-> > > there are devices where this turns out not to be enough.
-> > > 
-> > > Since any timeout choice would be arbitrary, and 60 seconds is generally
-> > > more than enough for the majority of hardware, let's make this a
-> > > parameter so an admin can adjust it specifically to their needs if the
-> > > default timeout isn't appropriate.
-> > 
-> > This patch is trying to address timings that have no spec defined
-> > behavior, so making it user tunable sounds just more reasonable than a
-> > kernel define. If we're not considering upstream options to make this
-> > tunable, I think we have no choice but to continue with bespoke
-> > out-of-tree solutions.
+On 6/11/2025 3:04 AM, Naman Jain wrote:
+> Fix below warning in Hyper-V drivers that comes when kernel is compiled
+> with W=1 option. Include export.h in driver files to fix it.
+> * warning: EXPORT_SYMBOL() is used, but #include <linux/export.h>
+> is missing
 > 
-> Do we know the list of devices exhibiting this pattern? And does the time limit
-> is deterministic? I'm just trying to see if it is possible to add quirks for
-> those devices.
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
+>  drivers/hv/channel.c           | 1 +
+>  drivers/hv/channel_mgmt.c      | 1 +
+>  drivers/hv/hv_proc.c           | 1 +
+>  drivers/hv/mshv_common.c       | 1 +
+>  drivers/hv/mshv_root_hv_call.c | 1 +
+>  drivers/hv/ring_buffer.c       | 1 +
+>  6 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 35f26fa1ffe7..7c7c66e0dc3f 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/uio.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/set_memory.h>
+> +#include <linux/export.h>
+>  #include <asm/page.h>
+>  #include <asm/mshyperv.h>
+>  
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index 6e084c207414..65dd299e2944 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/cpu.h>
+>  #include <linux/hyperv.h>
+> +#include <linux/export.h>
+>  #include <asm/mshyperv.h>
+>  #include <linux/sched/isolation.h>
+>  
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 7d7ecb6f6137..fbb4eb3901bb 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/minmax.h>
+> +#include <linux/export.h>
+>  #include <asm/mshyperv.h>
+>  
+>  /*
+> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
+> index 2575e6d7a71f..6f227a8a5af7 100644
+> --- a/drivers/hv/mshv_common.c
+> +++ b/drivers/hv/mshv_common.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/mm.h>
+>  #include <asm/mshyperv.h>
+>  #include <linux/resume_user_mode.h>
+> +#include <linux/export.h>
+>  
+>  #include "mshv.h"
+>  
+> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> index a222a16107f6..c9c274f29c3c 100644
+> --- a/drivers/hv/mshv_root_hv_call.c
+> +++ b/drivers/hv/mshv_root_hv_call.c
+> @@ -9,6 +9,7 @@
+>  
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+> +#include <linux/export.h>
+>  #include <asm/mshyperv.h>
+>  
+>  #include "mshv_root.h"
+> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+> index 3c9b02471760..23ce1fb70de1 100644
+> --- a/drivers/hv/ring_buffer.c
+> +++ b/drivers/hv/ring_buffer.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/prefetch.h>
+>  #include <linux/io.h>
+> +#include <linux/export.h>
+>  #include <asm/mshyperv.h>
+>  
+>  #include "hyperv_vmbus.h"
 
-No. I'm dealing with new devices being actively developed, with new ones
-coming out every year, so a quirk list would just be never ending
-maintenance pain point. The fact I can't point them to off-the-shelf
-kernels to test with has been frustrating for everyone. If we just had a
-user defined option instead of forcing the kernel's arbitrary choice,
-then the problem is solved once and forever.
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
