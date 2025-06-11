@@ -1,58 +1,57 @@
-Return-Path: <linux-pci+bounces-29482-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29483-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2420AD5CC5
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 19:00:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 257FCAD5CDF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 19:12:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6614A7AAA20
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:59:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92FBB3A88FB
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 17:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D2741F582E;
-	Wed, 11 Jun 2025 17:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C614021018F;
+	Wed, 11 Jun 2025 17:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4hyrQAc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVSVeO9X"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539A81DF270;
-	Wed, 11 Jun 2025 17:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24CD20E708
+	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 17:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749661248; cv=none; b=QuOD6OJDrhZGkIQP7EU7vPujU/NsulAP0pcIc2IVrGTFaxbvxtSlGAZW9wxGzoztlEr22aWWMHHxP5SXouojiqub7uR/7ds6ajN4xKNGqSUgVNT2F1IADZFBDVEGQ7Bbbx5n8ra9u8Bnzn7bPKcHcNF/l/zDQPEH5s0JJZuWF6Y=
+	t=1749661903; cv=none; b=Y0WCx5JiPv+p4wrOrd0swcG8KLdxS/w3qoGM6WJsq7qEfxkLeieruyp93M37aVzBYpe/m5uZ+fjSvaublcjxyDSQ3dLeqc7GXo0mp3Qp7tvpiBJpuMwZuW0r6w+7ocF7hfLH0J0TDDn3c/t1cIR7EpdliomnnsupexPFYlXNNuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749661248; c=relaxed/simple;
-	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	s=arc-20240116; t=1749661903; c=relaxed/simple;
+	bh=V7Qz7FopCPAo45OIg+BcHAIFCLPXhmSSHPLNyIjQaSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIrkoFkdVB/LXxYRVSrqCwkYvst2HYvvrtEiNzaB050qG+tqQKwsg84f1q8qB7y6loDZlr5jI+dTUCk+8KDFpMKRQaoNuGaNIZ8WOzuFIe8IalUG/0A5h/zLRrrm+hhWzxqcdcNkOpsQQ2yhsf1ZzbV2zSn1XOb+vu1CgtJZhto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4hyrQAc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9913C4CEE3;
-	Wed, 11 Jun 2025 17:00:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=tax8SPLmE2/gTptJxGYZwRllu873U24iCIp3NMOkZuV5cOI7wBQTWd0gXd7RFVatol9ZwAMYT/01Ha5PVyWrZa9nBA9TFXa4GdUrAGC7v841y60Gprtf/BtWYZb4Yfph8UbzOOCISI/QQYqX1OJmKRphVyGUdzxtJ7pyVggwZRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVSVeO9X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D09C4CEE3;
+	Wed, 11 Jun 2025 17:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749661247;
-	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	s=k20201202; t=1749661901;
+	bh=V7Qz7FopCPAo45OIg+BcHAIFCLPXhmSSHPLNyIjQaSc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p4hyrQAc8dlu8sBj0gfIHVVSY23CT2QtlWEWzvD0M2Qj2hHkJPXAttqrZi3+K4NDA
-	 iw0OOgYL4nWtf1rVe8qMXcYbUvJyhcr9CIbR6CVPNEIg9wtwiEFh7K4oigJpqfFiUg
-	 66BA3kLROOgmVH7/msza3brqfhI0FquXuo1AP5C5U1RGGPVLCDs+W9NeHu17xHW7rX
-	 HbYYcRCh0jtU594VHerq02a3wArk7izJddstZ2Zayyh78mP6YfIiA+5ur/eYJ62kK2
-	 3wd9XBinClLcxbS46XGqnXMsYngs/660tSYA3foSTNh80FHylIivcdInuU+H8c+xX9
-	 Ol48rnLqpg3QA==
-Date: Wed, 11 Jun 2025 22:30:38 +0530
+	b=AVSVeO9XHwSxfVdXHIWY72HNElVtXYbcAiBWDg+CsV7SCE4gKhbWnXfDGKdXiqVTx
+	 Z9/OXZ8cCgmRZzVm2XOMDh4DQI427WmL90FpdMiBOttGEIL+So00s/tUhpvulFt7ht
+	 729kY9zbKhD8CdPW0oaDA+B7Q3e21MyaeJXXCuERbFJS1But5X7J8Dag1j3mpXf4Ys
+	 DRE19nehHNRe0kErTdyBLRK9CiVGxsg8R0NjdMOHyi7uJY6VSQMStKeSUoMkme83vv
+	 dkiGYV5UDIsPBz9rrotAk+LNGNexUZVVo/hibrXqCYCYsH+K2alhk7vFg4K5wy2W1e
+	 f2gRGsrQEJrlw==
+Date: Wed, 11 Jun 2025 22:41:33 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: =?utf-8?B?5a2Z5Yip5paMX0Rpbw==?= <dio.sun@enflame-tech.com>
-Cc: "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>, 
-	"oohall@gmail.com" <oohall@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?utf-8?B?572X5a6JX0Fu?= <an.luo@enflame-tech.com>, 
-	=?utf-8?B?6IOh5reuX0Zlcm5hbmRv?= <fernando.hu@enflame-tech.com>, =?utf-8?B?5ZC055qT552/X0JpbGw=?= <bill.wu@enflame-tech.com>, 
-	=?utf-8?B?546L6ZGrX1hpbg==?= <xin.wang@enflame-tech.com>
-Subject: Re: [PATCH] AER: PCIE CTO recovery handle fix
-Message-ID: <6gs5cvpqbbkudnlr7v57odgaxjyrare6nigrf2lkq22yljult2@z5jklzlmsdcq>
-References: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Keith Busch <kbusch@meta.com>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, ilpo.jarvinen@linux.intel.com, lukas@wunner.de
+Subject: Re: [PATCHv2] pci: allow user specifiy a reset poll timeout
+Message-ID: <reekyt4dm7uszybipm25xfxlksn5bm2cdpubx5idovxenpg44z@qcqs44xlevea>
+References: <20250218165444.2406119-1-kbusch@meta.com>
+ <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com>
+ <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5>
+ <aEmxanDmx6f_5aZX@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,66 +61,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
+In-Reply-To: <aEmxanDmx6f_5aZX@kbusch-mbp>
 
-On Tue, Mar 04, 2025 at 07:07:05AM +0000, 孙利斌_Dio wrote:
-> [EXTERNAL EMAIL]
+On Wed, Jun 11, 2025 at 10:40:10AM -0600, Keith Busch wrote:
+> On Wed, Jun 11, 2025 at 09:58:59PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Apr 14, 2025 at 06:11:44PM -0600, Keith Busch wrote:
+> > > On Tue, Feb 18, 2025 at 08:54:44AM -0800, Keith Busch wrote:
+> > > > From: Keith Busch <kbusch@kernel.org>
+> > > > 
+> > > > The spec does not provide any upper limit to how long a device may
+> > > > return Request Retry Status. It just says "Some devices require a
+> > > > lengthy self-initialization sequence to complete". The kernel
+> > > > arbitrarily chose 60 seconds since that really ought to be enough. But
+> > > > there are devices where this turns out not to be enough.
+> > > > 
+> > > > Since any timeout choice would be arbitrary, and 60 seconds is generally
+> > > > more than enough for the majority of hardware, let's make this a
+> > > > parameter so an admin can adjust it specifically to their needs if the
+> > > > default timeout isn't appropriate.
+> > > 
+> > > This patch is trying to address timings that have no spec defined
+> > > behavior, so making it user tunable sounds just more reasonable than a
+> > > kernel define. If we're not considering upstream options to make this
+> > > tunable, I think we have no choice but to continue with bespoke
+> > > out-of-tree solutions.
+> > 
+> > Do we know the list of devices exhibiting this pattern? And does the time limit
+> > is deterministic? I'm just trying to see if it is possible to add quirks for
+> > those devices.
 > 
-> From 5fc7b1a9e0f0bcfa14068c6358019ed1e3ffc6c6 Mon Sep 17 00:00:00 2001
-> From: "dio.sun" <dio.sun@enflame-tech.com>
-> Date: Wed, 26 Feb 2025 08:54:49 +0000
-> Subject: [PATCH] AER: PCIE CTO recovery handle fix
-> 
+> No. I'm dealing with new devices being actively developed, with new ones
+> coming out every year, so a quirk list would just be never ending
+> maintenance pain point.
 
-Looks like you forwarded this patch instead of submitting directly. Please fix
-it.
+Sounds like you have a lot of devices behaving this way. So can't you quirk them
+based on VID and CLASS?
 
->  - Non-fatal PCIe CTO is reportted to PCIE RC and it will be convertted to
->    AdvNonFatalErr automatically
->  - according to PCIE SPEC 6.2.3.2.4.4 Requester with Completion Timeout(
->    If the severity of the CTO is non-fatal, and the Requester elects to
->    attempt recovery by issuing a new request, the Requester must
->    first handle the currecnt error case as an Advisory Non-Fatal Error.).
->  - Current Kernel code does nothing when receiving an AdvNonFatalErr(
->    Correctable Error) and the device driver has no chance to handle this
->    error.
->  - Under this situation, sometimes system will hang when more
->    AdvNonFatalErr coming.
-> 
-> Signed-off-by: dio.sun <dio.sun@enflame-tech.com>
-> ---
-> drivers/pci/pcie/aer.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 508474e17183..5ddc990c6f42 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1154,7 +1154,21 @@ static void aer_recover_work_func(struct work_struct *work)
->                 ghes_estatus_pool_region_free((unsigned long)entry.regs,
->                                             sizeof(struct aer_capability_regs));
-> 
-> -               if (entry.severity == AER_NONFATAL)
-> +               if (entry.severity == AER_CORRECTABLE) {
-> +                       if (entry.regs->cor_status & PCI_ERR_COR_ADV_NFAT) {
-> +                               pci_err(pdev, "%04x:%02x:%02x:%x advisory non-fatal error\n",
-> +                                               entry.domain, entry.bus, PCI_SLOT(entry.devfn),
-> +                                               PCI_FUNC(entry.devfn));
-> +                               if (entry.regs->uncor_status & PCI_ERR_UNC_COMP_TIME) {
-> +                                       pci_err(pdev, "%04x:%02x:%02x:%x completion timeout\n",
-> +                                                       entry.domain, entry.bus,
-> +                                                       PCI_SLOT(entry.devfn),
-> +                                                       PCI_FUNC(entry.devfn));
-> +                                       pcie_do_recovery(pdev, pci_channel_io_frozen,
-> +                                                                        aer_root_reset);
-> +                               }
-> +                       }
+> The fact I can't point them to off-the-shelf
+> kernels to test with has been frustrating for everyone. If we just had a
+> user defined option instead of forcing the kernel's arbitrary choice,
+> then the problem is solved once and forever.
 
-Why the error is handled in aer_recover_work_func()? This looks like only gets
-triggered from ghes_handle_aer() in drivers/acpi/apei/ghes.c.
-
-I think it should be handled in pci_aer_handle_error(). Also, the error prints
-should be sneaked into aer_print_error().
+I think nowadays the use of module_params is not encouraged, though in this
+case, it is already present and you are just trying to add one more option.
+But, adding a new option for devices from a single vendor might not fly (though
+only Bjorn could take that call).
 
 - Mani
 
