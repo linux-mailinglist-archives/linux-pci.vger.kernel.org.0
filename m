@@ -1,177 +1,130 @@
-Return-Path: <linux-pci+bounces-29481-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29482-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DBECAD5CAC
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 18:50:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2420AD5CC5
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 19:00:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FC911888AD8
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:50:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6614A7AAA20
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7544F2040B0;
-	Wed, 11 Jun 2025 16:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D2741F582E;
+	Wed, 11 Jun 2025 17:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n5VnOf12"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4hyrQAc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45412E610F;
-	Wed, 11 Jun 2025 16:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539A81DF270;
+	Wed, 11 Jun 2025 17:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660634; cv=none; b=YYQ04DlVtDDKYK/9oZBnlvc9gevSkTDZM1lO5/PmTOTyqqRIffaj5vRFUQRt1FpSOkxBe00NqD3rjY/TqWj/QGWho6DL0zjYRx3VZGZ9WLpOeUjn0rUHl8UxtEGaB7WfBVhRdE8KL6NrBbLuqiHSinTTCz2H1omr04FvWEpuVQM=
+	t=1749661248; cv=none; b=QuOD6OJDrhZGkIQP7EU7vPujU/NsulAP0pcIc2IVrGTFaxbvxtSlGAZW9wxGzoztlEr22aWWMHHxP5SXouojiqub7uR/7ds6ajN4xKNGqSUgVNT2F1IADZFBDVEGQ7Bbbx5n8ra9u8Bnzn7bPKcHcNF/l/zDQPEH5s0JJZuWF6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660634; c=relaxed/simple;
-	bh=pKeHfuJCvibCVUEiijmqIbl2R3U0gwLuy7BlutemhL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0upvQa3pjZdK9cz1rA56qs+1sD8iFs51Rw3HzdYCHMT3zfpumF9RKNF/iOR1jzLoDVxZRstbAOqzkB9MMdgKO4BBeRFqDWAUd0B8e8ynipz6TaTzhDj0TbVf2S+7g4EGAAhd8y7VP2vcEk9y6VSLatvh/dU2TES0onTevlZRE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n5VnOf12; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.208.185] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3DB1F21151A2;
-	Wed, 11 Jun 2025 09:50:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3DB1F21151A2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749660632;
-	bh=FPPX7YYZ8XcYflcrWTpvoOffBT2d5LZYxQ3qxbCqh4s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n5VnOf12XqDy1EJXmNidNMRRrGTiqAP2sCXq0CDii1u/gxSlrbHUUBZNbDVvNlzvG
-	 pC+FRSOjFzu21Z8Be5lz4e77cvw2ht+jbnG0a00v68Sx9350zHovrdMvXRywTy104j
-	 vnSsJY80Za2jPuW6uSY5Flm3KJYdI4MpQcqyg7fc=
-Message-ID: <789d1112-020f-402e-9fd2-aa6e061879ff@linux.microsoft.com>
-Date: Wed, 11 Jun 2025 09:50:29 -0700
+	s=arc-20240116; t=1749661248; c=relaxed/simple;
+	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SIrkoFkdVB/LXxYRVSrqCwkYvst2HYvvrtEiNzaB050qG+tqQKwsg84f1q8qB7y6loDZlr5jI+dTUCk+8KDFpMKRQaoNuGaNIZ8WOzuFIe8IalUG/0A5h/zLRrrm+hhWzxqcdcNkOpsQQ2yhsf1ZzbV2zSn1XOb+vu1CgtJZhto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4hyrQAc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9913C4CEE3;
+	Wed, 11 Jun 2025 17:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749661247;
+	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p4hyrQAc8dlu8sBj0gfIHVVSY23CT2QtlWEWzvD0M2Qj2hHkJPXAttqrZi3+K4NDA
+	 iw0OOgYL4nWtf1rVe8qMXcYbUvJyhcr9CIbR6CVPNEIg9wtwiEFh7K4oigJpqfFiUg
+	 66BA3kLROOgmVH7/msza3brqfhI0FquXuo1AP5C5U1RGGPVLCDs+W9NeHu17xHW7rX
+	 HbYYcRCh0jtU594VHerq02a3wArk7izJddstZ2Zayyh78mP6YfIiA+5ur/eYJ62kK2
+	 3wd9XBinClLcxbS46XGqnXMsYngs/660tSYA3foSTNh80FHylIivcdInuU+H8c+xX9
+	 Ol48rnLqpg3QA==
+Date: Wed, 11 Jun 2025 22:30:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: =?utf-8?B?5a2Z5Yip5paMX0Rpbw==?= <dio.sun@enflame-tech.com>
+Cc: "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>, 
+	"oohall@gmail.com" <oohall@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?utf-8?B?572X5a6JX0Fu?= <an.luo@enflame-tech.com>, 
+	=?utf-8?B?6IOh5reuX0Zlcm5hbmRv?= <fernando.hu@enflame-tech.com>, =?utf-8?B?5ZC055qT552/X0JpbGw=?= <bill.wu@enflame-tech.com>, 
+	=?utf-8?B?546L6ZGrX1hpbg==?= <xin.wang@enflame-tech.com>
+Subject: Re: [PATCH] AER: PCIE CTO recovery handle fix
+Message-ID: <6gs5cvpqbbkudnlr7v57odgaxjyrare6nigrf2lkq22yljult2@z5jklzlmsdcq>
+References: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] Drivers: hv: Fix warnings for missing export.h header
- inclusion
-To: Naman Jain <namjain@linux.microsoft.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Konstantin Taranov <kotaranov@microsoft.com>,
- Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
- Shiraz Saleem <shirazsaleem@microsoft.com>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Maxim Levitsky <mlevitsk@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
- Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
- <20250611100459.92900-2-namjain@linux.microsoft.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250611100459.92900-2-namjain@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
 
-On 6/11/2025 3:04 AM, Naman Jain wrote:
-> Fix below warning in Hyper-V drivers that comes when kernel is compiled
-> with W=1 option. Include export.h in driver files to fix it.
-> * warning: EXPORT_SYMBOL() is used, but #include <linux/export.h>
-> is missing
+On Tue, Mar 04, 2025 at 07:07:05AM +0000, 孙利斌_Dio wrote:
+> [EXTERNAL EMAIL]
 > 
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> From 5fc7b1a9e0f0bcfa14068c6358019ed1e3ffc6c6 Mon Sep 17 00:00:00 2001
+> From: "dio.sun" <dio.sun@enflame-tech.com>
+> Date: Wed, 26 Feb 2025 08:54:49 +0000
+> Subject: [PATCH] AER: PCIE CTO recovery handle fix
+> 
+
+Looks like you forwarded this patch instead of submitting directly. Please fix
+it.
+
+>  - Non-fatal PCIe CTO is reportted to PCIE RC and it will be convertted to
+>    AdvNonFatalErr automatically
+>  - according to PCIE SPEC 6.2.3.2.4.4 Requester with Completion Timeout(
+>    If the severity of the CTO is non-fatal, and the Requester elects to
+>    attempt recovery by issuing a new request, the Requester must
+>    first handle the currecnt error case as an Advisory Non-Fatal Error.).
+>  - Current Kernel code does nothing when receiving an AdvNonFatalErr(
+>    Correctable Error) and the device driver has no chance to handle this
+>    error.
+>  - Under this situation, sometimes system will hang when more
+>    AdvNonFatalErr coming.
+> 
+> Signed-off-by: dio.sun <dio.sun@enflame-tech.com>
 > ---
->  drivers/hv/channel.c           | 1 +
->  drivers/hv/channel_mgmt.c      | 1 +
->  drivers/hv/hv_proc.c           | 1 +
->  drivers/hv/mshv_common.c       | 1 +
->  drivers/hv/mshv_root_hv_call.c | 1 +
->  drivers/hv/ring_buffer.c       | 1 +
->  6 files changed, 6 insertions(+)
+> drivers/pci/pcie/aer.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 35f26fa1ffe7..7c7c66e0dc3f 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -18,6 +18,7 @@
->  #include <linux/uio.h>
->  #include <linux/interrupt.h>
->  #include <linux/set_memory.h>
-> +#include <linux/export.h>
->  #include <asm/page.h>
->  #include <asm/mshyperv.h>
->  
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 6e084c207414..65dd299e2944 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -20,6 +20,7 @@
->  #include <linux/delay.h>
->  #include <linux/cpu.h>
->  #include <linux/hyperv.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  #include <linux/sched/isolation.h>
->  
-> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> index 7d7ecb6f6137..fbb4eb3901bb 100644
-> --- a/drivers/hv/hv_proc.c
-> +++ b/drivers/hv/hv_proc.c
-> @@ -6,6 +6,7 @@
->  #include <linux/slab.h>
->  #include <linux/cpuhotplug.h>
->  #include <linux/minmax.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  /*
-> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-> index 2575e6d7a71f..6f227a8a5af7 100644
-> --- a/drivers/hv/mshv_common.c
-> +++ b/drivers/hv/mshv_common.c
-> @@ -13,6 +13,7 @@
->  #include <linux/mm.h>
->  #include <asm/mshyperv.h>
->  #include <linux/resume_user_mode.h>
-> +#include <linux/export.h>
->  
->  #include "mshv.h"
->  
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> index a222a16107f6..c9c274f29c3c 100644
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/kernel.h>
->  #include <linux/mm.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  #include "mshv_root.h"
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 3c9b02471760..23ce1fb70de1 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -18,6 +18,7 @@
->  #include <linux/slab.h>
->  #include <linux/prefetch.h>
->  #include <linux/io.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  #include "hyperv_vmbus.h"
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 508474e17183..5ddc990c6f42 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1154,7 +1154,21 @@ static void aer_recover_work_func(struct work_struct *work)
+>                 ghes_estatus_pool_region_free((unsigned long)entry.regs,
+>                                             sizeof(struct aer_capability_regs));
+> 
+> -               if (entry.severity == AER_NONFATAL)
+> +               if (entry.severity == AER_CORRECTABLE) {
+> +                       if (entry.regs->cor_status & PCI_ERR_COR_ADV_NFAT) {
+> +                               pci_err(pdev, "%04x:%02x:%02x:%x advisory non-fatal error\n",
+> +                                               entry.domain, entry.bus, PCI_SLOT(entry.devfn),
+> +                                               PCI_FUNC(entry.devfn));
+> +                               if (entry.regs->uncor_status & PCI_ERR_UNC_COMP_TIME) {
+> +                                       pci_err(pdev, "%04x:%02x:%02x:%x completion timeout\n",
+> +                                                       entry.domain, entry.bus,
+> +                                                       PCI_SLOT(entry.devfn),
+> +                                                       PCI_FUNC(entry.devfn));
+> +                                       pcie_do_recovery(pdev, pci_channel_io_frozen,
+> +                                                                        aer_root_reset);
+> +                               }
+> +                       }
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Why the error is handled in aer_recover_work_func()? This looks like only gets
+triggered from ghes_handle_aer() in drivers/acpi/apei/ghes.c.
+
+I think it should be handled in pci_aer_handle_error(). Also, the error prints
+should be sneaked into aer_print_error().
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
