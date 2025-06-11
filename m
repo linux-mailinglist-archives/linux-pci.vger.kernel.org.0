@@ -1,128 +1,170 @@
-Return-Path: <linux-pci+bounces-29446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89C06AD5788
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 15:51:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52BF2AD5817
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:10:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3809A3A415D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 13:50:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B883166137
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 14:09:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E0E24502D;
-	Wed, 11 Jun 2025 13:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D94288CB4;
+	Wed, 11 Jun 2025 14:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHvInfJX"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BsL1rm0l"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25291E487;
-	Wed, 11 Jun 2025 13:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76E127E7F0;
+	Wed, 11 Jun 2025 14:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749649863; cv=none; b=ffXh3Ln+uq4jkocDPJhPmVCuwL3zoah0CKQ+RwFxrDcNYuN3rWhv0uBTUx+X4Nq/Ze1qg7sd4oDW/Zm1rsuO7kwlAqIP+V1mXXP15+qEB7/KOkb0l3W+Ot0ITlXQm0/fzDE8vfm38zCFFRYc/zqcQj2tkPEeRSvYzQGuaYg3HAk=
+	t=1749650988; cv=none; b=g8BVUNEE7nE7QuI29Plgp9ow8uVafyESZygDGv8tkaRCQgxZBuRIbSW+qdGE7TASfb5yHdXL8n7Y8XGQp18uWESPeC8hOPaFUCF4ERk0+xT6Dr9BMygqd4gFWQT60IxFskuLdERH4Cr0RKpBUJ+q1o06jEtmZftrxhoGH+9zUys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749649863; c=relaxed/simple;
-	bh=Dn/yF4tv1L6vdrhzkr6R5Cpsn7ot4gdbtnmxxApYyl0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ewHpObQaNv/1S52BrwPyAd3zhKHsAU40bW79iqUdzhSJz4cPO6MY/Xp4FdmwcOz8EI+U5/+kp+boN/gD3/giO4YQIO6aloyuRJdaCbPhrcYu0h4b5aLJNjkHXzchQvW89qsHofgfj7BI0HdKoPEgvDXQQnLKHTJBJpH2rIFCczQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHvInfJX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C812C4CEEE;
-	Wed, 11 Jun 2025 13:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749649863;
-	bh=Dn/yF4tv1L6vdrhzkr6R5Cpsn7ot4gdbtnmxxApYyl0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WHvInfJXz/50bS0+1y1CqOkuJpn2/ViHSWZEo6zAS6DFicXO8OD42xIf3JH6X5bBv
-	 IienWC56NlvWtXNzscMAgHmLg/gAq2e6r8cjBLr38HdqVE5QS0739Vaz05DYTGs8Vv
-	 jX+dLx+Dxuoefo9SeDIRzUrV3CjEra7HNlv/pRdf0IlmpshBtBPtAp3xQRK++MIWvZ
-	 +1YgiMFvL2mROd74Tr3VO5GUYz2UQkU3m/sdUgs3P1vOxCiajI4O8fyocItkVIJhLK
-	 kaAHEBoDFh3ilvby8iiVlNv+lWf0iRK6MgoiTHHgnLVOUzrwlgSBS7Ex/ei4Igu4Hz
-	 G4BJOznW5gsqQ==
-Message-ID: <56d0e247-8095-4793-a5a9-0b5cf2565b88@kernel.org>
-Date: Wed, 11 Jun 2025 06:50:59 -0700
+	s=arc-20240116; t=1749650988; c=relaxed/simple;
+	bh=AK8EHYOYCq+SXbAg7Z3/UJ2hTdChIAXHjEBP1cncQwc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=H9Jwxj6BFY33HERdMXY4Hr8Kf0BEApZ9TsAVs44zXx8Ly1005HI5KhCvFDb1t7uAmIcHhyO+xfkddRnOyi0Ynn+9+oAH9U+CH8eH10pYM0G56oxUB9uTktG1Va8exP8zFQU5zL1+5tnxAx+KJLjMvhu4FnQVTclefavJ/tavDwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BsL1rm0l; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 17C582115191; Wed, 11 Jun 2025 07:09:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17C582115191
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749650986;
+	bh=11QiVZcZI7HpQy9zTwvvYDXhgBE3dYR024Si5/zihXI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BsL1rm0lRBhLTVe8xwSQsnjJN3OAptJKwkNoU+LcAPvFp0UQcwr9aE4CbvB+1YfUw
+	 5Do84Mgv9/w1ewysOpHypiSiBacjohIaaRGYkzJ1nf3a9183LZAfNgO9K6yJO/idRj
+	 gom2c5DcaDfk0JpguLKUABzpU0zcYlTsalbDlgO4=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: 
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Date: Wed, 11 Jun 2025 07:09:44 -0700
+Message-Id: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Explicitly put devices into D0 when initializing
- - Bug report
-To: "Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>, bhelgaas@google.com,
- alex.williamson@redhat.com
-Cc: mario.limonciello@amd.com, rafael.j.wysocki@intel.com,
- huang.ying.caritas@gmail.com, stern@rowland.harvard.edu,
- linux-pci@vger.kernel.org, mike.ximing.chen@intel.com, ahsan.atta@intel.com,
- suman.kumar.chakraborty@intel.com, kvm@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <aEl8J3kv6HAcAkUp@gcabiddu-mobl.ger.corp.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aEl8J3kv6HAcAkUp@gcabiddu-mobl.ger.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 6/11/2025 5:52 AM, Cabiddu, Giovanni wrote:
-> Hi Mario, Bjorn and Alex,
-> 
-> On Wed, Apr 23, 2025 at 11:31:32PM -0500, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> AMD BIOS team has root caused an issue that NVME storage failed to come
->> back from suspend to a lack of a call to _REG when NVME device was probed.
->>
->> commit 112a7f9c8edbf ("PCI/ACPI: Call _REG when transitioning D-states")
->> added support for calling _REG when transitioning D-states, but this only
->> works if the device actually "transitions" D-states.
->>
->> commit 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI
->> devices") added support for runtime PM on PCI devices, but never actually
->> 'explicitly' sets the device to D0.
->>
->> To make sure that devices are in D0 and that platform methods such as
->> _REG are called, explicitly set all devices into D0 during initialization.
->>
->> Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
-> Through a bisect, we identified that this patch, in v6.16-rc1,
-> introduces a regression on vfio-pci across all Intel QuickAssist (QAT)
-> devices. Specifically, the ioctl VFIO_GROUP_GET_DEVICE_FD call fails
-> with -EACCES.
-> 
-> Upon further investigation, the -EACCES appears to originate from the
-> rpm_resume() function, which is called by pm_runtime_resume_and_get()
-> within vfio_pci_core_enable(). Here is the exact call trace:
-> 
->      drivers/base/power/runtime.c: rpm_resume()
->      drivers/base/power/runtime.c: __pm_runtime_resume()
->      include/linux/pm_runtime.h: pm_runtime_resume_and_get()
->      drivers/vfio/pci/vfio_pci_core.c: vfio_pci_core_enable()
->      drivers/vfio/pci/vfio_pci.c: vfio_pci_open_device()
->      drivers/vfio/vfio_main.c: device->ops->open_device()
->      drivers/vfio/vfio_main.c: vfio_df_device_first_open()
->      drivers/vfio/vfio_main.c: vfio_df_open()
->      drivers/vfio/group.c: vfio_df_group_open()
->      drivers/vfio/group.c: vfio_device_open_file()
->      drivers/vfio/group.c: vfio_group_ioctl_get_device_fd()
->      drivers/vfio/group.c: vfio_group_fops_unl_ioctl(..., VFIO_GROUP_GET_DEVICE_FD, ...)
-> 
-> Is this a known issue that affects other devices? Is there any ongoing
-> discussion or fix in progress?
-> 
-> Thanks,
-> 
+In this patchset we want to enable the MANA driver to be able to
+allocate MSI-X vectors in PCI dynamically.
 
-This is the first I've heard about an issue with that patch.
+The first patch exports pci_msix_prepare_desc() in PCI to be able to
+correctly prepare descriptors for dynamically added MSI-X vectors.
 
-Does setting the VFIO parameter disable_idle_d3 help?
+The second patch adds the support of dynamic vector allocation in
+pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+flag and using the pci_msix_prepare_desc() exported in first patch.
 
-If so; this feels like an imbalance of runtime PM calls in the VFIO 
-stack that this patch exposed.
+The third patch adds a detailed description of the irq_setup(), to
+help understand the function design better.
 
-Alex, any ideas?
+The fourth patch is a preparation patch for mana changes to support
+dynamic IRQ allocation. It contains changes in irq_setup() to allow
+skipping first sibling CPU sets, in case certain IRQs are already
+affinitized to them.
+
+The fifth patch has the changes in MANA driver to be able to allocate
+MSI-X vectors dynamically. If the support does not exist it defaults to
+older behavior.
+
+Since this patchset has patches from PCI and net tree, I am not entirely
+sure what should be the target tree. Any suggestions/recommendations on
+the same are welcomed.
+
+---
+Changes in v6
+ * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion
+---
+Changes in v5
+ * Added Yury as Author of the 3rd patch
+ * Fixed base commit information in the cover letter
+ * Correctly initialized start_irqs, so that it is cleaned properly
+ * rearranged the cpu_lock to minimize the critical section
+---
+ Change in v4
+ * add a patch describing the functionality of irq_setup() through a 
+   comment
+ * In irq_setup(), avoid using a label next_cpumask:
+ * modify the changes in MANA patch about restructuring the error
+   handling path in mana_gd_setup_dyn_irqs()
+ * modify the mana_gd_setup_irqs() to simplify handling around
+   start_irq_index
+ * add warning if an invalid gic is returned
+ * place the xa_destroy() cleanup in mana_gd_remove
+---
+ Changes in v3
+ * split the 3rd patch into preparation patch around irq_setup() and
+   changes in mana driver to allow dynamic IRQ allocation
+ * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
+   controller
+---
+ Changes in v2
+ * split the first patch into two(exporting the preapre_desc
+   func and using the function and flag in pci-hyperv)
+ * replace 'pci vectors' by 'MSI-X vectors'
+ * Change the cover letter description to align with changes made
+---
+
+Shradha Gupta (4):
+  PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
+  PCI: hv: Allow dynamic MSI-X vector allocation
+  net: mana: Allow irq_setup() to skip cpus for affinity
+  net: mana: Allocate MSI-X vectors dynamically
+
+Yury Norov (1):
+  net: mana: explain irq_setup() algorithm
+
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 366 ++++++++++++++----
+ drivers/pci/controller/pci-hyperv.c           |   3 +-
+ drivers/pci/msi/irqdomain.c                   |   5 +-
+ include/linux/msi.h                           |   2 +
+ include/net/mana/gdma.h                       |   8 +-
+ 5 files changed, 294 insertions(+), 90 deletions(-)
+
+
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+-- 
+2.34.1
+
 
