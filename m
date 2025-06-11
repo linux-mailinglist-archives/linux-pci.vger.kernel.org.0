@@ -1,120 +1,81 @@
-Return-Path: <linux-pci+bounces-29388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC4CAD48CD
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 04:22:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4DCAAD494C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 05:27:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59B8A1894F78
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 02:22:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FE703A5C94
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 03:26:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC00113D539;
-	Wed, 11 Jun 2025 02:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 977F718DB0E;
+	Wed, 11 Jun 2025 03:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gf7zPpb1"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vde01gqY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B20D286A9;
-	Wed, 11 Jun 2025 02:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0E413A3F2;
+	Wed, 11 Jun 2025 03:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608543; cv=none; b=tXrDRdQlaQjRV1jWC9xjSIrnk3cyQUEdURBxY6Eq8w358dU1LPbaiYIUiriIHxWQ435fawnN9WslBOp52ChrtCkZq1Wl2SUIj75erwNkJRRziTO3leF2iT2bkGxGL17jN4gqGVw3UThCTYiBy0jE30hRB72FN0BBp+X20O7aaZU=
+	t=1749612434; cv=none; b=EqFrBp1Mfa/DaHrC6RT+uyJqiRxMJX5WLwslahwNK/dWULvwsm5NDtSe5GfxcPojAs2mpWRTgnYzkEihOFn/HM4yG9wA92JFvFWzCdNgxOL3KUUsL/vIZbe9ICp24nyvObMdz2jAPWP8bobnJeNU0sLYQ/x+c3BkInzvRpLxKQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749608543; c=relaxed/simple;
-	bh=wZgm6b+aaYaDHSCtiEqey06T+bU5xLWsquPRNzTnwAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PEsXhKS2Nj4K0W8LiHhOPN9j97nch7fvQ4+MyiCDpYc2CNWP5f2/5nxYSqrZJHeTT4/gyYvjegHS/ZAU1vSkMfJDmyauAIfgiwV999FGypkISHqxci8kl3LrYK1ZidjJvnr4EOG4Oki8z06ARI7DtsPxa3TovGSC3SVAY9DoA88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gf7zPpb1; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-53118db57b4so417975e0c.2;
-        Tue, 10 Jun 2025 19:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749608541; x=1750213341; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mDW7FpZdddVN8iP+dZ71T1ANA9fYJqbCRdgup6n4kvE=;
-        b=Gf7zPpb1XG8xDRJrVpNudpGv/ZXFFNLRcdaiNlwEV5Hi9VqY2iSyvt//s+RsTrZems
-         VJeEGjIRm+eZRkT2Q21wJiLxp0UWLnPc8CJKDKkRmmSX8zHe3dkH6mcrMd5lhDAKb0Qa
-         3qKQjENe5Dd6viqrvFmxvMTbHtiRAvk0owSZoCfD28c4wq6Dgqz9srwqK24OJzJMYUwv
-         /nlxA0e8jgqBVTHKKSXFBX+pzqO4uQD9+WP0tf22VoQFDvb3Pghvfgn62eJ0mHTNxhYt
-         uG5N0wjflbUAXyXMuH4GjbvSgRFpBQVsm7l/NwNl9Rum0QgiIDD3hj6SbIJ7xQWauXgT
-         OKUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749608541; x=1750213341;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mDW7FpZdddVN8iP+dZ71T1ANA9fYJqbCRdgup6n4kvE=;
-        b=U9/l3bVQMF1SJVcBkqiRjteSK3QxxmWV1BB2P7SDahEZkGUyY4TFeDHhv2ab65j5pz
-         m/dCO2N3yH+gMd7C+h8ytYkr04DbPmsMMeZVy+BDqMCV93w+oWnNWx7uplhufwS5h1cz
-         fOQ6WxedenK19jbeOdYNx1GMwAWAtlXIkz7q0TEZiAW3pkIm7VxT9YXZm5NfOV6FKBQA
-         uz/4eocPt08D3Zikrwf4GbfU9FgslVqyRns6SrbaTv9qD1qLXuITTfSxTTu7bLsdorwu
-         SYuZi5cwwV/M1IdNDIyKhMptf9zhWCJyceHXg3QX8AA+WknIBN027KzM3n+XaitqFUxW
-         Xe7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWFlWVou5gKIqClKLT8uFGcHxe1B8YcPM7flXau9mK0n/9nmgvo4pD0aCLwONmRUHG2PscCVJvumO0te3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx70KBTQqvK/4xcR31a6ksEhY1dSn74n7ISI4d1n9Jnec25zzIC
-	nkKI3S0GggJMPShTWtfw0cCtV1vpHuRsavP+02apObw5I+3JJNsatlaa
-X-Gm-Gg: ASbGnctLz8KtOwrh/2vfxZY7vCUvp3FXNE23gPhnyvDIjFgwpJQBejgDFVZwjz18uKJ
-	v1K9i4+v77D9ZRxe5T39ZQI8eV48N5nOht2oLHpSMcPlLQZ6JpSmnXSyy1YzpjAIlmE9AHdmxgD
-	tyHlsLBLJLyzqNvkNybjdAp1V7mmEFePphWp4fDgiKhot6OZtoFKaTej+D6tcBNlYSAGC3Dc/ME
-	ZRa+yAIqSGoVjPMsfMvTYwEofVXkfneg7OxdEoy/EScU2aSwegixd+v6/fEKT7CWURTJUhI/iW8
-	/rDszqVjeAli2SbzXwbjIjzXMN03wDSY8A+TGhSV+D9tbuwl2+zMsPsoR5wde6BKJCSegn3m
-X-Google-Smtp-Source: AGHT+IEyTeM/+4PiirQpXvijwrUccW8FXProX6fsljS4q8OsbpgRzIAF0sRJeAbEcq4CDfTy+7e7aw==
-X-Received: by 2002:a05:6122:1e06:b0:530:7747:80a7 with SMTP id 71dfb90a1353d-53122e17151mr1138216e0c.9.1749608540798;
-        Tue, 10 Jun 2025 19:22:20 -0700 (PDT)
-Received: from pop-os.. ([201.49.69.163])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5311f41fa07sm1340765e0c.4.2025.06.10.19.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 19:22:20 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: bhelgaas@google.com,
-	ngn@ngn.tf
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Subject: [RESEND PATCH] PCI: hotplug: remove resolved TODO
-Date: Tue, 10 Jun 2025 23:21:23 -0300
-Message-Id: <20250611022123.201839-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1749612434; c=relaxed/simple;
+	bh=x/5yoshJpK/46vD6GnhsEJDVUCcaG30nZvgNrRAXwyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3p3AfiJKCnqc+wj57jjJAlQS0mR9pkur/ANu8d7eOM/Mw+JoA8gSCV6bDkVLpmlu84+JR+K4xbATvvmvRSsA7TanWTv1Ol3K39L7C1Cq5IRT0rykeiCc7zRxu+puS0/sEctdP05qf5L9aRhHr0Y0VOhuB3/WusDHNBO3h/Hoes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vde01gqY; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=eT2mDlWcfi4vpC/fXERnSm4bvQLSkLGtiKJc/u+kRZI=; b=vde01gqYoLSiujMIH9TY8DaQXV
+	91hOwGVeBw99TB5LYiwlNiDnLqE4cr0r5pG7h47Y5m+bJMv8+d3edWk3mLhRgrS4Y6zTfZ9fJhG76
+	H6zxiUH9hJMq111yoirRM6JX5TFFBtzJo3aWJpt6Hm4yHouOIW8JWFOLjknaBW9Tzp/Dr04TvjTC8
+	4UG3VyHt4BK3Tx9wmG5DWPaAgRdOH4OXsu/HxLjXNt30zPIFBWV1Jj29pM//TuGip6n8S/OISShQ4
+	uBYwM8pgzK4eSGzZbNV11wFwkf8WJ5GNxTDP0NUsk1tftFhZd3GYA8vXy9UQc0FFzIUGkD79JSHNd
+	Kp7HNz5Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPC7M-00000008jgW-2eKW;
+	Wed, 11 Jun 2025 03:27:12 +0000
+Date: Tue, 10 Jun 2025 20:27:12 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: grwhyte@linux.microsoft.com
+Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
+	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <aEj3kAy5bOXPA_1O@infradead.org>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The commit 8ff4574cf73d ("PCI: cpcihp: Remove unused .get_power() and
-.set_power()") and commit 5b036cada481 ("PCI: cpcihp: Remove unused
-struct cpci_hp_controller_ops.hardware_test") is resolved this TODO.
+On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
+> From: Graham Whyte <grwhyte@linux.microsoft.com>
+> 
+> Add a new flr_delay member of the pci_dev struct to allow customization of
+> the delay after FLR for devices that do not support immediate readiness
+> or readiness time reporting. The main scenario this addresses is VF
+> removal and rescan during runtime repairs and driver updates, which,
+> if fixed to 100ms, introduces significant delays across multiple VFs.
+> These delays are unnecessary for devices that complete the FLR well
+> within this timeframe.
 
-Remove this obsolete TODO notes.
-
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- drivers/pci/hotplug/TODO | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-index 92e6e20e8595..7397374af171 100644
---- a/drivers/pci/hotplug/TODO
-+++ b/drivers/pci/hotplug/TODO
-@@ -2,10 +2,6 @@ Contributions are solicited in particular to remedy the following issues:
- 
- cpcihp:
- 
--* There are no implementations of the ->hardware_test, ->get_power and
--  ->set_power callbacks in struct cpci_hp_controller_ops.  Why were they
--  introduced?  Can they be removed from the struct?
--
- * Returned code from pci_hp_add_bridge() is not checked.
- 
- cpqphp:
--- 
-2.34.1
+Please work with the PCIe SIG to have a standard capability for this
+instead of piling up hacks like this quirk.
 
 
