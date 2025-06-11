@@ -1,95 +1,62 @@
-Return-Path: <linux-pci+bounces-29391-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29392-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39FCCAD49DD
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 06:00:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D691EAD4A1A
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 06:39:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1324C3A69CB
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 03:59:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05DBC189CE3C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 04:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9741C75E2;
-	Wed, 11 Jun 2025 03:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AluZbev8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E38871DB346;
+	Wed, 11 Jun 2025 04:39:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9170C8FE;
-	Wed, 11 Jun 2025 03:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12D417E;
+	Wed, 11 Jun 2025 04:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614399; cv=none; b=oInLwA4/Hn4MHNHXYMElENngffNy2B1CemH2LW2uXeTx4NyWF+satmMk1LvZLHvA4yPCwSCs6OomXg+njyfhSJDD4zUI4CXFlRf2Lb2/QC7Ce0WUg33lZYiLo/ShwJ2W9lA4+hFsOKSFDRfSy7oYkHYH1tBHu1EjR/R+upls5Nk=
+	t=1749616745; cv=none; b=rRM1Gba9SnMRFnmHDB5Lo+t0k25gwzPTIoOccxS/BUCUhE9UN4VMA+88t4u7lSNQuWnUrOWv8I/UOGanD/GD6HmdoTinuAH3Atv9xjOwnGed2hEERMolYZ6N+Ep9YeQ+leQu3x5KyAIU0LbLeM2dC6hjuFyHyseDw47/jsNEi60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614399; c=relaxed/simple;
-	bh=6Bv1xt+Ulsxs3ZANi+lB4WzocuIuNfvDq3Y/oLo/j/0=;
+	s=arc-20240116; t=1749616745; c=relaxed/simple;
+	bh=DZA6rpZMGkpvSVloY9xR5fbblgafaczRjmes4Ie6mKM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IPEJk88d0K4n00K5iA9ZJ42mAazhmElXPy3RGG04xuBJCWe9GLZOEVliYs2HWZAfzzvod+g4fU0wVLjhWxFb4VFMNoAG/uvVnkRYH5CMSDZTcq5CCxnXFoCg+1CladGgZGo7d4QQP1nHYL7dT6emIWTDmdnyn+Ge8UMTcL+iOrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AluZbev8; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5311cfb975aso311959e0c.1;
-        Tue, 10 Jun 2025 20:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749614396; x=1750219196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
-        b=AluZbev8p6LHon9Qi8g0JjsjoqMaio4KkXWWEOvLm+3dPNmNNDIDXXbrYVtRkMlSlI
-         6eovcKpfloO/PZX6jvC7TJ+4Tb3YXUBpqOwLEtiBVfdlu6qAxOrcssDnTCuJFXs+ZSrC
-         9hBlMhw25gxTpZYN0U17tlFADOdxfA+VffGsx3j5wiquURSKDFuRb+a60JDi+4ju3Kt9
-         5TiafS5iPCe/GaRNWthVof8zHht76GMuOS0431JFazLjwGdMA1Gm7YZjfhYjHSK+BIIa
-         a2KiMqZ3HSaXxZoRC2K0uYMa15inEfr2cq+SSN9jy7KHMxHtTsgIhaj+tjXGHEs7/QMe
-         pufw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749614396; x=1750219196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
-        b=X/qghanupnh5YQFNMQBzRKC60w65zmAXqBsg56RVYHeDT/ccAQZJTC4al058FJUSJe
-         lo6SrX9juEzJclTFPubamy83OsCib22xEkxA+8NuLyL4Q69/dbfoK/D7kEknun2suLiJ
-         orMJY+kqWOdevDkK/7g/4/Cfg9rZbVL/KLMMGUy8LYSzpys+S4BqsGv+RcRzsZo2RV9C
-         Lk98thJy8zSaqDxm/QhBCqE4F5T9F8urkayBgqG3wf0ruKLkuJXEKTaneAmPfk1F4Rqb
-         5pUz7rtKERplnM88hdEjr2edZhBgRbqZJQpk0d+jjb6jeRddvhR4uTQWHa95rGpF2xWw
-         6iAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1veIsgzOZIYqfSJL6QiLttJKJFD+YQzwqKVS3WumeT0Z/uqPYrKagfjfds++n72Az87bZKmWuoROc6gg=@vger.kernel.org, AJvYcCVi/lus0nmY2/LuZYDzhQW0l0cdUegaiPuuF/a85qzLd/Om8li+oHJ0D8oxiURXZ3MC8ar07B5JLkzH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmAkyvo6gT9e36XstEBy225u0OsspojkdG3wyeXjeAoPivdi/F
-	6mALoSGTTqyTprjb6pWkvplUSI4f1VpKXFVp3aEdh8aSFDRwsoCaGXoL
-X-Gm-Gg: ASbGnct2WW9s+pTkdzWJofwd6ZXT+P4x+9Obrzuv1rULD83kUiJhB9pjnbYGxbuqyMu
-	enUSzai8jJWLAGwQcq4SZFPVyVvSHM572orlnqUUYfZ7wVVL6q+inLCmwz2miM7XjZ6Piw2TGRx
-	3mJaz5G5ooxY3U+sP9p2wEjkD9QfbUxbKpuDFomClRv/ZSqd+29s/Kki5vJLge9LITYTUk3Rs4D
-	Wbnu6ElpDY/z5OxvKsjR8O6rHzlbs8Qb/PFXR777IHw/SfXKTVXrXZBZMCpLMma8t9FjP3ZOwhg
-	5qtD8qiz6idVGzq/1HlpOLGVqLj7IDGeeONUPajrYa+RGDgHDgT7kp+ih/V5
-X-Google-Smtp-Source: AGHT+IGUDa7JtBq2dvoPFRpR8Ucsyx6ySznxILJ7IulGOvVCBM169/ICR1GV4mTL56zEZimS2JYQug==
-X-Received: by 2002:a05:6122:119c:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-53121e8cdeamr1223105e0c.6.1749614396582;
-        Tue, 10 Jun 2025 20:59:56 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113c0ee7fsm2411261e0c.41.2025.06.10.20.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 20:59:55 -0700 (PDT)
-Date: Wed, 11 Jun 2025 00:59:48 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] PCI: pcie-rockchip: add bits for Target Link
- Speed in LCS_2
-Message-ID: <aEj_NDgaFJT-oceR@geday>
-References: <aEQb5kEOCJNQJMin@geday>
- <20250610200744.GA820589@bhelgaas>
- <aEj7-6fMGKSXQb3J@geday>
+	 Content-Type:Content-Disposition:In-Reply-To; b=byBGj6oyVKkLUrVkirzpBuiaOtIua42B5HzwKdIfOD3q+dKAaZHUgkEJBDshuJPMUgWaQ6vHNvcAk6CV8iLHd6apGMYd9owYcBS55Q++UgQLLsO3uC0aRBrnnYI6L74qNAL3osDhc2wsooxPo2PNrAK8zK8u2pup9feZ0sxFgM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 268772C02510;
+	Wed, 11 Jun 2025 06:38:54 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0DE541FB9E; Wed, 11 Jun 2025 06:38:54 +0200 (CEST)
+Date: Wed, 11 Jun 2025 06:38:54 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
+	dan.carpenter@linaro.org, Smita.KoralahalliChannabasappa@amd.com,
+	kobayashi.da-06@fujitsu.com, rrichter@amd.com, peterz@infradead.org,
+	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
+Message-ID: <aEkIXiM3jaCvKw3o@wunner.de>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-5-terry.bowman@amd.com>
+ <aEexYj8uImRt0kr9@wunner.de>
+ <aad4372e-d73b-47f9-9736-31dc1e6e03b0@amd.com>
+ <a602603b-e075-46a1-a4bf-3653954faa08@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,30 +65,69 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEj7-6fMGKSXQb3J@geday>
+In-Reply-To: <a602603b-e075-46a1-a4bf-3653954faa08@amd.com>
 
-On Wed, Jun 11, 2025 at 12:46:10AM -0300, Geraldo Nascimento wrote:
-> Hi again Bjorn,
+On Tue, Jun 10, 2025 at 04:20:53PM -0500, Bowman, Terry wrote:
+> On 6/10/2025 1:07 PM, Bowman, Terry wrote:
+> > On 6/9/2025 11:15 PM, Lukas Wunner wrote:
+> >> On Tue, Jun 03, 2025 at 12:22:27PM -0500, Terry Bowman wrote:
+> >>> --- a/drivers/cxl/core/ras.c
+> >>> +++ b/drivers/cxl/core/ras.c
+> >>> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> >>> +{
+> >>> +	struct cxl_prot_error_info *err_info = data;
+> >>> +	struct pci_dev *pdev_ref __free(pci_dev_put) = pci_dev_get(pdev);
+> >>> +	struct cxl_dev_state *cxlds;
+> >>> +
+> >>> +	/*
+> >>> +	 * The capability, status, and control fields in Device 0,
+> >>> +	 * Function 0 DVSEC control the CXL functionality of the
+> >>> +	 * entire device (CXL 3.0, 8.1.3).
+> >>> +	 */
+> >>> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+> >>> +		return 0;
+> >>> +
+> >>> +	/*
+> >>> +	 * CXL Memory Devices must have the 502h class code set (CXL
+> >>> +	 * 3.0, 8.1.12.1).
+> >>> +	 */
+> >>> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> >>> +		return 0;
+> >>> +
+> >>> +	if (!is_cxl_memdev(&pdev->dev) || !pdev->dev.driver)
+> >>> +		return 0;
+> >>
+> >> Is the point of the "!pdev->dev.driver" check to ascertain that
+> >> pdev is bound to cxl_pci_driver?
+> >>
+> >> If so, you need to check "if (pdev->driver != &cxl_pci_driver)"
+> >> directly (like cxl_handle_cper_event() does).
+> >>
+> >> That's because there are drivers which may bind to *any* PCI device,
+> >> e.g. vfio_pci_driver.
 > 
-> Your message reminded me of something that may be important.
-> 
-> During my debugging I had the mild impression L0s capability is not
-> being cleared from Link Capabilities Register in the presence of
-> "aspm-no-l0s" DT property.
-> 
-> I can't confirm it right now but I might revisit this later on. From
-> what I've seen it can only be cleared from inside the port init
-> in pcie-rockchip.c and does nothing in present form.
-> 
-> Not a clear, confirmable report but something to watch out for...
+> Looking closer to implement this change I find the cxl_pci_driver is
+> defined static in cxl/pci.c and is unavailable to reference in
+> cxl/core/ras.c as-is. Would you like me to export cxl_pci_driver to
+> make available for this check?
 
-Not correct. ASPM bit for L0s is being properly cleared according
-to my printk's.
+I'm not sure you need an export.  The consumer you're introducing
+is located in core/ras.c, which is always built-in, never modular,
+hence just making it non-static and adding a declaration to cxlpci.h
+may be sufficient.
 
-Should have checked before creating noise. Sorry.
-Geraldo Nascimento
+An alternative would be to keep it static, but add a non-static helper
+cxl_pci_drv_bound() or something like that.
 
-> 
-> Regards,
-> Geraldo Nascimento
+I'm passing the buck to CXL maintainers for this. :)
+
+> The existing class code check guarantees it is a CXL EP. Is it not
+> safe to expect it is bound to a the CXL driver?
+
+Just checking for the pci_dev being bound seems insufficient to me
+because of the vfio_pci_driver case and potentially others.
+
+HTH,
+
+Lukas
 
