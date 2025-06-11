@@ -1,93 +1,131 @@
-Return-Path: <linux-pci+bounces-29465-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29480-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87ED9AD5C21
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 18:29:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12BABAD5C9A
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 18:47:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CB5018838BF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:29:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2B64172C1B
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 16:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959AB1B0F19;
-	Wed, 11 Jun 2025 16:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D49E81624E9;
+	Wed, 11 Jun 2025 16:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omrS4B5j"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Tu/SRJo6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230DDF49
-	for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 16:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE912E610F;
+	Wed, 11 Jun 2025 16:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659348; cv=none; b=IyUJpcBrJimQH31e2tvJj1l/eBZ9ooJ/MCGeiES8+BLzZM7kGjASRvwZ1l26mUoY9oatEzKrUa2P41lQ+EZVWd9sE+G3AL0Zg+CYxSFktyjHEuEIdGXrLXUpJ3itc+BWIA32q9DsE0WCQXxjRMoIBRC5YFQVodmtbMbCcTjBqSc=
+	t=1749660455; cv=none; b=qLWQ1WMPbDWwxPo1R10233dSlt3btBDFuaod3Wt3Elr8oyteeZUk7Ye3pkDF0fMpReCip5200RF+DsIttfQV+EtadS5sw//pWE+VheOUJNLdj6x9mZlx/bXr4c6sPAxbs/SwlUd3ke3Em9JNI+JRzkhDltjO4CJawQOEg1aNymc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659348; c=relaxed/simple;
-	bh=ckRdOM7OKrbOFNiboHlXTgskhStWd1gn0sUvPv3sOAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7JAD/avpnMv8N8dXyhGuvlaUvk4arsbUIUkmybGj/l4PVZQo1JffObesbdJU2LLj0JJwaw5iVYzBBeV00FpuqD7JEzxuvUSEWla/A3gStpu3Ep7fmBtkoEUDsE+ioXc7RLv7TUmkdPqro7SB/oEpp9F4yeXFPs+Q7vsrvciAHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omrS4B5j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929F1C4CEEA;
-	Wed, 11 Jun 2025 16:29:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749659348;
-	bh=ckRdOM7OKrbOFNiboHlXTgskhStWd1gn0sUvPv3sOAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=omrS4B5jzkrO1RWyNLscgOmTfQwAC6a9jto/WTZR2zZ5CKe4BwBCzJwxirvvs11dg
-	 AuqdalAfnc+u/S/ZziMQcdSJnnE88qtSIkwvHRQV0o6fZfJOuyUfMX6aVr2Pmd7LgG
-	 HKH35HABH2ENvvvvHIsV9AN02qJtyWzlqt7ZgVJCvuEnPovn8bFrm9tpXK34ddy1BV
-	 IWd/xUOS6A9mMTfH2W45z2x8bfosLVAGwCjeG4HnBYRZGSlf+gfavgAINeCU8SMTrN
-	 //4Y3QAgnU31Ker9y21g+umMsXZtNX9X4U+9IdckpuDxgcqKaPHwjWuW3puzhqc7xy
-	 OmUiMHntHKOIw==
-Date: Wed, 11 Jun 2025 21:58:59 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, ilpo.jarvinen@linux.intel.com, lukas@wunner.de
-Subject: Re: [PATCHv2] pci: allow user specifiy a reset poll timeout
-Message-ID: <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5>
-References: <20250218165444.2406119-1-kbusch@meta.com>
- <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com>
+	s=arc-20240116; t=1749660455; c=relaxed/simple;
+	bh=U6sLFAnNN8QkT6mXpZ5wVrd2IHHgNj6ewk8t7QwkI18=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HD3QneeO7A1lQUspd+FB5KRRUtdvdeQ1bnhtpirh/2AFA3cN6aRSudsYpnDgd42cIVY2uvZYdE/PxUkoGQJvHqqlrwX8vo6TzM4rBXzP7pwb2+nByilqkTLFKAiwJN0N312RopRpkuWQenW+x6ZIG0g6YRU2H7qiVvRmjJ2K18g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Tu/SRJo6; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Re
+	dA2VYCsCry1H9Vk53UVO0f37h0GmgLmt8VnAMRk+M=; b=Tu/SRJo6xMhY/W5C8a
+	sK3GZKEIfn+3zM/0Yr1xrZiS6ornJuSGAkFZdh0xArUpmL3+w50vP2V2M+Nufi2/
+	mYo9dvXXw9Dk4pvxJnuy8mBIW1ZYA6nBJnGDZJzvX1mFO4s6Kl2cuaG7lpztsNfK
+	T8EYYLwm7ufAHA9mxWG9uopIM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3f1U8r0loaGtLHw--.58832S2;
+	Thu, 12 Jun 2025 00:30:53 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	mani@kernel.org,
+	kwilczynski@kernel.org
+Cc: robh@kernel.org,
+	jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 00/13] PCI: dwc: Refactor register access with dw_pcie_clear_and_set_dword helper
+Date: Thu, 12 Jun 2025 00:30:47 +0800
+Message-Id: <20250611163047.860247-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com>
+X-CM-TRANSID:_____wD3f1U8r0loaGtLHw--.58832S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr1kJFW8ZF1DAw43AFW8JFb_yoW5CF47pa
+	yYqFW3AF1xtrsI9w17Xay09r15KF95ArZrGws3Ga4IgF1xAF9Fqryrtryfta47KrW0q3W2
+	9r1jqa1xGrn3AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEMKZJUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx1po2hJrMw-CwAAst
 
-On Mon, Apr 14, 2025 at 06:11:44PM -0600, Keith Busch wrote:
-> On Tue, Feb 18, 2025 at 08:54:44AM -0800, Keith Busch wrote:
-> > From: Keith Busch <kbusch@kernel.org>
-> > 
-> > The spec does not provide any upper limit to how long a device may
-> > return Request Retry Status. It just says "Some devices require a
-> > lengthy self-initialization sequence to complete". The kernel
-> > arbitrarily chose 60 seconds since that really ought to be enough. But
-> > there are devices where this turns out not to be enough.
-> > 
-> > Since any timeout choice would be arbitrary, and 60 seconds is generally
-> > more than enough for the majority of hardware, let's make this a
-> > parameter so an admin can adjust it specifically to their needs if the
-> > default timeout isn't appropriate.
-> 
-> This patch is trying to address timings that have no spec defined
-> behavior, so making it user tunable sounds just more reasonable than a
-> kernel define. If we're not considering upstream options to make this
-> tunable, I think we have no choice but to continue with bespoke
-> out-of-tree solutions.
+Register bit manipulation in DesignWare PCIe controllers currently
+uses repetitive read-modify-write sequences across multiple drivers.
+This pattern leads to code duplication and increases maintenance
+complexity as each driver implements similar logic with minor variations.
 
-Do we know the list of devices exhibiting this pattern? And does the time limit
-is deterministic? I'm just trying to see if it is possible to add quirks for
-those devices.
+This series introduces dw_pcie_clear_and_set_dword() to centralize atomic
+register modification. The helper performs read-clear-set-write operations
+in a single function, replacing open-coded implementations. Subsequent
+patches refactor individual drivers to use this helper, eliminating
+redundant code and ensuring consistent bit handling.
 
-- Mani
+The change reduces overall code size by ~350 lines while improving
+maintainability. Each controller driver is updated in a separate
+patch to preserve bisectability and simplify review.
 
+---
+Hi all,
+
+At the beginning, two patches were made, 0001*.patch, and the others were
+one patch. After consideration, I still split the patches. If splitting
+is not necessary, I will recombine them into two patches in future
+versions.
+---
+
+Hans Zhang (13):
+  PCI: dwc: Add dw_pcie_clear_and_set_dword() for register bit
+    manipulation
+  PCI: dwc: Refactor dwc to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor dra7xx to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor imx6 to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor meson to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor armada8k to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor bt1 to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor rockchip to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor fu740 to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor qcom common to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor qcom-ep to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor rcar-gen4 to use dw_pcie_clear_and_set_dword()
+  PCI: dwc: Refactor tegra194 to use dw_pcie_clear_and_set_dword()
+
+ drivers/pci/controller/dwc/pci-dra7xx.c       |  10 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |  26 ++-
+ drivers/pci/controller/dwc/pci-meson.c        |  22 +--
+ drivers/pci/controller/dwc/pcie-armada8k.c    |  48 ++----
+ drivers/pci/controller/dwc/pcie-bt1.c         |   5 +-
+ .../controller/dwc/pcie-designware-debugfs.c  |  67 +++-----
+ .../pci/controller/dwc/pcie-designware-ep.c   |  20 +--
+ .../pci/controller/dwc/pcie-designware-host.c |  27 ++-
+ drivers/pci/controller/dwc/pcie-designware.c  |  74 ++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  27 +--
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   7 +-
+ drivers/pci/controller/dwc/pcie-fu740.c       |   5 +-
+ drivers/pci/controller/dwc/pcie-qcom-common.c |  59 ++++---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |  14 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  23 +--
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 155 ++++++++----------
+ 16 files changed, 239 insertions(+), 350 deletions(-)
+
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-மணிவண்ணன் சதாசிவம்
+2.25.1
+
 
