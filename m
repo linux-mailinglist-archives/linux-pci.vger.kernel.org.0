@@ -1,159 +1,140 @@
-Return-Path: <linux-pci+bounces-29395-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29396-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 135ECAD4BD4
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 08:36:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DBA7AD4BD8
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 08:37:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9775D178FEF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 06:36:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D67F73A5D32
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jun 2025 06:36:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A8A0227EBE;
-	Wed, 11 Jun 2025 06:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9AD417A300;
+	Wed, 11 Jun 2025 06:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7aMl/oc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTx02RgH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4974E17A300;
-	Wed, 11 Jun 2025 06:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8833C79C0;
+	Wed, 11 Jun 2025 06:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623779; cv=none; b=bJYcrYrwxlC+8L2tSWT4z2a3pPRmbfjmUUWFjBUM2KOMpfYzotzzYPvamvuVEGqUVCrK/OqLO4R4n4YTuKj8BneyQXps+0EmF3XRiLa5YT0bRgyvhC1BKuIycpy6f9rA3jw3MLzDUcjBgYn3rl1cZqOgsMJsxfuujYF0e2+4PXg=
+	t=1749623819; cv=none; b=ZEKcdBY1wSnF1EwR7iMKUOrBcqVmq40WYks93Z0gyYjzf7xmvGSoh/f3zrU++n2P4UsPvhFNICsbZeh4AR81n4co8d6EnVp1d8BU6+0Kc2uh7nurttVU1ERBU59QJLG08pmX/Tr5AT57ADwYWESDxCI1cpRaXtcCjQwPlTujUh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623779; c=relaxed/simple;
-	bh=iBenA2DN1x1l5U6EZgOXDobSylhCJy9lWl3Re/GYpPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Alu9XOdxnarAVNu5d2tc7hirwSmPKl8vZCuCOKRFgijeLPFVetYz9qtHew+7hLRaK+M1LzFbuy6blvf013ey6ERtelG0kNDqYQdfhkNhXjXHApbyaIfi2cVgVgYo7a4wS8yv2C9wwrxEYePFiJNlsXTr9HkAAhLGqa2fBpeiPKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7aMl/oc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064BAC4CEEE;
-	Wed, 11 Jun 2025 06:36:12 +0000 (UTC)
+	s=arc-20240116; t=1749623819; c=relaxed/simple;
+	bh=PIQNNAo+DGVA4MpA0hOkYGdVW3ZOmQ8xd6n1BXPRYC8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HTmTHEnCo8KjDBz8B9Z4A2lmhvi7vVkLGWvELJAM8FDPSY0/OppL4B3+eHov1jjpOEeI91iqkeHiFIwNvlpyUl1tZNXKLfmPUzwyKLEBaYt66hP/6QeSXd+8WDsKFsYTaTcIlKwvF/pZdP47kJznlFtjg8MLilLE3tRLc0P5Wbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTx02RgH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525E8C4CEEE;
+	Wed, 11 Jun 2025 06:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749623776;
-	bh=iBenA2DN1x1l5U6EZgOXDobSylhCJy9lWl3Re/GYpPs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q7aMl/ocsy+TNoGsLf9cDteA5XPqxzve/XBJhORfrNlksCpoho1OiOqNgo4V7vc6o
-	 IfIdXW8WNunT1zvWdfskotnvVYiCbV6LsYbA/seuDz8flcCIilWJuFRHoPw9QVYFLH
-	 s5cq/p4ZCubMnz6dRid0sNRK0V3Rr3gsqUdJAbgjbyepkuVUe3FftEaDIqgbCmcqaE
-	 ZiHKhStAXTTbluNAe1WVf45KsrEjEbb49o0jcCPRvuZyllCWYwNFk1pJnGiYRkgP95
-	 y5tImE2Zzr8DLlZQhOknwV+ZaCZop/xdkRwflT5aHUkWFXCKzdJlfOo0xSEoGflfEt
-	 j2CZOUXJ+5dbw==
-Message-ID: <77eeca94-0703-44c9-b30b-17fc989dedb7@kernel.org>
-Date: Wed, 11 Jun 2025 08:36:11 +0200
+	s=k20201202; t=1749623819;
+	bh=PIQNNAo+DGVA4MpA0hOkYGdVW3ZOmQ8xd6n1BXPRYC8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=MTx02RgHT/gNtB7rEI8Yl7N+0lmbNTAZf8y9c/WAoGAXg43z7echXL+RyHy5toLiv
+	 5lZ9R1KGmy7fxsZ58Tj12XyW2oFlJMhWjyPLkD3XcJBCxopCGLL9yFF7LOigqXsFwH
+	 COGxWxOYVrLt0tBtR2r3/K7gz1pC7THIQQCar0IkQX+cTzPIaDPnW+ywpmu4sIy8/C
+	 QUKYB4x26lde4nOfV7sO5YSo+LorrLk8XwJhXJ4+L5rRvfUt6TR3e6ac9IEwTNx3+U
+	 LlfYtRfUMTdkp/8zK9Uj5bnUN7Zlsi3SKWs+8GADd8CQtIngPURnLecMc7DyzcNChJ
+	 p8hueRKhk6h0A==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
- node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
- <20250423153747.GA563929-robh@kernel.org>
- <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
- <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
- <56eccdb0-c877-431d-9833-16254afa1a0c@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <56eccdb0-c877-431d-9833-16254afa1a0c@oss.qualcomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Wed, 11 Jun 2025 08:36:50 +0200
+Message-Id: <DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Trevor Gross" <tmgross@umich.edu>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Andreas Hindborg"
+ <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+ <HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid> <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org> <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
+In-Reply-To: <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
 
-On 10/06/2025 15:15, Konrad Dybcio wrote:
-> On 6/2/25 3:01 PM, Krzysztof Kozlowski wrote:
->> On 08/05/2025 16:26, Konrad Dybcio wrote:
->>> On 4/23/25 5:37 PM, Rob Herring wrote:
->>>> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
->>>>> There are many places we agreed to move the wake and perst gpio's
->>>>> and phy etc to the pcie root port node instead of bridge node[1].
->>>>>
->>>>> So move the phy, phy-names, wake-gpio's in the root port.
->>>>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
->>>>> start using that property instead of perst-gpio.
->>>>
->>>> Moving the properties will break existing kernels. If that doesn't 
->>>> matter for these platforms, say so in the commit msg.
->>>
->>> I don't think we generally guarantee *forward* dt compatibility though, no?
->> We do not guarantee, comment was not about this, but we expect. This DTS
->> is supposed and is used by other projects. There was entire complain
->> last DT BoF about kernel breaking DTS users all the time.
-> 
-> Yeah I get it.. we're in a constant cycle of adding new components and
-> later coming to the conclusion that whoever came up with the initial
-> binding had no clue what they're doing..
-> 
-> That said, "absens carens".. if users or developers of other projects
-> don't speak up on LKML (which serves as the de facto public square for
-> DT development), we don't get any feedback to take into account when
-> making potentially breaking changes (that may have a good reason behind
-> them). We get a patch from OpenBSD people every now and then, but it's
-> a drop in the ocean.
-> 
-I don't understand what you are commenting on. Do you reject what I
-asked for?
+On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
+> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
+el.org> wrote:
+>>
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>
+>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
+>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>> >> index 22985b6f6982..0ccef6b5a20a 100644
+>> >> --- a/rust/kernel/types.rs
+>> >> +++ b/rust/kernel/types.rs
+>> >> @@ -21,15 +21,11 @@
+>> >>  ///
+>> >>  /// # Safety
+>> >>  ///
+>> >> -/// Implementers must ensure that [`into_foreign`] returns a pointer=
+ which meets the alignment
+>> >> -/// requirements of [`PointedTo`].
+>> >> -///
+>> >> -/// [`into_foreign`]: Self::into_foreign
+>> >> -/// [`PointedTo`]: Self::PointedTo
+>> >> +/// Implementers must ensure that [`Self::into_foreign`] returns poi=
+nters aligned to
+>> >> +/// [`Self::FOREIGN_ALIGN`].
+>> >>  pub unsafe trait ForeignOwnable: Sized {
+>> >> -    /// Type used when the value is foreign-owned. In practical term=
+s only defines the alignment of
+>> >> -    /// the pointer.
+>> >> -    type PointedTo;
+>> >> +    /// The alignment of pointers returned by `into_foreign`.
+>> >> +    const FOREIGN_ALIGN: usize;
+>> >>
+>> >>      /// Type used to immutably borrow a value that is currently fore=
+ign-owned.
+>> >>      type Borrowed<'a>;
+>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
+>> >>
+>> >>      /// Converts a Rust-owned object to a foreign-owned one.
+>> >>      ///
+>> >> +    /// The foreign representation is a pointer to void. Aside from =
+the guarantees listed below,
+>> >
+>> > I feel like this reads better:
+>> >
+>> > s/guarantees/ones/
+>> >
+>> >> +    /// there are no other guarantees for this pointer. For example,=
+ it might be invalid, dangling
+>> >
+>> > We should also mention that it could be null. (or is that assumption
+>> > wrong?)
+>>
+>> It is probably not going to be null, but it is allowed to. I can add it.
+>>
+>> The list does not claim to be exhaustive, and a null pointer is just a
+>> special case of an invalid pointer.
+>
+> We probably should not allow null pointers. If we do, then
+> try_from_foreign does not make sense.
 
-Best regards,
-Krzysztof
+That's a good point. Then let's add that as a safety requirement for the
+trait.
+
+---
+Cheers,
+Benno
 
