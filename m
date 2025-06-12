@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-29510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29511-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B29E0AD64C8
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 02:50:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4E35AD64E7
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 03:08:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57DB23AC867
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 00:50:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 632B93ACBD0
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC1E44C77;
-	Thu, 12 Jun 2025 00:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BE441760;
+	Thu, 12 Jun 2025 01:08:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="irQTORLM"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TicbPZVT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAE3A944;
-	Thu, 12 Jun 2025 00:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6D820328;
+	Thu, 12 Jun 2025 01:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689449; cv=none; b=rVs6WgbY2ofpfbVDGgk0LnNlxvi1Iwbq7YGdg7a8lPr3Yu7VkdAWzoIJURgVHjEzTb63/ZkwIAosu7zdSVHDVVNrfvMFv8h5/F5c5itVDsNepdjeIeoDNklKu7DGOvBd0tyO66CAP6z2E3yeDM7OD/PoUKWvuNduQBw0M6pk984=
+	t=1749690485; cv=none; b=lWWVkRGtDPXLGe4/qT+EM5/YNJf7oom56rJ2C+r1cDuRZYSYQEjH3Hz5+iWbw/42owYRMIrq8LsXlCcVkZUQc6tmJHkFK8wUZfn1TigA+nprY7tYYQ9wt9FSpIGvAUAQXgvCLQAN4avawjaMLpHvsfmlK6hxTyrDDyl/AAkGFdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689449; c=relaxed/simple;
-	bh=TO+esTbBV563zHhYclGKbQ4Kk44uqSY4io8/BVfQCA4=;
+	s=arc-20240116; t=1749690485; c=relaxed/simple;
+	bh=lxh3OcU9lrQDFBUQh3Z5944IL2QKk2zIeSZRZ/Sb4qc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=csdQGFOV2TghZ5/PJxR6uxCgP7QmQ5bsdulp8uy37u62rLliWR6Oajg+nY9aPOjbJGmsxCm/rxociZ7thvkqdgxXZVWIeR+M/3JyVj4TVHIDV4WNWZAzUW4qijgbE9vhiQYZe9qrXmcrjW0I7uuqcfNfBDWKU0Fz3AsKlnz8upc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=irQTORLM; arc=none smtp.client-ip=220.197.31.3
+	 In-Reply-To:Content-Type; b=Nfe3DlU5nq+khy/TKOiPIdRRlohKW/JjE0KOwb8kWjrOwOX+sw5dntgodjFi1r2QcQDs17amqpazAzVi3DsSja9dY777qN6ikt0bkSskXcj0CzCYnyCTZyTpt/P0KbSyYzfUYpSIE1uEWM56PCh0qNv0/Zeg/rL3RQyTxv7NUj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TicbPZVT; arc=none smtp.client-ip=117.135.210.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=1dOaqnFjZKRJyblr+6PCERlCBnX9Gn93vnPzUMgrd8k=;
-	b=irQTORLMsWATNz5nl8DuuEHMsyzgXw2/Mm0Pwo5Enw/7WdeqAA3TJoT5dG8wEX
-	sK6NKHxsegaCxEosMrr7uFg7/Gq9Hm6UKGgCnium7S3a6JwyQyiq6uPEw8yXG1Js
-	dy7rlCVvn8b0aTKdzU5rEhn6O9+TDwFPoHbFJSgHDnm9E=
+	Content-Type; bh=G5kBzMKk/cML1HYhI3QXW6znFZfK6qdoKbkVSe5acSs=;
+	b=TicbPZVThBQJbi8sp5BzztP4gdpPxoRTqqcixeGJ88cPQR8G3rlXSpy60mIPZW
+	aSCic1E5cFwY0yS73lU6CxYvx4Lvmb/sGpcrYGK6cDXeh0q+6preuWWiVgef2pU8
+	4Z6Hy5FoX66UrUn99mIK1FypJqkXBo4BA4XNYT5MMg/pg=
 Received: from [192.168.18.52] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBX7slSJEpoBHmaHw--.5481S2;
-	Thu, 12 Jun 2025 08:50:28 +0800 (CST)
-Message-ID: <bd7f1053-f00e-4a1b-9923-9c3e1d1605b2@163.com>
-Date: Thu, 12 Jun 2025 08:50:25 +0800
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgBnKTFdKEpoSUQwBg--.32898S2;
+	Thu, 12 Jun 2025 09:07:42 +0800 (CST)
+Message-ID: <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
+Date: Thu, 12 Jun 2025 09:07:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,154 +47,197 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/13] PCI: dwc: Refactor imx6 to use
- dw_pcie_clear_and_set_dword()
-To: Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
+ dw_pcie_clear_and_set_dword helper
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
  kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
  linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611163121.860619-1-18255117159@163.com>
- <aEnNFgv08BVVxfOQ@lizhi-Precision-Tower-5810>
- <aEnO4QSrAzEHzoAe@lizhi-Precision-Tower-5810>
+References: <20250611204011.GA868320@bhelgaas>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aEnO4QSrAzEHzoAe@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250611204011.GA868320@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wBX7slSJEpoBHmaHw--.5481S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Xw1fAw17Kw4fuw1fAw4kCrg_yoW7GrW7p3
-	y2vF4SkF48JrWruwsFvas5ZF13tasakr1DW3W7G340qF9Fyry7Ga1jyrW3Krn7Gr4Utryj
-	kr1UJws3Aa4YyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ujg4fUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwNqo2hKH5lxbwABs+
+X-CM-TRANSID:PCgvCgBnKTFdKEpoSUQwBg--.32898S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GrW7uw1kJrWDCF4kKryrXrb_yoW3WFyfpF
+	WjvF4rur4xtr1vg3yxXayYvr48Wr9YqrZ7W3WxG342vr4xJF97tFyftFWUKFy7KrWFv3WI
+	9ryjv3WkW34YkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDWrXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxtqo2hKJLB-XgAAse
 
 
 
-On 2025/6/12 02:45, Frank Li wrote:
-> On Wed, Jun 11, 2025 at 02:38:14PM -0400, Frank Li wrote:
->> On Thu, Jun 12, 2025 at 12:31:21AM +0800, Hans Zhang wrote:
->>
->> Subject should be
->>
->> PCI: dwc: imx6: Refactor code by using dw_pcie_clear_and_set_dword()
->>
->> tag "imx6:" should after "dwc:"
->>
->> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+On 2025/6/12 04:40, Bjorn Helgaas wrote:
+> On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
+>> Register bit manipulation in DesignWare PCIe controllers currently
+>> uses repetitive read-modify-write sequences across multiple drivers.
+>> This pattern leads to code duplication and increases maintenance
+>> complexity as each driver implements similar logic with minor variations.
 > 
-> I sent out too quick, please don't applied my review tag at next version
-> because I found a issue, see:
-> 
-> https://lore.kernel.org/linux-pci/aEnONwJUSEMdMAUD@lizhi-Precision-Tower-5810/
+> When you repost this, can you fix whatever is keeping this series from
+> being threaded?  All the patches should be responses to the 00/13
+> cover letter.  Don't repost until at least a couple of days have
+> elapsed and you make non-trivial changes.
 > 
 
-Dear Frank,
+Dear Bjorn,
 
-Thank you very much for your reply.
+Every time I send an email to the PCI main list, I will send it to 
+myself first, but I have encountered the following problems:
+Whether I send my personal 163 email, Outlook email, or my company's 
+cixtech email, only 10 patches can be sent. So in the end, I sent each 
+patch separately.
 
-I have replied to you in the previous email. Bjorn also raised a 
-question as to why the entire series is not under 
-0000-cover-letter.patch. I will reply to Bjorn in the email and try to 
-solve this problem.
+This is the first time I have sent an email with a series of more than 
+10 patches. My configuration is as follows:
+smtpserver = smtp.163.com
+smtpserverport = 25
+smtpenablestarttlsauto = true
+smtpuser = 18255117159@163.com
+smtppass = xxx
+
+I suspect it's a problem with China's 163 email. Next, I will try to 
+send it using the company's environment. Or when I send this series of 
+patches next time, I will paste the web link address of each patch in by 
+replying 0000-cover-letter.patch.
+
+
+git send-email --no-chain-reply-to --quiet --to 
+hanshuatuo.zhang@outlook.com patch_hans/dwc_set_dword/*
+......
+Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
+Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
+dw_pcie_clear_and_set_dword helper
+Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
+register bit manipulation
+Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
+dw_pcie_clear_and_set_dword()
+MI:DMC 163 gzga-smtp-mtada-g0-3,_____wA3YOjZJEpouIVyHg--.2947S13 
+1749689566 
+http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-3&time=1749689566
+
+
+or
+
+
+git send-email --no-chain-reply-to --quiet --to 1053912923@qq.com 
+patch_hans/dwc_set_dword/*
+......
+Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
+Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
+dw_pcie_clear_and_set_dword helper
+Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
+register bit manipulation
+Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
+dw_pcie_clear_and_set_dword()
+MI:DMC 163 gzga-smtp-mtada-g0-1,_____wBnOhQ_JUpoES6WHw--.47108S13 
+1749689667 
+http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-1&time=1749689667
+
+or
+
+git send-email --no-chain-reply-to --quiet --to hans.zhang@cixtech.com 
+patch_hans/dwc_set_dword/*
+......
+Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
+Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
+dw_pcie_clear_and_set_dword helper
+Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
+register bit manipulation
+Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
+dw_pcie_clear_and_set_dword()
+Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
+dw_pcie_clear_and_set_dword()
+MI:DMC 163 gzsmtp2,PSgvCgAnBeWGJUpo7GLnCA--.28592S13 1749689739 
+http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzsmtp2&time=1749689739
+
+
+
+
+I'm deeply sorry for the inconvenience caused to everyone's review. The 
+following are the links of each patch.
+
+0001:https://patchwork.kernel.org/project/linux-pci/patch/20250611163057.860353-1-18255117159@163.com/
+0002:https://patchwork.kernel.org/project/linux-pci/patch/20250611163106.860438-1-18255117159@163.com/
+0003:https://patchwork.kernel.org/project/linux-pci/patch/20250611163113.860528-1-18255117159@163.com/
+0004:https://patchwork.kernel.org/project/linux-pci/patch/20250611163121.860619-1-18255117159@163.com/
+0005:https://patchwork.kernel.org/project/linux-pci/patch/20250611163131.860729-1-18255117159@163.com/
+0006:https://patchwork.kernel.org/project/linux-pci/patch/20250611163137.860795-1-18255117159@163.com/
+0007:https://patchwork.kernel.org/project/linux-pci/patch/20250611163148.860884-1-18255117159@163.com/
+0008:https://patchwork.kernel.org/project/linux-pci/patch/20250611163154.860976-1-18255117159@163.com/
+0009:https://patchwork.kernel.org/project/linux-pci/patch/20250611163200.861064-1-18255117159@163.com/
+0010:https://patchwork.kernel.org/project/linux-pci/patch/20250611163209.861171-1-18255117159@163.com/
+0011:https://patchwork.kernel.org/project/linux-pci/patch/20250611163215.861242-1-18255117159@163.com/
+0012:https://patchwork.kernel.org/project/linux-pci/patch/20250611163221.861314-1-18255117159@163.com/
+0013:https://patchwork.kernel.org/project/linux-pci/patch/20250611163227.861403-1-18255117159@163.com/
+
+> My preference is to make the subject lines like:
+> 
+>    PCI: dra7xx: Refactor ...
+>    PCI: imx6: Refactor ...
+> 
+
+Will change.
+
+> etc.  I think including both dwc and dra7xx is overkill.
+> 
+> You can find the prevailing style with:
+> 
+>    git log --no-merges --oneline --pretty=format:"%h (\"%s\")" drivers/pci/controller/dwc
+> 
+> Whoever applies this series can trivially squash patches together if
+> that seems better.
+
+Thank you very much for the hint you gave.
 
 Best regards,
 Hans
-
-> Frank
->>
->>> i.MX6 PCIe driver contains multiple read-modify-write sequences for
->>> link training and speed configuration. These operations manually handle
->>> bit masking and shifting to update specific fields in control registers,
->>> particularly for link capabilities and speed change initiation.
->>>
->>> Refactor link capability configuration and speed change handling using
->>> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
->>> by encapsulating bit clear/set operations and eliminates intermediate
->>> variables. For speed change control, replace explicit bit manipulation
->>> with direct register updates through the helper.
->>>
->>> Adopting the standard interface reduces code complexity in link training
->>> paths and ensures consistent handling of speed-related bits. The change
->>> also prepares the driver for future enhancements to Gen3 link training
->>> by centralizing bit manipulation logic.
->>>
->>> Signed-off-by: Hans Zhang <18255117159@163.com>
->>> ---
->>>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
->>>   1 file changed, 10 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
->>> index 5a38cfaf989b..3004e432f013 100644
->>> --- a/drivers/pci/controller/dwc/pci-imx6.c
->>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
->>> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->>>   	struct device *dev = pci->dev;
->>>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>> -	u32 tmp;
->>>   	int ret;
->>>
->>>   	if (!(imx_pcie->drvdata->flags &
->>> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>>   	 * bus will not be detected at all.  This happens with PCIe switches.
->>>   	 */
->>>   	dw_pcie_dbi_ro_wr_en(pci);
->>> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
->>> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
->>> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
->>> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
->>> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
->>> +				    PCI_EXP_LNKCAP_SLS,
->>> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
->>>   	dw_pcie_dbi_ro_wr_dis(pci);
->>>
->>>   	/* Start LTSSM. */
->>> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>>
->>>   		/* Allow faster modes after the link is up */
->>>   		dw_pcie_dbi_ro_wr_en(pci);
->>> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
->>> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
->>> -		tmp |= pci->max_link_speed;
->>> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
->>> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
->>> +					    PCI_EXP_LNKCAP_SLS,
->>> +					    pci->max_link_speed);
->>>
->>>   		/*
->>>   		 * Start Directed Speed Change so the best possible
->>>   		 * speed both link partners support can be negotiated.
->>>   		 */
->>> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->>> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
->>> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
->>> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
->>> +					    0, PORT_LOGIC_SPEED_CHANGE);
->>>   		dw_pcie_dbi_ro_wr_dis(pci);
->>>
->>>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
->>> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->>>   {
->>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->>> -	u32 val;
->>>
->>>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
->>>   		/*
->>> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->>>   		 * to 0.
->>>   		 */
->>>   		dw_pcie_dbi_ro_wr_en(pci);
->>> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->>> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->>> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
->>> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
->>> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
->>>   		dw_pcie_dbi_ro_wr_dis(pci);
->>>   	}
->>>   }
->>> --
->>> 2.25.1
->>>
 
 
