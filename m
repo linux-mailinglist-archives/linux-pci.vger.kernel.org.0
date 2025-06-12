@@ -1,243 +1,149 @@
-Return-Path: <linux-pci+bounces-29511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4E35AD64E7
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 03:08:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E52E7AD6530
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 03:42:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 632B93ACBD0
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:07:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F51B1BC230E
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 01:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BE441760;
-	Thu, 12 Jun 2025 01:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05F014901B;
+	Thu, 12 Jun 2025 01:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TicbPZVT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aS8zANfF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6D820328;
-	Thu, 12 Jun 2025 01:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED96136E37
+	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 01:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749690485; cv=none; b=lWWVkRGtDPXLGe4/qT+EM5/YNJf7oom56rJ2C+r1cDuRZYSYQEjH3Hz5+iWbw/42owYRMIrq8LsXlCcVkZUQc6tmJHkFK8wUZfn1TigA+nprY7tYYQ9wt9FSpIGvAUAQXgvCLQAN4avawjaMLpHvsfmlK6hxTyrDDyl/AAkGFdo=
+	t=1749692537; cv=none; b=tEzJl9Eq07V1de4Pkz5NhGqPRiy0uT4Hb0MExQpi5G6N68SB9RP8Xoy1Hmj+r7NaLwkTBlWb41cjIDcbaWgPTTLnkxst/Y/PFbLMOOfGnovpyMFjPurYX5AAKrqVARNT8jlnHdyTRslLafo4MkZxI83tRHFfEzlBj8YU33ZtFuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749690485; c=relaxed/simple;
-	bh=lxh3OcU9lrQDFBUQh3Z5944IL2QKk2zIeSZRZ/Sb4qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nfe3DlU5nq+khy/TKOiPIdRRlohKW/JjE0KOwb8kWjrOwOX+sw5dntgodjFi1r2QcQDs17amqpazAzVi3DsSja9dY777qN6ikt0bkSskXcj0CzCYnyCTZyTpt/P0KbSyYzfUYpSIE1uEWM56PCh0qNv0/Zeg/rL3RQyTxv7NUj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TicbPZVT; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=G5kBzMKk/cML1HYhI3QXW6znFZfK6qdoKbkVSe5acSs=;
-	b=TicbPZVThBQJbi8sp5BzztP4gdpPxoRTqqcixeGJ88cPQR8G3rlXSpy60mIPZW
-	aSCic1E5cFwY0yS73lU6CxYvx4Lvmb/sGpcrYGK6cDXeh0q+6preuWWiVgef2pU8
-	4Z6Hy5FoX66UrUn99mIK1FypJqkXBo4BA4XNYT5MMg/pg=
-Received: from [192.168.18.52] (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgBnKTFdKEpoSUQwBg--.32898S2;
-	Thu, 12 Jun 2025 09:07:42 +0800 (CST)
-Message-ID: <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
-Date: Thu, 12 Jun 2025 09:07:40 +0800
+	s=arc-20240116; t=1749692537; c=relaxed/simple;
+	bh=yekqGRUYYLfu4rmZNRUCu0QzvWyE3YgMNmc+9ucJ2S0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N2k0xuqNo5BSvuhDOuZZUD70yPFTf/ZZNKrZkvvTowj6oEBqCW5zijuHbiga8L0NeXNODWdfPrPZiMCyjZU7lpTRDcSvq1AlFODgFNvfx8H1WfoWVWfCVIbMGJZa59wg9x8axKWJ7hlmhgyzWYFVXYEc3A24eVvSNNlGqc7scOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aS8zANfF; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso499307b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jun 2025 18:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749692535; x=1750297335; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6GMTYoO/hH1xieNN1bEgiAsAF7Z3yvr8fWaDaLPOgs0=;
+        b=aS8zANfFOoewlnHoxS75gB9a2NKvfc3aVwtpEuYLvBRkUgLVdbajvUugYuQnlpiNgX
+         O1vKvdtO31ytv5O8Mpv6Revr0jOt5r0H3cQboSyBx5UpHSu2FM7rNHau145oNwt24JgM
+         SuPLRI3E8lOxkoeS5jsYVmwIEgpwgtHa1VWEqgKk7D5ZtMSX3gB4Cqk71BJhAsNiyXN7
+         dX0Z3h29YqnKsTl0q3Gv+PLrMWZF6BXjyYldCXIP9LmhSs6CdjrHtCVjTwZqVrkYp5S5
+         W+ktguZtboDEG+3XOVE7id4b+mzh+bJz//xjj3N8qzHy7CnlD4GLKsYG5jWbJ4wm3aZo
+         dfNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749692535; x=1750297335;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6GMTYoO/hH1xieNN1bEgiAsAF7Z3yvr8fWaDaLPOgs0=;
+        b=IfZ2LVzmVzxPBkgUph5ZnbOhtzVHhpleec7uL4q1VtdU/VY1R6PNYfPSOBY6uXsffl
+         dqw+hJ+C8PWwXdVkv1fmf3AJg2itwP7rYjKxu2UnSb0s1tYUQMQ+rHCZ56H8PSpfMnoM
+         zKc/KKMoEGvhNf5jHTM+kI7jP+W29CWzaCbGPYxBYV4C1OgMy2NfJLztImioA586og6o
+         llluHOMQVoOobNI4c5iVSFbmRb7OHLRSIi6Uf3NkcCbb9WVnzPLXM7TLIkKSbYIWFxvB
+         I/GSyBCbu9xqxLMzSfoHDtNsmU11MXSjdSXl5WnNXFgJkB1zCHdC0RK8Hs8+G8JwYZEH
+         6TfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUY4hYzLJRWj49iHZoqpdOZjuXK5hcKUiKqhpAc6eAhNyvUSWFVNNfI9Mi/q+30yQPR42j9wKLHIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxShxXd1vy6KZqf+fH6Sb3TO/LE35Fek2qfN5btMWNfyDQZuwW
+	EInGbwQ5TV0AqtjiBka+vK4LuFyzvlDPYGbha02MKBdtgcdUfPXlB8bYgTgVIUl0FEw=
+X-Gm-Gg: ASbGnctV8Z4qo9O5X0WsCNFyQL0Ait7dY4/SFqbAFLZogsVRy1wE8ixqB68oWbrHJHA
+	t85LKA7AypsK+UO7ouebHaDUMUzYrONec7dIU6kX2ZATR4DsSHUvJ2RH5HjUBLNoEPURz0o+uRW
+	xHQRKkZ8mddRFaeB6xD6HUArtigdEVYh5GdQcqRwIOpZ8hg3EPm7SGO7R7LIUKFlUBuOKBnK54w
+	YilHKreH0I+mbf/Q5+V7vYEB7c/R/6nzIRhx7drYVn4YQiVPNMteX7N7xXcnWt4imX/JOKBoCLv
+	KDNJecFQPxRcBaXLd9v0HrNcpeU0F+caTqVm7u/wnLVwFLeg7ynwdQw1U8C7D80=
+X-Google-Smtp-Source: AGHT+IEYQuQrQ9pSkTkNr1pxDJTIIU0K6qyK009mvjKSvoQj1EO38HYFTD6dT0wcT093olcResSw9Q==
+X-Received: by 2002:a17:903:2346:b0:234:d2fb:2d13 with SMTP id d9443c01a7336-2364c8d1932mr20654285ad.18.1749692535270;
+        Wed, 11 Jun 2025 18:42:15 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e7195c0sm2365445ad.209.2025.06.11.18.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 18:42:14 -0700 (PDT)
+Date: Thu, 12 Jun 2025 07:12:10 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH V2] rust: Use consistent "# Examples" heading style in
+ rustdoc
+Message-ID: <20250612014210.bcp2p6ww5ofvy6zh@vireshk-i7>
+References: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
- kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611204011.GA868320@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250611204011.GA868320@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PCgvCgBnKTFdKEpoSUQwBg--.32898S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GrW7uw1kJrWDCF4kKryrXrb_yoW3WFyfpF
-	WjvF4rur4xtr1vg3yxXayYvr48Wr9YqrZ7W3WxG342vr4xJF97tFyftFWUKFy7KrWFv3WI
-	9ryjv3WkW34YkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDWrXUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxtqo2hKJLB-XgAAse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
 
-
-
-On 2025/6/12 04:40, Bjorn Helgaas wrote:
-> On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
->> Register bit manipulation in DesignWare PCIe controllers currently
->> uses repetitive read-modify-write sequences across multiple drivers.
->> This pattern leads to code duplication and increases maintenance
->> complexity as each driver implements similar logic with minor variations.
+On 10-06-25, 14:33, Viresh Kumar wrote:
+> Use a consistent `# Examples` heading in rustdoc across the codebase.
 > 
-> When you repost this, can you fix whatever is keeping this series from
-> being threaded?  All the patches should be responses to the 00/13
-> cover letter.  Don't repost until at least a couple of days have
-> elapsed and you make non-trivial changes.
+> Some modules previously used `## Examples` (even when they should be
+> available as top-level headers), while others used `# Example`, which
+> deviates from the preferred `# Examples` style.
 > 
-
-Dear Bjorn,
-
-Every time I send an email to the PCI main list, I will send it to 
-myself first, but I have encountered the following problems:
-Whether I send my personal 163 email, Outlook email, or my company's 
-cixtech email, only 10 patches can be sent. So in the end, I sent each 
-patch separately.
-
-This is the first time I have sent an email with a series of more than 
-10 patches. My configuration is as follows:
-smtpserver = smtp.163.com
-smtpserverport = 25
-smtpenablestarttlsauto = true
-smtpuser = 18255117159@163.com
-smtppass = xxx
-
-I suspect it's a problem with China's 163 email. Next, I will try to 
-send it using the company's environment. Or when I send this series of 
-patches next time, I will paste the web link address of each patch in by 
-replying 0000-cover-letter.patch.
-
-
-git send-email --no-chain-reply-to --quiet --to 
-hanshuatuo.zhang@outlook.com patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzga-smtp-mtada-g0-3,_____wA3YOjZJEpouIVyHg--.2947S13 
-1749689566 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-3&time=1749689566
-
-
-or
-
-
-git send-email --no-chain-reply-to --quiet --to 1053912923@qq.com 
-patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzga-smtp-mtada-g0-1,_____wBnOhQ_JUpoES6WHw--.47108S13 
-1749689667 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-1&time=1749689667
-
-or
-
-git send-email --no-chain-reply-to --quiet --to hans.zhang@cixtech.com 
-patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzsmtp2,PSgvCgAnBeWGJUpo7GLnCA--.28592S13 1749689739 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzsmtp2&time=1749689739
-
-
-
-
-I'm deeply sorry for the inconvenience caused to everyone's review. The 
-following are the links of each patch.
-
-0001:https://patchwork.kernel.org/project/linux-pci/patch/20250611163057.860353-1-18255117159@163.com/
-0002:https://patchwork.kernel.org/project/linux-pci/patch/20250611163106.860438-1-18255117159@163.com/
-0003:https://patchwork.kernel.org/project/linux-pci/patch/20250611163113.860528-1-18255117159@163.com/
-0004:https://patchwork.kernel.org/project/linux-pci/patch/20250611163121.860619-1-18255117159@163.com/
-0005:https://patchwork.kernel.org/project/linux-pci/patch/20250611163131.860729-1-18255117159@163.com/
-0006:https://patchwork.kernel.org/project/linux-pci/patch/20250611163137.860795-1-18255117159@163.com/
-0007:https://patchwork.kernel.org/project/linux-pci/patch/20250611163148.860884-1-18255117159@163.com/
-0008:https://patchwork.kernel.org/project/linux-pci/patch/20250611163154.860976-1-18255117159@163.com/
-0009:https://patchwork.kernel.org/project/linux-pci/patch/20250611163200.861064-1-18255117159@163.com/
-0010:https://patchwork.kernel.org/project/linux-pci/patch/20250611163209.861171-1-18255117159@163.com/
-0011:https://patchwork.kernel.org/project/linux-pci/patch/20250611163215.861242-1-18255117159@163.com/
-0012:https://patchwork.kernel.org/project/linux-pci/patch/20250611163221.861314-1-18255117159@163.com/
-0013:https://patchwork.kernel.org/project/linux-pci/patch/20250611163227.861403-1-18255117159@163.com/
-
-> My preference is to make the subject lines like:
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Acked-by: Benno Lossin <lossin@kernel.org>
+> ---
+> V1->V2:
+> - Don't change the header level for the example in workqueue.rs.
+> - Update the commit log accordingly.
+> - Add Ack from Benno.
 > 
->    PCI: dra7xx: Refactor ...
->    PCI: imx6: Refactor ...
-> 
+>  rust/kernel/block/mq.rs  |  2 +-
+>  rust/kernel/clk.rs       |  6 +++---
+>  rust/kernel/configfs.rs  |  2 +-
+>  rust/kernel/cpufreq.rs   |  8 ++++----
+>  rust/kernel/cpumask.rs   |  4 ++--
+>  rust/kernel/devres.rs    |  4 ++--
+>  rust/kernel/firmware.rs  |  4 ++--
+>  rust/kernel/opp.rs       | 16 ++++++++--------
+>  rust/kernel/pci.rs       |  4 ++--
+>  rust/kernel/platform.rs  |  2 +-
+>  rust/kernel/sync.rs      |  2 +-
+>  rust/kernel/workqueue.rs |  2 +-
+>  rust/pin-init/src/lib.rs |  2 +-
+>  13 files changed, 29 insertions(+), 29 deletions(-)
 
-Will change.
+Miguel,
 
-> etc.  I think including both dwc and dra7xx is overkill.
-> 
-> You can find the prevailing style with:
-> 
->    git log --no-merges --oneline --pretty=format:"%h (\"%s\")" drivers/pci/controller/dwc
-> 
-> Whoever applies this series can trivially squash patches together if
-> that seems better.
+If you are okay, I can also take this via the PM tree along with my other rust
+fixes for next rc.
 
-Thank you very much for the hint you gave.
-
-Best regards,
-Hans
-
+-- 
+viresh
 
