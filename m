@@ -1,145 +1,158 @@
-Return-Path: <linux-pci+bounces-29570-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29571-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B75AAD7879
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 18:48:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67295AD7885
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 18:51:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F8E4188B63B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:48:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D84FD3B2D7A
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:51:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 972EC4690;
-	Thu, 12 Jun 2025 16:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF9119F13F;
+	Thu, 12 Jun 2025 16:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYnZYbBr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lle5iPO1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704C210E5
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 16:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745E17AE1D
+	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 16:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749746903; cv=none; b=uUye4+eRXiNImJ6Sz1+/0wJ9GdlrsLBfjGWl1H9O64rqkvfP8Dej7tq1lpliX4rhDRo4+xYFK7q7V+h5l9zo30ctGHChjnsyAy6sIGyclDvOIxom4/amgYZiIWbBHP10ErSlN2ZQ/+0C0oOXkfpwVw/PbxMUP2TzLcbbIVEUWh4=
+	t=1749747082; cv=none; b=B766fFJSnDSoQbVquYTv/UQNQU6D+lMEyB+QajaIhQNpvQ8EHzMGQYEBBybNAc6nnKOGwfLobEmh0MVNB6hzISbFUEEgm8mhZjTNpmtFCpbncI5CseGXEeqzM0n850ELEdMx91TXTEeBjpl3nSE1gjehOqfxtX326zMbLhB9unY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749746903; c=relaxed/simple;
-	bh=MKFtlH+DNj7Mt4xdBU9hVZyLVXYpS47EakHUm67hZVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b/i60SjYDl1vlMrD7WzCTNjSX2tsMK/kE5KKv9BkRUek0qlZekzh/mB4x8Dmmqq7aOcCyG2hW3Fg//e+uK19LToABZfvYpa1LQO+RESqvbhZ2EU9yLw1AFgjX0wK6K+h8ejPAtiBp98siR0E6yfZtf+6qDDNvSceSfTyxWHGs1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYnZYbBr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A98C4CEEA;
-	Thu, 12 Jun 2025 16:48:22 +0000 (UTC)
+	s=arc-20240116; t=1749747082; c=relaxed/simple;
+	bh=l2F/3t+8SIJLEDbXAmzSF5v0PHC967ELWAyFEgyMaJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b0zSnqMRopCWpAFaTWNpvf4WBVZugb5mrtMiFLJmzM66qsPe+28t4xgrdK/kAg/Pg5bJ9mL5pN3yvYcAOIWqmI+CK1IQl4geahjpgdTcObghACUBu+cv1E5+Gw3gn1htCiBnIK/lQpeAl3N/wbFIF2Uoe58X7sV7awxYT4wIJ/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lle5iPO1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711E2C4CEEA;
+	Thu, 12 Jun 2025 16:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749746902;
-	bh=MKFtlH+DNj7Mt4xdBU9hVZyLVXYpS47EakHUm67hZVA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aYnZYbBr0udYvD4rf1rktl27wkbIbveswII8sA8nbZ+9A7b7e/CALHqaenQK0wCNN
-	 H1r2DRIB87Q04rTROTMH7mSIh8fTb4HvIh6aGlVspYL/dhUVXXv0xq/3DKeYvsOKwd
-	 3jaCYhJ5FyrHZl01fGXhQod6pYtPPfsZODhVONfjIvTb7URl0dOm1RBzH96xzL8xPL
-	 UiQXcSQCQRyQoBh8x32wRw9avX5675jWTwz1yX3ZZ0j92GM9mJXujXqgUv1yqwpURi
-	 KgzbWUZZrBEbO8Hs9i2vVeTBTn4hkgt6FbdyBlXft5qApxg+EP1mxOfyDNHfih9Btu
-	 ginZ5Y3i7lbIw==
-Date: Thu, 12 Jun 2025 11:48:21 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hui Wang <hui.wang@canonical.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
-	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Message-ID: <20250612164821.GA870964@bhelgaas>
+	s=k20201202; t=1749747081;
+	bh=l2F/3t+8SIJLEDbXAmzSF5v0PHC967ELWAyFEgyMaJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lle5iPO1DNjbhLGB4VbOJYvB39anufxlTt++B3y6P+q/9kOzh84ujA9JjxGxoO4kX
+	 P40/8Grk4pMEDUtI5Krs4LO8b2d44eg9et83HLw9o+ULE3lz9SLJDqSOiudL2hSM7p
+	 LEzmLzuoQxsFsGsVjxxyOlWTByGWcXgfY1XWTGGqWkLPhXLnoxnl3+tvK65OxDUCgl
+	 ZwPVFY+G2CUwONVRX6VgfdPzSDe61er5LVkbvNZQh/nriZ69t7QBnhUhVKSMdA7d9K
+	 YecY3x5y/FsYk0z6yOEoHI7yflKAs9zuQLMphkpj80Cx4SePw6J9YBlibVT2pyITmM
+	 3YU6Vt5qTUNbw==
+Date: Thu, 12 Jun 2025 22:21:13 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/4] PCI: dw-rockchip: Do not enumerate bus before
+ endpoint devices are ready
+Message-ID: <3sgjqqwpp57dn7wxbd32qmzwaf3tu5jmylklxnf3siwz7ysuxn@y2uoh3clqpgr>
+References: <2e23r5i5kmju476fcakodccyqnwanbhtyul5prqpqdgqivy3t6@ci54hfghhbb7>
+ <20250612152442.GA908790@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611101442.387378-1-hui.wang@canonical.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250612152442.GA908790@bhelgaas>
 
-[+cc VMD folks]
-
-On Wed, Jun 11, 2025 at 06:14:42PM +0800, Hui Wang wrote:
-> Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
-> Configuration RRS"), this Intel nvme [8086:0a54] works well. Since
-> that patch is merged to the kernel, this nvme stops working.
+On Thu, Jun 12, 2025 at 10:24:42AM -0500, Bjorn Helgaas wrote:
+> On Thu, Jun 12, 2025 at 08:33:54PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Jun 12, 2025 at 09:44:47AM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Jun 12, 2025 at 06:30:37PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Thu, Jun 12, 2025 at 07:21:08AM -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Jun 12, 2025 at 01:40:23PM +0200, Niklas Cassel wrote:
+> > > > > > On Thu, Jun 12, 2025 at 06:38:27AM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Thu, Jun 12, 2025 at 01:19:45PM +0200, Niklas Cassel wrote:
+> > > > > > > > On Wed, Jun 11, 2025 at 04:14:56PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > > On Wed, Jun 11, 2025 at 12:51:42PM +0200, Niklas Cassel wrote:
+> > > > > > > > > > Commit ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can
+> > > > > > > > > > detect Link Up") changed so that we no longer call dw_pcie_wait_for_link(),
+> > > > > > > > > > and instead enumerate the bus directly after receiving the Link Up IRQ.
+> > > > > > > > > > 
+> > > > > > > > > > This means that there is no longer any delay between link up and the bus
+> > > > > > > > > > getting enumerated.
+> > > > > > > 
+> > > > > > > > > I think the comment at the PCIE_T_RRS_READY_MS definition should be
+> > > > > > > > > enough (although it might need to be updated to mention link-up).
+> > > > > > > > > This delay is going to be a standard piece of every driver, so it
+> > > > > > > > > won't require special notice.
+> > > > > > > > 
+> > > > > > > > Looking at pci.h, we already have a comment mentioning exactly this
+> > > > > > > > (link-up):
+> > > > > > > > https://github.com/torvalds/linux/blob/v6.16-rc1/drivers/pci/pci.h#L51-L63
+> > > > > > > > 
+> > > > > > > > I will change the patches to use PCIE_RESET_CONFIG_DEVICE_WAIT_MS instead.
+> > > > > > > 
+> > > > > > > I'll more closely later, but I think PCIE_T_RRS_READY_MS and
+> > > > > > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS are duplicates and only one should
+> > > > > > > exist.  It looks like they got merged at about the same time by
+> > > > > > > different people, so we didn't notice.
+> > > > > > 
+> > > > > > I came to the same conclusion, I will send a patch to remove
+> > > > > > PCIE_T_RRS_READY_MS and convert the only existing user to use
+> > > > > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS.
+> > > > > 
+> > > > > I think PCIE_T_RRS_READY_MS expresses the purpose of the wait more
+> > > > > specifically.  It's not that the device is completely ready after
+> > > > > 100ms; just that it should be able to respond with RRS if it needs
+> > > > > more time.
+> > > > 
+> > > > Yes, but none of the drivers are checking for the RRS status
+> > > > currently. So using PCIE_T_RRS_READY_MS gives a wrong impression
+> > > > that the driver is waiting for the RRS status from the device.
+> > > 
+> > > There's 100ms immediately after reset or link-up when we can't send
+> > > config requests because the device may not be able to respond at all.
+> > > 
+> > > After 100ms, the device should be able to respond to config requests
+> > > with SC, UR, RRS, or CA status (sec 2.2.9.1).  If it responds with
+> > > RRS, the access should be retried either by hardware or (if RRS SV is
+> > > enabled) by software.  This is the origin of "RRS_READY" -- the device
+> > > can at least do RRS.
+> > 
+> > Yeah, but the usage of 100ms is only valid if RRS SV is enabled by
+> > the software as per sec 6.6.1:
+> > 
+> > "It is strongly recommended that software use 100 ms wait periods
+> > only if software enables Configuration RRS Software Visibility".
 > 
-> Through debugging, we found that commit introduces the RRS polling in
-> the pci_dev_wait(), for this nvme, when polling the PCI_VENDOR_ID, it
-> will return ~0 if the config access is not ready yet, but the polling
-> expects a return value of 0x0001 or a valid vendor_id, so the RRS
-> polling doesn't work for this nvme.
+> I see that statement but don't understand it.  Do you think it's meant
+> as an exception to the first two paragraphs that say "software must
+> wait a minimum of 100 ms" following either "exit from Conventional
+> Reset" or "after Link training completes"?
+> 
 
-Sorry for breaking this, and thanks for all your work in debugging
-this!  Issues like this are really hard to track down.
+Maybe yes.
 
-I would think we would have heard about this earlier if the NVMe
-device were broken on all systems.  Maybe there's some connection with
-VMD?  From the non-working dmesg log in your bug report
-(https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/+attachment/5879970/+files/dmesg-60.txt):
+> I can't imagine that it means "if the Root Port doesn't support RRS SV
+> or software doesn't enable RRS SV, software needn't wait at all before
+> issuing config requests."
+> 
 
-  DMI: ASUSTeK COMPUTER INC. ESC8000 G4/Z11PG-D24 Series, BIOS 5501 04/17/2019
-  vmd 0000:d7:05.5: PCI host bridge to bus 10000:00
-  pci 10000:00:02.0: [8086:2032] type 01 class 0x060400 PCIe Root Port
-  pci 10000:00:02.0: PCI bridge to [bus 01]
-  pci 10000:00:02.0: bridge window [mem 0xf8000000-0xf81fffff]: assigned
-  pci 10000:01:00.0: [8086:0a54] type 00 class 0x010802 PCIe Endpoint
-  pci 10000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+Yeah, it cannot be.
 
-  <I think vmd_enable_domain() calls pci_reset_bus() here>
+> This whole thing is about whether the Endpoint is ready to respond.
+> A Root Port property (RRS SV support or enablement) doesn't tell us
+> anything about the Endpoint.
 
-  pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
-  pci 10000:01:00.0: BAR 0: error updating (high 0x00000000 != 0xffffffff)
-  pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
-  pci 10000:01:00.0: BAR 0: error updating (0xf8010004 != 0xffffffff)
-  nvme nvme0: pci function 10000:01:00.0
-  nvme 10000:01:00.0: enabling device (0000 -> 0002)
+I think we should just leave the RRS for good :) I was having a feeling that the
+RRS define we have didn't fit the purpose of waiting for the device to be ready
+post link up. Hence, I looked it up in the spec and spotted the above statement,
+just to confuse you and myself.
 
-Things I notice:
+- Mani
 
-  - The 10000:01:00.0 NVMe device is behind a VMD bridge
-
-  - We successfully read the Vendor & Device IDs (8086:0a54)
-
-  - The NVMe device is uninitialized.  We successfully sized the BAR,
-    which included successful config reads and writes.  The BAR
-    wasn't assigned by BIOS, which is normal since it's behind VMD.
-
-  - We allocated space for BAR 0 but the config writes to program the
-    BAR failed.  The read back from the BAR was 0xffffffff; probably a
-    PCIe error, e.g., the NVMe device didn't respond.
-
-  - The device *did* respond when nvme_probe() enabled it: the
-    "enabling device (0000 -> 0002)" means pci_enable_resources() read
-    PCI_COMMAND and got 0x0000.
-
-  - The dmesg from the working config doesn't include the "enabling
-    device" line, which suggests that pci_enable_resources() saw
-    PCI_COMMAND_MEMORY (0x0002) already set and didn't bother setting
-    it again.  I don't know why it would already be set.
-   
-d591f6804e7e really only changes pci_dev_wait(), which is used after
-device resets.  I think vmd_enable_domain() resets the VMD Root Ports
-after pci_scan_child_bus(), and maybe we're not waiting long enough
-afterwards.
-
-My guess is that we got the ~0 because we did a config read too soon
-after reset and the device didn't respond.  The Root Port would time
-out, log an error, and synthesize ~0 data to complete the CPU read
-(see PCIe r6.0, sec 2.3.2 implementation note).
-
-It's *possible* that we waited long enough but the NVMe device is
-broken and didn't respond when it should have, but my money is on a
-software defect.
-
-There are a few pci_dbg() calls about these delays; can you set
-CONFIG_DYNAMIC_DEBUG=y and boot with dyndbg="file drivers/pci/* +p" to
-collect that output?  Please also collect the "sudo lspci -vv" output
-from a working system.
-
-Bjorn
+-- 
+மணிவண்ணன் சதாசிவம்
 
