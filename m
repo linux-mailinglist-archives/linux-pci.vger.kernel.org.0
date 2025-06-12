@@ -1,136 +1,229 @@
-Return-Path: <linux-pci+bounces-29531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 818E8AD6DBF
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 12:31:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 346A5AD6DC2
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 12:31:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3BE11890742
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 10:30:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 202063A701F
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 10:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B84B232369;
-	Thu, 12 Jun 2025 10:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95765238172;
+	Thu, 12 Jun 2025 10:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAZH+8yC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZOQCorL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0D422F16C
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 10:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C33122DF95;
+	Thu, 12 Jun 2025 10:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724188; cv=none; b=U6f/5p/NmLQSkNUfFn3wKYq4NyOOHUibPLyo7CWzOrvO3Phnh9+O49rusuPS+v481jawTWypilMLriXzfvM0Qzw4M92D05fuUatkX0VgPfUqtGn40Q7T4EreEPMBBI8XaFryuMrrnsxqom49uA/Oj1K6SPIU3nF7sirerDboIs8=
+	t=1749724278; cv=none; b=pobJ9ZXSNxEU8ck/Ru0ZApAytga6N/Ipd856+ebrELPsgknGtbTpCWblPwwL3nv7TkUCPsuonjPtmCsFeHFZPXqkZjdM3VOJT0Kd2SSpYouVk0Gz0q5RFRygj/CT2scKtnpmqKTGLiEEIeXr8XpMQATUvp8fuEvkgw2uoDRCmaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724188; c=relaxed/simple;
-	bh=LBiZjj1c04h2wKgu6SjWXxVcIMRnF5MvTTsJHW2Ksb8=;
+	s=arc-20240116; t=1749724278; c=relaxed/simple;
+	bh=wiejYMTupVjbAdH1VRxuYY6nbMKtSb6UNwF+vG/I2Rw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e59pRKYtUQUhElM1orzboSBhKyjjcyiLAnVCNrdPkQQ2ZjM5bsTcBDAbFggKO01lqJIFrCxJzX1Al5+xhMIi+WgCJ8BLlEqCqtyYDEhIMxUb/cMyhPyiT0+wqG650s9ypnEYPxmwRHVHEzMLPRjiGYrHVdCV61nBmGYUTFV17XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZAZH+8yC; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-311e2cc157bso719927a91.2
-        for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 03:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749724186; x=1750328986; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=djUr5zaU07dnze6b12sZ98Cx0swbt49r2vx4mVIURNg=;
-        b=ZAZH+8yCPSa6m8A5OO5z0I+JsTAU0Y16O2nTUn0F+56+r4H3gZVnoAs43LeHeEbCeb
-         UU1ENxbcN8vJW7HEkqhS377VhZC/Km7dSCLKUTzgmqpQ0KG/5J7pLYpGferDpDhSFNaZ
-         cnDcxUrkg7pU8gF4FPVKPAtJpx0tWNY9mmXLaq1j+5gE6IHIBR84s5wB5IYhwBshbdr5
-         i0KHpk8mZS2oginkAgTPBGveVcfmeNxyAg01OzNEOfwIAwv6arYqDiFpyCW+FvCXBkEw
-         hFZRX+FKPwJpl1Ocp+Se7/g49JGvOL4Tf09aWrDf6rVJXIVu/pY0xVFJUa4CfQFZhq6/
-         sGJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749724186; x=1750328986;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=djUr5zaU07dnze6b12sZ98Cx0swbt49r2vx4mVIURNg=;
-        b=Ck9bv5lj8obgA2tH1sNre2EVCMAV2bixgLoJac1TcrZy5EAwFzwyo2B9dMZiTeR9Rn
-         oyAa5mtNLStqHMZU3/BCOekcjnxN8qbToMGhM6jdWDU06o3fpbFYWu8YKlqCgK/fTSO5
-         AcAWlWOyuI+3zn+I1O7cVSgIX9+XbzpImt726q4BYC2Ditboneifmr8hfFGDqmPpoz3V
-         RZEAdoK5Ep5C1nBbY8N+KvCJrWOVcHnVXQpxUIdCJ4ELunUWgjvfgpDrn5J4xu5ZdZd9
-         kMYWSCEhwyYtDz/QITDSmTlygCTEBGOlIkk4Gtkms5isff04tlvc0m3JDmlHP4ZMO6i+
-         xS6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVMdlqOklE3LUcYGk5jF/AAkrnGSyxtta3FJA+DnDDa89cN6lkyOwvmZmkkfHYNrD0Nj6FuWVnJ4sw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFMg4o+YqvTvbNBzN1IbHaKdelhb4sfLRvKrlI1pcWGxY+zzQM
-	JHdKN0XuO/UqzZJZ5f2MBLm740Dl6VCQwD/Wci8Wv4y68zs40ZlmktFBb8eZLhcgPs4=
-X-Gm-Gg: ASbGncuOWrTIxqpqZTpY5VcOjx1xIDW4q8aYUMCbDUJUI4DxRrAWKkQB9sdEGuL+nzB
-	aURToznpTh+5GXmdOk9h8XLd0NzBp6fx99HhrnPFyNhxqdyovlrZtqwwRr8i3UZ/L5YeVJ5Ckdp
-	4SmqY6Q2HUJEsm8RIPp2yo/eH/640Xo2Nk5y01UVPxYsF7+neRYo6P+vJ31ZMXdr1yWumGU2onE
-	Dh6KL5AdwNR8/QH5PyfPvkbnO3DKh4yakHBlMcT6KjDH04RY50G/LAjaASmP73pivOoXYRtys37
-	c0ySR/q4mJKkmtzqRaUb1WvWICsvYn0T0Rcf0Of1ZxdH3khUXRgRdtlJYphxsW18qKZIwfTUEA=
-	=
-X-Google-Smtp-Source: AGHT+IGj6zH2i6FSYnQuoWZbvieZJ82el41fbjoepfDccYSCZ6jY6ZrPdhwat+GRxvtW+AAp+Hs2QQ==
-X-Received: by 2002:a17:90b:4986:b0:312:e618:bd53 with SMTP id 98e67ed59e1d1-313af1e44a0mr8462248a91.26.1749724185738;
-        Thu, 12 Jun 2025 03:29:45 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e61b4besm10717505ad.27.2025.06.12.03.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 03:29:45 -0700 (PDT)
-Date: Thu, 12 Jun 2025 15:59:42 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH V2] rust: Use consistent "# Examples" heading style in
- rustdoc
-Message-ID: <20250612102942.iqdqmu3dolmgtmio@vireshk-i7>
-References: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
- <20250612014210.bcp2p6ww5ofvy6zh@vireshk-i7>
- <CANiq72=m+O7p==Fte4HA7kmt0DKaKmkeAQ-J1kVtyTKDKibgcA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mfySZ36kcFtQEfmeWcTqzo/dK+q/nIox/G8hOlvhrhEEIlCKvJlQVwonKeZPzGeWaaF9PbEyZ39GnWashTPC5XDOfFoGmXJKdQIpzj5D1/+L9OC6L2+5rLfm1UUk8EO34pCcNG/MeRT3/WcYh4AGg6jpw2JZIiLZrvx2Se0ngRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZOQCorL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C7DC4CEEA;
+	Thu, 12 Jun 2025 10:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749724274;
+	bh=wiejYMTupVjbAdH1VRxuYY6nbMKtSb6UNwF+vG/I2Rw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jZOQCorL+FGN0FPSLDpR8Nl8cwHh+7aLHkJpDhkkqjrI4azY6PmftyMBrjW11fweY
+	 /6L5e0SRkXt6e0SsClWbT+ujg52rh7F8AHbwijjUu6KqMAiuttnuGG/7Hnkcd67Pr1
+	 YI8JipTlAB9CM+wZphqk74sat00/MaaownS333t/79phWLtuK2fq6r6lYwvgdXchSW
+	 Gm38EvYTsUiceMQtIWV51cF7u7fDL274fBaomUddd/WzWI8Yuo7F12zxO+95YL5GuK
+	 8SawW3OB8iFq4MhTAmDNhMmHBN5Q64FOLUcFMZ5PjkbBVWqdKhm++ACGoj9njUx2R9
+	 O8y52dIfXP3Rg==
+Date: Thu, 12 Jun 2025 16:01:06 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, mahesh@linux.ibm.com, oohall@gmail.com, 
+	Jonathan.Cameron@huawei.com, terry.bowman@amd.com, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v4 2/3] PCI/DPC: Run recovery on device that detected the
+ error
+Message-ID: <qqixmrgqnba6hlt4fritlknfnbe6zm63qgxhoep4oriinbozyt@f6tzmjpyaf6d>
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+ <20250217024218.1681-3-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANiq72=m+O7p==Fte4HA7kmt0DKaKmkeAQ-J1kVtyTKDKibgcA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250217024218.1681-3-xueshuai@linux.alibaba.com>
 
-On 12-06-25, 12:22, Miguel Ojeda wrote:
-> Do you need it there? It is trivial, so it probably does not matter,
-> but mistakes are still possible (like it happened in v1). Since it
-> touches files from a few maintainers, it would be best to put it
-> across the "global" Rust tree (ideally with their Acked-by), and Cc
-> everyone (e.g. Tejun added now).
+On Mon, Feb 17, 2025 at 10:42:17AM +0800, Shuai Xue wrote:
+> The current implementation of pcie_do_recovery() assumes that the
+> recovery process is executed on the device that detected the error.
+
+s/on/for
+
+> However, the DPC driver currently passes the error port that experienced
+> the DPC event to pcie_do_recovery().
 > 
-> I also have a fixes PR to send, but I was not planning to take this as
-> a fix since it is not marked as such.
+> Use the SOURCE ID register to correctly identify the device that
+> detected the error. When passing the error device, the
+> pcie_do_recovery() will find the upstream bridge and walk bridges
+> potentially AER affected. And subsequent patches will be able to
+
+s/patches/commits
+
+> accurately access AER status of the error device.
 > 
-> But I don't want to delay you. If you need the changes, then I would
-> suggest just applying the parts that modify your files, and we clean
-> up the rest later.
+> Should not observe any functional changes.
+> 
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> ---
+>  drivers/pci/pci.h      |  2 +-
+>  drivers/pci/pcie/dpc.c | 28 ++++++++++++++++++++++++----
+>  drivers/pci/pcie/edr.c |  7 ++++---
+>  3 files changed, 29 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..870d2fbd6ff2 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -572,7 +572,7 @@ struct rcec_ea {
+>  void pci_save_dpc_state(struct pci_dev *dev);
+>  void pci_restore_dpc_state(struct pci_dev *dev);
+>  void pci_dpc_init(struct pci_dev *pdev);
+> -void dpc_process_error(struct pci_dev *pdev);
+> +struct pci_dev *dpc_process_error(struct pci_dev *pdev);
+>  pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
+>  bool pci_dpc_recovered(struct pci_dev *pdev);
+>  unsigned int dpc_tlp_log_len(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 1a54a0b657ae..ea3ea989afa7 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -253,10 +253,20 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+>  	return 1;
+>  }
+>  
+> -void dpc_process_error(struct pci_dev *pdev)
+> +/**
+> + * dpc_process_error - handle the DPC error status
+> + * @pdev: the port that experienced the containment event
+> + *
+> + * Return the device that detected the error.
 
-I don't need this for my request. You can pick it at a later time.
+s/Return/Return:
 
-Thanks.
+> + *
+> + * NOTE: The device reference count is increased, the caller must decrement
+> + * the reference count by calling pci_dev_put().
+> + */
+> +struct pci_dev *dpc_process_error(struct pci_dev *pdev)
+>  {
+>  	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+>  	struct aer_err_info info;
+> +	struct pci_dev *err_dev;
+>  
+>  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+>  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> @@ -279,6 +289,13 @@ void dpc_process_error(struct pci_dev *pdev)
+>  		 "software trigger" :
+>  		 "reserved error");
+>  
+> +	if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE ||
+> +	    reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE)
+> +		err_dev = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
+> +					    PCI_BUS_NUM(source), source & 0xff);
+> +	else
+> +		err_dev = pci_dev_get(pdev);
+> +
+>  	/* show RP PIO error detail information */
+>  	if (pdev->dpc_rp_extensions &&
+>  	    reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT &&
+> @@ -291,6 +308,8 @@ void dpc_process_error(struct pci_dev *pdev)
+>  		pci_aer_clear_nonfatal_status(pdev);
+>  		pci_aer_clear_fatal_status(pdev);
+>  	}
+> +
+> +	return err_dev;
+>  }
+>  
+>  static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+> @@ -346,7 +365,7 @@ static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+>  
+>  static irqreturn_t dpc_handler(int irq, void *context)
+>  {
+> -	struct pci_dev *err_port = context;
+> +	struct pci_dev *err_port = context, *err_dev;
+>  
+>  	/*
+>  	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
+> @@ -357,10 +376,11 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>  		return IRQ_HANDLED;
+>  	}
+>  
+> -	dpc_process_error(err_port);
+> +	err_dev = dpc_process_error(err_port);
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+> -	pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
+> +	pcie_do_recovery(err_dev, pci_channel_io_frozen, dpc_reset_link);
+> +	pci_dev_put(err_dev);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 521fca2f40cb..088f3e188f54 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -150,7 +150,7 @@ static int acpi_send_edr_status(struct pci_dev *pdev, struct pci_dev *edev,
+>  
+>  static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  {
+> -	struct pci_dev *pdev = data, *err_port;
+> +	struct pci_dev *pdev = data, *err_port, *err_dev;
+>  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
+>  	u16 status;
+>  
+> @@ -190,7 +190,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  		goto send_ost;
+>  	}
+>  
+> -	dpc_process_error(err_port);
+> +	err_dev = dpc_process_error(err_port);
+>  	pci_aer_raw_clear_status(err_port);
+>  
+>  	/*
+> @@ -198,7 +198,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	 * or ERR_NONFATAL, since the link is already down, use the FATAL
+>  	 * error recovery path for both cases.
+>  	 */
+> -	estate = pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
+> +	estate = pcie_do_recovery(err_dev, pci_channel_io_frozen, dpc_reset_link);
+>  
+>  send_ost:
+>  
+> @@ -216,6 +216,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	}
+>  
+>  	pci_dev_put(err_port);
+> +	pci_dev_put(err_dev);
+
+err_dev is not a valid pointer before calling dpc_process_error(). So either
+initialize it with NULL or only call it in error paths after
+dpc_process_error().
+
+And btw, pci_dev_put(err_dev) should come before pci_dev_put(err_port).
+
+- Mani
 
 -- 
-viresh
+மணிவண்ணன் சதாசிவம்
 
