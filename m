@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-29597-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 411A2AD7ACB
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:06:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5531AD7ACA
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:06:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EBD51896E22
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:06:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58DEE17C8A3
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE3C2D6600;
-	Thu, 12 Jun 2025 19:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 036702DECA1;
+	Thu, 12 Jun 2025 19:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="fu5lzhx6"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="CIy7jthP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EA02D1F72;
-	Thu, 12 Jun 2025 19:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BB92D1F72;
+	Thu, 12 Jun 2025 19:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754899; cv=pass; b=ueZdeTWeaMl43khmj/oVz2jBGXHikdyF7/1nUvCOpdNIRlXhvX0LPX7Ve0iL/QW9QlBMx42FOJ5RkNtAiZZJnRZgbhUTyB8/Phi3svmyzGvET1zsaAkSOmJpCFhi6fc2deMhjdf8nVCdOAl/j0gg3rcD0XSSzA93iE8W+F2d1h0=
+	t=1749754908; cv=pass; b=icCYHYsLZjRC4LJhLZWwkGXCkpg3V3Q4xozutkRg2/lIj/6PDP1u9HZk+TiPknTgDlbrGFEoKS2UCLAdv5WWYPpjbuWvXZeICBwZAYSzDmQISIKCTbT6ELcoSmjhYbZn2TyNXBna9w9E7crMZIXP3mFoKdYc+bHNFj4N6ogIAUI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754899; c=relaxed/simple;
-	bh=3l2/382oXuQckHXMcFNIdMBsrBifyDFF2nWhSPoo8ZQ=;
+	s=arc-20240116; t=1749754908; c=relaxed/simple;
+	bh=mZD77SZcH1gDijOn4xxFCpLnXQKxP72IzxOzF3zD1wo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TnQvSR3mzW+doEbwhwOkqC+NKtNLmDwZ9kUmvI2lIufvP5Xko6Yo/ySyXg9VHHBbwD18Hcq6PMQBVshQXYuyJw6EYePml8w3dcbVYW5dq2kjTIK1kxk/+2hss1IU3HUYEtRriRXjhv5k5+D+O2L+CQgKLTAPEur6GJSpyf8Hpj0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=fu5lzhx6; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=IXeZTR46m8hecB5oc1nZH0Nlfx1B2wxWDt+Np74GbAdOc9PglSTaSSPv/4FaNYTD8UMbTz2RQpl2eG1IaqQkzKRfhwYWiBjYo1UFOm3iaKGm+a0cGiWXc72i19GOkn8cd5/iTs+CKD/i1W/x+M3QcwO5vn4ljBXWPDV4Znptovw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=CIy7jthP; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1749754835; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1749754847; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Iw4lh31zL3z3vD4l4xecCrI7P32xZo18/XnWLSbT+0eTjO8AWIJ+cpqks4s0BYoN9xlYeef1j2egzjwr6MmP242NVMt//uQiPxgKLyzoNTH4hU3jXrdsmZirqu/Ue7iru8typnlh6/GgxJJa3X1fE49YengG5j96Ugpj76FUWzw=
+	b=U1rUZbpAXUp7ntMrJjmQxF4hNpsjurE8G9vz0ufQ5/NDfrmWFlR7OBMSXjgVqeYOYnpV90kF7aQVyHtqlyZKQikJaPfmYoz2l0VrUeshaV/o9IrM0MErUWp7mXL4Ah9v93mZx176tRj/VvZUZUWGTUgVG2R5v1l4IGN/VP+igJQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754835; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=A3pFEOOb6EOrxgekJ/E7bblmTlxsE0jgmWgpDuqVGPI=; 
-	b=l3U8SXUOPY1cFZ6FfLwBTFMZqMXPT4oGoyfyIaDbxLbWbmdL58lG2nR+SztDNwooTh0adAGz2h9vpOvOODttWauvs36n5sq9mmxO1Y26JMmhGclvz9wlEP/ktsgkYfzqRWGT3VpIQSde8ouA3yx2aRn1kQE9KM+URDXK4Pu3wZ8=
+	t=1749754847; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hOlEtywVoaa9GYHyWTuEQ+Doi2prp9NQsnYCAZDXUrY=; 
+	b=PLN+3wAR17snXoAKJ7sDFCkMSRdH4ud+br+G2w5rOoLh9SFk8Erg2mrrLjXpHJkav3z+y+68g0yYfe/OoZVU7QTCfuQeOxlmHcSb3Nx+PmN4cqJbzw9lIfZLVOefhtqfYJBTaXfAkqNXSAgFDXnMP3K384zU2s6rWl7N5DN3zoA=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754835;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754847;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=A3pFEOOb6EOrxgekJ/E7bblmTlxsE0jgmWgpDuqVGPI=;
-	b=fu5lzhx6cwwOCtOY33CFP1xl/7xxfxNMI12CKuai1Aw50ZX3m4vX9GQ+GHa8gkyy
-	tjP3stEhr5lch37RCITLb9C7G6w3oPtG17AvoZ39Uazn47g4KXiuzCWG2ydoS+PKnm6
-	0QxRTMRWkR6Oel4nmpTjlFejoX07IM+z0gAl4Qy8=
-Received: by mx.zohomail.com with SMTPS id 1749754833329406.383279922641;
-	Thu, 12 Jun 2025 12:00:33 -0700 (PDT)
+	bh=hOlEtywVoaa9GYHyWTuEQ+Doi2prp9NQsnYCAZDXUrY=;
+	b=CIy7jthP0vmYmRBLGe3ArudzrJYd57ADhv2sXVxobeAF3HjHq+BVAfNW3YDlLxzH
+	NRfoC35x8e9/TT/8bnO0pp96cuHlFEzgLzeoE+OAf2fqxqA+nCGwybx6Gg4xSvOANiD
+	mEb/rqHQsJW6lwwJXB8KXabrA82pmDgAwoyVLU0s=
+Received: by mx.zohomail.com with SMTPS id 174975484621575.10184870586033;
+	Thu, 12 Jun 2025 12:00:46 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:21 +0200
-Subject: [PATCH 19/20] clk: sp7021: switch to HWORD_UPDATE macro
+Date: Thu, 12 Jun 2025 20:56:22 +0200
+Subject: [PATCH 20/20] phy: rockchip-pcie: switch to HWORD_UPDATE macro
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-19-f4afb8f6313f@collabora.com>
+Message-Id: <20250612-byeword-update-v1-20-f4afb8f6313f@collabora.com>
 References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -105,64 +105,173 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The sp7021 clock driver has its own shifted high word mask macro,
-similar to the ones many Rockchip drivers have.
+The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+drivers that use constant masks.
 
-Remove it, and replace instances of it with bitfield.h's HWORD_UPDATE
-macro, which does the same thing except in a common macro that also does
-compile-time error checking.
+The Rockchip PCIe PHY driver, used on the RK3399, has its own definition
+of HIWORD_UPDATE.
 
-This was compile-tested with 32-bit ARM with Clang, no runtime tests
-were performed as I lack the hardware. However, I verified that fix
-commit 5c667d5a5a3e ("clk: sp7021: Adjust width of _m in HWM_FIELD_PREP()")
-is not regressed. No warning is produced.
+Remove it, and replace instances of it with bitfield.h's HWORD_UPDATE.
+To achieve this, some mask defines are reshuffled, as HWORD_UPDATE uses
+the mask as both the mask of bits to write and to derive the shift
+amount from in order to shift the value.
+
+In order to ensure that the mask is always a constant, the inst->index
+shift is performed after the HWORD_UPDATE, as this is a runtime value.
+
+From this, we gain compile-time error checking, and in my humble opinion
+nicer code, as well as a single definition of this macro across the
+entire codebase to aid in code comprehension.
+
+Tested on a RK3399 ROCKPro64, where PCIe still works as expected when
+accessing an NVMe drive.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/clk/clk-sp7021.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 72 ++++++++++----------------------
+ 1 file changed, 21 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/clk/clk-sp7021.c b/drivers/clk/clk-sp7021.c
-index 7cb7d501d7a6ebffe002f80dfa937365e04d356a..f408109f866c6ee65398d549e76994e54c1421ea 100644
---- a/drivers/clk/clk-sp7021.c
-+++ b/drivers/clk/clk-sp7021.c
-@@ -38,13 +38,6 @@ enum {
- #define MASK_DIVN	GENMASK(7, 0)
- #define MASK_DIVM	GENMASK(14, 8)
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index bd44af36c67a5a504801275c1b0384d373fe7ec7..7c486ecb96ffe1589fa077d7d2b079e02f4f6769 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2016 ROCKCHIP, Inc.
+  */
  
--/* HIWORD_MASK FIELD_PREP */
--#define HWM_FIELD_PREP(mask, value)		\
--({						\
--	u64 _m = mask;				\
--	(_m << 16) | FIELD_PREP(_m, value);	\
--})
--
- struct sp_pll {
- 	struct clk_hw hw;
- 	void __iomem *reg;
-@@ -313,15 +306,15 @@ static int plltv_set_rate(struct sp_pll *clk)
- 	u32 r0, r1, r2;
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+@@ -18,23 +19,14 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
  
- 	r0  = BIT(clk->bp_bit + 16);
--	r0 |= HWM_FIELD_PREP(MASK_SEL_FRA, clk->p[SEL_FRA]);
--	r0 |= HWM_FIELD_PREP(MASK_SDM_MOD, clk->p[SDM_MOD]);
--	r0 |= HWM_FIELD_PREP(MASK_PH_SEL, clk->p[PH_SEL]);
--	r0 |= HWM_FIELD_PREP(MASK_NFRA, clk->p[NFRA]);
-+	r0 |= HWORD_UPDATE(MASK_SEL_FRA, clk->p[SEL_FRA]);
-+	r0 |= HWORD_UPDATE(MASK_SDM_MOD, clk->p[SDM_MOD]);
-+	r0 |= HWORD_UPDATE(MASK_PH_SEL, clk->p[PH_SEL]);
-+	r0 |= HWORD_UPDATE(MASK_NFRA, clk->p[NFRA]);
+-/*
+- * The higher 16-bit of this register is used for write protection
+- * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+- */
+-#define HIWORD_UPDATE(val, mask, shift) \
+-		((val) << (shift) | (mask) << ((shift) + 16))
  
--	r1  = HWM_FIELD_PREP(MASK_DIVR, clk->p[DIVR]);
-+	r1  = HWORD_UPDATE(MASK_DIVR, clk->p[DIVR]);
+ #define PHY_MAX_LANE_NUM      4
+-#define PHY_CFG_DATA_SHIFT    7
+-#define PHY_CFG_ADDR_SHIFT    1
+-#define PHY_CFG_DATA_MASK     0xf
+-#define PHY_CFG_ADDR_MASK     0x3f
+-#define PHY_CFG_RD_MASK       0x3ff
++#define PHY_CFG_DATA_MASK     GENMASK(10, 7)
++#define PHY_CFG_ADDR_MASK     GENMASK(6, 1)
++#define PHY_CFG_RD_MASK       GENMASK(9, 0)
+ #define PHY_CFG_WR_ENABLE     1
+ #define PHY_CFG_WR_DISABLE    1
+-#define PHY_CFG_WR_SHIFT      0
+-#define PHY_CFG_WR_MASK       1
++#define PHY_CFG_WR_MASK       BIT(0)
+ #define PHY_CFG_PLL_LOCK      0x10
+ #define PHY_CFG_CLK_TEST      0x10
+ #define PHY_CFG_CLK_SCC       0x12
+@@ -49,11 +41,7 @@
+ #define PHY_LANE_RX_DET_SHIFT 11
+ #define PHY_LANE_RX_DET_TH    0x1
+ #define PHY_LANE_IDLE_OFF     0x1
+-#define PHY_LANE_IDLE_MASK    0x1
+-#define PHY_LANE_IDLE_A_SHIFT 3
+-#define PHY_LANE_IDLE_B_SHIFT 4
+-#define PHY_LANE_IDLE_C_SHIFT 5
+-#define PHY_LANE_IDLE_D_SHIFT 6
++#define PHY_LANE_IDLE_MASK    BIT(3)
  
--	r2  = HWM_FIELD_PREP(MASK_DIVN, clk->p[DIVN] - 1);
--	r2 |= HWM_FIELD_PREP(MASK_DIVM, clk->p[DIVM] - 1);
-+	r2  = HWORD_UPDATE(MASK_DIVN, clk->p[DIVN] - 1);
-+	r2 |= HWORD_UPDATE(MASK_DIVM, clk->p[DIVM] - 1);
+ struct rockchip_pcie_data {
+ 	unsigned int pcie_conf;
+@@ -100,22 +88,14 @@ static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
+ 			      u32 addr, u32 data)
+ {
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+-		     HIWORD_UPDATE(data,
+-				   PHY_CFG_DATA_MASK,
+-				   PHY_CFG_DATA_SHIFT) |
+-		     HIWORD_UPDATE(addr,
+-				   PHY_CFG_ADDR_MASK,
+-				   PHY_CFG_ADDR_SHIFT));
++		     HWORD_UPDATE(PHY_CFG_DATA_MASK, data) |
++		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, addr));
+ 	udelay(1);
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+-		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
+-				   PHY_CFG_WR_MASK,
+-				   PHY_CFG_WR_SHIFT));
++		     HWORD_UPDATE(PHY_CFG_WR_MASK, PHY_CFG_WR_ENABLE));
+ 	udelay(1);
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+-		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
+-				   PHY_CFG_WR_MASK,
+-				   PHY_CFG_WR_SHIFT));
++		     HWORD_UPDATE(PHY_CFG_WR_MASK, PHY_CFG_WR_DISABLE));
+ }
  
- 	spin_lock_irqsave(&clk->lock, flags);
- 	writel(r0, clk->reg);
+ static int rockchip_pcie_phy_power_off(struct phy *phy)
+@@ -126,11 +106,9 @@ static int rockchip_pcie_phy_power_off(struct phy *phy)
+ 
+ 	guard(mutex)(&rk_phy->pcie_mutex);
+ 
+-	regmap_write(rk_phy->reg_base,
+-		     rk_phy->phy_data->pcie_laneoff,
+-		     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
+-				   PHY_LANE_IDLE_MASK,
+-				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
++		     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
++				  PHY_LANE_IDLE_OFF) << inst->index);
+ 
+ 	if (--rk_phy->pwr_cnt) {
+ 		return 0;
+@@ -140,11 +118,9 @@ static int rockchip_pcie_phy_power_off(struct phy *phy)
+ 	if (err) {
+ 		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
+ 		rk_phy->pwr_cnt++;
+-		regmap_write(rk_phy->reg_base,
+-			     rk_phy->phy_data->pcie_laneoff,
+-			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+-					   PHY_LANE_IDLE_MASK,
+-					   PHY_LANE_IDLE_A_SHIFT + inst->index));
++		regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
++			     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
++					  !PHY_LANE_IDLE_OFF) << inst->index);
+ 		return err;
+ 	}
+ 
+@@ -172,15 +148,11 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 	}
+ 
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+-		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
+-				   PHY_CFG_ADDR_MASK,
+-				   PHY_CFG_ADDR_SHIFT));
++		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, PHY_CFG_PLL_LOCK));
+ 
+-	regmap_write(rk_phy->reg_base,
+-		     rk_phy->phy_data->pcie_laneoff,
+-		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+-				   PHY_LANE_IDLE_MASK,
+-				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
++		     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
++				  !PHY_LANE_IDLE_OFF) << inst->index);
+ 
+ 	/*
+ 	 * No documented timeout value for phy operation below,
+@@ -211,9 +183,7 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 	}
+ 
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+-		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
+-				   PHY_CFG_ADDR_MASK,
+-				   PHY_CFG_ADDR_SHIFT));
++		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, PHY_CFG_PLL_LOCK));
+ 
+ 	err = regmap_read_poll_timeout(rk_phy->reg_base,
+ 				       rk_phy->phy_data->pcie_status,
 
 -- 
 2.49.0
