@@ -1,60 +1,59 @@
-Return-Path: <linux-pci+bounces-29596-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29597-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38248AD7AC7
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:06:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 411A2AD7ACB
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:06:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A3263B6A1E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:05:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EBD51896E22
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8292DCBE7;
-	Thu, 12 Jun 2025 19:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE3C2D6600;
+	Thu, 12 Jun 2025 19:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="O15lOD6M"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="fu5lzhx6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE922D5424;
-	Thu, 12 Jun 2025 19:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EA02D1F72;
+	Thu, 12 Jun 2025 19:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754883; cv=pass; b=X760dWZp2y3beOrxljhiu4G1VJanF/4c9Dc55w3JAaoWQWWCJePmSIf/jnXH3Ctgt3U4zZFaW4jqrmqm0E5BkC0tDpLUMJD6oyLNAAxus75KRqfREU0/9/S8Zk6tZp8C4wFjxknuHw5DEERvznoBudMbkugx7DWjPen7J2rl/cQ=
+	t=1749754899; cv=pass; b=ueZdeTWeaMl43khmj/oVz2jBGXHikdyF7/1nUvCOpdNIRlXhvX0LPX7Ve0iL/QW9QlBMx42FOJ5RkNtAiZZJnRZgbhUTyB8/Phi3svmyzGvET1zsaAkSOmJpCFhi6fc2deMhjdf8nVCdOAl/j0gg3rcD0XSSzA93iE8W+F2d1h0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754883; c=relaxed/simple;
-	bh=r8PuC2k6ebHXQPM3VaVQUXA5NCm4m725GZ544vsNQKE=;
+	s=arc-20240116; t=1749754899; c=relaxed/simple;
+	bh=3l2/382oXuQckHXMcFNIdMBsrBifyDFF2nWhSPoo8ZQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DoDPvTaELxKmp33NmX31qJkPXPaJ54SFVocb53kR2SyT0K4px9h2EPmWg3iFMrq5Zscv/LIItelpxG0ryMzeAHJEQ9UceVRKSkGwE8nJPInst/5FP1XvcQ8x4INUrT7jsI2SV41dU2cVJLdUaSjxyWHBNhUB8w1+vV+DwsZdcyg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=O15lOD6M; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=TnQvSR3mzW+doEbwhwOkqC+NKtNLmDwZ9kUmvI2lIufvP5Xko6Yo/ySyXg9VHHBbwD18Hcq6PMQBVshQXYuyJw6EYePml8w3dcbVYW5dq2kjTIK1kxk/+2hss1IU3HUYEtRriRXjhv5k5+D+O2L+CQgKLTAPEur6GJSpyf8Hpj0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=fu5lzhx6; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1749754821; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1749754835; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=afASkY17K44xJEqOtwoZRi2Rj7NU7XGHd4FRsaUcqjDdsxzAJJPtIiTemtpvH6l/NG65TT05z2EkQLZdosFRQryXP6i+RGhx7dBneuvXXeZUqTxa8Qh+DYKsDDweJzC0PjzGah1CDwp1GfdI7h3XUf65IW3CbLigXt4s9uWuqKU=
+	b=Iw4lh31zL3z3vD4l4xecCrI7P32xZo18/XnWLSbT+0eTjO8AWIJ+cpqks4s0BYoN9xlYeef1j2egzjwr6MmP242NVMt//uQiPxgKLyzoNTH4hU3jXrdsmZirqu/Ue7iru8typnlh6/GgxJJa3X1fE49YengG5j96Ugpj76FUWzw=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754821; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=m1382RaA7e8zsKGURaU10Bm2BofcjNhspv3I/bEDj7A=; 
-	b=IdI2iMjWyIsfW6J4Z3uk5DJ+r4e0XnhOfEhn3553kdGunkhO5w///zqauhzf/g4fCNCJVbDN5baWezVSY5RiUyuzhUPpEHHjgKh0pKKpdm8+s8Lu353UV0bOh8fZpcYB1Z/fkz5E0jOtOjDq9n5UP/I4yUSUebHRI1M260F8slg=
+	t=1749754835; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=A3pFEOOb6EOrxgekJ/E7bblmTlxsE0jgmWgpDuqVGPI=; 
+	b=l3U8SXUOPY1cFZ6FfLwBTFMZqMXPT4oGoyfyIaDbxLbWbmdL58lG2nR+SztDNwooTh0adAGz2h9vpOvOODttWauvs36n5sq9mmxO1Y26JMmhGclvz9wlEP/ktsgkYfzqRWGT3VpIQSde8ouA3yx2aRn1kQE9KM+URDXK4Pu3wZ8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754821;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754835;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=m1382RaA7e8zsKGURaU10Bm2BofcjNhspv3I/bEDj7A=;
-	b=O15lOD6MI/pO9h9f2kP7I1AWRDMPsoJW29DoDvaV7h+Bx2ZViNauk5I/7iA7EDEB
-	kV9coVsP3dI4A0XNr1l4oIuYa7usUkDGTnB7hX4y5BpR2JhsVqr2f6lPdGo8GUXnatZ
-	9NHA0fRNgfDpIWUdNhnEchVHqaTTsGazuupwfMuY=
-Received: by mx.zohomail.com with SMTPS id 1749754820267222.12581105394042;
-	Thu, 12 Jun 2025 12:00:20 -0700 (PDT)
+	bh=A3pFEOOb6EOrxgekJ/E7bblmTlxsE0jgmWgpDuqVGPI=;
+	b=fu5lzhx6cwwOCtOY33CFP1xl/7xxfxNMI12CKuai1Aw50ZX3m4vX9GQ+GHa8gkyy
+	tjP3stEhr5lch37RCITLb9C7G6w3oPtG17AvoZ39Uazn47g4KXiuzCWG2ydoS+PKnm6
+	0QxRTMRWkR6Oel4nmpTjlFejoX07IM+z0gAl4Qy8=
+Received: by mx.zohomail.com with SMTPS id 1749754833329406.383279922641;
+	Thu, 12 Jun 2025 12:00:33 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:20 +0200
-Subject: [PATCH 18/20] PM / devfreq: rockchip-dfi: switch to HWORD_UPDATE
- macro
+Date: Thu, 12 Jun 2025 20:56:21 +0200
+Subject: [PATCH 19/20] clk: sp7021: switch to HWORD_UPDATE macro
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-18-f4afb8f6313f@collabora.com>
+Message-Id: <20250612-byeword-update-v1-19-f4afb8f6313f@collabora.com>
 References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -106,101 +105,64 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+The sp7021 clock driver has its own shifted high word mask macro,
+similar to the ones many Rockchip drivers have.
 
-Like many other Rockchip drivers, rockchip-dfi brings with it its own
-HIWORD_UPDATE macro. This variant doesn't shift the value (and like the
-others, doesn't do any checking).
+Remove it, and replace instances of it with bitfield.h's HWORD_UPDATE
+macro, which does the same thing except in a common macro that also does
+compile-time error checking.
 
-Remove it, and replace instances of it with bitfield.h's HWORD_UPDATE.
-Since HWORD_UPDATE requires contiguous masks and shifts the value for
-us, some reshuffling of definitions needs to happen.
-
-This gives us better compile-time error checking, and in my opinion,
-nicer code.
-
-Tested on an RK3568 ODROID-M1 board, and an RK3588 ROCK 5B board.
+This was compile-tested with 32-bit ARM with Clang, no runtime tests
+were performed as I lack the hardware. However, I verified that fix
+commit 5c667d5a5a3e ("clk: sp7021: Adjust width of _m in HWM_FIELD_PREP()")
+is not regressed. No warning is produced.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/devfreq/event/rockchip-dfi.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ drivers/clk/clk-sp7021.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
-index 0470d7c175f4f6bb3955e36c713f4c55538d1a87..634e935ab821de23a296af5fedf22341bc4217bb 100644
---- a/drivers/devfreq/event/rockchip-dfi.c
-+++ b/drivers/devfreq/event/rockchip-dfi.c
-@@ -30,8 +30,6 @@
+diff --git a/drivers/clk/clk-sp7021.c b/drivers/clk/clk-sp7021.c
+index 7cb7d501d7a6ebffe002f80dfa937365e04d356a..f408109f866c6ee65398d549e76994e54c1421ea 100644
+--- a/drivers/clk/clk-sp7021.c
++++ b/drivers/clk/clk-sp7021.c
+@@ -38,13 +38,6 @@ enum {
+ #define MASK_DIVN	GENMASK(7, 0)
+ #define MASK_DIVM	GENMASK(14, 8)
  
- #define DMC_MAX_CHANNELS	4
- 
--#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
+-/* HIWORD_MASK FIELD_PREP */
+-#define HWM_FIELD_PREP(mask, value)		\
+-({						\
+-	u64 _m = mask;				\
+-	(_m << 16) | FIELD_PREP(_m, value);	\
+-})
 -
- /* DDRMON_CTRL */
- #define DDRMON_CTRL	0x04
- #define DDRMON_CTRL_DDR4		BIT(5)
-@@ -40,9 +38,6 @@
- #define DDRMON_CTRL_LPDDR23		BIT(2)
- #define DDRMON_CTRL_SOFTWARE_EN		BIT(1)
- #define DDRMON_CTRL_TIMER_CNT_EN	BIT(0)
--#define DDRMON_CTRL_DDR_TYPE_MASK	(DDRMON_CTRL_DDR4 | \
--					 DDRMON_CTRL_LPDDR4 | \
--					 DDRMON_CTRL_LPDDR23)
+ struct sp_pll {
+ 	struct clk_hw hw;
+ 	void __iomem *reg;
+@@ -313,15 +306,15 @@ static int plltv_set_rate(struct sp_pll *clk)
+ 	u32 r0, r1, r2;
  
- #define DDRMON_CH0_WR_NUM		0x20
- #define DDRMON_CH0_RD_NUM		0x24
-@@ -142,29 +137,32 @@ static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
- 			continue;
+ 	r0  = BIT(clk->bp_bit + 16);
+-	r0 |= HWM_FIELD_PREP(MASK_SEL_FRA, clk->p[SEL_FRA]);
+-	r0 |= HWM_FIELD_PREP(MASK_SDM_MOD, clk->p[SDM_MOD]);
+-	r0 |= HWM_FIELD_PREP(MASK_PH_SEL, clk->p[PH_SEL]);
+-	r0 |= HWM_FIELD_PREP(MASK_NFRA, clk->p[NFRA]);
++	r0 |= HWORD_UPDATE(MASK_SEL_FRA, clk->p[SEL_FRA]);
++	r0 |= HWORD_UPDATE(MASK_SDM_MOD, clk->p[SDM_MOD]);
++	r0 |= HWORD_UPDATE(MASK_PH_SEL, clk->p[PH_SEL]);
++	r0 |= HWORD_UPDATE(MASK_NFRA, clk->p[NFRA]);
  
- 		/* clear DDRMON_CTRL setting */
--		writel_relaxed(HIWORD_UPDATE(0, DDRMON_CTRL_TIMER_CNT_EN |
--			       DDRMON_CTRL_SOFTWARE_EN | DDRMON_CTRL_HARDWARE_EN),
-+		writel_relaxed(HWORD_UPDATE(DDRMON_CTRL_TIMER_CNT_EN, 0) |
-+			       HWORD_UPDATE(DDRMON_CTRL_SOFTWARE_EN, 0) |
-+			       HWORD_UPDATE(DDRMON_CTRL_HARDWARE_EN, 0),
- 			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
+-	r1  = HWM_FIELD_PREP(MASK_DIVR, clk->p[DIVR]);
++	r1  = HWORD_UPDATE(MASK_DIVR, clk->p[DIVR]);
  
- 		/* set ddr type to dfi */
- 		switch (dfi->ddr_type) {
- 		case ROCKCHIP_DDRTYPE_LPDDR2:
- 		case ROCKCHIP_DDRTYPE_LPDDR3:
--			ctrl = DDRMON_CTRL_LPDDR23;
-+			ctrl = HWORD_UPDATE(DDRMON_CTRL_LPDDR23, 1) |
-+			       HWORD_UPDATE(DDRMON_CTRL_LPDDR4, 0);
- 			break;
- 		case ROCKCHIP_DDRTYPE_LPDDR4:
- 		case ROCKCHIP_DDRTYPE_LPDDR4X:
--			ctrl = DDRMON_CTRL_LPDDR4;
-+			ctrl = HWORD_UPDATE(DDRMON_CTRL_LPDDR23, 0) |
-+			       HWORD_UPDATE(DDRMON_CTRL_LPDDR4, 1);
- 			break;
- 		default:
- 			break;
- 		}
+-	r2  = HWM_FIELD_PREP(MASK_DIVN, clk->p[DIVN] - 1);
+-	r2 |= HWM_FIELD_PREP(MASK_DIVM, clk->p[DIVM] - 1);
++	r2  = HWORD_UPDATE(MASK_DIVN, clk->p[DIVN] - 1);
++	r2 |= HWORD_UPDATE(MASK_DIVM, clk->p[DIVM] - 1);
  
--		writel_relaxed(HIWORD_UPDATE(ctrl, DDRMON_CTRL_DDR_TYPE_MASK),
--			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
-+		writel_relaxed(ctrl, dfi_regs + i * dfi->ddrmon_stride +
-+			       DDRMON_CTRL);
- 
- 		/* enable count, use software mode */
--		writel_relaxed(HIWORD_UPDATE(DDRMON_CTRL_SOFTWARE_EN, DDRMON_CTRL_SOFTWARE_EN),
-+		writel_relaxed(HWORD_UPDATE(DDRMON_CTRL_SOFTWARE_EN, 1),
- 			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
- 
- 		if (dfi->ddrmon_ctrl_single)
-@@ -194,8 +192,8 @@ static void rockchip_dfi_disable(struct rockchip_dfi *dfi)
- 		if (!(dfi->channel_mask & BIT(i)))
- 			continue;
- 
--		writel_relaxed(HIWORD_UPDATE(0, DDRMON_CTRL_SOFTWARE_EN),
--			      dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
-+		writel_relaxed(HWORD_UPDATE(DDRMON_CTRL_SOFTWARE_EN, 0),
-+			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
- 
- 		if (dfi->ddrmon_ctrl_single)
- 			break;
+ 	spin_lock_irqsave(&clk->lock, flags);
+ 	writel(r0, clk->reg);
 
 -- 
 2.49.0
