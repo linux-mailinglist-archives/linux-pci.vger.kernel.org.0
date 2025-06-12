@@ -1,130 +1,105 @@
-Return-Path: <linux-pci+bounces-29523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17594AD6868
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 09:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C943FAD69EB
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 10:06:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C969917B007
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 07:01:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86AB7179758
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 08:06:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E7B1195808;
-	Thu, 12 Jun 2025 07:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8255C72617;
+	Thu, 12 Jun 2025 08:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="dWG46h5a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U/sVmzIX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D06142E73
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 07:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0FD1E487
+	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 08:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711669; cv=none; b=m1ntUtYJv/+Ff8qSjNEcyZ6Ll+UiBGXBuiWwLc0JlSWn49QvLeBCMiLwtTNYIPAsjOFszaGY6I7vlG0on9hpzqflmJ7uxFZybhe1ep6IQErdf/511HL1U35q1dxpqImdmFEz2pcJoeqkq+yVaCXZWpibihCwLSIjyYOjUlvJWf8=
+	t=1749715610; cv=none; b=GBQaVr9Q/6cY6RzjwdUWbajnsVG3q+ZbArLwQqwyNCSSQ2UTevz59FriYzsyMvQ5iEoY3xB6qMa/H0Oj4BVCRXAxPNvV5pe/+wyZQqYqeSnqZrClNc4uFyOzdiFzWFq8FJKeuVBpIjZj1J2QAd+EaQOf+oIOuWyOG9zFwMfziKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711669; c=relaxed/simple;
-	bh=aCuORGLYfaCO2c84GspLcQ5LMK5x/RDVQDmlrrUtYXg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tS1J33HLnKR3K6swpj5f1AuMPPKJYJiDUYvNbnq7aePnnO8VqvG2g0BX6dHzHPch3f94jhkN9TSbbgsE/lsl1ahAaHT2G3u4BJ9HL9vuoeHB3Bd+GvEHh6tq4eynapgQCgDHoUeR6l1xo78NEOds6RyOQSMq2OZdA2ph/Y8rDrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=dWG46h5a; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a524caf77eso84935f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 00:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google; t=1749711665; x=1750316465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqyOSExQ9ClfNk2qO1GV5lWRbCTQeCLIDMM1+RecwWE=;
-        b=dWG46h5azbEQHOKJu1e1BjHip+gA3Jb6TVes9bJGlJUtJiaNYMflMJ396mBZm8s+rI
-         acIN+//hyIEnCNKf3WQJ/ZqiP06qs97RlOHZpkMvxdswgynci5xhUwO3C5qlqOUJwNQ0
-         WsR9xe5d+gtjavy71nr0Rrm/wzoRciDidSnVEBL5G3IUt2PrVx+Dbb/T31CVoH6iISpV
-         pw+TSrw1QdTHkiEWKEjMjRjO3dk11IHFP7zJ1lib46j0TCu154M35moOkini+yIFQew+
-         CaW1iINZZYOQMJZiewxHWdM7mTokk3EwTGQI6kAJAgCbmfb15WstXCXn1cQqcYx5PS13
-         RPjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711665; x=1750316465;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IqyOSExQ9ClfNk2qO1GV5lWRbCTQeCLIDMM1+RecwWE=;
-        b=htfbFcfyLwFv/Bdu1F2QyYXFGwMOM145KgIXrtUY/eR9Gtv2yswdr8vA7KEfqet9DG
-         Gzm71zwtn8j9oQxn2n/AOu4LgVeWyFuHleelRaxoyCxRQmID6EotvqmkBfOHXBjZXkKn
-         h6xgcMDTOwQ3XUf9WEgeNM7IbYJdN66pdEpSHbhkN5KunS4mkZlGN+FfHwe0s86eBybl
-         /pklqAayDecJGZiBuBlheObYd1wzTzyIvDRvfxwHYAtJ1co37KQt/ghgCfVGWd84AkTK
-         +g2131M95I8USqR04EPbK9fR14651/oJ5cY/SVs1a5mjQwb5Urg7S/h9tpe77JEf6wR9
-         +ieA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyhmGjJCbQuq8ctBA0uUlk11q5vIkyTGogyR4TFoF4TDVU0zwLQb+KFBry3MxkGt3Veblyko28xps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnsHBQf4/FWDxXPsbhCU9+VFnFpxW1g+byDDCxqs74e+Z4BTIK
-	4zgmLPrCvvosgb9nRG9hycFw4TpukZc3/gpL+Bp7V+KgksSJpmH85zuSOdGXGcGisjWAcQBNQRc
-	IMFpS
-X-Gm-Gg: ASbGncuzPdVkt5SpM/nGMtva9ly+JD3vP3/qqpC8U0fl+appJfchNdw+V9j4kAAXpCC
-	ycJj6nWTe18T02kVyCvh9k3sb62Xi7hz9foNQ4PAr0DK8ZnK8H+xuH03Zy59iI1+kfS+t9dCsnW
-	CBs1lx19QiGzXr00qD1LuAXaDBijgE+AyBAC6bPZhfA5I4FSJYzLOYaAyTbXR9n3TtN3x7B/+YW
-	TLFA2BSf24Kvbfmab8npPvj3uDjjxC4Htjb050Y9A+/TSpaeFtPRMopuRemuM21i6AgcGJvwfwa
-	3SauT/AMQdNKuYSuw+0yF9fMVMi/fSu75X5TxL6y2gFQakUv5fbFPUPpJrCOOmqfiRuUVBU6cg0
-	4CzMPhgnRbeEFkmMdpnrRHu6xxLzlRZwubEZl4d+5DH0EXZzKsg==
-X-Google-Smtp-Source: AGHT+IGxJN7HInW4CZxHcjxgZInfvW5mPM6KkJ5x8+45x2svPGYVZCGnZU0i+OsViWDYserMqQek4w==
-X-Received: by 2002:a05:6000:40c9:b0:3a4:d0dc:184b with SMTP id ffacd0b85a97d-3a5586c5ea5mr1929132f8f.6.1749711665432;
-        Thu, 12 Jun 2025 00:01:05 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:b41:c160:7168:1868:7f5f:52b2? ([2a01:e0a:b41:c160:7168:1868:7f5f:52b2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e232219sm10648875e9.9.2025.06.12.00.01.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 00:01:04 -0700 (PDT)
-Message-ID: <d3f1d2dd-2afe-49d3-a813-4e8ea698e5c1@6wind.com>
-Date: Thu, 12 Jun 2025 09:01:03 +0200
+	s=arc-20240116; t=1749715610; c=relaxed/simple;
+	bh=TdHIrQM7FdODbPk+dNq9Sp9wIRR+g+G7AXTsjMH4T0I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hHPVyZyhqaR9mp3q568olBHBPZ2zd+vKxVNCvHvWUbC/8BMwV+LIKbfNAcEPiqPIWyRJgIq1hO9E2MurPRf2LfawB3kPC38eEcESXO/MvLNJ8YAd/775/JCraeIw51fJaIOF9UpJ3PMrHspKk/lhyb6lK0R2jVOPu8NFamDDA7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U/sVmzIX; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749715609; x=1781251609;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TdHIrQM7FdODbPk+dNq9Sp9wIRR+g+G7AXTsjMH4T0I=;
+  b=U/sVmzIXn1/ZtJ97Lu2l0tHLILPpYi15FKfLxj7TBBAwn045UayK4L8a
+   nh9kUJZ66hlek0xljYXReyy/sqKhORCma+3Dj9PjX1eptY0uuENfR4SZE
+   y7uPIxzR+D2SprYb/BD7Hqc9HRrKLPVr/uq32ahS5O3AJ1LspfDLlwVfn
+   ZtUv/mIVY4SiAUSQTPFtrI2KDoGLg23elPYV+ATqP27MuHJlWjhd1QXIW
+   p1VGvR/2x/jCwSgQEaxFTw294sPfVR/etnr6Iq1PWRc8lSZ4ELSwcPxmF
+   uXWzQ2aUjFbotPK5JGtJ2jgJklHTvCN+tORlaasyslJuRO+lG94XjOW78
+   A==;
+X-CSE-ConnectionGUID: 37bs9gVARp+E1MDbE5PTrQ==
+X-CSE-MsgGUID: uLPVyoNBQYydDuqj6ELZ5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55683574"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="55683574"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 01:06:49 -0700
+X-CSE-ConnectionGUID: QZoNygF9QFCxlb2B93oFbw==
+X-CSE-MsgGUID: FaCas7JTQ1OB6h4FVcJ3+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="147433545"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.140])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 01:06:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 12 Jun 2025 11:06:41 +0300 (EEST)
+To: Keith Busch <kbusch@kernel.org>
+cc: Manivannan Sadhasivam <mani@kernel.org>, Keith Busch <kbusch@meta.com>, 
+    bhelgaas@google.com, linux-pci@vger.kernel.org, 
+    Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCHv2] pci: allow user specifiy a reset poll timeout
+In-Reply-To: <aEm6Nx6bSDvyouEy@kbusch-mbp>
+Message-ID: <48d598a4-27e4-e1d4-a6a2-9dc1fec10b77@linux.intel.com>
+References: <20250218165444.2406119-1-kbusch@meta.com> <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com> <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5> <aEmxanDmx6f_5aZX@kbusch-mbp> <reekyt4dm7uszybipm25xfxlksn5bm2cdpubx5idovxenpg44z@qcqs44xlevea>
+ <aEm6Nx6bSDvyouEy@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH v2] PCI: Set up runtime PM on devices that don't support
- PCI PM
-To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
- bhelgaas@google.com, rafael@kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>, linux-pci@vger.kernel.org
-References: <20250611233117.61810-1-superm1@kernel.org>
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Content-Language: en-US
-Organization: 6WIND
-In-Reply-To: <20250611233117.61810-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Le 12/06/2025 à 01:31, Mario Limonciello a écrit :
-> From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, 11 Jun 2025, Keith Busch wrote:
+
+> On Wed, Jun 11, 2025 at 10:41:33PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Jun 11, 2025 at 10:40:10AM -0600, Keith Busch wrote:
+> > > 
+> > > No. I'm dealing with new devices being actively developed, with new ones
+> > > coming out every year, so a quirk list would just be never ending
+> > > maintenance pain point.
+> > 
+> > Sounds like you have a lot of devices behaving this way. So can't you quirk them
+> > based on VID and CLASS?
 > 
-> commit 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-> initializing") intended to put PCI devices into D0, but in doing so
-> unintentionally changed runtime PM initialization not to occur on
-> devices that don't support PCI PM.  This caused a regression in vfio-pci
-> due to an imbalance with it's use.
-> 
-> Adjust the logic in pci_pm_init() so that even if PCI PM isn't supported
-> runtime PM is still initialized.
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Reported-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m7e8929d6421690dc8bd6dc639d86c2b4db27cbc4
-> Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm1@kernel.org/T/#m40d277dcdb9be64a1609a82412d1aa906263e201
-> Tested-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Fixes: 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> What I mean by active development is that the timeout continues to be a
+> moving target. A quirk only gives me a fixed value, but I need a
+> modifiable one without having to recompile the kernel.
 
-Tested-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Hi,
 
-Thanks for the quick fix!
+Doesn't DRS/FRS address this such way that the device can tell when it's 
+ready? So perhaps check if DRS/FRS is supported and only then make the 
+timeout like really large?
 
+-- 
+ i.
 
-Regards,
-Nicolas
 
