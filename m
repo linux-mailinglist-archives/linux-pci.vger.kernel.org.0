@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-29584-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29585-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F6B0AD7A5D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:00:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E656AD7A7F
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:02:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BE273A3C80
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:00:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A2707A2EB4
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 18:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 419FD2D8DA4;
-	Thu, 12 Jun 2025 18:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F092B2D5402;
+	Thu, 12 Jun 2025 18:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="A+wttCJo"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gVBvumII"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4054E2D1F69;
-	Thu, 12 Jun 2025 18:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816F12D1F72;
+	Thu, 12 Jun 2025 18:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754722; cv=pass; b=BhnDHM6AIhmhXQAgEpuhxnHzfFZBo7S3/Lo4BB9N2iP2XOUesAz+Iqx3CRZyGYl31zoiPIjwz0RbZE6h3eC1TuC3Rl8anL0Lc8uEhxKzMk+TRsyxAsw0a3A9xMI7PCbj7AnYOK2dT9otAD1ok56v+ygY4pKqzPAIza1345ef0Ew=
+	t=1749754740; cv=pass; b=r3MHCLGu3AdEGxcsPwFiHMYbzltPWcPuPWLMenjzDNTytrEjcAQ8zlCokmlPcLvfj9T9AU85WmgTRFldgS1JBwxm1NYB50QXoV1bvqOR1eNVq400yNXkvN7pGZhH2mXlMOdN6atGNimSyPtbFGwGVtCR+rwRW9POIU9z2CqIlgY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754722; c=relaxed/simple;
-	bh=H7aXCdbydtZ89HoSF13f+y9lt7yH7Xn+GU4gM/yYLrw=;
+	s=arc-20240116; t=1749754740; c=relaxed/simple;
+	bh=mNb1/Ie43DEWThXiQ7NAv581mZyKlqqMHqCW022sM14=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gyphEmSqDXPDbMwGECueEylRmFWNchuTnJIxruEKiZpUq1BAOLf7zMVQtlmd08zmxinHrM7Cbyo8GImJ57VMr0bWF72g7nEIqB7elNJ3Ly2AyTEONqLEL9Y6pY7Qp6s3KupsoeO+2exNI+vA2ugM3FLZHM/JxnnEsPr+xrcbt30=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=A+wttCJo; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=qXCy3SQ42ewuyAvX6fkqposPljDbCvMMgJQ2g/k5u9FMljPlo3Sjw9xdJSpyt3S5NMeJxmGomEWMLPET2sbTarSEDpBB+1hYUS5y/ccCstNOmf/VrLfb7KTmApcS3Nwk7HLyPxdnp4tElxLO1rm+L86uIVeq7WztMOnPMTzPPE8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gVBvumII; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1749754663; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1749754677; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=VIVSWUHUDhSyIr5VPzQQv7abH/sQyPr4VEfvrq+pf3y6T5ctXdGUOylcpl/6KZuCw9m683oiY0ct+1c/CxDhO+LyoSAbhwwcy5dBnlArU+Qeiu2wH3S7shTBpQIj/EvKWckVkoQHk4TO5+jCms97x5gPlmdDBkBHLrTt1crpXio=
+	b=US1gzbNP3TVvPYpNWpk0qmtktHV6v21qm3Oc/VZUUXdk6sYMzzmf5GidDs6JfeWDgJT4fT8ZlHP5ZSnCgrL0Oh/tjRLJu/8kl/V/0YRPVq7kLY0i1B6jwPmwAha6RnptJF5289+mrSva1o7t+i+i8jayu3sfRnzzgXyFHIVDTCk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754663; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JRCZRQ76GcMlJmExs7D12cB0k3smTmlvVSyjx4WGW5s=; 
-	b=ntaiHlvBA+A7Xq20rx7nJXFZhB+l92gqFbKwWc6afm304WhD5PHHeD8GKFYJub4iUhUmNilDW41HpWtA1dCq1DkviyiVG59OpEh1ovNOkGGmCJ8SZvYo/Igu12+n98zzfmNqGIlbP5cBWPtxuFuw/XPNuIejOVfbU4fjcz3IlJY=
+	t=1749754677; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=DxOozm94GRIumJ69VDZua6F7vbtBnztogmJ1LD8Q0f8=; 
+	b=EXI7/dvYxFKCakSc3ckHGpzS8vMThw5BoZ80epWnAa46853PUjrQEWgG229haDvcA/6Pjs293c/tdKv+KPDcx5OPlDK1UG9eP2/yEl0SR0HFHL1p1mkhHQP0I3WI5J9cKOmw6mcB6XBnMwU7zOP98Dm5FRrWlLUVyGeXZ8l8bm0=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754663;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754677;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=JRCZRQ76GcMlJmExs7D12cB0k3smTmlvVSyjx4WGW5s=;
-	b=A+wttCJo4137gNw9pr1C972PU7mQ5agBkbjRzFLtDwzcJjdTeN9JI8TBCXZwgtpr
-	PwBGFHka5M54F99jMHceL9KyQUu+yao+8mCy1PsU69P1c8eWkm4xZVtTyS9Qye/6R3p
-	7Yayt7oUjNH3tT8mrddNiQXazittftRIxkVoiA+s=
-Received: by mx.zohomail.com with SMTPS id 17497546627841003.7575879427058;
-	Thu, 12 Jun 2025 11:57:42 -0700 (PDT)
+	bh=DxOozm94GRIumJ69VDZua6F7vbtBnztogmJ1LD8Q0f8=;
+	b=gVBvumII05FnXSEqfniw8sN3gnGnUc07N+CXL35e1hsKzCQC9Z4HKsbybbvQ05TV
+	uFMfPIaetmO7MSafWtyOInK5hpTr/LmcaTYUWYVzxEZWaEol1P5qHstxfogqCQLBdUm
+	8UJkVv/yi3ldXZ+AwJbV6jNrcUQDIwAQvDwUIdCY=
+Received: by mx.zohomail.com with SMTPS id 1749754676179936.9319969725277;
+	Thu, 12 Jun 2025 11:57:56 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:08 +0200
-Subject: [PATCH 06/20] phy: rockchip-emmc: switch to HWORD_UPDATE macro
+Date: Thu, 12 Jun 2025 20:56:09 +0200
+Subject: [PATCH 07/20] drm/rockchip: dsi: switch to HWORD_UPDATE* macros
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-6-f4afb8f6313f@collabora.com>
+Message-Id: <20250612-byeword-update-v1-7-f4afb8f6313f@collabora.com>
 References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -108,36 +108,333 @@ X-Mailer: b4 0.14.2
 The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
 drivers that use constant masks.
 
-Replace the implementation of the rockchip eMMC PHY driver's
-HIWORD_UPDATE macro with bitfield.h's HWORD_UPDATE. This makes the
-change more easily reviewable.
+Remove this driver's HIWORD_UPDATE macro, and replace instances of it
+with either HWORD_UPDATE or HWORD_UPDATE_CONST, depending on whether
+they're in an initializer. This gives us better error checking, which
+already saved me some trouble during this refactor.
+
+The driver's HIWORD_UPDATE macro doesn't shift up the value, but expects
+a pre-shifted value. Meanwhile, HWORD_UPDATE and HWORD_UPDATE_CONST will
+shift the value for us, based on the given mask. So a few things that
+used to be a HIWORD_UPDATE(VERY_LONG_FOO, VERY_LONG_FOO) are now a
+somewhat more pleasant HWORD_UPDATE(VERY_LONG_FOO, 1).
+
+There are some non-trivial refactors here. A few literals needed a U
+suffix added to stop them from unintentionally overflowing as a signed
+long. To make sure all of these cases are caught, and not just the ones
+where the HWORD_UPDATE* macros use such a value as a mask, just mark
+every literal that's used as a mask as unsigned.
+
+Non-contiguous masks also have to be split into multiple HWORD_UPDATE*
+instances, as the macro's checks and shifting logic rely on contiguous
+masks.
+
+This is compile-tested only.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-emmc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c | 142 ++++++++++++------------
+ 1 file changed, 68 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
-index 20023f6eb9944eaab505101d57e806476ecfac71..42423d4cd1811cd039a701895758050483d1c959 100644
---- a/drivers/phy/rockchip/phy-rockchip-emmc.c
-+++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+index 3398160ad75e4a9629082bc47491eab473caecc0..930bd412904cb244ca0d14e89f5b5d2af3e570ba 100644
+--- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
 @@ -6,6 +6,7 @@
-  * Copyright (C) 2016 ROCKCHIP, Inc.
+  *      Nickey Yang <nickey.yang@rock-chips.com>
   */
  
 +#include <linux/bitfield.h>
  #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/mfd/syscon.h>
-@@ -21,7 +22,7 @@
-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-  */
- #define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
-+		(HWORD_UPDATE((mask) << (shift), (val)))
+ #include <linux/iopoll.h>
+ #include <linux/math64.h>
+@@ -148,7 +149,7 @@
+ #define DW_MIPI_NEEDS_GRF_CLK		BIT(1)
  
- /* Register definition */
- #define GRF_EMMCPHY_CON0		0x0
+ #define PX30_GRF_PD_VO_CON1		0x0438
+-#define PX30_DSI_FORCETXSTOPMODE	(0xf << 7)
++#define PX30_DSI_FORCETXSTOPMODE	(0xfU << 7)
+ #define PX30_DSI_FORCERXMODE		BIT(6)
+ #define PX30_DSI_TURNDISABLE		BIT(5)
+ #define PX30_DSI_LCDC_SEL		BIT(0)
+@@ -167,16 +168,16 @@
+ #define RK3399_DSI1_LCDC_SEL		BIT(4)
+ 
+ #define RK3399_GRF_SOC_CON22		0x6258
+-#define RK3399_DSI0_TURNREQUEST		(0xf << 12)
+-#define RK3399_DSI0_TURNDISABLE		(0xf << 8)
+-#define RK3399_DSI0_FORCETXSTOPMODE	(0xf << 4)
+-#define RK3399_DSI0_FORCERXMODE		(0xf << 0)
++#define RK3399_DSI0_TURNREQUEST		(0xfU << 12)
++#define RK3399_DSI0_TURNDISABLE		(0xfU << 8)
++#define RK3399_DSI0_FORCETXSTOPMODE	(0xfU << 4)
++#define RK3399_DSI0_FORCERXMODE		(0xfU << 0)
+ 
+ #define RK3399_GRF_SOC_CON23		0x625c
+-#define RK3399_DSI1_TURNDISABLE		(0xf << 12)
+-#define RK3399_DSI1_FORCETXSTOPMODE	(0xf << 8)
+-#define RK3399_DSI1_FORCERXMODE		(0xf << 4)
+-#define RK3399_DSI1_ENABLE		(0xf << 0)
++#define RK3399_DSI1_TURNDISABLE		(0xfU << 12)
++#define RK3399_DSI1_FORCETXSTOPMODE	(0xfU << 8)
++#define RK3399_DSI1_FORCERXMODE		(0xfU << 4)
++#define RK3399_DSI1_ENABLE		(0xfU << 0)
+ 
+ #define RK3399_GRF_SOC_CON24		0x6260
+ #define RK3399_TXRX_MASTERSLAVEZ	BIT(7)
+@@ -186,8 +187,8 @@
+ #define RK3399_TXRX_TURNREQUEST		GENMASK(3, 0)
+ 
+ #define RK3568_GRF_VO_CON2		0x0368
+-#define RK3568_DSI0_SKEWCALHS		(0x1f << 11)
+-#define RK3568_DSI0_FORCETXSTOPMODE	(0xf << 4)
++#define RK3568_DSI0_SKEWCALHS		(0x1fU << 11)
++#define RK3568_DSI0_FORCETXSTOPMODE	(0xfU << 4)
+ #define RK3568_DSI0_TURNDISABLE		BIT(2)
+ #define RK3568_DSI0_FORCERXMODE		BIT(0)
+ 
+@@ -197,18 +198,16 @@
+  * come from. Name GRF_VO_CON3 is assumed.
+  */
+ #define RK3568_GRF_VO_CON3		0x36c
+-#define RK3568_DSI1_SKEWCALHS		(0x1f << 11)
+-#define RK3568_DSI1_FORCETXSTOPMODE	(0xf << 4)
++#define RK3568_DSI1_SKEWCALHS		(0x1fU << 11)
++#define RK3568_DSI1_FORCETXSTOPMODE	(0xfU << 4)
+ #define RK3568_DSI1_TURNDISABLE		BIT(2)
+ #define RK3568_DSI1_FORCERXMODE		BIT(0)
+ 
+ #define RV1126_GRF_DSIPHY_CON		0x10220
+-#define RV1126_DSI_FORCETXSTOPMODE	(0xf << 4)
++#define RV1126_DSI_FORCETXSTOPMODE	(0xfU << 4)
+ #define RV1126_DSI_TURNDISABLE		BIT(2)
+ #define RV1126_DSI_FORCERXMODE		BIT(0)
+ 
+-#define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
+-
+ enum {
+ 	DW_DSI_USAGE_IDLE,
+ 	DW_DSI_USAGE_DSI,
+@@ -1484,14 +1483,13 @@ static const struct rockchip_dw_dsi_chip_data px30_chip_data[] = {
+ 	{
+ 		.reg = 0xff450000,
+ 		.lcdsel_grf_reg = PX30_GRF_PD_VO_CON1,
+-		.lcdsel_big = HIWORD_UPDATE(0, PX30_DSI_LCDC_SEL),
+-		.lcdsel_lit = HIWORD_UPDATE(PX30_DSI_LCDC_SEL,
+-					    PX30_DSI_LCDC_SEL),
++		.lcdsel_big = HWORD_UPDATE_CONST(PX30_DSI_LCDC_SEL, 0),
++		.lcdsel_lit = HWORD_UPDATE_CONST(PX30_DSI_LCDC_SEL, 1),
+ 
+ 		.lanecfg1_grf_reg = PX30_GRF_PD_VO_CON1,
+-		.lanecfg1 = HIWORD_UPDATE(0, PX30_DSI_TURNDISABLE |
+-					     PX30_DSI_FORCERXMODE |
+-					     PX30_DSI_FORCETXSTOPMODE),
++		.lanecfg1 = HWORD_UPDATE_CONST((PX30_DSI_TURNDISABLE |
++						PX30_DSI_FORCERXMODE |
++						PX30_DSI_FORCETXSTOPMODE), 0),
+ 
+ 		.max_data_lanes = 4,
+ 	},
+@@ -1502,9 +1500,9 @@ static const struct rockchip_dw_dsi_chip_data rk3128_chip_data[] = {
+ 	{
+ 		.reg = 0x10110000,
+ 		.lanecfg1_grf_reg = RK3128_GRF_LVDS_CON0,
+-		.lanecfg1 = HIWORD_UPDATE(0, RK3128_DSI_TURNDISABLE |
+-					     RK3128_DSI_FORCERXMODE |
+-					     RK3128_DSI_FORCETXSTOPMODE),
++		.lanecfg1 = HWORD_UPDATE_CONST((RK3128_DSI_TURNDISABLE |
++						RK3128_DSI_FORCERXMODE |
++						RK3128_DSI_FORCETXSTOPMODE), 0),
+ 		.max_data_lanes = 4,
+ 	},
+ 	{ /* sentinel */ }
+@@ -1514,16 +1512,16 @@ static const struct rockchip_dw_dsi_chip_data rk3288_chip_data[] = {
+ 	{
+ 		.reg = 0xff960000,
+ 		.lcdsel_grf_reg = RK3288_GRF_SOC_CON6,
+-		.lcdsel_big = HIWORD_UPDATE(0, RK3288_DSI0_LCDC_SEL),
+-		.lcdsel_lit = HIWORD_UPDATE(RK3288_DSI0_LCDC_SEL, RK3288_DSI0_LCDC_SEL),
++		.lcdsel_big = HWORD_UPDATE_CONST(RK3288_DSI0_LCDC_SEL, 0),
++		.lcdsel_lit = HWORD_UPDATE_CONST(RK3288_DSI0_LCDC_SEL, 1),
+ 
+ 		.max_data_lanes = 4,
+ 	},
+ 	{
+ 		.reg = 0xff964000,
+ 		.lcdsel_grf_reg = RK3288_GRF_SOC_CON6,
+-		.lcdsel_big = HIWORD_UPDATE(0, RK3288_DSI1_LCDC_SEL),
+-		.lcdsel_lit = HIWORD_UPDATE(RK3288_DSI1_LCDC_SEL, RK3288_DSI1_LCDC_SEL),
++		.lcdsel_big = HWORD_UPDATE_CONST(RK3288_DSI1_LCDC_SEL, 0),
++		.lcdsel_lit = HWORD_UPDATE_CONST(RK3288_DSI1_LCDC_SEL, 1),
+ 
+ 		.max_data_lanes = 4,
+ 	},
+@@ -1539,13 +1537,13 @@ static int rk3399_dphy_tx1rx1_init(struct phy *phy)
+ 	 * Assume ISP0 is supplied by the RX0 dphy.
+ 	 */
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(0, RK3399_TXRX_SRC_SEL_ISP0));
++		     HWORD_UPDATE(RK3399_TXRX_SRC_SEL_ISP0, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(0, RK3399_TXRX_MASTERSLAVEZ));
++		     HWORD_UPDATE(RK3399_TXRX_MASTERSLAVEZ, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(0, RK3399_TXRX_BASEDIR));
++		     HWORD_UPDATE(RK3399_TXRX_BASEDIR, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(0, RK3399_DSI1_ENABLE));
++		     HWORD_UPDATE(RK3399_DSI1_ENABLE, 0));
+ 
+ 	return 0;
+ }
+@@ -1559,21 +1557,20 @@ static int rk3399_dphy_tx1rx1_power_on(struct phy *phy)
+ 	usleep_range(100, 150);
+ 
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(0, RK3399_TXRX_MASTERSLAVEZ));
++		     HWORD_UPDATE(RK3399_TXRX_MASTERSLAVEZ, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(RK3399_TXRX_BASEDIR, RK3399_TXRX_BASEDIR));
++		     HWORD_UPDATE(RK3399_TXRX_BASEDIR, 1));
+ 
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(0, RK3399_DSI1_FORCERXMODE));
++		     HWORD_UPDATE(RK3399_DSI1_FORCERXMODE, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(0, RK3399_DSI1_FORCETXSTOPMODE));
++		     HWORD_UPDATE(RK3399_DSI1_FORCETXSTOPMODE, 0));
+ 
+ 	/* Disable lane turn around, which is ignored in receive mode */
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON24,
+-		     HIWORD_UPDATE(0, RK3399_TXRX_TURNREQUEST));
++		     HWORD_UPDATE(RK3399_TXRX_TURNREQUEST, 0));
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(RK3399_DSI1_TURNDISABLE,
+-				   RK3399_DSI1_TURNDISABLE));
++		     HWORD_UPDATE(RK3399_DSI1_TURNDISABLE, 0xf));
+ 	usleep_range(100, 150);
+ 
+ 	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
+@@ -1581,8 +1578,8 @@ static int rk3399_dphy_tx1rx1_power_on(struct phy *phy)
+ 
+ 	/* Enable dphy lanes */
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(GENMASK(dsi->dphy_config.lanes - 1, 0),
+-				   RK3399_DSI1_ENABLE));
++		     HWORD_UPDATE(RK3399_DSI1_ENABLE,
++				  GENMASK(dsi->dphy_config.lanes - 1, 0)));
+ 
+ 	usleep_range(100, 150);
+ 
+@@ -1594,7 +1591,7 @@ static int rk3399_dphy_tx1rx1_power_off(struct phy *phy)
+ 	struct dw_mipi_dsi_rockchip *dsi = phy_get_drvdata(phy);
+ 
+ 	regmap_write(dsi->grf_regmap, RK3399_GRF_SOC_CON23,
+-		     HIWORD_UPDATE(0, RK3399_DSI1_ENABLE));
++		     HWORD_UPDATE(RK3399_DSI1_ENABLE, 0));
+ 
+ 	return 0;
+ }
+@@ -1603,15 +1600,14 @@ static const struct rockchip_dw_dsi_chip_data rk3399_chip_data[] = {
+ 	{
+ 		.reg = 0xff960000,
+ 		.lcdsel_grf_reg = RK3399_GRF_SOC_CON20,
+-		.lcdsel_big = HIWORD_UPDATE(0, RK3399_DSI0_LCDC_SEL),
+-		.lcdsel_lit = HIWORD_UPDATE(RK3399_DSI0_LCDC_SEL,
+-					    RK3399_DSI0_LCDC_SEL),
++		.lcdsel_big = HWORD_UPDATE_CONST(RK3399_DSI0_LCDC_SEL, 0),
++		.lcdsel_lit = HWORD_UPDATE_CONST(RK3399_DSI0_LCDC_SEL, 1),
+ 
+ 		.lanecfg1_grf_reg = RK3399_GRF_SOC_CON22,
+-		.lanecfg1 = HIWORD_UPDATE(0, RK3399_DSI0_TURNREQUEST |
+-					     RK3399_DSI0_TURNDISABLE |
+-					     RK3399_DSI0_FORCETXSTOPMODE |
+-					     RK3399_DSI0_FORCERXMODE),
++		.lanecfg1 = HWORD_UPDATE_CONST((RK3399_DSI0_TURNREQUEST |
++						RK3399_DSI0_TURNDISABLE |
++						RK3399_DSI0_FORCETXSTOPMODE |
++						RK3399_DSI0_FORCERXMODE), 0),
+ 
+ 		.flags = DW_MIPI_NEEDS_PHY_CFG_CLK | DW_MIPI_NEEDS_GRF_CLK,
+ 		.max_data_lanes = 4,
+@@ -1619,25 +1615,23 @@ static const struct rockchip_dw_dsi_chip_data rk3399_chip_data[] = {
+ 	{
+ 		.reg = 0xff968000,
+ 		.lcdsel_grf_reg = RK3399_GRF_SOC_CON20,
+-		.lcdsel_big = HIWORD_UPDATE(0, RK3399_DSI1_LCDC_SEL),
+-		.lcdsel_lit = HIWORD_UPDATE(RK3399_DSI1_LCDC_SEL,
+-					    RK3399_DSI1_LCDC_SEL),
++		.lcdsel_big = HWORD_UPDATE_CONST(RK3399_DSI1_LCDC_SEL, 0),
++		.lcdsel_lit = HWORD_UPDATE_CONST(RK3399_DSI1_LCDC_SEL, 1),
++
+ 
+ 		.lanecfg1_grf_reg = RK3399_GRF_SOC_CON23,
+-		.lanecfg1 = HIWORD_UPDATE(0, RK3399_DSI1_TURNDISABLE |
+-					     RK3399_DSI1_FORCETXSTOPMODE |
+-					     RK3399_DSI1_FORCERXMODE |
+-					     RK3399_DSI1_ENABLE),
++		.lanecfg1 = HWORD_UPDATE_CONST((RK3399_DSI1_TURNDISABLE |
++						RK3399_DSI1_FORCETXSTOPMODE |
++						RK3399_DSI1_FORCERXMODE |
++						RK3399_DSI1_ENABLE), 0),
+ 
+ 		.lanecfg2_grf_reg = RK3399_GRF_SOC_CON24,
+-		.lanecfg2 = HIWORD_UPDATE(RK3399_TXRX_MASTERSLAVEZ |
+-					  RK3399_TXRX_ENABLECLK,
+-					  RK3399_TXRX_MASTERSLAVEZ |
+-					  RK3399_TXRX_ENABLECLK |
+-					  RK3399_TXRX_BASEDIR),
++		.lanecfg2 = (HWORD_UPDATE_CONST(RK3399_TXRX_MASTERSLAVEZ, 1) |
++			     HWORD_UPDATE_CONST(RK3399_TXRX_ENABLECLK, 1) |
++			     HWORD_UPDATE_CONST(RK3399_TXRX_BASEDIR, 0)),
+ 
+ 		.enable_grf_reg = RK3399_GRF_SOC_CON23,
+-		.enable = HIWORD_UPDATE(RK3399_DSI1_ENABLE, RK3399_DSI1_ENABLE),
++		.enable = HWORD_UPDATE_CONST(RK3399_DSI1_ENABLE, RK3399_DSI1_ENABLE),
+ 
+ 		.flags = DW_MIPI_NEEDS_PHY_CFG_CLK | DW_MIPI_NEEDS_GRF_CLK,
+ 		.max_data_lanes = 4,
+@@ -1653,19 +1647,19 @@ static const struct rockchip_dw_dsi_chip_data rk3568_chip_data[] = {
+ 	{
+ 		.reg = 0xfe060000,
+ 		.lanecfg1_grf_reg = RK3568_GRF_VO_CON2,
+-		.lanecfg1 = HIWORD_UPDATE(0, RK3568_DSI0_SKEWCALHS |
+-					  RK3568_DSI0_FORCETXSTOPMODE |
+-					  RK3568_DSI0_TURNDISABLE |
+-					  RK3568_DSI0_FORCERXMODE),
++		.lanecfg1 = (HWORD_UPDATE_CONST(RK3568_DSI0_SKEWCALHS, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI0_FORCETXSTOPMODE, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI0_TURNDISABLE, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI0_FORCERXMODE, 0)),
+ 		.max_data_lanes = 4,
+ 	},
+ 	{
+ 		.reg = 0xfe070000,
+ 		.lanecfg1_grf_reg = RK3568_GRF_VO_CON3,
+-		.lanecfg1 = HIWORD_UPDATE(0, RK3568_DSI1_SKEWCALHS |
+-					  RK3568_DSI1_FORCETXSTOPMODE |
+-					  RK3568_DSI1_TURNDISABLE |
+-					  RK3568_DSI1_FORCERXMODE),
++		.lanecfg1 = (HWORD_UPDATE_CONST(RK3568_DSI1_SKEWCALHS, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI1_FORCETXSTOPMODE, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI1_TURNDISABLE, 0) |
++			     HWORD_UPDATE_CONST(RK3568_DSI1_FORCERXMODE, 0)),
+ 		.max_data_lanes = 4,
+ 	},
+ 	{ /* sentinel */ }
+@@ -1675,9 +1669,9 @@ static const struct rockchip_dw_dsi_chip_data rv1126_chip_data[] = {
+ 	{
+ 		.reg = 0xffb30000,
+ 		.lanecfg1_grf_reg = RV1126_GRF_DSIPHY_CON,
+-		.lanecfg1 = HIWORD_UPDATE(0, RV1126_DSI_TURNDISABLE |
+-					     RV1126_DSI_FORCERXMODE |
+-					     RV1126_DSI_FORCETXSTOPMODE),
++		.lanecfg1 = (HWORD_UPDATE_CONST(RV1126_DSI_TURNDISABLE, 0) |
++			     HWORD_UPDATE_CONST(RV1126_DSI_FORCERXMODE, 0) |
++			     HWORD_UPDATE_CONST(RV1126_DSI_FORCETXSTOPMODE, 0)),
+ 		.max_data_lanes = 4,
+ 	},
+ 	{ /* sentinel */ }
 
 -- 
 2.49.0
