@@ -1,78 +1,84 @@
-Return-Path: <linux-pci+bounces-29518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DC4BAD66E3
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 06:44:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67659AD6785
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 07:51:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2A1617DC9D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 04:44:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 025B4189B8EB
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 05:51:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2231DF751;
-	Thu, 12 Jun 2025 04:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1889D2AE6D;
+	Thu, 12 Jun 2025 05:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPsP4oBI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FuVybg2A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE051A0BC5;
-	Thu, 12 Jun 2025 04:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5755B1EF394
+	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 05:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749703455; cv=none; b=oiZwQE3S2wadec27hNS6a2BUbyS4lMJFzAyLhnuhdFyvzB3Cb2jHS9D7wXcTAMtcnWT1+Gtc2Ot2x5DnMvEfJE8zcFeIhYdHqlzjYtPk17r0amFcfvDnHnVTfwRl1t8T6qGMWIsdhncSL4zwRTHl3hqw/kOcwqvDLzSReIQYUZo=
+	t=1749707486; cv=none; b=TzIKnoF4hUkWR3rmYz5y/9nTOyMHhP9XwBZT2rXhKfikH41j8dVVxPd11TfOWN04wT/YlQIYh++vRj9wDiPXzD5wxYaNTblSuwmqf/VAPXOnYh3qjnIGXvxHnwG7OCPrgqIs/KSr7pWszFqxuWhzYSo3m3fi+4ryHPXpS1216G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749703455; c=relaxed/simple;
-	bh=c20JGxz7owIFFjbCtgNQck0/Y7pf2TfNDqzUWz5yELc=;
+	s=arc-20240116; t=1749707486; c=relaxed/simple;
+	bh=urUwsAon5fRFQ5sS9HdZlWSmga2hGGL48QQcV2/RZzU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IEMi4b65BqsK6Jo9zWeA0ylKV5zpNKRAsFhTw8fG/8Z2nnw7ZHZUDFB71V23lR51VBCc3V1EzsFSitQRsSS5HD1NxxHAVURzJ3otAxRIXaQ85hgNP+5FkTpMpM+yLPkG31CDczva4lg0ZGgOWrA9qMyK3SDtiWZa6B+RuAchvO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPsP4oBI; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGYFdNcew7Y62Yu40Ex31ALYUVR1C03MsEjS8WLqgInwfpYA0VfHu6LdRsycF/TmwW7wPSfGPXKcmvtz0j3PVa63btmtxacFfqf+7+NIVcGykS6y7YdhCVk8tKfxevsVysdPBoeRiSOfaxq0JhtTHsOYf6OixIe5eio/Cf/pcpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FuVybg2A; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749703455; x=1781239455;
+  t=1749707484; x=1781243484;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=c20JGxz7owIFFjbCtgNQck0/Y7pf2TfNDqzUWz5yELc=;
-  b=lPsP4oBI1QVkzsf+ZvpvksoDYlHRfFFAEa/bcKCdL5w0xpggWVVYFQSD
-   lEUyRy0xKDj4kaSr+hWvD5AMNYt+puU/4Se1m3g71HbJHu9nJyB71Vy6y
-   X5uzFcsNNjeoU3nznlmwygeSSeQyfeiPGHZPbYv3rZ+Biu6nciIEx33LD
-   CiHGBvFvomuC0WTRBNNR7TiQIXB+lFwIqMyxp8z2VxtJJKgrjtMmz60Ih
-   n93oWxIWO4I97BOWlT/poDYIZnn8RdeByN91vGo9qCuCqBP7zSnkNhwo0
-   mfWX4qQ+ANbMXr0vDm7UPVqousm16N3gjLsI3ItL8GdxTEUs4EkNWDSqL
+  bh=urUwsAon5fRFQ5sS9HdZlWSmga2hGGL48QQcV2/RZzU=;
+  b=FuVybg2AEYYWtmgbX/48VfODzTNkOLSPzkJBK/EBnherUN65KTyEtbb1
+   HtHGYJxMNK3nBKRxEIaXh0+FwTeRAORzwjPt7H7NELcpoxq3yT+dIM2Y9
+   D5Hh0C6Oqz6uTaA0lzpU6lsTAMsJyRPM4OXAzIw1CpXQWBgPGX+iDbANF
+   PYYH/l3RM+EbIdBwOqbLldzzwXGP9jiZuJ/t+9zQX/f/2hUR6uSxNLHwG
+   M8tbX439rXCylflK3G02SRdUf7V4q+vA08qr/PrwaUReYNhuxExK3Iaa7
+   sWYju2b7e0bYBCQuPEDOQXuYOZAXNln7ARYDEBcGj9iM3xQM6JXyqm+Cv
    A==;
-X-CSE-ConnectionGUID: wN4ns6cTR6i8X4OFPBzX9w==
-X-CSE-MsgGUID: hy9LurcNSZCVSSgt7YbYrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51743331"
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="51743331"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 21:44:14 -0700
-X-CSE-ConnectionGUID: PLVjGx2jTj6VuZEHKkszLA==
-X-CSE-MsgGUID: 8S8jNBq5SB+0xh04LEbIjQ==
+X-CSE-ConnectionGUID: koRIcr7QRgSyTSuTLoQhMA==
+X-CSE-MsgGUID: lNXPrc91Tfi4i7BKXsUSMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51955111"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="51955111"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:51:24 -0700
+X-CSE-ConnectionGUID: 28wxkEgqQD29vgYWjEUN6A==
+X-CSE-MsgGUID: yjPY9bsSQcqSAdnsZRulYA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="147390370"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 11 Jun 2025 21:44:11 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPZnM-000B86-38;
-	Thu, 12 Jun 2025 04:44:08 +0000
-Date: Thu, 12 Jun 2025 12:43:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org, jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: Re: [PATCH 13/13] PCI: dwc: Refactor tegra194 to use
- dw_pcie_clear_and_set_dword()
-Message-ID: <202506121258.qVeeEKfy-lkp@intel.com>
-References: <20250611163227.861403-1-18255117159@163.com>
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="147771501"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa008.fm.intel.com with ESMTP; 11 Jun 2025 22:51:21 -0700
+Date: Thu, 12 Jun 2025 13:44:23 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+	lukas@wunner.de, suzuki.poulose@arm.com, sameo@rivosinc.com,
+	zhiw@nvidia.com
+Subject: Re: [RFC PATCH 3/3] iommufd/tsm: Add tsm_bind/unbind iommufd ioctls
+Message-ID: <aEppN++Z7j4ZJJVk@yilunxu-OptiPlex-7050>
+References: <20250529133757.462088-1-aneesh.kumar@kernel.org>
+ <20250529133757.462088-3-aneesh.kumar@kernel.org>
+ <aDsta4UX76GaExrO@yilunxu-OptiPlex-7050>
+ <yq5azfeqjt9i.fsf@kernel.org>
+ <aD3QcQxtjoYXrglM@yilunxu-OptiPlex-7050>
+ <yq5ao6v5ju6p.fsf@kernel.org>
+ <aD7TZRnFualizeXk@yilunxu-OptiPlex-7050>
+ <20250603121456.GF376789@nvidia.com>
+ <aD/aOk9jHryygiRG@yilunxu-OptiPlex-7050>
+ <bccd4693-775f-401d-a2fc-237510066366@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,99 +87,67 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611163227.861403-1-18255117159@163.com>
+In-Reply-To: <bccd4693-775f-401d-a2fc-237510066366@amd.com>
 
-Hi Hans,
+On Tue, Jun 10, 2025 at 05:31:41PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 4/6/25 15:31, Xu Yilun wrote:
+> > On Tue, Jun 03, 2025 at 09:14:56AM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Jun 03, 2025 at 06:50:13PM +0800, Xu Yilun wrote:
+> > > 
+> > > > I see. But I'm not sure if it can be a better story than ioctl(VFIO_TSM_BIND).
+> > > > You want VFIO unaware of TSM bind, e.g. try to hide pci_request/release_region(),
+> > > > but make VFIO aware of TSM unbind, which seems odd ...
+> > > 
+> > > request_region does not need to be done dynamically. It should be done
+> > > once when the VFIO cdev is opened. If you need some new ioctl to put
+> > > VFIO in a CC compatible mode then it should do all this stuff once. It
+> > > doesn't need to be dynamic.
+> > 
+> > But the unbind needs to be dynamic.
+> > 
+> > > 
+> > > I think all you want is to trigger VFIO to invalidate its MMIOs when
+> > > bind/unbind happens.
+> > 
+> > Trigger VFIO to passively invalidate MMIOs during unbind is a TDX
+> > specific requirement.
+> > 
+> > 
+> > Another more general requirement is, VFIO needs to trigger unbind when
+> > VFIO wants to actively invalidate MMIOs. e.g. before VFIO resets device.
+> > That is the dynamic unbind thing.
+> > 
+> > The reason is the secure DMA silent drop issue.  Intel, and seems
+> > AMD (Alexey please confirm) both implemented some policy in FW/HW to block
+> > this issue. But the consequences are fatal to OS, so better we avoid
+> > this.
+> 
+> Why does it have to be fatal to any OS? A device which suddenly stops working is not something unheard of, not a good reason to kill an OS. Blocking MMIO or DMA seems like an adequate response.
 
-kernel test robot noticed the following build warnings:
+It is fatal before any recovery solution is already in the OS. There are
+plenty of BUG_ON()s in kernel but from HW's POV they may not be the end
+of world. If recovery is more complex than prevention from SW's POV,
+let's prevent it and bail out if we failed to prevent.
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.16-rc1 next-20250611]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+AMD's ASID fence (and Intel & ARM's DMA Silent Drop protection) are the
+ways to ensure security, but let's try best not to trigger them.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-dwc-Refactor-dwc-to-use-dw_pcie_clear_and_set_dword/20250612-003548
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250611163227.861403-1-18255117159%40163.com
-patch subject: [PATCH 13/13] PCI: dwc: Refactor tegra194 to use dw_pcie_clear_and_set_dword()
-config: x86_64-buildonly-randconfig-003-20250612 (https://download.01.org/0day-ci/archive/20250612/202506121258.qVeeEKfy-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250612/202506121258.qVeeEKfy-lkp@intel.com/reproduce)
+Thanks,
+Yilun
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506121258.qVeeEKfy-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/pci/controller/dwc/pcie-tegra194.c: In function 'tegra_pcie_dw_host_init':
->> drivers/pci/controller/dwc/pcie-tegra194.c:884:13: warning: unused variable 'val' [-Wunused-variable]
-     884 |         u32 val;
-         |             ^~~
-
-
-vim +/val +884 drivers/pci/controller/dwc/pcie-tegra194.c
-
-56e15a238d9278 Vidya Sagar   2019-08-13  879  
-64451ac83fe6ab Bjorn Helgaas 2022-08-04  880  static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
-56e15a238d9278 Vidya Sagar   2019-08-13  881  {
-56e15a238d9278 Vidya Sagar   2019-08-13  882  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-f1ab409d578752 Vidya Sagar   2022-07-21  883  	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-56e15a238d9278 Vidya Sagar   2019-08-13 @884  	u32 val;
-56e15a238d9278 Vidya Sagar   2019-08-13  885  
-275e88b06a277c Rob Herring   2020-12-18  886  	pp->bridge->ops = &tegra_pci_ops;
-275e88b06a277c Rob Herring   2020-12-18  887  
-369b868f4a2ef8 Vidya Sagar   2020-11-26  888  	if (!pcie->pcie_cap_base)
-369b868f4a2ef8 Vidya Sagar   2020-11-26  889  		pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
-369b868f4a2ef8 Vidya Sagar   2020-11-26  890  							      PCI_CAP_ID_EXP);
-369b868f4a2ef8 Vidya Sagar   2020-11-26  891  
-9891c2a48c49a9 Hans Zhang    2025-06-12  892  	dw_pcie_clear_and_set_dword(pci, PCI_IO_BASE,
-9891c2a48c49a9 Hans Zhang    2025-06-12  893  				    IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8, 0);
-56e15a238d9278 Vidya Sagar   2019-08-13  894  
-9891c2a48c49a9 Hans Zhang    2025-06-12  895  	dw_pcie_clear_and_set_dword(pci, PCI_PREF_MEMORY_BASE, 0,
-9891c2a48c49a9 Hans Zhang    2025-06-12  896  				    CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE |
-9891c2a48c49a9 Hans Zhang    2025-06-12  897  				    CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE);
-56e15a238d9278 Vidya Sagar   2019-08-13  898  
-56e15a238d9278 Vidya Sagar   2019-08-13  899  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-56e15a238d9278 Vidya Sagar   2019-08-13  900  
-87f10faf166a91 Bjorn Helgaas 2024-08-27  901  	/* Enable as 0xFFFF0001 response for RRS */
-9891c2a48c49a9 Hans Zhang    2025-06-12  902  	dw_pcie_clear_and_set_dword(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT,
-9891c2a48c49a9 Hans Zhang    2025-06-12  903  				    AMBA_ERROR_RESPONSE_RRS_MASK << AMBA_ERROR_RESPONSE_RRS_SHIFT,
-9891c2a48c49a9 Hans Zhang    2025-06-12  904  				    AMBA_ERROR_RESPONSE_RRS_OKAY_FFFF0001 <<
-87f10faf166a91 Bjorn Helgaas 2024-08-27  905  				    AMBA_ERROR_RESPONSE_RRS_SHIFT);
-56e15a238d9278 Vidya Sagar   2019-08-13  906  
-a54e190737181c Vidya Sagar   2022-07-21  907  	/* Clear Slot Clock Configuration bit if SRNS configuration */
-9891c2a48c49a9 Hans Zhang    2025-06-12  908  	if (pcie->enable_srns)
-9891c2a48c49a9 Hans Zhang    2025-06-12  909  		dw_pcie_clear_and_set_dword(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
-9891c2a48c49a9 Hans Zhang    2025-06-12  910  					    PCI_EXP_LNKSTA_SLC, 0);
-a54e190737181c Vidya Sagar   2022-07-21  911  
-56e15a238d9278 Vidya Sagar   2019-08-13  912  	config_gen3_gen4_eq_presets(pcie);
-56e15a238d9278 Vidya Sagar   2019-08-13  913  
-56e15a238d9278 Vidya Sagar   2019-08-13  914  	init_host_aspm(pcie);
-56e15a238d9278 Vidya Sagar   2019-08-13  915  
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  916  	/* Disable ASPM-L1SS advertisement if there is no CLKREQ routing */
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  917  	if (!pcie->supports_clkreq) {
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  918  		disable_aspm_l11(pcie);
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  919  		disable_aspm_l12(pcie);
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  920  	}
-6b6fafc1abc7c0 Vidya Sagar   2020-12-03  921  
-9891c2a48c49a9 Hans Zhang    2025-06-12  922  	if (!pcie->of_data->has_l1ss_exit_fix)
-9891c2a48c49a9 Hans Zhang    2025-06-12  923  		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-9891c2a48c49a9 Hans Zhang    2025-06-12  924  					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
-56e15a238d9278 Vidya Sagar   2019-08-13  925  
-9891c2a48c49a9 Hans Zhang    2025-06-12  926  	if (pcie->update_fc_fixup)
-9891c2a48c49a9 Hans Zhang    2025-06-12  927  		dw_pcie_clear_and_set_dword(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-9891c2a48c49a9 Hans Zhang    2025-06-12  928  					    0, 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT);
-56e15a238d9278 Vidya Sagar   2019-08-13  929  
-56e15a238d9278 Vidya Sagar   2019-08-13  930  	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-56e15a238d9278 Vidya Sagar   2019-08-13  931  
-275e88b06a277c Rob Herring   2020-12-18  932  	return 0;
-275e88b06a277c Rob Herring   2020-12-18  933  }
-275e88b06a277c Rob Herring   2020-12-18  934  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> 
+> > [1]: https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+> > 
+> > Thanks,
+> > Yilun
+> > 
+> > > 
+> > > Jason
+> 
+> -- 
+> Alexey
+> 
 
