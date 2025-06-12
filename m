@@ -1,158 +1,204 @@
-Return-Path: <linux-pci+bounces-29571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67295AD7885
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 18:51:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6279EAD7889
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 18:56:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D84FD3B2D7A
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:51:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A51A13B3A22
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF9119F13F;
-	Thu, 12 Jun 2025 16:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lle5iPO1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244BF29B761;
+	Thu, 12 Jun 2025 16:56:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745E17AE1D
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 16:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80B81F3BB0;
+	Thu, 12 Jun 2025 16:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749747082; cv=none; b=B766fFJSnDSoQbVquYTv/UQNQU6D+lMEyB+QajaIhQNpvQ8EHzMGQYEBBybNAc6nnKOGwfLobEmh0MVNB6hzISbFUEEgm8mhZjTNpmtFCpbncI5CseGXEeqzM0n850ELEdMx91TXTEeBjpl3nSE1gjehOqfxtX326zMbLhB9unY=
+	t=1749747365; cv=none; b=KX8DYizOSxNjch8Os3e4pEIulqkogOJTRHwd8iaa9eIrWrDCDnO/he1FF37cOxh55DyEsBdwx8sIsG+J6cGxFfy2nUFJV9LQrxw6LLLVmUw8dz8VXIPjwnURD4sA3SGtTmupx7JIzVLiZfhVV0qWH1Aj3o8vtCH/Rc+OZNOu1TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749747082; c=relaxed/simple;
-	bh=l2F/3t+8SIJLEDbXAmzSF5v0PHC967ELWAyFEgyMaJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0zSnqMRopCWpAFaTWNpvf4WBVZugb5mrtMiFLJmzM66qsPe+28t4xgrdK/kAg/Pg5bJ9mL5pN3yvYcAOIWqmI+CK1IQl4geahjpgdTcObghACUBu+cv1E5+Gw3gn1htCiBnIK/lQpeAl3N/wbFIF2Uoe58X7sV7awxYT4wIJ/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lle5iPO1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711E2C4CEEA;
-	Thu, 12 Jun 2025 16:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749747081;
-	bh=l2F/3t+8SIJLEDbXAmzSF5v0PHC967ELWAyFEgyMaJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lle5iPO1DNjbhLGB4VbOJYvB39anufxlTt++B3y6P+q/9kOzh84ujA9JjxGxoO4kX
-	 P40/8Grk4pMEDUtI5Krs4LO8b2d44eg9et83HLw9o+ULE3lz9SLJDqSOiudL2hSM7p
-	 LEzmLzuoQxsFsGsVjxxyOlWTByGWcXgfY1XWTGGqWkLPhXLnoxnl3+tvK65OxDUCgl
-	 ZwPVFY+G2CUwONVRX6VgfdPzSDe61er5LVkbvNZQh/nriZ69t7QBnhUhVKSMdA7d9K
-	 YecY3x5y/FsYk0z6yOEoHI7yflKAs9zuQLMphkpj80Cx4SePw6J9YBlibVT2pyITmM
-	 3YU6Vt5qTUNbw==
-Date: Thu, 12 Jun 2025 22:21:13 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/4] PCI: dw-rockchip: Do not enumerate bus before
- endpoint devices are ready
-Message-ID: <3sgjqqwpp57dn7wxbd32qmzwaf3tu5jmylklxnf3siwz7ysuxn@y2uoh3clqpgr>
-References: <2e23r5i5kmju476fcakodccyqnwanbhtyul5prqpqdgqivy3t6@ci54hfghhbb7>
- <20250612152442.GA908790@bhelgaas>
+	s=arc-20240116; t=1749747365; c=relaxed/simple;
+	bh=v89dW3iMfh6mZ1TxInMmlWaE+TSy57a+Fi/OSAIAcF0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iXfMh+tHxTVR8FI4Ceu2mxmEsGuoo8KCkvUR11jfRlaVEtfsHknOG9Asfn4iH4sxJtzvZPhhVPTBSxjcNiEtSHSFKci0Gdjp7G/hPrs83oheXCdbI/vNIXHbBlRIeLzpzBO7O8REF3vV+TTngLoVU4dvvIChT+pKF/2FkgCdaW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ7v90vVqz6M529;
+	Fri, 13 Jun 2025 00:55:33 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 29C90140276;
+	Fri, 13 Jun 2025 00:55:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
+ 2025 18:55:58 +0200
+Date: Thu, 12 Jun 2025 17:55:56 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
+	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
+	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
+	<colyli@suse.de>, <uaisheng.ye@intel.com>,
+	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
+	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v9 12/16] cxl/pci: Introduce CXL Endpoint protocol error
+ handlers
+Message-ID: <20250612175556.000036b5@huawei.com>
+In-Reply-To: <20250603172239.159260-13-terry.bowman@amd.com>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+	<20250603172239.159260-13-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250612152442.GA908790@bhelgaas>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Jun 12, 2025 at 10:24:42AM -0500, Bjorn Helgaas wrote:
-> On Thu, Jun 12, 2025 at 08:33:54PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Jun 12, 2025 at 09:44:47AM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Jun 12, 2025 at 06:30:37PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Thu, Jun 12, 2025 at 07:21:08AM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, Jun 12, 2025 at 01:40:23PM +0200, Niklas Cassel wrote:
-> > > > > > On Thu, Jun 12, 2025 at 06:38:27AM -0500, Bjorn Helgaas wrote:
-> > > > > > > On Thu, Jun 12, 2025 at 01:19:45PM +0200, Niklas Cassel wrote:
-> > > > > > > > On Wed, Jun 11, 2025 at 04:14:56PM -0500, Bjorn Helgaas wrote:
-> > > > > > > > > On Wed, Jun 11, 2025 at 12:51:42PM +0200, Niklas Cassel wrote:
-> > > > > > > > > > Commit ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can
-> > > > > > > > > > detect Link Up") changed so that we no longer call dw_pcie_wait_for_link(),
-> > > > > > > > > > and instead enumerate the bus directly after receiving the Link Up IRQ.
-> > > > > > > > > > 
-> > > > > > > > > > This means that there is no longer any delay between link up and the bus
-> > > > > > > > > > getting enumerated.
-> > > > > > > 
-> > > > > > > > > I think the comment at the PCIE_T_RRS_READY_MS definition should be
-> > > > > > > > > enough (although it might need to be updated to mention link-up).
-> > > > > > > > > This delay is going to be a standard piece of every driver, so it
-> > > > > > > > > won't require special notice.
-> > > > > > > > 
-> > > > > > > > Looking at pci.h, we already have a comment mentioning exactly this
-> > > > > > > > (link-up):
-> > > > > > > > https://github.com/torvalds/linux/blob/v6.16-rc1/drivers/pci/pci.h#L51-L63
-> > > > > > > > 
-> > > > > > > > I will change the patches to use PCIE_RESET_CONFIG_DEVICE_WAIT_MS instead.
-> > > > > > > 
-> > > > > > > I'll more closely later, but I think PCIE_T_RRS_READY_MS and
-> > > > > > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS are duplicates and only one should
-> > > > > > > exist.  It looks like they got merged at about the same time by
-> > > > > > > different people, so we didn't notice.
-> > > > > > 
-> > > > > > I came to the same conclusion, I will send a patch to remove
-> > > > > > PCIE_T_RRS_READY_MS and convert the only existing user to use
-> > > > > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS.
-> > > > > 
-> > > > > I think PCIE_T_RRS_READY_MS expresses the purpose of the wait more
-> > > > > specifically.  It's not that the device is completely ready after
-> > > > > 100ms; just that it should be able to respond with RRS if it needs
-> > > > > more time.
-> > > > 
-> > > > Yes, but none of the drivers are checking for the RRS status
-> > > > currently. So using PCIE_T_RRS_READY_MS gives a wrong impression
-> > > > that the driver is waiting for the RRS status from the device.
-> > > 
-> > > There's 100ms immediately after reset or link-up when we can't send
-> > > config requests because the device may not be able to respond at all.
-> > > 
-> > > After 100ms, the device should be able to respond to config requests
-> > > with SC, UR, RRS, or CA status (sec 2.2.9.1).  If it responds with
-> > > RRS, the access should be retried either by hardware or (if RRS SV is
-> > > enabled) by software.  This is the origin of "RRS_READY" -- the device
-> > > can at least do RRS.
-> > 
-> > Yeah, but the usage of 100ms is only valid if RRS SV is enabled by
-> > the software as per sec 6.6.1:
-> > 
-> > "It is strongly recommended that software use 100 ms wait periods
-> > only if software enables Configuration RRS Software Visibility".
+On Tue, 3 Jun 2025 12:22:35 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> CXL Endpoint protocol errors are currently handled using PCI error
+> handlers. The CXL Endpoint requires CXL specific handling in the case of
+> uncorrectable error handling not provided by the PCI handlers.
 > 
-> I see that statement but don't understand it.  Do you think it's meant
-> as an exception to the first two paragraphs that say "software must
-> wait a minimum of 100 ms" following either "exit from Conventional
-> Reset" or "after Link training completes"?
+> Add CXL specific handlers for CXL Endpoints. Rename the existing
+> cxl_error_handlers to be pci_error_handlers to more correctly indicate
+> the error type and follow naming consistency.
+
+I wonder if a rename precursor patch would be better here than doing it
+all in one go?
+
+Having not read the patch description thoroughly this had me confused ;)
+
 > 
-
-Maybe yes.
-
-> I can't imagine that it means "if the Root Port doesn't support RRS SV
-> or software doesn't enable RRS SV, software needn't wait at all before
-> issuing config requests."
+> Keep the existing PCI Endpoint handlers. PCI handlers can be called if the
+> CXL device is not trained for alternate protocol (CXL). Update the CXL
+> Endpoint PCI handlers to call the CXL handler. If the CXL uncorrectable
+> handler returns PCI_ERS_RESULT_PANIC then the PCI handler invokes panic().
 > 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-Yeah, it cannot be.
 
-> This whole thing is about whether the Endpoint is ready to respond.
-> A Root Port property (RRS SV support or enablement) doesn't tell us
-> anything about the Endpoint.
+>  
+>  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>  {
+> -
 
-I think we should just leave the RRS for good :) I was having a feeling that the
-RRS define we have didn't fit the purpose of waiting for the device to be ready
-post link up. Hence, I looked it up in the spec and spotted the above statement,
-just to confuse you and myself.
+So this snuck in somewhere between upstream and here.  If it is in this
+set let's push the removal back to where it came from.
 
-- Mani
+>  	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>  }
+>  
+> @@ -844,14 +843,15 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
+>  #endif
+>
+> +pci_ers_result_t cxl_error_detected(struct device *dev)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
+> +	pci_ers_result_t ue;
+> +
+> +	scoped_guard(device, cxlmd_dev) {
+>  		if (!dev->driver) {
+>  			dev_warn(&pdev->dev,
+>  				 "%s: memdev disabled, abort error handling\n",
+>  				 dev_name(dev));
+> -			return PCI_ERS_RESULT_DISCONNECT;
+> +			return PCI_ERS_RESULT_PANIC;
+>  		}
+>  
+>  		if (cxlds->rcd)
+> @@ -892,29 +900,25 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  		ue = cxl_handle_endpoint_ras(cxlds);
+>  	}
+>  
+> -
 
--- 
-மணிவண்ணன் சதாசிவம்
+Maybe something more in the patch description on why this chunk isn't relevant?
+I guess we don't need the more complex handling as these are all panic :)
+
+> -	switch (state) {
+> -	case pci_channel_io_normal:
+> -		if (ue) {
+> -			device_release_driver(dev);
+> -			return PCI_ERS_RESULT_NEED_RESET;
+> -		}
+> -		return PCI_ERS_RESULT_CAN_RECOVER;
+> -	case pci_channel_io_frozen:
+> -		dev_warn(&pdev->dev,
+> -			 "%s: frozen state error detected, disable CXL.mem\n",
+> -			 dev_name(dev));
+> -		device_release_driver(dev);
+> -		return PCI_ERS_RESULT_NEED_RESET;
+> -	case pci_channel_io_perm_failure:
+> -		dev_warn(&pdev->dev,
+> -			 "failure state error detected, request disconnect\n");
+> -		return PCI_ERS_RESULT_DISCONNECT;
+> -	}
+> -	return PCI_ERS_RESULT_NEED_RESET;
+> +	return ue;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+
+>  static int cxl_flit_size(struct pci_dev *pdev)
+>  {
+>  	if (cxl_pci_flit_256(pdev))
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 0ef8c2068c0c..664f532cc838 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+
+> @@ -244,6 +244,8 @@ static struct pci_dev *sbdf_to_pci(struct cxl_prot_error_info *err_info)
+>  static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
+>  {
+>  	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(sbdf_to_pci(err_info));
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	struct device *cxlmd_dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+>  
+>  	if (!pdev) {
+>  		pr_err("Failed to find the CXL device\n");
+> @@ -260,15 +262,13 @@ static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
+>  
+>  	if (err_info->severity == AER_CORRECTABLE) {
+>  		int aer = pdev->aer_cap;
+> -		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> -		struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+
+This code move seems somewhat unrelated?  Maybe it's in the wrong patch and
+becomes necessary later?
+
+>  
+>  		if (aer)
+>  			pci_clear_and_set_config_dword(pdev,
+>  						       aer + PCI_ERR_COR_STATUS,
+>  						       0, PCI_ERR_COR_INTERNAL);
+>  
+> -		cxl_cor_error_detected(pdev);
+> +		cxl_cor_error_detected(&pdev->dev);
+>  
+>  		pcie_clear_device_status(pdev);
+>  	} else {
+
+
+
 
