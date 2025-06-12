@@ -1,143 +1,124 @@
-Return-Path: <linux-pci+bounces-29528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACFA6AD6C68
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 11:39:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A1B5AD6CE6
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 12:01:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C5AB3AD6E4
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 09:39:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11D0A1883205
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 09:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A404322A804;
-	Thu, 12 Jun 2025 09:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46C522FF2E;
+	Thu, 12 Jun 2025 09:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0zdtRji"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tDJJkjCS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF931F583D
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 09:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2BB222D9ED;
+	Thu, 12 Jun 2025 09:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721184; cv=none; b=pyoqU6ar+qxY5STgBcV/WdoutAFUbzmHfjl/c2avglVad77DhrGt7+x5SgKIQrVPxNpiJPcTjcgDSG6U6oP95xQ8kvnzFXa+pMFT2H/JsFuR7pWXnuh1AxhlDs7eA8wjuBB+3OQyMJMyyf61+wmHhgHKUOOcmfsEygqL4REdtGw=
+	t=1749722298; cv=none; b=rg74puPt14FCE24/z0GzDuCAKw0b/4fPSyWc1lkfP6Qv0XN4Pn6RUxkW7AliBMwnjCNkauDS62OOrf3/tXXUz3VHekWEvD1HHZ2cPm9SGGJ4r6JINlrw0PTOxwt+60Oi1dgzirNJyod8pqNeYdb3Qj08kNYZecOw0R+U8Zq0Z5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721184; c=relaxed/simple;
-	bh=itD9k5ydYfxqNmokH1TVplNS+0T+GUbYVycjN5gv6M0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hKJNLvsSrDdjZP7fBZymwoqRDO7cFxcVYyIRXgO2YyCzsPZqjxIXQdQ6FiSTUAZQJXfbnsYXySnH1EW+jQFSjERErLuvRhRYiBmbltcEe3odQKcOyV7k405fhtGAUZwZdvmD/gyMuDZuIgQPEZc1C/bSOTv00+Ytg7seeBTpklU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0zdtRji; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F034FC4CEF1
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 09:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749721184;
-	bh=itD9k5ydYfxqNmokH1TVplNS+0T+GUbYVycjN5gv6M0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=H0zdtRjiaJ9lIf3bUp+PXaAuJobxMms+fhuxpkzqG1vQd1EL5sU+NLmIYfh92w6r0
-	 yAJ+xkjSnuJDbpGzpA/Wy4mqPkisIBEDyXdfTtKYFyMKwie3sVXgEEAUvz3i/OLL0V
-	 iKS4o31lqRbOMe8dAR7jJbU+a1d6lHxwh0vcknshD6xu4o46yt/kdba06gh/s7rg8z
-	 15KtV/qpOtY9gBvsBbXth2Bkqy+O4GFOjx7RxozCmJMmJeOROiSrdBBsnMN0v3+7E3
-	 s3u3BRgsfSCg0dAUPSOwHjRJKedEz8wEbGAbRN3kSm+JdHXCArCBqooSZa9Q6TOY/9
-	 PsI4auKWfw7Tg==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-606477d77easo429646eaf.1
-        for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 02:39:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXelYWKWxo7cK7C5E1wmWgBjyGc50E1NVm7HFtFgpoHCKrOQNj2//s75c89Ftx0OR5Ef4OfYy6fyK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycnHmLvmVSZ/62MM+owxqIf+3aHaD/JfxKqDLq6e/NwSd4rW7I
-	C1RAlCmGgQ2Ur4LYpmynO0fhVtpznPiEmDrUcfJa5P7miz/pvUSSidMhmFjriGuNmfxGSeCs5yR
-	lfy0QGhBG/+fempvzAJKAOkqmjSSvWQ0=
-X-Google-Smtp-Source: AGHT+IH+FLOCkXAJvaknvZeAKj74qaTVKH+NSbGV8ytjM3Y/kHs0g+u4heGwYtxsU8Rl4gnBIZmpHoexiXFWDl/B5wg=
-X-Received: by 2002:a05:6820:5201:b0:610:d11c:896 with SMTP id
- 006d021491bc7-610fc4ecae0mr1203448eaf.0.1749721183253; Thu, 12 Jun 2025
- 02:39:43 -0700 (PDT)
+	s=arc-20240116; t=1749722298; c=relaxed/simple;
+	bh=5lm3CROQoCKhao5Ca1yh00q3aQ56aGBHBbVoD/37i5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aep6nx+HiXaeP7DVpy+gRxz8M311au0h4TdiEQ4Q2vyWinogz1umqlybWn27+my1Z05PYxFjmqSJylBmeXFZ2dU2EAv3+YGb4ZF7kBCxnFaqz/d5Y4QthUkbBLbkTjj4rJBtSjik9dEzdlMWlrK9b0ZA0McCUqair4WVf6NRvwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tDJJkjCS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.224.160] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 91B9A201C768;
+	Thu, 12 Jun 2025 02:57:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 91B9A201C768
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749722295;
+	bh=eV3A+ddBcibHRVaqFJxwXvFIGtWcCdCwh7KjLBme/sQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tDJJkjCSRPy1hYNPAJtUISF1WSrCFZjdUEcEOdGWKAqv01iv5hJcEcllquwSVNAjF
+	 q6us+/HaBIBYi1tNhaYqZ9/ZpX81sTqUj9rNVlp0pkdgFUWydBJs/cT+uNCqPNoGR6
+	 7cUs3sg09Mbn3wLax4jFUWttwF/QfkOeeZy88ftA=
+Message-ID: <42abc705-bdb5-4be0-9fe7-b49d0a0d9507@linux.microsoft.com>
+Date: Thu, 12 Jun 2025 15:27:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611233117.61810-1-superm1@kernel.org>
-In-Reply-To: <20250611233117.61810-1-superm1@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 12 Jun 2025 11:39:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iL29uNcwi=8rB5Yp6UN4i6WFh7twZO=zou2M9yT10erg@mail.gmail.com>
-X-Gm-Features: AX0GCFtFkZ8oJ8lwYSz68uWQYi3UmQOQsUprM85OEb1-NukQ2q4snJ8SgS71iDA
-Message-ID: <CAJZ5v0iL29uNcwi=8rB5Yp6UN4i6WFh7twZO=zou2M9yT10erg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Set up runtime PM on devices that don't support
- PCI PM
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com, rafael@kernel.org, 
-	Alex Williamson <alex.williamson@redhat.com>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>, 
-	Nicolas Dichtel <nicolas.dichtel@6wind.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86: Fix build warnings about export.h
+To: Zhenghan Cheng <chengzhenghan@uniontech.com>,
+ herbert@gondor.apana.org.au, davem@davemloft.net, peterz@infradead.org,
+ acme@kernel.org, namhyung@kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ rafael@kernel.org, jgross@suse.com, Jason@zx2c4.com, mhiramat@kernel.org,
+ ebiggers@kernel.org, masahiroy@kernel.org
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, lenb@kernel.org,
+ ajay.kaher@broadcom.com, alexey.makhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, ppaalanen@gmail.com,
+ boris.ostrovsky@oracle.com, nathan@kernel.org, nicolas@fjasle.eu,
+ ilpo.jarvinen@linux.intel.com, usamaarif642@gmail.com, ubizjat@gmail.com,
+ dyoung@redhat.com, myrrhperiwinkle@qtmlabs.xyz, guoweikang.kernel@gmail.com,
+ graf@amazon.com, chao.gao@intel.com, chang.seok.bae@intel.com,
+ sohil.mehta@intel.com, vigbalas@amd.com, aruna.ramakrishna@oracle.com,
+ zhangkunbo@huawei.com, fvdl@google.com, gatlin.newhouse@gmail.com,
+ snovitoll@gmail.com, bjohannesmeyer@gmail.com, glider@google.com,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ shivankg@amd.com, peterx@redhat.com, dan.j.williams@intel.com,
+ dave.jiang@intel.com, kevin.brodsky@arm.com, willy@infradead.org,
+ linux@treblig.org, Neeraj.Upadhyay@amd.com, wangyuli@uniontech.com,
+ linux-crypto@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+ Zhenghan Cheng <your_email@example.com>
+References: <20250612093021.7187-1-chengzhenghan@uniontech.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250612093021.7187-1-chengzhenghan@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 1:31=E2=80=AFAM Mario Limonciello <superm1@kernel.o=
-rg> wrote:
->
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> commit 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-> initializing") intended to put PCI devices into D0, but in doing so
-> unintentionally changed runtime PM initialization not to occur on
-> devices that don't support PCI PM.  This caused a regression in vfio-pci
-> due to an imbalance with it's use.
->
-> Adjust the logic in pci_pm_init() so that even if PCI PM isn't supported
-> runtime PM is still initialized.
->
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Reported-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm=
-1@kernel.org/T/#m7e8929d6421690dc8bd6dc639d86c2b4db27cbc4
-> Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-> Closes: https://lore.kernel.org/linux-pci/20250424043232.1848107-1-superm=
-1@kernel.org/T/#m40d277dcdb9be64a1609a82412d1aa906263e201
-> Tested-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> Fixes: 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializi=
-ng")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-> ---
-> v2:
->  * remove pointless return
-> ---
->  drivers/pci/pci.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3dd44d1ad829b..160a9a482c732 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3222,14 +3222,14 @@ void pci_pm_init(struct pci_dev *dev)
->         /* find PCI PM capability in list */
->         pm =3D pci_find_capability(dev, PCI_CAP_ID_PM);
->         if (!pm)
-> -               return;
-> +               goto poweron;
->         /* Check device's ability to generate PME# */
->         pci_read_config_word(dev, pm + PCI_PM_PMC, &pmc);
->
->         if ((pmc & PCI_PM_CAP_VER_MASK) > 3) {
->                 pci_err(dev, "unsupported PM cap regs version (%u)\n",
->                         pmc & PCI_PM_CAP_VER_MASK);
-> -               return;
-> +               goto poweron;
->         }
->
->         dev->pm_cap =3D pm;
-> @@ -3274,6 +3274,7 @@ void pci_pm_init(struct pci_dev *dev)
->         pci_read_config_word(dev, PCI_STATUS, &status);
->         if (status & PCI_STATUS_IMM_READY)
->                 dev->imm_ready =3D 1;
-> +poweron:
->         pci_pm_power_up_and_verify_state(dev);
->         pm_runtime_forbid(&dev->dev);
->         pm_runtime_set_active(&dev->dev);
-> --
-> 2.43.0
->
+On 6/12/2025 3:00 PM, Zhenghan Cheng wrote:
+> After commit a934a57a42f64a4 ("scripts/misc-check:
+> check missing #include <linux/export.h> when W=1")
+> and commit 7d95680d64ac8e836c ("scripts/misc-check:
+> check unnecessary #include <linux/export.h> when W=1"),
+> we get some build warnings with W=1,such as:
+> 
+> arch/x86/coco/sev/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/crypto/aria_aesni_avx2_glue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/kvm/hyperv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/events/intel/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/events/zhaoxin/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/kernel/crash.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/kernel/devicetree.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> 
+> so fix these build warnings for x86.
+> 
+> Signed-off-by: "Zhenghan Cheng" <chengzhenghan@uniontech.com>
+> Suggested-by: "Huacai Chen" <chenhuacai@loongson.cn>
+> 
+
+
+Thanks for sharing.
+
+FYI, I sent a patch to fix these warnings in Hyper-V related drivers
+here:
+https://lore.kernel.org/all/20250611100459.92900-1-namjain@linux.microsoft.com/
+
+Some of the files are common to the ones in your patch.
+
+Regards,
+Naman
+
+
 
