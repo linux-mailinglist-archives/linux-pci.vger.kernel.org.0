@@ -1,134 +1,120 @@
-Return-Path: <linux-pci+bounces-29554-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29555-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 064D2AD7461
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:46:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86F0AD7464
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 16:46:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8ABC617B76C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 14:45:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67AF13AFB7E
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 14:46:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A54481A0BE0;
-	Thu, 12 Jun 2025 14:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B31772616;
+	Thu, 12 Jun 2025 14:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hM3LZUyq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUqjF7ON"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806642AEFD
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 14:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8F71B808;
+	Thu, 12 Jun 2025 14:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739489; cv=none; b=ezCZ70PvVI85AzegXqYsELIKAsBR+0TI8W5bp9TbJo2ZB3QLEEIuSEf5qWBctmKdLq1hzg7sVbuGUf6u8/7mOy+NM2DYDwIknWdw5wkWrTGn0EnzX50Lj0Mua0vfvV52wI9fmyPAuFwEuWojeEluRAR1arOylxEecMufLwQ2LzU=
+	t=1749739578; cv=none; b=IT3US6dIYhYiWRyofrh8LJHIgrCL2QMaLfN//+QrQYmexAA+nHnhQ1aodsQCI0WDCfXzEpotnmyva1s2xTVR5Ebrc0MZwgWiujtccrGUjYE9wlqtGUO1X2livLyFNr0uDQGzCaB7IhoMuvkehPdhFqra+vg5XziZnRwtcUBh02Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739489; c=relaxed/simple;
-	bh=/4XAl/Uym603PEnwuhOtlVJIOWql+o3h2l1QrsNj3KQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=l92WlrychLbKJy3sOkREX2k8VBMAGf90fHcDRpLkQk6EDzMEeUc9/6Qr5+ELsMSDIqdexywBGQP8y9Jvynl69A+aRElwQRtArEq+hutIC2U6LBF6ku7qcSbVpaQNYwstY0vpogdqF+Yw8W6J/dIgeyiczgzdWE5FcZJ0DEdouMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hM3LZUyq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0464AC4CEEA;
-	Thu, 12 Jun 2025 14:44:48 +0000 (UTC)
+	s=arc-20240116; t=1749739578; c=relaxed/simple;
+	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVF3MrnkjG3UB5aTYc048TREoE/Bqitc+BFe9r7dsdO2R9Xvf//5oRycnjYB/y0y9l1VI4sIvzxcMaSlcYUTCLZjKia38j0F3ATxKesWAHAIeS76RqJ4bbYnqSe014lZ3xl6OYdo14yYygjbrxVpNCuAeAb6bupTx+7k+LEmjwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUqjF7ON; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE90C4CEEA;
+	Thu, 12 Jun 2025 14:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739489;
-	bh=/4XAl/Uym603PEnwuhOtlVJIOWql+o3h2l1QrsNj3KQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hM3LZUyqdFmUQDcojGiU7qlxGb7eJMZYGxrQ0r6PyBGGVQFKLR3Wc0VYzGZlk1BrL
-	 a8xnYgg0vrFigcsWghZSOOgaxhhuEiGiqx+cFiHLUWn7f2T1o7BgLyK1iHgsNLhwWm
-	 jXXa8hBJDs7T7KZsyqnYzzeU41lTdsQxzZdGIDR80vkGOSX+Cyr3d8WrPK3Z9prAeT
-	 wiOTS/M/cPKN5d6Xf0oiiaCpZGD6MyQg+PEkKPwi/TaTy9dKqCMtBxX2ehWdBjFSNT
-	 ocM23lbDvW+AM3EKrIRJJvyECpHwPyyueW2bUjjFyBTJcnaU6etL4a1Z6qYlMuDKkh
-	 XHdw6xrCyPF7A==
-Date: Thu, 12 Jun 2025 09:44:47 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/4] PCI: dw-rockchip: Do not enumerate bus before
- endpoint devices are ready
-Message-ID: <20250612144447.GA903908@bhelgaas>
+	s=k20201202; t=1749739574;
+	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FUqjF7ONFa/8MEpHuAC0lNeK4nPttPf0Hz1juF4yxJk6qw8h112kn2pLn1gxQU2GR
+	 xCfBIrIgpwpX6PMUvf1+rkx53ho53XJD7FhpIpSg6XY583benADFDIXPTpvBIeCOx/
+	 sMkLO/n4wtblZxvr0nsVsALTLT9VlmquhajDWK4k4cCeuh5oK7ZMeTxTEk/TQn2kGV
+	 3urV9802dpwb86AfhMelys5oT6bfUdNxba0TbtaJ//L1qsgnPseh7br0VCwoVkk6NU
+	 fI3ekhZupD9ExVKASnX2ixaxELjUVMbNqc5VPV1WfHXySfMmM735xE4LOD2duATKcy
+	 pQg6+NcnmoIbg==
+Date: Thu, 12 Jun 2025 20:16:03 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v11 10/11] PCI: dwc: Print warning message when
+ cpu_addr_fixup() exists
+Message-ID: <v77jy5tldwuasjzqirlwx45zigt6bpnaiz67e4w7r2lxqrdsek@5qzzobothf5r>
+References: <20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com>
+ <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <apkamrd6ty2km7mjwz4mpe2xhewxgd3crmeqdmnj7wn6jl4emv@3nwrt43u2ons>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
 
-On Thu, Jun 12, 2025 at 06:30:37PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jun 12, 2025 at 07:21:08AM -0500, Bjorn Helgaas wrote:
-> > On Thu, Jun 12, 2025 at 01:40:23PM +0200, Niklas Cassel wrote:
-> > > On Thu, Jun 12, 2025 at 06:38:27AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Jun 12, 2025 at 01:19:45PM +0200, Niklas Cassel wrote:
-> > > > > On Wed, Jun 11, 2025 at 04:14:56PM -0500, Bjorn Helgaas wrote:
-> > > > > > On Wed, Jun 11, 2025 at 12:51:42PM +0200, Niklas Cassel wrote:
-> > > > > > > Commit ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can
-> > > > > > > detect Link Up") changed so that we no longer call dw_pcie_wait_for_link(),
-> > > > > > > and instead enumerate the bus directly after receiving the Link Up IRQ.
-> > > > > > > 
-> > > > > > > This means that there is no longer any delay between link up and the bus
-> > > > > > > getting enumerated.
-> > > > 
-> > > > > > I think the comment at the PCIE_T_RRS_READY_MS definition should be
-> > > > > > enough (although it might need to be updated to mention link-up).
-> > > > > > This delay is going to be a standard piece of every driver, so it
-> > > > > > won't require special notice.
-> > > > > 
-> > > > > Looking at pci.h, we already have a comment mentioning exactly this
-> > > > > (link-up):
-> > > > > https://github.com/torvalds/linux/blob/v6.16-rc1/drivers/pci/pci.h#L51-L63
-> > > > > 
-> > > > > I will change the patches to use PCIE_RESET_CONFIG_DEVICE_WAIT_MS instead.
-> > > > 
-> > > > I'll more closely later, but I think PCIE_T_RRS_READY_MS and
-> > > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS are duplicates and only one should
-> > > > exist.  It looks like they got merged at about the same time by
-> > > > different people, so we didn't notice.
-> > > 
-> > > I came to the same conclusion, I will send a patch to remove
-> > > PCIE_T_RRS_READY_MS and convert the only existing user to use
-> > > PCIE_RESET_CONFIG_DEVICE_WAIT_MS.
-> > 
-> > I think PCIE_T_RRS_READY_MS expresses the purpose of the wait more
-> > specifically.  It's not that the device is completely ready after
-> > 100ms; just that it should be able to respond with RRS if it needs
-> > more time.
+On Thu, Mar 13, 2025 at 11:38:46AM -0400, Frank Li wrote:
+> If the parent 'ranges' property in DT correctly describes the address
+> translation, the cpu_addr_fixup() callback is not needed. Print a warning
+> message to inform users to correct their DTB files and prepare to remove
+> cpu_addr_fixup().
 > 
-> Yes, but none of the drivers are checking for the RRS status
-> currently. So using PCIE_T_RRS_READY_MS gives a wrong impression
-> that the driver is waiting for the RRS status from the device.
 
-There's 100ms immediately after reset or link-up when we can't send
-config requests because the device may not be able to respond at all.
+This patch seem to have dropped, but I do see a value in printing the warning to
+encourage developers/users to fix the DTB in some way. Since we fixed the driver
+to parse the DT 'ranges' properly, the presence of cpu_addr_fixup() callback
+indicates that the translation is not properly described in DT. So DT has to be
+fixed.
 
-After 100ms, the device should be able to respond to config requests
-with SC, UR, RRS, or CA status (sec 2.2.9.1).  If it responds with
-RRS, the access should be retried either by hardware or (if RRS SV is
-enabled) by software.  This is the origin of "RRS_READY" -- the device
-can at least do RRS.
+Bjorn, thoughts?
 
-"CONFIG_READY" would make sense except that it would be confused with
-the spec's usage of "Configuration Ready" (unfortunately not formally
-defined).  The PCIe r6.0, sec 6.22 implementation note says devices
-may take up to 1 second to become Configuration Ready, and that when a
-device is Configuration Ready, system software can proceed without
-further delay to configure the device.
+- Mani
 
-"PCIE_RESET_CONFIG_DEVICE_WAIT_MS" seems a little long to me (we might
-not need "DEVICE"), but it does include "CONFIG" which is definitely
-relevant.  "PCIE_RESET_CONFIG_WAIT_MS"?
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v10 to v11
+> - change to dev_warn()
+> - Bjorn: this is opitional patches to encourage user fix their dtb file.
+> 
+> change from v9 to v10
+> - new patch
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 8b546131b97f6..d4dc8bf06d4c1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -1125,6 +1125,8 @@ int dw_pcie_init_parent_bus_offset(struct dw_pcie *pci, const char *reg_name,
+>  
+>  	fixup = pci->ops->cpu_addr_fixup;
+>  	if (fixup) {
+> +		dev_warn(pci->dev, "cpu_addr_fixup() usage detected. Please fix your DTB!\n");
+> +
+>  		fixup_addr = fixup(pci, cpu_phy_addr);
+>  		if (reg_addr == fixup_addr) {
+>  			dev_warn(dev, "%#010llx %s reg[%d] == %#010llx; %ps is redundant\n",
+> 
+> -- 
+> 2.34.1
+> 
 
-Bjorn
+-- 
+மணிவண்ணன் சதாசிவம்
 
