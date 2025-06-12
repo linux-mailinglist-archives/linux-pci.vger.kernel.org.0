@@ -1,190 +1,132 @@
-Return-Path: <linux-pci+bounces-29605-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29606-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24D5AAD7B5E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:48:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C51E2AD7B77
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 21:51:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F031C1893D84
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:48:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DC8E3A3392
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jun 2025 19:51:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB512D4B49;
-	Thu, 12 Jun 2025 19:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ACDE2D540D;
+	Thu, 12 Jun 2025 19:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="L1+a6pB5"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="dgrFviZi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CF920B80E
-	for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 19:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749757686; cv=none; b=KixMmHUuZqI+Xw+dvdYXrWMJ+kAfXDXtTB2+mZWO4zD5aYQd/6QZWhEdyo+nH+Ztl1IU83oAXpuU9lhNcW7ZBEbUzkyuSf0PBXgv/O/wECthCuzmZ8hpfSweqOmqFXiNnfLUNyzfZfGsMCetvxFajThqGRBVYDbxzosseRa+R54=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749757686; c=relaxed/simple;
-	bh=ioKitG+yRYhRJrtQctH8UeW8KGYpeayaBl4Ml1mBldA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pWi5oYZAKI7odkQIOIiqtihitv9zg0gFjc1IvhRqJ2v8ZA2v8PhTOLvjZuU5AzJ/X/WqThRRbcBUQSPNfr9Ou7L5Qbg1WTowf+BDBO0rZm7+IGu4tWOhQBdV7/p/bzaQnbm/F/hdV0fTScgyiSHnktyiRa6FIvCB3Y5/xuOsvKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=L1+a6pB5; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-404e580bf09so365930b6e.1
-        for <linux-pci@vger.kernel.org>; Thu, 12 Jun 2025 12:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks.com; s=google; t=1749757683; x=1750362483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8e9esVoe2c1asLojkhwYh+MoQPaPYmSvfLLOY1O43Qk=;
-        b=L1+a6pB5HWKsnQSfy/aDfl2Ow2HHCndtYYNnEpXRf1L4YsCgXaabYJB2094YKQLZbA
-         0fbNHwMRFSGJgwseBRxrobOyN2oJZ90EjBi//94CRg3YIer7o7fhh8t0zSz6gF42WhH9
-         kiXYPy4e+90MsBpEwURC3E/G34tH1yB46UIXAGCHsSDGtssXOCpdpIyfUJZFaSAEIqbS
-         umIeeFAzdemJ/fSYoEcZ7hHr3kfLtS3TOdq7JIpz0dcQEG1d1Dq/xMsKrtMefUL0Q66u
-         sLsfXqpEaJEMLQW24JoqA5uo1bYB2Nb2HYpUmcIohaI8kdNMsmd0ygv591C+AV6ADOAT
-         PcYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749757683; x=1750362483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8e9esVoe2c1asLojkhwYh+MoQPaPYmSvfLLOY1O43Qk=;
-        b=GzArfkgTmG00EULSrQX8gOkOOeAcsKnYGZM0f2HH1H2xJanwmYWWnnRXimHYLPamv4
-         WpbGwEELj/3XmtlBBq8OIugFjYVyBVSetDQ2IaGY+KsDaJHAxfh4X9O/LQyexBxjeZxb
-         71LZ2UF+7QX4evXsEj13sObvIT9hu8POd7Bf+hSWssqs3r6hKUb+YgA06BHcW+xktBr2
-         iAyKc9cM7oOchPSi6+wlytxysmSeFiuiEIn+75ugbc8LSMdfuXwFeHrm9yBjkIB5Vvgq
-         jyz7bp+iteOZ3Q7/xQGwNDMzCjiGaQ4LN/ryVOd6Hfi/XkWTNUoAorBZ5ygarv2swyq5
-         FHQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPv/mMqPzi98d+lucpo07bYfa9Pijq3n9ZKzmAQzTy6D8PSKVFnM31lKSUwfxAjxnx4wG/Z8vOtU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/Dwil8sTNUlwp0evJiTgQBLADP/RTpZjZRL80CkxGGjna+KW3
-	H7ZoqEe81NBaH9ZawH7W0bxiVNBp2bsN6hZ2ZrK9CsVrgw3lSeI3hwTqDUhZ/3pw4rFJVrvMh0U
-	ZMMWR+OEqs8U/W1i5hpvZ3keKvHP0Fc3Ir4cjVzV3hA==
-X-Gm-Gg: ASbGncurNlpWwI+K3CN+c61Fuqou7OR0Jc0YYoxoKv1u5WmHPQDuIOcrUxz0Nm+4cA4
-	ctE9+uC9E3QwvMorVLsux6ySESLrvXTHUe/Cu0OSgafOuEexZ11kCD9wGq0WsGQyKJIyGDAhgg+
-	OTBqzyvvu3lz6DoQ6nQ68SCWIq84/URWZql9ZNEpCD+zo=
-X-Google-Smtp-Source: AGHT+IFcwAXQ3PbWAljxpAOaH7id08n7aXe7ujr3lhVGcrvJaHIYrxkMSHXAY37YjImxRVd5r3NbxP9AAw1idnxghok=
-X-Received: by 2002:a05:6808:3c43:b0:401:16e:918e with SMTP id
- 5614622812f47-40a71d7641fmr583982b6e.8.1749757683321; Thu, 12 Jun 2025
- 12:48:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF371D95B3;
+	Thu, 12 Jun 2025 19:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749757901; cv=pass; b=iJvE/7JTDpX+6pEIdWh/R6HearuahSki9IzBxWgLPbe8hIw+VlMxJDd2Y/swkFAeJco3hM8vdpZXdVUmQM55ImBAU++MCRj3sjJzLQ5z86O/jox3w0y8jEwLvfi0xcVA62tnhE0DDUW+BELlmWtvR5alTUKbaio336NAqhzdAZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749757901; c=relaxed/simple;
+	bh=MZFOxTpWTX30Sul/xd08OAY7m5LBHhcZ8N+9X99cUVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bxN5LWwOUgq4Ysl1yuosuaJAuFwaXdLZ3/YhiHy9D7yqJKrpr16pZbHnlOI3lTbx6hH8iACJOUMTPDnTaIFSs/A2C01QUojjuf5HXTjQRw4qUOewnx2A3uEmlMXFzVGzEaXX/4W9ZVuKmsteoGtPF/j42PL/4dDhByjQuXIkDqk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=dgrFviZi; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1749757825; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=niCZ7gfbCTphUt9F4A6BqJhyAWLYx6ZFwS619hLJe6PBl39fzz0Cx8vMltl3JFnMTsylPx4rmHxzSjlI6+i7JxXqUGT3s6Es/ezleTw1LiVQjojUFV2MChvno5MY8Cvp/2xtoIVUvXIUkrk6ZQaLkHxbgid9Eb84F9rtiiep3/w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749757825; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mU+CcqNywPoimgVbJRvOWx8a/xllDqeUM7RTijoC4cY=; 
+	b=QslLP2IFvCv129jJG9S1czdWGSll5oQcKPTGbu69twy2y6tft074Tj9gl4VSLqgkHbZePSQXCS47CfPxgVRXhkhNwNcM8sjdLMyylkaGbgAbNTkJteWsZT0or3z04oq3pKdilJf94Uubjr2Ok5GHz0dv8po0Wsr3HlZiPRC3pWc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749757824;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=mU+CcqNywPoimgVbJRvOWx8a/xllDqeUM7RTijoC4cY=;
+	b=dgrFviZisw0pqrB+YqDeMyESyiRkmHgCVyEhMK+qA9s5JJEM1kHaX6FSiVjc6CAL
+	ESUjzFUcC4kIRX5GaLHv+75hTR9fo3lR/+rESxFHOrnAIQiuvgMjh0P0wu1u/jZe70V
+	f2+QqcSa+85I9n/Kg//f8lLHO3nJsdYBvCrZC82w=
+Received: by mx.zohomail.com with SMTPS id 1749757823600263.75629300643163;
+	Thu, 12 Jun 2025 12:50:23 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Sandy Huang <hjc@rock-chips.com>,
+ Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 01/20] bitfield: introduce HWORD_UPDATE bitfield macros
+Date: Thu, 12 Jun 2025 21:50:12 +0200
+Message-ID: <22744779.EfDdHjke4D@workhorse>
+In-Reply-To: <20250612124415.3399e26b@kernel.org>
+References:
+ <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+ <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
+ <20250612124415.3399e26b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612022747.1206053-1-hongxing.zhu@nxp.com>
- <20250612022747.1206053-2-hongxing.zhu@nxp.com> <aEr8PxcHp55Bo5Os@lizhi-Precision-Tower-5810>
-In-Reply-To: <aEr8PxcHp55Bo5Os@lizhi-Precision-Tower-5810>
-From: Tim Harvey <tharvey@gateworks.com>
-Date: Thu, 12 Jun 2025 12:47:52 -0700
-X-Gm-Features: AX0GCFtVrSEePbUg8i-7Hr0xxmYOgLkuZdutnpQomlDJR8IFZN655IzCDiGytFM
-Message-ID: <CAJ+vNU3vyznybZ_QZBrB+nc1=2+BcC8csOtR5=6-gmgn6sb5tQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI: imx6: Remove apps_reset toggle in _core_reset functions
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, 
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Jun 12, 2025 at 9:11=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Thu, Jun 12, 2025 at 10:27:46AM +0800, Richard Zhu wrote:
-> > apps_reset is LTSSM_EN on i.MX7, i.MX8MQ, i.MX8MM and i.MX8MP platforms=
-.
-> > Since the assertion/de-assertion of apps_reset(LTSSM_EN bit) had been
-> > wrappered in imx_pcie_ltssm_enable() and imx_pcie_ltssm_disable();
-> >
-> > Remove apps_reset toggle in imx_pcie_assert_core_reset() and
-> > imx_pcie_deassert_core_reset() functions. Use imx_pcie_ltssm_enable()
-> > and imx_pcie_ltssm_disable() to configure apps_reset directly.
-> >
-> > Fix fail to enumerate reliably PI7C9X2G608GP (hotplug) at i.MX8MM, whic=
-h
-> > reported By Tim.
-> >
->
-> You may rename apps_reset to ltssm_reset to avoid confuse for legancy
-> platform later.
+On Thursday, 12 June 2025 21:44:15 Central European Summer Time Jakub Kicinski wrote:
+> On Thu, 12 Jun 2025 20:56:03 +0200 Nicolas Frattaroli wrote:
+> > Hardware of various vendors, but very notably Rockchip, often uses
+> > 32-bit registers where the upper 16-bit half of the register is a
+> > write-enable mask for the lower half.
+> 
+> Please limit the spread of this weirdness to a rockchip or "hiword"
+> specific header. To a normal reader of bitfield.h these macros will
+> be equally confusing and useless.
+> 
 
-Hi Frank and Richard,
+That is how this change started out, and then a different maintainer told
+me that this is a commonly used thing (see: the sunplus patch), and
+Rockchip just happens to have a lot of these with consistent naming.
 
-I was thinking of making the same suggestion however the apps reset is
-in several places:
-- imx8m*.dtsi pci node as 'reset-names' and reset index number #define
-- imx8m*-reset.h bindings as reset index number/define
-- pci-imx.c driver
+I believe normal readers of bitfield.h will be much more confused by the
+undocumented concatenating macro soup at the end, but maybe that's just
+me.
 
-Granted it is used by imx7d.dtsi, fsl,imx8mq-pcie, fsl,imx8mm-pcie,
-fsl,imx8mp-pcie and in every one of those reference manuals it's bit6
-of SRC_PCIEPH_RCR named PCIE_CTRL_APPS_EN but described as
-'Pcie_ctrl_app_ltssm_enable'. Can you ask your references to get more
-definition for this bit? I'm still unclear why 'de-asserting' it twice
-was an issue.
-
-Regardless, any cleanup changing the name can be a seperate patch in my opi=
-nion.
-
-Best Regards,
-
-Tim
+Best regards,
+Nicolas Frattaroli
 
 
->
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
->
->
-> > Reported-by: Tim Harvey <tharvey@gateworks.com>
-> > Closes: https://lore.kernel.org/all/CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZ=
-cMHDy+poj9=3DjSy+w@mail.gmail.com/
-> > Fixes: ef61c7d8d032 ("PCI: imx6: Deassert apps_reset in imx_pcie_deasse=
-rt_core_reset()")
-> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-imx6.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/contro=
-ller/dwc/pci-imx6.c
-> > index 5f267dd261b5..f4e0342f4d56 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -776,7 +776,6 @@ static int imx7d_pcie_core_reset(struct imx_pcie *i=
-mx_pcie, bool assert)
-> >  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
-> >  {
-> >       reset_control_assert(imx_pcie->pciephy_reset);
-> > -     reset_control_assert(imx_pcie->apps_reset);
-> >
-> >       if (imx_pcie->drvdata->core_reset)
-> >               imx_pcie->drvdata->core_reset(imx_pcie, true);
-> > @@ -788,7 +787,6 @@ static void imx_pcie_assert_core_reset(struct imx_p=
-cie *imx_pcie)
-> >  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
-> >  {
-> >       reset_control_deassert(imx_pcie->pciephy_reset);
-> > -     reset_control_deassert(imx_pcie->apps_reset);
-> >
-> >       if (imx_pcie->drvdata->core_reset)
-> >               imx_pcie->drvdata->core_reset(imx_pcie, false);
-> > @@ -1176,6 +1174,9 @@ static int imx_pcie_host_init(struct dw_pcie_rp *=
-pp)
-> >               }
-> >       }
-> >
-> > +     /* Make sure that PCIe LTSSM is cleared */
-> > +     imx_pcie_ltssm_disable(dev);
-> > +
-> >       ret =3D imx_pcie_deassert_core_reset(imx_pcie);
-> >       if (ret < 0) {
-> >               dev_err(dev, "pcie deassert core reset failed: %d\n", ret=
-);
-> > --
-> > 2.37.1
-> >
 
