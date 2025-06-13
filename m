@@ -1,227 +1,175 @@
-Return-Path: <linux-pci+bounces-29790-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C36EAAD9766
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 23:34:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DA53AD976C
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 23:41:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B909177944
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 21:34:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18A1E189E0C7
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 21:41:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6204A28DB7A;
-	Fri, 13 Jun 2025 21:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9681C28C02C;
+	Fri, 13 Jun 2025 21:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PFL6qhtM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LcRNuALu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013002.outbound.protection.outlook.com [40.107.159.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5187828DB45;
-	Fri, 13 Jun 2025 21:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749850475; cv=fail; b=m6EUsi6P3nW0B5vzjCpgmsvOtg2ebWqdDAg5NtoAs4tKzw0QS4UO+0ZmYGXHdspZz76M2h93rdoNgNrwL4yMzYsSQeQqPE16P78Oo8nNg9QTr94XPKSK5rlI/8Cjtgtgqvi4iBJUCtCIezfoiYiq9Iz3bzxfdqjRunDyUCMQPoY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749850475; c=relaxed/simple;
-	bh=qSIfKEx95k6ODhvVw461h2b8m+2eUf3ftBzR5QU1OKU=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=SKSpGTnnTn6W7bnAmpsH3nTHM9CUQq9cvlYFqewanh5suPXzG0G8wFGB42vQ5RORbkQ/l5E1zBSjTbz7+n2G1SVyx2GZpdlBP26HkZ8efHlmYrStHSDKAQ8jXTasweVD909dMcpxNJKeIF9c0nMovm+XupwcOGKetUIvVuMOFZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PFL6qhtM; arc=fail smtp.client-ip=40.107.159.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uuB2FkeU5/5qMcqAuufN2d5+Fg38oTwzjP0ePN3AflFq1o7QuzRcJz1my2fr5bfLVOl/mxPBcEfly9kOMyFTIvEHREKPWKiYawC8RaQCI4h0Nb0XXvTxmDLX+4zW6P9oZuhxL1GYfOG2cdjF70351Qp5nPH60d8wn1/Yp2vu2zqV2A8ER5OChTKnZ9IJJL1C7cKgTN7DRh2tt21N4qwRuWfH9nsh25a7VQ7AOhvwRL8FbVvRn5rA7ZTZAriX2xuD6v3ZGIT1mNVL/GIcQe76wWq5Q5ShcZxUBzTPlstyWZOOhmGBUMxngm0z4tREIIFwVs5sxQS1LKrdMVZIbUtJAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nufmyfNf3R8wAshdU9NV7WnaFxZ7CGXD2RJ6786gEJ8=;
- b=AjE37It6F6Pt1T7zdMdzHvSRN4obKZqv/AUtIX/JjBPPwMJeQNdsy7GBOxWOpiGZKL0OkLxYva5TbvT214Acbq0B/0xw3C5QWbQAGnteconSh9P7IJ+t1FXj9OlVujd/EThFO4Wdz/K/m8efAMYunJwYnFdPaeLff1SFBJGZ+XS7Sph2fk4gzpwctRicLY8GSrlJJbR8bvA2FsAJIbHHlSbhf0rHDiFqYVgq0jHhLGd/GSdXDofr/saJrMVrBJxWt43NvyWC+u5PihfMMe2399xJ1Y9/zr3BWgPQ2CKfQ6YMI+CYMwTJLDMh/yky9aS/hlM4OOC7t9pflGRslG2Ddg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nufmyfNf3R8wAshdU9NV7WnaFxZ7CGXD2RJ6786gEJ8=;
- b=PFL6qhtMy9/3sWqEfjxHHtIk88VOsU222cUXGPeGjlDVsH4ZYiRiYYqzNRCBmELhzfAaDRX0EKLGsE4cMPpjsla/EJiVe1i/qTk8WpJDw5T3lKoo4CX70WEjMTUPKKgjznoo435tU+0xSMnnxGlCLOnIzsbPU83R2C0BVG+0ioZSRNZE/Lxkpj2xNQHL0zwKM+WBRADKqZIgCvHfZIWs2u8DnqMqDKHSqCnrXDoCahMRehTNqUHVcop2erigD64BID+bOhEPeVrE9NAXJZDjQn92z0d5Tqk9bhV8LqKgg5Oug52/1/vbMyi4wkcFRX91r/1FyO64jBGD8snAdTL4ug==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS5PR04MB9856.eurprd04.prod.outlook.com (2603:10a6:20b:678::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Fri, 13 Jun
- 2025 21:34:30 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
- 21:34:30 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 13 Jun 2025 17:33:30 -0400
-Subject: [PATCH RFT 2/2] PCI: dwc: visconti: Remove cpu_addr_fix() after
- DTS fix ranges
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-tmpv-v1-2-4023aa386d17@nxp.com>
-References: <20250613-tmpv-v1-0-4023aa386d17@nxp.com>
-In-Reply-To: <20250613-tmpv-v1-0-4023aa386d17@nxp.com>
-To: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749850461; l=1402;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=qSIfKEx95k6ODhvVw461h2b8m+2eUf3ftBzR5QU1OKU=;
- b=OgrwUqQim1U6LX3Qs7y6cFN9+JdDxIqXXJW2B4NQiEmWFfzMhXMH65gsIVuoxB90zwc9MTWF9
- y3GuYctdzl0CkFoF6MG3HKPPUJ7c5kt9dATDZ8hwL0X8bw996HOt6vm
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: PH5P220CA0013.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:34a::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80741E8338
+	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 21:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749850854; cv=none; b=g6DcZ6jjrnN7VuX2GToV/ynUyZ0AE3M+sSa94DgQw2Tlb7GMQyfabP1fLoIn0Vs0h3Dfzrm+a0WY0i0OJdWz8fL0I+EyhsxO03UDszGcDNH2li2u/xHha3Quf1HyLuWUiHwy3Z86YrkaxzJaTJBfTHwlkiaeiMI82qsmuGpLwkw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749850854; c=relaxed/simple;
+	bh=ZcoeBl1oYujZAp6bxXAb2ArnZ8wEspzdPox2tOMOAVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PhDR3whfD+8BCHTjce8TKl5Sk+pnPBEEg9CXcLTvzEDXR10ApuTax1pKrCtSwgk47vRbePDNyI0NyioTSfV5r9udKn0K4aVXkmez20XsV+Q4Gd7STewoPDQQ6ajbLbfwOSA6p2K2mhjueVvF9fpdHNnqusX1X9LES/ifUHb//7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LcRNuALu; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a58ef58a38so53771cf.0
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 14:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749850852; x=1750455652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JM2Ts82lf5QQvFrV+s/2evWQljauh/bsNUGeUyNRzHU=;
+        b=LcRNuALugPaCbh5j7w1f5jaLJeU25rtU58LC28ZkS68MrBNrpdkwZMn6jCDgdVEma9
+         7xBZgrK8OjSDbbOaUt0NuRs4iF7mQ6HpcmMQMzvd+qbqfzHo6/GxChuaGLiF82JJIvN1
+         LlN4gnXqaKz2gSiXCogpy+tV+pXHWA/DE7P7YjbQEKVka7+/IKDHWclqk5+zmz1LkDsw
+         VT+8i6b1q6LZJTN2uAU2gJby0Ign9CDiJdaXarsnkIi+g7H44DD4PnOQIojs6Q8lOQi2
+         qCNKvCvJDT0IyOx5uiFo6zalU92UWe/I2QJCaQt/QZq542MFaJyErB91Jv3KKBOELP9+
+         vGIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749850852; x=1750455652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JM2Ts82lf5QQvFrV+s/2evWQljauh/bsNUGeUyNRzHU=;
+        b=DW9wmL7TeQvJ//8NzmYETXw+5OxEM8oiA019mlygJliKUuUvy/3C1pPcavSY/+TXrE
+         W4A6lm5dQjZqpo7DWAF7OOJ4+zUFFlE9sN6zoObGz/+fzJYcloAJxVtI94CeFe02tp7E
+         K9X5Br9UDx3bgJO/ua7VxG/h4zGIUaRmRsux435vpjrjGQaRx0/neG9wiyD4cyOrV77I
+         4Xgw+udivlPT9Pgc5820uayRH1sGjSUe2VWWee7SMIZnqyQ/UJx9hoct/a0iRzTtnCF9
+         FXfJ2dKUlwQyD62OE9aRXc0bRPJqs657a13mcNGt4Z1ulGidtPwt8sUKp2Wh4dkiZHNj
+         UDpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbxmCRmy5KFjsfFf4Ukpw4+Sz1T2P8GKKKV82xKhdZ6dfrCq0LdzkWkGaTCEHbeqSadauJ3WgwsMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzs3FwKMpflcvcx5Nfa8zZndLFINsVs9RdaZQEwlO4xsPQLd+u
+	t2zbdmKEIqeRm+ADEmjhIyZstwVodY7scgrgZsOUlsBqq/eGcYo+7avJJ7U1I6r2Hob/sNSdv+G
+	rGizgZOItSmffAKUBY9RPGlaDjgXBNf8bmFmYxFKn
+X-Gm-Gg: ASbGncvMzOhvKrYsNTwJPpJ6siVCSh4oHLGR+6Dn9Du9nNRXG3jvIlEWmeShSKTWC3c
+	8NtIFkU+97NAb26bfaUtaIpsqjG6WEwvFjbB0iRoTqqnxz51NmV7Kr2RhqwnbVYFYqvkeo/62lg
+	qkRdUcvaA6MO0DTF7FGHhYLQ2QnKkF1RudCTyS5Xz2ieEyloAdr5eUdbKgjQamtjMRfBs23p4jw
+	0bU
+X-Google-Smtp-Source: AGHT+IG1idNpNGEh1fsqXcIdT6pKKaSZNTI8gzltM9eiWquOgOiErFBOQySl4sbq198P8GJJ+W4YyiKJNaw+aMDYCFo=
+X-Received: by 2002:ac8:5707:0:b0:480:dde:aa4c with SMTP id
+ d75a77b69052e-4a73d613ef7mr570401cf.4.1749850851523; Fri, 13 Jun 2025
+ 14:40:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS5PR04MB9856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 144eb972-0eb9-4acf-6a49-08ddaac2148d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c3hLclVFQmFSRzllb092VEdxaW8rbVJXUXBMK1pITHlTWnA4dFFIaGJHaUVG?=
- =?utf-8?B?Q0tyakF6bXNEYUpSNkkzYkwxT21TbmFvTFFsM1hVaERJS01Zb3dITU8zTDNu?=
- =?utf-8?B?bEVFR25lcFFUNC9hY3JWakUyWXd2R1d2eXlUZ3pBcHRYdzd2MjFVOVdmK2xp?=
- =?utf-8?B?dDV6cXlrK3FpNHZhWGx5dHJiVndhZm15ZDBXN1ZBTEc2Szc2MVpqUC83WVNM?=
- =?utf-8?B?clpaV1NWZm53VGRnbWhudFRTY0g1VE5pOHNUY1ZzTUkxWE9uVkZrQk5EN1NE?=
- =?utf-8?B?TGtIdElFQ2dhbjFGcncxOGNDRGw4QnpQYUh0N1c0OHZYQ3kxdG9XU243QTVw?=
- =?utf-8?B?WUZzVDNpa2x5cGVtMWVtZjNUTkMwY3d0cS92M0d0bnVKUS81VDk3a0c0ZWNy?=
- =?utf-8?B?NjhrbjNRamdtMGpZQmpYUTFLVzBrU2s5eUxZNC8vS1QxNlNMeVpod0c5MjJE?=
- =?utf-8?B?aHlJOE9OOTRzbjg3WnlaQXlBMTVTMGQxWDV0b2F4aW5oRUU1cWhwMHVTajF0?=
- =?utf-8?B?TVpiVFNTWGE3MUxpZi8rVk9oSnJIaGVFenpUeHg4TmcwaDF4SHhNQjhrQXBC?=
- =?utf-8?B?NkhQTElYYmJNM3pwaHVzVEJkMHNyUndHak1EMm05NmNMOWw5L3RmRFRaeGs4?=
- =?utf-8?B?b0VIOTJicEdxQXB4bnhlZkFZeWhaM2NvNmdVdHJrZ21yK1pCdEFZdmJZZHpO?=
- =?utf-8?B?QS9QS25EbzV1ancwRndmVWVXSzMxNXBMekZIOHZPL3pZMTdiTHdTdzdaUTJM?=
- =?utf-8?B?alFkbGRSMnFSckNTSnFERzduS1lGS1VvbjBtNEUvOEtuV1dUellHTmtEM3N6?=
- =?utf-8?B?a2dkNFdRa21rVEl1STlQYzB3bnlTK29UNlFDUloyWW1ETC9ueTdsVmJJMjNX?=
- =?utf-8?B?Y3hHcUJiWDd6WGFReVdWR2xDVGx1dUp1Q3hEOWlpVkc2K0txek9YVXkzQ2Q5?=
- =?utf-8?B?V3U0Z3l2dU8xQ2J4ZVF2QVNrZllJVmFwK0xETXhNMzVnTzh0ZURFd3hlbFdG?=
- =?utf-8?B?SGhMaVFmZVVMQnlXQjdvS09qWG9VNUJmRHJweHIyN3JrTjI0a2cwd0txajZw?=
- =?utf-8?B?VGJ5MFpNeUIxQ0Zhd3d6SnJxTVc4RTBjOXo5YzlCbHFqUzRXdXJlMHJCVUhZ?=
- =?utf-8?B?VEtoM2FVV3NBcnVpeU55ZXE5eEpuZW1rL3Y5YzhCTHpzQ2hwbHE3L05reFNo?=
- =?utf-8?B?aHpYaVBadmxLb1FiOWJvaWdUN282anhGQTVEbi91U3ZtdnZHVk0rUDZDdHdk?=
- =?utf-8?B?Y0ZFdGlTdXBlZENhNXYrN015VnlacUthK05iS3BJTkZmNUt2amp6MUNneElD?=
- =?utf-8?B?RFR1QWZneHhVN2kwcGRySlhGM0crbW1wUVR5VTZlMVhKaHZLMDJoSFk0Wldq?=
- =?utf-8?B?YzZyLzJqdEJTRDdkb05zVEFOcUVKdlZ2N0hDbDEzMFo1SzNJdU9CT0lpdnpl?=
- =?utf-8?B?dEFSOEJ5NU9qbGxpb0toZ2o0V0FFUjU2NjJMcCtyUDRRU3o5SEx1TVlCZEZL?=
- =?utf-8?B?cmZDNXZmYUtLblhueHFmSkFkUXUrUDNsMmt2MmdjYlJPOTFMU1R1RFVVOHRX?=
- =?utf-8?B?dHNDcjdDTUc0djExcGN6dUhEYUJnSmM4ZzBQVEhOWWpzYS8vQVJiRGl1SVpl?=
- =?utf-8?B?dEl3clBYQnZUOVYzbysvbU1WWC9scnlPc21BZUFPNzlpUE12OE03VUtTRWdH?=
- =?utf-8?B?WWFxL1VWOUFuMmpnbTRhVGUwLzdFaXE0cU5zQjE3L0NEQ3I0a2pPclAyUG41?=
- =?utf-8?B?TjlnR2pIN01HR2FXR2Z6NE8xOGk2NDlOelJXOE9KSFhjVU50cHJuRlBRRXRN?=
- =?utf-8?B?THhuOXlLQnhQVGNtdHRlVmVtd1Fpbm56V2s0aCtCM3VSNjVxVXZjT0xNSjRZ?=
- =?utf-8?B?UzlXQ0g5NFZiTVZWdHJEbGtnUlhWM0ZvdVlvZ1hmc2J5d3NOL3FmMExJZ1Za?=
- =?utf-8?B?V3ZRbUYrNFdjemszcnhObVRsYlZOWFRaOC9hSll4TnJwdUFTcjNIY1dPOE5G?=
- =?utf-8?B?N0kyTDJkSVF3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TmF0TU5JdXRJTXFZc1lzU2FlWTVEVVBWeE92YXptaXVXMHdpNmxPanhxTVFi?=
- =?utf-8?B?enRzdUVXUEZRWHpacm1GbHlUSWxzODhZUklFUEZxTUlqbFRMZWZJSEJMVjhz?=
- =?utf-8?B?MWpGU09JRnA1eE5qd1BWdXo4TkJLcFE4cVJtamdIUGw2R3pUN1JwZDNRbGhz?=
- =?utf-8?B?VnJNcGFhTVJYcXlBdFV1dXpzNDlTNVN3U1lTSEpoWktjandMUlMxYm9UY1Q0?=
- =?utf-8?B?d1VUTzBxaEZvL3h4RkhuVjVoT0RMeDdnekhzTUJvR05JZlo4aFhWc2xxTEd5?=
- =?utf-8?B?amoyZ3RnNUN0SytieTdFZHY3WFBFWE9RTkxPWUpwMTlXM0xQcEFNcDgwbzYw?=
- =?utf-8?B?L016cHV1U2daNFV3VlpKalNuK1FlaHJ6SlU4dzdKTEpkTENFV3NHbHdBeS9L?=
- =?utf-8?B?Q3JvVDlPNFZJS0RzQnZFMmlIMWdJclZ1MzVSUkJrMkhhOHFYWVJEN3g5bXUv?=
- =?utf-8?B?WmpPM1ZjTndOV04wL2k5aWhJNlBVaWU2bi9Qck1EQW1HRTNEL0R4OG54RFZU?=
- =?utf-8?B?eW5qb2xHbHVJaEovMnpqU2NTWFFNb2o0dGJGTkFoeDd0bmt4ZFBsSHVQbG1K?=
- =?utf-8?B?TzREQVM2eEZzMUNuaDlmOEZicU53cktqL3l0ZTFaa3loUjdFdENLRUdXeVNt?=
- =?utf-8?B?Q0p1eDFvcmNjc05acE9KVEk1RkpaSXZnSEU0WGhHNTV6bFRrZElyVFdEK1BL?=
- =?utf-8?B?S2hPTHB6UVdEUUZ0b1pKcjR1VGZ6WC9TSkcvZmd1Ym1HaGI0KzRCbXdNait5?=
- =?utf-8?B?SnJ2anNrclA1NmJhaTkzTnZEWUZyMWFuZHZnZUhBRFc3Vit2ZVFBL3NiOWo2?=
- =?utf-8?B?TmNXcllDWW5NQStqZ25FSHlEelRKcW9hUFNBOFQ4UFZYUWRwWG1VbWR2Uysx?=
- =?utf-8?B?QVFMK0RBZnZ0SHFTcG1hcFltellYRDNGS2pwTzlEWlJLa0tYUS9LbTVsT2Rv?=
- =?utf-8?B?bkVMdGVMd3ZSWjlFVVd0SjFuYW9KK2xLbzJsLzUySE1HUDByVndEMElCNk1x?=
- =?utf-8?B?N0xnSUQ2UUREV1hDWDNxdWl4UktaMHVMOGg4SmhpV2V4RitoMS9VUXRvUnZk?=
- =?utf-8?B?YnpEVGd6QWZBQis4ZVBiR2ZyRGlEQ3lKWTducWhOVWVDRkFhbE5mVHRUS0Nt?=
- =?utf-8?B?OHV0U1Mra0pnUThzV3VRUVZyekFwWjl4M003eGc1SHYvOEY1Smpua3VNQjJQ?=
- =?utf-8?B?alJ5REd5ZjNWNGJtRDhCQm94RjVrZ1AzbkYvcWtIN3phWXhYRmVNRksyaURh?=
- =?utf-8?B?cjdlbCtRNksxa3VYNTlMUzcydWNYdE83dXliM2Uzem9qQ2pFR3lCUWpmeWlw?=
- =?utf-8?B?L0tZYVZhaTVLZzNwU1dVREgrVEdjWXNjYkxSU1JzSHBPVW1RY1VGUnZSYnMr?=
- =?utf-8?B?SGhhd010QjVDZjJCZkhjcGdmK09zZmdaRDMxaHBUWlk1eDkwK2sxTDg3QThI?=
- =?utf-8?B?SGNCTmxwM2U3a2dkMnBxRnpwckVyZFdVdGhVbzBlVVFwdGRLeEpGNVM5UVlC?=
- =?utf-8?B?TmZRVG5CdnVxOGhSMWcrbGVIQXhPWFA2NjVSMXg1UEFZcmNiRERiajU0c3RY?=
- =?utf-8?B?ZUVCZlN4RVpMMjlGT243WDIzR2NjbHpRZ1I1amtvZnFrK0FnOUk4TlRRM1ox?=
- =?utf-8?B?SENTdnd4OEVmY1NCekRRK0JKWHpYTGxiL29LR0prMjQxTTR1NVpQSTl1U05J?=
- =?utf-8?B?UFI2TTR4L0tvUFp3eGRxd1poek1QT09Velp1Zi9QQkVHUll6d2dMcFZWam1a?=
- =?utf-8?B?aVpjYlU3WEFQemdQeFVNcTFseUN0MWFYUVFGOUc4K1NUVHUrWFA1WUVRYjhB?=
- =?utf-8?B?TklmQlU3UUR2dEY5ZjhyekNxSnljbkY0MVhwcmI2dS9vM3lXRjRuT2FySFlX?=
- =?utf-8?B?Y1RPNHVhWUtKQmpSK2xQcTJwQ1A4YTVrRnByWXVzMHF3dWRScUg5aG9vMTJq?=
- =?utf-8?B?a25PdW5nV2VMUFdlaXI1K3pDaXVNdWg3VXRKUDJxVnNjSlFjaFFhK25GSlND?=
- =?utf-8?B?VlFHUmpmM1ZLaE54WndtcllvbjlpS1hhTXpCSjdZTndNNmxmbDhzaFZrTnVx?=
- =?utf-8?B?cmJuVFQ0allZZWs1V1FET0w3ZHFkSDZzTVZieVUxNGZnbEdFZzBKNEpmdUNn?=
- =?utf-8?Q?kQVOXpC4ywzAsKP8ChdVjkc6q?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 144eb972-0eb9-4acf-6a49-08ddaac2148d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:34:30.3480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G3FMAtWpu5thGoOx+tXaai8c5M/S9pH1Gufkh09ntOViz5bUCX+Te3J9xmL48F2tlMymEW9cJhQ5RUU/VbJfpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9856
+References: <20250507232919.801801-1-ammarq@google.com> <56cc4h6daxofmooafh2ifquwtf37jajuaed7otdmkhozfnawz4@5zon6ttwegqf>
+In-Reply-To: <56cc4h6daxofmooafh2ifquwtf37jajuaed7otdmkhozfnawz4@5zon6ttwegqf>
+From: Ammar Qadri <ammarq@google.com>
+Date: Fri, 13 Jun 2025 14:40:40 -0700
+X-Gm-Features: AX0GCFs5j8js_AAU9D3E_39hMGItksLQLbdYIFR-SkVPVUr1wCAoLUTCmNHTdbA
+Message-ID: <CAFbbpayW+y8s3i4qxzHcoY0Yz5qeAhb7ziey=FayDiZbC_mm7w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Reduce verbosity of device enable messages
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove cpu_addr_fix() since it is no longer needed. The PCIe ranges
-property has been corrected in the DTS, and the DesignWare common code now
-handles address translation properly without requiring this workaround.
+Hi Mani,
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pcie-visconti.c | 13 -------------
- 1 file changed, 13 deletions(-)
+The issue we are experiencing is not caused from removing/reattaching
+the device driver, so the other messages have not been problematic.
 
-diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-index cdeac6177143c..9c3386c965948 100644
---- a/drivers/pci/controller/dwc/pcie-visconti.c
-+++ b/drivers/pci/controller/dwc/pcie-visconti.c
-@@ -171,20 +171,7 @@ static void visconti_pcie_stop_link(struct dw_pcie *pci)
- 	visconti_mpu_writel(pcie, val | MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
- }
- 
--/*
-- * In this SoC specification, the CPU bus outputs the offset value from
-- * 0x40000000 to the PCIe bus, so 0x40000000 is subtracted from the CPU
-- * bus address. This 0x40000000 is also based on io_base from DT.
-- */
--static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
--{
--	struct dw_pcie_rp *pp = &pci->pp;
--
--	return cpu_addr & ~pp->io_base;
--}
--
- static const struct dw_pcie_ops dw_pcie_ops = {
--	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
- 	.link_up = visconti_pcie_link_up,
- 	.start_link = visconti_pcie_start_link,
- 	.stop_link = visconti_pcie_stop_link,
+The vfio-pci driver is attached to each VF once. Clients in our system call
+open and close on the vfio-pci driver, respectively, at the start and
+end of their use,
+with fairly short-term tenancy, which ends up triggering these enable messa=
+ges.
+This message is proving challenging not only because they are not particula=
+rly
+useful,  but because they are causing log files to rotate once every 30 min=
+utes
+or so, and we lose a lot of other more valuable logging as a consequence.
+I'm open to other solutions, but in my opinion this preserves the message,
+without over-engineering and introducing throttling or other behaviour.
 
--- 
-2.34.1
 
+On Thu, Jun 12, 2025 at 11:12=E2=80=AFPM Manivannan Sadhasivam <mani@kernel=
+.org> wrote:
+>
+> On Wed, May 07, 2025 at 11:29:19PM +0000, Ammar Qadri wrote:
+> > Excessive logging of PCIe device enable operations can create significa=
+nt
+> > noise in system logs, especially in environments with a high number of
+> > such devices, especially VFs.
+> >
+> > High-rate logging can cause log files to rotate too quickly, losing
+> > valuable information from other system components.This commit addresses
+> > this issue by downgrading the logging level of "enabling device" messag=
+es
+> > from `info` to `dbg`.
+> >
+>
+> While I generally prefer reduced verbosity of the device drivers, demotin=
+g an
+> existing log to debug might surprise users. Especially in this case, the =
+message
+> is widely used to identify the enablement of a PCI device. So I don't thi=
+nk it
+> is a good idea to demote it to a debug log.
+>
+> But I'm surprised that this single message is creating much overhead in t=
+he
+> logging. I understand that you might have 100s of VFs in cloud environmen=
+ts, but
+> when a VF is added, a bunch of other messages would also get printed (res=
+ource,
+> IRQ, device driver etc...). Or you considered that this message is not th=
+at
+> important compared to the rest?
+>
+> - Mani
+>
+> > Signed-off-by: Ammar Qadri <ammarq@google.com>
+> > ---
+> >  drivers/pci/setup-res.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> > index c6657cdd06f67..be669ff6ca240 100644
+> > --- a/drivers/pci/setup-res.c
+> > +++ b/drivers/pci/setup-res.c
+> > @@ -516,7 +516,7 @@ int pci_enable_resources(struct pci_dev *dev, int m=
+ask)
+> >       }
+> >
+> >       if (cmd !=3D old_cmd) {
+> > -             pci_info(dev, "enabling device (%04x -> %04x)\n", old_cmd=
+, cmd);
+> > +             pci_dbg(dev, "enabling device (%04x -> %04x)\n", old_cmd,=
+ cmd);
+> >               pci_write_config_word(dev, PCI_COMMAND, cmd);
+> >       }
+> >       return 0;
+> > --
+> > 2.49.0.987.g0cc8ee98dc-goog
+> >
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
