@@ -1,65 +1,80 @@
-Return-Path: <linux-pci+bounces-29793-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29794-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C36DAD97EB
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 00:01:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E3F4AD97F4
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 00:03:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DA8A1BC0A51
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:01:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F00CB7ABE3B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:01:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DFFD244676;
-	Fri, 13 Jun 2025 22:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E08B28D8F5;
+	Fri, 13 Jun 2025 22:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOEU3psk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThKPydiD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097DD1547E7;
-	Fri, 13 Jun 2025 22:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB1D28D8D1;
+	Fri, 13 Jun 2025 22:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749852068; cv=none; b=QxcdSqa6OMTMtHduqpb2IDoygeH2wC1vB3tGo0fzpmn/Z6JrW9fZHGUz0q+5lnUQKyVciej1gfeSWIPo863IGMiF/k8zu1CRbYhDQbp1fMYBgWp9qLxQPBlgS6KKMLBmRjHuDVOMIg4kgBxT//XzmjetS7Vx9t2jomSCC0elKJc=
+	t=1749852186; cv=none; b=VUzFAf6Esdeq0PF/9xfeGOYtvPSbbupmg0ceLyrfiU3x+urCy7ziMUILjBoWUBgkDIS+6wypHQw/VbeRDuNew7goKUyX6GUCuR/J0pnHfzrcphZiagVRiSnqIPg9WLEvgmQr9fXsgmmk/IQwmHF0Fu4XU0iEPEnkEv1OgEb8Yfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749852068; c=relaxed/simple;
-	bh=Q4i3PDbu1STbHbbwGxaxWMYZqyXSfts65HVlG376auM=;
+	s=arc-20240116; t=1749852186; c=relaxed/simple;
+	bh=Cnh1qj3xnGvm2c9rFPL9dCenhTeSuMcmJMoF4BNsEZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TmG/I93zNRYRlAPhAH5PstWwZS4z1oCnOrn+GxqbrItIICDZVWImO8pSUDCOfPvdVAFRXV8kYamqsceJA8L7KAkCYxJSDuk1iOL0NUsVzgcvRt5fbTLQ8T1JPdhfFuyX7UEWTEt3FHY8BAOG19kiWdz75ZNDwWGNBYbiuTPcENo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOEU3psk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E85EC4CEE3;
-	Fri, 13 Jun 2025 22:01:06 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Dkr/mNbHsSl+xnJgCCM9p+g5rcpdtT4Hk2KeSbfXI5eOKU5BLgt2t7IXtL0pSm6Od/UUrjJwyoqwiNeE3Bv3OUaPortzY8o95lwuNsr+xxIJ4Tyl7KUvkmLWZvRnL74Qs/gNpVwQbem4vq0C2DyyV0y5f5XFFQ4JkUeVyVv2eVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThKPydiD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CCB1C4CEE3;
+	Fri, 13 Jun 2025 22:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749852066;
-	bh=Q4i3PDbu1STbHbbwGxaxWMYZqyXSfts65HVlG376auM=;
+	s=k20201202; t=1749852185;
+	bh=Cnh1qj3xnGvm2c9rFPL9dCenhTeSuMcmJMoF4BNsEZ8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rOEU3pskrhCUXIC9exM3DbnLO6Z58LFRstZMwm8FRcCm0ZE3V/XyBigJUPeR1L7LT
-	 H4Mv+8zYRbncG5Bz5Fa0BQYBdWY4TEB1xwBQxxGYK2t5w+/lgDSau+Ep34MGIuxF0f
-	 kebzay7p4cr0MApOqLaU+vvhAE+vjdFVIILnJevr9V6cm9/ByzXzBut0B+RIvYRF86
-	 w1ex6y4ew3wA8G3wuk0lqj803k4XuH1x+qx6wzWmjYASinLYCySaA5198ruiFBCMhx
-	 blCti/bipt1jx9/Scmwffs/CYkkqlMSap2iR5cA4Z1qQ7IlHE1CMvonlmUE02m6ooG
-	 7GwhfZIl2MAbw==
-Date: Fri, 13 Jun 2025 17:01:04 -0500
+	b=ThKPydiDv0ylaXBgHHJwkq4tkeKNssAJZ1hnaTj/WKjEDwKikiX4KxXRbf8eMwb+S
+	 6VAdIsq9HqGlWB+M66KdtHDjawWzkcTLlek49xiyM/LhcYwdW27yk0sQYsHx9v/W9U
+	 7RLWceKHQMhuGNaaTC2uunzHPDHYHKQ4tlzT9V/3I2NdG++H5gX4Lhtr9eq3+uVrQa
+	 GC9cMq/5+w5nyUSXEoaV8Di5HWP2l/5AEaMYgtWdbsZf45xbC9v2jT4IyIar4rUvLH
+	 yC4mUTLdCpoUxreAZoFf/L70V17qbb5ObeOeUa5cCKVxTHcV+c5NHiVreSTH5N3tLF
+	 cxvf8gV5MDtbA==
+Date: Fri, 13 Jun 2025 17:03:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-arm-kernel@lists.infradead.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Anand Moon <linux.amoon@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-Message-ID: <20250613220104.GA986309@bhelgaas>
+	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 1/5] PCI/MSI: Export pci_msix_prepare_desc() for
+ dynamic MSI-X allocations
+Message-ID: <20250613220304.GA986661@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,72 +83,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
+In-Reply-To: <1749651001-9436-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-On Thu, Jun 12, 2025 at 03:16:45PM +0200, Geert Uytterhoeven wrote:
-> On Sat, 7 Jun 2025 at 21:46, Marek Vasut
-> <marek.vasut+renesas@mailbox.org> wrote:
-> > Add the ability to enable optional slot clock into the pwrctrl driver.
-> > This is used to enable slot clock in split-clock topologies, where the
-> > PCIe host/controller supply and PCIe slot supply are not provided by
-> > the same clock. The PCIe host/controller clock should be described in
-> > the controller node as the controller clock, while the slot clock should
-> > be described in controller bridge/slot subnode.
-> >
-> > Example DT snippet:
-> > &pcicontroller {
-> >     clocks = <&clk_dif 0>;             /* PCIe controller clock */
-> >
-> >     pci@0,0 {
-> >         #address-cells = <3>;
-> >         #size-cells = <2>;
-> >         reg = <0x0 0x0 0x0 0x0 0x0>;
-> >         compatible = "pciclass,0604";
-> >         device_type = "pci";
-> >         clocks = <&clk_dif 1>;         /* PCIe slot clock */
-> >         vpcie3v3-supply = <&reg_3p3v>;
-> >         ranges;
-> >     };
-> > };
-> >
-> > Example clock topology:
-> >  ____________                    ____________
-> > |  PCIe host |                  | PCIe slot  |
-> > |            |                  |            |
-> > |    PCIe RX<|==================|>PCIe TX    |
-> > |    PCIe TX<|==================|>PCIe RX    |
-> > |            |                  |            |
-> > |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> > '------------'      ||  ||      '------------'
-> >                     ||  ||
-> >  ____________       ||  ||
-> > |  9FGV0441  |      ||  ||
-> > |            |      ||  ||
-> > |   CLK DIF0<|======''  ||
-> > |   CLK DIF1<|==========''
-> > |   CLK DIF2<|
-> > |   CLK DIF3<|
-> > '------------'
-> >
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+On Wed, Jun 11, 2025 at 07:10:01AM -0700, Shradha Gupta wrote:
+> For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
+> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+> to prepare the MSI descriptor is also needed.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
+> MSI-X vector allocation.
 > 
-> Bartosz: Any chance you can apply this patch to an immutable branch,
-> so I can merge that before taking the other two patches?
-> The alternative is to postpone the DTS patches for one cycle.
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-I applied this patch only to pci/pwrctrl for v6.17 and made a note
-that the commit should be immutable:
+If you need it; I see you already have a branch at
+https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 
-  66db1d3cbdb0 ("PCI/pwrctrl: Add optional slot clock for PCI slots")
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-We will likely add other pwrctrl patches to this branch during this
-cycle; I assume that will be OK as long as 66db1d3cbdb0 remains
-untouched, right?
-
-Bjorn
+> ---
+>  drivers/pci/msi/irqdomain.c | 5 +++--
+>  include/linux/msi.h         | 2 ++
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> index c05152733993..765312c92d9b 100644
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
+>  	pci_msix_unmask(irq_data_get_msi_desc(data));
+>  }
+>  
+> -static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> -				  struct msi_desc *desc)
+> +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> +			   struct msi_desc *desc)
+>  {
+>  	/* Don't fiddle with preallocated MSI descriptors */
+>  	if (!desc->pci.mask_base)
+>  		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
+>  
+>  static const struct msi_domain_template pci_msix_template = {
+>  	.chip = {
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 6863540f4b71..7f254bde5426 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -706,6 +706,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					     struct irq_domain *parent);
+>  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+>  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
+> +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> +			   struct msi_desc *desc);
+>  #else /* CONFIG_PCI_MSI */
+>  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
+>  {
+> -- 
+> 2.34.1
+> 
 
