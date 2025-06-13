@@ -1,96 +1,204 @@
-Return-Path: <linux-pci+bounces-29725-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29726-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4668AD8EB8
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 16:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A552AD8EB0
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 16:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 006171BC4673
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 14:02:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C396D188830E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 14:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39B519CD01;
-	Fri, 13 Jun 2025 13:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9441A23AD;
+	Fri, 13 Jun 2025 13:55:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7FD156F5E;
-	Fri, 13 Jun 2025 13:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84AF619047A;
+	Fri, 13 Jun 2025 13:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822774; cv=none; b=Ok3J17SDVAdo1rO+NuVE9lNo4Hhphxfqzp3nYlAjqIqD5/ewltmCTn2Jmp+q4lh4J0o04+xj4U0lQaYZLibQUa7lfJXRsh2mzOcN+da1WJPmw/9FceLRE0J2enT82go1QDCqbFZWFxCG3tHwmX2C8c8MrrU0XzGcIdnM1//AuMU=
+	t=1749822906; cv=none; b=qEPc3qbgezMqvF70dIuATB+qc/TzSKG+myOt3UjXfGr93fRKjFZRpNBjhsYXDDIw1esj7r66YqHnwMXS5/n2Lvb01tJuPSjrwPRZhxsTKXWWtCCoOGjVBjo8z+o3X8r3/fSx73bZatNSsx7bxGmG1+O5PPkufMP9a0NoHIf+mtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822774; c=relaxed/simple;
-	bh=cWb5O919iJ5GUz1RPBsizB20JDHxE/ASBUV9zv+N5lQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dcRnjrc7AdI/QdB/w/nssfAoHCTjIVd0hYD72f+fq75DkbSJVjVhZZBOodUeybgVmSqavlXg+gfZLOHnm+ZhV+UM2OtyNBvZj3YiSIgRLWU93+/qsjSo1wWcG/YIlLktVBrROCeXS5Gax92tPEKeUa36wiSxGgbV7OeDL8W5Oxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 0866620091AE;
-	Fri, 13 Jun 2025 15:45:36 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E75D669ABA; Fri, 13 Jun 2025 15:45:35 +0200 (CEST)
-Date: Fri, 13 Jun 2025 15:45:35 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: grwhyte@linux.microsoft.com, linux-pci@vger.kernel.org,
-	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org,
-	bhelgaas@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-Message-ID: <aEwrfy63cvBLr5yc@wunner.de>
-References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
- <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
+	s=arc-20240116; t=1749822906; c=relaxed/simple;
+	bh=ENX9QtWbYw4Rxu2kw33jFBDaHiweTvxpiRQiKM+M9rg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJL9v8S3AAGFeCNuGcmvE0k1QAsJ5ZoPDt1eQij0FNFeIh6k2XeAZOR2ynpdS5tEqyvamD3j4nQQNZ2zJZy8o6DzCvHfX326vfjogliVkntlGZSnakBsf3gFwFo5l5GKbzFLl/9+b3kBV72PAS1PfCNip70XgpZ/3Xk7Vp4cOHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 775451C0A;
+	Fri, 13 Jun 2025 06:54:42 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A0C03F59E;
+	Fri, 13 Jun 2025 06:54:52 -0700 (PDT)
+Message-ID: <1437fe89-341b-4b57-b1fa-a0395081e941@arm.com>
+Date: Fri, 13 Jun 2025 14:54:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/20] bitfield: introduce HWORD_UPDATE bitfield macros
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Sandy Huang
+ <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-pm@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev,
+ linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+ kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+ <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 05:12:48PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
-> > Add a new flr_delay member of the pci_dev struct to allow customization of
-> > the delay after FLR for devices that do not support immediate readiness
-> > or readiness time reporting. The main scenario this addresses is VF
-> > removal and rescan during runtime repairs and driver updates, which,
-> > if fixed to 100ms, introduces significant delays across multiple VFs.
-> > These delays are unnecessary for devices that complete the FLR well
-> > within this timeframe.
-> > 
+On 2025-06-12 7:56 pm, Nicolas Frattaroli wrote:
+> Hardware of various vendors, but very notably Rockchip, often uses
+> 32-bit registers where the upper 16-bit half of the register is a
+> write-enable mask for the lower half.
 > 
-> I don't think it is acceptable to *reduce* the standard delay just
-> because your device completes it more quickly. Proper way to reduce
-> the timing would be to support FRS as you said, but we cannot have
-> arbitrary delays for random devices.
+> This type of hardware setup allows for more granular concurrent register
+> write access.
+> 
+> Over the years, many drivers have hand-rolled their own version of this
+> macro, usually without any checks, often called something like
+> HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
+> semantics between them.
+> 
+> Clearly there is a demand for such a macro, and thus the demand should
+> be satisfied in a common header file.
+> 
+> Add two macros: HWORD_UPDATE, and HWORD_UPDATE_CONST. The latter is a
+> version that can be used in initializers, like FIELD_PREP_CONST. The
+> macro names are chosen to not clash with any potential other macros that
+> drivers may already have implemented themselves, while retaining a
+> familiar name.
 
-To be fair, we already have that for certain devices:
+Nit: while from one angle it indeed looks similar, from another it's 
+even more opaque and less meaningful than what we have already. 
+Personally I cannot help but see "hword" as "halfword", so logically if 
+we want 32+32-bit or 8+8-bit variants in future those would be 
+WORD_UPDATE() and BYTE_UPDATE(), right? ;)
 
-The quirk delay_250ms_after_flr() is referenced by three different
-Vendor ID / Device ID combos and *lengthens* the delay after FLR.
-
-It's probably difficult to justify rejecting custom delays for
-certain MANA devices, even though we allowed them for three other
-devices.
-
-The proposed patch introduces a generic solution which avoids
-further cluttering up pci_dev_reset_methods[] with extra entries,
-so I think it's an approach worth considering.
-
-There are a bunch of nits in the proposed patches, such as "pci"
-not being capitalized, but the general approach seems fine to me.
+It's also confounded by "update" not actually having any obvious meaning 
+at this level without all the implicit usage context. FWIW my suggestion 
+would be FIELD_PREP_WM_U16, such that the reader instantly sees 
+"FIELD_PREP with some additional semantics", even if they then need to 
+glance at the kerneldoc for clarification that WM stands for writemask 
+(or maybe WE for write-enable if people prefer). Plus it then leaves 
+room to easily support different sizes (and potentially even bonkers 
+upside-down Ux_WM variants?!) without any bother if we need to.
 
 Thanks,
+Robin.
 
-Lukas
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>   include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+> 
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 6d9a53db54b66c0833973c880444bd289d9667b1..b90d88db7405f95b78cdd6f3426263086bab5aa6 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -8,6 +8,7 @@
+>   #define _LINUX_BITFIELD_H
+>   
+>   #include <linux/build_bug.h>
+> +#include <linux/limits.h>
+>   #include <linux/typecheck.h>
+>   #include <asm/byteorder.h>
+>   
+> @@ -142,6 +143,52 @@
+>   		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+>   	)
+>   
+> +/**
+> + * HWORD_UPDATE() - prepare a bitfield element with a mask in the upper half
+> + * @_mask: shifted mask defining the field's length and position
+> + * @_val:  value to put in the field
+> + *
+> + * HWORD_UPDATE() masks and shifts up the value, as well as bitwise ORs the
+> + * result with the mask shifted up by 16.
+> + *
+> + * This is useful for a common design of hardware registers where the upper
+> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
+> + * register, a bit in the lower half is only updated if the corresponding bit
+> + * in the upper half is high.
+> + */
+> +#define HWORD_UPDATE(_mask, _val)					 \
+> +	({								 \
+> +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		 \
+> +				 "HWORD_UPDATE: ");			 \
+> +		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask)) | \
+> +		((_mask) << 16);					 \
+> +	})
+> +
+> +/**
+> + * HWORD_UPDATE_CONST() - prepare a constant bitfield element with a mask in
+> + *                        the upper half
+> + * @_mask: shifted mask defining the field's length and position
+> + * @_val:  value to put in the field
+> + *
+> + * HWORD_UPDATE_CONST() masks and shifts up the value, as well as bitwise ORs
+> + * the result with the mask shifted up by 16.
+> + *
+> + * This is useful for a common design of hardware registers where the upper
+> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
+> + * register, a bit in the lower half is only updated if the corresponding bit
+> + * in the upper half is high.
+> + *
+> + * Unlike HWORD_UPDATE(), this is a constant expression and can therefore
+> + * be used in initializers. Error checking is less comfortable for this
+> + * version.
+> + */
+> +#define HWORD_UPDATE_CONST(_mask, _val)					  \
+> +	(								  \
+> +		FIELD_PREP_CONST(_mask, _val) |				  \
+> +		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
+> +		 ((_mask) << 16))					  \
+> +	)
+> +
+>   /**
+>    * FIELD_GET() - extract a bitfield element
+>    * @_mask: shifted mask defining the field's length and position
+> 
+
 
