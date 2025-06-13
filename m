@@ -1,54 +1,56 @@
-Return-Path: <linux-pci+bounces-29628-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29629-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 583B0AD817C
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 05:13:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ADC8AD819E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 05:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09ED216BA71
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 03:13:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEEBD7AA7C4
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 03:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5788D257458;
-	Fri, 13 Jun 2025 03:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thlaY0oS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F133D21765E;
+	Fri, 13 Jun 2025 03:30:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243F923D2A4
-	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 03:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFAB246791;
+	Fri, 13 Jun 2025 03:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749784368; cv=none; b=tWoObOHdR0e586OLBEYyMHN3IVjnmhONSbgg0qQrtFz/Mz+bjk22IUj4CR4EhHp+Rdaisw/g/ww3CQW4WjSWLwmc6/Dwyx3dU9qwAM8ILe/gCmjN52oi6T1iXG97PPXJ6ZEmOzi289dC67pVKfX/IMjqheEuyqwxKeiOkMYpX7I=
+	t=1749785406; cv=none; b=QjGAGA/JuPHdn/ZEO/TH7SHHCZiG/bP7nhM6khQ+BbeUkcvljsqHyahjsfO7/aHSDet/QGI2SZrTk9m5z6K1s3Pd2kPr1640Pw8KyfM1gXnWPjolFpeA+uCDQTETZc0ixt/SWdzGuKbAVBa3gqwcMlqA0rJ96xT1FhQSxEpz22I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749784368; c=relaxed/simple;
-	bh=lBDB7ObzOtutcnYZ+ZSuPxjPekEelrLTTsGfWEnUZMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KfetunUm+a90mWBd1Q+bXqk51bkk97cx2QRHQ7yii3ULSeSPA7tiWaIRhyzslOBfDY2FCaUSryQi0Mv7PEj/yEDzra1H8M6VGrYq1Jsyw7KK6ZFnrVU+m4cJdGUFC5DJLI1ylh3ZqoS49DnN3ULfydf3hZn57vjI6EcDOjW5G/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thlaY0oS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 385B4C4CEEA;
-	Fri, 13 Jun 2025 03:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749784367;
-	bh=lBDB7ObzOtutcnYZ+ZSuPxjPekEelrLTTsGfWEnUZMY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=thlaY0oScuC6A8SXXJXBA7TcJgQl8C3ErM1A14rppeIeegCPjcLGF+bVpqcNHctnj
-	 ECWMeWFRUJ3V3GsQR/DOZCWASH5OwbFkliBkZ5ttOi36Cy8p2yqF0PZ69VAp07aezc
-	 KUc7RJKmtE6T9+GEdlIp7e80F3LGqdGbcTjcxyo39wo4m4iHZVQmEr5dk7alfebM6f
-	 2lXwJlgXGdCA9Vk6FoYQocZj5e0AVZkPgXULy1k13MlRVsCbN19VVxp6L515izsZuF
-	 mZn2Ue/HWEr2/cO+PLmI/7jTOkCXUCpcy5Te3vtKjiHrTHsle/CnitzKOTcJDZDCWb
-	 qQjJVjLod7Klw==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	bhelgaas@google.com
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/VGA: Look at all PCI display devices in VGA arbiter
-Date: Thu, 12 Jun 2025 22:12:14 -0500
-Message-ID: <20250613031215.615885-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749785406; c=relaxed/simple;
+	bh=au/m1NAEX1zIiTs2rnxuBj0gzG9egat9fu3VofqSb5E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=URjQT1oy0x6KnluMBjQXvGWBxN1yD0zZWc5bBOVZ8vwD+oUKF9/gxfqOOA11ZNARTdvpb+GW6i6NAvsgJzvm6R8Gw2CJY/lju2AJkJzi0RJZalJhKLA7z07TcIZpt71XWf98Y5tdzssL1sIP5CE0WfFvsRUFm4DlTWwBgaPWJZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 13 Jun
+ 2025 11:30:01 +0800
+Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Fri, 13 Jun 2025 11:30:01 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+	<mani@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
+	<vkoul@kernel.org>, <kishon@kernel.org>, <linus.walleij@linaro.org>,
+	<p.zabel@pengutronix.de>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>
+CC: <elbadrym@google.com>, <romlem@google.com>, <anhphan@google.com>,
+	<wak@google.com>, <yuxiaozhang@google.com>, <BMC-SW@aspeedtech.com>
+Subject: [PATCH 0/7] Add ASPEED PCIe Root Complex support
+Date: Fri, 13 Jun 2025 11:29:54 +0800
+Message-ID: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,184 +58,50 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
 
-On an A+N mobile system the APU is not being selected by some desktop
-environments for any rendering tasks. This is because the neither GPU
-is being treated as "boot_vga" but that is what some environments use
-to select a GPU [1].
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+- Add PCIe RC PERST pin group to aspeed-g6 pinctrl
+- Implement ASPEED PCIe Root Complex host controller driver
 
-The VGA arbiter driver only looks at devices that report as PCI display
-VGA class devices. Neither GPU on the system is a display VGA class
-device:
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
 
-c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
-c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+Feedback and review are welcome.
 
-So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
-function already has some handling for integrated GPUs by looking at the
-ACPI HID entries, so if all PCI display class devices are looked at it
-actually can detect properly with this device ordering.  However if there
-is a different ordering it could flag the wrong device.
+Jacky Chou (7):
+  dt-bindings: phy: Add document for ASPEED PCIe PHY
+  dt-bindings: pci: Add document for ASPEED PCIe Config
+  dt-bindings: pci: Add document for ASPEED PCIe RC
+  ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST ctrl pin
+  ARM: dts: aspeed-g6: Add PCIe RC node
+  pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+  pci: aspeed: Add ASPEED PCIe host controller driver
 
-Modify the VGA arbiter code and matching sysfs file entries to examine all
-PCI display class devices. After every device is added to the arbiter list
-make a pass on all devices and explicitly check whether one is integrated.
+ .../bindings/pci/aspeed-pcie-cfg.yaml         |   41 +
+ .../devicetree/bindings/pci/aspeed-pcie.yaml  |  159 +++
+ .../bindings/phy/aspeed-pcie-phy.yaml         |   38 +
+ MAINTAINERS                                   |   10 +
+ .../boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |   53 +
+ drivers/pci/controller/Kconfig                |   13 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-aspeed.c          | 1039 +++++++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    |   12 +-
+ 10 files changed, 1370 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie-cfg.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+ create mode 100644 drivers/pci/controller/pcie-aspeed.c
 
-This will cause all GPUs to gain a `boot_vga` file, but the correct device
-(APU in this case) will now show `1` and the incorrect device shows `0`.
-Userspace then picks the right device as well.
-
-Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-RFC->v1:
- * Add tag
- * Drop unintended whitespace change
- * Use vgaarb_dbg instead of vgaarb_info
----
- drivers/pci/pci-sysfs.c |  2 +-
- drivers/pci/vgaarb.c    | 48 +++++++++++++++++++++++++++--------------
- include/linux/pci.h     | 15 +++++++++++++
- 3 files changed, 48 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..c314ee1b3f9ac 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
-+	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
- 		return a->mode;
- 
- 	return 0;
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index 78748e8d2dbae..0eb1274d52169 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -140,6 +140,7 @@ void vga_set_default_device(struct pci_dev *pdev)
- 	if (vga_default == pdev)
- 		return;
- 
-+	vgaarb_dbg(&pdev->dev, "selecting as VGA boot device\n");
- 	pci_dev_put(vga_default);
- 	vga_default = pci_dev_get(pdev);
- }
-@@ -751,6 +752,31 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
- 		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
- }
- 
-+static
-+void vga_arbiter_select_default_device(void)
-+{
-+	struct pci_dev *candidate = vga_default_device();
-+	struct vga_device *vgadev;
-+
-+	list_for_each_entry(vgadev, &vga_list, list) {
-+		if (vga_is_boot_device(vgadev)) {
-+			/* check if one is an integrated GPU, use that if so */
-+			if (candidate) {
-+				if (vga_arb_integrated_gpu(&candidate->dev))
-+					break;
-+				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
-+					candidate = vgadev->pdev;
-+					break;
-+				}
-+			} else
-+				candidate = vgadev->pdev;
-+		}
-+	}
-+
-+	if (candidate)
-+		vga_set_default_device(candidate);
-+}
-+
- /*
-  * Currently, we assume that the "initial" setup of the system is not sane,
-  * that is, we come up with conflicting devices and let the arbiter's
-@@ -816,23 +842,17 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
- 		bus = bus->parent;
- 	}
- 
--	if (vga_is_boot_device(vgadev)) {
--		vgaarb_info(&pdev->dev, "setting as boot VGA device%s\n",
--			    vga_default_device() ?
--			    " (overriding previous)" : "");
--		vga_set_default_device(pdev);
--	}
--
- 	vga_arbiter_check_bridge_sharing(vgadev);
- 
- 	/* Add to the list */
- 	list_add_tail(&vgadev->list, &vga_list);
- 	vga_count++;
--	vgaarb_info(&pdev->dev, "VGA device added: decodes=%s,owns=%s,locks=%s\n",
-+	vgaarb_dbg(&pdev->dev, "VGA device added: decodes=%s,owns=%s,locks=%s\n",
- 		vga_iostate_to_str(vgadev->decodes),
- 		vga_iostate_to_str(vgadev->owns),
- 		vga_iostate_to_str(vgadev->locks));
- 
-+	vga_arbiter_select_default_device();
- 	spin_unlock_irqrestore(&vga_lock, flags);
- 	return true;
- fail:
-@@ -1499,8 +1519,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
- 
- 	vgaarb_dbg(dev, "%s\n", __func__);
- 
--	/* Only deal with VGA class devices */
--	if (!pci_is_vga(pdev))
-+	/* Only deal with display devices */
-+	if (!pci_is_display(pdev))
- 		return 0;
- 
- 	/*
-@@ -1548,12 +1568,8 @@ static int __init vga_arb_device_init(void)
- 
- 	/* Add all VGA class PCI devices by default */
- 	pdev = NULL;
--	while ((pdev =
--		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
--			       PCI_ANY_ID, pdev)) != NULL) {
--		if (pci_is_vga(pdev))
--			vga_arbiter_add_pci_device(pdev);
--	}
-+	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
-+		vga_arbiter_add_pci_device(pdev);
- 
- 	pr_info("loaded\n");
- 	return rc;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 05e68f35f3923..e77754e43c629 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -744,6 +744,21 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
- 	return false;
- }
- 
-+/**
-+ * pci_is_display - Check if a PCI device is a display controller
-+ * @pdev: Pointer to the PCI device structure
-+ *
-+ * This function determines whether the given PCI device corresponds
-+ * to a display controller. Display controllers are typically used
-+ * for graphical output and are identified based on their class code.
-+ *
-+ * Return: true if the PCI device is a display controller, false otherwise.
-+ */
-+static inline bool pci_is_display(struct pci_dev *pdev)
-+{
-+	return (pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY;
-+}
-+
- #define for_each_pci_bridge(dev, bus)				\
- 	list_for_each_entry(dev, &bus->devices, bus_list)	\
- 		if (!pci_is_bridge(dev)) {} else
 -- 
 2.43.0
 
