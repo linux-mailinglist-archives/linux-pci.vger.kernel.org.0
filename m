@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-29665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E780AD8870
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:50:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AA5EAD887A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:51:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C5AD3A639B
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:50:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EECA17CAB8
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:51:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB75291C37;
-	Fri, 13 Jun 2025 09:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB3829B233;
+	Fri, 13 Jun 2025 09:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EguPdziN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9TsuvXO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2981C84B9;
-	Fri, 13 Jun 2025 09:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F72DA75E;
+	Fri, 13 Jun 2025 09:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808239; cv=none; b=LJFe+X8zFlCwBJkrjuAp6HFpZQp4osFgKsVnNdqVus0QcWJlGdpGNNrVoFzmQxea+D91JohxM+VDeKOGvl5bOnV8RZ37bid9ukD52YgUVfBUMedsFW+BwlRLYwP0V5Kabj5+HPtzseZYI7O2Lx/7fG/dvZfZ73SQLteY8gzd830=
+	t=1749808273; cv=none; b=Za9QW262UwLMRNZXT7kdezmSKQXSv53LfvUKKXIOpQov2X6WIolK7AeUj4p5DDr2fB8KTETi1s2YAYUKTRhpiwS0SP5WGgNvhnp68q2EwyQXv83N5Zm5h5zcXQkWqoweatAMGEpRteVIVHscrqabVnfa2w30tVkaewdRSmJaxk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808239; c=relaxed/simple;
-	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	s=arc-20240116; t=1749808273; c=relaxed/simple;
+	bh=rYOisCnlWBaaGeYPQE6dgdjQ9PsJAUikQFuHw9C8lZ0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iKN8xjpbXu3604SAlCoky5V25f3av6RWHnfeoaORSgqWyezYnc0s3yQ4IN83Mc5SzO0nWfcyCdhf++F1yKmKnWawZ5uDsEYqhmp8yu3BQjMqFNt80nFl43MTy5nbKIoFyyVYPj2A2YTl8mGExrejMqeK4sPOsyhROxjJD1Xuq4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EguPdziN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EF6C4CEE3;
-	Fri, 13 Jun 2025 09:50:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=dwF5vlUtcxjNitGB9HYuqLRsNKenmfB3XZHv/dDiWnrpnEzgIBhMvSP6CYb1qnWe0CHQkXze44KunmkNFI3QDj7+r/corBBkgs2pEW0gv6+EUF0zuXbzwXB816KWuwE4A4YFufBaEujMg13fYKlYBEPjRpJlNZc+XlXtNzRWpto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9TsuvXO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E083EC4CEE3;
+	Fri, 13 Jun 2025 09:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749808236;
-	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	s=k20201202; t=1749808272;
+	bh=rYOisCnlWBaaGeYPQE6dgdjQ9PsJAUikQFuHw9C8lZ0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EguPdziNfQVFXhGugXO7CxVDI9hmhHEse2V8d9DfmaJLP2zPCWPiwDCqETugb6aqg
-	 EovPSvD8xMKL6QL2InygSOr54EKhGof73pM1Sw26ZxLwBJp0iDPCWzXQPBoy2735ny
-	 +CkixnfG+TpDATOVwDAuoRdDpyXsEBJ6g/aW0oasj+3Q6ssDs1OU2v+UKnJcc85AlP
-	 SAYD3d+JNmJs1aIND1eplli51ZAh6hEB6EcmkGRWqGOYKnrheIUj87KvByxUndUVau
-	 /j0KhctSzqmpk6Gt6djtxuf/+M9582WOduahXLRpD2hXHINaVWyijCpqgdrgPAEPNU
-	 q403k+tQENT6w==
-Message-ID: <b387a2ed-af47-45a9-871e-d43a66e41f21@kernel.org>
-Date: Fri, 13 Jun 2025 11:50:28 +0200
+	b=k9TsuvXO2mwjb2Xjr45tABkcMnNJqse6zW4DjkKEHKk4QKDckpAzXFM6ZkhADQWEN
+	 gLwspUevhzKfyr1wr0oymLToBUpW+JrcLgr3J9hVufaa/s+BhwyPzxxu4dnLE5WRP+
+	 3AfiwA7FWojm2UqOo4ZA+0vwvoS2En6+qR9uIKkMC+WY4o/BCHfueHFxlfwzrElag0
+	 UiX1LwBxmmi/DYI/nM6Z73X/prRbXIQLhPULLBcC2JzZCuBUGOcJos7k2txfuu5Xuv
+	 W+A6Y+37EXEfIxHfa/XfUPNUj/5OBoLmWHzpkx1ThKbJU+E1OUs9ZFCJ4XpylDwqQ+
+	 I7zGAyfk5rZFQ==
+Message-ID: <9be50674-357d-45d8-9117-b66922b46d25@kernel.org>
+Date: Fri, 13 Jun 2025 11:51:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] dt-bindings: pci: Add document for ASPEED PCIe RC
+Subject: Re: [PATCH 4/7] ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST ctrl
+ pin
 To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
  lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
@@ -63,7 +64,7 @@ To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
 Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
  wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
 References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+ <20250613033001.3153637-5-jacky_chou@aspeedtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,198 +110,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+In-Reply-To: <20250613033001.3153637-5-jacky_chou@aspeedtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/06/2025 05:29, Jacky Chou wrote:
-> Add device tree binding documentation for the ASPEED PCIe Root Complex
-> controller. This binding describes the required and optional properties
-> for configuring the PCIe RC node, including support for syscon phandles,
-> MSI, clocks, resets, and interrupt mapping. The schema enforces strict
-> property validation and provides a comprehensive example for reference.
+> Add pinctrl support for PCIe RC PERST pin.
 > 
 > Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 > ---
->  .../devicetree/bindings/pci/aspeed-pcie.yaml  | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+>  arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> new file mode 100644
-> index 000000000000..5b50a9e2d472
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-
-Same comments.
-
-> @@ -0,0 +1,159 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/aspeed-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED PCIe Root Complex Controller
-> +
-> +maintainers:
-> +  - Jacky Chou <jacky_chou@aspeedtech.com>
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
+> index 289668f051eb..a93e15c64a4b 100644
+> --- a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
+> @@ -2,6 +2,11 @@
+>  // Copyright 2019 IBM Corp.
+>  
+>  &pinctrl {
+> +	pinctrl_pcierc1_default: pcierc1_default {
 
 
-> +  Device tree binding for the ASPEED PCIe Root Complex controller.
-
-No, describe the hardware. Your current description is 100% redundant.
-It is never useful to say in DT binding description that it is a DT
-binding. It cannot be anything else, can it?
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2600-pcie
-> +      - aspeed,ast2700-pcie
-> +
-> +  device_type:
-> +    const: pci
-
-You need to include proper pci schema and drop all redundant properties.
-
-Look at other schemas.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ranges:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    description: IntX and MSI interrupt
-
-Need to list the items. Look at other schemas.
-
-> +
-> +  resets:
-> +    items:
-> +      - description: Module reset
-> +      - description: PCIe PERST
-> +
-> +  reset-names:
-> +    items:
-> +      - const: h2x
-> +      - const: perst
-> +
-> +  msi-parent: true
-> +
-> +  msi_address:
-
-Where is this property defined?  I do not see in kernel nor in dtschema.
-Drop and use existing properties. I am not even talking about coding
-style...
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: MSI address
-> +
-> +  aspeed,ahbc:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED AHBC syscon.
-
-For what purpose?
-
-> +
-> +  aspeed,pciecfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED PCIe configuration syscon.
-
-For what purpose?
-
-> +
-> +  aspeed,pciephy:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED PCIe PHY syscon.
-
-For what purpose?
-
-> +
-> +  clocks:
-> +    description: PCIe BUS clock
-
-Missing constraints.
-
-Just open any other  binding and do not implement things diferently.
-
-> +
-> +  interrupt-controller:
-> +    description: Interrupt controller node for handling legacy PCI interrupts.
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 0
-> +      '#interrupt-cells':
-> +        const: 1
-> +      interrupt-controller: true
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#interrupt-cells'
-> +      - interrupt-controller
-> +
-> +    additionalProperties: false
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2600-pcie
-> +    then:
-> +      required:
-> +        - aspeed,ahbc
-
-else: make it false
-
-> +
-> +required:
-> +  - interrupts
-> +  - bus-range
-> +  - ranges
-> +  - resets
-> +  - reset-names
-> +  - msi-parent
-> +  - msi-controller
-> +  - aspeed,pciephy
-> +  - aspeed,pciecfg
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - interrupt-controller
-
-Messed order, missing properties. Open other bindings...
-
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/ast2600-clock.h>
-> +
-> +    apb {
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      pcie0: pcie@1e7700C0 {
-> +        compatible = "aspeed,ast2600-pcie";
-> +        device_type = "pci";
-> +        reg = <0x1e7700C0 0x40>;
-
-Lower case hex. Please follow carefully DTS coding style.
+No underscores in node names. Follow finally DTS coding style. You have
+been told that in previous patchsets already.
 
 
 
