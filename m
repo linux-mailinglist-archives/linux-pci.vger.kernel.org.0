@@ -1,82 +1,82 @@
-Return-Path: <linux-pci+bounces-29657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29658-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8B5DAD8777
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:14:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 925DFAD8786
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:18:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 615143ABAF0
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:14:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4378517A3CB
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:18:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C81280CC8;
-	Fri, 13 Jun 2025 09:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 683F2279DB1;
+	Fri, 13 Jun 2025 09:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drMl2ouI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b89QU2XC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3477279DCC
-	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 09:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8236426B77B
+	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 09:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806071; cv=none; b=PzMl/nssjRGHNv3bG5GpGG70hUIhvfe1tclL4L9l0Z+seXfaleqny9QFwRzo9OzQPUv4IojB9uKIK40YFBYvbwz7IORnRDpI9rHVXVOaMBAcamfzEo7p3Alv+HB7byQ7q297F62X3nIEUox2X6ur19f9k3LaZJHNCBcY6kwXzJM=
+	t=1749806302; cv=none; b=GFF6OS21BDUvj+MUK9DfmZcR34+jdgwVa+5GM4lIFU35ZstnfdNdazKN1VKplXGHiuf1quh6wvkfGum9lwvFqEbY0Mf6h7V72m7FNL+1zbrZfyFrDbQV9bRFLv6k73fTr9l2pfMeV1uzynUf0acmssh6T2X7m/RH1nCbkBXXF84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806071; c=relaxed/simple;
-	bh=U4FrUnxsS+O88EpMRs/X5M2gy9Ob8GhzpGYbm/BQic0=;
+	s=arc-20240116; t=1749806302; c=relaxed/simple;
+	bh=0tYHCUc86v4VDFvmyJ+IiAirGPTxKi9QIYg15seG3TM=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eMVn2MZpyBMf1m6gPsIwd1TbVNcZgEbJcaFNDSlsCxvTXwoJdqsFHUujDgHmGt4XssDeta3nvZeMc26qwUqsUyDj9jDECq/J8tpLcu8ZkaeutqS0l7YLe/rwVIbMiBDVGr8UPHCXjl8ssWrRqqB5PcS+RlmM/YVaxWUO6nQxwac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=drMl2ouI; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:Content-Type; b=KqqY2vmEIIStq83ugUWwjGr3I7In921aZCVhuvBox//LoyQ8tGV5pqUYc7RJPGp6oK+SOWYfNNO9CnlIiDfbAI/ythyZRBnDFsFH+O1qeo7qrqo7q4ofCQBFrXr7O9NYUpUxR0BJ4v/vZNLZJihTQBpOkNebqWXj11x5WT1/E3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b89QU2XC; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso1217850f8f.2
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 02:14:29 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453398e90e9so1870575e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 02:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749806068; x=1750410868; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749806299; x=1750411099; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QxfIULPvH1TVJo+Bp0irHce0KEkyksYpcZ/Cbp7r00Y=;
-        b=drMl2ouIyRwSgLVGzBBO+OxyEw8y6A925wFGgIxqaVkyEfE0xv6gu61FEuK8Hpkgeb
-         N2NR6k1A9YZ2niw/1atorWIanTvHGeRBf5ATXHzo6IfV5ZwA1oY0HEApuGf82YuQ5Qnp
-         by+h0QEcA1zfuyfLEED9qjyLRj1cQUnRvMb1RBqadP7cfMbNa/dYOGwbui4xUPWokPnU
-         1/MTJH7a50xneWgw+zhfMF7FVIS96iv4tvh2Tup4HzJlvEFv4QpvFBI3HCAl3DaVB3jG
-         kaGf15RN/johiJ/pxleH/kICA0Qr163AiBXQPzQd5hIOg3PM8vFRbHMBnFkRl4i0S0O2
-         0++w==
+        bh=EZezB8dUdKZQC1klqpxG0ZCPkOkCrr9wOd6SwONA76E=;
+        b=b89QU2XC4QPXMwXpEcnyUt62VZE4emjd1rJW2WN1nkAxjegsDgxkMXNYU1Rn3eCQ9h
+         1d5v9pzjfKm9bm80pvEemDe8d0Neav5/Wzg/2QI7PIR8VXFvUKD284s8tzfvJx3e/zi+
+         ZsJmBpvl4q/SKRICPFbr3xcJQGLhndGA9cJQZUsASe+79MDZteHe+ljefDkzLJC/8FOD
+         PEF2iUd4CVxa26QjbbNzVoEt5lPRXHKEZ93Np9IxrddB4UTGyLpR6Uh6iHQX71h2p4ID
+         CD1TLDbj1ZOqH+0Rs4QIia3eF3Z+YNDwt/O3QDlyQ8aWAnF1tVZNidcUJM0KFZ5RDpNW
+         xx8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749806068; x=1750410868;
+        d=1e100.net; s=20230601; t=1749806299; x=1750411099;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=QxfIULPvH1TVJo+Bp0irHce0KEkyksYpcZ/Cbp7r00Y=;
-        b=DwQ4ORoovJvWeQor98ey91loorMN186JZRZr5GpXu95sQoQlq0lsTDGj2ZzA+7oKrd
-         lZF80eNjv/q9XFHRQlgFURPfjdJ+hnDtmhmSw87+3DaUU9ynDJGM0WFDiVYvvxf7wT7j
-         py4ajf+hjgEvkabDwFC0/9h8VX7qYKpz1TJnGtqRtFNAasCtR/4W3lZLEwoL5DFLqe4H
-         ecuTgcuYMfLyJrVVzdYExxFogkYBHcEH7vhhrBEjKdxttMJc4X64Uy0rTlgGZMQuDaho
-         5ad0FaKn24f6r//V/I4F+HqV4BuPgLPrGMgzuuYfRX8wIlxAgTSiN6bz3YN+CRjd6ORP
-         BO2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUwvaKrc6BCi5OsZZZjA7ggElWg6syhyeym89ruCBGpIrbQ2fZBXynNFxYrxFbOWdHubnIRtYvQfXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJNGg7fcAJ24UW+BNZoHMnkr4lqRLTVKvSMf+UiDPWEv7cVpI3
-	UkS9vZSYlwp0hCl+AtVOiUUesUO6SJXR9fjinuhppx8X8FpvUWFWzQ7iXuZ0acnDw4o=
-X-Gm-Gg: ASbGnct/a+uavGv728nRicdKgs0AMcgcppe0uGgkzcSl04CyKkHae/edfgYfBFCNjjB
-	IppMBbpmpP8EEdDWtSBPJ+8Ot/iJDnrDuEM19EdaoBJHK4zVfyokLPAN3hkLEjpSMCLIEzb24zc
-	eX8Qi+XdGyaLlnq6iX/VGnwPY6XQlGVup7ITsMcy2PpqcRA9pNteee8P0+cw/rw0XOrXKjj1uXS
-	I4oPW1CVhoEeZUgF5mHeJqvN97g3XhvCgS4EDZNDk0ity0BMrTyfJi+KpoLQcK5arNiqXazIoVU
-	By5tnFaXkc1mswT7td3NO79/xWKf8coHvBZwqhrycjgAlu7UTqMrodDJH3AOtqgsufxe/mHdqNs
-	p0pWasdtMcun/aGoGG8vj4/RKJHcZHuf+StnupbE=
-X-Google-Smtp-Source: AGHT+IGQOFD/EY7S2QDUIKx6X5WFj8qb8/qrnjFsfEXjcL1hzrA6uPRMdM2o+qwKrI1AezZg1EjOrA==
-X-Received: by 2002:a05:6000:1445:b0:3a5:52cc:346e with SMTP id ffacd0b85a97d-3a568655fe0mr1850481f8f.6.1749806068043;
-        Fri, 13 Jun 2025 02:14:28 -0700 (PDT)
+        bh=EZezB8dUdKZQC1klqpxG0ZCPkOkCrr9wOd6SwONA76E=;
+        b=u32iZV3eEFaagAAlqPIq3aPAFYk4f2ssyreD1w6iJjRu1k2+mzGDILkZwDl9+3uJax
+         3ovmmUylCDmTzcjzm+s0fxvQ/iA/GNdgbw70v1Ia9w8Lb7Wfn0qv5mn5WajfLGKwI0Sy
+         FWmGOWrqCwZ4dvL6eOp4tJp/LrvGuZipZIU11FOIntyFOA+Gn4Rop2vrZ2Lfp9cWgtJV
+         jIfIApxAb8fMHdfpe0DsT2kwZIO4s4yLDycgJ0oKF3rMuUKQ0DOYwnGE8T49LSivmFe6
+         MMEXMtkh7cI/1mqJ9pfW0Sm0fAmrp3lkhUoBrIPlymP0WG0mzVEK+GBxeij6Dfe/8HPq
+         kgNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUY3UdDce7dyCkz1RHXd5rRqFMZIuyIDRpi97GKRmHko/poTT+2cwREbxn8mam1ZPRp0UTZR46ANAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcAH6tmWuX3FbKWtuEMe5HoNa2+PBrzZDb2TJfIHKbRlEUix1a
+	hjPHfBefddhBWjEiG0+3Lx9LvjBI2R5579pZxmqcH5cjiM0gIDJYAS1jFa0XkiJgX6Y=
+X-Gm-Gg: ASbGncv5L66SS8D+7q1fA6P8W91g4ztFuVx3ziCTuQsneWL3HBHXoZhulptT5A8pKXR
+	oM/Rgb15J3w7uzjtVfa8pRTq/y1lA5IvBVcdyn4LkhvHCNFquhc6HWljrWXsjzwEOIwbvFlWpHp
+	eiPys+DfOPGVfTseH3Ig+HHtpVatSqsIK2fRv2HyBN6PN7871mEnLUJLtA2IhtTXPK9WWMo90Mo
+	jJmWtJ7XJDPpYxhDNLyqf8DiMYFVXXCW64R1/fYBD2LYJlpTj7SnWDazBLY8xdyQT2VykonSRyh
+	V8+eahnwFrZ5McBa+MxkACW1/XXn/gi703N+QnfmiU8nuvzWsgUSObYByC4m+SIZqcxWPmBxqLZ
+	pOBxuEWZHQ9GLOWf5aGvu8t+7Yh86/eSaoxrJ4CBocE7uU18pzg==
+X-Google-Smtp-Source: AGHT+IEUrossJxJVwWBU+vfj+xukJOxxn0Gc50ke7zrjhbK13v9zCYmZziSm3yGa9wtgXShwZmF+uA==
+X-Received: by 2002:a05:600c:468f:b0:450:d3b9:4b96 with SMTP id 5b1f17b1804b1-45334b07460mr22803915e9.13.1749806298856;
+        Fri, 13 Jun 2025 02:18:18 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae? ([2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54a36sm1781165f8f.15.2025.06.13.02.14.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532063ebf6sm56506385e9.3.2025.06.13.02.18.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 02:14:27 -0700 (PDT)
-Message-ID: <5d624bce-a46f-4b75-b785-56def0c7f108@linaro.org>
-Date: Fri, 13 Jun 2025 11:14:26 +0200
+        Fri, 13 Jun 2025 02:18:18 -0700 (PDT)
+Message-ID: <7178e816-4cb4-49b3-9a1e-1ecd4caa43ed@linaro.org>
+Date: Fri, 13 Jun 2025 11:18:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,7 +86,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 1/7] dt-bindings: phy: Add document for ASPEED PCIe PHY
+Subject: Re: [PATCH 0/7] Add ASPEED PCIe Root Complex support
 To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
  lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
@@ -99,7 +99,6 @@ To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
 Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
  wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
 References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -126,50 +125,60 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
+In-Reply-To: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 13/06/2025 05:29, Jacky Chou wrote:
-> Add device tree binding YAML documentation for the ASPEED PCIe PHY.
-> This schema describes the required properties for the PCIe PHY node,
-> including compatible strings and register space, and provides an
-> example for reference.
+> This patch series adds support for the ASPEED PCIe Root Complex,
+> including device tree bindings, pinctrl support, and the PCIe host controller
+> driver. The patches introduce the necessary device tree nodes, pinmux groups,
+> and driver implementation to enable PCIe functionality on ASPEED platforms.
 > 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->   .../bindings/phy/aspeed-pcie-phy.yaml         | 38 +++++++++++++++++++
->   MAINTAINERS                                   | 10 +++++
->   2 files changed, 48 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+> Summary of changes:
+> - Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+> - Update MAINTAINERS for new bindings and driver
+> - Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+> - Add PCIe RC PERST pin group to aspeed-g6 pinctrl
+> - Implement ASPEED PCIe Root Complex host controller driver
 > 
+> This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+> enumeration and operation.
+> 
+> Feedback and review are welcome.
 
-<snip>
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a5a650812c16..68115443607d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3696,6 +3696,16 @@ S:	Maintained
->   F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
->   F:	drivers/media/platform/aspeed/
->   
-> +ASPEED PCIE CONTROLLER DRIVER
-> +M:	Jacky Chou <jacky_chou@aspeedtech.com>
-> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie-cfg.yaml
-> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> +F:	Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
-> +F:	drivers/pci/controller/pcie-aspeed.c
-> +
->   ASUS EC HARDWARE MONITOR DRIVER
->   M:	Eugene Shalygin <eugene.shalygin@gmail.com>
->   L:	linux-hwmon@vger.kernel.org
-
-Please move the MAINTAINERS change in a separate patch.
+So it seems all PCIe RC code is bundled in a single driver and there's no
+PCIe PHY driver code, is there a reason for that ? If yes I think it should
+be described in the cover letter.
 
 Thanks,
 Neil
+
+> 
+> Jacky Chou (7):
+>    dt-bindings: phy: Add document for ASPEED PCIe PHY
+>    dt-bindings: pci: Add document for ASPEED PCIe Config
+>    dt-bindings: pci: Add document for ASPEED PCIe RC
+>    ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST ctrl pin
+>    ARM: dts: aspeed-g6: Add PCIe RC node
+>    pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+>    pci: aspeed: Add ASPEED PCIe host controller driver
+> 
+>   .../bindings/pci/aspeed-pcie-cfg.yaml         |   41 +
+>   .../devicetree/bindings/pci/aspeed-pcie.yaml  |  159 +++
+>   .../bindings/phy/aspeed-pcie-phy.yaml         |   38 +
+>   MAINTAINERS                                   |   10 +
+>   .../boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+>   arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |   53 +
+>   drivers/pci/controller/Kconfig                |   13 +
+>   drivers/pci/controller/Makefile               |    1 +
+>   drivers/pci/controller/pcie-aspeed.c          | 1039 +++++++++++++++++
+>   drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    |   12 +-
+>   10 files changed, 1370 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie-cfg.yaml
+>   create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+>   create mode 100644 Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+>   create mode 100644 drivers/pci/controller/pcie-aspeed.c
+> 
+
 
