@@ -1,134 +1,136 @@
-Return-Path: <linux-pci+bounces-29738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02BE1AD90A3
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 17:02:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EBDFAD90A8
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 17:03:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AB801BC18A1
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 15:01:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1542B3AED58
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 15:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030F94207F;
-	Fri, 13 Jun 2025 15:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF8A1DED5F;
+	Fri, 13 Jun 2025 15:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CN8YoqKA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxYTl3Ul"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CF12E11B8;
-	Fri, 13 Jun 2025 15:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FCB29CEB;
+	Fri, 13 Jun 2025 15:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826858; cv=none; b=sEK2leiDiVr6Wj75ogIWImvZbW8aiDHOjflxjgd+KSYDlT2WOPWGr1UvkUkOdRwo2kdLzZzUvjYXEuywSrwzEbmycqeDWPc81EbmQi6BK780StHxxbrUdqWgMMztjyXln1SFFdiUpFGPVuStnLqzFbQkwglgctltaUR6SdjB4q8=
+	t=1749827004; cv=none; b=bE+4pLqMeiwZvtpI7Qcq5CCES+C/aEnfXGH84xoCQ+TQ4He0xFaWV9k3e7GSndZj5dLQ81iuE2/B/5NerzEIUgNCVFzaqrGaBZehg/HHFCjyXI6Ms3h0L0rSgYdicgpOvq+iwfZ+6fY6nM8NhoP4PbagZ/Smfaizv7hKZdHPWSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826858; c=relaxed/simple;
-	bh=ERR0N61HPhTY7ubFfMWXyYEDkqxRO2pES3k1QCgQ86Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u6n12olNspzk3cnJWGIrOJ92DVRL/faav+sVmo1Vjw4Tc1TtcmrQXCdgdgrwsTQhK6bvfOGAQvsp96EH14PO65WY+pCv/TP7ZdnGtccpjxNeJxg7zyJIgjcydRScKfJzUBS9HcaUZ9sAMlMAd3IV1F8HvFOTCaKe4fTW98vEvpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CN8YoqKA; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso2073041b3a.2;
-        Fri, 13 Jun 2025 08:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749826857; x=1750431657; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H8jiEiES8+qUM2cqXDPdwSgaPuU6OGlRs4pC0s/GeL0=;
-        b=CN8YoqKAh6WC5F35GECMbxBjksY5nFQ+iNFEXD4LWMCmrGyXByJ2F7RsQX8SQN6xLd
-         qW5Jph2FVb8IHciB4oBcfU1eTuQUSxRXTrCkfzufPZmNo2ZJ0l4zHBDqVTtZ1cv1I7Gw
-         FdOxaisCWBz2oZqFMzTuo2cceZuksGJ65rD9n31CIoHQB0+z0TX4S9P2PFUnBTUk/Yww
-         PKS0BETuBEBjqmUyHHBiIPUPxixQ19FQ3WTPnPyqKfMHgVQlzF6uQwFBVOV9VswunVV1
-         jU60vZ1lMWanfcFsaaUA8LWPw8kSTsC5Kpm7uJaRvLMWfbX334TItlRpgal3G0URccGK
-         oEhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826857; x=1750431657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H8jiEiES8+qUM2cqXDPdwSgaPuU6OGlRs4pC0s/GeL0=;
-        b=hOI3fB+xb9dbeOucXaxamiXghsLpCBud20TACpnNNdFy3gPxW4ahEsH6Hut/SHU9Gn
-         9yndQYjVHGEcYwp6+aGL32qUfiEb33i7sHxyczAHuM3zcFVs1leD/5CyObVtIJhDieCI
-         ME/jhoT7swwqZQg1RUABUc+UdgYAYkwDyJ+h1SsdWDuNxLjNOKba7t/xN24t6uNRAdDS
-         F3NNxisv+z0kkQmBkj97mdGLPD/KDY8m9nqDfsESvPkJIsuhu9j423eOmypw1dvNPj5E
-         +o00zBIqoyOPJ/w8etxYBi98GRGxpm/f1/eOv3GyHTFFeaJunCCkSAzVTHdislvomVb7
-         1BgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKSJbvOtraiCWfN79vPSnY0NznrPrh15EUjGGHhLc1q5tEf5gEz0/WNuAalMhVTiipDDG3g4Rt+4uZ@vger.kernel.org, AJvYcCXtOouhwsIYDxDwGDP+1ax/qCbLTrnfmUf36llvReIiCdep95AWyoQiWHfVSu95bVumBFbPcKDawPkOAlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTsmAmDOjVXvayI3hoorbKcCyJ8OPOd0LTcPGbzwBnvrYUjV54
-	//WtB5MVUDczDd5nK3OGwTrhdMZctz5WwHxL8eldCT28pXA5cgeH58qF
-X-Gm-Gg: ASbGncuYLNkTtgtUpO16aG/3YgXVrySpGMdHsNnZwzEoKNYPXCjNojtCdansUYzC9RB
-	YFtMRa0t8KvPNyTHfTNvajOUjqLequqBCyzSN+tC3fKfNrphf4ELizwYcnzT4xCBJa653XwXw6/
-	B3WPmtNr+KPefjBgRUq3l3oBtwtxHTUomHQLfHqGIkTVY9XiaGCmGmHfDN3VtS3FRC/xi5MDqJ0
-	+PvTsQY1+PpyJLywPzK97XBUMYqHUvy2LlUILjVaHUsrbXs9eDIFSXIicvBidpe6XSjMcVd4ZDi
-	kdHunSkNLtmJ5e4DDrkAgj6OFm49/ni66FcEK7QmXlgjmaZuP0iHACBWMkwT
-X-Google-Smtp-Source: AGHT+IHC4qfJgFLaeGwJ0qqEkImTRcGA8emN7/hG0BhuZcGgDlfiA7i4akpRVf9dQJcSyAfy5FGJnA==
-X-Received: by 2002:a05:6a20:2445:b0:215:df62:7d51 with SMTP id adf61e73a8af0-21fac8b12d8mr4816889637.11.1749826855282;
-        Fri, 13 Jun 2025 08:00:55 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:838f::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1691be9sm1813060a12.68.2025.06.13.08.00.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:00:54 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:00:49 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/4] PCI: rockchip: Improve quality of driver
-Message-ID: <aEw9IVCAtANnLPib@geday>
-References: <cover.1749825317.git.geraldogabriel@gmail.com>
+	s=arc-20240116; t=1749827004; c=relaxed/simple;
+	bh=lmsC6NuVWnVy+Dsfq0irR7B12PqvUPA3RWEtvjKTL2I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YigiHBovAITx72yoP4KVfGDNAAcobs68rw/IszuOQoUWVrNf1akAt1Zj7GizKGWqhGJfPil6IDNWnNsrfmpetTH5ualTqtHWV6gUzsZVwWZwiM7rctHEjMb2+7lPAyyTASeipxRAgXqN4tn+FJQnmjkSsP522sV9uaXdAP9ACI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QxYTl3Ul; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749827003; x=1781363003;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lmsC6NuVWnVy+Dsfq0irR7B12PqvUPA3RWEtvjKTL2I=;
+  b=QxYTl3Ul40DeJ1cPsRk+9ot2dD4OBeg+XsIjI317QPcyB28OU65StIWi
+   job1g/2aQihOt8ZPLxC6x/K55cv9hBtnlvZtE/gPOC/ywlec5z7Vuszt9
+   SANJgZgJGVzIhpyz9Ky1HR3F/VG1m4ljpMDWcMj6uhNiULxt+PIbaWXGF
+   tMrax/rGi+h7bZLfLX1zuahktm4jE2srsEwcDB6mYDH1q8hJXlbGq3UYO
+   BMKVYoO23FXHqYjCsLqouqH2rzR2FhUE/m815lqgyHkTSRAThBS9SUWz7
+   GXpz9ctJLKZtM2dL7l0BzN7JPOUQqpidRTaTlr29JVVobSd3dx9K7tOSQ
+   g==;
+X-CSE-ConnectionGUID: nuoWpjn7RGeoLCFpl3VbkA==
+X-CSE-MsgGUID: diApV+ZRSB+9V0/wDeJP5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="55718053"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="55718053"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:03:23 -0700
+X-CSE-ConnectionGUID: wEeUUgUfTD2/YHByLcKAww==
+X-CSE-MsgGUID: Zw0bhwMyS9KD3iB4u6xSBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148320085"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:03:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 13 Jun 2025 18:03:14 +0300 (EEST)
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+cc: linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+    Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+    linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v4 2/5] PCI: rockchip: Drop unused custom registers
+ and bitfields
+In-Reply-To: <ed25d30f2761e963164efffcfbe35502feb3adc2.1749826250.git.geraldogabriel@gmail.com>
+Message-ID: <97114c68-5eb7-18b0-adbd-227e1d7957c6@linux.intel.com>
+References: <cover.1749826250.git.geraldogabriel@gmail.com> <ed25d30f2761e963164efffcfbe35502feb3adc2.1749826250.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1749825317.git.geraldogabriel@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jun 13, 2025 at 11:48:27AM -0300, Geraldo Nascimento wrote:
-> During a 30-day debugging-run fighting quirky PCIe devices on RK3399
-> some quality improvements began to take form and this is my attempt
-> at upstreaming it. It will ensure maximum chance of retraining to Gen2
-> 5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
-> they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
-> without risk of locking up kernel like with present broken async
-> strobe TEST_WRITE.
-> 
+On Fri, 13 Jun 2025, Geraldo Nascimento wrote:
+
+> Since we are now using standard PCIe defines, drop
+> unused custom-defined ones, which are now referenced
+> from offset at added Capabilities Register.
+
+These are quite short lines, please reflow the changelog paragraphs to the 
+usual length.
+
+> Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 > ---
-> V3 -> V4: fix TLS setting-up in Link Control and Status Register 2 and
-> adjust commit titles
-> V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
-> suggestion
-> V1 -> V2: use standard PCIe defines as suggested by Bjorn
+>  drivers/pci/controller/pcie-rockchip.h | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
 > 
-> Geraldo Nascimento (4):
->   PCI: rockchip: Drop unused custom registers and bitfields
->   PCI: rockchip: Set Target Link Speed before retraining
->   phy: rockchip-pcie: Enable all four lanes
->   phy: rockchip-pcie: Adjust read mask and write
-> 
->  drivers/pci/controller/pcie-rockchip-host.c |  4 ++++
->  drivers/pci/controller/pcie-rockchip.h      | 11 +----------
->  drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 +++++++++-------
->  3 files changed, 14 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.49.0
->
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 5864a20323f2..f611599988d7 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -155,16 +155,7 @@
+>  #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+>  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+>  #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+> -#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
+> -#define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+> -#define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+> -#define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+> -#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
+> -#define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+> -#define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+> -#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+> -#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+> -#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+> +#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
 
-I somehow have screwed-up threading again. Please ignore. Resending
-now.
+This will cause a build failure because PCIE_RC_CONFIG_CR is used in 1/5 
+but only introduced here so you'll need to do this in the same patch as 
+any step within a series must build too. IMO it would anyway make sense to 
+combine patches 1 & 2.
 
-Geraldo Nascimento
+>  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+
+Aren't you going to convert this as well?
+
+>  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+>  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+> 
+
+-- 
+ i.
+
 
