@@ -1,97 +1,347 @@
-Return-Path: <linux-pci+bounces-29769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 783C5AD9584
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 21:27:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1EFFAD958E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 21:31:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFA823BC74A
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 19:26:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F16581BC3E65
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 19:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3EDC225761;
-	Fri, 13 Jun 2025 19:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B12EE1369B4;
+	Fri, 13 Jun 2025 19:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVdoPBim"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLwDD5xF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901622E11BB;
-	Fri, 13 Jun 2025 19:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C67338DD1
+	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 19:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842831; cv=none; b=ajlHG1z4jMTOYVHdy/vQfmcHsbheV/0yJg6sXWMNOzaFFnEuxmuveyd4siw5M26u8cp29wzIkexym2Ii+4D/d9PcHRY7josHlCS3vosrHEsTBkHGGdQNKVI+Vl+ECBodUQ7o3Sn2GB+w9PFJvLXfQeLBrpL02qv88rQn6t0p8NQ=
+	t=1749843072; cv=none; b=XK3qG4lBSzxVdiKWiJT4qXGEeVKDW1uiuM41vH6KsklrJr0UDA0C5n2Kav15cWCaOSfq8I7ys99YIODsMpvoTDde51aeNeHyEMR+kawi1cozH6ndehPyeMcoTq3V3N/oa3BjZzK7qcl4yThpBeOLWv9VfHIHv6V/ycR32WSrc7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842831; c=relaxed/simple;
-	bh=faZgBj3OG+5oZst8i9znuKpqc5DmC3rZiACY89LYJLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kSyYqAOLGD4AaEs1nDUw2dRUYPWLpHUJa5vJrz+lLXWDnMvdErMkhvLCHj+JTV4x40YnLayn/cznzIGiwwKUC6lmIlzagi/HLYd+Sr0fqS8Hg7FuPiMQkHZMW2gALLk9gSM/ExebrZR1bhzZAO657WvHiNUqE31V03hOB+YZgkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVdoPBim; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5EE9C4CEEB;
-	Fri, 13 Jun 2025 19:27:10 +0000 (UTC)
+	s=arc-20240116; t=1749843072; c=relaxed/simple;
+	bh=yoy/aRl/tspevyILTGQur34s8aUeGhDoAUVvx9HGuuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hvyTOKowwwCMd6+CZ6S41Y0NQ9Izfpu4ZuAPfHu3DcWeSUYCPsiVr9i8zIEJuZ27ovJO4NFSUco6U0lMKZJNasPre/xdOm/rqrNLrb6xGCaP3+v/aWBD9dZ86GlYbee6/S48+CAK8ig5EYmuv9grfoZG9/Bso8ZyobVVVMyCMT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLwDD5xF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E441C4CEE3;
+	Fri, 13 Jun 2025 19:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749842831;
-	bh=faZgBj3OG+5oZst8i9znuKpqc5DmC3rZiACY89LYJLc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dVdoPBimaPmBN7fPWzA1H4jOeua65sr0vDUrPdccine238XmGkJ/8+QdGLXmurI3C
-	 9rt9uXVJOkqUXxPqCzyhYlgwyWdSg+xRbb+lqqea1pcj9nY3xr7XdLOKcEQbt3Uak4
-	 SHB81Ael271D/Sg1mSILLRi8iHUs6aW90z5nT4Uz1s7unPxYb1AO92jYR7r/CGZ3YX
-	 w9SjcashO3k3vOxfS0LbZznc7m9IaPY3lfH68a3/p60le0ApU0fKAFT6I8wNfHOq1l
-	 WyyEC86QBm76McGng58ESdAEx2iesj+YAOux2LLLfJv3bbNVO9BNj2/FPuotRQ6xAL
-	 YqkYTEI6w5Lcw==
-Date: Fri, 13 Jun 2025 14:27:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Nicolin Chen <nicolinc@nvidia.com>,
-	joro@8bytes.org, will@kernel.org, bhelgaas@google.com,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, patches@lists.linux.dev,
-	pjaroszynski@nvidia.com, vsethi@nvidia.com
-Subject: Re: [PATCH RFC v1 0/2] iommu&pci: Disable ATS during FLR resets
-Message-ID: <20250613192709.GA971579@bhelgaas>
+	s=k20201202; t=1749843072;
+	bh=yoy/aRl/tspevyILTGQur34s8aUeGhDoAUVvx9HGuuw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LLwDD5xFpyJSYcPkQPCNeP+C1ETSSy/2rA4uBqFpI8OAbInj56hAtv7/njQkG0Tr4
+	 Nrp8tlr0FimHJ+wgOP6fvJASVBLzOykwNQDkZLO3EhzZvVXtE4rpYzyETi8VAglX+o
+	 6F50qtFv0edMArSwewBfm96ZSL8gbqhKzgmM/r8RfQXgVE8WczjHgFt5Qepc61xyLg
+	 pQZiOkdz4VmaEPZKTHdoDPwpq6xGT0vwEmUdXjWCp2TEjHLpPFOTDtlDmusAAcFeD4
+	 gJ426uLf5Agb46CeSLnia7k3023WWEPCpuFOS4dBw6QuAPM775EymDSr+VcSaxeTa4
+	 ZgPbAwjkSe0Yg==
+Message-ID: <3a0a7aeb-436d-442a-bede-9e760a69fa47@kernel.org>
+Date: Fri, 13 Jun 2025 14:31:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610163045.GI543171@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/VGA: Look at all PCI display devices in VGA arbiter
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+ Thomas Zimmermann <tzimmermann@suse.de>, linux-pci@vger.kernel.org
+References: <20250613190718.GA968774@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250613190718.GA968774@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 01:30:45PM -0300, Jason Gunthorpe wrote:
-> On Tue, Jun 10, 2025 at 04:37:58PM +0100, Robin Murphy wrote:
-> > On 2025-06-09 7:45 pm, Nicolin Chen wrote:
-> > > Hi all,
-> > > 
-> > > Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software should disable ATS
-> > > before initiating a Function Level Reset, and then ensure no invalidation
-> > > requests being issued to a device when its ATS capability is disabled.
-> > 
-> > Not really - what it says is that software should not expect to receive
-> > invalidate completions from a function which is in the process of being
-> > reset or powered off, and if software doesn't want to be confused by that
-> > then it should take care to wait for completion or timeout of all
-> > outstanding requests, and avoid issuing new requests, before initiating such
-> > a reset or power transition.
+On 6/13/2025 2:07 PM, Bjorn Helgaas wrote:
+> On Thu, Jun 12, 2025 at 10:12:14PM -0500, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> On an A+N mobile system the APU is not being selected by some desktop
+>> environments for any rendering tasks. This is because the neither GPU
+>> is being treated as "boot_vga" but that is what some environments use
+>> to select a GPU [1].
 > 
-> The commit message can be more precise, but I agree with the
-> conclusion that the right direction for Linux is to disable and block
-> ATS, instead of trying to ignore completion time out events, or trying
-> to block page table mutations. Ie do what the implementation note
-> says..
-> 
-> Maybe:
-> 
-> PCIe permits a device to ignore ATS invalidation TLPs while it is
-> processing FLR. This creates a problem visible to the OS where ATS
-> invalidation commands will time out. For instance a SVA domain will
-> have no coordination with a FLR event and can racily issue ATC
-> invalidations into a resetting device.
+> What is "A+N" and "APU"?
 
-The sec 10.3.1 implementation note mentions FLR specifically, but it
-seems like *any* kind of reset would be vulnerable, e.g., SBR,
-external PERST# assert, etc?
+A+N is meant to refer to an AMD APU + NVIDIA dGPU.
+APU is an SoC that contains a lot more IP than just x86 cores.  In this 
+context it contains both integrated graphics and display IP.
+
+> 
+> I didn't quite follow the second sentence.  I guess you're saying some
+> userspace environments use the "boot_vga" sysfs file to select a GPU?
+> And on this A+N system, neither device has the file?
+
+Yeah.  Specifically this problem happens in Xorg that the library it 
+uses (libpciaccess) looks for a boot_vga file.  That file isn't found on 
+either GPU and so Xorg picks the first GPU it finds in the PCI heirarchy 
+which happens to be the NVIDIA GPU.
+
+> 
+>> The VGA arbiter driver only looks at devices that report as PCI display
+>> VGA class devices. Neither GPU on the system is a display VGA class
+>> device:
+>>
+>> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+>> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+>>
+>> So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
+>> function already has some handling for integrated GPUs by looking at the
+>> ACPI HID entries, so if all PCI display class devices are looked at it
+>> actually can detect properly with this device ordering.  However if there
+>> is a different ordering it could flag the wrong device.
+>>
+>> Modify the VGA arbiter code and matching sysfs file entries to examine all
+>> PCI display class devices. After every device is added to the arbiter list
+>> make a pass on all devices and explicitly check whether one is integrated.
+>>
+>> This will cause all GPUs to gain a `boot_vga` file, but the correct device
+>> (APU in this case) will now show `1` and the incorrect device shows `0`.
+>> Userspace then picks the right device as well.
+> 
+> What determines whether the APU is the "correct" device?
+
+In this context is the one that is physically connected to the eDP 
+panel.  When the "wrong" one is selected then it is used for rendering.
+
+Without this patch the net outcome ends up being that the APU display 
+hardware drives the eDP but the desktop is rendered using the N dGPU. 
+There is a lot of latency in doing it this way, and worse off the N dGPU 
+stays powered on at all times.  It never enters into runtime PM.
+
+> 
+>> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
+>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> RFC->v1:
+>>   * Add tag
+>>   * Drop unintended whitespace change
+>>   * Use vgaarb_dbg instead of vgaarb_info
+>> ---
+>>   drivers/pci/pci-sysfs.c |  2 +-
+>>   drivers/pci/vgaarb.c    | 48 +++++++++++++++++++++++++++--------------
+>>   include/linux/pci.h     | 15 +++++++++++++
+>>   3 files changed, 48 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>> index 268c69daa4d57..c314ee1b3f9ac 100644
+>> --- a/drivers/pci/pci-sysfs.c
+>> +++ b/drivers/pci/pci-sysfs.c
+>> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>>   	struct device *dev = kobj_to_dev(kobj);
+>>   	struct pci_dev *pdev = to_pci_dev(dev);
+>>   
+>> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+>> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+>>   		return a->mode;
+>>   
+>>   	return 0;
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index 78748e8d2dbae..0eb1274d52169 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -140,6 +140,7 @@ void vga_set_default_device(struct pci_dev *pdev)
+>>   	if (vga_default == pdev)
+>>   		return;
+>>   
+>> +	vgaarb_dbg(&pdev->dev, "selecting as VGA boot device\n");
+> 
+> I guess this is essentially a move of the vgaarb_info() message from
+> vga_arbiter_add_pci_device() to here?  If so, I think I would preserve
+> the _info() level.  Including non-VGA devices is fairly subtle and I
+> don't think we need to discard potentially useful information about
+> what we're doing.
+
+Thanks - that was my original RFC before I sent this as PATCH but Thomas 
+had suggested to decrease to debug.  I'll restore in the next spin.
+
+> 
+>>   	pci_dev_put(vga_default);
+>>   	vga_default = pci_dev_get(pdev);
+>>   }
+>> @@ -751,6 +752,31 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
+>>   		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
+>>   }
+>>   
+>> +static
+>> +void vga_arbiter_select_default_device(void)
+> 
+> Signature on one line.
+> 
+
+Ack
+
+>> +{
+>> +	struct pci_dev *candidate = vga_default_device();
+>> +	struct vga_device *vgadev;
+>> +
+>> +	list_for_each_entry(vgadev, &vga_list, list) {
+>> +		if (vga_is_boot_device(vgadev)) {
+>> +			/* check if one is an integrated GPU, use that if so */
+>> +			if (candidate) {
+>> +				if (vga_arb_integrated_gpu(&candidate->dev))
+>> +					break;
+>> +				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
+>> +					candidate = vgadev->pdev;
+>> +					break;
+>> +				}
+>> +			} else
+>> +				candidate = vgadev->pdev;
+>> +		}
+>> +	}
+>> +
+>> +	if (candidate)
+>> +		vga_set_default_device(candidate);
+>> +}
+> 
+> It looks like this is related to the integrated GPU code in
+> vga_is_boot_device().  Can this be done by updating the logic there,
+> so it's more clear what change this patch makes?
+> 
+> It seems like this patch would change the selection in a way that
+> makes some of the vga_is_boot_device() comments obsolete.  E.g., "We
+> select the default VGA device in this order"?  Or "we use the *last*
+> [integrated GPU] because that was the previous behavior"?
+> 
+> The end of vga_is_boot_device() mentions non-legacy (non-VGA) devices,
+> but I don't remember now how we ever got there because
+> vga_arb_device_init() and pci_notify() only call
+> vga_arbiter_add_pci_device() for VGA devices.
+
+Sure I'll review the comments and update.  As for moving the logic I 
+didn't see an obvious way to do this.  This code is "tie-breaker" code 
+in the case that two GPUs are otherwise ranked equally.
+
+> 
+>>   /*
+>>    * Currently, we assume that the "initial" setup of the system is not sane,
+>>    * that is, we come up with conflicting devices and let the arbiter's
+>> @@ -816,23 +842,17 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+>>   		bus = bus->parent;
+>>   	}
+>>   
+>> -	if (vga_is_boot_device(vgadev)) {
+>> -		vgaarb_info(&pdev->dev, "setting as boot VGA device%s\n",
+>> -			    vga_default_device() ?
+>> -			    " (overriding previous)" : "");
+>> -		vga_set_default_device(pdev);
+>> -	}
+>> -
+>>   	vga_arbiter_check_bridge_sharing(vgadev);
+>>   
+>>   	/* Add to the list */
+>>   	list_add_tail(&vgadev->list, &vga_list);
+>>   	vga_count++;
+>> -	vgaarb_info(&pdev->dev, "VGA device added: decodes=%s,owns=%s,locks=%s\n",
+>> +	vgaarb_dbg(&pdev->dev, "VGA device added: decodes=%s,owns=%s,locks=%s\n",
+> 
+> Looks like an unrelated change.
+
+Yeah it was going with the theme from Thomas' comment to decrease to 
+debug.  I'll put it back to info.
+
+> 
+>>   		vga_iostate_to_str(vgadev->decodes),
+>>   		vga_iostate_to_str(vgadev->owns),
+>>   		vga_iostate_to_str(vgadev->locks));
+>>   
+>> +	vga_arbiter_select_default_device();
+>>   	spin_unlock_irqrestore(&vga_lock, flags);
+>>   	return true;
+>>   fail:
+>> @@ -1499,8 +1519,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>>   
+>>   	vgaarb_dbg(dev, "%s\n", __func__);
+>>   
+>> -	/* Only deal with VGA class devices */
+>> -	if (!pci_is_vga(pdev))
+>> +	/* Only deal with display devices */
+>> +	if (!pci_is_display(pdev))
+>>   		return 0;
+> 
+> Are there any other pci_is_vga() users that might want
+> pci_is_display() instead?  virtio_gpu_pci_quirk()?
+
++AlexW for comments on potential virtio changes here.
+
+If there are sensible changes they should be another patch, and also 
+I'll split the creation of pci_is_display() helper to it's own patch.
+> 
+>>   	/*
+>> @@ -1548,12 +1568,8 @@ static int __init vga_arb_device_init(void)
+>>   
+>>   	/* Add all VGA class PCI devices by default */
+>>   	pdev = NULL;
+>> -	while ((pdev =
+>> -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>> -			       PCI_ANY_ID, pdev)) != NULL) {
+>> -		if (pci_is_vga(pdev))
+>> -			vga_arbiter_add_pci_device(pdev);
+>> -	}
+>> +	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
+>> +		vga_arbiter_add_pci_device(pdev);
+> 
+> I guess pci_get_base_class(PCI_BASE_CLASS_DISPLAY) is sort of a source
+> code optimization and this one-line change would be equivalent?
+> 
+>    -		if (pci_is_vga(pdev))
+>    +		if (pci_is_display(pdev))
+>    			vga_arbiter_add_pci_device(pdev);
+> 
+> If so, I think I prefer the one-liner because then everything in this
+> file would use pci_is_display() and we wouldn't have to figure out the
+> equivalent-ness of pci_get_base_class(PCI_BASE_CLASS_DISPLAY).
+
+pci_get_base_class() is a search function.  It only really makese sense 
+for iterating.
+
+
+> 
+>>   	pr_info("loaded\n");
+>>   	return rc;
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 05e68f35f3923..e77754e43c629 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -744,6 +744,21 @@ static inline bool pci_is_vga(struct pci_dev *pdev)
+>>   	return false;
+>>   }
+>>   
+>> +/**
+>> + * pci_is_display - Check if a PCI device is a display controller
+>> + * @pdev: Pointer to the PCI device structure
+>> + *
+>> + * This function determines whether the given PCI device corresponds
+>> + * to a display controller. Display controllers are typically used
+>> + * for graphical output and are identified based on their class code.
+>> + *
+>> + * Return: true if the PCI device is a display controller, false otherwise.
+>> + */
+>> +static inline bool pci_is_display(struct pci_dev *pdev)
+>> +{
+>> +	return (pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY;
+>> +}
+> 
+> Could use in vga_switcheroo_client_probe_defer(), IS_GFX_DEVICE(),
+> vfio_pci_is_intel_display(), i915_gfx_present(), get_bound_vga().
+> Arguable whether it's worth changing them, but I guess it's nice to
+> test for the same thing the same way.
+> 
+> Bjorn
+
+Sure - this makes a stronger argument to add pci_is_display helper in 
+it's own patch instead of with this one.  I'll intend to have the first 
+patch introduce the helper and replace all existing users with it.
+
 
