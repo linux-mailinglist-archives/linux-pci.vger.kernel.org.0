@@ -1,49 +1,79 @@
-Return-Path: <linux-pci+bounces-29775-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29776-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A54FAD9627
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:21:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF298AD963C
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:27:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBD623A9E68
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 20:20:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4941C7A7BC9
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 20:25:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06EB324DCE0;
-	Fri, 13 Jun 2025 20:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CBD8231832;
+	Fri, 13 Jun 2025 20:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKTWHR0P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2IWGEhL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D249924C08D;
-	Fri, 13 Jun 2025 20:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EC025291F;
+	Fri, 13 Jun 2025 20:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846057; cv=none; b=JYL4hrABbX9vglFvUHWF/a8Aust3EmnvKXqOcTFxruaD+dfH30ms5yQ613x8TpZkp4tOSAIMH9mkdgFnbOWrbQDImtc4hobFZLBlxrV6d30GbQ58gInJAmc8PAkhtNz9x5GsAlTXzjokzBaLQls4rG3RjIVoEGh94qDA0q+fKPs=
+	t=1749846415; cv=none; b=LF6CynRnaEFVJcMLpgrf7vokfdS9qI576aZV6bzp6hzAE1UfvtlliZyANNgo6z2wnFO5AGi93Qa7p9VH20axQbQiSwmfyl1egFpQC7MpL0OKbkM1+8hTMCsYRRjvxmiWo9PctOTH/8+woCCV65uzqgqpqoVEEYIT7718pf+Fzsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846057; c=relaxed/simple;
-	bh=6KUd6SjVInqm4qHBGUp3HKQszrrAseaeXFamTSXmz2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fe8jei8pxPC26EVwWi5txY9DJlKxEo/nxotsx6GkCrkXcJKKXAXi2q0elyErwwrwgN5G5+tTm3Pz0VRCICIBEHSFTN0I9415SKfiQIHfDXOJMAfIeHAk1VMQmvYz9cpoJ9VuVnL/ODycNCTpupi5G1djMnqSSyp4cFxvqrZUmsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKTWHR0P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD5CC4CEF0;
-	Fri, 13 Jun 2025 20:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749846057;
-	bh=6KUd6SjVInqm4qHBGUp3HKQszrrAseaeXFamTSXmz2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aKTWHR0Pj5XwixyMybSxmRXMXqFopnZeQjwxw+eWNwNhtratX2Fbax6AgWr98Ilrq
-	 Xk25jE2ldYwGCX/BaWf5e9/O0gSF/CZsF2be3nn1/N7IXDm7jmuu/Y/Deeh3cTZ7Te
-	 xId65s512KOKFMjtHi9+pPsqL69FSZxPwXzScQg3T036KXeg7F5TUOPFiKIYM93gKk
-	 XEMmDsqzwNLIrzAd5QNY7NboalW/wi6L4juJS7b4pcjZoJ/VjGz0K3e2Tc55Vn+NRL
-	 irccNfeU7j54nmkZrGByvaETg7hex3mXJIzu73WxXyqY4fS7nJz90A0bPuJLbDuKMq
-	 liK0r/XgoPa0g==
-Date: Fri, 13 Jun 2025 15:20:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
+	s=arc-20240116; t=1749846415; c=relaxed/simple;
+	bh=jfwW+vYg9qynM2aoKF4Q9s0thfx+wKwgfpI1ZIAROeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skOULADFIwiFLBSbU/8AAKk85L72uQfgkwE2wBCgLZTadzY4krde2o2Tm0psurMUPJcwmnnHrTLRoavHcaF3f7jjjaoaRGZ6j6zPmCKTesNuvTygqn0s1VEwRwDJcCeXMfH6wJGP70t4e/HCu1rabs4w7NO066lzyrk7TSQCpvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2IWGEhL; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23602481460so25361785ad.0;
+        Fri, 13 Jun 2025 13:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749846413; x=1750451213; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GwN4Vlj9V/Si30XGhhYcfcrSEwd+tR4XQQLqO9MnNd0=;
+        b=h2IWGEhLd6IfwxWZUebOIPcT0NkpUDkA+VQy8/WFlT/c28IfsHP/mn4uwfFFedNBuz
+         /sETkS28MXMu+Y1ySlWqqA/ZmJPfYmJPni9t46iDMYXrvoc/GK6jup8dYD5WzENdNTba
+         Eo3vYtpHOJ/f4mNotpPlnKUrTND3PPGSgzA2iYBgy6oSWAZvtyrATJQUYCSxFpDEduoT
+         15U8oKq02DTMueO2c5O9uuUwuBO/T4NDawjtnSAAqeBpJuGdBekOmgmwS+mBugnPu2US
+         ZsyaCot9rHf6N46Ggw/vxGiCamBzKx4HX6OX4HjVlkgJlcxm6JgT0/uHi+dGV/KXMC2z
+         aZZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749846413; x=1750451213;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GwN4Vlj9V/Si30XGhhYcfcrSEwd+tR4XQQLqO9MnNd0=;
+        b=V/07qNhjytGECAnMUCeRKnRBYPrSDnAc8ZBC9KHcsfas8yEm5ryRgygGHxQZPJc3/N
+         Zoq5FYPR6ZDyzPUnEBSxeFQEqLCTbCk2z8cHtj+R40YjBoBntcxwabfs21h04m7V+7fA
+         9LI2mf4xunAhU+CDjHqAOfjbyqHnWWbz8JDIMllaW5ok5qmZCI1QcHbL8hM4tVgKeLhw
+         mocPZZOo4BjCBJCXrUc+lgcK0im8eL6JXIVknubah1qz1UTx0ETsi4QzEzRjq4w174h7
+         XiefIkU/Vf15eQRpFywOr0mkzuzj+EvFg7LbmJxgZoea7A/c6/Yr1OdoJ5nKRqv3l1XY
+         midQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIEcMM/9HfsM/TYVxYZyo5UHB2LH+Qgn+nuxFmpc4lLTPOXoAFVRhP2oUlTnGitg3uu0onO1+pvJZV@vger.kernel.org, AJvYcCVQaaduN4oNFb9C49XorQnAgW4ZJdsDY+3GV2ikzlqRSVYx64S2aULIwHuB8SPDtq1EtDlT014MgS3lX0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7zUKwfNuyqnkEWermhS2SW1zs89BysTCmtYb3tGeYbwIHnsSd
+	0o4dfy3Ms3/Svy2ccFq+HipxM+0iwoKf6AWxbx/OFvVO534PyFWHXHUj
+X-Gm-Gg: ASbGncs4btThtu7Dp9lKpw5njIT6h6edybpQ2tH292OYg0W/hWZGQa6Y8rWQRLmXJ/E
+	Y8+y8EPObsfvPR0EbkdrsdOo47Zge8HJC5zHBOryXpL8E6mfsGfFeHcMSnev9dlxK01duiNBtrF
+	jOCJyUi/WvUnTRrMLRUQByp+11/WBU+ves/S86kQS0sBONSsC9HSt2aDNjTAM1BjG+jpLnRw5tE
+	7cXnr+6yOMkbrum3XZiGoTT94/uHY4t/5Pj1qW1PypRt74n2e+2q5Hw60oFOyJlynfNp2nd0a+V
+	E4cXUrbgoUA4+/OCTTgjpOYhpyOYWBKuiyoINcByGnzv9dM/Jw==
+X-Google-Smtp-Source: AGHT+IFMYwG+tAQaxnOsOinKwBE/kqO0tD/aAkh1rN9LDtPDMa0ftPIDcZwR/F9qih5cAjFZot/vjg==
+X-Received: by 2002:a17:902:c941:b0:231:ea68:4e2a with SMTP id d9443c01a7336-2366b12f867mr13009585ad.34.1749846413249;
+        Fri, 13 Jun 2025 13:26:53 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:84a2::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0d0b12sm18838725ad.253.2025.06.13.13.26.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 13:26:52 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:26:46 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-rockchip@lists.infradead.org,
 	Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -54,9 +84,11 @@ Cc: linux-rockchip@lists.infradead.org,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 5/5] phy: rockchip-pcie: Adjust read mask
- and write
-Message-ID: <20250613202056.GA974155@bhelgaas>
+Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
+ defines
+Message-ID: <aEyJhoiPP0Ugm1t6@geday>
+References: <992ab6278af59b8f2f82521bf4611f69a916bbe1.1749827015.git.geraldogabriel@gmail.com>
+ <20250613201409.GA973486@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,53 +97,36 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b32c8e4e0e36c03ae72bff13926d8bdd9131c838.1749827015.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250613201409.GA973486@bhelgaas>
 
-On Fri, Jun 13, 2025 at 12:06:28PM -0300, Geraldo Nascimento wrote:
-> Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
-> defines asynchronous strobe TEST_WRITE which should be enabled then
-> disabled and seems to have been copy-pasted as of current. Adjust it.
-> While at it, adjust read mask which should be the same as write mask.
-
-Not a PCI patch, but "adjust" doesn't tell us what's happening.
-
-From reading the patch, I assume that since PHY_CFG_WR_ENABLE and
-PHY_CFG_WR_DISABLE were both defined to be 1, this code:
-
-        regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-                     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
-                                   PHY_CFG_WR_MASK,
-                                   PHY_CFG_WR_SHIFT));
-
-actually left something *enabled* when it meant to disable it.
-
-Maybe the subject/commit log could say something about actually
-disabling whatever this is instead of leaving it enabled?
-
-PHY_CFG_RD_MASK appears unused, so maybe it should be just removed.
-
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
->  drivers/phy/rockchip/phy-rockchip-pcie.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Jun 13, 2025 at 03:14:09PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 13, 2025 at 12:05:31PM -0300, Geraldo Nascimento wrote:
+> > -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+> > +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+> >  	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
 > 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> index 48bcc7d2b33b..35d2523ee776 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> @@ -30,9 +30,9 @@
->  #define PHY_CFG_ADDR_SHIFT    1
->  #define PHY_CFG_DATA_MASK     0xf
->  #define PHY_CFG_ADDR_MASK     0x3f
-> -#define PHY_CFG_RD_MASK       0x3ff
-> +#define PHY_CFG_RD_MASK       0x3f
->  #define PHY_CFG_WR_ENABLE     1
-> -#define PHY_CFG_WR_DISABLE    1
-> +#define PHY_CFG_WR_DISABLE    0
->  #define PHY_CFG_WR_SHIFT      0
->  #define PHY_CFG_WR_MASK       1
->  #define PHY_CFG_PLL_LOCK      0x10
-> -- 
-> 2.49.0
+> It looks funny to write PCI_EXP_LNKCTL with bits from PCI_EXP_LNKSTA.
+> I guess this is because rockchip_pcie_write() does 32-bit writes, but
+> PCI_EXP_LNKCTL and PCI_EXP_LNKSTA are adjacent 16-bit registers.
 > 
+> If the hardware supports it, adding rockchip_pcie_readw() and
+> rockchip_pcie_writew() for 16-bit accesses would make this read
+> better.
+> 
+> Hopefully the hardware *does* support this (it's required per spec at
+> least for config accesses, which would be a different path in the
+> hardware).  Doing the 32-bit write of PCI_EXP_LNKCTL above is
+> problematic because writes PCI_EXP_LNKSTA as well, and PCI_EXP_LNKSTA
+> includes some RW1C bits that may be unintentionally cleared.
+
+Hi Bjorn and thank you for the review,
+
+while your rationale is correct per PCIe spec, per RK3399 TRM
+those registers are indeed 32 bits in the Rockchip-IP PCIe, so
+I'm forced to work with that, but without fear that other
+registers get messed-up. (See for example Section 17.6.6.1.30
+of RK3399 TRM, Part 2)
+
+Regards,
+Geraldo Nascimento
 
