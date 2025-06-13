@@ -1,88 +1,112 @@
-Return-Path: <linux-pci+bounces-29677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6EB4AD8A61
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 13:23:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5E4AAD8B29
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 13:51:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 202B317A654
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:23:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEBE8171880
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2212D5C99;
-	Fri, 13 Jun 2025 11:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9BC82F3649;
+	Fri, 13 Jun 2025 11:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NE1svWma"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvz6J9l6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D7E2D5C94
-	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 11:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA1C2ED873;
+	Fri, 13 Jun 2025 11:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813768; cv=none; b=V5kKTlAJyKaszj3xipO0yIf69OJNxXWAjYGAbCOq2wYh56CInYqV0A77/LIXj3TaCewUc65D7lZns+SRoTXTCHhJuQU2pnPrilMrAk3Ur8P0hTPz2qaJiwnfKbjOOOQQ8HRef3iO7qMW8CPqjRbqUl4Hm8SO3zulFaJ90kQ/+6k=
+	t=1749814975; cv=none; b=fDtXGdtJysQAlkawrRuSlWu1IOGGERvDEMtwosM82unm4qY+WzuVSWRLOJZ3MFkZ3gAzFjMSHWlRq+DfmtTNeYaOhs6MiWzmkGzLOeKuq2k9m6nk84IABn2SAaL6q3KsVO6wYl3ZALPMgoe+xy7mPdH88OHnuZ6wxTRHdGh+aRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813768; c=relaxed/simple;
-	bh=5rxzVe3Ow+D6PP7e26gxm2BHAwg7Xs8xFPoeYwGwIMk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PEDL3v0K922br8u1VKgb9nNegtXRndTpzXNLEaE+uo6vfRA8aLaCp5h8TKpLfFyWYcT9piMA/MEQ3iLR84zjgZ2ouzORJqj2VH5l1IIwEsLi4Wl3NxiCfbBpPkyJ6xwYDM92eyDABFuxPs/IC0Lg2Yf2xDiVfHhrJ3wta8jBQS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NE1svWma; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7174C4CEE3;
-	Fri, 13 Jun 2025 11:22:43 +0000 (UTC)
+	s=arc-20240116; t=1749814975; c=relaxed/simple;
+	bh=pCBlCuG9Neif5IPi1RmChNHeLoVqg6sWDPGO2L3rdng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBNJNhTX3N9w7Cpitd68ES3hArJgAVgRoyjdmJJaVYWN5SEzpb4PF31fZ3h/+2/WLpyfiHEOcbAAcZGJG/UefsQ+A41dku+YWX1Z/iVVPFbSJdhuF4SdPsSj2Rvc4Fut5RMQlEroh3cVBHsb6U0xl75Nm5SJYpIIcd8HqUICSI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvz6J9l6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5871AC4CEE3;
+	Fri, 13 Jun 2025 11:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749813767;
-	bh=5rxzVe3Ow+D6PP7e26gxm2BHAwg7Xs8xFPoeYwGwIMk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NE1svWmagWMxeZM77Y3Xv2bWeIm5O6825UTWoqiVxpHm/8aD1cOwbkD4BzKC4LTcK
-	 KvJ9sjONO7KAf/4C0i/lCYjDMGi8IKiIC/AXVcPlcIpS7zB4ZyuztQMwRHCCqE3IsH
-	 DYqPgOY+qQSP5xbU/940AE0XLq+RDGN0ChENch/EJmbeIYu0UsPD3D19/F0anAFeWw
-	 apAl8vKK4vfAZg4PjA1UFv9TMEdHphvcLKzZwGomh9x6LchEtOWOHxxhNb45Kpj6QL
-	 7Um/DAUObxd00UaeXa5fA7gF16U9EGsHbnBAAGbj050vKZql1RVysAgLQPi01HMWq3
-	 BdcFHPDeifJeA==
+	s=k20201202; t=1749814975;
+	bh=pCBlCuG9Neif5IPi1RmChNHeLoVqg6sWDPGO2L3rdng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kvz6J9l61wbBCQv3BuKWM9TEx1ApP+hCbHvp9m6ZDvH+nkMvLxD02kCYauL4MOrX2
+	 /Pm2kofSDJn2ZLpRDuC1RLr3zB2dWuzrehvtqe/PPhNrAEs5R8nVZ4ZZJqK3vM5bm5
+	 fXZl78J2QwO+Zptb7Oxn7sODSQ7jPwl48e6Bh8YtWG1JnsQmXFx5kHE4SXclLpxowp
+	 zUceEWFeMTK+QqaQx/ynqmxycQotIZYSahdp0kFE4I5FCT9CVCHfFo15vwAsvAIT96
+	 GPXHtJwXtN0UuRAUA3ZieY0+delpZXtnr+D5yLkPf02wC9URgQnR/f26LG9t5wYEkH
+	 FFLXlewdNLsdA==
+Date: Fri, 13 Jun 2025 17:12:48 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Heiko Stuebner <heiko@sntech.de>, Niklas Cassel <cassel@kernel.org>
-Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>, linux-pci@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-In-Reply-To: <20250613101908.2182053-2-cassel@kernel.org>
-References: <20250613101908.2182053-2-cassel@kernel.org>
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Delay link training after hot
- reset in EP mode
-Message-Id: <174981376322.39040.626028156798612367.b4-ty@kernel.org>
-Date: Fri, 13 Jun 2025 16:52:43 +0530
+To: grwhyte@linux.microsoft.com
+Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, 
+	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
 
-
-On Fri, 13 Jun 2025 12:19:09 +0200, Niklas Cassel wrote:
-> RK3588 TRM, section "11.6.1.3.3 Hot Reset and Link-Down Reset" states that:
-> """
-> If you want to delay link re-establishment (after reset) so that you can
-> reprogram some registers through DBI, you must set app_ltssm_enable =0
-> immediately after core_rst_n as shown in above. This can be achieved by
-> enable the app_dly2_en, and end-up the delay by assert app_dly2_done.
-> """
+On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
+> From: Graham Whyte <grwhyte@linux.microsoft.com>
 > 
-> [...]
+> Add a new flr_delay member of the pci_dev struct to allow customization of
+> the delay after FLR for devices that do not support immediate readiness
+> or readiness time reporting. The main scenario this addresses is VF
+> removal and rescan during runtime repairs and driver updates, which,
+> if fixed to 100ms, introduces significant delays across multiple VFs.
+> These delays are unnecessary for devices that complete the FLR well
+> within this timeframe.
+> 
 
-Applied, thanks!
+I don't think it is acceptable to *reduce* the standard delay just because your
+device completes it more quickly. Proper way to reduce the timing would be to
+support FRS as you said, but we cannot have arbitrary delays for random devices.
 
-[1/1] PCI: dw-rockchip: Delay link training after hot reset in EP mode
-      commit: dcca6051a220484f0c1a5cb018f3012735067254
+- Mani
 
-Best regards,
+> Patch 1 adds the flr_delay member to the pci_dev struct
+> Patch 2 adds the msft device specific quirk to utilize the flr_delay
+> 
+> ---
+> v2->v3:
+> - Removed Microsoft specific pcie reset reset, replaced with customizable flr_delay parameter
+> - Changed msleep in pcie_flr to usleep_range to support flr delays of under 20ms 
+> v1->v2:
+> - Removed unnecessary EXPORT_SYMBOL_GPL for function pci_dev_wait
+> - Link to thread:https://lore.kernel.org/linux-pci/?q=f%3Agrwhyte&x=t#m7453647902a1b22840f5e39434a631fd7b2515ce'
+> 
+> Link to V1: https://lore.kernel.org/linux-pci/20250522085253.GN7435@unreal/T/#m7453647902a1b22840f5e39434a631fd7b2515ce  
+> 
+> Graham Whyte (2):
+>   PCI: Add flr_delay parameter to pci_dev struct
+>   PCI: Reduce FLR delay to 10ms for MSFT devices
+> 
+>  drivers/pci/pci.c    |  8 ++++++--
+>  drivers/pci/pci.h    |  2 ++
+>  drivers/pci/quirks.c | 20 ++++++++++++++++++++
+>  include/linux/pci.h  |  1 +
+>  4 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+> 
+
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
