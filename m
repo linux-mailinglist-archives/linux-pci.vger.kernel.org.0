@@ -1,31 +1,31 @@
-Return-Path: <linux-pci+bounces-29634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62EB0AD81B3
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 05:31:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BB92AD81B5
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 05:31:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DF4E3B9429
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 03:30:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 418C13A28F3
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 03:31:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE7272580D2;
-	Fri, 13 Jun 2025 03:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E407825A357;
+	Fri, 13 Jun 2025 03:30:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D41B2571BA;
-	Fri, 13 Jun 2025 03:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170A82580E4;
+	Fri, 13 Jun 2025 03:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749785417; cv=none; b=GwZH0DA4xK0pChQBCm+nORZJm0adjiYUHHeuLhevsmtURFilMsj9LvYgt9AgrGKxlUzSJZkQbV+yNL1nbpX31JM7jat4R3NySeVfbeSVhWjZ+7fb55qkfCav9vmdl8FOmfMUr1mq5deqnOaDhoTbyuDRQXmyiTxw3rjEKZifuTk=
+	t=1749785419; cv=none; b=jT0Uf8NhRJEMnGOJ0jko/qT61XE1Iod794aHNzy/0Ku+lkPnqpiyxeIROI/r3UAK2b1YffieL5MBtZ9yv6nTig0NS4kUPciD4HpYLSg2eKAdNT1Yc9fjKK9c+Ce2s2OtdloT7s7N+UWPdI4jDQW2PqdssvLZXzjPnv14XqJLARo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749785417; c=relaxed/simple;
-	bh=hY26OLd+ttBIhv3LwxsuAVeB6IQrJnV8zG6jeGobekI=;
+	s=arc-20240116; t=1749785419; c=relaxed/simple;
+	bh=0DkfuTwKKA84kc4r3PvUw4eOW7Btqxbf9v4apXk9BvY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Om2vv2J9hN0EdHGirHEZ+rxh6ls2b9oCf14h5+fumFqYcjqPFS5FIdJyRUIIjzRSLX/hxhgaJmzwT9DO+z4H7tuwJmqnywtBwNyAMSZjw5d1GWz8eQ/rfwkqb04bJbE/lnc0bm/vuyba4UXi7nPgqmfAHuX4wORfmw4FBlKII0w=
+	 MIME-Version:Content-Type; b=kLgnpvs/33MqYqiayoWwSCcOHwIBzdGxnl3uNaaIHu+/iyRD0NdE5mmhDaoX6luHVzOHxaeEgzX37/c50riSjo/G/CajUwrHGVNbq6UUoR5M5vrYGg/U2EjVBV/3GxL44LzgJNVUxxjJclBSPEU2NXFu6EMyM4uH4mk22kIqH+c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -48,9 +48,9 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <elbadrym@google.com>, <romlem@google.com>, <anhphan@google.com>,
 	<wak@google.com>, <yuxiaozhang@google.com>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH 5/7] ARM: dts: aspeed-g6: Add PCIe RC node
-Date: Fri, 13 Jun 2025 11:29:59 +0800
-Message-ID: <20250613033001.3153637-6-jacky_chou@aspeedtech.com>
+Subject: [PATCH 6/7] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+Date: Fri, 13 Jun 2025 11:30:00 +0800
+Message-ID: <20250613033001.3153637-7-jacky_chou@aspeedtech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
 References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
@@ -63,77 +63,72 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-The AST2600 has one PCIe RC, and add the relative configure regmap.
+The PCIe RC PERST uses SSPRST# as PERST#  and enable this pin
+to output.
 
 Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 ---
- arch/arm/boot/dts/aspeed/aspeed-g6.dtsi | 53 +++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-index 8ed715bd53aa..d46a151e3c99 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-@@ -379,6 +379,59 @@ rng: hwrng@1e6e2524 {
- 				quality = <100>;
- 			};
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 5a7cd0a88687..c751703acdb9 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -17,6 +17,7 @@
+ #include "../pinctrl-utils.h"
+ #include "pinctrl-aspeed.h"
  
-+			pcie_phy1: pcie-phy@1e6ed200 {
-+				compatible = "aspeed,ast2600-pcie-phy", "syscon";
-+				reg = <0x1e6ed200 0x100>;
-+			};
++#define SCU040		0x040 /* Reset Control Set 1  */
+ #define SCU400		0x400 /* Multi-function Pin Control #1  */
+ #define SCU404		0x404 /* Multi-function Pin Control #2  */
+ #define SCU40C		0x40C /* Multi-function Pin Control #3  */
+@@ -52,7 +53,7 @@
+ #define SCU6D0		0x6D0 /* Multi-function Pin Control #29 */
+ #define SCUC20		0xC20 /* PCIE configuration Setting Control */
+ 
+-#define ASPEED_G6_NR_PINS 256
++#define ASPEED_G6_NR_PINS 258
+ 
+ #define M24 0
+ SIG_EXPR_LIST_DECL_SESG(M24, MDC3, MDIO3, SIG_DESC_SET(SCU410, 0));
+@@ -1636,6 +1637,12 @@ FUNC_DECL_1(USB11BHID, USBB);
+ FUNC_DECL_1(USB2BD, USBB);
+ FUNC_DECL_1(USB2BH, USBB);
+ 
++#define D7 257
++SIG_EXPR_LIST_DECL_SESG(D7, RCRST, PCIERC1, SIG_DESC_SET(SCU040, 19),
++			SIG_DESC_SET(SCU500, 24));
++PIN_DECL_(D7, SIG_EXPR_LIST_PTR(D7, RCRST));
++FUNC_GROUP_DECL(PCIERC1, D7);
 +
-+			pcie_cfg: pcie-cfg@1e770000 {
-+				compatible = "aspeed,ast2600-pcie-cfg", "syscon";
-+				reg = <0x1e770000 0x80>;
-+			};
-+
-+			pcie0: pcie@1e7700c0 {
-+				compatible = "aspeed,ast2600-pcie";
-+				device_type = "pci";
-+				reg = <0x1e7700c0 0x40>;
-+				linux,pci-domain = <0>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-+				bus-range = <0x80 0xff>;
-+
-+				ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
-+					  0x02000000 0x0 0x70000000 0x70000000 0x0 0x10000000>;
-+
-+				status = "disabled";
-+
-+				resets = <&syscon ASPEED_RESET_H2X>,
-+					 <&syscon ASPEED_RESET_PCIE_RC_O>;
-+				reset-names = "h2x", "perst";
-+				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_pcierc1_default>;
-+
-+				#interrupt-cells = <1>;
-+				msi-parent = <&pcie0>;
-+				msi-controller;
-+				msi_address = <0x1e77005c>;
-+
-+				aspeed,ahbc = <&ahbc>;
-+				aspeed,pciecfg = <&pcie_cfg>;
-+				aspeed,pciephy = <&pcie_phy1>;
-+
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-+						<0 0 0 2 &pcie_intc0 1>,
-+						<0 0 0 3 &pcie_intc0 2>,
-+						<0 0 0 4 &pcie_intc0 3>;
-+				pcie_intc0: interrupt-controller {
-+					interrupt-controller;
-+					#address-cells = <0>;
-+					#interrupt-cells = <1>;
-+				};
-+			};
-+
- 			gfx: display@1e6e6000 {
- 				compatible = "aspeed,ast2600-gfx", "syscon";
- 				reg = <0x1e6e6000 0x1000>;
+ /* Pins, groups and functions are sort(1):ed alphabetically for sanity */
+ 
+ static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
+@@ -1806,6 +1813,7 @@ static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
+ 	ASPEED_PINCTRL_PIN(D4),
+ 	ASPEED_PINCTRL_PIN(D5),
+ 	ASPEED_PINCTRL_PIN(D6),
++	ASPEED_PINCTRL_PIN(D7),
+ 	ASPEED_PINCTRL_PIN(E1),
+ 	ASPEED_PINCTRL_PIN(E11),
+ 	ASPEED_PINCTRL_PIN(E12),
+@@ -2073,6 +2081,7 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
+ 	ASPEED_PINCTRL_GROUP(SALT9G1),
+ 	ASPEED_PINCTRL_GROUP(SD1),
+ 	ASPEED_PINCTRL_GROUP(SD2),
++	ASPEED_PINCTRL_GROUP(PCIERC1),
+ 	ASPEED_PINCTRL_GROUP(EMMCG1),
+ 	ASPEED_PINCTRL_GROUP(EMMCG4),
+ 	ASPEED_PINCTRL_GROUP(EMMCG8),
+@@ -2314,6 +2323,7 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
+ 	ASPEED_PINCTRL_FUNC(SPI2),
+ 	ASPEED_PINCTRL_FUNC(SPI2CS1),
+ 	ASPEED_PINCTRL_FUNC(SPI2CS2),
++	ASPEED_PINCTRL_FUNC(PCIERC1),
+ 	ASPEED_PINCTRL_FUNC(TACH0),
+ 	ASPEED_PINCTRL_FUNC(TACH1),
+ 	ASPEED_PINCTRL_FUNC(TACH10),
 -- 
 2.43.0
 
