@@ -1,232 +1,161 @@
-Return-Path: <linux-pci+bounces-29654-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7152FAD860A
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 10:52:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C638AD86E7
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:05:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DDB53B7EAA
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 08:51:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 366CF189D32F
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:05:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8247D279DBC;
-	Fri, 13 Jun 2025 08:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139A1291C0B;
+	Fri, 13 Jun 2025 09:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bAYWQDjD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1D314jD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BCB279DA6;
-	Fri, 13 Jun 2025 08:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8763279DD7;
+	Fri, 13 Jun 2025 09:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804701; cv=none; b=ptMl7qygjDzTXBFYMD2NeLYUcGyKxaOvB8T/wmjeZxDoGDGPBNVzjTmwenaA3+JdFqIRoZeKtMJAc3sWihLT5QCkWulq8ptieQI27Y9uTUQRdh4z7cOh0RupdFsktAgQ4Ip/IyGK6EX0SAoJsOX8+/BmG86t0ERx6JGnQnnb/90=
+	t=1749805505; cv=none; b=LqHK5x+JUWGTuDZcJIpVODFqI6pKHTnhIg11L/apfJuwpCez/fCcajs1UKQKyg4vQWGYKNACi1i8UR61zg7D9mKKJPJxATV6/4O32vavo+oo0+qrjepyijhnXdzxwQqlAsbIfuPn1JFovv+BRhXM9kU0j4GzVLiPCCyyZWcuHF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804701; c=relaxed/simple;
-	bh=4dvU2gjTBAobluxvnHDFcItktqR+5ChasN0aGjgKaKI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TF+CL1X33sxw0VqtEuxr3jb9iDssc9X7A3EbESabllYS5bQypE7xtvrP24WRopbaODEJsnEitLuRSOADTb6xhjheuJ5PqfcRLTFF2NFwhhfBsRcfAtQhb6sU/Xl3UrBDR0Oi9rk601w22W+jpBT3WcnxDQYE78zs3mn4Qq2qOj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bAYWQDjD; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749804698; x=1781340698;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=4dvU2gjTBAobluxvnHDFcItktqR+5ChasN0aGjgKaKI=;
-  b=bAYWQDjDkqgi8W41nfXsD1GhZHc4vEcptHrcwRhlbYzs7p38uM/FRHY9
-   QI07SMAxI1j8YzAT+3A3xox4j6T5WDx5/kCRLw/4dvrB7gCYsUrcPGeUM
-   5Or/jMlTJwCF9tVnwbSHcrTt0AljSpxDJLPrZMoMV5Ca26pjAG/R/Fn/k
-   kVm5Zzh+lhEWkw/4s1/v1bmFadgHTs+qEplVvRsPzDVnphKTVWxulJOLY
-   CvwJSb1IjkEXK8Tlx3lXlNqBNVMtTilFT/z1CPBfL5uJlk5FjJUrlE1bo
-   7edJ/NKsfKL8WTu2ls85/a+WJfSnuVj9IHa/k2TntcNrGzpGMC1k43DNP
-   Q==;
-X-CSE-ConnectionGUID: o9pnfUYGRrqHAutgH0cHwA==
-X-CSE-MsgGUID: HMom63YgR4GFn4jvLO1IUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="74547609"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="74547609"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:51:37 -0700
-X-CSE-ConnectionGUID: agVmFPqcQfiQWHXPtV8Rmw==
-X-CSE-MsgGUID: gWFTP0HTRC2RODcDIuxKFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="147619241"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.26])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:51:19 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Yury Norov
- <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Shreeya Patel
- <shreeya.patel@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Vinod Koul
- <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Nicolas
- Frattaroli <frattaroli.nicolas@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Shawn Lin
- <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
- Sadhasivam
- <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham
- <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Qin
- Jian <qinjian@cqplus1.com>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
- linux-sound@vger.kernel.org, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Tvrtko Ursulin
- <tursulin@igalia.com>
-Subject: Re: [PATCH 01/20] bitfield: introduce HWORD_UPDATE bitfield macros
-In-Reply-To: <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
- <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
-Date: Fri, 13 Jun 2025 11:51:15 +0300
-Message-ID: <5493fd6017de3f393f632125fad95945d1c4294c@intel.com>
+	s=arc-20240116; t=1749805505; c=relaxed/simple;
+	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3kGH99Xyss1UFM2ttw9t5GCRTSDmtXRVkDEgLr49+c1Tovx0oPiIq3uTfdTU7dPJpHeHo4/MXQeRigm7pzHIaXrlFntMo/OcqVMwfCwkO17dKDfKBCKpYzFxOA5gC0ZvPGCaZg43iiWn79Q12iciE1cqaT6wl2j7MrBH4zRRxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1D314jD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A22C4CEE3;
+	Fri, 13 Jun 2025 09:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749805505;
+	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I1D314jDshWGk9VU2FaY4xmGqqNeYJ+VEfnVmgJTbLmVUHHkWXnQ/bz5woAKzjvTP
+	 /DOvGnVk+VFicXXGm06il7p1yMWrGU1SrtwLvKYooEcl1/LvCtWvSdod2fqOwHKinI
+	 StbcptvHentF5Eltm8p22RKUHdoQ8dkhrZbjNGzfbjCDBfPqIjy3CbCryp/gAlspNP
+	 nuP7WJp4925btgScwJ1DSd8MdyUnu4D9EASBYnU5c4z+mq08FLc+QW5rd6RDW3eene
+	 yN6Ex20uiZkditsFIUM2eMD/uqKuvBx+c4h1Q9GSHmhOOXLosJ4N/TXPLe1SvV8MF1
+	 g9Dz9rRKzCncg==
+Date: Fri, 13 Jun 2025 14:34:54 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: 'Krzysztof Kozlowski' <krzk@kernel.org>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de, 
+	m.szyprowski@samsung.com, jh80.chung@samsung.com, 
+	'Pankaj Dubey' <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+Message-ID: <fty3sp3brzpcs6jeqg6yxiwgpbyqogxqt5mo7owiw4vkl7vj2j@b33zfdizuy4d>
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193239epcas5p4cb4112382560f38ad9708e000eb2335f@epcas5p4.samsung.com>
+ <20250518193152.63476-5-shradha.t@samsung.com>
+ <20250521-cheerful-spiked-mackerel-ef7ade@kuoka>
+ <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
 
-On Thu, 12 Jun 2025, Nicolas Frattaroli <nicolas.frattaroli@collabora.com> wrote:
-> Hardware of various vendors, but very notably Rockchip, often uses
-> 32-bit registers where the upper 16-bit half of the register is a
-> write-enable mask for the lower half.
->
-> This type of hardware setup allows for more granular concurrent register
-> write access.
->
-> Over the years, many drivers have hand-rolled their own version of this
-> macro, usually without any checks, often called something like
-> HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-> semantics between them.
->
-> Clearly there is a demand for such a macro, and thus the demand should
-> be satisfied in a common header file.
->
-> Add two macros: HWORD_UPDATE, and HWORD_UPDATE_CONST. The latter is a
-> version that can be used in initializers, like FIELD_PREP_CONST. The
-> macro names are chosen to not clash with any potential other macros that
-> drivers may already have implemented themselves, while retaining a
-> familiar name.
->
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 6d9a53db54b66c0833973c880444bd289d9667b1..b90d88db7405f95b78cdd6f3426263086bab5aa6 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -8,6 +8,7 @@
->  #define _LINUX_BITFIELD_H
->  
->  #include <linux/build_bug.h>
-> +#include <linux/limits.h>
->  #include <linux/typecheck.h>
->  #include <asm/byteorder.h>
->  
-> @@ -142,6 +143,52 @@
->  		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
->  	)
->  
-> +/**
-> + * HWORD_UPDATE() - prepare a bitfield element with a mask in the upper half
-> + * @_mask: shifted mask defining the field's length and position
-> + * @_val:  value to put in the field
-> + *
-> + * HWORD_UPDATE() masks and shifts up the value, as well as bitwise ORs the
-> + * result with the mask shifted up by 16.
-> + *
-> + * This is useful for a common design of hardware registers where the upper
-> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> + * register, a bit in the lower half is only updated if the corresponding bit
-> + * in the upper half is high.
-> + */
-> +#define HWORD_UPDATE(_mask, _val)					 \
-> +	({								 \
-> +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		 \
-> +				 "HWORD_UPDATE: ");			 \
-> +		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask)) | \
-> +		((_mask) << 16);					 \
-> +	})
+On Tue, May 27, 2025 at 04:13:58PM +0530, Shradha Todi wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > Sent: 21 May 2025 15:15
+> > To: Shradha Todi <shradha.t@samsung.com>
+> > Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.or;
+> > linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
+> > kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de; m.szyprowski@samsung.com;
+> > jh80.chung@samsung.com; Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+> > 
+> > On Mon, May 19, 2025 at 01:01:46AM GMT, Shradha Todi wrote:
+> > > -static const struct dw_pcie_ops dw_pcie_ops = {
+> > > +static const struct dw_pcie_ops exynos_dw_pcie_ops = {
+> > >  	.read_dbi = exynos_pcie_read_dbi,
+> > >  	.write_dbi = exynos_pcie_write_dbi,
+> > >  	.link_up = exynos_pcie_link_up,
+> > > @@ -279,6 +286,7 @@ static int exynos_pcie_probe(struct
+> > > platform_device *pdev)  {
+> > >  	struct device *dev = &pdev->dev;
+> > >  	struct exynos_pcie *ep;
+> > > +	const struct samsung_pcie_pdata *pdata;
+> > >  	struct device_node *np = dev->of_node;
+> > >  	int ret;
+> > >
+> > > @@ -286,8 +294,11 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+> > >  	if (!ep)
+> > >  		return -ENOMEM;
+> > >
+> > > +	pdata = of_device_get_match_data(dev);
+> > > +
+> > > +	ep->pdata = pdata;
+> > >  	ep->pci.dev = dev;
+> > > -	ep->pci.ops = &dw_pcie_ops;
+> > > +	ep->pci.ops = pdata->dwc_ops;
+> > >
+> > >  	ep->phy = devm_of_phy_get(dev, np, NULL);
+> > >  	if (IS_ERR(ep->phy))
+> > > @@ -363,9 +374,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
+> > >  		return ret;
+> > >
+> > >  	/* exynos_pcie_host_init controls ep->phy */
+> > > -	exynos_pcie_host_init(pp);
+> > > +	ep->pdata->host_ops->init(pp);
+> > >  	dw_pcie_setup_rc(pp);
+> > > -	exynos_pcie_start_link(pci);
+> > > +	ep->pdata->dwc_ops->start_link(pci);
+> > 
+> > One more layer of indirection.
+> > 
+> > Read:
+> > https://lore.kernel.org/all/CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com/
+> > 
+> 
+> I went through this thread and the solution to avoid redirection seems to be:
+> 1. Make the common parts into a library that each driver can call
+> 2. When there is barely anything in common, make a separate driver
+> 
+> From my understanding of these 2 drivers, there is hardly anything that can go into common library
+> 1. host_init, dbi_read, dbi_write these ops have completely different flow
+> 2. link_up, start_link have similar flow but different register offsets
+> 3. write_dbi2 and stop_link is not implemented for exynos but needed for FSD
+> 4. Resources are different - FSD does not have regulator, Exynos5433 does not have syscon, FSD has msi IRQ vs exynos5433 has legacy
+> 5. Exynos is host only whereas FSD is dual mode controller.
+> 
+> I don’t see any other way except redirection, or using lots of if(variant == FSD) which is also discouraged.
 
-i915 uses something like this for a few registers too, with the name
-_MASKED_FIELD(). I think we could use it.
+Please wrap your replies to 80 columns.
 
-I do think this is clearly an extension of FIELD_PREP(), though, and
-should be be named similarly, instead of the completely deviating
-HWORD_UPDATE().
+> 
 
-Also, we recently got GENMASK() versions with sizes, GENMASK_U16()
-etc. so I find it inconsistent to denote size here with HWORD.
+IMO it is OK to have the callbacks for cases like this. This is also similar to
+Qcom driver where each SoC requires custom register updates and going by the
+common library or a new driver wouldn't be feasible.
 
-FIELD_PREP_MASKED_U16? MASKED_FIELD_PREP_U16? Something along those
-lines?
+> And about making it a different driver altogether, I'm completely okay to do so. In fact we had previously tried to post it as a
+> different driver which was rejected.
+> 
 
-And perhaps that (and more potential users) could persuade Jakub that
-this is not that weird after all?
+No, please do not create a new driver, that is another maintainer burden.
 
-
-BR,
-Jani.
-
-
-
-
-> +
-> +/**
-> + * HWORD_UPDATE_CONST() - prepare a constant bitfield element with a mask in
-> + *                        the upper half
-> + * @_mask: shifted mask defining the field's length and position
-> + * @_val:  value to put in the field
-> + *
-> + * HWORD_UPDATE_CONST() masks and shifts up the value, as well as bitwise ORs
-> + * the result with the mask shifted up by 16.
-> + *
-> + * This is useful for a common design of hardware registers where the upper
-> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> + * register, a bit in the lower half is only updated if the corresponding bit
-> + * in the upper half is high.
-> + *
-> + * Unlike HWORD_UPDATE(), this is a constant expression and can therefore
-> + * be used in initializers. Error checking is less comfortable for this
-> + * version.
-> + */
-> +#define HWORD_UPDATE_CONST(_mask, _val)					  \
-> +	(								  \
-> +		FIELD_PREP_CONST(_mask, _val) |				  \
-> +		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
-> +		 ((_mask) << 16))					  \
-> +	)
-> +
->  /**
->   * FIELD_GET() - extract a bitfield element
->   * @_mask: shifted mask defining the field's length and position
+- Mani
 
 -- 
-Jani Nikula, Intel
+மணிவண்ணன் சதாசிவம்
 
