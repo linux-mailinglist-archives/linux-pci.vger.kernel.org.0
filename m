@@ -1,157 +1,96 @@
-Return-Path: <linux-pci+bounces-29724-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29725-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38D19AD8E7B
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 16:03:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4668AD8EB8
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 16:09:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD62B177339
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 13:58:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 006171BC4673
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 14:02:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F1FA2D9ED3;
-	Fri, 13 Jun 2025 13:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PmOtPKRp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39B519CD01;
+	Fri, 13 Jun 2025 13:52:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606092D1304;
-	Fri, 13 Jun 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7FD156F5E;
+	Fri, 13 Jun 2025 13:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822599; cv=none; b=O85IoCBwfG8BPJyaOORv8u/5X0hadFeANBfHc205jQprrX+/a1ZbSFAu9a4Yt7kpbNCgjaIe2/SeZ8u2hFrkaRo4sDCmzQeDXbbtTgIlb3WT//HHUFPDdaysVDR5eaVI3HtrEuEAil7af1gP4TG2rgtn7JROQDwONfl1J+g+nBE=
+	t=1749822774; cv=none; b=Ok3J17SDVAdo1rO+NuVE9lNo4Hhphxfqzp3nYlAjqIqD5/ewltmCTn2Jmp+q4lh4J0o04+xj4U0lQaYZLibQUa7lfJXRsh2mzOcN+da1WJPmw/9FceLRE0J2enT82go1QDCqbFZWFxCG3tHwmX2C8c8MrrU0XzGcIdnM1//AuMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822599; c=relaxed/simple;
-	bh=XfaFZJbpPnn5P7AWNKZTZI2bEWtKdKvNZh+ex9dhxL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BOsR+uIS15JJS72N+dPyhUKRXGxxnhpkP1E2x4QqoKpgNAIywEYU4ye4zsoxIlu/QKIyNPOUEa6zlacQlpqjYDwpb4BuV7zEDder2lEiIFpyiFCvUpV1qWZXRrjS3hCKU3NEZrO8RmC7p7TF6EteHAU0i4QBHT6o5Rx/nPWvZTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PmOtPKRp; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 8D746439C1;
-	Fri, 13 Jun 2025 13:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749822595;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2WUtGaDXoMVBG3In2EoMbIWbQFZXS/XzmECPUwP3qOk=;
-	b=PmOtPKRpo1zl6cFiM5WFK+zH72UPlsNWbWesWXOzOa13dF6NrYrd9tHWFSan/VDfOYZOtN
-	xt+fP9HV1YOyX2zl/UKObG4aETC/HfctdPOOhMjHTs3ZPB+AK//6w0cexG7wgr28Bubksh
-	Mt0ksWeZwRWyDAfpjI5FDGeeShEkkBnWwTrsfvOOt06Kz4md8o01HZ7aRvtLolqxtpa6vL
-	/AWfl50UTlHeMmMLmg3fxUhKXGz+sb0o/5dsfIWYBLdU188iXAJyVZypSn0COvpAKXwM8T
-	IvKwRxUx9AAsjO/F3aRHAXycD9nv1X6CegugSnEgpzrYo8J02vEsGAtlEN+DbQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 28/28] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Fri, 13 Jun 2025 15:48:08 +0200
-Message-ID: <20250613134817.681832-29-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613134817.681832-1-herve.codina@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1749822774; c=relaxed/simple;
+	bh=cWb5O919iJ5GUz1RPBsizB20JDHxE/ASBUV9zv+N5lQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dcRnjrc7AdI/QdB/w/nssfAoHCTjIVd0hYD72f+fq75DkbSJVjVhZZBOodUeybgVmSqavlXg+gfZLOHnm+ZhV+UM2OtyNBvZj3YiSIgRLWU93+/qsjSo1wWcG/YIlLktVBrROCeXS5Gax92tPEKeUa36wiSxGgbV7OeDL8W5Oxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 0866620091AE;
+	Fri, 13 Jun 2025 15:45:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E75D669ABA; Fri, 13 Jun 2025 15:45:35 +0200 (CEST)
+Date: Fri, 13 Jun 2025 15:45:35 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: grwhyte@linux.microsoft.com, linux-pci@vger.kernel.org,
+	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org,
+	bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <aEwrfy63cvBLr5yc@wunner.de>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
+ <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedvudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegledprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrh
- hgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+On Fri, Jun 13, 2025 at 05:12:48PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
+> > Add a new flr_delay member of the pci_dev struct to allow customization of
+> > the delay after FLR for devices that do not support immediate readiness
+> > or readiness time reporting. The main scenario this addresses is VF
+> > removal and rescan during runtime repairs and driver updates, which,
+> > if fixed to 100ms, introduces significant delays across multiple VFs.
+> > These delays are unnecessary for devices that complete the FLR well
+> > within this timeframe.
+> > 
+> 
+> I don't think it is acceptable to *reduce* the standard delay just
+> because your device completes it more quickly. Proper way to reduce
+> the timing would be to support FRS as you said, but we cannot have
+> arbitrary delays for random devices.
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+To be fair, we already have that for certain devices:
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
+The quirk delay_250ms_after_flr() is referenced by three different
+Vendor ID / Device ID combos and *lengthens* the delay after FLR.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+It's probably difficult to justify rejecting custom delays for
+certain MANA devices, even though we allowed them for three other
+devices.
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index b05fddff8f97..ab6a94b201be 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -636,13 +636,18 @@ config MCHP_LAN966X_PCI
- 	  Even if this driver does not depend on those other drivers, in order
- 	  to have a fully functional board, the following drivers are needed:
- 	    - fixed-clock (COMMON_CLK)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
- 	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-oic (LAN966X_OIC)
- 	    - lan966x-pinctrl (PINCTRL_OCELOT)
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-switch (LAN966X_SWITCH)
- 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sfp (SFP)
- 
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
--- 
-2.49.0
+The proposed patch introduces a generic solution which avoids
+further cluttering up pci_dev_reset_methods[] with extra entries,
+so I think it's an approach worth considering.
 
+There are a bunch of nits in the proposed patches, such as "pci"
+not being capitalized, but the general approach seems fine to me.
+
+Thanks,
+
+Lukas
 
