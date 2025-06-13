@@ -1,131 +1,111 @@
-Return-Path: <linux-pci+bounces-29644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29645-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED727AD8289
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 07:31:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 472DDAD82F5
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 08:12:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71CB93B6A2C
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 05:31:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 618EC188D752
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 06:12:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8CAB253B67;
-	Fri, 13 Jun 2025 05:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5103A257427;
+	Fri, 13 Jun 2025 06:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0ZC3sb6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqG80Tbe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DC6252288;
-	Fri, 13 Jun 2025 05:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DEA1B95B;
+	Fri, 13 Jun 2025 06:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749792674; cv=none; b=IbuQLS95W/wP+Ox/1u1je15O29/dgy9GJ9JtqwFgLUfJ38saayiU/HYnjDXIX+qG6/9AWlKZTQDWnJ2FUira1ckjl2HhgGQIBN/oqnamIt7BBfm5EnX0qreOZfCk8fgZBxJvJx/WsqMrPLMKO3IP6vyhLNUm9dscnOzKvSxk/Eg=
+	t=1749795131; cv=none; b=LGtGrUpJd47NHuxHxOVeP73Su/ONu65Qh2I05C3JuJOctO89Ha9fNuUDiPRT1+EYM/G9SgWhYPtzGsv2QlRQFXL308XEkKXJVc4omkbK9c7XzLlVFdtSRV3Nh7FX4Ww9o+7L6wPDNSSp/Xo8g0UYaJwOXK/ljDBN1ghiLMcC9zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749792674; c=relaxed/simple;
-	bh=CNh+HiiRkB0XHFZ9RDPw/wKbUOdkeNHiRSJSctqLMz8=;
+	s=arc-20240116; t=1749795131; c=relaxed/simple;
+	bh=xkYpzMUmOpY1cRCi/aFqu67aJwISXF0l+SAsHg0sZ6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCQ/x5TObjrbdZc2y7rPVVBJSeSPmK320WsaMl8bhrsCDAT3VVjDqVbXu9lgruX2MvEH7UenT8ecwxiobKEnqZ0rLYvxvVWMFS7LoH0TiUqH6DDvyj5/xFalYkt/0XYVA9DqOMbcXFrF6owlCXD94vy4SNh6BrQra4cXb843+Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0ZC3sb6; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-748764d8540so1621689b3a.0;
-        Thu, 12 Jun 2025 22:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749792672; x=1750397472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CxRccK9TPNkSjUlVA9FxqDEHBsSIzMxTRGu02KOjBxE=;
-        b=H0ZC3sb6o7Wr3/LTZOvL5Ogl1/JJfiFdd+aMDFGds5cjpdcAticqA4AOvbPfnDEy5x
-         EnjMEMiM6ffatNshqMhBNGWbpgCGwSkOpfQtBCcpBrcF2+KkPCWEA5rY5/iCD1TT6/lO
-         O3EWmbHuzYlyKq2aaxQAFcRWF48vsKyvnJg54DecVex15urtRVv7l01T5spVpE3tB8XW
-         zrV/wE1ouVLVh34Nu8ClDA7ApsevzyxjkNq4xStLc+sodpsX1VBKYIvKX+6b8sNBIK2J
-         QsOaUcCOAYMmYYavP4clgm9n31kmzbfvouYvhKeat9FRlzCMR9FzOC5sKjmTG0zqSjOH
-         0URw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749792672; x=1750397472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CxRccK9TPNkSjUlVA9FxqDEHBsSIzMxTRGu02KOjBxE=;
-        b=F1MsHrtPvnxzrYiSBZBZHf+5UasNPY2Hyi0I9oFRwNz0PLqaZhwF1e6r6Sj+PK45CL
-         m5iGk6OW/U7Q8UTjICC1q060kM3gXJYajfT5tGV3AzeV/pAOUz5k5pOaHx1aIgfy/DLd
-         yhEXDJ1glTrZy0Tdq+YAVQ2sXdYwAxep8+lgs99zla7GpjIXDRtEEWn1Gbomr5dNXjzb
-         l4XEBJJePfAmod1CAHIIOa00nP2MU8GFKv65k2BhGoA21xIHlYqFU8CoCUIxccc3zZRc
-         FSTm2jZJWDRayrGUnfUufU+VHesvhoDHTt5x9Fz9oGKr4qL17/OZOh39jbnu8aUAv7i5
-         OrwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFHUkDcu3mXv1MtC+7MPoYRn9+EZanB8kFNKABoMY4+rP02pyZkEB8t/rlF2c9qh+GXkpA60He8eNHguE=@vger.kernel.org, AJvYcCX1PuQ4aDmFAjm/heqZdf6u/hGdEENq9bl+NH3/unddvUQPzRCBdeNiYj18HgbWNpTbMXUgKIuZdF8o@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjJvLRv8DxhfPUEbzZQO3qCH4TH9TV9+HcCBxLlMCkv+SHLCud
-	/r5O6W4ySwx+NxQyxLmo6iPzyAMQIF3+16FeaFISNdNHiJ1UwSkquezOFnhva5li
-X-Gm-Gg: ASbGncsq9ngqLptlBCGENIjDWfI+gJILxswXWsu4hteRxvERtU4u0JoUGwE9dUn2MpU
-	ooHhYQb0NFPR4wfg19HPTmJ2y4dj90ypu7HOJL8ZWvIiqtanFzyhN93prTQC70Evcw/kd3qHQkj
-	PRkRZUIZImDjynW953Sm2RWJ3ePr0c0hNQ9aZ3ZPmdvpZ17SnewLaF049PVXi0dN2jo6LnjDz5c
-	JjnoT41Fk9bCTTeixAUqPchgI5u5mcvi8jcgakqJLTyClibroCdKX0hJ3UGQI+c3HEkXCeKba7Y
-	c7K9o4py6GUW5tEPSMZj6Qlkr+VtngzJkzLRgvNsqGqDcMaEGTAtW/eK/bs6
-X-Google-Smtp-Source: AGHT+IFW3YLUNguMP7Jju7pJGbAloDxqM68G7zonX52FPkJnUD/CTS3dbXq3+Dz07CjcjRnXcH9SdA==
-X-Received: by 2002:aa7:88ca:0:b0:746:25d1:b711 with SMTP id d2e1a72fcca58-7488f71e65dmr2200476b3a.17.1749792672571;
-        Thu, 12 Jun 2025 22:31:12 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:7667::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca16sm717943b3a.35.2025.06.12.22.31.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 22:31:11 -0700 (PDT)
-Date: Fri, 13 Jun 2025 02:31:06 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 3/5] PCI: rockchip-host: Set Target Link Speed
- before retraining
-Message-ID: <aEu3mqIp-QjgYTWT@geday>
-References: <cover.1749791474.git.geraldogabriel@gmail.com>
- <ad9dc26689ae2c9e811d093ba18c9e579b6747ea.1749791474.git.geraldogabriel@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gk/IxNKQkZCN6kPVWy+c9jkY6aYlgdVu7KtcJebFspZz1quJPFjDwORSh58wWuxgZie6Hp28YYemwhZDfbQ9R6bkR5cCTKEGwohv3p22FP9WtOXSHZsd6X+xO86OHAaJOaTpI6cRw5/LIQrjL4ThZyix3zAT8yBPkAFLt1wSh7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqG80Tbe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09FEBC4CEE3;
+	Fri, 13 Jun 2025 06:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749795129;
+	bh=xkYpzMUmOpY1cRCi/aFqu67aJwISXF0l+SAsHg0sZ6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AqG80TbevqI95q4rg/vd3Re6AvxNi3B/ZR/eNtrGI+flPrhTULQEjQojte3zWgT/M
+	 EpfsbX94xA2R6Z6YdTGy8ROY8w5Uu2FWfliX8hg8SVSl+XuLh3W7cOIltWA0uf+wvd
+	 lDrAWiAcUhV3RN+vwz0W0gzvOK1p9jXclh53SZzN6YwLojDVUliblGUvN+u6VvM1Cf
+	 V59pJB6awEHfJHSvCykV0UREglW332I1QJuNgdFaymsd9qTmRRkvmPfmIK76FOAzef
+	 ITpOsM/OupUl3/ul6t7hEXSUyqFmjLpalj8gHsLqAXFtX++3Q7mlejlKybBEFf1p1r
+	 5J8EfoHZnGPBA==
+Date: Fri, 13 Jun 2025 11:42:03 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Ammar Qadri <ammarq@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Reduce verbosity of device enable messages
+Message-ID: <56cc4h6daxofmooafh2ifquwtf37jajuaed7otdmkhozfnawz4@5zon6ttwegqf>
+References: <20250507232919.801801-1-ammarq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ad9dc26689ae2c9e811d093ba18c9e579b6747ea.1749791474.git.geraldogabriel@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250507232919.801801-1-ammarq@google.com>
 
-On Fri, Jun 13, 2025 at 02:21:59AM -0300, Geraldo Nascimento wrote:
-> Current code may fail Gen2 retraining if Target Link Speed
-> is set to 2.5 GT/s in Link Control and Status Register 2.
-> Set it to 5.0 GT/s accordingly.
+On Wed, May 07, 2025 at 11:29:19PM +0000, Ammar Qadri wrote:
+> Excessive logging of PCIe device enable operations can create significant
+> noise in system logs, especially in environments with a high number of
+> such devices, especially VFs.
 > 
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> High-rate logging can cause log files to rotate too quickly, losing
+> valuable information from other system components.This commit addresses
+> this issue by downgrading the logging level of "enabling device" messages
+> from `info` to `dbg`.
+> 
+
+While I generally prefer reduced verbosity of the device drivers, demoting an
+existing log to debug might surprise users. Especially in this case, the message
+is widely used to identify the enablement of a PCI device. So I don't think it
+is a good idea to demote it to a debug log.
+
+But I'm surprised that this single message is creating much overhead in the
+logging. I understand that you might have 100s of VFs in cloud environments, but
+when a VF is added, a bunch of other messages would also get printed (resource,
+IRQ, device driver etc...). Or you considered that this message is not that
+important compared to the rest?
+
+- Mani
+
+> Signed-off-by: Ammar Qadri <ammarq@google.com>
 > ---
->  drivers/pci/controller/pcie-rockchip-host.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/pci/setup-res.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 65653218b9ab..68634ae8caaf 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -341,6 +341,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  		 * Enable retrain for gen2. This should be configured only after
->  		 * gen1 finished.
->  		 */
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
-> +		status |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, PCI_EXP_LNKCTL2_TLS_5_0GT);
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index c6657cdd06f67..be669ff6ca240 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -516,7 +516,7 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
+>  	}
+>  
+>  	if (cmd != old_cmd) {
+> -		pci_info(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
+> +		pci_dbg(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
+>  		pci_write_config_word(dev, PCI_COMMAND, cmd);
+>  	}
+>  	return 0;
+> -- 
+> 2.49.0.987.g0cc8ee98dc-goog
+> 
 
-Although this incidentally "works" for facilitating Gen2 training
-because mask clears 2.5 GT/s, this will shift the value 0x2
-by the mask I think. This is clearly wrong, and instead
-we should use AND clearing plus OR'ing the 5.0GT/s value.
-
-But I wait until at least Bjorn's review to send v4 with
-correction.
-
-Geraldo Nascimento
+-- 
+மணிவண்ணன் சதாசிவம்
 
