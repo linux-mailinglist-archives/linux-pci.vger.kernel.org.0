@@ -1,154 +1,309 @@
-Return-Path: <linux-pci+bounces-29664-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29665-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E958FAD8869
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:49:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E780AD8870
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 11:50:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12AB11897F58
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:49:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C5AD3A639B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 09:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0431C189BB0;
-	Fri, 13 Jun 2025 09:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB75291C37;
+	Fri, 13 Jun 2025 09:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tISg5Fdz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EguPdziN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34792DA75E
-	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 09:49:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2981C84B9;
+	Fri, 13 Jun 2025 09:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808156; cv=none; b=BLbGf20Jpo0vBOxyUiy+vIacpntXgpgRNr6RqEl+23A6xzCwILdvZAhdSeiavfE+70TpDwEjUQd7lcloSRcK0Qd/+DWMwBi0MumLhgMmMHeYvHfvbKoZdqdfRfkuBCRsCKsq7wNuaAP1nBrqIGwrz2+wsfrpXTUHp3PJvIfdFcs=
+	t=1749808239; cv=none; b=LJFe+X8zFlCwBJkrjuAp6HFpZQp4osFgKsVnNdqVus0QcWJlGdpGNNrVoFzmQxea+D91JohxM+VDeKOGvl5bOnV8RZ37bid9ukD52YgUVfBUMedsFW+BwlRLYwP0V5Kabj5+HPtzseZYI7O2Lx/7fG/dvZfZ73SQLteY8gzd830=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808156; c=relaxed/simple;
-	bh=FD3+a0qSWnfO5GoGBElixxKXQCsxJ+r+ACcIJE+ksE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZCc0erYDLwEEem/e2S6sM8f22oVpGUJ3ROkMawrWNrlLahpPKiIli8ysdcNJw49mSJXqJsf2/MvTwpAXrNKlvDQMy87stFS6cYT4slpBKfTe/B3ODH6RTQrpkpMkhq9RbRX47NzE3W239miK3Oqn+FnIBtnO5avsKkXgHWeeAL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tISg5Fdz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF083C4CEE3;
-	Fri, 13 Jun 2025 09:49:12 +0000 (UTC)
+	s=arc-20240116; t=1749808239; c=relaxed/simple;
+	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iKN8xjpbXu3604SAlCoky5V25f3av6RWHnfeoaORSgqWyezYnc0s3yQ4IN83Mc5SzO0nWfcyCdhf++F1yKmKnWawZ5uDsEYqhmp8yu3BQjMqFNt80nFl43MTy5nbKIoFyyVYPj2A2YTl8mGExrejMqeK4sPOsyhROxjJD1Xuq4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EguPdziN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EF6C4CEE3;
+	Fri, 13 Jun 2025 09:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749808155;
-	bh=FD3+a0qSWnfO5GoGBElixxKXQCsxJ+r+ACcIJE+ksE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tISg5FdzAiM8LkPj/G3D3XHzC5+0wKGP5Zbp/S4yJDs1HpYJZub+rCZcy205U2HYL
-	 8sfKp3yDD+HR5fL6SsNKJnzR483P1fgGEkuIm3g4CgMlZ+VNe2plowNZerSjiKicOc
-	 V6zZdZhrxiGAYpwK215/0ndEBW+F2KgZw7eESvwS8V0P9JHKvKSDSOnvQelLEomnDf
-	 lU8vqheLzkwOAdo6pyXBRKxUdI2sdZSju/tO0Z1QoS9QddCJjTAvukJBBl9HqL10zH
-	 qfV1+t9/cxJW08fHEyDuRJ1u+b1XLLBTGO5lM7z1RspZ2qziKktyBwKTYviUUHTE3r
-	 60ChV+NqxDK6A==
-Date: Fri, 13 Jun 2025 15:19:08 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [PATCH] PCI: dw-rockchip: Delay link training after hot reset in
- EP mode
-Message-ID: <wlrcincpfir65cvqbgromy7gc25vtkynxzoqmnebp7r62pce5z@iipm4r7j5aot>
-References: <20250522123958.1518205-2-cassel@kernel.org>
+	s=k20201202; t=1749808236;
+	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EguPdziNfQVFXhGugXO7CxVDI9hmhHEse2V8d9DfmaJLP2zPCWPiwDCqETugb6aqg
+	 EovPSvD8xMKL6QL2InygSOr54EKhGof73pM1Sw26ZxLwBJp0iDPCWzXQPBoy2735ny
+	 +CkixnfG+TpDATOVwDAuoRdDpyXsEBJ6g/aW0oasj+3Q6ssDs1OU2v+UKnJcc85AlP
+	 SAYD3d+JNmJs1aIND1eplli51ZAh6hEB6EcmkGRWqGOYKnrheIUj87KvByxUndUVau
+	 /j0KhctSzqmpk6Gt6djtxuf/+M9582WOduahXLRpD2hXHINaVWyijCpqgdrgPAEPNU
+	 q403k+tQENT6w==
+Message-ID: <b387a2ed-af47-45a9-871e-d43a66e41f21@kernel.org>
+Date: Fri, 13 Jun 2025 11:50:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250522123958.1518205-2-cassel@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] dt-bindings: pci: Add document for ASPEED PCIe RC
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org,
+ linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
+ wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
+References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
+ <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 02:39:59PM +0200, Niklas Cassel wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+On 13/06/2025 05:29, Jacky Chou wrote:
+> Add device tree binding documentation for the ASPEED PCIe Root Complex
+> controller. This binding describes the required and optional properties
+> for configuring the PCIe RC node, including support for syscon phandles,
+> MSI, clocks, resets, and interrupt mapping. The schema enforces strict
+> property validation and provides a comprehensive example for reference.
 > 
-> RK3588 TRM, section "11.6.1.3.3 Hot Reset and Link-Down Reset" states that:
-> """
-> If you want to delay link re-establishment (after reset) so that you can
-> reprogram some registers through DBI, you must set app_ltssm_enable =0
-> immediately after core_rst_n as shown in above. This can be achieved by
-> enable the app_dly2_en, and end-up the delay by assert app_dly2_done.
-> """
-> 
-> I.e. setting app_dly2_en will automatically deassert app_ltssm_enable on
-> a hot reset, and setting app_dly2_done will re-assert app_ltssm_enable,
-> re-enabling link training.
-> 
-> When receiving a hot reset/link-down IRQ when running in EP mode, we will
-> call dw_pcie_ep_linkdown(), which will call the .link_down() callback in
-> the currently bound endpoint function (EPF) drivers.
-> 
-> The callback in an EPF driver can theoretically take a long time to
-> complete, so make sure that the link is not re-established until after
-> dw_pcie_ep_linkdown() (which calls the .link_down() callback(s)
-> synchronously).
-> 
-> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> Co-developed-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-
-This patch is not applying on top of v6.16-rc1. Please post it after rebasing.
-
-- Mani
-
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 > ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/pci/aspeed-pcie.yaml  | 159 ++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index c4bd7e0abdf0..05b8e4cbd30b 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -61,6 +61,8 @@
->  
->  /* Hot Reset Control Register */
->  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-> +#define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-> +#define  PCIE_LTSSM_APP_DLY2_DONE	BIT(3)
->  #define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
->  
->  /* LTSSM Status Register */
-> @@ -487,7 +489,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->  	struct rockchip_pcie *rockchip = arg;
->  	struct dw_pcie *pci = &rockchip->pci;
->  	struct device *dev = pci->dev;
-> -	u32 reg;
-> +	u32 reg, val;
->  
->  	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
->  	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-> @@ -498,6 +500,10 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->  	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
->  		dev_dbg(dev, "hot reset or link-down reset\n");
->  		dw_pcie_ep_linkdown(&pci->ep);
-> +		/* Stop delaying link training. */
-> +		val = HIWORD_UPDATE_BIT(PCIE_LTSSM_APP_DLY2_DONE);
-> +		rockchip_pcie_writel_apb(rockchip, val,
-> +					 PCIE_CLIENT_HOT_RESET_CTRL);
->  	}
->  
->  	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
-> @@ -585,8 +591,11 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
->  		return ret;
->  	}
->  
-> -	/* LTSSM enable control mode */
-> -	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-> +	/*
-> +	 * LTSSM enable control mode, and automatically delay link training on
-> +	 * hot reset/link-down reset.
-> +	 */
-> +	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE | PCIE_LTSSM_APP_DLY2_EN);
->  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
->  
->  	/*
-> -- 
-> 2.49.0
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+> new file mode 100644
+> index 000000000000..5b50a9e2d472
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
 
--- 
-மணிவண்ணன் சதாசிவம்
+Same comments.
+
+> @@ -0,0 +1,159 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/aspeed-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED PCIe Root Complex Controller
+> +
+> +maintainers:
+> +  - Jacky Chou <jacky_chou@aspeedtech.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+
+> +  Device tree binding for the ASPEED PCIe Root Complex controller.
+
+No, describe the hardware. Your current description is 100% redundant.
+It is never useful to say in DT binding description that it is a DT
+binding. It cannot be anything else, can it?
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pcie
+> +      - aspeed,ast2700-pcie
+> +
+> +  device_type:
+> +    const: pci
+
+You need to include proper pci schema and drop all redundant properties.
+
+Look at other schemas.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ranges:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    description: IntX and MSI interrupt
+
+Need to list the items. Look at other schemas.
+
+> +
+> +  resets:
+> +    items:
+> +      - description: Module reset
+> +      - description: PCIe PERST
+> +
+> +  reset-names:
+> +    items:
+> +      - const: h2x
+> +      - const: perst
+> +
+> +  msi-parent: true
+> +
+> +  msi_address:
+
+Where is this property defined?  I do not see in kernel nor in dtschema.
+Drop and use existing properties. I am not even talking about coding
+style...
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: MSI address
+> +
+> +  aspeed,ahbc:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED AHBC syscon.
+
+For what purpose?
+
+> +
+> +  aspeed,pciecfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED PCIe configuration syscon.
+
+For what purpose?
+
+> +
+> +  aspeed,pciephy:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED PCIe PHY syscon.
+
+For what purpose?
+
+> +
+> +  clocks:
+> +    description: PCIe BUS clock
+
+Missing constraints.
+
+Just open any other  binding and do not implement things diferently.
+
+> +
+> +  interrupt-controller:
+> +    description: Interrupt controller node for handling legacy PCI interrupts.
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 0
+> +      '#interrupt-cells':
+> +        const: 1
+> +      interrupt-controller: true
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
+> +      - interrupt-controller
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-pcie
+> +    then:
+> +      required:
+> +        - aspeed,ahbc
+
+else: make it false
+
+> +
+> +required:
+> +  - interrupts
+> +  - bus-range
+> +  - ranges
+> +  - resets
+> +  - reset-names
+> +  - msi-parent
+> +  - msi-controller
+> +  - aspeed,pciephy
+> +  - aspeed,pciecfg
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - interrupt-controller
+
+Messed order, missing properties. Open other bindings...
+
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +
+> +    apb {
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      pcie0: pcie@1e7700C0 {
+> +        compatible = "aspeed,ast2600-pcie";
+> +        device_type = "pci";
+> +        reg = <0x1e7700C0 0x40>;
+
+Lower case hex. Please follow carefully DTS coding style.
+
+
+
+Best regards,
+Krzysztof
 
