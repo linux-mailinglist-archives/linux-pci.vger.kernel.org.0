@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-29797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 303E7AD9811
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 00:09:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F21DAAD9814
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 00:09:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3DC816E872
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:09:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8DC71BC4AAB
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:09:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78DD528DF34;
-	Fri, 13 Jun 2025 22:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE43428EA69;
+	Fri, 13 Jun 2025 22:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iDHKVma6"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VEQ1NHrl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2E428DEE9
-	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 22:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1763828E611
+	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 22:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749852535; cv=none; b=cX6jG8jiCklrlTZR0tXdohiis3AReG5wtDcuOZUvq0lV2ICaSgpYjd392OwJytEjoAyzdO0DVgiUu8g2nY/GSWUQCTRJUG5SkMy55rVQb1DmSmbpVvwcIvE5/oC8cSkgWfiUZjHhlL2PXYgO5wN9YddJYMXCwbkmug2OCIT2sBM=
+	t=1749852538; cv=none; b=IB4pWSF9XNPzAdrqRdbejqmGvQybY+SuTuFYfyZMhqohH0QYyGWeLuDfZuseLW6FJtIJLpNKp7resc7vOhFyBspaMXrdRPUkpcR0N+g5HhYGzpUafLMaIZVwURUuPgAgRCgZigb+IO4B/GYpDClPPGLoue3hLNMeloVT4WDZRHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749852535; c=relaxed/simple;
-	bh=TRaVBAz7tbUSc6CM8t/iSL3Hwc9e4nCy7l6dTwQY3qI=;
+	s=arc-20240116; t=1749852538; c=relaxed/simple;
+	bh=HD4a6r9bibYgUJ71XazUNv0yi/iISYkLeMyZ683QAeI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FtW7EADiKBqo2QyE46ys2PuN9uq9+iJTTyRxhdTz1Ojiew0Hw65rAXEO3hP066TdWzictR4aA5hdHbIdnqFanGWMz5EpqV2MNkta2ZxEkgb0zPQRfxCup/G81ZjNIuz2MakjETirGEH7LjGCCg2wIzgtybZydu3QqlaoVGiVWWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=iDHKVma6; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=ErtrNYaLjRhEKqK9jjbkbVh8JobaKAiwZAoqlLoSWfG4Hpm6ayuLAwkpsTV6l1B4yBkZB81h6a+fdEpy++YrVFcwFp0dZlDps3TFfXyD/JYKQaiTbNyJxMw+7E7n6KfYzt4qLIw4vKS20qsbExx0JjtNMDPE9hX14l+LyuG9KL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VEQ1NHrl; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235f9ea8d08so26747345ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 15:08:53 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234d3261631so19342625ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 15:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1749852533; x=1750457333; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1749852536; x=1750457336; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eTOEPKoKv4ajHTNSTP84Hrxgzt+IR4WbeVWxtPlJWow=;
-        b=iDHKVma6PJ64/7/SZN84RLKnK2KPBhwmSzc2KCpy6R2ADPiIPMwdUi0+AnqYO9DQSq
-         31N09KoZmLmn9FpAXOZKENXiAMPvZhpPQ/tEf9GI9zipGyFbW2M+a9g7YW+NKwYxgqyU
-         eS8XALelseqEGcI5UJnHg5AfsWFOWm5lG9pls=
+        bh=a9nXHk5SBHvChHubaGzWpWGO2zI+zAOT3Ho0PXOlrnQ=;
+        b=VEQ1NHrl6ViNJCE8YLom+QIPBbB4Sx9LCXbCLFl67cjiY6TZIES5N48x8lUHpLj/gd
+         g6zH4irVxWBnU2qsr1hgfUibEdFeJKxGaX5RYNbiUcotVqWJhERLCJ+SQTa5OEWTX30N
+         ajE4Bs4Jd22HjjM7IMf9jrJS/nuDqwHF5PUGw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749852533; x=1750457333;
+        d=1e100.net; s=20230601; t=1749852536; x=1750457336;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eTOEPKoKv4ajHTNSTP84Hrxgzt+IR4WbeVWxtPlJWow=;
-        b=aU5TmNkL4L7fbv9sUteaMH7fIO2DM43e33F2X1AVP9chaWGmsOE8HiySmf2tm+lOqL
-         f/wt8Y5cC2Dzlc4yN1frDvk4zpbiD3qYsgu8kWiQhvMsNX8MAiTeu2DxORioFsujMewY
-         ZqCeH3G0l1uuY5u07xaSVuaYbqmjGwQ/H0dAOtxkrioQTohBoRn72mu84SwxlzjiKlkR
-         beHHBYFJ05mu9LWbQXNGfNDIA5WdjQiID6/QrJ+jPFFob5WVcY0mt70EHO7u9MJ/2P+C
-         9p18cf0A7Iq1o79+QNTnkX4uihSOeqdKysZMBXhs0YmLr8n4SZxU5x0VGRCdBqhFSJ9o
-         +9sA==
-X-Gm-Message-State: AOJu0Yz9OV/uQ08ES3DQLiLGEgZFbUiFvAGO2+u8yy4O7phX2jm60O3g
-	PhEFibuFEznNhF51fBPhqXDoqA7DDTMYep/E8HzbiToHcmrhd0Z5FYZfbdZQ43p/ZB1KfcjZQMd
-	LDllPUERx3x1Ge9DVJE/P3yVHcRE+WKzftP4ROoX24xXN7IoTpdRobNaKLwnm4j46oB0ZXbxczt
-	71ivvUfbFVJWV5mxknm8W4qyvbEA8e0aHnWI731EO3/X6FTlWooZQ8
-X-Gm-Gg: ASbGncsAU0WrZzctLIwCsRjIp/GvyrQxXeOYE+lxvT0n25SauKwZLrM3yzD1Ao+kh6w
-	LuHyULflirmtBgRmEIKwqlf+PHMnMzpdDCgsFQw2Fx/rIalXK+rMTTDM1t8MMTkckMZRdYAhhy3
-	QxKUmm6ArZOCZoh1KY1Uuw88pM+1YNfXKN888U9iCFq7+RCVASMJBoo1bC7X6qPAfW5gDOKrFLv
-	YQVQRYPSIhUhiY9dqyEWO/gXrsbHYjmzl2w2bgiOyTMjS6YwYuK+2LaU9JcbDgPGuESaSIeKynS
-	en2LLS7wT2IagzvNRCkpZrZc0JB4jp5Wm9N+1kekX/UYcyaUUNaPANpUnjICfx4aW+5ziqx2zMl
-	JFlHUoZO8hFp1Y0R1ucLz3UMw5JAg2sF8LwjPqVXkqw==
-X-Google-Smtp-Source: AGHT+IG1F1gAsXiF14k7CbCxmhGYBAPiFDXrNRzZMFVz3m3N5XXoe66Nkc5F+9nou5STw5a0DP1o4Q==
-X-Received: by 2002:a17:902:d54a:b0:235:eb8d:7fff with SMTP id d9443c01a7336-2366b1224d8mr18110485ad.28.1749852532769;
-        Fri, 13 Jun 2025 15:08:52 -0700 (PDT)
+        bh=a9nXHk5SBHvChHubaGzWpWGO2zI+zAOT3Ho0PXOlrnQ=;
+        b=vEer9h5z5CBEv8SVA0THWQaebkUisV7f5TYhvc9BpUiTpZhz5Ke5Hr+7k7/wUQ6q6a
+         LOZFOYPzr4xi+XOnYkZrEkGOoSykIzLQQFPmIJ2O2GfmXveNeHKvvMaVV5Qbtlw7o2bq
+         a++60m/zujJPrC9yt5i6zOiHBiU0FXwkM3nH6uQApkW4g98SA1j6DoQwfUjp74IxnyxT
+         cSy7gwT/jEVx2/l6PWgkZ7ukByEG1ehuEZaihK1S2ZkFLmyByfsMgtYvIqLxyu2w1gqz
+         RFik4z2uOgUkdQJB6nPxj2I8I5IuvM7ud0wqDw6tjVLhzh+J7JLNPMX1HoJy7YXmadbi
+         4P/A==
+X-Gm-Message-State: AOJu0Yw3KwpxyE6iSBJQDWipXgI2RoGyVd4ZadlQIheSzzQTe6bRsQRv
+	4E0bfQQw8Q3kEeIijBUZHQuof9HEeKo3eZ+prLnUoPvHCLTwDRyMg41Ex/ducl4UVjWnIdA6kGl
+	r9VkXZHkvZL8YHJXUvnq3GfMj99qemFRY7km5bP/to6JnGkc8Ct8PnZCJfApsr+rvv5Vu1FjBhF
+	eHFFC4Z8EPhtX3688LtW7wMpdbzvwrapbP6nCoauJPv7fhBWjF99AA
+X-Gm-Gg: ASbGncv88hpNdF9OJYeR+yeRvMLJIfWxLM1xxzGjKD41lr5jGmuSx6s/X2iu4+IHrlQ
+	b49XYVTXJ19d12tsDgoavQIhVzz3SYZvRieseZVw3QrubXlp8WodeomQy4oVVOWKfSag+/9pL1l
+	ftZR7kXH0n+HQ2PTFXJhcDAulrjI7BB/0BvkkGFZuii/SByUamKtwv7NcCd/1nUQRtBUnITELrD
+	35wmz3+GDyadA7g7fZ4th6c3lXmEszeII84YEIRnrAeOA5rqkC14A6D/B8scoadIMEPSpfF4AJ0
+	xTo+Humn4ZwDj1hAub3lh4B0hXkluZYEXHaW8dnqFLg+IvcbpeA5C3qYVeJuMTP4FPgiirLDdP6
+	TODnFi6M40ywHiTRy4IVoflpniAZi0wAhe1MfTo450SVTUKSTn0g5
+X-Google-Smtp-Source: AGHT+IHM8oazS7A2uh0xAgCrPVpqhejHMMo7I+G/E9MQgjoES8mLV+qqRbRGmcO3lnv9/6im+w/Xyg==
+X-Received: by 2002:a17:902:ecce:b0:235:225d:3087 with SMTP id d9443c01a7336-2366b14d3c9mr14390065ad.30.1749852535840;
+        Fri, 13 Jun 2025 15:08:55 -0700 (PDT)
 Received: from stband-bld-1.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea7d74sm19593105ad.152.2025.06.13.15.08.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea7d74sm19593105ad.152.2025.06.13.15.08.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 15:08:52 -0700 (PDT)
+        Fri, 13 Jun 2025 15:08:55 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -88,9 +88,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] PCI: brcmstb: Add a way to indicate if PCIe bridge is active
-Date: Fri, 13 Jun 2025 18:08:42 -0400
-Message-Id: <20250613220843.698227-2-james.quinlan@broadcom.com>
+Subject: [PATCH 2/2] PCI: brcmstb: Add panic/die handler to driver
+Date: Fri, 13 Jun 2025 18:08:43 -0400
+Message-Id: <20250613220843.698227-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250613220843.698227-1-james.quinlan@broadcom.com>
 References: <20250613220843.698227-1-james.quinlan@broadcom.com>
@@ -102,139 +102,246 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In a future commit, a new handler will be introduced that in part does
-reads and writes to some of the PCIe registers.  When this handler is
-invoked, it is paramount that it does not do these register accesses when
-the PCIe bridge is inactive, as this will cause CPU abort errors.
+Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
+by default Broadcom's STB PCIe controller effects an abort.  Some SoCs --
+7216 and its descendants -- have new HW that identifies error details.
 
-To solve this we keep a spinlock that guards a variable which indicates
-whether the bridge is on or off.  When the bridge is on, access of the PCIe
-HW registers may proceed.
+This simple handler determines if the PCIe controller was the cause of the
+abort and if so, prints out diagnostic info.  Unfortunately, an abort still
+occurs.
 
-Since there are multiple ways to reset the bridge, we introduce a general
-function to obtain the spinlock, call the specific function that is used
-for the specific SoC, sets the bridge active indicator variable, and
-releases the spinlock.
+Care is taken to read the error registers only when the PCIe bridge is
+active and the PCIe registers are acceptable.  Otherwise, a "die" event
+caused by something other than the PCIe could cause an abort if the PCIe
+"die" handler tried to access registers when the bridge is off.
+
+Example error output:
+  brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
+  brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 40 +++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 155 +++++++++++++++++++++++++-
+ 1 file changed, 154 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 92887b394eb4..400854c893d8 100644
+index 400854c893d8..abc56acad1fe 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -29,6 +29,7 @@
- #include <linux/reset.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <linux/string.h>
- #include <linux/types.h>
+@@ -13,15 +13,18 @@
+ #include <linux/ioport.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/kdebug.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/log2.h>
+ #include <linux/module.h>
+ #include <linux/msi.h>
++#include <linux/notifier.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
++#include <linux/panic_notifier.h>
+ #include <linux/pci.h>
+ #include <linux/pci-ecam.h>
+ #include <linux/printk.h>
+@@ -151,6 +154,39 @@
+ #define  MSI_INT_MASK_SET		0x10
+ #define  MSI_INT_MASK_CLR		0x14
  
-@@ -254,6 +255,7 @@ struct pcie_cfg_data {
- 	int (*perst_set)(struct brcm_pcie *pcie, u32 val);
- 	int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
- 	int (*post_setup)(struct brcm_pcie *pcie);
-+	bool has_err_report;
- };
++/* Error report registers */
++#define PCIE_OUTB_ERR_TREAT				0x6000
++#define  PCIE_OUTB_ERR_TREAT_CONFIG_MASK		0x1
++#define  PCIE_OUTB_ERR_TREAT_MEM_MASK			0x2
++#define PCIE_OUTB_ERR_VALID				0x6004
++#define PCIE_OUTB_ERR_CLEAR				0x6008
++#define PCIE_OUTB_ERR_ACC_INFO				0x600c
++#define  PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK		0x01
++#define  PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK		0x02
++#define  PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK		0x04
++#define  PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK		0x10
++#define  PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK		0xff00
++#define PCIE_OUTB_ERR_ACC_ADDR				0x6010
++#define PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK			0xff00000
++#define PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK			0xf8000
++#define PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK		0x7000
++#define PCIE_OUTB_ERR_ACC_ADDR_REG_MASK			0xfff
++#define PCIE_OUTB_ERR_CFG_CAUSE				0x6014
++#define  PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK		0x40
++#define  PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK		0x20
++#define  PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK	0x10
++#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK	0x4
++#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK	0x2
++#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK	0x1
++#define PCIE_OUTB_ERR_MEM_ADDR_LO			0x6018
++#define PCIE_OUTB_ERR_MEM_ADDR_HI			0x601c
++#define PCIE_OUTB_ERR_MEM_CAUSE				0x6020
++#define  PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK		0x40
++#define  PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK		0x20
++#define  PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK	0x10
++#define  PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK	0x2
++#define  PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK		0x1
++
+ #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
+ #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
  
- struct subdev_regulators {
-@@ -299,6 +301,8 @@ struct brcm_pcie {
+@@ -301,6 +337,8 @@ struct brcm_pcie {
  	struct subdev_regulators *sr;
  	bool			ep_wakeup_capable;
  	const struct pcie_cfg_data	*cfg;
-+	bool			bridge_on;
-+	spinlock_t		bridge_lock;
++	struct notifier_block	die_notifier;
++	struct notifier_block	panic_notifier;
+ 	bool			bridge_on;
+ 	spinlock_t		bridge_lock;
  };
- 
- static inline bool is_bmips(const struct brcm_pcie *pcie)
-@@ -306,6 +310,24 @@ static inline bool is_bmips(const struct brcm_pcie *pcie)
- 	return pcie->cfg->soc_base == BCM7435 || pcie->cfg->soc_base == BCM7425;
- }
- 
-+static inline int brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32 val)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	if (pcie->cfg->has_err_report)
-+		spin_lock_irqsave(&pcie->bridge_lock, flags);
-+
-+	ret = pcie->cfg->bridge_sw_init_set(pcie, val);
-+	if (ret)
-+		pcie->bridge_on = !val;
-+
-+	if (pcie->cfg->has_err_report)
-+		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
-+
-+	return ret;
-+}
-+
- /*
-  * This is to convert the size of the inbound "BAR" region to the
-  * non-linear values of PCIE_X_MISC_RC_BAR[123]_CONFIG_LO.SIZE
-@@ -1078,7 +1100,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	int memc, ret;
- 
- 	/* Reset the bridge */
--	ret = pcie->cfg->bridge_sw_init_set(pcie, 1);
-+	ret = brcm_pcie_bridge_sw_init_set(pcie, 1);
- 	if (ret)
- 		return ret;
- 
-@@ -1094,7 +1116,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	usleep_range(100, 200);
- 
- 	/* Take the bridge out of reset */
--	ret = pcie->cfg->bridge_sw_init_set(pcie, 0);
-+	ret = brcm_pcie_bridge_sw_init_set(pcie, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1545,7 +1567,7 @@ static int brcm_pcie_turn_off(struct brcm_pcie *pcie)
- 
- 	if (!(pcie->cfg->quirks & CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN))
- 		/* Shutdown PCIe bridge */
--		ret = pcie->cfg->bridge_sw_init_set(pcie, 1);
-+		ret = brcm_pcie_bridge_sw_init_set(pcie, 1);
- 
+@@ -1711,6 +1749,115 @@ static int brcm_pcie_resume_noirq(struct device *dev)
  	return ret;
  }
-@@ -1633,7 +1655,9 @@ static int brcm_pcie_resume_noirq(struct device *dev)
- 		goto err_reset;
  
- 	/* Take bridge out of reset so we can access the SERDES reg */
--	pcie->cfg->bridge_sw_init_set(pcie, 0);
-+	ret = brcm_pcie_bridge_sw_init_set(pcie, 0);
-+	if (ret)
-+		goto err_reset;
++/* Dump out PCIe errors on die or panic */
++static int _brcm_pcie_dump_err(struct brcm_pcie *pcie,
++			       const char *type)
++{
++	void __iomem *base = pcie->base;
++	int i, is_cfg_err, is_mem_err, lanes;
++	char *width_str, *direction_str, lanes_str[9];
++	u32 info, cfg_addr, cfg_cause, mem_cause, lo, hi;
++	unsigned long flags;
++
++	spin_lock_irqsave(&pcie->bridge_lock, flags);
++	/* Don't access registers when the bridge is off */
++	if (!pcie->bridge_on || readl(base + PCIE_OUTB_ERR_VALID) == 0) {
++		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
++		return NOTIFY_DONE;
++	}
++
++	/* Read all necessary registers so we can release the spinlock ASAP */
++	info = readl(base + PCIE_OUTB_ERR_ACC_INFO);
++	is_cfg_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK);
++	is_mem_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK);
++	if (is_cfg_err) {
++		cfg_addr = readl(base + PCIE_OUTB_ERR_ACC_ADDR);
++		cfg_cause = readl(base + PCIE_OUTB_ERR_CFG_CAUSE);
++	}
++	if (is_mem_err) {
++		mem_cause = readl(base + PCIE_OUTB_ERR_MEM_CAUSE);
++		lo = readl(base + PCIE_OUTB_ERR_MEM_ADDR_LO);
++		hi = readl(base + PCIE_OUTB_ERR_MEM_ADDR_HI);
++	}
++	/* We've got all of the info, clear the error */
++	writel(1, base + PCIE_OUTB_ERR_CLEAR);
++	spin_unlock_irqrestore(&pcie->bridge_lock, flags);
++
++	dev_err(pcie->dev, "handling %s error notification\n", type);
++	width_str = (info & PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK) ? "64bit" : "32bit";
++	direction_str = (info & PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK) ? "Write" : "Read";
++	lanes = FIELD_GET(PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK, info);
++	for (i = 0, lanes_str[8] = 0; i < 8; i++)
++		lanes_str[i] = (lanes & (1 << i)) ? '1' : '0';
++
++	if (is_cfg_err) {
++		int bus = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK, cfg_addr);
++		int dev = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK, cfg_addr);
++		int func = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK, cfg_addr);
++		int reg = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_REG_MASK, cfg_addr);
++
++		dev_err(pcie->dev, "Error: CFG Acc, %s, %s, Bus=%d, Dev=%d, Fun=%d, Reg=0x%x, lanes=%s\n",
++			width_str, direction_str, bus, dev, func, reg, lanes_str);
++		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccTO=%d AccDsbld=%d Acc64bit=%d\n",
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK),
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK),
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK),
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK),
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK),
++			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK));
++	}
++
++	if (is_mem_err) {
++		u64 addr = ((u64)hi << 32) | (u64)lo;
++
++		dev_err(pcie->dev, "Error: Mem Acc, %s, %s, @0x%llx, lanes=%s\n",
++			width_str, direction_str, addr, lanes_str);
++		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccDsble=%d BadAddr=%d\n",
++			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK),
++			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK),
++			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK),
++			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK),
++			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK));
++	}
++
++	return NOTIFY_OK;
++}
++
++static int brcm_pcie_die_notify_cb(struct notifier_block *self,
++				   unsigned long v, void *p)
++{
++	struct brcm_pcie *pcie =
++		container_of(self, struct brcm_pcie, die_notifier);
++
++	return _brcm_pcie_dump_err(pcie, "Die");
++}
++
++static int brcm_pcie_panic_notify_cb(struct notifier_block *self,
++				     unsigned long v, void *p)
++{
++	struct brcm_pcie *pcie =
++		container_of(self, struct brcm_pcie, panic_notifier);
++
++	return _brcm_pcie_dump_err(pcie, "Panic");
++}
++
++static void brcm_register_die_notifiers(struct brcm_pcie *pcie)
++{
++	pcie->panic_notifier.notifier_call = brcm_pcie_panic_notify_cb;
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &pcie->panic_notifier);
++
++	pcie->die_notifier.notifier_call = brcm_pcie_die_notify_cb;
++	register_die_notifier(&pcie->die_notifier);
++}
++
++static void brcm_unregister_die_notifiers(struct brcm_pcie *pcie)
++{
++	unregister_die_notifier(&pcie->die_notifier);
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &pcie->panic_notifier);
++}
++
+ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+ {
+ 	brcm_msi_remove(pcie);
+@@ -1729,6 +1876,9 @@ static void brcm_pcie_remove(struct platform_device *pdev)
  
- 	/* SERDES_IDDQ = 0 */
- 	tmp = readl(base + HARD_DEBUG(pcie));
-@@ -1901,7 +1925,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "could not enable clock\n");
+ 	pci_stop_root_bus(bridge->bus);
+ 	pci_remove_root_bus(bridge->bus);
++	if (pcie->cfg->has_err_report)
++		brcm_unregister_die_notifiers(pcie);
++
+ 	__brcm_pcie_remove(pcie);
+ }
  
--	pcie->cfg->bridge_sw_init_set(pcie, 0);
-+	ret = brcm_pcie_bridge_sw_init_set(pcie, 0);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "could not un-reset the bridge\n");
+@@ -1829,6 +1979,7 @@ static const struct pcie_cfg_data bcm7216_cfg = {
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
+ 	.has_phy	= true,
+ 	.num_inbound_wins = 3,
++	.has_err_report = true,
+ };
  
- 	if (pcie->swinit_reset) {
- 		ret = reset_control_assert(pcie->swinit_reset);
-@@ -1976,6 +2003,9 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ static const struct pcie_cfg_data bcm7712_cfg = {
+@@ -2003,8 +2154,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  		return ret;
  	}
  
-+	if (pcie->cfg->has_err_report)
-+		spin_lock_init(&pcie->bridge_lock);
-+
+-	if (pcie->cfg->has_err_report)
++	if (pcie->cfg->has_err_report) {
+ 		spin_lock_init(&pcie->bridge_lock);
++		brcm_register_die_notifiers(pcie);
++	}
+ 
  	return 0;
  
- fail:
 -- 
 2.34.1
 
