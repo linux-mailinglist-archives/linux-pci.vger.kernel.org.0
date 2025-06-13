@@ -1,94 +1,54 @@
-Return-Path: <linux-pci+bounces-29777-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29778-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 146D1AD963E
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:27:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDF18AD964A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 22:31:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30CBA189EE09
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 20:28:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E45F7A3837
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 20:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440AB2472BD;
-	Fri, 13 Jun 2025 20:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0AF21C176;
+	Fri, 13 Jun 2025 20:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2MVHE/P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMXa9Nev"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEBA231832;
-	Fri, 13 Jun 2025 20:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAFEC148
+	for <linux-pci@vger.kernel.org>; Fri, 13 Jun 2025 20:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846462; cv=none; b=BPh+JmuduttyT1aTf9GIxuc/cODf/QQITPyvtEAR2xTfAt/npP4rKe1zC7HeUvqzaI2qJly0DznMqVFfhOSckN4aVBwYjZ/6Mkjye1RwtwrnFvYGTZ185TRO1RFFT/c/8Pxm3F7B+yoWCpb8iXffpD4aWsFK+9RSJLQ4yUGJc8w=
+	t=1749846692; cv=none; b=DVm0ONClFxrLcbTifMnGCOU6OflYBDCul09+WL3xSGQ/nRjXy18w5dq4rZ1rveTfQDs7rdmdOcmA4jV4SACS8Sx8ryTDXQtbniVLFH4gmmtrQgIBPL/XZvkMvJNY9U8G30IXEjBM7S+1KRemEfKaSpC8FhMIct4We4t3Ip42Xw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846462; c=relaxed/simple;
-	bh=MvVbIeVkQyVq6ubAPvymL2uqWzvSoJ/EGU7vFPZmAuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JG+pV7+SEKLn2ybdPDQUPOiu2fzGL1JxkJt58j+SFeq5sU13RTf4Y1OLkPIrtHwiIbEFnJzYzDdvD6+1mn+jTPiGhG/9b7Z17rncvc2AYtM9RepDuGifZf4OVjBNMCm9/kjAV4fDEaIB5xMb7KJMPJlXi6OdY80SL1lleQf1QdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2MVHE/P; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-313b6625cf1so2077966a91.0;
-        Fri, 13 Jun 2025 13:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749846460; x=1750451260; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wuCVuGaHirlRuU3Mk+7drZzjFeMHQqUbXh9VX9SQqrk=;
-        b=h2MVHE/PLIo0QfeqpyM6E4UiDDWH1DypzIhel5TL7I4KxLdE27xo2QOLyOLSH58zym
-         5UyfCky0mYN5MFsfwiTYcy6kGpQmVD6iGdfdRK+3GiyccD+rod9KVfOU4wzgz9UTrcRM
-         BFpg8Pt0LzPB4+tG7sdN2zHKgJdI/pQq8VfaHCkeDCt7JLZlI5H2RpOtARHFyjJSk+Dp
-         rrzgQi3xL5x0H5j6Wjd8tc2NVaBHJ2H5iaV0WCH11C3bSVZkX9LHwC8tJmg0430TDwPo
-         EZVMVP5Yh5CjNs6Iw47FGcIbR/9/xoZfGvjvk4TpZM27YJOQivtwKjA8YxYfe4W2rSsj
-         Mmcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846460; x=1750451260;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wuCVuGaHirlRuU3Mk+7drZzjFeMHQqUbXh9VX9SQqrk=;
-        b=TF/9PnRSewLc8SOropVRh9A+0+MpT/GPjz2OxCf7q4HZoPZd/WraiCX4np4DOpyZk7
-         ZWb8PLEVh9IdQkb5nGE1g7E+FwO9D4JNYc3M9luXALau43U2RmF3BavSsucvjRuHV5Q7
-         Gb2tmXSoeNoAvlFL3hGdMHIan/8kj+yIOdy+Gh+VkGOurWKb/dnhDNVN/bjS5mDH1aUi
-         ptvtfDoiaxb/oozEhfbONkIur/f9ekflSLEdW3Nfq0ssIprGFaAEwaum1h3wFDJcms9c
-         kb93ey6f4Tera0yBkB690osu+GNwQPmbYjleNeS84hOq5KhK9EQLgUuuduigp8BozYFo
-         mjwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJv3EzFIr7dLANdEbkM3R+KZPcCvJEhvwFypYOcqg5S7Cm85lZtzLtwnm3vjBC61BAQD0rsbEcLjvE@vger.kernel.org, AJvYcCXB6Dl7fqFXDNBNni5JnzH+UObyE2n2lLddTkjeB058cBjwsZGhzNMrgp8ZUWWz+MfLnl0cxi87o2+elro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDyPROb4g1v9qvHWVOGAbVeUDYYfmS3rhlVjUAoqhhxsXymOep
-	JRw9y4r+PRUeDKiaIUx1vhhvMrym1l02Kz9wrrcuT4EmaKPubZMz51Sj
-X-Gm-Gg: ASbGncsFNbrSsLt9VEs0cvRe7omlRR2TZkk3MY5aKpbyuAjXPjlWUtHAwd/5VH8nsv8
-	iu+I7+E1ROzNa7V4Uhu4hx4V1SO6QSHHPMVkZAMdCbEYBY/ayZCpiCoqjatHkFIBNBREHVdMa1M
-	odI4t9JybEk29ldAFf1WKozGWVeFnR/JJU/Chw3Xon1ry69lo7b1hhePGZpLzIGG/Ny9+OJaUD9
-	6qq1Le+7RSy2FzO3PbpxElLrYrZGXw5qzujTIfjWc7Esp9q1LAImVwdfH0TODvE7RG7fhnf92/z
-	zTDk8HL2gl4xWNqkU+7fkaUOfUzVLuOAXXJDoPsJxIT6k8MNLQ==
-X-Google-Smtp-Source: AGHT+IGUQjIESVvCU1Q82nN2vM7R+sdaSyi8GkWTG/4Isa6h9OSBbLcr54ZlcJqq7Bpk+gJG6xIHOQ==
-X-Received: by 2002:a17:90b:2313:b0:310:b602:bc52 with SMTP id 98e67ed59e1d1-313e9036e0emr2281470a91.2.1749846460111;
-        Fri, 13 Jun 2025 13:27:40 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:84a2::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfc68c1sm18744625ad.238.2025.06.13.13.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 13:27:39 -0700 (PDT)
-Date: Fri, 13 Jun 2025 17:27:33 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 3/5] PCI: rockchip: Set Target Link Speed
- before retraining
-Message-ID: <aEyJtdhuofaUU-xL@geday>
-References: <affaa12fedbb6e34696242d1f2f2dc5634b72005.1749827015.git.geraldogabriel@gmail.com>
- <20250613201543.GA974034@bhelgaas>
+	s=arc-20240116; t=1749846692; c=relaxed/simple;
+	bh=WbvN2cb/4l9Mu1HdR3ViiuYjkFUGASOVYTNOjSYuPbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uyODiHu9mKGQ5w8lo9XgkUWaQo4PnASl8tHSePqctnAB8cd5DDh823oufxK6kFLpQQQSxrEDPYX8xzjVeC2p8RpElVWjew6pDknPyHxQBRpLxe/F3sOUJUF3exRnEj2WsvNHLRIO6siJ+nv6OgcWt+qDGdBq6XJd3JUC2Y8+fdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMXa9Nev; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3732BC4CEE3;
+	Fri, 13 Jun 2025 20:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749846692;
+	bh=WbvN2cb/4l9Mu1HdR3ViiuYjkFUGASOVYTNOjSYuPbk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bMXa9NevcmyzMPL0QfEkvShqU8GxJkegtuTAdyMxQ7vVul8shbNJYused2921tuaf
+	 EPu4HLYGc7f9yWvtraE9OcoEtckWlYauugN8T2zOmTdAGEde7l425NJ/Z+QGUUFS35
+	 G6R5g4HylY/uWrDmxjcNpMvv+7ovGpl89Ekh526m57bB260BkALlnOkr38sR61SSYg
+	 GfrNQRdoqKwO25UJKU/oLf4PR5IMRrQuq5R2mJtfo/fMfstZEX7+R8uJxgAR33IWOM
+	 kOiIH79MDcPTzr0lpAn9cbHrlt+F35NB0pLkmxFtexvxb00PQM+hlhO27pzFwlAbXo
+	 +iBV3RsQcQGLQ==
+Date: Fri, 13 Jun 2025 15:31:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>, mario.limonciello@amd.com,
+	bhelgaas@google.com, Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/VGA: Look at all PCI display devices in VGA arbiter
+Message-ID: <20250613203130.GA974345@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,22 +57,160 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613201543.GA974034@bhelgaas>
+In-Reply-To: <3a0a7aeb-436d-442a-bede-9e760a69fa47@kernel.org>
 
-On Fri, Jun 13, 2025 at 03:15:43PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 13, 2025 at 12:06:00PM -0300, Geraldo Nascimento wrote:
-> > Current code may fail Gen2 retraining if Target Link Speed
-> > is set to 2.5 GT/s in Link Control and Status Register 2.
-> > Set it to 5.0 GT/s accordingly.
+On Fri, Jun 13, 2025 at 02:31:10PM -0500, Mario Limonciello wrote:
+> On 6/13/2025 2:07 PM, Bjorn Helgaas wrote:
+> > On Thu, Jun 12, 2025 at 10:12:14PM -0500, Mario Limonciello wrote:
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > On an A+N mobile system the APU is not being selected by some desktop
+> > > environments for any rendering tasks. This is because the neither GPU
+> > > is being treated as "boot_vga" but that is what some environments use
+> > > to select a GPU [1].
+> > 
+> > What is "A+N" and "APU"?
 > 
-> Nit: I don't know what "Gen2" means (and the spec warns against
-> assuming spec rev maps one-to-one to a speed), so try to use the
-> actual speed instead of "GenX".
+> A+N is meant to refer to an AMD APU + NVIDIA dGPU.
+> APU is an SoC that contains a lot more IP than just x86 cores.  In this
+> context it contains both integrated graphics and display IP.
 
-Ah, excellent catch. I'll make sure to adjust the commit message!
+So I guess "APU is not being selected" refers to the AMD APU?
 
-Geraldo Nascimento
-
+> > I didn't quite follow the second sentence.  I guess you're saying some
+> > userspace environments use the "boot_vga" sysfs file to select a GPU?
+> > And on this A+N system, neither device has the file?
 > 
-> Bjorn
+> Yeah.  Specifically this problem happens in Xorg that the library it uses
+> (libpciaccess) looks for a boot_vga file.  That file isn't found on either
+> GPU and so Xorg picks the first GPU it finds in the PCI heirarchy which
+> happens to be the NVIDIA GPU.
+> 
+> > > The VGA arbiter driver only looks at devices that report as PCI display
+> > > VGA class devices. Neither GPU on the system is a display VGA class
+> > > device:
+> > > 
+> > > c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+> > > c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+> > > 
+> > > So neither device gets the boot_vga sysfs file. The vga_is_boot_device()
+> > > function already has some handling for integrated GPUs by looking at the
+> > > ACPI HID entries, so if all PCI display class devices are looked at it
+> > > actually can detect properly with this device ordering.  However if there
+> > > is a different ordering it could flag the wrong device.
+> > > 
+> > > Modify the VGA arbiter code and matching sysfs file entries to examine all
+> > > PCI display class devices. After every device is added to the arbiter list
+> > > make a pass on all devices and explicitly check whether one is integrated.
+> > > 
+> > > This will cause all GPUs to gain a `boot_vga` file, but the correct device
+> > > (APU in this case) will now show `1` and the incorrect device shows `0`.
+> > > Userspace then picks the right device as well.
+> > 
+> > What determines whether the APU is the "correct" device?
+> 
+> In this context is the one that is physically connected to the eDP panel.
+> When the "wrong" one is selected then it is used for rendering.
+
+How does the code figure out which is connected to the eDP panel?  I
+didn't see anything in the patch that I can relate to this.  This
+needs to be something people who are not AMD and NVIDIA experts can
+figure out in five years.
+
+It feels like we're fixing a point problem and next month's system
+might have the opposite issue, and we won't know how to make both
+systems work.
+
+> Without this patch the net outcome ends up being that the APU display
+> hardware drives the eDP but the desktop is rendered using the N dGPU. There
+> is a lot of latency in doing it this way, and worse off the N dGPU stays
+> powered on at all times.  It never enters into runtime PM.
+
+> > > +{
+> > > +	struct pci_dev *candidate = vga_default_device();
+> > > +	struct vga_device *vgadev;
+> > > +
+> > > +	list_for_each_entry(vgadev, &vga_list, list) {
+> > > +		if (vga_is_boot_device(vgadev)) {
+> > > +			/* check if one is an integrated GPU, use that if so */
+> > > +			if (candidate) {
+> > > +				if (vga_arb_integrated_gpu(&candidate->dev))
+> > > +					break;
+> > > +				if (vga_arb_integrated_gpu(&vgadev->pdev->dev)) {
+> > > +					candidate = vgadev->pdev;
+> > > +					break;
+> > > +				}
+> > > +			} else
+> > > +				candidate = vgadev->pdev;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (candidate)
+> > > +		vga_set_default_device(candidate);
+> > > +}
+> > 
+> > It looks like this is related to the integrated GPU code in
+> > vga_is_boot_device().  Can this be done by updating the logic there,
+> > so it's more clear what change this patch makes?
+> > 
+> > It seems like this patch would change the selection in a way that
+> > makes some of the vga_is_boot_device() comments obsolete.  E.g., "We
+> > select the default VGA device in this order"?  Or "we use the *last*
+> > [integrated GPU] because that was the previous behavior"?
+> > 
+> > The end of vga_is_boot_device() mentions non-legacy (non-VGA) devices,
+> > but I don't remember now how we ever got there because
+> > vga_arb_device_init() and pci_notify() only call
+> > vga_arbiter_add_pci_device() for VGA devices.
+> 
+> Sure I'll review the comments and update.  As for moving the logic I didn't
+> see an obvious way to do this.  This code is "tie-breaker" code in the case
+> that two GPUs are otherwise ranked equally.
+
+How do we break the tie?  I guess we use the first one we find?
+
+The comment in vga_is_boot_device() says we expect only a single
+integrated GPU, but I guess this system breaks that assumption?
+
+And in the absence of other clues, vga_is_boot_device() decides that
+every integrated GPU it finds should be the default, so the last one
+wins?  But now we want the first one to win?
+
+> > > -	while ((pdev =
+> > > -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+> > > -			       PCI_ANY_ID, pdev)) != NULL) {
+> > > -		if (pci_is_vga(pdev))
+> > > -			vga_arbiter_add_pci_device(pdev);
+> > > -	}
+> > > +	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev)))
+> > > +		vga_arbiter_add_pci_device(pdev);
+> > 
+> > I guess pci_get_base_class(PCI_BASE_CLASS_DISPLAY) is sort of a source
+> > code optimization and this one-line change would be equivalent?
+> > 
+> >    -		if (pci_is_vga(pdev))
+> >    +		if (pci_is_display(pdev))
+> >    			vga_arbiter_add_pci_device(pdev);
+> > 
+> > If so, I think I prefer the one-liner because then everything in this
+> > file would use pci_is_display() and we wouldn't have to figure out the
+> > equivalent-ness of pci_get_base_class(PCI_BASE_CLASS_DISPLAY).
+> 
+> pci_get_base_class() is a search function.  It only really makes sense for
+> iterating.
+
+Right I'm saying that if you do this:
+
+        while ((pdev =
+                pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+                               PCI_ANY_ID, pdev)) != NULL) {
+                if (pci_is_display(pdev))
+                        vga_arbiter_add_pci_device(pdev);
+        }
+
+the patch is a bit smaller and we don't have to look up
+pci_get_base_class() and confirm that it returns things for which
+pci_is_display() is true.  That's just a little more analysis.
+
+Bjorn
 
