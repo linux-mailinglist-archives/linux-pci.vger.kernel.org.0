@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-29744-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29745-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3DDBAD90C3
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 17:06:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87501AD90C6
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 17:07:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BACDE188B5C0
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 15:06:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35A3D3BAF26
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 15:06:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E241C84CF;
-	Fri, 13 Jun 2025 15:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13096149DE8;
+	Fri, 13 Jun 2025 15:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imNINOwj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4DTK97L"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463A016F265;
-	Fri, 13 Jun 2025 15:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0541A5BBD;
+	Fri, 13 Jun 2025 15:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827183; cv=none; b=A1l0rt9iA7idExxLKnlvyndcCSwtjpZgd3PMJAQKNlLWz6kDYDRE7FYRcCt2/Dxc1O75NfgdZF0KVPHM7jI8AloraCGA47i6oXARr9yv4iA1/VoaYcHIJnwRE1ExOegcGrT/KWvzvQ9MbPQVs49X06kwKI3rGECKkKvzR27cH1U=
+	t=1749827197; cv=none; b=Q7jbf6v9N0YBp2THoVRC6ScL6AViwH8DJUeikKPLSovHww7H1UMcCVknI1hv644ra4M3Nvey/Hhm3MlwZTq3ixlUGlaaGh7widuMkn48aCIYF8R+GXcGYS+mCTWfGwU275cKmSA4Hrvy05x94EGP0T82Gn5CFDi180lahseBj08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827183; c=relaxed/simple;
-	bh=z1QuJQTs2qeychSUYLbx3MrTtjKfzdWwsIGraIObLLg=;
+	s=arc-20240116; t=1749827197; c=relaxed/simple;
+	bh=DzWuE22vL1YP8zSHbfP7Qpjs9nzrUqlrq34nmlb01RA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rYMHZsohvDxLCt794iKfONNxERIJ8vgxzLjOsee+fkK6VqE7pfeEoe/Rsgimw09+IXGROJAv1AGgJpDjndxii5ejfQQOtdpwvS+1b0zkC22mw+SCHhqYtd/oVOOyrgGdR4+c3U978TuQ+C2te39j1E+Z2mIzRaKksB8wg7fVKv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imNINOwj; arc=none smtp.client-ip=209.85.216.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNei1UugsVTWfi1mrETIKjjkTIvr7xTSmqI9XAd3XFMz+HhCD+xtyz8ZXz91GuoDvPX49yCXV9dLeRjash23oC/sRmi4pCmop5KVN9VvvM64qs3YMXDbx5lAZ7kkKAZcgVSR3sYufuw3r9vhYKo1udykCm2Be8ad+PxAY5Cdm/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q4DTK97L; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso2523427a91.3;
-        Fri, 13 Jun 2025 08:06:21 -0700 (PDT)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so2911456a91.0;
+        Fri, 13 Jun 2025 08:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749827181; x=1750431981; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749827195; x=1750431995; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tcgFdGvrxzEgL0jd0jS7Kyu6UO50T4AXfHFozAP4vvw=;
-        b=imNINOwjTZEgX3khIhI0b4CGPIRGartVei50VcTocpluIkHQ164ijxQsdu71T04z7t
-         EU42Sj9eijX1EkjJOSIfLeVZhNxaeMyRaT/HhPxd051iN6m6vp9IDm+9UyHd3B0UnwBv
-         KTMarPxXkZrGsLHGRSGbJl5j1apAXU14jhzwkzNMG4wxFuVfPYRSrAyrXnuLX1dMEhTG
-         3NbqeSmw6mbxopgmAllcodPgNjykE7Fym8ziH946V0X6HSTnEBhB3mlwlBqVtPk9+w2X
-         gCFwA/8QWlG/MGE8Yoh0o3iVZW8To6nt/ovQIyDPs1ZiCkFEt2h+85Y5rj7/BSS7MJ9F
-         w1Fw==
+        bh=4uBBexglmDg860eeLxvF6Ft+pxKPH1DbiU+A4sUq4Hk=;
+        b=Q4DTK97L+suPraLAIsC2rcBJ2DUN/4QqJuQvBfJMeGUYXeAXlhElIFj4DLWm2/Yocs
+         cQtJMsLAIjuIjRX9snM9lZLw97yoPr5VEwK/hzHpwup54qeNh3lv20Oz5N952F/nMbyB
+         qLHFOg6Pjh7acykg613UJx83PLDy8C4HAoqD0zFC5X8CH+gcDyWzdwctxrOtDMONdsJi
+         9QxCVz0EwVhUb7QkzmKo0tRADoqCY7ra25/LMlf827XEy+UNNWekt7DjlaMg3Ebn8aUg
+         G0A/aNvlUsmYc0fV9PhabK+mk+mHs6+BjhCNagzblpAum037HFiKeeRhNBQ7C9H7+MqL
+         JvEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749827181; x=1750431981;
+        d=1e100.net; s=20230601; t=1749827195; x=1750431995;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tcgFdGvrxzEgL0jd0jS7Kyu6UO50T4AXfHFozAP4vvw=;
-        b=hwl6YDyqCLK5bhAUWVUxgCsozwmM3jHHJ8WKwUgRLsmwzVOMNrrhe8K26WBrbIyZzL
-         WicwZ9cyfBSBBZ08kuH54PftxPnXsim1bLRi4iEiIRAqdHTGG7E7hb/2MX6T86UQqD89
-         EA9qb+pKqOWfHjyUacSgRmlEi/0Lzd733oFKO6GrcYEcbPs5pYd5TI3zBEKjW1bQ6b+9
-         ntnj7QsBP096pJ28Fqrdt088eEE6KfdCY4MlUCTS+nJDpgiI60mzFmH2nw9a6uvZrKV3
-         kaglvs/O3YrTjw8CUjxwhIIgzlC9DS1QBLWH4W8Wq5eBGef9XxK1wcLg4QWTf/JGUmqB
-         pklw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCfGAFw7QIguI9qGjDgssg/tVZGvAMRyr9DvNR6U6pMabVAob7EQY4QJAQs1xaY7VOGdJQA9TnsMU7@vger.kernel.org, AJvYcCXwtBOEPx+QWagj2mmin92iLqxa8feiNQtuDzNuadKSxd3EzRCxtV54wZAtuVCJBoaMTIoOjA59t8bnkdU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEw10x5cxiYXCjAXqB585aTJj4ecrcqju4rBBAGBzFU9BYro1E
-	kJ48Br4Ai1FEcg1WtVWFhbfWaNdZZQWbMP82v+3u6q84vM/Wm3hxtNAz
-X-Gm-Gg: ASbGnctzn5lUgd8j/eoG/WvTTJE8ZOY8EUadHcsDkHgZTyklzP1r0qmkvLmBBXxQihM
-	ISVxv0Ty/pgDKYyPdjCTUiVSC0uhOtEXuLtki1w7UL1JIR61R12J7LuLZpJ6Vof6mpqRjhiSa19
-	NM4lz6vuWDWizqsJ5lDzE92yPnKI46/g7hrlx8vdUFTqAIdD6IVkRu6oPVrq3Qhxs1G0H5D7qhM
-	H/wLpbUCRXFCA3oiPy3SPJ1XVSsLfq+9118fTuTMzV3yl4wcmqQamHOOwjoaZ9NEHhxMxPRtp02
-	otsWsmVlSb2xz1EtfHaHt1SHw8eWyVAq5iTm504+l5+LqrI7Bw==
-X-Google-Smtp-Source: AGHT+IECaGBjuizwlffuDig1L0laDWaQFszoeJrsrY+zyJrlRqn3sGWZs1z2EMQ8zZxgMRnvK+ky9Q==
-X-Received: by 2002:a17:90a:ec88:b0:311:cc4e:516b with SMTP id 98e67ed59e1d1-313f1e4a36bmr31111a91.32.1749827181384;
-        Fri, 13 Jun 2025 08:06:21 -0700 (PDT)
+        bh=4uBBexglmDg860eeLxvF6Ft+pxKPH1DbiU+A4sUq4Hk=;
+        b=YtpmqofNICL5zdbEODPOLNYKKT/1Urq8NqEjBwQzqjqAMUst7xCEH4xR/3+jjFE4O2
+         r3ySsjbliA5VN2LGMDMBnoQ+mbYHPcGE1Z2zEZ0RuObvNnEuajJiv6aEa4DlJ7GTwoah
+         xd1clxePGwrh2oV2ssg2xBvO+RlMj4Ib7ofNXW9XPjLW2SrfK6M3/cWwI2nmc02tllbO
+         OOSvesbJgHraLK4KVCfc1eBJVqzmrNqjxxtFFppAxKiCqR5pdRo500bVRrX6F2Bf5Di9
+         hdrkecREqBOKwCBiToyzWq3vsn3GQHcWEvC4XoEvXQLpDcK5CZ8dTaKNAOrPJ5A+4BTl
+         CpVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrLB/Fui9LzUt/rTrZ8gcO9EPqR+zx3AXQ1Is1tVbh2wr8UREGTE/bBQLQ5G+Qd9jmvxQvnZjKhNxqfME=@vger.kernel.org, AJvYcCWef66kSLNOtfyXI5nyPK2QuHpf94SGS32SNZi4SnJUFh+EX9nVySwjWPmKZrsc2ZneTLcUXg65HrPU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZwgI/7qg5/3znD63E2SBAMnreAwGBdXHNBffGqCp67i2ZypSm
+	H4x8FmfWhh0W0y1tPc0d3pofJFaKz2RL6kx9ozhn0qifq4ojLdeIahdy
+X-Gm-Gg: ASbGncutUkrap6ihKP9zEmvSHjnrbtuz1peZfBMutVs8vYdoGdJV8WuC2pNlqmp6+Px
+	L1uNHOGNG29iMDLH4AxS/xmG+tIPC3U8bo6cr6i3QLEVMUYMojUlZb1nPpDKZFWsQTm7LpOgkYV
+	oRz572pdFv+kGunK9nzsXpvrUjMqAH5jaRkLLg1FkdC85H1JQzhrB2U2OSumG48B9ZKS2j9wsOh
+	k11rAkcmp9GGtqv6jo3hv3s5Hnpz60qw5swF8fcdhcE+BneHU1MESgB4Om0TpyKSij6bJelFCN1
+	6M5ga5U/Bm4+6y7Onh2T3CXgxi7PZixhCE5LJrk+zvPgWYebL3mlbmYNKeRi
+X-Google-Smtp-Source: AGHT+IHrDxh6U4VAfIfK65vuTtcjHspUUqpNcD7PvyW2ItZ3xJVTxhDo3I8Q61np12P96HXNsZ4NXw==
+X-Received: by 2002:a17:90a:e184:b0:2fa:42f3:e3e4 with SMTP id 98e67ed59e1d1-313e9036d04mr1456076a91.3.1749827194621;
+        Fri, 13 Jun 2025 08:06:34 -0700 (PDT)
 Received: from geday ([2804:7f2:800b:838f::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deaaa15sm15322535ad.173.2025.06.13.08.06.16
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b499cbsm3885857a91.26.2025.06.13.08.06.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:06:20 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:06:14 -0300
+        Fri, 13 Jun 2025 08:06:34 -0700 (PDT)
+Date: Fri, 13 Jun 2025 12:06:28 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: linux-rockchip@lists.infradead.org
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -83,8 +83,9 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v4 4/5] phy: rockchip-pcie: Enable all four lanes
-Message-ID: <389fc093572f3124244c5f3e87dd084b89be88ba.1749827015.git.geraldogabriel@gmail.com>
+Subject: [RESEND RFC PATCH v4 5/5] phy: rockchip-pcie: Adjust read mask and
+ write
+Message-ID: <b32c8e4e0e36c03ae72bff13926d8bdd9131c838.1749827015.git.geraldogabriel@gmail.com>
 References: <cover.1749827015.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -96,38 +97,32 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1749827015.git.geraldogabriel@gmail.com>
 
-Current code enables only Lane 0 because pwr_cnt will be incremented
-on first call to the function. Use for-loop to enable all 4 lanes
-through GRF.
+Section 17.6.10 of the RK3399 TRM "PCIe PIPE PHY registers Description"
+defines asynchronous strobe TEST_WRITE which should be enabled then
+disabled and seems to have been copy-pasted as of current. Adjust it.
+While at it, adjust read mask which should be the same as write mask.
 
 Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
- drivers/phy/rockchip/phy-rockchip-pcie.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index bd44af36c67a..48bcc7d2b33b 100644
+index 48bcc7d2b33b..35d2523ee776 100644
 --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
 +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -176,11 +176,13 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 				   PHY_CFG_ADDR_MASK,
- 				   PHY_CFG_ADDR_SHIFT));
- 
--	regmap_write(rk_phy->reg_base,
--		     rk_phy->phy_data->pcie_laneoff,
--		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
--				   PHY_LANE_IDLE_MASK,
--				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+	for (int i=0; i < PHY_MAX_LANE_NUM; i++) {
-+		regmap_write(rk_phy->reg_base,
-+			     rk_phy->phy_data->pcie_laneoff,
-+			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-+					   PHY_LANE_IDLE_MASK,
-+					   PHY_LANE_IDLE_A_SHIFT + i));
-+	}
- 
- 	/*
- 	 * No documented timeout value for phy operation below,
+@@ -30,9 +30,9 @@
+ #define PHY_CFG_ADDR_SHIFT    1
+ #define PHY_CFG_DATA_MASK     0xf
+ #define PHY_CFG_ADDR_MASK     0x3f
+-#define PHY_CFG_RD_MASK       0x3ff
++#define PHY_CFG_RD_MASK       0x3f
+ #define PHY_CFG_WR_ENABLE     1
+-#define PHY_CFG_WR_DISABLE    1
++#define PHY_CFG_WR_DISABLE    0
+ #define PHY_CFG_WR_SHIFT      0
+ #define PHY_CFG_WR_MASK       1
+ #define PHY_CFG_PLL_LOCK      0x10
 -- 
 2.49.0
 
