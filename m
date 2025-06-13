@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-29674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E955AAD8965
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 12:23:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E436AD8982
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 12:31:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7C4D1E013C
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 10:23:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6689C189BD3B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jun 2025 10:31:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062C62949F3;
-	Fri, 13 Jun 2025 10:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B9C2139B0;
+	Fri, 13 Jun 2025 10:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dXnstHLk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+Is76Ax"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693EE20DD4B;
-	Fri, 13 Jun 2025 10:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EB579E1;
+	Fri, 13 Jun 2025 10:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810196; cv=none; b=GA1LMOZNhzC2q4mJQfhajbuco9hgA3kHPG7OMJTS82u1hoxmdTbGjuM6vupbpthU8gxyhFR71dtqNLke35oy0JpZPrRnQKfTmdBf97vW9GwSAIivzrpmyMRb6AZFgHUA/OpjCKWytuCOqwS7zZdztilpm9mlEMdDiqgjevHDrNw=
+	t=1749810696; cv=none; b=OERvJ/qm94qHGs94YPEsBebCokB1VfHFzx9iuQdWTav2zPbBUHu/g00UxMjwdXVjPacTugVA4cT7lnKods47SO7024JuBjnrsWBdOdyKskXt20I3kqHsG3PPAduV3wDbrbXCo3ekmiusQEbIURCAO/oVMgZki9COE+Gf90rzunI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810196; c=relaxed/simple;
-	bh=Dj4lniyyeYNRTKv/1o99UF5ZM7Am9fvxsL9T+QXQ6Uc=;
+	s=arc-20240116; t=1749810696; c=relaxed/simple;
+	bh=7PfB+D/P+RJF9hYw926xnWuIqsnAnuyUdeN7XwIXwMA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W4gzTIfa8cAI+OACMYiJMccrrQzvLfFy3/+9+zmYz3sohb7b89uFjAQRQ0e5DS3O5YoDEsxSmh/CIFIzonpSqQptdqKagOjw+zeR55xSuTvHB+YfbuLnsLGahQWvmms5mPJ17+/TDJFDt20o1uOJa8kb+fIXqCrTtH0XCJherlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dXnstHLk; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=ganA/UVA69rq8Fa9ScTKTK9cPvZUBXP9WGeZq8j9LDtHckjbkj73G7pfpljDUljNKv/8+nZWqynOi38uSfSVSdwKHtuIOQTWz7SZUGzbBwhoJq4rzdX3bBiI67dP0O4qV/9BE7r+J73FIjclo0s3ePVFA0HH0FEvJbXMnsp1k8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+Is76Ax; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749810195; x=1781346195;
+  t=1749810695; x=1781346695;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Dj4lniyyeYNRTKv/1o99UF5ZM7Am9fvxsL9T+QXQ6Uc=;
-  b=dXnstHLk8S405n3Mppn1tXAqjEhS6nT05vZdfaGx9QwoIYmArBlaEeUx
-   0KAr78A0yCl5B8I7xPs/inDYcMPDpySvIO2UluxXIeGjSlhQ8Mfr2G7CB
-   ZSikw0u08bfPyd9FIthaNpwBg7zGQvUliQCMHN8sw7faG5MS8wEyO9+K7
-   a+fxaNlNoioBt+ALXNRxetWT7v+xwFbYgMV7huIdzwOBhKyHmTAstJpeM
-   ND0bE1TxTaOCvD5CEtnWSoactLkp2fkWP5ikQyBXqHmTCRK7+qBT8EXGB
-   /jJvxFGpezK21LoOfzta7VidsLoKD1HIKr+d+hoeMFtbXn0XSi7eQdTTT
+  bh=7PfB+D/P+RJF9hYw926xnWuIqsnAnuyUdeN7XwIXwMA=;
+  b=U+Is76AxzwLWlajoo+1v2xnAShmwrudJ2yz/2RDBw+Wz4w6Gynvhu1wn
+   lG4KL7wi4i9rHj9muZ9jqkZ2F2XlRuGWX+A3x9KaeUP5qdQggTKiJru2E
+   aueWAzB0H3TnbkjKigvtLjn8RlBBWnGOKlCMjfy+blEN0h1jBcJyGPEHf
+   jtPWjvgm0DhF3u+ZwugYoF2nICjhft9S8ZC1cKIKBMdlO6cAnivvhzCJ2
+   8Iul77L+ovUS7PLgprS2YGfslw5dSdppZjosAq8mceDmqveJbpfBQm+DC
+   GIKe0jT2fmdM51Q15xM1iwLYc8K3IjWCxE7xN+QBvPMm6m1CaGORxpmjU
    w==;
-X-CSE-ConnectionGUID: puuylzLTTQ6ZS7Z4Ev2OAg==
-X-CSE-MsgGUID: L1lZt4j1S6iD35Y847s7hQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69596958"
+X-CSE-ConnectionGUID: JaNMXm3OQnWk45VrFKbwTg==
+X-CSE-MsgGUID: yMx0JQbYR9mwII0PE1S7EQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51898032"
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="69596958"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:23:14 -0700
-X-CSE-ConnectionGUID: 1TEtn/QzTweOEddkqsbr/A==
-X-CSE-MsgGUID: R8r1FwprTm24+N4ue6bZwQ==
+   d="scan'208";a="51898032"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:31:34 -0700
+X-CSE-ConnectionGUID: ZHA8esmISNCPCD0TZjeaWA==
+X-CSE-MsgGUID: TiQwpTxbTRyex/kwIZCVzg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="152688642"
+   d="scan'208";a="148686963"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:23:08 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:31:30 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:23:03 +0300 (EEST)
+Date: Fri, 13 Jun 2025 13:31:27 +0300 (EEST)
 To: grwhyte@linux.microsoft.com
 cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, 
     code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI: Add flr_delay parameter to pci_dev struct
-In-Reply-To: <20250611000552.1989795-2-grwhyte@linux.microsoft.com>
-Message-ID: <7b66aaa6-10af-885f-a8f2-040f899197f1@linux.intel.com>
-References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com> <20250611000552.1989795-2-grwhyte@linux.microsoft.com>
+Subject: Re: [PATCH v3 2/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+In-Reply-To: <20250611000552.1989795-3-grwhyte@linux.microsoft.com>
+Message-ID: <eb9199fa-1a2a-910c-35f8-ea316a57c55d@linux.intel.com>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com> <20250611000552.1989795-3-grwhyte@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,81 +80,65 @@ On Wed, 11 Jun 2025, grwhyte@linux.microsoft.com wrote:
 
 > From: Graham Whyte <grwhyte@linux.microsoft.com>
 > 
-> Add a new flr_delay member of the pci_dev struct to allow customization of
-> the delay after FLR for devices that do not support immediate readiness.
-> 
+> Add a new quirk to reduce the delay after a FLR to 10ms
+> for MSFT devices. These devices complete the FLR well within the default
+> 100ms timeframe and this path can be optimized for VF removal during
+
+What is "this path" in this context? Try to avoid vague references like 
+that.
+
+> runtime repairs and driver updates. These devices do not support immediate
+> readiness or readiness time reporting
+
+When talking about something that relates to PCIe spec, please also refer 
+to PCIe spec and use the terminology matching to the spec (+ capitalization).
+
+Missing .
+
+Please also reflow the paragraph as the first line is clearly not full.
+
+
+This probably belongs more to the previous patch changelog than this one, 
+as the justification: I suggest you start by stating the problem. So state 
+the spec defined wait (+ spec reference), and why that is problem. Then 
+explain the solution in another paragraph.
+
 > Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
 > ---
->  drivers/pci/pci.c   | 8 ++++++--
->  drivers/pci/pci.h   | 2 ++
->  include/linux/pci.h | 1 +
->  3 files changed, 9 insertions(+), 2 deletions(-)
+>  drivers/pci/quirks.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e9448d55113b..04f2660df7c4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3233,6 +3233,8 @@ void pci_pm_init(struct pci_dev *dev)
->  	dev->bridge_d3 = pci_bridge_d3_possible(dev);
->  	dev->d3cold_allowed = true;
->  
-> +	dev->flr_delay = PCI_FLR_DELAY;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d7f4ee634263..d704606330bd 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6335,3 +6335,23 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
+>  #endif
 > +
->  	dev->d1_support = false;
->  	dev->d2_support = false;
->  	if (!pci_no_d1d2(dev)) {
-> @@ -4529,9 +4531,11 @@ int pcie_flr(struct pci_dev *dev)
->  	/*
->  	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
->  	 * 100ms, but may silently discard requests while the FLR is in
-> -	 * progress.  Wait 100ms before trying to access the device.
-> +	 * progress.  Wait 100ms before trying to access the device, unless
-> +	 * otherwise modified if the device supports a faster reset.
-> +	 * Use usleep_range to support delays under 20ms.
->  	 */
-> -	msleep(100);
-> +	usleep_range(dev->flr_delay, dev->flr_delay+1);
-
-Missing spaces around +.
-
-Are you sure + 1us is really useful as the range? Usually much bigger 
-numbers are used.
-
-There's also fsleep() which would autoselect the sleep mechanism.
-
->  	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
->  }
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..abc1cf6e6d9b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -135,6 +135,8 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
->  #define PCI_PM_D3HOT_WAIT       10	/* msec */
->  #define PCI_PM_D3COLD_WAIT      100	/* msec */
->  
-> +#define PCI_FLR_DELAY           100000 /* usec */
-
-Please put the unit into the define name (_US).
-
+> +#define MICROSOFT_2051_SVC 0xb210
+> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
+> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
 > +
->  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
->  void pci_refresh_power_state(struct pci_dev *dev);
->  int pci_power_up(struct pci_dev *dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f392..4c9989037ed1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -402,6 +402,7 @@ struct pci_dev {
->  						   bit manually */
->  	unsigned int	d3hot_delay;	/* D3hot->D0 transition time in ms */
->  	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
-> +	unsigned int    flr_delay;      /* pci post flr sleep time in us */
+> +/*
+> + * For devices that don't require the full 100ms sleep
+> + * after FLR and do not support immediate readiness or readiness
+> + * time reporting
+> + */
+> +static void pci_fixup_pci_flr_10msec(struct pci_dev *pdev)
+> +{
+> +	pdev->flr_delay = 10000;
 
-Please follow how the spec writes things in capitalization of letters.
+10 * USEC_PER_MSEC
 
->  
->  	u16		l1ss;		/* L1SS Capability pointer */
->  #ifdef CONFIG_PCIEASPM
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
+> +	pci_fixup_pci_flr_10msec);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
+> +	pci_fixup_pci_flr_10msec);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
+> +	pci_fixup_pci_flr_10msec);
 > 
 
 -- 
