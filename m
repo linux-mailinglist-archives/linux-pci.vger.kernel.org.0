@@ -1,94 +1,84 @@
-Return-Path: <linux-pci+bounces-29802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29DDBAD9982
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 03:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B429CAD9992
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 04:09:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21A4C189FC22
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 01:38:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64EC71895630
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 02:09:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8606122EF5;
-	Sat, 14 Jun 2025 01:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1735264A98;
+	Sat, 14 Jun 2025 02:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw2v6/oM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P5DVYZcv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B85B3FD4;
-	Sat, 14 Jun 2025 01:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309FA43AB7;
+	Sat, 14 Jun 2025 02:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749865116; cv=none; b=rpWd1K5qiKw70yTrZDOSzWHDP8DdL2+PL7vcd7jZwGlpChrwRoFf4S9bL6TmyxqtzKD9vskCpA4wXqDecCw4IBrGnAHWbiOVRtICD+Q2+jy34FIMe+eTLT2wW0QAKLs66vMXOV4Yst/EAlSDmoA1YxylV85vpdUmOySUWF0q+OQ=
+	t=1749866945; cv=none; b=Ql76lo/HxuPWRKcxPkTFC8EBKc33Q9LfErkHJ7xFhvODYCdCjMeM9ktprq0MRh1hC4uoHCe1pREUsSn/rpUXi5B3CzNhuJufWJ5dzOR53csQCp6FRC0oi5O1fKF0HpH4R6+wmcg3DzViobZ7zt3QnsEhM9qh1VUjuSfZIGl2PoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749865116; c=relaxed/simple;
-	bh=1t2JgUYUU36zTeFilfNtFiyEJY5c/S+KS6xlRrjKu6o=;
+	s=arc-20240116; t=1749866945; c=relaxed/simple;
+	bh=T7F5BTPkmIJqijZcvCaJDzeehyOgLhWobs1d8ZTzUB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=urNCJ7XC4LkpfktEk/eCM2TSa5aoetKvAmvLzLh43drX5wRGPrqJr+QiGfRJp1LFGozDsVzXyT43klLiZmTrfkXdZHhssCkpgNgBN60PFhZe5Rphfzli4xRZ5NnpTWML2jTTCMR8d5O7KQjQcGryU2MD/Ro+XD93Wcth7EQnxIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rw2v6/oM; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234bfe37cccso35797705ad.0;
-        Fri, 13 Jun 2025 18:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749865114; x=1750469914; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0lQejjsw0q+CGE5uh3c+Gs+NLf8tN+h+7rm943Xmkng=;
-        b=Rw2v6/oMSbIk3ycRDHx3rwg4hDHo0xVqTUel3yRsIdrVd747jxgNU3k+w1MEF6magy
-         HOfXPAsbBRef62YWLW2zL+g8GCnryeB4X/O7JBV2WJvskJDU7/OFhRhDZ4f2ugolJWu5
-         q3Bl2AMLVeP+iV5YeQzoEt1egLeM7HDv9OLWAyABQ6RjqveV9Rf9foPTgiNvWx1eCgJJ
-         cLNyZIVR2thmtgGY0VhjWUoCZgHVZXuq9aEyK2PbTfi4Pbggal6yvps1gmw92PlltkQN
-         9oLPXSSlmgv2FeHqIT0/2FnliU6M4pLbhkJR8r+ug9WqePe8rmcRssTccg8h+IL+yZ5S
-         Rb/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749865114; x=1750469914;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0lQejjsw0q+CGE5uh3c+Gs+NLf8tN+h+7rm943Xmkng=;
-        b=b4V5LlgXhvQwe1qhXxJthKpV40sqqAj+6WPb9aluQzeE7eAIOWfYdSzpFaCe4lBqlI
-         ZY8EjTtKSytUG8sCcl6X37bSvpUbeHw2uBOvvbZXRycWHxwOX87MCHgKwfnNT2qAF6om
-         FkMk/FEsD/eK2eEBzeurEX3gSawSEby0w7FQibXlbd2VofIOk5HvYdq3OB/kI1O2G5MD
-         Xb4nkaO8T1/UXbZWUyFtM41kIzoGicv1IAT2RkL8uVXDwEA1kIzrFT7hm4dKmkMQotg9
-         HLgRu9Wn4fOxJWRBu3wb70r3k/q0l7iggFM2gptQPo+5tIXBepBGFlS8K1p0RAmWU8Ld
-         l72Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVJhI7uZudqqUMNPj1FGGV+Td6AdK3UUMBhALhCYD1DfB247oAnW9dX9no8PiW66cnWcFj2J4BM30xwE7o=@vger.kernel.org, AJvYcCXEowq85y/3XJ+L/kspfInAPr0BjlpvRROPcplRKMcX3eOf5sXTK3/8j21ITZQgzt4A4dRaZUoH23WU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3wQKLH0bjXhy5B1jehITYgQTUNRva3RcuBUWrRAERePXdb3lg
-	z91XJgTx9rqXDfwDWACAhpEgg2YeK6g5iX9WfzmNUYVtB4hqC0lRukOg
-X-Gm-Gg: ASbGncu8mNdyEn1T9utkZMI/kX6CsepEHuJ4FdyprI/D3kTza4oOjEPTik6I4LaoE0r
-	Eyj5XxQrG9l5XT9Kq+AcYNrIc7WIwd5jNE/vB4i6c6OhadahgYjU/XAiRFoH2cGd3Q1O6BaMozJ
-	wHcCdh7clMk43f08h2skqzHmjwnP80ZWr7PgEsX1A2xREvyP9yUzxJk/4A7ZleAZMYAo3YE70KS
-	75PG+bHiXsc52WQB2bfUVAJVUfCwJOnRRcNWop9pc3vKoVOtqmmw8pHZzeRPNUneRttlRXAPrn2
-	SsRHncQcXUAgvXLqvIGoxo5GdSYoTNgkuI0RZTiRaYJpIIvv9Q==
-X-Google-Smtp-Source: AGHT+IEMPF1CG7Z4ty/9CQse/2JF9FvgerUO1LrtGFrS+i5WUaSY65B8ME0JLsiKs/vhtHxhj88YWw==
-X-Received: by 2002:a17:902:f647:b0:234:e7bb:963b with SMTP id d9443c01a7336-2366b00ee33mr23760305ad.16.1749865114201;
-        Fri, 13 Jun 2025 18:38:34 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:87ca::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a1fa0sm21379435ad.86.2025.06.13.18.38.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 18:38:33 -0700 (PDT)
-Date: Fri, 13 Jun 2025 22:38:18 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
- defines
-Message-ID: <aEzSilET0wAQ7ozA@geday>
-References: <992ab6278af59b8f2f82521bf4611f69a916bbe1.1749827015.git.geraldogabriel@gmail.com>
- <20250613201409.GA973486@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=swObgkl92d3F4gMRGB9mFaX3TY5lj+WIiRDNNyS3BrsIWleXfViVnwyzkYG2Vr4OfoFEevxmJm3/QGg4Iigee/qZ8YIhchwHd6UMEPt3x0rBQrg2+0hqTnRy+YizX3hIpGSBniI7UgiNEjOJ5iY83pTuh/nS2ofSvvjsPWTTHgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P5DVYZcv; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749866943; x=1781402943;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T7F5BTPkmIJqijZcvCaJDzeehyOgLhWobs1d8ZTzUB8=;
+  b=P5DVYZcv7WqOIzebe93guUWFeRU0LO/Rym1G8Bk62tW1Cb4DltyEKZgt
+   ahSiN/LoaSqf2dknKfbcAK+LxKpPDg9mEUtL7E5RzmhVPhxnSiZr41wjs
+   S41JntK4tKECagL06WLe+f9J6zC0iFElzH+q59Quay0ND22NvyS3uoPee
+   9/ZWZlDUHEht8r8KL1t1ujjiUa2ILkouaOhrQmb5M7O1q28QQinc5Z49l
+   fhKcK/5y66LKHFzYMdDUitf7OMyjn+842HgrSq2K8WZE2NSyKIb8gnTgv
+   rrouZ+RphuV8wwCzMZYp7F9aLnyE75zRxk1pHZ0qsBhP+hQabalJVv4Jd
+   A==;
+X-CSE-ConnectionGUID: oe7szM/dSBGJp5B99AHL8Q==
+X-CSE-MsgGUID: QO+3P+K0QfWcPCdvTypHrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="69668257"
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="69668257"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 19:09:02 -0700
+X-CSE-ConnectionGUID: dYhVJh5yTR6s0T8b+3tZig==
+X-CSE-MsgGUID: NmfKjhUOQ6mo1Nvl5ddlFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="148347803"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2025 19:08:53 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQGJz-000DAM-2X;
+	Sat, 14 Jun 2025 02:08:39 +0000
+Date: Sat, 14 Jun 2025 10:07:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
+	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	elbadrym@google.com, romlem@google.com, anhphan@google.com,
+	wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+Message-ID: <202506140931.MWdyPxX1-lkp@intel.com>
+References: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,55 +87,165 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613201409.GA973486@bhelgaas>
+In-Reply-To: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 
-On Fri, Jun 13, 2025 at 03:14:09PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 13, 2025 at 12:05:31PM -0300, Geraldo Nascimento wrote:
-> > -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> > +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
-> >  	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
-> 
-> It looks funny to write PCI_EXP_LNKCTL with bits from PCI_EXP_LNKSTA.
-> I guess this is because rockchip_pcie_write() does 32-bit writes, but
-> PCI_EXP_LNKCTL and PCI_EXP_LNKSTA are adjacent 16-bit registers.
-> 
-> If the hardware supports it, adding rockchip_pcie_readw() and
-> rockchip_pcie_writew() for 16-bit accesses would make this read
-> better.
-> 
-> Hopefully the hardware *does* support this (it's required per spec at
-> least for config accesses, which would be a different path in the
-> hardware).  Doing the 32-bit write of PCI_EXP_LNKCTL above is
-> problematic because writes PCI_EXP_LNKSTA as well, and PCI_EXP_LNKSTA
-> includes some RW1C bits that may be unintentionally cleared.
+Hi Jacky,
 
-Hi Bjorn,
+kernel test robot noticed the following build warnings:
 
-unfortunately Rockchip PCIe IP does not support 16-bit accesses,
-I tried and it only rendered the kernel unbootable, which made
-people in my house angry since the RK3399 box is my Internet Gateway!
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.16-rc1 next-20250613]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-:-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-phy-Add-document-for-ASPEED-PCIe-PHY/20250613-113331
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250613033001.3153637-8-jacky_chou%40aspeedtech.com
+patch subject: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250614/202506140931.MWdyPxX1-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140931.MWdyPxX1-lkp@intel.com/reproduce)
 
-For thit particular case, it is OK since LABS and LBMS are precisely
-the only RW1C bits in LNKSTA as far as I know. But see below.
-> >  
-> > -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCSR);
-> > -	status &= ~PCIE_RC_CONFIG_DCSR_MPS_MASK;
-> > -	status |= PCIE_RC_CONFIG_DCSR_MPS_256;
-> > -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCSR);
-> > +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-> > +	status &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > +	status |= PCI_EXP_DEVCTL_PAYLOAD_256B;
-> > +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-> 
-> Similar problem here; PCI_EXP_DEVCTL is only 16 bits, and writing the
-> adjacent PCI_EXP_DEVSTA may clear RW1C bits you didn't want to clear.
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506140931.MWdyPxX1-lkp@intel.com/
 
-This is a bit more concerning then above. I'm out of ideas regarding
-this particular issue you raised.
+All warnings (new ones prefixed by >>):
 
-Geraldo Nascimento
-> Bjorn
+>> drivers/pci/controller/pcie-aspeed.c:481:6: warning: variable 'status' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     481 |         if (bus->number == 0) {
+         |             ^~~~~~~~~~~~~~~~
+   drivers/pci/controller/pcie-aspeed.c:541:9: note: uninitialized use occurs here
+     541 |         writel(status, pcie->reg + H2X_CFGE_INT_STS);
+         |                ^~~~~~
+   drivers/pci/controller/pcie-aspeed.c:481:2: note: remove the 'if' if its condition is always false
+     481 |         if (bus->number == 0) {
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+     482 |                 /* Internal access to bridge */
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     483 |                 writel(TLP_BYTE_EN(0xf) << 16 | (where & ~3), pcie->reg + H2X_CFGI_TLP);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     484 |                 writel(CFGI_TLP_FIRE, pcie->reg + H2X_CFGI_CTRL);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     485 |                 *val = readl(pcie->reg + H2X_CFGI_RET_DATA);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     486 |         } else {
+         |         ~~~~~~
+   drivers/pci/controller/pcie-aspeed.c:474:24: note: initialize the variable 'status' to silence this warning
+     474 |         u32 bdf_offset, status;
+         |                               ^
+         |                                = 0
+   drivers/pci/controller/pcie-aspeed.c:573:6: warning: variable 'status' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     573 |         if (bus->number == 0) {
+         |             ^~~~~~~~~~~~~~~~
+   drivers/pci/controller/pcie-aspeed.c:622:9: note: uninitialized use occurs here
+     622 |         writel(status, pcie->reg + H2X_CFGE_INT_STS);
+         |                ^~~~~~
+   drivers/pci/controller/pcie-aspeed.c:573:2: note: remove the 'if' if its condition is always false
+     573 |         if (bus->number == 0) {
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+     574 |                 /* Internal access to bridge */
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     575 |                 writel(CFGI_WRITE | TLP_BYTE_EN(byte_en) << 16 | (where & ~3),
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     576 |                        pcie->reg + H2X_CFGI_TLP);
+         |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+     577 |                 writel(val, pcie->reg + H2X_CFGI_WR_DATA);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     578 |                 writel(CFGI_TLP_FIRE, pcie->reg + H2X_CFGI_CTRL);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     579 |         } else {
+         |         ~~~~~~
+   drivers/pci/controller/pcie-aspeed.c:552:24: note: initialize the variable 'status' to silence this warning
+     552 |         u32 bdf_offset, status, type;
+         |                               ^
+         |                                = 0
+   2 warnings generated.
+
+
+vim +481 drivers/pci/controller/pcie-aspeed.c
+
+   469	
+   470	static int aspeed_ast2700_rd_conf(struct pci_bus *bus, unsigned int devfn,
+   471					  int where, int size, u32 *val)
+   472	{
+   473		struct aspeed_pcie *pcie = bus->sysdata;
+   474		u32 bdf_offset, status;
+   475		u8 type;
+   476		int ret;
+   477	
+   478		if ((bus->number == 0 && devfn != 0))
+   479			return PCIBIOS_DEVICE_NOT_FOUND;
+   480	
+ > 481		if (bus->number == 0) {
+   482			/* Internal access to bridge */
+   483			writel(TLP_BYTE_EN(0xf) << 16 | (where & ~3), pcie->reg + H2X_CFGI_TLP);
+   484			writel(CFGI_TLP_FIRE, pcie->reg + H2X_CFGI_CTRL);
+   485			*val = readl(pcie->reg + H2X_CFGI_RET_DATA);
+   486		} else {
+   487			if (!aspeed_ast2700_get_link(pcie))
+   488				return PCIBIOS_DEVICE_NOT_FOUND;
+   489	
+   490			bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
+   491	
+   492			type = (bus->number == 1) ? PCI_HEADER_TYPE_NORMAL : PCI_HEADER_TYPE_BRIDGE;
+   493	
+   494			writel(CRG_READ_FMTTYPE(type) | CRG_PAYLOAD_SIZE, pcie->reg + H2X_CFGE_TLP_1ST);
+   495			writel(AST2700_TX_DESC1_VALUE | (pcie->tx_tag << 8) | TLP_BYTE_EN(0xf),
+   496			       pcie->reg + H2X_CFGE_TLP_NEXT);
+   497			writel(bdf_offset, pcie->reg + H2X_CFGE_TLP_NEXT);
+   498			writel(CFGE_TX_IDLE | CFGE_RX_BUSY, pcie->reg + H2X_CFGE_INT_STS);
+   499			writel(CFGE_TLP_FIRE, pcie->reg + H2X_CFGE_CTRL);
+   500	
+   501			ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
+   502						 (status & CFGE_TX_IDLE), 0, 50);
+   503			if (ret) {
+   504				dev_err(pcie->dev,
+   505					"[%X:%02X:%02X.%02X]CR tx timeout sts: 0x%08x\n",
+   506					pcie->domain, bus->number, PCI_SLOT(devfn),
+   507					PCI_FUNC(devfn), status);
+   508				ret = PCIBIOS_SET_FAILED;
+   509				*val = ~0;
+   510				goto out;
+   511			}
+   512	
+   513			ret = readl_poll_timeout(pcie->reg + H2X_CFGE_INT_STS, status,
+   514						 (status & CFGE_RX_BUSY), 0, 50000);
+   515			if (ret) {
+   516				dev_err(pcie->dev,
+   517					"[%X:%02X:%02X.%02X]CR rx timeoutsts: 0x%08x\n",
+   518					pcie->domain, bus->number, PCI_SLOT(devfn),
+   519					PCI_FUNC(devfn), status);
+   520				ret = PCIBIOS_SET_FAILED;
+   521				*val = ~0;
+   522				goto out;
+   523			}
+   524			*val = readl(pcie->reg + H2X_CFGE_RET_DATA);
+   525		}
+   526	
+   527		switch (size) {
+   528		case 1:
+   529			*val = (*val >> ((where & 3) * 8)) & 0xff;
+   530			break;
+   531		case 2:
+   532			*val = (*val >> ((where & 2) * 8)) & 0xffff;
+   533			break;
+   534		case 4:
+   535		default:
+   536			break;
+   537		}
+   538	
+   539		ret = PCIBIOS_SUCCESSFUL;
+   540	out:
+   541		writel(status, pcie->reg + H2X_CFGE_INT_STS);
+   542		pcie->tx_tag = (pcie->tx_tag + 1) % 0xF;
+   543		return ret;
+   544	}
+   545	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
