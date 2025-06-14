@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-29819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABBFCAD9EF3
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 20:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44D71AD9F27
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 20:53:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF36F18989D9
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 18:18:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 600D6189449B
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 18:54:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54E101C3314;
-	Sat, 14 Jun 2025 18:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB1321E492D;
+	Sat, 14 Jun 2025 18:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWTcy8dj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBCFT29I"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A9E1D52B;
-	Sat, 14 Jun 2025 18:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6851F941;
+	Sat, 14 Jun 2025 18:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749925068; cv=none; b=BmPKXDssgVkHMZvXAbXFAAtigbTeaZ8F0mxZ2zCaHiiBKXU3JCM07A0cSelRgzQMNEmhrr5NTD4GANeg2E9RfCtfr54afo78l2w2vBtwgt+9Bkh/YFvHlQ4zfH0jQXNm30CyfGEW0MgP119zyvnUd3x2X1hMgx3IMiWZczHTjY8=
+	t=1749927219; cv=none; b=MN4ACfzPJkBfNgi1R8/wIZvA3+N/AW2tZDtkjXmou+RXebJIBBP2pBOHlVGZSKom+El/dSlbseIbJ6H7PfSDddsHAPj0YvwRma2rnCdwpSRtDcuDk4mnYciKi7vPchFfudvFapdJzYKFuFoThZX38n4Aho1Xp1GzD5fLEh/If+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749925068; c=relaxed/simple;
-	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
+	s=arc-20240116; t=1749927219; c=relaxed/simple;
+	bh=vaspYYUdyipuilwzgjC/E308IR/28hvnXzZCjErcA3o=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=j2i8kyTzqPyrNX3aogP3+ThOL+vNcEYp9J/dtPTL9EjA8FYtGaaCOptHqOqKrdd4C6Di1VizOh0o0Xp1Waydkz3ByYPl4R+1+4qkVXXICmbyDsK0Ml/RbePkDw2TSbIh7pxLL3p8BgmN4hClE2EXzLSoe6AUsiaNE0Aefbj5W9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWTcy8dj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEFCC4CEEB;
-	Sat, 14 Jun 2025 18:17:44 +0000 (UTC)
+	 References:In-Reply-To; b=lK4/0bOef1celYgnJirN4GtkzayogloQKlpCAtMN6Fw2q2/n0XUZBA/YdFxbNIlcOTIPkyDUl2XBiqDOzabl3HN/7uicAuAUv4mj6XttBHA3wW6t1pCFHSB90bU/YpZy2iUp7bK8QPJ6sXeCGdKrpMvV1FsOgI6DIw+D/RrWyFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBCFT29I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3DCC4CEEB;
+	Sat, 14 Jun 2025 18:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749925067;
-	bh=kYjMKtc7MklFMBiGIsBwUdz/Ui61mcF79jR156Q6WLE=;
+	s=k20201202; t=1749927219;
+	bh=vaspYYUdyipuilwzgjC/E308IR/28hvnXzZCjErcA3o=;
 	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iWTcy8djg9eMkM73JF3/T5fhhrX0PUH2QYiAkDv3oO6yuylXcmk3CnxrcNCjgLuMK
-	 rGpZLqirzW6xYLgJe4FHVLWvvxwVGiUMkxX8iiGAnUAGv42qWa7UVF/+SZ+SADuUDM
-	 27pB30y4E0AJZQ2Lc7Wz265vVegVDzUeEICh4F9M/RN+8y7wjWVeZCugN8fPYUl/Ye
-	 PyYvNrXq1VT3lo3W5xAppa7Tg5dPiqkFFxA5XzdUHILJnmuBuDaSDk8LujP/TNFSKV
-	 /F9E1FaX1wxtYu1U4vvcY3mnwp5lQsOvOo2zi8alf3BmzoYsFz8gFvAoXZqv2OrVrs
-	 sjf7n3PVhwvdQ==
+	b=fBCFT29In6dOJhN/DyGpjDvLKzjrLuaLJ76P/0y8PrxpsZnf7jZAnAAFqtE+Vl2YB
+	 ssQVqtmIXvRryo6ziSgHRRTm8T0owQn/D+VG3PZcQTPWpmSJECxlDAGWwTKXsDrCX2
+	 XAKn14xuXmqNS/XgZogFbefPf17OHV/nkhKSCq38+CfnJ4eFrgLFS1AbD+QdL8QPGa
+	 nbCJmhxv0r5JCt8eLpSQabPnIDOnuJudErVzOKr25wlXrAhMQFKjZrUG6v7XbGYA3O
+	 1AadWRLc+QnYavOUw4SM8P2ovLpicaBx1sjugUzPu3RzwB8zGsz2G0G7qSnDXnXC9b
+	 YHP7U1YsEmQlA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,49 +49,67 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 20:17:42 +0200
-Message-Id: <DAMGNVWE7HAH.ZIUK8D3A3VEM@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
- <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, <rust-for-linux@vger.kernel.org>,
+Date: Sat, 14 Jun 2025 20:53:34 +0200
+Message-Id: <DAMHFC5U1496.25GQJSFU53PRD@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
+ Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
+Subject: Re: [PATCH v3 2/2] rust: types: require
+ `ForeignOwnable::into_foreign` return non-null
 From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
 X-Mailer: aerc 0.20.1
-References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
- <aAkoVfiZDAXdYxrr@google.com>
- <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=vPJJ9H0+vCb9=5MwQavcYqvQQ3D+heFhE+xHW+kq=MA@mail.gmail.com>
+References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
+ <20250612-pointed-to-v3-2-b009006d86a1@kernel.org>
+ <ftVceLHmGCX4uHfwZ7aGMOkv5d4ALLIYrsQarySS4pU1gDD6qnxOY3rArV9Kp0tazReT-IfOQGGpK-jNthUKkA==@protonmail.internalid> <DAKN1HO7WUXY.QS098VXTDICU@kernel.org> <87sek3by5l.fsf@kernel.org>
+In-Reply-To: <87sek3by5l.fsf@kernel.org>
 
-On Fri Jun 13, 2025 at 6:45 PM CEST, Tamir Duberstein wrote:
-> On Wed, Apr 23, 2025 at 1:50=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
- wrote:
->>
->> On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
->> > The bulk of this change occurs in the last commit, please its commit
->> > messages for details.
->> >
->> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->>
->> This works with Rust Binder and Ashmem.
->>
->> Tested-by: Alice Ryhl <aliceryhl@google.com>
+On Fri Jun 13, 2025 at 2:53 PM CEST, Andreas Hindborg wrote:
+> "Benno Lossin" <lossin@kernel.org> writes:
 >
-> Thanks Alice. Could you also review? I guess this still needs some
-> RBs. @Benno Lossin could you perhaps have a look as well? You both
-> reviewed my other series[0] which was quite similar.
+>> On Thu Jun 12, 2025 at 3:09 PM CEST, Andreas Hindborg wrote:
+>>> The intended implementations of `ForeignOwnable` will not return null
+>>> pointers from `into_foreign`, as this would render the implementation o=
+f
+>>> `try_from_foreign` useless. Current users of `ForeignOwnable` rely on
+>>> `into_foreign` returning non-null pointers. So require `into_foreign` t=
+o
+>>> return non-null pointers.
+>>>
+>>> Suggested-by: Benno Lossin <lossin@kernel.org>
+>>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+>>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>> ---
+>>>  rust/kernel/types.rs | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>>> index c156808a78d3..63a2559a545f 100644
+>>> --- a/rust/kernel/types.rs
+>>> +++ b/rust/kernel/types.rs
+>>> @@ -43,6 +43,7 @@ pub unsafe trait ForeignOwnable: Sized {
+>>>      /// # Guarantees
+>>>      ///
+>>>      /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALI=
+GN`].
+>>> +    /// - The returned pointer is not null.
+>>
+>> This also needs to be mentioned in the `Safety` section of this trait.
+>> Alternatively you can put "Implementers must ensure the guarantees on
+>> [`into_foreign`] are upheld." or similar.
 >
-> [0] https://lore.kernel.org/all/20250411-no-offset-v3-1-c0b174640ec3@gmai=
-l.com/
+> Which is exactly what I did :)
 
-I probably won't have time for this one.
+Ah didn't look at the first patch again, then it's fine :)
+
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
 ---
 Cheers,
