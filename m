@@ -1,94 +1,215 @@
-Return-Path: <linux-pci+bounces-29812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94B55AD9C6C
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 13:16:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1D03AD9C74
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 13:20:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D67623BA599
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 11:16:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 429B93BB6EC
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 11:19:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6479916A395;
-	Sat, 14 Jun 2025 11:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930021EEA47;
+	Sat, 14 Jun 2025 11:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSvO+Rup"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlOf8gBR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5AC8633A;
-	Sat, 14 Jun 2025 11:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2651E3DEB;
+	Sat, 14 Jun 2025 11:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749899793; cv=none; b=i3uQdN4KQE3AZo0zm45PZf5nWQ765utcjtz1Z5devqfvSgQF64nVsHh1/LIpS2BVoSnOtnhVRg37M2vPadLqm65nnTrDqEVevYkSBDka0BQB0rainSdmqfljSTOKqwXqSV1lxYrTUC5/JxyXDK5BiME5t5w+MFlN6yh3MJgR9Vk=
+	t=1749900018; cv=none; b=ay7CgnkT9QPTB3l1hUyouGI9YaFdsr9hykKGdA0CziJZG9ABSpVmS0lB4jEwFLpGWeY5wuAN0vf6AQIkFGhpJX63cXAD0FGDCnUENM2xLnPVLosYokSkEJIrVgxpUXDIDkrKSwsdRjhY31JM42bWoL/lLVduJ6ml3/9A7X39oJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749899793; c=relaxed/simple;
-	bh=X9xDO0up16rT/k7uTrPBb2e9wca60PKhcFhlzmD1abM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMzyD3UuMdIoKuQyPVlePm0bO5cVAdWlG89PTo9mZe45AEjTB86ml97sVlkwWC2QZjuwXuCssZ5pGdfph09qtn/Eyi0IHS8UeX/7/wt3fADtjT0BTqVdRHPeAyHU50laGrJHdv+FMo5f8DhE/yReLr+X4qvpqli2P2DTgbKUY7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSvO+Rup; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE6EC4CEEB;
-	Sat, 14 Jun 2025 11:16:29 +0000 (UTC)
+	s=arc-20240116; t=1749900018; c=relaxed/simple;
+	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWtx4iPA/rci1eQQTnBwikpa6t563Mm/NNLe+5FGcfjVAHtOtVmVYHn+MVs8q6kgbJSMVE5+DFOiGBhgJ4/dTTQTE1mGWyDgL3DzYEtOgn/Dx1sjkPaNyGicU3pZsi7lb51kNoH17LYaRhJN0t1PAf3GkXZfR0btpsPNLwceOjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlOf8gBR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADF8C4CEEB;
+	Sat, 14 Jun 2025 11:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749899792;
-	bh=X9xDO0up16rT/k7uTrPBb2e9wca60PKhcFhlzmD1abM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FSvO+RupbNq8Amfag+Z0W5P8z7b6LcotkjLyXS9/DZA07+dGP7MnbWmF/QvLSDBNH
-	 FXECrjOv4fb9ZBF65GgwPQ+oUkX0D3PNFuqw+vKbfsUD8oSaGfX2tJJtaWA5IrisS6
-	 d68PVUtU1Ksw+Zg6EbW9FMNQC/galUqOTiKcm7D4126N8xlWKFSlTIMtliH190JnRP
-	 GiuW8BgTBP55NYETzAeKWp/1WEfRJ3VgNJoGfGpU441QapwUMjsxYvngVpBG9xd9He
-	 ZILanRzNpsy6tPv62mowDWgTlEfujqqB2z4eNIGbvLU13aJrTa3OSW2bEbYp6cGUxF
-	 XR1eFmHUpN+OA==
-Date: Sat, 14 Jun 2025 16:46:26 +0530
+	s=k20201202; t=1749900018;
+	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SlOf8gBR9d8vqcxgXAcRRblhZuepfQSg7TOPVpUpVJetAyA7BPxAh2AZG0YeZt4T7
+	 hLWck6hsiWD2XEfqVj1XEvfbkESjcySq5hA90gMTtm0N8oY+918tB3XZdqeKgp0BPC
+	 1u9KlkxDUH0/IHbTShoAcunmfzJQN/sen6/gzGTPeUCfQD26kTTGkN1GiQdlT6/dfn
+	 lgJ+3bSpJ1sITQtF8E/d+aZuJp6qPeFfEpbmAGInvS3ijJHvWeUm0sFpLNYL2U3yEp
+	 EJoyn2waEfwMx6Ycj93XfC8YtxGZyXeCVQCJodgbcaAQQvMRguVsFX7MJIfMord/AQ
+	 Ap9UGJhJXihyA==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>, 
+To: bhelgaas@google.com,
+	brgl@bgdev.pl
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
 	Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition
- to drivers/pci/pwrctrl/
-Message-ID: <sy2pxbexfr7nhpd52ml2s4obghsbr7n7bfkym4guv533lxxxyc@pwi6rih5efmh>
-References: <20250614052651.15055-1-mani@kernel.org>
- <aE0lGcYO1asrwb9z@wunner.de>
+Subject: [PATCH v2] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
+Date: Sat, 14 Jun 2025 16:50:09 +0530
+Message-ID: <20250614112009.6478-1-mani@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aE0lGcYO1asrwb9z@wunner.de>
 
-On Sat, Jun 14, 2025 at 09:30:33AM +0200, Lukas Wunner wrote:
-> On Sat, Jun 14, 2025 at 10:56:51AM +0530, Manivannan Sadhasivam wrote:
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2508,36 +2508,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
-> >  }
-> >  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
-> >  
-> > -static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-> > -{
-> > -	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-> > -	struct platform_device *pdev;
-> > -	struct device_node *np;
-> 
-> Looks like...
-> 
-> 	#include <linux/of_platform.h>
-> 	#include <linux/platform_device.h>
-> 
-> ...can also be removed from probe.c, both introduced by 957f40d039a9.
-> 
+pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
+built only when CONFIG_PWRCTRL is enabled. Currently, it is built
+independently of CONFIG_PWRCTRL. This creates enumeration failure on
+platforms like brcmstb using out-of-tree devicetree that describes the
+power supplies for endpoints in the PCIe child node, but doesn't use
+PWRCTRL framework to manage the supplies. The controller driver itself
+manages the supplies.
 
-Right. Will send v2 removing these, thanks!
+But in any case, the API should be built only when CONFIG_PWRCTRL is
+enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
+a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
+fixes the enumeration issues on the affected platforms.
 
-- Mani
+Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
 
+Changes in v2:
+
+* Dropped the unused headers from probe.c (Lukas)
+
+ drivers/pci/pci.h          |  8 ++++++++
+ drivers/pci/probe.c        | 32 --------------------------------
+ drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 12215ee72afb..c5efd8b9c96a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
+ 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+ 	 PCI_CONF1_EXT_REG(reg))
+ 
++#ifdef CONFIG_PCI_PWRCTRL
++struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
++						  int devfn);
++#else
++static inline struct platform_device *
++pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL; }
++#endif
++
+ #endif /* DRIVERS_PCI_H */
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..478e217928a6 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -9,8 +9,6 @@
+ #include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of_pci.h>
+-#include <linux/of_platform.h>
+-#include <linux/platform_device.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -2508,36 +2506,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+ }
+ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+ 
+-static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+-{
+-	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+-	struct platform_device *pdev;
+-	struct device_node *np;
+-
+-	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+-	if (!np || of_find_device_by_node(np))
+-		return NULL;
+-
+-	/*
+-	 * First check whether the pwrctrl device really needs to be created or
+-	 * not. This is decided based on at least one of the power supplies
+-	 * being defined in the devicetree node of the device.
+-	 */
+-	if (!of_pci_supply_present(np)) {
+-		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
+-		return NULL;
+-	}
+-
+-	/* Now create the pwrctrl device */
+-	pdev = of_platform_device_create(np, NULL, &host->dev);
+-	if (!pdev) {
+-		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
+-		return NULL;
+-	}
+-
+-	return pdev;
+-}
+-
+ /*
+  * Read the config data for a PCI device, sanity-check it,
+  * and fill in the dev structure.
+diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+index 6bdbfed584d6..20585b2c3681 100644
+--- a/drivers/pci/pwrctrl/core.c
++++ b/drivers/pci/pwrctrl/core.c
+@@ -6,11 +6,47 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_pci.h>
++#include <linux/of_platform.h>
+ #include <linux/pci.h>
+ #include <linux/pci-pwrctrl.h>
++#include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
++#include "../pci.h"
++
++struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
++{
++	struct pci_host_bridge *host = pci_find_host_bridge(bus);
++	struct platform_device *pdev;
++	struct device_node *np;
++
++	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
++	if (!np || of_find_device_by_node(np))
++		return NULL;
++
++	/*
++	 * First check whether the pwrctrl device really needs to be created or
++	 * not. This is decided based on at least one of the power supplies
++	 * being defined in the devicetree node of the device.
++	 */
++	if (!of_pci_supply_present(np)) {
++		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
++		return NULL;
++	}
++
++	/* Now create the pwrctrl device */
++	pdev = of_platform_device_create(np, NULL, &host->dev);
++	if (!pdev) {
++		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
++		return NULL;
++	}
++
++	return pdev;
++}
++
+ static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
+ 			      void *data)
+ {
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
 
