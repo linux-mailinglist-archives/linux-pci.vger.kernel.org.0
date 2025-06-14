@@ -1,215 +1,191 @@
-Return-Path: <linux-pci+bounces-29813-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29814-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1D03AD9C74
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 13:20:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731D6AD9C91
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 13:44:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 429B93BB6EC
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 11:19:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A8F71897345
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 11:44:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930021EEA47;
-	Sat, 14 Jun 2025 11:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EA67248195;
+	Sat, 14 Jun 2025 11:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlOf8gBR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnR1DNEq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2651E3DEB;
-	Sat, 14 Jun 2025 11:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84701ACED1
+	for <linux-pci@vger.kernel.org>; Sat, 14 Jun 2025 11:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749900018; cv=none; b=ay7CgnkT9QPTB3l1hUyouGI9YaFdsr9hykKGdA0CziJZG9ABSpVmS0lB4jEwFLpGWeY5wuAN0vf6AQIkFGhpJX63cXAD0FGDCnUENM2xLnPVLosYokSkEJIrVgxpUXDIDkrKSwsdRjhY31JM42bWoL/lLVduJ6ml3/9A7X39oJ4=
+	t=1749901479; cv=none; b=Oz/Hy5lB8uL9/sKIi6k70j+JGaXCJvabFZrbabuFxLT+z40REP9GWlq71Byo9t2JvfAxAFtJpDPemApCXTHQAkLiMnTlWYrWKTPBAAevgw+Z1tDHQ1TtME/ZQsRJrKIsh/0S2P0Z4/UAptmTTED5w40FXjW2KecD7HbD1oFPalk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749900018; c=relaxed/simple;
-	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWtx4iPA/rci1eQQTnBwikpa6t563Mm/NNLe+5FGcfjVAHtOtVmVYHn+MVs8q6kgbJSMVE5+DFOiGBhgJ4/dTTQTE1mGWyDgL3DzYEtOgn/Dx1sjkPaNyGicU3pZsi7lb51kNoH17LYaRhJN0t1PAf3GkXZfR0btpsPNLwceOjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlOf8gBR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADF8C4CEEB;
-	Sat, 14 Jun 2025 11:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749900018;
-	bh=4bC7wWm1elb5ro8Z0EDJQKlP7Skj63lJVgMYbIWM9vs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SlOf8gBR9d8vqcxgXAcRRblhZuepfQSg7TOPVpUpVJetAyA7BPxAh2AZG0YeZt4T7
-	 hLWck6hsiWD2XEfqVj1XEvfbkESjcySq5hA90gMTtm0N8oY+918tB3XZdqeKgp0BPC
-	 1u9KlkxDUH0/IHbTShoAcunmfzJQN/sen6/gzGTPeUCfQD26kTTGkN1GiQdlT6/dfn
-	 lgJ+3bSpJ1sITQtF8E/d+aZuJp6qPeFfEpbmAGInvS3ijJHvWeUm0sFpLNYL2U3yEp
-	 EJoyn2waEfwMx6Ycj93XfC8YtxGZyXeCVQCJodgbcaAQQvMRguVsFX7MJIfMord/AQ
-	 Ap9UGJhJXihyA==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: bhelgaas@google.com,
-	brgl@bgdev.pl
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v2] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
-Date: Sat, 14 Jun 2025 16:50:09 +0530
-Message-ID: <20250614112009.6478-1-mani@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749901479; c=relaxed/simple;
+	bh=GgBJPvtBk8iXA2++HJDUJCZGJT1fLjLhuHRx5+NOYjc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iAWTwKj7amnTHwZyWoLNTzJC9mOPLHNCjAQQFqFWgPxqvl1FYjK5ulf65nZ/G/h7LeaxQW17O+v+CVfrRL0k49H7/wntPRYIKh9AOz7/gAanNvt6Yf0SBj6ovGo9yrZW1Oz3mPNthtwbVKci7kulvX4NeibQkmyjmcv5a7FnDqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnR1DNEq; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749901478; x=1781437478;
+  h=date:from:to:cc:subject:message-id;
+  bh=GgBJPvtBk8iXA2++HJDUJCZGJT1fLjLhuHRx5+NOYjc=;
+  b=CnR1DNEqI3FSv9kLoN/I8Lx59Dti/DfSTpp/KtQdfypOcLfmqIsiiLT5
+   p4s/wFVIInPS9NyXS3btJdjQDY2P4/ohEmFcGh765P356msJC/Ipzt9tX
+   w2dH8Apwn1YiFCmXW5qwbmraTkskzsePXwrUMqEfnvQhrwXbFFTUCgNQr
+   LAuz67iaBKF4gxSPQ5yl201Ee92kvrpFYLZgDbcg54P/M3t2Jj993P0n3
+   PvB4EeCFPJFhj/PzsAGsL10pFDj95yzveBrczoYKpROMgtVO0acEhmnnI
+   Que1ycMtAYw9+TjupS510lNXOOXHFrVTpqSd2fnlQYt/c3POz44Fb1Ycw
+   g==;
+X-CSE-ConnectionGUID: aHflm7stS0iXevrvUJ26jA==
+X-CSE-MsgGUID: fTPv9yhwQLWbouYjQHmeTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="51333857"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="51333857"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:44:37 -0700
+X-CSE-ConnectionGUID: aWIhPg07Qc6DyiMjLV8mNQ==
+X-CSE-MsgGUID: OJgICxc2TnSo6YDLwOc3Cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="179046678"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 14 Jun 2025 04:44:36 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQPJK-000DU6-0L;
+	Sat, 14 Jun 2025 11:44:34 +0000
+Date: Sat, 14 Jun 2025 19:43:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dw-rockchip] BUILD SUCCESS
+ dcca6051a220484f0c1a5cb018f3012735067254
+Message-ID: <202506141949.XdapHTc7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-independently of CONFIG_PWRCTRL. This creates enumeration failure on
-platforms like brcmstb using out-of-tree devicetree that describes the
-power supplies for endpoints in the PCIe child node, but doesn't use
-PWRCTRL framework to manage the supplies. The controller driver itself
-manages the supplies.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dw-rockchip
+branch HEAD: dcca6051a220484f0c1a5cb018f3012735067254  PCI: dw-rockchip: Delay link training after hot reset in EP mode
 
-But in any case, the API should be built only when CONFIG_PWRCTRL is
-enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-fixes the enumeration issues on the affected platforms.
+elapsed time: 1461m
 
-Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
+configs tested: 98
+configs skipped: 1
 
-Changes in v2:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-* Dropped the unused headers from probe.c (Lukas)
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250613    gcc-12.4.0
+arc                   randconfig-002-20250613    gcc-12.4.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250613    clang-21
+arm                   randconfig-002-20250613    clang-20
+arm                   randconfig-003-20250613    gcc-8.5.0
+arm                   randconfig-004-20250613    clang-21
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250613    gcc-15.1.0
+arm64                 randconfig-002-20250613    clang-21
+arm64                 randconfig-003-20250613    clang-21
+arm64                 randconfig-004-20250613    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250613    gcc-15.1.0
+csky                  randconfig-002-20250613    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250613    clang-21
+hexagon               randconfig-002-20250613    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250613    gcc-12
+i386        buildonly-randconfig-002-20250613    gcc-11
+i386        buildonly-randconfig-003-20250613    gcc-12
+i386        buildonly-randconfig-004-20250613    clang-20
+i386        buildonly-randconfig-005-20250613    clang-20
+i386        buildonly-randconfig-006-20250613    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250613    gcc-15.1.0
+loongarch             randconfig-002-20250613    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250613    gcc-11.5.0
+nios2                 randconfig-002-20250613    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                randconfig-001-20250613    gcc-8.5.0
+parisc                randconfig-002-20250613    gcc-13.3.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20250613    clang-21
+powerpc               randconfig-002-20250613    gcc-8.5.0
+powerpc               randconfig-003-20250613    gcc-9.3.0
+powerpc64             randconfig-001-20250613    gcc-8.5.0
+powerpc64             randconfig-002-20250613    gcc-8.5.0
+powerpc64             randconfig-003-20250613    gcc-10.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250613    gcc-8.5.0
+riscv                 randconfig-002-20250613    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250613    clang-21
+s390                  randconfig-002-20250613    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250613    gcc-15.1.0
+sh                    randconfig-002-20250613    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250613    gcc-10.3.0
+sparc                 randconfig-002-20250613    gcc-13.3.0
+sparc64               randconfig-001-20250613    gcc-15.1.0
+sparc64               randconfig-002-20250613    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250613    gcc-12
+um                    randconfig-002-20250613    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250613    clang-20
+x86_64      buildonly-randconfig-002-20250613    gcc-12
+x86_64      buildonly-randconfig-003-20250613    gcc-12
+x86_64      buildonly-randconfig-004-20250613    gcc-12
+x86_64      buildonly-randconfig-005-20250613    clang-20
+x86_64      buildonly-randconfig-006-20250613    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250613    gcc-8.5.0
+xtensa                randconfig-002-20250613    gcc-15.1.0
 
- drivers/pci/pci.h          |  8 ++++++++
- drivers/pci/probe.c        | 32 --------------------------------
- drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12215ee72afb..c5efd8b9c96a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
- 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
- 	 PCI_CONF1_EXT_REG(reg))
- 
-+#ifdef CONFIG_PCI_PWRCTRL
-+struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
-+						  int devfn);
-+#else
-+static inline struct platform_device *
-+pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL; }
-+#endif
-+
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4b8693ec9e4c..478e217928a6 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -9,8 +9,6 @@
- #include <linux/pci.h>
- #include <linux/msi.h>
- #include <linux/of_pci.h>
--#include <linux/of_platform.h>
--#include <linux/platform_device.h>
- #include <linux/pci_hotplug.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -2508,36 +2506,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- }
- EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
- 
--static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
--{
--	struct pci_host_bridge *host = pci_find_host_bridge(bus);
--	struct platform_device *pdev;
--	struct device_node *np;
--
--	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
--	if (!np || of_find_device_by_node(np))
--		return NULL;
--
--	/*
--	 * First check whether the pwrctrl device really needs to be created or
--	 * not. This is decided based on at least one of the power supplies
--	 * being defined in the devicetree node of the device.
--	 */
--	if (!of_pci_supply_present(np)) {
--		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
--		return NULL;
--	}
--
--	/* Now create the pwrctrl device */
--	pdev = of_platform_device_create(np, NULL, &host->dev);
--	if (!pdev) {
--		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
--		return NULL;
--	}
--
--	return pdev;
--}
--
- /*
-  * Read the config data for a PCI device, sanity-check it,
-  * and fill in the dev structure.
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 6bdbfed584d6..20585b2c3681 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -6,11 +6,47 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/pci-pwrctrl.h>
-+#include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-+#include "../pci.h"
-+
-+struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-+{
-+	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+
-+	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
-+	if (!np || of_find_device_by_node(np))
-+		return NULL;
-+
-+	/*
-+	 * First check whether the pwrctrl device really needs to be created or
-+	 * not. This is decided based on at least one of the power supplies
-+	 * being defined in the devicetree node of the device.
-+	 */
-+	if (!of_pci_supply_present(np)) {
-+		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
-+		return NULL;
-+	}
-+
-+	/* Now create the pwrctrl device */
-+	pdev = of_platform_device_create(np, NULL, &host->dev);
-+	if (!pdev) {
-+		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
-+		return NULL;
-+	}
-+
-+	return pdev;
-+}
-+
- static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
- 			      void *data)
- {
--- 
-2.43.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
