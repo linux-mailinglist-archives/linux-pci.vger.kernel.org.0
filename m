@@ -1,117 +1,244 @@
-Return-Path: <linux-pci+bounces-29820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44D71AD9F27
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 20:53:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6064ADA133
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Jun 2025 09:26:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 600D6189449B
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Jun 2025 18:54:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4942C16F70F
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Jun 2025 07:26:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB1321E492D;
-	Sat, 14 Jun 2025 18:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D0B3596D;
+	Sun, 15 Jun 2025 07:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBCFT29I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVw68QeP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6851F941;
-	Sat, 14 Jun 2025 18:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B892E11CF;
+	Sun, 15 Jun 2025 07:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749927219; cv=none; b=MN4ACfzPJkBfNgi1R8/wIZvA3+N/AW2tZDtkjXmou+RXebJIBBP2pBOHlVGZSKom+El/dSlbseIbJ6H7PfSDddsHAPj0YvwRma2rnCdwpSRtDcuDk4mnYciKi7vPchFfudvFapdJzYKFuFoThZX38n4Aho1Xp1GzD5fLEh/If+A=
+	t=1749972359; cv=none; b=EwolVtCmYhdKnvNbOY+1zSKCj+D0U9vwUq/DfDees6YDsUWzABRLLsw3ei4lS4lXiV0BziqoU+2RLy9EITVTKyXHI1erJUKpygM9GLX9oOL288Q1dwNzxb1hT4S8gaK0FKBBpdK1XQzgIgxwOZjDWIdt8Sng5GeFJSCfLiGIymY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749927219; c=relaxed/simple;
-	bh=vaspYYUdyipuilwzgjC/E308IR/28hvnXzZCjErcA3o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=lK4/0bOef1celYgnJirN4GtkzayogloQKlpCAtMN6Fw2q2/n0XUZBA/YdFxbNIlcOTIPkyDUl2XBiqDOzabl3HN/7uicAuAUv4mj6XttBHA3wW6t1pCFHSB90bU/YpZy2iUp7bK8QPJ6sXeCGdKrpMvV1FsOgI6DIw+D/RrWyFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBCFT29I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3DCC4CEEB;
-	Sat, 14 Jun 2025 18:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749927219;
-	bh=vaspYYUdyipuilwzgjC/E308IR/28hvnXzZCjErcA3o=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=fBCFT29In6dOJhN/DyGpjDvLKzjrLuaLJ76P/0y8PrxpsZnf7jZAnAAFqtE+Vl2YB
-	 ssQVqtmIXvRryo6ziSgHRRTm8T0owQn/D+VG3PZcQTPWpmSJECxlDAGWwTKXsDrCX2
-	 XAKn14xuXmqNS/XgZogFbefPf17OHV/nkhKSCq38+CfnJ4eFrgLFS1AbD+QdL8QPGa
-	 nbCJmhxv0r5JCt8eLpSQabPnIDOnuJudErVzOKr25wlXrAhMQFKjZrUG6v7XbGYA3O
-	 1AadWRLc+QnYavOUw4SM8P2ovLpicaBx1sjugUzPu3RzwB8zGsz2G0G7qSnDXnXC9b
-	 YHP7U1YsEmQlA==
+	s=arc-20240116; t=1749972359; c=relaxed/simple;
+	bh=csO2QGNbf7nfO26EKC6JcvC7zLNP4dQemn8e0yToBcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qX/gLet/pLK7N0RqJzupdLWvXNt3ZQNWjRVxF3BIsegjfay6Ey3aR7WmK0+3NSMZcYphEb4ZB8pLlr4V2KVDHylRIMjPwgv16egiPCFfRUAwYzi9PWm1DCKylgm430pjPTFnOtVEYMfcok06oAdUkx1OZ9fVGYvRNcS+DLqCwTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVw68QeP; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749972358; x=1781508358;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=csO2QGNbf7nfO26EKC6JcvC7zLNP4dQemn8e0yToBcE=;
+  b=BVw68QePssQY/mAEfWhRDea/0/JKQ7TSUqbJKNtTXIiDsdYKp/jWnW9T
+   K+wHoDa9i31G3bb3qICqrji7aq5Z2+G/PH+5+Itju+73Y1xmahi+XjFbj
+   GK9ECu7pTYOmU3DryYnm86g0uLIkNWGZk40B2pIY5jUoqZhzo0Pwnh7wJ
+   fBO4EEtruiVr8tf0KrMRbU+z9beXCc29m2nZBUhO6WKJFWRfKZlC6mtCx
+   max1ofmSXwToBiTz+FUwF4TdZzc3rHm7Y74W4Xmz4TwSAvqZ3itPdHfw+
+   suFGS+RJreI3M4a7M5jpi8/4JY+C8H8ZyVkCGWOyarnHQLKt5374YXmEI
+   Q==;
+X-CSE-ConnectionGUID: Lw9d1J/5RI63SnRLozfshg==
+X-CSE-MsgGUID: 4dnyJptpSCuHbjcabZROrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="55938975"
+X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
+   d="scan'208";a="55938975"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 00:25:49 -0700
+X-CSE-ConnectionGUID: +9pzYl0HRJS2n0TVJY1Jzw==
+X-CSE-MsgGUID: Wng3WymvTT2DyoN5s27cMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,238,1744095600"; 
+   d="scan'208";a="185445438"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2025 00:25:50 -0700
+Received: from [10.124.222.253] (unknown [10.124.222.253])
+	by linux.intel.com (Postfix) with ESMTP id DB03B20B5736;
+	Sun, 15 Jun 2025 00:25:48 -0700 (PDT)
+Message-ID: <0442f060-1e8b-469a-a700-c96d18d5b737@linux.intel.com>
+Date: Sun, 15 Jun 2025 00:25:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Jun 2025 20:53:34 +0200
-Message-Id: <DAMHFC5U1496.25GQJSFU53PRD@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
- <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] rust: types: require
- `ForeignOwnable::into_foreign` return non-null
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
- <20250612-pointed-to-v3-2-b009006d86a1@kernel.org>
- <ftVceLHmGCX4uHfwZ7aGMOkv5d4ALLIYrsQarySS4pU1gDD6qnxOY3rArV9Kp0tazReT-IfOQGGpK-jNthUKkA==@protonmail.internalid> <DAKN1HO7WUXY.QS098VXTDICU@kernel.org> <87sek3by5l.fsf@kernel.org>
-In-Reply-To: <87sek3by5l.fsf@kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+To: Manivannan Sadhasivam <mani@kernel.org>, bhelgaas@google.com,
+ brgl@bgdev.pl
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@wunner.de,
+ Jim Quinlan <james.quinlan@broadcom.com>, Bjorn Helgaas <helgaas@kernel.org>
+References: <20250614112009.6478-1-mani@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250614112009.6478-1-mani@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri Jun 13, 2025 at 2:53 PM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
+
+On 6/14/25 4:20 AM, Manivannan Sadhasivam wrote:
+> pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
+> built only when CONFIG_PWRCTRL is enabled. Currently, it is built
+> independently of CONFIG_PWRCTRL. This creates enumeration failure on
+> platforms like brcmstb using out-of-tree devicetree that describes the
+> power supplies for endpoints in the PCIe child node, but doesn't use
+> PWRCTRL framework to manage the supplies. The controller driver itself
+> manages the supplies.
 >
->> On Thu Jun 12, 2025 at 3:09 PM CEST, Andreas Hindborg wrote:
->>> The intended implementations of `ForeignOwnable` will not return null
->>> pointers from `into_foreign`, as this would render the implementation o=
-f
->>> `try_from_foreign` useless. Current users of `ForeignOwnable` rely on
->>> `into_foreign` returning non-null pointers. So require `into_foreign` t=
-o
->>> return non-null pointers.
->>>
->>> Suggested-by: Benno Lossin <lossin@kernel.org>
->>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->>> ---
->>>  rust/kernel/types.rs | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>> index c156808a78d3..63a2559a545f 100644
->>> --- a/rust/kernel/types.rs
->>> +++ b/rust/kernel/types.rs
->>> @@ -43,6 +43,7 @@ pub unsafe trait ForeignOwnable: Sized {
->>>      /// # Guarantees
->>>      ///
->>>      /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALI=
-GN`].
->>> +    /// - The returned pointer is not null.
->>
->> This also needs to be mentioned in the `Safety` section of this trait.
->> Alternatively you can put "Implementers must ensure the guarantees on
->> [`into_foreign`] are upheld." or similar.
+> But in any case, the API should be built only when CONFIG_PWRCTRL is
+> enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
+> a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
+> fixes the enumeration issues on the affected platforms.
 >
-> Which is exactly what I did :)
+> Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+> Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>
+> Changes in v2:
+>
+> * Dropped the unused headers from probe.c (Lukas)
+>
+>   drivers/pci/pci.h          |  8 ++++++++
+>   drivers/pci/probe.c        | 32 --------------------------------
+>   drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 44 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 12215ee72afb..c5efd8b9c96a 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
+>   	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+>   	 PCI_CONF1_EXT_REG(reg))
+>   
+> +#ifdef CONFIG_PCI_PWRCTRL
 
-Ah didn't look at the first patch again, then it's fine :)
+Use IS_ENABLED?
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+> +struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
+> +						  int devfn);
+> +#else
+> +static inline struct platform_device *
+> +pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL; }
+> +#endif
+> +
+>   #endif /* DRIVERS_PCI_H */
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4b8693ec9e4c..478e217928a6 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -9,8 +9,6 @@
+>   #include <linux/pci.h>
+>   #include <linux/msi.h>
+>   #include <linux/of_pci.h>
+> -#include <linux/of_platform.h>
+> -#include <linux/platform_device.h>
+>   #include <linux/pci_hotplug.h>
+>   #include <linux/slab.h>
+>   #include <linux/module.h>
+> @@ -2508,36 +2506,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+>   }
+>   EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+>   
+> -static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+> -{
+> -	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+> -	struct platform_device *pdev;
+> -	struct device_node *np;
+> -
+> -	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+> -	if (!np || of_find_device_by_node(np))
+> -		return NULL;
+> -
+> -	/*
+> -	 * First check whether the pwrctrl device really needs to be created or
+> -	 * not. This is decided based on at least one of the power supplies
+> -	 * being defined in the devicetree node of the device.
+> -	 */
+> -	if (!of_pci_supply_present(np)) {
+> -		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
+> -		return NULL;
+> -	}
+> -
+> -	/* Now create the pwrctrl device */
+> -	pdev = of_platform_device_create(np, NULL, &host->dev);
+> -	if (!pdev) {
+> -		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
+> -		return NULL;
+> -	}
+> -
+> -	return pdev;
+> -}
+> -
+>   /*
+>    * Read the config data for a PCI device, sanity-check it,
+>    * and fill in the dev structure.
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 6bdbfed584d6..20585b2c3681 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -6,11 +6,47 @@
+>   #include <linux/device.h>
+>   #include <linux/export.h>
+>   #include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+>   #include <linux/pci.h>
+>   #include <linux/pci-pwrctrl.h>
+> +#include <linux/platform_device.h>
+>   #include <linux/property.h>
+>   #include <linux/slab.h>
+>   
+> +#include "../pci.h"
+> +
+> +struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+> +	struct platform_device *pdev;
+> +	struct device_node *np;
+> +
+> +	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
+> +	if (!np || of_find_device_by_node(np))
+> +		return NULL;
+> +
+> +	/*
+> +	 * First check whether the pwrctrl device really needs to be created or
+> +	 * not. This is decided based on at least one of the power supplies
+> +	 * being defined in the devicetree node of the device.
+> +	 */
+> +	if (!of_pci_supply_present(np)) {
+> +		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
+> +		return NULL;
+> +	}
+> +
+> +	/* Now create the pwrctrl device */
+> +	pdev = of_platform_device_create(np, NULL, &host->dev);
+> +	if (!pdev) {
+> +		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
+> +		return NULL;
+> +	}
+> +
+> +	return pdev;
+> +}
+> +
+>   static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
+>   			      void *data)
+>   {
 
----
-Cheers,
-Benno
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
