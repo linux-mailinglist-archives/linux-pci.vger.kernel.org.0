@@ -1,83 +1,83 @@
-Return-Path: <linux-pci+bounces-29900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62D47ADBD0B
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 00:43:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2402DADBD0F
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 00:43:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08805172B5C
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 22:43:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 47A8018922F2
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 22:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2C6218E91;
-	Mon, 16 Jun 2025 22:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A94522578C;
+	Mon, 16 Jun 2025 22:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g3SQC4Wr"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="M/OtMreW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ABE21C176
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0514223DD5
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750113788; cv=none; b=ZCblFknljkugH8Wkk5PYYwvKDkzIork2M4+zrK8t8/67FReEbOvbgD3fBrSLbt59rXCLuf2KreYprBj3cHZ1KEWJdajaM7L0RevpLkoA+mqdVD73m9WmQm766lhOCn8Z2WunPc7D4UIDDjr5yLNFboo+zSjVcNrupTJylnQEMD0=
+	t=1750113790; cv=none; b=qEEHZ7LP2ydU7QHJM5jzDCo7eR6762QNLSkk9nTwNIrSVfiu1twY2DcaMYD5HOpe7hJYUSx4AThWNkaIX97DBmudN6Odkt9GEyUj6MKv7WIBuwsP7dCgQ5plx29ySJ+ranxt5dBKshfqAJbi6Nr+id8WSU0qqwjDy7Oo5lrxtTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750113788; c=relaxed/simple;
-	bh=kbCDTVvV1hptfdSWgxjuH8VVDcvDx+p8AHAKNymii/M=;
+	s=arc-20240116; t=1750113790; c=relaxed/simple;
+	bh=jwXAlYfmhDYsCRlqK3RU34h6+Mh+UVwAG7ubZFvcMXA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tDtavGVMoGOwp6EEOPoHceVlHkn46okCpPLEfGzCpeXLJx5UABq7JTK4Po3MV6DseWEZNNDBgAbbR2fEYJykVeAkAL4SxRpmgugC0V2ylAk8RTpF44K74rsbTyE0gKiZSiJvFp+6RhSRj4RH7TavbYgDzagmg4M32+xMkVDbY7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g3SQC4Wr; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=VYN3azthGROB/FkB7A4+oS31MCY0GnSwF+q9JTu7t7SoBbiTOPENxyTAIAzDLd/wpX+gQzR1Y+XlBBCmt7uhNUeRuPXS4z3Zm1SfDC9XYmHUHsgj6AnhRol9DZTSeid4QJYFoSNW3w5aXXuR2HW3fMXl2RbjDx4wYf7iZ7Qt1KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=M/OtMreW; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GKAvjv027438
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:06 GMT
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GHUgYL015543
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=+7rUATnUgHw
-	XSUUqHkvZgzdmOmf9U8vfsrfGqwxA5/0=; b=g3SQC4WrBo9K1vteGiyiBGZVdZH
-	8Y54Ew19qBq8SQIVbe5zsQmwihHDN9sfwntKU4QGZQ62b6ubfP/igTU7GRck2cWy
-	airinKUTeSxDgFfMcP3KFISmrDQCBfUvCe/I4zXS8zdg1V/RbIiMpSz0y5kwf8h3
-	XTfqvyii7jvtiXDVgZV87EOX6XcJipD8wlD+CYkx0SX5iX69Pzar6HQBNKl0s48H
-	J+n1aIYnj4z5WBL6XnQyG+4naM4B1UKDW2lXUJBRyznImsKjw9scI5TFvGLErbE2
-	7uSoLVRTgsvNffQ1dnyBdLaC28kDrh88/8xbypngQoZX4LaIAdfS1LH58Tw==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hcx3n5-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=lhwmguzIPmh
+	cfCIr+Zeb4Fe0l1FXFzrQsdEuYLGejCA=; b=M/OtMreW6tTSjgnFMKZdWIY0O+k
+	YeB9UMeLnYPvtr/fjiNgGWs44d/z1Fe+TBG01jUOyxhxuIaQ5pROidaUtfNFDbtj
+	XdsvnEMv8hu+81/724GXJeGUqhALpr4eEwG/mEdxlV2JPw7rgb/BIRUZzOc6BRmH
+	hNKnst2CCHCZwoLJdcuNj8cJX3zm/PlJzi04x/fuMHigzrQYOms1FhO9xNIYyutD
+	KVShgJR3eKQHjGgpU/gGEj0O/bSyg8SDxFCvVpL1dUn43add1hapRfHMXCE6UBtB
+	t1S7n8eFJz1dkSAxg6WYxmUdsXRzdhUDUnFb40H/J/kQ/dvD16R/AF3fLaA==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfe4jt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:06 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7489d1f5e9fso3609617b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 15:43:06 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:07 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b2c38df7ed2so3591571a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 15:43:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750113785; x=1750718585;
+        d=1e100.net; s=20230601; t=1750113787; x=1750718587;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+7rUATnUgHwXSUUqHkvZgzdmOmf9U8vfsrfGqwxA5/0=;
-        b=MB8gCwVAZ/JP5/BfMmlaGMZpGt5fVAPYKGmXkxBukQ453VedCEPVQriCE9y3rRhAIS
-         ERaoaeOvMn2fQkOvpJMOBxhGBJP20C/0gLmcopzgQ1H3lgwQOovj/zG5hBIVsekYinln
-         mwiMUv4BhG2TII0RYnMho4rHXH6HzBnu8QQh+uhNmcFzHotHGrzYo4ODLYQDLfZXinir
-         rpeixmIiCC5kmxdixEGSfsL7xYo4IHcqf7+QGu58C6zOJEzWce2eyXjpCqWWTAgeavds
-         Vdgecwk7uo2y5w2MmMaUs9fjD7sVh8+JdvUvqvLEP5insJfb6oKJs/Dq3w8fmxbcJm+o
-         dIxg==
-X-Gm-Message-State: AOJu0YyrSGPDCLu+GWpt6e30F0MPjdZQJ6VE6EHDKVRUsUcEj4MBPHOP
-	q6d12635kA+em+mBnxbSNOEQhspwoELs3Mslhcc9i6fmOk/p+wRAi96TOyDjxc+4l0XGI74EL9s
-	eIyKU7Hgobx+dilMI2iQjJ6AEDuRQwlrJOTWYnXrAKvoBLw3yYEs4YK8JdkgwHXeZwzF17lY=
-X-Gm-Gg: ASbGncsjv9pHCWHaddcKt8zL5+mxUCzZFPCg25wL/1C22rXlv4cIeocKFdzGl9fk9US
-	1wphiiqJVdHJCr1cJBcQucZajFNXa1z5e18pLPHmnHUxeD0QJ18P1enAjF4JqbmCtM5KxLzkX/3
-	N4hR3uSgedDcnUaHZnrenPrEOjxbDIdXzDHffTXrQSjToldWGMY1bk4/cbdPlEPAnBRcmmeHnGl
-	HDp+fNzs/mlATdpR63p14jMzGohUD8k+KyxbHNUT9n4YJBHt3aeFld+Hhxwqhqueq/8rEoD8t9q
-	wYnoTi0aIpwSCmYwCxO+zkRlC4SEM6/nMMtgKjin2/O9sG37KHs0Rn4/l8OmatTelotQJJw6
-X-Received: by 2002:a05:6a00:4644:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-7489d04b711mr15653195b3a.21.1750113785168;
-        Mon, 16 Jun 2025 15:43:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFCCpHdGf5Yo8ro+gs5s+5plFGSZTbGwiHzKAu4yqnpZgJZYowcqRph1Os/Jxp1IuaZOqtVEg==
-X-Received: by 2002:a05:6a00:4644:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-7489d04b711mr15653159b3a.21.1750113784723;
-        Mon, 16 Jun 2025 15:43:04 -0700 (PDT)
+        bh=lhwmguzIPmhcfCIr+Zeb4Fe0l1FXFzrQsdEuYLGejCA=;
+        b=BiqHRtz8yuXztw69rgZst0kwF2O6hMDhRxR58XIWBypkkVZ5z7+iibqsWpSygQgxR5
+         FraYryaIiLHGKSY68h2f6fb5QhkLPsxDqYkr+rWuqVxyEHqq/hpM8SD+HRORiwgYKfH7
+         dZsDOQb6UEsXQHP4DnmRrwVOnkcjaU83C5qpD1SdW7kuIbka9ISDdWtm3GM5M1JhUmA9
+         jMjuv7H5M5/IOUoV2kG631ph1qKYZ+jtis9q+Y6HsI3Lwp924Ty4uTeabJVvi0L5xczh
+         sFl/TKI4vVyWK7SnmOz4VEszr1QZqhwNOi6cfOJtVB/slMHgVKtQQuJfcUMZKpwL+T8F
+         pMaA==
+X-Gm-Message-State: AOJu0Yy743q5RXCm2y0+DqbHBCtNuO7JeSr9Emql1wUVzfJytQPj0F+X
+	jBLYFwi22wZO5vg3ED3EQxnpYvNuj8uLnpwKXleMb9VrCFPo50cHFS13enIjjN2wsHGd0ceWS8O
+	U4X5yiNIOnC6DWvZnwT34aDrl34dUivDstDBKSRWWHgxGatgdksTMSNZ3ogPhJ3PBtH3Qtzc=
+X-Gm-Gg: ASbGncutv6n7Cp7j46gvGZAx1RpVoJtphR4HNSLZRH+tCF2Sh58lTYgvyshWwsAobU2
+	H4bGAuLk7PKbiZ8+pJWpgxN64hoy2p4B5zyDwiYuiHth8ZHLkzKc272cimAxLdSH6QErpNNmmvQ
+	+P0V7gCwJSlT+9CHrqv65GXb9K00g9GuXpq488EeZOLcbD+V67Ic+Ju9FA7lVmmBAXuJGhngzpy
+	oq6xsE+/dLL/XFIe66olXpRTwU/9M40x8iVKKbcewaeWARr3dS6jtbnybPUSDlWIonH2wQzVnpq
+	KBZ2olUd6jfr5xqSyOzwb90D8nXIWhr3HF/uhlwGGnUCsheYpVCsm+rW4Mm4D7TaPJlYHpGG
+X-Received: by 2002:a05:6a21:6481:b0:216:1476:f5c with SMTP id adf61e73a8af0-21fbd67e9a0mr16273214637.25.1750113786544;
+        Mon, 16 Jun 2025 15:43:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCUK4WZBPlh1OsfUgx/7QkUvePE7tIw8RLbrhNrBkgKdkjJRcElSReSy0icKZ0zCzm+TpmAg==
+X-Received: by 2002:a05:6a21:6481:b0:216:1476:f5c with SMTP id adf61e73a8af0-21fbd67e9a0mr16273194637.25.1750113786125;
+        Mon, 16 Jun 2025 15:43:06 -0700 (PDT)
 Received: from hu-mrana-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083029sm7405077b3a.81.2025.06.16.15.43.03
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083029sm7405077b3a.81.2025.06.16.15.43.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 15:43:04 -0700 (PDT)
+        Mon, 16 Jun 2025 15:43:05 -0700 (PDT)
 From: Mayank Rana <mayank.rana@oss.qualcomm.com>
 To: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org,
         kw@linux.com, robh@kernel.org, bhelgaas@google.com,
@@ -87,9 +87,9 @@ To: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org,
 Cc: linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com,
         quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
         quic_nitegupt@quicinc.com, Mayank Rana <mayank.rana@oss.qualcomm.com>
-Subject: [PATCH v5 1/4] PCI: dwc: Export dwc MSI controller related APIs
-Date: Mon, 16 Jun 2025 15:42:56 -0700
-Message-Id: <20250616224259.3549811-2-mayank.rana@oss.qualcomm.com>
+Subject: [PATCH v5 2/4] PCI: host-generic: Rename and export gen_pci_init() to allow ECAM creation
+Date: Mon, 16 Jun 2025 15:42:57 -0700
+Message-Id: <20250616224259.3549811-3-mayank.rana@oss.qualcomm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250616224259.3549811-1-mayank.rana@oss.qualcomm.com>
 References: <20250616224259.3549811-1-mayank.rana@oss.qualcomm.com>
@@ -100,169 +100,80 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDE2MiBTYWx0ZWRfXw3sybrX+5ag/
- oZhcaaOQlIwZiViqw3fi5sbIxvvA9YqLl76Za7aFTp6jkhKRdquWdfx4+3eCkrGQqkb73m45nWr
- E9mQE0R4d8reHBtKLTvz0Kz2RyktZax+CKuZ4Y/aJCttetzmI6sdvIDdjbdktnZa+meCo1hjtcN
- LnnVVINaqxM/trHr7gaeuOfoc3oT5NPH2lxlnISfl0KIYA5DODGT4ytCUpKM9VhhpX+mRNxqPa5
- CW04BEG3kDrdRHl+3tyAces6LbjInZB9TA6TJieRuVxu4FGQulwXuEgvGiU7LfCAz3J0J/n+q56
- xUgelXc0Lu2sTRVRU1l0DHdiu7J5LDj9KNNgSZ694W5ceW9OC7Dqf0Bhrgj5tHZozOXFmjzZCEr
- 8hYTsMUgcdgeZbW5Pt1uAktHwSwdBc+fbovsiuEvhGg+UInqjY69PqVzPPW4CpoYlbd2bsSz
-X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=68509dfa cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=2oFYxEjC1fcXuHwUiPIA:9
- a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-ORIG-GUID: SHNMY1tcereQkuwd8T_BRZqQVxdxe_U3
-X-Proofpoint-GUID: SHNMY1tcereQkuwd8T_BRZqQVxdxe_U3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDE2MiBTYWx0ZWRfXzGA2FyA2P3Gg
+ dXx3bpZxpDc8M/bd1TbKMG6+dB41ys2HaSCZc2ukU1JIrUCmAVcNDNWLcltCM3/p95LkWLP/6wd
+ YA6sO8K6kcJC3N6I6x4isVAXXrEWf+Q4vl8mM21fm512Pbz8I+mwUgBah6lULt0AjmSqfdcT0hM
+ 9phmc0zx3VnIZ02CEyOY9HlB7/LQrjR1n3fxWvt//tJQecLAl3ASu68E99dqS+SeBv5a9+JETvM
+ 0HPK5b4aGjcPFO5e/8LT6/uh/f1TIlWqT0OdIBv3i1jaEQAP6Zjoh7VkBhc4BQBGNmKTOobd6SK
+ QyV96ZXqGOu0A9AIymoG7f99OeV92/3ewYASds3oVGex+oVA8u+nXS2HhS1TuuUciundIV4v8xC
+ r6AJInyakdRFwPiZXLnPaNqSJwXFtYNzIeRRxcN6oK/Am7UhsVLul8GwzraUhOOoUUisklK8
+X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68509dfb cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=6IFa9wvqVegA:10 a=sWKEhP36mHoA:10 a=EUspDBNiAAAA:8 a=IL0NFLon8k7eL5dmDYQA:9
+ a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-GUID: 4QQILT0vnYCZ2v3o4XZ3zkc9uKo64J8z
+X-Proofpoint-ORIG-GUID: 4QQILT0vnYCZ2v3o4XZ3zkc9uKo64J8z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-16_11,2025-06-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506160162
 
-Export dw_pcie_msi_host_init(), dw_pcie_msi_init(), and dw_pcie_free_msi()
-APIs to allow dwc PCIe controller based MSI functionality from ECAM pcie
-driver. Move MSI IRQ related initialization code into dw_pcie_msi_init()
-as this code must be executed before dw_pcie_msi_init() API can be used
-with ECAM driver.
+Rename gen_pci_init() API as pci_host_common_ecam_create() and export it to
+create ECAM and initialized ECAM OPs from PCIe driver which don't have way
+to populate driver_data as just ECAM ops.
 
 Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 38 ++++++++++---------
- drivers/pci/controller/dwc/pcie-designware.h  | 14 +++++++
- 2 files changed, 34 insertions(+), 18 deletions(-)
+ drivers/pci/controller/pci-host-common.c | 5 +++--
+ drivers/pci/controller/pci-host-common.h | 2 ++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 906277f9ffaf..af6c91ec7312 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -250,7 +250,7 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
- 	return 0;
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index b0992325dd65..5b61b5a9e0f9 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -22,7 +22,7 @@ static void gen_pci_unmap_cfg(void *ptr)
+ 	pci_ecam_free((struct pci_config_window *)ptr);
  }
  
--static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-+void dw_pcie_free_msi(struct dw_pcie_rp *pp)
+-static struct pci_config_window *gen_pci_init(struct device *dev,
++struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
+ 		struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops)
  {
- 	u32 ctrl;
+ 	int err;
+@@ -50,6 +50,7 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
  
-@@ -263,19 +263,34 @@ static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
- 	irq_domain_remove(pp->msi_domain);
- 	irq_domain_remove(pp->irq_domain);
+ 	return cfg;
  }
-+EXPORT_SYMBOL_GPL(dw_pcie_free_msi);
++EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
  
--static void dw_pcie_msi_init(struct dw_pcie_rp *pp)
-+void dw_pcie_msi_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	u64 msi_target = (u64)pp->msi_data;
-+	u32 ctrl, num_ctrls;
+ int pci_host_common_init(struct platform_device *pdev,
+ 			 const struct pci_ecam_ops *ops)
+@@ -65,7 +66,7 @@ int pci_host_common_init(struct platform_device *pdev,
+ 	of_pci_check_probe_only();
  
- 	if (!pci_msi_enabled() || !pp->has_msi_ctrl)
- 		return;
+ 	/* Parse and map our Configuration Space windows */
+-	cfg = gen_pci_init(dev, bridge, ops);
++	cfg = pci_host_common_ecam_create(dev, bridge, ops);
+ 	if (IS_ERR(cfg))
+ 		return PTR_ERR(cfg);
  
-+	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-+
-+	/* Initialize IRQ Status array */
-+	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    pp->irq_mask[ctrl]);
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    ~0);
-+	}
-+
- 	/* Program the msi_data */
- 	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO, lower_32_bits(msi_target));
- 	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_init);
+diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
+index 65bd9e032353..51c35ec0cf37 100644
+--- a/drivers/pci/controller/pci-host-common.h
++++ b/drivers/pci/controller/pci-host-common.h
+@@ -17,4 +17,6 @@ int pci_host_common_init(struct platform_device *pdev,
+ 			 const struct pci_ecam_ops *ops);
+ void pci_host_common_remove(struct platform_device *pdev);
  
- static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
- {
-@@ -317,7 +332,7 @@ static int dw_pcie_parse_split_msi_irq(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
--static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-+int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct device *dev = pci->dev;
-@@ -391,6 +406,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_msi_host_init);
- 
- static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
- {
-@@ -909,7 +925,7 @@ static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	u32 val, ctrl, num_ctrls;
-+	u32 val;
- 	int ret;
- 
- 	/*
-@@ -920,20 +936,6 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 
- 	dw_pcie_setup(pci);
- 
--	if (pp->has_msi_ctrl) {
--		num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
--
--		/* Initialize IRQ Status array */
--		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
--			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
--					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
--					    pp->irq_mask[ctrl]);
--			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
--					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
--					    ~0);
--		}
--	}
--
- 	dw_pcie_msi_init(pp);
- 
- 	/* Setup RC BARs */
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ce9e18554e42..4165c49a0a50 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -759,6 +759,9 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
- int dw_pcie_suspend_noirq(struct dw_pcie *pci);
- int dw_pcie_resume_noirq(struct dw_pcie *pci);
- irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
-+void dw_pcie_msi_init(struct dw_pcie_rp *pp);
-+int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
-+void dw_pcie_free_msi(struct dw_pcie_rp *pp);
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
- int dw_pcie_host_init(struct dw_pcie_rp *pp);
- void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
-@@ -781,6 +784,17 @@ static inline irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp)
- 	return IRQ_NONE;
- }
- 
-+static inline void dw_pcie_msi_init(struct dw_pcie_rp *pp)
-+{ }
-+
-+static inline int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void dw_pcie_free_msi(struct dw_pcie_rp *pp)
-+{ }
-+
- static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	return 0;
++struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
++	struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops);
+ #endif
 -- 
 2.25.1
 
