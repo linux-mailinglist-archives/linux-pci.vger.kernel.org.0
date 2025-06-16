@@ -1,54 +1,53 @@
-Return-Path: <linux-pci+bounces-29891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1F01ADB98D
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 21:28:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A042AADB98E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 21:28:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E75281890AC3
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 19:28:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D472C3B6F43
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 19:28:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0FC6289E00;
-	Mon, 16 Jun 2025 19:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FEC289E14;
+	Mon, 16 Jun 2025 19:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fxNadmqW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3QcwloQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA5F2E40E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0A42E40E
 	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 19:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102102; cv=none; b=Y1it2X3sv5mOe9MyZV01NbJx60G8OTUEVd1OCQcjlfRdaQywC5hD7EsQmKH341KqHkBfX7X+ENOF5KS4l7QLh3aN/Xq6zpwuikLhN2UbyOcGJh+wltzRIVH4UHNLFS8z5WrIvOeiXFFhTbMhsm/LyxYxtt8zVHWT6Q2AfQb7270=
+	t=1750102103; cv=none; b=s/+sLNwFergBLwH4lu+wYgQqdFqUBYd/fYAVAG6zk0cUVFT7QL011aj2Wp74jmw7aZ0SN/vCzcsqs91bfNVRegFe1JPepQJTyv/mmF+Kaa2qVrjtOQmbUAY5bQH0N66rqxE9bfF6Rx5Bh0yAVexAF+qljy6YzbJy3hMJcDTGQzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102102; c=relaxed/simple;
-	bh=xYa9bGIisz2p+cx/BizkJpSrIfhy9tTQCoRjsQt671s=;
+	s=arc-20240116; t=1750102103; c=relaxed/simple;
+	bh=IuUSHuICNT6VDr2kGhY7r9UdTJKfGEQciUGw8PV9XY0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WOMTCwVYHO0zrFdlAJQTZDjW8zDpTcPDAKNDKpaxHy9NPoRgx6L3peuBrVIeJaZ6vHoSHOIucHNh91FvJdwRmxDEnMBNwJkx3rfeZECZ9IyS7FR9a9/G5Z3+euvSe26Eqr4jifdfjB2esxEjFfd9X9L8Ghk5CJ+FnAIThWcPhn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fxNadmqW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FD5C4CEEF;
-	Mon, 16 Jun 2025 19:28:21 +0000 (UTC)
+	 MIME-Version; b=r+sAEtymx3e3bl7v5KfyeS/gOUzRoXuI1h2j/jLJFgdYZL6z/RE3HJdWgUuEIMhC9LNGae+jkEvi6cTeRcTZ87k0+HcB99ksrMJh8JsSeKW4A+SSJXv1pTkeiU/d8JqVEAkHts4mB0FRgivlthd+RKZknuVdXzmMWQU1eiUkBUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3QcwloQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52371C4CEF1;
+	Mon, 16 Jun 2025 19:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750102102;
-	bh=xYa9bGIisz2p+cx/BizkJpSrIfhy9tTQCoRjsQt671s=;
+	bh=IuUSHuICNT6VDr2kGhY7r9UdTJKfGEQciUGw8PV9XY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fxNadmqWmMJbNINpgcrkOM5F5jPJqowhqGiP1wJLweuSQ4JBD8jY3b1zlUwpPjHcz
-	 OUdSh2U6OBZKSKwiQQa7MRU9uZ9sUa/ymNYA0XaWDK77uPhKy1lwv+RJZcqKRmOO36
-	 19udNslJGtqrswpxdKpBEX+CJdTcBdySy+TNZSa00r3hgFXyEO7VgSSrxKNw0VfoR6
-	 zKa6B/xRlnCdeGn7X1aFjv92qHtULOzhgSExzH2i8ZmXZBgKoA9ayXVH6UQT6iZYbt
-	 BJ7CnAy8APduoWxEcr/PKQSAwiv8BgDdwJF+R3tlismZiD5N0umQo2iM2nqajt806s
-	 vPL9bxZt5/p2Q==
+	b=F3QcwloQZwiNAMT8Hrbd5/sEV9uOFjIAksR7RsYNEFh1deRVcoQDe6fTsmonpmJsj
+	 peH/bm2vlimB6aguTYPjC/aMuDqgTGyzxfQF0XNSrNHa9nxHjJa+vsmMN9gfzDzyH6
+	 psQ4V5ANPJvaQA69AF/cWLEnuMRGER9MJCqqrP1StjLXwqBwMX4xxm3doG5tXparoC
+	 Ypz+2HbhYhDu6h5DBmzJ+vUSPxresjiYxxGtk416dTzMbzaGwxYMlDvMbAiuq6eOyO
+	 yaOdG2DeJ3DmEHd4qHgRVoUj388xdfTLCqq2R9iYskM8vnYkPwZ/kMFB9xMTweCu02
+	 p5ZnR2KCo3lVg==
 From: Mario Limonciello <superm1@kernel.org>
 To: mario.limonciello@amd.com,
 	bhelgaas@google.com
-Cc: Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2 1/2] PCI: Don't show errors on inaccessible PCI devices
-Date: Mon, 16 Jun 2025 14:26:56 -0500
-Message-ID: <20250616192813.3829124-2-superm1@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [PATCH v2 2/2] PCI: Fix runtime PM usage count underflow
+Date: Mon, 16 Jun 2025 14:26:57 -0500
+Message-ID: <20250616192813.3829124-3-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250616192813.3829124-1-superm1@kernel.org>
 References: <20250616192813.3829124-1-superm1@kernel.org>
@@ -65,40 +64,38 @@ From: Mario Limonciello <mario.limonciello@amd.com>
 When a USB4 dock is unplugged the PCIe bridge it's connected to will
 remove issue a "Link Down" and "Card not detected event". The PCI core
 will treat this as a surprise hotplug event and unconfigure all downstream
-devices. This involves setting the device error state to
-`pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+devices.
 
-As the device is already gone and the PCI core is cleaning up there isn't
-really any reason to show error messages to the user about failing to
-change power states. Detect the device is marked disconnected and skip the
-messaging.
+When PCI core gets to the point that the device is removed using
+pci_device_remove() the runtime count has already been decremented and
+so calling pm_runtime_put_sync() will cause an underflow.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
+Detect the device ishas been disconnected and skip the call for this
+cleanup path.
+
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
 v2:
  * Use pci_dev_is_disconnected()
 v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
 ---
- drivers/pci/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/pci-driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e9448d55113bd..3dd44d1ad829b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
- 		return -EIO;
- 	}
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 67db34fd10ee7..0d4c67829958b 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -479,7 +479,8 @@ static void pci_device_remove(struct device *dev)
+ 	pci_iov_remove(pci_dev);
  
-+	if (pci_dev_is_disconnected(dev)) {
-+		dev->current_state = PCI_D3cold;
-+		return -EIO;
-+	}
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
- 		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+ 	/* Undo the runtime PM settings in local_pci_probe() */
+-	pm_runtime_put_sync(dev);
++	if (!pci_dev_is_disconnected(pci_dev))
++		pm_runtime_put_sync(dev);
+ 
+ 	/*
+ 	 * If the device is still on, set the power state as "unknown",
 -- 
 2.43.0
 
