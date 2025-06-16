@@ -1,172 +1,123 @@
-Return-Path: <linux-pci+bounces-29866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB042ADB201
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:33:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34972ADB1F5
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:31:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FBF43A4D26
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 13:30:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55FD418872FD
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 13:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8839C285CA3;
-	Mon, 16 Jun 2025 13:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611AB2877C8;
+	Mon, 16 Jun 2025 13:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VOZXM28g"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cYlV4oAy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8600320C029
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 13:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8097120C029
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 13:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080624; cv=none; b=m76N9bMcYDCSXb4K+QoKB3zmWpBMUOOUJ4SjUS0tG1SXn39TXCVpnClMR7YKkCFiPQ6Zzoo3YM4R/qFox9zqI2DUNCkBkZWRpIqigq8ppnmpFR68zI5IhCxkwg55Rxj/MxTVZ/eWER+9JoCG4XTKEHnIBWqxHhDkxJ5yeFkHGek=
+	t=1750080643; cv=none; b=AphOQXKheruPcieuLMp4JVporg/XAGF1vsV44A8kiW9LSTPhn7wP6hF4TEncKKzL8RM2HuSMGLJY6s+lJfQknUuqv3tERtBsMKihelIjWRGCyi0TQ+sdRuG8EGyiaDENx27Fj56wRU9b2FTynEpciaEzVwTxbOpklBkuDtdIkRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080624; c=relaxed/simple;
-	bh=4Zfd7f0oSTyDjhyyLNFCOi5jeoQIXrDItP4SyLWb99s=;
+	s=arc-20240116; t=1750080643; c=relaxed/simple;
+	bh=Set7ARbDGtVl+rypiAdzKX+Nu1RI6OmX9rgnwmZ6y4Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LsY0mviELU2LNqdVDrvSOpPfyvt3O9pWG2JDttV62A+q/66bDNu6g/IBA1dhSKWEk4HuLr7isAp5xMNbyKroaA7xq2PRHV4GnAK5aZHHNBoZikSE+tYNhRmQwcqEyHraAh2yv3VBnRaU0O+M2ZRrM39WbC+kR5gRZAkv0fSkFiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VOZXM28g; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e81877c1ed6so4872817276.0
-        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 06:30:22 -0700 (PDT)
+	 To:Cc:Content-Type; b=G6ooBsBESd/gisRzIae7l/Lm5MSeFLj9x1xR4fgmgvKO/k3hxuhFlrWxnxOeZy1kNR4tocMKUpkZ1phwBfDja8fFJEig9n1e5rYouOLdyIEw+ek28HjcExI+DEuLHdSrcXXEqv+LBXMVJYzU6GjM7E83mG4NSEGd5H8OYw9foMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYlV4oAy; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b3a3a8201so29824151fa.0
+        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 06:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750080621; x=1750685421; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dIM4ggq6nkqhLbVMKcT1ezBsK840f8IM9RKNGuYHjk=;
-        b=VOZXM28gJWu1vtHOVXPd4JllO/Nz4hljwAtGy/NTTFqx4sFZAoktaklYs3/0AO1zwr
-         s8Bs8c4S8RQAf/S6s8xkvhKLKBXz2LH7lOa9UCKs92RogaANj4nhH8yucEzHKhHccwlT
-         E6OhXRIhlrtu5aoUYs0XPZVqMddfNmbbuzj/54GmWWHAwTawvRgmOlrZL5bkAguDTt+g
-         48inRBhIuUixx887ZOITRZJfQJEBvQkauQXFmsmV1GCzMFYDb6owUm1GXTXkvoADFM3a
-         KKmEA4XPHzI0qDYfHSC4JNfjQEbQQb2EphKSOIq7QhZRGcveAh7/eCjJB+Dyw6bfOkp6
-         dc/A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750080640; x=1750685440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PpFwILv4epGn2GHEmYFKtiL50L1fsQYq7PF3nsB89Ng=;
+        b=cYlV4oAyvGjKbkG0YWUekZpabHfvLEROpLCZRFgVyTafp7OnA2lBk9fxS9hrHKqv9D
+         Ga3sA+N5rxNJP1w3rbx+Fwh2i9A6U6zin07vwT4odocivw++VaeEy+8W1KZigo+WSsT5
+         wj6MdzFKsNIkvNJGCQAI6C+YVDELbkVRVlTr3RXtuFyZK9pqx9wR7+b4aiDCJiYbMg5J
+         ewracz6DrS1drCUPQmUzHl0ol5v0Jmv7EUo4fdSGfsZVn6wH6sWoyrqLZDEHV7l3kv8G
+         XREcNjpaZb07VueULpzOdKWGCMsSXYe+abbKBsy19piFeKMp2qlyVrH8GbUgkN+qqaex
+         ymkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750080621; x=1750685421;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8dIM4ggq6nkqhLbVMKcT1ezBsK840f8IM9RKNGuYHjk=;
-        b=wAZ2EfyJ1GW1Wwb2/1/la70PBDXKTXfwh7G29/jNcLlAYsPXC56G0HgZmP/BvxCqeM
-         PU6EBZ8PQQi+zZtTsaQ9o6B99D0vp1cn2npPA/+FMQvDQ8n+uzwQ/MFTC66RaqAV3CzS
-         gQYI8M9h5NmtB/42verniw3sDiRxBbtG/Hgoj9gSedAxcrBOOxdtZwMASOK824lq5jPL
-         G2QMKNTwxEF6UU/c7SARJCFpMvncKCa6JG0du57Q0UNiMu2kZis3/e0me9t2zz1QyVEx
-         /QSrnFn3JH0dOjLjjucukpeyM5ZYEaCcHG8koTo9ZWRncwjdZuGWPLes6Ns/CgBOL85E
-         WGhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8aGM+uHRUNHX540cmFks7R2kkgu5CJah8WNzs42VTWBRAmpES0vsb8CY/lA1q7NDHP4PRYRctMG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdfK7tL2FpDKe2iIkKfyOU4kXsKYsKfGTi6LZWAkIZ24y5F37u
-	ilEQUC1SXmPBBTnHorWiomgWnZdIhaYFVVovrf/Z7Mvmvtw9nDE/k5vxAYnL80w4sRThV7uO58x
-	Wk2FBjLd2QLn+u8fP5hinAkGHtytLEAcnv5h4EuLk1w==
-X-Gm-Gg: ASbGncudUylj+d7BcfLx1tZsG0ap0UbaKcGwmI9Fsg0hqS5uW3jHeXtStZ8QHNzPBRW
-	e2Od3jd849hbTFcvbJ5S2VUUrRl+DtJoqh4UrP1E2ua68D6qVOsL/51YSP/istsGdfsz0dWCSlt
-	h01GADmKToMNIMqoxcnrINZY0yQilPnTpp7KILxStEw2UL
-X-Google-Smtp-Source: AGHT+IHvwFdTtrctzoiWIaPE71W/8FTAI+xhZY2HkhDJbIaDsGip4BNw9qrbXT3Tk9Kd8tGyhyS35T/gDOg+zFs+nYI=
-X-Received: by 2002:a05:6902:703:b0:e81:566c:3085 with SMTP id
- 3f1490d57ef6-e8227f0e61bmr12875927276.1.1750080620760; Mon, 16 Jun 2025
- 06:30:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750080640; x=1750685440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PpFwILv4epGn2GHEmYFKtiL50L1fsQYq7PF3nsB89Ng=;
+        b=AgchPKZnN0HQ+UlNKkhkila9gE1KdzotP66YNmyiidYy1ByFkY5NuJciH8gp7OR3lw
+         razZeX+Vg4zSteaM9XP5YrYCjlhzDow/6JaPXHtw1DVvW6CAs0pMzOl/GtkgSoe+vkBJ
+         wrT+y6mh93Ocx18ezaiS3dleyMj7/hDPRLD0O7fCzAuPMZjYkLbguAe+GsY29RDk3lzu
+         AzI7nNgd5zevK0WmH4AAglv+8iwn400fsbAQk67SWbqlezuqKZAtRFavCE29xscNTDpr
+         HktZBFDeoKUflX1xjAYntG7gicWGg4MjeLvKwIw2SyUQB0/xTwjw299jOhyK3GPgmhtr
+         bxKA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0lhUdglKrCady84o9hT+HmPJTvqpX+1LrCBnajsUJSH6WU5Q0l9JVmu66AFDVzpW5spzu2swBOfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAlOBJI1LA8n8MshUKPXzjTrMK28n/06UVo+Y1C2hW0wPNp5PD
+	tWl64Yrc7qRY07tzBBDGyMbsiELydM3UAb71jm1gJfEYOr0oE917up6SyunFYR45wBGZZk94XW0
+	SZLk3wRoHCv57J43q5OSvFTzJiZhlxq5k+g+Gr1vteQ==
+X-Gm-Gg: ASbGnctXswO9ygWaCSDEeztGJw1+torYQDjOifXtGdf5tNiz8c6bxXUV83IT7wnBfqx
+	LZEJzEWFYPjb19mvPCWdTWJpRB+qKhmh+dMTtxHnF/8pNI85EtLoTKt3rkrRqSo6KuVqn/xtl4Q
+	9pManrp58X/Lez52INdv8tlKPqPa+xQsy+1T3KYe1i/Jw7zF+V3ZimdLiwAfPWGfkEU/+HigFYA
+	mz2XPDqgtOb8Q==
+X-Google-Smtp-Source: AGHT+IGDpPwrY/qezNWazK+rw//fC7hH97md4nyqXriaZInw5tKf/dsV1dwP+FB3JvLuRVtC7OZOgXl1b9/GYt16THo=
+X-Received: by 2002:a05:651c:1505:b0:31e:261a:f3e2 with SMTP id
+ 38308e7fff4ca-32b4a2e35f0mr24206531fa.1.1750080639525; Mon, 16 Jun 2025
+ 06:30:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com> <20250612-byeword-update-v1-2-f4afb8f6313f@collabora.com>
-In-Reply-To: <20250612-byeword-update-v1-2-f4afb8f6313f@collabora.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 16 Jun 2025 15:29:44 +0200
-X-Gm-Features: AX0GCFucmmVjhuxKNu1-kopwQ1Ifcn7b36ykDZEf_SV72XMHIWGaSa8Aqxa6A60
-Message-ID: <CAPDyKFr_-aQ+YoRqYVUFhRR=94NWOredaSYQsVb-xvot83HJ3w@mail.gmail.com>
-Subject: Re: [PATCH 02/20] mmc: dw_mmc-rockchip: switch to HWORD_UPDATE macro
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, kernel@collabora.com, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, llvm@lists.linux.dev
+References: <20250616053209.13045-1-mani@kernel.org> <202506162013.go7YyNYL-lkp@intel.com>
+ <ji3pexgvdkfho6mnby5jumkeaxdbzom574kbiyfy4dcqumtgz2@h4nmwjvox7nl> <aFAZL1GgEH9l-zj9@wunner.de>
+In-Reply-To: <aFAZL1GgEH9l-zj9@wunner.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 16 Jun 2025 15:30:27 +0200
+X-Gm-Features: AX0GCFsuPlvNCKVZ42nqFo1y-oTylnUFxw211QqxqFtmolpwWlFQJ8VvyOnirMY
+Message-ID: <CAMRc=Mf=Z+d3UKdwEXkw1Xm9G=qVwh6=fXsfgS6JiOM6Z7H50w@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, kernel test robot <lkp@intel.com>, bhelgaas@google.com, 
+	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Jun 2025 at 20:57, Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
+On Mon, Jun 16, 2025 at 3:16=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
+e:
 >
-> The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-> drivers that use constant masks.
+> On Mon, Jun 16, 2025 at 06:07:48PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 16, 2025 at 08:21:20PM +0800, kernel test robot wrote:
+> > >    ld: drivers/pci/probe.o: in function `pci_scan_single_device':
+> > > >> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create=
+_device'
+> >
+> > Hmm, so we cannot have a built-in driver depend on a module...
+> >
+> > Bartosz, should we make CONFIG_PCI_PWRCTRL bool then? We can still allo=
+w the
+> > individual pwrctrl drivers be tristate.
 >
-> Switch to the new HWORD_UPDATE macro in bitfield.h, which has error
-> checking. Instead of redefining the driver's HIWORD_UPDATE macro in this
-> case, replace the two only instances of it with the new macro, as I
-> could test that they result in an equivalent value.
+> I guess the alternative is to just leave it in probe.c.  The function is
+> optimized away in the CONFIG_OF=3Dn case because of_pci_find_child_device=
+()
+> returns NULL.  It's unpleasant that it lives outside of pwrctrl/core.c,
+> but it doesn't occupy any space in the compiled kernel at least on non-OF
+> (e.g. ACPI) platforms.
 >
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+And there's a third option of having this function live in a separate
+.c file under drivers/pci/pwrctl/ that would be always built-in even
+if PWRCTL itself is a module. The best/worst of two worlds? :)
 
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/dw_mmc-rockchip.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-> index baa23b51773127b4137f472581259b61649273a5..9e3d17becf65ffb60fe3d32d2cdec341fbd30b1e 100644
-> --- a/drivers/mmc/host/dw_mmc-rockchip.c
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -5,6 +5,7 @@
->
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/mmc/host.h>
->  #include <linux/of_address.h>
-> @@ -24,8 +25,6 @@
->  #define ROCKCHIP_MMC_DELAYNUM_OFFSET   2
->  #define ROCKCHIP_MMC_DELAYNUM_MASK     (0xff << ROCKCHIP_MMC_DELAYNUM_OFFSET)
->  #define ROCKCHIP_MMC_DELAY_ELEMENT_PSEC        60
-> -#define HIWORD_UPDATE(val, mask, shift) \
-> -               ((val) << (shift) | (mask) << ((shift) + 16))
->
->  static const unsigned int freqs[] = { 100000, 200000, 300000, 400000 };
->
-> @@ -148,9 +147,9 @@ static int rockchip_mmc_set_internal_phase(struct dw_mci *host, bool sample, int
->         raw_value |= nineties;
->
->         if (sample)
-> -               mci_writel(host, TIMING_CON1, HIWORD_UPDATE(raw_value, 0x07ff, 1));
-> +               mci_writel(host, TIMING_CON1, HWORD_UPDATE(GENMASK(11, 1), raw_value));
->         else
-> -               mci_writel(host, TIMING_CON0, HIWORD_UPDATE(raw_value, 0x07ff, 1));
-> +               mci_writel(host, TIMING_CON0, HWORD_UPDATE(GENMASK(11, 1), raw_value));
->
->         dev_dbg(host->dev, "set %s_phase(%d) delay_nums=%u actual_degrees=%d\n",
->                 sample ? "sample" : "drv", degrees, delay_num,
->
-> --
-> 2.49.0
->
+Bart
 
