@@ -1,417 +1,228 @@
-Return-Path: <linux-pci+bounces-29898-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29899-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2150ADBCC2
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 00:17:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 733A7ADBD0A
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 00:43:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 722967A79BD
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 22:16:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1237B172C4C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 22:43:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4428C1B4257;
-	Mon, 16 Jun 2025 22:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73BEC282EE;
+	Mon, 16 Jun 2025 22:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DwRQMrDi"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U4NdQ9fu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2048.outbound.protection.outlook.com [40.107.237.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C251917E3;
-	Mon, 16 Jun 2025 22:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750112251; cv=fail; b=PM/tYHL6mN1VhnuPuO8Sa9E9mraWjnq2ttSP8SNcoD3M3O6hx6Wf8p8gmAQJxusQa762hr1YTsQHIYaxvrJM3FW0lUpfjzR6a3R3GIsCqtloja5shhwIG41A2aDwTqWVJ2yxqMVO5EJRVBL31NHcY/Ovr4Op1d2RbITlrXHh6wk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750112251; c=relaxed/simple;
-	bh=a4WvfvalSgS39FOMLYgQE0PA5UJHaIzu0syTLAfwxP4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Di/UcFJrh15MT79hYK5oQjDSU9GNfY+mXg7kCF8hYlAZAPul1+sD7pIq1JG49UI5Axzz5t3daAWTrY9bkW/y7fqcGEznQW1Ut6z2CSaFlGlAXUj1Ga+SajHDTPPl4JjafkZkC9NC3JiZaDJ98U8muegkCw7BXoIhqNmSDx6dmo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DwRQMrDi; arc=fail smtp.client-ip=40.107.237.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EazKR88eecfaJ2Ph0kN3CpVjIS0lnzFL0EUI09TSGWhHtOxFfKA0j3m1zFxbpW17WP4bmU1SkTW3dAA3v6uu7EteYGhm3c1C9z9JqpXJCKkV7BN4jfPSf1C5HpdLRyfavNH+FICOuQ7fSY6PXiVKnIDcHrJ3CCi/UdzeK+dq51TuX9krD7PRprVkCodG5HSFTbh1pmn7McJXBOJ4potQ4fH1/ApRki/UEE1XttxD6T0qwWRAOjnS7+nxhZgaRd70qajBtk4svwLaTQdNuC9STIi5/V+b5ZHWcmPqQx5JN2B+cHtBfpp9RlB+95IY+0s0F5Lz3V0oVYRf9iQWX6l2nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=edBRXC87zwVQEhpbJmzCAHMO+AD5l8AseZ2dCSaamBA=;
- b=WLvrrHvl6/AnHMc7mYdI88OZiz8jpB5GPp42+JtXjZ3L/iqRunbp+yUUJnZhDwlwaCEwjpkOFI6eLa+wuamJk8p2YZpaG2vc03p+RIS1uBg6Kb9KG9J3NSdVuveeNWlUid8j+VpXGdnBENESYkJE2u6+owf2SwI81AE1SkLipPCrtLVSh10IGPMb0y8jZg9XvC88KQoij6zcCGYDYwe73J5CJNGp6d7QUUUJBcDBZ1cwVzvX6Ub/nXzxaKaH15OeiZIgtBnFrlrDZt64+qwmhV4JzJm+CkUH8XeoERbgKkPp5meFFVAsoIP9VIhzQ/Sr1xriVJfW1Bh1HVO1iXBAHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=edBRXC87zwVQEhpbJmzCAHMO+AD5l8AseZ2dCSaamBA=;
- b=DwRQMrDiUVJLEdeJxKcnupaOcbc7PwwaxCnpt98K/ph1T2EfjmKZysGZBd6JZDGpQQzuxTPS+4FwGylSm07L8MfGM2YB8gl7Z05K/IIBiaC7SwjmNz6v2Z5c1+uZfjfRKUhNMg+NBiTV3muTlcdru4Y4giiN62/Dg4EHAmQpKlU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- PH7PR12MB7428.namprd12.prod.outlook.com (2603:10b6:510:203::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.29; Mon, 16 Jun 2025 22:17:23 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
- 22:17:22 +0000
-Message-ID: <8433dfb2-efb8-422c-9c2b-aeb62a7b4865@amd.com>
-Date: Mon, 16 Jun 2025 17:17:16 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 13/16] cxl/pci: Introduce CXL Port protocol error
- handlers
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
- bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
- dan.carpenter@linaro.org, Smita.KoralahalliChannabasappa@amd.com,
- kobayashi.da-06@fujitsu.com, rrichter@amd.com, peterz@infradead.org,
- colyli@suse.de, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-14-terry.bowman@amd.com>
- <20250612181445.000045ab@huawei.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20250612181445.000045ab@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH7PR17CA0021.namprd17.prod.outlook.com
- (2603:10b6:510:324::27) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7B121C16D
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750113788; cv=none; b=e0MUt2J1fx5U0Y8/u8y6SnSuiYOHYPfueAUFGFHYr0nWyVcnU0R7AXKx2u2HM+oJb/xNpbMqJTTP8Q4wubTMGx8+4I7nrbl9W+JTQ0wYEjy+YBc0hbSQtnbZ0PHR0nALj9XXuut+czeToqvUsR6hBWCobT9V7ItL08LLyYUCuNc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750113788; c=relaxed/simple;
+	bh=zomONDQ0Qx37OkiETP/pnDcvQTypzvtXen0dGdSn/YE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hgku65EYKdndAk0HDHBme6y5suePM7y2gRgBvxrxaGJVP5nqbwBMzyUMHEegg2k9Fff4dNyuW1MkcsuwpdDgHMqH8OhEcK57/BxoZewsxgUhOaW7Sx3cNBIK0+NRqMJDhxTlTvCk7hWWn8iP74sixlvAEoY5sC9JN7mv9ymZGoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U4NdQ9fu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GGeeMG029581
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Xl/pk5AyXw9fWHquf+0bmU
+	vgDIjx3jfKKP6iywcs/MU=; b=U4NdQ9fu+E1DUhB3+8fo5hzxXo8K8KkYEjIN8l
+	ir+jT8ES00JHeEZ7BHv3GSu1hNK+0N/o3wXIrIYUrrrpPbrb81jW7hC8DTsuw84J
+	D8drV/JYvWKj2d4VAOELGqaOAPZi5NR7q3BlI5TkZgXHmzxFlgD2Ofz+9FbajAW4
+	92jxibIpjuBozG3DkV0hv6lRYdi0FcUmA4XmA3aJvlbNv+T33WaXLlWofCktqLlC
+	5MGDtAfWoG//TvZp2Fz4zHE1DRWAeXDNLfJQ401/yO0ZRJiUzvNSvj2zYaIU2Ltq
+	F3nHhvkFSs9hr/MJUU29v3ePzGaqwABXowgdN3rm7lklRPQA==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h962qg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 22:43:05 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-748cf01de06so349513b3a.3
+        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 15:43:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750113784; x=1750718584;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xl/pk5AyXw9fWHquf+0bmUvgDIjx3jfKKP6iywcs/MU=;
+        b=v1R6EboLOeF0ADKQzni0oM4692Bnm1tXZc5wHzXDBddbNeE2pkYTcO2fEib3/xN8CO
+         F3KEDvQ9AjlHO6gkmiWAG0zqMuOtEE79X4dt3Q3jfmkBAPHuKuGLc+K5e/x614ycRrNt
+         qa2WRzaq0aNj6yJi4heteKZ6J/YHNzAMyxz07L8lQEgkew2j3IHp0zZHxGfizacwhjUe
+         SsnN5S7d9FfTlkmFHFE2nzu4qaEv+GKB2Wt/w03bP85iwlN0NIuemDTE6StsmVGp1FEX
+         5RDYWoWyqNKHy8/NIL+k7KltRjKgh0LwVSXyrtv0OPwyb3vUtxp23KuKkqz6THBbgD8i
+         SiJg==
+X-Gm-Message-State: AOJu0Ywj8vuH500OTT1YCTnE3QL/KDPiZNLHea36bF9G9aPpD4nqRy0K
+	TAWAWoTR6rnFDwJbWcihujhr7R7thi9yYw24uzhV3siztTeSBgJvxsDFt8AME12pilAmbEgYlyu
+	qEaAPeWHcd+xbFumw7jnEAj+l5LSaK6dyrD91O0X3Oh0sKbrdSf284crh3KGYySD6Swj5t0M=
+X-Gm-Gg: ASbGncshsCSV2lBpuCSaNsOwcUwEFtoVaSKr48r/OziJOFZL+h6+9wQEulI7d3/PPNH
+	UjRX/IaBDHcfkJZ7/Fk3K7hf2w77aU6/s/ld6jqzAY3faY/ZvtUTFZE1l+bx5skBClyUAUUNlda
+	QHe5HhYDUVCb5sNfCSWhRfpzRlGWvlstvMY3l+h3kaQumYu7GbWH+Z0Lco17JJLRfQNHjMBTb1k
+	Oo9EMK8XrFDMgQXYzqGpe6W9BWa20rLb4srHo3Vd8Ha+edsVSaf9tf6mD0eKW/t9/iuEQ9RrjwU
+	ZRwpn1U/8V90AnGq5GEC1XO7zgwfVn9+RrWvMja5dhdR5Fk6+xfFTBjC+k64bUjHS5Sx2BJD
+X-Received: by 2002:a05:6a00:10c8:b0:748:2ff7:5e22 with SMTP id d2e1a72fcca58-7489cff1950mr12695014b3a.10.1750113783755;
+        Mon, 16 Jun 2025 15:43:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9UV9wLQcUsY/aC3vfdnxVaPe6n7TpuExyAehf70xpQMa7h1OtnP3qBq8I+prIqhHmzBkG7A==
+X-Received: by 2002:a05:6a00:10c8:b0:748:2ff7:5e22 with SMTP id d2e1a72fcca58-7489cff1950mr12694993b3a.10.1750113783346;
+        Mon, 16 Jun 2025 15:43:03 -0700 (PDT)
+Received: from hu-mrana-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083029sm7405077b3a.81.2025.06.16.15.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 15:43:02 -0700 (PDT)
+From: Mayank Rana <mayank.rana@oss.qualcomm.com>
+To: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org,
+        kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+        andersson@kernel.org, mani@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com,
+        quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
+        quic_nitegupt@quicinc.com, Mayank Rana <mayank.rana@oss.qualcomm.com>
+Subject: [PATCH v5 0/4] Add Qualcomm SA8255p based firmware managed PCIe root complex
+Date: Mon, 16 Jun 2025 15:42:55 -0700
+Message-Id: <20250616224259.3549811-1-mayank.rana@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|PH7PR12MB7428:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ceee4ab-1350-4129-2599-08ddad2390be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N0F3anpsWEJBdFV6ZlVQZWUyaTFEL1Znb1RYL1NSQnk0eWgwbitMVG9sWnJU?=
- =?utf-8?B?Ym9DTFVoSHhSKzlsWkh1NlhKMWpnMEdCZW5ZN1JEWEpqUzRNRHJ3cHEyUmNp?=
- =?utf-8?B?QkxvWlczQW5KUDE5QUZIMm5MS3BIdE5yY0xMMWNZQzFzU1J4NDllMFI5M0g1?=
- =?utf-8?B?dk9LU282amc3akRoeThXYzdiUjQyU3RqMU5nbTlFR2RvK0RNNjVmVGNRa1Iz?=
- =?utf-8?B?ZmNWcmg4ZFI0NDhQTGtjVlZPc0U3eTJjeTdOZTRwTGRqc1ptYUtuSkphSGhT?=
- =?utf-8?B?WkFPblRybjh5c3hMdmRmK01xMnplc1BaT1FrWUVtTHFDSjdJRWdIZE5weXlh?=
- =?utf-8?B?NFFDV2swMUxlbGRTM3VIWC9WaTgvSlloMGVCeHlGeG5ncFZkeU1HLzBkbExL?=
- =?utf-8?B?bmxncVVIZU43aFJDUFhQQjE4UGNub21SbitTZUpRYTFSbmNLQjU5aTNyb25k?=
- =?utf-8?B?TEJZdFpJMzJGT2czUmNUTS9ELzVZeDdGMmJvclFtWkR0QlNWMm9uNVJlVGVE?=
- =?utf-8?B?Tk9FclhzY1huTy9YejMza3lFNmUzR1JTZEZoVVRIKzkvbnkvTm9Sb3JmZjZR?=
- =?utf-8?B?bDdiVXRXTm9YMDA4a2dYbTFNWkI4UlVEUldzL3VYbGtxa1NrdzZSZEpyNWEv?=
- =?utf-8?B?SkRIdzZJY3JGQU44cHo4N3VmMmxoZXZ1Y1hHUkpVWkd6MVFZK3ZxU29KM0VK?=
- =?utf-8?B?bGNQbEc0aWJRdTZWSlZxUzgwdGYycEU5YnYzSXZoRTZKTE00N0lraEFidy85?=
- =?utf-8?B?VWR3ZmRvUHd2ajBnQ0g0d2F5TjcwNDlSYjk4WCtpQUtkVFFTSlhSSzNyZy9o?=
- =?utf-8?B?QW1WSWVxai9lcnJCbWZUWkRncGMrYnRRY3lHdDl6UTd0aXdaRTdidTF4Y2tX?=
- =?utf-8?B?M1JYaytYTWxSaU8zdWxJSk1GUHBGSzRvVUEvbXkrUGY5UVpQYm55QTZuMmxm?=
- =?utf-8?B?Qjc1OVBvcFR5ci81cEVCeml3Q1hKRjdYdlJDVEVzWG5OOWFpRDVyMzR0V3RD?=
- =?utf-8?B?OUUyS2prU2ZadXVSYVNoRDhmS25YT1ZIbHMyck5WM3lUZWFFcFV1eGsyZjB2?=
- =?utf-8?B?NkUxbUQyU0JldDE0ODJ4ZmYzNHRXQlhDa3RNNFUxbVBQNGVwNWtSQyt3MjZm?=
- =?utf-8?B?Tmt5N29mdGYxS3hSNnJBZ3dlYkUvenJObWNmdWl1cE40ZTJ0Y1ozd21DTDdS?=
- =?utf-8?B?eU8xVzdkNXNJRU9QcWgxQnFaTnA3cE4ybzRwSkJEdHZsRDd2M3U2cTZhR3E1?=
- =?utf-8?B?amt3Njh1MVUzNkxlUG1ueVFzVFNNMnpQeW1sYUZjK0hFY1NadTlMMG0zOFZM?=
- =?utf-8?B?NDBBY3lId0tVSm1oMlJvV3VEcDJsNi9TYVIvYmZ3Wit1dENYR1FoVnQ2V2V1?=
- =?utf-8?B?cXZ2bDJMRjlpNUZuK2lPQTIxRzdDSDZxZVo0bWd2cGNtc3pBakF1T2cvQmIy?=
- =?utf-8?B?UVB0K0EzdUVzNHNKOHAyRGJnSXorOG4ybjdrL3dzVG9XcTFmNXEyWlRhcGFT?=
- =?utf-8?B?M3R2OXlBQi85TkZlUjNSeng2c05MN01nNDFvOC9RMWI3L3FKRkgzaEdJaGk2?=
- =?utf-8?B?VDlnWTMrY2EwL0lhTytFRDlQL2Z1dkxYVlhoemo4TFNvdytiR2JNVkk0d3BD?=
- =?utf-8?B?WWdiRW1lMHdYUk85ekw2eEg4Y3RTNU10aFRURVRuUVZCKzlRN1NQSmpMejJ4?=
- =?utf-8?B?NVdsVHJEMm81ZkRiNWJTdkJuTml2aURzLzJtdjY4RnhqSzFzYWV6cjR4V1ln?=
- =?utf-8?B?S0krVFFmRVBsZnFTaEIzVEQ5dnBNeGpPNjVhcEFLWkloT0V4OEEyOUg0TkJD?=
- =?utf-8?B?MGY4WW9LYzk1R0tCL1drNnVkOWZBVG5SZVRhUnl5cVFNQ1RjbTVTejhsajVa?=
- =?utf-8?B?b2U2VWtpTWlnR21IRVROdHpKSFhRVFg0YnBkN01mV0NLQjBoeEFKdG9PNC8v?=
- =?utf-8?Q?FBBW05xsPeA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Um9rYnNKb2I5ZitET3VreWVlbUkxZ0RvOUdXTkUwaFdScUgvRTNMVnEzc1Vu?=
- =?utf-8?B?NysybGJ6dUMzTVBPeTMwekRpaHQ1Nlk3OXRLc2ovY0dCVUNPVXB3eVQ2UUpv?=
- =?utf-8?B?Q3pXWnpKSnIvczhCYnFjTVV3OGpIL3I1SVFZVkZVMDEzc3o0dGpqTUFJaFA3?=
- =?utf-8?B?eXhCTlBxZDdOSDBMdzlvbEdlZkN4bnkyN1JqcXd3VE10U0cwRmdBeXJ0eHNU?=
- =?utf-8?B?QkdneEdSeWtkeEhZdnVYRkJab1V0cnpwOEdZUVlPQlc2eDVKTHhPVmRkcnZ0?=
- =?utf-8?B?VWZZeGwzSHVXUWl1d1phZzdqNVZTRmVsYjJacktGY2tsa2xXUlRsa3VkSjll?=
- =?utf-8?B?NGkwMjM5SzFsRm1OMHJFVDVoNDdmMWh5THI5cmVRQll4WmczMkRKdzV5VS9z?=
- =?utf-8?B?dWN1dlZyMUZLc3VYVmNLdzYyUW0wNGRONlY4VTZRVlpScXNqWUUvSTRSSkZE?=
- =?utf-8?B?amViSGJLZjZjQU5MWkc3cXJDa0wzVFVDbGZ6L1pKNU9JL0RhNDN5cTRsUlZS?=
- =?utf-8?B?dllhV3FuUFhWeUZSN0xTUjBUbitUaU1xdWp1L29wWG9uK2duUDZlc3RibUVu?=
- =?utf-8?B?YnF3V1FwRkduRERRQVRuTHYxVWhCd0hqa0pQZHp2bnJLMW41UHloSjZuOWdy?=
- =?utf-8?B?TjFSM1BudWR4b0hWZjY4Ly8xbFMzSC83NWk0dDdpMC9PNmQ0ZVVDb2VOYmwz?=
- =?utf-8?B?ZTVrNm12VXpELy9adVNNakVTRWxJK0RwQTI0NnZaSWZkK1gzSGd6ZVRLNjF6?=
- =?utf-8?B?eDZTY0FrdVVSNGpTK090ZnRyL2tYMFRJekVLNzE3RjlsTHM1aVlwQ3dUaGho?=
- =?utf-8?B?OEtXSVJ1YjJsNHdoKy9zL1RGeG9tL1JHWlFFc2M1UDY4SElVRDVSTE4yQUhp?=
- =?utf-8?B?ZXFSbTdSSVkvZjFoVm9zc3hxR1YwUVdLcXdZQWFWRG5pQi9wOGVnQTUreWhL?=
- =?utf-8?B?TUdmVjR5dVBsV01JMGFKaFJ5QXRBOXhkenpKT3RDQnp1bU5mckp4ejFaMytn?=
- =?utf-8?B?YTdaaDhYNXhFSVc4OE5zNFBnVExBTlpnM09FYjB6UFlSbVljM2Y3V2RFSGdo?=
- =?utf-8?B?VTc4Q1dBNlpmOGsyTitzYUp1SklCYzBqSmlHQU01WEYxWitpQzRXbkMyaDl0?=
- =?utf-8?B?MVhKMlRrQi9SSGVaeG9CVksvSVdQWVp1Y0NJQzF2TDRuQXZoUkdqWTVUY3Z2?=
- =?utf-8?B?M29jZ3lHaE54UHZMNjgvaVZYQysvOW5OK29VZC9xYXBsa2NwVjRWeHFvSlNN?=
- =?utf-8?B?T3lzbHU4QUVQRDE1SzBqaTJhOWVOT2QyYXZYSWRHZ2ZhOFgzdEtjK3RmL1FT?=
- =?utf-8?B?endmSFVvZjh0eklQK0ZlcURLTGcySzdqL1NseG5Sd1l5SjNZNVdVQUFsYzBy?=
- =?utf-8?B?VFNjdGxwUEVTQ2pDeHVYbTArK2ZSYkVFM0FUWEJLRTVCdXdmWXR6VkxVMFY1?=
- =?utf-8?B?Z0l3SVhMM1R6SjY3MUFrQTFETXg4WkdJS2ZiT1pMeVRIMFhHZWdpeVQwR0pV?=
- =?utf-8?B?VlFYTVRiRnBWMzJaZEtEQWNOWTdFblJVN2RNMWhsVk11UDVSQWpCendjdGZs?=
- =?utf-8?B?VDBKT1V6UFVXTDFHY0ZoWkFWMklHMlJMWjBpL1ZsU2VFUlA1NHJZN2E2T0N6?=
- =?utf-8?B?N0pMUWNOMnQ1aWVqVkFLRENSS2JxZXI4emtUdDVESHgwcUFETVI5WlBIZ0J3?=
- =?utf-8?B?c09vUHc5TEdoNW81cUp3Vk5pb2xYN2ZDQmRYS0t2ZE9kdlVvcGxOZUhKOHFz?=
- =?utf-8?B?QXEyUVQrY2tvQnZubG9sT2htdnR3OEg1VEpyR2tlemZVRUFiMHNTdzJSaUlt?=
- =?utf-8?B?RDBMekpFYnBWd3JmSVZSdmdWaXMwbDQ2bndVZ3gwbDlqRG5qYTd4Wk9oRjNO?=
- =?utf-8?B?ZUJaeG5JUHV6UjhUY25FWlByUzRoMjI5SmdwZHFxMXdlVWZmQVdCTWNlT3FM?=
- =?utf-8?B?WGlacUNBdG9OMVR4ZjE0L1VBOFBEaFMzVWZ1d0R3RktXVDhRWGptc0tFRDVD?=
- =?utf-8?B?QlFQSUthQlRwMWtqVm1oWWJGaXcrZDB2b2s0VXA0SWhhNjFSUHhKMEdlMGRB?=
- =?utf-8?B?M3NQNDg1dVlYY0dMekF4clV1dFVXdjYraGxZam1XdEJqQU1oL25EYUlvc3Bx?=
- =?utf-8?Q?CcRpWYXFli4xXmSU5rs9vmwsr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ceee4ab-1350-4129-2599-08ddad2390be
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 22:17:22.5374
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I8KG0ba1o67dfRtvB3Y6/3TxbBVpWfaF72Qoa49FGO5B/X14nTLEwlcwtCtaUL0Q8BvSseCvKbLFZsbwhCBwEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7428
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: tErl7rSCGR00bzkO1zE2rknb3HXanbFv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDE2MiBTYWx0ZWRfX1domElizuLI4
+ cUSlNJyCVzLd/y8kkvL1v/WZqV7zZIAz9Oka1WjzJWIQQsJ2VbTH8tehF42x38sybRyB8DnyhGY
+ ehEo8h6PDzuSwgDxqnezgi4gyimYqdU4RLfYngKznsbplBSELmxNm9lQ7zsVK8bOmxWqPfKnTma
+ Et9P7Z6W4OCL25FZ04xC8k1aXjMDQDaeBibXYxEpr+2UA3+bVCKaWUEwbJBdvEHWSRpdUc2qNyJ
+ ZEsPmJFA/WMvwyZlJWUFAdq99rZYuG2Vjbk1IaTFFdCrw3KvtqVo8iLJo3jEqhN3SCCl8IOBu3L
+ wmNIYQGISpgoZ+NsFhBpMekDrGV76U0an8qtna8vBDEK6Qeyg7wPLlfOy8E1eB8xIMPrMJtlD9u
+ G1AX5FGHDBWWXbk5pri0mDvOZgJK6hgUvYZJ/JqXezvyChFiFjfg0Xh9H5HEpZEJ+u6oFFCi
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=68509df9 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=cBYbKlKiy6JW2YU5ZBsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=OpyuDcXvxspvyRM73sMx:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: tErl7rSCGR00bzkO1zE2rknb3HXanbFv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_11,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506160162
 
-On 6/12/2025 12:14 PM, Jonathan Cameron wrote:
-> On Tue, 3 Jun 2025 12:22:36 -0500
-> Terry Bowman <terry.bowman@amd.com> wrote:
-> 
->> Introduce CXL error handlers for CXL Port devices.
->>
->> Add functions cxl_port_cor_error_detected() and cxl_port_error_detected().
->> These will serve as the handlers for all CXL Port devices. Introduce
->> cxl_get_ras_base() to provide the RAS base address needed by the handlers.
->>
->> Update cxl_handle_prot_error() to call the CXL Port or CXL Endpoint handler
->> depending on which CXL device reports the error.
->>
->> Implement pci_get_ras_base() to return the cached RAS register address of a
->> CXL Root Port, CXL Downstream Port, or CXL Upstream Port.
->>
->> Update the AER driver's is_cxl_error() to remove the filter PCI type check
->> because CXL Port devices are now supported.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> A few minor things on a fresh read.
-> 
->>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index e094ef518e0a..b6836825e8df 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -753,6 +753,67 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->>  
->>  #ifdef CONFIG_PCIEAER_CXL
->>  
->> +static void __iomem *cxl_get_ras_base(struct device *dev)
->> +{
->> +	struct pci_dev *pdev = to_pci_dev(dev);
->> +	void __iomem *ras_base;
->> +
->> +	switch (pci_pcie_type(pdev)) {
->> +	case PCI_EXP_TYPE_ROOT_PORT:
->> +	case PCI_EXP_TYPE_DOWNSTREAM:
->> +	{
->> +		struct cxl_dport *dport = NULL;
->> +		struct cxl_port *port __free(put_cxl_port) = find_cxl_port(&pdev->dev, &dport);
->> +
->> +		if (!dport || !dport->dport_dev) {
->> +			pci_err(pdev, "Failed to find the CXL device");
->> +			return NULL;
->> +		}
->> +
->> +		ras_base = dport ? dport->regs.ras : NULL;
-> As below - perhaps a sanity check for error and early return makes sense here.
-> 
+Based on received feedback, this patch series adds support with existing
+Linux qcom-pcie.c driver to get PCIe host root complex functionality on
+Qualcomm SA8255P auto platform.
 
-Good idea.
+1. Interface to allow requesting firmware to manage system resources and
+performing PCIe Link up (devicetree binding in terms of power domain and
+runtime PM APIs is used in driver)
 
->> +		break;
->> +	}
->> +	case PCI_EXP_TYPE_UPSTREAM:
->> +	{
->> +		struct cxl_port *port;
->> +		struct device *dev __free(put_device) = bus_find_device(&cxl_bus_type, NULL,
->> +									&pdev->dev, match_uport);
->> +
->> +		if (!dev || !is_cxl_port(dev)) {
->> +			pci_err(pdev, "Failed to find the CXL device");
->> +			return NULL;
->> +		}
->> +
->> +		port = to_cxl_port(dev);
->> +		ras_base = port ? port->uport_regs.ras : NULL;
-> 
-> I'd be tempted to return here to keep the flows simple.  Maybe avoiding the ternary
-> 		if (!port)
-> 			return NULL;
-> 
-> 		return port->uport_regs.ras;
-> 
-> 
+2. SA8255P is using Synopsys Designware PCIe controller which supports MSI
+controller. Using existing MSI controller based functionality by exporting
+important pcie dwc core driver based MSI APIs, and using those from
+pcie-qcom.c driver.
 
-Ok.
-
->> +		break;
->> +	}
->> +	default:
->> +	{
->> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
->> +		return NULL;
-> 
-> Better not to introduce scope {} when not needed.
-> 
-
-Ok.
-
->> +	}
->> +	}
->> +
->> +	return ras_base;
->> +}
-> 
->> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
->> index 664f532cc838..6093e70ece37 100644
->> --- a/drivers/cxl/core/ras.c
->> +++ b/drivers/cxl/core/ras.c
-> 
->> +
->> +/* Return 'struct device*' responsible for freeing pdev's CXL resources */
->> +static struct device *get_pci_cxl_host_dev(struct pci_dev *pdev)
->> +{
->> +	struct device *host_dev;
->> +
->> +	switch (pci_pcie_type(pdev)) {
->> +	case PCI_EXP_TYPE_ROOT_PORT:
->> +	case PCI_EXP_TYPE_DOWNSTREAM:
->> +	{
->> +		struct cxl_dport *dport = NULL;
->> +		struct cxl_port *port = find_cxl_port(&pdev->dev, &dport);
->> +
->> +		if (!dport || !dport->dport_dev)
-> 
-> What does !dport->dprot_dev mean?  I.e. how does that happen?
-> I can only find places where we set it just after allocating a dport.
-> Perhaps a comment?
-> 
-> 
-I'll remove the check for !dport->dport_dev.
-
-> 
->> +			return NULL;
->> +
->> +		host_dev = &port->dev;
->> +		break;
->> +	}
->> +	case PCI_EXP_TYPE_UPSTREAM:
->> +	{
->> +		struct cxl_port *port;
->> +		struct device *cxl_dev = bus_find_device(&cxl_bus_type, NULL,
->> +							 &pdev->dev, match_uport);
-> 
-> Doesn't his leave you holding a reference to a device different form
-> the one you return? Hence wrong one gets put in caller.
-> 
+Below architecture is used on Qualcomm SA8255P auto platform to get ECAM
+compliant PCIe controller based functionality. Here firmware VM based PCIe
+driver takes care of resource management and performing PCIe link related
+handling (D0 and D3cold). Linux pcie-qcom.c driver uses power domain to
+request firmware VM to perform these operations using SCMI interface.
+--------------------
 
 
+                                   ┌────────────────────────┐                                               
+                                   │                        │                                               
+  ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐       
+  │     Firmware VM      │         │                        │            │         Linux VM         │       
+  │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │       
+  │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE Qcom    │    │       
+  │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │    driver      │    │       
+  │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │       
+  │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │       
+  │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │       
+  │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │       
+  │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │       
+  │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │       
+  │               │  │   │         │                        │            │       │          │       │       
+  └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘       
+                  │  │             │                        │                    │          │               
+                  │  │             └────────────────────────┘                    │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │IRQ       │HVC            
+              IRQ │  │HVC                                                        │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+                  │  │                                                           │          │               
+┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
+│                                                                                                          │
+│                                                                                                          │
+│                                      HYPERVISOR                                                          │
+│                                                                                                          │
+│                                                                                                          │
+│                                                                                                          │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                                                                                            
+  ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐        
+  │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │        
+  │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │        
+  └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘        
+-----------------
+Changes in v5:
+- Rebased changes to v6.16-rc1 kernel and updated proposed changes to accomodate new refactoring with pci-host-common.c file
+Link to v4: https://patchwork.kernel.org/project/linux-pci/cover/20250522001425.1506240-1-mayank.rana@oss.qualcomm.com/ 
 
->> +
->> +		if (!cxl_dev || !is_cxl_port(cxl_dev))
->> +			return NULL;
->> +
->> +		port = to_cxl_port(cxl_dev);
->> +		host_dev = &port->dev;
-> Actually no. Isn't this a circle that lands you on cxl_dev again?
-> 
-> 		container_of(dev, struct cxl_port, dev)->dev
-> 
+Changes in v4:
+- Addressed provided review comments from reviewers
+Link to v3: https://lore.kernel.org/lkml/20241106221341.2218416-1-quic_mrana@quicinc.com/
 
-You're right, it is circular. I'll simplify it. Thanks.
+Changes in v3:
+- Drop usage of PCIE host generic driver usage, and splitting of MSI functionality
+- Modified existing pcie-qcom.c driver to add support for getting ECAM compliant and firmware managed
+PCIe root complex functionality
+Link to v2: https://lore.kernel.org/linux-arm-kernel/925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com/T/
 
->> +		break;
->> +	}
->> +	case PCI_EXP_TYPE_ENDPOINT:
->> +	case PCI_EXP_TYPE_RC_END:
->> +	{
->> +		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->> +
->> +		if (!cxlds)
->> +			return NULL;
->> +
->> +		host_dev = get_device(&cxlds->cxlmd->dev);
->> +		break;
-> 
-> Maybe just return it here? Similar for other cases.
-> Saves a reader keeping track of references if we get them roughly where
-> we return them.
-> 
+Changes in v2:
+- Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
+- Add power domain based functionality within existing ECAM driver
+Link to v1: https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/                                                                                 
 
-Ok.
+Tested:
+- Validated NVME functionality with PCIe1 on SA8255P-RIDE platform
 
->> +	}
->> +	default:
->> +	{
-> No need for scope on this one (or at least some of the others) so drop the {}
-> 
+Mayank Rana (4):
+  PCI: dwc: Export dwc MSI controller related APIs
+  PCI: host-generic: Rename and export gen_pci_init() to allow ECAM
+    creation
+  dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM compliant PCIe root
+    complex
+  PCI: qcom: Add support for Qualcomm SA8255p based PCIe root complex
 
-Ok.
+ .../bindings/pci/qcom,pcie-sa8255p.yaml       | 122 ++++++++++++++++++
+ drivers/pci/controller/dwc/Kconfig            |   1 +
+ .../pci/controller/dwc/pcie-designware-host.c |  38 +++---
+ drivers/pci/controller/dwc/pcie-designware.h  |  14 ++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 116 +++++++++++++++--
+ drivers/pci/controller/pci-host-common.c      |   5 +-
+ drivers/pci/controller/pci-host-common.h      |   2 +
+ 7 files changed, 269 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
 
--Terry
-
->> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
->> +		return NULL;
->> +	}
->> +	}
->> +
->> +	return host_dev;
->> +}
->> +
->> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device *host_dev __free(put_device) = get_pci_cxl_host_dev(pdev);
->> +	pci_ers_result_t vote, *result = data;
->>  
->>  	device_lock(&pdev->dev);
->> -	vote = cxl_error_detected(&pdev->dev);
->> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) ||
->> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)) {
->> +		vote = cxl_error_detected(dev);
->> +	} else {
->> +		vote = cxl_port_error_detected(dev);
->> +	}
->>  	*result = cxl_merge_result(*result, vote);
->>  	device_unlock(&pdev->dev);
->>  
->> @@ -244,14 +309,18 @@ static struct pci_dev *sbdf_to_pci(struct cxl_prot_error_info *err_info)
->>  static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
->>  {
->>  	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(sbdf_to_pci(err_info));
->> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->> -	struct device *cxlmd_dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
->>  
->>  	if (!pdev) {
->>  		pr_err("Failed to find the CXL device\n");
->>  		return;
->>  	}
->>  
->> +	struct device *host_dev __free(put_device) = get_pci_cxl_host_dev(pdev);
->> +	if (!host_dev) {
->> +		pr_err("Failed to find the CXL device's host\n");
->> +		return;
->> +	}
->> +
-> 
+-- 
+2.25.1
 
 
