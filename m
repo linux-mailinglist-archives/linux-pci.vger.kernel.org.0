@@ -1,102 +1,138 @@
-Return-Path: <linux-pci+bounces-29892-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29893-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A042AADB98E
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 21:28:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2775ADBA89
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 22:06:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D472C3B6F43
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 19:28:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D9E6189032F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 20:06:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FEC289E14;
-	Mon, 16 Jun 2025 19:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4341E1F5821;
+	Mon, 16 Jun 2025 20:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3QcwloQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MwygWuha"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0A42E40E
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 19:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987E71F5847;
+	Mon, 16 Jun 2025 20:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102103; cv=none; b=s/+sLNwFergBLwH4lu+wYgQqdFqUBYd/fYAVAG6zk0cUVFT7QL011aj2Wp74jmw7aZ0SN/vCzcsqs91bfNVRegFe1JPepQJTyv/mmF+Kaa2qVrjtOQmbUAY5bQH0N66rqxE9bfF6Rx5Bh0yAVexAF+qljy6YzbJy3hMJcDTGQzc=
+	t=1750104385; cv=none; b=UFUc5H/LfImWO2h/7t59yiIjLWqCiM1Vz67hu9sFa1pB3HraBwBuS3h1esXivFwYC+Xahw8SJPm8rKt3/zHR8StguRaC4lQtvsT/3mj2/ZZfnfDhlAEm39C1QL965pbI7GmibPv5tH299Zz+y52kHxpAe7ikmd1z3vUXzLqS8Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102103; c=relaxed/simple;
-	bh=IuUSHuICNT6VDr2kGhY7r9UdTJKfGEQciUGw8PV9XY0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r+sAEtymx3e3bl7v5KfyeS/gOUzRoXuI1h2j/jLJFgdYZL6z/RE3HJdWgUuEIMhC9LNGae+jkEvi6cTeRcTZ87k0+HcB99ksrMJh8JsSeKW4A+SSJXv1pTkeiU/d8JqVEAkHts4mB0FRgivlthd+RKZknuVdXzmMWQU1eiUkBUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3QcwloQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52371C4CEF1;
-	Mon, 16 Jun 2025 19:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750102102;
-	bh=IuUSHuICNT6VDr2kGhY7r9UdTJKfGEQciUGw8PV9XY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F3QcwloQZwiNAMT8Hrbd5/sEV9uOFjIAksR7RsYNEFh1deRVcoQDe6fTsmonpmJsj
-	 peH/bm2vlimB6aguTYPjC/aMuDqgTGyzxfQF0XNSrNHa9nxHjJa+vsmMN9gfzDzyH6
-	 psQ4V5ANPJvaQA69AF/cWLEnuMRGER9MJCqqrP1StjLXwqBwMX4xxm3doG5tXparoC
-	 Ypz+2HbhYhDu6h5DBmzJ+vUSPxresjiYxxGtk416dTzMbzaGwxYMlDvMbAiuq6eOyO
-	 yaOdG2DeJ3DmEHd4qHgRVoUj388xdfTLCqq2R9iYskM8vnYkPwZ/kMFB9xMTweCu02
-	 p5ZnR2KCo3lVg==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/2] PCI: Fix runtime PM usage count underflow
-Date: Mon, 16 Jun 2025 14:26:57 -0500
-Message-ID: <20250616192813.3829124-3-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250616192813.3829124-1-superm1@kernel.org>
-References: <20250616192813.3829124-1-superm1@kernel.org>
+	s=arc-20240116; t=1750104385; c=relaxed/simple;
+	bh=DxKYfW2Y3BQiZFIE+AMWe+NyrlGjHl/jlQm63dGeKuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMB7E08JIyZZXakdDLGdci7ItBoRFNfTEY2Y6E/dU9bYWL6WOi8Nk16NqPMicWW7ONcJ0v55nNpzLQsMotM+Sj6QmqR9z+uYncRp5Fydch31ZFfmRRXYoDGmZ4A3aXTyXW5gSacroSaHt79H7MxF+7OzqjANr3tMajKZHwEBl1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MwygWuha; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.1.24] (unknown [20.236.11.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A030C21176C6;
+	Mon, 16 Jun 2025 13:06:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A030C21176C6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750104381;
+	bh=RWf4U2IMgfXaKMSLGJUCrHvubnG0tLPF0JXW2PD8mi0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MwygWuhajk7TGYV1hsriMnPH/Z615YS+VR6NW/7XY+ka4XNr/WLH2QUZibl6KRgys
+	 duta2oQez2pfYwZQIs/JdGdS7BHRSYlkI3IaA2ECLv+a5lZnTkfKCJiuOuMTv1PfU1
+	 VHKF/NIqb+R7AbxYyEWJNa2pTcbblAVqovZtzrig=
+Message-ID: <38127f1a-3761-48c7-8e95-1f677d6bd7b3@linux.microsoft.com>
+Date: Mon, 16 Jun 2025 13:06:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On 6/11/2025 4:06 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
+>>
+>> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> 
+> The patch Subject line is confusing to me. Perhaps this better captures
+> the intent:
+> 
+>  "PCI: hv: Don't load the driver for the root partition on a bare-metal hypervisor"
+> 
 
-When a USB4 dock is unplugged the PCIe bridge it's connected to will
-remove issue a "Link Down" and "Card not detected event". The PCI core
-will treat this as a surprise hotplug event and unconfigure all downstream
-devices.
+Thanks, that does make more sense.
 
-When PCI core gets to the point that the device is removed using
-pci_device_remove() the runtime count has already been decremented and
-so calling pm_runtime_put_sync() will cause an underflow.
+>>
+>> init_hv_pci_drv() is not relevant for root partition on baremetal as there
+>> is no vmbus. On nested (with a Windows L1 root), vmbus is present.
+> 
+> This needs more precision. init_hv_pci_drv() isn't what is
+> "not relevant". It's the entire driver that doesn't need to be loaded
+> because the root partition on a bare-metal hypervisor doesn't use
+> VMBus. It's only when the root partition is running on a nested
+> hypervisor that it uses VMBus, and hence may need the Hyper-V
+> PCI driver to be loaded.
+> 
 
-Detect the device ishas been disconnected and skip the call for this
-cleanup path.
+I'll update it so it is clearer, thanks.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v2:
- * Use pci_dev_is_disconnected()
-v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
----
- drivers/pci/pci-driver.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 67db34fd10ee7..0d4c67829958b 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -479,7 +479,8 @@ static void pci_device_remove(struct device *dev)
- 	pci_iov_remove(pci_dev);
- 
- 	/* Undo the runtime PM settings in local_pci_probe() */
--	pm_runtime_put_sync(dev);
-+	if (!pci_dev_is_disconnected(pci_dev))
-+		pm_runtime_put_sync(dev);
- 
- 	/*
- 	 * If the device is still on, set the power state as "unknown",
--- 
-2.43.0
+>>
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index b4f29ee75848..4d25754dfe2f 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+>>  	if (!hv_is_hyperv_initialized())
+>>  		return -ENODEV;
+>>
+>> +	if (hv_root_partition() && !hv_nested)
+>> +		return -ENODEV;
+>> +
+>>  	ret = hv_pci_irqchip_init();
+>>  	if (ret)
+>>  		return ret;
+>> --
+>> 2.34.1
 
 
