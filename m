@@ -1,138 +1,194 @@
-Return-Path: <linux-pci+bounces-29877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29308ADB5D0
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 17:47:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F44ADB63A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 18:09:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3322F188FDA6
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:47:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FDDC188A75C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 16:09:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A26283FEC;
-	Mon, 16 Jun 2025 15:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97992877E9;
+	Mon, 16 Jun 2025 16:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsE/rIpQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a3s6TluD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B71E22E9;
-	Mon, 16 Jun 2025 15:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A8F21FF37
+	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 16:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750088739; cv=none; b=Ph8Om0TZAdtnJ3VD2Cb2JW18J1Ils69XdPGigrLo0hUCbxAfkTQEHoN48rDtjxHbifXR16XbgS4qUkhVsoUvAXmAT/VleTZ35HEBxMQk9MqVRW9sjeoXGZ0T6KBJyNPreKZ33ll2lm1PuVw2zbYW6G/TII5q2sH1OORkbtswhGA=
+	t=1750090074; cv=none; b=QKKhVM22UTksw+ooZEcWnyzEUuKlMR9APWF/plA3T48Kv1lNvb4oJaS1iT+p5KbsMQIabUxlDlE3jA4uMMwQRKwd4MR0ej9P2URFZY1CqxbQbgb0/ITCxLHgpF8tTcSxbh153Tx5opYDnazvc1ejPgWLuQFyqC4yGMpGRMo5t9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750088739; c=relaxed/simple;
-	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
+	s=arc-20240116; t=1750090074; c=relaxed/simple;
+	bh=ZA6S9shc1QEX3PEyqUllB6Vi85lndLEG0kzkNo7/Ypk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oKQRdCGlAmfV44XUUNT+ix4My3xFWrxtvmokhOmPlzkx7/UNm+rjgI5QYdeKe/Bef33TslqA2azznUAOhcuaIK91NDPD98OYf7VwwgecBq9jLp9e1z8YgIlEKGSs+BQ+ellByj8eSJ7BJdgtv6ldgBwUWfZGny9lH1FZn+stgGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsE/rIpQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0BE0C4CEEA;
-	Mon, 16 Jun 2025 15:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750088739;
-	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RsE/rIpQgQubD9FD467llyTDjelw55TPUcdwrb3S1TXpCpXXNI43yrGPqDiR5nlqa
-	 5TaebA2IEx6SuLpxCLrzK+vChFuXE6GGqpTKbGmHVpDela40oSWhU99OzwUu1A8U2p
-	 ptnhDotPAzF1Irh4PN/v4rJURVqJYGkmrRRKP13lds41ykDKZgf4r7gi5Do6PdPXbD
-	 rfZacp+1dtK5Uq27l+OehTp3KZCDFi28e/6Zpha8lBtamt2+AJrZaCD4bHD0MrHjNc
-	 TNeuHUOHVTlHxeZz+OPK3UblpI1OCqbhTFAGFfeO+J7ndKOXZ1MeId9BrdXbWcoK4j
-	 DiE9RKF5pKoEg==
-Date: Mon, 16 Jun 2025 17:45:32 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
- handlers
-Message-ID: <aFA8HLREfMtZSh_u@pollux>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
- <aEbTOhdfmYmhPiiS@pollux>
- <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
- <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIZ2f202gf6lsiy7zi67+fhOg2x7BHYZdegv01v1tx9glE6shVLHGdFGopjKn06l0c3Po++SicNBugab1eIllf2N+P3gYlZ5AaxkJdwKmW3/GJSEouGBgO6xhWC+VpRcq7X/4WM7iF1pTt9yDPt0WBDHgz6mzectv4KgejN0Bp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a3s6TluD; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb79177so28890595e9.0
+        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 09:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750090071; x=1750694871; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
+        b=a3s6TluDxHNO9L6Ppp/c5qLuQ4qi+zVkatDACSrjNQzGMPwNIgOmn/VZz8jg1qfjXc
+         BXFJ/8N3NKzS9QTT4nmSoT6jHT8VAyO/w0KHLiCMrtl39msoo62nrIVEmchKwR3QEjWZ
+         1IuZmKD370XRIdCKBo/ZDWMmy0perrx80w4XGqsxz9zHhe8YHzKUP/7SiX8pvaGaf/FO
+         x1n0z6eE1gbJO1eGX7b8hPD0TA5eGqHlIIq678MhQg2B8ooQP4iyRqY/wiBl0ykvTbNl
+         R+AMxoNHEjQmhKEUpIRBvx9k6hSvApOkL4mNSwA68tU6g2guvBbQUBHK4zlXYGsLQ3gD
+         xJ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750090071; x=1750694871;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=66enaQYzVszRsP2d3FubStZt1y7rSXnP5cI/cUMaHAc=;
+        b=I8cHs1AG0cAb/SYzlbPZ6LG75Bx5v36VLYBfW3RQiZ8lJ7V0KZnreW3fIZc242jiIZ
+         ntszbs/HQwsVKI0XLR5tQ7NyLP49fUuUWRnHkCThakNpLetsVws2kj55dXi6OLF/yJZX
+         n7GpV6q9gfKhxjiAkKC16PxCIlTfLvBzWGV6AJWRmlV8v8zOOOgzwYa2RI568puFOIrH
+         /BkAS/JhbSyF8iswmcd4oBC0h4zktt3vAuD6ePX93P5t+5DPfWllOMN9edvXUCI+pxBf
+         JDlvH+GEYkCccATQEoMtJm5VjhKTb1kqPPogeJoTLCbnOCiFcnyZP6Cy5SjhXoREcoDu
+         9oLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnBPWvkzj+a8B+8HmCBXnoZZ7klYaB9zqg191Ai/htqadznrXytsRt/FWh6R0yOuC2Kolk1vyOmB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAolgqNNBPa2A84wq3ufUV16KQDI29FsQnRRNBmRZUS/D89fkI
+	yeN5uvWcRfGuggJSXSTMwk+Ne5R1hlCT8SH73IbWVWO2I/w0BH6j84cLrqMX5+cSZVA=
+X-Gm-Gg: ASbGncuk0yU9nbmDddr8hInXW5C97QJFYOmuewQDBBi+6u9wCLyK4EopCZ/47cjRUe7
+	2aTYyVXUxR3gtEicbNa3tvtV6sk9n8Mj7Yxhzq8PAEqi4KaTz8SlSV8muUSGPEBtyckjxUQibaq
+	pY++svX+Fx4ro+S9/lfdQdhUEdlZ3bppKSVCcfxuSnYG6p4R2Z0WUPOj4Nz3vTwkoCdBcolW+3x
+	31f1V7qzMJUd8tLL2yFzoezizUeonbZx6D/H75hfNuoJTKfrbOTv5gw3XTpJNwPoBZkLVKFp2i+
+	ebNyZNoSO7/FrAMNgLNrIboVWLIrawLBaG+aj0UzZXqnFTuBYsSRoFRuh528/3csH93dVC0fmN6
+	9RzEukBeVnBTzfg==
+X-Google-Smtp-Source: AGHT+IFm2XOGvEu+c2Vt4oKDTOhDYuX0Zc67/qbAzwRfpRIo4JlzBUdpBKcXvIOmlDkGO4s2VlIKAQ==
+X-Received: by 2002:a05:600c:3ba2:b0:442:dc6f:7a21 with SMTP id 5b1f17b1804b1-4533ca79d19mr100567515e9.3.1750090071100;
+        Mon, 16 Jun 2025 09:07:51 -0700 (PDT)
+Received: from myrica (92.40.185.180.threembb.co.uk. [92.40.185.180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b19b32sm11602270f8f.67.2025.06.16.09.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 09:07:50 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:07:52 +0100
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: Alyssa Ross <hi@alyssa.is>
+Cc: Demi Marie Obenour <demiobenour@gmail.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devel@spectrum-os.org, Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	eric.auger@redhat.com
+Subject: Re: Virtio interrupt remapping
+Message-ID: <20250616160735.GA5171@myrica>
+References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
+ <20250613181345.GA1350149@myrica>
+ <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
+ <877c1ed9o7.fsf@alyssa.is>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <877c1ed9o7.fsf@alyssa.is>
 
-On Mon, Jun 16, 2025 at 10:48:37AM -0300, Daniel Almeida wrote:
-> Hi Danilo,
-> 
-> > On 9 Jun 2025, at 13:24, Daniel Almeida <daniel.almeida@collabora.com> wrote:
-> > 
-> > Hi Danilo,
-> > 
-> >> On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
-> >> 
-> >> On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
-> >>> +/// Callbacks for a threaded IRQ handler.
-> >>> +pub trait ThreadedHandler: Sync {
-> >>> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
-> >>> +    /// context.
-> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn;
-> >>> +
-> >>> +    /// The threaded handler function. This function is called from the irq
-> >>> +    /// handler thread, which is automatically created by the system.
-> >>> +    fn thread_fn(&self) -> IrqReturn;
-> >>> +}
-> >>> +
-> >>> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
-> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
-> >>> +        T::handle_irq(self)
-> >>> +    }
-> >>> +
-> >>> +    fn thread_fn(&self) -> IrqReturn {
-> >>> +        T::thread_fn(self)
-> >>> +    }
-> >>> +}
-> >> 
-> >> In case you intend to be consistent with the function pointer names in
-> >> request_threaded_irq(), it'd need to be handler() and thread_fn(). But I don't
-> >> think there's a need for that, both aren't really nice for names of trait
-> >> methods.
-> >> 
-> >> What about irq::Handler::handle() and irq::Handler::handle_threaded() for
-> >> instance?
-> >> 
-> >> Alternatively, why not just
-> >> 
-> >> trait Handler {
-> >>  fn handle(&self);
-> >> }
-> >> 
-> >> trait ThreadedHandler {
-> >>  fn handle(&self);
-> >> }
-> >> 
-> >> and then we ask for `T: Handler + ThreadedHandler`.
-> > 
-> > Sure, I am totally OK with renaming things, but IIRC I've tried  Handler +
-> > ThreadedHandler in the past and found it to be problematic. I don't recall why,
-> > though, so maybe it's worth another attempt.
-> 
-> Handler::handle() returns IrqReturn and ThreadedHandler::handle() returns
-> ThreadedIrqReturn, which includes WakeThread, so these had to be separate
-> traits.
+[+Eric]
 
-Ok, that fine then. But I'd still prefer the better naming as mentioned above.
+On Sat, Jun 14, 2025 at 10:11:52AM +0200, Alyssa Ross wrote:
+> Demi Marie Obenour <demiobenour@gmail.com> writes:
+> 
+> > On 6/13/25 14:13, Jean-Philippe Brucker wrote:
+> >> Hi,
+> >> 
+> >> On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
+> >>> I’m working on virtio-IOMMU interrupt remapping for Spectrum OS [1],
+> >>> and am running into a problem.  All of the current interrupt remapping
+> >>> drivers use __init code during initialization, and I’m not sure how to
+> >>> plumb the struct virtio_device * into the IOMMU initialization code.
+> >>>
+> >>> What is the proper way to do this, where “proper” means that it doesn’t
+> >>> do something disgusting like “stuff the virtio device in a global
+> >>> variable”?
+> >> 
+> >> I'm not familiar at all with interrupt remapping, but I suspect a major
+> >> hurdle will be device probing order: the PCI subsystem probes the
+> >> virtio-pci transport device relatively late during boot, and the virtio
+> >> driver probes the virtio-iommu device afterwards, at which point we can
+> >> call viommu_probe() and inspect the device features and config.  This can
+> >> be quite late in userspace if virtio and virtio-iommu get loaded as
+> >> modules (which distros tend to do).> 
+> >> The way we know to hold off initializing dependent devices before the
+> >> IOMMU is ready is by reading the firmware tables. In devicetree the
+> >> "msi-parent" and "msi-map" properties point to the interrupt remapping
+> >> device, so by reading those Linux knows to wait for the probe of the
+> >> remapping device before setting up those endpoints. The ACPI VIOT
+> >> describes this topology as well, although at the moment it does not have
+> >> separate graphs for MMU and interrupts, like devicetree does (could
+> >> probably be added to the spec if needed, but I'm guessing the topologies
+> >> may be the same for a VM).  If the interrupt infrastructure supports
+> >> probe deferral, then that's probably the way to go.
+> >
+> > I don't see any examples of probe deferral in the codebase.
+
+I think the flow with VIOT is roughly:
+
+ // Scan an endpoint
+ pci_bus_add_device()
+  device_attach()
+   driver_probe_device()
+    really_probe()
+     dev->bus->dma_configure()
+      pci_dma_configure()
+       acpi_dma_configure()
+        acpi_iommu_configure_id()
+         viot_iommu_configure()
+	  viot_dev_iommu_init()
+	   acpi_iommu_fwspec_init()
+	    iommu_fwspec_init()
+	     driver_deferred_probe_check_state()
+	     iommu ready ? 0 : -EPROBE_DEFER
+
+So if the IOMMU isn't available at this point, base/dd.c adds the device
+to the deferred probe list, to be retried later. Later:
+
+ // Scan the IOMMU
+ ...
+  virtio_dev_probe()
+   viommu_probe()
+    iommu_device_register()
+     add to iommu_device_list
+     iommu->ready = true
+
+I believe after this probe completes, base/dd.c checks if dependent
+devices can now be probed:
+
+ driver_bound()
+  driver_deferred_probe_trigger()
+
+That should all be working and you don't need to add anything. The
+question is whether the interrupt core supports starting the setup of
+interrupt remapping in viommu_probe(), or if it needs to know of the
+IOMMU's config and features earlier during boot. Even if the viommu driver
+is builtin, those info may not be available early enough since they
+require PCI and virtio probe.
+
+> > Would it instead be possible to require virtio-iommu (and thus virtio)
+> > to be built-in rather than modules?
+> 
+> It's certainly possible to have an optional feature in the kernel that
+> depends on a module being built in where it otherwise wouldn't have to be.
+
+Agree, no problem requiring this as a first step, but the IOMMU probe
+might still not be early enough. 
+
+Thanks,
+Jean
 
