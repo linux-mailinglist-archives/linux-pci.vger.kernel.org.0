@@ -1,151 +1,119 @@
-Return-Path: <linux-pci+bounces-29879-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29880-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45C1BADB7F4
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 19:49:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AD2ADB7F7
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 19:50:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AC053AD9AA
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 17:49:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDE821738FA
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 17:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7942221D92;
-	Mon, 16 Jun 2025 17:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E2C288532;
+	Mon, 16 Jun 2025 17:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUSiHlH5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtsrH6pR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8581A8F84;
-	Mon, 16 Jun 2025 17:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09622877C3;
+	Mon, 16 Jun 2025 17:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096192; cv=none; b=FppB2m2VKH+GrM0n6ojc5AIyKNxFjqRh85Lj/JqFV8qLDAPVibkjGLx0sthw2nc94kDeGC/dznCA0Cb3asrOl4eMX5SxdRF4SbPwsj/+qKKq2cWKndq2EEeA+kIRCxPSlsgGvSmVyb++Z/tFwKPV5LivvbHGpxs+4RieafI4jZg=
+	t=1750096231; cv=none; b=sr/RaUsViIUr4vYe/iIIuCIGflWG+zrqm98/xBmPNBhCTscYExdt+HVakjUBXrx5VHf4f09iECOV+1MwkTCSCGdJjiSbpU+wha1rxnC40spJxd7+XY4RMwbjTzkDjZoSBawCF6cOnEiokb4P1wDjhy/7pK27AbSDcnE02hcLdtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096192; c=relaxed/simple;
-	bh=48yC1/xv9hcERXBkA2VxMw3sBdiHgsLoDVpoQ/TZPgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ui7PMFgtqSBuLBLR5BpvQoooHGhq8WttQjCwaDiCs98bjl+4fzC/C92pR5HBVX1DzW6mf3sMp74Ibuf17hBw1QOAu5nednEBTuNnJ5bpFaJ9Q9Nq4yrZpSQ2uATduk5y/ixtB3HPCK+IjxJVHw/wcOo0lJeXGoURLC0OgTlC3FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUSiHlH5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCEDC4CEEA;
-	Mon, 16 Jun 2025 17:49:48 +0000 (UTC)
+	s=arc-20240116; t=1750096231; c=relaxed/simple;
+	bh=o+5l+xciKuEuWPJqTjlSbYb3XN4X9RZAkcnaf/XM8Sc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YMhdi2Kc8kM9OK1vIysA7u/GiGxd4KtWvn1n/WThUeRLjujrjPDeUxCsPM5Rtnb8eNl9Hdl2bq92qIuiKrnw+GWnVH/brq+OVs4eeVnQvCuKjXyglTUg45dipri3hM1nPBFIPTq4XqEI7jJq8hVPEYsxfptpmBaaHTeCMszOUp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtsrH6pR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047BAC4CEEA;
+	Mon, 16 Jun 2025 17:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750096192;
-	bh=48yC1/xv9hcERXBkA2VxMw3sBdiHgsLoDVpoQ/TZPgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JUSiHlH5F07bg0XR6EuTZUXlClXh+Nrwpj3etwTVzQSvYJUn2Dg1d7bEV1AwSGyAA
-	 Yd+JKdR67oQtYJnCN4P2tGe7fkn8Kl05mSdDIPBxNudHBrtLQZo33X2/9vvEWEUtcr
-	 1JJ0+6TnFy8dnZ+OOZezdjnXMKu7GJpDahe2IO8w1xDIdDTHA0NcK5tNmzoZsK9T4k
-	 ZGD02Ci63F0IvCSoXWkZF96S0+H27hnuDTyrVpkNAHsyWclPR1Wn1qEAwHu6aSeWTO
-	 w5VG7u+YWwD+vDBtyCQBekwnAnsylEGfBwFduZ+Ymsot/qPS4z7MCbc2OV82oh91OB
-	 DbqQGgt0UQ61Q==
-Date: Mon, 16 Jun 2025 19:49:45 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
+	s=k20201202; t=1750096230;
+	bh=o+5l+xciKuEuWPJqTjlSbYb3XN4X9RZAkcnaf/XM8Sc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LtsrH6pRnwpBx3mTKhdDLzNWFVK6FHY9n5KrT/J4L7oNSgAQP0vYlac0DBOm+oddS
+	 puztJhtv+bYpRSJtyAnzDCtVykjqLiWC5OIVn4iIg+bQ9a4BjVTU2226Axo9vTp4hu
+	 Th52v5pkg4T3iTPDjC/BYj2UKQAeN4v2CPaiFhZ4LoW1bDa0Gi4DM2VWYMsCYsPgjD
+	 YJKVutzkKdCratlVrUJAJSafIVNadv8D1Jg21nGLZ4tW/BtOlxWkMP9bo2Js/Cc58A
+	 PDzqTuNDkkKB6nxMXyjS+/O1YwaSUXQ3s6LD7ltBLysTe/TEnJFJMyvRVbDeZjqE3H
+	 7TuV/KMKvHLJA==
+From: Mario Limonciello <superm1@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list),
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
- handlers
-Message-ID: <aFBZOWt_W2Gku5ZW@pollux>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
- <aEbTOhdfmYmhPiiS@pollux>
- <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
- <aEckTQ2F-s1YfUdu@pollux.localdomain>
- <CAH5fLgj+za85ajgNwJepoa7PSFkMm+3J2wJJVJ24m6YZoFVmVw@mail.gmail.com>
- <aFAfhsuvEQFOd4MJ@pollux>
+	Danilo Krummrich <dakr@kernel.org>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v4 0/5] Improvements to S5 power consumption
+Date: Mon, 16 Jun 2025 12:50:14 -0500
+Message-ID: <20250616175019.3471583-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFAfhsuvEQFOd4MJ@pollux>
 
-On Mon, Jun 16, 2025 at 03:43:40PM +0200, Danilo Krummrich wrote:
-> On Mon, Jun 16, 2025 at 03:33:06PM +0200, Alice Ryhl wrote:
-> > On Mon, Jun 9, 2025 at 8:13 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > I think with specialization it'd be trivial to generalize, but this isn't
-> > > stable yet. The enum approach is probably unnecessarily complicated, so I agree
-> > > to leave it as it is.
-> > >
-> > > Maybe a comment that this can be generalized once we get specialization would be
-> > > good?
-> > 
-> > Specialization is really far out. I don't think we should try to take
-> > it into account when designing things today. I think that the
-> > duplication in this case is perfectly acceptable and trying to
-> > deduplicate makes things too hard to read.
-> 
-> As mentioned above, I agree with the latter. But I think leaving a note that
-> this could be deduplicated rather easily with specialization probably doesn't
-> hurt?
-> 
-> > > I'm thinking of something like
-> > >
-> > >         /// # Invariant
-> > >         ///
-> > >         /// `ěrq` is the number of an interrupt source of `dev`.
-> > >         struct IrqRequest<'a> {
-> > >            dev: &'a Device<Bound>,
-> > >            irq: u32,
-> > >         }
-> > >
-> > > and from the caller you could create an instance like this:
-> > >
-> > >         // INVARIANT: [...]
-> > >         let req = IrqRequest { dev, irq };
-> > >
-> > > I'm not sure whether this needs an unsafe constructor though.
-> > 
-> > The API you shared would definitely work. It pairs the irq number with
-> > the device it matches. Yes, I would probably give it an unsafe
-> > constructor, but I imagine that most methods that return an irq number
-> > could be changed to just return this type so that drivers do not need
-> > to use said unsafe.
-> 
-> Driver don't need to use unsafe already. It's only the IRQ accessors in this
-> patch series (in platform.rs and pci.rs) that are affected.
-> 
-> Let's also keep those accessors, from a driver perspective it's much nicer to
-> have an API like this, i.e.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Just to clarify, I meant to additionally keep the accessors, since
+A variety of issues both in function and in power consumption have been
+raised as a result of devices not being put into a low power state when
+the system is powered off.
 
-> 
-> 	// `irq` is an `irq::Registration`
-> 	let irq = pdev.threaded_irq_by_name()?
+There have been some localized changes[1] to PCI core to help these issues,
+but they have had various downsides.
 
-this should be the most common case.
+This series instead tries to use the S4 flow when the system is being
+powered off.  This lines up the behavior with what other operating systems
+do as well.  If for some reason that fails or is not supported, unwind and
+do the previous S5 flow that will wake all devices and run their shutdown()
+callbacks.
 
-> 
-> vs.
-> 
-> 	// `req` is an `IrqRequest`.
-> 	let req = pdev.irq_by_name()?;
-> 
-> 	// `irq` is an `irq::Registration`
-> 	let irq = irq::ThreadedRegistration::new(req)?;
+v3->v4:
+ * Fix LKP robot failure
+ * Rebase on v6.16-rc2
 
-But this can be useful as well, e.g. if a driver can handle devices from
-multiple busses, the driver could obtain the IrqRequest and pass it down to bus
-independent layers of the driver which then create the final irq::Registration.
+Previous submissions [1]:
+Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcXSYc5kkL=6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f4906225d2
+Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/ (v1)
+Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@kernel.org/ (v2)
+Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/ (v3)
+
+Mario Limonciello (5):
+  PM: Use hibernate flows for system power off
+  PCI: Put PCIe ports with downstream devices into D3 at hibernate
+  drm/amd: Avoid evicting resources at S5
+  scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+  usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+
+ drivers/base/power/main.c                  |  7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+ drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
+ drivers/scsi/mesh.c                        |  1 +
+ drivers/scsi/stex.c                        |  1 +
+ drivers/usb/host/sl811-hcd.c               |  1 +
+ include/linux/pm.h                         |  3 +
+ include/trace/events/power.h               |  3 +-
+ kernel/reboot.c                            |  6 ++
+ 9 files changed, 86 insertions(+), 34 deletions(-)
+
+-- 
+2.43.0
+
 
