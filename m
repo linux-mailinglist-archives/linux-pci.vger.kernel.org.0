@@ -1,125 +1,167 @@
-Return-Path: <linux-pci+bounces-29838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA495ADAA30
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 10:04:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE7F9ADAA7D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 10:17:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BBF8188785A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 08:04:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF2E87A317C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 08:15:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59032204F8C;
-	Mon, 16 Jun 2025 08:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B6726C3B1;
+	Mon, 16 Jun 2025 08:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z56rYfB/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lf96xJkg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9895E1FFC74
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 08:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C20F1BF33F;
+	Mon, 16 Jun 2025 08:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750061049; cv=none; b=C/nKw1FzY6SvctSppQoQ/xSO8B6YItkB5Zx+pcU59HSs2gspaRAr8vd7iZJra5gM8IUDwRjpZ17PAA67BLOlOdkY6EHMUxnXkwKGhNRMUxdVGeRl7wMZSXp5xfjugUYGrHJfrZh7K9/iZyy0qxah63cjY0RfweYRZaOZNWg7t6M=
+	t=1750061816; cv=none; b=Ez8teZRAUuvf6xSVR9aRBztrzsxhK77fINuQsIEPw/ovblxSPkAwytbHMdFytRcdc8PZpokgU6TtztAmNQrhPgamw8FQ3U6bAA58dvkVl1IVqWsg3xozv9mpVom+G/+r1ZelNYFLeX4PaGfgdUewvFwoxKOpdbkrC0F7z4DzWY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750061049; c=relaxed/simple;
-	bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WDc+x6mCWLSScDkdNEHewBvviP/4HMuzYvb+1qG8wbl4X6VcLIMdThS9rgEA1TBVtIxB0yWXAcXihXn0R3MHuD2FyDD0skoetbOfhVKMXwp5GU37Pbs86c2jENpB8HBV2Znn9RgEUAEcwQNhKUXDPyMWp9rYxMEimHVEXsTABvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z56rYfB/; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d54214adso32293945e9.3
-        for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 01:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750061046; x=1750665846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
-        b=Z56rYfB/6DT74qaitagzv+993Q7uW7YWuqJ3iBr36WuY0NU+vutvNNc8Z6Mptbt5Th
-         6Q7n9WEuxpJ7vs+DvI66CwGFvYiUFLNhdhDxI1fY0H7jzjB66KHO6h/1mx25/XrYULrm
-         7NgvLqjxQx3hPxg4dlMS85JgljMIIPXZeHC8hDUHh9G9jazgHPAkioikTVh1FBnfSiV9
-         4BkPWMHF8wPlWKhRRP/C0Bkp/6RytYTB4I59QI0MD9msz37BtNQOuP+kwo5yjTHAHBBq
-         17tSItj17hu/Agc3XSrAUdc+8Q3mWv3y1RU6g1F2Le9fCkyOpEJ93rSZx4oD6W6gaGnD
-         L5+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750061046; x=1750665846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f1PYGjMBDRYf08ilo6nO6r65U87ulrrDAGAp9xwJARk=;
-        b=OCslT2GZKgj+ZGgiQkbgGF4ssM3cSWCXoxXwzhEYHw4pTTLH8BU2R3vVLhmVzHbmBj
-         8HI5IdFyr/5rSYtssm4wEYBdsGoUwtMsmD+CMDqHTPHPw5xNppX2lE2V1AlZHyFQVyAo
-         RIEaYy60kJxzTJ8fA/IoBS8VrZ6+nUVwA5hu1XC3XLMYxY6b4C2/f4gTM9u3PwWIsxI/
-         IC15lVfnoL0OgVQf+mkv5ZLogMwM713rGj4XZYHVVHWU6k2nl+LDSvTZEwR26lp7UthK
-         rP5uUJWbTpFg2AeNMW4Zufi4JXSjs14hfaYTiSQn2JJbg+js6R9cPjMJwGaraCuaJAfA
-         ClDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZQ+m/Uvw+qdp7BAbZFL7OYj7rXzDSwceRxfUModtgFzCqTE/YUqxawZ8YFWX/nD7Q3sgbJcIL/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTpSUfEa5HPndWV9NusSARdO0typTNq261vxAIToHR/DjR6vp5
-	diHIlxbA71Q5WhuYvj3k/EIRnqI+qMRYpFqPSGlWAC4HesCNGM1Ruh91Vx0l2Nu0YW7/PtdTsLF
-	BHKefAntJ1/EvcjuK9IwvI6cRggEKbVd1rSVxycxo
-X-Gm-Gg: ASbGncvECf6jJ/OWs2lSD8lKXSbHlDHJvdCb8kXQd7JuPO5X2TwScgd5hL7MdP0Cxbb
-	BUQjBLv97235eW6/m68zoyUWzo2g+/UTiFLeBj6PXn9T6eV4oob6s8Dhxne/X9SsQ030vQ5OgE8
-	NPCzjUyUSW6XvGIuJCC/CMg04XM1m7qJmpz70tKgOqNfCd7QsQO5A7NAA=
-X-Google-Smtp-Source: AGHT+IFJNYnGY++zKK9ezz4GBc7LrhfZRQuFSNzgJFJ9/LkEAc06KUhMt33Oo5LPfwTK3+h2aideyFG6HmImWi9Q2XQ=
-X-Received: by 2002:a5d:5846:0:b0:3a4:eef5:dece with SMTP id
- ffacd0b85a97d-3a5723a3729mr6989355f8f.35.1750061045848; Mon, 16 Jun 2025
- 01:04:05 -0700 (PDT)
+	s=arc-20240116; t=1750061816; c=relaxed/simple;
+	bh=ly1IWPhnZ1mdLMMMt0ZwbtlmSqYG5wNvS1Mp/mjCGh8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jpqDDyN1FLTSd4OvPPgmp4CMadj9JKcslBXknKR+x6l3Yfo2b4QbA+ihHNI2hSXLsUeGIka7I1lPIqi3sktRXh7jWzIYz4B/ATbbSwbe5dHgpq6AJGE1qeJBwljHNNrPz3B/cbvGgIk8BullHqdtPeXBjRKcAdehqRvYpTmh8HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lf96xJkg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F7A2C4CEEF;
+	Mon, 16 Jun 2025 08:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750061816;
+	bh=ly1IWPhnZ1mdLMMMt0ZwbtlmSqYG5wNvS1Mp/mjCGh8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lf96xJkgz6KBIDKXutGdJKHWBKiiYSI3P6IV8Rt4Ezx881d0N/1Wijd5CsuRIrmEH
+	 iO0ucq0zXsVTGRDCftXbROmy1p+s47E4JpV7ohXYepO9R7fK74pYfzjnB9FPr2Dlx+
+	 D9NmY1kqgsg4kqDo/WT/NtXgtFSN2gwawJtsZ8RQTdBYPsqQTV/Q6+/FKiJNkmFfpH
+	 38ON4HibYUOxRIYYPLb0P68B7/oMeIWR9jxB6ugZJYqrpWHcs86OBbGakdHQuLjjdL
+	 QV9OSCvZIdRlCd+8xO5J6YwfLV78gsg+hBMUxv6kqHIlfm5xqRf9CiuRuve6uXlEVF
+	 3uekUV373Yc3w==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+In-Reply-To: <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org> <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+ <yq5ajz5r8w6p.fsf@kernel.org> <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+Date: Mon, 16 Jun 2025 13:46:42 +0530
+Message-ID: <yq5a5xgwt82d.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514105734.3898411-1-andrewjballance@gmail.com>
-In-Reply-To: <20250514105734.3898411-1-andrewjballance@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 16 Jun 2025 10:03:53 +0200
-X-Gm-Features: AX0GCFuzgZ7WEl16NbBTVWyiSxMdvM6mQ36bWXoU4zjT-XrCROgztLnIerofDY4
-Message-ID: <CAH5fLgjgtLQMaAZxufttzoVCJpAfTifn6VWwKZ7Q6vAOOvG+ug@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] rust: add support for port io
-To: Andrew Ballance <andrewjballance@gmail.com>
-Cc: dakr@kernel.org, a.hindborg@kernel.org, airlied@gmail.com, 
-	akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	andriy.shevchenko@linux.intel.com, arnd@arndb.de, benno.lossin@proton.me, 
-	bhelgaas@google.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
-	daniel.almeida@collabora.com, fujita.tomonori@gmail.com, gary@garyguo.net, 
-	gregkh@linuxfoundation.org, kwilczynski@kernel.org, me@kloenk.dev, 
-	ojeda@kernel.org, raag.jadav@intel.com, rafael@kernel.org, simona@ffwll.ch, 
-	tmgross@umich.edu, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, May 14, 2025 at 12:58=E2=80=AFPM Andrew Ballance
-<andrewjballance@gmail.com> wrote:
+Xu Yilun <yilun.xu@linux.intel.com> writes:
+
+> On Wed, Jun 04, 2025 at 07:07:18PM +0530, Aneesh Kumar K.V wrote:
+>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>> 
+>> > On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
+>> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>> >> 
+>> >> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+>> >> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
+>> >> > command to VMM. Specifically for TDX Connect, these commands are some
+>> >> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+>> >> > Interface).
+>> >> >
+>> >> > The TSM TDI bind/unbind operations are expected to be initiated by a
+>> >> > running CoCo VM, which already have the legacy assigned device in place.
+>> >> > The TSM bind operation is to request VMM make all secure configurations
+>> >> > to support device work as a TDI, and then issue TDISP messages to move
+>> >> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+>> >> >
+>> >> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+>> >> > device to TDISP ERROR state.
+>> >> >
+>> >> 
+>> >> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+>> >> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
+>> >
+>> > A general reason is, the device driver - VFIO should be aware of the
+>> > bound state, and some operations break the bound state. VFIO should also
+>> > know some operations on bound may crash kernel because of platform TSM
+>> > firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
+>> > in secure page tables cannot be unmapped before TDI STOP [1].
+>> >
+>> > Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
+>> > S-EPT would fail if TDI is bound. For AMD there seems also some
+>> > requirement about this but I need Alexey's confirmation.
+>> >
+>> > [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+>> >
+>> 
+>> According to the TDISP specification (Section 11.2.6), clearing either
+>> the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
+>> the TDI to transition to an error state. To handle this gracefully, it
+>> seems necessary to unbind the TDI before modifying the BME or MSE bits.
 >
-> currently the rust `Io` type maps to the c read{b, w, l, q}/write{b, w, l=
-, q}
-> functions and have no support for port io. this can be a problem for pci:=
-:Bar
-> because the pointer returned by pci_iomap can be either PIO or MMIO [0].
+> Yes. But now the suggestion is never let VFIO do unbind, instead VFIO
+> should block these operations when device is bound.
 >
-> this patch series splits the `Io` type into `Io`, and `MMIo`. `Io` can be
-> used to access PIO or MMIO. `MMIo` can only access memory mapped IO but
-> might, depending on the arch, be faster than `Io`. and updates pci::Bar,
-> so that it is generic over Io and, a user can optionally give a compile
-> time hint about the type of io.
+>> 
+>> If I understand correctly, we also need to unmap the Stage-2 mapping due
+>> to the issue described in commit
+>> abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
+>> reasons we would want to unmap the Stage-2 mapping for the BAR (as done
+>> in vfio_pci_zap_and_down_write_memory_lock)?
 >
-> Link: https://docs.kernel.org/6.11/driver-api/pci/pci.html#c.pci_iomap [0=
-]
+> I think no more reason. 
+>
+>> 
+>> Additionally, with TDX, it appears that before unmapping the Stage-2
+>> mapping for the BAR, we should first unbind the TDI (ie, move it to the
+>> "unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
+>> or is it driven by a different requirement?
+>
+> No, this is not device side TDISP requirement. It is host side
+> requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
+> with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
+> unmap IOMMU S2 PT.
+>
+> If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
+> guest by just unmap some PT entry and suppress the fault event. Guest
+> thought a DMA writting is successful but it is not and may cause
+> data integrity issue.
+>
 
-This series seems to try and solve parts of the same problems as
-Daniel's patchset:
-https://lore.kernel.org/rust-for-linux/20250603-topics-tyr-platform_iomem-v=
-9-0-a27e04157e3e@collabora.com/#r
+I am still trying to find more details here. How did the guest conclude
+DMA writing is successful? Guest would timeout waiting for DMA to complete
+if the host hides the interrupt delivery of failed DMA transfer?
 
-We should probably align these two patchsets so that they do not add
-incompatible abstractions for the same thing.
+>
+> This is not a TDX specific problem, but different vendors has different
+> mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
+> AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
+> how ARM handles this?
+>
+> https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+>
+> Thanks,
+> Yilun
+>
 
-Alice
+-aneesh
 
