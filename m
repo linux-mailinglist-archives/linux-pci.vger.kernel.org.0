@@ -1,145 +1,138 @@
-Return-Path: <linux-pci+bounces-29876-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29877-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0B2AADB548
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 17:26:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29308ADB5D0
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 17:47:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97B37171F75
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:26:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3322F188FDA6
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:47:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDD622127C;
-	Mon, 16 Jun 2025 15:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A26283FEC;
+	Mon, 16 Jun 2025 15:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="N2uGulhZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsE/rIpQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8911F0995;
-	Mon, 16 Jun 2025 15:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B71E22E9;
+	Mon, 16 Jun 2025 15:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087538; cv=none; b=DJQhn06rDs393eEl3TjyzqzLzc6yeeai7AFGhtUgyvMwMeDgYFMueVTsq/g44wchGdbCsdB/nFeKhcE0laukmynq5Em5PqwKwoJriUoTc2EY/I7vwOc0yaGlj5W0Cu1wqnGv5J6Lsw9m9ABhruF11ZnvVEpHCXDvXYaoD7ElWto=
+	t=1750088739; cv=none; b=Ph8Om0TZAdtnJ3VD2Cb2JW18J1Ils69XdPGigrLo0hUCbxAfkTQEHoN48rDtjxHbifXR16XbgS4qUkhVsoUvAXmAT/VleTZ35HEBxMQk9MqVRW9sjeoXGZ0T6KBJyNPreKZ33ll2lm1PuVw2zbYW6G/TII5q2sH1OORkbtswhGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087538; c=relaxed/simple;
-	bh=dqCC8ak/91Dzr4+3kecF6KVGO0oq/uGowumULvxPFCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YIlkVHXIlJ65FZc0eLHwhDj3KaWgBMhNO8oG1Lz9idXCfvCwRjyIkpQAHMhSIWKNUV2dczqRS39L9tJ2BML5QZyPMPHYXPONTCVjBX1RQBSLDp0l/uJK4IoiJxn/g5/8nM6gm3ATrxXM93WyHgdobwfwT1fQU6FOWMeGuP/n2k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=N2uGulhZ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=yh
-	CLHY+Yn5QZ5riQsIqS3LeSsfbH4BcVgHt29CWBC98=; b=N2uGulhZDW3wO2TBkk
-	O8pJE5fVzrKggDDY/cSjM2i4EQ7/wLW8nEPrillstJMX22Shyljl3MB+G3kfT8o1
-	2sOdTzImUgNoGw7xFSisfo+J0sfvJS8D13EWuvOMWMdQjzA87T86ZxKqfrJ1t1IR
-	sBBMhoEdh6JaX7gyqapnwFQ5g=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDnr6ZcN1Bo7z_bIw--.19402S2;
-	Mon, 16 Jun 2025 23:25:17 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: robh@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: endpoint: Use common PCI host bridge APIs for finding the capabilities
-Date: Mon, 16 Jun 2025 23:25:15 +0800
-Message-Id: <20250616152515.966480-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750088739; c=relaxed/simple;
+	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKQRdCGlAmfV44XUUNT+ix4My3xFWrxtvmokhOmPlzkx7/UNm+rjgI5QYdeKe/Bef33TslqA2azznUAOhcuaIK91NDPD98OYf7VwwgecBq9jLp9e1z8YgIlEKGSs+BQ+ellByj8eSJ7BJdgtv6ldgBwUWfZGny9lH1FZn+stgGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsE/rIpQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0BE0C4CEEA;
+	Mon, 16 Jun 2025 15:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750088739;
+	bh=Phz8r6X/1/Hfio3qW3aeXo0QdX243igoFLB5Ql8EyIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RsE/rIpQgQubD9FD467llyTDjelw55TPUcdwrb3S1TXpCpXXNI43yrGPqDiR5nlqa
+	 5TaebA2IEx6SuLpxCLrzK+vChFuXE6GGqpTKbGmHVpDela40oSWhU99OzwUu1A8U2p
+	 ptnhDotPAzF1Irh4PN/v4rJURVqJYGkmrRRKP13lds41ykDKZgf4r7gi5Do6PdPXbD
+	 rfZacp+1dtK5Uq27l+OehTp3KZCDFi28e/6Zpha8lBtamt2+AJrZaCD4bHD0MrHjNc
+	 TNeuHUOHVTlHxeZz+OPK3UblpI1OCqbhTFAGFfeO+J7ndKOXZ1MeId9BrdXbWcoK4j
+	 DiE9RKF5pKoEg==
+Date: Mon, 16 Jun 2025 17:45:32 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+Message-ID: <aFA8HLREfMtZSh_u@pollux>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+ <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+ <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnr6ZcN1Bo7z_bIw--.19402S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KFy5Ww4Utw4DWFyfGw1DAwb_yoW5JFyDpa
-	yrZry5Cr4UKF1Yq3ZxAFZxZr98ZFn8AFWUZ39xG3WSvr17Zry3W34IkFW5Kry7KF4jgrWf
-	KrsFyFWrWr1fGa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pELvKUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwRuo2hQL1TsVQAAsw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B4E43744-D3F5-4720-BC75-29C092BAF7A6@collabora.com>
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the DWC EP driver.
+On Mon, Jun 16, 2025 at 10:48:37AM -0300, Daniel Almeida wrote:
+> Hi Danilo,
+> 
+> > On 9 Jun 2025, at 13:24, Daniel Almeida <daniel.almeida@collabora.com> wrote:
+> > 
+> > Hi Danilo,
+> > 
+> >> On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+> >> 
+> >> On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+> >>> +/// Callbacks for a threaded IRQ handler.
+> >>> +pub trait ThreadedHandler: Sync {
+> >>> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
+> >>> +    /// context.
+> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+> >>> +
+> >>> +    /// The threaded handler function. This function is called from the irq
+> >>> +    /// handler thread, which is automatically created by the system.
+> >>> +    fn thread_fn(&self) -> IrqReturn;
+> >>> +}
+> >>> +
+> >>> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
+> >>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> >>> +        T::handle_irq(self)
+> >>> +    }
+> >>> +
+> >>> +    fn thread_fn(&self) -> IrqReturn {
+> >>> +        T::thread_fn(self)
+> >>> +    }
+> >>> +}
+> >> 
+> >> In case you intend to be consistent with the function pointer names in
+> >> request_threaded_irq(), it'd need to be handler() and thread_fn(). But I don't
+> >> think there's a need for that, both aren't really nice for names of trait
+> >> methods.
+> >> 
+> >> What about irq::Handler::handle() and irq::Handler::handle_threaded() for
+> >> instance?
+> >> 
+> >> Alternatively, why not just
+> >> 
+> >> trait Handler {
+> >>  fn handle(&self);
+> >> }
+> >> 
+> >> trait ThreadedHandler {
+> >>  fn handle(&self);
+> >> }
+> >> 
+> >> and then we ask for `T: Handler + ThreadedHandler`.
+> > 
+> > Sure, I am totally OK with renaming things, but IIRC I've tried  Handler +
+> > ThreadedHandler in the past and found it to be problematic. I don't recall why,
+> > though, so maybe it's worth another attempt.
+> 
+> Handler::handle() returns IrqReturn and ThreadedHandler::handle() returns
+> ThreadedIrqReturn, which includes WakeThread, so these had to be separate
+> traits.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-- Submissions based on the following patches:
-https://patchwork.kernel.org/project/linux-pci/patch/20250607161405.808585-1-18255117159@163.com/
-
-Recently, I checked the code and found that there are still some areas that can be further optimized.
-The above series of patches has been around for a long time, so I'm sending this one out for review
-as a separate patch.
----
- .../pci/controller/dwc/pcie-designware-ep.c   | 39 +++++++------------
- 1 file changed, 14 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 0ae54a94809b..9f1880cc1925 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -69,37 +69,26 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
- 
--static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
--				     u8 cap_ptr, u8 cap)
-+static int dw_pcie_ep_read_cfg(void *priv, u8 func_no, int where, int size, u32 *val)
- {
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
--
--	if (cap_id == cap)
--		return cap_ptr;
-+	struct dw_pcie_ep *ep = priv;
-+
-+	if (size == 4)
-+		*val = dw_pcie_ep_readl_dbi(ep, func_no, where);
-+	else if (size == 2)
-+		*val = dw_pcie_ep_readw_dbi(ep, func_no, where);
-+	else if (size == 1)
-+		*val = dw_pcie_ep_readb_dbi(ep, func_no, where);
-+	else
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
- 
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
- {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_ep_read_cfg, PCI_CAPABILITY_LIST,
-+				     cap, ep, func_no);
- }
- 
- /**
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.25.1
-
+Ok, that fine then. But I'd still prefer the better naming as mentioned above.
 
