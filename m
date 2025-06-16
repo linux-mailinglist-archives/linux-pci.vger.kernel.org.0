@@ -1,225 +1,120 @@
-Return-Path: <linux-pci+bounces-29848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86B5BADADB6
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 12:47:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CB0AADAE1E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 13:15:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7694C3A5C93
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 10:47:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66EB1188F0DB
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 11:15:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6BB1275112;
-	Mon, 16 Jun 2025 10:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130B5299928;
+	Mon, 16 Jun 2025 11:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H1IoBz+p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xd+a8q+8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC74B13B7AE;
-	Mon, 16 Jun 2025 10:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41F32750E9;
+	Mon, 16 Jun 2025 11:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750070853; cv=none; b=OAe9eqZf9JlT+m0p/MX2s+gZQLCc6fe9RyDDCoD3H78nVqs3yj0bPEKpr2BlxTAXI0Aro9K/ulR2L3NLNcr1r3CN9gUiC33i2CD9RTCio4l3YrQmN6pyc0vUuSW4Afb9V7dR8U7IFu6sQ1nDX0stMsqTsi2zb/Kw/nATQ4IWNlM=
+	t=1750072517; cv=none; b=BtIscEJAf0zv55tKgtwHtljdy6l6a5CbVR9lMXtg6/4rro69YRGcZ4iBnKp1mVavrTEU3hRKFIPfr9/M+wPRnax8Ew74AawCPNz8P/ePJPVhPynYmuHFDWJhptrKtim89SAGdohdPXdIGXbYEA5Yp7xqxzjXx2B2hCNJYNzPfNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750070853; c=relaxed/simple;
-	bh=l26Y1UKzSX3COjgMaGEwitOzzoKwdFgUTFRPib34s6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FBZA6SzPCjqIoONTup5XZRF1j5v7zH/AERCrFgVSNUWKyb53Elai0PDwxaR8fCE3ehmIjEXDQmpiqMqziEznHF61R3LAhvt+esJ1TbEdIwXJo9OBI+NVSqiKB8HkWJ63FZiHfnRURqf0inbMVmX5AwpQhL3hO/70R/YGpgqJBTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H1IoBz+p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55G8TWXl025998;
-	Mon, 16 Jun 2025 10:47:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pVoXjpsfwQSE3a+lpBhScYzkZsvWjpI8XcyTjY56B+E=; b=H1IoBz+psq6931Z4
-	7A7BUtUW4aKB9eSM49lm0B4gNKGe2Yd64Gbuus2kKe/ZnmcOgK5YoTFa/nbM3JSI
-	cIHkctRi7Zdo5ak6orwQE1rKv47O7lNPY3maz3jIDQ8MAJNsE+7W3/ADtBRTe1Y+
-	CFoxa9LuH3NDf0ISOscsEUMQoMd9g54sZFIDAg8EKHikHqnUHk0z0YZMnVTNJYlP
-	ENNpyyM1wJ48EcfzSU/bdvX7LAO/0k7mknFi6EeRjkpPXNU9EkbnaGq+0HDx/ACV
-	+77y2DevPNV9+yjoT5m4f1i08VfaZcktBaT9eCU39tVi2/Wzc6tnke1IGSoWX5sS
-	zRNKYA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9463a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 10:47:21 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55GAlJgl016618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 10:47:19 GMT
-Received: from [10.253.79.108] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Jun
- 2025 03:47:13 -0700
-Message-ID: <9ea68c8b-59ed-48a5-9289-861ae6077fcf@quicinc.com>
-Date: Mon, 16 Jun 2025 18:47:10 +0800
+	s=arc-20240116; t=1750072517; c=relaxed/simple;
+	bh=7XruesgmCvrpWGKOVk4pK39pQEFV9NmZ788H3C4BwN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DSbRxbDST0xsStt8kwXqGOj8fZJo0M27sLmUr8p98BrGsY/LMa2UOHVIO+vXzJF+Ina9SeqGSauACCVX5krNPLmUiQHKaMaJp7gnJsRyuZ0hn+Mhp7Z91ieRV1f65P6SPGuFDnNfgtku4+rIxrkrnwdPVZkLGp5/LjnpiFLBI2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xd+a8q+8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E3CC4CEEE;
+	Mon, 16 Jun 2025 11:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750072516;
+	bh=7XruesgmCvrpWGKOVk4pK39pQEFV9NmZ788H3C4BwN8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Xd+a8q+8+XpTU2USUk+pYFAXHGcoYDfYrAc9ElwknnCeiVUhsmB1/nbrAoxCmMij9
+	 7XL6U7mYRCSQKjZzHcro+PLye3yIkq3CFDtDM0Hhie9/gWdKHiOJjeqGtD8fyEDuvJ
+	 WAXdWdovVEcl70QjlBnIPuMPXoD8mHcGfdksnelLVxVyDIADJOedYAXVGIdF5mddMl
+	 vXZbl4BWZC2RY1kOLebMY6J5DTSQdCozKDYUsEhDm2/5Sl1a/0S5yn8XMFvrymTU3W
+	 7twyQDy2GvgR5SB1HELx3Hnft2r0+ZdeAlkA2rk4wxITbQi2JXhbaWPskTDV7REco/
+	 vgZIIO/Xh1c3g==
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-40a4bf1eb0dso2413289b6e.3;
+        Mon, 16 Jun 2025 04:15:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUebzbihFovcXofUPw25G9eZrx919MpeP5E9vLXO51XhsgT5/cd9mgMv5uBra8vvbSQRHXD8tVDvUO9UF5m@vger.kernel.org, AJvYcCVhxPZe5ketXg2z1zIzGPYTzD/4Re1zuP5sN9WEi8lUvooy5+O+bqvlUU+uq8vmTGzszyWOVAUklRBK@vger.kernel.org, AJvYcCXuEt1ICrCjBhu0zqim44d+VLJTUqb8e3theokFEzHr6PTY3xGsdOePyEIovlo+da7Be5DTLqIX8oct@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW0Awb+f2m9BvEIfFsndGHSNhiE5ok4uffTHR/UjAKu9SGzTla
+	LUsC6Jak0qcrM9oU5PaNTaJYBv24U566QdxlpRvQVfAWoMu637x65YKZcw/KBYAh+b02C3qOIEN
+	9yTVi8VcVvwrfAK143YT+elHs2jhmneU=
+X-Google-Smtp-Source: AGHT+IEXNQFfySWCatJvZfvLo+9/K2Xb6V9D2wxdtjt9RUuj8wwr4E1vs+SwmpSWnN545c2RBci1ckd1Rebq0o8cGA4=
+X-Received: by 2002:a05:6808:152c:b0:406:6e89:499f with SMTP id
+ 5614622812f47-40a7c18e2abmr6418202b6e.35.1750072515501; Mon, 16 Jun 2025
+ 04:15:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: qcom: Add equalization settings for 8.0 GT/s
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <jingoohan1@gmail.com>, <mani@kernel.org>,
-        <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
-        <bhelgaas@google.com>, <johan+linaro@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <neil.armstrong@linaro.org>,
-        <abel.vesa@linaro.org>, <kw@linux.com>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <qiang.yu@oss.qualcomm.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
-References: <20250611100319.464803-1-quic_ziyuzhan@quicinc.com>
- <20250611100319.464803-2-quic_ziyuzhan@quicinc.com>
- <c24314dd-229f-4e26-befb-1491a5ca4037@oss.qualcomm.com>
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <c24314dd-229f-4e26-befb-1491a5ca4037@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 8LJfrerG8c1opMcQiaovC795OGelrsaa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDA2NyBTYWx0ZWRfXxBBRb/eK/o5Q
- HqQ0DNtooDndzlhXWc0gkjtz87y2loGbHchaoqD1d52G5DihuvtMY7fajacifmV4krb+NvqNSYs
- IMRk+fCQrDdKbxlpF+hGt6LALY02QJHmPv8YKQB2G+JIIBVsm0Gr5dSBEYg1bymxfWR1rkpRBiC
- P2K7EEvVxmW28QIh/cAZNW2e7a6iIiXTzThViLtBueESwUi1ogcn6Fsy3YHUal1czx/2480jNIw
- L2JjVb7ziromU1vz+O3sFHu//NPNcGLfPX4d3ym5OMKIqwkY2jTfZEob4OOpRZPlG8yhdK5Pnhv
- P9UXluBFeZqd5vAI6yaBV8Xi0aKfwxxX+WVoS0czhOhRR7S/UD0abNk9aBuT2iEXUzoa5ITN45b
- 3R8vUwl/e1WqmCXOY5KfHuI4XhnCJ87ipZvTc6A1lCFvFgHSVKP1qDa837BGSXdj98ZQZJeA
-X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=684ff639 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=Ci0Lskn0Otf-CQ4wiN4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 8LJfrerG8c1opMcQiaovC795OGelrsaa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-16_04,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506160067
+References: <20250616084420.526381-1-qiaozhe@iscas.ac.cn>
+In-Reply-To: <20250616084420.526381-1-qiaozhe@iscas.ac.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 16 Jun 2025 13:15:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jpJLMZYONVxg3ncEDEKoTy0tyaoBfCSnRrhJYmF8fngA@mail.gmail.com>
+X-Gm-Features: AX0GCFsTGnJNpIoRuI6mVAfFTLL-AckWye-THmELgyOS52Pknrtxspza669re8I
+Message-ID: <CAJZ5v0jpJLMZYONVxg3ncEDEKoTy0tyaoBfCSnRrhJYmF8fngA@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: Fix double free bug in pci_acpi_scan_root() function
+To: Zhe Qiao <qiaozhe@iscas.ac.cn>
+Cc: sashal@kernel.org, rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/11/2025 11:31 PM, Konrad Dybcio wrote:
-> On 6/11/25 12:03 PM, Ziyue Zhang wrote:
->> Adding lane equalization setting for 8.0 GT/s to enhance link stability
->> and fix AER correctable errors reported on some platforms (eg. SA8775P).
->>
->> 8.0 GT/s and 16.0GT/s require the same equalization setting. This setting
->> is programmed into a group of shadow registers, which can be switched to
->> configure equalization for different GEN speeds by writing 00b, 01b
->> to `RATE_SHADOW_SEL`.
->>
->> Hence program equalization registers in a loop using link speed as index,
->> so that equalization setting can be programmed for both 8.0 GT/s and
->> 16.0 GT/s.
->>
->> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> ---
-> [...]
+On Mon, Jun 16, 2025 at 10:44=E2=80=AFAM Zhe Qiao <qiaozhe@iscas.ac.cn> wro=
+te:
 >
->> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
->>   {
->>   	u32 reg;
->> +	u16 speed, max_speed = PCIE_SPEED_16_0GT;
->> +	struct device *dev = pci->dev;
->>   
->>   	/*
->>   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
->> @@ -18,33 +20,43 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->>   	 * GEN3_EQ_*. The RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF
->>   	 * determines the data rate for which these equalization settings are
->>   	 * applied.
->> +	 *
->> +	 * TODO:
->> +	 * EQ settings need to be added for 32.0 T/s in future
->>   	 */
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
->> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->> +	if (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT)
->> +		max_speed = pcie_link_speed[pci->max_link_speed];
->> +	else
->> +		dev_warn(dev, "The target supports 32.0 GT/s, but the EQ setting for 32.0 GT/s is not configured.\n");
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> -		GEN3_EQ_FMDC_N_EVALS |
->> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +	for (speed = PCIE_SPEED_8_0GT; speed <= max_speed; ++speed) {
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> +			  speed - PCIE_SPEED_8_0GT);
->> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> +			GEN3_EQ_FMDC_N_EVALS |
->> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +	}
-> this function could receive `speed` as a parameter instead, so that
-> it's easier to parse
+> Fix the double free bug introduced in the patch "PCI/ACPI: Fix
+> allocated memory release on error in pci_acpi_scan_root()".
+
+More details, please.
+
+What's the bug and why is this the best fix?
+
+> Fixes: 631b2af2f357 ("PCI/ACPI: Fix allocated memory release on error in =
+pci_acpi_scan_root()")
+> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+> ---
+>  drivers/pci/pci-acpi.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
 >
-> Konrad
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index b78e0e417324..49b72596ae37 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1653,15 +1653,7 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *=
+root)
+>  }
+>
+>  /* release_info: free resources allocated by init_info */
+> -static void pci_acpi_generic_release_info(struct acpi_pci_root_info *ci)
+> -{
+> -       struct acpi_pci_generic_root_info *ri;
+> -
+> -       ri =3D container_of(ci, struct acpi_pci_generic_root_info, common=
+);
+> -       pci_ecam_free(ri->cfg);
+> -       kfree(ci->ops);
+> -       kfree(ri);
+> -}
+> +static void pci_acpi_generic_release_info(struct acpi_pci_root_info *ci)=
+ {}
 
-Hi Konrad,
+Why don't you add a check for info->ops->release_info to
+__acpi_pci_root_release_info() and drop this altogether?
 
-On the current platform, the register write configurations for both
-8.0 GT/s and 16.0 GT/s are identical, so we believe it's unnecessary to
-pass ‘speed’ as a parameter at this stage.
-
-However, I agree that if future platforms or speed modes introduce
-configuration differences, it would make sense to revisit this and
-consider adding speed as a parameter for better flexibility.
-
-BRs
-Ziyue
-
+>  /* Interface called from ACPI code to setup PCI host controller */
+>  struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+> --
 
