@@ -1,177 +1,119 @@
-Return-Path: <linux-pci+bounces-29857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1202ADAFCA
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 14:06:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F362ADB01A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 14:22:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DABD173EC8
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 12:04:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E8A116DE38
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 12:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750BA285CA1;
-	Mon, 16 Jun 2025 12:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6418A2E427F;
+	Mon, 16 Jun 2025 12:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YrDVamlS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5204285C84;
-	Mon, 16 Jun 2025 12:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00503800;
+	Mon, 16 Jun 2025 12:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075372; cv=none; b=luO96/XbZ2v7L9+gcbZVuVkT0v7APMxmFr7aQL2mEGY9VV9QBBTifywXN98GUIRaMI+6rgHMFeNDk3HEp635gq11w55i/3vOuT3/ZmqfzhoiRZRbc3u1GVaq/kimKy6rpvEw7VphjDrhs7aX1Tg2KxDu+/j6KNHSdKNQ/R+0tUg=
+	t=1750076527; cv=none; b=KZm5IoQ4i9kM6bBt+ezJq26C9qRlgSY8D3NstQaFn0mi8kYSMJFBgyJNg1dHI3Mcu+SKNXiU297YrJMnxGWWO1jgO7UKkYxTiEl8EpUDhFxpNyU51ElaXgQZwB09xiBkGP6qZ2ZSms1D6NMhTXTise6PpCrLUsekLyn+PozElL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075372; c=relaxed/simple;
-	bh=vXBu7uwkxPOsvKdqrgHswhlxEEE0Wgvz5jbfmhZinlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V5rHDoT0DKLlKiN9ZPLbBL30XsDHuYZDeiMQk1Hp85B322pgzRyU5yxkalvr238mx8CHKRjvGVE50iRCY2I62BMvF0D97qN0a63mK+qDGeHKDJhxoXthicXHwLI+FofsAEJoqNIfZsI3ZUj94D/Bwj9k9g2e7gC9GHgy6Gh+Wqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6face1d58dcso71264276d6.2;
-        Mon, 16 Jun 2025 05:02:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750075368; x=1750680168;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ploSucNH29V90v2689/j3svshD2BMkR3XA3gPmC2bbo=;
-        b=riUuZmO9ufJc4MSveocOo8GmGmLfU0uuiUQ1uwnSpfCZTKAXFPx/baansQRtTdb2rJ
-         A64CulxiJULe89sdLZwf3W0aN4DW4YrqhK2/MyNZQpDPLEmqWQ7KTZ3b5QJs1F7rir25
-         Aokr996IoDzNe0GkciujQyt7SnrbO7wkaDKYJKQcJVndKJcO3SlHDvF+qt2JKT/haR5h
-         uj/fIdHaXJdWPBHmjljLhrzPr0no1H2uzzjbpAVErpGNCU9K1HCWU16qRJyOTRLOP2ro
-         AdD/AeF/WYQiAmmmvXMP8xriIQ4O0vcGso0PoMdTq+M5TuEcSM1KG+he4ipRb0GrcYu7
-         DwiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyiAxzoGGz9lAwOPoTvNt5lTW4Gzq9XPREOYbGniAKPPhTn4KolffL9bz+tqeIVH3UzHHNtz1cg5Gvs2Mp@vger.kernel.org, AJvYcCVqU/ylK5WXAKWQ8gQOK42dJJCuXlXSTBtVvX2L/SoMrMcl6zSu7I8DJFGaU1n8nZUtj07+BoheEk/6hJVtkbHFKyc=@vger.kernel.org, AJvYcCXHIaKAuHbNkMqfrbwLkw2o5MPDrfGMG21Jj62dQd+nBBkS1MqmmThjXM0hXEJLvVl6BG8yXdsqbWaS@vger.kernel.org, AJvYcCXLfLmWT2F7VM06HJY78LFWb7HDOXu3lYuW7zBzQCZJjdShzkCkvlYdfVWmZS8Gb/pt4lgTuVQG/MVO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzgiud/7pIXtnzAb1TpltoFnGZtEOUWnv8pG4gD/b8zdjZAvKQh
-	kQxqEdZeBuJXI82R3zpNIfV3ihiR/lCac3bNBdRDbOee4JOTGpJ/jSFepsoWB2bK
-X-Gm-Gg: ASbGncsFmQSeMiGpa4j0dJ3ttoS6gRyQiSKSBBiqQFFc1Ay0iOfSkDTv9oliVbkBnAW
-	rNZ86kumxvKhbg51M3Zj92NrhRPCZG5ng92tccZH8i0eOLIEq8T2yETZMPTqRZxfpwod4bdRbnM
-	0c+IA/t9fimcJa+4YQyEOoygCDF5JXlzgo/KtXvFFw9Jcsm5Y+rZI2f8JR4U9hwAcZIqXKLRuHl
-	GkHQ42y+wLBM+Z92OXSvHpubDPEZNefoNoMyudw97BF6qhoKGuYamZ/iDcxdbjEbTyMkqwrfhZT
-	WvwxB4PzqYvaJxt/3oUz7tTncwbPZvw1bEYHdi/4zfPcxzVgQTZKDk8voRK3oHpOsB3OeORoqjV
-	T45GiHYykd8aTDguhhMIRGqrlMvGR
-X-Google-Smtp-Source: AGHT+IGaSL4wf+lxi6xehLxilhn3urHlQbpFxBdgSiB38NiFFpsSt7fAX/o6XZC56+FVfkSeFjm/UQ==
-X-Received: by 2002:a05:6214:2b9b:b0:6fa:fe27:a249 with SMTP id 6a1803df08f44-6fb478103b0mr102407926d6.43.1750075367839;
-        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb569796e2sm8847296d6.80.2025.06.16.05.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 05:02:47 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d2107eb668so716716785a.1;
-        Mon, 16 Jun 2025 05:02:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVc4QZxFF/bIDhVOXu8rIrL8/cuZ0hwVmmA61TcFErKUP+CVoyfe020UMUk8wfhuu8lq8OjEVDsd8SLOGC+cOdcj/8=@vger.kernel.org, AJvYcCVygQWqJ6baCDpylKTIKNhz+gImxkXn6d6ykjSwNSKa7vK+KjMVYSsq2KL3Z2ZnOdKdcLyAUTgmOP2F@vger.kernel.org, AJvYcCW5HoseMoeOuraGAg0V2WN5WddH/Na1pCNUgzbjNOz52JmJnR58v8yA+fhugWgdOdamoUdldlKqJ/f6@vger.kernel.org, AJvYcCWvpzKz3fJwnwGGUQNZ2dKw++FhHh4QpCJNWi3cpq5EgJQUE9bzXhaRG1rTCbuURL0gYrjcBW+B+/cZC9If@vger.kernel.org
-X-Received: by 2002:a05:620a:2a03:b0:7d3:8df8:cc04 with SMTP id
- af79cd13be357-7d3c6cc98efmr1411274185a.35.1750075366742; Mon, 16 Jun 2025
- 05:02:46 -0700 (PDT)
+	s=arc-20240116; t=1750076527; c=relaxed/simple;
+	bh=mlk51EUaFTM60JuowPd7x+Uze/JnxYqKzWvV92wf+a8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUqHVfcbEJRT3knOZkqufzlee41d0QkISJxDy8eO/cwVpaF5nV96rHXADZVYUAar5gtytq5mg2EZaiQqQdm8vFUbcwIRiqiqi6XopWbHGgaiZXNASySll2YTCk43Vs5GlIMTFSzl4N2sR0qwsueJ9aTzQ7cNvXGbknxfcV4KUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YrDVamlS; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750076524; x=1781612524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mlk51EUaFTM60JuowPd7x+Uze/JnxYqKzWvV92wf+a8=;
+  b=YrDVamlStZhruQUfrA8oXBxThFqGz3s9wPA6QEHVkW5HsYsa5i85VuM9
+   8l7mVRpUx09ebBkrF5VIc+oWsnk/zNWdNEm9N/Q6DWAFs0DKACgUS/+oV
+   8F9LyUi13KfoZhLV/YuO5vDeS/PzPko7doVVFd0yZytm9JPRr0Lf3EPK3
+   cM+9kfvp61pk3sTcV7Fd6mGqUSzp3ECvHTC35RSwmsdpYYC7XGbi43GaF
+   EEJi4Ice8yTtvPnN9VvIRRx0sCm2UALZlfOGPjckQarWzXYSOHd6m2gbl
+   EVlzWQlIOfCVcOKgiMoH+vnA0eSk7hrnzC3oGZDvQA3IF/m09j0BKuqs5
+   g==;
+X-CSE-ConnectionGUID: ZfcNp8fGTkOmqlAXtNwv1g==
+X-CSE-MsgGUID: Qd/6Z16PTKmRryDb/vm53g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="63566996"
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="63566996"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 05:22:03 -0700
+X-CSE-ConnectionGUID: yg6Y5f6KQHy9iP2vfGCZXA==
+X-CSE-MsgGUID: KxVsMkQqQ0KgpYB+zIg9GQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
+   d="scan'208";a="153224360"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 16 Jun 2025 05:22:01 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uR8qd-000F0e-06;
+	Mon, 16 Jun 2025 12:21:59 +0000
+Date: Mon, 16 Jun 2025 20:21:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>, bhelgaas@google.com,
+	brgl@bgdev.pl
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+Message-ID: <202506162013.go7YyNYL-lkp@intel.com>
+References: <20250616053209.13045-1-mani@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
- <20250613220104.GA986309@bhelgaas>
-In-Reply-To: <20250613220104.GA986309@bhelgaas>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 16 Jun 2025 14:02:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
-X-Gm-Features: AX0GCFvGpF0UKvY33FJrsFmSliyEKvidiVPDSH8oJwCDkQnKl_S7otDQDQqSNxs
-Message-ID: <CAMuHMdU=+Hxz09DJeVOhZ1N5yS=UJgMsr5R40KBeu=ftoq4zrw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Anand Moon <linux.amoon@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616053209.13045-1-mani@kernel.org>
 
-Hi Bjorn,
+Hi Manivannan,
 
-On Sat, 14 Jun 2025 at 00:01, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Thu, Jun 12, 2025 at 03:16:45PM +0200, Geert Uytterhoeven wrote:
-> > On Sat, 7 Jun 2025 at 21:46, Marek Vasut
-> > <marek.vasut+renesas@mailbox.org> wrote:
-> > > Add the ability to enable optional slot clock into the pwrctrl driver.
-> > > This is used to enable slot clock in split-clock topologies, where the
-> > > PCIe host/controller supply and PCIe slot supply are not provided by
-> > > the same clock. The PCIe host/controller clock should be described in
-> > > the controller node as the controller clock, while the slot clock should
-> > > be described in controller bridge/slot subnode.
-> > >
-> > > Example DT snippet:
-> > > &pcicontroller {
-> > >     clocks = <&clk_dif 0>;             /* PCIe controller clock */
-> > >
-> > >     pci@0,0 {
-> > >         #address-cells = <3>;
-> > >         #size-cells = <2>;
-> > >         reg = <0x0 0x0 0x0 0x0 0x0>;
-> > >         compatible = "pciclass,0604";
-> > >         device_type = "pci";
-> > >         clocks = <&clk_dif 1>;         /* PCIe slot clock */
-> > >         vpcie3v3-supply = <&reg_3p3v>;
-> > >         ranges;
-> > >     };
-> > > };
-> > >
-> > > Example clock topology:
-> > >  ____________                    ____________
-> > > |  PCIe host |                  | PCIe slot  |
-> > > |            |                  |            |
-> > > |    PCIe RX<|==================|>PCIe TX    |
-> > > |    PCIe TX<|==================|>PCIe RX    |
-> > > |            |                  |            |
-> > > |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> > > '------------'      ||  ||      '------------'
-> > >                     ||  ||
-> > >  ____________       ||  ||
-> > > |  9FGV0441  |      ||  ||
-> > > |            |      ||  ||
-> > > |   CLK DIF0<|======''  ||
-> > > |   CLK DIF1<|==========''
-> > > |   CLK DIF2<|
-> > > |   CLK DIF3<|
-> > > '------------'
-> > >
-> > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Bartosz: Any chance you can apply this patch to an immutable branch,
-> > so I can merge that before taking the other two patches?
-> > The alternative is to postpone the DTS patches for one cycle.
->
-> I applied this patch only to pci/pwrctrl for v6.17 and made a note
-> that the commit should be immutable:
->
->   66db1d3cbdb0 ("PCI/pwrctrl: Add optional slot clock for PCI slots")
->
-> We will likely add other pwrctrl patches to this branch during this
-> cycle; I assume that will be OK as long as 66db1d3cbdb0 remains
-> untouched, right?
+kernel test robot noticed the following build errors:
 
-Great, I will merge that branch, and will apply the DTS patches on top.
-Thanks!
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.16-rc2 next-20250616]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Gr{oetje,eeting}s,
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/PCI-pwrctrl-Move-pci_pwrctrl_create_device-definition-to-drivers-pci-pwrctrl/20250616-133314
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250616053209.13045-1-mani%40kernel.org
+patch subject: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device() definition to drivers/pci/pwrctrl/
+config: i386-buildonly-randconfig-001-20250616 (https://download.01.org/0day-ci/archive/20250616/202506162013.go7YyNYL-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250616/202506162013.go7YyNYL-lkp@intel.com/reproduce)
 
-                        Geert
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506162013.go7YyNYL-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: drivers/pci/probe.o: in function `pci_scan_single_device':
+>> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create_device'
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
