@@ -1,192 +1,139 @@
-Return-Path: <linux-pci+bounces-29869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03D43ADB240
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9422CADB260
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 15:45:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA13C1889013
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 13:39:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5E3E1882D9D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jun 2025 13:44:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D57032BEFEF;
-	Mon, 16 Jun 2025 13:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D192877CF;
+	Mon, 16 Jun 2025 13:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="pAHBICe4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPjbSuU1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C722BEFE1
-	for <linux-pci@vger.kernel.org>; Mon, 16 Jun 2025 13:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56022877C2;
+	Mon, 16 Jun 2025 13:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750081125; cv=none; b=qz4Et3nnKnRQNwkGUYsKQP9io3x4nYXOYJamGuKU5M15nVLb1xQ/I6p/rl815t/YGCBeyk2ROfN29VLVoGKuGJdut6ZXtS0mOclFoDXLjb8XE984HvciSpU0d/XMCjCkbAbpBCRJAfp959EhgnI2dSB2aA7bZXYCWz2lSkGtr3o=
+	t=1750081421; cv=none; b=TvXZvReWzKHBUz1P5n7IgPOrs2Kl8Zwfy3POLr/M8O2FRZHrk3sDojfsaHxwLkinwEqecWb6X2HetTXuTx11W0OFcOGmzJ6LkqYv7elBkgoyQCnCrqp4g5Y2JYiOIo8G1JyDS2Yv15Nnjdrk7NasUrVDhRfmulrTcdl3lqV0jUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750081125; c=relaxed/simple;
-	bh=gYwKt4t4qRyXnMaV+EElI8XB6EH+E2cGu3ZWVQHL7Pc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RDWvC6ig+7i6oa7nuLuWbVhYbAxy4kEHjUxf/zv8hN+iAV+BoboheitszzO+x85RoB/M9wfGOJwecOm/NQIDaXETFViJmDK+gI3ao/aUyK0+O4TV/Xtoy4OfUJrtjKui56jwUHUinweivoOwqmUTKJguPniY7dchtAGtE3JvHdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=pAHBICe4; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from [10.172.195.16] (1.general.hwang4.uk.vpn [10.172.195.16])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id E89914B657;
-	Mon, 16 Jun 2025 13:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1750081119;
-	bh=GOf0egpZADvJWL6lwEX4lakPDoFI1X2B3p/bm/HFxqw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type;
-	b=pAHBICe4wzusoym3RjvBykX78Mtt5lbUVNgpWeeimZQ/3AYRs6WPrT0D8xSCCzVfw
-	 SO5zep3K+bUaT/DCWoBf9F6e0FGuLEMxcvqTHDD3td+Nh16a02qTlDILEUUXzxpO4m
-	 Sg2RPeVD2D76kg2tO3L3sQCrKJwjjDMDnDxWFHLDkT8lOyONyITHoGqFWqsBfiNAwZ
-	 NfAIzgcGUldcbGNdBLpkABN4YgiHnYjuFJPS3zZzXMhdLtbdNrMNlVq3StxqJ1W9sS
-	 7EAFWapNOdeu88j3bGyfJaJjIHUmGlrn9I0lZgMsoOXM65ceDC9beHZxT4P3oInrE6
-	 Gxssdut1uDs4g==
-Message-ID: <4e9bd015-09ae-4fff-b186-c1cbdfd337c1@canonical.com>
-Date: Mon, 16 Jun 2025 21:38:25 +0800
+	s=arc-20240116; t=1750081421; c=relaxed/simple;
+	bh=fZ1eh8wNphknetjgbS9kIkHdBLVSvB3bGOQQSPb1rYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMRvwttBbyJp5N/XOrNXj4YbsoyiCrnTVWgxa5rSGQCwE0CpI0NrCe3wSNmEOyExjhAElzQr5E6LsDFgoj/lDN9Ijm0D9buslIW97jJkXW7C3uE0PyK8ZauUhGXVkOiU8HU+aL8mAw61mvZxwau3v+VWw3wmOmDWqwiw592h9Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPjbSuU1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C1CC4CEEA;
+	Mon, 16 Jun 2025 13:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750081420;
+	bh=fZ1eh8wNphknetjgbS9kIkHdBLVSvB3bGOQQSPb1rYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPjbSuU14xto+sqSHH8NF5VTqrn/1Hrl2/q2aaOd1A4le6Pmsc7Qy9VEscsuVvlKN
+	 JUIs9Lgnx3MZGHDE3tG4ifPa4tu05TVF3UvFIWn7UxYW6io3auQC+19viueCxaK6Gy
+	 Ox5BltIC9g9iPtzYHOS93/2CiGBd8tMK/jt7OFpzlqY8NtpQKO3V23SY3Oe/acp0d0
+	 XQP4iYjJYlNchS836OOYXQQ3czqwDCv0jsWKQ/+f6jeur5QB0BDWVI50bTEhnc9P/M
+	 Qf61+LfnWAjxqQQ+ikJk1Ln082Gze9KtwU7cnsfVoFMHKT8zVVlADHmpAOMlWRmKG+
+	 Cf6p5OBhDbceg==
+Date: Mon, 16 Jun 2025 15:43:34 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+Message-ID: <aFAfhsuvEQFOd4MJ@pollux>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+ <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+ <aEckTQ2F-s1YfUdu@pollux.localdomain>
+ <CAH5fLgj+za85ajgNwJepoa7PSFkMm+3J2wJJVJ24m6YZoFVmVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-From: Hui Wang <hui.wang@canonical.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
- raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
- suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>
-References: <20250612164821.GA870964@bhelgaas>
- <371da708-3520-41af-8c1f-c8c3d53710ee@canonical.com>
-Content-Language: en-US
-In-Reply-To: <371da708-3520-41af-8c1f-c8c3d53710ee@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgj+za85ajgNwJepoa7PSFkMm+3J2wJJVJ24m6YZoFVmVw@mail.gmail.com>
 
+On Mon, Jun 16, 2025 at 03:33:06PM +0200, Alice Ryhl wrote:
+> On Mon, Jun 9, 2025 at 8:13 PM Danilo Krummrich <dakr@kernel.org> wrote:
+> > I think with specialization it'd be trivial to generalize, but this isn't
+> > stable yet. The enum approach is probably unnecessarily complicated, so I agree
+> > to leave it as it is.
+> >
+> > Maybe a comment that this can be generalized once we get specialization would be
+> > good?
+> 
+> Specialization is really far out. I don't think we should try to take
+> it into account when designing things today. I think that the
+> duplication in this case is perfectly acceptable and trying to
+> deduplicate makes things too hard to read.
 
-On 6/16/25 19:55, Hui Wang wrote:
->
-> On 6/13/25 00:48, Bjorn Helgaas wrote:
->> [+cc VMD folks]
->>
->> On Wed, Jun 11, 2025 at 06:14:42PM +0800, Hui Wang wrote:
->>> Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
->>> Configuration RRS"), this Intel nvme [8086:0a54] works well. Since
->>> that patch is merged to the kernel, this nvme stops working.
->>>
->>> Through debugging, we found that commit introduces the RRS polling in
->>> the pci_dev_wait(), for this nvme, when polling the PCI_VENDOR_ID, it
->>> will return ~0 if the config access is not ready yet, but the polling
->>> expects a return value of 0x0001 or a valid vendor_id, so the RRS
->>> polling doesn't work for this nvme.
->> Sorry for breaking this, and thanks for all your work in debugging
->> this!  Issues like this are really hard to track down.
->>
->> I would think we would have heard about this earlier if the NVMe
->> device were broken on all systems.  Maybe there's some connection with
->> VMD?  From the non-working dmesg log in your bug report
->> (https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/+attachment/5879970/+files/dmesg-60.txt): 
->>
->>
->>    DMI: ASUSTeK COMPUTER INC. ESC8000 G4/Z11PG-D24 Series, BIOS 5501 
->> 04/17/2019
->>    vmd 0000:d7:05.5: PCI host bridge to bus 10000:00
->>    pci 10000:00:02.0: [8086:2032] type 01 class 0x060400 PCIe Root Port
->>    pci 10000:00:02.0: PCI bridge to [bus 01]
->>    pci 10000:00:02.0: bridge window [mem 0xf8000000-0xf81fffff]: 
->> assigned
->>    pci 10000:01:00.0: [8086:0a54] type 00 class 0x010802 PCIe Endpoint
->>    pci 10000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
->>
->>    <I think vmd_enable_domain() calls pci_reset_bus() here>
->
-> Yes, and the pci_dev_wait() is called here. With the RRS polling, will 
-> get a ~0 from PCI_VENDOR_ID, then will get 0xfffffff when configuring 
-> the BAR0 subsequently. With the original polling method, it will get 
-> enough delay in the pci_dev_wait(), so nvme works normally.
->
-> The line "[   10.193589] hhhhhhhhhhhhhhhhhhhhhhhhhhhh dev->device = 
-> 0a54 id = ffffffff" is output from pci_dev_wait(), please refer to 
-> https://launchpadlibrarian.net/798708446/LP2111521-dmesg-test9.txt
->
->>
->>    pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
->>    pci 10000:01:00.0: BAR 0: error updating (high 0x00000000 != 
->> 0xffffffff)
->>    pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
->>    pci 10000:01:00.0: BAR 0: error updating (0xf8010004 != 0xffffffff)
->>    nvme nvme0: pci function 10000:01:00.0
->>    nvme 10000:01:00.0: enabling device (0000 -> 0002)
->>
->> Things I notice:
->>
->>    - The 10000:01:00.0 NVMe device is behind a VMD bridge
->>
->>    - We successfully read the Vendor & Device IDs (8086:0a54)
->>
->>    - The NVMe device is uninitialized.  We successfully sized the BAR,
->>      which included successful config reads and writes.  The BAR
->>      wasn't assigned by BIOS, which is normal since it's behind VMD.
->>
->>    - We allocated space for BAR 0 but the config writes to program the
->>      BAR failed.  The read back from the BAR was 0xffffffff; probably a
->>      PCIe error, e.g., the NVMe device didn't respond.
->>
->>    - The device *did* respond when nvme_probe() enabled it: the
->>      "enabling device (0000 -> 0002)" means pci_enable_resources() read
->>      PCI_COMMAND and got 0x0000.
->>
->>    - The dmesg from the working config doesn't include the "enabling
->>      device" line, which suggests that pci_enable_resources() saw
->>      PCI_COMMAND_MEMORY (0x0002) already set and didn't bother setting
->>      it again.  I don't know why it would already be set.
->>     d591f6804e7e really only changes pci_dev_wait(), which is used after
->> device resets.  I think vmd_enable_domain() resets the VMD Root Ports
->> after pci_scan_child_bus(), and maybe we're not waiting long enough
->> afterwards.
->>
->> My guess is that we got the ~0 because we did a config read too soon
->> after reset and the device didn't respond.  The Root Port would time
->> out, log an error, and synthesize ~0 data to complete the CPU read
->> (see PCIe r6.0, sec 2.3.2 implementation note).
->>
->> It's *possible* that we waited long enough but the NVMe device is
->> broken and didn't respond when it should have, but my money is on a
->> software defect.
->>
->> There are a few pci_dbg() calls about these delays; can you set
->> CONFIG_DYNAMIC_DEBUG=y and boot with dyndbg="file drivers/pci/* +p" to
->> collect that output?  Please also collect the "sudo lspci -vv" output
->> from a working system.
->
-> Already passed the testing request to bug reporters, wait for their 
-> feedback.
->
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/55
->
-> Thanks,
->
-> Hui.
+As mentioned above, I agree with the latter. But I think leaving a note that
+this could be deduplicated rather easily with specialization probably doesn't
+hurt?
 
-This is the dmesg with dyndbg="file drivers/pci/* +p"
+> > I'm thinking of something like
+> >
+> >         /// # Invariant
+> >         ///
+> >         /// `ěrq` is the number of an interrupt source of `dev`.
+> >         struct IrqRequest<'a> {
+> >            dev: &'a Device<Bound>,
+> >            irq: u32,
+> >         }
+> >
+> > and from the caller you could create an instance like this:
+> >
+> >         // INVARIANT: [...]
+> >         let req = IrqRequest { dev, irq };
+> >
+> > I'm not sure whether this needs an unsafe constructor though.
+> 
+> The API you shared would definitely work. It pairs the irq number with
+> the device it matches. Yes, I would probably give it an unsafe
+> constructor, but I imagine that most methods that return an irq number
+> could be changed to just return this type so that drivers do not need
+> to use said unsafe.
 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/56
+Driver don't need to use unsafe already. It's only the IRQ accessors in this
+patch series (in platform.rs and pci.rs) that are affected.
 
-And this is the lspci output:
+Let's also keep those accessors, from a driver perspective it's much nicer to
+have an API like this, i.e.
 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/57
+	// `irq` is an `irq::Registration`
+	let irq = pdev.threaded_irq_by_name()?
 
->
->
->>
->> Bjorn
+vs.
+
+	// `req` is an `IrqRequest`.
+	let req = pdev.irq_by_name()?;
+
+	// `irq` is an `irq::Registration`
+	let irq = irq::ThreadedRegistration::new(req)?;
 
