@@ -1,56 +1,70 @@
-Return-Path: <linux-pci+bounces-29985-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29986-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E8E3ADDF70
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 01:12:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64605ADDF96
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 01:22:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E6A13A4846
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 23:11:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B954168BDB
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 23:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477E81898E8;
-	Tue, 17 Jun 2025 23:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24ACF296153;
+	Tue, 17 Jun 2025 23:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYrh+TJ9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJJMEIcd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D6B2F5313;
-	Tue, 17 Jun 2025 23:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C9D1F5847;
+	Tue, 17 Jun 2025 23:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201932; cv=none; b=KoGYIfSo5EdUmGDN0vPO1XJYq46G/+qrV5Ux0YAm1GouH+B9Z9rZBkyLwel/r8tr8zMsgHfxPVoHcVQWxsupH13ZEMPHSSi2NGDK3eL4uU3Rd5LG08PxDQOl7UzDPA14KSVA/xesW2iaez1XGOFppRj1LergJXXZn/CJTFZ7gTA=
+	t=1750202555; cv=none; b=taTbaZNZW9eo0ymlFJW8f9DavnL5YWJp333FAMqzI7gNs13JJfybTOQKFh1h8fKJRysCku5P1CCoGd5FNrnMjONFROZdZ/sth8tJVBKbwKhPNtGa5bCGKrWdOb06I29shhA7No9YzXsaKCfneoZP8Uxh929ekQ1dSMqenpCaggw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201932; c=relaxed/simple;
-	bh=/B1RkUot2UjJrd5z+c7h5VWR07uAJ8Xr0Hm1ihBcNb4=;
+	s=arc-20240116; t=1750202555; c=relaxed/simple;
+	bh=u1htMHCfOn54kD/o5h2nrr3o2cCWVjR8jS9t5mNwAAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uZRGKFSJ6k0ltj3jqKvKCe84VAqpQW3kF3y56c1X65bOFx7MBuNZYpqYhU9C0k41cP++TOSn27OCzIsMAj876P+eX4U/lxbsnwglo5mrXDX1rgkoEQ9mGhpZie7/OPwXW/0B7MgCqRfzKuShIr44VZTl0uSvXnQQCWMMwwEbYtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYrh+TJ9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80DC8C4CEED;
-	Tue, 17 Jun 2025 23:12:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lpm3saFSITDavIsI93fAwP/oVx98UhBCeXVl3MjeZvnKQgE+eBKBAmEVL3sk9epEOtcCAougAMjoszRee/zQ9mRA1EiRIqdla5ZYOzE2prMZCu2Bb0f+1MLsza0uFQKo5ITD+7XW128IbHTMAre1gsuyueqJmh/2zVAhK7HjNLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJJMEIcd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514D9C4CEE3;
+	Tue, 17 Jun 2025 23:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750201931;
-	bh=/B1RkUot2UjJrd5z+c7h5VWR07uAJ8Xr0Hm1ihBcNb4=;
+	s=k20201202; t=1750202554;
+	bh=u1htMHCfOn54kD/o5h2nrr3o2cCWVjR8jS9t5mNwAAo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PYrh+TJ9VcezAZi26nVUY8qNHMh5CSlvYt8Nejewaf3xULQKxhUCkwXVxILgd7qky
-	 +o34pizCXa6IA3jnQTfGXg2SEPrw5RfRe3a71n3mQucuM42YjHwvlumV8iMnGujXXl
-	 q7LOM+te5jKLDbmgSg+9EPwDvDb/xITkWthUbAdGlcD8en8CtFA1RPGgdtGBqNRUqu
-	 rGvQaThNfpbcq/8qMUCaT729RWEEk0n682deNI6BR7OrQ1xLF7j75KYfgzncyDfmLU
-	 9xyJbHtTtA72gZwX6q++JHOGhw/CnCOxVy3t5XgAAOd1yvGM7noZz4Y1qZ5odiHwrt
-	 XU+nJAPxQk+pw==
-Date: Tue, 17 Jun 2025 18:12:10 -0500
+	b=CJJMEIcdDL3U6KeionggSaibPhm8G//lLOHIh/M0Sv3ETnJx3ZonmS2DBE4kHPEiB
+	 G+qDd5cANB8mxW16MzxHEUPSeXVm3jMXARu8P165BaWknXoG0jcqDfbtkkxlepxqJB
+	 rkakRvjbQ4hNzWqYApa0KEdRAPLYCJ1vU3e/PEeO4Jv/DBGEW+FR6Y9UBfWhyL3Kaj
+	 OjDt4bLRw059fA+iLK/WGmSiNIKhVGyuC9nOe1LlttWN3VBwEtvw2UId0UoYsHPUaU
+	 dZ6KVmI5xSUwU4MeCfgb//aydRZHZzb0PmlsDK7q4MAxVKO+PbNE9DH/FkR147Y1E+
+	 ceTnoMgYOBAgA==
+Date: Tue, 17 Jun 2025 18:22:32 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] PCI: dwc: Add debugfs support for PTM context
-Message-ID: <20250617231210.GA1172093@bhelgaas>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Wei Huang <wei.huang2@amd.com>,
+	linux-pci@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V4 11/14] PCI/MSI: Provide a sane mechanism for TPH
+Message-ID: <20250617232232.GA1175597@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,24 +73,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505-pcie-ptm-v4-3-02d26d51400b@linaro.org>
+In-Reply-To: <20250319105506.683663807@linutronix.de>
 
-On Mon, May 05, 2025 at 07:54:41PM +0530, Manivannan Sadhasivam wrote:
-> Synopsys Designware PCIe IPs support PTM capability as defined in the PCIe
-> spec r6.0, sec 6.21. The PTM context information is exposed through Vendor
-> Specific Extended Capability (VSEC) registers on supported controller
-> implementation.
+On Wed, Mar 19, 2025 at 11:56:57AM +0100, Thomas Gleixner wrote:
+> The PCI/TPH driver fiddles with the MSI-X control word of an active
+> interrupt completely unserialized against concurrent operations issued
+> from the interrupt core. It also brings the PCI/MSI-X internal cached
+> control word out of sync.
+> 
+> Provide a function, which has the required serialization and keeps the
+> control word cache in sync.
+> 
+> Unfortunately this requires to look up and lock the interrupt descriptor,
+> which should be only done in the interrupt core code. But confining this
+> particular oddity in the PCI/MSI core is the lesser of all evil. A
+> interrupt core implementation would require a larger pile of infrastructure
+> and indirections for dubious value.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Wei Huang <wei.huang2@amd.com>
+> Cc: linux-pci@vger.kernel.org
+> 
+> 
+> 
+> ---
+>  drivers/pci/msi/msi.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h     |    9 +++++++++
+>  2 files changed, 56 insertions(+)
+> 
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -910,6 +910,53 @@ void pci_free_msi_irqs(struct pci_dev *d
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_PCIE_TPH
+> +/**
+> + * pci_msix_write_tph_tag - Update the TPH tag for a given MSI-X vector
+> + * @pdev:	The PCIe device to update
+> + * @index:	The MSI-X index to update
+> + * @tag:	The tag to write
+> + *
+> + * Returns: 0 on success, error code on failure
+> + */
+> +int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
+> +{
+> +	struct msi_desc *msi_desc;
+> +	struct irq_desc *irq_desc;
+> +	unsigned int virq;
+> +
+> +	if (!pdev->msix_enabled)
+> +		return -ENXIO;
+> +
+> +	guard(msi_descs_lock)(&pdev->dev);
+> +	virq = msi_get_virq(&pdev->dev, index);
+> +	if (!virq)
+> +		return -ENXIO;
+> +	/*
+> +	 * This is a horrible hack, but short of implementing a PCI
+> +	 * specific interrupt chip callback and a huge pile of
+> +	 * infrastructure, this is the minor nuissance. It provides the
+> +	 * protection against concurrent operations on this entry and keeps
+> +	 * the control word cache in sync.
+> +	 */
+> +	irq_desc = irq_to_desc(virq);
+> +	if (!irq_desc)
+> +		return -ENXIO;
+> +
+> +	guard(raw_spinlock_irq)(&irq_desc->lock);
+> +	msi_desc = irq_data_get_msi_desc(&irq_desc->irq_data);
+> +	if (!msi_desc || msi_desc->pci.msi_attrib.is_virtual)
+> +		return -ENXIO;
+> +
+> +	msi_desc->pci.msix_ctrl &= ~PCI_MSIX_ENTRY_CTRL_ST;
+> +	msi_desc->pci.msix_ctrl |= FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
+> +	pci_msix_write_vector_ctrl(msi_desc, msi_desc->pci.msix_ctrl);
+> +	/* Flush the write */
+> +	readl(pci_msix_desc_addr(msi_desc));
+> +	return 0;
+> +}
 
-> +const struct pcie_ptm_ops dw_pcie_ptm_ops = {
+Looks like this change might add this warning, which I don't claim to
+understand:
 
-Sparse complains:
+  $ make C=2 drivers/pci/msi/msi.o
+  drivers/pci/msi/msi.c:928:5: warning: context imbalance in 'pci_msix_write_tph_tag' - wrong count at exit
 
-  CHECK   drivers/pci/controller/dwc/pcie-designware-debugfs.c
-drivers/pci/controller/dwc/pcie-designware-debugfs.c:868:27: warning: symbol 'dw_pcie_ptm_ops' was not declared. Should it be static?
-
-I should have noticed this earlier, sorry.  As of v6.16-rc1, this is
-now 852a1fdd34a8 ("PCI: dwc: Add debugfs support for PTM context")
-upstream.
-
-Bjorn
+This appeared in v6.16-rc1 as d5124a9957b2 ("PCI/MSI: Provide a sane
+mechanism for TPH")
 
