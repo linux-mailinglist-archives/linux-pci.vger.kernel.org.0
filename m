@@ -1,70 +1,57 @@
-Return-Path: <linux-pci+bounces-29987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 407E6ADDF9E
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 01:26:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB968ADDFC2
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 01:35:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD55D17BEDB
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 23:26:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8ED817AA2E6
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 23:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5991D298994;
-	Tue, 17 Jun 2025 23:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC4F218858;
+	Tue, 17 Jun 2025 23:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGshCCWs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPd8kitl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202A22F532C;
-	Tue, 17 Jun 2025 23:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616752F5326;
+	Tue, 17 Jun 2025 23:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750202758; cv=none; b=BHJHwNsEznfBW1aPWCmuoYGP27+diKQyLrz7GL4ld4q5gsf9VzFw52Kay+h349o3jUGhm68B0pyff7alSWoolyGYbOcg7u/gbcK+lUoPNeePhewynLjMa7JOoC2bM1AmVlz8LWwNDUgWlLrkU7kwAeu9C5N4FnTop6hLvlr78qk=
+	t=1750203341; cv=none; b=bUPMjSW+gCUo+DPnFPSIiUMnc8kKAkYm7SHdScA9e41U0DuecnkHs49vO7K2N0ynfrdgRaoB+U1Y1pYh5bvPbv6n2REUQTnj3/fUk9Yyo4kl8K3oVXOZkz4gyVRhlSl04TPVuVoMG2LPaql43fdxS6orZ9NQUD/yU4La5OeMBX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750202758; c=relaxed/simple;
-	bh=xt7/Fe7EQ3OwNo1cmh493TU1lPrwQWbplHjQhSs0xXg=;
+	s=arc-20240116; t=1750203341; c=relaxed/simple;
+	bh=iLoQCihGzEBGYCVh3p3W+/pZ3DPuaTjIgYAmG7jTQxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IUY4AtrxBpenmIGRHYA+lD3oIx3IX+/XNAIB3RTajdC6WF9HRcIYMrDczx7JV5iFnzA5jc6C2a76ZJLe4AraxcGZeMX7BS/noOnIY5hYTEqnIevcV7IuKJpewC678aTZp1N8kVOdgZGl1OT2//Z3+tqcZV/0+AJbgy1IUuI5EvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGshCCWs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF7EC4CEE3;
-	Tue, 17 Jun 2025 23:25:57 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hnzySM1qMTN+XoTwcalGsFLJhH4urD4y8ZbVMD5gb8TsZ70Jnm5wMsV5LR799HEbA6w73w057VthjyJ1qaasWpXEZfgSt69SfQbu6trPhbRLITL9VOAKlf1Dj3r6oac/hYmiZjm1lLC3mMP2MHq2bp6f/gNLKewhYC2OKYQwVRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPd8kitl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB5D7C4CEE3;
+	Tue, 17 Jun 2025 23:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750202757;
-	bh=xt7/Fe7EQ3OwNo1cmh493TU1lPrwQWbplHjQhSs0xXg=;
+	s=k20201202; t=1750203340;
+	bh=iLoQCihGzEBGYCVh3p3W+/pZ3DPuaTjIgYAmG7jTQxQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CGshCCWsG/mKLt3rDhhDhuqXb3Sbgo5/WeCo6yWoUyUty8kTEQtK2E0UYYXijJl5j
-	 D6tEEMz5PnjydoODziIVFkiE6BulpRqJ7EAyNkjuK8wGuLX6PBENSmSXt6u4i782yz
-	 60cfl1dwS3I5XvpbEDMwP1xUqyEUlaJ8ribNAbu8rgRHzWMQhAO5wEmB8Zmke7HfCQ
-	 RUGRp/sSrO8/PkkXIDNUi99HRYJRJAtEUARQ9IVMqfrRL8q0UeMS71JFPBn6MyW+uP
-	 HF/jpYFL4UD3jIoDljgqpMle3xiy3+h8fLo8kvKRRMnolNIH6V/0HcdhtAZOkHsdMf
-	 S6xihLbRSAKMw==
-Date: Tue, 17 Jun 2025 18:25:56 -0500
+	b=RPd8kitlsBO7a3MKgi/kF14PhO4LBtooMT2SU/HDAz0urVacRH48WrnVuO+QWq+h+
+	 4H0VACCWifknEQMJ/1p+ai0D8q0i/xbfLLT9DYjey8Txq1HJB+kC1ZaiUhU/nU+0Ui
+	 SbySFcxjmiPf99FWM9Lq9w1SyUHuIW76EI17PCPqZoTe7TP5jKFrRFvVlzlLgf4zey
+	 iEW8wCBwTawXbESa88yzoKRe9dPPzGDeg+bZ7yGaxrEyqdfPKrPLVJOrBfc/yLaVQv
+	 w1ERbvroGJ+MBOdhi+pqgxfMnYDaqjKgZ+DjFT23VKsTeh11RE7z84yOnXI757M4D+
+	 zubUGhRDZFGCQ==
+Date: Tue, 17 Jun 2025 18:35:39 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Wei Huang <wei.huang2@amd.com>,
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V4 11/14] PCI/MSI: Provide a sane mechanism for TPH
-Message-ID: <20250617232556.GA1176283@bhelgaas>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>
+Subject: Re: [PATCH v9 4/5] PCI/pwrctl: Add PCI power control core code
+Message-ID: <20250617233539.GA1177120@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,100 +60,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617232232.GA1175597@bhelgaas>
+In-Reply-To: <20240612082019.19161-5-brgl@bgdev.pl>
 
-On Tue, Jun 17, 2025 at 06:22:34PM -0500, Bjorn Helgaas wrote:
-> On Wed, Mar 19, 2025 at 11:56:57AM +0100, Thomas Gleixner wrote:
-> > The PCI/TPH driver fiddles with the MSI-X control word of an active
-> > interrupt completely unserialized against concurrent operations issued
-> > from the interrupt core. It also brings the PCI/MSI-X internal cached
-> > control word out of sync.
-> > 
-> > Provide a function, which has the required serialization and keeps the
-> > control word cache in sync.
-> > 
-> > Unfortunately this requires to look up and lock the interrupt descriptor,
-> > which should be only done in the interrupt core code. But confining this
-> > particular oddity in the PCI/MSI core is the lesser of all evil. A
-> > interrupt core implementation would require a larger pile of infrastructure
-> > and indirections for dubious value.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Wei Huang <wei.huang2@amd.com>
-> > Cc: linux-pci@vger.kernel.org
-> > 
-> > 
-> > 
-> > ---
-> >  drivers/pci/msi/msi.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.h     |    9 +++++++++
-> >  2 files changed, 56 insertions(+)
-> > 
-> > --- a/drivers/pci/msi/msi.c
-> > +++ b/drivers/pci/msi/msi.c
-> > @@ -910,6 +910,53 @@ void pci_free_msi_irqs(struct pci_dev *d
-> >  	}
-> >  }
-> >  
-> > +#ifdef CONFIG_PCIE_TPH
-> > +/**
-> > + * pci_msix_write_tph_tag - Update the TPH tag for a given MSI-X vector
-> > + * @pdev:	The PCIe device to update
-> > + * @index:	The MSI-X index to update
-> > + * @tag:	The tag to write
-> > + *
-> > + * Returns: 0 on success, error code on failure
-> > + */
-> > +int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
-> > +{
-> > +	struct msi_desc *msi_desc;
-> > +	struct irq_desc *irq_desc;
-> > +	unsigned int virq;
-> > +
-> > +	if (!pdev->msix_enabled)
-> > +		return -ENXIO;
-> > +
-> > +	guard(msi_descs_lock)(&pdev->dev);
-> > +	virq = msi_get_virq(&pdev->dev, index);
-> > +	if (!virq)
-> > +		return -ENXIO;
-> > +	/*
-> > +	 * This is a horrible hack, but short of implementing a PCI
-> > +	 * specific interrupt chip callback and a huge pile of
-> > +	 * infrastructure, this is the minor nuissance. It provides the
-> > +	 * protection against concurrent operations on this entry and keeps
-> > +	 * the control word cache in sync.
-> > +	 */
-> > +	irq_desc = irq_to_desc(virq);
-> > +	if (!irq_desc)
-> > +		return -ENXIO;
-> > +
-> > +	guard(raw_spinlock_irq)(&irq_desc->lock);
-> > +	msi_desc = irq_data_get_msi_desc(&irq_desc->irq_data);
-> > +	if (!msi_desc || msi_desc->pci.msi_attrib.is_virtual)
-> > +		return -ENXIO;
-> > +
-> > +	msi_desc->pci.msix_ctrl &= ~PCI_MSIX_ENTRY_CTRL_ST;
-> > +	msi_desc->pci.msix_ctrl |= FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
-> > +	pci_msix_write_vector_ctrl(msi_desc, msi_desc->pci.msix_ctrl);
-> > +	/* Flush the write */
-> > +	readl(pci_msix_desc_addr(msi_desc));
-> > +	return 0;
-> > +}
+On Wed, Jun 12, 2024 at 10:20:17AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Looks like this change might add this warning, which I don't claim to
-> understand:
-> 
->   $ make C=2 drivers/pci/msi/msi.o
->   drivers/pci/msi/msi.c:928:5: warning: context imbalance in 'pci_msix_write_tph_tag' - wrong count at exit
-> 
-> This appeared in v6.16-rc1 as d5124a9957b2 ("PCI/MSI: Provide a sane
-> mechanism for TPH")
+> Some PCI devices must be powered-on before they can be detected on the
+> bus. Introduce a simple framework reusing the existing PCI OF
+> infrastructure.
 
-Sorry, I guess I just rediscovered this sparse deficiency:
+> +/**
+> + * struct pci_pwrctl - PCI device power control context.
+> + * @dev: Address of the power controlling device.
+> + *
+> + * An object of this type must be allocated by the PCI power control device and
+> + * passed to the pwrctl subsystem to trigger a bus rescan and setup a device
+> + * link with the device once it's up.
+> + */
+> +struct pci_pwrctl {
+> +	struct device *dev;
+> +
+> +	/* Private: don't use. */
+> +	struct notifier_block nb;
+> +	struct device_link *link;
+> +};
 
-  https://lore.kernel.org/r/20250422174156.GA344533@bhelgaas
+This is old and I should have noticed before, but we have partial
+kernel-doc for this struct:
 
-Never mind, I'll just try to remember to ignore these warnings.
+  $ find include -name \*pci\* | xargs scripts/kernel-doc -none
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'nb' not described in 'pci_pwrctrl'
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'link' not described in 'pci_pwrctrl'
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'work' not described in 'pci_pwrctrl'
+
 
