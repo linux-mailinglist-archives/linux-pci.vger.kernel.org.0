@@ -1,139 +1,158 @@
-Return-Path: <linux-pci+bounces-29931-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29932-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88997ADCFF8
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:34:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DA6EADD040
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:44:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62B4A3A8953
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 14:26:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB11E3BB5CE
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 14:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D3D2EF65D;
-	Tue, 17 Jun 2025 14:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052C9202965;
+	Tue, 17 Jun 2025 14:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3WgjR7f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998EA2EF64C
-	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 14:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4B42EB10;
+	Tue, 17 Jun 2025 14:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170415; cv=none; b=gkdwT4Xi8dzzZq1BS+P8N2ZlolrlICQGhSjwVfmJGbSl/OimtLh/DcrZFtSPW4dElnMtEGkkGFEhhH1FhgtOkXOCzcmHJ84uuBUm/6MnebtyQ2nAERgRxdYykp9fWGUoKRCFyauZcXTDjBdIOCID/D1JiXyowyBgrWi8vsCe8JY=
+	t=1750171240; cv=none; b=TOJk4tShuj4Llk5wdh/eM1CpihItECE7reCxiaiI4zJaEnBvOZJj3geSzE9OAJpdXfP42/v7g2zI8k3mV/1nrU2+22j7Gbchihb8e/Nb9EZ/EzYPX0JZ7SdHkYSWz/t2MpE0sYwlvttFzL4zG7/4euuSJ+saKu8Co+cpy9d7muM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170415; c=relaxed/simple;
-	bh=gobYUNUFllNI01KDeRELpX66jEUTdqau1xfZDAOL8k0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=geh7xhAl3SZCrX2d6eKaRnhpKggqxl8wtobsvoIHpYV4Nt1kCkmls6C1yWjqmlfyF7Sx/ieYLn3ktBBUyrv3Qe05KomZEBUSfwypyAx53SEsscVTPTgEdeJUEftlCMjl9fJN1Dw0TM+QVK4lIY7SFAp7AbJWq3rW/J2U+tzzjm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bM8Jn247Dz6L5RW;
-	Tue, 17 Jun 2025 22:24:41 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7F38A1402FE;
-	Tue, 17 Jun 2025 22:26:51 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
- 2025 16:26:50 +0200
-Date: Tue, 17 Jun 2025 15:26:48 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>, <lukas@wunner.de>, <aneesh.kumar@kernel.org>,
-	<suzuki.poulose@arm.com>, <sameo@rivosinc.com>, <aik@amd.com>,
-	<jgg@nvidia.com>, <zhiw@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, Xu
- Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v3 11/13] samples/devsec: Add sample IDE establishment
-Message-ID: <20250617152648.00006e28@huawei.com>
-In-Reply-To: <20250516054732.2055093-12-dan.j.williams@intel.com>
-References: <20250516054732.2055093-1-dan.j.williams@intel.com>
-	<20250516054732.2055093-12-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750171240; c=relaxed/simple;
+	bh=TqtzmXYPJKEqTXMU+f7uN1rUv0VpX38ROAg2dTsXMek=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NWuZPlpW4nxmWfY/11PdnQSKHj+pTmFT+MsGwKUnCEs9y3gY10Mk0iYIXCSEDrDhh4ZI6p5yRc5Va9W8VoNLeAErkrCh3J+PEmx6lSc0tSO8B/1KxKZhePwbR2tFwhePiHFkcn6SNsz7JgVjhXmc89yX2RZDrH2Dyfsqn8naFXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3WgjR7f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A514C4CEE3;
+	Tue, 17 Jun 2025 14:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750171240;
+	bh=TqtzmXYPJKEqTXMU+f7uN1rUv0VpX38ROAg2dTsXMek=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=P3WgjR7fLmn91+0xU8Hla3uG7iISQmyRbiw94Do9t79HnPRryQW91aQxjSru5nf5w
+	 uT+oQMbTF96IrfX9N7QuW42vSOjnYQ6YdIa/jqrHfzB0CwvOWnWfr+EVIbpy1hUAhi
+	 IsxLeqVzQZBVQoUkSm3Rd09GRekXl1ZBvnfS7OHuKzK0FAKqGZ2CFQtTJNC7SF/uN4
+	 R03Fe1ZKEBtoJCVwSCcPlxoJp42MgUOfFxEl2hwoeCsFJ2rw+BMj9tQi8G8uR4O8Mr
+	 BHWm+58erlcWIWl757167rxBk+/Fsfhnj6ejwq705UuMfxyq0q1T8IACscMltivasX
+	 T+MfltiURB8HA==
+Date: Tue, 17 Jun 2025 09:40:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Zhe Qiao <qiaozhe@iscas.ac.cn>
+Cc: rafael@kernel.org, bhelgaas@google.com, lenb@kernel.org,
+	kwilczynski@kernel.org, sashal@kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v2] PCI/ACPI: Fix double free bug in pci_acpi_scan_root()
+ function
+Message-ID: <20250617144038.GA1134072@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617023738.779081-1-qiaozhe@iscas.ac.cn>
 
-On Thu, 15 May 2025 22:47:30 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+[+cc Dan]
 
-> Exercise common setup and teardown flows for a sample platform TSM
-> driver that implements the TSM 'connect' and 'disconnect' flows.
+On Tue, Jun 17, 2025 at 10:37:38AM +0800, Zhe Qiao wrote:
+> The patch "PCI/ACPI: Fix allocated memory release on error in
+> pci_acpi_scan_root()" introduces a dual release issue. When
+> acpi_pci_root_creat() fails, the pci_cpi_can_root() function
+> will release 'ri ->cfg' and 'root_ops' in the error handling
+> path.However, acpi_pci_root_creat() will also call
+> __acpi_pci_root_release_info(), which in turn will call the
+> release_info hook, causing the same block of memory to be
+> released again.
+
+These are all nits, but would have to be fixed before applying:
+
+  - 'The patch "PCI/ACPI: Fix ..."' is not the usual way to identify a
+    commit.  Use the same style as in the Fixes: tag below.
+
+  - Typo in "acpi_pci_root_creat" (twice)
+
+  - Typo in "pci_cpi_can_root"
+
+  - Add space after the period in "path.However, ..."
+
+  - Add "Reported-by: Dan Carpenter <dan.carpenter@linaro.org>" and
+    "Closes: https://lore.kernel.org/all/aEmdnuw715btq7Q5@stanley.mountain/"
+    and cc: Dan.
+
+  - 631b2af2f357 appeared in v6.16-rc1, so we should try to get the
+    fix into v6.16.  A hint after the "---" would be helpful to make
+    sure that happens.
+
+Wait a few days before reposting in case other folks have comments.
+
+> Fixes: 631b2af2f357 ("PCI/ACPI: Fix allocated memory release on error in pci_acpi_scan_root()")
+> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+> ---
+> v1 -> v2:
+>  - Restore all changes from the first version.
+>  - Remove unnecessary release info hooks.
+>  - Add a NULL check before calling info->ops->release_info().
+>  - Delete the currently unused pci_api_geneic_delease_info () function.
+> ---
+>  drivers/acpi/pci_root.c |  3 ++-
+>  drivers/pci/pci-acpi.c  | 12 ------------
+>  2 files changed, 2 insertions(+), 13 deletions(-)
 > 
-> This is both a template for platform specific implementations and a
-> simple integration test for the PCI core infrastructure + ABI.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Samuel Ortiz <sameo@rivosinc.com>
-> Cc: Alexey Kardashevskiy <aik@amd.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Trivial comment inline.
-
-> index 7a8d33dc54c6..aa852ac1c16d 100644
-> --- a/samples/devsec/tsm.c
-> +++ b/samples/devsec/tsm.c
-
->  /*
->   * Reference consumer for a TSM driver "connect" operation callback. The
->   * low-level TSM driver understands details about the platform the PCI
-> @@ -74,11 +79,81 @@ static void devsec_tsm_pci_remove(struct pci_tsm *tsm)
->   */
->  static int devsec_tsm_connect(struct pci_dev *pdev)
->  {
-> -	return -ENXIO;
-> +	struct pci_dev *rp = pcie_find_root_port(pdev);
-> +	struct pci_ide *ide;
-> +	int rc, stream_id;
-> +
-> +	stream_id =
-> +		find_first_zero_bit(devsec_stream_ids, NR_TSM_STREAMS);
-
-Ugly and it's under 80 chars on one line.
-
-
-> +	if (stream_id == NR_TSM_STREAMS)
-> +		return -EBUSY;
-
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 74ade4160314..83628adbc56b 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -974,7 +974,8 @@ static void __acpi_pci_root_release_info(struct acpi_pci_root_info *info)
+>  		resource_list_destroy_entry(entry);
+>  	}
 >  
->  static void devsec_tsm_disconnect(struct pci_dev *pdev)
->  {
-> +	struct pci_dev *rp = pcie_find_root_port(pdev);
-> +	struct pci_ide *ide;
-> +	int i;
-> +
-> +	for_each_set_bit(i, devsec_stream_ids, NR_TSM_STREAMS)
-> +		if (devsec_streams[i]->pdev == pdev)
-> +			break;
-> +
-> +	if (i >= NR_TSM_STREAMS)
-== NR_TSM_STREAMS 
-not that it really matters but it can never be greater.
-
-> +		return;
-> +
-> +	ide = devsec_streams[i];
-> +	devsec_streams[i] = NULL;
-> +	pci_ide_stream_disable(pdev, ide);
-> +	tsm_ide_stream_unregister(ide);
-> +	pci_ide_stream_teardown(rp, ide);
-> +	pci_ide_stream_teardown(pdev, ide);
-> +	pci_ide_stream_unregister(ide);
-> +	pci_ide_stream_free(ide);
-> +	clear_bit(i, devsec_stream_ids);
+> -	info->ops->release_info(info);
+> +	if (info->ops && info->ops->release_info)
+> +		info->ops->release_info(info);
 >  }
 >  
->  static const struct pci_tsm_ops devsec_pci_ops = {
-
+>  static void acpi_pci_root_release_info(struct pci_host_bridge *bridge)
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index b78e0e417324..6e85816ee1c3 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1652,17 +1652,6 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *root)
+>  	return cfg;
+>  }
+>  
+> -/* release_info: free resources allocated by init_info */
+> -static void pci_acpi_generic_release_info(struct acpi_pci_root_info *ci)
+> -{
+> -	struct acpi_pci_generic_root_info *ri;
+> -
+> -	ri = container_of(ci, struct acpi_pci_generic_root_info, common);
+> -	pci_ecam_free(ri->cfg);
+> -	kfree(ci->ops);
+> -	kfree(ri);
+> -}
+> -
+>  /* Interface called from ACPI code to setup PCI host controller */
+>  struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  {
+> @@ -1683,7 +1672,6 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  	if (!ri->cfg)
+>  		goto free_root_ops;
+>  
+> -	root_ops->release_info = pci_acpi_generic_release_info;
+>  	root_ops->prepare_resources = pci_acpi_root_prepare_resources;
+>  	root_ops->pci_ops = (struct pci_ops *)&ri->cfg->ops->pci_ops;
+>  	bus = acpi_pci_root_create(root, root_ops, &ri->common, ri->cfg);
+> -- 
+> 2.43.0
+> 
 
