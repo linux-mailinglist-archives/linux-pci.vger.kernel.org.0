@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-29937-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29938-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0541ADD12C
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 17:17:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F35E5ADD137
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 17:21:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 968B63A4526
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 15:16:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9AB4179567
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 15:21:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 483BE2EAD1C;
-	Tue, 17 Jun 2025 15:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B392EB5C4;
+	Tue, 17 Jun 2025 15:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="jFsy2LHi"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="mwMtfLbN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772E22EB5A7
-	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 15:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AC02EB5D8
+	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 15:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750173430; cv=none; b=qTUbCusV7wNBMrJkpwkMNWbvPaqgih4ckGGD5nJCy2e+gJdw5lelzLxR63nzOPctl7A4KJzxgosgW9DVdoalWHGuVH5M6wBu/mUZC8m6jvLpph2TU1in/GOp6H3M2zUWWt5Og3UVVe/ziMpqsTa5rUJ56zKA6Y1Ztg3YhJI//B8=
+	t=1750173688; cv=none; b=QpbQAqkA/vM/WzEy04CVW1iWSAgyZmH0342SDCszNSRSkCA0aomqPuZc/ZHdwosLG7LzOjHg8fUVYOPpcnQatZC1DHm5v+Znd7naJRHYfb8h0oddKGMSKdwC3EtNgylaUs9f5jr2anjbRHvGTzWnYZS+lR9Z1lOHD4yVwckPpLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750173430; c=relaxed/simple;
-	bh=YvRC/TY2fP/E3Tu3EYZzYlsplelpdDq7+9uJXbUTGIQ=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=sw6AfcW7dfhiSE8Xl04Frccuf9n9rK78+F9quT62Zdg1UDdOAFKOW/FmJyOaWOkjvC7FUUNADQcTPEoq/JIkOOPND+kjb3ZEfEOghU0MWBOxMIAH40OftletwI7HofWyDPu4vLiVYtKPtn97r24z9DLY2egYiMoapOwNe2V5kus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=jFsy2LHi; arc=none smtp.client-ip=23.155.224.40
+	s=arc-20240116; t=1750173688; c=relaxed/simple;
+	bh=kuZdD5IzWZMrg5THwap4iqfnC0NlTgKLNQW9swAKssQ=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=cpJ8WXQzTY3BlYQSKmD8xCRMxfB0U46uLlv1dg33AjJxYU9gupYTq3TdmoM5fLMQ2dlMtDk452Jt1XxWWPfOnfwoIr147DdfhUpgjcdSllRmoHzKIDyoixqxDlNZL093mNYc9PaqvbrVo4Z2zOqtHYGYhIxCR0PB/wNxS7Q72J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=mwMtfLbN; arc=none smtp.client-ip=23.155.224.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id BF7848288525;
-	Tue, 17 Jun 2025 10:17:07 -0500 (CDT)
+	by mail.rptsys.com (Postfix) with ESMTP id 0E9848288520;
+	Tue, 17 Jun 2025 10:21:26 -0500 (CDT)
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id Os47lUzo8jdr; Tue, 17 Jun 2025 10:17:06 -0500 (CDT)
+	with ESMTP id Pgob3myW1a83; Tue, 17 Jun 2025 10:21:24 -0500 (CDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 680B5828867F;
-	Tue, 17 Jun 2025 10:17:06 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 680B5828867F
+	by mail.rptsys.com (Postfix) with ESMTP id 848FE82856C6;
+	Tue, 17 Jun 2025 10:21:24 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 848FE82856C6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750173426; bh=Kcv94WL+u3XA4B8JQaEdCbtVJnvdHB4fiMitEhxHrko=;
+	t=1750173684; bh=DzKqDGcSVRaTL9C+1OWb7vEaceL1IZYIyGbbzQPVyJs=;
 	h=Date:From:To:Message-ID:MIME-Version;
-	b=jFsy2LHif592xmZx32cehMHbcsrK7pDrOUCP3SxnYwNBDWQYnadIHs/SQOlyKTieY
-	 9cn89gmMD1w8DQ5nUsE0/Bvoiq9c6jWuKgjq+Bh6dCYNtyzqgs+YCwUuRAgERBhjvB
-	 Kkmm1cIsThurO+2suF8yoyxcieX+hsEsYyYytggo=
+	b=mwMtfLbNSq7o+Zilk+dx46fksTQ5c8golrShPdsfHQdm/qMB+TULLWuZRON/6ZObx
+	 +7+jj039hkdQUvsClZite5NnB238q1yPn2T3jUMgmHHSVwr/GxeWQJuT6aZs9Cf4Es
+	 RGIhgDzUWyYxLjEuv9va2+1Faedw9kCfV1qpOeXs=
 X-Virus-Scanned: amavisd-new at rptsys.com
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id dLXWLLnaTZRy; Tue, 17 Jun 2025 10:17:06 -0500 (CDT)
+	with ESMTP id mk1ojaENwB3q; Tue, 17 Jun 2025 10:21:24 -0500 (CDT)
 Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 400138288525;
-	Tue, 17 Jun 2025 10:17:06 -0500 (CDT)
-Date: Tue, 17 Jun 2025 10:17:06 -0500 (CDT)
+	by mail.rptsys.com (Postfix) with ESMTP id 57F51828565E;
+	Tue, 17 Jun 2025 10:21:24 -0500 (CDT)
+Date: Tue, 17 Jun 2025 10:21:24 -0500 (CDT)
 From: Timothy Pearson <tpearson@raptorengineering.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci <linux-pci@vger.kernel.org>, mahesh <mahesh@linux.ibm.com>, 
 	Oliver <oohall@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
 	Michael Ellerman <mpe@ellerman.id.au>, 
 	Lukas Wunner <lukas@wunner.de>
-Message-ID: <308441448.1308106.1750173426169.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v8] PCI: Add pcie_link_is_active() function
+Message-ID: <1056894588.1308112.1750173684149.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: [PATCH v9] PCI: Add pcie_link_is_active() function
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,8 +72,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Index: bRchl5cQV1XGiSEvnp7ITUHd/LUyIw==
+Thread-Index: 9u5F8V20xU8NB8rpiZIaIaw+eUciVg==
 Thread-Topic: Add pcie_link_is_active() function
+
+From 5a21a4f2356114942098978837ce16f1accc469e Mon Sep 17 00:00:00 2001
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Fri, 9 May 2025 13:08:12 -0500
+Subject: [PATCH] PCI: Add pcie_link_is_active() function
 
 Add pcie_link_is_active() function to check if the physical PCIe link is
 active, replacing duplicate code in multiple locations.
@@ -82,7 +87,6 @@ Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
 Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
 ---
- arch/powerpc/kernel/eeh_driver.c  |  8 +++++++-
  drivers/pci/hotplug/pciehp.h      |  1 -
  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
  drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
@@ -91,26 +95,6 @@ Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
  include/linux/pci.h               |  1 +
  7 files changed, 40 insertions(+), 36 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 7efe04c68f0f..a9c467fa415b 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -1095,8 +1095,14 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 		eeh_pe_dev_mode_mark(pe, EEH_DEV_REMOVED);
- 
- 		pci_lock_rescan_remove();
--		pci_hp_remove_devices(bus);
-+		bus = eeh_pe_bus_get(pe);
-+		if (bus)
-+			pci_hp_remove_devices(bus);
-+		else
-+			pr_err("%s: PCI bus for PHB#%x-PE#%x disappeared\n",
-+				__func__, pe->phb->global_number, pe->addr);
- 		pci_unlock_rescan_remove();
-+
- 		/* The passed PE should no longer be used */
- 		return;
- 	}
 diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
 index debc79b0adfb..79df49cc9946 100644
 --- a/drivers/pci/hotplug/pciehp.h
@@ -282,4 +266,5 @@ index 05e68f35f392..1133b35696e4 100644
  /* Include architecture-dependent settings and functions */
 -- 
 2.39.5
+
 
