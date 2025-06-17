@@ -1,252 +1,289 @@
-Return-Path: <linux-pci+bounces-29940-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29941-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6973AADD26A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 17:42:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B9E6ADD362
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 17:57:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB1C73B32E6
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 15:41:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEFA1165931
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 15:53:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26C3920F090;
-	Tue, 17 Jun 2025 15:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660162ECE8F;
+	Tue, 17 Jun 2025 15:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="PDtK7kmL"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J50HglKG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0C91E8332
-	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 15:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750174922; cv=none; b=qLcStyHVPpHZSyqmz+tY8zFq6aYsuZ2xXxPineSwktmwItulnnLaM+bMBRr3dBV51ziLdwVNIzkn43yRqZllkJ6D2ZOU2MgN/vqhaFPANamhqXwQs+CZA/dRXXe/nb5/jK50bIMMx3d+5ZyvFHreZ93QXOy1BViE54Lo362vwJQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750174922; c=relaxed/simple;
-	bh=4ERsyv2V9kKanvqSGxzmgpPdpwKi/muNcY7A7Ut0mvM=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=bfMVtPq4ytg9c3arAZQnfLa3IAtcAPJwTqlO/O+eg8/Aajz6JBEQFQuVQMRgCBSj0C1N1Pi6KCmTp4c4yIjfNKEuMTg6u2O4IuB3brWo0Pa94lI0Qe245cPUUsv8y8yPzHUxV69HTXp0OsEBaErNDxxDmLuwAESBDXH6YBnUoss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=PDtK7kmL; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 734CB8287CFA;
-	Tue, 17 Jun 2025 10:41:59 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 1gyDe3CVKRtJ; Tue, 17 Jun 2025 10:41:58 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 676CC828565E;
-	Tue, 17 Jun 2025 10:41:58 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 676CC828565E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750174918; bh=vOK5OMf8/xOPq/rubASEmbUMWwbSG6eNeEkbGAA5SPo=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=PDtK7kmLBo3o9FnTVfcdRVkR1NQarDk2ji1b0JbTgNrCPOhujph++ZSSd1/G3iGu4
-	 s007OtKrnkBhbLjN3N8EL2y7csnaV7lsPuJP7lrgcfPm0bJSO/tm8z+57h34fVa1ES
-	 EsSVgZ3Bifi6Qbcp49wMAs+OLkpi4BQjftrYmBWI=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DXVXCmOhveAS; Tue, 17 Jun 2025 10:41:58 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 3A9948287CFA;
-	Tue, 17 Jun 2025 10:41:58 -0500 (CDT)
-Date: Tue, 17 Jun 2025 10:41:58 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A043528E8;
+	Tue, 17 Jun 2025 15:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750175388; cv=fail; b=DJcj0GDvF9OYO/mXi4y2nfg4aLCQzsdFm97ymuigVSHzCkI6iT59o98KXZ79uQLJu8DgE1PaWVks2IwzvtsFV28Rp21arCaEQPBVNaDNtKavgi1jqzxNqqGeD5/nhYQoxaWk9hLx6wKqqVfp0/LzPyhjmqpHeyi8NsrvsqKaomM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750175388; c=relaxed/simple;
+	bh=HA3Oiy703/vxDtTrMUq20YvYE6JtQfSiQ78abrhZbN0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OXza9i1/JyPpAkOUEEQam3wf3L+Tds7hcOnGHgLzxonQ7+9kcGU7JZlk8KQHDf6j+u9oOo8mgip6Cln3yrm5L8gc0n89J6BHtk7DkD/aOnWP6JuvHWNXOC2LpsaIGAKrMHPUjepkWhFIWgnGrd0+vzg2bkVYYcBJ1/3zYeSqbwU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J50HglKG; arc=fail smtp.client-ip=40.107.220.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zu4znCuKkKMRQ6/RlJ4s+ZuNg5Io/ID2EYlLrmiiiZGqWBmCWLvigkHr48cnl1Er8AtsRxKLGMK+DQSx2KHdus8lUV1NDhLT0QHEisJEQuVUEfYGqcOasJDGFj9aZ6sHrufo1y9W+gWKoI6lGeB1cXg4Kt1BrZRMWtwon5/5E4lNBygf3I7ywHfWGJN/jj/l7h9c2LvQ4rP4jMZbnS40wrqLhHcivCnGkr8WfvaOZQTqaTWtfZ753LHrcZZ/4dTz9NspGZUOTC078soxRcdvvan2PmZvFoINXE9To+iys+Tual+zE4AFJYA+6uCtvNhG1R8jj0qbgrfQnedZL7tQYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0g9o/w8RFnGwfEva01l0q/HX4y0DPbIID9AfYYZnRjk=;
+ b=OH4DzP+drwJ7MYrVxwcG8xW7xHmAEOgHgVO3spgbtU3anS80rlMhf7oH5iIclFWjsoe8oFYCHKrRbIjtpWuvgN3ljQwwTLyzQl4XLtN8VMTMAeZYQHaukPOkbXhxsYLX55gBsJCc118OD8oF2i/vu7RGtt06/mECZAaem2Ldjadtqo/GiNGpr7ro0p4HKAVPuicnLo6jaQXVf8DGwyLCMqE8BeTD3jUCFr6cSK49+S0qIivYAQxNoGKmnQ59GCDVu1kvywMN40Yb018T9guswiDJVLXS6hdT8YgdlEBLAnAc9vo2S/A1UG/RLpf1viYspzx24v2nloXeq47mFA5gDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0g9o/w8RFnGwfEva01l0q/HX4y0DPbIID9AfYYZnRjk=;
+ b=J50HglKGaiPtJkFK2SQt0kZeL4OQAob4dxsEmWPAGobYSiq1DQSRRLDgW2jS1KHaZxzoz5RNSmuvh4YBRDEn7OPjzngm4mkj2wKb29JGYniiigRRFgS2WlKsMWkTrT+ImV9z7mQf4D08Sc1WBbs00HbiAG9sFEi1vnO+LAM6X+A=
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
+ SA3PR12MB7923.namprd12.prod.outlook.com (2603:10b6:806:317::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.19; Tue, 17 Jun 2025 15:49:41 +0000
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e%3]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 15:49:41 +0000
+From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, mahesh <mahesh@linux.ibm.com>, 
-	Oliver <oohall@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	Lukas Wunner <lukas@wunner.de>
-Message-ID: <988492931.1308196.1750174918075.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v10] PCI: Add pcie_link_is_active() function
+CC: Manivannan Sadhasivam <mani@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Gogada, Bharat Kumar"
+	<bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
+	<thippeswamy.havalige@amd.com>
+Subject: RE: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
+ PERST# signal
+Thread-Topic: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
+ PERST# signal
+Thread-Index: AQHbrOylgtMytwVisU+l4ovrQWRiO7QAInCAgAb67JCAALYgAIAAED7w
+Date: Tue, 17 Jun 2025 15:49:41 +0000
+Message-ID:
+ <DM4PR12MB6158A154D1186EFDBFD92BC1CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
+References:
+ <DM4PR12MB615826495B1A4F7DBADCEEF2CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
+ <20250617144654.GA1135267@bhelgaas>
+In-Reply-To: <20250617144654.GA1135267@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-17T15:45:01.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|SA3PR12MB7923:EE_
+x-ms-office365-filtering-correlation-id: ff21e03a-c2e7-4819-15f3-08ddadb692f3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?xoxaCBQq9Qm13FN2SG76yowWgdqE5oN0IYbShy2OOH3tFCZlbKwBAyRFaRNg?=
+ =?us-ascii?Q?zlZcpRb1HGyZcjIrPIoG/bjfeknyE9HZX0EysWDdVN6diRYAqluuh/LCa/4W?=
+ =?us-ascii?Q?xIvySlm1MjPwztDdOFBvMVggPzjhIfZA3QOfYC8U9q38Bhv2/y53wqeqgMmr?=
+ =?us-ascii?Q?faVjx3c8EnR3H1XenSASMPfRuJybCsQ6CkvDQaJpmN60EuTBqLur+5SmvoGu?=
+ =?us-ascii?Q?+TGuKS4w20qp/i0+woc6W6f6oBLKqCaKvgHjCxVH6wKIPfTO95gbD8Q4nVmz?=
+ =?us-ascii?Q?k0iaBaI2wKhIP4d29hq9q/2nP0Q4ShKMZnL+FOK7T6J2/OhGdhgVvKjtHAZa?=
+ =?us-ascii?Q?hdaWbKG17Bq1K2cHibjYXV/ORd/2bYwWXAVTGBdxEBS1bJJZbKEWzrMPsCke?=
+ =?us-ascii?Q?eyUJdCVNo6ttiBeM14sGwJO0hnGCP101doTZy79aAOiB/vJvr9My45HG2VHC?=
+ =?us-ascii?Q?fHkMCV4gF+zALT36pUOeacZqLVIJNSpAqn+RXpHRfg0wWvbhd93srT00zHET?=
+ =?us-ascii?Q?vovbnlpkhh3PtGU9XpC+OQwW8x3vbeni2TPZTzCysKwsSpnHHgPrP076LJ5g?=
+ =?us-ascii?Q?MgNkRS4zWVJXjLExPsC1tQoGm5IcmrrejxltPtnw3CL91mjgS1+sWi2OIHel?=
+ =?us-ascii?Q?NAQay4IJxHKFHMLuCLO8gw7A2fLd+T1jozw97tMdpyvWGPaELli7LYLbubqa?=
+ =?us-ascii?Q?Gv41trBwJ0V42fa3x4D9Q5Ehp6Tvrk8iShfiuvFTMwoAadiOApBiNNq4Tz34?=
+ =?us-ascii?Q?l2FTVFt8zIN+WRWRQxUQxxuhGPI3bi/OpcFIF8Zvjlm+ExpRxwaM5iwM7fNn?=
+ =?us-ascii?Q?SxJ28PIBg6CDgkvp0n/Rz2K+9JF1PjJ7ueU6/HCn10+ZBVK8b1ClNy8Nj9gq?=
+ =?us-ascii?Q?uyHN30PNuc1/9mFLYLqQzlFQ662PKprpqnK8VqD7JvF/FNqFpQlrpvTVZMmK?=
+ =?us-ascii?Q?LFpZvcgEA3/LHoCi46OUXqJIZeaTfLk2XSQ8BEhIH6RZ3xDH39Cx+nQPzJ/K?=
+ =?us-ascii?Q?poQd0CzdoK4iRqVAgjq4csLahlX9hNqsQtRl3+T1emRWMFHnkXoJhgK9fuiy?=
+ =?us-ascii?Q?L+XRTYrKJwJ5qYVEXv3jTIV/W+nGBNf3G6PXb2XKw850uKfFjaycncjqs75r?=
+ =?us-ascii?Q?+q+eNQTfFY5N/IyhBGLVUd5tN2UyplqetLKSAwINsi5FghyY0kBzXKxMvRVG?=
+ =?us-ascii?Q?eIUV+kIOsae+VCYm//lsMTm7QQtUX1NUfuhnOcAxW8a7kSCZ89I4c4pomo1i?=
+ =?us-ascii?Q?6U5Emwb7r7TwP1oE1eDohEQ6nh1M6sknDYAmVqT8gsBAioBudHfAStElRszv?=
+ =?us-ascii?Q?J7HkYf/Lb6v8TfXsltngXShUfcubT8VV528UXn2rrXvwJvWskzD3vZFqFPCD?=
+ =?us-ascii?Q?g1GxBzydm/SX8EWi5LQaIMrHO7HFGMrrGQlrdpD/yf14ETPMKmC47xTUaXON?=
+ =?us-ascii?Q?EHFQtAR4Np1dCKt42F8xvwYlPFLQ3J6um7XmR5f1vckElM/AxuVt3g=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?UBWEGUfBy/g9BllKM9JMHfOxfVvO4WUXhapwjuieXyH/aVr02xnk6C2M6/oh?=
+ =?us-ascii?Q?vFI671tX7nZfVn9Q94qQbMMyS0fRNX6XJRz8SI7ILhnFEKkkTJDdcnpw3vWR?=
+ =?us-ascii?Q?2FVd6utHXeJPilB268Mi+8PAhI3eSvqTxRjFObHqsFufQgv68I4ETE1xuXbf?=
+ =?us-ascii?Q?XOq8Rlzvnh6Bc/MQtgfZeY8K/YRdwCa/SXmYggZ/chgZp8NsLJgJfeCyh/NH?=
+ =?us-ascii?Q?OjHfcSM3JkfTAwXCh0ct7R1ZXKFCkV9Yz3N4rWEZxfSSDQ70thN6Dl/72YaO?=
+ =?us-ascii?Q?iegiqDtgpbvc8eGTPIO5nmagOyKR9tSOPrKzhm52kOo/34qGCjggWwbah7gw?=
+ =?us-ascii?Q?7AQq/JqxbNZOUkaalHAnT11GDULTuQ+m+BrchmX8i1zPVklOStoT9pTh4Zcf?=
+ =?us-ascii?Q?/WoXoWFwO/S6h0KTTcHQsdTX99luppl4BWD7CkInjZM2AbK6H64XKizdcPN8?=
+ =?us-ascii?Q?GNq7NIO0hzu7liZlehMsp3+YN+Ed3xAHkvIQnRBa2K7rkW86RDz3IWiuqHav?=
+ =?us-ascii?Q?URT6iyXVxgThgFKBZlC9CAf63fU0utuVzqgtGfTSuE+gDBo0KmluA9DkLgpQ?=
+ =?us-ascii?Q?d0aQVP/4rIL/sXkbZZn6Sd3IUohLquL0G31yyDCkfe2P/Y3G+OVvRGh/s6ZO?=
+ =?us-ascii?Q?uXfQyUdWHeA03MUZB9Y8GiE/4RM4hPdE6TFXZRVIsr5WzJXmuh5bJRrd6ELx?=
+ =?us-ascii?Q?k3X35CxY5qApL4cigG7MOpGcufgeTu/Ie+2zDig3rit80Rhz5NwOIy9fv91f?=
+ =?us-ascii?Q?wDNpKNbhohWpg6TIXXagKvazEJM1bFzqTJUeBzn1l3cB2afdpBW1/HnHNzWB?=
+ =?us-ascii?Q?SGnQ1dge2Zvl4nxEgvj0NVSzOp+X2iHE6MOp2ogKZ/ER1uCOGJdBve9c3mMR?=
+ =?us-ascii?Q?sLYmVgUvo5nJG2YqHZSSXWexMw3P4zOiQJ6DY3R+K/LAkfW0wKy/sIYZ7zXb?=
+ =?us-ascii?Q?xfyWw/j8NsGlnj0ygqr5BTAfGgYbsv1i5YNY+WfHW2qMGyoeNmBrE9XkQoa+?=
+ =?us-ascii?Q?C62DYeHqBs096BjBSnORbrZjmd7wrih2kzpEP1FwLrRPws8EhiLy4k9GKxgR?=
+ =?us-ascii?Q?Da5evmVIy8DCOrO7bZM8wM4IQJRoFUX1ZREEdiId++WLkZJFxLY3he2XNGAQ?=
+ =?us-ascii?Q?nP8TesddQEZWyEgwbxCdOYwnw9sFZ3LXy6bCSfQCHVtjaCf8OayUC7t2KKWK?=
+ =?us-ascii?Q?yR+5t5HVLp3jGD2kzXNcQUvWmb56VOVfOxxYtRcYapNHQ2EdONsN0/hB1GeE?=
+ =?us-ascii?Q?RdheabgZdVCRiLJGQo5wpdOBCsoE7bqdmzI0Nf4pV5R+qqneZSme5neUgtte?=
+ =?us-ascii?Q?V87oyTOHoUyBsgbxeKHYg+G8CmuU7w1syQDWkJYgjcgH27c/Ncih6nnQ5RlS?=
+ =?us-ascii?Q?gtASD/9C6P6Sbhon7roMNc5S9YxD8N2XVD4nYoaYWoi6YP5iL4EDTyHbroEB?=
+ =?us-ascii?Q?YHOdImyu0ZBu3PYQJkzDAw6eKsH4IjpTawRmGT/pvzuNeRj4k8u68arSib2w?=
+ =?us-ascii?Q?IZNVGHs3qQ/gAJLatMzVfiquvWtyTz03R56wtaoXsuVNtNR741t762+cwW8y?=
+ =?us-ascii?Q?sDloD28cHDki4Ftsans=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Index: Tf5MFWbY9QC7+aSYgQMp7TPgJM6ygA==
-Thread-Topic: Add pcie_link_is_active() function
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff21e03a-c2e7-4819-15f3-08ddadb692f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 15:49:41.7091
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XcVSaB/6SYBkx+p7oc2bY7ZeltIs6QnMrAtGj9uMnqUkj15HOrg4CZZBQ84mgQCop768ZobMhyy9J/EYhcYDpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7923
 
-Add pcie_link_is_active() function to check if the physical PCIe link is
-active, replacing duplicate code in multiple locations.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
----
- drivers/pci/hotplug/pciehp.h      |  1 -
- drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
- drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
- drivers/pci/pci.c                 | 31 ++++++++++++++++++++++++++---
- drivers/pci/pci.h                 |  1 +
- 5 files changed, 33 insertions(+), 35 deletions(-)
+Hi Bjorn,
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index debc79b0adfb..79df49cc9946 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
- int pciehp_card_present(struct controller *ctrl);
- int pciehp_card_present_or_link_active(struct controller *ctrl);
- int pciehp_check_link_status(struct controller *ctrl);
--int pciehp_check_link_active(struct controller *ctrl);
- bool pciehp_device_replaced(struct controller *ctrl);
- void pciehp_release_ctrl(struct controller *ctrl);
- 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index bcc938d4420f..6cc1b27b3b11 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	/* Turn the slot on if it's occupied or link is up */
- 	mutex_lock(&ctrl->state_lock);
- 	present = pciehp_card_present(ctrl);
--	link_active = pciehp_check_link_active(ctrl);
-+	link_active = pcie_link_is_active(ctrl->pcie->port);
- 	if (present <= 0 && link_active <= 0) {
- 		if (ctrl->state == BLINKINGON_STATE) {
- 			ctrl->state = OFF_STATE;
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index ebd342bda235..d29ce3715a44 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
- 	pcie_do_write_cmd(ctrl, cmd, mask, false);
- }
- 
--/**
-- * pciehp_check_link_active() - Is the link active
-- * @ctrl: PCIe hotplug controller
-- *
-- * Check whether the downstream link is currently active. Note it is
-- * possible that the card is removed immediately after this so the
-- * caller may need to take it into account.
-- *
-- * If the hotplug controller itself is not available anymore returns
-- * %-ENODEV.
-- */
--int pciehp_check_link_active(struct controller *ctrl)
--{
--	struct pci_dev *pdev = ctrl_dev(ctrl);
--	u16 lnk_status;
--	int ret;
--
--	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
--	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
--		return -ENODEV;
--
--	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
--	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
--
--	return ret;
--}
--
- static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
- {
- 	u32 l;
-@@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
- 	if (ret)
- 		return ret;
- 
--	return pciehp_check_link_active(ctrl);
-+	return pcie_link_is_active(ctrl_dev(ctrl));
- }
- 
- int pciehp_query_power_fault(struct controller *ctrl)
-@@ -614,7 +587,7 @@ static void pciehp_ignore_link_change(struct controller *ctrl,
- 	 * Synthesize it to ensure that it is acted on.
- 	 */
- 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
--	if (!pciehp_check_link_active(ctrl) || pciehp_device_replaced(ctrl))
-+	if (!pcie_link_is_active(ctrl_dev(ctrl)) || pciehp_device_replaced(ctrl))
- 		pciehp_request(ctrl, ignored_events);
- 	up_read(&ctrl->reset_lock);
- }
-@@ -921,7 +894,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
- 	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
- 				   PCI_EXP_SLTSTA_DLLSC);
- 
--	if (!pciehp_check_link_active(ctrl))
-+	if (!pcie_link_is_active(ctrl_dev(ctrl)))
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
- 
- 	return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e9448d55113b..4e96ff8ee5ec 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4908,7 +4908,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		return 0;
- 
- 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		u16 status;
- 
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
-@@ -4924,8 +4923,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		if (!dev->link_active_reporting)
- 			return -ENOTTY;
- 
--		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
--		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+		if (pcie_link_is_active(dev) <= 0)
- 			return -ENOTTY;
- 
- 		return pci_dev_wait(child, reset_type,
-@@ -6230,6 +6228,33 @@ void pcie_print_link_status(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pcie_print_link_status);
- 
-+/**
-+ * pcie_link_is_active() - Checks if the link is active or not
-+ * @pdev: PCI device to query
-+ *
-+ * Check whether the physical link is active or not. Note it is
-+ * possible that the card is removed immediately after this so the
-+ * caller may need to take it into account.
-+ *
-+ * If the PCI device itself is not available anymore returns
-+ * %-ENODEV.
-+ *
-+ * Return: link state, or -ENODEV if the config read failes.
-+ */
-+int pcie_link_is_active(struct pci_dev *pdev)
-+{
-+	u16 lnk_status;
-+	int ret;
-+
-+	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-+	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-+		return -ENODEV;
-+
-+	pci_dbg(pdev, "lnk_status = %#06x\n", lnk_status);
-+	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-+}
-+EXPORT_SYMBOL(pcie_link_is_active);
-+
- /**
-  * pci_select_bars - Make BAR mask from the type of resource
-  * @dev: the PCI device for which BAR mask is made
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12215ee72afb..cf1afb718f8a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -231,6 +231,7 @@ static inline int pci_proc_detach_bus(struct pci_bus *bus) { return 0; }
- /* Functions for PCI Hotplug drivers to use */
- int pci_hp_add_bridge(struct pci_dev *dev);
- bool pci_hp_spurious_link_change(struct pci_dev *pdev);
-+int pcie_link_is_active(struct pci_dev *dev);
- 
- #if defined(CONFIG_SYSFS) && defined(HAVE_PCI_LEGACY)
- void pci_create_legacy_files(struct pci_bus *bus);
--- 
-2.39.5
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, June 17, 2025 8:17 PM
+> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> Cc: Manivannan Sadhasivam <mani@kernel.org>; bhelgaas@google.com;
+> lpieralisi@kernel.org; kw@linux.com; manivannan.sadhasivam@linaro.org;
+> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.o=
+rg;
+> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bha=
+rat
+> Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> <thippeswamy.havalige@amd.com>
+> Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe =
+RP
+> PERST# signal
+>
+> Caution: This message originated from an External Source. Use proper caut=
+ion
+> when opening attachments, clicking links, or responding.
+>
+>
+> On Tue, Jun 17, 2025 at 04:14:37AM +0000, Musham, Sai Krishna wrote:
+> > [AMD Official Use Only - AMD Internal Distribution Only]
+> >
+> > Hi Manivannan,
+> >
+> > > -----Original Message-----
+> > > From: Manivannan Sadhasivam <mani@kernel.org>
+> > > Sent: Thursday, June 12, 2025 10:49 PM
+> > > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> > > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> > > manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org=
+;
+> > > conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
+> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Mich=
+al
+> > > <michal.simek@amd.com>; Gogada, Bharat Kumar
+> > > <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> > > <thippeswamy.havalige@amd.com>
+> > > Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for P=
+CIe RP
+> > > PERST# signal
+> > >
+> > > Caution: This message originated from an External Source. Use proper =
+caution
+> > > when opening attachments, clicking links, or responding.
+> > >
+> > >
+> > > On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
+> > > > Add support for handling the PCIe Root Port (RP) PERST# signal usin=
+g
+> > > > the GPIO framework, along with the PCIe IP reset. This reset is
+> > > > managed by the driver and occurs after the Initial Power Up sequenc=
+e
+> > > > (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's p=
+robe
+> > > > function is called.
+>
+> > > > +     if (do_reset) {
+> > > > +             /* Assert the PCIe IP reset */
+> > > > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pci=
+e_rst);
+> > > > +
+> > > > +             /*
+> > > > +              * "PERST# active time", as per Table 2-10: Power Seq=
+uencing
+> > > > +              * and Reset Signal Timings of the PCIe Electromechan=
+ical
+> > > > +              * Specification, Revision 6.0, symbol "T_PERST".
+> > > > +              */
+> > > > +             udelay(100);
+> > >
+> > > Are you sure that you need T_PERST here and not T_PVPERL? T_PERST
+> > > is only valid while resuming from D3Cold i.e., after power up,
+> > > while T_PVPERL is valid during the power up, which is usually the
+> > > case when a controller driver probes. Is your driver relying on
+> > > power being enabled by the bootloader and the driver just toggling
+> > > PERST# to perform conventional reset of the endpoint?
+> >
+> > Thanks for pointing that out. Yes, the power-up sequence is handled
+> > by the hardware, and the driver relies on power being enabled by it.
+> > We're only toggling the PERST# signal in the driver to perform a
+> > conventional reset of the endpoint. So, I'm confident that T_PERST
+> > is the appropriate timing reference here, not T_PVPERL.
+> >
+> > Additionally, this delay was recommended by our hardware team, who
+> > confirmed that the power-up sequence is managed in hardware logic,
+> > and that T_PERST is the appropriate timing to apply in this context.
+> >
+> > I also checked pci.h but couldn't find a predefined macro for
+> > T_PERST, so I used 100.  Please let me know if there's a preferred
+> > macro I should be using instead.
+>
+> If we need a new macro, please add it.  Include a citation to the
+> relevant section of the spec ("PCIe CEM r6.0, sec 2.11.2"; table
+> numbers don't appear in the table of contents so they're hard to
+> find), and include the units ("_US", I guess) in the macro name.
+>
+> Given a comment at the macro definition, you don't need to repeat it
+> at all the uses.
+>
+
+Thanks for the review, sure I will add new macro and include a citation
+to the relevant section of the PCIe spec.
+
+> Bjorn
+
+Thanks,
+Sai Krishna
 
