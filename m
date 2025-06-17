@@ -1,127 +1,246 @@
-Return-Path: <linux-pci+bounces-29914-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29915-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33BAEADC24D
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 08:22:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 051E7ADC32E
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 09:23:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3344C3AD1C8
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 06:21:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 128F717497C
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 07:23:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DE228B7DB;
-	Tue, 17 Jun 2025 06:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA12C136358;
+	Tue, 17 Jun 2025 07:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EJ6AIsUe"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MFmHI/y+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C818528E;
-	Tue, 17 Jun 2025 06:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D5B28D85F;
+	Tue, 17 Jun 2025 07:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141318; cv=none; b=p2gc+WNMvhmuBF255Vp8dCdcQVv5Mxn2wNu9wiTHmnCC4BAstX7nyglhHru6R9JYO2ekpRZe0C9QPNiUFXMKSjU4tqB7+WWnaRn1f6i0r/VbUP6OEbP48GfAcNSJ72yMT8d5iD+3HMNcaSBauhXQvzK6+RqC9v1V2oJ3El3xnLs=
+	t=1750144995; cv=none; b=RcRUtfMKTHdsMr3OemgLI0lcYTV4h1EHVD43TjQ+B4CN2qwGlegyEdP9AFCJSTt98GsZ7f8H7S6Pd4M/Xh7S8hPXutrttaR9fQJdCn387LLKbPd4PIEkXrUXcsPb+k259vYxN5GNpXC+2vPuJYspW3RCgeHzd2dbPimNqEwbMy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141318; c=relaxed/simple;
-	bh=7WMnIAB52I00dnpzMybWE815AWl4bKC3OBG2ss/MyDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWA27Gl1Y5ShzO+xjJorLMbfhuB27M4VVy6rjnyJ4iJz6gGuuj156ErUJiCXWHtiudGN+nE9ZgxTFQOgwZW6isoaVuvaDCEKHMpxoytjIaR3YhEOAo0/GtsfUbCUPxctA7IllpcFmegO1zIqmqqGgqmJuhH0SeNXP1pENtQcEls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EJ6AIsUe; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750141317; x=1781677317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7WMnIAB52I00dnpzMybWE815AWl4bKC3OBG2ss/MyDg=;
-  b=EJ6AIsUerss0l/nmH1DB/M4tp+3TYVSCn4ClGh2/cpNwYv/4z8n0LBs/
-   uM0Qz87MZydoL4PrFgmSo1lRdMTharwa89iUVcD2LE2TDwqzIpcY8XDqE
-   E3Y99ECxwD/e1bncWFt8qD5Ochr+gLQyUCN8dokOt5+W5Zoqr0V/4omRR
-   bUZMu+odTfbNQ1J3E3uaEGZ1p+TpXeyp/3hHYfZcZB6PDY/5F0SctZ7qe
-   QMBkd9HYf9bYAHgIFJIX4UW5oykF4RPy9fZ/zNvI640y0trN/0O2fwsme
-   UhNZMwfd8R5jNnNLVPLlDFVh27snJv0PcoZOqWC1H/ebF/18V1fZ/w9uP
-   Q==;
-X-CSE-ConnectionGUID: kqVGJnwXQoWjAtomGqUrIw==
-X-CSE-MsgGUID: ke/bNd4fTCaw401ATKXL1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="77698159"
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="77698159"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 23:21:56 -0700
-X-CSE-ConnectionGUID: EZlHW9uoR9Whd36m92cfMg==
-X-CSE-MsgGUID: 2W3a49RCS/KbjciADHmnfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="153857607"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 16 Jun 2025 23:21:54 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRPhf-000Fg0-0v;
-	Tue, 17 Jun 2025 06:21:51 +0000
-Date: Tue, 17 Jun 2025 14:21:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [PATCH] PCI: endpoint: Use common PCI host bridge APIs for
- finding the capabilities
-Message-ID: <202506171435.UiUpSaqs-lkp@intel.com>
-References: <20250616152515.966480-1-18255117159@163.com>
+	s=arc-20240116; t=1750144995; c=relaxed/simple;
+	bh=f11hWl4NtA1ewNVG2EX9gYBJpVleqyEr0TOtEB8ZeF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cum7rpjodru2YRUYpMaMeEGIgbAb7hSEhafXjL33ONEk12P94ZIO+9j1DLK4g9nKzLqHgPDQqn9WlLLnkmgPLgcO0BH1Y756tBHoPCnTO0At1xvnKdiWm+fNk7Z8GePLyx9rUsIL3uPN93OqKOPu7wCVHCG8eZJ3sMZEZzC8buI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MFmHI/y+; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 924EF58267E;
+	Tue, 17 Jun 2025 07:00:39 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DF5FC44459;
+	Tue, 17 Jun 2025 07:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750143631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c54X4q8yozguoRQqbVkcnFg4rictDWQ/ozHe3OqAcDo=;
+	b=MFmHI/y+p5sJ80eQ4s84rkWG8dTBnsg53y+lIdVMySqFH3kXrdFd96UoQAMwYWdyYhc4mN
+	sIkTqVsjSholwOLcgSFfDnEx/Vcbv7ypWPZJ/zewYOLBXN0gZRoBiGLwb5Bio64J0oJNQH
+	AeTDy7iFaOY7sJTWE7+MNTSny1Zhi0PZESIbbF2Nj/udROiyTPy1M8zAAZ0c/yFM3M0dCP
+	6J4A2sbuaokCGhdOfA9hG2SUyZ4bzwf72NNoCgi6N8XA30zPeLfglUyrI4JLVye3aYhnH+
+	vTjIUiEidjQRcb0QxA7mIgcV2E0foqZxbu4cPQ/ehKmBhAW2Q67QXYF4dKXTcg==
+Date: Tue, 17 Jun 2025 09:00:29 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
+Message-ID: <20250617090029.03283ea6@bootlin.com>
+In-Reply-To: <3258d453-f262-4f1c-822b-5310a8346a2d@tuxon.dev>
+References: <20250224141356.36325-1-herve.codina@bootlin.com>
+	<20250224141356.36325-6-herve.codina@bootlin.com>
+	<594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
+	<20250611165617.641c7c09@bootlin.com>
+	<3258d453-f262-4f1c-822b-5310a8346a2d@tuxon.dev>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616152515.966480-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvkeejkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetheejgeetudehiedvuedvteehhfegudevvdeftdduhfejleegheevteetvdeihfenucffohhmrghinhepsghoohhtlhhinhdrtghomhdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhhesl
+ hhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Hans,
+Hi Claudiu,
 
-kernel test robot noticed the following build errors:
+On Fri, 13 Jun 2025 16:36:16 +0300
+Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
 
-[auto build test ERROR on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
+...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-endpoint-Use-common-PCI-host-bridge-APIs-for-finding-the-capabilities/20250616-232735
-base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-patch link:    https://lore.kernel.org/r/20250616152515.966480-1-18255117159%40163.com
-patch subject: [PATCH] PCI: endpoint: Use common PCI host bridge APIs for finding the capabilities
-config: powerpc-randconfig-r073-20250617 (https://download.01.org/0day-ci/archive/20250617/202506171435.UiUpSaqs-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250617/202506171435.UiUpSaqs-lkp@intel.com/reproduce)
+> I pointed to the wrong function. It's not of_pci_make_host_bridge_node()
+> [1] but of_pci_make_dev_node() which creates a node with a similar naming
+> and makes things not working on my side.
+> 
+> [1] https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L694
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506171435.UiUpSaqs-lkp@intel.com/
+Ok, so your issue is not related patches applied from the "PCI: of: Create
+device-tree PCI host bridge node" series.
+  https://lore.kernel.org/all/20250224141356.36325-6-herve.codina@bootlin.com/
 
-All errors (new ones prefixed by >>):
+Indeed, this series add the node creation for the host bridge with
+of_pci_make_host_bridge_node() but you pointed now of_pci_make_dev_node()
+which is the creation for PCI device node and this function was not modify by the
+series.
 
->> drivers/pci/controller/dwc/pcie-designware-ep.c:90:9: error: call to undeclared function 'PCI_FIND_NEXT_CAP_TTL'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      90 |         return PCI_FIND_NEXT_CAP_TTL(dw_pcie_ep_read_cfg, PCI_CAPABILITY_LIST,
-         |                ^
-   1 error generated.
+of_pci_make_host_bridge_node() should not create anything. Can you confirm on your
+side that it doesn't create any nodes.
 
+If so, maybe the problem comes from of_irq_parse_raw() or similar.
 
-vim +/PCI_FIND_NEXT_CAP_TTL +90 drivers/pci/controller/dwc/pcie-designware-ep.c
+...
 
-    87	
-    88	static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
-    89	{
-  > 90		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_ep_read_cfg, PCI_CAPABILITY_LIST,
-    91					     cap, ep, func_no);
-    92	}
-    93	
+> 
+> > 
+> > On this system, I didn't observed any issues but of course, the PCIe drivers are
+> > different.
+> > Also, on my system, no node were created by of_pci_make_host_bridge_node().  
+> 
+> Sorry for the confusion, it is of_pci_make_dev_node() on my side which
+> creates the node.
+> 
+> > 
+> > To be honest, I didn't re-test recently to see if something has been broken.
+> > I can do that on my side with my system.
+
+I have re-tested and I confirm that I have no issue on my system.
+
+> > 
+> > On your side, maybe you can have look at the Armada PCIe driver and see if
+> > something could explain your behavior. I am not sure that you need to add the
+> > pci@0,0 node in your DT.  
+> 
+> I can't find a driver that uses the approach I'm trying in my patches. This
+> approach was suggested in the review process [2] by Rob who mentioned that
+> now we should be able drop legacy interrupt controller nodes. There are
+> some Apple device trees that points the interrupt-map to the port node (the
+> way I tried in my workaround) [3], but I can't find more than that.
+> 
+> The topology in my case is:
+> 
+> root@smarc-rzg3s:~# lspci -t
+> -[0000:00]---00.0-[01]----00.0
+> 
+> root@smarc-rzg3s:~# lspci
+> 00:00.0 PCI bridge: Renesas Technology Corp. Device 0033
+> 01:00.0 Non-Volatile memory controller: Micron Technology Inc 2550 NVMe SSD
+> (DRAM-less) (rev 01)
+> 
+> When not working pci@0,0 is exported as follows in rootfs:
+> 
+> root@smarc-rzg3s:~# ls /sys/firmware/devicetree/base/soc/pcie@11e40000 -l
+> -r--r--r--    1 root     root             4 Jan 12 10:28 #address-cells
+> -r--r--r--    1 root     root             4 Jan 12 10:28 #interrupt-cells
+> -r--r--r--    1 root     root             4 Jan 12 10:28 #size-cells
+> -r--r--r--    1 root     root             8 Jan 12 10:28 bus-range
+> -r--r--r--    1 root     root            13 Jan 12 10:28 clock-names
+> -r--r--r--    1 root     root            24 Jan 12 10:28 clocks
+> -r--r--r--    1 root     root            26 Jan 12 10:28 compatible
+> -r--r--r--    1 root     root             4 Jan 12 10:28 device-id
+> -r--r--r--    1 root     root             4 Jan 12 10:28 device_type
+> -r--r--r--    1 root     root            28 Jan 12 10:28 dma-ranges
+> -r--r--r--    1 root     root             0 Jan 12 10:28 interrupt-controller
+> -r--r--r--    1 root     root           144 Jan 12 10:28 interrupt-map
+> -r--r--r--    1 root     root            16 Jan 12 10:28 interrupt-map-mask
+> -r--r--r--    1 root     root           164 Jan 12 10:28 interrupt-names
+> -r--r--r--    1 root     root             4 Jan 12 10:28 interrupt-parrent
+
+Why parrent instead of parent in interrupt-parrent ?
+
+> -r--r--r--    1 root     root           192 Jan 12 10:28 interrupts
+> -r--r--r--    1 root     root             5 Jan 12 10:28 name
+> -r--r--r--    1 root     root             4 Jan 12 10:28 num-lanes
+> drwxr-xr-x    2 root     root             0 Jan 12 10:17 pci@0,0
+> -r--r--r--    1 root     root             4 Jan 12 10:28 phandle
+> -r--r--r--    1 root     root             4 Jan 12 10:28 pinctrl-0
+> -r--r--r--    1 root     root             8 Jan 12 10:28 pinctrl-names
+> -r--r--r--    1 root     root             4 Jan 12 10:28 power-domains
+> -r--r--r--    1 root     root            28 Jan 12 10:28 ranges
+> -r--r--r--    1 root     root            16 Jan 12 10:28 reg
+> -r--r--r--    1 root     root             4 Jan 12 10:28 renesas,sysc
+> -r--r--r--    1 root     root            63 Jan 12 10:28 reset-names
+> -r--r--r--    1 root     root            56 Jan 12 10:28 resets
+> -r--r--r--    1 root     root             5 Jan 12 10:28 status
+> -r--r--r--    1 root     root             4 Jan 12 10:28 vendor-id
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~# ls
+> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0 -l
+> -r--r--r--    1 root     root             4 Jan 12 10:17 #address-cells
+> -r--r--r--    1 root     root             4 Jan 12 10:17 #interrupt-cells
+> -r--r--r--    1 root     root             4 Jan 12 10:17 #size-cells
+> -r--r--r--    1 root     root             8 Jan 12 10:17 bus-range
+> -r--r--r--    1 root     root            41 Jan 12 10:17 compatible
+> -r--r--r--    1 root     root             4 Jan 12 10:17 device_type
+> -r--r--r--    1 root     root           144 Jan 12 10:17 interrupt-map
+> -r--r--r--    1 root     root            16 Jan 12 10:17 interrupt-map-mask
+> -r--r--r--    1 root     root            32 Jan 12 10:17 ranges
+> -r--r--r--    1 root     root            20 Jan 12 10:17 reg
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~# cat
+> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0/compatible
+> pci1912,33pciclass,060400pciclass,0604root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~#
+> root@smarc-rzg3s:~#
+> 
+> In case I describe a port in device tree, it works because the pci@0,0 is
+> not created anymore when device is enumerated and thus the interrupt
+> parsing is working.
+> 
+> Herve: do you have some hints?
+
+First interrupt-parrent in your /sys/firmware/devicetree/base/soc/pcie@11e40000
+files.
+
+If it is just a typo in this email, maybe the interrupt parsing itself.
+
+Can you provide an extract for the DT with nodes created at runtime.
+I mean can you run 'dtc -I dtb -O dts /proc/device-tree' and provide the output
+related to PCI nodes including the PCIe controller ?
+
+> 
+> Rob: do you know some device trees where the interrupt-map points to the
+> node itself as suggested in [2] so that I can check is something is missing
+> on my side?
+> 
+> Thank you,
+> Claudiu
+> 
+> [2] https://lore.kernel.org/all/20250509210800.GB4080349-robh@kernel.org/
+> [3]
+> https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/apple/t8112.dtsi#L951
+> 
+
+Best regards,
+Hervé
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
