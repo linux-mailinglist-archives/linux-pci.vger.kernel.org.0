@@ -1,80 +1,57 @@
-Return-Path: <linux-pci+bounces-29934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8EFAADD0B5
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:58:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 738DAADD0DC
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 17:05:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22675188AC00
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 14:52:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AE113ABCAF
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 15:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9EBC21C179;
-	Tue, 17 Jun 2025 14:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2962E54C0;
+	Tue, 17 Jun 2025 15:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2+LJqlx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ik/SjuC6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C372EF653;
-	Tue, 17 Jun 2025 14:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F602E54BF
+	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 15:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171906; cv=none; b=ulPDby9HCxvJTbXoFsw2L6d3cZgoUDw+5Ez7QCI2+mkabRk4Az5Wnjwgf/eqw44cE9xHQp0Ap2HGtg5qHTZ/zu9ngTwz1CrUb81ZEuLFTZ0PQ8gXQnWsl++Js7gO6wvMRllhVCapD3+Oq2iLv4SIg/44yN3udA4ud/kYtf5jobc=
+	t=1750172583; cv=none; b=QzZ3foq3XdtezXx0iccCcrmtlVSmWLguUwT9mQol0C/Q1SxRFD2sJRi/I507oNQm/En91i56ullW+PaAK1b+cueH+cm8amZfOUJiJ8DIEKGJutKgNT1UG10eahoqondqvo7Ld+bJad7lB4bZbagXCXiNv2mEs3y7G1ILy7R5qo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171906; c=relaxed/simple;
-	bh=GJNDpDkdKnWwO964hGEn7dPszcj2MajR6OvVee6Hb1o=;
+	s=arc-20240116; t=1750172583; c=relaxed/simple;
+	bh=e5ZH9Bd2clJV7cgvDrUPhxhBAxL/BCrQfMwiv5HInAg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=T5VOZwHiPtPc2MpWclNBGByE/f+fdcBToxoGFScrtZ8ZJ2lVxZlaXdjElbM3/QsransM4V0B12ymJutCeYH6ewAGDoZbU+E4+5FU1OY5LfHNKBQCvwxnuPyvZZzQn7CWhC2pckCsX1YgEqx5s2/LeQmM/BjqJKmBMUoKvsOYnoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2+LJqlx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF6EC4CEE3;
-	Tue, 17 Jun 2025 14:51:46 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uYLJ5EPV++za3ocSO/g2WiUuUUwYmOVEFmO+1v9L4prZS0Sx7cOk0/YcGNcJFOM2uyu+tRAnB9UPWtNlf4jk1ixiOBmIFohNlX4FGz5Wwzykvj06SuxfTbx+A4y7Tl1YTcUunm8zmrNA5e5jUs66kQiuVtzk0rNCJbhrwXfxXZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ik/SjuC6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3946C4CEE3;
+	Tue, 17 Jun 2025 15:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750171906;
-	bh=GJNDpDkdKnWwO964hGEn7dPszcj2MajR6OvVee6Hb1o=;
+	s=k20201202; t=1750172583;
+	bh=e5ZH9Bd2clJV7cgvDrUPhxhBAxL/BCrQfMwiv5HInAg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Z2+LJqlx6+TL/hZHm8WCskW3k2OV7kpcNCs02+3FZQFT09KQ8TJU3zto91XJ+DyEq
-	 /z/1HcGzaeoptb5J2eo2eIBP1CkROT1/0SuZW74f55fEybTsVTIsF9Kr4NSDPf6oEz
-	 oxyGbN6RUfnxd1apQerveF99Mt7FaIifoK7VnV0Ic803vdpspcb5VlalWI0JaXMCbo
-	 mm8fU076psXpF1DAbIx94NXo8gSq0eWYe//4sEuGwCLi1Uid0UGjtXdR03tScpHa4j
-	 s9I5TTvL2fLecj9y89qIvyrhifu9krBxJMMCDQyulGp2DcYqgLVTlycV4nlBKcCOof
-	 7842kN3i4S7kw==
-Date: Tue, 17 Jun 2025 09:51:44 -0500
+	b=Ik/SjuC6D1GaiZXfHfqkwc0AO5YcBZrd3IGojdLhUxPet8Ow3dAykpVpnOPMRYMDD
+	 3c/lTrv1njghjMLCK8eUqOWU3onLK5MqIuM6vh5ZJvlzr1r+dncRxpTZtwgw65+Y6o
+	 Be52+nwuX9lVarItPzRT0Db1xrKcI8RisJDCdwn0wGJggDxNcaRaTA+q1dAi3wE6H1
+	 ptl5vALBWwBihgauv9SHKxxBYD5GA0ibyBUcuxvkPSAIGEFThFQnc7GHnhVytwb6Pn
+	 BjPz+gdx1ILyee3UJuh3xLfK9iLWOrIht0HZipxH5mmoV1d3xfssEqrzy3cuiycmwm
+	 uoaE+zn9nHAfQ==
+Date: Tue, 17 Jun 2025 10:03:01 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH stblinux/next 2/2] clk: rp1: Implement ramaining clock
- tree
-Message-ID: <20250617145144.GA1135520@bhelgaas>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: linux-pci@vger.kernel.org, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v7] PCI: Add pcie_link_is_active() to determine if the
+ PCIe link
+Message-ID: <20250617150301.GA1135647@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,22 +60,238 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b70b9f2d50e3155509c2672e6779c0840f38ad5e.1750165398.git.andrea.porta@suse.com>
+In-Reply-To: <1333820200.1308028.1750170324447.JavaMail.zimbra@raptorengineeringinc.com>
 
-On Tue, Jun 17, 2025 at 03:10:27PM +0200, Andrea della Porta wrote:
-> The RP1 clock generator driver currently defines only the fundamental
-> clocks such as the front PLLs for system, audio and video subsystems
-> and the ethernet clock.
+[+cc ppc folks, Lukas]
+
+On Tue, Jun 17, 2025 at 09:25:24AM -0500, Timothy Pearson wrote:
+>  is active
+
+Subject line needs to be complete in itself.  No need to include
+"PCIe" in the "PCIe link" part.  We already say PCI or PCIe twice even
+without that.
+
+Commit log needs to be complete in itself also.  It's OK to repeat the
+subject line in the commit log, but definitely not to split a sentence
+across them.
+
+> Introduce a common API to check if the PCIe link is active, replacing
+> duplicate code in multiple locations.
+
+Mention the actual function name here, not just "a common API", e.g., 
+"Add pcie_link_is_active() ..."
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+> ---
+>  arch/powerpc/kernel/eeh_driver.c  |  8 +++++++-
+>  drivers/pci/hotplug/pciehp.h      |  1 -
+>  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
+>  drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
+>  drivers/pci/pci.c                 | 31 ++++++++++++++++++++++++++---
+>  include/linux/pci.h               |  4 ++++
+>  6 files changed, 43 insertions(+), 36 deletions(-)
 > 
-> Add the remaining clocks to the tree so as to be completed.
+> diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+> index 441a3562bddd..4fdd62432f2c 100644
+> --- a/arch/powerpc/kernel/eeh_driver.c
+> +++ b/arch/powerpc/kernel/eeh_driver.c
+> @@ -1097,8 +1097,14 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+>  		eeh_pe_dev_mode_mark(pe, EEH_DEV_REMOVED);
+>  
+>  		pci_lock_rescan_remove();
+> -		pci_hp_remove_devices(bus);
+> +		bus = eeh_pe_bus_get(pe);
+> +		if (bus)
+> +			pci_hp_remove_devices(bus);
+> +		else
+> +			pr_err("%s: PCI bus for PHB#%x-PE#%x disappeared\n",
+> +				__func__, pe->phb->global_number, pe->addr);
+>  		pci_unlock_rescan_remove();
 
-In subject, s/ramaining/remaining/
+Is this an unrelated change included here by mistake?  I don't see the
+connection with pcie_link_is_active().
 
-I guess we actually get some functional benefit here (something that
-previously did not work, will start working after this patch)?  It
-would be good to mention that here.  "Completing the tree" sounds
-nice, but if I were being asked to merge this, I'd like to know what
-benefit it brings.
+>  		/* The passed PE should no longer be used */
+>  		return;
+>  	}
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index debc79b0adfb..79df49cc9946 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
+>  int pciehp_card_present(struct controller *ctrl);
+>  int pciehp_card_present_or_link_active(struct controller *ctrl);
+>  int pciehp_check_link_status(struct controller *ctrl);
+> -int pciehp_check_link_active(struct controller *ctrl);
+>  bool pciehp_device_replaced(struct controller *ctrl);
+>  void pciehp_release_ctrl(struct controller *ctrl);
+>  
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index bcc938d4420f..6cc1b27b3b11 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	/* Turn the slot on if it's occupied or link is up */
+>  	mutex_lock(&ctrl->state_lock);
+>  	present = pciehp_card_present(ctrl);
+> -	link_active = pciehp_check_link_active(ctrl);
+> +	link_active = pcie_link_is_active(ctrl->pcie->port);
+>  	if (present <= 0 && link_active <= 0) {
+>  		if (ctrl->state == BLINKINGON_STATE) {
+>  			ctrl->state = OFF_STATE;
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index ebd342bda235..d29ce3715a44 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
+>  	pcie_do_write_cmd(ctrl, cmd, mask, false);
+>  }
+>  
+> -/**
+> - * pciehp_check_link_active() - Is the link active
+> - * @ctrl: PCIe hotplug controller
+> - *
+> - * Check whether the downstream link is currently active. Note it is
+> - * possible that the card is removed immediately after this so the
+> - * caller may need to take it into account.
+> - *
+> - * If the hotplug controller itself is not available anymore returns
+> - * %-ENODEV.
+> - */
+> -int pciehp_check_link_active(struct controller *ctrl)
+> -{
+> -	struct pci_dev *pdev = ctrl_dev(ctrl);
+> -	u16 lnk_status;
+> -	int ret;
+> -
+> -	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+> -		return -ENODEV;
+> -
+> -	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> -	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+> -
+> -	return ret;
+> -}
+> -
+>  static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+>  {
+>  	u32 l;
+> @@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
+>  	if (ret)
+>  		return ret;
+>  
+> -	return pciehp_check_link_active(ctrl);
+> +	return pcie_link_is_active(ctrl_dev(ctrl));
+>  }
+>  
+>  int pciehp_query_power_fault(struct controller *ctrl)
+> @@ -614,7 +587,7 @@ static void pciehp_ignore_link_change(struct controller *ctrl,
+>  	 * Synthesize it to ensure that it is acted on.
+>  	 */
+>  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+> -	if (!pciehp_check_link_active(ctrl) || pciehp_device_replaced(ctrl))
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)) || pciehp_device_replaced(ctrl))
+>  		pciehp_request(ctrl, ignored_events);
+>  	up_read(&ctrl->reset_lock);
+>  }
+> @@ -921,7 +894,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
+>  	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
+>  				   PCI_EXP_SLTSTA_DLLSC);
+>  
+> -	if (!pciehp_check_link_active(ctrl))
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+>  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+>  
+>  	return 0;
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e9448d55113b..ad639e60f3bd 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4908,7 +4908,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		return 0;
+>  
+>  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+> -		u16 status;
+>  
+>  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+>  		msleep(delay);
+> @@ -4924,8 +4923,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		if (!dev->link_active_reporting)
+>  			return -ENOTTY;
+>  
+> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
+> -		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +		if (pcie_link_is_active(dev) <= 0)
+>  			return -ENOTTY;
+>  
+>  		return pci_dev_wait(child, reset_type,
+> @@ -6230,6 +6228,33 @@ void pcie_print_link_status(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL(pcie_print_link_status);
+>  
+> +/**
+> + * pcie_link_is_active() - Checks if the link is active or not
+> + * @pdev: PCI device to query
+> + *
+> + * Check whether the physical link is active or not. Note it is
+> + * possible that the card is removed immediately after this so the
+> + * caller may need to take it into account.
+> + *
+> + * If the PCI device itself is not available anymore returns
+> + * %-ENODEV.
+> + *
+> + * Return: link state, or -ENODEV if the config read failes.
+> + */
+> +int pcie_link_is_active(struct pci_dev *pdev)
+> +{
+> +	u16 lnk_status;
+> +	int ret;
+> +
+> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+> +		return -ENODEV;
+> +
+> +	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
 
-Bjorn
+I know this is just carried over from the original definition, but
+"%#06x" would remove the ambiguity about whether the value is in
+decimal or hex.
+
+> +	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> +}
+> +EXPORT_SYMBOL(pcie_link_is_active);
+
+Unless something outside drivers/pci/ actually needs this, it should
+not be exported and it should be declared in drivers/pci/pci.h
+instead.
+
+>  /**
+>   * pci_select_bars - Make BAR mask from the type of resource
+>   * @dev: the PCI device for which BAR mask is made
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 05e68f35f392..5d1c9f718ac8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1993,6 +1993,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
+>  			    pci_select_bars(pdev, IORESOURCE_MEM));
+>  }
+>  
+> +int pcie_link_is_active(struct pci_dev *dev);
+>  #else /* CONFIG_PCI is not enabled */
+>  
+>  static inline void pci_set_flags(int flags) { }
+> @@ -2141,6 +2142,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  {
+>  	return -ENOSPC;
+>  }
+> +
+> +static inline bool pcie_link_is_active(struct pci_dev *dev)
+> +{ return false; }
+
+I doubt we would need this stub.
+
+>  #endif /* CONFIG_PCI */
 
