@@ -1,71 +1,60 @@
-Return-Path: <linux-pci+bounces-29947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 615DCADD629
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 18:30:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A690ADD705
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 18:40:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 660D12C4698
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:22:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6696519E4373
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46F882E54D9;
-	Tue, 17 Jun 2025 16:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A0F2236453;
+	Tue, 17 Jun 2025 16:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="fodlhOZZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfgI3HFf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983FC1A2632
-	for <linux-pci@vger.kernel.org>; Tue, 17 Jun 2025 16:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7592221F14;
+	Tue, 17 Jun 2025 16:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750176987; cv=none; b=WOLYxxTUQeU+PDzCHVmptVkRfE4UDobPMH8vfzkXHBPSnayrNV+gZKrJSZpp3eSIZpYVlolWr5YM+f4BMQbWCrrSBmMKCd0qrYkZKqPKGZqNVPTRj91Z+vr7+rGLma7JvqwdlFUggOwcMmt3N0uGHgwDXvf67Iy/m80GPZoAB64=
+	t=1750177420; cv=none; b=fLhggOPk57CrZtUEfPaBVH/ZCHxGB+ORTBvsTlqk3T5zoNpi5w23q8khaqW4jX9RjNPmHWZ9XNqCcwzhVagME4x+kEyxmgP7zJJ0jYYpy+4AShFnGyv5nbzUo8nOMR7WeGBX1MRR21R5cBfS8t520FzTB+7Dou8rjOti0WUf8S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750176987; c=relaxed/simple;
-	bh=tXVLViBoyIkBkr/3Jx42A0yxOtW+jyVmSWc3detDxV8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=hI36KvcNRZIyxW4jIKzPzNQisllvLiZ9Arqc7R6qEmXe4laTh4JjwHXis+lX2K5Lf/ICfP1pMSCS6qAnXXTq5yJ7cwM5pcQvDSbglTdeDM11Wu5djkpxV6aYAU9kGkx2SoUAL6dIhgkSDdBFFvLu4BVC4FgM8FwJ7X359Dll41Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=fodlhOZZ; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id D392B8288DB2;
-	Tue, 17 Jun 2025 11:16:24 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 4ERCxKvt3Qrf; Tue, 17 Jun 2025 11:16:24 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 01F308288C59;
-	Tue, 17 Jun 2025 11:16:24 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 01F308288C59
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750176984; bh=cX06GwlLMww3MyZFmLLFEQH4I2gcuBa1AAiBsj362MI=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=fodlhOZZe7HZSSF7Pg5ktbeSNHb0JyWrCWF8x3IZUMxHlK9yj/DHjOerk/uwIkoB8
-	 NMHYqOS5vSS+xAeGfAdg2i/HTrBu7X+z6k6L6s1oHfPfhqLNs6JGItOKHyAnDFoheE
-	 kXll4GqHu+CWtlywjVVkypubKBwI5RAMfR5J+kxU=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bgM6KWG3rVLy; Tue, 17 Jun 2025 11:16:23 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id C9283828594F;
-	Tue, 17 Jun 2025 11:16:23 -0500 (CDT)
-Date: Tue, 17 Jun 2025 11:16:19 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, mahesh <mahesh@linux.ibm.com>, 
-	Oliver <oohall@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	Lukas Wunner <lukas@wunner.de>
-Message-ID: <699078203.1309081.1750176979904.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <988492931.1308196.1750174918075.JavaMail.zimbra@raptorengineeringinc.com>
-References: <988492931.1308196.1750174918075.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: [PATCH v10] PCI: Add pcie_link_is_active() function
+	s=arc-20240116; t=1750177420; c=relaxed/simple;
+	bh=V8t5bo5FF6oerOdwGkDXKtDkx0wzlN6pNvzLOhsekAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOeQQM1CLbHx58aR6eUVYi/sq43uUdgQwVl/oa1GggNK4q5sq4AZlsqRIB2a8TDzWlnDEm2c60J3ChW6P/VaPozce7LNBgB9x0iBaoCThTQNNNwlnP2qVOk5KMkmh+i0VgDWM/gUbmt+OJJPYlG5OtXJHHrSYftW2Yn/PbLeGiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfgI3HFf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3B54C4CEE3;
+	Tue, 17 Jun 2025 16:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750177420;
+	bh=V8t5bo5FF6oerOdwGkDXKtDkx0wzlN6pNvzLOhsekAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jfgI3HFf4DEK5tMMrbCmXDo5gMBLSPmrFShaTkHn2SAYErrKEoooB22PsftEu4Dn6
+	 gd/vU85cZRp54Nkmkt8VCBy+Mobpj/xQ27uts5EZWwRstndjB5Mbpms0JmfsNhJVoN
+	 U/YRwgamazLTUCw5K7qGQlE77O6v4EgbH+X1tYTXbMNySQPZC4rzZiaX9FPI97Kkc+
+	 h0Bl2j/VYdgEtIZmIiWxxfPyAlaCwyZZF+QpOCIMQQ2koP3yAm5llS8cj9Bz3HKRbW
+	 9m80iAeyOKXvCBxxi27V0NdXOKVLYqwEbvZB9/MZAu3tt4Y8TFqQKGhd5pT/AeKmSx
+	 SclUXo7xd5Psg==
+Date: Tue, 17 Jun 2025 21:53:28 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, conor+dt@kernel.org, 
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com, 
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v5 0/4] pci: qcom: Add QCS615 PCIe support
+Message-ID: <t6bwkld55a2dcozxz7rxnvdgpjis6oveqzkh4s7nvxgikws4rl@fn2sd7zlabhe>
+References: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
+ <d67ba247-6b2d-4f2e-9583-ddbe375bf08d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,25 +62,68 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: Add pcie_link_is_active() function
-Thread-Index: Tf5MFWbY9QC7+aSYgQMp7TPgJM6ygEAOFw9L
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d67ba247-6b2d-4f2e-9583-ddbe375bf08d@quicinc.com>
 
+On Tue, Jun 17, 2025 at 06:34:03PM +0800, Ziyue Zhang wrote:
+> 
+> On 5/27/2025 3:20 PM, Ziyue Zhang wrote:
+> > This series adds document, phy, configs support for PCIe in QCS615.
+> > 
+> > This series depend on the dt-bindings change
+> > https://lore.kernel.org/all/20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com/
+> > 
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> > ---
+> > Have following changes:
+> > 	- Add a new Document the QCS615 PCIe Controller
+> > 	- Add configurations in devicetree for PCIe, including registers, clocks, interrupts and phy setting sequence.
+> > 	- Add configurations in devicetree for PCIe, platform related gpios, PMIC regulators, etc.
+> > 
+> > Changes in v5:
+> > - Drop qcs615-pcie.yaml and use sm8150, as qcs615 is the downgraded
+> >    version of sm8150, which can share the same yaml.
+> > - Drop compatible enrty in driver and use sm8150's enrty (Krzysztof)
+> > - Fix the DT format problem (Konrad)
+> > - Link to v4: https://lore.kernel.org/all/20250507031559.4085159-1-quic_ziyuzhan@quicinc.com/
+> > 
+> > Changes in v4:
+> > - Fixed compile error found by kernel test robot(Krzysztof)
+> > - Update DT format (Konrad & Krzysztof)
+> > - Remove QCS8550 compatible use QCS615 compatible only (Konrad)
+> > - Update phy dt bindings to fix the dtb check errors.
+> > - Link to v3: https://lore.kernel.org/all/20250310065613.151598-1-quic_ziyuzhan@quicinc.com/
+> > 
+> > Changes in v3:
+> > - Update qcs615 dt-bindings to fit the qcom-soc.yaml (Krzysztof & Dmitry)
+> > - Removed the driver patch and using fallback method (Mani)
+> > - Update DT format, keep it same with the x1e801000.dtsi (Konrad)
+> > - Update DT commit message (Bojor)
+> > - Link to v2: https://lore.kernel.org/all/20241122023314.1616353-1-quic_ziyuzhan@quicinc.com/
+> > 
+> > Changes in v2:
+> > - Update commit message for qcs615 phy
+> > - Update qcs615 phy, using lowercase hex
+> > - Removed redundant function
+> > - split the soc dtsi and the platform dts into two changes
+> > - Link to v1: https://lore.kernel.org/all/20241118082619.177201-1-quic_ziyuzhan@quicinc.com/
+> > 
+> > Krishna chaitanya chundru (2):
+> >    arm64: dts: qcom: qcs615: enable pcie
+> >    arm64: dts: qcom: qcs615-ride: Enable PCIe interface
+> > 
+> > Ziyue Zhang (2):
+> >    dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+> >      for QCS615
+> >    dt-bindings: PCI: qcom,pcie-sm8150: document qcs615
+> > 
 
+Applied to pci/dt-bindings, thanks!
 
------ Original Message -----
-> From: "Timothy Pearson" <tpearson@raptorengineeringinc.com>
-> To: "Bjorn Helgaas" <helgaas@kernel.org>
-> Cc: "linux-pci" <linux-pci@vger.kernel.org>, "mahesh" <mahesh@linux.ibm.com>, "Oliver" <oohall@gmail.com>, "Madhavan
-> Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>, "Lukas Wunner" <lukas@wunner.de>
-> Sent: Tuesday, June 17, 2025 10:41:58 AM
-> Subject: [PATCH v10] PCI: Add pcie_link_is_active() function
+- Mani
 
-> Add pcie_link_is_active() function to check if the physical PCIe link is
-> active, replacing duplicate code in multiple locations.
-
-Note I have re-added EXPORT_SYMBOL here, since on further inspection it looks like we need to export the symbol after all.  The problem is that some hotplug drivers (pnv-php in particular) both a.) need this functionality and b.) may be built as a module.
-
-I think we should still keep the definition in the PCI include directory, but the symbol itself needs to be exported.
+-- 
+மணிவண்ணன் சதாசிவம்
 
