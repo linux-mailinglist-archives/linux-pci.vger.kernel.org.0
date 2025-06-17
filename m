@@ -1,96 +1,104 @@
-Return-Path: <linux-pci+bounces-29953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-29954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5850ADD99F
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 19:08:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 073E5ADD7C4
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 18:49:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2044419E1BB4
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:46:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3561F7A8377
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jun 2025 16:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46FB4285056;
-	Tue, 17 Jun 2025 16:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC4ED2EA72C;
+	Tue, 17 Jun 2025 16:45:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGZ62YGH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCq/D8Vl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159A81ADC97;
-	Tue, 17 Jun 2025 16:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA962FA642;
+	Tue, 17 Jun 2025 16:45:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178510; cv=none; b=Qab0/LfpDksU6iivPbEqF+rEcYMBG9t8F27MlZJZCNny8Rqi4rUl3p4ydQgClLWjtptF5JfJwT0Hs9clVrJpDUGgdmRZxV3PEuQfz97dKpfV33HFxIjxsuGrNg8j0UBWG1ZssPxMQiNsB6d5fCB9Im1EDHQD0P1x6VlPlwiOGJY=
+	t=1750178744; cv=none; b=dDQVGTFEy+F2OjlNO/q4QxFLnvwJSYVVZ22olJmHuhdFa628RApHwwQ2VLD0aOPTfPh3AksZH3PgW3C2o+FAjSnk7UycYrWJvlmqu6BJhb6S7nQOaTN+cbD/nwUEoUJTwOdsGrBFxg3sYHn0CpkkakHpVWVOUJG8TM1PXTHhl9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178510; c=relaxed/simple;
-	bh=3deT+Pse1UsDb9IBGWHRo7tZxOhm4Ao/X+bA5Ha+pfY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=s/OfNRjuRjJsxDKobb7774L7KRVmWrNZEGhGuWDFUbddiB1KZzgxnQz/Orqr+4XtXWlZFnu1isn5pYiLqlYGrjfctLzRYsPjmUXNpHAk6ZM1xgbI6pKD3MePyFxnj0/rBOT1XR/WIM23BdRXritrglYUI1pU+Xxjboikfpe0ZGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGZ62YGH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64392C4CEE3;
-	Tue, 17 Jun 2025 16:41:42 +0000 (UTC)
+	s=arc-20240116; t=1750178744; c=relaxed/simple;
+	bh=eOuj0um5s9Ht12TDusUThSaJpwRfZcw9YesjbP8lFYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M4AcNiSbVtbKc7yrE9Bwan6BWCwF3Wxmas7QYyIUrHn0jYGt99H7WJbNeiJOd+XO0GeQ4ATWd+g1DHEO6l49Dox2BawRgbDuYTEZ9fkJD1xjq/nycVehRunx6c91sKyo4/RyGXYyIgvDh0968/kLMojzd6SptGr7jdDa92xggBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCq/D8Vl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850F7C4CEE3;
+	Tue, 17 Jun 2025 16:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750178509;
-	bh=3deT+Pse1UsDb9IBGWHRo7tZxOhm4Ao/X+bA5Ha+pfY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=MGZ62YGHhakSEeW9wUJDW+ExY36reNAOY++1Q1A/gs5PKurpoNP8K3kB6J+g2OfvC
-	 yfCvnN049RM/C0jwyolm5JK7owV37sWKSZjQHtVIiFRZVffVFQHNeMZpMbTTAmvOqM
-	 HfV8vtRwX7OqkXj5kff9ilr8PFuM+qUc3SzhbZ50FllluclqM3pnMm/qWy8ZMp9fU/
-	 gaQqez5yR7te87q1BPS/zkHHXrpDV4guZflICuOBr5/5WsZM/Yf1kI5NUsQifyyuUD
-	 sMMyfn+dkr3c/kh/kf0vgjzgY5DodC0tWHNml0DLLWwJBsr+/yFv0fA7J0BcKjzFnS
-	 hp0LNZ6Fm4Xng==
+	s=k20201202; t=1750178744;
+	bh=eOuj0um5s9Ht12TDusUThSaJpwRfZcw9YesjbP8lFYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nCq/D8VlWTpBu2CPANOsbvbUXzRlauRrRrhvKXNMQbHx7oHcptA015u354mZ6eAnA
+	 IJEhHIeHXRFhY3vrpAl/gYAOFJ1bldN85pVnT5eXTQ7U98Q8wvOCKTEqjQy37EP977
+	 pts6wF7kM8qNH3e/bnltf4Z7sHQOwdtIN3R8lHt4WshYujrGYN5Tig4Yp2cvCkWO2J
+	 n9MbQ/m4F7WGE+/Yfzva3ueY3bMljqBao0lFuLJPinE0EXHygyIydpXre1sbng4+Mr
+	 pZrFEkqkEdIryNU/rODBTULBho6M4VVUFIZR3A4gC89guav1pHTiI1lrt4QdjqQk0U
+	 bgXU9NvIASv3w==
+Date: Tue, 17 Jun 2025 22:15:36 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
- bhelgaas@google.com, krzk+dt@kernel.org, neil.armstrong@linaro.org, 
- abel.vesa@linaro.org, conor+dt@kernel.org, vkoul@kernel.org, 
- kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com, 
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-In-Reply-To: <20250529035635.4162149-1-quic_ziyuzhan@quicinc.com>
-References: <20250529035635.4162149-1-quic_ziyuzhan@quicinc.com>
-Subject: Re: (subset) [PATCH v6 0/6] pci: qcom: Add QCS8300 PCIe support
-Message-Id: <175017850194.43806.878167709542899652.b4-ty@kernel.org>
-Date: Tue, 17 Jun 2025 22:11:41 +0530
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org, 
+	robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: Extend max-link-speed to
+ support PCIe Gen5/Gen6
+Message-ID: <q5ltnilbdhfxwh6ucjnm3wichrmu5wyjsx6eheiazqypveu3sm@euuvpjwu77h4>
+References: <20250529021026.475861-1-18255117159@163.com>
+ <20250529021026.475861-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250529021026.475861-2-18255117159@163.com>
 
-
-On Thu, 29 May 2025 11:56:29 +0800, Ziyue Zhang wrote:
-> This series depend on the sa8775p gcc_aux_clock and link_down reset change
-> https://lore.kernel.org/all/20250529035416.4159963-1-quic_ziyuzhan@quicinc.com/
+On Thu, May 29, 2025 at 10:10:24AM +0800, Hans Zhang wrote:
+> Update the device tree binding documentation for PCI to include
+> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
+> The original documentation limited the value to 1~4 (Gen1~Gen4),
+> but the kernel now supports up to Gen6. This change ensures the
+> documentation aligns with the actual code implementation.
 > 
-> This series adds document, phy, configs support for PCIe in QCS8300.
-> It also adds 'link_down' reset for sa8775p.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  dtschema/schemas/pci/pci-bus-common.yaml | 2 +-
+
+As Rob commented in v1, this file lives in dtschema project. So update it there:
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
+
+- Mani
+
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Have follwing changes:
-> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
-> 	- Add compatible for qcs8300 platform.
-> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
-> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+> index ca97a00..413ef05 100644
+> --- a/dtschema/schemas/pci/pci-bus-common.yaml
+> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
+> @@ -121,7 +121,7 @@ properties:
+>        unnecessary operation for unsupported link speed, for instance, trying to
+>        do training for unsupported link speed, etc.
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> -    enum: [ 1, 2, 3, 4 ]
+> +    enum: [ 1, 2, 3, 4, 5, 6 ]
+>  
+>    num-lanes:
+>      description: The number of PCIe lanes
+> -- 
+> 2.25.1
 > 
-> [...]
 
-Applied, thanks!
-
-[2/6] dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
-      commit: be84da3e19666da5c43c5c4ad86eff456510bd77
-
-Best regards,
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
