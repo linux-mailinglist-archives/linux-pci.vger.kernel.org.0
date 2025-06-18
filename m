@@ -1,50 +1,49 @@
-Return-Path: <linux-pci+bounces-30042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59DCBADE889
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 12:22:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7325ADE885
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 12:22:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AC5D188459A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 10:22:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1183164AB9
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 10:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80F3028853B;
-	Wed, 18 Jun 2025 10:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77272BEC32;
+	Wed, 18 Jun 2025 10:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtoE2TO6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgl/Ah6c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5703F2857DA;
-	Wed, 18 Jun 2025 10:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87019286437;
+	Wed, 18 Jun 2025 10:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241959; cv=none; b=gA00EM+9V5FNsDHpf4djzljc3xLBnnvwE0j3zAQoicZZHcBKBGAOw5Hxn7zZMeasEQJmdLgBL9v7gjg8/L/aSLywQQ5lOu3gJ/h7dKy/qHr60MzrpGblUuNrzIvH7IhDF6tJ/CMzM5KBhFRiE1boPczTwpPOPQgar34FmWolbaY=
+	t=1750241964; cv=none; b=gdmTcCZkSKiNo4jXktow8twi5N3NKJbmlUciLhWa4RE5aFpbQ/85K65g4NrUPQF0oAKGa36nFhk3vYNO3rHwagmjiM+GXEPIubjeUj227bZ4ERbXqb+Ot/bYnHKNdmJxwzr7T2u9GQdW/ChlCorE0ssPhVexF56tV+32YtJq8fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241959; c=relaxed/simple;
-	bh=/dE8LD/ePWA/0RVJBLeEqlL5qzeRTK7k8l1BILw0Xkg=;
+	s=arc-20240116; t=1750241964; c=relaxed/simple;
+	bh=F5crFUYtXOGpORYOhqOnQl4MAMs4HYwDDiXJ5/3sjlU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EOE1tL1qQh16xU1BK/8siQyMYqROtqkz4iouDOZHjKhpeqcRrNSU1Z5KTRSBiuaE0hM1wW5JrHOEoXRf83refssvheigRi8bieMM3lrzFy7+qnlq64mq4+PURfLYfCB3kf+1h2dqrmoJ4jhKstuTLav9Kr/Qt5sJ8V38wgz7D7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtoE2TO6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF44C4CEED;
-	Wed, 18 Jun 2025 10:19:13 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=m/ODXLnHfsBy5cbCoTEKl3yf7svMHfA3bh2ohmgx/DD8aXgQR3dVHBgFlBkwishXv6SPze0PF6mrU49YPle38ZDlwvolzhwj7CyBkf9LTqq1+5APBYODkXcg0YvG53dDPzSmCJrErdHyboCG0lL3TBSpV6oo+yQ0PoxO14dSQFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgl/Ah6c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C282C4CEE7;
+	Wed, 18 Jun 2025 10:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750241959;
-	bh=/dE8LD/ePWA/0RVJBLeEqlL5qzeRTK7k8l1BILw0Xkg=;
+	s=k20201202; t=1750241964;
+	bh=F5crFUYtXOGpORYOhqOnQl4MAMs4HYwDDiXJ5/3sjlU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HtoE2TO6nsiem4sAbZcXTKDCGXCBgTjpiHmkRiYS9OiD4ThIoIAuhHdMM7neLqGng
-	 /WRXK9uIew4Ok+5QERMRAiSQySJKufdEQKEHFYcbL6I8AXuujy8AzkUgo5OkKkazCd
-	 URTPKvhJfXUtdtI6xLmhfYIQ/vfeKZspkFqmOMULz4NnBnpxQA/ABdTOjdpM7V6l1u
-	 h7NoQITY3WAX9GW5NilbFJRfK/6xxvnEVdrUVWDM5qG7vjMxIg9njmHUnATKf6+uTg
-	 p4lrzfehi7dnpyv+gkmDwY32TmztOcofMZr9GqpvCqSg5d+o4N4xhwg0R9M4nQK0eI
-	 Q2eZbJ0scdyWg==
+	b=tgl/Ah6cyQ0cNMwJaXFDtPgW8W4Hk7sQ8p4CqWkAHYoGYbj7Pa8rJO6ZVyKTaGyJj
+	 TsYEa55liFxnqn64xiqWxDBmjN9s8ojkDqaHff+1zCHD9kv+jUZeU0qi9bxRdeWKtU
+	 UCvwyyCP4hV+Wj1zQ2NZQrxn0MDX6OR/vMRqGIwUs4pRBzC2Ak+IHsTQ2lAMYxpROi
+	 RYZ1uRnNEniu74MTHHdcDnoI7sOdJc7XhjikwF1bzfi9EQN1L7vgVDRW1q7R8Beg4t
+	 +aLfk7NxIHLpVWuHDWvix+/UJLl1bafk4Tya1iin+Q77/tpN3pqsv9vTXz477K4p/f
+	 BEKG0JTWeVE1Q==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Wed, 18 Jun 2025 12:17:32 +0200
-Subject: [PATCH v5 17/27] arm64: cpucaps: Add GICv5 CPU interface (GCIE)
- capability
+Date: Wed, 18 Jun 2025 12:17:33 +0200
+Subject: [PATCH v5 18/27] arm64: smp: Support non-SGIs for IPIs
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-gicv5-host-v5-17-d9e622ac5539@kernel.org>
+Message-Id: <20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
 References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
 In-Reply-To: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,51 +71,270 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-Implement the GCIE capability as a strict boot cpu capability to
-detect whether architectural GICv5 support is available in HW.
+From: Marc Zyngier <maz@kernel.org>
 
-Plug it in with a naming consistent with the existing GICv3
-CPU interface capability.
+The arm64 arch has relied so far on GIC architectural software
+generated interrupt (SGIs) to handle IPIs. Those are per-cpu
+software generated interrupts.
 
+arm64 architecture code that allocates the IPIs virtual IRQs and
+IRQ descriptors was written accordingly.
+
+On GICv5 systems, IPIs are implemented using LPIs that are not
+per-cpu interrupts - they are just normal routable IRQs.
+
+Add arch code to set-up IPIs on systems where they are handled
+using normal routable IRQs.
+
+For those systems, force the IRQ affinity (and make it immutable)
+to the cpu a given IRQ was assigned to.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+[timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
+Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+[lpieralisi: changed affinity set-up, log]
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Will Deacon <will@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 7 +++++++
- arch/arm64/tools/cpucaps       | 1 +
- 2 files changed, 8 insertions(+)
+ arch/arm64/include/asm/smp.h |   7 ++-
+ arch/arm64/kernel/smp.c      | 142 ++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 114 insertions(+), 35 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 42ba76b6c8cd..2fa26129762c 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -3061,6 +3061,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_pmuv3,
- 	},
- #endif
-+	{
-+		.desc = "GICv5 CPU interface",
-+		.type = ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE,
-+		.capability = ARM64_HAS_GICV5_CPUIF,
-+		.matches = has_cpuid_feature,
-+		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, GCIE, IMP)
-+	},
- 	{},
- };
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index 2510eec026f7..d6fd6efb66a6 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -53,7 +53,12 @@ extern void smp_init_cpus(void);
+ /*
+  * Register IPI interrupts with the arch SMP code
+  */
+-extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
++extern void set_smp_ipi_range_percpu(int ipi_base, int nr_ipi, int ncpus);
++
++static inline void set_smp_ipi_range(int ipi_base, int n)
++{
++	set_smp_ipi_range_percpu(ipi_base, n, 0);
++}
  
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index a7a4d9e6e12e..8665e4cfbeab 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -36,6 +36,7 @@ HAS_GENERIC_AUTH_ARCH_QARMA3
- HAS_GENERIC_AUTH_ARCH_QARMA5
- HAS_GENERIC_AUTH_IMP_DEF
- HAS_GICV3_CPUIF
-+HAS_GICV5_CPUIF
- HAS_GIC_PRIO_MASKING
- HAS_GIC_PRIO_RELAXED_SYNC
- HAS_HCR_NV1
+ /*
+  * Called from the secondary holding pen, this is the secondary CPU entry point.
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 3b3f6b56e733..7fd6bec80750 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -83,7 +83,31 @@ enum ipi_msg_type {
+ 
+ static int ipi_irq_base __ro_after_init;
+ static int nr_ipi __ro_after_init = NR_IPI;
+-static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
++
++struct ipi_descs {
++	struct irq_desc *descs[MAX_IPI];
++};
++
++static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
++
++#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
++
++static bool percpu_ipi_descs __ro_after_init;
++
++static int ipi_to_irq_percpu(int ipi, int cpu)
++{
++	return ipi_irq_base + (cpu * nr_ipi) + ipi;
++}
++
++static int ipi_to_irq(int ipi)
++{
++	return ipi_to_irq_percpu(ipi, 0);
++}
++
++static int irq_to_ipi(int irq)
++{
++	return (irq - ipi_irq_base) % nr_ipi;
++}
+ 
+ static bool crash_stop;
+ 
+@@ -844,7 +868,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+ 			   prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
++			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
+ 		seq_printf(p, "      %s\n", ipi_types[i]);
+ 	}
+ 
+@@ -919,7 +943,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+ 
+ static void arm64_backtrace_ipi(cpumask_t *mask)
+ {
+-	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
++	unsigned int cpu;
++
++	if (!percpu_ipi_descs)
++		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
++	else
++		for_each_cpu(cpu, mask)
++			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
+ }
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+@@ -944,7 +974,7 @@ void kgdb_roundup_cpus(void)
+ 		if (cpu == this_cpu)
+ 			continue;
+ 
+-		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
++		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
+ 	}
+ }
+ #endif
+@@ -1013,14 +1043,21 @@ static void do_handle_IPI(int ipinr)
+ 
+ static irqreturn_t ipi_handler(int irq, void *data)
+ {
+-	do_handle_IPI(irq - ipi_irq_base);
++	do_handle_IPI(irq_to_ipi(irq));
+ 	return IRQ_HANDLED;
+ }
+ 
+ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+ {
++	unsigned int cpu;
++
+ 	trace_ipi_raise(target, ipi_types[ipinr]);
+-	__ipi_send_mask(ipi_desc[ipinr], target);
++
++	if (!percpu_ipi_descs)
++		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
++	else
++		for_each_cpu(cpu, target)
++			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
+ }
+ 
+ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+@@ -1046,11 +1083,15 @@ static void ipi_setup(int cpu)
+ 		return;
+ 
+ 	for (i = 0; i < nr_ipi; i++) {
+-		if (ipi_should_be_nmi(i)) {
+-			prepare_percpu_nmi(ipi_irq_base + i);
+-			enable_percpu_nmi(ipi_irq_base + i, 0);
++		if (!percpu_ipi_descs) {
++			if (ipi_should_be_nmi(i)) {
++				prepare_percpu_nmi(ipi_irq_base + i);
++				enable_percpu_nmi(ipi_irq_base + i, 0);
++			} else {
++				enable_percpu_irq(ipi_irq_base + i, 0);
++			}
+ 		} else {
+-			enable_percpu_irq(ipi_irq_base + i, 0);
++			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+ 		}
+ 	}
+ }
+@@ -1064,44 +1105,77 @@ static void ipi_teardown(int cpu)
+ 		return;
+ 
+ 	for (i = 0; i < nr_ipi; i++) {
+-		if (ipi_should_be_nmi(i)) {
+-			disable_percpu_nmi(ipi_irq_base + i);
+-			teardown_percpu_nmi(ipi_irq_base + i);
++		if (!percpu_ipi_descs) {
++			if (ipi_should_be_nmi(i)) {
++				disable_percpu_nmi(ipi_irq_base + i);
++				teardown_percpu_nmi(ipi_irq_base + i);
++			} else {
++				disable_percpu_irq(ipi_irq_base + i);
++			}
+ 		} else {
+-			disable_percpu_irq(ipi_irq_base + i);
++			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+ 		}
+ 	}
+ }
+ #endif
+ 
+-void __init set_smp_ipi_range(int ipi_base, int n)
++static void ipi_setup_ppi(int ipi)
++{
++	int err, irq, cpu;
++
++	irq = ipi_to_irq(ipi);
++
++	if (ipi_should_be_nmi(irq)) {
++		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
++		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
++	} else {
++		err = request_percpu_irq(irq, ipi_handler, "IPI", &irq_stat);
++		WARN(err, "Could not request IRQ %d as IRQ, err=%d\n", irq, err);
++	}
++
++	for_each_possible_cpu(cpu)
++		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
++
++	irq_set_status_flags(irq, IRQ_HIDDEN);
++}
++
++static void ipi_setup_lpi(int ipi, int ncpus)
++{
++	for (int cpu = 0; cpu < ncpus; cpu++) {
++		int err, irq;
++
++		irq = ipi_to_irq_percpu(ipi, cpu);
++
++		err = irq_force_affinity(irq, cpumask_of(cpu));
++		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
++
++		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
++				  NULL);
++		WARN(err, "Could not request IRQ %d, err=%d\n", irq, err);
++
++		irq_set_status_flags(irq, (IRQ_HIDDEN | IRQ_NO_BALANCING_MASK));
++
++		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
++	}
++}
++
++void __init set_smp_ipi_range_percpu(int ipi_base, int n, int ncpus)
+ {
+ 	int i;
+ 
+ 	WARN_ON(n < MAX_IPI);
+ 	nr_ipi = min(n, MAX_IPI);
+ 
+-	for (i = 0; i < nr_ipi; i++) {
+-		int err;
+-
+-		if (ipi_should_be_nmi(i)) {
+-			err = request_percpu_nmi(ipi_base + i, ipi_handler,
+-						 "IPI", &irq_stat);
+-			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
+-			     i, err);
+-		} else {
+-			err = request_percpu_irq(ipi_base + i, ipi_handler,
+-						 "IPI", &irq_stat);
+-			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
+-			     i, err);
+-		}
+-
+-		ipi_desc[i] = irq_to_desc(ipi_base + i);
+-		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+-	}
+-
++	percpu_ipi_descs = !!ncpus;
+ 	ipi_irq_base = ipi_base;
+ 
++	for (i = 0; i < nr_ipi; i++) {
++		if (!percpu_ipi_descs)
++			ipi_setup_ppi(i);
++		else
++			ipi_setup_lpi(i, ncpus);
++	}
++
+ 	/* Setup the boot CPU immediately */
+ 	ipi_setup(smp_processor_id());
+ }
 
 -- 
 2.48.0
