@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-30084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30083-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAA8EADF14C
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 17:24:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8972ADF151
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 17:24:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D26477A46C8
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 15:22:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18FEC1882967
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 15:24:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76E3B2EF9A7;
-	Wed, 18 Jun 2025 15:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA43A2EF673;
+	Wed, 18 Jun 2025 15:21:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LGO+Bbah"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KcaorCMr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09D22EF66B;
-	Wed, 18 Jun 2025 15:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BB42EF66B;
+	Wed, 18 Jun 2025 15:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260121; cv=none; b=sFCySyu/mAae6ufKDMAMOO1Sttcifk/UihYxPY/hu1SbIawWaXNwGk1eC+m78sihNSyKDE8+5OwIg2Z6x8nSh1b4A5zP5F3DwBFBSO/OEm5Z1/oB1Ghw4J1hHy3abOkjXqJJwZNR1G50N/rP81bgVIZ1PJb7FjL982ZyACTHayw=
+	t=1750260113; cv=none; b=IWMJ8nMgRWsM4G/jFmikJJVh7qmYFPE3EgijBK07SzG7/lgz+AxeeUGO/Jfb9jCEbl29NQGSFDSaR174ayP/FK2Mevp19sTINW9DaOghGMgW4VkOmAmY1iYEZh7J+4auXNekQnLqn2WQkEupzpuxCm2M3Yr3bOLVSoiB8cKdN+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260121; c=relaxed/simple;
-	bh=oFApSBDY+OxxnOA0P3lT0lMEWBUJm37uUIdc7A3fBPk=;
+	s=arc-20240116; t=1750260113; c=relaxed/simple;
+	bh=X2ULA3wtv07dwjO/8i4ptLUuuyTx6rDSdQW4HnYB9Zo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HuPPgN98eMlcehCyT+7aRvWs3oz0asgyYuZojnnJQq9WMYnbg95of3NX0YuFXqNbc9mHgc8fo9HmuFQkOn5FoO0nJwN20pFWThXaIqbi4qp1zJ/LFi2EFdkQmcTXsMEuIUs5hKVLBrmttu481z0xD+GPHSqlm5aErjGEZfD0YHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LGO+Bbah; arc=none smtp.client-ip=117.135.210.4
+	 MIME-Version; b=LVX7wCGXblyrw8Y7NOUF8S6G/xmqF2zvWiJkRqvz5d1XygGU8cBB9C1rZWN+m5eTYU4OF7+XxCmK+Jx9s7/E0sDKRrjd7/sN/W6aF/tDSUVbhU33Og2RCnhiAHFOJNPnQchLcHemLkyLtVxIf42VAeEKdKCW3M4lKMSXhBZIxHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KcaorCMr; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=lN
-	RcWaeVw9b8wcrD5zFUisNHEU5ftFol/Wu2HmY6NWU=; b=LGO+BbahFaqPgoCH+w
-	xlRt3mQRHCekAQ6k8Ynucs5dS5YDZ4ZymTnu8JLhKgNm4CHCXvzeElsYMH8/7ZaD
-	HPsniMhmSGflZRHKhLtsbhbIUMlGzcoDndlAbxLAiINHPX1BlKqjkQmxBEazwRtb
-	jygu0IfYMYyapjafrur42uRzY=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=+B
+	Bjrc0EVkwRmuejXLpU8+j4fD1/hPN0cQ6RirtS1XI=; b=KcaorCMrMFuRM/1zlu
+	OHLf+evk0XJyD3HX2bQUrhNY/FuVSCPewIMGarw8vFlw+lKmqTtjZdaFPvHfMKsO
+	YUrKUcJUsELOByva+DP0UK0H5FDDarnCs/tfujCcwIHHirmjurVMQY4auXATjVcJ
+	uw1X/cjwX41GH65wCrcZJMNZY=
 Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgBnr96E2VJo_+eqAA--.17078S2;
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgBnr96E2VJo_+eqAA--.17078S3;
 	Wed, 18 Jun 2025 23:21:41 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
@@ -48,9 +48,9 @@ Cc: robh@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 10/13] PCI: qcom: Refactor code by using dw_pcie_clear_and_set_dword()
-Date: Wed, 18 Jun 2025 23:21:09 +0800
-Message-Id: <20250618152112.1010147-11-18255117159@163.com>
+Subject: [PATCH v2 11/13] PCI: qcom-ep: Refactor code by using dw_pcie_clear_and_set_dword()
+Date: Wed, 18 Jun 2025 23:21:10 +0800
+Message-Id: <20250618152112.1010147-12-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250618152112.1010147-1-18255117159@163.com>
 References: <20250618152112.1010147-1-18255117159@163.com>
@@ -61,136 +61,61 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgBnr96E2VJo_+eqAA--.17078S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKF4rAryxWr1DAw1xWr4kZwb_yoW7Ww48pw
-	10k3Z7JFn7AF40939Iyan7Xr1FkFZxur42k3W3tanFv3Z7AFZFgay5tasrKr1xGFW7KFy2
-	k34UAFW7Gr1SkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pigyC9UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhRwo2hS1URnOgAAsL
+X-CM-TRANSID:QCgvCgBnr96E2VJo_+eqAA--.17078S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF17Kr17ZF1UGr4rtrWUArb_yoW8Kr4Upr
+	9xXrn0kF1xJr4rur4qka1kZF15JFnxAFy3JFWDKw1avFy7CF9rtas0ya4aqFn7GrW2qryj
+	934YqayrW3WYyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_wZ29UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwxwo2hS1CaEpwAAs3
 
-Qcom PCIe common code contains complex bit manipulation for 16GT/s
-equalization and lane margining configuration. These functions use
-multiple read-modify-write sequences with manual bit masking and
-field preparation, leading to verbose and error-prone code.
+Qcom PCIe endpoint driver implements L0s/L1 latency configuration through
+manual register manipulation. The current approach reads LNKCAP register,
+modifies specific latency fields, then writes back the value. This pattern
+repeats twice with similar logic but different bit masks.
 
-Refactor equalization and lane margining setup using
-dw_pcie_clear_and_set_dword(). The helper simplifies multi-field
-configuration by combining clear and set operations in a single call.
-Initialize local variables to zero before field insertion to ensure
-unused bits are cleared appropriately.
+Replace explicit latency configuration with dw_pcie_clear_and_set_dword().
+The helper combines field clearing and setting in a single operation,
+replacing three-step manual sequences. Initialize the set value with
+FIELD_PREP() to clearly express the intended bitfield value.
 
-This change reduces code complexity by ~40% in affected functions
-while improving readability. Centralizing bit manipulation ensures
-consistent handling of register fields across Qcom PCIe implementations
-and provides a solid foundation for future 16GT/s enhancements.
+This refactoring reduces code duplication in latency configuration paths
+and improves maintainability. Using the standard helper ensures consistent
+handling of capability registers and simplifies future updates to ASPM
+settings.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom-common.c | 59 +++++++++----------
- 1 file changed, 29 insertions(+), 30 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-index 3aad19b56da8..8ea521147b7e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-@@ -10,7 +10,7 @@
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index bf7c6ac0f3e3..c2b4f172385d 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -475,17 +475,15 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
  
- void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
- {
--	u32 reg;
-+	u32 reg = 0;
+ 	/* Set the L0s Exit Latency to 2us-4us = 0x6 */
+ 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+-	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+-	val &= ~PCI_EXP_LNKCAP_L0SEL;
+-	val |= FIELD_PREP(PCI_EXP_LNKCAP_L0SEL, 0x6);
+-	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, val);
++	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
++				    PCI_EXP_LNKCAP_L0SEL,
++				    FIELD_PREP(PCI_EXP_LNKCAP_L0SEL, 0x6));
  
- 	/*
- 	 * GEN3_RELATED_OFF register is repurposed to apply equalization
-@@ -19,60 +19,59 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
- 	 * determines the data rate for which these equalization settings are
- 	 * applied.
- 	 */
--	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
- 	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
- 			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL |
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-+				    reg);
+ 	/* Set the L1 Exit Latency to be 32us-64 us = 0x6 */
+ 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+-	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+-	val &= ~PCI_EXP_LNKCAP_L1EL;
+-	val |= FIELD_PREP(PCI_EXP_LNKCAP_L1EL, 0x6);
+-	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, val);
++	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
++				    PCI_EXP_LNKCAP_L1EL,
++				    FIELD_PREP(PCI_EXP_LNKCAP_L1EL, 0x6));
  
--	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
--	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
--		GEN3_EQ_FMDC_N_EVALS |
--		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
--		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-+	reg = 0;
- 	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
- 		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
- 		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
- 		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
--	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF,
-+				    GEN3_EQ_FMDC_T_MIN_PHASE23 |
-+				    GEN3_EQ_FMDC_N_EVALS |
-+				    GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-+				    GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA,
-+				    reg);
+ 	dw_pcie_dbi_ro_wr_dis(pci);
  
--	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
--	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
--		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
--		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
--		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
--	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_CONTROL_OFF,
-+				    GEN3_EQ_CONTROL_OFF_FB_MODE |
-+				    GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-+				    GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-+				    GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC, 0);
- }
- EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
- 
- void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
- {
--	u32 reg;
-+	u32 reg = 0;
- 
--	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
--	reg &= ~(MARGINING_MAX_VOLTAGE_OFFSET |
--		MARGINING_NUM_VOLTAGE_STEPS |
--		MARGINING_MAX_TIMING_OFFSET |
--		MARGINING_NUM_TIMING_STEPS);
- 	reg |= FIELD_PREP(MARGINING_MAX_VOLTAGE_OFFSET, 0x24) |
- 		FIELD_PREP(MARGINING_NUM_VOLTAGE_STEPS, 0x78) |
- 		FIELD_PREP(MARGINING_MAX_TIMING_OFFSET, 0x32) |
- 		FIELD_PREP(MARGINING_NUM_TIMING_STEPS, 0x10);
--	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
-+	dw_pcie_clear_and_set_dword(pci, GEN4_LANE_MARGINING_1_OFF,
-+				    MARGINING_MAX_VOLTAGE_OFFSET |
-+				    MARGINING_NUM_VOLTAGE_STEPS |
-+				    MARGINING_MAX_TIMING_OFFSET |
-+				    MARGINING_NUM_TIMING_STEPS, reg);
- 
--	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_2_OFF);
-+	reg = 0;
- 	reg |= MARGINING_IND_ERROR_SAMPLER |
- 		MARGINING_SAMPLE_REPORTING_METHOD |
- 		MARGINING_IND_LEFT_RIGHT_TIMING |
- 		MARGINING_VOLTAGE_SUPPORTED;
--	reg &= ~(MARGINING_IND_UP_DOWN_VOLTAGE |
--		MARGINING_MAXLANES |
--		MARGINING_SAMPLE_RATE_TIMING |
--		MARGINING_SAMPLE_RATE_VOLTAGE);
- 	reg |= FIELD_PREP(MARGINING_MAXLANES, pci->num_lanes) |
- 		FIELD_PREP(MARGINING_SAMPLE_RATE_TIMING, 0x3f) |
- 		FIELD_PREP(MARGINING_SAMPLE_RATE_VOLTAGE, 0x3f);
--	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_2_OFF, reg);
-+	dw_pcie_clear_and_set_dword(pci, GEN4_LANE_MARGINING_2_OFF,
-+				    MARGINING_IND_UP_DOWN_VOLTAGE |
-+				    MARGINING_MAXLANES |
-+				    MARGINING_SAMPLE_RATE_TIMING |
-+				    MARGINING_SAMPLE_RATE_VOLTAGE, reg);
- }
- EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_lane_margining);
 -- 
 2.25.1
 
