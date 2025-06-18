@@ -1,60 +1,69 @@
-Return-Path: <linux-pci+bounces-30132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA2F8ADF747
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 21:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A0C8ADF74F
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 21:57:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84ED517E6EC
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 19:55:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB9EB4A3A30
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 19:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA880204F93;
-	Wed, 18 Jun 2025 19:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C34E219E8F;
+	Wed, 18 Jun 2025 19:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXfY0GqY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5hCWJOq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864E91E0B91
-	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 19:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8EF204F93;
+	Wed, 18 Jun 2025 19:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276496; cv=none; b=StVGeldt5N8KD6V9iDAkXmLssl2E3ObHXgLFpj4XQz5bsLdViMjFbNAs2Wf7cQyWIclxD0ftHbew/sxXp3KB3hPwq731l22dgR5SHhJex7ninoQSz2finiLbACb0EiaMGbGhY47fHdBGbImyxNGIITVkmpT0NCh1YDOq0ZL4INU=
+	t=1750276622; cv=none; b=KjqE6f+lyW6LqC+eA9jGbEMQTVLEXL/IsrASbdkWEA1PADK3Qt1g4SvjjQdKlYdVPR0PiziKhltlxuuqDT43fOFE3x4nnqqgtTCUXjwtHsuhOXYFS/d/7lfDnHYjhsE0auk4j2ecis7acsMHVnEfSy7hmcl5ackeCG6EIjU5QXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750276496; c=relaxed/simple;
-	bh=lrTsaG0xF5dU+UzUYyY/pQ26jjJEFCDApXnKHIP4M34=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=frPQYjxY8NQWajXGewL+JPQtegFykMA61lifnqO7fLMHAhe6d+MMZ11Y4JxRBRbwGQ28Pgtfw8ekq1korvhRzPDGt4AN55rPOYRqWBzE+/rErZbrsPTsrqJZEp3sXmIsr9pb+mzB1TWK2UAgT0utM/kIobErDvKlTYRuZcNXExM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXfY0GqY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABD5C4CEE7;
-	Wed, 18 Jun 2025 19:54:55 +0000 (UTC)
+	s=arc-20240116; t=1750276622; c=relaxed/simple;
+	bh=LODV13BAO/vPV1KR/ZrA48zSFSV7rhVVCDbvUO9rbCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LXDYZiEHXpDfR0RBBjXxW3J90OIX7pmqmbZr0PYlsHOt9f7pCmUBTNqj3iG6fXC+3y+w7zYbyI1uqTrzLFlFVYXf5KxltgC3SrMNBiI+M8MFehV1pj1wTuXF/RbWdCQ6lI61mw2JE1AQBc4xCVyDYnUmuK14Ri6E2DlaNpCfOXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5hCWJOq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AEE1C4CEE7;
+	Wed, 18 Jun 2025 19:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750276496;
-	bh=lrTsaG0xF5dU+UzUYyY/pQ26jjJEFCDApXnKHIP4M34=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YXfY0GqY7ZR4pyE6q/gKqP0YVYPvcq7HxVcPuEhFQeFBotBsq99Id2pnVd11/HgG2
-	 U7iL10QLe8J0Q7E3+Axu8o0P1tXSqakokMHJ/gVthwOsSQqG8seU+3JVHNUlKWLtem
-	 JgW1/ww/Z5dkcj/JmEMZmWdHQ3CwHVG/l3E3Jn5eOroJPxIESS7b/a7gM6WoF3NyMB
-	 dti2UxhjE3JNodUHk4fdLopEIEhIwAK+Tg33KH+gZprwuE/TexRsnp3Fg39hkKRdM5
-	 lgsmB9DSe/m+HKbVn8YtZDWoZCdkpjkThaYj+HPDxROFU2BH0anrYQkFlxW4wVS/UB
-	 OmoIUWxJgTxCw==
-Date: Wed, 18 Jun 2025 14:54:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Delay link training after hot reset
- in EP mode
-Message-ID: <20250618195454.GA1219998@bhelgaas>
+	s=k20201202; t=1750276622;
+	bh=LODV13BAO/vPV1KR/ZrA48zSFSV7rhVVCDbvUO9rbCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q5hCWJOq4BPeCPXNeDRpGBKL2aPnSMqJBqxjXFAR2SRBa5EnDn9dkzuxqDQNbEvyn
+	 fBe9dyKKEvuzysSk8KQ23rW2e7DLfVl9W5bfq+MXDQ2Ekk2CLxIjwOSoJXi6Te+TBl
+	 7C7XaAGn751Ko9xb2RGqAgP++GyMpDvi45jTrj7Gu9DNQMrl5OeFEzN2kVcrOODzc3
+	 RgCEUVqJMI0ocsFhgdbB/HSfQ/5Axvz1EE9TR+bE74oNsRAZn/zPC0vcN8fzSP6w4r
+	 Zk7b15ng+BIjJxGmbqNZXFT54eLakscZ6nBXx0fgBDNjo9rIXEJK5DhLmHgahFpL5P
+	 2T7sA59b8j31w==
+Date: Wed, 18 Jun 2025 21:56:54 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
+Message-ID: <aFMaBlByS8xPq6kc@lpieralisi>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+ <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,62 +72,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFLPyxZD5lkAtw6b@ryzen>
+In-Reply-To: <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
 
-On Wed, Jun 18, 2025 at 04:40:11PM +0200, Niklas Cassel wrote:
-> On Wed, Jun 18, 2025 at 04:23:19PM +0200, Niklas Cassel wrote:
-> > On Tue, Jun 17, 2025 at 05:05:23PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Jun 17, 2025 at 05:01:16PM -0500, Bjorn Helgaas wrote:
-> > > > On Fri, Jun 13, 2025 at 12:19:09PM +0200, Niklas Cassel wrote:
-> > > 
-> > > Oh, and this sets PCIE_LTSSM_ENABLE_ENHANCE | PCIE_LTSSM_APP_DLY2_EN
-> > > once at probe-time, but what about after a link-down/link-up cycle?
-> > > 
-> > > Don't we need to set PCIE_LTSSM_ENABLE_ENHANCE |
-> > > PCIE_LTSSM_APP_DLY2_EN again when the link comes up so we don't have
-> > > the same race when the link goes down again?
-> > 
-> > Nope, we don't.
-> > 
-> > To verify I used this patch:
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > index be239254aacd..e79add5412b8 100644
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -506,6 +506,8 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
-> >         if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
-> >                 dev_dbg(dev, "hot reset or link-down reset\n");
-> >                 dw_pcie_ep_linkdown(&pci->ep);
-> > +               pr_info("PCIE_CLIENT_HOT_RESET_CTRL after reset: %#x\n",
-> > +                       rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_HOT_RESET_CTRL));
-> >                 /* Stop delaying link training. */
-> >                 val = HIWORD_UPDATE_BIT(PCIE_LTSSM_APP_DLY2_DONE);
-> >                 rockchip_pcie_writel_apb(rockchip, val,
-> > 
-> > 
-> > 
-> > 
-> > [   85.979567] rockchip-dw-pcie a40000000.pcie-ep: hot reset or link-down reset
-> > [   85.980210] PCIE_CLIENT_HOT_RESET_CTRL after reset: 0x12
-> > [   93.720413] rockchip-dw-pcie a40000000.pcie-ep: hot reset or link-down reset
-> > [   93.721074] PCIE_CLIENT_HOT_RESET_CTRL after reset: 0x12
-> > 
-> > 0x12 == bit 1 and bit 4 are set.
-> > 
-> > bit 1: app_dly2_en
-> > bit 4: app_ltssm_enable_enhance
-> 
-> Oh, and just to verify that the hardware does not clear the app_dly2_en bit
-> when we write the app_dly2_done bit, I ran the same test, but with the
-> prints in rockchip_pcie_ep_sys_irq_thread(), just after calling
-> dw_pcie_ep_linkup(&pci->ep); and got the same result:
-> 
-> [   57.176862] rockchip-dw-pcie a40000000.pcie-ep: link up
-> [   57.177338] PCIE_CLIENT_HOT_RESET_CTRL after linkup: 0x12
-> [   72.448052] rockchip-dw-pcie a40000000.pcie-ep: link up
-> [   72.448527] PCIE_CLIENT_HOT_RESET_CTRL after linkup: 0x12
+On Wed, Jun 18, 2025 at 12:17:39PM +0200, Lorenzo Pieralisi wrote:
 
-Thanks, I had missed the difference between PCIE_LTSSM_APP_DLY2_EN and
-PCIE_LTSSM_APP_DLY2_DONE.
+[...]
+
+> +static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +				  int nvec, msi_alloc_info_t *info)
+> +{
+> +	struct msi_domain_info *msi_info;
+> +	struct device_node *msi_node;
+> +	struct pci_dev *pdev;
+> +	phys_addr_t pa;
+> +	int ret;
+> +
+> +	if (!dev_is_pci(dev))
+> +		return -EINVAL;
+> +
+> +	pdev = to_pci_dev(dev);
+> +
+> +	msi_node = pci_msi_get_device_msi_ctlr_node(pdev);
+> +	if (!msi_node)
+> +		return -ENODEV;
+> +
+> +	ret = its_translate_frame_address(msi_node, &pa);
+> +	if (ret)
+> +		return -ENODEV;
+> +
+> +	of_node_put(msi_node);
+> +
+> +	/* ITS specific DeviceID */
+> +	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain->parent, pdev);
+
+Heads-up: it turned out I was too optimistic and reusing
+
+pci_msi_domain_get_msi_rid()
+
+on GICv5 does not work (or better it works incorrectly).
+
+It calls (for DT) of_msi_map_id() with the IRQ domain of_node (why, I am
+not sure but for GICv3 it works because the phandle in the msi-map and
+the IRQ domain of_node are equivalent). This does _not_ work on GICv5,
+I failed to spot it because in of_msi_map_id() if the IRQ domain of_node
+and msi-map phandle do not match a 1:1 translation is carried out, which
+ironically is what the RID<->DID translation looks like in the test
+platform. Sigh.
+
+I have already patched the code to augment:
+
+pci_msi_get_device_msi_ctlr_node()
+
+so that it grabs the msi-controller of_node pointer in msi-map AND maps the
+RID->DID (and to be honest that's what I should have done but I wanted to
+reuse pci_msi_domain_get_msi_rid(), it does not work for GICv5 unless I
+change it but I fear I could break platforms, we don't fix what it is not
+broken).
+
+Long story short: apologies, I missed this snag for the reasons above, I
+will update it for v6.
+
+Thanks,
+Lorenzo
 
