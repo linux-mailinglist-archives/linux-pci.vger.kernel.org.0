@@ -1,91 +1,90 @@
-Return-Path: <linux-pci+bounces-30062-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30063-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6858EADEEEB
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DEBBEADEEF4
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:14:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03571167F4B
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 14:12:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7386173741
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 14:14:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9352EAB93;
-	Wed, 18 Jun 2025 14:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3932EAB92;
+	Wed, 18 Jun 2025 14:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hwL7rjVx"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Qtap48RD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420822EAB87
-	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 14:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887882E54AA
+	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 14:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750255956; cv=none; b=YWtrH2GQ+fr32lqIy9Oe43LB4nI5aRKVP5zJCJO/8MWC2pam40DRqQkBNchA+k3TjU94kBm720I7oKecyyqMS58IgCukFnWXI7nafkzUj6fprX8evUL+KQR0Cj86Y179lvulMVmhsa38xL8j9VREDhduG0ZnVeVFHVswXWjjUEY=
+	t=1750256050; cv=none; b=PHk91qGqn6GETmF7Yo/lr9kVjLffcdnJuJUFb7+xL13TCzpp7Cs2FoPR4A6hlV767g/GBOwxGDis2n4nGt6hLQYuYpUlbzkX3MLoTtSo/RjCF13ZkG0yXBm+7whICqrV2NQZTnZkLPUCc8sRaz5icreZvRWbZuzx3zMkZh/fcN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750255956; c=relaxed/simple;
-	bh=7kj7G2jswNX3K0YTdwCRIBC9FAqoENBLPyK5Aq5xsG0=;
+	s=arc-20240116; t=1750256050; c=relaxed/simple;
+	bh=YgtPxwKPTeZEZYoIXt8HkosylZM3S9CVqdbZuAkboEA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMewGQeq+pQaCFTgHTP8o680tcVZ8p89zkT/Is1slYuDxafGKF8gw/OOvB682ux+WLlfDwkr3ph3xVqVbXe923+QxfrJp1KkmvRsXhYBi60yMyvKRzNzW1pi+1/raMmmM2jrcyClEVnmglOLENSRdP4Czuoq28LbKykXl5jybb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=hwL7rjVx; arc=none smtp.client-ip=209.85.208.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxVkL2Wxmb3+41cq9VTmlOTVM32m/zd+qjfBQkCo/bqJX9tbnBTAkAuuqXJ42d0i9zl9BbIkOdKgGU+x3kmZmPXET2syPas9uDZj9vks6gw8Y0pNoeknnrfrat+XuaxPXZfojlHPI7VNdZniKOR1dIjLgccHWWnmwGNl8QqtHUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Qtap48RD; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso12329264a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 07:12:33 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso12875624a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 07:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1750255952; x=1750860752; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cz84Hc3uQ6sKBV5PwfzjhcRcDvTwqgSKPuxbgQX5TiY=;
-        b=hwL7rjVx7+zCjsgfT/jaB+YQC3AUTUKtmx0B18LgDMmsDoxkiuaEhtcN9m1DphsY05
-         A0Or5UbDzrWx5JnGTb6P16sUKCS6s0MaZOYi5a0J57Bd6LbIWTtfH3cq5NR0qbhDyqgu
-         6vEMyawYoA7vM70lxtjqlsnMVSuMIfl2y3bbg=
+        d=ffwll.ch; s=google; t=1750256047; x=1750860847; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
+        b=Qtap48RDtlou7u57wrEbxaKIQaHVB850hPqUAlo0J22KUrSipuKf0kySHhniNMicHl
+         5QjwC8KBWNIBl75ECRIpIpZbEHrrZ7sZOOrasSCicxabzTnFfeIPjjm16SEkwuIWpFO2
+         1pqVtk1juSAPxDcVNqz/C8ZPHLDxiN533HWLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750255952; x=1750860752;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cz84Hc3uQ6sKBV5PwfzjhcRcDvTwqgSKPuxbgQX5TiY=;
-        b=ipef26e10TIoRv1r2zvl5hrvsOe6kzWHMdYVRpT6+nb/GRZpV091BLG2AvLZd5SUd9
-         XxDSjbtoV7DJ0pVMlWTAWQylykLRy1o42u6YRVctHYOmjyZuFhbP4hEpcPHlOWW+lHcB
-         8wfTR3SypO4fvv/s3uCxge36Qx7ioYLUDTxWJ19n6s/mS4ZgXrlgVRENhlNa4W/AT3wP
-         TJSqO0heNJpH4B5CC7XvQmyVD1LBjvf+1dJ3hxiuVKC5O2mfvOghrfTWrkQzNAjAUiaa
-         xVCAE+z36zLpm/822p5t/+rb5NIsSykWHOdc9J9xEivYp+Nl0lVJpBNHUBpoKeQoX0g0
-         tC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Nk4dsl0Q334tqM9TAzNOHfs/9MxZMxU4FeGsFRfDXGthv3SxW36c7SWygcDWptBEJDuvhiAVBhE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGaU/9G54JjJ40a6z1jIL8gnTPvblvrHzcxl/v6p70guKzf/eC
-	OQupKIyOJm5Eao9BkGlgak933HSPRtamCWbkIvlpzSjGaOifMIAIczhWhqO3IiJQBi4=
-X-Gm-Gg: ASbGncsz2vuG71SAXwZUNsGC8XU68yGxpnqBpZNF+ulvt0iDkg02AHhSVJMxrb1VpPe
-	sov11pHgA2gPUWdsCzNzccEYV1/dLZTTrwLhovgZLHReYNzEaJWjclCc4NEaa9Q1Mr0HLm4wgiN
-	Yd5TYIeivkCMlc2kdmRUFFTxoWV9CZ3YIK8RUcCQUAhYLreNcW0QIbYmrQaxXlrRZ5vpQNkraMh
-	+rIqZEtTJyuaDnQw22B5M01qoOw2ywr1lVuiGaTl6aexOYmdNR13gyOuia2mpWhtOiRXm/M5/pE
-	x56WKsfURw0SKZxbCpGOGSk95CqwGeQIhuaGQhkpxaDeOYmh+QyFsfsxOeDViENPx2ah0X+EtA=
+        d=1e100.net; s=20230601; t=1750256047; x=1750860847;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
+        b=klRys729eDOjsn2I82A/vZra5QGO4sbD3PEXhCDGFkdHtTjo2NVwEaZvudcGh8mLaJ
+         b382gEUSpln4qHtKVDjXkoToiSTuBitK8XRTCMZp9hAnSkzGngoxQ7IUY1R6/I6L3sek
+         MJEtry8TmAwLOdktD8ytXQmzDIuX2kc28EqFvG6TASyc3SSfXz6XoPAaFhk6edm9M9Gi
+         XbySnqxbqXja96+TY1kvMnjjvZ6J2mKJA6MZNxzEEHGS+F3fiobn0JaFb1oYMvolGUnF
+         kYGfeBGqxAHaiLULpc9rKCQj2qSAwHgu5pYCvoPfx1Px2DM1JbnHUTyz8JqROrbV3rG5
+         PZTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBlLL7nV3Hd01ow7SdjVbxWJIKuNQh9k9cVZmAhKv3fGfc98Th6XnZYVdBQ5XQ13VsaA13QrSrHh8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgbN1wIr24KPEi4vuefUqGUTnVPP4EnEOn49lLSOiqweAojYqt
+	/fjHky1/NXUGZVVCsUKNAUEvm//PrbtykmyKL0DG97ohhirb2Zwndgtc5pr+yibZwFI=
+X-Gm-Gg: ASbGncsh0y82S7q2LKCPz+qiL64Nef/18F8SZKOoLV0GufP7FoUqQN1EmuYzKEa9njo
+	KJfl6+g3woXAspblsvoyZ809PTVSCtQIK9TFvArMZbafW9O4ef44Hoh8DxuRbaOKtPc4Pj9jeyC
+	vOd36eoveXcdP7tH/+r5kemY5TKY4oi00modie43WwYHNoT3SivNTNPks+ksXeAWNPkjbda3QkT
+	DwRCMZnVN5paJl0HEE4BiBzIZKVXSWjQhuK77WaP03CPUJroO1F8ZdnjIMbQCocYN55HA68/5VT
+	u4bto1Bngv9kpzCx9LBcZS9MTmIN7pMycDeOlI7BvPzv67YpPerQLlM/KTwDKSItV/oD3/8Pew=
 	=
-X-Google-Smtp-Source: AGHT+IGngqXytowFqo9vFefDWIVGWRd6341iJxu/XHfEW5ddA5khtLzeGEkme1kvilPhkRGvjw4AVA==
-X-Received: by 2002:a17:906:9f91:b0:ad8:9257:571b with SMTP id a640c23a62f3a-adfad32fa19mr1651880266b.16.1750255952414;
-        Wed, 18 Jun 2025 07:12:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsqCmrJXzMwPM+oH1kv5sMlk4UVUkN2dXKJGBUjRXie2yVHLpK2+aze7LyMOOgssnqt0k33w==
+X-Received: by 2002:a05:6402:274c:b0:607:f63b:aa31 with SMTP id 4fb4d7f45d1cf-608d0853447mr14785409a12.6.1750256046873;
+        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8929371sm1062739466b.117.2025.06.18.07.12.31
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4ae68a2sm9640327a12.79.2025.06.18.07.14.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 07:12:31 -0700 (PDT)
-Date: Wed, 18 Jun 2025 16:12:29 +0200
+        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
+Date: Wed, 18 Jun 2025 16:14:04 +0200
 From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Woodhouse <dwmw2@infradead.org>,
 	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
 	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
 	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
 	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
 	open list <linux-kernel@vger.kernel.org>,
@@ -94,23 +93,23 @@ Cc: Mario Limonciello <superm1@kernel.org>,
 	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
 	"open list:SOUND" <linux-sound@vger.kernel.org>,
 	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA
- arbiter
-Message-ID: <aFLJTSIPVE0EnNvh@phenom.ffwll.local>
-Mail-Followup-To: Thomas Zimmermann <tzimmermann@suse.de>,
-	Mario Limonciello <superm1@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	David Airlie <airlied@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 5/6] ALSA: hda: Use pci_is_display()
+Message-ID: <aFLJrHdfrTmoyhin@phenom.ffwll.local>
+Mail-Followup-To: Mario Limonciello <superm1@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Woodhouse <dwmw2@infradead.org>,
 	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
 	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
 	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
 	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
 	open list <linux-kernel@vger.kernel.org>,
@@ -119,170 +118,80 @@ Mail-Followup-To: Thomas Zimmermann <tzimmermann@suse.de>,
 	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
 	"open list:SOUND" <linux-sound@vger.kernel.org>,
 	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
 References: <20250617175910.1640546-1-superm1@kernel.org>
- <20250617175910.1640546-7-superm1@kernel.org>
- <20250617132228.434adebf.alex.williamson@redhat.com>
- <08257531-c8e4-47b1-a5d1-1e67378ff129@kernel.org>
- <4b4224b8-aa91-4f21-8425-2adf9a2b3d38@suse.de>
+ <20250617175910.1640546-6-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b4224b8-aa91-4f21-8425-2adf9a2b3d38@suse.de>
+In-Reply-To: <20250617175910.1640546-6-superm1@kernel.org>
 X-Operating-System: Linux phenom 6.12.30-amd64 
 
-On Wed, Jun 18, 2025 at 11:11:26AM +0200, Thomas Zimmermann wrote:
-> Hi
+On Tue, Jun 17, 2025 at 12:59:09PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Am 17.06.25 um 22:22 schrieb Mario Limonciello:
-> > 
-> > 
-> > On 6/17/25 2:22 PM, Alex Williamson wrote:
-> > > On Tue, 17 Jun 2025 12:59:10 -0500
-> > > Mario Limonciello <superm1@kernel.org> wrote:
-> > > 
-> > > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > > 
-> > > > On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
-> > > > AMD GPU is not being selected by some desktop environments for any
-> > > > rendering tasks. This is because neither GPU is being treated as
-> > > > "boot_vga" but that is what some environments use to select a GPU [1].
-> > > > 
-> > > > The VGA arbiter driver only looks at devices that report as PCI display
-> > > > VGA class devices. Neither GPU on the system is a PCI display VGA class
-> > > > device:
-> > > > 
-> > > > c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
-> > > > c6:00.0 Display controller: Advanced Micro Devices, Inc.
-> > > > [AMD/ATI] Device 150e (rev d1)
-> > > > 
-> > > > If the GPUs were looked at the vga_is_firmware_default()
-> > > > function actually
-> > > > does do a good job at recognizing the case from the device used for the
-> > > > firmware framebuffer.
-> > > > 
-> > > > Modify the VGA arbiter code and matching sysfs file entries to
-> > > > examine all
-> > > > PCI display class devices. The existing logic stays the same.
-> > > > 
-> > > > This will cause all GPUs to gain a `boot_vga` file, but the
-> > > > correct device
-> > > > (AMD GPU in this case) will now show `1` and the incorrect
-> > > > device shows `0`.
-> > > > Userspace then picks the right device as well.
-> > > > 
-> > > > Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12
-> > > > [1]
-> > > > Suggested-by: Daniel Dadap <ddadap@nvidia.com>
-> > > > Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-> > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > > ---
-> > > >   drivers/pci/pci-sysfs.c | 2 +-
-> > > >   drivers/pci/vgaarb.c    | 8 ++++----
-> > > >   2 files changed, 5 insertions(+), 5 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > index 268c69daa4d57..c314ee1b3f9ac 100644
-> > > > --- a/drivers/pci/pci-sysfs.c
-> > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > @@ -1707,7 +1707,7 @@ static umode_t
-> > > > pci_dev_attrs_are_visible(struct kobject *kobj,
-> > > >       struct device *dev = kobj_to_dev(kobj);
-> > > >       struct pci_dev *pdev = to_pci_dev(dev);
-> > > >   -    if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
-> > > > +    if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
-> > > >           return a->mode;
-> > > >         return 0;
-> > > > diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> > > > index 78748e8d2dbae..63216e5787d73 100644
-> > > > --- a/drivers/pci/vgaarb.c
-> > > > +++ b/drivers/pci/vgaarb.c
-> > > > @@ -1499,8 +1499,8 @@ static int pci_notify(struct
-> > > > notifier_block *nb, unsigned long action,
-> > > >         vgaarb_dbg(dev, "%s\n", __func__);
-> > > >   -    /* Only deal with VGA class devices */
-> > > > -    if (!pci_is_vga(pdev))
-> > > > +    /* Only deal with PCI display class devices */
-> > > > +    if (!pci_is_display(pdev))
-> > > >           return 0;
-> > > >         /*
-> > > > @@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
-> > > >         bus_register_notifier(&pci_bus_type, &pci_notifier);
-> > > >   -    /* Add all VGA class PCI devices by default */
-> > > > +    /* Add all PCI display class devices by default */
-> > > >       pdev = NULL;
-> > > >       while ((pdev =
-> > > >           pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> > > >                      PCI_ANY_ID, pdev)) != NULL) {
-> > > > -        if (pci_is_vga(pdev))
-> > > > +        if (pci_is_display(pdev))
-> > > >               vga_arbiter_add_pci_device(pdev);
-> > > >       }
-> > > 
-> > > At the very least a non-VGA device should not mark that it decodes
-> > > legacy resources, marking the boot VGA device is only a part of what
-> > > the VGA arbiter does.  It seems none of the actual VGA arbitration
-> > > interfaces have been considered here though.
-> > > 
-> > > I still think this is a bad idea and I'm not sure Thomas didn't
-> > > withdraw his ack in the previous round[1].  Thanks,
-> > 
-> > Ah; I didn't realize that was intended to be a withdrawl.
-> > If there's another version of this I'll remove it.
+> The inline pci_is_display() helper does the same thing.  Use it.
 > 
-> Then let me formally withdraw the A-b.
-> 
-> I think this updated patch doesn't address the concerns raised in the
-> previous reviews. AFAIU vgaarb is really only about VGA devices.
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-I missed the earlier version, but wanted to chime in that I concur. vgaarb
-is about vga decoding, and modern gpu drivers are trying pretty hard to
-disable that since it can cause pain. If we mix in the meaning of "default
-display device" into this, we have a mess.
+I think the helper here is still neat, so for patches 1-5:
 
-I guess what does make sense is if the kernel exposes its notion of
-"default display device", since we do have that in some sense with
-simpledrm. At least on systems where simpledrm is a thing, but I think you
-need some really old machines for that to not be the case.
+Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+
+And a-b for the vgaswitcheroo patch for merging through the pci tree or a
+dedicated pr to Linus, since I guess that's the simplest way to get that
+done.
 
 Cheers, Sima
-
-> Best regards
-> Thomas
+> ---
+>  sound/hda/hdac_i915.c     | 2 +-
+>  sound/pci/hda/hda_intel.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> > 
-> > Dave,
-> > 
-> > What is your current temperature on this approach?
-> > 
-> > Do you still think it's best for something in the kernel or is this
-> > better done in libpciaccess?
-> > 
-> > Mutter, Kwin, and Cosmic all handle this case in the compositor.
-> > 
-> > 
-> > > 
-> > > Alex
-> > > 
-> > > [1]https://lore.kernel.org/all/bc0a3ac2-c86c-43b8-b83f-edfdfa5ee184@suse.de/
-> > > 
-> > > 
-> > 
-> 
+> diff --git a/sound/hda/hdac_i915.c b/sound/hda/hdac_i915.c
+> index e9425213320ea..44438c799f957 100644
+> --- a/sound/hda/hdac_i915.c
+> +++ b/sound/hda/hdac_i915.c
+> @@ -155,7 +155,7 @@ static int i915_gfx_present(struct pci_dev *hdac_pci)
+>  
+>  	for_each_pci_dev(display_dev) {
+>  		if (display_dev->vendor != PCI_VENDOR_ID_INTEL ||
+> -		    (display_dev->class >> 16) != PCI_BASE_CLASS_DISPLAY)
+> +		    !pci_is_display(display_dev))
+>  			continue;
+>  
+>  		if (pci_match_id(denylist, display_dev))
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index e5210ed48ddf1..a165c44b43940 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -1465,7 +1465,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
+>  				 * the dGPU is the one who is involved in
+>  				 * vgaswitcheroo.
+>  				 */
+> -				if (((p->class >> 16) == PCI_BASE_CLASS_DISPLAY) &&
+> +				if (pci_is_display(p) &&
+>  				    (atpx_present() || apple_gmux_detect(NULL, NULL)))
+>  					return p;
+>  				pci_dev_put(p);
+> @@ -1477,7 +1477,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
+>  			p = pci_get_domain_bus_and_slot(pci_domain_nr(pci->bus),
+>  							pci->bus->number, 0);
+>  			if (p) {
+> -				if ((p->class >> 16) == PCI_BASE_CLASS_DISPLAY)
+> +				if (pci_is_display(p))
+>  					return p;
+>  				pci_dev_put(p);
+>  			}
 > -- 
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
+> 2.43.0
 > 
 
 -- 
