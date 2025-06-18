@@ -1,112 +1,117 @@
-Return-Path: <linux-pci+bounces-30070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B287ADF081
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:58:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72BD7ADF0D8
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 17:13:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 860257A85C4
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 14:57:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1E823B36B7
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 15:12:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6390A2EE605;
-	Wed, 18 Jun 2025 14:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF92230BE4;
+	Wed, 18 Jun 2025 15:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKinX9kJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCTBLbZU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1A72EE5F9;
-	Wed, 18 Jun 2025 14:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991342EE96F
+	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 15:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258630; cv=none; b=MNNCcdWAn6dhxDTQ1PO3vbLPeO5naFp3DPLXLTlYjGre+ee82Z1S1MxZNtOEjG5+hUZLTIUNrX6j0+p/VqxPjlfF6JAKEey4vUDPedMAvSVCXoGwjhOPKggLnVE5tfTlYofZqARwiWezfmMtp9bosfJPNrT+G+8ygKX7b2rf4eQ=
+	t=1750259590; cv=none; b=X+i1n0Gz3D4KUf9NNglITrZUo8BYx+f1ELNl/2e58guiwbbqDmqQ+/GZa+8n7Gw3tncNLh167VIECPuNeg1+Jlspj7rP887EPchpOIeFaEDjJ5joiHDetQPpT+kVZKAu3F09HOA21AQSQkZD4Nru4kVxhN+KNjWY4dRjMbUaArI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258630; c=relaxed/simple;
-	bh=1Q6aOTiXFFTMQvJwg4MCx9dBoHXp49iL/WVCWF12SPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OC7NCXOtXyQ4ykUiZhZ8CwGGXteJiKwdbGH0zu2UOyn3tL00UYJh86Wa1HJx0EwZj3hzO9LOJND8sNyDz9Y5PdzIpVGE+c8VkWpJKtw0xMNN6R1yn4gGqn2txG5cQP7Ymd77kdi/koRFL3oNmTdIsKPSvtGZP6FjjIkhWAMfe1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKinX9kJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F2CDC4CEE7;
-	Wed, 18 Jun 2025 14:57:07 +0000 (UTC)
+	s=arc-20240116; t=1750259590; c=relaxed/simple;
+	bh=RxyUMiuudcd2zaA9C02HdB4e4SfRw0dOFH1tKyo03Xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AC1wRMaabs5EJx97dnYBHtHn4JKlWG8aF+lSWJBuGIOYoYzkNoQTLUJbzZgRmtqVapBMTeoXh3agm4ZCYpN9Z/cUVFmuch4F1m1+Hd+CG/Rr4gNQpUpl469kGqppUsVKTwdg+/+8WI8ZScv/ugV8pTAWpLXvhTL0xNGO7MltjgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCTBLbZU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04930C4CEE7;
+	Wed, 18 Jun 2025 15:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750258629;
-	bh=1Q6aOTiXFFTMQvJwg4MCx9dBoHXp49iL/WVCWF12SPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eKinX9kJnqTejARxXhz/UtTXpMpi3bmGLMfHO1mKWQkfzTzlTwLPXhvQOhi5tTKXN
-	 dCSNQ7BTBh/LFgUc1EaeBIX7eGokQf1asIp8kK5WHovidTL5zsXHM5xPrzVvawYtrm
-	 kATemcl5moH7ysMmybsn9/6WX7KA5RyjQddhOczkux+zHapJTWa3NPD9trnIJ1hLI2
-	 gEwx4awAwK58QpiW6SiKKNB/eMIWSLwEiTt/VaKw/Ss9OF2Wa6bxZuYE7fvgQIT3sB
-	 klU1GZgoh7CjMOYts8hmySzZ9WNOJNgQiVxPBxVxIY7ree7iXVlG6gqnKCF1rCdvIU
-	 y+yARPH94ezCw==
-Date: Wed, 18 Jun 2025 16:57:05 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org,
-	bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-Message-ID: <aFLTwWG5lOTunEq3@ryzen>
-References: <20250611204011.GA868320@bhelgaas>
- <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
+	s=k20201202; t=1750259589;
+	bh=RxyUMiuudcd2zaA9C02HdB4e4SfRw0dOFH1tKyo03Xs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=iCTBLbZU36w1Zp3/rnRzCErxrw/EdeiCJDh5MZ0zfFPsikPoe1GXRq9CZ8XC0HvjI
+	 nmSem/3/YMOxILryJTK84Wndu2JvYr0OlUQI28L87Zc9+WfM76QWaKB0Hw0Wn2VOd0
+	 jZqOfzou9PBHPQoriWY00jOx0QdWAzSg5yiwGx3L3rruxh+Vbf8WOwlvsSPEZ/stRi
+	 mwBDLK1cehod3Y22/GR0LD5vTg1vhVFQr5m7hlG1+7tsrwKo4tOG2wETEGtqMvYGWT
+	 RXZQwx51RExTQwdAEVEO0fU3e9DSBM9Xt5IwkLy1T7KSXQLvReFvyt8YDOyYnPaa2K
+	 bJm2N06dt8m5A==
+Date: Wed, 18 Jun 2025 10:13:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Joel Mathew Thomas <proxy0@tutamail.com>, tcm4095@gmail.com,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH for-linus] PCI: pciehp: Ignore belated Presence Detect
+ Changed caused by DPC
+Message-ID: <20250618151307.GA1203119@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d9c4286a16253af7e93eaf12e076e3ef3546367a.1750257164.git.lukas@wunner.de>
 
-Hello Hans,
+On Wed, Jun 18, 2025 at 04:38:25PM +0200, Lukas Wunner wrote:
+> Commit c3be50f7547c ("PCI: pciehp: Ignore Presence Detect Changed caused
+> by DPC") sought to ignore Presence Detect Changed events occurring as a
+> side effect of Downstream Port Containment.
+> 
+> The commit awaits recovery from DPC and then clears events which occurred
+> in the meantime.  However if the first event seen after DPC is Data Link
+> Layer State Changed, only that event is cleared and not Presence Detect
+> Changed.  The object of the commit is thus defeated.
+> 
+> That's because pciehp_ist() computes the events to clear based on the
+> local "events" variable instead of "ctrl->pending_events".  The former
+> contains the events that had occurred when pciehp_ist() was entered,
+> whereas the latter also contains events that have accumulated while
+> awaiting DPC recovery.
+> 
+> In practice, the order of PDC and DLLSC events is arbitrary and the delay
+> in-between can be several milliseconds.
+> 
+> So change the logic to always clear PDC events, even if they come after an
+> initial DLLSC event.
+> 
+> Fixes: c3be50f7547c ("PCI: pciehp: Ignore Presence Detect Changed caused by DPC")
+> Reported-by: Lương Việt Hoàng <tcm4095@gmail.com>
+> Reported-by: Joel Mathew Thomas <proxy0@tutamail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219765#c165
+> Tested-by: Lương Việt Hoàng <tcm4095@gmail.com>
+> Tested-by: Joel Mathew Thomas <proxy0@tutamail.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-On Thu, Jun 12, 2025 at 09:07:40AM +0800, Hans Zhang wrote:
-> 
-> 
-> On 2025/6/12 04:40, Bjorn Helgaas wrote:
-> > On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
-> > > Register bit manipulation in DesignWare PCIe controllers currently
-> > > uses repetitive read-modify-write sequences across multiple drivers.
-> > > This pattern leads to code duplication and increases maintenance
-> > > complexity as each driver implements similar logic with minor variations.
-> > 
-> > When you repost this, can you fix whatever is keeping this series from
-> > being threaded?  All the patches should be responses to the 00/13
-> > cover letter.  Don't repost until at least a couple of days have
-> > elapsed and you make non-trivial changes.
-> > 
-> 
-> Dear Bjorn,
-> 
-> Every time I send an email to the PCI main list, I will send it to myself
-> first, but I have encountered the following problems:
-> Whether I send my personal 163 email, Outlook email, or my company's cixtech
-> email, only 10 patches can be sent. So in the end, I sent each patch
-> separately.
-> 
-> This is the first time I have sent an email with a series of more than 10
-> patches. My configuration is as follows:
-> smtpserver = smtp.163.com
-> smtpserverport = 25
-> smtpenablestarttlsauto = true
-> smtpuser = 18255117159@163.com
-> smtppass = xxx
-> 
-> I suspect it's a problem with China's 163 email. Next, I will try to send it
-> using the company's environment. Or when I send this series of patches next
-> time, I will paste the web link address of each patch in by replying
-> 0000-cover-letter.patch.
+Applied to pci/for-linus for v6.16, thanks, Lukas!
 
-Perhaps the git-send-email options --batch-size and --relogin-delay can be
-of help to you:
-https://git-scm.com/docs/git-send-email#Documentation/git-send-email.txt---batch-sizenum
-
-
-Kind regards,
-Niklas
+> ---
+>  drivers/pci/hotplug/pciehp_hpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index ebd342b..91d2d92 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -771,7 +771,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>  		u16 ignored_events = PCI_EXP_SLTSTA_DLLSC;
+>  
+>  		if (!ctrl->inband_presence_disabled)
+> -			ignored_events |= events & PCI_EXP_SLTSTA_PDC;
+> +			ignored_events |= PCI_EXP_SLTSTA_PDC;
+>  
+>  		events &= ~ignored_events;
+>  		pciehp_ignore_link_change(ctrl, pdev, irq, ignored_events);
+> -- 
+> 2.47.2
+> 
 
