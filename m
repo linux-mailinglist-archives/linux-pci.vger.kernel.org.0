@@ -1,141 +1,200 @@
-Return-Path: <linux-pci+bounces-30003-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 237ABADE258
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 06:24:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E30A7ADE2D1
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 07:01:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7BB117B889
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 04:24:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D5C217AA8A
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 05:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29BF01C5496;
-	Wed, 18 Jun 2025 04:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED7BB1DD9AD;
+	Wed, 18 Jun 2025 05:01:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="RW36JUNL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYbVkYCg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9273882866;
-	Wed, 18 Jun 2025 04:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03F42F533A;
+	Wed, 18 Jun 2025 05:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750220645; cv=none; b=TsDZjg/FFBk8oX9Lne4Y1AMWBoF7u0/sj+FsIjMeKeUu8yLXiWUBf8eiesFyGVPKBoHhVvQ8GBg+/vLuULiERW2RHBSJY1b2pn06Pmh7Miox0G5wx/IknFXqpdMcFsq7PnoDHoVg+QUZaBRq+8ENcdorLS13OEE+ctZzZH5Ek5E=
+	t=1750222902; cv=none; b=HDquFgiYEyomOBhIeWHRfxL0ny4wQrOohOWTEbiSzz5tUBpdqn2Vr2E3+SuCjVHCPRxALrnQvi0l7nD9zzvWWqAbYXu2sR/Zzr551KvZ3X4Ze6HPixJ+tWxmWW5wVrcKqRIIx4wogjP4jXrhoI2aMM+F7SNMFMBBs9WqpCQBR4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750220645; c=relaxed/simple;
-	bh=mr5xkyIYAENNMenKiuaHIxWlFKxW3ImXxL3lR0fLT2s=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=EV8RFSBEtdD2Z2S1sXyl7ouR4zV6nNpPld4Gh6+BYkE81W1zzMurH+9Z/iE1x22++nShh8oYuv/sBMNH045x4QtjpDvOsWlJIvfs67sa1fB+zS5ljE5yG0BE5O1AfCcRO56x3ZqfGEBzCX8sDkHmzycmX0We7pXKgecu3Px3BHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=RW36JUNL; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id E18E48288AE9;
-	Tue, 17 Jun 2025 23:24:02 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id SHe2gD1KcKYp; Tue, 17 Jun 2025 23:24:02 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 2D8B0828884A;
-	Tue, 17 Jun 2025 23:24:02 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 2D8B0828884A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750220642; bh=o/1IBINWMrVso6KNgb8gMd8huCPM66zxZkZ7bvMLpVQ=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=RW36JUNLcwayc7jLDx4GGxx7gpPVeCgX7oRK9NAHzdXjX3NlU2uTf2M0zh+meeOkr
-	 BbL5v/HpIJTvlA0dwagL8ZTWhq9ox2vo6fh12OSC6njlxTAHqx6++MkngJKN7ktOC6
-	 RWvUpioRJsl7IOWxhc8f9F4B4SYoU2jRcSl0LHxE=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9wY7-oK45MhH; Tue, 17 Jun 2025 23:24:02 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 0748082887A2;
-	Tue, 17 Jun 2025 23:24:02 -0500 (CDT)
-Date: Tue, 17 Jun 2025 23:24:01 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Timothy Pearson <tpearson@raptorengineering.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <1984998826.1309773.1750220641884.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH 6/6] pci/hotplug/pnv_php: Enable third attention indicator
+	s=arc-20240116; t=1750222902; c=relaxed/simple;
+	bh=W4i8qDV6jVubz5hu6Md2H0YeWT1kUXFb3dG2JZ/Daf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BCgyHrfNudV58i3wNxPumaR2H8TeOIurL16FY/iR7X55TjKWE1A+gCdxI0XFF1+epkYqqQU0H/lIARTGBwScxu9CNrrX2laKo+fJuXtivTfYERkv8LIfCu2G0PAIWlT4z74w1BZGV9b0bnuAI3x5xAE+B80aVDxnTKQy0gx8IZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYbVkYCg; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750222901; x=1781758901;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W4i8qDV6jVubz5hu6Md2H0YeWT1kUXFb3dG2JZ/Daf4=;
+  b=PYbVkYCg6dFBa5+bJJnNKJl8UKPcsX0tJCgJlzXbKQ/AttmVWV5b8ytu
+   jayczWD0KL9y/1zxfU72iGFzjxzk4Ek+tE6iWxXcg+upe6EkpN5yxCHPH
+   kRW6ZtJW/Z5LEKAliBQxVF8PaETPPbd5Hz9Yai08s7bK1JoyfYb1FCCnq
+   3/tEBxCY8OFg+NSLVTOxnXn8em5WgAqzmlDkhC/B09QtLK2gQQmFlRpCp
+   e2G4JsW/75WWI1N8bYUyEEavxH8QGJuIYYhl3DSHA1MaE1KdLXRJCDKkK
+   kf2ofkJaapYWl7voTvo9Cc6aXmyXVAdlS8+7eQQbVJzWVU/v4ur25+Epg
+   g==;
+X-CSE-ConnectionGUID: HMpuFPQpTLqiNmOPogH6Xg==
+X-CSE-MsgGUID: jcIAY/sgTuq8gAyBL8woJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56227552"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="56227552"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 22:01:40 -0700
+X-CSE-ConnectionGUID: Gm/9BwRlTnCzyem2RZOImg==
+X-CSE-MsgGUID: oj3tfdjmRECdvZHIuARvuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="153976738"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 22:01:33 -0700
+Date: Wed, 18 Jun 2025 12:54:18 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
+	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com, yilun.xu@intel.com,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com,
+	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
+ TEE-IO support
+Message-ID: <aFJGet5JS4ed7xfc@yilunxu-OptiPlex-7050>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+ <20250529053513.1592088-20-yilun.xu@linux.intel.com>
+ <yq5aplfn210z.fsf@kernel.org>
+ <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
+ <yq5ajz5r8w6p.fsf@kernel.org>
+ <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
+ <yq5a5xgwt82d.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Index: eLJahenhbKp2Kz5NYOtowJbZINMJBw==
-Thread-Topic: pci/hotplug/pnv_php: Enable third attention indicator
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5a5xgwt82d.fsf@kernel.org>
 
- state
+On Mon, Jun 16, 2025 at 01:46:42PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> 
+> > On Wed, Jun 04, 2025 at 07:07:18PM +0530, Aneesh Kumar K.V wrote:
+> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> >> 
+> >> > On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
+> >> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
+> >> >> 
+> >> >> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
+> >> >> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
+> >> >> > command to VMM. Specifically for TDX Connect, these commands are some
+> >> >> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
+> >> >> > Interface).
+> >> >> >
+> >> >> > The TSM TDI bind/unbind operations are expected to be initiated by a
+> >> >> > running CoCo VM, which already have the legacy assigned device in place.
+> >> >> > The TSM bind operation is to request VMM make all secure configurations
+> >> >> > to support device work as a TDI, and then issue TDISP messages to move
+> >> >> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
+> >> >> >
+> >> >> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
+> >> >> > device to TDISP ERROR state.
+> >> >> >
+> >> >> 
+> >> >> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
+> >> >> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
+> >> >
+> >> > A general reason is, the device driver - VFIO should be aware of the
+> >> > bound state, and some operations break the bound state. VFIO should also
+> >> > know some operations on bound may crash kernel because of platform TSM
+> >> > firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
+> >> > in secure page tables cannot be unmapped before TDI STOP [1].
+> >> >
+> >> > Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
+> >> > S-EPT would fail if TDI is bound. For AMD there seems also some
+> >> > requirement about this but I need Alexey's confirmation.
+> >> >
+> >> > [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+> >> >
+> >> 
+> >> According to the TDISP specification (Section 11.2.6), clearing either
+> >> the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
+> >> the TDI to transition to an error state. To handle this gracefully, it
+> >> seems necessary to unbind the TDI before modifying the BME or MSE bits.
+> >
+> > Yes. But now the suggestion is never let VFIO do unbind, instead VFIO
+> > should block these operations when device is bound.
+> >
+> >> 
+> >> If I understand correctly, we also need to unmap the Stage-2 mapping due
+> >> to the issue described in commit
+> >> abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
+> >> reasons we would want to unmap the Stage-2 mapping for the BAR (as done
+> >> in vfio_pci_zap_and_down_write_memory_lock)?
+> >
+> > I think no more reason. 
+> >
+> >> 
+> >> Additionally, with TDX, it appears that before unmapping the Stage-2
+> >> mapping for the BAR, we should first unbind the TDI (ie, move it to the
+> >> "unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
+> >> or is it driven by a different requirement?
+> >
+> > No, this is not device side TDISP requirement. It is host side
+> > requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
+> > with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
+> > unmap IOMMU S2 PT.
+> >
+> > If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
+> > guest by just unmap some PT entry and suppress the fault event. Guest
+> > thought a DMA writting is successful but it is not and may cause
+> > data integrity issue.
+> >
+> 
+> I am still trying to find more details here. How did the guest conclude
+> DMA writing is successful?
 
-The PCIe specification allows three attention indicator states,
-on, off, and blink.  Enable all three states instead of basic
-on / off control.
+Traditionally VMM is the trusted entity. If there is no IOMMU fault
+reported, guest assumes DMA writing is successful.
 
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
----
- drivers/pci/hotplug/pnv_php.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+> Guest would timeout waiting for DMA to complete
 
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index 32f26f0d1ca6..c9003dec91c3 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -3,6 +3,7 @@
-  * PCI Hotplug Driver for PowerPC PowerNV platform.
-  *
-  * Copyright Gavin Shan, IBM Corporation 2016.
-+ * Copyright (C) 2025 Raptor Engineering, LLC
-  */
- 
- #include <linux/bitfield.h>
-@@ -439,10 +440,23 @@ static int pnv_php_get_adapter_state(struct hotplug_slot *slot, u8 *state)
- 	return ret;
- }
- 
-+static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8 *state)
-+{
-+	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
-+	struct pci_dev *bridge = php_slot->pdev;
-+	u16 status;
-+
-+	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
-+	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
-+	return 0;
-+}
-+
-+
- static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
- {
- 	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
- 
-+	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
- 	*state = php_slot->attention_state;
- 	return 0;
- }
-@@ -460,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot *slot, u8 state)
- 	mask = PCI_EXP_SLTCTL_AIC;
- 
- 	if (state)
--		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
-+		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
- 	else
- 		new = PCI_EXP_SLTCTL_ATTN_IND_OFF;
- 
--- 
-2.39.5
+There is no *generic* machanism to detect or wait for a single DMA
+write completion. They are "posted" in terms of PCIe.
+
+Thanks,
+Yilun
+
+> if the host hides the interrupt delivery of failed DMA transfer?
+> 
+> >
+> > This is not a TDX specific problem, but different vendors has different
+> > mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
+> > AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
+> > how ARM handles this?
+> >
+> > https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
+> >
+> > Thanks,
+> > Yilun
+> >
+> 
+> -aneesh
 
