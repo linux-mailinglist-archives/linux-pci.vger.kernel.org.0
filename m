@@ -1,110 +1,133 @@
-Return-Path: <linux-pci+bounces-30088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 028E5ADF22D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 18:10:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 641B0ADF238
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 18:13:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDABB3B9167
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:09:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1197817FAD6
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:14:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7282F0022;
-	Wed, 18 Jun 2025 16:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421B22EA726;
+	Wed, 18 Jun 2025 16:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="mUshL+nz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXg15e9j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2662ED159;
-	Wed, 18 Jun 2025 16:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C36D2EB5C5
+	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750263016; cv=none; b=AailKEENOI08/gOVI2v4Q3R9r8myIPxFYblaynhr2h4Aurj4QrlKLLMYdGR5mj832D7am295otYPqhCw5ohhNyvszHgmwCwxcgoBsXiQI56Qy+FyROT98LmMvDDYXSbpzj8VvxLj0BH3xi3hYWEliSF3UA31Tv/+KSSVzdp4Kp0=
+	t=1750263236; cv=none; b=HT7ODNQlCiljvgr6u1tWGNi8+umwLWD+KXwWM4SKGP6KJdhB4dAPPFdmdc/6+NDANz8px01Md1/GSntoOXeowPqOrxZVX7OzHWEaglO7i00CoL1wHSA94MYEbpiueUDLdmYbgbindM69eOv2R++L+g4b4ZUtecgsZJQiaBIDqKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750263016; c=relaxed/simple;
-	bh=NOym2xZcgJfB+z+AAQuaFL7SN41M6k+rBUoLUvCNhGQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=hy1AQzMjQDVQRc9A1a1v7i+O6rOlyg6sAlp8A6cE+SwdaE/8xeUMqPHlj6LbxXDHBSompdXEgWJzZ1LfMq6CFvOWOxq7Gp8gG6ecC+0yxAWnHyu6IlyyZFgA92TNqmD++eKFGJJy7SfLXRKuydYniCzhZ/Nk02OjVfAeNVbgTWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=mUshL+nz; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 455FF82888DD;
-	Wed, 18 Jun 2025 11:10:06 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id X_pUIaLZDl61; Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 909B88288871;
-	Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 909B88288871
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750263002; bh=jzmacsdU6uI9FhGkK2oO6/7D6m0SuoLy6Bj4U6ELlRA=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=mUshL+nzI8gkBXELnjg9WBeHhA5NGuq1DLusUDrP6UwP2TxvvudbCMreU7GQQIk0U
-	 BXQR9Lj73ak0tJhV4RUCgMsfbGCkqexCCemoZ252ZbK9TEHxFHCJCiz+43KufZTfLv
-	 ATErfBUqQ7E1g+fNFa4smT7cdZ1BJHrm+BeYO0m0=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id JI3qCWrOjecK; Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 4C0C382882C6;
-	Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
-Date: Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <1728509613.1310543.1750263002144.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <aFJQ8AtYlKx1t_ri@infradead.org>
-References: <946966095.1309769.1750220559201.JavaMail.zimbra@raptorengineeringinc.com> <aFJQ8AtYlKx1t_ri@infradead.org>
-Subject: Re: [PATCH 3/8] powerpc/pseries/eeh: Export eeh_unfreeze_pe() and
- eeh_ops
+	s=arc-20240116; t=1750263236; c=relaxed/simple;
+	bh=fbuM+mm3CzXhR4Vx6fz24E6YgGaASNAJe7RFsbZoZr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=p2JwUsJU98uimIniZolyD6DmOvt0+Sq1bZ49Xz8MsEsHMixf7uSbb6qhZ+ADU7cGrsXmsGDSUTbCj4iZu//mR1YKYdYqlWxi6TMcM+4Hx+9YIDybvQZVEkbWDq/xlXeASrVtEyknhNg0JDM21vtcbVcuIVK1XczR8qdrNAIPvnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXg15e9j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC4EC4CEE7;
+	Wed, 18 Jun 2025 16:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750263235;
+	bh=fbuM+mm3CzXhR4Vx6fz24E6YgGaASNAJe7RFsbZoZr8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=YXg15e9jO7zj7yxrJrcm+72b1bgthGqbSMWNRxAMOuKHOFEYB5likqlVZpCTU/SSZ
+	 Zab3hI4KaLIQfr8bGB5sSvDk9zQ4IDpg3jX62Y7JqdrsVMhqZhOW/4q3QTMuatchJm
+	 23dKiflKQ/QbUvuviZENBPT5hoPfZu2VVaCglnELXyLUfBycd97iBoQOWZWpyrHrtp
+	 hNJtP61SlXkEiKtK23WTBmc2bxaRvl0rGIYbZaBSkb8ml36y/CAytlpxFJraaFQ6vy
+	 SgA6eOEhZP8eRXl0RXVlYrTEZMs9SGe99osj9PeFwj3k4uTU2LETSQ5frXgGUHyAKK
+	 NsjNvf/3O10uQ==
+Date: Wed, 18 Jun 2025 11:13:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	"lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [v3 PATCH 1/1] PCI: of: fix non-prefetchable region address
+ range check.
+Message-ID: <20250618161353.GA1203949@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
-Thread-Index: bupdJGUzprnsSSzB+HYmaNkawJnfUQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA4PR07MB88380E01F75CBC2209C23CA0FD72A@PA4PR07MB8838.eurprd07.prod.outlook.com>
 
-
-
------ Original Message -----
-> From: "Christoph Hellwig" <hch@infradead.org>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
-> Sent: Wednesday, June 18, 2025 12:38:56 AM
-> Subject: Re: [PATCH 3/8] powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
-
-> On Tue, Jun 17, 2025 at 11:22:39PM -0500, Timothy Pearson wrote:
->>  /* Platform dependent EEH operations */
->>  struct eeh_ops *eeh_ops = NULL;
->> +EXPORT_SYMBOL(eeh_ops);
+On Wed, Jun 18, 2025 at 01:56:17PM +0000, Wannes Bouwen (Nokia) wrote:
+> [v3 PATCH 1/1] PCI: of: fix non-prefetchable region address range check.
 > 
-> Exporting ops vectors is generally a really bad idea.  Please build a
-> proper abstraction instead.
+> According to the PCIe spec (PCIe r6.3, sec 7.5.1.3.8), non-prefetchable
+> memory supports only 32-bit host bridge windows (both base address as
+> limit address).
+>
+> In the kernel there is a check that prints a warning if a
+> non-prefetchable resource's size exceeds the 32-bit limit.
 > 
-> And use EXPORT_SYMBOL_GPL for any kind of low-level API.
+> The check currently checks the size of the resource, while actually the
+> check should be done on the PCIe end address of the non-prefetchable
+> window.
+> 
+> Move the check to devm_of_pci_get_host_bridge_resources() where the PCIe
+> addresses are available and use the end address instead of the size of
+> the window.
+> 
+> Fixes: fede8526cc48 (PCI: of: Warn if non-prefetchable memory aperture
+> size is > 32-bit)
+> Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
+> ---
+> 
+> v3:
+>   - Update subject and description + add changelog
+> 
+> v2:
+>   - Use PCI address range instead of window size to check that window is
+>     within a 32bit boundary.
+> 
+> ---
+>  drivers/pci/of.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 3579265f1198..4fffa32c7c3d 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -400,6 +400,10 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  			*io_base = range.cpu_addr;
+>  		} else if (resource_type(res) == IORESOURCE_MEM) {
+>  			res->flags &= ~IORESOURCE_MEM_64;
+> +
+> +			if (!(res->flags & IORESOURCE_PREFETCH))
+> +				if (upper_32_bits(range.pci_addr + range.size - 1))
+> +					dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
 
-Fair enough.  I'll add a properly exported method for PE get_state() and update the series in the next couple of days.
+Seems mostly right to me.  I think we should update the message to
+talk about the *address* instead of the size, since that's the real
+problem.  Also would be nice to include the resource (%pR) and the
+corresponding bus addresses as we do in pci_register_host_bridge().
+
+>  		}
+>  
+>  		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+> @@ -622,10 +626,6 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+>  		case IORESOURCE_MEM:
+>  			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+>  
+> -			if (!(res->flags & IORESOURCE_PREFETCH))
+> -				if (upper_32_bits(resource_size(res)))
+> -					dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
+> -
+>  			break;
+>  		}
+>  	}
+> -- 
+> 2.43.5
+> 
 
