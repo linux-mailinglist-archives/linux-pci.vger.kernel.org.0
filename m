@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-30079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 294F6ADF120
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 17:22:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E186ADF139
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 17:23:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC0D617A5EC
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 15:22:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1BC03BC4C1
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 15:22:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6E12F0028;
-	Wed, 18 Jun 2025 15:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACDE2EFDAE;
+	Wed, 18 Jun 2025 15:21:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PlpPLCAk"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Uhmj0vaq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EB3E2EFD94;
-	Wed, 18 Jun 2025 15:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 295622EFDB7;
+	Wed, 18 Jun 2025 15:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260103; cv=none; b=tjm+NDFVClindGPJ4VXN7dox/k/HUK9s5aAyEMO4Bn5Ie2EX41iNZ66KgviNO9oFqacyIGZCSd17iB5RPvQ/NOAlnLZkIoxXMAwbr7XrX3uVzpdrp7f2bfIBLCknD4BH9t6YF+MRICzeBbUGQK9GcNVzf9Ng0mWwPmWSBBATV/Y=
+	t=1750260105; cv=none; b=ClW7oLQyDwaDWUZwKfcbNoIZloH5ey/+7+UVd1WWU3uyPg2RuJP7l7qKUtiFZSEJvCRBY8+UMTX4pSWpj/e2a3SwK7yrJjqF0UzOve5dvaOZ49aGDZDCGeKnNKgoG3d0Gw/7gK6i6cm6bjfjTGqfav/+Drv2ekwUnFVdoilQmBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260103; c=relaxed/simple;
-	bh=QsvVTVjEukMOXgp7vsAJHkEP4QuiyFrtI+Q8YTeyeFg=;
+	s=arc-20240116; t=1750260105; c=relaxed/simple;
+	bh=uHw15SEfgJhjk0plrbNOxwEmIEjDnYKRuTeithPcYq8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PZOkxojhIGMbDDdc1qmnU8h3k3hpMrDzSuvr0+OSYKYlD7Q0Yqp6+ugzj/+RbZujHMMBBqdXVAuontMqzr6e+aCtwSCBqHOfQzsTf7EVfAdM2thoXvbgdWpcaB0iftryEyDZyYzfju04UpaNQAU2hsZw5dp7Hgl6soGojsYiFqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PlpPLCAk; arc=none smtp.client-ip=220.197.31.3
+	 MIME-Version; b=cEAzuqUfUPZDVpIMWLZfcF27TB4nmbS+sYu6kc0wdnWcC5/QHj2Wl3gTMvUdlhjp9T47+TSrhEQwF5o97RF6agr+2xEmLzMbs7eqbCwqEXPsgWTeL+HxUW857F8enRhMxOf5Qs24NW1tiZT29DevXzLAWw7CiBcMGY51vMQLO3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Uhmj0vaq; arc=none smtp.client-ip=220.197.31.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=04
-	fcvJHUcanUs3BderAdxY1w8bpBTNk29ppsje+kwjk=; b=PlpPLCAksLt/HRoZ5Y
-	/EiJR5EueBtclAWbEVdnZ+JPd42M5xU/kPeH5+a32wYp0pCpZe6hz260npjMh8uO
-	hYUkCh8pV8+VvsdA2cR322IMJrtBxDW4A43NOs3r44k/3yTTXtbCaBgoeaxz02nA
-	SuZvH3iEELBErWrKZ+OrdHoKc=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=lz
+	037P2kaVzqsQ34A3LWfibKKWlS33MGjH64LQLCkDA=; b=Uhmj0vaq/FSWYCyHKK
+	SXCv5pl1QkZldRIcz/5204acUf9cunLphDScBHvQiCD4ArzM3PAS/Ok5ztXD8LlX
+	d/P9ZbyAXxdOwZm7MaydmZjjZgr/si62tHhjVCbp5ngzqg5UhY0E9vtc1sdu29dJ
+	k7GAcTfEcuSFQdQCVwCV/iQ5A=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wBXvXd32VJoWFISAQ--.22704S4;
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wBXvXd32VJoWFISAQ--.22704S5;
 	Wed, 18 Jun 2025 23:21:29 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
@@ -48,9 +48,9 @@ Cc: robh@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 07/13] PCI: bt1: Refactor code by using dw_pcie_clear_and_set_dword()
-Date: Wed, 18 Jun 2025 23:21:06 +0800
-Message-Id: <20250618152112.1010147-8-18255117159@163.com>
+Subject: [PATCH v2 08/13] PCI: dw-rockchip: Refactor code by using dw_pcie_clear_and_set_dword()
+Date: Wed, 18 Jun 2025 23:21:07 +0800
+Message-Id: <20250618152112.1010147-9-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250618152112.1010147-1-18255117159@163.com>
 References: <20250618152112.1010147-1-18255117159@163.com>
@@ -61,48 +61,56 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXvXd32VJoWFISAQ--.22704S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zry8Xw4xCw48Gr45uF4xXrb_yoW8ArW7pa
-	9IkF92kF12ya1Y9a1Ut3Z7ZFyYgan5CayjgFn7Kw1IgF9Iyr9rWFyrKFy3trZxJr4Iqr1a
-	9w1UtFW7uan8ArUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_GYLPUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgBwo2hS1URmDAAAso
+X-CM-TRANSID:_____wBXvXd32VJoWFISAQ--.22704S5
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw1rGr4Dtr1DJF1ruw18Grg_yoW8CrW5p3
+	y3Aa4akF4rJw4rua1kAa97ZF13ta9xAFW7JFZ3Gw1SqFy2k34DKF1YkFyaqF1xGr42vF1a
+	93yUt3yUZa13AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR2jg3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhFwo2hS1URmFgAAsj
 
-Baikal-T1 PCIe driver contains a direct register write to initiate
-speed change during link training. The current implementation sets
-the PORT_LOGIC_SPEED_CHANGE bit via read-modify-write without using
-the standard bit manipulation helper.
+Rockchip PCIe driver implements L0s capability enablement through
+explicit register read-modify-write. The current approach reads the
+LNKCAP register, modifies the ASPM_L0S bit, then writes back the
+value with DBI write protection handling.
 
-Replace manual bit set operation with dw_pcie_clear_and_set_dword() to
-enable speed change. The helper clearly expresses the intent to modify
-a specific bit while preserving others, eliminating the need for explicit
-read-before-write.
+Refactor ASPM capability configuration using
+dw_pcie_clear_and_set_dword(). The helper combines bit manipulation with
+DBI protection in a single call, replacing three-step manual operations.
+This simplifies the capability setup flow and reduces code complexity.
 
-Using the standardized interface improves consistency with other
-DesignWare drivers and reduces the risk of unintended bit modifications.
-The change also simplifies future updates to link training logic.
+Adopting the standard helper improves maintainability by eliminating
+local variables and explicit bitwise operations. The change also ensures
+consistent handling of DBI write protection across capability modification
+functions.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pci/controller/dwc/pcie-bt1.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-bt1.c b/drivers/pci/controller/dwc/pcie-bt1.c
-index 1340edc18d12..7cbaeeed033d 100644
---- a/drivers/pci/controller/dwc/pcie-bt1.c
-+++ b/drivers/pci/controller/dwc/pcie-bt1.c
-@@ -289,9 +289,8 @@ static int bt1_pcie_start_link(struct dw_pcie *pci)
- 	 * attempt to reach a higher bus performance (up to Gen.3 - 8.0 GT/s).
- 	 * This is required at least to get 8.0 GT/s speed.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val |= PORT_LOGIC_SPEED_CHANGE;
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
-+				    0, PORT_LOGIC_SPEED_CHANGE);
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 93171a392879..e6bd9c54b164 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -194,15 +194,14 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
  
- 	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_PMSC, val,
- 				       BT1_CCU_PCIE_LTSSM_LINKUP(val),
+ static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+ {
+-	u32 cap, lnkcap;
++	u32 cap;
+ 
+ 	/* Enable L0S capability for all SoCs */
+ 	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+ 	if (cap) {
+-		lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
+-		lnkcap |= PCI_EXP_LNKCAP_ASPM_L0S;
+ 		dw_pcie_dbi_ro_wr_en(pci);
+-		dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
++		dw_pcie_clear_and_set_dword(pci, cap + PCI_EXP_LNKCAP,
++					    0, PCI_EXP_LNKCAP_ASPM_L0S);
+ 		dw_pcie_dbi_ro_wr_dis(pci);
+ 	}
+ }
 -- 
 2.25.1
 
