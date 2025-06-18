@@ -1,55 +1,65 @@
-Return-Path: <linux-pci+bounces-30006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85BF1ADE309
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 07:27:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6BFADE316
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 07:39:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6FA61898D66
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 05:27:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A64C1899D93
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 05:39:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE9281F8747;
-	Wed, 18 Jun 2025 05:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4571714B7;
+	Wed, 18 Jun 2025 05:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AhWyVqsA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095963A1DB
-	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 05:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C680155382;
+	Wed, 18 Jun 2025 05:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750224440; cv=none; b=TE2FrLPRhVFVIOwuVRNFfnvnpR71/UHL5tiUjYCayOZm4IlpIMipBJo20O2oJqflmiC2xqk5ASvJjg1JxsZEDtjUH86lp7dL+7uTC2jWHX+8qAjsN62mD/YhrkP3xeL/2ederkDt4pOZgHlxm0nVa6vbxHvaXSLMvAn7jt+rMTk=
+	t=1750225140; cv=none; b=owAKXh63a7jcvRyzVIpAZD21MbrMK5iAG7Rsq9ns4DyCiVts83w7tMntiFK0FI4iS6wtzfjq7OX4pataAevYgJX/SPhheX/FeiE7w7zUzzJTkk5WO2cw/mC9oCy8DFJ2YleDhEp17S1/nD803kEIDzwo43d1+m044wT7TO+ODfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750224440; c=relaxed/simple;
-	bh=OiHOH+gOId7nAoNgnk0w09IkkzEN1Ydh9tBfYlBT9H8=;
+	s=arc-20240116; t=1750225140; c=relaxed/simple;
+	bh=M74KaXEkB7xVptKIShssQZ1N2d0tX1uMlJHUqumUNSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PysW8catP8bM4qRUIDweowOy1iQvOkDuI5ROafPxcA4Y7Hgoe051ylV/iM7eq/wVL6F8EvzTrF1ZrhHaBIWE3W9lQAe9gXLuDbTiPE+58uSK5s/SYZda/z/HB0SzC5QAYV2UdUtbAhYXNtJvYOIetv5ndMtcywMpIKJZtpkZ4ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 0635F200A291;
-	Wed, 18 Jun 2025 07:27:10 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id DF26F20D68D; Wed, 18 Jun 2025 07:27:09 +0200 (CEST)
-Date: Wed, 18 Jun 2025 07:27:09 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: linux-pci@vger.kernel.org
-Cc: Ben Hutchings <ben@decadent.org.uk>, Bjorn Helgaas <helgaas@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	David Airlie <airlied@redhat.com>
-Subject: Re: amd-iommu / agpgart-amd64 problem: Resources present before
- probing
-Message-ID: <aFJOLZ88KIH5WBy2@wunner.de>
-References: <wpoivftgshz5b5aovxbkxl6ivvquinukqfvb5z6yi4mv7d25ew@edtzr2p74ckg>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pJOhJzsSyWfiwbmoPGyfEkcE6mNgWm4bA4PKaJgX/eYkANxnwjlVYn1hvc+nq1nx09ENvUflvSXAidKmeKaRm+VHlhT4K2RzahMlPOpms7RuQXXXOgjFi5WS4/9CWpdk3LRlKQko8pQRC6Hh19C/OTj8mLl0xOMZe1WvMDvMhTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AhWyVqsA; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0VfDKR79Vtwn5VxJOChmtPjWAJZfi4MTkhv0klH8VUU=; b=AhWyVqsA3j3LhyCrTsVnb6uTsn
+	9r6eUym64zHlFvMOujpVErXmuxZQzBpGAHf1t8TqLy87/VyIOL9uzm/ZdUVdiz/B19k2KVu7Ye40r
+	mbAeh0+vhywNjZniEURh0ncL8SIKwNm3DZU75mlqhPVHVZQY5qONFOShAFrwqXsxxwbGSEp2nsqis
+	sqMQZI/VXqT+yY4NrSb1Srah+zvhVs4VmAgrGpwwANoFS+Qy4WjpXkCUfgvPrD2Dcw7GG3iyEJEJY
+	l22KO9U5zP3AOTEuow7mmc/cEjcZVJnC4idkyj4mM2zRrVK9hm0cZbS8yFg3Hw7OO91YpFwVHUP90
+	HxZfSLCw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRlVg-000000096Bv-3dIB;
+	Wed, 18 Jun 2025 05:38:56 +0000
+Date: Tue, 17 Jun 2025 22:38:56 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Subject: Re: [PATCH 3/8] powerpc/pseries/eeh: Export eeh_unfreeze_pe() and
+ eeh_ops
+Message-ID: <aFJQ8AtYlKx1t_ri@infradead.org>
+References: <946966095.1309769.1750220559201.JavaMail.zimbra@raptorengineeringinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,58 +68,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <wpoivftgshz5b5aovxbkxl6ivvquinukqfvb5z6yi4mv7d25ew@edtzr2p74ckg>
+In-Reply-To: <946966095.1309769.1750220559201.JavaMail.zimbra@raptorengineeringinc.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jun 17, 2025 at 10:47:48PM +0300, Fedor Pchelkin wrote:
-> Hello,
-> 
-> there is a 
-> 
->   [    0.579232] pci 0000:00:00.2: Resources present before probing
-> 
-> error message observed after
-> 
->   commit 3be5fa236649da6404f1bca1491bf02d4b0d5cce
->   Author: Lukas Wunner <lukas@wunner.de>
->   Date:   Fri Apr 25 11:24:21 2025 +0200
->   
->       Revert "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices"
+On Tue, Jun 17, 2025 at 11:22:39PM -0500, Timothy Pearson wrote:
+>  /* Platform dependent EEH operations */
+>  struct eeh_ops *eeh_ops = NULL;
+> +EXPORT_SYMBOL(eeh_ops);
 
-For the record, the reporter of the above-quoted issue appears to be
-working for an OFAC sanctioned entity:
+Exporting ops vectors is generally a really bad idea.  Please build a
+proper abstraction instead.
 
-https://sanctionssearch.ofac.treas.gov/Details.aspx?id=50890
+And use EXPORT_SYMBOL_GPL for any kind of low-level API.
 
-This prohibits me from two-way engagement with the reporter:
-
-https://www.linuxfoundation.org/blog/navigating-global-regulations-and-open-source-us-ofac-sanctions
-
-   "Reviewing an unsolicited patch from a contributor in a sanctioned
-    region should generally be fine, but actively engaging them to
-    better understand their issue, diagnose the problem, or help
-    improve a patch or modify code would likely cross the line.
-    If the contributor is linked to a sanctioned entity or region,
-    in general, it is best to keep communications strictly one-way.
-    If a patch is received and you improve it and submit it upstream,
-    that should be fine, but going back and forth in communications
-    with the SDN developer likely would not."
-
-Hence I am removing the reporter and the lvc-project@linuxtesting.org
-address (hosted by ispras.ru) from the To: and Cc: headers.
-
-I note that prior to 6fd024893911, the amd64-agp.c driver was only bound
-to devices with a PCI_CAP_ID_AGP capability.
-
-agp_amd64_probe() does check for presence of the capability, but that's
-too late to avoid the error message emitted by really_probe().
-
-What we could do however is to first check for presence of a device with
-PCI_CAP_ID_AGP, and only if one is found would we try to bind to any
-device.  That should avoid the message on any halfway modern system.
-
-Thoughts?
-
-Thanks,
-
-Lukas
 
