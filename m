@@ -1,149 +1,110 @@
-Return-Path: <linux-pci+bounces-30087-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30088-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9491DADF21D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 18:02:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 028E5ADF22D
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 18:10:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CC144A03F9
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:02:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDABB3B9167
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jun 2025 16:09:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7562EE28B;
-	Wed, 18 Jun 2025 16:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7282F0022;
+	Wed, 18 Jun 2025 16:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LijKba0L"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="mUshL+nz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C912EB5AF
-	for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 16:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2662ED159;
+	Wed, 18 Jun 2025 16:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750262551; cv=none; b=GnaaXb+iU3ZvmfskVAIde3CRgouKaXirm//54HhXjYxFSS5734Ya/osZUTwXKQvE3HlXFrlHLeRs/dzYF5OtNVJaRlzANFNBlevykTDANqGKeBCdHtBKBhWlI4FPjaVtfwgYUFUkn/Hrtygo2hbUhNjvoJLdszZCUP9NCeRySxs=
+	t=1750263016; cv=none; b=AailKEENOI08/gOVI2v4Q3R9r8myIPxFYblaynhr2h4Aurj4QrlKLLMYdGR5mj832D7am295otYPqhCw5ohhNyvszHgmwCwxcgoBsXiQI56Qy+FyROT98LmMvDDYXSbpzj8VvxLj0BH3xi3hYWEliSF3UA31Tv/+KSSVzdp4Kp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750262551; c=relaxed/simple;
-	bh=szpCxpm/j2ZbcXcfCS9kCbBVMGO+lYR+TOvNQfWht2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtp/MClrQsMcsk//Z+0GiJf1f9nf9xkHao93UUEiKDMU6Fpp+wHxIUH+U1CMD6eHnSRbJ/+JuChdQWtS8Yuir9sdm6xqIw+2D8oZm4ZTRH8wHWlkUbPhrRYGvMWZzQrH6LwqZOurmyTEbHwRQNhuwMqMOWNyF78qihZgi5SsYs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LijKba0L; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-4079f80ff0fso577800b6e.1
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jun 2025 09:02:29 -0700 (PDT)
+	s=arc-20240116; t=1750263016; c=relaxed/simple;
+	bh=NOym2xZcgJfB+z+AAQuaFL7SN41M6k+rBUoLUvCNhGQ=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=hy1AQzMjQDVQRc9A1a1v7i+O6rOlyg6sAlp8A6cE+SwdaE/8xeUMqPHlj6LbxXDHBSompdXEgWJzZ1LfMq6CFvOWOxq7Gp8gG6ecC+0yxAWnHyu6IlyyZFgA92TNqmD++eKFGJJy7SfLXRKuydYniCzhZ/Nk02OjVfAeNVbgTWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=mUshL+nz; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 455FF82888DD;
+	Wed, 18 Jun 2025 11:10:06 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id X_pUIaLZDl61; Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 909B88288871;
+	Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 909B88288871
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750262549; x=1750867349; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHWHgwA/STLjiBuexUHGmnhpSwfTae10x6GG0C7Yl58=;
-        b=LijKba0LwOio5PKcfPJHGJj8p/7ATCv3EVfcxwvX1Swv95zZWG3k/ayHqEZOm8YnNc
-         XQkrxq/6pjXIEnq6PTtgBHTVS8y1sYGJNqhJQBwsyNjwAPblhm2iRrVxU62FxCRMY6rZ
-         D2g8Y1RLT3KtJrp66E9ORS+efui1VtIhjo8upE6jqyRBivRli42hRJ6eDhzNfcLeAN7U
-         K9PtSXtWT5mGya8OFt0dIZ/XdSemPHNhBz7WDHsx8JHm5VJl22mwph7ESUccg2I0Uk5V
-         7Hn243BsD/HZI//gcF9Eo/MqAhtYQXUU51EYCNZTLSx+WW0yX5KbSEabwud28+cRqiEB
-         sqDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750262549; x=1750867349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHWHgwA/STLjiBuexUHGmnhpSwfTae10x6GG0C7Yl58=;
-        b=FW1zfR1uVJ7py72m8bq4CbjbmEGOnl5qdjSm75UAYL2FXaqcSAsSCrC0XJISf4wpRz
-         atJ5xUdZG6zmMJwJYxTk2Mt5zESSxIiJE8dee/88qheA3+T7aP1wXd2mq+pOGzO6Xus7
-         UE6aFfmTEKTXXe39/Ln3DMPKB8Ph0+P4wr7FkKIl5Ba8KJUsJDiiS6F2vlCstJLPS11E
-         yh9A/eiq4I4fTmfjiY6T4o6VlAmFFz/kxqr3VQOdi/B8xt0pPKgOZX/uOdqFrEpDqgBv
-         N7WP5eiPUfEm8bp/JuyNcfJmy58gJSCNUK03WKLxE3iG8YRPKv0IwcaWAqBWPpGg80ld
-         RlnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJA8Y1VzsxmthDLKotPnRTesjVVtmcvfud5iUWIdP2VGSGhuficnMQlnqHeKwWLh5g8Wx8fpo8p0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi/lp+xzsp8fXJQLygb5jyezyQiOhgVisGiaT5L3UJg3Lv1zs0
-	WmiT7yku67JwhDIx7FlicEqMj+TNmXGVP+QHU9+SNIe75s91LQsGH3vjqMTCvrfu/60=
-X-Gm-Gg: ASbGncsXBMOXhVN/45gGtmg/d4BTHekOlm45DgI4JL5j1VEW41EPVF8WEg9QpsplWEQ
-	otpouHVeXjY71un4V2olP3lBavydsCHgN2nr8TzDxMoo3nJVFZi91Ouezi65KixjfkkTxteXT8B
-	V10GNreTyQYKIP9F4xMI6uPZ0vqWt5Hc+0hgSlJo7SUL2VEYBT1R+PD9tjxLUFOsQ/VoAuxs8zh
-	pE0EAbt2VeZAIpOUb+L4BMhgktNwMR93uLZVpAxx7SnGTLtYnTxrs9a72tfSezLlGZlNA5ai19u
-	2+gcvGpI1X1klm7cGa8Ous9KCnoGKopvp+t+x9Cl4yt6z8WEsrROWsBudMvIfVRCSjFEew==
-X-Google-Smtp-Source: AGHT+IFdKAGH3Dc73tUBzIIxeMD+asyvvqOBafuZVazwZnURkN8zz0IH1vKpB9D7wWwudeN/TRUMfQ==
-X-Received: by 2002:a05:6808:4f26:b0:40a:5380:b8d1 with SMTP id 5614622812f47-40ab510f58emr105690b6e.3.1750262549102;
-        Wed, 18 Jun 2025 09:02:29 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1b3b:c162:aefa:da1b])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a283dc98asm2012193a34.11.2025.06.18.09.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 09:02:28 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:02:27 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>
-Cc: rafael@kernel.org, bhelgaas@google.com, lenb@kernel.org,
-	kwilczynski@kernel.org, sashal@kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/ACPI: Fix double free bug in pci_acpi_scan_root()
- function
-Message-ID: <f04d01a7-28f5-41ea-85f6-ba0e67c80428@suswa.mountain>
-References: <20250617023738.779081-1-qiaozhe@iscas.ac.cn>
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750263002; bh=jzmacsdU6uI9FhGkK2oO6/7D6m0SuoLy6Bj4U6ELlRA=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=mUshL+nzI8gkBXELnjg9WBeHhA5NGuq1DLusUDrP6UwP2TxvvudbCMreU7GQQIk0U
+	 BXQR9Lj73ak0tJhV4RUCgMsfbGCkqexCCemoZ252ZbK9TEHxFHCJCiz+43KufZTfLv
+	 ATErfBUqQ7E1g+fNFa4smT7cdZ1BJHrm+BeYO0m0=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JI3qCWrOjecK; Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 4C0C382882C6;
+	Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
+Date: Wed, 18 Jun 2025 11:10:02 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <1728509613.1310543.1750263002144.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <aFJQ8AtYlKx1t_ri@infradead.org>
+References: <946966095.1309769.1750220559201.JavaMail.zimbra@raptorengineeringinc.com> <aFJQ8AtYlKx1t_ri@infradead.org>
+Subject: Re: [PATCH 3/8] powerpc/pseries/eeh: Export eeh_unfreeze_pe() and
+ eeh_ops
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617023738.779081-1-qiaozhe@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
+Thread-Index: bupdJGUzprnsSSzB+HYmaNkawJnfUQ==
 
-Wait, what?  We can't just delete pci_acpi_generic_release_info().
-What's going to free all those things on the success path?  I
-don't understand.
 
-I had suggested you do something like this:
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 74ade4160314..ff5799b696d6 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -1012,20 +1012,20 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		 root->segment, busnum);
- 
- 	if (ops->init_info && ops->init_info(info))
--		goto out_release_info;
-+		return NULL;
- 	if (ops->prepare_resources)
- 		ret = ops->prepare_resources(info);
- 	else
- 		ret = acpi_pci_probe_root_resources(info);
- 	if (ret < 0)
--		goto out_release_info;
-+		goto cleanup_init_info;
- 
- 	pci_acpi_root_add_resources(info);
- 	pci_add_resource(&info->resources, &root->secondary);
- 	bus = pci_create_root_bus(NULL, busnum, ops->pci_ops,
- 				  sysdata, &info->resources);
- 	if (!bus)
--		goto out_release_info;
-+		goto cleanup_acpi_pci_probe_root_resources;
- 
- 	host_bridge = to_pci_host_bridge(bus->bridge);
- 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
-@@ -1053,8 +1053,10 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		dev_printk(KERN_DEBUG, &bus->dev, "on NUMA node %d\n", node);
- 	return bus;
- 
-+cleanup_acpi_pci_probe_root_resources:
-+	free_something_with_probe();
- out_release_info:
--	__acpi_pci_root_release_info(info);
-+	free_something_info();
- 	return NULL;
- }
- 
+----- Original Message -----
+> From: "Christoph Hellwig" <hch@infradead.org>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
+> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
+> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
+> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
+> Sent: Wednesday, June 18, 2025 12:38:56 AM
+> Subject: Re: [PATCH 3/8] powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
 
-But you'd need to replace the dummy code with actual code and
-change the callers etc.  And I haven't looked at the actual
-code to verify it's a good idea.
+> On Tue, Jun 17, 2025 at 11:22:39PM -0500, Timothy Pearson wrote:
+>>  /* Platform dependent EEH operations */
+>>  struct eeh_ops *eeh_ops = NULL;
+>> +EXPORT_SYMBOL(eeh_ops);
+> 
+> Exporting ops vectors is generally a really bad idea.  Please build a
+> proper abstraction instead.
+> 
+> And use EXPORT_SYMBOL_GPL for any kind of low-level API.
 
-regards,
-dan carpenter
-
+Fair enough.  I'll add a properly exported method for PE get_state() and update the series in the next couple of days.
 
