@@ -1,138 +1,162 @@
-Return-Path: <linux-pci+bounces-30177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ACD3AE045B
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 13:52:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27D4FAE05BC
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 14:28:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4C25188683D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 11:52:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE91A4A1580
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 12:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686F722D7B9;
-	Thu, 19 Jun 2025 11:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07A6B246774;
+	Thu, 19 Jun 2025 12:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBhR6LBd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C422DFA6;
-	Thu, 19 Jun 2025 11:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258052459EA;
+	Thu, 19 Jun 2025 12:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333950; cv=none; b=F8K7N2OADEHx7bcbBMCgCgGp5qTXuhGssuUurp5vG2zX7ruZ+prmo3qay3K/dS/VMVgW49r25O3yBJL7YvAkugMPw40KuB2sDZBj0B7gn65FsgBVrR8ZGxKb72T/pwHIDn15mBtyx0D3xlFm229ocH0TUux+osz6TH3gZfPLWkA=
+	t=1750335954; cv=none; b=hd249MLLg1p7wQlaa7C5aEzpRqjbXUCJs0h3H0o80XSJ0CaCvxZu6k9GhXNXXNAjCzOImH0U4XipgcMfF1SRjwcPjJn7VtU/ks+J5lUjyA/2lchSVNpZmpmDSa6H5zr3C6t7pURHocz4SOrPojFizxHZng5q5avdqdIrXpe+vGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333950; c=relaxed/simple;
-	bh=y+mfvfRO3LvLtvSawFm5KlpFLf6wmj080xPpPri1ADo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yq5zW+nfLoLeX6K594KsM7RoymFapaAYljeB4eaY+ToBeBEg3eLOvWYcDUrunMcRUauLUEgQMTOGBL7761h9Jdp/qJ06KsTbUuNXBL0TGHk7jzzunz5MNENLdp9MEL3zt7MV+j9qUCCf6aXMI6BDIoyd9jDasy+CK1Bcm1IPgdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 934DD200B1D0;
-	Thu, 19 Jun 2025 13:52:23 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 865ED4103A; Thu, 19 Jun 2025 13:52:23 +0200 (CEST)
-Date: Thu, 19 Jun 2025 13:52:23 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Hongbo Yao <andy.xu@hj-micro.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	peter.du@hj-micro.com, jemma.zhang@hj-micro.com
-Subject: Re: [RFC PATCH] PCI: pciehp: Replace fixed delay with polling for
- slot power-off
-Message-ID: <aFP598Yyl0el1uKh@wunner.de>
-References: <20250619093228.283171-1-andy.xu@hj-micro.com>
+	s=arc-20240116; t=1750335954; c=relaxed/simple;
+	bh=kkhTTdSVV5+k/hxdi7N53JUhyduhidpUDduKQjOPZoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VK4Mos/xktgSxyERpuBSjYabhGRxv3SmRye8RIyaNYDqRwltAozMtkTWJTCeLF8tMNnExq5pONv2ON5VltLd1D3cppGexkC7NazqJFaTJXraUfJ/0kqIGfTfAXuNceO75aCe6FDLWy1i28N/GfqO5ng/1Th6i+8wM89trgzCPao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBhR6LBd; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6097de2852aso893435a12.0;
+        Thu, 19 Jun 2025 05:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750335951; x=1750940751; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OUjVhDCukRCpVssyQqgdbhyj+mC/bn6jwO9V7utYui8=;
+        b=QBhR6LBdkI8VumqMYAEDbIvd6oSWYa05iE1XDWaAkFy7FDCyKrLuB1g11kVYtiJvt6
+         fnlGkjx1yUVQcwImwwGX5skGIl9cRCs1lsOOK0hmvRxznvo4WzvIg5K4otdQbmvHnrzy
+         Ak6V/VbtEF6cO+EODxMNMgWgarN/oKA5DNbw2YO9V3g5UdZ3QKOt+5jRyWAGM2zOC0xV
+         3iAVitXKk/s8aFd81arAEdxhkvEybEwpkUEKG/BHmzRuY3+AwPtsNUvoCt96hQ0e9fKT
+         u1feSTaHqGjmdNVcxnBcgYyZlw6gokFfbNk+ABqvtcGYoysWH8Lvd+A0ZqXUESrarb4P
+         MvQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750335951; x=1750940751;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OUjVhDCukRCpVssyQqgdbhyj+mC/bn6jwO9V7utYui8=;
+        b=EA5LR8C2llfmxRNZPt+Rcjj4yyKVpsU//lzgeDy02KUwkSISNHxNRQPQY+FRDixY2a
+         B5IBIddJlOjzDjyAkSkBhgQfkgAISJRtqEeHDH8antB57gm0YAGzgsDIq9N5Ye9x92PE
+         40mUL+lBUMFx0r6EOxs8xLIdXbdsiQnyetGn/VmKG9gMoQWkNTPaID6tmB4jmnV2HVDm
+         rJT31gJ98oSdvMyjqO5LMYtRLqZqzhsqwJYA0q4NRCjvgXAHpQDoM3MFmAAh/4BqOMrN
+         aakYf0ts8ElCO9tn/A98LMa06zcGWkhZ0KA5bGR1LNbuime4rp69vi36p8bjpp4jWKcP
+         +/KA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1VhFPvzk8VLdysligL/Fm7CmOgKCvKFoD0ReJtnk90uMBMj6gHKJpjokbH7BNpnHnNOVH7AgIqTg=@vger.kernel.org, AJvYcCX3hNo+CEGTzDs2SAokAQCb3ZpxrrziEBAk5t/i2iVZ0xMsJjjutvZacQT9vWe/hK69NULSMiBv@vger.kernel.org
+X-Gm-Message-State: AOJu0YztCctqTBnk7OsyyNyl5q4NraAB7VmVtyPYvo1ifzsG6T7griIN
+	Oe2KVXJEkaEODSHqE2BCIoD/OL0Zz2uwBHYgju5K2XaNUhPt7ekjrdcAedKFzboEKyLIOgUq66S
+	wfo6234wsQcLvsAK9dAqHjWfCjGI8TUY=
+X-Gm-Gg: ASbGncs7MpblKZ5A9iq7wyncXi0zPVMpJSComZZv/44eA95Pdzl4ct5Kw3tFk/sR+VM
+	H7u122usEFirR0xezjG0uA3w3uGWrSgEsswZDPlCvMljrgzNFP4QdRxQd/Xl3PXLcebtku+eowS
+	zZ76RuF5jnc2rIaXO82H4FLI39Vy6DHVvDU/VO0MOAfg==
+X-Google-Smtp-Source: AGHT+IEpyK/ndgolPgSKQaxrtcm+/GpMItLdmhLyIy/bcyqQOMgP7pOp9jibfJGBc8oBoFLxrx0ykJy/TXaOtX1LPeA=
+X-Received: by 2002:a05:6402:5186:b0:602:1216:fdde with SMTP id
+ 4fb4d7f45d1cf-608d08b6bc1mr18729944a12.14.1750335951240; Thu, 19 Jun 2025
+ 05:25:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619093228.283171-1-andy.xu@hj-micro.com>
+References: <20250511083413.3326421-1-chenhuacai@loongson.cn>
+ <20250511083413.3326421-2-chenhuacai@loongson.cn> <r6qqyt7dqa32hlpvn63ajxc6rcwkwtjkpcro3zdiwtoiuglz5s@ed5v3ytdcgs4>
+In-Reply-To: <r6qqyt7dqa32hlpvn63ajxc6rcwkwtjkpcro3zdiwtoiuglz5s@ed5v3ytdcgs4>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Thu, 19 Jun 2025 20:25:39 +0800
+X-Gm-Features: AX0GCFvj-MwD-n5EPk4HKRH8niPDSonPNMCI8Dbm_eE4Y24Pr3x9p7P6CWCsWDM
+Message-ID: <CAAhV-H4yxmR-yOGsTgbe8KX4ce9T=XRcdLu2eyi7bh5=L_+odQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] PCI: Use local_pci_probe() when best selected cpu
+ is offline
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 05:32:28PM +0800, Hongbo Yao wrote:
-> Fixed 1-second delay in remove_board() fails to accommodate certain
-> hardware like multi-host OCP cards, which exhibit longer power-off
-> latencies.
+Hi, Manivannan,
 
-Please name the affected product(s).
+Sorry for the late reply.
 
-They don't seem to comply to the spec.  How prevalent are they?
-If there are only few deployed, quirks like this are probably
-best addressed by an out-of-tree patch.
+On Fri, Jun 13, 2025 at 3:11=E2=80=AFPM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
+>
+> On Sun, May 11, 2025 at 04:34:12PM +0800, Huacai Chen wrote:
+> > From: Hongchen Zhang <zhanghongchen@loongson.cn>
+> >
+> > When the best selected CPU is offline, work_on_cpu() will stuck forever=
+.
+> > This can be happen if a node is online while all its CPUs are offline
+> > (we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), There=
+fore,
+> > in this case, we should call local_pci_probe() instead of work_on_cpu()=
+.
+> >
+>
+> Just curious, did you encounter this problem in a real world usecase or j=
+ust
+> found the issue while playing with maxcpus/nr_cpus parameters?
+When we debug kdump we tried to use different maxcpus/nr_cpus
+combinations, and we found this problem.
 
-> Logs before fix:
-> [157.778307] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0001 from Slot Status
-> [157.778321] pcieport 0003:00:00.0: pciehp: Slot(31): Attention button pressed
-> [157.785445] pcieport 0003:00:00.0: pciehp: Slot(31): Powering off due to button press
-> [157.798931] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
+>
+> > Cc: <stable@vger.kernel.org>
+>
+> I believe the fixes tag for this patch is 873392ca514f8.
+Yes, but the code has changed many times, this patch cannot be applied
+as early as 873392ca514f8.
 
-This log excerpt mixes messages from two separate hotplug ports
-(0003:00:00.0 and 000b:00:02.0).  Are these hotplug ports related?
-If not, please reduce the log excerpt to a single hotplug port
-to avoid confusion.
 
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -30,6 +30,25 @@
->  #define SAFE_REMOVAL	 true
->  #define SURPRISE_REMOVAL false
->  
-> +static void pciehp_wait_for_link_inactive(struct controller *ctrl)
-> +{
-> +	u16 lnk_status;
-> +	int timeout = 10000, step = 20;
-> +
-> +	do {
-> +		pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> +					  &lnk_status);
-> +
-> +		if (!(lnk_status & PCI_EXP_LNKSTA_DLLLA))
-> +			return;
-> +
-> +		msleep(step);
-> +		timeout -= step;
-> +	} while (timeout >= 0);
-> +
-> +	ctrl_dbg(ctrl, "Timeout waiting for link inactive state\n");
-> +}
+Huacai
 
-Any chance you can use one of the existing helpers, such as
-pcie_wait_for_link()?
-
-Is the 10 second delay chosen arbitrarily or how did you come up
-with it?  How much time do the affected products really need?
-
-> @@ -119,8 +138,11 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
->  		 * After turning power off, we must wait for at least 1 second
->  		 * before taking any action that relies on power having been
->  		 * removed from the slot/adapter.
-> +		 *
-> +		 * Extended wait with polling to ensure hardware has completed
-> +		 * power-off sequence.
->  		 */
-> -		msleep(1000);
-> +		pciehp_wait_for_link_inactive(ctrl);
->  
->  		/* Ignore link or presence changes caused by power off */
->  		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
-
-Please keep the msleep(1000), that's the minimum we need to wait
-per PCIe r6.3 sec 6.7.1.8.
-
-Please make the extra wait for link down conditional on
-ctrl->pcie->port->link_active_reporting.  (DLLLA reporting is
-optional for hotplug ports conforming to older spec revisions.)
-
-Thanks,
-
-Lukas
+>
+> - Mani
+>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> > ---
+> >  drivers/pci/pci-driver.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index c8bd71a739f7..602838416e6a 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, s=
+truct pci_dev *dev,
+> >               free_cpumask_var(wq_domain_mask);
+> >       }
+> >
+> > -     if (cpu < nr_cpu_ids)
+> > +     if ((cpu < nr_cpu_ids) && cpu_online(cpu))
+> >               error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
+> >       else
+> >               error =3D local_pci_probe(&ddi);
+> > --
+> > 2.47.1
+> >
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
