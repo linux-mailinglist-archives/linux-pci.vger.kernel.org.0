@@ -1,257 +1,281 @@
-Return-Path: <linux-pci+bounces-30202-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30203-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CFE1AE0A46
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:23:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61F5BAE0AD4
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:46:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB2B51C24FAC
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:17:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3F17169656
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:46:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41FD21FF4C;
-	Thu, 19 Jun 2025 15:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846AE21CC6C;
+	Thu, 19 Jun 2025 15:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OVCRSva2"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s5BwCtuh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010005.outbound.protection.outlook.com [52.101.69.5])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C601E7C1C;
-	Thu, 19 Jun 2025 15:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D1C11712;
+	Thu, 19 Jun 2025 15:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346220; cv=fail; b=KP9LQlnjY4LxE4rnMdjWzAW1qVMWWeGBJ5MUkcu1BdvgKPAdnYe4JVIOst9ex2Nkq47kD+UQJWfhML4GtpaDjYeo0b9Cf3iIcG5pLSrKZiBEp0gKs0ua3Jqe5fvnRA1GB/Q2vCCqNRQqgikSYyEQQms5vLhvlLF6PJBge+BcrAY=
+	t=1750347994; cv=fail; b=UtsJx7V7gG2K2FmLedxKf/TPc4soBoc55ofLcnHr9LyM3raOn9oacbGssIQDEYjrukFFAHuuNYw3byo+Gmt+/wwzxJaloTs4/3wPL40xpQIkNGFvKu6MQC3m7q5jwjpYg0hv5jj1X8++12jU00lNyvA2lTusDHptTqLez3dJLwE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346220; c=relaxed/simple;
-	bh=g0OolTRrunC2RBFP5DrjUdgtuTWmRvc6QU0bfpnPbSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gB4voWtmTOyQOcQ6159lqGiCeJUNVEtTRHDIT9z2GUOw2kZOtJD/1R5dQ38uDbd/vFtP0b+NHZUxluo7VDqA0vTSmrt2SVpjuzog+X72gn/OqDmdYpq/wOSyjxqE4AIv13pd7BlX6mj9Or+ZV74uHA0tjfC6ipF9So0n9/2F7zU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OVCRSva2; arc=fail smtp.client-ip=52.101.69.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1750347994; c=relaxed/simple;
+	bh=S7pI0ii+bb7PmFQrKdKpcQOEQuv7e5dzQSNhlf2Khbo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ujx2fddDhit9WCSlGqNtQCDQNrJKxnDMvhfOcitF+PoKQZP9q/w6CsHt7sOihBDt+P7rqv9ilO5c7fDVeCGnEgG0zQN8yr/zJyHRsB/KsJEfJQ2YAAOpagAWCDQ0asp0iXytXyZFSGBCl+R2O+Uuu040AiKBMSPlpFeZPkXynOY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s5BwCtuh; arc=fail smtp.client-ip=40.107.243.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OT0N4qEySPXyZe9t6hNjKXy7jmXWRwHjR8WoHIdKVQYpaN6mwYGLrIOpudkCy/7ihPVs5+YBRMbp+6iC4yGbZer2+bgrecPNMpJ4sMcEvv84ylaZlI0TsDEAvJovnLuifoWra5zbLUtg7g9wR9LfeWka18WwdSsgRIS6p7jRukbRSOyaZQWyV30wlsMIAgb9YZs739HlpXwMK7CUIsd2vIExcfvVnIkCAe6xqBu1TjJ2mclHmbJkBMjH7nVkF83apPKfMOdnnTiaPAdQqjUQB0vQbcTplGh92np9mbsPZ4ZuTqmmm2F2XJ+2zaEA5yEAadhPOajBBtD6aHO+bZaNqw==
+ b=k7xoyqzV7W27Fiq/EbuWn89tOTQY9c54Hquqq9m4+H0qLxruKb+UyW29R1jCGp0C/gZF+mO8TvaYIjWXz51bDi3xqHZjgozWy5vWG9S9MUQOghtapxe1/9IBXKpzllOY6kaLTHMLh2+AweDHwhGBBHCdzYt2DK6lZPACEUHVSxe2OYOg7XpfiVpLxy+heFEP+ySByWxI0nkqBbDsVgGIeHwa7rlsFWPeKm4bEzno2WQR15aQjM592Jo5dqk4dhOle/o7ZRVdya99PL0tZHFcTv0qWVbdOiE7AEhLOYnc+1setnWkVujRB9+aPw6G/OaGYvyVjTua1OH3Nci4yMrH4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R811h/bVLP6brcd+phVAjGJYPSXUUtMs52NYQ9htsac=;
- b=KjRN3QfDtf6yWgybT07Xd2mSg1YhxLokl5ylyTwxhocyUtHFweXv18e/GSuu1WpM426DSuXt+0CGxrEgAqJdM7hhizuiWZ8glIMYhI84ZBDbvuYf4Q/dAPs2JFwvopnxX3iNd+xZF+gdI0gcu1OMh7b6uJ6W4JAi+krRwLT63lx1r+tX6ZkQ364jB0Kv4Xv97H+XmfGBphPQVAyVD/j+YYo23tfg3fSPouW/IiNpy4r6dkBev3oUlLZgQV9Rf8aW18//eTifT1EITD5PM3S4BXUERKywecgq5LsrBp2+4dyD9iZ4vjVWdMdiRHR7EochF1j7TjbeW3qVG2luCYV0Fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
+ b=b7McOTRNYAmvXJSiJG7xJoIOmbLZqNLlGoz6kMLYg3Yaf95sUbMxd5sGqYhGDJ8hLRkep342eA3D3lALk9eEt2Ya2f+YTJ4s91XxzfI3NkrXbal7J0d6YNA+JBixiYHnyPjbWHJhMh4fF6TeLjC1ZZvsW0gMLSXsr1p6giYZRGLDHoxa9JJ3DDaO4s2przHr6MX2NjbQt3ETm2FuxoIvKWyaH464PVVGNtfz/N+A+aRANXYjvksaZRxEmPLOP/2LUh4ndPRcP8fO8IOj9jthhmtK7ocsR5P18tBgIxIpBJjqnn90V29cTikLapKn6vh4fpsM3JWCOjJXVib3HfZD0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R811h/bVLP6brcd+phVAjGJYPSXUUtMs52NYQ9htsac=;
- b=OVCRSva2uvIJ7T4XKMiakwZPW5IcBrgOiG4qjT9GdXBPQ9YDCwXxAE8HfMK6edgHPALxcgJIliVG6exxZxB97nM3Wyh38Sth2IyV7SS2E+zRzYRB9TvUqAF7LnhxyGDR8MhGD0YdixFB00XcuTEU6d2ZyMhuj7SCrGI8qxYRUqD6yI5U3MU8jSH+yHOmpGz83okq1B2cMxPWyHhsVjRIxyZ8Q5lXBiyWUuJAOjH98RCNzVBEU496oU6r46azaBzyIpYyY2RtCSvFJ7ZmmGiSsLU7wXOqpWYVxgWJG5c9cVTAuXEIQsCQ7LbtenKi/SNu0zw4Ih3t/klUpo+bcLvajg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB8394.eurprd04.prod.outlook.com (2603:10a6:10:244::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Thu, 19 Jun
- 2025 15:16:55 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
- 15:16:55 +0000
-Date: Thu, 19 Jun 2025 11:16:48 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] PCI: imx6: Refactor code by using
- dw_pcie_clear_and_set_dword()
-Message-ID: <aFQp4MYpRaEUXNQy@lizhi-Precision-Tower-5810>
-References: <20250618152112.1010147-1-18255117159@163.com>
- <20250618152112.1010147-5-18255117159@163.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618152112.1010147-5-18255117159@163.com>
-X-ClientProxiedBy: PH7PR17CA0004.namprd17.prod.outlook.com
- (2603:10b6:510:324::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
+ b=s5BwCtuhTVB/t9op5OQ8kvR7NK8f3AFeXboaytHyqWgydqrz9Ky5is4HrDxlKN6sSSjqYJFVerT4ywdtf59Ju7WbsnRhwCUxvU7V6N8jGhcNtwbM5pIfGfX+QzTD/WX3GEzX5tzKxqlNV7mlvqHA+UhvDCQLR2cJAdIxzhItBDM=
+Received: from CH2PR05CA0056.namprd05.prod.outlook.com (2603:10b6:610:38::33)
+ by DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Thu, 19 Jun 2025 15:46:28 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:38:cafe::3) by CH2PR05CA0056.outlook.office365.com
+ (2603:10b6:610:38::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.8 via Frontend Transport; Thu,
+ 19 Jun 2025 15:46:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025 15:46:28 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 19 Jun
+ 2025 10:46:26 -0500
+From: Raju Rangoju <Raju.Rangoju@amd.com>
+To: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <lukas@wunner.de>, Raju Rangoju <Raju.Rangoju@amd.com>, Sanath S
+	<Sanath.S@amd.com>
+Subject: [PATCH] PCI: pciehp: fix circular lock dependency b/w pci_rescan_remove_lock and reset_lock
+Date: Thu, 19 Jun 2025 21:16:10 +0530
+Message-ID: <20250619154610.902892-1-Raju.Rangoju@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8394:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7378159-28c8-4c56-b86c-08ddaf44538b
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|DS0PR12MB6390:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|7053199007|38350700014;
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uJQ3vjeywFppHjYzawgpeaZmXOaYRL/LCyEkHUzFJ/+Nh1C0hSmXfDNthCoR?=
- =?us-ascii?Q?4gElc3ZcPIwvVT4bZ8nGopAb0PHEH1jNDHOqhF3C0ETzoQCSXkvq/SAnSD5S?=
- =?us-ascii?Q?41fG+hUi6etb0+3/PBUNrtuLPS/dnTxobEqd/QRD5OiyRkyqLwnn3m2FkC1y?=
- =?us-ascii?Q?OkZxDntOXCYFjJY+JWA4ewkpGOLKSwb7lcaaIq0mDfIk2XOLKxbGeHeVhvQc?=
- =?us-ascii?Q?XodMZN2B5ricDt3FVV3ekH7I+VfyP++2h7h3ZLuSKIOYOkj7FEsYb/RxuIsB?=
- =?us-ascii?Q?55raHA6iai0uo5b1wXkBejFqBO9sEUNU/ha+gWDb7QgIGLQjVbY13xe3Uzmg?=
- =?us-ascii?Q?7cajo7NdupfxHMYHdla+idKGmCbawk0MIOw1JNrLYLoEgigTZ0JyTUb7m+zG?=
- =?us-ascii?Q?JePSvmwpyw3g2Xi1OUlf1+jOrmiRJFzSr5RnnMw7MGS+uME2qXQzts1AlVB+?=
- =?us-ascii?Q?0e0GLX4IUEr9bTeVJ19j5yAKJJSKxB6v7TwchR1tKIm8WN1G4wxbKPG2VFpn?=
- =?us-ascii?Q?Pyz2EuzIZqTbrcGLwGFUvTt5D35dKBSoPm6/GTPj0saZUPKpxD4iTxHLQ4T4?=
- =?us-ascii?Q?VRQVNTLEkJ9K0C5QF6NAM2syPoI5+/fOGJjia6yR/A1d29TbxQvpC2B9EPVo?=
- =?us-ascii?Q?Ytbo1sEH2GvdatXWDgKt9ZSwT0lWp6LN8B0xxREZ87rHr54pVxDEIRslkKdm?=
- =?us-ascii?Q?IM3ogrhSm4gosxcJC3cyWtKMID1tQoK0kKwV+01Y49MprYh3k6EzZi4yaIcl?=
- =?us-ascii?Q?VMAkQPHSMeeUL1ph2wSnkqpeYAzMCvXhfURhbAc8DBlO7X8Rs+HLBDT9OjlT?=
- =?us-ascii?Q?mLEGDIcx/7GvepCAHFUPcVlirljuIcScCUoTYOgtTn4EB5LF/WFxRud9yidw?=
- =?us-ascii?Q?STeaH29jupXcDEUeMGW3fzn67uDjLpzoUjNCrfeNoH1Feshrty7jhCI/y3N+?=
- =?us-ascii?Q?JNdSi34KxzcbGX6sglFAR7vBQTt8u43lbqPZjZrLDKR0Adg5C4JBGGNye55/?=
- =?us-ascii?Q?CEtN0N+usDytfH5PWzwoMNeW3q5eyDvHZm3JdCy0lHOgn3H7KL2Ci5vpktit?=
- =?us-ascii?Q?te6g54OgAdsJDnQKLREL7Gx4j8mzavQFTAOBDa6JqfEK2JGqh6juuIQw039l?=
- =?us-ascii?Q?SOGHbxGUXTVcU5pGP/e1m/4bXsiPOyYVrf1gQbHNsVOQl0msF/8eo3qaH07C?=
- =?us-ascii?Q?ZSq+vkHiApdJ+XlzLemoHQSQIKZuR1oM3r/r/MkkFqlX4/nQ6aU0DJcOFIFC?=
- =?us-ascii?Q?nOhGuWdb8jWGtZT9Ia4XTdA3fzpik95XPfka/iPgejFC1mXiGFEck21X+Dzi?=
- =?us-ascii?Q?7W5LNtnW/KVXhjN96JMz2MlNTzaQjE14d07Rtk0m2tcY1gy6ef038GIyaD3r?=
- =?us-ascii?Q?u/9+/vohDpRVKm87vvaEZPKGC5CSjHstP8NwYI+LrHduSejX6oHBRHmvNHlH?=
- =?us-ascii?Q?13NvJniYldVBnTFnoTXMZOK+VXynaU07kuAM6PaRgrfHoNha09xvbAI1BbIx?=
- =?us-ascii?Q?iPjMomz6fWZheoY=3D?=
+	=?us-ascii?Q?YNncCpwYIAtNK2G4iXg1U2ns3YS+V4Fwrb7xnhyZTnFRw8Wehnneq+G94ci0?=
+ =?us-ascii?Q?8f/CU4Fr03ioVWKTvxPj28249cQ4o8ZAiPwR5X+xsFcdont5EMMqGuDinewK?=
+ =?us-ascii?Q?STitj26PnRtgORw0eHXe3AbmTPWTVOzbVrKI4/YhNixVKTr2aDy4W6wvIXFS?=
+ =?us-ascii?Q?ezKOg0mADG1Cj5dGNMeHS61NUsVOY49n8C1IsFYhPH9Af8M4IpBO0o0kh39d?=
+ =?us-ascii?Q?6RcBOCExZI4Ado3mYYM5rS90zO6/i09sbH9saGPEfYFJGvneZuxyRE3HxzwP?=
+ =?us-ascii?Q?b0+76MXbWqstRhDxF9SAnoaGZrStJRqhMu09KHuIEE9S+0cuL9XECC+aLiPs?=
+ =?us-ascii?Q?amZIUFhXpLScMSsU2qmJip4TBmOJw0VOgcWlVmMcOXvB3H1J7gSLcIdv45M6?=
+ =?us-ascii?Q?rPJW1TFKhudMWwKq4YD1y6cHma2kvrni2IRp8+JRT9hDdVh5xUZUyrSX9SQK?=
+ =?us-ascii?Q?QthG3Kmj2hw9Oc1zs8CiQPQglQ815yuF6PWKAP8qCAQpO7Q+i5GfDMRmhJn9?=
+ =?us-ascii?Q?9jWyqBXDXzrnmesKxuPqTYV6CM5XJTemauENuPOJwdWOWQ/tPv3Ge6LG/DNO?=
+ =?us-ascii?Q?Avi/nOV5VnIPIv573q1rGmGa6xA4V4jqi3tD7asSUaaEJ77N4o1cRnvBqY/X?=
+ =?us-ascii?Q?+4iSdefXtNAQp+IjjYZ/My/I1dF09zvejt9ul7vKe+aOgA2KT6It0Py1993c?=
+ =?us-ascii?Q?vkmIEJsgZVN+u3WFLgGwSNtI6k3h83EwfRZ+ftNt+VGJRAMql8Fdmtb00Qga?=
+ =?us-ascii?Q?/qoO2m+3Oq/y8m+ym8vMnAR3kLvl6f4IqMbK19W+jk2jxKlpSgc+39Bn5wZX?=
+ =?us-ascii?Q?wmLjtfweoPZJaiQtWbvM/CP0Z+diYWY2f6sY+yPKdvHbBDN7yjTrV8izvBMS?=
+ =?us-ascii?Q?7KQ1Na6VhsNG395pgXjRQJ5v3HMCwelaZpB+4aUtwYsgnyZkZeHZ0v3UbGTg?=
+ =?us-ascii?Q?sBagJNAxwxlKIZsrP7zMJSms9j8YOl320cbwlvY8JCOOKdYbNyZNQqkTt5vs?=
+ =?us-ascii?Q?azD+TCjIuxDund/PEr9/nsUGqjZjrplolZZtWhzmhT9VoFtyFRwaFDia0UbM?=
+ =?us-ascii?Q?0sLAoGByzDsRi/Mk3N19R1dkHdrqW1pQ1JUIWCrxxw6Zcn0bUCnGgeEkjYj/?=
+ =?us-ascii?Q?jrJYxJaopv6glmAzts75tV3hq/p132E55ANr8BIhQ4Q/9y1A3SwGn5yMbbfN?=
+ =?us-ascii?Q?FPEn8i9HoWm/5fcUfYlinYd2PjiVx6+gZIJH0wDHULtc5y3KUMK9HcWakr3s?=
+ =?us-ascii?Q?PaZvED43SKeOJN+v9R89fTVIiADzOfsNFEsonVq+BJAbWns0GbVMVsb5Ug1h?=
+ =?us-ascii?Q?SgyK5ZwdjgCi1eUNzhYm8agPKfdOadx+c/InzXTF5BSQWh686Zkt+HOR/2NX?=
+ =?us-ascii?Q?0xjBuSsd9VJ25aa0nydVJiav79FZphxFZDo2XO2Eluq0TtlWEm8/qCh7LXMk?=
+ =?us-ascii?Q?HG7MZ6zZYmLMcI2DSZ79bHE+TRakX8NwU6/DEJlYsx3BtbbxvZsS4P0eMDQn?=
+ =?us-ascii?Q?1iM9pmDa9GuHKeI2URF7ambuGjfwEWPWlHwG?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yDbsie3R2/HSUHT1JDtzROhY31hBZWqXab3nbaoSnBhGzcZf6E5hATRHKeRB?=
- =?us-ascii?Q?JucYSjXMXHayMVOUDjeL0yyVCpnrA4ZgInHeIBx0RFjOUA1Dvd9mmNndzU9B?=
- =?us-ascii?Q?h6UR3bpB7cflusDqO42MKkmwpPZXmhnJJA2Nrh3yDPAGpMY8H8PrXnoQTAPW?=
- =?us-ascii?Q?2a+ewrOMaW/B7rLVJ0IcFrIFajAjrsInQcq2IjUdByad2RFsucCKich0gwhA?=
- =?us-ascii?Q?y8kRoktwrcqaU7AMFSKVcfx8hntX9o4bcbnnKGf1o/XuxYeLFWJdoEgguBrT?=
- =?us-ascii?Q?iHwjBi2vNnUesbrKPM7QKvA6/CSerYj7Bw6kZBJU5ROcAJw8BsVLgOR0rAcZ?=
- =?us-ascii?Q?Zh9okbR87H3MPKBqCJUnFuJGoRGtdAv8O1/zr4d1jWBeTFiTTGPbZ3M1bk3t?=
- =?us-ascii?Q?c6fX9h6L3fpuiMs5Kx3+jEEEtWu0ulUlb2+jfswYxczm7vxtfzzfGpVgO6V/?=
- =?us-ascii?Q?SaqRg8Tvvw+iz+D5vmU05vydFdu2k7ZSr70ra5vZXyNrFrmyouBk+OY7MqlR?=
- =?us-ascii?Q?MylP8mVTggda/byY58VBUbvFNoV67YRVpl/tnXxO3yNn7hc4KElThjr17k2k?=
- =?us-ascii?Q?cUHFol+qUEHDsyTwQfwnd6IMfjlfFoyHHRWdFCGSSLlkybGLW0s/KohjvF8O?=
- =?us-ascii?Q?T287/dFgjvm53goQbplppyfExaTsns29jaFRUu5+/MAfTxREIrNvsq0+UWfS?=
- =?us-ascii?Q?wuElYXAGrP91OAf6wb9U3wfrOasXx5soBMcF3fCIxWEEwQq53NoHyIaIwo5F?=
- =?us-ascii?Q?24K9k54JHwPq5Q/PzX5l87QETpc2Iarp+TjLlNW2UYHthqEU+JiBG4p0oyxD?=
- =?us-ascii?Q?iWv+HhK6ORC+XqfHJiXjYUnUyCgbWZvasfRpFiz3vTJG76fHCxIMlN9Ux+Jo?=
- =?us-ascii?Q?rRSYNYU31uw7I7ODT3vNPu0RG6nES0mH+vCFtPVUrWBhPc1oXo60UNWkM8OE?=
- =?us-ascii?Q?6mOhyHw5X8M7lO7/arty4sdNQGhlMEYINRr8D0ysxBEsC/hVbHt33Wz3rqb6?=
- =?us-ascii?Q?L9EMT/C7rUVhrfKqbHXuMB+ZijhYmT2cOFbTICcdr9pr7pBeKcDzjamfggsc?=
- =?us-ascii?Q?4W+3aQ4XmZbYPhN9RYLyQd0sie7zr+6303y3IQwfFlrG9rTlyaRGRZ3XttFh?=
- =?us-ascii?Q?tDyWoCWmV9N/kTe91pmIfELAA2EEvajkHCWatUPFzmvvHrJghFYv6ulgCi8V?=
- =?us-ascii?Q?K5+uRE6A45rkF2oISytzrqIJ/s0Qhb13/vk+tsyaWKf1x4MMDt4QIXLq3nd8?=
- =?us-ascii?Q?vO2QljSj50ajFclwkfYX5mNZ/WDm244W8XUU2bJB7pv7kfijbkAcCm+V139F?=
- =?us-ascii?Q?U9DllXLkgqiKoLFqDh8VHT6uovmphpOkNPtkDe3e2W6gkw3e/EEQduoOpT0Z?=
- =?us-ascii?Q?ihtxGYmi2HvZwWLqG9irrgeVrGQKoxHEYxHGoJfT7n1jUJVsEL3BcmFdgKbY?=
- =?us-ascii?Q?SpQcS53vctX6ESGovq6Jci+a7A5BrwRiXffuaBBj2LvMG4xI4sVK/Dx502gD?=
- =?us-ascii?Q?GQiXpgHcuryE883E/y2Aj0OxJez8rwABujDBVa8L0gId5bHh+hEWtVFwXilb?=
- =?us-ascii?Q?+tbYnfZ3K4evQ3+m8/Qp/5bvMfzfO3FSoAV2AHqf?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7378159-28c8-4c56-b86c-08ddaf44538b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:16:55.5499
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:46:28.7658
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YuSzLsZRLY4eL4gibP6iz+C7IhH8SzE8YAM+pL+E3eGSEf1fCyW1aEehailNav53ypfIGWa4en9cxSHbJD/Ong==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8394
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6390
 
-On Wed, Jun 18, 2025 at 11:21:03PM +0800, Hans Zhang wrote:
-> i.MX6 PCIe driver contains multiple read-modify-write sequences for
-> link training and speed configuration. These operations manually handle
-> bit masking and shifting to update specific fields in control registers,
-> particularly for link capabilities and speed change initiation.
->
-> Refactor link capability configuration and speed change handling using
-> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
-> by encapsulating bit clear/set operations and eliminates intermediate
-> variables. For speed change control, replace explicit bit manipulation
-> with direct register updates through the helper.
->
-> Adopting the standard interface reduces code complexity in link training
-> paths and ensures consistent handling of speed-related bits. The change
-> also prepares the driver for future enhancements to Gen3 link training
-> by centralizing bit manipulation logic.
->
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
+Resolves a circular locking dependency issue between
+pci_rescan_remove_lock() and ctrl->reset_lock() in the PCI hotplug
+subsystem, specifically in the pciehp_unconfigure_device() function.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Commit f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock
+ and device_lock") introduced a change in the locking order within
+pciehp_unconfigure_device() to avoid an AB-BA deadlock between
+ctrl->reset_lock and device_lock. However, this change inadvertently
+introduced a new circular locking dependency between
+pci_rescan_remove_lock and ctrl->reset_lock, as detected by lockdep.
 
->  drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 5a38cfaf989b..3004e432f013 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->  	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->  	struct device *dev = pci->dev;
->  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> -	u32 tmp;
->  	int ret;
->
->  	if (!(imx_pcie->drvdata->flags &
-> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->  	 * bus will not be detected at all.  This happens with PCIe switches.
->  	 */
->  	dw_pcie_dbi_ro_wr_en(pci);
-> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
-> +				    PCI_EXP_LNKCAP_SLS,
-> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
->  	dw_pcie_dbi_ro_wr_dis(pci);
->
->  	/* Start LTSSM. */
-> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->
->  		/* Allow faster modes after the link is up */
->  		dw_pcie_dbi_ro_wr_en(pci);
-> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> -		tmp |= pci->max_link_speed;
-> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
-> +					    PCI_EXP_LNKCAP_SLS,
-> +					    pci->max_link_speed);
->
->  		/*
->  		 * Start Directed Speed Change so the best possible
->  		 * speed both link partners support can be negotiated.
->  		 */
-> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
-> +					    0, PORT_LOGIC_SPEED_CHANGE);
->  		dw_pcie_dbi_ro_wr_dis(pci);
->
->  		ret = imx_pcie_wait_for_speed_change(imx_pcie);
-> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
-> -	u32 val;
->
->  	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
->  		/*
-> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->  		 * to 0.
->  		 */
->  		dw_pcie_dbi_ro_wr_en(pci);
-> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
->  		dw_pcie_dbi_ro_wr_dis(pci);
->  	}
->  }
-> --
-> 2.25.1
->
+The problematic sequence is as follows:
+  1. pciehp_unconfigure_device() acquires ctrl->reset_lock (read lock).
+  2. It then acquires pci_rescan_remove_lock.
+  3. Within the device removal loop, it attempts to reacquire
+     ctrl->reset_lock after releasing it for driver unbinding,
+     while still holding pci_rescan_remove_lock.
+
+This creates a potential for deadlock if another thread acquires the
+locks in the opposite order, as illustrated by lockdep's report.
+
+To resolve this, change the locking order in pciehp_unconfigure_device()
+so that ctrl->reset_lock is released before acquiring
+pci_rescan_remove_lock and before driver unbinding. This avoids
+holding both locks at the same time and breaks the circular
+dependency. After the critical section, ctrl->reset_lock is reacquired
+as needed.
+
+This ensures that the locking order is consistent and prevents the
+circular dependency, addressing the lockdep warning and potential
+deadlock.
+
+[  120.615285] ======================================================
+[  120.615289] WARNING: possible circular locking dependency detected
+[  120.615293] 6.14.5-300.fc42.x86_64+debug #1 Not tainted
+[  120.615297] ------------------------------------------------------
+[  120.615300] irq/36-pciehp/136 is trying to acquire lock:
+[  120.615303] ffff88810d247340 (&ctrl->reset_lock){.+.+}-{4:4}, at: pciehp_unconfigure_device+0x1d0/0x390
+[  120.615323]
+               but task is already holding lock:
+[  120.615326] ffffffff9c13ce90 (pci_rescan_remove_lock){+.+.}-{4:4}, at: pciehp_unconfigure_device+0xe5/0x390
+[  120.615337]
+               which lock already depends on the new lock.
+
+[  120.615340]
+               the existing dependency chain (in reverse order) is:
+[  120.615343]
+               -> #1 (pci_rescan_remove_lock){+.+.}-{4:4}:
+[  120.615351]        lock_acquire.part.0+0x133/0x390
+[  120.615359]        __mutex_lock+0x1b3/0x1490
+[  120.615366]        pciehp_unconfigure_device+0xe5/0x390
+[  120.615370]        pciehp_disable_slot+0xfa/0x2f0
+[  120.615376]        pciehp_handle_presence_or_link_change+0xc8/0x310
+[  120.615381]        pciehp_ist+0x2d5/0x3e0
+[  120.615386]        irq_thread_fn+0x88/0x160
+[  120.615393]        irq_thread+0x21e/0x490
+[  120.615399]        kthread+0x39d/0x760
+[  120.615406]        ret_from_fork+0x31/0x70
+[  120.615412]        ret_from_fork_asm+0x1a/0x30
+[  120.615418]
+               -> #0 (&ctrl->reset_lock){.+.+}-{4:4}:
+[  120.615426]        check_prev_add+0x1ab/0x23b0
+[  120.615431]        __lock_acquire+0x2311/0x2e10
+[  120.615436]        lock_acquire.part.0+0x133/0x390
+[  120.615441]        down_read_nested+0xa4/0x490
+[  120.615445]        pciehp_unconfigure_device+0x1d0/0x390
+[  120.615448]        pciehp_disable_slot+0xfa/0x2f0
+[  120.615453]        pciehp_handle_presence_or_link_change+0xc8/0x310
+[  120.615458]        pciehp_ist+0x2d5/0x3e0
+[  120.615462]        irq_thread_fn+0x88/0x160
+[  120.615465]        irq_thread+0x21e/0x490
+[  120.615469]        kthread+0x39d/0x760
+[  120.615474]        ret_from_fork+0x31/0x70
+[  120.615478]        ret_from_fork_asm+0x1a/0x30
+[  120.615483]
+               other info that might help us debug this:
+
+[  120.615485]  Possible unsafe locking scenario:
+
+[  120.615488]        CPU0                    CPU1
+[  120.615490]        ----                    ----
+[  120.615492]   lock(pci_rescan_remove_lock);
+[  120.615497]                                lock(&ctrl->reset_lock);
+[  120.615502]                                lock(pci_rescan_remove_lock);
+[  120.615506]   rlock(&ctrl->reset_lock);
+[  120.615511]
+                *** DEADLOCK ***
+
+Fixes: f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock")
+Co-developed-by: Sanath S <Sanath.S@amd.com>
+Signed-off-by: Sanath S <Sanath.S@amd.com>
+Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+---
+ drivers/pci/hotplug/pciehp_pci.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index 65e50bee1a8c..08ba59d96f4a 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -104,6 +104,11 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 	if (!presence)
+ 		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
+ 
++	/*
++	 * Release reset_lock before driver unbinding
++	 * to avoid AB-BA deadlock with device_lock.
++	 */
++	up_read(&ctrl->reset_lock);
+ 	pci_lock_rescan_remove();
+ 
+ 	/*
+@@ -116,11 +121,6 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 					 bus_list) {
+ 		pci_dev_get(dev);
+ 
+-		/*
+-		 * Release reset_lock during driver unbinding
+-		 * to avoid AB-BA deadlock with device_lock.
+-		 */
+-		up_read(&ctrl->reset_lock);
+ 		pci_stop_and_remove_bus_device(dev);
+ 		down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 
+@@ -134,8 +134,14 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 			command |= PCI_COMMAND_INTX_DISABLE;
+ 			pci_write_config_word(dev, PCI_COMMAND, command);
+ 		}
++		/*
++		 * Release reset_lock before driver unbinding
++		 * to avoid AB-BA deadlock with device_lock.
++		 */
++		up_read(&ctrl->reset_lock);
+ 		pci_dev_put(dev);
+ 	}
+ 
++	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 	pci_unlock_rescan_remove();
+ }
+-- 
+2.34.1
+
 
