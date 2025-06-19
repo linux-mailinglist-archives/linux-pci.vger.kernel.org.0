@@ -1,249 +1,307 @@
-Return-Path: <linux-pci+bounces-30194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27BAAAE09D7
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:10:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97FB7AE09E1
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:11:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09F305A7EFE
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:04:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB28A1897607
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E033E21ABB0;
-	Thu, 19 Jun 2025 15:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B434921ABB0;
+	Thu, 19 Jun 2025 15:06:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WZwOTKSu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3QEA4PO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013049.outbound.protection.outlook.com [40.107.159.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41BF54769;
-	Thu, 19 Jun 2025 15:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750345447; cv=fail; b=Gjk/wow5w2J9rf7KIpYvQDm4w5eSTcEy4fIbUD/i/03I0Jqb5WFZtpyt6mou0DMV6yxItCR81KogAuaCB8qwaFKtZp/vAr6wyVlSJoZupuYSmAoZ5pn95zNRSKrjtSBSbOqxyL08FB4zC/hGKpG8Q+AaSMI91Xw3nqPjXPSoxkg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750345447; c=relaxed/simple;
-	bh=0gUdCmRObIlAqqFf4bkYx38pCafy/M2luMNtOzSRQOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YFwiQeeFDPaIfdjJShdJDh2ihwW/uZxGx1WLffcqTZJHQ6LKSL1/7kIlmk4NYDG32GBu52h+JYJEojZ2JucN5Etbd33HEzRqEeYS2kPtgi6lJaJ9xrh4NxYF3FdbcA3jDWQTxmLSYvnaDKf6LPUmuwi2UC/UUmsC/ChTw8FfeNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WZwOTKSu; arc=fail smtp.client-ip=40.107.159.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tpSG+ja3w5Alnyh4j2yv+2yIp8AmSqvZIybZM/I7Pa1BzK13ApOxcDqkvzzPa8OVHRIQpBrK8MzfB39z2B6Xhe399I0BuAphiEf3Boc/ZS+fjEPzHrqPK5oxFS6O9z6Jlq4jICqiBM0oJv6Bpo/vybdH4rh7YNfRw9WGts7+y2w4jnfX+RJm1EzL+ixgrQNdn1Upl/NSujeBZj6psN/NkjqggYHDlqUpbFIsC8MidAvG+FZd7YRRK7ATyEzMAPeUaOj0vi1VF3xj4FxFW1FOfPyIcSEMq7b08Gk4i8wKCeUHikzkIs90LkCxADkw9nh71OE0pr8xROu5R3EflP1sHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=m+x5byQUOY7qgtf9l8argamkgAzp4ZQgepYY2YIOFQw=;
- b=jdnDhc97YCjIwCLIwZhrWgIVgE62ieaT2hrKlG+BHSEYm4I+Wi0FdOHTAykxbK6nozkOjCeUUccpjigG+LAi1GS9bA0xBjFASx8OoS0wxJPYBmhcXZmbg1190FzrJan1fzRkfbKEh2PUf483/g//bzDtMldMbbvv+III9MPvXmnlDnIlUvlNEUqGzmUXQG9ZfgAIpsXP14sFjySSwQGS0q/fHpPdexNxDO560VlZLfOEI+7ZGfHIaGsV9ik/00xfDGM/YiQ2soOi7EL8XF3TFd817jNdniJFQpf/BSzvNkii1Bgfhq8WnPOaN6NqAG6+lECrmJ/AhdHv9T23uzY6Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m+x5byQUOY7qgtf9l8argamkgAzp4ZQgepYY2YIOFQw=;
- b=WZwOTKSuZ1aDL+yAAEysWUY5zR0EywsL4uOyYRdrLhAGeZ1g/xgI9M35DbyZ8af8j14yvkVhbfyjYrgM2gsL+Q1tZNkkKBsT+6zaUErCSb7YFeZwrLItprVKaKwCRjmTVIof6t9pJCevPu1UarliJAYMDqFWtu+MrdmnR9maBKjTOUDXBD8nJkXff2E3WJA+SYBn71v8+ge94V8nRr5OknZ7IzoWUrHd7DHKogMz3hVppRcexihNDS1x8oP+OTADidg4gNP3NamajuPJY+gNWPq0DgAyUgsdh+BiPl81ZPuy3Xt7hXxjagE5MHG8saN8+xoXi6/WmyLXrtu0dLyHHg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU7PR04MB11138.eurprd04.prod.outlook.com (2603:10a6:10:5b1::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Thu, 19 Jun
- 2025 15:04:02 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Thu, 19 Jun 2025
- 15:04:02 +0000
-Date: Thu, 19 Jun 2025 11:03:56 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: imx6: Enable the vpcie regulator when fetch it
-Message-ID: <aFQm3KmyAaCUWtFa@lizhi-Precision-Tower-5810>
-References: <20250619072438.125921-1-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619072438.125921-1-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: AS4PR09CA0024.eurprd09.prod.outlook.com
- (2603:10a6:20b:5d4::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD97DDAD;
+	Thu, 19 Jun 2025 15:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750345593; cv=none; b=g1h1WQdb+17cSDozzcINiKifXWDYDJz7bc9X21z+p7iwm2LIHxVx6dKQlSXXra8qPq3y8nMjyPJqpcX0b/NVfuOw7O2o3Rua+Ihf+gOn8dOplzG7TF5KIuQhbyRZfnp4eP+oYVVWHPiiYUkfFce4x6B5wVoqUJmCeiSQOU2flh8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750345593; c=relaxed/simple;
+	bh=wGxKJCc7qeOmnuSZ+yHqpDhrjglCvryWX3i8qW5pY7s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r/Wa+x2i46WhQGRqbEfRcE6Ywcn5iVgbYTyDweceFzokDQkrtJ9EvyBuxFA9WqLxsvciTS5Y18HJPTniVByeFUKupz12/lOuNxqfVnd8b+rzV/2rgfywE2N0WQqW5xPYsQJPwJzTli4O2Uc4w22nit+g2lS8lo8fkUTNUsIbgos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d3QEA4PO; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a5a196f057so19362361cf.3;
+        Thu, 19 Jun 2025 08:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750345590; x=1750950390; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nXuTpoOb8+LqU5quDMVJCzI6iZgIaVm2IMUXk0GHfM4=;
+        b=d3QEA4POj7ODVz0We39Zw8PpOhR1ta/kOnhCYRcZzymhkn1kI9vmKal5BMZiMgbRXr
+         XG27MF1w0D+dnJmAJsbUIBNfU5Jy2P+aS91gWBSWNZZQ2Cm8hYYFV3jJj06ouLaEWBf2
+         wqLHljESTpDQNaJ6mfZishXEEt500W1pmRufz6OsgrqMHeaK/VKYgmI+lopIcp+S1wVP
+         vDus4AEo4c/oeHTDBY7jR4cA/XZy4zTP22eUBM8BILHmeUDLkADmIbkETRGJ8/sRq8pX
+         anMFo8tU5iEzWmDEMQjRw80HvyKeRdaTSk1bZwxKp5qSWo7thyJl9/8zVUtVFIhmdzFW
+         kcIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750345590; x=1750950390;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nXuTpoOb8+LqU5quDMVJCzI6iZgIaVm2IMUXk0GHfM4=;
+        b=jX4ghTLVC/ZiTESleN8RhQFgCP8lKwq5YDIb7NDnoeWH3vOX2qyBuGdCJBXQA+j2yD
+         tb1kOl3wkXZ2n8nLU8obkfr2Gl9lISCdaUjTyEpp+IXlWJcqVhqi4ZQM//ZwxN4w8TrI
+         XkuzlWxe5P4vAL/vtMAodhmlTwOogggFljABTt4Ivgo/GNzjp380ZVpu7ZixKw0+8LUG
+         fLCO8BN3Ws7yWuQDF2/PG6fJukkDfwvrRk8oq6NFj5DkP2R+7wRC9KneSG3z1ptKYICV
+         PA3qSXtsjzxTnuoqCSSd2CT+Ix3cbBjI8Z/xnn0BtqBKbtTZ35UTfZBdMJizD4DNFbS+
+         727Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCePjPkAKziNvNYbtqB91aCayr62taBWRhuNfsOJ/3MgIX90fECC16coICBiB5Zrd0W7XgOlYBg4LHXrPIeVGY@vger.kernel.org, AJvYcCUPMm4jvtotNH07IU2ErufaRhIA0dtfAimhRd9AM/e8ElkMf21H7hdqBgpeQdztNW/aN9ny3KTm@vger.kernel.org, AJvYcCUxDDfgOfwya6nbgVmbz9IUrct4RhlA8gHc1e1U6Pq26TGfWIQEflmvKOuNyFoLp5SFg+GPwffcFJj89vI=@vger.kernel.org, AJvYcCVT/LA+sOpwaMpngnp2bPsrZRCm2mdx2E5+J6TxWeTP2gzQH2Ue1s1PfW+9wXpq/PQGAF0fT41de1gPjM7L@vger.kernel.org, AJvYcCWgfVD7Eo2J4EwfMlzqM94PIof6VMnFjiCbTQ75EmHG+SJLrfgoBvO5nWULHNZHJqpfewbN9Yy0PFsF@vger.kernel.org, AJvYcCX8hze+R++pKzPhFCm7h+lJNkdcBXEL4CT3OKiIUYb65duCTK7aGBWRgLKUuZ/Zwv2QjkJpauo3LBz+@vger.kernel.org, AJvYcCXUQr963FoXMsOq1VEMFOA6fso276O4EsbObbd76pCD6zpryLNydPIZ4d67sq1g3Qtu1UaAXRs8NStk@vger.kernel.org, AJvYcCXYjHHI4K4mZOQrcxkqsm8lJ0DlCh3547wboVCGWPq2EueeWvQUrrXimdUqizgDhhyHmpdMK8ePtUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKa8PZ/9owuobzdFPfu8dkS6SL7l4bH65qpjScjTFyNGkuJKli
+	m1WzKMp9Ja/ij+MhPoOBmvhhGOFPblQc1T+Z4gt8e7eqtKgG5qK4zYUr
+X-Gm-Gg: ASbGnctiu4AiwvIZxAFe+VyoWHtXdHC/kUv1vv0GCIko/BvVWZCMiWQrIp6jleqF8vw
+	qjHBneFursBnv2VtfPLrDo+Tmrhbk52F4mEX/b4B0vQ44RUxYvDrlaOJ0qHeJ9pP+nQS1if9Rk6
+	HAg0Kqdmjv+2+esh8JegqKGqqncod5knFU1njqldCvUEJVVCUr9whmnnia7ALAd+9Ar1CKvJ7wl
+	I66q+WccDM4GR+Yqv5BX4BpN5V2yqc4fq96/23hMxueQRYQ0gSqGLzlkaDj+51Z7xgQ98kgWzZn
+	jTZJQT4eT7/WkcbTq3Pdz4SeZ+lMw0L0xNO7XoABrtjUE6RpQj9/zBjpT08mvqcaWYFnjv8zzlQ
+	=
+X-Google-Smtp-Source: AGHT+IFX/JE8xs0dtWJTtpxoAw108+yxpwrRoiMuu696MghqABs29FkJDRGkGOS7haSa53S3zqGnCw==
+X-Received: by 2002:a05:622a:11c1:b0:476:7199:4da1 with SMTP id d75a77b69052e-4a73c5ed5bemr350669851cf.46.1750345590333;
+        Thu, 19 Jun 2025 08:06:30 -0700 (PDT)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:5c8a:fc6a:b57c:e57f])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7785aaacdsm250531cf.39.2025.06.19.08.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 08:06:29 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v12 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Thu, 19 Jun 2025 11:06:24 -0400
+Message-Id: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU7PR04MB11138:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12d32bf0-97c9-4d97-0537-08ddaf4286ff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ffWbPJyWJJzMTvGMhPrfBh/TisTfVWkbkeVMdJ/IatZodCH3S8JUqXOeqdXC?=
- =?us-ascii?Q?DzSrdpXEJ+ya4fZw2bflR/i3ilvXlUmYEBM0sfeelhAEyBsQaXKjW85uLJ1c?=
- =?us-ascii?Q?hqdOt+RferZVf59a0pEVoBOrsnzxaqJdB5AT52z7tsvPQCHqZKTVk0bMHUO+?=
- =?us-ascii?Q?83L6zjSjI9EBpahWHydkuHu0OdGzaHpm1cwA/O9ZK5c+C0FaSxoyzoaJMCc0?=
- =?us-ascii?Q?Tuo+BgKemmVbpqa6otFxTnug3PMocS89+XQFvy9pzgD1xwP4ULv5aqzIpYpn?=
- =?us-ascii?Q?utmDmlJctKWNo0EJbgNSw8mOqNdPtXxXLWbqntU2GGWcyhbfyJcVh0Imo7LC?=
- =?us-ascii?Q?pznVy4XBPBlN2O3RB9yT150tGpm/mi6zcCnrkr56BrgtwiYEWgmEs7z96Vb8?=
- =?us-ascii?Q?stDa0f2CWWWz+hZY2/N8dZPS3p+CCUgslfF7uIbGkG4mO5uZR29AYtU/ZYha?=
- =?us-ascii?Q?u6caFBmc9dMSadU6BxTDDtIJqafPblB6YX0/d43T5t/ub3nHGgLozTvAUA9p?=
- =?us-ascii?Q?n8ctCgneWuDWFVZyfK6bmJNDLAEG83dsF+E+6HbzQbyBxLoBBcgLO1Tyus2+?=
- =?us-ascii?Q?h1BMT78cYQNe/AHkyOV8s3BoremBTNE4LKoeIjtlY9DIjSAJ0uTsLFmsLrlL?=
- =?us-ascii?Q?FLD/OMzHZDaROUyOOimsLBM7aKDNEglLpHPjFdzpsAYMtO40I4b7o9McGwJT?=
- =?us-ascii?Q?8ev0Mgbkh3dV95MfPtyfWTqf0V0dQZyOXaAYvEJYEqdYUjOJ2GTp18hL/IF+?=
- =?us-ascii?Q?VQjHTplOsjTxStD3yvdP8JjXyHiL93qTsrYKHNSccsV4Z/E1MJt036B3cEcX?=
- =?us-ascii?Q?XGaM/hNXPWko5LRI5K3ZAYLq9W6oJ/Luhe+DDRtLeifeeKrHTWo0sr1Dnuxr?=
- =?us-ascii?Q?eolpBYsKn5RlB1WaO2e5unF1/H2FC0icqQLGXZ2oOBuxfWPEISR1v11DUcN1?=
- =?us-ascii?Q?Q9ntkg1hUi1hVXIQZHYXcUU6r3xLAuOrlnf1ZsEeYN2C4PlFKlqxKngY3Mgo?=
- =?us-ascii?Q?77hhCaUFfOQ4z1kafkBliUdjNQImYP1thDrT/WCWnuA0xHzO+ochRM/2487r?=
- =?us-ascii?Q?acvYuBdoc6l4ABd+EWqprTx7VE6sduXCjvt3DJrtYEZT6oOK7+6K9QeVgzBe?=
- =?us-ascii?Q?i3E4ebPznqyNp/p4sRe4ossVYPHO19Fy9bfP/qzyHVv7+dKkE8GNq+a3k1Iy?=
- =?us-ascii?Q?ObPtl85avLn7rW0DVBmQT5uIIeVVID8HuddWZj0gZ/eQTcEjbaFXMzysjHwt?=
- =?us-ascii?Q?NgpaIbEtFUW7VSVppo77CAMN5KPAaYdu6I5LLQSwH9luN1+52nOU3MPVDWN8?=
- =?us-ascii?Q?ZQqk0z6tp7bi7UENX5pAYBI1j6siZl+CY5hVPMvppWbmc7w39DpcGTbPmPLI?=
- =?us-ascii?Q?+S8PgNeRQkLeUY60V3hIWWSCOKH0V4r6Dma5naHwJHBtQBJB6E3KSH/3XhI6?=
- =?us-ascii?Q?92nZh/ysiUgX/MOALCmNmOfScCwBOlPWrhO1kTF9psNO0xV7KwDoqEmBW61H?=
- =?us-ascii?Q?jdCqGQSuflrLW5Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ivj4kulcbD14lzSgVLjCTddUPTIxBdx7Sr8a22oer9u3JRb91vu4aQC0tw4H?=
- =?us-ascii?Q?5dNzNYZka0KX/7jzwn2R35r4Zx5DhEyBt9hViWNiFPavxYsPH6mzGRLCxNrv?=
- =?us-ascii?Q?jFIwCdq09Swl4Wnu2NHwUKVdblpLYYT3soAVmh1kAPGxot3EhIkMtgpd3xPs?=
- =?us-ascii?Q?xw1Wjmp6JSu/IXVVIgW+jRiEZcWGOAbTajQ5W1w+7gdtCLUIh9DQvU2JysVI?=
- =?us-ascii?Q?k2/yS08xdacKj6MM5Z9nnBjgku+wFY2/fNlItwHydn2wg5l0Xz5RKzqk0fy6?=
- =?us-ascii?Q?wcovKpDoWUIXGOvGrYCPYW7SqH1YfrsSQ87LomyXL3FMjY5fXsIS9sbZlDMT?=
- =?us-ascii?Q?DXeF9AQAji1l832YSn7r3sfM9Q60ef6Tej76daBzO990sONXOiibPyQi34tU?=
- =?us-ascii?Q?tba5lz/9lsQUGo1E0BOhYlDk8AVRAtJ6Ae5Ffgk+SNIa7kMuSUUSM7S2/UtP?=
- =?us-ascii?Q?PVyaq2BuJswLuCsl1pPftbNBpST4gMhRG1ccfrRIsultkfnuroSqbnj8ZB6Q?=
- =?us-ascii?Q?uucZiI6ZIk3xZUdehzbvP4OxH40h2eelWQJe7lqjkpmUHyx2+/vL+fsgDaU8?=
- =?us-ascii?Q?/zNZzJ8x+aPeiZ5rjssh9y3O3qlKevztxv6gtPytZVUKU7aVmz+Q4US/vrJ3?=
- =?us-ascii?Q?nJ70+UMs+V/ISyLLEwyliI1pypHQ540PM2oQ0/A4SKjyUjRyTXuc8dLYKLVw?=
- =?us-ascii?Q?wFZ/WMhq0SfCMWf7W9hLnlqalhdywKSptPnF5kwEDTMnV9U+EAUiZer60CId?=
- =?us-ascii?Q?dK50WVGkuGPw0k4diuetNObh8Fn1mu31yQtSmIH0r7e+xoab54XU7NnhFhKw?=
- =?us-ascii?Q?kcQF/y2ti7kGkENluwMux24TaS+k5wvp8l+0WmuVXyKGAn2eO9e0YNHfPwTn?=
- =?us-ascii?Q?T+vL3d4QSy/+v3FPVUJvPWSMUWsBI0fRnfEs5kg5osSMJxwXEmLOD/NKW2H7?=
- =?us-ascii?Q?zuCdOiB1BAa1K33BjZ0Kwx50OLHLgtqYiXzKwQbQ1XBrBt9VxL2w89+0xfLd?=
- =?us-ascii?Q?f+DSo6Wk1u2KFogpXWCnBUlaKKuo/HubyIXMh+eM1i2T/+xiOdqcarIxkzhp?=
- =?us-ascii?Q?l3HeQoipb60f2m+lBDbnlkwxevq7U2sKTkejMarchZzJd/1MUoqeeGNDSkQz?=
- =?us-ascii?Q?sVY0yAvlGW0RWYK/s0IDGcl0bOyEsb3VysVSJPzFNahTa+DYtbl4jPkCrSL3?=
- =?us-ascii?Q?6OkPi/d/o5hIGGG1c9GhfgA2sNnJq3gjJqRHNQWqrtlWD9I7X++792zoKX0/?=
- =?us-ascii?Q?QxyNfKkiZjbueVqd2mRf14SeGXRH7KVFa0JQKVnINmSphNrtr6VGHv8xbnbb?=
- =?us-ascii?Q?Cf/y6LX4jA7mJ3dZT1Q+awFqirYeAMx798015JvtGLGytDCccTAo7qxeOtAj?=
- =?us-ascii?Q?pr84uTwTzNmlMXzTJRnB+mwycNvpQ0xCoq6Seb2pDPxb/oPeSK1A8r/W1l94?=
- =?us-ascii?Q?xLY8Fbbp4kFUjA6FCNonUWXM+VlZPdhtkEkSf53oHicdUUeXrHY8y+TkSxF8?=
- =?us-ascii?Q?ynwFNGC6+qItksId87+j1tPDc5o+SZXBz3zMlt5Or7Wfb24bf9g17w7lNJqy?=
- =?us-ascii?Q?0fCaFY2ehpWAQl9L/bskGLDxtwHazpce8vAU0vFN?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12d32bf0-97c9-4d97-0537-08ddaf4286ff
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:04:02.5959
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mE0RNdW4QgI9DlT6TapYhf5KK0diq10MMlIiAJkW52L323m0tkGFdZ9CFkAlHpZNbumGqadWXI1z6RUYMgC+gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU7PR04MB11138
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHAnVGgC/3XOwW6DMAwG4FepOC+VbRKT9NT3mHaAJJRog1QBo
+ VUV775QqSvttKPjfL//azH6FPxYHHbXIvk5jCEOeUB62xW2q4eTF8Hlh4KAFBCgsOOUhI3JCyc
+ b07BBAtsW+f85+TZ838LeP/LcptiLqUu+vidI0GhQlax4T1pDJUjMtYspzuPn5XhOcYpDX4evv
+ Y39GtmFcYrpcqs38xp8L0KbIjMLEFqysY4dmdYdT78ha5G5+ldWWboadV4RyFK/Sr2V5VbqLG1
+ TtsS+0qz5VZqHLLHaSpOlQsfWKqKW6VUiPKgiuaUI2bJEqo10xlXqj8WNLeHJ4trYGQu2sY2Bp
+ 7vLsvwAOlZtqwwCAAA=
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+ nouveau@lists.freedesktop.org, linux-block@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Thu, Jun 19, 2025 at 03:24:38PM +0800, Richard Zhu wrote:
-> Enable the vpcie regulator at probe time and keep it enabled for the
-> entire PCIe controller lifecycle. This ensures support for outbound
-> wake-up mechanism such as WAKE# signaling.
->
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 27 ++++-----------------------
->  1 file changed, 4 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 5a38cfaf989b..7cab4bcfae56 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -159,7 +159,6 @@ struct imx_pcie {
->  	u32			tx_deemph_gen2_6db;
->  	u32			tx_swing_full;
->  	u32			tx_swing_low;
-> -	struct regulator	*vpcie;
->  	struct regulator	*vph;
->  	void __iomem		*phy_base;
->
-> @@ -1198,15 +1197,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
->  	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->  	int ret;
->
-> -	if (imx_pcie->vpcie) {
-> -		ret = regulator_enable(imx_pcie->vpcie);
-> -		if (ret) {
-> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-> -				ret);
-> -			return ret;
-> -		}
-> -	}
-> -
->  	if (pp->bridge && imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT)) {
->  		pp->bridge->enable_device = imx_pcie_enable_device;
->  		pp->bridge->disable_device = imx_pcie_disable_device;
-> @@ -1222,7 +1212,7 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
->  	ret = imx_pcie_clk_enable(imx_pcie);
->  	if (ret) {
->  		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
-> -		goto err_reg_disable;
-> +		return ret;
->  	}
->
->  	if (imx_pcie->phy) {
-> @@ -1269,9 +1259,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
->  	phy_exit(imx_pcie->phy);
->  err_clk_disable:
->  	imx_pcie_clk_disable(imx_pcie);
-> -err_reg_disable:
-> -	if (imx_pcie->vpcie)
-> -		regulator_disable(imx_pcie->vpcie);
->  	return ret;
->  }
->
-> @@ -1286,9 +1273,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
->  		phy_exit(imx_pcie->phy);
->  	}
->  	imx_pcie_clk_disable(imx_pcie);
-> -
-> -	if (imx_pcie->vpcie)
-> -		regulator_disable(imx_pcie->vpcie);
->  }
->
->  static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
-> @@ -1739,12 +1723,9 @@ static int imx_pcie_probe(struct platform_device *pdev)
->  	pci->max_link_speed = 1;
->  	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
->
-> -	imx_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
-> -	if (IS_ERR(imx_pcie->vpcie)) {
-> -		if (PTR_ERR(imx_pcie->vpcie) != -ENODEV)
-> -			return PTR_ERR(imx_pcie->vpcie);
-> -		imx_pcie->vpcie = NULL;
-> -	}
-> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie");
-> +	if (ret < 0 && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to enable vpcie");
->
->  	imx_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
->  	if (IS_ERR(imx_pcie->vph)) {
-> --
-> 2.37.1
->
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v12:
+- Introduce `kernel::fmt::Display` to allow implementations on foreign
+  types.
+- Tidy up doc comment on `str_to_cstr`. (Alice Ryhl).
+- Link to v11: https://lore.kernel.org/r/20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com
+
+Changes in v11:
+- Use `quote_spanned!` to avoid `use<'a, T>` and generally reduce manual
+  token construction.
+- Add a commit to simplify `quote_spanned!`.
+- Drop first commit in favor of
+  https://lore.kernel.org/rust-for-linux/20240906164448.2268368-1-paddymills@proton.me/.
+  (Miguel Ojeda)
+- Correctly handle expressions such as `pr_info!("{a}", a = a = a)`.
+  (Benno Lossin)
+- Avoid dealing with `}}` escapes, which is not needed. (Benno Lossin)
+- Revert some unnecessary changes. (Benno Lossin)
+- Rename `c_str_avoid_literals!` to `str_to_cstr!`. (Benno Lossin &
+  Alice Ryhl).
+- Link to v10: https://lore.kernel.org/r/20250524-cstr-core-v10-0-6412a94d9d75@gmail.com
+
+Changes in v10:
+- Rebase on cbeaa41dfe26b72639141e87183cb23e00d4b0dd.
+- Implement Alice's suggestion to use a proc macro to work around orphan
+  rules otherwise preventing `core::ffi::CStr` to be directly printed
+  with `{}`.
+- Link to v9: https://lore.kernel.org/r/20250317-cstr-core-v9-0-51d6cc522f62@gmail.com
+
+Changes in v9:
+- Rebase on rust-next.
+- Restore `impl Display for BStr` which exists upstream[1].
+- Link: https://doc.rust-lang.org/nightly/std/bstr/struct.ByteStr.html#impl-Display-for-ByteStr [1]
+- Link to v8: https://lore.kernel.org/r/20250203-cstr-core-v8-0-cb3f26e78686@gmail.com
+
+Changes in v8:
+- Move `{from,as}_char_ptr` back to `CStrExt`. This reduces the diff
+  some.
+- Restore `from_bytes_with_nul_unchecked_mut`, `to_cstring`.
+- Link to v7: https://lore.kernel.org/r/20250202-cstr-core-v7-0-da1802520438@gmail.com
+
+Changes in v7:
+- Rebased on mainline.
+- Restore functionality added in commit a321f3ad0a5d ("rust: str: add
+  {make,to}_{upper,lower}case() to CString").
+- Used `diff.algorithm patience` to improve diff readability.
+- Link to v6: https://lore.kernel.org/r/20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com
+
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
+
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
+
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (5):
+      rust: macros: reduce collections in `quote!` macro
+      rust: support formatting of foreign types
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/block/rnull.rs                |   4 +-
+ drivers/cpufreq/rcpufreq_dt.rs        |   5 +-
+ drivers/gpu/drm/drm_panic_qr.rs       |   5 +-
+ drivers/gpu/drm/nova/driver.rs        |  10 +-
+ drivers/gpu/nova-core/driver.rs       |   6 +-
+ drivers/gpu/nova-core/firmware.rs     |   2 +-
+ drivers/gpu/nova-core/gpu.rs          |   4 +-
+ drivers/gpu/nova-core/nova_core.rs    |   2 +-
+ drivers/net/phy/ax88796b_rust.rs      |   8 +-
+ drivers/net/phy/qt2025.rs             |   6 +-
+ rust/kernel/auxiliary.rs              |   6 +-
+ rust/kernel/block/mq.rs               |   2 +-
+ rust/kernel/clk.rs                    |   9 +-
+ rust/kernel/configfs.rs               |  14 +-
+ rust/kernel/cpufreq.rs                |   6 +-
+ rust/kernel/device.rs                 |   9 +-
+ rust/kernel/devres.rs                 |   2 +-
+ rust/kernel/driver.rs                 |   4 +-
+ rust/kernel/drm/device.rs             |   4 +-
+ rust/kernel/drm/driver.rs             |   3 +-
+ rust/kernel/drm/ioctl.rs              |   2 +-
+ rust/kernel/error.rs                  |  10 +-
+ rust/kernel/faux.rs                   |   5 +-
+ rust/kernel/firmware.rs               |  16 +-
+ rust/kernel/fmt.rs                    |  89 +++++++
+ rust/kernel/kunit.rs                  |  21 +-
+ rust/kernel/lib.rs                    |   3 +-
+ rust/kernel/miscdevice.rs             |   5 +-
+ rust/kernel/net/phy.rs                |  12 +-
+ rust/kernel/of.rs                     |   5 +-
+ rust/kernel/pci.rs                    |   2 +-
+ rust/kernel/platform.rs               |   6 +-
+ rust/kernel/prelude.rs                |   5 +-
+ rust/kernel/print.rs                  |   4 +-
+ rust/kernel/seq_file.rs               |   6 +-
+ rust/kernel/str.rs                    | 444 ++++++++++------------------------
+ rust/kernel/sync.rs                   |   7 +-
+ rust/kernel/sync/condvar.rs           |   4 +-
+ rust/kernel/sync/lock.rs              |   4 +-
+ rust/kernel/sync/lock/global.rs       |   6 +-
+ rust/kernel/sync/poll.rs              |   1 +
+ rust/kernel/workqueue.rs              |   9 +-
+ rust/macros/fmt.rs                    |  99 ++++++++
+ rust/macros/kunit.rs                  |  10 +-
+ rust/macros/lib.rs                    |  19 ++
+ rust/macros/module.rs                 |   2 +-
+ rust/macros/quote.rs                  | 111 ++++-----
+ samples/rust/rust_configfs.rs         |   9 +-
+ samples/rust/rust_driver_auxiliary.rs |   7 +-
+ samples/rust/rust_driver_faux.rs      |   4 +-
+ samples/rust/rust_driver_pci.rs       |   4 +-
+ samples/rust/rust_driver_platform.rs  |   4 +-
+ samples/rust/rust_misc_device.rs      |   3 +-
+ scripts/rustdoc_test_gen.rs           |   6 +-
+ 54 files changed, 540 insertions(+), 515 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
+--  
+Tamir Duberstein <tamird@gmail.com>
+
 
