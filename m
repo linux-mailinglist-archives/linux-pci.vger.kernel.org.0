@@ -1,194 +1,301 @@
-Return-Path: <linux-pci+bounces-30207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30208-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59776AE0D29
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 20:51:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468A9AE0DED
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 21:24:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC13A1C21756
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 18:51:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7DA94A0AFD
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 19:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA4830E858;
-	Thu, 19 Jun 2025 18:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAFA24501D;
+	Thu, 19 Jun 2025 19:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgGZFW+/"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="I9qkUJ7D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2A330E829;
-	Thu, 19 Jun 2025 18:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF8D1E7C32;
+	Thu, 19 Jun 2025 19:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750359069; cv=none; b=nVDpJO3wgZMXBWR7qqQ3efv6vItdkVSI8tZHs6oZLphnqSWVBjMSZfuUZ3C9EFqMdvNwEttfPIYrt0hFcVgdVwLRHxbFgUmheWCi7V+AiLC2zfTVbgQbUKto09lULqw29B5QsH+IWFcwoLa2YUpBwQ5R7HgPPrXUPfhbgwfdUg0=
+	t=1750360992; cv=none; b=oKVdEmXlLG00sC+jb2vfBJ1TbtrIlGHK7kXljkL9M1GV4p1tIb90v9g9Ydpiz6FDw5kqOApkUcgtJ7oCHwUvhxcQfh3qN3WMwSNZZvjuW3K/UMWcajgcZTAk+EZjXR2GAxFszP1Wpee769mwDsOs/Z9pTSrWtoIq/80/TXCduck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750359069; c=relaxed/simple;
-	bh=V6FgTW5bpQroTIYKEuUph17GQ4t3LAmXbkQjPBSHntQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q4R0F8kJo1ruyBVFzzOHUlG3BLhhzGIcroZ1v4LpNbKK38C3CN80m2WAmgGcIU21yxsEvaMhZkAkAJnBdYgQW98peMkRuKVVtO3bm85Bnmni+wVn44wna67jP3OdUjJnCfzTqLLMBwqiNdx3E02sXdpW0glPusRSLXPoOFPRXYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgGZFW+/; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso867689a91.0;
-        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
+	s=arc-20240116; t=1750360992; c=relaxed/simple;
+	bh=hWCUtRBP5pq6o2kyz2fr410cxhRI4EPB8IdUqsSI9Z8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=rq7OYd0BqqaCRDQ0S1QdiWIlZS0534xnF8h8HMvDmg59u85rwOlPFA8VJrD55qg77oFLwR7veg67iR8WQpfk6i2ihhCNTRWTng5pgRieeRAp5zHZ5mfa4/vSHwPYUV+9LN9NycpIfvSp6mvxWrGCLxvWmgV+tiRj94zehnQ/i48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=I9qkUJ7D; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id EF828828818E;
+	Thu, 19 Jun 2025 14:23:01 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id gNmk7lzoMzVq; Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 96BD68288789;
+	Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 96BD68288789
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750359067; x=1750963867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
-        b=hgGZFW+/55lw/EvxhymxJZoFdEP3/zsfgHhvIUAGiDRKuIAClK30a0MoFXnvjrAz4O
-         asOrb7ARDPhFgt0rEADY/RsJrWb9CER2eFF9xFTaOPgbBxaieWhofSy0Z1T0nA3u71nk
-         LEcV6gfU2TAg2yKLuqL1INWQNI5VrJvsVI/LPhYC0NUeA4csdtnIbikXlvHOZHPLW3Cn
-         rIh1wCSZbtrgblgvUtuuEjSsykHXsDwUxj8vItNwYPLnjKIrk4k+vzSz+W6k4jcRRhq8
-         gyjtYFu+J8rt6LzFPDPek8qELrJbaq6EcmI8hSocTPcSENQoyGkFYJF2oo2xDtXLFvdC
-         rkIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750359067; x=1750963867;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fG8L2UBhkMD+msjH2Zyh8X1xh8BD75kzdzrp0NcX/38=;
-        b=SqbqQUmtSP+WC9JJA8lJXE7j9U0WtTMdvMwMiPN4E2aBM39Il3y5nPRtzw9h5RoBuP
-         EkcGRmCL2OBHJ/zb70U5xpXow0kLLnvNTgdYCTDKYX87d7wJedlkWgD/L9DEnqCwkhW1
-         df92ShkqyEtJrPVD2/jciIfLT3FqEKUYyu4OSn8U0/Sve1Z7BZCTdSNq8+VNy4c8TdV0
-         qRDSr56nsgZ7pcsf7qeyR4sh+Igq3QcdvyLozNE53kIgdLtOaPJxGnGr/F5UlV9ARslV
-         3N8P1U3LfsQ0BueLKmqtuGCauOITaljtRGhsW3SzZ6prVWeJad45R4W+coMlwuldDUs2
-         Q3Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNqtfW7q9coctMC6kKdd1NUa1d4ouB0BgTcF0qKY1GS44IAuaBnyA8gBbGw/IPvcBiHU1EyYaLU71W@vger.kernel.org, AJvYcCXC11SmN5R4wFL3lWl+rPVEppCA8cmO4Ga/rSe7RLGZz47UlBNww+Zh8kzEJEnDjN9JCOgMReutwUqnhoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYvNAEs8Q5/QuyPWvrgTNdbhcxvsAWSd/szYG4WgJbf9nVC38w
-	bM6otIouF1qBvZLjSJYXSpPf8lxgrMYEBMMqrtj50Q98RLEN9gtlIEMNSvwc40Wo0iQ=
-X-Gm-Gg: ASbGncuEgaMljAZP0MNFBPyRzv9GiPj8elTtQN+xc13zBJ5QH0BvJsj69O1LjS7Vb6O
-	vUOKP6wyxMSXSfSyswtgsQj+m2RzC1ZpVq6rTIDhjpBO54m+H8oDEgzkvHdYIfMGrparwnFN/01
-	hr0TjcgZtAf8QwRhUIpXYriGDPp0WxH8/J3cCgnn1NK1Q9pP72SVsADcrsNODgXpUYnx1Sk0/UR
-	ydEqbMl8mgh2l8hF7YctvRp5R8nFjnicFv0clTrOjLQDwfDgFy/W3XKtPNjV59oxDzqTs6qR715
-	LA9cY95se32arr66Hr+tHQCUFgNbEeOCMRuJ7eTb5wsse8nkc4yXVZ3inyGa+Aq8f/q7fjLbBWH
-	Oqw==
-X-Google-Smtp-Source: AGHT+IHY07cWD3/UkHvQ+C8XH2o0tDncDzeMoJCIlVijlJqxL2AQusdDBC+VP0O6B4Op+4zXXreWaQ==
-X-Received: by 2002:a17:90b:5625:b0:313:bdbf:36c0 with SMTP id 98e67ed59e1d1-3159d5779femr676440a91.0.1750359067287;
-        Thu, 19 Jun 2025 11:51:07 -0700 (PDT)
-Received: from akshayaj-lenovo.. ([2401:4900:8839:85c6:508e:51d2:91e1:30dd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df71d49sm44927a91.5.2025.06.19.11.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 11:51:06 -0700 (PDT)
-From: Akshay Jindal <akshayaj.lkd@gmail.com>
-To: bhelgaas@google.com,
-	helgaas@kernel.org,
-	mani@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	kwilczynski@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	Jonathan.Cameron@huawei.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	lukas@wunner.de
-Cc: Akshay Jindal <akshayaj.lkd@gmail.com>,
-	shuah@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI/AER: Add error message when AER_MAX_MULTI_ERR_DEVICES limit is hit during AER handling
-Date: Fri, 20 Jun 2025 00:20:30 +0530
-Message-ID: <20250619185041.73240-1-akshayaj.lkd@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750360979; bh=qNxPNWYqbb+jXf/iAO953gQYbUx7jsGfjskPN+KhghU=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=I9qkUJ7DOEs3Wb9rxVFKyOCLB7xvM89YRoh+cik654FSQNSHsRZciqfL6ZZoCRh6l
+	 da4XtxCy3xEM0Aofe07LjU9QC1vYJCh7uqdpzoKGpNpkv1H1XgarDMJGGQamC6O4tD
+	 WK/BAfZ6D752HtPH2orH6pW+6LKWqoVwuW2YWGNc=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id l8vlh_JxzcFN; Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 5184E828818E;
+	Thu, 19 Jun 2025 14:22:59 -0500 (CDT)
+Date: Thu, 19 Jun 2025 14:22:56 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <518523485.1313620.1750360976352.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <20250618191530.GA1218109@bhelgaas>
+References: <20250618191530.GA1218109@bhelgaas>
+Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection
+ and
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Topic: pci/hotplug/pnv_php: Fix surprise plug detection and
+Thread-Index: 5L5iP5Vg8cTYPISRTmSBwe4YSu25hg==
 
-When a PCIe error is detected, the root port receives the error message
-and the threaded IRQ handler, aer_isr, traverses the hierarchy downward
-from the root port. It populates the e_info->dev[] array with the PCIe
-devices that have recorded error status, so that appropriate error
-handling and recovery can be performed.
 
-The e_info->dev[] array is limited in size by AER_MAX_MULTI_ERR_DEVICES,
-which is currently defined as 5. If more than five devices report errors
-in the same event, the array silently truncates the list, and those
-extra devices are not included in the recovery flow.
 
-Emit an error message when this limit is reached, fulfilling a TODO
-comment in drivers/pci/pcie/aer.c.
-/* TODO: Should print error message here? */
+----- Original Message -----
+> From: "Bjorn Helgaas" <helgaas@kernel.org>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
+> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
+> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
+> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
+> Sent: Wednesday, June 18, 2025 2:15:30 PM
+> Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection and
 
-Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
----
+> On Wed, Jun 18, 2025 at 11:58:23AM -0500, Timothy Pearson wrote:
+>>  recovery
+> 
+> Same weird subject/commit wrapping.
+> 
+>> The existing PowerNV hotplug code did not handle suprise plug events
+>> correctly, leading to a complete failure of the hotplug system after
+>> device removal and a required reboot to detect new devices.
+> 
+> s/suprise/surprise/ (also below)
+> 
+>> This comes down to two issues:
+>> 1.) When a device is suprise removed, oftentimes the bridge upstream
+>>     port will cause a PE freeze on the PHB.  If this freeze is not
+>>     cleared, the MSI interrupts from the bridge hotplug notification
+>>     logic will not be received by the kernel, stalling all plug events
+>>     on all slots associated with the PE.
+> 
+> I guess you mean the bridge *downstream* port that leads to the slot?
 
-Changes since v1:
-- Reworded commit message in imperative mood (per Shuah’s feedback)
-- Mentioned and quoted related TODO in the message
-- Updated recipient list
+No, the upstream port leading to the PHB.  If it was just the downstream port, we'd still be receiving MSI interrupts from the bridge; the upstream PE also ends up frozen.  My best guess is that the downstream error is propagated upward by the PHB, and the hardware freezes the PE to avoid data corruption until the software (in this case the hotplug driver) can analyze the fault, see that it is expected, and thaw the PE.
 
-Testing:
-========
-Verified log in dmesg on QEMU.
+>> 2.) When a device is removed from a slot, regardless of suprise or
+>>     programmatic removal, the associated PHB/PE ls left frozen.
+>>     If this freeze is not cleared via a fundamental reset, skiboot
+>>     is unable to clear the freeze and cannot retrain / rescan the
+>>     slot.  This also requires a reboot to clear the freeze and redetect
+>>     the device in the slot.
+>> 
+>> Issue the appropriate unfreeze and rescan commands on hotplug events,
+>> and don't oops on hotplug if pci_bus_to_OF_node() returns NULL.
+>> 
+>> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+>> ---
+>>  arch/powerpc/kernel/pci-hotplug.c |  3 ++
+>>  drivers/pci/hotplug/pnv_php.c     | 53 ++++++++++++++++++++++++++++++-
+>>  2 files changed, 55 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/powerpc/kernel/pci-hotplug.c
+>> b/arch/powerpc/kernel/pci-hotplug.c
+>> index 9ea74973d78d..6f444d0822d8 100644
+>> --- a/arch/powerpc/kernel/pci-hotplug.c
+>> +++ b/arch/powerpc/kernel/pci-hotplug.c
+>> @@ -141,6 +141,9 @@ void pci_hp_add_devices(struct pci_bus *bus)
+>>  	struct pci_controller *phb;
+>>  	struct device_node *dn = pci_bus_to_OF_node(bus);
+>>  
+>> +	if (!dn)
+>> +		return;
+>> +
+>>  	phb = pci_bus_to_host(bus);
+>>  
+>>  	mode = PCI_PROBE_NORMAL;
+>> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+>> index bac8af3df41a..0ceb4a2c3c79 100644
+>> --- a/drivers/pci/hotplug/pnv_php.c
+>> +++ b/drivers/pci/hotplug/pnv_php.c
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/libfdt.h>
+>>  #include <linux/module.h>
+>>  #include <linux/pci.h>
+>> +#include <linux/delay.h>
+>>  #include <linux/pci_hotplug.h>
+>>  #include <linux/of_fdt.h>
+>>  
+>> @@ -474,7 +475,7 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot,
+>> bool rescan)
+>>  	struct hotplug_slot *slot = &php_slot->slot;
+>>  	uint8_t presence = OPAL_PCI_SLOT_EMPTY;
+>>  	uint8_t power_status = OPAL_PCI_SLOT_POWER_ON;
+>> -	int ret;
+>> +	int ret, i;
+>>  
+>>  	/* Check if the slot has been configured */
+>>  	if (php_slot->state != PNV_PHP_STATE_REGISTERED)
+>> @@ -532,6 +533,27 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot,
+>> bool rescan)
+>>  
+>>  	/* Power is off, turn it on and then scan the slot */
+>>  	ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+>> +	if (ret) {
+>> +		SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible
+>> frozen PHB", ret);
+>> +		SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot
+>> activation\n");
+>> +		for (i = 0; i < 3; i++) {
+>> +			/* Slot activation failed, PHB may be fenced from a prior device failure
+>> +			 * Use the OPAL fundamental reset call to both try a device reset and clear
+>> +			 * any potentially active PHB fence / freeze
+>> +			 */
+>> +			SLOT_WARN(php_slot, "Try %d...\n", i + 1);
+>> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
+>> +			msleep(250);
+> 
+> What is the source of the 250 value?  Is there a spec you can cite for
+> this?  Maybe add a #define if it makes sense?
 
-1. Following command created the required environment. As mentioned below a
-pcie-root-port and a virtio-net-pci device are used on a Q35 machine model.
-./qemu-system-x86_64 \
-	-M q35,accel=kvm \
-	-m 2G -cpu host -nographic \
-	-serial mon:stdio \
-	-kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
-	-initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.cpio.gz \
-	-append "console=ttyS0 root=/ pci=pcie_scan_all" \
-	-device pcie-root-port,id=rp0,chassis=1,slot=1 \
-	-device virtio-net-pci,bus=rp0
+It's a magic number used elsewhere in the tree, specifically by the EEH driver which also issues fundamental resets as part of its logic.  Unfortunately I don't know the origin of the magic number, and from my understanding of the PCIe specification it's probably non-critical -- long enough to be reasonably sure that the PCIe device has seen the reset strobe, but short enough not to stall the operation for an obnoxiously long interval.
 
-~ # mylspci -t
--[0000:00]-+-00.0
-           +-01.0
-           +-02.0
-           +-03.0-[01]----00.0
-           +-1f.0
-           +-1f.2
-           \-1f.3
-00:03.0--> pcie-root-port
+>> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
+>> +
+>> +			ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+> 
+> Wrap the comment and non-printk lines to fit in 80 columns like the
+> rest of the file.  Preserve the messages as-is so grep finds them
+> easily.
+> 
+> Usual multi-line comment style is:
+> 
+>  /*
+>   * Text ...
+>   */
 
-2. Kernel bzImage compiled with following changes:
-	2.1 CONFIG_PCIEAER=y in config
-	2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
-	Since there is no pcie-testdev in QEMU, it is impossible to create
-	a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
-	error scenario by changing the limit to 0.
-	2.3 Log added at the required place in aer.c.
+Will do.
 
-3. Both correctable and uncorrectable errors were injected on
-pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
-HMP Command used are as follows:
-	3.1 pcie_aer_inject_error -c rp0 0x1
-	3.2 pcie_aer_inject_error -c rp0 0x40
-	3.3 pcie_aer_inject_error rp0 0x10
+> Possibly factor this warn/reset code into a helper function to
+> unclutter pnv_php_enable()?
 
-Resulting dmesg:
-================
-[    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
-[   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+Sure, will do.
 
- drivers/pci/pcie/aer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>> +			if (!ret)
+>> +				break;
+>> +		}
+>> +
+>> +		if (i >= 3)
+>> +			SLOT_WARN(php_slot, "Failed to bring slot online, aborting!\n");
+>> +	}
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> @@ -841,12 +863,41 @@ static void pnv_php_event_handler(struct work_struct
+>> *work)
+>>  	struct pnv_php_event *event =
+>>  		container_of(work, struct pnv_php_event, work);
+>>  	struct pnv_php_slot *php_slot = event->php_slot;
+>> +	struct pci_dev *pdev = php_slot->pdev;
+>> +	struct eeh_dev *edev;
+>> +	struct eeh_pe *pe;
+>> +	int i, rc;
+>>  
+>>  	if (event->added)
+>>  		pnv_php_enable_slot(&php_slot->slot);
+>>  	else
+>>  		pnv_php_disable_slot(&php_slot->slot);
+>>  
+>> +	if (!event->added) {
+>> +		/* When a device is surprise removed from a downstream bridge slot, the
+>> upstream bridge port
+>> +		 * can still end up frozen due to related EEH events, which will in turn
+>> block the MSI interrupts
+>> +		 * for slot hotplug detection.  Detect and thaw any frozen upstream PE after
+>> slot deactivation...
+>> +		 */
+> 
+> Restyle and wrap comment.
+> 
+> s/upstream bridge port/bridge downstream port/ to avoid confusion.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 70ac66188367..3995a1db5699 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
- 		/* List this device */
- 		if (add_error_device(e_info, dev)) {
- 			/* We cannot handle more... Stop iteration */
--			/* TODO: Should print error message here? */
-+			pci_err(dev, "Exceeded max allowed (%d) addition of PCIe "
-+				"devices for AER handling\n", AER_MAX_MULTI_ERR_DEVICES);
- 			return 1;
- 		}
- 
--- 
-2.43.0
+It's the upstream port of the bridge (downstream slot of the PHB itself) that ends up as the frozen PE.
 
+>> +		edev = pci_dev_to_eeh_dev(pdev);
+>> +		pe = edev ? edev->pe : NULL;
+>> +		rc = eeh_pe_get_state(pe);
+>> +		if ((rc == -ENODEV) || (rc == -ENOENT)) {
+>> +			SLOT_WARN(php_slot, "Upstream bridge PE state unknown, hotplug detect may
+>> fail\n");
+>> +		}
+>> +		else {
+>> +			if (pe->state & EEH_PE_ISOLATED) {
+>> +				SLOT_WARN(php_slot, "Upstream bridge PE %02x frozen, thawing...\n",
+>> pe->addr);
+>> +				for (i = 0; i < 3; i++)
+>> +					if (!eeh_unfreeze_pe(pe))
+>> +						break;
+>> +				if (i >= 3)
+>> +					SLOT_WARN(php_slot, "Unable to thaw PE %02x, hotplug detect will fail!\n",
+>> pe->addr);
+>> +				else
+>> +					SLOT_WARN(php_slot, "PE %02x thawed successfully\n", pe->addr);
+>> +			}
+>> +		}
+>> +	}
+> 
+> Possibly factor this out, too.  Then pnv_php_event_handler() could
+> look simpler:
+> 
+>  if (event->added) {
+>    pnv_php_enable_slot(&php_slot->slot);
+>  } else {
+>    pnv_php_disable_slot(&php_slot->slot);
+>    <new helper to check for surprise removal>
+>  }
+
+Fair enough, will do.
+
+>  kfree(event);
+> 
+>>  	kfree(event);
+>>  }
+>>  
+>> --
+> > 2.39.5
 
