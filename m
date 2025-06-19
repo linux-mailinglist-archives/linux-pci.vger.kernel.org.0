@@ -1,47 +1,49 @@
-Return-Path: <linux-pci+bounces-30147-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30148-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 588B6ADFC6E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 06:30:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E515ADFC7C
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 06:31:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D4033BA1DB
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 04:30:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 648903BACDD
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 04:30:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E19239E78;
-	Thu, 19 Jun 2025 04:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72C5C23BD02;
+	Thu, 19 Jun 2025 04:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GzCxRxVB"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="st3jnt91"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454314C6C;
-	Thu, 19 Jun 2025 04:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297464C6C;
+	Thu, 19 Jun 2025 04:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750307436; cv=none; b=H5rp31L02Ghi9F/U9XEKFlI9mA2nmYXcndHQD7C5r8bxbz4vxnXX+6zQrupkTtFqNmHwZSJtJ51+hHicYfHw/MCN1lMqY9YGtxaCA/zhk1utXWZNtZmneNXL9ClcIFhUvmvqyZY02QQnh/2Onu6dGNja3sm8yvlyp/8iEdtRK/M=
+	t=1750307448; cv=none; b=rzbJXDpHR8KBTcydi8RVbbQtoa1UcIQkIyDZEMaHbgFQO0UklL6RlxAj7rrjKoXS8VMHd2TciLF4fjUUCZKizcDmbSThO9zhy+vWZI2GeLeZsYEdyda7N8T+KDY84LiXLNSXb4uw+P1ipJAxX9x2WZHki5q5OrbrXyweq8NRFG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750307436; c=relaxed/simple;
-	bh=hO0TBASwoc3FULZXFzHhHmKijD+SjFrHsXI7r55AdbM=;
+	s=arc-20240116; t=1750307448; c=relaxed/simple;
+	bh=RkszZ+4CO5HPbQ9OZvtEUSF9NCC9BO39xHiRDQcYuOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sRu7iWF1mKtRroZyZtl363XNQ1z5UAmY+DXfuzJF0NDXwyraYVu+qDDKDRzuiFjCyxMzhdHUKB++IcIUXsgSo3qFAx5qncMlrGgamne/0oZJwbe4XQJaqs4fUwH7ezKVt9VEuTnrzZ21Cpa8Dq8dh3vevjK4ROQTTZhykGJ9vQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GzCxRxVB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B6BC4CEEA;
-	Thu, 19 Jun 2025 04:30:34 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=gXxErcE2XJII65rlZQtYtPRivUkeTetKkEpSoQMxCjguGGWKtACEwebErdK5LNjD6ngnP3FUzFHysKyPDVDSc1badZ0EWGkrs3te8ahlqAN3aFPX4BxA+7Hwg1T2YOhXn+guZBM9lrosqNNxFXktDkoPDT+vhNHRA/24NHcuVZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=st3jnt91; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27403C4CEEA;
+	Thu, 19 Jun 2025 04:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750307435;
-	bh=hO0TBASwoc3FULZXFzHhHmKijD+SjFrHsXI7r55AdbM=;
+	s=korg; t=1750307447;
+	bh=RkszZ+4CO5HPbQ9OZvtEUSF9NCC9BO39xHiRDQcYuOU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GzCxRxVBtx0jtsOzTuX5lDiIuXCgfmTkoIsSs4pvrxvGPGJnnznlBOCC+SumafN9C
-	 hGscwnr1vSXreuaYFr8wOn+XZRaxWe3djIwnySC08WCgOa8OnehiLnwvAwJmScrV9B
-	 73U8zk4S21SJ6Ck6LJeAECPS5KdQgVrJYCdl/Ys0=
-Date: Thu, 19 Jun 2025 06:30:26 +0200
+	b=st3jnt91uU/CnwTBt3Ahp147TRAwWb8pXbGypGoc/VymUwGTmYQFyEGs0i+qp2a/3
+	 CdYe0pWv15pbDuWmiGZVS+qqHQLgE9hrCTr4WbxKRrnW4eUzCrETJ4UNgNkPpe9/Kr
+	 oABPxYM5VCHVjAobpVLADv4N0m9WwFckCIQpuo8o=
+Date: Thu, 19 Jun 2025 06:30:43 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
+Cc: Tamir Duberstein <tamird@gmail.com>, Alice Ryhl <aliceryhl@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>,
 	Masahiro Yamada <masahiroy@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -49,7 +51,7 @@ Cc: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
 	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Trevor Gross <tmgross@umich.edu>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Brendan Higgins <brendan.higgins@linux.dev>,
 	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
@@ -83,11 +85,12 @@ Cc: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
 	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org,
 	linux-mm@kvack.org, linux-pm@vger.kernel.org,
 	nouveau@lists.freedesktop.org
-Subject: Re: [PATCH v12 3/6] rust: enable `clippy::as_ptr_cast_mut` lint
-Message-ID: <2025061919-stooge-fascism-d734@gregkh>
+Subject: Re: [PATCH v12 4/6] rust: enable `clippy::as_underscore` lint
+Message-ID: <2025061933-smog-breezy-90d6@gregkh>
 References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
- <20250615-ptr-as-ptr-v12-3-f43b024581e8@gmail.com>
- <CANiq72mn6fFL86-7XjsovdjQ2ySiNNviP4dvE170FmK_4E19OQ@mail.gmail.com>
+ <20250615-ptr-as-ptr-v12-4-f43b024581e8@gmail.com>
+ <CAJ-ks9k0vAw9UHx-s9uD9u0LufvgnojtrFoG=AH40Gp9HnxEDg@mail.gmail.com>
+ <CANiq72n4rr-S5NtFECxpd8FzkZvE8mg++p0qWDLK7+C0ru1Tew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,14 +100,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mn6fFL86-7XjsovdjQ2ySiNNviP4dvE170FmK_4E19OQ@mail.gmail.com>
+In-Reply-To: <CANiq72n4rr-S5NtFECxpd8FzkZvE8mg++p0qWDLK7+C0ru1Tew@mail.gmail.com>
 
-On Wed, Jun 18, 2025 at 07:29:25PM +0200, Miguel Ojeda wrote:
-> On Sun, Jun 15, 2025 at 10:55 PM Tamir Duberstein <tamird@gmail.com> wrote:
+On Wed, Jun 18, 2025 at 07:04:11PM +0200, Miguel Ojeda wrote:
+> On Wed, Jun 18, 2025 at 3:51 PM Tamir Duberstein <tamird@gmail.com> wrote:
 > >
-> >  rust/kernel/devres.rs | 2 +-
+> > @Danilo Krummrich could you please have a look for nova?
 > 
-> Danilo, Greg: for completeness: if you don't want this, please shout. Thanks!
+> Alice, Christian, Danilo, Greg, Tejun: it would also be nice to get
+> Acked-by's for your (other) bits.
 
 Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
