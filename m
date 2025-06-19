@@ -1,281 +1,322 @@
-Return-Path: <linux-pci+bounces-30203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F5BAE0AD4
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:46:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0AB3AE0AE7
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 17:55:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3F17169656
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:46:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFB627A1958
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 15:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846AE21CC6C;
-	Thu, 19 Jun 2025 15:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD3A21D5B3;
+	Thu, 19 Jun 2025 15:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s5BwCtuh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dmlIu1/e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D1C11712;
-	Thu, 19 Jun 2025 15:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750347994; cv=fail; b=UtsJx7V7gG2K2FmLedxKf/TPc4soBoc55ofLcnHr9LyM3raOn9oacbGssIQDEYjrukFFAHuuNYw3byo+Gmt+/wwzxJaloTs4/3wPL40xpQIkNGFvKu6MQC3m7q5jwjpYg0hv5jj1X8++12jU00lNyvA2lTusDHptTqLez3dJLwE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750347994; c=relaxed/simple;
-	bh=S7pI0ii+bb7PmFQrKdKpcQOEQuv7e5dzQSNhlf2Khbo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ujx2fddDhit9WCSlGqNtQCDQNrJKxnDMvhfOcitF+PoKQZP9q/w6CsHt7sOihBDt+P7rqv9ilO5c7fDVeCGnEgG0zQN8yr/zJyHRsB/KsJEfJQ2YAAOpagAWCDQ0asp0iXytXyZFSGBCl+R2O+Uuu040AiKBMSPlpFeZPkXynOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s5BwCtuh; arc=fail smtp.client-ip=40.107.243.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k7xoyqzV7W27Fiq/EbuWn89tOTQY9c54Hquqq9m4+H0qLxruKb+UyW29R1jCGp0C/gZF+mO8TvaYIjWXz51bDi3xqHZjgozWy5vWG9S9MUQOghtapxe1/9IBXKpzllOY6kaLTHMLh2+AweDHwhGBBHCdzYt2DK6lZPACEUHVSxe2OYOg7XpfiVpLxy+heFEP+ySByWxI0nkqBbDsVgGIeHwa7rlsFWPeKm4bEzno2WQR15aQjM592Jo5dqk4dhOle/o7ZRVdya99PL0tZHFcTv0qWVbdOiE7AEhLOYnc+1setnWkVujRB9+aPw6G/OaGYvyVjTua1OH3Nci4yMrH4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
- b=b7McOTRNYAmvXJSiJG7xJoIOmbLZqNLlGoz6kMLYg3Yaf95sUbMxd5sGqYhGDJ8hLRkep342eA3D3lALk9eEt2Ya2f+YTJ4s91XxzfI3NkrXbal7J0d6YNA+JBixiYHnyPjbWHJhMh4fF6TeLjC1ZZvsW0gMLSXsr1p6giYZRGLDHoxa9JJ3DDaO4s2przHr6MX2NjbQt3ETm2FuxoIvKWyaH464PVVGNtfz/N+A+aRANXYjvksaZRxEmPLOP/2LUh4ndPRcP8fO8IOj9jthhmtK7ocsR5P18tBgIxIpBJjqnn90V29cTikLapKn6vh4fpsM3JWCOjJXVib3HfZD0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q9qv+b5OebQDe2Rf2AwZhig3pUHz63b84JV4d8SqnXY=;
- b=s5BwCtuhTVB/t9op5OQ8kvR7NK8f3AFeXboaytHyqWgydqrz9Ky5is4HrDxlKN6sSSjqYJFVerT4ywdtf59Ju7WbsnRhwCUxvU7V6N8jGhcNtwbM5pIfGfX+QzTD/WX3GEzX5tzKxqlNV7mlvqHA+UhvDCQLR2cJAdIxzhItBDM=
-Received: from CH2PR05CA0056.namprd05.prod.outlook.com (2603:10b6:610:38::33)
- by DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.29; Thu, 19 Jun 2025 15:46:28 +0000
-Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
- (2603:10b6:610:38:cafe::3) by CH2PR05CA0056.outlook.office365.com
- (2603:10b6:610:38::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.8 via Frontend Transport; Thu,
- 19 Jun 2025 15:46:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025 15:46:28 +0000
-Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 19 Jun
- 2025 10:46:26 -0500
-From: Raju Rangoju <Raju.Rangoju@amd.com>
-To: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <lukas@wunner.de>, Raju Rangoju <Raju.Rangoju@amd.com>, Sanath S
-	<Sanath.S@amd.com>
-Subject: [PATCH] PCI: pciehp: fix circular lock dependency b/w pci_rescan_remove_lock and reset_lock
-Date: Thu, 19 Jun 2025 21:16:10 +0530
-Message-ID: <20250619154610.902892-1-Raju.Rangoju@amd.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494B811712
+	for <linux-pci@vger.kernel.org>; Thu, 19 Jun 2025 15:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750348519; cv=none; b=FLL8vz988NsSHpmOB+A/0BqNBywZqUVMvZRVia67rAHhwQRjgv8KxrbSaj6BzLTV7VYgtjHGPcUyJxipFoOzbCSULHjvIOjrJ6ygtRigmBdQkiWya915w/9Xkuc8iWv4mOpYPp9PuLTAlbxO0M/Yz4olCR4IlgsGq4YhYYl8idQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750348519; c=relaxed/simple;
+	bh=Bz/s73pqRDMzs9oSvulOauUy0Y1ul0wLs1FfJS5lw+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=MfD8v6BuT+ZXzDgfb3slP2lv2jTRZDuiesv447smc2jL66OCaK1YW/uSJ9FZHyhGia8q2E8z1Y1vCSJuNMBKpkUNie2hAS8rSKHnc5AVsFYMhHiIZRxoIw90qVqK0igT15BE1+FmIGhMNNg1AXMhB4+Abg7WE5fMk2J37btb6+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dmlIu1/e; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750348517; x=1781884517;
+  h=date:from:to:cc:subject:message-id;
+  bh=Bz/s73pqRDMzs9oSvulOauUy0Y1ul0wLs1FfJS5lw+Q=;
+  b=dmlIu1/en/9OYYvSxegj03iv5OeqQdoj0HUxT7fpTeMBoRm+foZxd47F
+   qCBiE73UgepZvY/8gvwoh71CX80lSQcTOZVkzh8so2bgjHKVfTzecPnis
+   mzViRXI0jBzSnVvwVfNghNLm8EUwa03rayY/YilYQw4hOmxLKBce2B2IY
+   2nq+R+p4Qh+alyVvWlwrvml+r/ibUZQ2p3nMbj3QNYyraDmdjjWHYSyLI
+   odNAYahvnNeA1UaRE2t9CFo+lKP+d3Ihwg06gKxelzQNU8e+ah8M5uToK
+   r2hMWesZ/1ARJ4jJShvB5WBWrfNoYgK2hovPG5qvCwkNnN58QFPeI04j7
+   w==;
+X-CSE-ConnectionGUID: RSXyLNE2SLi8RxJfORplVQ==
+X-CSE-MsgGUID: 0PbhXrEkRwWN4oqx3M3ZZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52756173"
+X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
+   d="scan'208";a="52756173"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 08:55:13 -0700
+X-CSE-ConnectionGUID: MjOz7Xp5RMCSUWcp9VPiKQ==
+X-CSE-MsgGUID: Yugssy+ETw6ltW4sPkEzPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,249,1744095600"; 
+   d="scan'208";a="156180724"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 19 Jun 2025 08:55:12 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSHbZ-000Ktq-1f;
+	Thu, 19 Jun 2025 15:55:09 +0000
+Date: Thu, 19 Jun 2025 23:54:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ bbf10cd686835d5a4b8566dc73a3b00b4cd7932a
+Message-ID: <202506192302.DuGblaYM-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|DS0PR12MB6390:EE_
-X-MS-Office365-Filtering-Correlation-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YNncCpwYIAtNK2G4iXg1U2ns3YS+V4Fwrb7xnhyZTnFRw8Wehnneq+G94ci0?=
- =?us-ascii?Q?8f/CU4Fr03ioVWKTvxPj28249cQ4o8ZAiPwR5X+xsFcdont5EMMqGuDinewK?=
- =?us-ascii?Q?STitj26PnRtgORw0eHXe3AbmTPWTVOzbVrKI4/YhNixVKTr2aDy4W6wvIXFS?=
- =?us-ascii?Q?ezKOg0mADG1Cj5dGNMeHS61NUsVOY49n8C1IsFYhPH9Af8M4IpBO0o0kh39d?=
- =?us-ascii?Q?6RcBOCExZI4Ado3mYYM5rS90zO6/i09sbH9saGPEfYFJGvneZuxyRE3HxzwP?=
- =?us-ascii?Q?b0+76MXbWqstRhDxF9SAnoaGZrStJRqhMu09KHuIEE9S+0cuL9XECC+aLiPs?=
- =?us-ascii?Q?amZIUFhXpLScMSsU2qmJip4TBmOJw0VOgcWlVmMcOXvB3H1J7gSLcIdv45M6?=
- =?us-ascii?Q?rPJW1TFKhudMWwKq4YD1y6cHma2kvrni2IRp8+JRT9hDdVh5xUZUyrSX9SQK?=
- =?us-ascii?Q?QthG3Kmj2hw9Oc1zs8CiQPQglQ815yuF6PWKAP8qCAQpO7Q+i5GfDMRmhJn9?=
- =?us-ascii?Q?9jWyqBXDXzrnmesKxuPqTYV6CM5XJTemauENuPOJwdWOWQ/tPv3Ge6LG/DNO?=
- =?us-ascii?Q?Avi/nOV5VnIPIv573q1rGmGa6xA4V4jqi3tD7asSUaaEJ77N4o1cRnvBqY/X?=
- =?us-ascii?Q?+4iSdefXtNAQp+IjjYZ/My/I1dF09zvejt9ul7vKe+aOgA2KT6It0Py1993c?=
- =?us-ascii?Q?vkmIEJsgZVN+u3WFLgGwSNtI6k3h83EwfRZ+ftNt+VGJRAMql8Fdmtb00Qga?=
- =?us-ascii?Q?/qoO2m+3Oq/y8m+ym8vMnAR3kLvl6f4IqMbK19W+jk2jxKlpSgc+39Bn5wZX?=
- =?us-ascii?Q?wmLjtfweoPZJaiQtWbvM/CP0Z+diYWY2f6sY+yPKdvHbBDN7yjTrV8izvBMS?=
- =?us-ascii?Q?7KQ1Na6VhsNG395pgXjRQJ5v3HMCwelaZpB+4aUtwYsgnyZkZeHZ0v3UbGTg?=
- =?us-ascii?Q?sBagJNAxwxlKIZsrP7zMJSms9j8YOl320cbwlvY8JCOOKdYbNyZNQqkTt5vs?=
- =?us-ascii?Q?azD+TCjIuxDund/PEr9/nsUGqjZjrplolZZtWhzmhT9VoFtyFRwaFDia0UbM?=
- =?us-ascii?Q?0sLAoGByzDsRi/Mk3N19R1dkHdrqW1pQ1JUIWCrxxw6Zcn0bUCnGgeEkjYj/?=
- =?us-ascii?Q?jrJYxJaopv6glmAzts75tV3hq/p132E55ANr8BIhQ4Q/9y1A3SwGn5yMbbfN?=
- =?us-ascii?Q?FPEn8i9HoWm/5fcUfYlinYd2PjiVx6+gZIJH0wDHULtc5y3KUMK9HcWakr3s?=
- =?us-ascii?Q?PaZvED43SKeOJN+v9R89fTVIiADzOfsNFEsonVq+BJAbWns0GbVMVsb5Ug1h?=
- =?us-ascii?Q?SgyK5ZwdjgCi1eUNzhYm8agPKfdOadx+c/InzXTF5BSQWh686Zkt+HOR/2NX?=
- =?us-ascii?Q?0xjBuSsd9VJ25aa0nydVJiav79FZphxFZDo2XO2Eluq0TtlWEm8/qCh7LXMk?=
- =?us-ascii?Q?HG7MZ6zZYmLMcI2DSZ79bHE+TRakX8NwU6/DEJlYsx3BtbbxvZsS4P0eMDQn?=
- =?us-ascii?Q?1iM9pmDa9GuHKeI2URF7ambuGjfwEWPWlHwG?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 15:46:28.7658
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbafb382-c2d6-40a0-426b-08ddaf4874c7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A34C.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6390
 
-Resolves a circular locking dependency issue between
-pci_rescan_remove_lock() and ctrl->reset_lock() in the PCI hotplug
-subsystem, specifically in the pciehp_unconfigure_device() function.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: bbf10cd686835d5a4b8566dc73a3b00b4cd7932a  PCI: pciehp: Ignore belated Presence Detect Changed caused by DPC
 
-Commit f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock
- and device_lock") introduced a change in the locking order within
-pciehp_unconfigure_device() to avoid an AB-BA deadlock between
-ctrl->reset_lock and device_lock. However, this change inadvertently
-introduced a new circular locking dependency between
-pci_rescan_remove_lock and ctrl->reset_lock, as detected by lockdep.
+elapsed time: 1445m
 
-The problematic sequence is as follows:
-  1. pciehp_unconfigure_device() acquires ctrl->reset_lock (read lock).
-  2. It then acquires pci_rescan_remove_lock.
-  3. Within the device removal loop, it attempts to reacquire
-     ctrl->reset_lock after releasing it for driver unbinding,
-     while still holding pci_rescan_remove_lock.
+configs tested: 229
+configs skipped: 5
 
-This creates a potential for deadlock if another thread acquires the
-locks in the opposite order, as illustrated by lockdep's report.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-To resolve this, change the locking order in pciehp_unconfigure_device()
-so that ctrl->reset_lock is released before acquiring
-pci_rescan_remove_lock and before driver unbinding. This avoids
-holding both locks at the same time and breaks the circular
-dependency. After the critical section, ctrl->reset_lock is reacquired
-as needed.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250619    gcc-15.1.0
+arc                   randconfig-002-20250619    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                         bcm2835_defconfig    gcc-15.1.0
+arm                                 defconfig    gcc-15.1.0
+arm                        multi_v7_defconfig    gcc-15.1.0
+arm                          pxa910_defconfig    clang-21
+arm                   randconfig-001-20250619    clang-21
+arm                   randconfig-001-20250619    gcc-15.1.0
+arm                   randconfig-002-20250619    gcc-15.1.0
+arm                   randconfig-002-20250619    gcc-8.5.0
+arm                   randconfig-003-20250619    gcc-15.1.0
+arm                   randconfig-003-20250619    gcc-8.5.0
+arm                   randconfig-004-20250619    gcc-10.5.0
+arm                   randconfig-004-20250619    gcc-15.1.0
+arm                           stm32_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250619    gcc-15.1.0
+arm64                 randconfig-001-20250619    gcc-8.5.0
+arm64                 randconfig-002-20250619    gcc-15.1.0
+arm64                 randconfig-002-20250619    gcc-9.5.0
+arm64                 randconfig-003-20250619    gcc-10.5.0
+arm64                 randconfig-003-20250619    gcc-15.1.0
+arm64                 randconfig-004-20250619    gcc-10.5.0
+arm64                 randconfig-004-20250619    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250619    gcc-11.5.0
+csky                  randconfig-001-20250619    gcc-8.5.0
+csky                  randconfig-002-20250619    gcc-8.5.0
+csky                  randconfig-002-20250619    gcc-9.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20250619    clang-21
+hexagon               randconfig-001-20250619    gcc-8.5.0
+hexagon               randconfig-002-20250619    clang-21
+hexagon               randconfig-002-20250619    gcc-8.5.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250619    clang-20
+i386        buildonly-randconfig-001-20250619    gcc-12
+i386        buildonly-randconfig-002-20250619    clang-20
+i386        buildonly-randconfig-002-20250619    gcc-12
+i386        buildonly-randconfig-003-20250619    clang-20
+i386        buildonly-randconfig-004-20250619    clang-20
+i386        buildonly-randconfig-005-20250619    clang-20
+i386        buildonly-randconfig-006-20250619    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250619    gcc-12
+i386                  randconfig-002-20250619    gcc-12
+i386                  randconfig-003-20250619    gcc-12
+i386                  randconfig-004-20250619    gcc-12
+i386                  randconfig-005-20250619    gcc-12
+i386                  randconfig-006-20250619    gcc-12
+i386                  randconfig-007-20250619    gcc-12
+i386                  randconfig-011-20250619    clang-20
+i386                  randconfig-012-20250619    clang-20
+i386                  randconfig-013-20250619    clang-20
+i386                  randconfig-014-20250619    clang-20
+i386                  randconfig-015-20250619    clang-20
+i386                  randconfig-016-20250619    clang-20
+i386                  randconfig-017-20250619    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250619    gcc-15.1.0
+loongarch             randconfig-001-20250619    gcc-8.5.0
+loongarch             randconfig-002-20250619    gcc-15.1.0
+loongarch             randconfig-002-20250619    gcc-8.5.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                       m5249evb_defconfig    clang-21
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        bcm47xx_defconfig    clang-21
+mips                           ip32_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250619    gcc-8.5.0
+nios2                 randconfig-002-20250619    gcc-8.5.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250619    gcc-11.5.0
+parisc                randconfig-001-20250619    gcc-8.5.0
+parisc                randconfig-002-20250619    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                       ebony_defconfig    clang-21
+powerpc                      katmai_defconfig    clang-21
+powerpc                     mpc5200_defconfig    clang-21
+powerpc               randconfig-001-20250619    gcc-8.5.0
+powerpc               randconfig-001-20250619    gcc-9.3.0
+powerpc               randconfig-002-20250619    clang-21
+powerpc               randconfig-002-20250619    gcc-8.5.0
+powerpc               randconfig-003-20250619    gcc-10.5.0
+powerpc               randconfig-003-20250619    gcc-8.5.0
+powerpc                     tqm8540_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250619    gcc-11.5.0
+powerpc64             randconfig-001-20250619    gcc-8.5.0
+powerpc64             randconfig-002-20250619    clang-21
+powerpc64             randconfig-002-20250619    gcc-8.5.0
+powerpc64             randconfig-003-20250619    gcc-10.5.0
+powerpc64             randconfig-003-20250619    gcc-8.5.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250619    gcc-11.5.0
+riscv                 randconfig-001-20250619    gcc-9.3.0
+riscv                 randconfig-002-20250619    clang-16
+riscv                 randconfig-002-20250619    gcc-9.3.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250619    clang-19
+s390                  randconfig-001-20250619    gcc-9.3.0
+s390                  randconfig-002-20250619    gcc-13.2.0
+s390                  randconfig-002-20250619    gcc-9.3.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250619    gcc-9.3.0
+sh                    randconfig-002-20250619    gcc-9.3.0
+sh                           se7206_defconfig    clang-21
+sh                   sh7724_generic_defconfig    clang-21
+sh                            titan_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250619    gcc-14.3.0
+sparc                 randconfig-001-20250619    gcc-9.3.0
+sparc                 randconfig-002-20250619    gcc-10.3.0
+sparc                 randconfig-002-20250619    gcc-9.3.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250619    gcc-13.3.0
+sparc64               randconfig-001-20250619    gcc-9.3.0
+sparc64               randconfig-002-20250619    gcc-8.5.0
+sparc64               randconfig-002-20250619    gcc-9.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250619    clang-19
+um                    randconfig-001-20250619    gcc-9.3.0
+um                    randconfig-002-20250619    clang-21
+um                    randconfig-002-20250619    gcc-9.3.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250619    clang-20
+x86_64      buildonly-randconfig-001-20250619    gcc-12
+x86_64      buildonly-randconfig-002-20250619    gcc-12
+x86_64      buildonly-randconfig-003-20250619    clang-20
+x86_64      buildonly-randconfig-003-20250619    gcc-12
+x86_64      buildonly-randconfig-004-20250619    gcc-12
+x86_64      buildonly-randconfig-005-20250619    clang-20
+x86_64      buildonly-randconfig-005-20250619    gcc-12
+x86_64      buildonly-randconfig-006-20250619    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250619    gcc-11
+x86_64                randconfig-002-20250619    gcc-11
+x86_64                randconfig-003-20250619    gcc-11
+x86_64                randconfig-004-20250619    gcc-11
+x86_64                randconfig-005-20250619    gcc-11
+x86_64                randconfig-006-20250619    gcc-11
+x86_64                randconfig-007-20250619    gcc-11
+x86_64                randconfig-008-20250619    gcc-11
+x86_64                randconfig-071-20250619    clang-20
+x86_64                randconfig-072-20250619    clang-20
+x86_64                randconfig-073-20250619    clang-20
+x86_64                randconfig-074-20250619    clang-20
+x86_64                randconfig-075-20250619    clang-20
+x86_64                randconfig-076-20250619    clang-20
+x86_64                randconfig-077-20250619    clang-20
+x86_64                randconfig-078-20250619    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                           alldefconfig    gcc-15.1.0
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250619    gcc-9.3.0
+xtensa                randconfig-002-20250619    gcc-8.5.0
+xtensa                randconfig-002-20250619    gcc-9.3.0
 
-This ensures that the locking order is consistent and prevents the
-circular dependency, addressing the lockdep warning and potential
-deadlock.
-
-[  120.615285] ======================================================
-[  120.615289] WARNING: possible circular locking dependency detected
-[  120.615293] 6.14.5-300.fc42.x86_64+debug #1 Not tainted
-[  120.615297] ------------------------------------------------------
-[  120.615300] irq/36-pciehp/136 is trying to acquire lock:
-[  120.615303] ffff88810d247340 (&ctrl->reset_lock){.+.+}-{4:4}, at: pciehp_unconfigure_device+0x1d0/0x390
-[  120.615323]
-               but task is already holding lock:
-[  120.615326] ffffffff9c13ce90 (pci_rescan_remove_lock){+.+.}-{4:4}, at: pciehp_unconfigure_device+0xe5/0x390
-[  120.615337]
-               which lock already depends on the new lock.
-
-[  120.615340]
-               the existing dependency chain (in reverse order) is:
-[  120.615343]
-               -> #1 (pci_rescan_remove_lock){+.+.}-{4:4}:
-[  120.615351]        lock_acquire.part.0+0x133/0x390
-[  120.615359]        __mutex_lock+0x1b3/0x1490
-[  120.615366]        pciehp_unconfigure_device+0xe5/0x390
-[  120.615370]        pciehp_disable_slot+0xfa/0x2f0
-[  120.615376]        pciehp_handle_presence_or_link_change+0xc8/0x310
-[  120.615381]        pciehp_ist+0x2d5/0x3e0
-[  120.615386]        irq_thread_fn+0x88/0x160
-[  120.615393]        irq_thread+0x21e/0x490
-[  120.615399]        kthread+0x39d/0x760
-[  120.615406]        ret_from_fork+0x31/0x70
-[  120.615412]        ret_from_fork_asm+0x1a/0x30
-[  120.615418]
-               -> #0 (&ctrl->reset_lock){.+.+}-{4:4}:
-[  120.615426]        check_prev_add+0x1ab/0x23b0
-[  120.615431]        __lock_acquire+0x2311/0x2e10
-[  120.615436]        lock_acquire.part.0+0x133/0x390
-[  120.615441]        down_read_nested+0xa4/0x490
-[  120.615445]        pciehp_unconfigure_device+0x1d0/0x390
-[  120.615448]        pciehp_disable_slot+0xfa/0x2f0
-[  120.615453]        pciehp_handle_presence_or_link_change+0xc8/0x310
-[  120.615458]        pciehp_ist+0x2d5/0x3e0
-[  120.615462]        irq_thread_fn+0x88/0x160
-[  120.615465]        irq_thread+0x21e/0x490
-[  120.615469]        kthread+0x39d/0x760
-[  120.615474]        ret_from_fork+0x31/0x70
-[  120.615478]        ret_from_fork_asm+0x1a/0x30
-[  120.615483]
-               other info that might help us debug this:
-
-[  120.615485]  Possible unsafe locking scenario:
-
-[  120.615488]        CPU0                    CPU1
-[  120.615490]        ----                    ----
-[  120.615492]   lock(pci_rescan_remove_lock);
-[  120.615497]                                lock(&ctrl->reset_lock);
-[  120.615502]                                lock(pci_rescan_remove_lock);
-[  120.615506]   rlock(&ctrl->reset_lock);
-[  120.615511]
-                *** DEADLOCK ***
-
-Fixes: f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock")
-Co-developed-by: Sanath S <Sanath.S@amd.com>
-Signed-off-by: Sanath S <Sanath.S@amd.com>
-Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
----
- drivers/pci/hotplug/pciehp_pci.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index 65e50bee1a8c..08ba59d96f4a 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -104,6 +104,11 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
- 	if (!presence)
- 		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
- 
-+	/*
-+	 * Release reset_lock before driver unbinding
-+	 * to avoid AB-BA deadlock with device_lock.
-+	 */
-+	up_read(&ctrl->reset_lock);
- 	pci_lock_rescan_remove();
- 
- 	/*
-@@ -116,11 +121,6 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
- 					 bus_list) {
- 		pci_dev_get(dev);
- 
--		/*
--		 * Release reset_lock during driver unbinding
--		 * to avoid AB-BA deadlock with device_lock.
--		 */
--		up_read(&ctrl->reset_lock);
- 		pci_stop_and_remove_bus_device(dev);
- 		down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 
-@@ -134,8 +134,14 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
- 			command |= PCI_COMMAND_INTX_DISABLE;
- 			pci_write_config_word(dev, PCI_COMMAND, command);
- 		}
-+		/*
-+		 * Release reset_lock before driver unbinding
-+		 * to avoid AB-BA deadlock with device_lock.
-+		 */
-+		up_read(&ctrl->reset_lock);
- 		pci_dev_put(dev);
- 	}
- 
-+	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 	pci_unlock_rescan_remove();
- }
--- 
-2.34.1
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
