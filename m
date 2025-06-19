@@ -1,62 +1,53 @@
-Return-Path: <linux-pci+bounces-30176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C39CBAE021B
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 11:54:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ACD3AE045B
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 13:52:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1E253BAD19
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 09:53:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4C25188683D
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jun 2025 11:52:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87118221276;
-	Thu, 19 Jun 2025 09:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KfbyxoKV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686F722D7B9;
+	Thu, 19 Jun 2025 11:52:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C1E2206B5
-	for <linux-pci@vger.kernel.org>; Thu, 19 Jun 2025 09:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C422DFA6;
+	Thu, 19 Jun 2025 11:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750326841; cv=none; b=aum4MjTpGKqEtacEEg2bSudf+AHehFHlciHz/pYZBZHdhk+jDS7khrUIWIhCNkTKgablUzS/4SFqcVv+/MXFb9kanFWusf+arvvvXNaBu5CsBCDY04fbp6EIux+yqRfdCN4dU0BJJa3Hw0yKku3HRVsKqKnFTHEfSqnjreIy0Fo=
+	t=1750333950; cv=none; b=F8K7N2OADEHx7bcbBMCgCgGp5qTXuhGssuUurp5vG2zX7ruZ+prmo3qay3K/dS/VMVgW49r25O3yBJL7YvAkugMPw40KuB2sDZBj0B7gn65FsgBVrR8ZGxKb72T/pwHIDn15mBtyx0D3xlFm229ocH0TUux+osz6TH3gZfPLWkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750326841; c=relaxed/simple;
-	bh=3kDiPSCG/YSn0QGi0c8Zra1rZG6c2gbaqXpd8Muw3N8=;
+	s=arc-20240116; t=1750333950; c=relaxed/simple;
+	bh=y+mfvfRO3LvLtvSawFm5KlpFLf6wmj080xPpPri1ADo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0Sg9qzt0htQjtmlSoR0gvutgAqqkF/jWqg9k8gE4BxEYEEW/21/KLhRrrqXz1NCJreZeXoeet7NVJn6bwouGV5yObWVLYbjr3yHVd0msmG2bquo2MltRuesPLqXBPrsO0/bnyhk5IgFwKeAdlYJRXQSVkJqdbz3nL/AHp3iDOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KfbyxoKV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98164C4CEEA;
-	Thu, 19 Jun 2025 09:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750326840;
-	bh=3kDiPSCG/YSn0QGi0c8Zra1rZG6c2gbaqXpd8Muw3N8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KfbyxoKV+C8IW2ITf7tcRxFv7ovSQRozIwhrvYVvfzncgmpFzwrsoijrTidHx4w9J
-	 ykg1odCt52H0hrPNksfyqDcR5qyGz+Me8RJQtR5m46Z6S4RbvGSWJBzfwrG7wZMGXB
-	 l4M6K9pk9Dea2wuiMRPLDdwkrnQs8j/FNz9dXUYguxKlUs5JDMzE9N/6CElXBx9c+9
-	 tABKRJA7WLRWCWgQZh/R9KmHu9LGFLVCc2cygWVM/uneYxsVAS3wyE3GwZhFmkK3zO
-	 KZUvm4TyaXfpzqGxHyWu1RHZpVd01N6aU8FvaRxGtT1s5J1Fq3JnRK0JepYrn/6O4r
-	 s81N+V/2KSkDQ==
-Date: Thu, 19 Jun 2025 11:53:55 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Delay link training after hot reset
- in EP mode
-Message-ID: <aFPeMzLxbiXEOQCt@ryzen>
-References: <aFLHYfs1iDgwMdcp@ryzen>
- <20250618195959.GA1207191@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yq5zW+nfLoLeX6K594KsM7RoymFapaAYljeB4eaY+ToBeBEg3eLOvWYcDUrunMcRUauLUEgQMTOGBL7761h9Jdp/qJ06KsTbUuNXBL0TGHk7jzzunz5MNENLdp9MEL3zt7MV+j9qUCCf6aXMI6BDIoyd9jDasy+CK1Bcm1IPgdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 934DD200B1D0;
+	Thu, 19 Jun 2025 13:52:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 865ED4103A; Thu, 19 Jun 2025 13:52:23 +0200 (CEST)
+Date: Thu, 19 Jun 2025 13:52:23 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Hongbo Yao <andy.xu@hj-micro.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	peter.du@hj-micro.com, jemma.zhang@hj-micro.com
+Subject: Re: [RFC PATCH] PCI: pciehp: Replace fixed delay with polling for
+ slot power-off
+Message-ID: <aFP598Yyl0el1uKh@wunner.de>
+References: <20250619093228.283171-1-andy.xu@hj-micro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,73 +56,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618195959.GA1207191@bhelgaas>
+In-Reply-To: <20250619093228.283171-1-andy.xu@hj-micro.com>
 
-On Wed, Jun 18, 2025 at 02:59:59PM -0500, Bjorn Helgaas wrote:
-> > 
-> > Well, because currently, we do NOT delay link training, and everything
-> > works as expected.
-> > 
-> > Most likely we are just lucky, because dw_pcie_ep_linkdown() calls
-> > dw_pcie_ep_init_non_sticky_registers(), which is quite a short function.
-> 
-> I'm just making the point that IIUC there's a race between link
-> training and any DBI accesses done by
-> dw_pcie_ep_init_non_sticky_registers() and potentially EPF callbacks,
-> and the time those paths take is immaterial.
-> 
-> If this is indeed a race and this patch is the fix, I think it's
-> misleading to describe it as "this path might take a long time and
-> lose the race."  We have to assume arbitrary delays can be added to
-> either path, so we can never rely on a path being "fast enough" to
-> avoid the race.
+On Thu, Jun 19, 2025 at 05:32:28PM +0800, Hongbo Yao wrote:
+> Fixed 1-second delay in remove_board() fails to accommodate certain
+> hardware like multi-host OCP cards, which exhibit longer power-off
+> latencies.
 
-I agree 100%.
+Please name the affected product(s).
 
-When writing the commit message, we simply wanted to be transparent that we
-have not observed the problem that this fix (theoretical fix?) is solving.
+They don't seem to comply to the spec.  How prevalent are they?
+If there are only few deployed, quirks like this are probably
+best addressed by an out-of-tree patch.
 
-However, from reading the TRM (trust me, a lot of hours...), we are certain
-that this feature DLY2_EN + DLY2_DONE was implemented such that there would
-not be a race between link training and reinitializing registers via the DBI.
+> Logs before fix:
+> [157.778307] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0001 from Slot Status
+> [157.778321] pcieport 0003:00:00.0: pciehp: Slot(31): Attention button pressed
+> [157.785445] pcieport 0003:00:00.0: pciehp: Slot(31): Powering off due to button press
+> [157.798931] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
 
+This log excerpt mixes messages from two separate hotplug ports
+(0003:00:00.0 and 000b:00:02.0).  Are these hotplug ports related?
+If not, please reduce the log excerpt to a single hotplug port
+to avoid confusion.
 
-> 
-> Is the following basically what we're doing?
-> 
->   Set PCIE_LTSSM_APP_DLY2_EN so the controller never automatically
->   trains the link after a link-down interrupt.  That way any DBI
->   updates done in the dw_pcie_ep_linkdown() path will happen while the
->   link is still down.  Then allow link training by setting
->   PCIE_LTSSM_APP_DLY2_DONE.
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -30,6 +30,25 @@
+>  #define SAFE_REMOVAL	 true
+>  #define SURPRISE_REMOVAL false
+>  
+> +static void pciehp_wait_for_link_inactive(struct controller *ctrl)
+> +{
+> +	u16 lnk_status;
+> +	int timeout = 10000, step = 20;
+> +
+> +	do {
+> +		pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+> +					  &lnk_status);
+> +
+> +		if (!(lnk_status & PCI_EXP_LNKSTA_DLLLA))
+> +			return;
+> +
+> +		msleep(step);
+> +		timeout -= step;
+> +	} while (timeout >= 0);
+> +
+> +	ctrl_dbg(ctrl, "Timeout waiting for link inactive state\n");
+> +}
 
-Yes.
+Any chance you can use one of the existing helpers, such as
+pcie_wait_for_link()?
 
-s/link-down interrupt/link-down or hot reset interrupt/
+Is the 10 second delay chosen arbitrarily or how did you come up
+with it?  How much time do the affected products really need?
 
-When Hot Reset or Link-down reset occurs, controller will assert
-smlh_req_rst_not as an early warning. This warning is an interrupt bit in
-Client Register group(link_req_rst_not_int).
+> @@ -119,8 +138,11 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
+>  		 * After turning power off, we must wait for at least 1 second
+>  		 * before taking any action that relies on power having been
+>  		 * removed from the slot/adapter.
+> +		 *
+> +		 * Extended wait with polling to ensure hardware has completed
+> +		 * power-off sequence.
+>  		 */
+> -		msleep(1000);
+> +		pciehp_wait_for_link_inactive(ctrl);
+>  
+>  		/* Ignore link or presence changes caused by power off */
+>  		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
 
-(It is the same IRQ, so we can't tell the difference, at least not from
-only looking at the IRQ status.)
+Please keep the msleep(1000), that's the minimum we need to wait
+per PCIe r6.3 sec 6.7.1.8.
 
+Please make the extra wait for link down conditional on
+ctrl->pcie->port->link_active_reporting.  (DLLLA reporting is
+optional for hotplug ports conforming to older spec revisions.)
 
-> 
-> We don't set PCIE_LTSSM_APP_DLY2_DONE anywhere in the initial probe
-> path.  Obviously the link must train in that case, so I guess
-> PCIE_LTSSM_APP_DLY2_EN only applies to the case of link state
-> transition from link-up to link-down?
+Thanks,
 
-Yes.
-
-The register description for dly2_en:
-Set "1" to enable delaying the link training after Hot Reset.
-
-The register description for dly2_done:
-Set "1" to end the delaying of the link training after Hot Reset.
-
-
-Kind regards,
-Niklas
+Lukas
 
