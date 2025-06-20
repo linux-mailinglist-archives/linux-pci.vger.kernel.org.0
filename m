@@ -1,158 +1,185 @@
-Return-Path: <linux-pci+bounces-30258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90B3AAE1B5E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:00:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D8E3AE1B85
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:09:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C505188645C
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 13:01:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF2017A772F
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 13:07:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E385D515;
-	Fri, 20 Jun 2025 13:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4A628DF48;
+	Fri, 20 Jun 2025 13:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOcYavQW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikYbpV3d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2537030E84D;
-	Fri, 20 Jun 2025 13:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2DD28DF36;
+	Fri, 20 Jun 2025 13:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424441; cv=none; b=ktVKy2iCXNtftalj9L1r82Za53gY3p193errqfQsxmV+USGZ1WWL5rFb38Xuiqb931LshI/fgm8QU93muvaU+jil60kVa8VtAtK/Ne8G7LViQ0F/EL23WRclBrFYxFtIgOdvO+JIzZiYWMSPzkKjxjFJdv02jOk9gQ/zK5Qh56g=
+	t=1750424903; cv=none; b=cG5oaUMP/QF32AMvam6GXQJxmM/8lAHkJT3tl5KRMk/GNyZFv0kMFgTgN/PViBTcuYDC4gm1PYeTRE6WrMWwNdn+TJcO32vlGcBniDqRcjamUo95FCjaPa+AMKfLMK3ny7B5u3gWJJ4EcDBOFTHx6YbMGCN0yZWOfzJh/aFtV9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424441; c=relaxed/simple;
-	bh=nZHsfgLmOj5XfHygs8LAFogHnVsH+7ZJB0SIBGXmy6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rd6ADFpGlsuYaq6wvshVYlpfKsJW7L3GxmLnLbPyZ7DYPVKnCOHZwfjFg8v8LhTCNfUgdA3AfC8WNJzdYyerRH7TiKDZDlVPI4uv9aKrhe0LdJlq9iUuFcOLhrSpcOCSPOhDhQIjqETAvfCzrjn+XAgQMcW8Q9F6KS+emBiqgDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOcYavQW; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so1247896b3a.0;
-        Fri, 20 Jun 2025 06:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750424439; x=1751029239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oSvBaEOwHs3K5QkOUjfhZZACAj/9HP8HSOlO7m0z0Zg=;
-        b=MOcYavQWd8UyuYd2ffoZBQ2V4ofSSLYT2J3FP0+t4ReTS1tWCdr+RifMPCHUA5FqIt
-         6Rz54BRqZbmbp1IkOkLH5olgxmTWZkvIAYSGoJbZ7z6iL6661d+fbsdS2djLag1Of+Ug
-         wNbrUKNtLd0PRNeHSu745nSZgXRSSnHAsA8ZA5SQDk+69NBCNv76m32FymJW4kWjNOpr
-         VJN017X5YICuFocBSa00+JVYBEidfisDVIvbD/eSFAhya0cBL2N0FDI89bztphs4BCel
-         H0Rm591YibVTl4AP0YTE4DERYrSoK5CKJwc1w0cXxRtu34zbdTlRjiGxGW1N9loJVWEI
-         N6GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750424439; x=1751029239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oSvBaEOwHs3K5QkOUjfhZZACAj/9HP8HSOlO7m0z0Zg=;
-        b=BKoPCBwXfFWa1cPjJuwui+sKbUROxUQqdPm26JsFaxT3HyYcwf/kuRaEjXFqaoUR33
-         X7NmJ772w1rpP1rk5RklIaByHDsbb559FedNcgN8ZolzLmVxmL9UAyCsdE7LLqo9GPC7
-         SJwY7gZoaT49anrm8lr6fbOoSbxKtG+lMgv3AUfSnrN5Ik1MLUA0OqbbT/xnx+81vYIz
-         AGW8qyChBuAHk/TBjbopZBQf3MECojYRf7uqOsYmbS8fy/BaSGZ/DJ5L4DEkIqSPkKQp
-         LRmTzFuRBop9maJLMaBllj68ep3MpoKa+Y3txefkXTUuSS+ybZCAjUYSEJSdsR7GfWGq
-         xkJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsReTFN6V3sJ1WNBVT3HKA5OKQLLmoBjFsvStr8+Ima4+tSaLyKuvCcnh81WfDhdb5/IqCGKAALHpe@vger.kernel.org, AJvYcCWER98QQ2o4jZ4Z1aX4V+vQFTi5ezTOKG8CQBdyVYfTUs15gAqXq/ZZzhlIJnGUQuKFzApfqQoQU1/no2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/SdouvQY4dTIaE7i86WM34Ip4tAAfHgOfJ+SBtUEiILS7cKp+
-	W58vVCOzll6jdbksCgpdpC6ke4GJD8wuo2hx4F90iQOHRD3aGpqiIuNw
-X-Gm-Gg: ASbGncssir2kIozFaLze2DhVdBKcELqS2wNCiYyWKbpbMoi2LELyrroKGhttV0jnBHK
-	c7eD4l8bNV8/tZ34u4UELwGX3+atFpQ4mJ5T0107NmbWgDcvU7Sg650W7evxyYPk/spzTAxvv/D
-	qem3hSyD31MozkLnXx9Dhvq91LXWvtIBDV0LmUFWiFRcNLhCovaiAOFKQHg+v8w6MSCRQzzZSTZ
-	ScbOw9r229v5hWPooWMX23cLMe4m0YzY/P3wvc9ifrAF3mARlYEHpkpi8r7QPm1nG02UsaieVfB
-	h7OYNH8nYCsFSAcvASiLu2/xtM3AGorFdpZg5JE3K/N+juB+aw==
-X-Google-Smtp-Source: AGHT+IH769Yhqpe3IGCT87lyXbykB6q9+9qjkxaYFu3oBfVpD+WnzrOHIxyf03fBlIyFkkLBax0GxA==
-X-Received: by 2002:a05:6a20:748c:b0:218:5954:1293 with SMTP id adf61e73a8af0-22026de98cfmr5302329637.34.1750424437536;
-        Fri, 20 Jun 2025 06:00:37 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:cab9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a69b973sm1994049b3a.157.2025.06.20.06.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 06:00:36 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:00:30 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
-Message-ID: <aFVbbnl9UscGQoqC@geday>
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
- <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
- <aFVTdYWxuq9YzVQR@geday>
- <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
+	s=arc-20240116; t=1750424903; c=relaxed/simple;
+	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qobmUOYLLjndq3wY8xIq/ZcaEA0ZC+li9kXdO1JWokuBBETSm3AQ9D+zRRFgX9iBBR65Mito2/ZEsErA+PV3HxnFAnJ0kPAw5V9f9AvEdnqAzR/kkhfw0fW3kFoYTxsO6Fddysf0dcVxw3mUt/eOba3Z5c0Fk157kzMZ5oZTgQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikYbpV3d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B769C4CEEE;
+	Fri, 20 Jun 2025 13:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750424902;
+	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ikYbpV3djtoMZC4zunIhWqeO+nOC9+2wy9yMZ+uerAs+3IkaRuiJqk4jSIDyDFhGk
+	 RNVkBnOa4IfxYdQQYUTsA25+H3tPbXZZuFHWY/v+472XaOqarx5uvOm+9mHLmfFq6R
+	 govT7oVJnAv5r5fMEn/gw1E5FxTQeQTLvgY0/Fz5AqULmANSd0DPIHWSvl3fkA5yRC
+	 582khYGx4F+6amr9NjTOGnGiQx6wpgYMKC6AhHEZUXwqPodeIAChXqd2tWowLiMl/u
+	 6N68j+25wShwp+gfZMms/GJAHfl0saapqavn+7nVC3Q0L7IY5oreHIfpyweUXUdmDy
+	 3rwYAX/DgZofg==
+Message-ID: <130fe1fc-913b-48cf-b2a4-e9c4952354fd@kernel.org>
+Date: Fri, 20 Jun 2025 15:08:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
+ mode support
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>,
+ "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "festevam@gmail.com" <festevam@gmail.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250620031350.674442-1-hongxing.zhu@nxp.com>
+ <20250620031350.674442-2-hongxing.zhu@nxp.com>
+ <20250620-honored-versed-donkey-6d7ef4@kuoka>
+ <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 01:47:35PM +0100, Robin Murphy wrote:
-> Ah, I put that print at the top of the function - on second look now I
-> see that there's an awkward mix of per-lane and global data, and pwr_cnt
-> is actually the latter. Sure enough, moving the print past that check I
-> only see it once.
+On 20/06/2025 10:26, Hongxing Zhu wrote:
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: 2025年6月20日 15:53
+>> To: Hongxing Zhu <hongxing.zhu@nxp.com>
+>> Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
+>> lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
+>> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+>> bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+>> kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+>> imx@lists.linux.dev; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
+>> mode support
+>>
+>> On Fri, Jun 20, 2025 at 11:13:49AM GMT, Richard Zhu wrote:
+>>> On i.MX, the PCIe reference clock might come from either internal
+>>> system PLL or external clock source.
+>>> Add the external reference clock source for reference clock.
+>>>
+>>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+>>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
+>>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>> index ca5f2970f217..c472a5daae6e 100644
+>>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>> @@ -219,7 +219,12 @@ allOf:
+>>>              - const: pcie_bus
+>>>              - const: pcie_phy
+>>>              - const: pcie_aux
+>>> -            - const: ref
+>>> +            - description: PCIe reference clock.
+>>> +              oneOf:
+>>> +                - description: The controller might be configured
+>> clocking
+>>> +                    coming in from either an internal system PLL or
+>> an
+>>> +                    external clock source.
+>>> +                  enum: [ref, gio]
+>>
+>> Internal like within PCIe or coming from other SoC block? What does "gio"
+>> mean?
+> Internal means that the PCIe reference clock is coming from other
+>  internal SoC block, such as system PLL. "gio" is on behalf that the
+> reference clock comes form external crystal oscillator.
 
-Hi Robin, thanks for re-testing and no worries.
+Then what does "ref" mean, if gio is the clock supplied externally? We
+talk here about signals coming to this chip, regardless how they are
+generated.
 
-> 
-> However, I still don't think blindly enabling all the lanes is the right
-> thing to do either; I'd imagine something like the (untested) diff below
-> would be more appropriate. That would then seem to balance with what
-> power_off is doing.
 
-Thanks for the suggestion, I'll make sure to test it appropriately
-before sending v6.
-
-Thanks!
-Geraldo Nascimento
-
-> 
-> Thanks,
-> Robin.
-> 
-> ----->8-----
-> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> index bd44af36c67a..a34a983db16c 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> @@ -160,11 +160,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
->   
->   	guard(mutex)(&rk_phy->pcie_mutex);
->   
-> -	if (rk_phy->pwr_cnt++) {
-> -		return 0;
-> -	}
-> -
-> -	err = reset_control_deassert(rk_phy->phy_rst);
-> +	if (rk_phy->pwr_cnt++)
-> +		err = reset_control_deassert(rk_phy->phy_rst);
->   	if (err) {
->   		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
->   		rk_phy->pwr_cnt--;
-> @@ -181,6 +178,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
->   		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
->   				   PHY_LANE_IDLE_MASK,
->   				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> +	if (rk_phy->pwr_cnt)
-> +		return 0;
->   
->   	/*
->   	 * No documented timeout value for phy operation below,
-> 
+Best regards,
+Krzysztof
 
