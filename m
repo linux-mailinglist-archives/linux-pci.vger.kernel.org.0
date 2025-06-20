@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-30257-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D4EAAE1B33
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 14:50:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90B3AAE1B5E
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:00:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC370176F6E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 12:50:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C505188645C
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 13:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855E028A1C2;
-	Fri, 20 Jun 2025 12:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E385D515;
+	Fri, 20 Jun 2025 13:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hX+LT/oS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOcYavQW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F92021C17D;
-	Fri, 20 Jun 2025 12:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2537030E84D;
+	Fri, 20 Jun 2025 13:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423811; cv=none; b=U1CK81fkGRr36By0xr5aJqXZJEVRh0dMe1xTWKTGK2EPaL7n8s/qcrCSX6zPsciDT/wElOOrJQKAwoQHAzAjnewCAPBxYR2NH8cuTo6dSvLNgRLZ29+t1M5iwVGxw42UQNOrNsSwPlUDWi0BCi/EuJ615uXpntF2fQI3D9WJaQQ=
+	t=1750424441; cv=none; b=ktVKy2iCXNtftalj9L1r82Za53gY3p193errqfQsxmV+USGZ1WWL5rFb38Xuiqb931LshI/fgm8QU93muvaU+jil60kVa8VtAtK/Ne8G7LViQ0F/EL23WRclBrFYxFtIgOdvO+JIzZiYWMSPzkKjxjFJdv02jOk9gQ/zK5Qh56g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423811; c=relaxed/simple;
-	bh=Kwv946pnQhs+0i4tof1+yJjt+sBgm/9UeR7RPmgYJ/0=;
+	s=arc-20240116; t=1750424441; c=relaxed/simple;
+	bh=nZHsfgLmOj5XfHygs8LAFogHnVsH+7ZJB0SIBGXmy6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgGpRLuG0Sg98y3UHihJZgWBPBQix1JvriYQLjaXf7BFx45XqJYIBk5veejMwvIrUYlzfC/G5+ZB2E4vJeABqc/X9MRkKDMWvXRG4PDQlD6Ezraf5Y1PqfDYBmavH/QKJMU4HrtWVWWYdjb5CENd450rq1xIht6uRlvAsl8o1hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hX+LT/oS; arc=none smtp.client-ip=209.85.210.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rd6ADFpGlsuYaq6wvshVYlpfKsJW7L3GxmLnLbPyZ7DYPVKnCOHZwfjFg8v8LhTCNfUgdA3AfC8WNJzdYyerRH7TiKDZDlVPI4uv9aKrhe0LdJlq9iUuFcOLhrSpcOCSPOhDhQIjqETAvfCzrjn+XAgQMcW8Q9F6KS+emBiqgDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOcYavQW; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747e41d5469so1778672b3a.3;
-        Fri, 20 Jun 2025 05:50:09 -0700 (PDT)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so1247896b3a.0;
+        Fri, 20 Jun 2025 06:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750423809; x=1751028609; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750424439; x=1751029239; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0NmLYBG24ijAXHoIQVzJvB+/26hO+EVlKH3Q7Q1ZOAU=;
-        b=hX+LT/oSdsKDTKJ1J5l9T80bZtsNPhvINvRp6pWwN7vZrminiCO13/7Mdpta8ChkrG
-         TuvZu/lvtVbVztNlkJTXUd7wbFk0RnXSaarNjIRb+Z57VxYldiVC/duHWyGFdzStPxWC
-         eB8fwcwoxEDmaUEmCHD6x9tI4B7CA0Mdr8NaSlRffgS3ducxfip6xrnGRtOxAREr38qW
-         eKnCziBUTAPex14+aeoCWrJJgFpN2YeGPKiITfb6+Rk/9Y4ZvyJ3zBG5DmL38PG3+xxR
-         2nrCr0EAZRXrJLhQEqu4PF7B+gC/DFnlh18cdCo9vvS4TYYNelNDHiac4+StoixcrPSb
-         cBHA==
+        bh=oSvBaEOwHs3K5QkOUjfhZZACAj/9HP8HSOlO7m0z0Zg=;
+        b=MOcYavQWd8UyuYd2ffoZBQ2V4ofSSLYT2J3FP0+t4ReTS1tWCdr+RifMPCHUA5FqIt
+         6Rz54BRqZbmbp1IkOkLH5olgxmTWZkvIAYSGoJbZ7z6iL6661d+fbsdS2djLag1Of+Ug
+         wNbrUKNtLd0PRNeHSu745nSZgXRSSnHAsA8ZA5SQDk+69NBCNv76m32FymJW4kWjNOpr
+         VJN017X5YICuFocBSa00+JVYBEidfisDVIvbD/eSFAhya0cBL2N0FDI89bztphs4BCel
+         H0Rm591YibVTl4AP0YTE4DERYrSoK5CKJwc1w0cXxRtu34zbdTlRjiGxGW1N9loJVWEI
+         N6GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750423809; x=1751028609;
+        d=1e100.net; s=20230601; t=1750424439; x=1751029239;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0NmLYBG24ijAXHoIQVzJvB+/26hO+EVlKH3Q7Q1ZOAU=;
-        b=aoW9K1GXWhu9nqi/LgL7YNmtS6auu7Cbc39jpIppdqFjvljLACA5E4OwqPcktGZtq9
-         1XFzuqYnMS+IrJkx8ix2kKiVi820ioR8hXoRmiSHYiSvSyxa0rabyx4Ryiogm/AlCnJx
-         S+2Qw8h8E3e+pBjoKFNsXkHLl6hTgRTarF8+sLDp50FM9GP/D6k2+t7oyTIMDiInqCGE
-         +GGJ+aTqBt2WAxZ/FAAE0bB/3pPZPVKEvivycbIRp4yL7GL2ClwdusvIEOkBY2l4+sGJ
-         1f9Wq15Lpp+c83Z3FAQAe3WMoQm926SorHoPibgwArE0+KUW37RT+qv/VXG4/vupmCr/
-         t6fg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3iX8rvTzvQWVjyvu9Vq4T06PCSqAJEFCREFtmaehsV4mnXqXoSvqob0cNj4hbr4NFDA9rBJnR3WNA8l0=@vger.kernel.org, AJvYcCVG1du2jf6JoKP+rBjIj/ocStOP7ZoR2J1Ep8//CdYuGYtwpbsC4UXoiHKFgYb72BU8R+l9PbhaxuaK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6uZqjvugWBh/gU1OTKrKIx5qH5LmHFBh3IW40noJ9ro54rtnK
-	CvwkNDsjF0y+PURqLGB5YJaz4lu57UzqpS+nckBE43sayhx6VZq+6TOc
-X-Gm-Gg: ASbGnculhZyLgYutylNeGqddDBKO7XzRyNxLtvJDriLU0/fkdDv2SFzhre1MLy3WzL2
-	N51n5qICmjOz42t4/ZXRhi5eTUBvklXzjFjW/kXdEDzuHdzHA2OG6XawtDv8uxpkIcSNkipJun+
-	rW3W0Yx6K7DVF8sKdvsJk8uutA86WrD4FtVln1N6yin+icEhue1SuLLRA26bZcnFA6cXSIUHAsO
-	hHhkzCPpPrw1jWd0S2ri5T0K0INW2HVO7H/0wUd2AgO4KsHFW2xnLXgBUQ09f+SR4lSgPUEQUD1
-	MiP+xPoFwdClR75NBdbTOcrYehQvOOIW8kLVA1tglma/JQ5Ygg==
-X-Google-Smtp-Source: AGHT+IFHPYDIR4or2vPqPU1VUvmiA2iVM69SFwDRvDzb2cK3GvAtLoyB4Hkk467Mv/TfqKSO9XUqHw==
-X-Received: by 2002:a05:6a00:1a88:b0:748:2ac2:f8c3 with SMTP id d2e1a72fcca58-7490d6bf6d6mr4497789b3a.24.1750423809249;
-        Fri, 20 Jun 2025 05:50:09 -0700 (PDT)
+        bh=oSvBaEOwHs3K5QkOUjfhZZACAj/9HP8HSOlO7m0z0Zg=;
+        b=BKoPCBwXfFWa1cPjJuwui+sKbUROxUQqdPm26JsFaxT3HyYcwf/kuRaEjXFqaoUR33
+         X7NmJ772w1rpP1rk5RklIaByHDsbb559FedNcgN8ZolzLmVxmL9UAyCsdE7LLqo9GPC7
+         SJwY7gZoaT49anrm8lr6fbOoSbxKtG+lMgv3AUfSnrN5Ik1MLUA0OqbbT/xnx+81vYIz
+         AGW8qyChBuAHk/TBjbopZBQf3MECojYRf7uqOsYmbS8fy/BaSGZ/DJ5L4DEkIqSPkKQp
+         LRmTzFuRBop9maJLMaBllj68ep3MpoKa+Y3txefkXTUuSS+ybZCAjUYSEJSdsR7GfWGq
+         xkJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsReTFN6V3sJ1WNBVT3HKA5OKQLLmoBjFsvStr8+Ima4+tSaLyKuvCcnh81WfDhdb5/IqCGKAALHpe@vger.kernel.org, AJvYcCWER98QQ2o4jZ4Z1aX4V+vQFTi5ezTOKG8CQBdyVYfTUs15gAqXq/ZZzhlIJnGUQuKFzApfqQoQU1/no2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/SdouvQY4dTIaE7i86WM34Ip4tAAfHgOfJ+SBtUEiILS7cKp+
+	W58vVCOzll6jdbksCgpdpC6ke4GJD8wuo2hx4F90iQOHRD3aGpqiIuNw
+X-Gm-Gg: ASbGncssir2kIozFaLze2DhVdBKcELqS2wNCiYyWKbpbMoi2LELyrroKGhttV0jnBHK
+	c7eD4l8bNV8/tZ34u4UELwGX3+atFpQ4mJ5T0107NmbWgDcvU7Sg650W7evxyYPk/spzTAxvv/D
+	qem3hSyD31MozkLnXx9Dhvq91LXWvtIBDV0LmUFWiFRcNLhCovaiAOFKQHg+v8w6MSCRQzzZSTZ
+	ScbOw9r229v5hWPooWMX23cLMe4m0YzY/P3wvc9ifrAF3mARlYEHpkpi8r7QPm1nG02UsaieVfB
+	h7OYNH8nYCsFSAcvASiLu2/xtM3AGorFdpZg5JE3K/N+juB+aw==
+X-Google-Smtp-Source: AGHT+IH769Yhqpe3IGCT87lyXbykB6q9+9qjkxaYFu3oBfVpD+WnzrOHIxyf03fBlIyFkkLBax0GxA==
+X-Received: by 2002:a05:6a20:748c:b0:218:5954:1293 with SMTP id adf61e73a8af0-22026de98cfmr5302329637.34.1750424437536;
+        Fri, 20 Jun 2025 06:00:37 -0700 (PDT)
 Received: from geday ([2804:7f2:800b:cab9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a69bb99sm1950566b3a.155.2025.06.20.05.50.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a69b973sm1994049b3a.157.2025.06.20.06.00.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 05:50:07 -0700 (PDT)
-Date: Fri, 20 Jun 2025 09:50:01 -0300
+        Fri, 20 Jun 2025 06:00:36 -0700 (PDT)
+Date: Fri, 20 Jun 2025 10:00:30 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: Robin Murphy <robin.murphy@arm.com>
 Cc: linux-rockchip@lists.infradead.org,
@@ -86,11 +86,12 @@ Cc: linux-rockchip@lists.infradead.org,
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
-Message-ID: <aFVY-YtSTxUpJkIa@geday>
+Message-ID: <aFVbbnl9UscGQoqC@geday>
 References: <cover.1749833986.git.geraldogabriel@gmail.com>
  <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
  <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
  <aFVTdYWxuq9YzVQR@geday>
+ <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,55 +100,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFVTdYWxuq9YzVQR@geday>
+In-Reply-To: <413e7ed5-fc4d-4e4e-9cb4-234c41db267b@arm.com>
 
-On Fri, Jun 20, 2025 at 09:26:36AM -0300, Geraldo Nascimento wrote:
-> On Fri, Jun 20, 2025 at 01:04:46PM +0100, Robin Murphy wrote:
-> > On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
-> > > Current code enables only Lane 0 because pwr_cnt will be incremented
-> > > on first call to the function. Use for-loop to enable all 4 lanes
-> > > through GRF.
-> > 
-> > If this was really necessary, then surely it would also need the 
-> > equivalent changes in rockchip_pcie_phy_power_off() too?
-> > 
-> > However, I'm not sure it *is* necessary - the NVMe on my RK3399 board 
-> > happily claims to be using an x4 link, so I stuck a print of inst->index 
-> > in this function, and sure enough I do see it being called for each 
-> > instance already:
-> > 
-> > [    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
-> > [    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
-> > [    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
-> > [    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
-> > 
+On Fri, Jun 20, 2025 at 01:47:35PM +0100, Robin Murphy wrote:
+> Ah, I put that print at the top of the function - on second look now I
+> see that there's an awkward mix of per-lane and global data, and pwr_cnt
+> is actually the latter. Sure enough, moving the print past that check I
+> only see it once.
+
+Hi Robin, thanks for re-testing and no worries.
+
 > 
-> Hi Robin, and thanks for caring, it's excellent to rely on your
-> extensive expertise on ARM in general and RK3399 specifically!
-> 
-> However, on my board I'm positive it does not work without proposed
-> patch and I get stuck with x1 link without it.
-> 
-> There are currently very similar patches applied downstream to Armbian
-> and OpenWRT so at least I'm confident that is not only my board which is
-> quirky and other people experienced the same problem.
-> 
-> Thanks,
-> Geraldo Nascimento
+> However, I still don't think blindly enabling all the lanes is the right
+> thing to do either; I'd imagine something like the (untested) diff below
+> would be more appropriate. That would then seem to balance with what
+> power_off is doing.
 
-Hello again Robin,
+Thanks for the suggestion, I'll make sure to test it appropriately
+before sending v6.
 
-for reference, here's the commit for OpenWRT, originally from Armbian:
-https://github.com/openwrt/openwrt/commit/2dc9801fe81ab3c092d2ca75e4c63f8d5eea46f5
-
-Please note that the author of that commit specifically mentions a warm
-reboot is needed to trigger the "stuck on x1" behavior. That author took
-a different strategy than me, just reordering instead of using for-loop.
-I'm open for different strategies, but the report is real I assure you.
-
+Thanks!
 Geraldo Nascimento
 
 > 
-> > Thanks,
-> > Robin.
+> Thanks,
+> Robin.
+> 
+> ----->8-----
+> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> index bd44af36c67a..a34a983db16c 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> @@ -160,11 +160,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+>   
+>   	guard(mutex)(&rk_phy->pcie_mutex);
+>   
+> -	if (rk_phy->pwr_cnt++) {
+> -		return 0;
+> -	}
+> -
+> -	err = reset_control_deassert(rk_phy->phy_rst);
+> +	if (rk_phy->pwr_cnt++)
+> +		err = reset_control_deassert(rk_phy->phy_rst);
+>   	if (err) {
+>   		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
+>   		rk_phy->pwr_cnt--;
+> @@ -181,6 +178,8 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+>   		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+>   				   PHY_LANE_IDLE_MASK,
+>   				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+> +	if (rk_phy->pwr_cnt)
+> +		return 0;
+>   
+>   	/*
+>   	 * No documented timeout value for phy operation below,
+> 
 
