@@ -1,48 +1,45 @@
-Return-Path: <linux-pci+bounces-30268-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30269-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49452AE1FA0
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 17:59:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63C91AE1F9E
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 17:59:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92F303AB4AE
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:56:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82DE87AD382
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:58:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0C12DFF2F;
-	Fri, 20 Jun 2025 15:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 699E82DCC0B;
+	Fri, 20 Jun 2025 15:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMluZ3go"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="J4fitMSV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28952DA74B;
-	Fri, 20 Jun 2025 15:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D45B292936;
+	Fri, 20 Jun 2025 15:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435016; cv=none; b=qZ5QJritlJMBkVd60c+Ja387NGt7/PcHRLid7pLMwfyhiryJr3exjOnNQCJGce0MyAq1wTaC3MF079NfA17vgd+AicsFAsUkgS0HbW5bYDPlXPfMxqF0F7W/ugDL499AwlHeRoFzcqoZO5GrgtX3bhA6wHhdAK9xQVWl4adzb7A=
+	t=1750435163; cv=none; b=RGvCvpyq+1NZ10q423ekhytwpnvj1mvMC5fo4yjFdwHBMkUfYZswSWS2sdrFOMSEm0LQBUQMDTpQ+vkbeuNgn+1hZhpEGgL+1DOXO8VTVl+k8UjGoghR7DbQe9RqBli8+H9fPV+n3BN/zkuwdun3hmmecK7uhXnAd+KPOL/yEyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435016; c=relaxed/simple;
-	bh=0/Yq00Po9hqFh21kg/bqFD/QAGJ5CVo5hl9dHMq0V5o=;
+	s=arc-20240116; t=1750435163; c=relaxed/simple;
+	bh=YWywS6coQ5SLZX7nQ9wv5WL8S0zIjuBiMyIx4hdFcZU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aTxu2mhVP/FtnbE8PM0ldkBPXTi0basPeGUYcvL3N6XYLvfYc8cDpOI+CGYMAWiQG9xmygM/arUMWH1g7ePHOXLpmNQH8WxTBqR3Fq7NpgGKuFgSKqev4Bz7poTJ7JlsS7SCcXkUx6eQ4iNEJypP5SknjjSiZEW6b0e/bJn8M/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMluZ3go; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFB9C4CEEF;
-	Fri, 20 Jun 2025 15:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750435016;
-	bh=0/Yq00Po9hqFh21kg/bqFD/QAGJ5CVo5hl9dHMq0V5o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dMluZ3goj5wb11sMDmc3+xCKL1yqf1bsRZI3DxM7uG1KXtXt6C7MAqktYANFHHSuf
-	 Frgwrq+4RZBVltnb5P6MkMmrn1V8fD0OxVdrVTSfZT+rQG2Imxj5XevWyFkdZCmiY+
-	 ch/RwVduOAGedgkwB7gIRW0jutMz12GvWKhtnHqQF7Q273p3a1Mxw09XmodM6IdZWf
-	 mBLzMLbaMt7KS9Qt1zJoyPXRZH7OYcp3YYF2sL4h+l/1t5V4l2yjFI0QsyU9eIPJGS
-	 URhtkW63RC9+TxOytsaLyDgSj5zAc1DJw6+22JfmondzKh0LMan4WBUMSolFC4+7NY
-	 9S8CfRC6cet/w==
-Message-ID: <b3462e88-e24a-43d9-8437-b6d378a3b5d3@kernel.org>
-Date: Fri, 20 Jun 2025 10:56:53 -0500
+	 In-Reply-To:Content-Type; b=MBCvkfAgnSFl9EJimrgHAH0yZV+CEKpQRNpYpcUuPmKuM3WKDA+Mz1Xam3AeQ/3HyQpHkiYZwnWOStOqkqdOO+oSJLfuDHcJxz8jc7yAc3FKYWTgoZc2H4Qr/ptTA3uHG71PVxmLICqpoRJDgTUguYiCcvQHKLjvzspyZVVISJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=J4fitMSV; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=0zrM8W2TbSsSIHvT1Fq4IVGHy7WN7Km4fk5n2KCsDZg=;
+	b=J4fitMSVfCyFl9sFMsejJfExQJjX5ak/mbOya/qJbysx2L2x6nfErZb0HeEn2t
+	4u1d8czktvXwNmZTtXizOgBTIs59ATRW7ZbUk2LowXejD5t/XYtNA2K9GobExCeh
+	pOIIK2ouvF0xt8SkVj2G249iaVqK5g0eiYGF+rwejVsLQ=
+Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCnzAA9hVVoKwqyAA--.25131S2;
+	Fri, 20 Jun 2025 23:58:54 +0800 (CST)
+Message-ID: <4bfc8c05-c6e6-4246-960c-ee5802840523@163.com>
+Date: Fri, 20 Jun 2025 23:58:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,147 +47,84 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] fbcon: Make a symlink to the device selected as
- primary
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250620024943.3415685-1-superm1@kernel.org>
- <20250620024943.3415685-8-superm1@kernel.org>
- <a22ecd33-460d-41bf-920c-529645d173e3@suse.de>
+Subject: Re: [PATCH 2/2] PCI: rockchip: Remove redundant PCIe message routing
+ definitions
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
+ shawn.lin@rock-chips.com, heiko@sntech.de, robh@kernel.org,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620154202.GA1292011@bhelgaas>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <a22ecd33-460d-41bf-920c-529645d173e3@suse.de>
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250620154202.GA1292011@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:QCgvCgCnzAA9hVVoKwqyAA--.25131S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWw1DWF4xAF4xCF1kCrWfXwb_yoW5Jw4rpr
+	WUXayFyF48Jr43ua4aqan3XF47XanrtF4jgr1I9w4fKF1fWryrWa4Yvr45Grn8XrW8Xrn2
+	k390ka4DKFZ8J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UntxhUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxVyo2hVgqRJRAAAsJ
 
-On 6/20/25 3:47 AM, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 20.06.25 um 04:49 schrieb Mario Limonciello:
->> From: Mario Limonciello <mario.limonciello@amd.com>
+
+
+On 2025/6/20 23:42, Bjorn Helgaas wrote:
+> On Sat, Jun 07, 2025 at 11:49:13PM +0800, Hans Zhang wrote:
+>> The Rockchip driver contained duplicated message routing and INTx code
+>> definitions (e.g., ROCKCHIP_PCIE_MSG_ROUTING_TO_RC,
+>> ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA). These are already provided by the
+>> PCI core in drivers/pci/pci.h as PCIE_MSG_TYPE_R_RC and
+>> PCIE_MSG_CODE_ASSERT_INTA, respectively.
 >>
->> Knowing which device is the primary device can be useful for userspace
->> to make decisions on which device to start a display server.
+>> Remove the driver-specific definitions and use the common PCIe macros
+>> instead. This aligns the driver with the PCIe specification and reduces
+>> maintenance overhead.
 >>
->> Create a link to that device called 'primary_device'.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
 >> ---
->>   drivers/video/fbdev/core/fbcon.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>   drivers/pci/controller/pcie-rockchip.h | 14 --------------
+>>   1 file changed, 14 deletions(-)
 >>
->> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/ 
->> core/fbcon.c
->> index 2df48037688d1..46f21570723e5 100644
->> --- a/drivers/video/fbdev/core/fbcon.c
->> +++ b/drivers/video/fbdev/core/fbcon.c
+>> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+>> index 5864a20323f2..12bc8da59d73 100644
+>> --- a/drivers/pci/controller/pcie-rockchip.h
+>> +++ b/drivers/pci/controller/pcie-rockchip.h
+>> @@ -215,20 +215,6 @@
+>>   #define RC_REGION_0_TYPE_MASK			GENMASK(3, 0)
+>>   #define MAX_AXI_WRAPPER_REGION_NUM		33
+>>   
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_TO_RC		0x0
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ADDR		0x1
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ID		0x2
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_BROADCAST		0x3
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX		0x4
+>> -#define ROCKCHIP_PCIE_MSG_ROUTING_PME_ACK		0x5
+>> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA		0x20
+>> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTB		0x21
+>> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTC		0x22
+>> -#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTD		0x23
+>> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA		0x24
+>> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTB		0x25
+>> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTC		0x26
+>> -#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTD		0x27
 > 
-> You cannot rely on this, as fbcon might be disabled entirely.
-
-So the other idea I had was to have a new file boot_console.
-
-How would you feel about this instead (or even in addition to the symlink)?
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d5..8535950b4c0f 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
-  #include <linux/msi.h>
-  #include <linux/of.h>
-  #include <linux/aperture.h>
-+#include <asm/video.h>
-  #include "pci.h"
-
-  #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
-         NULL,
-  };
-
-+static ssize_t boot_console_show(struct device *dev, struct 
-device_attribute *attr,
-+                                char *buf)
-+{
-+       return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
-+}
-+static DEVICE_ATTR_RO(boot_console);
-+
-  static ssize_t boot_vga_show(struct device *dev, struct 
-device_attribute *attr,
-                              char *buf)
-  {
-@@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
-
-  static struct attribute *pci_dev_dev_attrs[] = {
-         &dev_attr_boot_vga.attr,
-+       &dev_attr_boot_console.attr,
-         NULL,
-  };
-
-@@ -1710,6 +1719,9 @@ static umode_t pci_dev_attrs_are_visible(struct 
-kobject *kobj,
-         if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
-                 return a->mode;
-
-+       if (a == &dev_attr_boot_console.attr && pci_is_display(pdev))
-+               return a->mode;
-+
-         return 0;
-  }
-
-
+> Thanks for doing this!  In fact, these definitions are not only
+> redundant, they're not even used at all.
 > 
-> Best regards
-> Thomas
+>>   #define ROCKCHIP_PCIE_MSG_ROUTING_MASK			GENMASK(7, 5)
+>>   #define ROCKCHIP_PCIE_MSG_ROUTING(route) \
+>>   	(((route) << 5) & ROCKCHIP_PCIE_MSG_ROUTING_MASK)
 > 
->> @@ -2934,7 +2934,7 @@ static void fbcon_select_primary(struct fb_info 
->> *info)
->>   {
->>       if (!map_override && primary_device == -1 &&
->>           video_is_primary_device(info->device)) {
->> -        int i;
->> +        int i, r;
->>           printk(KERN_INFO "fbcon: %s (fb%i) is primary device\n",
->>                  info->fix.id, info->node);
->> @@ -2949,6 +2949,10 @@ static void fbcon_select_primary(struct fb_info 
->> *info)
->>                      first_fb_vc + 1, last_fb_vc + 1);
->>               info_idx = primary_device;
->>           }
->> +        r = sysfs_create_link(&fbcon_device->kobj, &info->device->kobj,
->> +                      "primary_device");
->> +        if (r)
->> +            pr_err("fbcon: Failed to link to primary device: %d\n", r);
->>       }
->>   }
->> @@ -3376,6 +3380,10 @@ void __init fb_console_init(void)
->>   void __exit fb_console_exit(void)
->>   {
->> +#ifdef CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY
->> +    if (primary_device != -1)
->> +        sysfs_remove_link(&fbcon_device->kobj, "primary_device");
->> +#endif
->>   #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
->>       console_lock();
->>       if (deferred_takeover)
-> 
+> And neither are these ROUTING and CODE definitions.
+
+Dear Bjorn,
+
+Yes, this driver has too many unused definitions. I can delete the other 
+unused definitions next. For this series, I just delete the similar 
+macro definitions in drivers/pci/pci.h.
+
+Best regards,
+Hans
 
 
