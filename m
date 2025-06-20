@@ -1,114 +1,148 @@
-Return-Path: <linux-pci+bounces-30224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3459AAE1170
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 04:55:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4713AE1185
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 05:04:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9730F7ADBAF
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 02:54:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58F564A329C
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 03:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521221D7E41;
-	Fri, 20 Jun 2025 02:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368D681ACA;
+	Fri, 20 Jun 2025 03:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/2JbYqp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhA5bwO6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E5F19CCFA;
-	Fri, 20 Jun 2025 02:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1236E101EE
+	for <linux-pci@vger.kernel.org>; Fri, 20 Jun 2025 03:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388140; cv=none; b=qwWAFFlG0ULT17kDEix0D8s5GL0tGzqsliJIGpP7i1MpSBRtigMc63a/ApgL7Q4SfqxqnpwRcHtikE/pTmLD3WD8S3RPmvzRtEWx9uJokrMz+Pn5vJHH+mo7Ltzv57jdddqnGzMRkoH21yLr5WTiIdxQ1vWxm148IbH+UBIc1DU=
+	t=1750388677; cv=none; b=bpOUAZ/bsZQMThvPuxqgePxwu/4o1jeTHJtmSJaCURHj9wKsgEBrXpGf5LkrX504fPw94t1XaPsM6JxG+6dyoZBg/cpTQcyWrrVOZUn/m6hQqNxSy2A71O6kY38xyYFsNagPoSivOtWyeQjQcNTP6SKoNt/XpKrJ+hyjZFjxoFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388140; c=relaxed/simple;
-	bh=jPA1olMTWa2BHo+uYQO/iSse65JiJVx+iRIUnTVzmXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aw9BwImhx0AGBGIVQodFk8zOSsyW2qrHM0qWC6kdjQw4OQmsjzbZd0KkDWj10Q/xNLwVP2XFBhOI9T7r6p4UW6wjz7/cPddJqrbMHhNIWa2fI0V541/t366WWx8Mn9l6J4FVbfrGZu8T2FngWvDFomQnDTIiloEJAI0AyqPMgf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/2JbYqp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3395CC4CEF1;
-	Fri, 20 Jun 2025 02:55:39 +0000 (UTC)
+	s=arc-20240116; t=1750388677; c=relaxed/simple;
+	bh=0zzSsOaaVW+6Rladm+VrtEW+Uxxwfj2qRoLW/MhT43s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VIvZU2619+AWxgoubK7B0yOX0bPo99JEZ4Y5jB7JTR96o71CCHbR4pelMGWLdYG9U8Uq0lAqgOqP4F5vwXXR25fJ9tWJbc7X0mIIpgX0sr0ZADM/Q/4bZ6pWh6oONsQQf6MiGEjcAwtyVrjaynNENWr4H10F6MnqbtXvLI4A01Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhA5bwO6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2191C4CEEA;
+	Fri, 20 Jun 2025 03:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750388139;
-	bh=jPA1olMTWa2BHo+uYQO/iSse65JiJVx+iRIUnTVzmXE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g/2JbYqpITLCH8No1hTY0nXGIVliJRB4bNMa4k4jOBHA2r70pyqDMJhRYwMpWqbie
-	 Ni+6KhrhRcILuA80FzO5mpoSb3ERQ2DoriceQkXTvH7pXahAR3X45HncTHKWrk7DkC
-	 nK1xclewQx5cmd02d20k/QqvOrkSlU6v1kTkhxugZQdJ/tUOp9ZI+QOOG/5QH5JKQ9
-	 A+DwaIPynAbgIrT/5JI9WSsWP3AEAXqvCHfdnOS3O0IwFEAhTIFd7PYJecaWLAyBXT
-	 Ouf0FUXKFn81oARarYLkiuExripDb2oV5LoPW8tbSh+y7PHE+VHIqKhsEE8N1FTepD
-	 4SjQKQzsRQxMQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
-Cc: linux-pm@vger.kernel.org,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on device unplug
-Date: Thu, 19 Jun 2025 21:55:35 -0500
-Message-ID: <20250620025535.3425049-3-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620025535.3425049-1-superm1@kernel.org>
-References: <20250620025535.3425049-1-superm1@kernel.org>
+	s=k20201202; t=1750388676;
+	bh=0zzSsOaaVW+6Rladm+VrtEW+Uxxwfj2qRoLW/MhT43s=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=FhA5bwO67Cdtq+2B7kb3uiwUoOuieGxjnOOK7iALgbsp2HtVqDeQOdj2nzYUMlfBS
+	 2IZEtq2f39hbe3reaa9UyULvk6qwMX5caInhTiw/hSRBBPIgfaEWZbwGugM37lN3cs
+	 4JxEX85SEdf9rcl2YzYWTVOFY9IVcsUD6ATXBy6ukUgEfWgVmgJjo/YTMJmi8BMNy0
+	 nIY66kgwGTMJ9exaE62V8GV9G4EOV4H8eGBTuEbjH5lv9JflFhAf+aV++T00dUVX8T
+	 UsugUbfU9LfrNSZYkhTI90NUEorqbRRDgdITAQsVTFl+xK/aF/OKey5hxm7PAZYXrx
+	 ezMLWyMugnT/A==
+Message-ID: <c4fcff25-5cc0-4f53-96ee-076651c13315@kernel.org>
+Date: Fri, 20 Jun 2025 12:04:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: endpoint: Fix configfs group removal on driver
+ teardown
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Niklas Cassel <cassel@kernel.org>
+References: <20250617010737.560029-1-dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250617010737.560029-1-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On 6/17/25 10:07, Damien Le Moal wrote:
+> An endpoint driver configfs attributes group is added to the
+> epf_group list of struct pci_epf_driver pci_epf_add_cfs() but not
+> removed from this list when the attribute group is unregistered with
+> pci_ep_cfs_remove_epf_group(). Add the missing list_del_init() call in
+> that function to correctly remove the attribute group from the driver
+> list.
+> 
+> Furthermore, doing a list_del() on the epf_group field of struct
+> pci_epf_driver in pci_epf_remove_cfs() is not correct as this field is a
+> list head, not a list entry, and triggers a KASAN warning:
 
-When a USB4 dock is unplugged the PCIe bridge it's connected to will
-remove issue a "Link Down" and "Card not detected event". The PCI core
-will treat this as a surprise hotplug event and unconfigure all downstream
-devices.
+Ping ?
 
-pci_stop_bus_device() will call device_release_driver(). As part of device
-release sequence pm_runtime_put_sync() is called for the device which will
-decrement the runtime counter to 0. After this, the device remove callback
-(pci_device_remove()) will be called which again calls pm_runtime_put_sync()
-but as the counter is already 0 will cause an underflow.
+> 
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in pci_epf_remove_cfs+0x17c/0x198
+> Write of size 8 at addr ffff00010f4a0d80 by task rmmod/319
+> 
+> CPU: 3 UID: 0 PID: 319 Comm: rmmod Not tainted 6.16.0-rc2 #1 NONE
+> Hardware name: Radxa ROCK 5B (DT)
+> Call trace:
+> show_stack+0x2c/0x84 (C)
+> dump_stack_lvl+0x70/0x98
+> print_report+0x17c/0x538
+> kasan_report+0xb8/0x190
+> __asan_report_store8_noabort+0x20/0x2c
+> pci_epf_remove_cfs+0x17c/0x198
+> pci_epf_unregister_driver+0x18/0x30
+> nvmet_pci_epf_cleanup_module+0x24/0x30 [nvmet_pci_epf]
+> __arm64_sys_delete_module+0x264/0x424
+> invoke_syscall+0x70/0x260
+> el0_svc_common.constprop.0+0xac/0x230
+> do_el0_svc+0x40/0x58
+> el0_svc+0x48/0xdc
+> el0t_64_sync_handler+0x10c/0x138
+> el0t_64_sync+0x198/0x19c
+> ...
+> 
+> Remove this list_del() call from pci_epf_remove_cfs() and replace it
+> with a warning if the epf_group list is not empty.
+> 
+> Fixes: ef1433f717a2 ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-ep-cfs.c   | 1 +
+>  drivers/pci/endpoint/pci-epf-core.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> index d712c7a866d2..63876537e7dc 100644
+> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> @@ -691,6 +691,7 @@ void pci_ep_cfs_remove_epf_group(struct config_group *group)
+>  	if (IS_ERR_OR_NULL(group))
+>  		return;
+>  
+> +	list_del_init(&group->group_entry);
+>  	configfs_unregister_default_group(group);
+>  }
+>  EXPORT_SYMBOL(pci_ep_cfs_remove_epf_group);
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 577a9e490115..167dc6ee63f7 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -338,7 +338,7 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
+>  	mutex_lock(&pci_epf_mutex);
+>  	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
+>  		pci_ep_cfs_remove_epf_group(group);
+> -	list_del(&driver->epf_group);
+> +	WARN_ON(!list_empty(&driver->epf_group));
+>  	mutex_unlock(&pci_epf_mutex);
+>  }
+>  
 
-This behavior was introduced in commit 967577b062417 ("PCI/PM: Keep runtime
-PM enabled for unbound PCI devices") to prevent asymmetrical get/put from
-probe/remove, but this misses out on the point that when releasing a driver
-the usage count is decremented from the device core.
 
-Drop the extra call from pci_device_remove().
-
-Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3:
- * git archeaology
- * Drop call alltogether, not just for the device disconnected case
-v2:
- * Use pci_dev_is_disconnected()
-v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
----
- drivers/pci/pci-driver.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index b78b98133e7df..63f1cb11906ad 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -478,9 +478,6 @@ static void pci_device_remove(struct device *dev)
- 	pci_dev->driver = NULL;
- 	pci_iov_remove(pci_dev);
- 
--	/* Undo the runtime PM settings in local_pci_probe() */
--	pm_runtime_put_sync(dev);
--
- 	/*
- 	 * If the device is still on, set the power state as "unknown",
- 	 * since it might change by the next time we load the driver.
 -- 
-2.43.0
-
+Damien Le Moal
+Western Digital Research
 
