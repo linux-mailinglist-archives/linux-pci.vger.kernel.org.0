@@ -1,115 +1,169 @@
-Return-Path: <linux-pci+bounces-30251-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26543AE1A70
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 14:04:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06FE3AE1ABE
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 14:14:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7663F5A5482
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 12:04:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4458167D49
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 12:14:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2782289E21;
-	Fri, 20 Jun 2025 12:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F086E28AAE3;
+	Fri, 20 Jun 2025 12:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U/rLwPrj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B143921C18E;
-	Fri, 20 Jun 2025 12:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48F628315F;
+	Fri, 20 Jun 2025 12:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421092; cv=none; b=HY3krCgwKawvYNQqH/8hRpmUBMmdbmyu5ci0IvCVyWDABTzHB5Fx0OS+VBcHdZVjrjerRhb+F0kGJg0YHOTpX9Pl8oFkaGHpGwUinKpEvUaxo1UjBNAa6LaLLHCrx6bJdMkvzMUROLOcjepvorGDylirs6ZAok+zy42o3vxPjWQ=
+	t=1750421672; cv=none; b=N4gpH7Aeq5sa+AKTgUm6VEcvgCT5HNa1GgmflBJN/7YOO5QcGECS/QJW7ErD6GSDmsdnvSgCyQIL+SK/orAOPZqEev4oCegMo8xwtd6g3+Pu9o+oaI455AkowYcWMEl6RjdGi/zWqFUQvQdd7CLV/BPD7+YT6w6gN8FB3fHOII8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421092; c=relaxed/simple;
-	bh=tCIXfMiKQccXCO9quG8rjG7WtEugWSAaDnbrbxXHMoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ASd51WVNxFtFKr3X9gptizu7i9eVm7ul1rl3hHtt5rblaqi6luztyd2A0moJchTJcIfj8hCGUxJFAXo9qR57Q9gx8Tp7UKRZqQQuARdDu5RnAHShk2GbpHxwwzSCj/8nXboCX7aVg+0InUjz1fEFjGrgBabjZstbCQ+2YtEGRe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E59D106F;
-	Fri, 20 Jun 2025 05:04:30 -0700 (PDT)
-Received: from [192.168.1.102] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD2173F58B;
-	Fri, 20 Jun 2025 05:04:47 -0700 (PDT)
-Message-ID: <4c2c9a15-50bc-4a89-b5fe-d9014657fca7@arm.com>
-Date: Fri, 20 Jun 2025 13:04:46 +0100
+	s=arc-20240116; t=1750421672; c=relaxed/simple;
+	bh=akZkLO9HpvybIYtKa+1huJIJ17R706HAo3uzRMtFzvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKBfeAqu5HdC3E1lSnu1D1HV1AzA3g+rFPR6dwwZI+9XJtPlNmhKyMwY7hReH6hbRVSnrO6UO/sF5XROJ8otH6iNK5UKaojrVdQv5QhHL0pXobTlRnbzO/MiMhqIORdCFeQYtrhU0NY52vZADz9DkVjHjicf1DqaDKBC4Har6cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U/rLwPrj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750421671; x=1781957671;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=akZkLO9HpvybIYtKa+1huJIJ17R706HAo3uzRMtFzvc=;
+  b=U/rLwPrj7I1Pa5ktruUTvnVkMepdegg9CTbpT65m2tRb419RK5dlwa3g
+   LFTe0uIxhUPTJEhktofZ+d5USNtTY7DAY8xD6RwO4rMuI2h5CQDxxRQtb
+   tA7fV46UJXigefZiTFvQ1QL+WIruyXxlHcqAQRMQT+xYvgdeGXzb0rOO2
+   DZtqDYGt/nF1wJdz/GSUfON0QA8kIptlLItQcwp7JFAjRWKnZWXmGSfzl
+   fJBbiYbDLw2IIeUOUPFhF/wVYveu89T0AYf7fZrJeUZIVa0IsSkCA/fQo
+   hJhknuTdQY0qY7IV1x7oHGGptiS1qPnkX9K0xHb7x5QQnoOXyd6zrILhy
+   A==;
+X-CSE-ConnectionGUID: TY+9sjGMSOuBryI4+1kZnQ==
+X-CSE-MsgGUID: vviToT46QHW2DssptQoLIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52613099"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="52613099"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:14:30 -0700
+X-CSE-ConnectionGUID: 86AhDx93Q+CJrNlp9wdJzw==
+X-CSE-MsgGUID: vVVico3cSyel5glwcJaBig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="150495286"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:14:26 -0700
+Date: Fri, 20 Jun 2025 15:14:23 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Denis Benato <benato.denis96@gmail.com>, mahesh@linux.ibm.com,
+	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
+	aravind.iddamsetty@linux.intel.com,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aFVQn5N1srBuDkuP@black.fi.intel.com>
+References: <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+ <CAJZ5v0h9--jFVBtQ5F7Gee3Cy8P3TeSLdiHEWykQ=EsZdoffmg@mail.gmail.com>
+ <aDnpfKvLwRZsKxhH@black.fi.intel.com>
+ <CAJZ5v0gjA2B4AnaYpfYpaNDo49k4LM2FGSrPFFuOCJ62bCMmkA@mail.gmail.com>
+ <aEBpdwMfxp5M4Hxr@black.fi.intel.com>
+ <CAJZ5v0hhoh0Fqnph6ZcbyZBj1Wp0t8UqnLr27TAVW31ZyKPL3Q@mail.gmail.com>
+ <aEGDL0IF10QX3Abr@black.fi.intel.com>
+ <CAJZ5v0hJbKEJKRKv67bcQaHbL7h5e_WDGNPg4BA_P4JY-mk_nw@mail.gmail.com>
+ <aEg2vzf6tn4j96LG@black.fi.intel.com>
+ <CAJZ5v0iiPVWpWdAHJkzWCHGrUj5i5b8nN9G2_CAWUarc3Ryskg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 3/4] phy: rockchip-pcie: Enable all four lanes
-To: Geraldo Nascimento <geraldogabriel@gmail.com>,
- linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rick wertenbroek <rick.wertenbroek@gmail.com>,
- linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1749833986.git.geraldogabriel@gmail.com>
- <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <ce661babb3e2f08c8b28554ccb5508da503db7ba.1749833987.git.geraldogabriel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iiPVWpWdAHJkzWCHGrUj5i5b8nN9G2_CAWUarc3Ryskg@mail.gmail.com>
 
-On 2025-06-13 6:03 pm, Geraldo Nascimento wrote:
-> Current code enables only Lane 0 because pwr_cnt will be incremented
-> on first call to the function. Use for-loop to enable all 4 lanes
-> through GRF.
-
-If this was really necessary, then surely it would also need the 
-equivalent changes in rockchip_pcie_phy_power_off() too?
-
-However, I'm not sure it *is* necessary - the NVMe on my RK3399 board 
-happily claims to be using an x4 link, so I stuck a print of inst->index 
-in this function, and sure enough I do see it being called for each 
-instance already:
-
-[    1.737479] phy phy-ff770000.syscon:pcie-phy.1: power_on 0
-[    1.738810] phy phy-ff770000.syscon:pcie-phy.2: power_on 1
-[    1.745193] phy phy-ff770000.syscon:pcie-phy.3: power_on 2
-[    1.745196] phy phy-ff770000.syscon:pcie-phy.4: power_on 3
-
-Thanks,
-Robin.
-
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
->   drivers/phy/rockchip/phy-rockchip-pcie.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
+On Tue, Jun 10, 2025 at 03:53:10PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Jun 10, 2025 at 3:44 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > On Thu, Jun 05, 2025 at 02:26:05PM +0200, Rafael J. Wysocki wrote:
+> > > On Thu, Jun 5, 2025 at 1:44 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > On Wed, Jun 04, 2025 at 08:19:34PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Wed, Jun 4, 2025 at 5:43 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > On Fri, May 30, 2025 at 07:49:26PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > On Fri, May 30, 2025 at 7:23 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > > > On Fri, May 23, 2025 at 05:23:10PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > > > On Wed, May 21, 2025 at 1:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > > > > > On Wed, May 21, 2025 at 10:54 AM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > > > > > > On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wrote:
+> > > > > > > > > > > > On 5/20/2025 1:42 PM, Raag Jadav wrote:
+> > > > > > > > > > > > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > > > > > > > > From the driver perspective it does have expectations that the parts outside
+> > > > > > > > > > > > the driver did the right thing.  If the driver was expecting the root port
+> > > > > > > > > > > > to be powered down at suspend and it wasn't there are hardware components
+> > > > > > > > > > > > that didn't power cycle and that's what we're seeing here.
+> > > > > > > > > > >
+> > > > > > > > > > > Which means the expectation set by the driver is the opposite of the
+> > > > > > > > > > > purpose of this patch, and it's going to fail if any kind of error is
+> > > > > > > > > > > detected under root port during suspend.
+> > > > > > > > > >
+> > > > > > > > > > And IMV this driver's expectation is questionable at least.
+> > > > > > > > > >
+> > > > > > > > > > There is no promise whatsoever that the device will always be put into
+> > > > > > > > > > D3cold during system suspend.
+> > > > > > > > >
+> > > > > > > > > For instance, user space may disable D3cold for any PCI device via the
+> > > > > > > > > d3cold_allowed attribute in sysfs.
+> > > > > > > > >
+> > > > > > > > > If the driver cannot handle this, it needs to be fixed.
+> > > > > > > >
+> > > > > > > > Thanks for confirming. So should we consider this patch to be valid
+> > > > > > > > and worth moving forward?
+> > > > > > >
+> > > > > > > It doesn't do anything that would be invalid in principle IMV.
+> > > > > > >
+> > > > > > > You need to consider one more thing, though: It may be necessary to
+> > > > > > > power-cycle the device in order to kick it out of the erroneous state
+> > > > > > > and the patch effectively blocks this if I'm not mistaken.
+> > > > > > >
+> > > > > > > But admittedly I'm not sure if this really matters.
+> > > > > >
+> > > > > > Wouldn't something like bus reset (SBR) be more predictable?
+> > > > >
+> > > > > Maybe.
+> > > > >
+> > > > > The device state is most likely inconsistent in that case, so it depends.
+> > > >
+> > > > My limited understanding is that if SBR doesn't help, at that point all
+> > > > bets are off including PMCSR configuration and probably a cold boot is
+> > > > needed.
+> > >
+> > > I'm not talking about PMCSR, I'm talking about power removal (D3cold).
+> > > This should be equivalent to a cold boot for the particular device
+> > > except that cold boot would also reset the hierarchy above it.
+> >
+> > Sure. But for D3cold we rely on everything else under root port to also
+> > be suspended, which we can't predict while in endpoint suspend path. And
+> > with that we're back to "no guarantees" problem, which was the case either
+> > way. The patch might just prevent any further damage than what's already
+> > done.
 > 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> index bd44af36c67a..48bcc7d2b33b 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> @@ -176,11 +176,13 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
->   				   PHY_CFG_ADDR_MASK,
->   				   PHY_CFG_ADDR_SHIFT));
->   
-> -	regmap_write(rk_phy->reg_base,
-> -		     rk_phy->phy_data->pcie_laneoff,
-> -		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> -				   PHY_LANE_IDLE_MASK,
-> -				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> +	for (int i=0; i < PHY_MAX_LANE_NUM; i++) {
-> +		regmap_write(rk_phy->reg_base,
-> +			     rk_phy->phy_data->pcie_laneoff,
-> +			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> +					   PHY_LANE_IDLE_MASK,
-> +					   PHY_LANE_IDLE_A_SHIFT + i));
-> +	}
->   
->   	/*
->   	 * No documented timeout value for phy operation below,
+> Fair enough.
 
+So anything I can do to move this forward?
+Sorry I didn't include your tag since I changed the core logic.
+
+Raag
 
