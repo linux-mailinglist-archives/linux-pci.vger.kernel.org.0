@@ -1,177 +1,128 @@
-Return-Path: <linux-pci+bounces-30273-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30274-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9C6FAE2050
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 18:46:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 07694AE2251
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 20:36:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 935824A84B7
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 16:46:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3D0F4A3BD4
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 18:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14DAF1E376E;
-	Fri, 20 Jun 2025 16:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C650528A71D;
+	Fri, 20 Jun 2025 18:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="RVqmFiu4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOmYPssx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FA136988;
-	Fri, 20 Jun 2025 16:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5621FF51;
+	Fri, 20 Jun 2025 18:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437957; cv=none; b=XY6aVcoqWbMFRr2KEF+B9mgMzbUm+ZD27/aZgD9G+gAzKZS/p81onsU6i07dx2sLlksr0Cu6slMAQj2qCj/XlyK2TkOmG5LfpCJIphomKXzYnr6V3lcYqo9hs0o/tKI9qwR2oB2FgVI9W+T6UKcMJl1Ui0cifEu5cKNv83LgDmE=
+	t=1750444569; cv=none; b=CfHr14T3LS5Gj2C6YCdAJ7beyDtx/MTwLOuO3Oq91gktqHdjZFEgbwc/k++F+JbVbAt9S/M1pYYS54PjZA4NyiG9cQQbFJKfWCaeOh5xywxUBq8/9/L962C41VEyur/1VEUdI7QJM2kujA8UoxaMl/+T3lllKYBGgL/RY+KUB6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437957; c=relaxed/simple;
-	bh=N68bI8SGJJ3SKPEabsdfy1Rw9X1WhzHFwhJV+Ya/LrU=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=fWG3FDZFkmd0FZTAqH39o1Fdu7VfyOL7eAyljX0rlBx7YAPRUPCTfIWS2KFS8YA6NcczfVDN8ioufXbNozrMWTpHTPDH/HiJCo/8pE1VY0U2CFDK4TNde3t/9UsAzyBAWF0wdLRr9onvr0IEtR4ak5x290y/Pyktyr+XDtN9K4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=RVqmFiu4; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 569668287484;
-	Fri, 20 Jun 2025 11:45:50 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id wRjCNNNSGv1c; Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 1CC8882883EB;
-	Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 1CC8882883EB
+	s=arc-20240116; t=1750444569; c=relaxed/simple;
+	bh=VxYYZ+5XRHo4d4bvFkZwjgzgU+HxsHrnwxX5D8o2J7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VXtXKwRI3u8T14ZBP+KjSupmeDr8kxXmxvmH4XufgcD6Yp7jgH30xhqKmYagKgp8XWoqBY/gbQydDfiFNr+W1lR+MwtEk7/E4dxBge6rRGlv0oh2lmA7bM+kNCx2mErhcMhy82s3U0LeixCfx3MbmhaCvSIJNTXb1LlyQ7iLW0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOmYPssx; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-237311f5a54so22814345ad.2;
+        Fri, 20 Jun 2025 11:36:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750437948; bh=qJI9vRVPG2JtxMF1nFpr43wzk4hpyWTFMAH0t4tQyfM=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=RVqmFiu4MxhddEf8TwOlqyM0KJG2onnFK2cigc4HlrrrTnigMsR14cDLSL/hK0Eni
-	 MfdIYXLgpRCGLtrej9K0rpBfcns97K6O5zGp0t6StTDjXy1dHTjW8j7Pt9DRjm9S7V
-	 1ZtkaUFez4tjhpcTeHtNI0pIDfIY+MIiaMVryOOs=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id xyFpQtmjQd2c; Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id BAEC08287484;
-	Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
-Date: Fri, 20 Jun 2025 11:45:45 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <318974284.1316210.1750437945118.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <aFUTV87SMdpHRbt8@wunner.de>
-References: <20250618201722.GA1220739@bhelgaas> <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com> <aFUTV87SMdpHRbt8@wunner.de>
-Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
- broken
+        d=gmail.com; s=20230601; t=1750444568; x=1751049368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iB8K7naU/3cWPMjhndPtrJKbfq4r5Bnu9UIH3k9QIY0=;
+        b=MOmYPssxlcwbS4ZYjkXEXfkTvUUBwwVaHlypz9Ui/k/JvHYVZ7NsJjYmoGhrXtFlYo
+         4gzNa/ShoOQvumSQuopHPerrqrOlrEEU7cmNBoGrTreSzc4GjzWcsN37QDjCHIDok/55
+         lkXF5jy/oSTGKvRr8duIZuAeryLHnUvTUwGP7VVPfijDINZIJMrN4lBq0Qb31jVL5XaU
+         uorMEHPc6fE6LDV/g7dmk7IyzbRRdcFkeAkMNqNLvy3nAg3kSJcexwH+veBI7dyB7Osy
+         uv62j2CncVkhNvdbNkbzFdsiQFPKxs0V5Jv+OZlFpiiGWMfPGr+D9/Wq3RdX04ELDWFF
+         cbuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750444568; x=1751049368;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iB8K7naU/3cWPMjhndPtrJKbfq4r5Bnu9UIH3k9QIY0=;
+        b=fMPbZIiJwW+Xit87nP+K4/JgF+lXzyCZw+9W4aL/aumHMl7QoWItgCXnhgbXE6bTi4
+         0RzqUAtRBK2KTmSlHjjWWDJkUbhLywBffbjjCnMPqM9RUDyMRZgy0G8/XtK3SnQ00GuA
+         kQ5xesHl0ePah09HhJ8yhkJN+YW9jDTvCRjt9xQVCZphXBJ2qYJbjGIXvxxTDDZ3uVcZ
+         7f4422sITeKV98HBA8ThBg+iSu1HWkRJ4O2EkkPQ6Yy8dk7W+fV9lI+pQhf5R+RdNJaw
+         ebw+e7/97K071PLuSfsefiffJd+7/Xm4dWYH2dSxtAtLyAZ/zcUgR0BJsvV/uPqOQp9i
+         T+6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVnYOa9T7mq16//QO2mM2xW8eKIxZdsfVUTehdpnuwisS4DJ3hvb0uzxbByMyiFhummd+C8hwEC+w3D@vger.kernel.org, AJvYcCWyw2QWPOzx8aGn6/D28rYO8TI1TEBalWY5xooS0dAewaFGmhKR1oVWcqFKyk/tnvtOY8JNCJ42jBCGgeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDAzJprsLW0SvkIE5oVqg4vyFY3d5hbB7IeEwAfJvVXZwbkkaq
+	xrRRPD94ksph1uTsibm2A/UeNGywwq/85Ekbk5ln3svRFOK/JIo5LpmI
+X-Gm-Gg: ASbGncv6UbiR7AVj1o5ZWtwdhpUxwO7doHEOXWLmvjBUQpaXQ2GdHEQPaDUtjUu2iOg
+	3C6T+DQ0heOsYlP9CDGorqwk1PlGBS6IugATl69HY8V2V7zUrs2OVClS2qbfnLD60nKEPttYmIy
+	Nm6u7sJREXG1A0LTqprUINwCPrBjv/obh18aqPO7A21mZiyShqfiTaJGVyMrJGKPIsvrtHlh/yo
+	OjNxPZCCrsST0NZMZPe/yKB6iaA+Nl4EMDXegnxePORtMKy8TRfSrj8GzO769TRS6TU4TpTD55L
+	kvN61WJrEVOVmZRw73DKjmXyTLazrn9zky6rvrjNFHhtjst1ww==
+X-Google-Smtp-Source: AGHT+IEpd/aQfcdw5uYZ1ZK+nV3R3Zab/R2Ed0lgYGKgBLEMJrWyEefDcKKfz+3OCjw8DJ0q07uFQA==
+X-Received: by 2002:a17:903:1b66:b0:234:c5c1:9b5f with SMTP id d9443c01a7336-237d99064ccmr64870585ad.16.1750444567570;
+        Fri, 20 Jun 2025 11:36:07 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:cf24::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d872a3d4sm23398895ad.239.2025.06.20.11.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 11:36:07 -0700 (PDT)
+Date: Fri, 20 Jun 2025 15:35:51 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 4/4] phy: rockchip-pcie: Adjust read mask and write
+Message-ID: <aFWqB8YRtYlC0vGG@geday>
+References: <cover.1749833986.git.geraldogabriel@gmail.com>
+ <7068a941037eca8ef37cc65e8e08a136c7aac924.1749833987.git.geraldogabriel@gmail.com>
+ <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Work around switches with broken
-Thread-Index: zvrBWMc7bGiakDybKycWMKCNibeoAQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d52fce68-d01e-4b92-825f-f7408df2ca18@arm.com>
 
+On Fri, Jun 20, 2025 at 03:19:06PM +0100, Robin Murphy wrote:
+> Which write mask? Certainly not PHY_CFG_WR_MASK... However as this 
+> definition is unused since 64cdc0360811 ("phy: rockchip-pcie: remove 
+> unused phy_rd_cfg function"), I don't see much point in touching it 
+> other than to remove it entirely. If it is the case that only the 
+> address field is significant for whatever a "read" operation actually 
+> means, well then that's just another job for ADDR_MASK (which I guess is 
+> what the open-coded business with PHY_CFG_PLL_LOCK is actually doing...)
 
+Just for the sake of posterity, Robin is right here, PHY_CFG_WR_MASK is
+just hardcoded to 1, and PHY_CFG_RD_MASK should have been the same
+as PHY_CFG_ADDR_MASK as Robin correctly pointed out.
 
------ Original Message -----
-> From: "Lukas Wunner" <lukas@wunner.de>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "Bjorn Helgaas" <helgaas@kernel.org>, "linuxppc-dev" <linuxppc-dev@li=
-sts.ozlabs.org>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>, "linux-pci" <linux-pci@vger.kernel.org>, =
-"Madhavan Srinivasan" <maddy@linux.ibm.com>,
-> "Michael Ellerman" <mpe@ellerman.id.au>, "christophe leroy" <christophe.l=
-eroy@csgroup.eu>, "Naveen N Rao"
-> <naveen@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Shawn Anasta=
-sio" <sanastasio@raptorengineering.com>
-> Sent: Friday, June 20, 2025 2:52:55 AM
-> Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches wit=
-h broken
+Moot point since I already agreed with Bjorn and Robin to drop the read
+define, and Robin was kind enough to track the exact commit where the
+corresponding read function was removed. I re-injected that function
+from BSP into mainline for my own debugging though, that's why I caught
+the typo.
 
-> On Thu, Jun 19, 2025 at 02:29:33PM -0500, Timothy Pearson wrote:
->> To be perfectly frank the existing code quality in this driver
->> (and the associated EEH driver) is not the best, and it's been
->> a frustrating experience trying to hack it into semi-stable
->> operation.
->>=20
->> I would vastly prefer to rewrite / integrate into the pciehp driver,
->> and we have plans to do so, but that will take an unacceptable amount
->> of time vs. trying to fix up the existing driver as a stopgap.
->>=20
->> As you mentioned, pciehp already has this fix, so we just have to
->> deal with the duplicated code until we (Raptor) figures out how to
->> merge PowerNV support into pciehp.
->=20
-> I don't know how much PCIe hotplug on PowerNV differs from native,
-> spec-compliant PCIe hotplug.  If the differences are vast (and I
-> get the feeling they might be if I read terms like "PHB" and
-> "EEH unfreeze", which sound completely foreign to me), it might
-> be easier to refactor pnv_php.c and copy patterns or code from
-> pciehp, than to integrate the functionality from pnv_php.c into
-> pciehp.
+Thanks,
+Geraldo Nascimento
 
-The differences at the root level (PHB) are quite significant -- the contro=
-ller is more advanced in many ways than standard PCIe root complexes [1] --=
- and those differences need very special handling.  Once we are looking at =
-devices downstream of the root complex, standard PCIe hotplug and AER speci=
-fications apply, so we're in a strange spot of really wanting to use pciehp=
- (to handle all nested downstream bridges), but pciehp still needs to under=
-stand how to deal with our unqiue root complex.
-
-One idea I had was to use the existing modularity of pciehp's source and ad=
-d a new pciehp_powernv.c file with all of our root complex handling methods=
-.  We could then #ifdef swap the assocated root complex calls to that exter=
-nal file when compiled in PowerNV mode.
-
-> pciehp does carry some historic baggage of its own (such as poll mode),
-> which you may not want to deal with on PowerNV.
-
-At the root level we probably don't care about polling mode, but in terms o=
-f nested downtream bridges polling may still be desireable.  I don't have a=
- strong opinion either way.
-
-> One thing I don't quite understand is, it sounds like you've
-> attached a PCIe switch to a Root Port and the hotplug ports
-> are on the PCIe switch.  Aren't those hotplug ports just
-> bog-standard ones that can be driven by pciehp?  My expectation
-> would have been that a PowerNV-specific hotplug driver would
-> only be necessary for hotplug-capable Root Ports.
-
-That's the problem -- the pciehp driver assumes x86 root ports, and the pow=
-ernv driver ends up duplicating (badly) parts of the pciehp functionality f=
-or downstream bridges.  That's one reason I'd like to abstract the root por=
-t handling in pciehp and eventually move the PowerNV root port handling int=
-o that module.
-
+> 
 > Thanks,
->=20
-> Lukas
-
-[1] Among other interesting differences, it is both capable of and has been=
- tested to properly block and report all invalid accesses from a PCIe devic=
-e to system memory.  This breaks assumptions in many PCIe device drivers, b=
-ut is also a significant security advantage.  EEH freeze is effectively thi=
-s security mechanism kicking in -- on detecting an invalid access, the PHB =
-itself will block the access and put the PE into a frozen state where no PC=
-Ie traffic is permitted.  It simultaneously rases an error to the host (col=
-loquially referred to as EEH) and punts the decision making on whether to r=
-eset or resume the device to the kernel itself.  We've caught various cards=
- doing fun things like reading host RAM or trying to write to 0x0 via this =
-mechanism, one of the most egregious was a Chinese telecom card that appare=
-ntly tries to reset the host with a write to low memory on detecting an int=
-errupt servicing delay (!).
+> Robin.
 
