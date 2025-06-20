@@ -1,181 +1,177 @@
-Return-Path: <linux-pci+bounces-30272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70D95AE1FFB
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 18:19:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C6FAE2050
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 18:46:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D93CC3B98B5
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 16:19:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 935824A84B7
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 16:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF6F726E708;
-	Fri, 20 Jun 2025 16:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14DAF1E376E;
+	Fri, 20 Jun 2025 16:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fVSZ0plV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhmuZmuQ"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="RVqmFiu4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8F91DD543;
-	Fri, 20 Jun 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FA136988;
+	Fri, 20 Jun 2025 16:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436369; cv=none; b=Jf+jslGdONFv5RgwoTAiJG5YV0kwC+YRwjf/GDWftQTT/7XF1V8pnETPg3YW3dKr86MzX+pJvYuAulFLNGIptAfY2KJA0nAvO//qQBKGj1sfu/d4Jp4aYI5YNHY6u9kxjoAXNJFqhZZZep7tOZ1+VhlmZ02q55+5lkli7B+xd3E=
+	t=1750437957; cv=none; b=XY6aVcoqWbMFRr2KEF+B9mgMzbUm+ZD27/aZgD9G+gAzKZS/p81onsU6i07dx2sLlksr0Cu6slMAQj2qCj/XlyK2TkOmG5LfpCJIphomKXzYnr6V3lcYqo9hs0o/tKI9qwR2oB2FgVI9W+T6UKcMJl1Ui0cifEu5cKNv83LgDmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436369; c=relaxed/simple;
-	bh=vv/we4/ivW8qVlc9KYQ3SUnskmMUwhAqc+b3MJmmAI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ccv5vlTB01Pn+Q+pNisSj0bkHqq2V13nnq5kmnD+T37Dis8RWT5MIhlDJFPZoPBZMiny17EAWX1Y5kHmJGOflD4sFkFG6w5LN/RXL4J0/wU76/FBSyi2eql0WFlfZ1CwUsK4pUWDPWBiGmEUWW/LP0ZCJ2vNMN9XTacb/mWf5zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fVSZ0plV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PhmuZmuQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=fVSZ0plVYhp6KwBYpmltfkSxuNsNAC/7XfZShU69Cx0/8hFmuPw0eSH+Nv9WnM/23Ocjem
-	zIzX6xLJ3SmpgUl8dHsH60vTgmOX/s1XIxN2K00/JWg12h41baUgo9scAOfzGov7X6tw++
-	UThw1WbFXpflUv/HaDUSOQUxlDrxlUNYfWbbJhkMqa2e7AzYsRxv9spTmH44ZGYAVLLESf
-	hED98byL/mOH+Y7OH5oywasR7kOg2FHnFgpdaKJEPJN05IeErqtTiyTEHvws4+6BtPeizF
-	nB+qGcccE9bDamx0L+mVy+WppwgPi52/1R4wcXKnjszqujq37+vlqBNOsns79w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=PhmuZmuQfJdPqbEkPXi+gvYMeuWTjpSprGjAU1gvLagNyhdjlNiTFYgUXvA2f35kGWg5v3
-	nz1mSbILfIRi+rDA==
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>, Michael Kelley
- <mhklinux@outlook.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
- <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
- <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
-In-Reply-To: <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157639630F8AD2D8FD8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-Date: Fri, 20 Jun 2025 18:19:24 +0200
-Message-ID: <878qlmqtbn.ffs@tglx>
+	s=arc-20240116; t=1750437957; c=relaxed/simple;
+	bh=N68bI8SGJJ3SKPEabsdfy1Rw9X1WhzHFwhJV+Ya/LrU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=fWG3FDZFkmd0FZTAqH39o1Fdu7VfyOL7eAyljX0rlBx7YAPRUPCTfIWS2KFS8YA6NcczfVDN8ioufXbNozrMWTpHTPDH/HiJCo/8pE1VY0U2CFDK4TNde3t/9UsAzyBAWF0wdLRr9onvr0IEtR4ak5x290y/Pyktyr+XDtN9K4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=RVqmFiu4; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 569668287484;
+	Fri, 20 Jun 2025 11:45:50 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id wRjCNNNSGv1c; Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 1CC8882883EB;
+	Fri, 20 Jun 2025 11:45:48 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 1CC8882883EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750437948; bh=qJI9vRVPG2JtxMF1nFpr43wzk4hpyWTFMAH0t4tQyfM=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=RVqmFiu4MxhddEf8TwOlqyM0KJG2onnFK2cigc4HlrrrTnigMsR14cDLSL/hK0Eni
+	 MfdIYXLgpRCGLtrej9K0rpBfcns97K6O5zGp0t6StTDjXy1dHTjW8j7Pt9DRjm9S7V
+	 1ZtkaUFez4tjhpcTeHtNI0pIDfIY+MIiaMVryOOs=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id xyFpQtmjQd2c; Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id BAEC08287484;
+	Fri, 20 Jun 2025 11:45:47 -0500 (CDT)
+Date: Fri, 20 Jun 2025 11:45:45 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <318974284.1316210.1750437945118.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <aFUTV87SMdpHRbt8@wunner.de>
+References: <20250618201722.GA1220739@bhelgaas> <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com> <aFUTV87SMdpHRbt8@wunner.de>
+Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
+ broken
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Topic: pci/hotplug/pnv_php: Work around switches with broken
+Thread-Index: zvrBWMc7bGiakDybKycWMKCNibeoAQ==
 
-On Wed, Jun 18 2025 at 14:08, Nuno Das Neves wrote:
-> On 6/11/2025 4:07 PM, Michael Kelley wrote:
->> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
->>> +/**
->>> + * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
->>> + * @data:      Describes the IRQ
->>> + * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
->>> + *
->>> + * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
->>> + */
->>> +int hv_map_msi_interrupt(struct irq_data *data,
->>> +			 struct hv_interrupt_entry *out_entry)
->>>  {
->>> -	union hv_device_id device_id = hv_build_pci_dev_id(dev);
->>> +	struct msi_desc *msidesc;
->>> +	struct pci_dev *dev;
->>> +	union hv_device_id device_id;
->>> +	struct hv_interrupt_entry dummy;
->>> +	struct irq_cfg *cfg = irqd_cfg(data);
->>> +	const cpumask_t *affinity;
->>> +	int cpu;
->>> +	u64 res;
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
 
->>>
->>> -	return hv_map_interrupt(device_id, false, cpu, vector, entry);
->>> +	msidesc = irq_data_get_msi_desc(data);
->>> +	dev = msi_desc_to_pci_dev(msidesc);
->>> +	device_id = hv_build_pci_dev_id(dev);
->>> +	affinity = irq_data_get_effective_affinity_mask(data);
->>> +	cpu = cpumask_first_and(affinity, cpu_online_mask);
->> 
->> Is the cpus_read_lock held at this point? I'm not sure what the
->> overall calling sequence looks like. If it is not held, the CPU that
->> is selected could go offline before hv_map_interrupt() is called.
->> This computation of the target CPU is the same as in the code
->> before this patch, but that existing code looks like it has the
->> same problem.
->> 
->
-> Thanks for pointing it out - It *looks* like the read lock is not held
-> everywhere this could be called, so it could indeed be a problem.
->
-> I've been thinking about different ways around this but I lack the
-> knowledge to have an informed opinion about it:
->
-> - We could take the cpu read lock in this function, would that work?
+----- Original Message -----
+> From: "Lukas Wunner" <lukas@wunner.de>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "Bjorn Helgaas" <helgaas@kernel.org>, "linuxppc-dev" <linuxppc-dev@li=
+sts.ozlabs.org>, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, "linux-pci" <linux-pci@vger.kernel.org>, =
+"Madhavan Srinivasan" <maddy@linux.ibm.com>,
+> "Michael Ellerman" <mpe@ellerman.id.au>, "christophe leroy" <christophe.l=
+eroy@csgroup.eu>, "Naveen N Rao"
+> <naveen@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Shawn Anasta=
+sio" <sanastasio@raptorengineering.com>
+> Sent: Friday, June 20, 2025 2:52:55 AM
+> Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches wit=
+h broken
 
-Obviously not.
+> On Thu, Jun 19, 2025 at 02:29:33PM -0500, Timothy Pearson wrote:
+>> To be perfectly frank the existing code quality in this driver
+>> (and the associated EEH driver) is not the best, and it's been
+>> a frustrating experience trying to hack it into semi-stable
+>> operation.
+>>=20
+>> I would vastly prefer to rewrite / integrate into the pciehp driver,
+>> and we have plans to do so, but that will take an unacceptable amount
+>> of time vs. trying to fix up the existing driver as a stopgap.
+>>=20
+>> As you mentioned, pciehp already has this fix, so we just have to
+>> deal with the duplicated code until we (Raptor) figures out how to
+>> merge PowerNV support into pciehp.
+>=20
+> I don't know how much PCIe hotplug on PowerNV differs from native,
+> spec-compliant PCIe hotplug.  If the differences are vast (and I
+> get the feeling they might be if I read terms like "PHB" and
+> "EEH unfreeze", which sound completely foreign to me), it might
+> be easier to refactor pnv_php.c and copy patterns or code from
+> pciehp, than to integrate the functionality from pnv_php.c into
+> pciehp.
 
-> - I'm not actually sure why the code is getting the first cpu off the effective
->   affinity mask in the first place. It is possible to get the apic id (and hence
->   the cpu) already associated with the irq, as per e.g. x86_vector_msi_compose_msg()
->   Maybe we could get the cpu that way, assuming that doesn't have a
->   similar issue.
+The differences at the root level (PHB) are quite significant -- the contro=
+ller is more advanced in many ways than standard PCIe root complexes [1] --=
+ and those differences need very special handling.  Once we are looking at =
+devices downstream of the root complex, standard PCIe hotplug and AER speci=
+fications apply, so we're in a strange spot of really wanting to use pciehp=
+ (to handle all nested downstream bridges), but pciehp still needs to under=
+stand how to deal with our unqiue root complex.
 
-There is no reason to fiddle in the underlying low level data. The
-effective affinity mask is there for a reason.
+One idea I had was to use the existing modularity of pciehp's source and ad=
+d a new pciehp_powernv.c file with all of our root complex handling methods=
+.  We could then #ifdef swap the assocated root complex calls to that exter=
+nal file when compiled in PowerNV mode.
 
-> - We could just let this race happen, maybe the outcome isn't too catastrophic?
+> pciehp does carry some historic baggage of its own (such as poll mode),
+> which you may not want to deal with on PowerNV.
 
-Let's terminate guesswork mode and look at the facts.
+At the root level we probably don't care about polling mode, but in terms o=
+f nested downtream bridges polling may still be desireable.  I don't have a=
+ strong opinion either way.
 
-The point is that hv_map_msi_interrupt() is called from:
+> One thing I don't quite understand is, it sounds like you've
+> attached a PCIe switch to a Root Port and the hotplug ports
+> are on the PCIe switch.  Aren't those hotplug ports just
+> bog-standard ones that can be driven by pciehp?  My expectation
+> would have been that a PowerNV-specific hotplug driver would
+> only be necessary for hotplug-capable Root Ports.
 
-    1) hv_irq_compose_msi_msg()
+That's the problem -- the pciehp driver assumes x86 root ports, and the pow=
+ernv driver ends up duplicating (badly) parts of the pciehp functionality f=
+or downstream bridges.  That's one reason I'd like to abstract the root por=
+t handling in pciehp and eventually move the PowerNV root port handling int=
+o that module.
 
-    2) hv_arch_irq_unmask() (in patch 4/4)
+> Thanks,
+>=20
+> Lukas
 
-Both functions are interrupt chip callbacks and invoked with the
-interrupt descriptor lock held.
-
-At the point where they are called, the effective affinity mask is valid
-and immutable. Nothing can modify it as any modification requires the
-interrupt descriptor lock to be held. This applies to the CPU hotplug
-machinery too. So this AND cpu_online_mask is a complete pointless
-voodoo exercise.
-
-Just use:
-
-     cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
-
-and be done with it.
-
-Please fix that first with a seperate patch before moving this code
-around.
-
-Thanks,
-
-        tglx
+[1] Among other interesting differences, it is both capable of and has been=
+ tested to properly block and report all invalid accesses from a PCIe devic=
+e to system memory.  This breaks assumptions in many PCIe device drivers, b=
+ut is also a significant security advantage.  EEH freeze is effectively thi=
+s security mechanism kicking in -- on detecting an invalid access, the PHB =
+itself will block the access and put the PE into a frozen state where no PC=
+Ie traffic is permitted.  It simultaneously rases an error to the host (col=
+loquially referred to as EEH) and punts the decision making on whether to r=
+eset or resume the device to the kernel itself.  We've caught various cards=
+ doing fun things like reading host RAM or trying to write to 0x0 via this =
+mechanism, one of the most egregious was a Chinese telecom card that appare=
+ntly tries to reset the host with a write to low memory on detecting an int=
+errupt servicing delay (!).
 
