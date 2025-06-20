@@ -1,48 +1,39 @@
-Return-Path: <linux-pci+bounces-30259-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D8E3AE1B85
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 15:09:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86217AE1DF5
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 16:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF2017A772F
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 13:07:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E9FB177A57
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 14:57:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4A628DF48;
-	Fri, 20 Jun 2025 13:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikYbpV3d"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B32280327;
+	Fri, 20 Jun 2025 14:57:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m21469.qiye.163.com (mail-m21469.qiye.163.com [117.135.214.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2DD28DF36;
-	Fri, 20 Jun 2025 13:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B553C2BD5B9;
+	Fri, 20 Jun 2025 14:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424903; cv=none; b=cG5oaUMP/QF32AMvam6GXQJxmM/8lAHkJT3tl5KRMk/GNyZFv0kMFgTgN/PViBTcuYDC4gm1PYeTRE6WrMWwNdn+TJcO32vlGcBniDqRcjamUo95FCjaPa+AMKfLMK3ny7B5u3gWJJ4EcDBOFTHx6YbMGCN0yZWOfzJh/aFtV9k=
+	t=1750431447; cv=none; b=giayTTbtFsXsXuXgV4Um2J+KLKeR/NWhC3P5P+DK07FVx1VnaUThXtEG395Hc7pcHGanxlWFWFTpGjltPLBlOPMvKkCDieDpXVW943bXjDo8uyjB6Fm7/BYcB33IaeHWRiFF6l5MdEf7fcN1AwI4cDHM4q8vVIml3X/EwCzHwLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424903; c=relaxed/simple;
-	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
+	s=arc-20240116; t=1750431447; c=relaxed/simple;
+	bh=nEieat/MdT1fvVX1SsqoS+kbALvTEjIirRnEuYybfgw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qobmUOYLLjndq3wY8xIq/ZcaEA0ZC+li9kXdO1JWokuBBETSm3AQ9D+zRRFgX9iBBR65Mito2/ZEsErA+PV3HxnFAnJ0kPAw5V9f9AvEdnqAzR/kkhfw0fW3kFoYTxsO6Fddysf0dcVxw3mUt/eOba3Z5c0Fk157kzMZ5oZTgQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikYbpV3d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B769C4CEEE;
-	Fri, 20 Jun 2025 13:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750424902;
-	bh=+9H6JcjTjRDyG1OblNVj9FXm7YspOKs/ESBzyf6Ag/I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ikYbpV3djtoMZC4zunIhWqeO+nOC9+2wy9yMZ+uerAs+3IkaRuiJqk4jSIDyDFhGk
-	 RNVkBnOa4IfxYdQQYUTsA25+H3tPbXZZuFHWY/v+472XaOqarx5uvOm+9mHLmfFq6R
-	 govT7oVJnAv5r5fMEn/gw1E5FxTQeQTLvgY0/Fz5AqULmANSd0DPIHWSvl3fkA5yRC
-	 582khYGx4F+6amr9NjTOGnGiQx6wpgYMKC6AhHEZUXwqPodeIAChXqd2tWowLiMl/u
-	 6N68j+25wShwp+gfZMms/GJAHfl0saapqavn+7nVC3Q0L7IY5oreHIfpyweUXUdmDy
-	 3rwYAX/DgZofg==
-Message-ID: <130fe1fc-913b-48cf-b2a4-e9c4952354fd@kernel.org>
-Date: Fri, 20 Jun 2025 15:08:16 +0200
+	 In-Reply-To:Content-Type; b=A1eIb5boLwBimKAMmSrcrLhit1xLCDIRKp+/BcXtzJj0TifsrV3btz0XYJ3PGyft5mUxUGd3vL4QS47jrEoAi1EkOmaB71iDcBsugI9QIwZLNWOABm/WnNaCPj7yfh+JoOJ2FyY13olRqN4FYO8NFOuUdQgXRaF5OmUcvjVxnZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=117.135.214.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
+Received: from [172.21.129.96] (unknown [122.224.241.34])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1956def94;
+	Fri, 20 Jun 2025 13:54:05 +0800 (GMT+08:00)
+Message-ID: <b95a60f8-0e1d-4c81-8d5a-e2ea7d083780@hj-micro.com>
+Date: Fri, 20 Jun 2025 13:54:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,136 +41,150 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
- mode support
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>,
- "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "shawnguo@kernel.org" <shawnguo@kernel.org>,
- "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "festevam@gmail.com" <festevam@gmail.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250620031350.674442-1-hongxing.zhu@nxp.com>
- <20250620031350.674442-2-hongxing.zhu@nxp.com>
- <20250620-honored-versed-donkey-6d7ef4@kuoka>
- <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <AS8PR04MB8676FBE47C2ECE074E5B14768C7CA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+Subject: Re: [RFC PATCH] PCI: pciehp: Replace fixed delay with polling for
+ slot power-off
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ peter.du@hj-micro.com, jemma.zhang@hj-micro.com
+References: <20250619093228.283171-1-andy.xu@hj-micro.com>
+ <aFP598Yyl0el1uKh@wunner.de>
+From: Hongbo Yao <andy.xu@hj-micro.com>
+In-Reply-To: <aFP598Yyl0el1uKh@wunner.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTBpOVh0ZT01PGB9LSB1MSlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUlPSlVIT1lXWRYaDxIVHRRZQVlPS0hVQkJJTktVSktLVU
+	pCS0JZBg++
+X-HM-Tid: 0a978be6c2a103afkunm0488a5943ba0a8
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mzo6Pww*KzE3DjQ9CAI2FjYO
+	KC5PFDVVSlVKTE5LSEJDQ09NTUlKVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
+	SklJVUlJT1VJT0pVSE9ZV1kIAVlBTktNSzcG
 
-On 20/06/2025 10:26, Hongxing Zhu wrote:
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: 2025年6月20日 15:53
->> To: Hongxing Zhu <hongxing.zhu@nxp.com>
->> Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
->> lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
->> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
->> bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
->> kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
->> imx@lists.linux.dev; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH v3 1/2] dt-binding: pci-imx6: Add external reference clock
->> mode support
->>
->> On Fri, Jun 20, 2025 at 11:13:49AM GMT, Richard Zhu wrote:
->>> On i.MX, the PCIe reference clock might come from either internal
->>> system PLL or external clock source.
->>> Add the external reference clock source for reference clock.
->>>
->>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
->>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
->>> ---
->>>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
->>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> index ca5f2970f217..c472a5daae6e 100644
->>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
->>> @@ -219,7 +219,12 @@ allOf:
->>>              - const: pcie_bus
->>>              - const: pcie_phy
->>>              - const: pcie_aux
->>> -            - const: ref
->>> +            - description: PCIe reference clock.
->>> +              oneOf:
->>> +                - description: The controller might be configured
->> clocking
->>> +                    coming in from either an internal system PLL or
->> an
->>> +                    external clock source.
->>> +                  enum: [ref, gio]
->>
->> Internal like within PCIe or coming from other SoC block? What does "gio"
->> mean?
-> Internal means that the PCIe reference clock is coming from other
->  internal SoC block, such as system PLL. "gio" is on behalf that the
-> reference clock comes form external crystal oscillator.
 
-Then what does "ref" mean, if gio is the clock supplied externally? We
-talk here about signals coming to this chip, regardless how they are
-generated.
 
+在 2025/6/19 19:52, Lukas Wunner 写道:
+> On Thu, Jun 19, 2025 at 05:32:28PM +0800, Hongbo Yao wrote:
+>> Fixed 1-second delay in remove_board() fails to accommodate certain
+>> hardware like multi-host OCP cards, which exhibit longer power-off
+>> latencies.
+> 
+> Please name the affected product(s).
+> 
+> They don't seem to comply to the spec.  How prevalent are they?
+> If there are only few deployed, quirks like this are probably
+> best addressed by an out-of-tree patch.
+> 
+
+Hi Lukas,
+Thank you for reviewing the patch.
+
+The affected hardware configuration:
+ - Host system: Arm Neoverse N2 based server
+ - Multi-host OCP card: Mellanox Technologies MT2910 Family [ConnectX-7]
+
+
+>> Logs before fix:
+>> [157.778307] pcieport 0003:00:00.0: pciehp: pending interrupts 0x0001 from Slot Status
+>> [157.778321] pcieport 0003:00:00.0: pciehp: Slot(31): Attention button pressed
+>> [157.785445] pcieport 0003:00:00.0: pciehp: Slot(31): Powering off due to button press
+>> [157.798931] pcieport 000b:00:02.0: pciehp: pending interrupts 0x0001 from Slot Status
+> 
+> This log excerpt mixes messages from two separate hotplug ports
+> (0003:00:00.0 and 000b:00:02.0).  Are these hotplug ports related?
+> If not, please reduce the log excerpt to a single hotplug port
+> to avoid confusion.
+> 
+Sorry for not providing adequate context in the patch submission.
+
+Yes, these two hotplug ports are related - they are part of the same
+physical multi-host OCP card.
+
+Key points:
+1. The OCP card has two independent PCIe endpoints
+2. Each endpoint connected to a PCIe root port:
+   - Endpoint 1 → Port 0003:00:00.0
+   - Endpoint 2 → Port 000b:00:02.0
+3. Both endpoints share a common power domain
+4. Full power-off occurs only after BOTH endpoints are powered down
+5. DLLSC is triggered only after complete power-off
+
+Critical log events:
+[157.778307] Both ports: Attention button pressed
+[167.540342] Port 0003:00:00.0 power off command issued
+[172.289366] Port 000b:00:02.0 power off command issued
+[172.302385] Card fully powered off, trigger AER interrupts and DLLSC
+
+Full power-off occurs only after BOTH ports complete their sequences,
+taking about 5s total.
+
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -30,6 +30,25 @@
+>>  #define SAFE_REMOVAL	 true
+>>  #define SURPRISE_REMOVAL false
+>>  
+>> +static void pciehp_wait_for_link_inactive(struct controller *ctrl)
+>> +{
+>> +	u16 lnk_status;
+>> +	int timeout = 10000, step = 20;
+>> +
+>> +	do {
+>> +		pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+>> +					  &lnk_status);
+>> +
+>> +		if (!(lnk_status & PCI_EXP_LNKSTA_DLLLA))
+>> +			return;
+>> +
+>> +		msleep(step);
+>> +		timeout -= step;
+>> +	} while (timeout >= 0);
+>> +
+>> +	ctrl_dbg(ctrl, "Timeout waiting for link inactive state\n");
+>> +}
+> 
+> Any chance you can use one of the existing helpers, such as
+> pcie_wait_for_link()?
+> 
+> Is the 10 second delay chosen arbitrarily or how did you come up
+> with it?  How much time do the affected products really need?
+>
+Ok,  I will try to use pcie_wait_for_link().
+
+The 10-second timeout was determined from actual log observations. The
+power-off process for the multi-host OCP card takes approximately 5-9
+seconds in our measurements.
+
+>> @@ -119,8 +138,11 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
+>>  		 * After turning power off, we must wait for at least 1 second
+>>  		 * before taking any action that relies on power having been
+>>  		 * removed from the slot/adapter.
+>> +		 *
+>> +		 * Extended wait with polling to ensure hardware has completed
+>> +		 * power-off sequence.
+>>  		 */
+>> -		msleep(1000);
+>> +		pciehp_wait_for_link_inactive(ctrl);
+>>  
+>>  		/* Ignore link or presence changes caused by power off */
+>>  		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+> 
+> Please keep the msleep(1000), that's the minimum we need to wait
+> per PCIe r6.3 sec 6.7.1.8.
+> 
+> Please make the extra wait for link down conditional on
+> ctrl->pcie->port->link_active_reporting.  (DLLLA reporting is
+> optional for hotplug ports conforming to older spec revisions.)
+> 
+Thank you for the valuable suggestion. i'll  revise the patch
 
 Best regards,
-Krzysztof
+Hongbo.> Thanks,
+> 
+> Lukas
+> 
+> 
+
 
