@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-30223-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30224-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05EEAE116B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 04:55:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3459AAE1170
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 04:55:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A921168656
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 02:55:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9730F7ADBAF
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jun 2025 02:54:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965641CBEAA;
-	Fri, 20 Jun 2025 02:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521221D7E41;
+	Fri, 20 Jun 2025 02:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPCj0Ek7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/2JbYqp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD941BEF77;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E5F19CCFA;
 	Fri, 20 Jun 2025 02:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388139; cv=none; b=AOSL2O8beRfxOhvdmAHW2eFOIk1GjEOasE9z/oAQ8IcSYuYQs0FnEm45T8+x0Q2K5ZUwlaCcPJYcblQB1qCqFcjOODWodDvjO9gblay/HOhQzdEoXxm6RGwkSQM72hggQ0keQyy4438nekWRODsdDfHr32ISRWKujX8Adp40nBg=
+	t=1750388140; cv=none; b=qwWAFFlG0ULT17kDEix0D8s5GL0tGzqsliJIGpP7i1MpSBRtigMc63a/ApgL7Q4SfqxqnpwRcHtikE/pTmLD3WD8S3RPmvzRtEWx9uJokrMz+Pn5vJHH+mo7Ltzv57jdddqnGzMRkoH21yLr5WTiIdxQ1vWxm148IbH+UBIc1DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388139; c=relaxed/simple;
-	bh=Y/CjH2xMz/xYNwUFX6ujhfmpzcysXs2YH/NnBhHupYA=;
+	s=arc-20240116; t=1750388140; c=relaxed/simple;
+	bh=jPA1olMTWa2BHo+uYQO/iSse65JiJVx+iRIUnTVzmXE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qXOfctr1Sq6KkRX+H9aTFmEd9k8Pf+sEIUjIGalx4QtdI5EhUM4FPiSOXCn/8c3Swh8bG/3NXSbPxGmSsuTGEc8PcCkx/EWV9gfR5oGiFuDGjnljuRNvsamqfHz/dMz3HC3jJ3on87q6IovMjUyQ0+xPoxFf2L1c9tAriDBMAYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPCj0Ek7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51938C4CEED;
-	Fri, 20 Jun 2025 02:55:38 +0000 (UTC)
+	 MIME-Version; b=aw9BwImhx0AGBGIVQodFk8zOSsyW2qrHM0qWC6kdjQw4OQmsjzbZd0KkDWj10Q/xNLwVP2XFBhOI9T7r6p4UW6wjz7/cPddJqrbMHhNIWa2fI0V541/t366WWx8Mn9l6J4FVbfrGZu8T2FngWvDFomQnDTIiloEJAI0AyqPMgf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/2JbYqp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3395CC4CEF1;
+	Fri, 20 Jun 2025 02:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750388139;
-	bh=Y/CjH2xMz/xYNwUFX6ujhfmpzcysXs2YH/NnBhHupYA=;
+	bh=jPA1olMTWa2BHo+uYQO/iSse65JiJVx+iRIUnTVzmXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mPCj0Ek7gYrnpqvMULoNVMPkz8dmfAFb5DfUE+jFzRJhcCVMDTFizpXIesJYYTcom
-	 ntF25kYoczfVDF3D0seBpRMZ7ra8Z1pjRlMJLekjytYyfpCvZ4LX6bt9R5TOd268t/
-	 9QHtpCBTzKV1/b65viEbTOuH+FydQTFn76+ZC7LHJfM4lNv0Vif5seikxKjZ05FD8o
-	 8dWUm1HM7sgpifpa0owqyOJLdgH3XNuk8UG41pCeY4RrXySHN38Fm8Mfav1eQ+I/Ti
-	 1+5pEpe7hNByjv7GQgW6iB6vDxHyn66M5pEe5ovDYzA8N+RBNvlD8pBlbkUf77vUnt
-	 1aMsQPYAi5j9A==
+	b=g/2JbYqpITLCH8No1hTY0nXGIVliJRB4bNMa4k4jOBHA2r70pyqDMJhRYwMpWqbie
+	 Ni+6KhrhRcILuA80FzO5mpoSb3ERQ2DoriceQkXTvH7pXahAR3X45HncTHKWrk7DkC
+	 nK1xclewQx5cmd02d20k/QqvOrkSlU6v1kTkhxugZQdJ/tUOp9ZI+QOOG/5QH5JKQ9
+	 A+DwaIPynAbgIrT/5JI9WSsWP3AEAXqvCHfdnOS3O0IwFEAhTIFd7PYJecaWLAyBXT
+	 Ouf0FUXKFn81oARarYLkiuExripDb2oV5LoPW8tbSh+y7PHE+VHIqKhsEE8N1FTepD
+	 4SjQKQzsRQxMQ==
 From: Mario Limonciello <superm1@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
 Cc: linux-pm@vger.kernel.org,
 	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v3 1/2] PCI/PM: Skip resuming to D0 if disconnected
-Date: Thu, 19 Jun 2025 21:55:34 -0500
-Message-ID: <20250620025535.3425049-2-superm1@kernel.org>
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on device unplug
+Date: Thu, 19 Jun 2025 21:55:35 -0500
+Message-ID: <20250620025535.3425049-3-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250620025535.3425049-1-superm1@kernel.org>
 References: <20250620025535.3425049-1-superm1@kernel.org>
@@ -67,56 +66,48 @@ From: Mario Limonciello <mario.limonciello@amd.com>
 When a USB4 dock is unplugged the PCIe bridge it's connected to will
 remove issue a "Link Down" and "Card not detected event". The PCI core
 will treat this as a surprise hotplug event and unconfigure all downstream
-devices. This involves setting the device error state to
-`pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+devices.
 
-It doesn't make sense to runtime resume disconnected devices to D0 and
-report the (expected) error to do so.  It is still useful information
-that a device is disconnected though, so add an info message for that
-purpose.
+pci_stop_bus_device() will call device_release_driver(). As part of device
+release sequence pm_runtime_put_sync() is called for the device which will
+decrement the runtime counter to 0. After this, the device remove callback
+(pci_device_remove()) will be called which again calls pm_runtime_put_sync()
+but as the counter is already 0 will cause an underflow.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
+This behavior was introduced in commit 967577b062417 ("PCI/PM: Keep runtime
+PM enabled for unbound PCI devices") to prevent asymmetrical get/put from
+probe/remove, but this misses out on the point that when releasing a driver
+the usage count is decremented from the device core.
+
+Drop the extra call from pci_device_remove().
+
+Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
 v3:
- * Adjust text and subject
- * Add an info message instead
+ * git archeaology
+ * Drop call alltogether, not just for the device disconnected case
 v2:
  * Use pci_dev_is_disconnected()
 v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
 ---
- drivers/pci/pci.c | 5 +++++
- drivers/pci/pci.h | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/pci/pci-driver.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9e42090fb1089..160a9a482c732 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
- 		return -EIO;
- 	}
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index b78b98133e7df..63f1cb11906ad 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -478,9 +478,6 @@ static void pci_device_remove(struct device *dev)
+ 	pci_dev->driver = NULL;
+ 	pci_iov_remove(pci_dev);
  
-+	if (pci_dev_is_disconnected(dev)) {
-+		dev->current_state = PCI_D3cold;
-+		return -EIO;
-+	}
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
- 		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12215ee72afb6..57aaf9c63e2e8 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -550,6 +550,7 @@ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
- 
- static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- {
-+	pci_info(dev, "Device disconnected\n");
- 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
- 	pci_doe_disconnected(dev);
- 
+-	/* Undo the runtime PM settings in local_pci_probe() */
+-	pm_runtime_put_sync(dev);
+-
+ 	/*
+ 	 * If the device is still on, set the power state as "unknown",
+ 	 * since it might change by the next time we load the driver.
 -- 
 2.43.0
 
