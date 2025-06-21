@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-30306-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30307-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83F81AE2BE6
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:53:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47156AE2BE5
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:53:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B3D03BC0C2
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:52:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9135189A951
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75B072737F0;
-	Sat, 21 Jun 2025 19:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B596E273D6E;
+	Sat, 21 Jun 2025 19:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtEBEW6d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YeB4POrs"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADB7270ED7;
-	Sat, 21 Jun 2025 19:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8F1271448;
+	Sat, 21 Jun 2025 19:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750535514; cv=none; b=TB/v5GvF7p7wTU1BMkmekZVjIn4gfW2RE9zpAD5VUMvTEZXkWAEYqxZCNTzfBC4BWtxuCIdtjc45RV6kNOcDp892ay8FRvQ0omdUcmOdgiVnCVd1R5w925yz4AAFqm5yBSObXwYfEKKrPApXWpm41Pr+Eb0OAFh1/QHnFcjVi74=
+	t=1750535518; cv=none; b=TA3Yjm++u4aNvJPbBKf4c5ff0laCi3yF11sSYvYAZYCQgqDegDuvyC2kJma3BqX8EJ5JhkFhLNo/CVeonGbasJUwxBMsKFHWl/Rj4X6DmHyW13CH02IPbay3FZS+cfM5lbJAwgoYVNKGlnsCMdQaoNAJH8hd2sjD81AvXoyasPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750535514; c=relaxed/simple;
-	bh=7QAcOvOYh5asCbN/n+PaQTUogUpYg0tZ05+enhoXBgA=;
+	s=arc-20240116; t=1750535518; c=relaxed/simple;
+	bh=2JkK5rZrOgiP/B+Tmh5/VUxDYFEElGEgx5i/EiKwWQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b/dCmSuEfIAHUPlV4/ccznmGWUIiXr/BOe/HY8G0fk8e/bg16R3A/Bz+R6ms7E+dE1IMbGWKzP1/hE3MJNiZXXWPhn3IhjEc1Meq55qCystQZAKLLEPSDc6gfeDsUMiAvGrXjm7t6ERMUBpcqMxTq+NJw4kDlVr5uxOdNr9wnNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtEBEW6d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3284C4CEE7;
-	Sat, 21 Jun 2025 19:51:49 +0000 (UTC)
+	 MIME-Version; b=jqQ0+Yk6hA6UH8e+PPsLCUEJKkSMl+zUHWt/TgLbu1Jq78PySq4MZg1cetHBKAJ27zqSnvHGtMSwX4PqPbjP1LZrsMKFNjBqcybIb0qqV+59kCmaj1ov6FTtVJa3IGel68CxzvmAw7FS5EXTtz3+0PgYIEAzzKJiqjD7oevNd6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YeB4POrs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BADC4CEEF;
+	Sat, 21 Jun 2025 19:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750535513;
-	bh=7QAcOvOYh5asCbN/n+PaQTUogUpYg0tZ05+enhoXBgA=;
+	s=k20201202; t=1750535518;
+	bh=2JkK5rZrOgiP/B+Tmh5/VUxDYFEElGEgx5i/EiKwWQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gtEBEW6dXTKMhVbZ+EIsCX7ZIs8DLZHY5nq8jzo2BAE18hd6c/Xlx4wr82vMDaywp
-	 zX7hhNi/qL1jW95tNcEPmNpHB9Anrk624xT3ycPZoWAPUfjrkgB7bPRm4RAcqLvgml
-	 iqEFLOo9JEFSoYFREmYU/rt98GJlJAJe4cfB4Ben0rCSDmhK7XVdtqD0KLH9+3kkE2
-	 AarnwwUYA0aNZg20PNsdQvhQLicwDqh0XmCKXyL6y/errLeEY23MwRBFRSoI5m+deL
-	 LUgEMjISLrper9B4+irYBui1DZrry1quSWBZ2b1fiB6GytyWtOXAK3mOsQlQWUFHxJ
-	 y42eipGMJrgfA==
+	b=YeB4POrsRlpzYE4d6RgxCMyvx9S+IlY9SQFzm4rSItiFg4IClwpdySqmKIdh+rwhG
+	 rlyl/b226EkNfPBG0wJ1R+Go6/Z2boxyg1xoCv3pZmxkBOMbH+Yqw8Q+m4wrDV6VfF
+	 ta+7TvJA9ezUEMeh7C8RmhWKvBzu/lsZ8T5zbkSAINse5IXS/TCXNMOPDbg3yfre/y
+	 Sj7011Ji8uCJnD2urE+psEEBE3Svz/nzTjWjh9pcMN5w7FC8JyMkRj5MhCdnH9NhxQ
+	 ZwUQTSphV4A0yhZyC0fB41BpVs9PPUc8lSeAFcdrUCHLq9QCjscvLF1kpT/nfB1QOd
+	 rAM5Y9jiOVOgg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -62,9 +62,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 6/8] rust: platform: implement Driver::unbind()
-Date: Sat, 21 Jun 2025 21:43:32 +0200
-Message-ID: <20250621195118.124245-7-dakr@kernel.org>
+Subject: [PATCH 7/8] rust: pci: implement Driver::unbind()
+Date: Sat, 21 Jun 2025 21:43:33 +0200
+Message-ID: <20250621195118.124245-8-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250621195118.124245-1-dakr@kernel.org>
 References: <20250621195118.124245-1-dakr@kernel.org>
@@ -112,14 +112,14 @@ meant to be used to perform teardown operations on the device (1), but
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/platform.rs | 18 +++++++++++++++++-
+ rust/kernel/pci.rs | 18 +++++++++++++++++-
  1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index dc0c36d70963..9b3de89dc2f9 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -82,7 +82,9 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 064e74a90904..6bdd3ab23f17 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -91,7 +91,9 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
          // SAFETY: `remove_callback` is only ever called after a successful call to
          // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
          // and stored a `Pin<KBox<T>>`.
@@ -130,10 +130,10 @@ index dc0c36d70963..9b3de89dc2f9 100644
      }
  }
  
-@@ -164,6 +166,20 @@ pub trait Driver: Send {
+@@ -238,6 +240,20 @@ pub trait Driver: Send {
+     /// Called when a new platform device is added or discovered.
      /// Implementers should attempt to initialize the device here.
-     fn probe(dev: &Device<device::Core>, id_info: Option<&Self::IdInfo>)
-         -> Result<Pin<KBox<Self>>>;
+     fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>;
 +
 +    /// Platform driver unbind.
 +    ///
@@ -150,7 +150,7 @@ index dc0c36d70963..9b3de89dc2f9 100644
 +    }
  }
  
- /// The platform device representation.
+ /// The PCI device representation.
 -- 
 2.49.0
 
