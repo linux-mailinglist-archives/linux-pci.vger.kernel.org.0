@@ -1,135 +1,150 @@
-Return-Path: <linux-pci+bounces-30299-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30300-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78859AE2B50
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:05:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0583CAE2BD6
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:51:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3717176DA1
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:05:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 553653BA764
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4994226FA5C;
-	Sat, 21 Jun 2025 19:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9623C224893;
+	Sat, 21 Jun 2025 19:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nk7HRXwF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650DD15CD74;
-	Sat, 21 Jun 2025 19:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E751B414E;
+	Sat, 21 Jun 2025 19:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750532722; cv=none; b=PjcbujbJxOSrEovg01Dk61q+sPeeFlBhm3SQwqYWJnCo5qhtWPaKznl7aGPVRBdDoUf5sllPF2RMegREZlqG3l9lAJjRxJhqgzljr/RTaMLf/kdZ2TS7kBSIjfHns0MRNtWzCoxL90EvoPExn5OKIFujvWvSHjz0JVt671NiDv8=
+	t=1750535488; cv=none; b=eeq20SO2nac9f2jUDKA08PK7SimsolfHumfoAth2pcdbnH9zCLLGkk1CJde3f+DbuE7BYBjOffXi+ogXrZ49+5a1owR9ZJFLMxwSVSAjTrATJA4wULSn63oCYb8P281kTKixmgtyPB9PRVoLABjBBnEiY0c/5tswOkl4eBDU1oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750532722; c=relaxed/simple;
-	bh=AkWA8qp1SUCfxVsjdnu/bl5tdqn3xmczgLReR+INRXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXSZpNDOyeHLqVb6S9AW3P5Y8EXXle+zVB0vUpp6Vp852caHK2MyLiNlHhiEI3I5BMoCvZxXMYDM11f+X2d3VxNNBvdGEQ3savSpQxeKELpVYGPHDzfoEnRVt25O/3DqdNIneXyQgfFdDLwar8VN0IZlk+4F8n3Ipnh7YnO6J6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id E7E84200A446;
-	Sat, 21 Jun 2025 21:05:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id CDA573A6359; Sat, 21 Jun 2025 21:05:15 +0200 (CEST)
-Date: Sat, 21 Jun 2025 21:05:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on
- device unplug
-Message-ID: <aFcCaw_IZr-JuUYY@wunner.de>
-References: <20250620025535.3425049-1-superm1@kernel.org>
- <20250620025535.3425049-3-superm1@kernel.org>
+	s=arc-20240116; t=1750535488; c=relaxed/simple;
+	bh=dNb7xAF9Q/a6CUsX7C6s6yY6BMrON4Y9eNUkNm0UIcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E5tWaZDSrVaE+TOFP//sx1iFzqpD9fvhQjStLq4PZVOG4VLZfaxZLYgLOGwgZYdu7fBJ6EWTgujkwhxVPEfBYulrnRrZIc25faLGKnVqiyr+2bjYKJffBIgtw3F3+uZTyZPVp+9znEvs6u1BAUKRQF4KEg58Ys3hCXa0uMuqIyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nk7HRXwF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFD3C4CEE7;
+	Sat, 21 Jun 2025 19:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750535487;
+	bh=dNb7xAF9Q/a6CUsX7C6s6yY6BMrON4Y9eNUkNm0UIcI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nk7HRXwFGqn+hYTXTTyqKYXjD97C91odMQqoXIhITnK+pveD0pJ1qO8+P19cas6fO
+	 tiy5qCqJc+tOVf6sKVEyC7fzrbeE397nWVmzQElGT7MGucdw1V+gs3ubpZx6u61A6G
+	 IeesnsZ0/OxfEkwqgRReAvFa5om2iMA+Vej6dtYpYuo+YxIuUYX2h/rAn2aQUni6mv
+	 lEnrA9HrKtZZh6Vgy6fYUM0PGpKyxpdcx81vsS/c/6+OGwLHMxZ5JNz/Fq7Oyl66DU
+	 nTTGTZVGi04i8AlgIAL1Nqfpu6ydSwvuhRvLZaQEb1nSk1M4Bhr1blzUPNOrG8x0u5
+	 E4VPL9/LnEWaw==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	leon@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH 0/8] Device: generic accessors for drvdata + Driver::unbind()
+Date: Sat, 21 Jun 2025 21:43:26 +0200
+Message-ID: <20250621195118.124245-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620025535.3425049-3-superm1@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 09:55:35PM -0500, Mario Limonciello wrote:
-> When a USB4 dock is unplugged the PCIe bridge it's connected to will
-> remove issue a "Link Down" and "Card not detected event". The PCI core
-> will treat this as a surprise hotplug event and unconfigure all downstream
-> devices.
-> 
-> pci_stop_bus_device() will call device_release_driver(). As part of device
-> release sequence pm_runtime_put_sync() is called for the device which will
-> decrement the runtime counter to 0. After this, the device remove callback
-> (pci_device_remove()) will be called which again calls pm_runtime_put_sync()
-> but as the counter is already 0 will cause an underflow.
-> 
-> This behavior was introduced in commit 967577b062417 ("PCI/PM: Keep runtime
-> PM enabled for unbound PCI devices") to prevent asymmetrical get/put from
-> probe/remove, but this misses out on the point that when releasing a driver
-> the usage count is decremented from the device core.
-> 
-> Drop the extra call from pci_device_remove().
-> 
-> Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
+This patch series consists of the following three parts.
 
-This doesn't look right.  The refcount underflow issue seems new,
-we surely haven't been doing the wrong thing since 2012.
+  1. Introduce the 'Internal' device context (semantically identical to the
+     'Core' device context), but only accessible for bus abstractions.
+
+  2. Introduce generic accessors for a device's driver_data  pointer. Those are
+     implemented for the 'Internal' device context only, in order to only enable
+     bus abstractions to mess with the driver_data pointer of struct device.
+
+  3. Implement the Driver::unbind() callback (details below).
+
+Driver::unbind()
+----------------
+
+Currently, there's really only one core callback for drivers, which is
+probe().
+
+Now, this isn't entirely true, since there is also the drop() callback of
+the driver type (serving as the driver's private data), which is returned
+by probe() and is dropped in remove().
+
+On the C side remove() mainly serves two purposes:
+
+  (1) Tear down the device that is operated by the driver, e.g. call bus
+      specific functions, write I/O memory to reset the device, etc.
+
+  (2) Release the resources that have been allocated by a driver for a
+      specific device.
+
+The drop() callback mentioned above is intended to cover (2) as the Rust
+idiomatic way.
+
+However, it is partially insufficient and inefficient to cover (1)
+properly, since drop() can't be called with additional arguments, such as
+the reference to the corresponding device that has the correct device
+context, i.e. the Core device context.
+
+This makes it inefficient (but not impossible) to access device
+resources, e.g. to write device registers, and impossible to call device
+methods, which are only accessible under the Core device context.
+
+In order to solve this, add an additional callback for (1), which we
+call unbind().
+
+The reason for calling it unbind() is that, unlike remove(), it is *only*
+meant to be used to perform teardown operations on the device (1), but
+*not* to release resources (2).
+
+Danilo Krummrich (8):
+  rust: device: introduce device::Internal
+  rust: device: add drvdata accessors
+  rust: platform: use generic device drvdata accessors
+  rust: pci: use generic device drvdata accessors
+  rust: auxiliary: use generic device drvdata accessors
+  rust: platform: implement Driver::unbind()
+  rust: pci: implement Driver::unbind()
+  samples: rust: pci: reset pci-testdev in unbind()
+
+ rust/helpers/auxiliary.c        | 10 ------
+ rust/helpers/device.c           | 10 ++++++
+ rust/helpers/pci.c              | 10 ------
+ rust/helpers/platform.c         | 10 ------
+ rust/kernel/auxiliary.rs        | 35 +++++++++-----------
+ rust/kernel/device.rs           | 57 ++++++++++++++++++++++++++++++++-
+ rust/kernel/pci.rs              | 47 +++++++++++++++++----------
+ rust/kernel/platform.rs         | 52 +++++++++++++++++++-----------
+ samples/rust/rust_driver_pci.rs | 11 ++++++-
+ 9 files changed, 154 insertions(+), 88 deletions(-)
 
 
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -478,9 +478,6 @@ static void pci_device_remove(struct device *dev)
->  	pci_dev->driver = NULL;
->  	pci_iov_remove(pci_dev);
->  
-> -	/* Undo the runtime PM settings in local_pci_probe() */
-> -	pm_runtime_put_sync(dev);
-> -
+base-commit: b29929b819f35503024c6a7e6ad442f6e36c68a0
+-- 
+2.49.0
 
-local_pci_probe() increases the refcount to keep the device in D0.
-If the driver wants to use runtime suspend, it needs to decrement
-the refcount on ->probe() and re-increment on ->remove().
-
-In the dmesg output attached to...
-
-https://bugzilla.kernel.org/show_bug.cgi?id=220216
-
-... the device exhibiting the refcount underflow is a PCIe port.
-Are you also seeing this on a PCIe port or is it a different device?
-
-So the refcount decrement happens in pcie_portdrv_probe() and
-the refcount increment happens in pcie_portdrv_remove().
-Both times it's conditional on pci_bridge_d3_possible().
-Does that return a different value on probe versus remove?
-
-Does any of the port service drivers decrement the refcount
-once too often?  I've just looked through pciehp but cannot
-find anything out of the ordinary.
-
-Looking through recent changes, 002bf2fbc00e and bca84a7b93fd
-look like potential candidates causing a regression, but the
-former is for AER (which isn't used in the dmesg attached to
-the bugzilla) and the latter touches suspend on system sleep,
-not runtime suspend.
-
-Can you maybe instrument the pm_runtime_{get,put}*() functions
-with a printk() and/or dump_stack() to see where a gratuitous
-refcount decrement occurs?
-
-Alternatively, is there a known-good kernel version which does
-not exhibit the issue and which could serve as anchor for
-git bisect?
-
-Thanks,
-
-Lukas
 
