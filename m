@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-30303-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30304-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 675FCAE2BDE
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:52:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06DBDAE2BE2
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 21:52:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15DA91898BBB
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:52:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9C1B3B6300
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jun 2025 19:52:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BD1926FDBB;
-	Sat, 21 Jun 2025 19:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4E127056E;
+	Sat, 21 Jun 2025 19:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPIx4PHB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLJNMWFh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515252701C8;
-	Sat, 21 Jun 2025 19:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CE427056D;
+	Sat, 21 Jun 2025 19:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750535501; cv=none; b=vEIhOqR4MBpz5Aol7Yp8LaVHsSK+sRjKK1Fj9JiBo8W4WXok/FMLkkctk7KRrZ3Yj3wLyfQ6gjq69iuVxeuE3t3rjId6h4hoCEH2zj3JjzBFs9lB9uIlrca3wOpPRiClEEg4UU31Ok8OPr9xiX2WWyvEjwtscAolaD9QhDQQvD0=
+	t=1750535505; cv=none; b=REB8w9pMzVZpJzboZ2q94IvPGaXGpFY2CQS9i9aEZud8h2FiH4Flx40QqbIelOWCeX8PPUYfem/xFQ75c/xsh57V2MK/4u5jqNVqqfzqZLI11fxn8q7GALllFex1PBnUb5SOX22PkyNTbgV+Vv97xjf6AYq4OijQHHrYEGBAbmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750535501; c=relaxed/simple;
-	bh=64LA9BPdINZxDweXi3XrPvDZBhIiC67sjGS0F3HdOPg=;
+	s=arc-20240116; t=1750535505; c=relaxed/simple;
+	bh=o1NrCTqKOLaLyCyMx28sXtEauIeDFKCQj+3OLoj5FnM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qbEg1qQaM3BwOu53FHbqekIZElx5fuJ1Sw40LTbR/FKccdOadyASym86tRYqh0iHoCcbSkga0DqhpHbUqb+rEQs/9kQ9/EKuUKKatgBVCIwp/7DNw/yEmb84T7D5H1hQy2i6NkUAQHO5x2B4KUYBgLUnh/fSE6fRvRyE2S0bIdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPIx4PHB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0374FC4CEF0;
-	Sat, 21 Jun 2025 19:51:36 +0000 (UTC)
+	 MIME-Version; b=T3GVO8Oh5x9JSZMic1KSmBOyIim/wnka1ePucBwQu+5OQMfFzGm1VHtINYXgLWqlVR3GVtkS3mdsdfS6YZe35RSDZqorx55+OcDBs4etiotsfe0Gd3upk8VyXbfm7Q/zCuxbVMo6KGSCHeFAfvvWtK9wKeYwOMDShKyrreO4I5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLJNMWFh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA9BC4CEE7;
+	Sat, 21 Jun 2025 19:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750535500;
-	bh=64LA9BPdINZxDweXi3XrPvDZBhIiC67sjGS0F3HdOPg=;
+	s=k20201202; t=1750535505;
+	bh=o1NrCTqKOLaLyCyMx28sXtEauIeDFKCQj+3OLoj5FnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hPIx4PHBQ9WQfZht+Ufuepc4qS5Roc/26MRLN02aPZzGbw9qYrodi3BjLb0StRPzC
-	 NJlj77yt+o9HTMKe2buOjP+U1Wb5ABZFKlND4Cw19YlOjjWfK89jjRy+joD78uzsCt
-	 DyeQkN5ol//HC7ZY0lGkOwA7cGG35e8/q38RNQJHOTA46Rclm7crVRvKvFmfMnW58m
-	 25lS9K9dxiHVzIG24n4EnSRb/hY4JFm67eif6rRTuJvfgwt9Npcoc8isoBlNri952h
-	 ddimMd8GSOGONMB2AkAHvxbkOOcmiqEVdQtr8mfS5BCD+3ImtUrlPEzeRHsYo3AKBJ
-	 1pmPkPBy10fEQ==
+	b=ZLJNMWFhH1IC/AZMKYFp/cjcYO5RYN+pG5sN4ZnyCHyUyHLP+7OYy0ynXNyt8uSmZ
+	 wfMoIKlomph/K0PwwyqGGPNa1EkR9nPWMvvKsoGMlzxWZ5H4xp+thExhCLrTf5/iaS
+	 8vok5bSb92Nn3jqEV7turYM6K0OAa7Z1vk6oE+PNb3Ml3sUMk15UB+MqR7+6w+I0pt
+	 Sj/PQOzSqd06euSR/ZlxZ9eiVUttELyk5OgUgKTbnD19Z3F9w7C0gvuk8GCUbyi/4S
+	 N9u1FHAnxdSfBAz7kEvKWILV5qUQ8WHY7PzVc6k1VoQQWu/QtorbDkbUp4FtxO0neR
+	 VPXgwT01t5nxA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -62,9 +62,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 3/8] rust: platform: use generic device drvdata accessors
-Date: Sat, 21 Jun 2025 21:43:29 +0200
-Message-ID: <20250621195118.124245-4-dakr@kernel.org>
+Subject: [PATCH 4/8] rust: pci: use generic device drvdata accessors
+Date: Sat, 21 Jun 2025 21:43:30 +0200
+Message-ID: <20250621195118.124245-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250621195118.124245-1-dakr@kernel.org>
 References: <20250621195118.124245-1-dakr@kernel.org>
@@ -83,83 +83,85 @@ While at it, use from_result() instead of match.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/helpers/platform.c | 10 ----------
- rust/kernel/platform.rs | 36 +++++++++++++++++-------------------
- 2 files changed, 17 insertions(+), 29 deletions(-)
+ rust/helpers/pci.c | 10 ----------
+ rust/kernel/pci.rs | 31 ++++++++++++++-----------------
+ 2 files changed, 14 insertions(+), 27 deletions(-)
 
-diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
-index 82171233d12f..1ce89c1a36f7 100644
---- a/rust/helpers/platform.c
-+++ b/rust/helpers/platform.c
+diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
+index cd0e6bf2cc4d..ef9cb38c81a6 100644
+--- a/rust/helpers/pci.c
++++ b/rust/helpers/pci.c
 @@ -2,16 +2,6 @@
  
- #include <linux/platform_device.h>
+ #include <linux/pci.h>
  
--void *rust_helper_platform_get_drvdata(const struct platform_device *pdev)
+-void rust_helper_pci_set_drvdata(struct pci_dev *pdev, void *data)
 -{
--	return platform_get_drvdata(pdev);
+-	pci_set_drvdata(pdev, data);
 -}
 -
--void rust_helper_platform_set_drvdata(struct platform_device *pdev, void *data)
+-void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
 -{
--	platform_set_drvdata(pdev, data);
+-	return pci_get_drvdata(pdev);
 -}
 -
- bool rust_helper_dev_is_platform(const struct device *dev)
+ resource_size_t rust_helper_pci_resource_len(struct pci_dev *pdev, int bar)
  {
- 	return dev_is_platform(dev);
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5b21fa517e55..dc0c36d70963 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -6,11 +6,11 @@
- 
- use crate::{
-     bindings, container_of, device, driver,
+ 	return pci_resource_len(pdev, bar);
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 8435f8132e38..064e74a90904 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -10,11 +10,11 @@
+     device_id::RawDeviceId,
+     devres::Devres,
+     driver,
 -    error::{to_result, Result},
 +    error::{from_result, to_result, Result},
-     of,
-     prelude::*,
+     io::Io,
+     io::IoRaw,
      str::CStr,
--    types::{ForeignOwnable, Opaque},
-+    types::Opaque,
+-    types::{ARef, ForeignOwnable, Opaque},
++    types::{ARef, Opaque},
      ThisModule,
  };
- 
-@@ -61,30 +61,28 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
-         // `struct platform_device`.
+ use core::{
+@@ -66,35 +66,32 @@ extern "C" fn probe_callback(
+         // `struct pci_dev`.
          //
          // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
 -        let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
--
 +        let pdev = unsafe { &*pdev.cast::<Device<device::Internal>>() };
-         let info = <Self as driver::Adapter>::id_info(pdev.as_ref());
+ 
+         // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct pci_device_id` and
+         // does not add additional invariants, so it's safe to transmute.
+         let id = unsafe { &*id.cast::<DeviceId>() };
+         let info = T::ID_TABLE.info(id.index());
+ 
 -        match T::probe(pdev, info) {
 -            Ok(data) => {
--                // Let the `struct platform_device` own a reference of the driver's private data.
+-                // Let the `struct pci_dev` own a reference of the driver's private data.
 -                // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
--                // `struct platform_device`.
--                unsafe { bindings::platform_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
+-                // `struct pci_dev`.
+-                unsafe { bindings::pci_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
 -            }
 -            Err(err) => return Error::to_errno(err),
 -        }
- 
--        0
 +        from_result(|| {
 +            let data = T::probe(pdev, info)?;
-+
+ 
+-        0
 +            pdev.as_ref().set_drvdata(data);
 +            Ok(0)
 +        })
      }
  
-     extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
--        // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
--        let ptr = unsafe { bindings::platform_get_drvdata(pdev) }.cast();
-+        // SAFETY: The platform bus only ever calls the remove callback with a valid pointer to a
-+        // `struct platform_device`.
+     extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+         // SAFETY: The PCI bus only ever calls the remove callback with a valid pointer to a
+         // `struct pci_dev`.
+-        let ptr = unsafe { bindings::pci_get_drvdata(pdev) }.cast();
 +        //
-+        // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
++        // INVARIANT: `pdev` is valid for the duration of `remove_callback()`.
 +        let pdev = unsafe { &*pdev.cast::<Device<device::Internal>>() };
  
          // SAFETY: `remove_callback` is only ever called after a successful call to
