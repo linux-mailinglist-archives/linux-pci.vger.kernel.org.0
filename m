@@ -1,104 +1,115 @@
-Return-Path: <linux-pci+bounces-30322-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30323-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA15AE31F1
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 22:25:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BC76AE31F5
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 22:30:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AA4C16D1C4
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 20:25:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB54616D836
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 20:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80FB19F111;
-	Sun, 22 Jun 2025 20:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871FAAD2C;
+	Sun, 22 Jun 2025 20:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQ4Tho1C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejmG2Ngd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA81823BE;
-	Sun, 22 Jun 2025 20:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD3D8BEE;
+	Sun, 22 Jun 2025 20:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750623928; cv=none; b=JVR7vqu2hxWMWh9TSk6672BLCWhT8WX2tJkwoWFRbJb6+ExfqP2HEzwDpVtwWH6nQGKtCxUcNEWpn2mZZW2OEbLZNoPJgxUcKa5/2lYy+Bcr8E6CMSn49pOc7RaFGj7QaTyBQNAPl/oqmIzkVnWXk/vCx7IHpUFj14lkqpbawxs=
+	t=1750624226; cv=none; b=mylNcR3HwR0NvmAPnjBTCJDUTb847leqIYRKL4NwP1pSYfOe+6gV9W39CJS+T/+Mszf1QszS3urlEPVjcNJXqjn+rV0yEQr6I7BrC61nJ0D2H1tFpzjSNj5QU4vGAi91UodRkRQoUxLZnyVSX3kN2FzR1+sDZ7E4ju8at+jTtPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750623928; c=relaxed/simple;
-	bh=cUNFPVL2U8mVJ0hDVfYgQe5XcqjJP1OfaLKOocM7dnk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=OoJYB4w1IGevk3DbzqtGbel0nBDeMK22Lg8oQW3xfeKDsEl+2FdQfpxA3tTJrIm4Wn49HhYaRncZEclwMk8YPILOW3WxH85J6e2Ht2iSOBCPdjUXF5Nz+lOpPmVQklBk2eKqodFp0k/4naQnzSW9mxgdtWJs8/K/T3jqJhflxyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQ4Tho1C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D86AC4CEE3;
-	Sun, 22 Jun 2025 20:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750623928;
-	bh=cUNFPVL2U8mVJ0hDVfYgQe5XcqjJP1OfaLKOocM7dnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GQ4Tho1Cl/g4ArVW1SZx+KGA1G6UvhYXvY8svBiKdkJcgwG6SkulS0basvIGUySvy
-	 KE9iT4ur7vZzRwy14njgTqbgCm/VldBcW3Opoks7HykF3rqePcjrV0rk+wubGPti2E
-	 dbIRlvIGzMv5uR7JR3XS4S4FfyT74KOq6rMVqYY4J0D+Y34dBM0hBT4BQkEoZM+FmB
-	 GXJj2V1inf0k44r9XIBs3515YrgYCE/8lCw+7d4ZTRi8Ikl3gFw48bdR6uc2tDtSQM
-	 ekd8Xz7bDzRF8ItDn+5J/OgjlmNvJpuO2oSieIE9R5h/jnOC3Q0KAozMSieP7i85M6
-	 dh4xyozUjFFbA==
+	s=arc-20240116; t=1750624226; c=relaxed/simple;
+	bh=E68xa/wJ3ERVn/8w2ChgPu5W6LivVD/2yytTsX6AysI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PZ7UAtfedHAw9mG4ZxCiLYowMjp13SWzO2RNiblqBXVzuIgtA9zVakTyD0qHviGzWEbAKlRRipBXI/K3fbL/9ccuYevyRzAEKslsV9F6IBozjMoq6n7BbfrXuRKCg7vWOIKrZoIjsnnfXBa5Fxhk5abjCa9tBfTcz5OiF/ZIdvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejmG2Ngd; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3138e64fc73so327468a91.2;
+        Sun, 22 Jun 2025 13:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750624224; x=1751229024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E68xa/wJ3ERVn/8w2ChgPu5W6LivVD/2yytTsX6AysI=;
+        b=ejmG2NgdiEbMnEHbOfN4CKflHl5PB+nG4Wll+WlZYlTkNQgmy60pKbqyW4Kg5+Ip38
+         zqWqFoTvmRhthDkotzFTFN6aP5Bem1w9tsQeWemP6ObklUl+w1dwZLQVIngb+dSqn1Ef
+         qIaZKD1beIapaKx+oYaja2QbZ5v7Co/9hUOWc+3Iyrww1k42302sf/V9MAWQknoazUJ/
+         O2SnwoHz5tx6QRdxofVbmaVX7m3bpblfb/vgMXUK3UoMViXy1Bbdhv3aVfIHg9eEkxR0
+         iRhziOd4m4YhNiM1SdWN4hTwTkId/H1Z13GKDwMGhb0kFbsrdPUb5nG6wf9kRqUWjKw7
+         f9AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750624224; x=1751229024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E68xa/wJ3ERVn/8w2ChgPu5W6LivVD/2yytTsX6AysI=;
+        b=a8lmYlBG1ptb7+DizGo9DryWtlg/WcQZhvBDxKXn1s5Rn9vQ8KWss/UiVbMjKNiFzH
+         a7FsIETsLsbTo6mGvKbEip6AYacBnWD6cQfdqjkUNUMkFSjym+SftJ7gpmZle7YDHWWk
+         QLXJjObpJYbUga6ImdhhCSJLFQjT2zPlGiEooV92r1F6dtp0KVv+FmY3PpHRg0xRZBGj
+         VazuBXHKhNGsucVj+4+OvtSNVVLFp3mPRPwLlFLv2z5737l5mVyYCCK41l4VKi4rzHAv
+         nrsaMCMP8L6qTFfsiMHmGj50qdef6WGLtGfaOlLbZyar87tdzGsMHGo81x9EUm2tt3Yg
+         L57g==
+X-Forwarded-Encrypted: i=1; AJvYcCVKfzMYllwrhx11zfuv59JTyu8vJbnLsmPKzr3/bdLUY/vg0zLajQg+Uy29GtSoiXGE34Vio/HITqPd@vger.kernel.org, AJvYcCVmmmInrMI63nIA6eSFh2eBVqmgdFv5mIrGw7IwnYm8MOlbJkkVEw4QsZSwywZI5r0QrTR39Yv9xQ5nH8s=@vger.kernel.org, AJvYcCXOOV1cC0QwFXWakVHMubcEniH7CgBjlXKX4rssUPzr9EwX9Z35+rVWbb0llgWr+9Iti3CSxhKk/d0XnRbUzlA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9VG59MI24TFbgTRZxbeJndoNa0En5SmK+TOTAbkknWspO77a3
+	RKa/H2U8RS0udOyzunE6klO5TC9ICh2CY9zi8fLLVEJa+mc8zKxgnY5TVV0Qo9mZAZczIHNj3D1
+	LDX2oeUii6tGqawf/SuuGlEbUmC2G+4c=
+X-Gm-Gg: ASbGncsGerPu7XMrIBVuXBO9tPnLgzQhIlSRcizt8zdKpdme3nz1CV8Uoafd8WhoCHT
+	Opaa6EfrHLdDVhl71fcZFSnhXeZyrrUYsgE0pdkA4M6FqpjOVd0ybuDI/3NVr7S28spY3A8QkfJ
+	1nV6wlblzoW4gIXD1lWej8VMZ/eCHOwQNoMv5vmYS8BitRE1l6qhP+9A==
+X-Google-Smtp-Source: AGHT+IFqmwSiQ6ti/Fk+Cp/rpFBgXOOjjk2KcKnh+N3PiClihLFHHS3K79RHZ8uMM20utmIM+aDfD0F/gk97lNr1E7k=
+X-Received: by 2002:a17:903:1210:b0:234:8f5d:e3a0 with SMTP id
+ d9443c01a7336-237d97acbb5mr60871075ad.2.1750624224369; Sun, 22 Jun 2025
+ 13:30:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250622164050.20358-1-dakr@kernel.org> <20250622164050.20358-2-dakr@kernel.org>
+In-Reply-To: <20250622164050.20358-2-dakr@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 22 Jun 2025 22:30:10 +0200
+X-Gm-Features: Ac12FXzUQVmbc9GxqhzqZpPb-uvoCNwGrPnJ5b2ZkVtgm02QVi1eakVHnjR2Po4
+Message-ID: <CANiq72k8yhJkS5zCKnSUMoWZtAnJNKePaoMDRoNSnqACWiUtKg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] rust: revocable: support fallible PinInit types
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com, 
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org, 
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Jun 2025 22:25:22 +0200
-Message-Id: <DATCDZGA43LE.2EZS3N8MXUCD9@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, "Dave Airlie" <airlied@redhat.com>, "Simona
- Vetter" <simona.vetter@ffwll.ch>, "Viresh Kumar" <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 2/4] rust: devres: replace
- Devres::new_foreign_owned()
-X-Mailer: aerc 0.20.1
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-3-dakr@kernel.org>
-In-Reply-To: <20250622164050.20358-3-dakr@kernel.org>
 
-On Sun Jun 22, 2025 at 6:40 PM CEST, Danilo Krummrich wrote:
-> Replace Devres::new_foreign_owned() with devres::register().
+On Sun, Jun 22, 2025 at 6:41=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
-> The current implementation of Devres::new_foreign_owned() creates a full
-> Devres container instance, including the internal Revocable and
-> completion.
+> Currently, Revocable::new() only supports infallible PinInit
+> implementations, i.e. impl PinInit<T, Infallible>.
 >
-> However, none of that is necessary for the intended use of giving full
-> ownership of an object to devres and getting it dropped once the given
-> device is unbound.
+> This has been sufficient so far, since users such as Devres do not
+> support fallibility.
 >
-> Hence, implement devres::register(), which is limited to consume the
-> given data, wrap it in a KBox and drop the KBox once the given device is
-> unbound, without any other synchronization.
+> Since this is about to change, make Revocable::new() generic over the
+> error type E.
 >
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Simona Vetter <simona.vetter@ffwll.ch>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+If the series goes through driver-core, please feel free to take:
 
----
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
 Cheers,
-Benno
-
->  rust/helpers/device.c     |  7 ++++
->  rust/kernel/cpufreq.rs    | 11 +++---
->  rust/kernel/devres.rs     | 70 +++++++++++++++++++++++++++++++++------
->  rust/kernel/drm/driver.rs | 14 ++++----
->  4 files changed, 82 insertions(+), 20 deletions(-)
+Miguel
 
