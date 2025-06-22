@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-30317-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30318-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE906AE30D7
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 18:41:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6371AE30DC
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 18:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69A567A77E7
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 16:40:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 523193AA909
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jun 2025 16:41:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C083D1F4261;
-	Sun, 22 Jun 2025 16:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E87D1FECBD;
+	Sun, 22 Jun 2025 16:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+62q8nQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRRcUYIG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CDA2AE8E;
-	Sun, 22 Jun 2025 16:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E740C2AE8E;
+	Sun, 22 Jun 2025 16:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750610490; cv=none; b=K+ZWBpG1CcXp25zPM/a4CYlSt8FiHGnuEHAICNwOCpDKI5qWgL/fY0RkUT3hK0Ye52gQXfqERXwgJ0NGeoCZQGeQYAyEyuESUmKITspalZmH6diRTdGgNQnWRi0uh+1ihR0tF7CxHBuszeMJGE0q69B2zfLwXBaBEd9sVip6R/I=
+	t=1750610495; cv=none; b=WQ+eck3Bmw6XxyOIqBIrLpB/xyUrs/TtIvnpo1g34OASniEGoHeunDF3BY7BpRr/inqmRyaPDqF+0WneJKTC7v360gb7fBDG7RYrkndGI2Ej23chRPyy6X0fjuUtI7rP8YU2+TI0D90YXVwNtDWTk2BdIG7oPCfh4pHkp1phUNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750610490; c=relaxed/simple;
-	bh=qd4m+pRuwBT7Lu3gw5UGth4bTaVLrbANlY/hRPsaidQ=;
+	s=arc-20240116; t=1750610495; c=relaxed/simple;
+	bh=vll6R+1yyMdNdcYfvLHVws/nFKfFPPbIweQImlIq800=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DV/MfXj7rDlGLSL/O7Hr7vPmJvySa/gxnz08zTpUpZ8A1VBsXRP/bJyhc5q933cr3qfrJ3v9uvlvOYMOVhxP1NBw5o+nJwgjI0z1bF9TrDn+3CWCRmE9eolFKEapIMGIVlI60eDGIRK9gYekI2NQHbrAcRE/0iTd3hQAFxndEV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+62q8nQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAFBC4CEF1;
-	Sun, 22 Jun 2025 16:41:25 +0000 (UTC)
+	 MIME-Version; b=PP4cdYmhGa3MR+mX8I8L3k9GB8IERibodSrvjE5RUITTyjU3jV2/9FOAxaW1Z3e/r3D9VjBidHBO3P9KNZgP+K7NDQPLFJ7TSy8drec9xjHV/1g/kHwvAsUs+sVruVS6j2fX1EQv0ffhqzBAXO0AyKxMSPXQly7cLUmq1QI8p1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRRcUYIG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D66C4CEE3;
+	Sun, 22 Jun 2025 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750610490;
-	bh=qd4m+pRuwBT7Lu3gw5UGth4bTaVLrbANlY/hRPsaidQ=;
+	s=k20201202; t=1750610494;
+	bh=vll6R+1yyMdNdcYfvLHVws/nFKfFPPbIweQImlIq800=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W+62q8nQUI17F5oF98Yvcj/CC+uM199E6m8Lox7oQ/CfndPAiOX+QGiZDDeimjCNj
-	 qzhp0lOjOf/TABucF8NCeWSuvzNoQw8cAro1OtrMespJNYBNmbInbFe8RLPaklTAbD
-	 D0plLnCSR+wUeEKGODnQI+2M/bMN2JfNlgU0EytUXw6CrWP8p7mw5RX1MbgwzsLo8/
-	 btrfti0glsvg6XgrT+kbG+ETODdyFgR54IDlnWRKSFej82Ppvvm7U8viOMotHPBc1a
-	 yYjn5F6dcCZrKpX0qoQPqbUCnJGGD49uDvYAZxOZ8mPuWZ/4Z55GTDN3d+qQQpQ+Ef
-	 iAQNgb3rqXlKw==
+	b=hRRcUYIGVirrySADg0Lydl1tbeJ/joF1vZcq/05N/9Y0DaUszT3aR0KH9OhNbxBps
+	 WKut1m5Wlj9MXMaHEXheEjXpuDwb3KNhHF97Z7fAbzdv1rFnRcFXdV5fkarLfW9+Au
+	 5sVvFdVWFFD3fQRI1JlJMXCBBY1/moan8xOXNuKyvH1Ko22pzmk3KoZjABlHwLZ1fC
+	 mSChWA1NbyJyPJsE5nG27Eb9z+htM10cty1nBir4RoarMAf0Nm89YfcT6qWKpuRW6Z
+	 OVVzG2+y6cBJJEs0Kpob+8sSgeG0tWLeKmHJ0IM3D/HD8kb3DG85gFgr2nzm6iqcQA
+	 DdEZqMZT3p83w==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -61,13 +61,10 @@ To: gregkh@linuxfoundation.org,
 Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Dave Airlie <airlied@redhat.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH v2 2/4] rust: devres: replace Devres::new_foreign_owned()
-Date: Sun, 22 Jun 2025 18:40:39 +0200
-Message-ID: <20250622164050.20358-3-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
+Date: Sun, 22 Jun 2025 18:40:40 +0200
+Message-ID: <20250622164050.20358-4-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250622164050.20358-1-dakr@kernel.org>
 References: <20250622164050.20358-1-dakr@kernel.org>
@@ -79,214 +76,473 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace Devres::new_foreign_owned() with devres::register().
+So far Devres uses an inner memory allocation and reference count, i.e.
+an inner Arc, in order to ensure that the devres callback can't run into
+a use-after-free in case where the Devres object is dropped while the
+devres callback runs concurrently.
 
-The current implementation of Devres::new_foreign_owned() creates a full
-Devres container instance, including the internal Revocable and
-completion.
+Instead, use a completion in order to avoid a potential UAF: In
+Devres::drop(), if we detect that we can't remove the devres action
+anymore, we wait for the completion that is completed from the devres
+callback. If, in turn, we were able to successfully remove the devres
+action, we can just go ahead.
 
-However, none of that is necessary for the intended use of giving full
-ownership of an object to devres and getting it dropped once the given
-device is unbound.
+This, again, allows us to get rid of the internal Arc, and instead let
+Devres consume an `impl PinInit<T, E>` in order to return an
+`impl PinInit<Devres<T>, E>`, which enables us to get away with less
+memory allocations.
 
-Hence, implement devres::register(), which is limited to consume the
-given data, wrap it in a KBox and drop the KBox once the given device is
-unbound, without any other synchronization.
+Additionally, having the resulting explicit synchronization in
+Devres::drop() prevents potential subtle undesired side effects of the
+devres callback dropping the final Arc reference asynchronously within
+the devres callback.
 
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/helpers/device.c     |  7 ++++
- rust/kernel/cpufreq.rs    | 11 +++---
- rust/kernel/devres.rs     | 70 +++++++++++++++++++++++++++++++++------
- rust/kernel/drm/driver.rs | 14 ++++----
- 4 files changed, 82 insertions(+), 20 deletions(-)
+ drivers/gpu/nova-core/driver.rs |   7 +-
+ drivers/gpu/nova-core/gpu.rs    |   6 +-
+ rust/kernel/devres.rs           | 208 +++++++++++++++++++-------------
+ rust/kernel/pci.rs              |  20 +--
+ samples/rust/rust_driver_pci.rs |  19 +--
+ 5 files changed, 149 insertions(+), 111 deletions(-)
 
-diff --git a/rust/helpers/device.c b/rust/helpers/device.c
-index b2135c6686b0..502fef7e9ae8 100644
---- a/rust/helpers/device.c
-+++ b/rust/helpers/device.c
-@@ -8,3 +8,10 @@ int rust_helper_devm_add_action(struct device *dev,
- {
- 	return devm_add_action(dev, action, data);
- }
-+
-+int rust_helper_devm_add_action_or_reset(struct device *dev,
-+					 void (*action)(void *),
-+					 void *data)
-+{
-+	return devm_add_action_or_reset(dev, action, data);
-+}
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index 11b03e9d7e89..dd84e2b4d7ae 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -13,7 +13,7 @@
-     cpu::CpuId,
-     cpumask,
-     device::{Bound, Device},
--    devres::Devres,
-+    devres,
-     error::{code::*, from_err_ptr, from_result, to_result, Result, VTABLE_DEFAULT_ERROR},
-     ffi::{c_char, c_ulong},
-     prelude::*,
-@@ -1046,10 +1046,13 @@ pub fn new() -> Result<Self> {
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index 8c86101c26cb..110f2b355db4 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-     /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
-     ///
--    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
-+    /// Instead the [`Registration`] is owned by [`devres::register`] and will be dropped, once the
-     /// device is detached.
--    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
--        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
-+    pub fn new_foreign_owned(dev: &Device<Bound>) -> Result
-+    where
-+        T: 'static,
-+    {
-+        devres::register(dev, Self::new()?, GFP_KERNEL)
-     }
+-use kernel::{auxiliary, bindings, c_str, device::Core, pci, prelude::*};
++use kernel::{auxiliary, bindings, c_str, device::Core, pci, prelude::*, sync::Arc};
+ 
+ use crate::gpu::Gpu;
+ 
+@@ -34,7 +34,10 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
+         pdev.enable_device_mem()?;
+         pdev.set_master();
+ 
+-        let bar = pdev.iomap_region_sized::<BAR0_SIZE>(0, c_str!("nova-core/bar0"))?;
++        let bar = Arc::pin_init(
++            pdev.iomap_region_sized::<BAR0_SIZE>(0, c_str!("nova-core/bar0")),
++            GFP_KERNEL,
++        )?;
+ 
+         let this = KBox::pin_init(
+             try_pin_init!(Self {
+diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+index 60b86f370284..47653c14838b 100644
+--- a/drivers/gpu/nova-core/gpu.rs
++++ b/drivers/gpu/nova-core/gpu.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
++use kernel::{device, devres::Devres, error::code::*, pci, prelude::*, sync::Arc};
+ 
+ use crate::driver::Bar0;
+ use crate::firmware::{Firmware, FIRMWARE_VERSION};
+@@ -161,14 +161,14 @@ fn new(bar: &Bar0) -> Result<Spec> {
+ pub(crate) struct Gpu {
+     spec: Spec,
+     /// MMIO mapping of PCI BAR 0
+-    bar: Devres<Bar0>,
++    bar: Arc<Devres<Bar0>>,
+     fw: Firmware,
  }
  
+ impl Gpu {
+     pub(crate) fn new(
+         pdev: &pci::Device<device::Bound>,
+-        devres_bar: Devres<Bar0>,
++        devres_bar: Arc<Devres<Bar0>>,
+     ) -> Result<impl PinInit<Self>> {
+         let bar = devres_bar.access(pdev.as_ref())?;
+         let spec = Spec::new(bar)?;
 diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 544e50efab43..250073749279 100644
+index 250073749279..15a0a94e992b 100644
 --- a/rust/kernel/devres.rs
 +++ b/rust/kernel/devres.rs
-@@ -9,12 +9,12 @@
-     alloc::Flags,
-     bindings,
-     device::{Bound, Device},
--    error::{Error, Result},
-+    error::{to_result, Error, Result},
+@@ -13,20 +13,31 @@
      ffi::c_void,
      prelude::*,
      revocable::{Revocable, RevocableGuard},
-     sync::{rcu, Arc, Completion},
--    types::ARef,
-+    types::{ARef, ForeignOwnable},
+-    sync::{rcu, Arc, Completion},
+-    types::{ARef, ForeignOwnable},
++    sync::{rcu, Completion},
++    types::{ARef, ForeignOwnable, Opaque},
  };
  
++use pin_init::Wrapper;
++
++/// [`Devres`] inner data accessed from [`Devres::callback`].
  #[pin_data]
-@@ -184,14 +184,6 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
-         Ok(Devres(inner))
-     }
- 
--    /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
--    /// is owned by devres and will be revoked / dropped, once the device is detached.
--    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
--        let _ = DevresInner::new(dev, data, flags)?;
--
--        Ok(())
--    }
--
-     /// Obtain `&'a T`, bypassing the [`Revocable`].
-     ///
-     /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-@@ -261,3 +253,61 @@ fn drop(&mut self) {
-         }
-     }
+-struct DevresInner<T> {
+-    dev: ARef<Device>,
+-    callback: unsafe extern "C" fn(*mut c_void),
++struct Inner<T> {
+     #[pin]
+     data: Revocable<T>,
++    /// Tracks whether [`Devres::callback`] has been completed.
++    #[pin]
++    devm: Completion,
++    /// Tracks whether revoking [`Self::data`] has been completed.
+     #[pin]
+     revoke: Completion,
  }
-+
-+/// Consume `data` and [`Drop::drop`] `data` once `dev` is unbound.
-+fn register_foreign<P: ForeignOwnable>(dev: &Device<Bound>, data: P) -> Result {
-+    let ptr = data.into_foreign();
-+
-+    #[allow(clippy::missing_safety_doc)]
-+    unsafe extern "C" fn callback<P: ForeignOwnable>(ptr: *mut kernel::ffi::c_void) {
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        let _ = unsafe { P::from_foreign(ptr.cast()) };
-+    }
-+
-+    // SAFETY:
-+    // - `dev.as_raw()` is a pointer to a valid and bound device.
-+    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-+    to_result(unsafe {
-+        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-+        // `ForeignOwnable` is released eventually.
-+        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-+    })
-+}
-+
-+/// Encapsulate `data` in a [`KBox`] and [`Drop::drop`] `data` once `dev` is unbound.
-+///
-+/// # Examples
-+///
-+/// ```no_run
-+/// use kernel::{device::{Bound, Device}, devres};
-+///
-+/// /// Registration of e.g. a class device, IRQ, etc.
-+/// struct Registration;
-+///
-+/// impl Registration {
-+///     fn new() -> Self {
-+///         // register
-+///
-+///         Self
-+///     }
-+/// }
-+///
-+/// impl Drop for Registration {
-+///     fn drop(&mut self) {
-+///        // unregister
-+///     }
-+/// }
-+///
-+/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-+///     devres::register(dev, Registration::new(), GFP_KERNEL)
-+/// }
-+/// ```
-+pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result
-+where
-+    T: 'static,
-+    Error: From<E>,
-+{
-+    let data = KBox::pin_init(data, flags)?;
-+
-+    register_foreign(dev, data)
-+}
-diff --git a/rust/kernel/drm/driver.rs b/rust/kernel/drm/driver.rs
-index acb638086131..f63addaf7235 100644
---- a/rust/kernel/drm/driver.rs
-+++ b/rust/kernel/drm/driver.rs
-@@ -5,9 +5,7 @@
- //! C header: [`include/linux/drm/drm_drv.h`](srctree/include/linux/drm/drm_drv.h)
  
- use crate::{
--    bindings, device,
--    devres::Devres,
--    drm,
-+    bindings, device, devres, drm,
-     error::{to_result, Result},
-     prelude::*,
-     str::CStr,
-@@ -130,18 +128,22 @@ fn new(drm: &drm::Device<T>, flags: usize) -> Result<Self> {
++impl<T> Inner<T> {
++    fn as_ptr(&self) -> *const Self {
++        self
++    }
++}
++
+ /// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
+ /// manage their lifetime.
+ ///
+@@ -88,100 +99,106 @@ struct DevresInner<T> {
+ /// # fn no_run(dev: &Device<Bound>) -> Result<(), Error> {
+ /// // SAFETY: Invalid usage for example purposes.
+ /// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
+-/// let devres = Devres::new(dev, iomem, GFP_KERNEL)?;
++/// let devres = KBox::pin_init(Devres::new(dev, iomem), GFP_KERNEL)?;
+ ///
+ /// let res = devres.try_access().ok_or(ENXIO)?;
+ /// res.write8(0x42, 0x0);
+ /// # Ok(())
+ /// # }
+ /// ```
+-pub struct Devres<T>(Arc<DevresInner<T>>);
++#[pin_data(PinnedDrop)]
++pub struct Devres<T> {
++    dev: ARef<Device>,
++    /// Pointer to [`Self::devres_callback`].
++    ///
++    /// Has to be stored, since Rust does not guarantee to always return the same address for a
++    /// function. However, the C API uses the address as a key.
++    callback: unsafe extern "C" fn(*mut c_void),
++    /// Contains all the fields shared with [`Self::callback`].
++    // TODO: Replace with `UnsafePinned`, once available.
++    #[pin]
++    inner: Opaque<Inner<T>>,
++}
+ 
+-impl<T> DevresInner<T> {
+-    fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+-        let inner = Arc::pin_init(
+-            try_pin_init!( DevresInner {
+-                dev: dev.into(),
+-                callback: Self::devres_callback,
++impl<T> Devres<T> {
++    /// Creates a new [`Devres`] instance of the given `data`.
++    ///
++    /// The `data` encapsulated within the returned `Devres` instance' `data` will be
++    /// (revoked)[`Revocable`] once the device is detached.
++    pub fn new<'a, E>(
++        dev: &'a Device<Bound>,
++        data: impl PinInit<T, E> + 'a,
++    ) -> impl PinInit<Self, Error> + 'a
++    where
++        T: 'a,
++        Error: From<E>,
++    {
++        let callback = Self::devres_callback;
++
++        try_pin_init!(&this in Self {
++            inner <- Opaque::pin_init(try_pin_init!(Inner {
+                 data <- Revocable::new(data),
++                devm <- Completion::new(),
+                 revoke <- Completion::new(),
+-            }),
+-            flags,
+-        )?;
+-
+-        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
+-        // `Self::devres_callback` is called.
+-        let data = inner.clone().into_raw();
++            })),
++            callback,
++            dev: {
++                // SAFETY: It is valid to dereference `this` to find the address of `inner`.
++                let inner = unsafe { core::ptr::addr_of_mut!((*this.as_ptr()).inner) };
+ 
+-        // SAFETY: `devm_add_action` guarantees to call `Self::devres_callback` once `dev` is
+-        // detached.
+-        let ret =
+-            unsafe { bindings::devm_add_action(dev.as_raw(), Some(inner.callback), data as _) };
+-
+-        if ret != 0 {
+-            // SAFETY: We just created another reference to `inner` in order to pass it to
+-            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
+-            // this reference accordingly.
+-            let _ = unsafe { Arc::from_raw(data) };
+-            return Err(Error::from_errno(ret));
+-        }
++                // SAFETY:
++                // - `dev.as_raw()` is a pointer to a valid bound device.
++                // - `inner` is guaranteed to be a valid for the duration of the lifetime of `Self`.
++                // - `devm_add_action()` is guaranteed not to call `callback` until `this` has been
++                //    properly initialized, because we require `dev` (i.e. the *bound* device) to
++                //    live at least as long as the returned `impl PinInit<Self, Error>`.
++                to_result(unsafe {
++                    bindings::devm_add_action(dev.as_raw(), Some(callback), inner.cast())
++                })?;
+ 
+-        Ok(inner)
++                dev.into()
++            },
++        })
      }
  
-     /// Same as [`Registration::new`}, but transfers ownership of the [`Registration`] to
--    /// [`Devres`].
-+    /// [`devres::register`].
-     pub fn new_foreign_owned(
-         drm: &drm::Device<T>,
-         dev: &device::Device<device::Bound>,
-         flags: usize,
--    ) -> Result {
-+    ) -> Result
-+    where
-+        T: 'static,
-+    {
-         if drm.as_ref().as_raw() != dev.as_raw() {
+-    fn as_ptr(&self) -> *const Self {
+-        self as _
++    fn inner(&self) -> &Inner<T> {
++        // SAFETY: `inner` is valid and properly initialized.
++        unsafe { &*self.inner.get() }
+     }
+ 
+-    fn remove_action(this: &Arc<Self>) -> bool {
+-        // SAFETY:
+-        // - `self.inner.dev` is a valid `Device`,
+-        // - the `action` and `data` pointers are the exact same ones as given to devm_add_action()
+-        //   previously,
+-        // - `self` is always valid, even if the action has been released already.
+-        let success = unsafe {
+-            bindings::devm_remove_action_nowarn(
+-                this.dev.as_raw(),
+-                Some(this.callback),
+-                this.as_ptr() as _,
+-            )
+-        } == 0;
+-
+-        if success {
+-            // SAFETY: We leaked an `Arc` reference to devm_add_action() in `DevresInner::new`; if
+-            // devm_remove_action_nowarn() was successful we can (and have to) claim back ownership
+-            // of this reference.
+-            let _ = unsafe { Arc::from_raw(this.as_ptr()) };
+-        }
+-
+-        success
++    fn data(&self) -> &Revocable<T> {
++        &self.inner().data
+     }
+ 
+     #[allow(clippy::missing_safety_doc)]
+     unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
+-        let ptr = ptr as *mut DevresInner<T>;
+-        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
+-        // reference.
+-        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
+-        //         `DevresInner::new`.
+-        let inner = unsafe { Arc::from_raw(ptr) };
++        // SAFETY: In `Self::new` we've passed a valid pointer to `Inner` to `devm_add_action()`,
++        // hence `ptr` must be a valid pointer to `Inner`.
++        let inner = unsafe { &*ptr.cast::<Inner<T>>() };
+ 
+         if !inner.data.revoke() {
+             // If `revoke()` returns false, it means that `Devres::drop` already started revoking
+-            // `inner.data` for us. Hence we have to wait until `Devres::drop()` signals that it
+-            // completed revoking `inner.data`.
++            // `data` for us. Hence we have to wait until `Devres::drop` signals that it
++            // completed revoking `data`.
+             inner.revoke.wait_for_completion();
+         }
+-    }
+-}
+ 
+-impl<T> Devres<T> {
+-    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+-    /// returned `Devres` instance' `data` will be revoked once the device is detached.
+-    pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+-        let inner = DevresInner::new(dev, data, flags)?;
++        // Signal that we're done using `inner`.
++        inner.devm.complete_all();
++    }
+ 
+-        Ok(Devres(inner))
++    fn remove_action(&self) -> bool {
++        // SAFETY:
++        // - `self.dev` is a valid `Device`,
++        // - the `action` and `data` pointers are the exact same ones as given to
++        //   `devm_add_action()` previously,
++        (unsafe {
++            bindings::devm_remove_action_nowarn(
++                self.dev.as_raw(),
++                Some(self.callback),
++                self.inner().as_ptr().cast_mut().cast(),
++            )
++        } == 0)
+     }
+ 
+     /// Obtain `&'a T`, bypassing the [`Revocable`].
+@@ -213,44 +230,61 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+     /// }
+     /// ```
+     pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a T> {
+-        if self.0.dev.as_raw() != dev.as_raw() {
++        if self.dev.as_raw() != dev.as_raw() {
              return Err(EINVAL);
          }
  
-         let reg = Registration::<T>::new(drm, flags)?;
--        Devres::new_foreign_owned(dev, reg, GFP_KERNEL)
-+
-+        devres::register(dev, reg, GFP_KERNEL)
+         // SAFETY: `dev` being the same device as the device this `Devres` has been created for
+-        // proves that `self.0.data` hasn't been revoked and is guaranteed to not be revoked as
+-        // long as `dev` lives; `dev` lives at least as long as `self`.
+-        Ok(unsafe { self.0.data.access() })
++        // proves that `self.data` hasn't been revoked and is guaranteed to not be revoked as long
++        // as `dev` lives; `dev` lives at least as long as `self`.
++        Ok(unsafe { self.data().access() })
      }
  
-     /// Returns a reference to the `Device` instance for this registration.
+     /// [`Devres`] accessor for [`Revocable::try_access`].
+     pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
+-        self.0.data.try_access()
++        self.data().try_access()
+     }
+ 
+     /// [`Devres`] accessor for [`Revocable::try_access_with`].
+     pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
+-        self.0.data.try_access_with(f)
++        self.data().try_access_with(f)
+     }
+ 
+     /// [`Devres`] accessor for [`Revocable::try_access_with_guard`].
+     pub fn try_access_with_guard<'a>(&'a self, guard: &'a rcu::Guard) -> Option<&'a T> {
+-        self.0.data.try_access_with_guard(guard)
++        self.data().try_access_with_guard(guard)
+     }
+ }
+ 
+-impl<T> Drop for Devres<T> {
+-    fn drop(&mut self) {
++// SAFETY: `Devres` can be send to any task, if `T: Send`.
++unsafe impl<T: Send> Send for Devres<T> {}
++
++// SAFETY: `Devres` can be shared with any task, if `T: Sync`.
++unsafe impl<T: Sync> Sync for Devres<T> {}
++
++#[pinned_drop]
++impl<T> PinnedDrop for Devres<T> {
++    fn drop(self: Pin<&mut Self>) {
+         // SAFETY: When `drop` runs, it is guaranteed that nobody is accessing the revocable data
+         // anymore, hence it is safe not to wait for the grace period to finish.
+-        if unsafe { self.0.data.revoke_nosync() } {
+-            // We revoked `self.0.data` before the devres action did, hence try to remove it.
+-            if !DevresInner::remove_action(&self.0) {
++        if unsafe { self.data().revoke_nosync() } {
++            // We revoked `self.data` before the devres action did, hence try to remove it.
++            if !self.remove_action() {
+                 // We could not remove the devres action, which means that it now runs concurrently,
+-                // hence signal that `self.0.data` has been revoked successfully.
+-                self.0.revoke.complete_all();
++                // hence signal that `self.data` has been revoked by us successfully.
++                self.inner().revoke.complete_all();
++
++                // Wait for `Self::devres_callback` to be done using this object.
++                self.inner().devm.wait_for_completion();
+             }
++        } else {
++            // `Self::devres_callback` revokes `self.data` for us, hence wait for it to be done
++            // using this object.
++            self.inner().devm.wait_for_completion();
+         }
++
++        // SAFETY: `inner` is valid for dropping.
++        unsafe { core::ptr::drop_in_place(self.inner.get()) };
+     }
+ }
+ 
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 8435f8132e38..db0eb7eaf9b1 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -5,7 +5,6 @@
+ //! C header: [`include/linux/pci.h`](srctree/include/linux/pci.h)
+ 
+ use crate::{
+-    alloc::flags::*,
+     bindings, container_of, device,
+     device_id::RawDeviceId,
+     devres::Devres,
+@@ -398,19 +397,20 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+ impl Device<device::Bound> {
+     /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
+     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
+-    pub fn iomap_region_sized<const SIZE: usize>(
+-        &self,
++    pub fn iomap_region_sized<'a, const SIZE: usize>(
++        &'a self,
+         bar: u32,
+-        name: &CStr,
+-    ) -> Result<Devres<Bar<SIZE>>> {
+-        let bar = Bar::<SIZE>::new(self, bar, name)?;
+-        let devres = Devres::new(self.as_ref(), bar, GFP_KERNEL)?;
+-
+-        Ok(devres)
++        name: &'a CStr,
++    ) -> impl PinInit<Devres<Bar<SIZE>>, Error> + 'a {
++        Devres::new(self.as_ref(), Bar::<SIZE>::new(self, bar, name))
+     }
+ 
+     /// Mapps an entire PCI-BAR after performing a region-request on it.
+-    pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
++    pub fn iomap_region<'a>(
++        &'a self,
++        bar: u32,
++        name: &'a CStr,
++    ) -> impl PinInit<Devres<Bar>, Error> + 'a {
+         self.iomap_region_sized::<0>(bar, name)
+     }
+ }
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 15147e4401b2..5c35f1414172 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -25,8 +25,10 @@ impl TestIndex {
+     const NO_EVENTFD: Self = Self(0);
+ }
+ 
++#[pin_data(PinnedDrop)]
+ struct SampleDriver {
+     pdev: ARef<pci::Device>,
++    #[pin]
+     bar: Devres<Bar0>,
+ }
+ 
+@@ -73,13 +75,11 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
+         pdev.enable_device_mem()?;
+         pdev.set_master();
+ 
+-        let bar = pdev.iomap_region_sized::<{ Regs::END }>(0, c_str!("rust_driver_pci"))?;
+-
+-        let drvdata = KBox::new(
+-            Self {
++        let drvdata = KBox::pin_init(
++            try_pin_init!(Self {
+                 pdev: pdev.into(),
+-                bar,
+-            },
++                bar <- pdev.iomap_region_sized::<{ Regs::END }>(0, c_str!("rust_driver_pci")),
++            }),
+             GFP_KERNEL,
+         )?;
+ 
+@@ -90,12 +90,13 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
+             Self::testdev(info, bar)?
+         );
+ 
+-        Ok(drvdata.into())
++        Ok(drvdata)
+     }
+ }
+ 
+-impl Drop for SampleDriver {
+-    fn drop(&mut self) {
++#[pinned_drop]
++impl PinnedDrop for SampleDriver {
++    fn drop(self: Pin<&mut Self>) {
+         dev_dbg!(self.pdev.as_ref(), "Remove Rust PCI driver sample.\n");
+     }
+ }
 -- 
 2.49.0
 
