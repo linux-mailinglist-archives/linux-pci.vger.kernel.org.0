@@ -1,96 +1,75 @@
-Return-Path: <linux-pci+bounces-30439-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30440-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2DFAAE4C26
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 19:52:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6623CAE4C4B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 20:00:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBC1C3B69E9
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 17:51:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 027DA17E001
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 18:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD2D2673B5;
-	Mon, 23 Jun 2025 17:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQpDNoVH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99EFD1C07F6;
+	Mon, 23 Jun 2025 18:00:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DDA2472A0
-	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 17:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814474A24;
+	Mon, 23 Jun 2025 18:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750701118; cv=none; b=J7ZtvwJof9OCL7adqhAR1GK5MChr0CgBVs7uB+1ZJDsdO+vCVPm5Hsm/GSNwg0eUQfTW1atRThRaM3md6k2uqVZLDcUN27UrzgSmZuuvzm7YP7jDLp0oaTyC3Kjme81QU56TCx39rHzbiyiZJPSsEmVgtoHokS6vaxhZ+mbKM9w=
+	t=1750701640; cv=none; b=fX9X7sc6w+VALqRs/RIq7aPbCcDgrJPPSRC9EvJyCtZwvyTDRjFCtlRHWvZCI/e5KlOgXp7MHYFuHgcMuyqIP+60IiCl3oznsqmOvxKlxbRa+DeFGZxcBq5BR8QSWDLTZicGdger2To605EV+7FUbJgDGntZK/kHKqyrqLOn98Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750701118; c=relaxed/simple;
-	bh=uT4eN0oH0BdUOC4cASVdHXq2DlOuNyGLBtFUDBFkZlI=;
+	s=arc-20240116; t=1750701640; c=relaxed/simple;
+	bh=2Zb/X76hGLMtOvc73fPeJAQeukskv+DbhVHnOwqWSw8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+O+TUaEWyUwyeBJg7OZwAEv772QLpEI5P7p0peIzPH3ht9w2GHfgSE+bD4/jk35W3dUzK0FW5dDr2hbBikPLZpA5M9HoKdIkwzave7eDfFLSrxvOIPf/t/0Hfni1UrSDfub0H27xeU0+foL7vda7f1CTA4TxBbHRtM5rSzSGaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQpDNoVH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76AE0C4CEEA;
-	Mon, 23 Jun 2025 17:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750701116;
-	bh=uT4eN0oH0BdUOC4cASVdHXq2DlOuNyGLBtFUDBFkZlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lQpDNoVHCuf2Bm3F+BfZISp+4ioI9QOjF6Tb8XIaDS7qauk/rQ7hWIc46aQ6/UUho
-	 ECMNgTy8kGUHL3VAsRFcKm+oXJtJPmtOj44mhsgPhBZEngYsi1bnw+c602QyNpVWF4
-	 lA37Mh0vovq6jewPAe8RZsUFGEmMNf1fs7T+VHd1mvKYKxSNEttfgocS15vHlG8/OC
-	 32C68q4jaKb8Xv0gk8Nslin53L2hMgDhCD9FjGuH0nbPCpa6Qka/GNtWgIJM8E1acR
-	 T+bJcEqAt7gUb1WECiDKGQXXzH+FeGPgeg5z9buB7dcGLrc70hDTjPtZDXy/D6Wjh6
-	 V3Vtg7MxNTkHw==
-Date: Mon, 23 Jun 2025 11:51:54 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Keith Busch <kbusch@meta.com>,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCHv2] pci: allow user specifiy a reset poll timeout
-Message-ID: <aFmUOppCJKylJznO@kbusch-mbp>
-References: <20250218165444.2406119-1-kbusch@meta.com>
- <Z_2kQMjR1uoKnMMo@kbusch-mbp.dhcp.thefacebook.com>
- <zqtfb77zu3x4w5ilbmaqsnvocisfknkptj4yuz64lu3rza5vub@fmalvswla7c5>
- <aEmxanDmx6f_5aZX@kbusch-mbp>
- <reekyt4dm7uszybipm25xfxlksn5bm2cdpubx5idovxenpg44z@qcqs44xlevea>
- <aEm6Nx6bSDvyouEy@kbusch-mbp>
- <48d598a4-27e4-e1d4-a6a2-9dc1fec10b77@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=L4x6VznUkUU4b2lHbYFhRiQ6QmRF6ycFI9I/H+ErO/kS2ZDtUWtKJoogb0VZf0OANZco4ycG9jDpq7lNz04rvNLllTAUU3DOcw33CwvCYBBsMoFa0X3lOR7fDXHOFKkrtBiFNwNWV0Ura4hNzGLD7yjbTeLhuYuQnKpHi3n+zgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 55FE22C0666B;
+	Mon, 23 Jun 2025 20:00:35 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 50A523B45B8; Mon, 23 Jun 2025 20:00:35 +0200 (CEST)
+Date: Mon, 23 Jun 2025 20:00:35 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Hongbo Yao <andy.xu@hj-micro.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	peter.du@hj-micro.com, jemma.zhang@hj-micro.com
+Subject: Re: [RFC PATCH] PCI: pciehp: Replace fixed delay with polling for
+ slot power-off
+Message-ID: <aFmWQ4atT8roSr6I@wunner.de>
+References: <20250619093228.283171-1-andy.xu@hj-micro.com>
+ <aFP598Yyl0el1uKh@wunner.de>
+ <b95a60f8-0e1d-4c81-8d5a-e2ea7d083780@hj-micro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <48d598a4-27e4-e1d4-a6a2-9dc1fec10b77@linux.intel.com>
+In-Reply-To: <b95a60f8-0e1d-4c81-8d5a-e2ea7d083780@hj-micro.com>
 
-On Thu, Jun 12, 2025 at 11:06:41AM +0300, Ilpo Järvinen wrote:
-> On Wed, 11 Jun 2025, Keith Busch wrote:
-> 
-> > On Wed, Jun 11, 2025 at 10:41:33PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Jun 11, 2025 at 10:40:10AM -0600, Keith Busch wrote:
-> > > > 
-> > > > No. I'm dealing with new devices being actively developed, with new ones
-> > > > coming out every year, so a quirk list would just be never ending
-> > > > maintenance pain point.
-> > > 
-> > > Sounds like you have a lot of devices behaving this way. So can't you quirk them
-> > > based on VID and CLASS?
-> > 
-> > What I mean by active development is that the timeout continues to be a
-> > moving target. A quirk only gives me a fixed value, but I need a
-> > modifiable one without having to recompile the kernel.
-> 
-> Hi,
-> 
-> Doesn't DRS/FRS address this such way that the device can tell when it's 
-> ready? So perhaps check if DRS/FRS is supported and only then make the 
-> timeout like really large?
+On Fri, Jun 20, 2025 at 01:54:05PM +0800, Hongbo Yao wrote:
+> The affected hardware configuration:
+>  - Host system: Arm Neoverse N2 based server
+>  - Multi-host OCP card: Mellanox Technologies MT2910 Family [ConnectX-7]
 
-Even if the kernel supported that, you'd still need an arbitrary timeout
-in order to make forward progress in case the device never becomes
-ready.
+Thanks for providing context for this patch submission.
+When respinning, please make sure to include the information above
+(as well as all the information in your e-mail) in the commit message.
+
+Thanks,
+
+Lukas
 
