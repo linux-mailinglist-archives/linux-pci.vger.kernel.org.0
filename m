@@ -1,154 +1,99 @@
-Return-Path: <linux-pci+bounces-30385-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30386-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDDE2AE3FDB
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 14:24:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A7D4CAE3FFE
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 14:26:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBD513E04F5
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:17:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0BDE3BBD0A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:19:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0EA248191;
-	Mon, 23 Jun 2025 12:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfP7CoTy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B27248F60;
+	Mon, 23 Jun 2025 12:19:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C79524169B;
-	Mon, 23 Jun 2025 12:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F1E248F40;
+	Mon, 23 Jun 2025 12:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680933; cv=none; b=t18bVNCPCgBuMWjMKmbnUlB+M6oaKea9JwsGZZHMOJGLXv2vleZxq6nVaC5XAuupAyAk7RnvBKhFYnkYC5LHbwFDtG/sueFrYJu6ASfJuYugfozO7USJ1FgXtVbmIpoDbFNSQexEvvoSlRbtqGGJseZl3YJqUr63NlE6AjvHI5g=
+	t=1750681162; cv=none; b=bFUS/ePCG7wwvmNTh7yZAzRF07iq2CVUekQVZgtqRE0dl02lyWj+4LG6Z6VrTQzlPZkXTgUIvCt6tO0DsSn6p1gUv2HeN8SyoO1Zk3eMklyfJ/QXg0bbJhnPIxwd0XhzkDD9V5LCygctMGYZgGhKF5YKZilFYYhqIjVAYjhWd6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680933; c=relaxed/simple;
-	bh=pr2/No/guItEEsZxzpUA7Zdi/FU0THWZwck2JGVadcM=;
+	s=arc-20240116; t=1750681162; c=relaxed/simple;
+	bh=shpeglIn36FKeBIw85IotOo/0D7/oiy7H7OZihX18HQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXVdA9BV19RiaA+cG8dRwBzdW/iVVc6QkRWSws0Tejd6kCc7xfrMF5z0VGUupuCdRv60LvvpVnUBOeq4/HdGIkIZsvItsALUGUy4pCaFBNe9uYCncf/RNZvFHDdy92YJy807FyQoZPOyxHa6U8qLbLcC1k9Kl2S7HNpXXOurNOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfP7CoTy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FB84C4CEEA;
-	Mon, 23 Jun 2025 12:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750680933;
-	bh=pr2/No/guItEEsZxzpUA7Zdi/FU0THWZwck2JGVadcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FfP7CoTyA8fu1qCwlWVPh5R8i5EG5GKmtcq50mO0Txd7ASAKCgT7eI5eLmmW4JRCD
-	 bT2rk641NFiTtFeOu4W2WwvmiuTe5RvfdJPMiGkB0iGPunuNBVKnKXiSzYFzuwEUmy
-	 Y3ATCjQJcuWGHBBP3JgbuaGB1TAqvg/Z2rDwEUkXRclqscxwUgb0gq9qUk8++07THf
-	 z4g7+5C0syh+uUqEuOnWnD+NiPOG72Zjl1xrMfOwPPNLdfWmCJTUK7RrnNhylGJWQQ
-	 o/hpBLdgYSVSDm1wyfKRXs4mNNU/8yi+GWV6tvk0v8xC71ViUdvIZntzgzEHjJCe8U
-	 4KN6vgL3PYNSA==
-Date: Mon, 23 Jun 2025 06:15:31 -0600
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	johan+linaro@kernel.org, cassel@kernel.org, shradha.t@samsung.com, 
-	thippeswamy.havalige@amd.com, quic_schintav@quicinc.com, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 7/9] arm64: dts: st: Add PCIe Root Complex mode on
- stm32mp251
-Message-ID: <vhzu4e233bulwq3jwozctvxzg2ib5j7n6axfneltznnqi453np@npbx44uvccdd>
-References: <20250610090714.3321129-1-christian.bruel@foss.st.com>
- <20250610090714.3321129-8-christian.bruel@foss.st.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCawbq99nzL2V+86H8M5QncpUBeOTMfqagSmF3OC3RU9ppl5IWGtd2+cqlnhExU1cQhYcG8WAkUA44wq9/fx/grXUaN6B3QoQhnyOQ/dOwioN2Sfq7Pu4XllfZlyGSPOHS63LZs6cHMQ8u2/rw/F9YHa2uaigFkxW+InHljqzEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 933EE2C06663;
+	Mon, 23 Jun 2025 14:19:09 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8120B40FCC; Mon, 23 Jun 2025 14:19:09 +0200 (CEST)
+Date: Mon, 23 Jun 2025 14:19:09 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on
+ device unplug
+Message-ID: <aFlGPaITSa3IAB8s@wunner.de>
+References: <20250620025535.3425049-3-superm1@kernel.org>
+ <aFcCaw_IZr-JuUYY@wunner.de>
+ <8d4d98b6-fec5-466f-bd2c-059d702c7860@kernel.org>
+ <aFeJ83O9PRUrM2Ir@wunner.de>
+ <295bf182-7fed-4ffd-93a4-fb5ddf5f1bb4@kernel.org>
+ <aFj3jUAM42lSyfpe@wunner.de>
+ <aFkEI2jXg7YiwL7b@wunner.de>
+ <aFkm8njX-NEIiTcv@wunner.de>
+ <CAJZ5v0jfuAjhskbwG1XHByGpdgP1pSHwVSMnz3jcOy7VDyjnRQ@mail.gmail.com>
+ <7dde3873-4239-4be8-801a-dcf37472664d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610090714.3321129-8-christian.bruel@foss.st.com>
+In-Reply-To: <7dde3873-4239-4be8-801a-dcf37472664d@kernel.org>
 
-On Tue, Jun 10, 2025 at 11:07:12AM +0200, Christian Bruel wrote:
-> Add pcie_rc node to support STM32 MP25 PCIe driver based on the
-> DesignWare PCIe core configured as Root Complex mode
+On Mon, Jun 23, 2025 at 06:37:33AM -0500, Mario Limonciello wrote:
+> On 6/23/25 5:11 AM, Rafael J. Wysocki wrote:
+> > On Mon, Jun 23, 2025 at 12:05???PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Mon, Jun 23, 2025 at 09:37:07AM +0200, Lukas Wunner wrote:
+> > > > On Mon, Jun 23, 2025 at 08:43:25AM +0200, Lukas Wunner wrote:
+> > > > > On Sun, Jun 22, 2025 at 01:39:26PM -0500, Mario Limonciello wrote:
+> > > > > > I did this check and yes specifically on this PCIe port with
+> > > > > > the underflow the d3 possible lookup returns false during
+> > > > > > pcie_portdrv_remove().  It returns true during
+> > > > > > pcie_portdrv_probe().
+> > > > > 
+> > > > > That's not supposed to happen.  The expectation is that
+> > > > > pci_bridge_d3_possible() always returns the same value.
+> > > > 
+> > > > I'm wondering if the patch below fixes the issue?
 > 
-> Supports Gen1/Gen2, single lane, MSI interrupts using the ARM GICv2m
-> 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> Yes this works, thanks!
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Could you still check what the value read from the Slot Capabilities
+register is in pciehp_is_native() (if the patch is not applied)?
 
-- Mani
+I guess it must be something else than "all ones" and I'd like to
+understand why.
 
-> ---
->  arch/arm64/boot/dts/st/stm32mp251.dtsi | 44 ++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> index 8d87865850a7..781d0e43ab59 100644
-> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> @@ -122,6 +122,15 @@ intc: interrupt-controller@4ac00000 {
->  		      <0x0 0x4ac20000 0x0 0x20000>,
->  		      <0x0 0x4ac40000 0x0 0x20000>,
->  		      <0x0 0x4ac60000 0x0 0x20000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		v2m0: v2m@48090000 {
-> +			compatible = "arm,gic-v2m-frame";
-> +			reg = <0x0 0x48090000 0x0 0x1000>;
-> +			msi-controller;
-> +		};
->  	};
->  
->  	psci {
-> @@ -1130,6 +1139,41 @@ stmmac_axi_config_1: stmmac-axi-config {
->  					snps,wr_osr_lmt = <0x7>;
->  				};
->  			};
-> +
-> +			pcie_rc: pcie@48400000 {
-> +				compatible = "st,stm32mp25-pcie-rc";
-> +				device_type = "pci";
-> +				reg = <0x48400000 0x400000>,
-> +				      <0x10000000 0x10000>;
-> +				reg-names = "dbi", "config";
-> +				#interrupt-cells = <1>;
-> +				interrupt-map-mask = <0 0 0 7>;
-> +				interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
-> +						<0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-> +						<0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-> +						<0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				ranges = <0x01000000 0x0 0x00000000 0x10010000 0x0 0x10000>,
-> +					 <0x02000000 0x0 0x10020000 0x10020000 0x0 0x7fe0000>,
-> +					 <0x42000000 0x0 0x18000000 0x18000000 0x0 0x8000000>;
-> +				dma-ranges = <0x42000000 0x0 0x80000000 0x80000000 0x0 0x80000000>;
-> +				clocks = <&rcc CK_BUS_PCIE>;
-> +				resets = <&rcc PCIE_R>;
-> +				msi-parent = <&v2m0>;
-> +				access-controllers = <&rifsc 68>;
-> +				power-domains = <&CLUSTER_PD>;
-> +				status = "disabled";
-> +
-> +				pcie@0,0 {
-> +					device_type = "pci";
-> +					reg = <0x0 0x0 0x0 0x0 0x0>;
-> +					phys = <&combophy PHY_TYPE_PCIE>;
-> +					#address-cells = <3>;
-> +					#size-cells = <2>;
-> +					ranges;
-> +				};
-> +			};
->  		};
->  
->  		bsec: efuse@44000000 {
-> -- 
-> 2.34.1
-> 
+Thanks,
 
--- 
-மணிவண்ணன் சதாசிவம்
+Lukas
 
