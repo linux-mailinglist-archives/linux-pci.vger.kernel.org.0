@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-30413-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30412-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92537AE49BD
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D1CAAE49B9
 	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 18:08:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 319163BAEF3
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 16:07:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 507A03BA5D2
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 16:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 864C229B8E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F64C29B799;
 	Mon, 23 Jun 2025 16:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="hJ5Aj3up"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="ETz5TV9b"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207429B233;
-	Mon, 23 Jun 2025 16:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F829B23E;
+	Mon, 23 Jun 2025 16:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694838; cv=pass; b=E9+w+nYMfQMHGsqlgidEAvqp1h6uOjM9jn30U9kZuI+enMbrLiRMxiWOfZ1r9p0TYgm67BE3O+fOesgRrdlx2fEX9Ms3e0s6cGnVkJryi5ArAAg0D8LkvkI6YUKw1ASwwWsHrvBrDRng70tSHQSMghCVW22VTkLfZR6OBo4N6nM=
+	t=1750694838; cv=pass; b=RuHTziVFITP8PswSYMy3HDBsQu7Cwxom0XqPphDvNlLYiCcCC1mVWhN+eRcRcHzBnhdtFPnX6trAthFmy03uvOjRVXmb7YfoN21mLS2khBtoBr/u1yiXN14tLhmo2dsZ+1XT8ufKve18ipqZNapsmyh96t6UxCgKxfog4iraOmE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750694838; c=relaxed/simple;
-	bh=U3dR7usceUoB1k3W9+wDecW/kRSYlS4inY/JHvz40oQ=;
+	bh=Rs+KTrJ92o4m+v5CF3hKsXzNwV8DvGVCg4BNzRzHNQs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KabGEIgFqyntHft2PqaDY0PKreVLbdzRPTS73E8U2ScmDbSj6jr36ITgN20r5ESxGU7IdWfIg2pLg+W5i5gwh/j+bf552lTJ3mIWxR+h1zN8gAGoGVG6So9vqKSUsMp56E9px7MejFPbWHJ4L229CEdMYIW37inoMLOSGzk4x+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=hJ5Aj3up; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=cO/hcsV+4X+Mdx/svJ5KvP9v82Bf4yjQcmL77Ero2i7MgeCwFD0+mPjHAGCMzvwrVD/BV2l7jY/hz7RxYM9HqZUxNkB76rRMFAwxzlSlHz69qdQywFlVCtkVjNkZlwfC15NDqhCdrWPZazhT+/hjFlHpzGx8SB0pegf897FUiVo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=ETz5TV9b; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1750694764; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1750694778; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=UVao7uPKb2Ut1L2cDmAKFM6EvbHFJRJRhzjSiR3OU7fc8TAq2vkP//x2lQ85ZKZBnrA5ZVgLn0N3WshR5q/SArOMQGYWDUh+5uE+KqBTfH47mg4GP792rXUg54EEPruBFGpfYaJtIVmWKsnRj2HVLVTg3QXutP9eReD31SSLnCw=
+	b=RKHqaCEzPeR4zy0teDOkQZRDqkpOv+JrYL6vZr3gblXVkFqwh8npxTDRHW5zWXOIF3/p1bjTnYqNcLJ6sXWua9h/9jQF8KB0RCRY6NnYvbFFsqvr66ZxkDkd57wfZ8hfgGe4tURMK2SRGJYo2Dx9d38Bz+5UTqgyoZJNl4Hpplc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750694764; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iE9yh19l2ifejmMUwyg2PaFSbh+ZLdHsr2HyVG2JpXE=; 
-	b=KLSor59+fk9LAZCaS55LP3NyjRaHTxa/zZqVL8VBobubkrK3iPBj+8+i37q6pajVRKlhi3lxhM1Is3yWSOO/ZS4q9s69QbpU+PqcDL+6vZjdfvgD60O/8oi73A08mIUV4s/Mep7meA3flPLRRZOgnOcOdmH3/ClxT+jsoZisD4A=
+	t=1750694778; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yEdxHJmCEw0Pc/7UrKzJWEnE1Ei3x3Qa8UoZFYS3K3A=; 
+	b=dUYM/iWCffN7WUrXMzoXlVVVfflSkd0yeWyTHzVJZwBMoVrRVypJDpTDkBR0a+vk1ptNOh7bqwF81oXYCeq0uL58S5j5iYI+oPLO5d01Tp9ZLipbdqsFN8iiOT3fY74Tmuhhfm13MEBTRmlhrHBaVeYyIs4sewfBNxwl3kr4794=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694764;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694778;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=iE9yh19l2ifejmMUwyg2PaFSbh+ZLdHsr2HyVG2JpXE=;
-	b=hJ5Aj3uplpiKDx8h+ipBhfmJ8l1L4DLklGLaMyLb/OlN2IOCKfQ8V2EB2YYC1xmx
-	RHZkF2ydgekMX00dHgsDxXb7edfllVicyUHvbDYeR0hHsX+RzanXWqULQArOhAGqzNf
-	7Oo23uvk7asskBGSDtkVzpYxYSbtt7c2S/JbgwPE=
-Received: by mx.zohomail.com with SMTPS id 1750694762676661.9667739946736;
-	Mon, 23 Jun 2025 09:06:02 -0700 (PDT)
+	bh=yEdxHJmCEw0Pc/7UrKzJWEnE1Ei3x3Qa8UoZFYS3K3A=;
+	b=ETz5TV9bbWWNK9JkXWIDXBSDvnDvqCzI0WzI2j2JWUddTXk2s7q9lYDn5ERabOS2
+	JmqWwbvDUujhTWNS5ZYvGksWpYAcIB9BeOrHyq5H0zKmwjY2Y70tB76+xjUmEGzQSyP
+	8afjrwARQzts/pl7VC1JSEEqV13EyStVWN+oVtMY=
+Received: by mx.zohomail.com with SMTPS id 1750694775956412.24403309942795;
+	Mon, 23 Jun 2025 09:06:15 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 23 Jun 2025 18:05:29 +0200
-Subject: [PATCH v2 01/20] bitmap: introduce hardware-specific bitfield
- operations
+Date: Mon, 23 Jun 2025 18:05:30 +0200
+Subject: [PATCH v2 02/20] mmc: dw_mmc-rockchip: switch to FIELD_PREP_WM16
+ macro
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-byeword-update-v2-1-cf1fc08a2e1f@collabora.com>
+Message-Id: <20250623-byeword-update-v2-2-cf1fc08a2e1f@collabora.com>
 References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
 In-Reply-To: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -106,115 +106,55 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-Hardware of various vendors, but very notably Rockchip, often uses
-32-bit registers where the upper 16-bit half of the register is a
-write-enable mask for the lower half.
+The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+drivers that use constant masks.
 
-This type of hardware setup allows for more granular concurrent register
-write access.
+Switch to the new FIELD_PREP_WM16 macro in hw_bitfield.h, which has
+error checking. Instead of redefining the driver's HIWORD_UPDATE macro
+in this case, replace the two only instances of it with the new macro,
+as I could test that they result in an equivalent value.
 
-Over the years, many drivers have hand-rolled their own version of this
-macro, usually without any checks, often called something like
-HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-semantics between them.
-
-Clearly there is a demand for such a macro, and thus the demand should
-be satisfied in a common header file. As this is a convention that spans
-across multiple vendors, and similar conventions may also have
-cross-vendor adoption, it's best if it lives in a vendor-agnostic header
-file that can be expanded over time.
-
-Add hw_bitfield.h with two macros: FIELD_PREP_WM16, and
-FIELD_PREP_WM16_CONST. The latter is a version that can be used in
-initializers, like FIELD_PREP_CONST.
-
-Suggested-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- MAINTAINERS                 |  1 +
- include/linux/hw_bitfield.h | 62 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+)
+ drivers/mmc/host/dw_mmc-rockchip.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 41f13ccef4c84dcb1762c166553a2dc35704f211..8d2cf600d5cd722b5b08e81b6b24338fdc044240 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4187,6 +4187,7 @@ F:	include/linux/bits.h
- F:	include/linux/cpumask.h
- F:	include/linux/cpumask_types.h
- F:	include/linux/find.h
-+F:	include/linux/hw_bitfield.h
- F:	include/linux/nodemask.h
- F:	include/linux/nodemask_types.h
- F:	include/vdso/bits.h
-diff --git a/include/linux/hw_bitfield.h b/include/linux/hw_bitfield.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..df202e167ce487122e4440962eacb2e44817ad9f
---- /dev/null
-+++ b/include/linux/hw_bitfield.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2025, Collabora Ltd.
-+ */
-+
-+#ifndef _LINUX_HW_BITFIELD_H
-+#define _LINUX_HW_BITFIELD_H
-+
-+#include <linux/bitfield.h>
-+#include <linux/build_bug.h>
-+#include <linux/limits.h>
-+
-+/**
-+ * FIELD_PREP_WM16() - prepare a bitfield element with a mask in the upper half
-+ * @_mask: shifted mask defining the field's length and position
-+ * @_val:  value to put in the field
-+ *
-+ * FIELD_PREP_WM16() masks and shifts up the value, as well as bitwise ORs the
-+ * result with the mask shifted up by 16.
-+ *
-+ * This is useful for a common design of hardware registers where the upper
-+ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-+ * register, a bit in the lower half is only updated if the corresponding bit
-+ * in the upper half is high.
-+ */
-+#define FIELD_PREP_WM16(_mask, _val)					     \
-+	({								     \
-+		typeof(_val) __val = _val;				     \
-+		typeof(_mask) __mask = _mask;				     \
-+		__BF_FIELD_CHECK(__mask, ((u16)0U), __val,		     \
-+				 "HWORD_UPDATE: ");			     \
-+		(((typeof(__mask))(__val) << __bf_shf(__mask)) & (__mask)) | \
-+		((__mask) << 16);					     \
-+	})
-+
-+/**
-+ * FIELD_PREP_WM16_CONST() - prepare a constant bitfield element with a mask in
-+ *                           the upper half
-+ * @_mask: shifted mask defining the field's length and position
-+ * @_val:  value to put in the field
-+ *
-+ * FIELD_PREP_WM16_CONST() masks and shifts up the value, as well as bitwise ORs
-+ * the result with the mask shifted up by 16.
-+ *
-+ * This is useful for a common design of hardware registers where the upper
-+ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-+ * register, a bit in the lower half is only updated if the corresponding bit
-+ * in the upper half is high.
-+ *
-+ * Unlike FIELD_PREP_WM16(), this is a constant expression and can therefore
-+ * be used in initializers. Error checking is less comfortable for this
-+ * version.
-+ */
-+#define FIELD_PREP_WM16_CONST(_mask, _val)				 \
-+	(								 \
-+		FIELD_PREP_CONST(_mask, _val) |				 \
-+		(BUILD_BUG_ON_ZERO(const_true((u64)(_mask) > U16_MAX)) + \
-+		 ((_mask) << 16))					 \
-+	)
-+
-+
-+#endif /* _LINUX_HW_BITFIELD_H */
+diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+index baa23b51773127b4137f472581259b61649273a5..218b2072688408fffa66d593eebc1efa81ae4969 100644
+--- a/drivers/mmc/host/dw_mmc-rockchip.c
++++ b/drivers/mmc/host/dw_mmc-rockchip.c
+@@ -6,6 +6,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
++#include <linux/hw_bitfield.h>
+ #include <linux/mmc/host.h>
+ #include <linux/of_address.h>
+ #include <linux/mmc/slot-gpio.h>
+@@ -24,8 +25,6 @@
+ #define ROCKCHIP_MMC_DELAYNUM_OFFSET	2
+ #define ROCKCHIP_MMC_DELAYNUM_MASK	(0xff << ROCKCHIP_MMC_DELAYNUM_OFFSET)
+ #define ROCKCHIP_MMC_DELAY_ELEMENT_PSEC	60
+-#define HIWORD_UPDATE(val, mask, shift) \
+-		((val) << (shift) | (mask) << ((shift) + 16))
+ 
+ static const unsigned int freqs[] = { 100000, 200000, 300000, 400000 };
+ 
+@@ -148,9 +147,11 @@ static int rockchip_mmc_set_internal_phase(struct dw_mci *host, bool sample, int
+ 	raw_value |= nineties;
+ 
+ 	if (sample)
+-		mci_writel(host, TIMING_CON1, HIWORD_UPDATE(raw_value, 0x07ff, 1));
++		mci_writel(host, TIMING_CON1,
++			   FIELD_PREP_WM16(GENMASK(11, 1), raw_value));
+ 	else
+-		mci_writel(host, TIMING_CON0, HIWORD_UPDATE(raw_value, 0x07ff, 1));
++		mci_writel(host, TIMING_CON0,
++			   FIELD_PREP_WM16(GENMASK(11, 1), raw_value));
+ 
+ 	dev_dbg(host->dev, "set %s_phase(%d) delay_nums=%u actual_degrees=%d\n",
+ 		sample ? "sample" : "drv", degrees, delay_num,
 
 -- 
 2.50.0
