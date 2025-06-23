@@ -1,114 +1,105 @@
-Return-Path: <linux-pci+bounces-30452-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30453-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5098AE4D3C
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 21:05:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94F9BAE4D66
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 21:13:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBEC83B5655
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 19:04:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31ED8172E2A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 19:13:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C006025F785;
-	Mon, 23 Jun 2025 19:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD921684A4;
+	Mon, 23 Jun 2025 19:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wq8P8oSO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bJ3uGDEs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZdeOPYX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF961DDA31;
-	Mon, 23 Jun 2025 19:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DB019049B
+	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 19:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750705499; cv=none; b=eiXIkt3GV+fqVz/vpBbUd4uRdfQfWSsHIHZbY3kRnl0jXcglndY/6vLzQ02AznoqKO76m4elaw+Q5pTbs50iUhY3OJISnMn9zO+WksZx65ReXXUm9JDtsRH/LdqojsMbLtUht7CQACU6pKAJs4bDD0N2fPrg1qc+WAZ3nxA2M7k=
+	t=1750706020; cv=none; b=khcYKONwB9UkGPEoPc32BFs7o2mdDWVFIsjRWokc7mdsMHsG0jpeuSteSV9UBwDNW2xg4NX5raq1UNasxGj/88bfIy3sLFcIjTjq331oOjR5sPvGWyJtO0kf8oOzcj66P2MqFvPPae2nSu3+W/62qxDUdrMqqzJEev/Yg7ZX6EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750705499; c=relaxed/simple;
-	bh=TR8ISfADIgMboKyCwl25EEKSp/wq6BbTsD/oRX+z1C8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KSoEMe5fsXWFSuuHxq1O8xD7WHqV09r5mlSCE7nCcEKF3R/J0sXISk1O9ITcMuof5yBkA6PJrZtptxuYzTIHg15Q1I90b7nyAfiHq6hIsSX+gz7QvlqKrPBE0cBRm1vuA10TpIZPojWQiSOUq/szBIjY7A1Y0aSjYyE3obl9xp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wq8P8oSO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bJ3uGDEs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750705495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
-	b=Wq8P8oSOSnrEFmyK5tBA94+ro+F6vK1BDqjUoE2cyXQ7+BV/JEjWO58VVuAZ1TfKjH+64f
-	WqMXCGXHSNX07tPREailSfueUDYo2DFKi5TrXV1mokTpLI+TnIybDSvX3Zg6RMMhvqPfaC
-	9X0mPgCp0A74LFynqgJE9znnOlfXksasKZfK4BOi5Higm6dCMf7kj3KvYJrxjsfeDueYAV
-	LSs8H2jtQYcdk9VPUaDlP3cm5DT6EgWEq0xhz0uHXSzszsZx+JgilzK4NQ6XP5RqlsPMH1
-	DpyBg6RJKWxlRJUD32Rz6uK5YHRWPKhJFvOBNZlTL/ggRfmRqEMCh0ikudVXsw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750705495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X6DcYddt5wym2Xskxe6KfcsdaZsVhnmiyQICeoOHbM8=;
-	b=bJ3uGDEsaB26JP9V7UX1Jlx1g4wZEoUxaRVea7vzQCcQzJlekZks5lMZkgtZUr16gahBgA
-	SNi+iyrrJuUoCwBQ==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Timothy Hayes
- <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Peter Maydell
- <peter.maydell@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jiri
- Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
-In-Reply-To: <aFkd0cigSKOSqUQI@lpieralisi>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
- <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org> <87y0tmp6gn.ffs@tglx>
- <aFkd0cigSKOSqUQI@lpieralisi>
-Date: Mon, 23 Jun 2025 21:04:54 +0200
-Message-ID: <87ms9ynusp.ffs@tglx>
+	s=arc-20240116; t=1750706020; c=relaxed/simple;
+	bh=i7kragQ9Vz4m6vrIv01n865b2qgbKDWuA2cpQt9Hme8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RfOGvljXmddQU6x6GAwZSmhb4ryucGkvW7OUEF/29fyAxiTmBsoc8ltZqAjf1XZ1CLeTPEZQugT+JL6TmrmcecjK+tjkm4fwJw6o8ez5LhRPUxF28AcGDQyDcTmR6cJdwp9QIvPcooeEiWq6st/y07WGMb0MtJtJL9NAq6kwPqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZdeOPYX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F66C4CEEA;
+	Mon, 23 Jun 2025 19:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750706019;
+	bh=i7kragQ9Vz4m6vrIv01n865b2qgbKDWuA2cpQt9Hme8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fZdeOPYXKNDF+XebZKZ5AhLhq8iUSUx+bfP10SEahLxzd/GyD+kJfxpybhA9iiWEM
+	 a5urTnH1b77bmemp1STK5czNsvl5Gy1SaDTbfpTeBY7fh26wcdog65lKkvMinxUkCB
+	 VImgBy7ECCH9CB13adK/Ogta1g256egvSRPlrVMZ1KR1oWF+0+zBLAx2laOv94pbH/
+	 o5mscb52DhLRlEfzQQvfsNgVjUfiC+uSKl7VwErfYNL//Bm1Y6ss5kNRetfxWaQnpL
+	 M5TDf5H4IrZ9FFRQt0jhKBDuM+gQvurfFb//RvWG/GpU7WbaPJq1yZ7pgJjgxw68Gi
+	 uaznQvCcbz4ag==
+From: Mario Limonciello <superm1@kernel.org>
+To: mario.limonciello@amd.com,
+	bhelgaas@google.com
+Cc: Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v4] PCI/PM: Skip resuming to D0 if disconnected
+Date: Mon, 23 Jun 2025 14:13:34 -0500
+Message-ID: <20250623191335.3780832-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23 2025 at 11:26, Lorenzo Pieralisi wrote:
-> On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
->> Just add a MSI flag and set it in parent_ops::required_flags and extend
->
-> I added that but it does not work (not if we use d->flags as below), it works
-> if I add it as an
->
-> IRQ_DOMAIN_FLAG_*
->
-> and set it in irq_domain_info in the msi_create_parent_irq_domain()
-> call in the GICv5 ITS driver when creating the domain.
->
->> the lib with
->> 
->>         struct fwnode_handle *fwh;
->> 
->>         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
->
-> Here we are using the domain flags and I think that's what we want.
->
-> If I go with parent_ops flag, I believe here we need to use the parent
-> msi_domain_info::flags - I don't think that's what we want.
->
-> It is a property of the IRQ domain so I think that adding an
->
-> IRQ_DOMAIN_FLAG_FWNODE_PARENT
->
-> is the best option.
->
-> Please let me know.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Obviously. Doh :)
+When a USB4 dock is unplugged the PCIe bridge it's connected to will
+issue a "Link Down" and "Card not detected event". The PCI core will
+treat this as a surprise hotplug event and unconfigure all downstream
+devices. This involves setting the device error state to
+`pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+
+It doesn't make sense to runtime resume disconnected devices to D0 and
+report the (expected) error, so bail early.
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v4:
+ * no info message
+v3:
+ * Adjust text and subject
+ * Add an info message instead
+v2:
+ * Use pci_dev_is_disconnected()
+v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
+---
+ drivers/pci/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9e42090fb1089..160a9a482c732 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+ 		return -EIO;
+ 	}
+ 
++	if (pci_dev_is_disconnected(dev)) {
++		dev->current_state = PCI_D3cold;
++		return -EIO;
++	}
++
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+ 		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+-- 
+2.43.0
+
 
