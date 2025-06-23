@@ -1,57 +1,61 @@
-Return-Path: <linux-pci+bounces-30357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DAE3AE3B81
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:02:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36987AE3BB8
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:07:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBB311898B9D
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 10:01:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6D9C188DE98
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 10:06:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 306FD23AE9B;
-	Mon, 23 Jun 2025 10:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGQ+zyxW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C107E23A9BE;
+	Mon, 23 Jun 2025 10:05:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC3923A9AC
-	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 10:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CE623A9BD;
+	Mon, 23 Jun 2025 10:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672818; cv=none; b=XaL0XHmKwz4Fge4rJxI8WHT+WtICxVQhNEXYPgDrcZ0FxjKMuukYOHi8GHWf+Uk01zcrVAlCepvocihLxOD+kxajSK8Q60wYa1S/rdCTmoAjzo3z/+3WaKRmyF+ike5BGF+YQmj7XZFgfLOxQktblyaV1cpcSVvdqpTtIwTb3uM=
+	t=1750673142; cv=none; b=dFgjXuKPL//iEgDP4X7trs8RCkDKtzuUYHKXCosKHloFP3KeBpFYBi1b0LMPvvR9XgmW5cx+hasTGQELz0gpNFSpiIQSymzKxYZ9CE+LqzLNViiF5jn1KQJxjLlGyrlBFo4xjrSyuoWXLSZqnodpQ4RF6XuQTuRW5FRJdWDuuvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672818; c=relaxed/simple;
-	bh=fEbRPQ4hEvdurfoPEsqe5jAaXK+4OgLHRXutJScJZmg=;
+	s=arc-20240116; t=1750673142; c=relaxed/simple;
+	bh=+kTCOP1WhjuszCcIK+r3LNOvbWb67HPONHc5xMq0s3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GYNq2t18Z936x5Wg9IORWgHtcE1QAUhEsaR6x137ih/gC+eiAAISffSvt4U4EgeSMwrj0jCPxHaVA2LQ3HGainJNxwNw+rL+XxQ9CPo6KX9NjXipeNKa3+46zdhlmZaOQgHPzYKT6hBRQhwoP2zbmEnK32Zrr/7Oec1dQfVNw5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGQ+zyxW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4756DC4CEEA;
-	Mon, 23 Jun 2025 10:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750672817;
-	bh=fEbRPQ4hEvdurfoPEsqe5jAaXK+4OgLHRXutJScJZmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FGQ+zyxW1F5Oy8JXNUOBh/kegtLfj17Wy/ltVxDrH+9PfBnyaQNkopnwZ7q9ToQGv
-	 6Xb8fg96CkILJGlbZAjT7s3FBth23A8J6ymqa+6+FitreMlSPHd0KGol2YQlCOY+C1
-	 LqhJ41271HV5s6SGMhkE/Z0xxtLIRBYA84BGBqyEnOEgVPujyWviSQolR/NVC9ubMN
-	 h9RrbqIAcqDt70GifWSNasSK2Bpsq4xlpM2ZvEQ3HouebdtCQ6XYYp0xELWAePQgQ6
-	 9CxvXMfRbpntw6lNKkHD+9Ba8YT84EJjWW1PZkTpgltCmAkMrANbQpT5BxJ+ZWxu/O
-	 pDLtA6pM5guhw==
-Date: Mon, 23 Jun 2025 12:00:14 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: endpoint: Fix configfs group removal on driver
- teardown
-Message-ID: <aFklrtQTwqKhOl39@ryzen>
-References: <20250617010737.560029-1-dlemoal@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=n3gxgwQSokOt0IAAr38pzsrpu+UJ+UxQks0hgPkfnbjAuMspZ1lyPAbbJtmrtjdWe40cYQueedfeXvaDYitYGPLlbHUS5Ca/r1D7Ub6oQk80UhbTT2PABSi+MGQEf6JUVDt/CH7VKniUQYJRJLkuHnAU14wOnMgd+mQ6U4Sqonc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4F5432C000BF;
+	Mon, 23 Jun 2025 12:05:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1CE943AA69A; Mon, 23 Jun 2025 12:05:38 +0200 (CEST)
+Date: Mon, 23 Jun 2025 12:05:38 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on
+ device unplug
+Message-ID: <aFkm8njX-NEIiTcv@wunner.de>
+References: <20250620025535.3425049-1-superm1@kernel.org>
+ <20250620025535.3425049-3-superm1@kernel.org>
+ <aFcCaw_IZr-JuUYY@wunner.de>
+ <8d4d98b6-fec5-466f-bd2c-059d702c7860@kernel.org>
+ <aFeJ83O9PRUrM2Ir@wunner.de>
+ <295bf182-7fed-4ffd-93a4-fb5ddf5f1bb4@kernel.org>
+ <aFj3jUAM42lSyfpe@wunner.de>
+ <aFkEI2jXg7YiwL7b@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,77 +64,76 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617010737.560029-1-dlemoal@kernel.org>
+In-Reply-To: <aFkEI2jXg7YiwL7b@wunner.de>
 
-Hello Damien,
-
-On Tue, Jun 17, 2025 at 10:07:37AM +0900, Damien Le Moal wrote:
-> An endpoint driver configfs attributes group is added to the
-> epf_group list of struct pci_epf_driver pci_epf_add_cfs() but not
-> removed from this list when the attribute group is unregistered with
-> pci_ep_cfs_remove_epf_group(). Add the missing list_del_init() call in
-> that function to correctly remove the attribute group from the driver
-> list.
-
-This seems like a bug (bug #1).
-
+On Mon, Jun 23, 2025 at 09:37:07AM +0200, Lukas Wunner wrote:
+> On Mon, Jun 23, 2025 at 08:43:25AM +0200, Lukas Wunner wrote:
+> > On Sun, Jun 22, 2025 at 01:39:26PM -0500, Mario Limonciello wrote:
+> > > > > On 6/21/25 2:05 PM, Lukas Wunner wrote:
+> > > > > > So the refcount decrement happens in pcie_portdrv_probe() and
+> > > > > > the refcount increment happens in pcie_portdrv_remove().
+> > > > > > Both times it's conditional on pci_bridge_d3_possible().
+> > > > > > Does that return a different value on probe versus remove?
+> > > 
+> > > I did this check and yes specifically on this PCIe port with the underflow
+> > > the d3 possible lookup returns false during pcie_portdrv_remove().  It
+> > > returns true during pcie_portdrv_probe().
+> > 
+> > That's not supposed to happen.  The expectation is that
+> > pci_bridge_d3_possible() always returns the same value.
 > 
-> Furthermore, doing a list_del() on the epf_group field of struct
-> pci_epf_driver in pci_epf_remove_cfs() is not correct as this field is a
-> list head, not a list entry, and triggers a KASAN warning:
+> I'm wondering if the patch below fixes the issue?
 
-This seems like another bug (bug #2).
+Refined patch below with proper commit message,
+also avoids a compiler warning caused by an unused variable.
 
+-- >8 --
 
-I do understand that both bugs were introduced by the same commit.
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug capable
+ ports
 
-However, since it is two separate bugs, I personally think that they
-deserve two separate patches (even if they will have the same Fixes tag).
+pcie_portdrv_probe() and pcie_portdrv_remove() both call
+pci_bridge_d3_possible() to determine whether to use runtime power
+management.  The underlying assumption is that pci_bridge_d3_possible()
+always returns the same value because otherwise a runtime PM reference
+imbalance occurs.
 
+That assumption falls apart if the device is inaccessible on ->remove()
+due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
+which accesses Config Space to determine whether the device is Hot-Plug
+Capable.   An inaccessible device generally returns "all ones" for such
+Config Read Requests.  Hence the device may seem Hot-Plug Capable on
+->remove() even though it wasn't on ->probe().
 
-> 
-> ==================================================================
-> BUG: KASAN: slab-use-after-free in pci_epf_remove_cfs+0x17c/0x198
-> Write of size 8 at addr ffff00010f4a0d80 by task rmmod/319
-> 
-> CPU: 3 UID: 0 PID: 319 Comm: rmmod Not tainted 6.16.0-rc2 #1 NONE
-> Hardware name: Radxa ROCK 5B (DT)
-> Call trace:
-> show_stack+0x2c/0x84 (C)
-> dump_stack_lvl+0x70/0x98
-> print_report+0x17c/0x538
-> kasan_report+0xb8/0x190
-> __asan_report_store8_noabort+0x20/0x2c
-> pci_epf_remove_cfs+0x17c/0x198
-> pci_epf_unregister_driver+0x18/0x30
-> nvmet_pci_epf_cleanup_module+0x24/0x30 [nvmet_pci_epf]
-> __arm64_sys_delete_module+0x264/0x424
-> invoke_syscall+0x70/0x260
-> el0_svc_common.constprop.0+0xac/0x230
-> do_el0_svc+0x40/0x58
-> el0_svc+0x48/0xdc
-> el0t_64_sync_handler+0x10c/0x138
-> el0t_64_sync+0x198/0x19c
+Use the cached copy of the Hot-Plug Capable bit to avoid the Config Space
+access and the resulting runtime PM ref imbalance.
 
-This KASAN splat seems to belong to bug #2.
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/pci-acpi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index b78e0e4..8859cce 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -816,13 +816,11 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
+ bool pciehp_is_native(struct pci_dev *bridge)
+ {
+ 	const struct pci_host_bridge *host;
+-	u32 slot_cap;
+ 
+ 	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+ 		return false;
+ 
+-	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+-	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
++	if (!bridge->is_hotplug_bridge)
+ 		return false;
+ 
+ 	if (pcie_ports_native)
+-- 
+2.47.2
 
-
-I think it is a litte bit confusing that you attach a KASAN
-splat to a patch that fixes two different bugs.
-
-Surely this KASAN bug can be fixes with only:
-
--     list_del(&driver->epf_group);
-+     WARN_ON(!list_empty(&driver->epf_group));
-
-
-So I think it would make more sense if the patch that fixes the KASAN splat
-includes only the changes that are needed to fix the KASAN splat, and then
-for the other bug, create a different patch that will then have a clearer
-commit message (because it will not have an unrelated KASAN splat in it).
-
-
-Kind regards,
-Niklas
 
