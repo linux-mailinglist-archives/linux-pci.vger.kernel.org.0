@@ -1,1483 +1,279 @@
-Return-Path: <linux-pci+bounces-30460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 365E4AE529A
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 23:45:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C70FAAE5424
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 23:59:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 857231B654C9
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 21:45:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 510FB446846
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 21:59:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3255922424C;
-	Mon, 23 Jun 2025 21:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B84C21FF2B;
+	Mon, 23 Jun 2025 21:59:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Gf3H6KMl"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eKlRUhQj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2055.outbound.protection.outlook.com [40.107.102.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC66122425B
-	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 21:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750715100; cv=none; b=KANpbeDlPxJ6k2O/kxsJJwEyvyXyDy3gmnTEaedOrDqUojOdynXUP7p5Sf9/EWraZE/WnufEEqi1tw1ThzeEojBF+jhWPwfQFg6AdgIXUd91AB9Ws+AuJPEu5c5bcOmeD4JQIawtu/01dbwunuqCB9XuMH8uYq12V9KFDnfuHCg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750715100; c=relaxed/simple;
-	bh=0o0x5wLjkyF5/dMznTX/yNzhcnKJNRFOWNFUE4daaFc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aVxCUjZQ2GmgHOR0TAUmkVz39x0j28x1QE+1XSW4b/aw/KsI/ZFGt9Zh2ve73ywMvilkfHYCYZMQpXsPvnwwEnZSwvvAzlvOZnR/KuZVqohgp9Y/QW7WtgVXzrHaJXEnArKPobsU3S7OYE1V4eigz6WZ7Oon2zkZYsidmhHOHz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Gf3H6KMl; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so7348852a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 14:44:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750715094; x=1751319894; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uyTDTDhXSytud4/Q4Klzy++fXf2zfaMF/L7rsCH43sA=;
-        b=Gf3H6KMlZhFPThMT6kb25XYp6vqd5D+uYOxgp1k7Omu9m5gR6bfSoifICabXyTEOgC
-         rHfF6G/Lcd8biu0zkWKjgiFrWcEmVcjSo84jHaFOr0PQC2HPtABf+qVT/FjvOP8tRiWl
-         9MYnExqF6zgbYvQdrWuyC+OR2zSe2Kdhv/gB8I4gLxb4MMqRW86DzHfsOOL3Ii3ed26y
-         W9vwqdP3vzunigSP5dOEQoMbvpC9+m6mSIo/U3CwRonv0Ms+Iw513JuaP9MK8K1boarZ
-         8GWBTmoZqU2oaSsuJITG5GgPZ/EDfFFYTLzHBpTgIwQMdn4FHYUE9fgvidhWsFL5YSyu
-         M92w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750715094; x=1751319894;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uyTDTDhXSytud4/Q4Klzy++fXf2zfaMF/L7rsCH43sA=;
-        b=FpMc2iJbrSTfqgY55H0PdSL9wqJZfatOMnryncEYCd7kBJrACjYp2nOuARdThAOMGI
-         j/GktyAxLrFTAijmpfaruXZaKbl635AOTmYJHDKz93A7D4Wm2VV79Ca0OklS0+GP0H+x
-         mprwbLiFtMFhkteBXznLk293yXQwHS1WKxT6u81PfeGkSpMwepNacHJPETuSTn55E3A+
-         cOQVPwvZE0+srNJLMGcEqmJ75Tr2qKIqTND8C9mbk3My6a+/CbcLYS4KpxGd1kK9D0Yt
-         9N9vFk6KaRic7NIMHTzxelaZ0LHeINwzhjRsQwSGvQhOjsZqpUrkjqq+Cy075i2k1cQa
-         2BdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqGhbSCk3ba6TIJM61vZi/nnL0w4eFAKHHUpsRoJT2CjGyoQoRm8Oyu43iQXvgjVdWA6VHIfRhycI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaQcsyEB/LsmRH4Nl5dyAJmSaxvNEuihJ1gKbL/RYy9t6eKFzq
-	zfvfuo7tsEZOTAciDbF/AAIUec1Rj1fjBrfceO6ak/DPT+SWGHNVxALVroeTd2UxtMA=
-X-Gm-Gg: ASbGnctBh6ZosLpKYiiLdz6EqHosUJ72jCambo6Uf/NQLsGrNnH6VgH7R9aOrirO9pp
-	1H/7RIn0iit6lmy/bbhWIcYKHQlJDqwb+/h6+elpugaGvFwitEM/rq2EPZzKv3BtVRE0vVMWfb/
-	TeAoswK0D4aOj8Gc4Op2ym2r2peolOY/y5ln1j3Jz3dopbnesheXAk5kbJOUvhor/D+eas+KOEC
-	dlpDgNImp+9YT26u+gMZPqjgBe2l3t5SVgjjhdq5VcTBIaK9kYjYJDo0Uxu3sbUm3muCXOFi9Ax
-	3GXY3X/lZLFXzLVCZNgHu6sSaPxOVN08GxQMMcJZZESGUp4fYoJQe3cjLMwu8fwpNKz2f8MxeoV
-	Klf1QwiJTzXrTvLa2kfmsnAXZhptlZZ8m
-X-Google-Smtp-Source: AGHT+IGQ1tkUF8aOjsEfU3olYa+CiEknBfpzJUL9DfROEx1hlLeNtDCQMLxByrtpbiXefLqowHVdxg==
-X-Received: by 2002:a05:6402:2354:b0:608:156d:f3f with SMTP id 4fb4d7f45d1cf-60a1d19e0cdmr13613769a12.33.1750715093859;
-        Mon, 23 Jun 2025 14:44:53 -0700 (PDT)
-Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f1b8addsm75506a12.33.2025.06.23.14.44.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 14:44:52 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com,
-	Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH v2 stblinux/next 2/2] clk: rp1: Implement remaining clock tree
-Date: Mon, 23 Jun 2025 23:46:28 +0200
-Message-ID: <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com>
-References: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ABF224AFA
+	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 21:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750715973; cv=fail; b=K1M7Ev5SfU1rtf/hMcHtiU8reU2yXIrWo7lx7uRZw3DjTb7k/QLyCv/6y9q7MH31AiX82gcrZO8aAGULjCYAG2D5JYKqkK2HYeELhoZ8hcWyKIWrnrv1/AVog6Q1hAp9O3xj2/Z//4DQmCB8dCtzEzXQ9coZHPpJQ2p71d7P2CA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750715973; c=relaxed/simple;
+	bh=a1DhTieHFc4lnqCprYaAfyb5KaQ/IOwPRlFUxFMI6oQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BltKPwSsmcocLccbLhO3WQxhDRKWRNZtXOIr8fkHs1BH0tSKdrALC3VJN2ZJ1PwvUBXACaBdxRjWVClvaqAcgO+P93LEU/IE/I6cY1dKnCFvVEUv2AoP6I+Jq/WcZYEFGZj+k+C+RHgFKS+Mn3QwAa43/D+KDE6S6i24qQlD2RQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eKlRUhQj; arc=fail smtp.client-ip=40.107.102.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QJd1i3EcDUq2pKZDtLACuhaNOFWYcBOfBdkom84Vl/rR1qBbxnUNoz1ffhqszPfgYpqgC5QkFE+tgJGsij52QEkJnLpFgNQBnapxHUfxkn/lueispkCGv6t5t1ywF/x+Tdtd4SUMO8JxXzfgYwt5h/9RGUkcn2valHaPixlkktBBNJEG1QC9X5U9z6viU1hP0zctZ2rqpwZKcOZ6zmUgVsfdRtYvRpNgnnOqabmPLZDXKfWD2K4ZbRwHoUWK7rwMuaBVx0ySHDpCT+i3HCfblFbMaMy2X4GpnWHi8aJbYH9bdh7sKTYFnkOo+vdMmtU0FxoPdfsvEVmuj6IQ75rDbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PD5HiYeMGAUjqs1CY3AV87jXZdBibmKZ3i5ttKza2M4=;
+ b=tglZlGyvRDp023ksvPL3AAfVWuOjbIRFpVP3zqw1y+672YiJPPjEmd69x8nNX849YMg9/ZT6VN1Gt2KAudq9+/sG8WOrspdLVsmPcr9ZdrHcu/JZwPrurI30RP4i46itE+WJk/+oczjmAHQHfeeTLuxrOK+DHrAN6VlIXMA5iEK/b2+q3vEmf+5sCFw0KiYuIHxZ1FbSohVrkN4Anxqm/mjkutX2SeX1CokBC1E5jvDE0FUOlWt7wKlfiTr5ENjVE5fbYl7252tDe87cv5Xt0wjVJcxGIHdI62/DslVHm48aX3h1l+HiCAMSQo61ynzqJxcDISVnGe1sj8vGNeMlHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PD5HiYeMGAUjqs1CY3AV87jXZdBibmKZ3i5ttKza2M4=;
+ b=eKlRUhQjQ5B/Z8l85V3PfkvmHAjXGUpXy7cOCnSmgzCArOr1fH3PKJp73TyGDP7FaK4jULJ/BaBQ+2QNCD1QwZch3P1WKvviGKNEgHzP3buQXlX/e5+C1fF1rIoF1ZIs3DIzTJR8uHmiO32oHhhm4SV61vV2rAnbuqsuhRjSzxU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH8PR12MB7133.namprd12.prod.outlook.com (2603:10b6:510:22e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 23 Jun
+ 2025 21:59:28 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8857.026; Mon, 23 Jun 2025
+ 21:59:28 +0000
+Message-ID: <1277bf56-28c4-422b-973f-b1f152b4e92d@amd.com>
+Date: Mon, 23 Jun 2025 16:59:26 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
+ capable ports
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Laurent Bigonville <bigon@bigon.be>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ linux-pci@vger.kernel.org
+References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR10CA0014.namprd10.prod.outlook.com
+ (2603:10b6:5:60::27) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH8PR12MB7133:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f3a2831-2b64-48d3-3f06-08ddb2a139bf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z2NLaVJZNTJNVFF5c1E1c1NWd0p4OHFkYk1lYjFzb3Q4emhYdTZTVGcxVHh0?=
+ =?utf-8?B?aTdpNWRSM05sQTZ3V0dqMHc4VU9XSk8vVnI1Wld2ZnRBQU00MmJVZTJiaGE0?=
+ =?utf-8?B?OWc3Qyt6R1RNM3UyVGVKcS8wZmpRVTRaQ3hhWU12RU4vc1V3WWc3Z1lpdHFN?=
+ =?utf-8?B?eUkwdWhyMHNHSVVXb21sb1dUWkpldm15V2tKQlpNUXJUUDh5aVJzY0Q0cE5p?=
+ =?utf-8?B?a0JoaXJKWkZLRW1JdlcrV2VRbzhvcy8yeitYS0xjSkhLWXRiK25NaXF5WmFS?=
+ =?utf-8?B?ZzZDNFM3Nm9oZUFtWHluSmc4NEgzQUNjNWRGOFptallJZERQaXEvVExWaGhy?=
+ =?utf-8?B?NXRaQVdxd0t0dGJYVmQwajN5eUlpbWVIbVNDLzV2ek9hbWRMZnNVZ3ZjcVZi?=
+ =?utf-8?B?OFZNdmZhcWpTenVVd0VHQ2RHTTQ5d0w5alhlbHM3RENSd3ZkWU5XdXZJczNV?=
+ =?utf-8?B?Q1FBWjJqNzNJSVdHUkpXdFJtczRpTXdoSGJnUkx6Y0NVMFN0dTJwYVZ2b0FS?=
+ =?utf-8?B?c1M5cmUrZ29xOTlnUUhKQlpZRnk4dTVtdGlDSEhYOER1d2dvMTVRQ3g2YlZv?=
+ =?utf-8?B?bFU5SlE2RGM2bEdtN2lnbDFXa3h2OExlcllPVXJ4SWFwV1pRMTVRYVpJYjRU?=
+ =?utf-8?B?MVlJc1FNQnU4eEpwOGxyQ1lFR1BFSnNvYkUya3k2aEdrMzdMcXRXVFZ0VFd4?=
+ =?utf-8?B?VWNrdmp1S1lLbVBaM080cWJWdHVsYi9MRjlCSFptMEE5NDQrazhSRVRyWjVz?=
+ =?utf-8?B?RTZTNzdBaWYydE9HRzc0ZEViTXlWeGlxcnc3WWJZeXdOQVJvcmJ6RkV6Z1M2?=
+ =?utf-8?B?UUFvMjcrd29raEpzbnZ3K0dIUEZITmZlVDVLRVBwMjdIODFBbGk2aGE3TzAv?=
+ =?utf-8?B?ZmxPQm93cmtJRGFJcGJaeWV3R2ptYUlqWEJscm03bE9IMVZFendicjVJaVNS?=
+ =?utf-8?B?Q3RucTFqTEdrQ2FHYzJDWFkvTmJ1cHN6VFJ4S3FQUEw5RjYrSy85bThDOVNa?=
+ =?utf-8?B?YzI5VzEyM3dJK0s5Z1NwTE9ackt6ZCs2cUIrL1lhOUpHVG5YMHEzdTBJMmQ5?=
+ =?utf-8?B?dWNtZ2s2RFVuWWZtWDUwUHRKcjMzYjd0ZGpIK0dMakNUSzUxM2NHaW5zK1lM?=
+ =?utf-8?B?Um10eWJqcTFwYm1kZkQ0VjFFWDRPTi9wdVR4clBmdXkwT0VNaXh4eXFpMC9h?=
+ =?utf-8?B?M0pTQTJvNzRkTWRHK0g0WUZHT0IyQklCczN3N3NsN0VGZFlNbTJWdHBoZW15?=
+ =?utf-8?B?SXFPTkxkUFlBOGpla2NxcCt3RWxNMmdRUktKY0tlOWU3OUxRY3lwTThza0lq?=
+ =?utf-8?B?ZHJGc2tWdXJLV3dyM1dnSzluNHQ3OFNtZzB1LzBWbW5QNVhlN0ZpVGFXeWNi?=
+ =?utf-8?B?U201SXNvUjdSOTA3V3JaNU42ODlEdzR2VWhKd1AzcWZBaU9CWkg2THlQNTcr?=
+ =?utf-8?B?bUhlaFY1emszNkF6U0VQamtrTHNyeGdURUw1QjBjaWI1cytsUkQ4cEFqNkx6?=
+ =?utf-8?B?VkFJM2RhSEgxZUJWSDJML3hGSU1NelN2QTFNbVBoQ3JWTWRKVXltNGVrdEhp?=
+ =?utf-8?B?Mld2NDRnc2pMN0sreXU5YS8wMThzT3FheGI0YkE2bkgzRTAvU0RVRkc3VXp3?=
+ =?utf-8?B?djJERzY5a21KM1VGYzN6akpYaGE3MEtaeXo0U0pUclFTK1dFNnEvbFEwMzMx?=
+ =?utf-8?B?YmI3M3g0aytsNFhmYXZxUHFwT0tPWGgrUGtwRngrcCt4T08zMmhCaGMwb1Mw?=
+ =?utf-8?B?bFc0aEhWU01mZ1NCN1hBdStkZXIvSm9kL21iYUhpYmI1UzFwdE1PWWpnRDRl?=
+ =?utf-8?B?dk1ZbExTcTdtVXEwTkRjSjl1aTBpaktNUjlFd3FIUEZpbDBjNzNWdHVvZUw2?=
+ =?utf-8?Q?P4qzLcum6iIW9?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b3hEa2xid0lrcU1aYW5ramRqU1NxcllVT2I5VDg0anJ2WXp5bnlHdUkzL3I1?=
+ =?utf-8?B?VFlQT0J2aXo5MUZMRnRLSHEwS0tEMHhDR3MxNWVTU29xald6R2hGbGc2THBn?=
+ =?utf-8?B?TmRWd1dmTDVVNVlkSFJ4NXF5dDBnSVNEUzdLMVk1MTVkZVh3NFZEaXlKMVRJ?=
+ =?utf-8?B?RXdDOXpxRkNiRy9haWU2T2YwVllocDlacFVrQWxHbXhreDZiYysydGNUbzRV?=
+ =?utf-8?B?OVdGMEtHOTdkL2xYQjVaTzJlRFYwSzhXZkJyRHVDMFlwZ1UyTForVFZrdjRD?=
+ =?utf-8?B?YzRkeGZGNkowOTgxaS9ReVFpQzJ1RFl3c0FHSVErbW9vOVZYczVjMzh0YWJ3?=
+ =?utf-8?B?Qko0NEVXZzl4TGZ4RWhHN0FzdzJ5NjN1b0M5Yks5dEh6L0YxQ0JsTCtJMld6?=
+ =?utf-8?B?OUhENkFobUhUckQ2aGtmVktQeDQwRUpoYTFUaFNuaE9KUzFKOUZqRDluNlZx?=
+ =?utf-8?B?MWpFTEhlV1NsL3dXQVFSNXQ1L2E1azFoS2hJeHZnelZhdXk0WW55Yk1nTlZC?=
+ =?utf-8?B?Q0dtdTFIUVJ1UnJDSWVOZXVJSWV6VEFicDlHR1Z2NzlOQ0h0bU1TYUZPUUs3?=
+ =?utf-8?B?Nk9BZjIrNG5Va0IxWU9kQml3aDFaUFNjTktIdlhHRlplYmhSaERvUm0wTzRP?=
+ =?utf-8?B?VXhBQ2RxRWdOa2xNeXZibCtSY2lHU1B1WTloK3NXT0lEMmc4dWE5TXltWERF?=
+ =?utf-8?B?bG8zelRZUWUrdW91K3lpQjJBcjQ1L3BOM0hGV2tHTFQwNTdSRVVoU1QwRk5K?=
+ =?utf-8?B?eDVzY1RoV3RGSGNBa09HOFJIeUVvY3hmV1BJMGpuYkZMVG5aVFNycmF3RDdP?=
+ =?utf-8?B?SEJTaTIvM1FialJUVW9lcTk0MS93WjNOK2laeElReGQyRnVLSjZNRmx2Z1Ju?=
+ =?utf-8?B?amx2SXJwdmxrc3llTW51VFRXdmdETmwraUM2MEJNa3grZzF4Kzk3UDIwY0o2?=
+ =?utf-8?B?cWp2UmVtcTdKbjBVOGs3Ry9mV0NBaytXb2oxaHd6K2hLckhJaWFiVWkydE1k?=
+ =?utf-8?B?cjNkT3JjWm84TFNlWGdWaTBKZU9MWjc2RWd1Zk0wWG0rcnZ4S2U1d2F2Vy9x?=
+ =?utf-8?B?UXR5RytSZTVhVW90NkVXVG1YTEV6dHQ5Sk5DQlFRKzkwWTVJNjJvaGY1Zysw?=
+ =?utf-8?B?bmNSNWJDTDB6WGQ2OWI4cy9TTmJmY1FmUC9Cb1lIMksyZWorbi9mNUVldysr?=
+ =?utf-8?B?bnBtQmVFRTJzOTllbW5WSEJhUVRsVnZTVmR2bVViSEMzTktXQm1CUmRQMGNX?=
+ =?utf-8?B?U0R0cFQxaVpjY0JBaVpLd25zWXNHSWZwdlU3Z0VvblhNbHJYVUNhUXAwckpp?=
+ =?utf-8?B?RUhUb3lZSkMrcXdqSEhCZlF4d1FjRU5raSt4UVhwdmhGSkhwdmhPNGNQNFpr?=
+ =?utf-8?B?SFV4QnZ6UnVNQ2IySG1PbkZ6eDJDNS9YRDhtMGd1c2FkdjJGdHFVdHM5N0FJ?=
+ =?utf-8?B?YWJBM2pPTGQ4YnZITlpUbXVjb01UVHVlTjF0VHBoZmtDdklGK1hZemMwa2tq?=
+ =?utf-8?B?eXl2UDhvT2FZTVphVmgyN0J5ajNXaXIvQXMyNzl2MEZXZTVwcE1MaU0wT2FI?=
+ =?utf-8?B?UHV4OHpOZEF2L3VBVExOTUczQ1R4ckxGajFyM3QvOGhNb21wdm85TWtud0RE?=
+ =?utf-8?B?cmFZZ2RpMnE2Mm1BcmtGV052ODFMV0tXNVdLME9yanNERkw3VThnVytxWEJs?=
+ =?utf-8?B?OCt3V3BzMTBtSzJrZ3pCcVFhNWovbGNhTVhaYmVKc05XWG1CTGhtdzQ2M1dQ?=
+ =?utf-8?B?SGMxcjc1MURqa1UvL1RwR2RiblJRdXVGVWVBb1RTQktlWUpFZ0VqSEsxeTB1?=
+ =?utf-8?B?bG9lV3hKRGJmbVZCSWlRalQzMG9IcStBdE82eUJiNjJweUV0ZTJWUmw2MStV?=
+ =?utf-8?B?R0R3bU9xQnBsS0tDZmNGVVlCeWc4Rk42S2thVEYyT0VMbHp4K3RvK1ROUmNR?=
+ =?utf-8?B?RE15eExmbjZEZisxTE43R0Zzb3V0aWdJZ0x2RFpRajRWL3B3bnFRbXVybTdC?=
+ =?utf-8?B?Q1JvdDZ0bGJLUDJmVW8zQ05OUTRoT3EyV256MTk0Z2tFMWM3WUQ1aWw0M0J2?=
+ =?utf-8?B?UU9XWmt4QkEweHF6ajB2c0d0RnhURmJ3OXIyTXVnVS9GUDhhYkVzWWRIcEs1?=
+ =?utf-8?Q?oX5adoaYIqXnul0LTYFsk9Acw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f3a2831-2b64-48d3-3f06-08ddb2a139bf
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 21:59:28.6193
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: epHXZ8IybfRPYBIbPEkY6t0zJ0NLDNhhSne6nAPqmq2zJ1L+V8+gqEGa3x+5HsXENd0Q6vbklvd/wtIVlHG2rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7133
 
-The RP1 clock generator driver currently defines only the fundamental
-clocks such as the front PLLs for system, audio and video subsystems
-and the ethernet clock.
+On 6/23/2025 12:08 PM, Lukas Wunner wrote:
+> pcie_portdrv_probe() and pcie_portdrv_remove() both call
+> pci_bridge_d3_possible() to determine whether to use runtime power
+> management.  The underlying assumption is that pci_bridge_d3_possible()
+> always returns the same value because otherwise a runtime PM reference
+> imbalance occurs.
+> 
+> That assumption falls apart if the device is inaccessible on ->remove()
+> due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
+> which accesses Config Space to determine whether the device is Hot-Plug
+> Capable.   An inaccessible device returns "all ones", which is converted
+> to "all zeroes" by pcie_capability_read_dword().  Hence the device no
+> longer seems Hot-Plug Capable on ->remove() even though it was on
+> ->probe().
+> 
+> The resulting runtime PM ref imbalance causes errors such as:
+> 
+>    pcieport 0000:02:04.0: Runtime PM usage count underflow!
+> 
+> The Hot-Plug Capable bit is cached in pci_dev->is_hotplug_bridge.
+> pci_bridge_d3_possible() only calls pciehp_is_native() if that flag is
+> set.  Re-checking the bit in pciehp_is_native() is thus unnecessary.
+> 
+> However pciehp_is_native() is also called from hotplug_is_native().  Move
+> the Config Space access to that function.  The function is only invoked
+> from acpiphp_glue.c, so move it there instead of keeping it in a publicly
+> visible header.
+> 
+> Fixes: 5352a44a561d ("PCI: pciehp: Make pciehp_is_native() stricter")
+> Reported-by: Laurent Bigonville <bigon@bigon.be>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220216
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Closes: https://lore.kernel.org/r/20250609020223.269407-3-superm1@kernel.org/
+> Link: https://lore.kernel.org/all/20250620025535.3425049-3-superm1@kernel.org/T/#u
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.18+
 
-Add the remaining clocks to the tree so as to be completed, which means
-that the following RP1 peripherals could now consume their specific clocks
-and be enabled to work (provided that the relevant driver changes for each
-specific peripheral, if any, are committed):
+Tested-by: Mario Limonciello <mario.limonciello@amd.com>
 
-- ADC
-- Audio IN/OUT
-- DMA controller
-- I2S
-- MIPI DPI/DSI
-- PWM
-- SDIO
-- UART
-- Video Encoder
-
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
----
-CHANGES IN V2:
-- commit message reworked to include more details about what is supported
-  with these changes, as per Bjorn suggestion.
-
- drivers/clk/clk-rp1.c | 1192 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 1076 insertions(+), 116 deletions(-)
-
-diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-index afff90d48734..e8f264d7f34e 100644
---- a/drivers/clk/clk-rp1.c
-+++ b/drivers/clk/clk-rp1.c
-@@ -368,6 +368,11 @@ struct rp1_clk_desc {
- 	struct clk_divider div;
- };
- 
-+static struct rp1_clk_desc *clk_audio_core;
-+static struct rp1_clk_desc *clk_audio;
-+static struct rp1_clk_desc *clk_i2s;
-+static struct clk_hw *clk_xosc;
-+
- static inline
- void clockman_write(struct rp1_clockman *clockman, u32 reg, u32 val)
- {
-@@ -475,7 +480,6 @@ static int rp1_pll_core_set_rate(struct clk_hw *hw,
- 	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
- 	struct rp1_clockman *clockman = pll_core->clockman;
- 	const struct rp1_pll_core_data *data = pll_core->data;
--	unsigned long calc_rate;
- 	u32 fbdiv_int, fbdiv_frac;
- 
- 	/* Disable dividers to start with. */
-@@ -484,8 +488,8 @@ static int rp1_pll_core_set_rate(struct clk_hw *hw,
- 	clockman_write(clockman, data->fbdiv_frac_reg, 0);
- 	spin_unlock(&clockman->regs_lock);
- 
--	calc_rate = get_pll_core_divider(hw, rate, parent_rate,
--					 &fbdiv_int, &fbdiv_frac);
-+	get_pll_core_divider(hw, rate, parent_rate,
-+			     &fbdiv_int, &fbdiv_frac);
- 
- 	spin_lock(&clockman->regs_lock);
- 	clockman_write(clockman, data->pwr_reg, fbdiv_frac ? 0 : PLL_PWR_DSMPD);
-@@ -497,8 +501,6 @@ static int rp1_pll_core_set_rate(struct clk_hw *hw,
- 	if (WARN_ON_ONCE(parent_rate > (rate / 16)))
- 		return -ERANGE;
- 
--	pll_core->cached_rate = calc_rate;
--
- 	spin_lock(&clockman->regs_lock);
- 	/* Don't need to divide ref unless parent_rate > (output freq / 16) */
- 	clockman_write(clockman, data->cs_reg,
-@@ -617,8 +619,12 @@ static unsigned long rp1_pll_recalc_rate(struct clk_hw *hw,
- static long rp1_pll_round_rate(struct clk_hw *hw, unsigned long rate,
- 			       unsigned long *parent_rate)
- {
-+	struct clk_hw *clk_audio_hw = &clk_audio->hw;
- 	u32 div1, div2;
- 
-+	if (hw == clk_audio_hw && clk_audio->cached_rate == rate)
-+		*parent_rate = clk_audio_core->cached_rate;
-+
- 	get_pll_prim_dividers(rate, *parent_rate, &div1, &div2);
- 
- 	return DIV_ROUND_CLOSEST(*parent_rate, div1 * div2);
-@@ -964,6 +970,59 @@ static int rp1_clock_set_rate(struct clk_hw *hw, unsigned long rate,
- 	return rp1_clock_set_rate_and_parent(hw, rate, parent_rate, 0xff);
- }
- 
-+static unsigned long calc_core_pll_rate(struct clk_hw *pll_hw,
-+					unsigned long target_rate,
-+					int *pdiv_prim, int *pdiv_clk)
-+{
-+	static const int prim_divs[] = {
-+		2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16,
-+		18, 20, 21, 24, 25, 28, 30, 35, 36, 42, 49,
-+	};
-+	const unsigned long xosc_rate = clk_hw_get_rate(clk_xosc);
-+	const unsigned long core_min = xosc_rate * 16;
-+	const unsigned long core_max = 2400000000;
-+	int best_div_prim = 1, best_div_clk = 1;
-+	unsigned long best_rate = core_max + 1;
-+	unsigned long core_rate = 0;
-+	int div_int, div_frac;
-+	u64 div;
-+	int i;
-+
-+	/* Given the target rate, choose a set of divisors/multipliers */
-+	for (i = 0; i < ARRAY_SIZE(prim_divs); i++) {
-+		int div_prim = prim_divs[i];
-+		int div_clk;
-+
-+		for (div_clk = 1; div_clk <= 256; div_clk++) {
-+			core_rate = target_rate * div_clk * div_prim;
-+			if (core_rate >= core_min) {
-+				if (core_rate < best_rate) {
-+					best_rate = core_rate;
-+					best_div_prim = div_prim;
-+					best_div_clk = div_clk;
-+				}
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (best_rate < core_max) {
-+		div = ((best_rate << 24) + xosc_rate / 2) / xosc_rate;
-+		div_int = div >> 24;
-+		div_frac = div % (1 << 24);
-+		core_rate = (xosc_rate * ((div_int << 24) + div_frac) + (1 << 23)) >> 24;
-+	} else {
-+		core_rate = 0;
-+	}
-+
-+	if (pdiv_prim)
-+		*pdiv_prim = best_div_prim;
-+	if (pdiv_clk)
-+		*pdiv_clk = best_div_clk;
-+
-+	return core_rate;
-+}
-+
- static void rp1_clock_choose_div_and_prate(struct clk_hw *hw,
- 					   int parent_idx,
- 					   unsigned long rate,
-@@ -972,12 +1031,35 @@ static void rp1_clock_choose_div_and_prate(struct clk_hw *hw,
- {
- 	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
- 	const struct rp1_clock_data *data = clock->data;
-+	struct clk_hw *clk_audio_hw = &clk_audio->hw;
-+	struct clk_hw *clk_i2s_hw = &clk_i2s->hw;
- 	struct clk_hw *parent;
- 	u32 div;
- 	u64 tmp;
- 
- 	parent = clk_hw_get_parent_by_index(hw, parent_idx);
- 
-+	if (hw == clk_i2s_hw && clk_i2s->cached_rate == rate && parent == clk_audio_hw) {
-+		*prate = clk_audio->cached_rate;
-+		*calc_rate = rate;
-+		return;
-+	}
-+
-+	if (hw == clk_i2s_hw && parent == clk_audio_hw) {
-+		unsigned long core_rate, audio_rate, i2s_rate;
-+		int div_prim, div_clk;
-+
-+		core_rate = calc_core_pll_rate(parent, rate, &div_prim, &div_clk);
-+		audio_rate = DIV_ROUND_CLOSEST(core_rate, div_prim);
-+		i2s_rate = DIV_ROUND_CLOSEST(audio_rate, div_clk);
-+		clk_audio_core->cached_rate = core_rate;
-+		clk_audio->cached_rate = audio_rate;
-+		clk_i2s->cached_rate = i2s_rate;
-+		*prate = audio_rate;
-+		*calc_rate = i2s_rate;
-+		return;
-+	}
-+
- 	*prate = clk_hw_get_rate(parent);
- 	div = rp1_clock_choose_div(rate, *prate, data);
- 
-@@ -1062,6 +1144,34 @@ static int rp1_clock_determine_rate(struct clk_hw *hw,
- 	return 0;
- }
- 
-+static int rp1_varsrc_set_rate(struct clk_hw *hw,
-+			       unsigned long rate, unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+
-+	/*
-+	 * "varsrc" exists purely to let clock dividers know the frequency
-+	 * of an externally-managed clock source (such as MIPI DSI byte-clock)
-+	 * which may change at run-time as a side-effect of some other driver.
-+	 */
-+	clock->cached_rate = rate;
-+	return 0;
-+}
-+
-+static unsigned long rp1_varsrc_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+
-+	return clock->cached_rate;
-+}
-+
-+static long rp1_varsrc_round_rate(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long *parent_rate)
-+{
-+	return rate;
-+}
-+
- static const struct clk_ops rp1_pll_core_ops = {
- 	.is_prepared = rp1_pll_core_is_on,
- 	.prepare = rp1_pll_core_on,
-@@ -1106,6 +1216,12 @@ static const struct clk_ops rp1_clk_ops = {
- 	.determine_rate = rp1_clock_determine_rate,
- };
- 
-+static const struct clk_ops rp1_varsrc_ops = {
-+	.set_rate = rp1_varsrc_set_rate,
-+	.recalc_rate = rp1_varsrc_recalc_rate,
-+	.round_rate = rp1_varsrc_round_rate,
-+};
-+
- static struct clk_hw *rp1_register_pll(struct rp1_clockman *clockman,
- 				       struct rp1_clk_desc *desc)
- {
-@@ -1241,6 +1357,36 @@ static struct rp1_clk_desc pll_sys_desc = REGISTER_PLL(
- 	)
- );
- 
-+static struct rp1_clk_desc pll_audio_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_audio",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_audio_core_desc.hw }
-+		},
-+		&rp1_pll_ops,
-+		CLK_SET_RATE_PARENT
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_AUDIO_PRIM,
-+		 .fc0_src = FC_NUM(4, 2),
-+	)
-+);
-+
-+static struct rp1_clk_desc pll_video_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_video",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_video_core_desc.hw }
-+		},
-+		&rp1_pll_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_VIDEO_PRIM,
-+		 .fc0_src = FC_NUM(3, 2),
-+	)
-+);
-+
- static struct rp1_clk_desc pll_sys_sec_desc = REGISTER_PLL_DIV(
- 	.hw.init = CLK_HW_INIT_PARENTS_DATA(
- 		"pll_sys_sec",
-@@ -1256,16 +1402,42 @@ static struct rp1_clk_desc pll_sys_sec_desc = REGISTER_PLL_DIV(
- 	)
- );
- 
-+static struct rp1_clk_desc pll_video_sec_desc = REGISTER_PLL_DIV(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_video_sec",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_video_core_desc.hw }
-+		},
-+		&rp1_pll_divider_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_VIDEO_SEC,
-+		 .fc0_src = FC_NUM(5, 3),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_eth_tsu_parents[] = {
-+	{ .index = 0 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
- static struct rp1_clk_desc clk_eth_tsu_desc = REGISTER_CLK(
- 	.hw.init = CLK_HW_INIT_PARENTS_DATA(
- 		"clk_eth_tsu",
--		(const struct clk_parent_data[]) { { .index = 0 } },
-+		clk_eth_tsu_parents,
- 		&rp1_clk_ops,
- 		0
- 	),
- 	CLK_DATA(rp1_clock_data,
- 		 .num_std_parents = 0,
--		 .num_aux_parents = 1,
-+		 .num_aux_parents = 8,
- 		 .ctrl_reg = CLK_ETH_TSU_CTRL,
- 		 .div_int_reg = CLK_ETH_TSU_DIV_INT,
- 		 .sel_reg = CLK_ETH_TSU_SEL,
-@@ -1278,6 +1450,7 @@ static struct rp1_clk_desc clk_eth_tsu_desc = REGISTER_CLK(
- static const struct clk_parent_data clk_eth_parents[] = {
- 	{ .hw = &pll_sys_sec_desc.div.hw },
- 	{ .hw = &pll_sys_desc.hw },
-+	{ .hw = &pll_video_sec_desc.hw },
- };
- 
- static struct rp1_clk_desc clk_eth_desc = REGISTER_CLK(
-@@ -1289,7 +1462,7 @@ static struct rp1_clk_desc clk_eth_desc = REGISTER_CLK(
- 	),
- 	CLK_DATA(rp1_clock_data,
- 		 .num_std_parents = 0,
--		 .num_aux_parents = 2,
-+		 .num_aux_parents = 3,
- 		 .ctrl_reg = CLK_ETH_CTRL,
- 		 .div_int_reg = CLK_ETH_DIV_INT,
- 		 .sel_reg = CLK_ETH_SEL,
-@@ -1342,122 +1515,904 @@ static struct rp1_clk_desc pll_sys_pri_ph_desc = REGISTER_PLL(
- 	)
- );
- 
--static struct rp1_clk_desc *const clk_desc_array[] = {
--	[RP1_PLL_SYS_CORE] = &pll_sys_core_desc,
--	[RP1_PLL_AUDIO_CORE] = &pll_audio_core_desc,
--	[RP1_PLL_VIDEO_CORE] = &pll_video_core_desc,
--	[RP1_PLL_SYS] = &pll_sys_desc,
--	[RP1_CLK_ETH_TSU] = &clk_eth_tsu_desc,
--	[RP1_CLK_ETH] = &clk_eth_desc,
--	[RP1_CLK_SYS] = &clk_sys_desc,
--	[RP1_PLL_SYS_PRI_PH] = &pll_sys_pri_ph_desc,
--	[RP1_PLL_SYS_SEC] = &pll_sys_sec_desc,
--};
--
--static const struct regmap_range rp1_reg_ranges[] = {
--	regmap_reg_range(PLL_SYS_CS, PLL_SYS_SEC),
--	regmap_reg_range(PLL_AUDIO_CS, PLL_AUDIO_TERN),
--	regmap_reg_range(PLL_VIDEO_CS, PLL_VIDEO_SEC),
--	regmap_reg_range(GPCLK_OE_CTRL, GPCLK_OE_CTRL),
--	regmap_reg_range(CLK_SYS_CTRL, CLK_SYS_DIV_INT),
--	regmap_reg_range(CLK_SYS_SEL, CLK_SYS_SEL),
--	regmap_reg_range(CLK_SLOW_SYS_CTRL, CLK_SLOW_SYS_DIV_INT),
--	regmap_reg_range(CLK_SLOW_SYS_SEL, CLK_SLOW_SYS_SEL),
--	regmap_reg_range(CLK_DMA_CTRL, CLK_DMA_DIV_INT),
--	regmap_reg_range(CLK_DMA_SEL, CLK_DMA_SEL),
--	regmap_reg_range(CLK_UART_CTRL, CLK_UART_DIV_INT),
--	regmap_reg_range(CLK_UART_SEL, CLK_UART_SEL),
--	regmap_reg_range(CLK_ETH_CTRL, CLK_ETH_DIV_INT),
--	regmap_reg_range(CLK_ETH_SEL, CLK_ETH_SEL),
--	regmap_reg_range(CLK_PWM0_CTRL, CLK_PWM0_SEL),
--	regmap_reg_range(CLK_PWM1_CTRL, CLK_PWM1_SEL),
--	regmap_reg_range(CLK_AUDIO_IN_CTRL, CLK_AUDIO_IN_DIV_INT),
--	regmap_reg_range(CLK_AUDIO_IN_SEL, CLK_AUDIO_IN_SEL),
--	regmap_reg_range(CLK_AUDIO_OUT_CTRL, CLK_AUDIO_OUT_DIV_INT),
--	regmap_reg_range(CLK_AUDIO_OUT_SEL, CLK_AUDIO_OUT_SEL),
--	regmap_reg_range(CLK_I2S_CTRL, CLK_I2S_DIV_INT),
--	regmap_reg_range(CLK_I2S_SEL, CLK_I2S_SEL),
--	regmap_reg_range(CLK_MIPI0_CFG_CTRL, CLK_MIPI0_CFG_DIV_INT),
--	regmap_reg_range(CLK_MIPI0_CFG_SEL, CLK_MIPI0_CFG_SEL),
--	regmap_reg_range(CLK_MIPI1_CFG_CTRL, CLK_MIPI1_CFG_DIV_INT),
--	regmap_reg_range(CLK_MIPI1_CFG_SEL, CLK_MIPI1_CFG_SEL),
--	regmap_reg_range(CLK_PCIE_AUX_CTRL, CLK_PCIE_AUX_DIV_INT),
--	regmap_reg_range(CLK_PCIE_AUX_SEL, CLK_PCIE_AUX_SEL),
--	regmap_reg_range(CLK_USBH0_MICROFRAME_CTRL, CLK_USBH0_MICROFRAME_DIV_INT),
--	regmap_reg_range(CLK_USBH0_MICROFRAME_SEL, CLK_USBH0_MICROFRAME_SEL),
--	regmap_reg_range(CLK_USBH1_MICROFRAME_CTRL, CLK_USBH1_MICROFRAME_DIV_INT),
--	regmap_reg_range(CLK_USBH1_MICROFRAME_SEL, CLK_USBH1_MICROFRAME_SEL),
--	regmap_reg_range(CLK_USBH0_SUSPEND_CTRL, CLK_USBH0_SUSPEND_DIV_INT),
--	regmap_reg_range(CLK_USBH0_SUSPEND_SEL, CLK_USBH0_SUSPEND_SEL),
--	regmap_reg_range(CLK_USBH1_SUSPEND_CTRL, CLK_USBH1_SUSPEND_DIV_INT),
--	regmap_reg_range(CLK_USBH1_SUSPEND_SEL, CLK_USBH1_SUSPEND_SEL),
--	regmap_reg_range(CLK_ETH_TSU_CTRL, CLK_ETH_TSU_DIV_INT),
--	regmap_reg_range(CLK_ETH_TSU_SEL, CLK_ETH_TSU_SEL),
--	regmap_reg_range(CLK_ADC_CTRL, CLK_ADC_DIV_INT),
--	regmap_reg_range(CLK_ADC_SEL, CLK_ADC_SEL),
--	regmap_reg_range(CLK_SDIO_TIMER_CTRL, CLK_SDIO_TIMER_DIV_INT),
--	regmap_reg_range(CLK_SDIO_TIMER_SEL, CLK_SDIO_TIMER_SEL),
--	regmap_reg_range(CLK_SDIO_ALT_SRC_CTRL, CLK_SDIO_ALT_SRC_DIV_INT),
--	regmap_reg_range(CLK_SDIO_ALT_SRC_SEL, CLK_SDIO_ALT_SRC_SEL),
--	regmap_reg_range(CLK_GP0_CTRL, CLK_GP0_SEL),
--	regmap_reg_range(CLK_GP1_CTRL, CLK_GP1_SEL),
--	regmap_reg_range(CLK_GP2_CTRL, CLK_GP2_SEL),
--	regmap_reg_range(CLK_GP3_CTRL, CLK_GP3_SEL),
--	regmap_reg_range(CLK_GP4_CTRL, CLK_GP4_SEL),
--	regmap_reg_range(CLK_GP5_CTRL, CLK_GP5_SEL),
--	regmap_reg_range(CLK_SYS_RESUS_CTRL, CLK_SYS_RESUS_CTRL),
--	regmap_reg_range(CLK_SLOW_SYS_RESUS_CTRL, CLK_SLOW_SYS_RESUS_CTRL),
--	regmap_reg_range(FC0_REF_KHZ, FC0_RESULT),
--	regmap_reg_range(VIDEO_CLK_VEC_CTRL, VIDEO_CLK_VEC_DIV_INT),
--	regmap_reg_range(VIDEO_CLK_VEC_SEL, VIDEO_CLK_DPI_DIV_INT),
--	regmap_reg_range(VIDEO_CLK_DPI_SEL, VIDEO_CLK_MIPI1_DPI_SEL),
--};
-+static struct rp1_clk_desc pll_audio_pri_ph_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_audio_pri_ph",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_audio_desc.hw }
-+		},
-+		&rp1_pll_ph_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_ph_data,
-+		 .ph_reg = PLL_AUDIO_PRIM,
-+		 .fixed_divider = 2,
-+		 .phase = RP1_PLL_PHASE_0,
-+		 .fc0_src = FC_NUM(5, 1),
-+	)
-+);
- 
--static const struct regmap_access_table rp1_reg_table = {
--	.yes_ranges = rp1_reg_ranges,
--	.n_yes_ranges = ARRAY_SIZE(rp1_reg_ranges),
--};
-+static struct rp1_clk_desc pll_video_pri_ph_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_video_pri_ph",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_video_desc.hw }
-+		},
-+		&rp1_pll_ph_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_ph_data,
-+		 .ph_reg = PLL_VIDEO_PRIM,
-+		 .fixed_divider = 2,
-+		 .phase = RP1_PLL_PHASE_0,
-+		 .fc0_src = FC_NUM(4, 3),
-+	)
-+);
- 
--static const struct regmap_config rp1_clk_regmap_cfg = {
--	.reg_bits = 32,
--	.val_bits = 32,
--	.reg_stride = 4,
--	.max_register = PLL_VIDEO_SEC,
--	.name = "rp1-clk",
--	.rd_table = &rp1_reg_table,
--	.disable_locking = true,
--};
-+static struct rp1_clk_desc pll_audio_sec_desc = REGISTER_PLL_DIV(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_audio_sec",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_audio_core_desc.hw }
-+		},
-+		&rp1_pll_divider_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_AUDIO_SEC,
-+		 .fc0_src = FC_NUM(6, 2),
-+	)
-+);
- 
--static int rp1_clk_probe(struct platform_device *pdev)
--{
--	const size_t asize = ARRAY_SIZE(clk_desc_array);
--	struct rp1_clk_desc *desc;
--	struct device *dev = &pdev->dev;
--	struct rp1_clockman *clockman;
--	struct clk_hw **hws;
--	unsigned int i;
-+static struct rp1_clk_desc pll_audio_tern_desc = REGISTER_PLL_DIV(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_audio_tern",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_audio_core_desc.hw }
-+		},
-+		&rp1_pll_divider_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_AUDIO_TERN,
-+		 .fc0_src = FC_NUM(6, 2),
-+	)
-+);
- 
--	clockman = devm_kzalloc(dev, struct_size(clockman, onecell.hws, asize),
--				GFP_KERNEL);
--	if (!clockman)
--		return -ENOMEM;
-+static struct rp1_clk_desc clk_slow_sys_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_slow_sys",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		CLK_IS_CRITICAL
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 1,
-+		 .num_aux_parents = 0,
-+		 .ctrl_reg = CLK_SLOW_SYS_CTRL,
-+		 .div_int_reg = CLK_SLOW_SYS_DIV_INT,
-+		 .sel_reg = CLK_SLOW_SYS_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(1, 4),
-+		 .clk_src_mask = 0x1,
-+	)
-+);
- 
--	spin_lock_init(&clockman->regs_lock);
--	clockman->dev = dev;
-+static const struct clk_parent_data clk_dma_parents[] = {
-+	{ .hw = &pll_sys_pri_ph_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .index = 0 },
-+};
- 
--	clockman->regs = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(clockman->regs))
--		return PTR_ERR(clockman->regs);
-+static struct rp1_clk_desc clk_dma_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_dma",
-+		clk_dma_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 3,
-+		 .ctrl_reg = CLK_DMA_CTRL,
-+		 .div_int_reg = CLK_DMA_DIV_INT,
-+		 .sel_reg = CLK_DMA_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(2, 2),
-+	)
-+);
- 
--	clockman->regmap = devm_regmap_init_mmio(dev, clockman->regs,
--						 &rp1_clk_regmap_cfg);
--	if (IS_ERR(clockman->regmap)) {
--		dev_err_probe(dev, PTR_ERR(clockman->regmap),
--			      "could not init clock regmap\n");
--		return PTR_ERR(clockman->regmap);
--	}
-+static const struct clk_parent_data clk_uart_parents[] = {
-+	{ .hw = &pll_sys_pri_ph_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .index = 0 },
-+};
- 
--	clockman->onecell.num = asize;
-+static struct rp1_clk_desc clk_uart_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_uart",
-+		clk_uart_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 3,
-+		 .ctrl_reg = CLK_UART_CTRL,
-+		 .div_int_reg = CLK_UART_DIV_INT,
-+		 .sel_reg = CLK_UART_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(6, 7),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_pwm0_parents[] = {
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = 0 },
-+};
-+
-+static struct rp1_clk_desc clk_pwm0_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_pwm0",
-+		clk_pwm0_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 3,
-+		 .ctrl_reg = CLK_PWM0_CTRL,
-+		 .div_int_reg = CLK_PWM0_DIV_INT,
-+		 .div_frac_reg = CLK_PWM0_DIV_FRAC,
-+		 .sel_reg = CLK_PWM0_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 76800 * HZ_PER_KHZ,
-+		 .fc0_src = FC_NUM(0, 5),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_pwm1_parents[] = {
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = 0 },
-+};
-+
-+static struct rp1_clk_desc clk_pwm1_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_pwm1",
-+		clk_pwm1_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 3,
-+		 .ctrl_reg = CLK_PWM1_CTRL,
-+		 .div_int_reg = CLK_PWM1_DIV_INT,
-+		 .div_frac_reg = CLK_PWM1_DIV_FRAC,
-+		 .sel_reg = CLK_PWM1_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 76800 * HZ_PER_KHZ,
-+		 .fc0_src = FC_NUM(1, 5),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_audio_in_parents[] = {
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = 0 },
-+};
-+
-+static struct rp1_clk_desc clk_audio_in_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_audio_in",
-+		clk_audio_in_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 5,
-+		 .ctrl_reg = CLK_AUDIO_IN_CTRL,
-+		 .div_int_reg = CLK_AUDIO_IN_DIV_INT,
-+		 .sel_reg = CLK_AUDIO_IN_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 76800 * HZ_PER_KHZ,
-+		 .fc0_src = FC_NUM(2, 5),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_audio_out_parents[] = {
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = 0 },
-+};
-+
-+static struct rp1_clk_desc clk_audio_out_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_audio_out",
-+		clk_audio_out_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 4,
-+		 .ctrl_reg = CLK_AUDIO_OUT_CTRL,
-+		 .div_int_reg = CLK_AUDIO_OUT_DIV_INT,
-+		 .sel_reg = CLK_AUDIO_OUT_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 153600 * HZ_PER_KHZ,
-+		 .fc0_src = FC_NUM(3, 5),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_i2s_parents[] = {
-+	{ .index = 0 },
-+	{ .hw = &pll_audio_desc.hw },
-+	{ .hw = &pll_audio_sec_desc.hw },
-+};
-+
-+static struct rp1_clk_desc clk_i2s_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_i2s",
-+		clk_i2s_parents,
-+		&rp1_clk_ops,
-+		CLK_SET_RATE_PARENT
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 3,
-+		 .ctrl_reg = CLK_I2S_CTRL,
-+		 .div_int_reg = CLK_I2S_DIV_INT,
-+		 .sel_reg = CLK_I2S_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(4, 4),
-+	)
-+);
-+
-+static struct rp1_clk_desc clk_mipi0_cfg_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_mipi0_cfg",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_MIPI0_CFG_CTRL,
-+		 .div_int_reg = CLK_MIPI0_CFG_DIV_INT,
-+		 .sel_reg = CLK_MIPI0_CFG_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(4, 5),
-+	)
-+);
-+
-+static struct rp1_clk_desc clk_mipi1_cfg_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_mipi1_cfg",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_MIPI1_CFG_CTRL,
-+		 .div_int_reg = CLK_MIPI1_CFG_DIV_INT,
-+		 .sel_reg = CLK_MIPI1_CFG_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(5, 6),
-+		 .clk_src_mask = 0x1,
-+	)
-+);
-+
-+static struct rp1_clk_desc clk_adc_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_adc",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_ADC_CTRL,
-+		 .div_int_reg = CLK_ADC_DIV_INT,
-+		 .sel_reg = CLK_ADC_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(5, 5),
-+	)
-+);
-+
-+static struct rp1_clk_desc clk_sdio_timer_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_sdio_timer",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_SDIO_TIMER_CTRL,
-+		 .div_int_reg = CLK_SDIO_TIMER_DIV_INT,
-+		 .sel_reg = CLK_SDIO_TIMER_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(3, 4),
-+	)
-+);
-+
-+static struct rp1_clk_desc clk_sdio_alt_src_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_sdio_alt_src",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_sys_desc.hw }
-+		},
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_SDIO_ALT_SRC_CTRL,
-+		 .div_int_reg = CLK_SDIO_ALT_SRC_DIV_INT,
-+		 .sel_reg = CLK_SDIO_ALT_SRC_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 200 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(5, 4),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_dpi_parents[] = {
-+	{ .hw = &pll_sys_desc.hw },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_dpi_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_dpi",
-+		clk_dpi_parents,
-+		&rp1_clk_ops,
-+		CLK_SET_RATE_NO_REPARENT /* Let DPI driver set parent */
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 8,
-+		 .ctrl_reg = VIDEO_CLK_DPI_CTRL,
-+		 .div_int_reg = VIDEO_CLK_DPI_DIV_INT,
-+		 .sel_reg = VIDEO_CLK_DPI_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 200 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(1, 6),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp0_parents[] = {
-+	{ .index = 0 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_sys_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_i2s_desc.hw },
-+	{ .hw = &clk_adc_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_sys_desc.hw },
-+};
-+
-+static struct rp1_clk_desc clk_gp0_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp0",
-+		clk_gp0_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(0),
-+		 .ctrl_reg = CLK_GP0_CTRL,
-+		 .div_int_reg = CLK_GP0_DIV_INT,
-+		 .div_frac_reg = CLK_GP0_DIV_FRAC,
-+		 .sel_reg = CLK_GP0_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(0, 1),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp1_parents[] = {
-+	{ .hw = &clk_sdio_timer_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_sys_pri_ph_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_adc_desc.hw },
-+	{ .hw = &clk_dpi_desc.hw },
-+	{ .hw = &clk_pwm0_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_gp1_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp1",
-+		clk_gp1_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(1),
-+		 .ctrl_reg = CLK_GP1_CTRL,
-+		 .div_int_reg = CLK_GP1_DIV_INT,
-+		 .div_frac_reg = CLK_GP1_DIV_FRAC,
-+		 .sel_reg = CLK_GP1_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(1, 1),
-+	)
-+);
-+
-+static struct rp1_clk_desc clksrc_mipi0_dsi_byteclk_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clksrc_mipi0_dsi_byteclk",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_varsrc_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 1,
-+		 .num_aux_parents = 0,
-+	)
-+);
-+
-+static struct rp1_clk_desc clksrc_mipi1_dsi_byteclk_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clksrc_mipi1_dsi_byteclk",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_varsrc_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 1,
-+		 .num_aux_parents = 0,
-+	)
-+);
-+
-+static const struct clk_parent_data clk_mipi0_dpi_parents[] = {
-+	{ .hw = &pll_sys_desc.hw },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .hw = &clksrc_mipi0_dsi_byteclk_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_mipi0_dpi_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_mipi0_dpi",
-+		clk_mipi0_dpi_parents,
-+		&rp1_clk_ops,
-+		CLK_SET_RATE_NO_REPARENT /* Let DSI driver set parent */
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 8,
-+		 .ctrl_reg = VIDEO_CLK_MIPI0_DPI_CTRL,
-+		 .div_int_reg = VIDEO_CLK_MIPI0_DPI_DIV_INT,
-+		 .div_frac_reg = VIDEO_CLK_MIPI0_DPI_DIV_FRAC,
-+		 .sel_reg = VIDEO_CLK_MIPI0_DPI_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 200 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(2, 6),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_mipi1_dpi_parents[] = {
-+	{ .hw = &pll_sys_desc.hw },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .hw = &clksrc_mipi1_dsi_byteclk_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_mipi1_dpi_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_mipi1_dpi",
-+		clk_mipi1_dpi_parents,
-+		&rp1_clk_ops,
-+		CLK_SET_RATE_NO_REPARENT /* Let DSI driver set parent */
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 8,
-+		 .ctrl_reg = VIDEO_CLK_MIPI1_DPI_CTRL,
-+		 .div_int_reg = VIDEO_CLK_MIPI1_DPI_DIV_INT,
-+		 .div_frac_reg = VIDEO_CLK_MIPI1_DPI_DIV_FRAC,
-+		 .sel_reg = VIDEO_CLK_MIPI1_DPI_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 200 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(3, 6),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp2_parents[] = {
-+	{ .hw = &clk_sdio_alt_src_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_sys_sec_desc.hw },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .hw = &clk_audio_in_desc.hw },
-+	{ .hw = &clk_dpi_desc.hw },
-+	{ .hw = &clk_pwm0_desc.hw },
-+	{ .hw = &clk_pwm1_desc.hw },
-+	{ .hw = &clk_mipi0_dpi_desc.hw },
-+	{ .hw = &clk_mipi1_cfg_desc.hw },
-+	{ .hw = &clk_sys_desc.hw },
-+};
-+
-+static struct rp1_clk_desc clk_gp2_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp2",
-+		clk_gp2_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(2),
-+		 .ctrl_reg = CLK_GP2_CTRL,
-+		 .div_int_reg = CLK_GP2_DIV_INT,
-+		 .div_frac_reg = CLK_GP2_DIV_FRAC,
-+		 .sel_reg = CLK_GP2_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(2, 1),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp3_parents[] = {
-+	{ .index = 0 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_pri_ph_desc.hw },
-+	{ .hw = &clk_audio_out_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_mipi1_dpi_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_gp3_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp3",
-+		clk_gp3_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(3),
-+		 .ctrl_reg = CLK_GP3_CTRL,
-+		 .div_int_reg = CLK_GP3_DIV_INT,
-+		 .div_frac_reg = CLK_GP3_DIV_FRAC,
-+		 .sel_reg = CLK_GP3_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(3, 1),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp4_parents[] = {
-+	{ .index = 0 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_mipi0_cfg_desc.hw },
-+	{ .hw = &clk_uart_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &clk_sys_desc.hw },
-+};
-+
-+static struct rp1_clk_desc clk_gp4_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp4",
-+		clk_gp4_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(4),
-+		 .ctrl_reg = CLK_GP4_CTRL,
-+		 .div_int_reg = CLK_GP4_DIV_INT,
-+		 .div_frac_reg = CLK_GP4_DIV_FRAC,
-+		 .sel_reg = CLK_GP4_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(4, 1),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_vec_parents[] = {
-+	{ .hw = &pll_sys_pri_ph_desc.hw },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .hw = &pll_video_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_vec_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_vec",
-+		clk_vec_parents,
-+		&rp1_clk_ops,
-+		CLK_SET_RATE_NO_REPARENT /* Let VEC driver set parent */
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 8,
-+		 .ctrl_reg = VIDEO_CLK_VEC_CTRL,
-+		 .div_int_reg = VIDEO_CLK_VEC_DIV_INT,
-+		 .sel_reg = VIDEO_CLK_VEC_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 108 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(0, 6),
-+	)
-+);
-+
-+static const struct clk_parent_data clk_gp5_parents[] = {
-+	{ .index = 0 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .hw = &pll_video_sec_desc.hw },
-+	{ .hw = &clk_eth_tsu_desc.hw },
-+	{ .index = -1 },
-+	{ .hw = &clk_vec_desc.hw },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+	{ .index = -1 },
-+};
-+
-+static struct rp1_clk_desc clk_gp5_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_gp5",
-+		clk_gp5_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 16,
-+		 .oe_mask = BIT(5),
-+		 .ctrl_reg = CLK_GP5_CTRL,
-+		 .div_int_reg = CLK_GP5_DIV_INT,
-+		 .div_frac_reg = CLK_GP5_DIV_FRAC,
-+		 .sel_reg = CLK_GP5_SEL,
-+		 .div_int_max = DIV_INT_16BIT_MAX,
-+		 .max_freq = 100 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(5, 1),
-+	)
-+);
-+
-+static struct rp1_clk_desc *const clk_desc_array[] = {
-+	[RP1_PLL_SYS_CORE] = &pll_sys_core_desc,
-+	[RP1_PLL_AUDIO_CORE] = &pll_audio_core_desc,
-+	[RP1_PLL_VIDEO_CORE] = &pll_video_core_desc,
-+	[RP1_PLL_SYS] = &pll_sys_desc,
-+	[RP1_CLK_ETH_TSU] = &clk_eth_tsu_desc,
-+	[RP1_CLK_ETH] = &clk_eth_desc,
-+	[RP1_CLK_SYS] = &clk_sys_desc,
-+	[RP1_PLL_SYS_PRI_PH] = &pll_sys_pri_ph_desc,
-+	[RP1_PLL_SYS_SEC] = &pll_sys_sec_desc,
-+	[RP1_PLL_AUDIO] = &pll_audio_desc,
-+	[RP1_PLL_VIDEO] = &pll_video_desc,
-+	[RP1_PLL_AUDIO_PRI_PH] = &pll_audio_pri_ph_desc,
-+	[RP1_PLL_VIDEO_PRI_PH] = &pll_video_pri_ph_desc,
-+	[RP1_PLL_AUDIO_SEC] = &pll_audio_sec_desc,
-+	[RP1_PLL_VIDEO_SEC] = &pll_video_sec_desc,
-+	[RP1_PLL_AUDIO_TERN] = &pll_audio_tern_desc,
-+	[RP1_CLK_SLOW_SYS] = &clk_slow_sys_desc,
-+	[RP1_CLK_DMA] = &clk_dma_desc,
-+	[RP1_CLK_UART] = &clk_uart_desc,
-+	[RP1_CLK_PWM0] = &clk_pwm0_desc,
-+	[RP1_CLK_PWM1] = &clk_pwm1_desc,
-+	[RP1_CLK_AUDIO_IN] = &clk_audio_in_desc,
-+	[RP1_CLK_AUDIO_OUT] = &clk_audio_out_desc,
-+	[RP1_CLK_I2S] = &clk_i2s_desc,
-+	[RP1_CLK_MIPI0_CFG] = &clk_mipi0_cfg_desc,
-+	[RP1_CLK_MIPI1_CFG] = &clk_mipi1_cfg_desc,
-+	[RP1_CLK_ADC] = &clk_adc_desc,
-+	[RP1_CLK_SDIO_TIMER] = &clk_sdio_timer_desc,
-+	[RP1_CLK_SDIO_ALT_SRC] = &clk_sdio_alt_src_desc,
-+	[RP1_CLK_GP0] = &clk_gp0_desc,
-+	[RP1_CLK_GP1] = &clk_gp1_desc,
-+	[RP1_CLK_GP2] = &clk_gp2_desc,
-+	[RP1_CLK_GP3] = &clk_gp3_desc,
-+	[RP1_CLK_GP4] = &clk_gp4_desc,
-+	[RP1_CLK_GP5] = &clk_gp5_desc,
-+	[RP1_CLK_VEC] = &clk_vec_desc,
-+	[RP1_CLK_DPI] = &clk_dpi_desc,
-+	[RP1_CLK_MIPI0_DPI] = &clk_mipi0_dpi_desc,
-+	[RP1_CLK_MIPI1_DPI] = &clk_mipi1_dpi_desc,
-+	[RP1_CLK_MIPI0_DSI_BYTECLOCK] = &clksrc_mipi0_dsi_byteclk_desc,
-+	[RP1_CLK_MIPI1_DSI_BYTECLOCK] = &clksrc_mipi1_dsi_byteclk_desc,
-+};
-+
-+static const struct regmap_range rp1_reg_ranges[] = {
-+	regmap_reg_range(PLL_SYS_CS, PLL_SYS_SEC),
-+	regmap_reg_range(PLL_AUDIO_CS, PLL_AUDIO_TERN),
-+	regmap_reg_range(PLL_VIDEO_CS, PLL_VIDEO_SEC),
-+	regmap_reg_range(GPCLK_OE_CTRL, GPCLK_OE_CTRL),
-+	regmap_reg_range(CLK_SYS_CTRL, CLK_SYS_DIV_INT),
-+	regmap_reg_range(CLK_SYS_SEL, CLK_SYS_SEL),
-+	regmap_reg_range(CLK_SLOW_SYS_CTRL, CLK_SLOW_SYS_DIV_INT),
-+	regmap_reg_range(CLK_SLOW_SYS_SEL, CLK_SLOW_SYS_SEL),
-+	regmap_reg_range(CLK_DMA_CTRL, CLK_DMA_DIV_INT),
-+	regmap_reg_range(CLK_DMA_SEL, CLK_DMA_SEL),
-+	regmap_reg_range(CLK_UART_CTRL, CLK_UART_DIV_INT),
-+	regmap_reg_range(CLK_UART_SEL, CLK_UART_SEL),
-+	regmap_reg_range(CLK_ETH_CTRL, CLK_ETH_DIV_INT),
-+	regmap_reg_range(CLK_ETH_SEL, CLK_ETH_SEL),
-+	regmap_reg_range(CLK_PWM0_CTRL, CLK_PWM0_SEL),
-+	regmap_reg_range(CLK_PWM1_CTRL, CLK_PWM1_SEL),
-+	regmap_reg_range(CLK_AUDIO_IN_CTRL, CLK_AUDIO_IN_DIV_INT),
-+	regmap_reg_range(CLK_AUDIO_IN_SEL, CLK_AUDIO_IN_SEL),
-+	regmap_reg_range(CLK_AUDIO_OUT_CTRL, CLK_AUDIO_OUT_DIV_INT),
-+	regmap_reg_range(CLK_AUDIO_OUT_SEL, CLK_AUDIO_OUT_SEL),
-+	regmap_reg_range(CLK_I2S_CTRL, CLK_I2S_DIV_INT),
-+	regmap_reg_range(CLK_I2S_SEL, CLK_I2S_SEL),
-+	regmap_reg_range(CLK_MIPI0_CFG_CTRL, CLK_MIPI0_CFG_DIV_INT),
-+	regmap_reg_range(CLK_MIPI0_CFG_SEL, CLK_MIPI0_CFG_SEL),
-+	regmap_reg_range(CLK_MIPI1_CFG_CTRL, CLK_MIPI1_CFG_DIV_INT),
-+	regmap_reg_range(CLK_MIPI1_CFG_SEL, CLK_MIPI1_CFG_SEL),
-+	regmap_reg_range(CLK_PCIE_AUX_CTRL, CLK_PCIE_AUX_DIV_INT),
-+	regmap_reg_range(CLK_PCIE_AUX_SEL, CLK_PCIE_AUX_SEL),
-+	regmap_reg_range(CLK_USBH0_MICROFRAME_CTRL, CLK_USBH0_MICROFRAME_DIV_INT),
-+	regmap_reg_range(CLK_USBH0_MICROFRAME_SEL, CLK_USBH0_MICROFRAME_SEL),
-+	regmap_reg_range(CLK_USBH1_MICROFRAME_CTRL, CLK_USBH1_MICROFRAME_DIV_INT),
-+	regmap_reg_range(CLK_USBH1_MICROFRAME_SEL, CLK_USBH1_MICROFRAME_SEL),
-+	regmap_reg_range(CLK_USBH0_SUSPEND_CTRL, CLK_USBH0_SUSPEND_DIV_INT),
-+	regmap_reg_range(CLK_USBH0_SUSPEND_SEL, CLK_USBH0_SUSPEND_SEL),
-+	regmap_reg_range(CLK_USBH1_SUSPEND_CTRL, CLK_USBH1_SUSPEND_DIV_INT),
-+	regmap_reg_range(CLK_USBH1_SUSPEND_SEL, CLK_USBH1_SUSPEND_SEL),
-+	regmap_reg_range(CLK_ETH_TSU_CTRL, CLK_ETH_TSU_DIV_INT),
-+	regmap_reg_range(CLK_ETH_TSU_SEL, CLK_ETH_TSU_SEL),
-+	regmap_reg_range(CLK_ADC_CTRL, CLK_ADC_DIV_INT),
-+	regmap_reg_range(CLK_ADC_SEL, CLK_ADC_SEL),
-+	regmap_reg_range(CLK_SDIO_TIMER_CTRL, CLK_SDIO_TIMER_DIV_INT),
-+	regmap_reg_range(CLK_SDIO_TIMER_SEL, CLK_SDIO_TIMER_SEL),
-+	regmap_reg_range(CLK_SDIO_ALT_SRC_CTRL, CLK_SDIO_ALT_SRC_DIV_INT),
-+	regmap_reg_range(CLK_SDIO_ALT_SRC_SEL, CLK_SDIO_ALT_SRC_SEL),
-+	regmap_reg_range(CLK_GP0_CTRL, CLK_GP0_SEL),
-+	regmap_reg_range(CLK_GP1_CTRL, CLK_GP1_SEL),
-+	regmap_reg_range(CLK_GP2_CTRL, CLK_GP2_SEL),
-+	regmap_reg_range(CLK_GP3_CTRL, CLK_GP3_SEL),
-+	regmap_reg_range(CLK_GP4_CTRL, CLK_GP4_SEL),
-+	regmap_reg_range(CLK_GP5_CTRL, CLK_GP5_SEL),
-+	regmap_reg_range(CLK_SYS_RESUS_CTRL, CLK_SYS_RESUS_CTRL),
-+	regmap_reg_range(CLK_SLOW_SYS_RESUS_CTRL, CLK_SLOW_SYS_RESUS_CTRL),
-+	regmap_reg_range(FC0_REF_KHZ, FC0_RESULT),
-+	regmap_reg_range(VIDEO_CLK_VEC_CTRL, VIDEO_CLK_VEC_DIV_INT),
-+	regmap_reg_range(VIDEO_CLK_VEC_SEL, VIDEO_CLK_DPI_DIV_INT),
-+	regmap_reg_range(VIDEO_CLK_DPI_SEL, VIDEO_CLK_MIPI1_DPI_SEL),
-+};
-+
-+static const struct regmap_access_table rp1_reg_table = {
-+	.yes_ranges = rp1_reg_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(rp1_reg_ranges),
-+};
-+
-+static const struct regmap_config rp1_clk_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = PLL_VIDEO_SEC,
-+	.name = "rp1-clk",
-+	.rd_table = &rp1_reg_table,
-+	.disable_locking = true,
-+};
-+
-+static int rp1_clk_probe(struct platform_device *pdev)
-+{
-+	const size_t asize = ARRAY_SIZE(clk_desc_array);
-+	struct rp1_clk_desc *desc;
-+	struct device *dev = &pdev->dev;
-+	struct rp1_clockman *clockman;
-+	struct clk_hw **hws;
-+	unsigned int i;
-+
-+	clockman = devm_kzalloc(dev, struct_size(clockman, onecell.hws, asize),
-+				GFP_KERNEL);
-+	if (!clockman)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&clockman->regs_lock);
-+	clockman->dev = dev;
-+
-+	clockman->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(clockman->regs))
-+		return PTR_ERR(clockman->regs);
-+
-+	clockman->regmap = devm_regmap_init_mmio(dev, clockman->regs,
-+						 &rp1_clk_regmap_cfg);
-+	if (IS_ERR(clockman->regmap)) {
-+		dev_err_probe(dev, PTR_ERR(clockman->regmap),
-+			      "could not init clock regmap\n");
-+		return PTR_ERR(clockman->regmap);
-+	}
-+
-+	clockman->onecell.num = asize;
- 	hws = clockman->onecell.hws;
- 
- 	for (i = 0; i < asize; i++) {
-@@ -1466,6 +2421,11 @@ static int rp1_clk_probe(struct platform_device *pdev)
- 			hws[i] = desc->clk_register(clockman, desc);
- 	}
- 
-+	clk_audio_core = &pll_audio_core_desc;
-+	clk_audio = &pll_audio_desc;
-+	clk_i2s = &clk_i2s_desc;
-+	clk_xosc = clk_hw_get_parent_by_index(&clk_i2s->hw, 0);
-+
- 	platform_set_drvdata(pdev, clockman);
- 
- 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
--- 
-2.35.3
+> ---
+>   drivers/pci/hotplug/acpiphp_glue.c | 15 +++++++++++++++
+>   drivers/pci/pci-acpi.c             |  5 -----
+>   include/linux/pci_hotplug.h        |  4 ----
+>   3 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index 5b1f271c6034..ae2bb8970f63 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -50,6 +50,21 @@ static void acpiphp_sanitize_bus(struct pci_bus *bus);
+>   static void hotplug_event(u32 type, struct acpiphp_context *context);
+>   static void free_bridge(struct kref *kref);
+>   
+> +static bool hotplug_is_native(struct pci_dev *bridge)
+> +{
+> +	u32 slot_cap;
+> +
+> +	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+> +
+> +	if (slot_cap & PCI_EXP_SLTCAP_HPC && pciehp_is_native(bridge))
+> +		return true;
+> +
+> +	if (shpchp_is_native(bridge))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>   /**
+>    * acpiphp_init_context - Create hotplug context and grab a reference to it.
+>    * @adev: ACPI device object to create the context for.
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index b78e0e417324..57bce9cc8a38 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -816,15 +816,10 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
+>   bool pciehp_is_native(struct pci_dev *bridge)
+>   {
+>   	const struct pci_host_bridge *host;
+> -	u32 slot_cap;
+>   
+>   	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+>   		return false;
+>   
+> -	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+> -	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+> -		return false;
+> -
+>   	if (pcie_ports_native)
+>   		return true;
+>   
+> diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
+> index ec77ccf1fc4d..02efeea62b25 100644
+> --- a/include/linux/pci_hotplug.h
+> +++ b/include/linux/pci_hotplug.h
+> @@ -102,8 +102,4 @@ static inline bool pciehp_is_native(struct pci_dev *bridge) { return true; }
+>   static inline bool shpchp_is_native(struct pci_dev *bridge) { return true; }
+>   #endif
+>   
+> -static inline bool hotplug_is_native(struct pci_dev *bridge)
+> -{
+> -	return pciehp_is_native(bridge) || shpchp_is_native(bridge);
+> -}
+>   #endif
 
 
