@@ -1,120 +1,160 @@
-Return-Path: <linux-pci+bounces-30355-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D896AE39E1
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 11:23:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E9FAE3A02
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 11:27:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B10F3A4C62
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 09:22:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA1003A2E7B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 09:26:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0F52367C3;
-	Mon, 23 Jun 2025 09:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28F2023536C;
+	Mon, 23 Jun 2025 09:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KE4vB10O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw+aUfQS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8D91DDA0C;
-	Mon, 23 Jun 2025 09:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CEC17996;
+	Mon, 23 Jun 2025 09:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670534; cv=none; b=YI63ll9SZkD6DolRMbhgWVvc/XskH3s46GWpXuAmFMeXfXVMYpo9r/KGQg3bufV3rdJfUMmPhEvexjHTlb+OiFPev8EMZxIw8TlExnC58mRDwbAmCJUC2d5fqJcUo1xLh7aTYxdovx72MmS1ct6aWSEd0CDbdUV7q9OU4m/DAww=
+	t=1750670809; cv=none; b=MwG30LZz3PINL0lgKCQU5V0/D+ri+I7k0Zqyu3pkztQwZL3FnjkbVESXMnBtoJpjPUDe2IqorpH6e8thPNdiicqNY6JmiqOgeZuzy5jikQSLGoX8Z+Ej8pxH+X80bq57iH0qgPnpTJ3ii6PmdzRnJqEboGvueqYZ3kKl5dECN0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670534; c=relaxed/simple;
-	bh=soXQq3t1dya0s4CrtzGp9pj1ITZrvf2REkC+7bGtSPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S2slo+q/M8btb/jHzvSA6aa5zvq4/VyGBJavrutm3HWMLahJkc95a1XzzJullAt0CPqSqhw5V5ydGFhWJEDljJ9As+i3a9tSTmkxn5DbZOVbYUfupKVZjQHj7+2UFVHpDUSDi9i6/As7GieNOune7ejclIfHbXx/2rFs4Bm1SFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KE4vB10O; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-313dc7be67aso631685a91.0;
-        Mon, 23 Jun 2025 02:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750670533; x=1751275333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HjkYyHNx4rWTzzDDcjQiY+paHZsU2z/srVTm68tEwz8=;
-        b=KE4vB10O85DXKk+z3Sc0Qz1Jx2iYgbu75daxMvr1/pQxkbzLfcRcBjFQrRo/AJ4qED
-         TSWIgo4TZjIaRT0pPwxDgX2zlVhXDr/tGrU1j4oVRiyu7AhM0u3zpvUOdekWBP93jdkO
-         kfgytsD7csaN7FvZLJvKFNLfP4rAL6rqAwy77ZVvsZFm2tYsWR80xuN6mDdT/qSYeRfo
-         F96Zk+5FWklyjBUaipA3bDkjxIjRyIO1K5YbLz/dt36bNgLEDKm4IIRtlef64yvd2gRs
-         AM4+CZELN0oy2gRLjoyFLbE0ksGaq3aQsL+yynB1a9WOGN8Nnob+mltrLoELsVOVu0+Q
-         hwpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750670533; x=1751275333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HjkYyHNx4rWTzzDDcjQiY+paHZsU2z/srVTm68tEwz8=;
-        b=JqTMzwXfhqXvEhUixc9BEvWe7CqZTAkm8PxdpFykrHeN9TCqIDpV71DxLBlwb4GcO1
-         i6bTPmeZxKpsmwS/C4NNh1HK2du7QLBYeUt2i6/TZjhlHZxU0uGMkl+zIEYpWA3m/yKP
-         UT7jPt0U9Q8NkC26TI+m/pcCZDnZQXOnz/2NHDFz5LoVugkB1IDN9rwk+NTbptdzcCSL
-         ug5pOtU71SnHcEHLicDJNiBRzvhO8Z3VNDRrEWZuaczFfktuVk+hbz6AoKd0FQNANtC7
-         I+VwcGoKCcU1Vp3gcIwKJuKDYAOeTvpq1K5Ztlha8D44pm2WE7CRlrbxfHYQx/DZE2Ie
-         bNVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHVlDslrEiYbjwxSwSTzK9OVT6Wy9hkE7UU1q/aCJTgjwIt4VvTf7ehZSEZ7/P52SsppMPRn9N4JGs@vger.kernel.org, AJvYcCUrOW5JyOhtWRHvxBvp9I1tS+gO6fFsFih/LJOYEIPsD/nFqbdlfmSxZfK4i5uiMnoI1QJxT/RgV5NREZFm@vger.kernel.org, AJvYcCVIXBhhoMprsii2yH2NmO/nIAySxmd2aMIC2ZAwIo1G0kTnSboknjBZ+NS6T0qvg1BG/QF+V2fG@vger.kernel.org, AJvYcCWEC7nrMPI/2hibi5FdLQm4uEcqcFVd8ClzMFekf+9HKU3/RL147PTWBbImimKPyflvfPcutiybcdS2+GG0VT8=@vger.kernel.org, AJvYcCXvySV4gzL7ClETPQULnL/zvxgZwU6uIr0pbBZU/B9Dw5JrQusyTKF6H0r8Ix73KTE2pLI41gXOMzB8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWMEo+CuXPAHZd5CcX6G5fnysLS5EMqX11fG4WGCg5Rq3W6Mi5
-	i7WsIq4EJxtv5kLOXSGVpr55HUhONd8bg/xsv4B2uIR4BpB1dY+14H4c1/Y+DUTQwzJDcD4lO3j
-	h3w5a6TkJHdvy/ILddMbWfPQELcSvww0=
-X-Gm-Gg: ASbGncs7Wv4jZGZavY2oZkLEh5B7ZqglA22BzKlkR1y47blwt9wI1Paz0lAinxbPLmZ
-	toZ36+x/Ft45SGmwk9efXF/jFHGTZEDvev6DmdBAnQLu9ENbqYqHkoBGiSbmaPUAfL0PoY041v4
-	vQLLp0WBGtoBBakfQsBLPQ5lpfG7Bg+zNtW3y0vm1VDNw=
-X-Google-Smtp-Source: AGHT+IETxn7v6zwYEwXoHczuLS/HNhU6MCkte75ZxXO1tVQqUFugpt4MXRo2X8xQeuyDb+oMCcOcOosrSzyu4AlrH8Y=
-X-Received: by 2002:a17:90a:e185:b0:312:db8:dbd3 with SMTP id
- 98e67ed59e1d1-3159d8e2bc3mr8097731a91.6.1750670532832; Mon, 23 Jun 2025
- 02:22:12 -0700 (PDT)
+	s=arc-20240116; t=1750670809; c=relaxed/simple;
+	bh=WefXIWazEPskl9B0X1xFtEXjeBSL+nY1ELytivVzN98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJ+zAqC8CzetOTfF5KGBYyfESC4rRcXZ51gL++SDH1B6VCFBpBwP1HIFz+OEX8KrSzVOfbJtIwffBgQhKcZTjB4Dy6LaisJwDljjmNRHkIz8z5TDCRdM1sWGXdaH6OaPbjUv83c/A0gpba5fxgFq8cATm9TSYlVOYN3QP2/WRFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw+aUfQS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A007EC4CEEA;
+	Mon, 23 Jun 2025 09:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750670808;
+	bh=WefXIWazEPskl9B0X1xFtEXjeBSL+nY1ELytivVzN98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qw+aUfQSuKHEk4enVIrEz606dRtP6XgNppP2YO4INXtXX0fpKl7h4u8sf/OIVdZnD
+	 NV0a4MPutrCtYNNsfopZKOvqLp1uChhTnXU/ifibAjQcX5+vHM+wZYC5u2QZdbBUbG
+	 hqLK7QSB1BRJ/asx988F/PfQIVQ/RY4GUmm1JFsgN4/Mo8DqYKJQw5At6VHOYn0S0c
+	 /UfP5gASQorEsfU+ZD4hXDXpdiSjND8/UoejeEyZYy69Ux4hUolfJth5AbnALTSJow
+	 usdestU/sQ5azXOngEas1a3myuz4c299HGo5Yyo31BePXHs+oevsQhp/8PUPfwE+Tz
+	 /Jbrjo0uFvWOw==
+Date: Mon, 23 Jun 2025 11:26:41 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
+Message-ID: <aFkd0cigSKOSqUQI@lpieralisi>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+ <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
+ <87y0tmp6gn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623060951.118564-1-fujita.tomonori@gmail.com> <20250623060951.118564-4-fujita.tomonori@gmail.com>
-In-Reply-To: <20250623060951.118564-4-fujita.tomonori@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 23 Jun 2025 11:21:59 +0200
-X-Gm-Features: Ac12FXyBpI3ZOawhrOYIBpBEywpexKv74tsF0NMaWmLvsufKlgJjeslNJFwjXGg
-Message-ID: <CANiq72k0sdUoBxVYghgh50+ZRV2gbDkgVjuZgJLtj=4s9852xg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] rust: net::phy Change module_phy_driver macro to
- use module_device_table macro
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: alex.gaynor@gmail.com, dakr@kernel.org, gregkh@linuxfoundation.org, 
-	ojeda@kernel.org, rafael@kernel.org, robh@kernel.org, saravanak@google.com, 
-	a.hindborg@kernel.org, aliceryhl@google.com, bhelgaas@google.com, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, david.m.ertman@intel.com, 
-	devicetree@vger.kernel.org, gary@garyguo.net, ira.weiny@intel.com, 
-	kwilczynski@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, lossin@kernel.org, netdev@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y0tmp6gn.ffs@tglx>
 
-On Mon, Jun 23, 2025 at 8:10=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
->
-> +// SAFETY: [`DeviceId`] is a `#[repr(transparent)` wrapper of `struct md=
-io_device_id`
+On Fri, Jun 20, 2025 at 09:18:32PM +0200, Thomas Gleixner wrote:
 
-No need for intra-doc link in normal comments.
+[...]
 
-Also, missing bracket (which apparently comes from another comment, so
-probably copy-pasted).
+> > + * Taken from msi_lib_irq_domain_select(). The only difference is that
+> > + * we have to match the fwspec->fwnode parent against the domain->fwnode
+> > + * in that in GICv5 the ITS domain is represented by the ITS fwnode but
+> > + * the MSI controller (ie the ITS frames) are ITS child nodes.
+> > + */
+> > +static int gicv5_its_irq_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
+> > +				       enum irq_domain_bus_token bus_token)
+> > +{
+> > +	const struct msi_parent_ops *ops = d->msi_parent_ops;
+> > +	u32 busmask = BIT(bus_token);
+> > +
+> > +	if (!ops)
+> > +		return 0;
+> > +
+> > +	if (fwnode_get_parent(fwspec->fwnode) != d->fwnode ||
+> > +	    fwspec->param_count != 0)
+> > +		return 0;
+> 
+> Just add a MSI flag and set it in parent_ops::required_flags and extend
 
-> +    // This should never be called.
-> +    fn index(&self) -> usize {
-> +        0
-> +    }
+I added that but it does not work (not if we use d->flags as below), it works
+if I add it as an
 
-Hmm... This isn't great. Could this perhaps be designed differently?
-e.g. split into two traits, possibly based one on another, or similar?
+IRQ_DOMAIN_FLAG_*
 
-Worst case, we should at least do a `debug_assert!` or similar.
+and set it in irq_domain_info in the msi_create_parent_irq_domain()
+call in the GICv5 ITS driver when creating the domain.
 
-Cheers,
-Miguel
+> the lib with
+> 
+>         struct fwnode_handle *fwh;
+> 
+>         fwh = d->flags & MAGIC ? fwnode_get_parent(fwspec->fwnode) : fwspec->fwnode;
+
+Here we are using the domain flags and I think that's what we want.
+
+If I go with parent_ops flag, I believe here we need to use the parent
+msi_domain_info::flags - I don't think that's what we want.
+
+It is a property of the IRQ domain so I think that adding an
+
+IRQ_DOMAIN_FLAG_FWNODE_PARENT
+
+is the best option.
+
+Please let me know.
+
+Thanks,
+Lorenzo
+
+> 
+> No?
+> 
+> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > index c2e7ba7e38f7..4a0990f46358 100644
+> > --- a/drivers/irqchip/irq-gic-v5.c
+> > +++ b/drivers/irqchip/irq-gic-v5.c
+> > @@ -57,12 +57,12 @@ static void release_lpi(u32 lpi)
+> >  	ida_free(&lpi_ida, lpi);
+> >  }
+> >  
+> > -static int gicv5_alloc_lpi(void)
+> > +int gicv5_alloc_lpi(void)
+> >  {
+> >  	return alloc_lpi();
+> >  }
+> >  
+> > -static void gicv5_free_lpi(u32 lpi)
+> > +void gicv5_free_lpi(u32 lpi)
+> >  {
+> >  	release_lpi(lpi);
+> >  }
+> 
+> Just make them global right away when you implement them. No point for
+> this kind of churn.
+> 
+> Thanks,
+> 
+>         tglx
 
