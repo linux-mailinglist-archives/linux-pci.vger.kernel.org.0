@@ -1,90 +1,116 @@
-Return-Path: <linux-pci+bounces-30383-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30384-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DB4EAE3FB0
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 14:22:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 03A0EAE3FB9
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 14:22:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 890AA17C40B
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:17:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4998C17C907
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 12:17:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ACE72512DE;
-	Mon, 23 Jun 2025 12:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C19F24887A;
+	Mon, 23 Jun 2025 12:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDPRAB8x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE402512C6
-	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 12:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2212B24169B;
+	Mon, 23 Jun 2025 12:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750680814; cv=none; b=icxo29b1teoOVcEXPmHPAFrbdWSSqJE2WgAOANudaw0a7V5jpijPFXxy4UZ7hToN2PIAkfP6SEjbGKHvKiaz0TA1XIY11/Bo8IBpx20By/wQGIYcEn22abwURadI/5El8JkT3Bf/dq59yTdBhv/atVT+7F4YifkPcgtt2HX/Gxs=
+	t=1750680914; cv=none; b=bsose3209NdYtMXuFHFIQAt262Rzarji9STyu0Sj/HnmC/sLWHBsk6qIk1JqEljM2USL8kbxT5L/AzxbEJzPK3GUrXSn5kLPhrZ4uJDlSvjZevMQac6TiKvKfglohL0OgC1smcBqu8u1gwDCNBrEHVM4/j2lfknGufTkkp2KvH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750680814; c=relaxed/simple;
-	bh=3/GOAOJT8rpo10Olmg+Wib42M2iciJWGXEkXgWgrVOg=;
+	s=arc-20240116; t=1750680914; c=relaxed/simple;
+	bh=e99veYZUy79gCMXBdhcBd8vV/Ca+YIYh9vr/jO7tfPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YuBqbo6JAowJ52nUxn8M+CC60p729VwNn1wsAyQwhkMNKxRaVmJLyr5DKA4Ej8VNnIXMYYVE/CPfs+AKvy35XnrvMVeq4QxPNOjF+f0K955FnMm5PcpP3Mw+4Xkne7wmp+SIhrrtklQEOWo4P+LsHI/gEw9XIjYzObCeV5O4w04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 43B75200918A;
-	Mon, 23 Jun 2025 14:13:29 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3C83A1311A; Mon, 23 Jun 2025 14:13:29 +0200 (CEST)
-Date: Mon, 23 Jun 2025 14:13:29 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: andreasx0 <andreasx0@protonmail.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [BUG] PCIe bwctrl warning on Lenovo 82XT with AMD Phoenix GPP
- Bridge
-Message-ID: <aFlE6WkVZFP_jdSe@wunner.de>
-References: <7iNzXbCGpf8yUMJZBQjLdbjPcXrEJqBxy5-bHfppz0ek-h4_-G93b1KUrm106r2VNF2FV_sSq0nENv4RsRIUGnlYZMlQr2ZD2NyB5sdj5aU=@protonmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rb3BiZNpuQZ3DQ4nGWN0VEdDVB3hJrWm/wJerMsIDg1Bl53xADKPYvWQk2UX9FOODeVIbu1kU1DJAL8kyRhX4RYN0OTul+uS8BeEa9X6peHFiNq489JzqVxN0cVC2aYHpHdPxJGQXzwrTSN2FapHpVMe7eoihRfo9H4VKg9hQ58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDPRAB8x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14247C4CEEA;
+	Mon, 23 Jun 2025 12:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750680914;
+	bh=e99veYZUy79gCMXBdhcBd8vV/Ca+YIYh9vr/jO7tfPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oDPRAB8x+L31MY/qA3EPZ/FsPe6E2LBHxsMfdHLpdaY9n1XFZRtyJBHYiW9RbRkcw
+	 kt3nTgv4WTwMg1LQZ/wVpsbsRM1V4C1ibRrLhIlyVypVleKAhgYbakE6NzYT8cVJ9h
+	 NB9TkI45eC+fxRHLIME/Sca94oRKSxuADXO0z8yIITHsWcjikKJuk/SOq1texRQtU8
+	 QnNLBieQM7tKdYlhuNSkdJ0zDF4/5emPgaGe4u144tzUTGoPQAqpnsekIuauSEMaTa
+	 hrWALF12f9AiP6XJKNMGeGzb2Bj8r7fr6QicvBJmFsA7wWRS6SUCGVORSsjyODlhve
+	 B+h6cu+xb/sLA==
+Date: Mon, 23 Jun 2025 06:15:12 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
+	johan+linaro@kernel.org, cassel@kernel.org, shradha.t@samsung.com, 
+	thippeswamy.havalige@amd.com, quic_schintav@quicinc.com, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 8/9] arm64: dts: st: Add PCIe Endpoint mode on
+ stm32mp251
+Message-ID: <de275zjaafymohqbcao5tvk2bul5f3fvqgsla4yjfvvueg75yz@dpqh2vs3t6kg>
+References: <20250610090714.3321129-1-christian.bruel@foss.st.com>
+ <20250610090714.3321129-9-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7iNzXbCGpf8yUMJZBQjLdbjPcXrEJqBxy5-bHfppz0ek-h4_-G93b1KUrm106r2VNF2FV_sSq0nENv4RsRIUGnlYZMlQr2ZD2NyB5sdj5aU=@protonmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610090714.3321129-9-christian.bruel@foss.st.com>
 
-[cc += Ilpo, Maciej; start of thread:
-https://lore.kernel.org/r/7iNzXbCGpf8yUMJZBQjLdbjPcXrEJqBxy5-bHfppz0ek-h4_-G93b1KUrm106r2VNF2FV_sSq0nENv4RsRIUGnlYZMlQr2ZD2NyB5sdj5aU=@protonmail.com/
-]
+On Tue, Jun 10, 2025 at 11:07:13AM +0200, Christian Bruel wrote:
+> Add pcie_ep node to support STM32 MP25 PCIe driver based on the
+> DesignWare PCIe core configured as Endpoint mode
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 
-On Mon, Jun 23, 2025 at 11:54:02AM +0000, andreasx0 wrote:
-> I am encountering a PCIe bandwidth control warning on my Lenovo 82XT
-> laptop during boot with kernel version 6.15.3. The warning occurs
-> inside the `pcie_set_target_speed()` function in the PCIe bwctrl
-> driver and appears related to setting link speeds on AMD Phoenix
-> GPP Bridge devices.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-Thanks for the report.  If you apply the patch below, does the issue
-go away?
+- Mani
 
--- >8 --
+> ---
+>  arch/arm64/boot/dts/st/stm32mp251.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> index 781d0e43ab59..23dcc889c3e8 100644
+> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> @@ -1140,6 +1140,21 @@ stmmac_axi_config_1: stmmac-axi-config {
+>  				};
+>  			};
+>  
+> +			pcie_ep: pcie-ep@48400000 {
+> +				compatible = "st,stm32mp25-pcie-ep";
+> +				reg = <0x48400000 0x100000>,
+> +				      <0x48500000 0x100000>,
+> +				      <0x48700000 0x80000>,
+> +				      <0x10000000 0x10000000>;
+> +				reg-names = "dbi", "dbi2", "atu", "addr_space";
+> +				clocks = <&rcc CK_BUS_PCIE>;
+> +				resets = <&rcc PCIE_R>;
+> +				phys = <&combophy PHY_TYPE_PCIE>;
+> +				access-controllers = <&rifsc 68>;
+> +				power-domains = <&CLUSTER_PD>;
+> +				status = "disabled";
+> +			};
+> +
+>  			pcie_rc: pcie@48400000 {
+>  				compatible = "st,stm32mp25-pcie-rc";
+>  				device_type = "pci";
+> -- 
+> 2.34.1
+> 
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d7f4ee6..deaaf4f 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -108,7 +108,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- 	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
- 	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
- 	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
--		u16 oldlnkctl2 = lnkctl2;
-+		u16 oldlnkctl2 = lnkctl2 & PCI_EXP_LNKCTL2_TLS;
- 
- 		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
- 
+-- 
+மணிவண்ணன் சதாசிவம்
 
