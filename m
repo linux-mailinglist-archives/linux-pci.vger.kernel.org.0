@@ -1,171 +1,125 @@
-Return-Path: <linux-pci+bounces-30464-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30465-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E7B8AE57A3
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 00:59:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12B76AE57B6
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 01:14:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13B99189B989
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 22:59:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E77C444FB4
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 23:13:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A606A227EB9;
-	Mon, 23 Jun 2025 22:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B93A022A4EE;
+	Mon, 23 Jun 2025 23:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTiAkh0F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1Zb9RGP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA9B225A23;
-	Mon, 23 Jun 2025 22:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33716229B15;
+	Mon, 23 Jun 2025 23:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750719544; cv=none; b=cO52NDQF9Fa1mohe/GCL4MBTxVJU/KUjf6MCi6Uala579l1zGqsnEBzXLCZSYvseB7566pawi0MFPPyPpQ2V03jvtXK4YzbBMXJLrJypmxMjTSZmKTay5y1CgccWRgZSFj3mWY8qNqgXBWolOV5raUdaji9cur+ut6xj/bd1AI4=
+	t=1750720441; cv=none; b=OeVokEWwaJlCj+m1qfoGgrqFr40GhSHc+t+SHEM8UyjrO2Tap4uu5cDAoR8tJkTz6SF2rWMVVjUWVySXPW4JFbYvQ2Q1Z5xd8lk1lFGehmNQ2Yja6Y+ohXg6TvFWFLlHzxr+iYMmPqoP7JF1mraO7tAlwPnJUWHT+CiJzMIUu4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750719544; c=relaxed/simple;
-	bh=aodqo2TfNv//TKLZmuT/byFBC/ScJXPbbKHlGhkNSr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LifOGSzpt8Nc7ZVyAFA+ILESaoP8WPh+sVQWui5KYbn4OlMQG3W0vMF40lmasgzDGkd+XHj8C6GOugJEYHuf9cYKHnNzUkVbB6UNLR7wGDPvNQ1K7uB1epXZeZW9rewIP136nMOALh78gRGqCax6fwPANVvaEGmKX9+mtN7Uh2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTiAkh0F; arc=none smtp.client-ip=209.85.210.176
+	s=arc-20240116; t=1750720441; c=relaxed/simple;
+	bh=ZtQ2Qt4f7OMEWIrCp3AR0s+GaEutTrsUFzG/PxY8FzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YdJQ7jIzJwNVGe567bvK9yILt0mfDGPGcnnE3pkJWcrrx2MOFmBegRR9StE4VUUU7HQh9JdMWg9tvAMSBRuWKlGKRMv3MHY4ogZuWJ50kfgOfskg159hmfcCVm2jEXMJVv8qnzbpU128Yd6Sq6mu07mmI9yvroLJHpXyw2JQ8nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1Zb9RGP; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3390595b3a.2;
-        Mon, 23 Jun 2025 15:59:02 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2eeada3df1so265933a12.1;
+        Mon, 23 Jun 2025 16:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750719542; x=1751324342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pcy7yresPbC3EzSIERmqz2XWS4vYmJ0nwu020eXVaWA=;
-        b=kTiAkh0F4xJ55La83JmomVrdT01B8C3gN06ytrPw07O1tDbOvJDWmFY2wmpfFS4blr
-         CKxR1/QSx7qqYnE9xjNMQlC1KgbKbAXZKJX+lt4ofcpbweV5kHu+VRr04LnUHK2bUC8U
-         TXXKI7L07kHnQyphrVWndSrE4fp5+eKWPv1IAJmsTUThJ19F+1FiJzzOtNfmRs7JkotU
-         eyUA2u+rasY88I4B+si523wPjOgG2wxB7284+QSdmfPYqVR0/8q7jAO7gXLxCUqlsXtz
-         iV98zzCfXweZX3ZBnl/sEs8ZbG+56vcXsOP+bHIz1g4sIxhCRPMPl1gDIq63WeWQOgBl
-         fdmA==
+        d=gmail.com; s=20230601; t=1750720438; x=1751325238; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZtQ2Qt4f7OMEWIrCp3AR0s+GaEutTrsUFzG/PxY8FzM=;
+        b=k1Zb9RGPdjjfFKQ1vmipn0GJQOyWo3eHucp8lirLYVYuOuqmgEevk/5G+Zs+iYWJSl
+         0so0IV20X3hOgaY9axzzaBtl5XgkW3cOAMDmM5eW3GDkzrVy1aRG7o4d9QmiORz62fwu
+         cMBC4YigWsXxLs/ajZcXIsGvIGEceL5C3pkfMqPgxFUOsXSAwsmkL4kg0j7ljpuTXx+K
+         7gm/i1PIsbH+IcId1Hq9yhRYzcJOetfE8BptVhdhqhLhLJj8gd5hL92v5wblMo81ZrKk
+         xAgoFzKG1wFcVOur3sA+bKZMUtruD9ocbtW3IDVtHCJeo9YQ+vksX6fCzXBfMYNfvpwt
+         dXUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750719542; x=1751324342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pcy7yresPbC3EzSIERmqz2XWS4vYmJ0nwu020eXVaWA=;
-        b=wdqrQGUV3uCmtyFrfH5Hr8YurOPrMvtI6vgJZqvHtYP70pcp1Ey+OdDu6IU6pqTm9n
-         HseGg/PwkCTvu0gzJuL/ISS+SfJCpS9bHAlEzv1VgIOaQqhmz5QMQ7cMZMnBlMzX3RD2
-         IKdXzngv+/xKr2B2Om3eXFqOWu5UPicTaMPwTkIuJHqnlaK9Nfkx9FpOb6kDIPjHszp4
-         8ig5ifAHQAhZJYFvEulIOOlCvogytcfX81GdaKpxm9oDGNbzkGRkPptIc2vcCME+OFA3
-         8xQZLiMDcoPoXeh/us3kWRv6qcEn9vOv+CmK7oXQkO7Z2gTRFC1JOjWPQp5mkKGJJId4
-         xuAg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7myKqsj8IX5cXpAbIXwxuDEsB+/17Wtd7OzARCYPSCt+01JUmsnTUM4UhVraDmn7Ov5qHNv8DTyDo@vger.kernel.org, AJvYcCUorBWTdXg2q1ikqsrCGTOqz5LJWVG6kpn6VbDZe4X8ISLH86f51PnKEVKAs05lz0avzG7FX+7/7+/BIDiO4+k=@vger.kernel.org, AJvYcCWbcqp9ukOA7Nd9Pyz/mzVUTHqy5Ek2O/qwL1vGcnAoNePdPRJgpzy2ORtuMStwCAojAJI7iSBqq7gj@vger.kernel.org, AJvYcCXS1+lJ9OAkvk+22yeSfqYbkKdbLPDROLJO9su0aMkWhde641QJRLYHJ+lWlZKv2eKMgpjIA+eEXBPMeWOw@vger.kernel.org
-X-Gm-Message-State: AOJu0YygP+zERFI2tHWwax7BFiBXaZEBQXH8jNmmAHhc4a0C4kmKUXCL
-	AlhahCv5FiHEgaPSrHGAJKPUKw2NyfL+P789Vw6MT3VWUXy3jV4NllMU
-X-Gm-Gg: ASbGnct4ffo8iL8E7QO+RLGZeEpe4hBZ4SfcujimJjkg2NnJ7pJaYwr541vcmokX+3O
-	6DAhMWx+N0gsVxOcIJK6sH7UbzzdsSEocSJJvbNGHBoRbhKaFK9epUgp+n4B2jb8TWmDe/Ikd9t
-	Xx1Jdw2gtLzUQnqkXfLcoa1qnPJN/8Bc08KGDrD2b6j0fxEVmH3Iao+NSIO3kHlDAumPpFVpZqe
-	au1/6eMO1hIHCVPToPuzBXtLyZglcIoTO+GekC3XlSqtO4yTtA6hm3GiQrEWPvYn+IjcTkEJfzi
-	eY6gsQJHbSRmMWCVH2vzVT7v7xscHC6zfNLu+0MBDS4YwxLw088DPIxsGkbZKuObL14XYDCjevC
-	icYkswuRGzJrgo2XxcjEvsAKmL9MgjuAT65g=
-X-Google-Smtp-Source: AGHT+IE939Z4t7O/tLb4fWGzn/o4VmmAeQawC4bX+wCLcSY8yO+m7Esw6TNR1NXnkHekz8HOzqa6sw==
-X-Received: by 2002:a05:6a20:43a4:b0:21a:bc07:b42c with SMTP id adf61e73a8af0-22026fa379bmr24630957637.30.1750719542219;
-        Mon, 23 Jun 2025 15:59:02 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c88532d2sm213620b3a.132.2025.06.23.15.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 15:59:01 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	kwilczynski@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v1] rust: fix typo in #[repr(transparent)] comments
-Date: Tue, 24 Jun 2025 07:58:46 +0900
-Message-ID: <20250623225846.169805-1-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750720438; x=1751325238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZtQ2Qt4f7OMEWIrCp3AR0s+GaEutTrsUFzG/PxY8FzM=;
+        b=toksJvoKBp8u3gsg5vSyVaLvwZHUr6h+x+w9jQHUTSyqQw5tBHP8Y0suSh/+tLT5x7
+         KeRxinExNzaZV+or5Ly8ZT+wuIG5hC0vU7Ajr+OfSugWp+fOIEUJ3tGpfxVLAgPAG99l
+         r7ZQc6mDU/NdylotqBnPQbkrqZN/6fYj0bwG5W81x3VE8t6+M5RCTaGJWGxrYI7AAOSW
+         spf1/mszgQwLKNZTqsLQugyZLnfN8BoMS4Pqoffm4D8VtDIHlCDaV0ORUApdVxBzKRaI
+         N+6Qi7f0KXbIr6fCR6YbffNWFnyJ18tSZRFj5HXW7VV6G7tRhRqFHPCqVHXKMBNk4uFy
+         8lTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+EN7VULX7u/QqiDCJaPeYoZzVnL0C0efQFvucM95pB6qI805vjC8YVuXhuQwRbK5HDVU0UzH+wAsLgA==@vger.kernel.org, AJvYcCUHXMzFJPD/S1T3OLjd0Zb1Z5F7rp1kar9DuF8Gowz0dkdIJqF4kHtmc04bUtPaNqLQcNaMke16NRo59a9b@vger.kernel.org, AJvYcCW5upNZlvghOYx+sDWv6goBGGWhZwgj/IG/yE16xUrSkaUJQ/QUCfp2ffE66j44xfbSc6pBQ9Z9QwrL@vger.kernel.org, AJvYcCWs/34aZrUHKQOw6CMd9P93lHDG2NGzQ88VDmIbJnfyyYr7LFdXRHf4GjsSDNiFTywNli6XUC0j6G4=@vger.kernel.org, AJvYcCWs1Qa5SkNvHicPoHOYc/e++g7mDIyNmRmIuvQ5T4Dit+s+Gu1AyxfUVFlhXeF7oxegBgxi5YetwI5P@vger.kernel.org, AJvYcCX6js9Qs2H7VkNDLY/C+LeIGUb0yzL76dZ2lKvViqISAc/yUnBRNu0gVgVvbL9rYaLMmq2WvoOSE923YX0iPQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5lhNL8cTlakLT2ypLTQMt0H5xVCEZzC97E+dM07b4Sp6SagfK
+	ge/FKEBfbCa6YR7j61ev6CTGxoZohaNgMwad8rXB4au72n6b1InFvh9e27Mlfof7SdTzgDCl3CK
+	yVwIwrXisydZPCzap4MB0eHa1f3neVHaMh8A9xsg=
+X-Gm-Gg: ASbGncsBpyLv6Hy7zMIu9BbOdK6JsEV1oH0tzn6WY23xL9XTCUD96oOqW+3eoUYCp8A
+	iLKIDeBgN7L+9TPH6yAcV6egRyoLJqmo5aDR5RrC9QTdBwJp+GV84aeImSm8IZQDjDEFagh5JWI
+	GgjDBypKyiHfGCkReARqHqo5AvnvMOoiY7KSXCvmF+vm4=
+X-Google-Smtp-Source: AGHT+IEsWii+V5p50ha11PTkF7dtQH4Lp+DAN/BWRuicAVRBL1LKwMw8G12V8WuF/myxhsVW+VQkOs7i/rj5crF+YW4=
+X-Received: by 2002:a17:90b:57ee:b0:314:2d38:3e4d with SMTP id
+ 98e67ed59e1d1-3159d8c5e70mr7719800a91.3.1750720438379; Mon, 23 Jun 2025
+ 16:13:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+In-Reply-To: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 24 Jun 2025 01:13:46 +0200
+X-Gm-Features: Ac12FXyx0oigTMFFaBp0d8IysYfhBRX_G8OKWklWXPpi1hgSkQf15JDHjf6iluE
+Message-ID: <CANiq72k9_bzjV7YbFL1NZTESjFYRiiLgYaGHYv_m9hNa+p9zmA@mail.gmail.com>
+Subject: Re: [PATCH V2] rust: Use consistent "# Examples" heading style in rustdoc
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, linux-block@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix a typo in several comments where `#[repr(transparent)]` was
-mistakenly written as `#[repr(transparent)` (missing closing
-bracket).
+On Tue, Jun 10, 2025 at 11:03=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
+>
+> Use a consistent `# Examples` heading in rustdoc across the codebase.
+>
+> Some modules previously used `## Examples` (even when they should be
+> available as top-level headers), while others used `# Example`, which
+> deviates from the preferred `# Examples` style.
+>
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Acked-by: Benno Lossin <lossin@kernel.org>
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/driver.rs | 2 +-
- rust/kernel/of.rs     | 2 +-
- rust/kernel/pci.rs    | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Applied to `rust-next` -- thanks everyone!
 
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..de4ed5dafa96 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -159,7 +159,7 @@ fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-         if raw_id.is_null() {
-             None
-         } else {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+            // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct of_device_id` and
-             // does not add additional invariants, so it's safe to transmute.
-             let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
- 
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-index 40d1bd13682c..cca3d5cfaa92 100644
---- a/rust/kernel/of.rs
-+++ b/rust/kernel/of.rs
-@@ -13,7 +13,7 @@
- pub struct DeviceId(bindings::of_device_id);
- 
- // SAFETY:
--// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and does not add
-+// * `DeviceId` is a `#[repr(transparent)]` wrapper of `struct of_device_id` and does not add
- //   additional invariants, so it's safe to transmute to `RawType`.
- // * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
- unsafe impl RawDeviceId for DeviceId {
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index f6b19764ad17..dc1516ce0bdc 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -68,7 +68,7 @@ extern "C" fn probe_callback(
-         // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
-         let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
- 
--        // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct pci_device_id` and
-+        // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct pci_device_id` and
-         // does not add additional invariants, so it's safe to transmute.
-         let id = unsafe { &*id.cast::<DeviceId>() };
-         let info = T::ID_TABLE.info(id.index());
-@@ -162,7 +162,7 @@ pub const fn from_class(class: u32, class_mask: u32) -> Self {
- }
- 
- // SAFETY:
--// * `DeviceId` is a `#[repr(transparent)` wrapper of `pci_device_id` and does not add
-+// * `DeviceId` is a `#[repr(transparent)]` wrapper of `pci_device_id` and does not add
- //   additional invariants, so it's safe to transmute to `RawType`.
- // * `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
- unsafe impl RawDeviceId for DeviceId {
+This is a trivial change that shouldn't be able to break anything
+anywhere, and I haven't heard any complaints, so I will go ahead and
+take it.
 
-base-commit: dc35ddcf97e99b18559d0855071030e664aae44d
--- 
-2.43.0
+If someone wants to give Acked-by's, I can still take them.
 
+Cheers,
+Miguel
 
