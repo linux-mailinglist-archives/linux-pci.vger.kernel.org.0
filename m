@@ -1,104 +1,98 @@
-Return-Path: <linux-pci+bounces-30395-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30396-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D638AE4448
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 15:41:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6149AE450F
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 15:47:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18D941B60C03
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 13:37:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39E07441680
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 13:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E431253F30;
-	Mon, 23 Jun 2025 13:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2196F24E019;
+	Mon, 23 Jun 2025 13:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7ZSo+8c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="js8sLov/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A74250C06
-	for <linux-pci@vger.kernel.org>; Mon, 23 Jun 2025 13:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C492F24;
+	Mon, 23 Jun 2025 13:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685710; cv=none; b=eIQjbEkj4A+mB8s4aAnTCfG+I2FHOtgoBaqjTw05RrCi01PiHIlcfRmMEh7f3nTdeCyGPetGQWtQxfGj+twfas5FmFV51pr4U524C6aetpf/uaC+Zgl0GZMmu9BhTI3l1walIglF/ItGAxUCw5LMGPEC5Jea/lq/0J1JEfbMTbs=
+	t=1750686011; cv=none; b=CN0NPFWI+FtS/k6zAjECHclq5v5bQkCjaud3LfytRlgob5RMzGHniPC/qHcDusBzCoxl4qdKhVjGYV5iO068tLGEcU4YtTb2TZIlnpSe4a6oZz/sX+Gk6gEPHeF7HbHQpKRddB8QOKNtr+I8E1FyMmCybJKLEesaQB2chQLSUwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685710; c=relaxed/simple;
-	bh=aKv3s1gSP7mjjA9zejL2CpZhUz+utB/JGvSt+uv3Mks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jCsZ+LnLJnhX9/tEEe7QHZ4qdut0ZR16SCjTzaNmBKKzor1oMUClxuCrGmvRlJUrDlf9dtWMdMJxcaAnZlWBdis67YvYTTOmte7wMZETsvANaLXqYNyPlLkq7pdqR9g6U8iD7kxnQnWrGFdcfxj9P4rWRXf+WXpyMgFswYXM4CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7ZSo+8c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFF5C4CEF2;
-	Mon, 23 Jun 2025 13:35:08 +0000 (UTC)
+	s=arc-20240116; t=1750686011; c=relaxed/simple;
+	bh=qnHvdmVdYs0nnag2h7hKE4fgRHvgo6WvZD5OV+POaY4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=DoXnYY78M8ONvTY6fHp0tvEVEN+bvv5/LTAeDp3x9EFBE0dzxrv2JU8yBs4HHdpRJiohpdiaHpevi9n0ibFvm5Bs6fD1b15t9FfIKFMB7ixXxk1uNC7cIulaZb2qpuiP2S7778OFLXzL0frE0l0YrqXtyUYkTom1M5ozLA2T+jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=js8sLov/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331F4C4CEF2;
+	Mon, 23 Jun 2025 13:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750685710;
-	bh=aKv3s1gSP7mjjA9zejL2CpZhUz+utB/JGvSt+uv3Mks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z7ZSo+8cWgmfe8MplB/2NUs39HUevakRFmewDReiLL4OuKoz9pW4BsLi1o4m4PXIi
-	 aJr98rLhU0Zs1tLEEwMV9f+urhNJ/ix/HyFXzFK4+laSFEID7/ysdDqd5ORhfN50v/
-	 ZanV4uW8TAfu5VmIFZ/XlS7aIxu/BM6Pi789WaK1aZUOH1Qozmu8BadYnxIc02TvsF
-	 oD2Eyu4g1acX2RLHnOGY+drSs/o99gDZUq0j8hQ4hBTPOp/8YxiYspEGYWq5in1Qgg
-	 XAljGpm3g3kO4iNI1Tfu1H/QzFzDelGP7mVBIvMwxZoDt3YGOLvVS6DSS4LWA45pMQ
-	 NnOM6CJiICwcA==
-Date: Mon, 23 Jun 2025 15:35:05 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: endpoint: Fix configfs group removal on driver
- teardown
-Message-ID: <aFlYCRtF40Y2i7dX@ryzen>
-References: <20250617010737.560029-1-dlemoal@kernel.org>
- <aFklrtQTwqKhOl39@ryzen>
- <011c4c6d-ebff-46e4-b32f-f93eb88dd82d@kernel.org>
+	s=k20201202; t=1750686010;
+	bh=qnHvdmVdYs0nnag2h7hKE4fgRHvgo6WvZD5OV+POaY4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=js8sLov/BP9FlRMoc4tY1e0WWeYcmDQVuJVLydSzGnZ7Lh5QqJq7uW4PF33enURpr
+	 qF3rg+hAfIEOZyROfJZEPFJu6vfhosqtjLEVu43zDztrBkz2IYZ1y1VOcG599M0iPS
+	 wYbhN1XD0ssP3vHD1SLHyH6PNkb7bSKIMm7SuUzwggwvy5LORILxK+gO2ANYjqvupe
+	 FznZvPXFMR4eQ9sq6G5aqxgnhe2qa70ga6cRVau4w5ndcZw2lDSl+ksx/A9t+Na3A4
+	 wAoM6RgkP87XK6LCC5z/vPRwZ/gl9DC2r37Rpy6Y8PKw6FRujgpKwQ38v1DUWadIVT
+	 3eukMSIDrkHQQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <011c4c6d-ebff-46e4-b32f-f93eb88dd82d@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Jun 2025 15:40:05 +0200
+Message-Id: <DATYE858ERJP.9B9NY8NPMOM2@kernel.org>
+Subject: Re: [PATCH v2 4/4] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-5-dakr@kernel.org> <aFlCCsvXCSJeYaFQ@google.com>
+ <aFlN7W5rMRcmE300@cassiopeiae>
+In-Reply-To: <aFlN7W5rMRcmE300@cassiopeiae>
 
-On Mon, Jun 23, 2025 at 09:01:53PM +0900, Damien Le Moal wrote:
-> On 6/23/25 19:00, Niklas Cassel wrote:
-> > 
-> > I think it is a litte bit confusing that you attach a KASAN
-> > splat to a patch that fixes two different bugs.
-> > 
-> > Surely this KASAN bug can be fixes with only:
-> > 
-> > -     list_del(&driver->epf_group);
-> > +     WARN_ON(!list_empty(&driver->epf_group));
-> 
-> Yes, with that, you will not get the KASAN warning, but you will get the
-> WARN_ON() to trigger unless bug #1 is applied first. But if you apply #1 first,
-> then any testing done with that bug fix only will trigger a NULL pointer
-> de-reference on the list_del().
+On Mon Jun 23, 2025 at 2:51 PM CEST, Danilo Krummrich wrote:
+> On Mon, Jun 23, 2025 at 12:01:14PM +0000, Alice Ryhl wrote:
+>> On Sun, Jun 22, 2025 at 06:40:41PM +0200, Danilo Krummrich wrote:
+>> > +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+>> > +where
+>> > +    P: ForeignOwnable,
+>> > +    for<'a> P::Borrowed<'a>: Release,
+>>=20
+>> I think we need where P: ForeignOwnable + 'static too.
+>>=20
+>> otherwise I can pass something with a reference that expires before the
+>> device is unbound and access it in the devm callback as a UAF.
+>
+> I can't really come up with an example for such a case, mind providing on=
+e? :)
 
-Ok, let me rephrase :)
+    {
+        let local =3D MyLocalData { /* ... */ };
+        let data =3D Arc::new(Data { r: &local });
+        devres::register_release(dev, data)?;
+    }
+    // devres still holds onto `data`, but that points at `MyLocalData`
+    // which is on the stack and freed here...
 
-Surely this KASAN bug can be fixed with only:
-
--     list_del(&driver->epf_group);
-
-As the bug is that the code is trying to delete a list head, which is just
-wrong.
-
-
-A patch 2/2 could add a list_del() to pci_ep_cfs_remove_epf_group() and the
-WARN_ON() to pci_epf_remove_cfs().
-
-Considering that pci_ep_cfs_remove_epf_group() also frees the memory for
-the group, I think it is more correct to use list_del() rather than
-list_del_init(), as no one will be able to re-use this group after calling
-pci_ep_cfs_remove_epf_group() on it.
-
-
-Kind regards,
-Niklas
+---
+Cheers,
+Benno
 
