@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-30340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CA45AE3557
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 08:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D93B0AE355C
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 08:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 897653A8D4F
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 06:10:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 909543B15AF
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 06:10:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44441E25F9;
-	Mon, 23 Jun 2025 06:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914BD1EB1BF;
+	Mon, 23 Jun 2025 06:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjK2JpSL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zyq4S5eL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330537261A;
-	Mon, 23 Jun 2025 06:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E21E834B;
+	Mon, 23 Jun 2025 06:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659031; cv=none; b=bNAsuHy4a3smFkaXV45i45bkxG9euNd6bOBAx0z1AQIzPllh2QMp+JIGnqbkDHNbzlJyVCS5/fszVx4F1tYx87yhuBHj5orvHZDjH0qvEHeRxI+D++WPhw+L9jAHx2076cOmddDIYEApM2yLZNL8n3vSGRenLcRi97AOXqOV8Qo=
+	t=1750659036; cv=none; b=vCbDFRCgDNYrk5t6K+ZuQWADjNQO5Y6JQFm3+8GqAlsrW/M0MuSwA+SAslv49ewB3OYGFoZURGUgXwhAFBKXc7WXMpwtMAYmkoDTEer6hS4BA8rOZHem/SQmchD28/KC4JY3xlENLYydTeaXJeGBWGoed5QCTYfvfi0WNTQSkPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659031; c=relaxed/simple;
-	bh=IX3NSHlFBlGmB80LzrBmBb2dfRqQ2p09Y20SMWJhES0=;
+	s=arc-20240116; t=1750659036; c=relaxed/simple;
+	bh=Rb82lXwhfTwYPKu8Q8XF7KI5JIB8d/RCndqm2TyQhxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vn1i1svIRMO4t4oGQLxe2X1dQRGIyRyW6+HRWnwKTDlL6N3C5M44kMN4vUoObtzs95y4pWtYGq1dFFAtFrb29pqTNjM+bENacDqgLKxxqE3+wtWJ2GEKZIungYOe3pMC4svIRIxfWXyo96NrzndK16Gg6dC7gxdhWQm+7LQrpxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjK2JpSL; arc=none smtp.client-ip=209.85.210.179
+	 MIME-Version; b=h8T8UR/c8h2hSP8THE3rWpgT6B+InGu8lAOPMQ+Cc47CfIEzS4AN2NtHg1iLxomM/5FQFujVR+v4SoRUfRLvNaSKlHS1JQEuCd/9w8AwIqeeqtg8vtSaxwjUeYqMGnvpl6TFIhZ7IEWw/catLzlfg3z7CJABeFzexadoXYPpC8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zyq4S5eL; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748e81d37a7so2256501b3a.1;
-        Sun, 22 Jun 2025 23:10:29 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so2581815b3a.0;
+        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750659029; x=1751263829; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750659034; x=1751263834; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1UrEMakr0gNd8OjD7Qs2/TZiEbnDjNEMNzH2cXICJsw=;
-        b=TjK2JpSLcLqxw3SMsHJHwsHiPJ/PLBDtjkhziFZkOBvL7eEWSKmScDe1+pfWi+UkUi
-         bVunFlNa0MAINvlKLHr1w3PPCaafYSNWLtXPcSs4MPSMDsvV4MPM8HB0QqBKhGJ0YPpx
-         MK4mvNRhXignSnBMHsFiS4NQjwgkJMFBAqO5hE1Fkt0S4U4LYC5y5QVfatYe8j7L/zyJ
-         EMCFH/cbzZCD3kzFfSEL8I6Z1wWrbpOYtoVDxdubIZmc0nXqoK2/C2q1w0++3w0ezNZH
-         R4rFQBkW6cqfSjb0V0/nYaLYz7z9z8Njyy0dV840pQPhhBIY71mh6hk2hH1wiIBxUlbw
-         wOfA==
+        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
+        b=Zyq4S5eLchJI5OfCr0mTEoTJQiRjdqKh8icmG+eU+ezgFjkHFe+Snb9zRtvIp8noIk
+         gAQM3NyZRSBE/WIG0wX0/JS4k3sqZhTwTTeQN+LpH86FoEu0vigjSIy1PlzQvIdOq4vb
+         eacA8RWRmPxqpYv5U/9aWmQtkDsBcgrU4dGb5+CIoWkQITtu2n5wdJ+EAeGTGhaPP5yQ
+         utcMT6ajJGlmsD2FO8Dz1lE7bR4bzxUBMndeZqujVAwxzK1HDU9PvM/V2TxbNlC88/yP
+         k0kt/paUaHpf3vqCrzVbNzT6X1UOYISn7rZF+c2MXHFBh9NOn6Fi7WMgEEuCG90Vb5Xf
+         SJww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750659029; x=1751263829;
+        d=1e100.net; s=20230601; t=1750659034; x=1751263834;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1UrEMakr0gNd8OjD7Qs2/TZiEbnDjNEMNzH2cXICJsw=;
-        b=hyK1MOnanO2Ni9G1mZN00jo8HxchdK9AmEr5bTC+gqlbmN4J5BFTxKPfT7lctRAKj2
-         GCCr6rvd731Xt5pUyCtrUMk7KMQO4tmS8ipW166RDBuyGVbiWS1VWYQip6p8JVLFYLIL
-         VC9kR3tjoOncf/U7F1BxmqtC+vd28Aa3YJ4LYSOaaYHzLjlno22+1/faQy3UTIbptTbB
-         51kmCYaPGuCRvHYCQWHL0d+mjPRkSPBHTmphwfIJ4V+P7Y5F1wZnT/Os590YGlETfgv0
-         kXn1a/DaVX8wxuyuip0Z734KguV80MeZNLL2zn8zz5/ukm6idCG2dC6XhxM4liwvoIir
-         n/Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUVZOLDPdYsvU962vHV0X6e9y7Y9gFLiRb/TgxwS9Fsh7JtsP8WWL08nSsv50Ui1mMlMdQr1kwuTBK4HLiU@vger.kernel.org, AJvYcCWD1dLKDNbsxycNhOObUSbdzPGBkccAeuAg/AHpkUx0DkpqXVLiJuPVRd5H7BJq5E325D9okY1DN2EcP4nVJV8=@vger.kernel.org, AJvYcCXBTdXJcJj2y+W27o4lTCXdeVhZdQ7z7t7Mj95PxBuA7jYWFl+5Tjf6qMEz0hErnLtt75+kVbf9F+eD@vger.kernel.org, AJvYcCXVFr0J1pGr95UAGKPFpTgvh3Xy2NdRhELc7/V1OAheoaEYJbi/JiOcX4cvR/hkj6OlgSyQPfd+e9sI@vger.kernel.org, AJvYcCXsLMfHlhi+icjOkm2LdHfQefMXeOt9e0KH+0trqnCyLgRRuoZzbLOFa940CCw+M0Azcxpl6Geb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYdMtYiIqClxP0PSFUz/+QBLXzAAWT3RqyvbDvrGIy2tOCnnTr
-	RaVPkwZ9I+IhOWI75lVY1NOHSzZkphdz28F7DdNFRgc70PLPRfHoxQ5q
-X-Gm-Gg: ASbGncsdacLWzFNoigyHlO1mwubUtGbVNY722lWH4r517ixdVdOoCAEQBKz6vqYIGps
-	0skQ0U4kgAd42APghOcYVCttSdkiUOhuZcFsrLiZPtmqo1y7mj0uAcrFQSY1g18Hgkzxs/YKE55
-	7uJUrIG8d1nkFyEUOUX1ThBdTJGuPs0aQx9ZIGWNqSKkYT8vsduXS3qDic6MCeQ0kKvSY2Yy9fP
-	mfMh6vnMyfQpIrKDERSpAmrlsN8JydyEnty0Wn+RKpHBsjKdfillerX18T4q+BfWrynmKCwPWkQ
-	k4C6ubjSoXC4Z+q6+xIeuIsQCgXlF6RaN7XcDIbAGYPuZgTCA0P5KDHb7Cc0ighHNgtpp1CYLUm
-	xzkibEKhQ04WXjKU3k5x0JOJ3l+oJUHXrAu58p+8rR37teQ==
-X-Google-Smtp-Source: AGHT+IGb+SPdwtli8hWJX/3MATXUDCSBw1nh68ByuvWCuMCmxTeajAuLE7PtMYnfrTz0U4bXbfCOMA==
-X-Received: by 2002:a05:6a00:1990:b0:749:bc7:1577 with SMTP id d2e1a72fcca58-7490d7a4452mr14881186b3a.9.1750659029307;
-        Sun, 22 Jun 2025 23:10:29 -0700 (PDT)
+        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
+        b=Ujz7abKdE87TEEbGp64ez3cP/ro/40EmVafCgu0xefsJkiKoGG1k/L/mbeeyo+JqJg
+         N6IdO2KL/uTSi+z2QDIBPRKNlTM449qQaxrMjf5+qB+WtWVMOCimHze+NIGDAkmbw9MD
+         cDAUjggloPD+f086mATACTtvb5comoggeIEhLLTcO8BIcArMfeGkTO90ZaYG/J3hkeeW
+         t+eXcQd2zu5WzN9X0btl5rH9YyZ6c7Z9YIJwWAa0YGEq9nJjBrGJseCFr1kf/aVmGSj2
+         rSuVWXE//nDQBJFjAi4mbzakDCRBCvHDySqzjbK5UtTJ30oiWBYkSSIZARg2IvAMAwYo
+         qb2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QjQ2SBaYfQBypHXR7Y7o575slbe6+Gj7GZXPnBEtTAR/NdNGRpxxZ9iHhsuRZGmhkGhHmTzbprc3@vger.kernel.org, AJvYcCUmk0YdzoKJPhF6DiGygipWJikBTzHx0v5dE08uC4LR4KwjSp9MNrUM+10iMXJ0/AjCLtwkNgOEcYF4nEEnT1I=@vger.kernel.org, AJvYcCVNZQHXjjlY844LFdkaHZZhYOL3ZtJbGHQSZV6FYH1tZPJ1qxzcF1ciHsqwM8h7tG14bRLgsgLi@vger.kernel.org, AJvYcCX6NkcrxVGB7It8Etpn35c9vvFDwo2JfiSWD/KSu6sOYUdYt2kID9mQAXjqKmNVeH5GvMfTJLLYP/WjWiKe@vger.kernel.org, AJvYcCXeg5b61EEdUJE13/kKOSTnfhtd+dqZ4l6XaSQ9ObIYJ1pfKgk0m9QnB3eQiNtbIb4Rg8nE2yb6JIKb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7mtD8QI5jc6NofRmmtuR5ePYK5DvM1xH3afky+vR+2P0LSmad
+	XOiNPvf6DJdKBCWCGMpVHWvVLVmrwH2EaAUSxUHCATb8IbOrtoczMRVq
+X-Gm-Gg: ASbGnctE3u/MCq/NvcouTpKNtA7pADQZ3afWaAO4BHbPcG2mENWayIceSUPstmPSANF
+	tWhfY8vKEHTA310exPwh0w7k3RXEhujWAdbjnC4yzd/TQmWZEJYoa10Lhy835Hf7cIOQN+x/C0J
+	nNO+VxCt02Fv6QxldaWmCBT065La5YQou6CHAd21s/qQoWzLmOiSxmUt6xloCEme2CgzLffK2Qq
+	PA0m7dTQArxvhHgDWgPwBsE4kU11Ovm5reohkgEOai6H8Hxn3zcGaGxy8SEd8a0dVMQoovhR7F4
+	aCkln7iuS9hU/UzhpObLHEeSOPHNXg5zcShNoSuJLymMXsRHlbmgIfYRdU5TJsCGnDRlJ7E8x8q
+	3/mpmtij7qjv8m+3wBzuByNEPXFIrJc3Dj9U=
+X-Google-Smtp-Source: AGHT+IHJ0s+N82fET2NTu68HyBSgQnjWLVAQ5sAX+rRcZnyNqTiAyvuOJxtF7RDTNY4WSH3gQTcYrw==
+X-Received: by 2002:a05:6300:194:b0:220:21bf:b112 with SMTP id adf61e73a8af0-22026c3228amr16754814637.13.1750659034306;
+        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
 Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.24
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:10:29 -0700 (PDT)
+        Sun, 22 Jun 2025 23:10:33 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: alex.gaynor@gmail.com,
 	dakr@kernel.org,
@@ -98,9 +98,9 @@ Cc: a.hindborg@kernel.org,
 	netdev@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	tmgross@umich.edu
-Subject: [PATCH v1 1/3] rust: device_id: make DRIVER_DATA_OFFSET optional
-Date: Mon, 23 Jun 2025 15:09:49 +0900
-Message-ID: <20250623060951.118564-2-fujita.tomonori@gmail.com>
+Subject: [PATCH v1 2/3] rust: net::phy Represent DeviceId as transparent wrapper over mdio_device_id
+Date: Mon, 23 Jun 2025 15:09:50 +0900
+Message-ID: <20250623060951.118564-3-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250623060951.118564-1-fujita.tomonori@gmail.com>
 References: <20250623060951.118564-1-fujita.tomonori@gmail.com>
@@ -112,120 +112,118 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable support for device ID structures that do not contain
-context/data field (usually named `driver_data`), making the trait
-usable in a wider range of subsystems and buses.
-
-Several such structures are defined in
-include/linux/mod_devicetable.h.
+Refactor the DeviceId struct to be a #[repr(transparent)] wrapper
+around the C struct bindings::mdio_device_id.
 
 This refactoring is a preparation for enabling the PHY abstractions to
 use device_id trait.
 
 Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 ---
- rust/kernel/auxiliary.rs |  6 ++++--
- rust/kernel/device_id.rs | 26 +++++++++++++++-----------
- rust/kernel/of.rs        |  3 ++-
- rust/kernel/pci.rs       |  3 ++-
- 4 files changed, 23 insertions(+), 15 deletions(-)
+ rust/kernel/net/phy.rs | 53 +++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 26 deletions(-)
 
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index d2cfe1eeefb6..7b8798599128 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -147,8 +147,10 @@ pub const fn new(modname: &'static CStr, name: &'static CStr) -> Self {
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::auxiliary_device_id;
- 
--    const DRIVER_DATA_OFFSET: usize =
--        core::mem::offset_of!(bindings::auxiliary_device_id, driver_data);
-+    const DRIVER_DATA_OFFSET: Option<usize> = Some(core::mem::offset_of!(
-+        bindings::auxiliary_device_id,
-+        driver_data
-+    ));
- 
-     fn index(&self) -> usize {
-         self.0.driver_data
-diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index 3dc72ca8cfc2..b7d00587a0e2 100644
---- a/rust/kernel/device_id.rs
-+++ b/rust/kernel/device_id.rs
-@@ -25,8 +25,9 @@
- ///     transmute; however, const trait functions relies on `const_trait_impl` unstable feature,
- ///     which is broken/gone in Rust 1.73.
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index 65ac4d59ad77..940972ffadae 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -507,7 +507,7 @@ pub const fn create_phy_driver<T: Driver>() -> DriverVTable {
+     DriverVTable(Opaque::new(bindings::phy_driver {
+         name: T::NAME.as_char_ptr().cast_mut(),
+         flags: T::FLAGS,
+-        phy_id: T::PHY_DEVICE_ID.id,
++        phy_id: T::PHY_DEVICE_ID.id(),
+         phy_id_mask: T::PHY_DEVICE_ID.mask_as_int(),
+         soft_reset: if T::HAS_SOFT_RESET {
+             Some(Adapter::<T>::soft_reset_callback)
+@@ -691,42 +691,41 @@ fn drop(&mut self) {
  ///
--///   - `DRIVER_DATA_OFFSET` is the offset of context/data field of the device ID (usually named
--///     `driver_data`) of the device ID, the field is suitable sized to write a `usize` value.
-+///   - If [`RawDeviceId::DRIVER_DATA_OFFSET`] is `Some(offset)`, it's the offset of
-+///     context/data field of the device ID (usually named `driver_data`) of the device ID,
-+///     the field is suitable sized to write a `usize` value.
- ///
- ///     Similar to the previous requirement, the data should ideally be added during `Self` to
- ///     `RawType` conversion, but there's currently no way to do it when using traits in const.
-@@ -37,7 +38,7 @@ pub unsafe trait RawDeviceId {
-     type RawType: Copy;
+ /// Represents the kernel's `struct mdio_device_id`. This is used to find an appropriate
+ /// PHY driver.
+-pub struct DeviceId {
+-    id: u32,
+-    mask: DeviceMask,
+-}
++#[repr(transparent)]
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::mdio_device_id);
  
-     /// The offset to the context/data field.
--    const DRIVER_DATA_OFFSET: usize;
-+    const DRIVER_DATA_OFFSET: Option<usize> = None;
+ impl DeviceId {
+     /// Creates a new instance with the exact match mask.
+     pub const fn new_with_exact_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Exact,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Exact.as_int(),
++        })
+     }
  
-     /// The index stored at `DRIVER_DATA_OFFSET` of the implementor of the [`RawDeviceId`] trait.
-     fn index(&self) -> usize;
-@@ -77,14 +78,17 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
-             // SAFETY: by the safety requirement of `RawDeviceId`, we're guaranteed that `T` is
-             // layout-wise compatible with `RawType`.
-             raw_ids[i] = unsafe { core::mem::transmute_copy(&ids[i].0) };
--            // SAFETY: by the safety requirement of `RawDeviceId`, this would be effectively
--            // `raw_ids[i].driver_data = i;`.
--            unsafe {
--                raw_ids[i]
--                    .as_mut_ptr()
--                    .byte_add(T::DRIVER_DATA_OFFSET)
--                    .cast::<usize>()
--                    .write(i);
+     /// Creates a new instance with the model match mask.
+     pub const fn new_with_model_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Model,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Model.as_int(),
++        })
+     }
+ 
+     /// Creates a new instance with the vendor match mask.
+     pub const fn new_with_vendor_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Vendor,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Vendor.as_int(),
++        })
+     }
+ 
+     /// Creates a new instance with a custom match mask.
+     pub const fn new_with_custom_mask(id: u32, mask: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Custom(mask),
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Custom(mask).as_int(),
++        })
+     }
+ 
+     /// Creates a new instance from [`Driver`].
+@@ -734,18 +733,20 @@ pub const fn new_with_driver<T: Driver>() -> Self {
+         T::PHY_DEVICE_ID
+     }
+ 
++    /// Get a `phy_id` as u32.
++    pub const fn id(&self) -> u32 {
++        self.0.phy_id
++    }
 +
-+            if let Some(data_offset) = T::DRIVER_DATA_OFFSET {
-+                // SAFETY: by the safety requirement of `RawDeviceId`, this would be effectively
-+                // `raw_ids[i].driver_data = i;`.
-+                unsafe {
-+                    raw_ids[i]
-+                        .as_mut_ptr()
-+                        .byte_add(data_offset)
-+                        .cast::<usize>()
-+                        .write(i);
-+                }
-             }
+     /// Get a `mask` as u32.
+     pub const fn mask_as_int(&self) -> u32 {
+-        self.mask.as_int()
++        self.0.phy_id_mask
+     }
  
-             // SAFETY: this is effectively a move: `infos[i] = ids[i].1`. We make a copy here but
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-index 40d1bd13682c..0ca1692d61f3 100644
---- a/rust/kernel/of.rs
-+++ b/rust/kernel/of.rs
-@@ -19,7 +19,8 @@
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::of_device_id;
+     // macro use only
+     #[doc(hidden)]
+     pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
+-        bindings::mdio_device_id {
+-            phy_id: self.id,
+-            phy_id_mask: self.mask.as_int(),
+-        }
++        self.0
+     }
+ }
  
--    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::of_device_id, data);
-+    const DRIVER_DATA_OFFSET: Option<usize> =
-+        Some(core::mem::offset_of!(bindings::of_device_id, data));
- 
-     fn index(&self) -> usize {
-         self.0.data as usize
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index f6b19764ad17..dea49abe7cd3 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -168,7 +168,8 @@ pub const fn from_class(class: u32, class_mask: u32) -> Self {
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::pci_device_id;
- 
--    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::pci_device_id, driver_data);
-+    const DRIVER_DATA_OFFSET: Option<usize> =
-+        Some(core::mem::offset_of!(bindings::pci_device_id, driver_data));
- 
-     fn index(&self) -> usize {
-         self.0.driver_data
 -- 
 2.43.0
 
