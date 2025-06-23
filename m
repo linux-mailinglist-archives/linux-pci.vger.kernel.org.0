@@ -1,181 +1,253 @@
-Return-Path: <linux-pci+bounces-30410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74B8CAE4875
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 17:26:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 937D1AE49F6
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 18:11:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05D3A7A7A99
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 15:25:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 730191889BD0
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 16:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB5728C868;
-	Mon, 23 Jun 2025 15:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2617288527;
+	Mon, 23 Jun 2025 16:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxnO0C6b"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Ur91gAI5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F791CD1F;
-	Mon, 23 Jun 2025 15:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750692379; cv=none; b=ZIvYoEhdYp5DSx24l7k5eauxupTbLFWD4KfpAzJcwEMU5EmS5trdIq9JzVw1Qg2Ek7kQlRWK6v93S8LqHZrObIPHBSWa1pzENwqqNtzv7G0fgY0sZDbc6pyzt5tH+UPearkAu7gSwUq73ixdRJqJQObTZMk9cfUyDxrpt5fzPME=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750692379; c=relaxed/simple;
-	bh=+hXT9NgKl54nrfoBfadxq8ETqumOuW4V7oUlv+01yZI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=BmFZjwiqk/juWPO2+Q0QETpGHMf+KVpSWQA7gmTpeymyCDo1JJTNOpnweQK6PF3vgcO+UZzIIF5u17cWk+Lx+Tbz52eenDbOop9IuHZ8BLFQSWiHwzRw8EWbeps1nG7I1maJnOVcPXtNy5HEljmd0ruclmE7oZ7nnYMXIgvSs4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxnO0C6b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D822AC4CEEF;
-	Mon, 23 Jun 2025 15:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750692379;
-	bh=+hXT9NgKl54nrfoBfadxq8ETqumOuW4V7oUlv+01yZI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=JxnO0C6bM+y5mdsqgVRs6SRVQiKmcNmRb2yI+wAPQSM6DDHueeuhxpQ6IP4ocbp8c
-	 X6RfZr128BtMRyabHNVxToqBNi34raB6iTkfilIYgOheIfPxjKD3Gsvd3vMLJJgtw5
-	 G9eqIXf40iVMXZRYibCpCUhV7hfn7f83khSgSuQQghbW/BdWuCZ65x13tDmTH781M1
-	 49KaoKy8Ibpd1dqP8tYndEwEus+zBNekkJdor0Cz3ngn/LaTPRJ5xt51H4ke/txB3g
-	 30EZzcOS+fzarwnHX/9cFzXQV1X1mndQS6BZuwl09lYlwxYDXLo6GHF/SDbZNHWJNc
-	 YBz4VT1/Wm5GQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A46145B3E;
+	Mon, 23 Jun 2025 16:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750694835; cv=pass; b=mfwfeKDlgMqq3WxwKOntxXHqOc0fMDym5UpPzG+LB/5eYfefzCRTuIRF0k/wpuEUespsOBnF7mqwWXd5/adrvkODs6Hc81Mr4T7KFlgQUezoUkNgfgeAUpwPf42osM0QHLfxEyRNuPJ+FpZAK1zzFyGgXozim7nMKpeK+ZziXlY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750694835; c=relaxed/simple;
+	bh=Idu57VDjF3mSyGxyHJymDuIMS3y1xL0aqQtnUD2e9qw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gKE7YqobSzQgyT2xhvMZcjXBETzclRrDl7E9ozeqx9bu8hZT8Ad79Rgn/0x/RGBAjFQg9CKfj+2yi4Ve88ablbduISqryBeeYyFi68+nu+IHKggnZ44rhjvwS/nCfQkwTo0LjHnBNXGkdLcww3QtKJ6nUKNI/Jlq3o/5iheiFJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Ur91gAI5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1750694752; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ALvgrtg+SBpE7ZZ5IkKOvEGS2SR4IufJdiOtiRVy68FjasB3QJgnA6RvY/N+EWWViRfyhEVxnTbdcTnv2v5XfDJzm7WEQ0UnzaDPAyseLdjkl1hb650UOTbiPdDATgqwdQ0m5LpepSWI3r6mky17Jk1JFGkOO2tMYLrNthhObwc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750694752; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OBRKd+xA4VsUyeckNojrdNQY/i5zR4hbYSAkGkUAxmI=; 
+	b=f3ISUawrfRo5+VIsmDCuLxBzcU2wsRYh8AzkHPaZdDI7cgoz33XFITfsgEElgM9NSiGaUM3OQfm+dYsD9LIHYxcv+/b6ZROeF56zQHjEWzyGwaqBBxO33FdbDSPb6iXhG6JZJ0LIg+Xrl2mcrBRdGxRMwgFHPpAjRG9/ITc6ZEA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750694752;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=OBRKd+xA4VsUyeckNojrdNQY/i5zR4hbYSAkGkUAxmI=;
+	b=Ur91gAI5Pg4ujGe9cgYtIhXeRdyWF4npt8XEVb3xB6c3gzjKDMoCcqGXSa540LUH
+	6uxd/EWPKNeFn3LrQ2TzaIZiMHsCyJroUlVvMjiRyJDgSkbfLlkadlnnc8+V/IkF3gU
+	4xPwrh5EMDEFFEwzxIcgQctKEDXccsek567/7Rjw=
+Received: by mx.zohomail.com with SMTPS id 1750694748824857.0971844130715;
+	Mon, 23 Jun 2025 09:05:48 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH v2 00/20] BYEWORD_UPDATE: unifying (most) HIWORD_UPDATE
+ macros
+Date: Mon, 23 Jun 2025 18:05:28 +0200
+Message-Id: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Jun 2025 17:26:14 +0200
-Message-Id: <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
- <dakr@kernel.org>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn
- Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com> <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com> <aEbJt0YSc3-60OBY@pollux> <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
-In-Reply-To: <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEh7WWgC/12OzQ6DIBAGX8XsuTSAf42nvkfjAWSpJCoW0GqM7
+ 16qPfU4m8x8u4FHZ9BDlWzgcDbe2CECvyTQtGJ4IjEqMnDKc1owSuSKb+sUmUYlApIsyxuKKMq
+ SKYjS6FCb5Qg+6pMdvqbYDecRpPBIGtv3JlTJgEsgZ5un8BVa44N16/HQzA7jt83/t2dGKNGZ0
+ PKmi5Sl+t7YrhPSOnGNA1Dv+/4BLKkE/uEAAAA=
+X-Change-ID: 20250610-byeword-update-445c0eea771d
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shreeya Patel <shreeya.patel@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
-> On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich <dakr@kernel.org=
-> wrote:
->> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
->> > +        dev: &'a Device<Bound>,
->> > +        irq: u32,
->> > +        flags: Flags,
->> > +        name: &'static CStr,
->> > +        handler: T,
->> > +    ) -> impl PinInit<Self, Error> + 'a {
->> > +        let closure =3D move |slot: *mut Self| {
->> > +            // SAFETY: The slot passed to pin initializer is valid fo=
-r writing.
->> > +            unsafe {
->> > +                slot.write(Self {
->> > +                    inner: Devres::new(
->> > +                        dev,
->> > +                        RegistrationInner {
->> > +                            irq,
->> > +                            cookie: slot.cast(),
->> > +                        },
->> > +                        GFP_KERNEL,
->> > +                    )?,
->> > +                    handler,
->> > +                    _pin: PhantomPinned,
->> > +                })
->> > +            };
->> > +
->> > +            // SAFETY:
->> > +            // - The callbacks are valid for use with request_irq.
->> > +            // - If this succeeds, the slot is guaranteed to be valid=
- until the
->> > +            // destructor of Self runs, which will deregister the cal=
-lbacks
->> > +            // before the memory location becomes invalid.
->> > +            let res =3D to_result(unsafe {
->> > +                bindings::request_irq(
->> > +                    irq,
->> > +                    Some(handle_irq_callback::<T>),
->> > +                    flags.into_inner() as usize,
->> > +                    name.as_char_ptr(),
->> > +                    slot.cast(),
->> > +                )
->> > +            });
->> > +
->> > +            if res.is_err() {
->> > +                // SAFETY: We are returning an error, so we can destr=
-oy the slot.
->> > +                unsafe { core::ptr::drop_in_place(&raw mut (*slot).ha=
-ndler) };
->> > +            }
->> > +
->> > +            res
->> > +        };
->> > +
->> > +        // SAFETY:
->> > +        // - if this returns Ok, then every field of `slot` is fully
->> > +        // initialized.
->> > +        // - if this returns an error, then the slot does not need to=
- remain
->> > +        // valid.
->> > +        unsafe { pin_init_from_closure(closure) }
->>
->> Can't we use try_pin_init!() instead, move request_irq() into the initia=
-lizer of
->> RegistrationInner and initialize inner last?
->
-> We need a pointer to the entire struct when calling
-> bindings::request_irq. I'm not sure this allows you to easily get one?
-> I don't think using container_of! here is worth it.
+This series was spawned by [1], where I was asked to move every instance
+of HIWORD_UPDATE et al that I could find to a common macro in the same
+series that I am introducing said common macro.
 
-There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
+The first patch of the series introduces a new header file,
+hw_bitfield.h, which contains two new macros: FIELD_PREP_WM16 and
+FIELD_PREP_WM16_CONST. The latter can be used in initializers.
 
-    try_pin_init!(&this in Self {
-        inner: Devres::new(
-            dev,
-            RegistrationInner {
-                irq,
-                cookie: this.as_ptr().cast(),
-            },
-            GFP_KERNEL,
-        )?,
-        handler,
-        _pin: {
-            to_result(unsafe {
-                bindings::request_irq(
-                    irq,
-                    Some(handle_irq_callback::<T>),
-                    flags.into_inner() as usize,
-                    name.as_char_ptr(),
-                    slot.as_ptr().cast(),
-                )
-            })?;
-            PhantomPinned
-        },
-    })
+I've cheekily added the hw_bitfield.h header to the BITMAP API section
+of the MAINTAINERS file.
 
-Last time around, I also asked this question and you replied with that
-we need to abort the initializer when `request_irq` returns false and
-avoid running `Self::drop` (thus we can't do it using `pin_chain`).
+This macro definition checks that the mask fits, and that the value fits
+in the mask. Like FIELD_PREP, it also shifts the value up to the mask,
+so turning off a bit does not require using the mask as a value. Masks
+are also required to be contiguous, like with FIELD_PREP.
 
-I asked what we could do instead and you mentioned the `_: {}`
-initializers and those would indeed solve it, but we can abuse the
-`_pin` field for that :)
+For each definition of such a macro, the driver(s) that used it were
+evaluated for three different treatments:
+ - full conversion to the new macro, for cases where replacing the
+   implementation of the old macro wouldn't have worked, or where the
+   conversion was trivial. These are the most complex patches in this
+   series, as they sometimes have to pull apart definitions of masks
+   and values due to the new semantics, which require a contiguous
+   mask and shift the value for us.
+ - replacing the implementation of the old macro with an instance of the
+   new macro, done where I felt it made the patch much easier to review
+   because I didn't want to drop a big diff on people.
+ - skipping conversion entirely, usually because the mask is
+   non-constant and it's not trivial to make it constant. Sometimes an
+   added complication is that said non-constant mask is either used in a
+   path where runtime overhead may not be desirable, or in an
+   initializer.
+
+Left out of conversion:
+ - drivers/mmc/host/sdhci-of-arasan.c: mask is non-constant.
+ - drivers/phy/rockchip/phy-rockchip-inno-csidphy.c: mask is
+   non-constant likely by way of runtime pointer dereferencing, even if
+   struct and members are made const.
+ - drivers/clk/rockchip/clk.h: way too many clock drivers use non-const
+   masks in the context of an initializer.
+
+I will not be addressing these 3 remaining users in this series, as
+implementing a runtime checked version on top of this and verifying that
+it doesn't cause undue overhead just for 3 stragglers is a bit outside
+the scope of wanting to get my RK3576 PWM series unblocked. Please have
+mercy.
+
+In total, I count 19 different occurrences of such a macro fixed out of
+22 I found. The vast majority of these patches have either undergone
+static testing to ensure the values end up the same during development,
+or have been verified to not break the device the driver is for at
+runtime. Only a handful are just compile-tested, and the individual
+patches remark which ones those are.
+
+This took a lot of manual work as this wasn't really something that
+could be automated: code had to be refactored to ensure masks were
+contiguous, made sense to how the hardware actually works and to human
+readers, were constant, and that the code uses unshifted values.
+
+Please note that I will not be resending the whole series again for
+purely subjective cosmetic changes. This series touches a lot of
+subsystems, which means many clashing tastes. You've had a week's notice
+to get any low-effort naming nitpicks out of the way after v1. If you as
+a maintainer are unhappy with a commit prefix or such, then you have my
+express permission to modify it while applying the patch, so that I
+don't need to bombard everyone else's inboxes again.
+
+https://lore.kernel.org/all/aD8hB-qJ4Qm6IFuS@yury/ [1]
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Changes in v2:
+- rebase onto next-20250623. This involved solving two conflicts in
+  pcie-dw-rockchip.
+- move new macros to a new hw_bitfield.h, and rename them to
+  FIELD_PREP_WM16*. All patches in the series have been updated to use
+  the new names.
+- hw_bitfield.h: fix macro param re-use in FIELD_PREP_WM16. I don't know
+  if there's any way to do the same in FIELD_PREP_WM16_CONST, but the
+  bitfield.h FIELD_PREP functions don't do it for either, so I'm already
+  strictly better anyway.
+- hw_bitfield.h: remove whitespace after cast operators.
+- change newly introduced U literal suffixes to UL, as they are more
+  commonly used in the kernel.
+- pcie-dw-rockchip: remove the legacy mode flag, as it's unused.
+- Link to v1: https://lore.kernel.org/r/20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com
 
 ---
-Cheers,
-Benno
+Nicolas Frattaroli (20):
+      bitmap: introduce hardware-specific bitfield operations
+      mmc: dw_mmc-rockchip: switch to FIELD_PREP_WM16 macro
+      soc: rockchip: grf: switch to FIELD_PREP_WM16_CONST macro
+      media: synopsys: hdmirx: replace macros with bitfield variants
+      drm/rockchip: lvds: switch to FIELD_PREP_WM16 macro
+      phy: rockchip-emmc: switch to FIELD_PREP_WM16 macro
+      drm/rockchip: dsi: switch to FIELD_PREP_WM16* macros
+      drm/rockchip: vop2: switch to FIELD_PREP_WM16 macro
+      phy: rockchip-samsung-dcphy: switch to FIELD_PREP_WM16 macro
+      drm/rockchip: dw_hdmi_qp: switch to FIELD_PREP_WM16 macro
+      drm/rockchip: inno-hdmi: switch to FIELD_PREP_WM16 macro
+      phy: rockchip-usb: switch to FIELD_PREP_WM16 macro
+      drm/rockchip: dw_hdmi: switch to FIELD_PREP_WM16* macros
+      ASoC: rockchip: i2s-tdm: switch to FIELD_PREP_WM16_CONST macro
+      net: stmmac: dwmac-rk: switch to FIELD_PREP_WM16 macro
+      PCI: rockchip: Switch to FIELD_PREP_WM16* macros
+      PCI: dw-rockchip: Switch to FIELD_PREP_WM16 macro
+      PM / devfreq: rockchip-dfi: switch to FIELD_PREP_WM16 macro
+      clk: sp7021: switch to FIELD_PREP_WM16 macro
+      phy: rockchip-pcie: switch to FIELD_PREP_WM16 macro
+
+ MAINTAINERS                                        |   1 +
+ drivers/clk/clk-sp7021.c                           |  22 ++--
+ drivers/devfreq/event/rockchip-dfi.c               |  27 ++--
+ drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c    | 142 ++++++++++-----------
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |  80 ++++++------
+ drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c     |  68 +++++-----
+ drivers/gpu/drm/rockchip/inno_hdmi.c               |  11 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.h       |   1 -
+ drivers/gpu/drm/rockchip/rockchip_lvds.h           |  21 +--
+ drivers/gpu/drm/rockchip/rockchip_vop2_reg.c       |  15 ++-
+ .../media/platform/synopsys/hdmirx/snps_hdmirx.h   |   6 +-
+ drivers/mmc/host/dw_mmc-rockchip.c                 |   9 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |   3 +-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c      |  42 +++---
+ drivers/pci/controller/pcie-rockchip.h             |  35 ++---
+ drivers/phy/rockchip/phy-rockchip-emmc.c           |   3 +-
+ drivers/phy/rockchip/phy-rockchip-pcie.c           |  72 +++--------
+ drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c  |  11 +-
+ drivers/phy/rockchip/phy-rockchip-usb.c            |  51 +++-----
+ drivers/soc/rockchip/grf.c                         |  35 +++--
+ include/linux/hw_bitfield.h                        |  62 +++++++++
+ sound/soc/rockchip/rockchip_i2s_tdm.h              |   4 +-
+ 22 files changed, 367 insertions(+), 354 deletions(-)
+---
+base-commit: 0491b8f4897c1ed267446959628592fd1cf8107d
+change-id: 20250610-byeword-update-445c0eea771d
+
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
 
