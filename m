@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-30341-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30342-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D93B0AE355C
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 08:11:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 491A4AE3560
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 08:11:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 909543B15AF
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 06:10:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C931716DD9A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 06:11:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914BD1EB1BF;
-	Mon, 23 Jun 2025 06:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 884031F237E;
+	Mon, 23 Jun 2025 06:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zyq4S5eL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bld7Lg0/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E21E834B;
-	Mon, 23 Jun 2025 06:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2B51F09A3;
+	Mon, 23 Jun 2025 06:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750659036; cv=none; b=vCbDFRCgDNYrk5t6K+ZuQWADjNQO5Y6JQFm3+8GqAlsrW/M0MuSwA+SAslv49ewB3OYGFoZURGUgXwhAFBKXc7WXMpwtMAYmkoDTEer6hS4BA8rOZHem/SQmchD28/KC4JY3xlENLYydTeaXJeGBWGoed5QCTYfvfi0WNTQSkPs=
+	t=1750659041; cv=none; b=C5ITCp30XEs4IyJOyDLtvSj9Vbjlr3UlZDZTPqzuwf5eo9RzF5bQEwIka0jeSFybhBmYyhJW/ulrDWhOqOcI7vz3FOhi+xA46Q9Ues2tgbz1KVYGXkdzIqrrJ9iu7Fmxv88erxloOqpHGFvxF53w1DoPXNC+GaD6qWW4A+A9pFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750659036; c=relaxed/simple;
-	bh=Rb82lXwhfTwYPKu8Q8XF7KI5JIB8d/RCndqm2TyQhxc=;
+	s=arc-20240116; t=1750659041; c=relaxed/simple;
+	bh=izClx4fO0QxlG0vSrI5j+u7UAglO6fztpbLAObv8R60=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h8T8UR/c8h2hSP8THE3rWpgT6B+InGu8lAOPMQ+Cc47CfIEzS4AN2NtHg1iLxomM/5FQFujVR+v4SoRUfRLvNaSKlHS1JQEuCd/9w8AwIqeeqtg8vtSaxwjUeYqMGnvpl6TFIhZ7IEWw/catLzlfg3z7CJABeFzexadoXYPpC8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zyq4S5eL; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=IWxYl6tVtRBio754VSGBLAOxnc52DEBYwOQ6w2D7GdUIXz73XROiLs+Y66LdKNxm+aapVZXymK76sI3MuXaBed/WZHBH4qNY8S4H+WMWJOkV1OCcuuZLLDYo7w3gYF4KdWk92U+XQEe5Vc4uEQk1NLathj6jcoxHKzSR6gylCQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bld7Lg0/; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so2581815b3a.0;
-        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso2783500b3a.0;
+        Sun, 22 Jun 2025 23:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750659034; x=1751263834; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750659039; x=1751263839; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
-        b=Zyq4S5eLchJI5OfCr0mTEoTJQiRjdqKh8icmG+eU+ezgFjkHFe+Snb9zRtvIp8noIk
-         gAQM3NyZRSBE/WIG0wX0/JS4k3sqZhTwTTeQN+LpH86FoEu0vigjSIy1PlzQvIdOq4vb
-         eacA8RWRmPxqpYv5U/9aWmQtkDsBcgrU4dGb5+CIoWkQITtu2n5wdJ+EAeGTGhaPP5yQ
-         utcMT6ajJGlmsD2FO8Dz1lE7bR4bzxUBMndeZqujVAwxzK1HDU9PvM/V2TxbNlC88/yP
-         k0kt/paUaHpf3vqCrzVbNzT6X1UOYISn7rZF+c2MXHFBh9NOn6Fi7WMgEEuCG90Vb5Xf
-         SJww==
+        bh=qdNaQL9Tu2TPrfssmRGP1lW46RFC7Xf3kc9ghofgNjg=;
+        b=bld7Lg0/l+lGaG9IZZJkYx3uQsdUBTCUJ84fe7aLTHLAwVylDDGl2N+yHx86duQ+hf
+         iWk3+ClTvc2G5+JDK8+WHcpBV50kgcmN/da4D5ubTc16u951CzOr+Fg/j65MSgJKNdUL
+         z8QCtR8fUaDK1AMfUBToQzNefcWgKuzwYJGH/6+6VZ2O6JmJ2n31WlCboUYcG0/8wYFN
+         ecILiLguVW9LOHuNuTOI1wfY7Z4+vX5uZMcGYyAY3wBA0O07v8tmI/iZgRzL9SQUp4dR
+         ixBGq8UBm4bD+h77rCA4VLnyO5h6IFZB40+Py3qoCs6knZ9lkui0ODadIp+h2nQ28uqK
+         W8Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750659034; x=1751263834;
+        d=1e100.net; s=20230601; t=1750659039; x=1751263839;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
-        b=Ujz7abKdE87TEEbGp64ez3cP/ro/40EmVafCgu0xefsJkiKoGG1k/L/mbeeyo+JqJg
-         N6IdO2KL/uTSi+z2QDIBPRKNlTM449qQaxrMjf5+qB+WtWVMOCimHze+NIGDAkmbw9MD
-         cDAUjggloPD+f086mATACTtvb5comoggeIEhLLTcO8BIcArMfeGkTO90ZaYG/J3hkeeW
-         t+eXcQd2zu5WzN9X0btl5rH9YyZ6c7Z9YIJwWAa0YGEq9nJjBrGJseCFr1kf/aVmGSj2
-         rSuVWXE//nDQBJFjAi4mbzakDCRBCvHDySqzjbK5UtTJ30oiWBYkSSIZARg2IvAMAwYo
-         qb2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3QjQ2SBaYfQBypHXR7Y7o575slbe6+Gj7GZXPnBEtTAR/NdNGRpxxZ9iHhsuRZGmhkGhHmTzbprc3@vger.kernel.org, AJvYcCUmk0YdzoKJPhF6DiGygipWJikBTzHx0v5dE08uC4LR4KwjSp9MNrUM+10iMXJ0/AjCLtwkNgOEcYF4nEEnT1I=@vger.kernel.org, AJvYcCVNZQHXjjlY844LFdkaHZZhYOL3ZtJbGHQSZV6FYH1tZPJ1qxzcF1ciHsqwM8h7tG14bRLgsgLi@vger.kernel.org, AJvYcCX6NkcrxVGB7It8Etpn35c9vvFDwo2JfiSWD/KSu6sOYUdYt2kID9mQAXjqKmNVeH5GvMfTJLLYP/WjWiKe@vger.kernel.org, AJvYcCXeg5b61EEdUJE13/kKOSTnfhtd+dqZ4l6XaSQ9ObIYJ1pfKgk0m9QnB3eQiNtbIb4Rg8nE2yb6JIKb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7mtD8QI5jc6NofRmmtuR5ePYK5DvM1xH3afky+vR+2P0LSmad
-	XOiNPvf6DJdKBCWCGMpVHWvVLVmrwH2EaAUSxUHCATb8IbOrtoczMRVq
-X-Gm-Gg: ASbGnctE3u/MCq/NvcouTpKNtA7pADQZ3afWaAO4BHbPcG2mENWayIceSUPstmPSANF
-	tWhfY8vKEHTA310exPwh0w7k3RXEhujWAdbjnC4yzd/TQmWZEJYoa10Lhy835Hf7cIOQN+x/C0J
-	nNO+VxCt02Fv6QxldaWmCBT065La5YQou6CHAd21s/qQoWzLmOiSxmUt6xloCEme2CgzLffK2Qq
-	PA0m7dTQArxvhHgDWgPwBsE4kU11Ovm5reohkgEOai6H8Hxn3zcGaGxy8SEd8a0dVMQoovhR7F4
-	aCkln7iuS9hU/UzhpObLHEeSOPHNXg5zcShNoSuJLymMXsRHlbmgIfYRdU5TJsCGnDRlJ7E8x8q
-	3/mpmtij7qjv8m+3wBzuByNEPXFIrJc3Dj9U=
-X-Google-Smtp-Source: AGHT+IHJ0s+N82fET2NTu68HyBSgQnjWLVAQ5sAX+rRcZnyNqTiAyvuOJxtF7RDTNY4WSH3gQTcYrw==
-X-Received: by 2002:a05:6300:194:b0:220:21bf:b112 with SMTP id adf61e73a8af0-22026c3228amr16754814637.13.1750659034306;
-        Sun, 22 Jun 2025 23:10:34 -0700 (PDT)
+        bh=qdNaQL9Tu2TPrfssmRGP1lW46RFC7Xf3kc9ghofgNjg=;
+        b=TPTaWcq0L9pQj5QLc6TTKhhzpIrVjejLGypn54jdLX/nzuWFLQrGGt5pfCsdVW1owD
+         yjSqGuU2FhpTN3acMtYo0VPtA6o1tVuK5tXfx4pHaNte+l5kjfzr5U/lRHHBvXZqToqZ
+         F9ZY6Hov4P9AaM/CJ2/mNuNzj2pqhoC0pWQ+juv7mw6410W8VRVKnhx7irdT/1R/bDlx
+         Ujs2cAnCJuFL72UkqKRze9B441pk19N9Kb47VeIs3jByBSRgZ2KLxNNsEtBsL+emtUB0
+         iexGeP/kgIgTzwab/Ctqe5plYXOUlGrR2Hcv9Qu4TjF09GLBhLaHF65AVQbYM5qyJJnO
+         6lbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbi+rNjc616gFx1WmqJ8UPrgunOgNA5sWKWhumcSSMglEnzXrJD7Y0LKRHqrYZVEbb23dwxS0yAk58@vger.kernel.org, AJvYcCVOBLHuFm9yt07pSJNgN/00/Tfx2ozvMXMOj3XtxEw3vYAO2BcQjZEumgUlyQ33U/E0wY/7+ou4@vger.kernel.org, AJvYcCVg0kV284p5Tb5JNQO/YLnrccURQ1Rvw7LVgvP9apoAivWK8PXJoS37ngrBoWuL5Dvm61wnFXDaE0yVM6jh@vger.kernel.org, AJvYcCW2ICi/oYEYdsXdXKIsh8SeQgdIM9YqvY7Bv4GgPf3JEul2MnjyImjfAzEfWZCYJHdaZx78DEIIv6h0@vger.kernel.org, AJvYcCWpidDIswsC4Q9yVIVHGbn3isPe9alrPfkuZE8maHbtzHuiazn98QJpu8J2sdG1CQ+2NtzXDyT3vw4vWncmTDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkXfDN26tVCtQ9AdWmQmf/7Qd4ETQ9IxsJM68UIoeZzK6UTy6q
+	xn62DUeimY0wdfX6gUDJYM9GLwVEi59jlwmeLOg4Yh24LPKUodXabS0vGybbKJOp
+X-Gm-Gg: ASbGncuqBNOoKVB7MkMLjpuau2DvwFbPiuyFuD8TmqDYOkpq0A6h4QNn693ZpOvaIrE
+	tVJxIWneTuoG0avb9q2Rop3UT9ZGlCnHp2P+i0J3LyN/mWHIP9s3kmTEqa04/U9iURSdC1PKuLL
+	bESxWf+QP+lZLm8W4iCUM9MUjVNj03J02KnL4qMaNy13sTuZlYC1VKPQ/A8CKOxDpxdttDRFmnP
+	UzDN4//w8Xlor6m+jDU6xe9DKUeUHwqZYvPcQZ3j4C7fZTzq69hb9wptADRYavjgq3ljcTsTwlq
+	fkuJwTpw4lvg5bIwbF376MxLTTZqD8HDw5uvzIEVBX/+0egKC6bBEcFkK+3UlbiTZcy71Xw8Y03
+	kmHpEBZAh0rLH1D3eO2Iyzmv7d3ozQFohOwFUatQNbZpRVw==
+X-Google-Smtp-Source: AGHT+IHoBjjoSv77pVEgY+g6rKcikXxyv+N7sZn8ywOJg/2GiBRo3MVDptmc4Vvya/wsfy3DQnBNJA==
+X-Received: by 2002:a05:6a20:9191:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-22026e60364mr14271591637.5.1750659039259;
+        Sun, 22 Jun 2025 23:10:39 -0700 (PDT)
 Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a623e8csm7391703b3a.83.2025.06.22.23.10.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 23:10:33 -0700 (PDT)
+        Sun, 22 Jun 2025 23:10:38 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: alex.gaynor@gmail.com,
 	dakr@kernel.org,
@@ -98,9 +98,9 @@ Cc: a.hindborg@kernel.org,
 	netdev@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	tmgross@umich.edu
-Subject: [PATCH v1 2/3] rust: net::phy Represent DeviceId as transparent wrapper over mdio_device_id
-Date: Mon, 23 Jun 2025 15:09:50 +0900
-Message-ID: <20250623060951.118564-3-fujita.tomonori@gmail.com>
+Subject: [PATCH v1 3/3] rust: net::phy Change module_phy_driver macro to use module_device_table macro
+Date: Mon, 23 Jun 2025 15:09:51 +0900
+Message-ID: <20250623060951.118564-4-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250623060951.118564-1-fujita.tomonori@gmail.com>
 References: <20250623060951.118564-1-fujita.tomonori@gmail.com>
@@ -112,118 +112,103 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the DeviceId struct to be a #[repr(transparent)] wrapper
-around the C struct bindings::mdio_device_id.
-
-This refactoring is a preparation for enabling the PHY abstractions to
-use device_id trait.
+Change module_phy_driver macro to build device tables which are
+exported to userspace by using module_device_table macro.
 
 Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 ---
- rust/kernel/net/phy.rs | 53 +++++++++++++++++++++---------------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
+ rust/kernel/net/phy.rs | 56 ++++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
 diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 65ac4d59ad77..940972ffadae 100644
+index 940972ffadae..4d797f7b79d2 100644
 --- a/rust/kernel/net/phy.rs
 +++ b/rust/kernel/net/phy.rs
-@@ -507,7 +507,7 @@ pub const fn create_phy_driver<T: Driver>() -> DriverVTable {
-     DriverVTable(Opaque::new(bindings::phy_driver {
-         name: T::NAME.as_char_ptr().cast_mut(),
-         flags: T::FLAGS,
--        phy_id: T::PHY_DEVICE_ID.id,
-+        phy_id: T::PHY_DEVICE_ID.id(),
-         phy_id_mask: T::PHY_DEVICE_ID.mask_as_int(),
-         soft_reset: if T::HAS_SOFT_RESET {
-             Some(Adapter::<T>::soft_reset_callback)
-@@ -691,42 +691,41 @@ fn drop(&mut self) {
- ///
- /// Represents the kernel's `struct mdio_device_id`. This is used to find an appropriate
- /// PHY driver.
--pub struct DeviceId {
--    id: u32,
--    mask: DeviceMask,
--}
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::mdio_device_id);
+@@ -6,7 +6,7 @@
+ //!
+ //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
  
- impl DeviceId {
-     /// Creates a new instance with the exact match mask.
-     pub const fn new_with_exact_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Exact,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Exact.as_int(),
-+        })
-     }
+-use crate::{error::*, prelude::*, types::Opaque};
++use crate::{device_id::RawDeviceId, error::*, prelude::*, types::Opaque};
+ use core::{marker::PhantomData, ptr::addr_of_mut};
  
-     /// Creates a new instance with the model match mask.
-     pub const fn new_with_model_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Model,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Model.as_int(),
-+        })
-     }
- 
-     /// Creates a new instance with the vendor match mask.
-     pub const fn new_with_vendor_mask(id: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Vendor,
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Vendor.as_int(),
-+        })
-     }
- 
-     /// Creates a new instance with a custom match mask.
-     pub const fn new_with_custom_mask(id: u32, mask: u32) -> Self {
--        DeviceId {
--            id,
--            mask: DeviceMask::Custom(mask),
--        }
-+        Self(bindings::mdio_device_id {
-+            phy_id: id,
-+            phy_id_mask: DeviceMask::Custom(mask).as_int(),
-+        })
-     }
- 
-     /// Creates a new instance from [`Driver`].
-@@ -734,18 +733,20 @@ pub const fn new_with_driver<T: Driver>() -> Self {
-         T::PHY_DEVICE_ID
-     }
- 
-+    /// Get a `phy_id` as u32.
-+    pub const fn id(&self) -> u32 {
-+        self.0.phy_id
-+    }
-+
-     /// Get a `mask` as u32.
-     pub const fn mask_as_int(&self) -> u32 {
--        self.mask.as_int()
-+        self.0.phy_id_mask
-     }
- 
-     // macro use only
-     #[doc(hidden)]
-     pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
--        bindings::mdio_device_id {
--            phy_id: self.id,
--            phy_id_mask: self.mask.as_int(),
--        }
-+        self.0
+ pub mod reg;
+@@ -750,6 +750,17 @@ pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
      }
  }
  
++// SAFETY: [`DeviceId`] is a `#[repr(transparent)` wrapper of `struct mdio_device_id`
++// and does not add additional invariants, so it's safe to transmute to `RawType`.
++unsafe impl RawDeviceId for DeviceId {
++    type RawType = bindings::mdio_device_id;
++
++    // This should never be called.
++    fn index(&self) -> usize {
++        0
++    }
++}
++
+ enum DeviceMask {
+     Exact,
+     Model,
+@@ -850,19 +861,18 @@ const fn as_int(&self) -> u32 {
+ ///     }
+ /// };
+ ///
+-/// const _DEVICE_TABLE: [::kernel::bindings::mdio_device_id; 2] = [
+-///     ::kernel::bindings::mdio_device_id {
+-///         phy_id: 0x00000001,
+-///         phy_id_mask: 0xffffffff,
+-///     },
+-///     ::kernel::bindings::mdio_device_id {
+-///         phy_id: 0,
+-///         phy_id_mask: 0,
+-///     },
+-/// ];
+-/// #[cfg(MODULE)]
+-/// #[no_mangle]
+-/// static __mod_device_table__mdio__phydev: [::kernel::bindings::mdio_device_id; 2] = _DEVICE_TABLE;
++/// const N: usize = 1;
++///
++/// const TABLE: ::kernel::device_id::IdArray<::kernel::net::phy::DeviceId, (), N> =
++///     ::kernel::device_id::IdArray::new([
++///         ::kernel::net::phy::DeviceId(
++///             ::kernel::bindings::mdio_device_id {
++///                 phy_id: 0x00000001,
++///                 phy_id_mask: 0xffffffff,
++///             }),
++///     ]);
++///
++/// ::kernel::module_device_table!("mdio", phydev, TABLE);
+ /// ```
+ #[macro_export]
+ macro_rules! module_phy_driver {
+@@ -873,20 +883,12 @@ macro_rules! module_phy_driver {
+     };
+ 
+     (@device_table [$($dev:expr),+]) => {
+-        // SAFETY: C will not read off the end of this constant since the last element is zero.
+-        const _DEVICE_TABLE: [$crate::bindings::mdio_device_id;
+-            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = [
+-            $($dev.mdio_device_id()),+,
+-            $crate::bindings::mdio_device_id {
+-                phy_id: 0,
+-                phy_id_mask: 0
+-            }
+-        ];
++        const N: usize = $crate::module_phy_driver!(@count_devices $($dev),+);
++
++        const TABLE: $crate::device_id::IdArray<$crate::net::phy::DeviceId, (), N> =
++            $crate::device_id::IdArray::new([ $(($dev,())),+, ]);
+ 
+-        #[cfg(MODULE)]
+-        #[no_mangle]
+-        static __mod_device_table__mdio__phydev: [$crate::bindings::mdio_device_id;
+-            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = _DEVICE_TABLE;
++        $crate::module_device_table!("mdio", phydev, TABLE);
+     };
+ 
+     (drivers: [$($driver:ident),+ $(,)?], device_table: [$($dev:expr),+ $(,)?], $($f:tt)*) => {
 -- 
 2.43.0
 
